@@ -3,7 +3,7 @@ def type(action) !type(impl)
 
 	import teseo.framework.actions.Action;
 	import teseo.Error;
-	import static teseo.Commons.getError;
+	import static teseo.Commons.error;
 	import static java.util.Collections.emptyMap;
 	import teseo.exceptions.*;
 	import java.time.LocalDateTime;
@@ -18,8 +18,8 @@ def type(action) !type(impl)
 			return (input, output) -> {
 				try {
 					$doTask
-				} catch(ForrestException e){
-					output.error(getError(e.code(), e.message(), emptyMap()));
+				} catch(TeseoException e){
+					output.error(error(e.code(), e.message(), emptyMap()));
 				}
 			};
 		}
@@ -39,13 +39,14 @@ def type(action & impl)
 
 	import teseo.framework.actions.Action;
 	import teseo.Error;
-	import static teseo.Commons.getError;
-	import static java.util.Collections.emptyMap;
 	import teseo.exceptions.*;
 	import $package.*;
 	import com.google.gson.Gson;
 	import tara.magritte.Graph;
 	$schemaImport
+
+	import static teseo.Commons.error;
+    import static java.util.Collections.emptyMap;
 
 	public class $name+firstUpperCase$~Action extends $name+firstUpperCase$~AbstractAction {
 

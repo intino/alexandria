@@ -1,7 +1,7 @@
 def type(server)
 	package $package+validname;
 
-	import teseo.framework.web.ForrestServer;
+	import teseo.framework.web.TeseoServer;
 	import $package+validname.actions.*;
 	import tara.magritte.Graph;
 
@@ -9,7 +9,7 @@ def type(server)
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Actions {
 
-		public static void fillActions(ForrestServer server, Graph graph) {
+		public static void fillActions(TeseoServer server, Graph graph) {
 			$resources...[$NL]
 		}
 
