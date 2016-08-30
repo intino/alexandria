@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
+      </profile>
+      <profile default="false" name="Annotation profile for core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="core" />
+      </profile>
+      <profile default="false" name="Annotation profile for application" enabled="true">
+        <sourceOutputDir name="../out/build/API/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/API/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="API" />
+        <module name="application" />
+      </profile>
+      <profile default="false" name="Annotation profile for plugin" enabled="true">
+        <sourceOutputDir name="../../out/build/plugin/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/plugin/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="forrest" />
+        <module name="teseo" />
+      </profile>
+      <profile default="false" name="Annotation profile for jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jmx" />
+      </profile>
+      <profile default="false" name="Annotation profile for scheduler" enabled="true">
+        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="scheduler" />
+        <module name="scheduling" />
+      </profile>
+      <profile default="false" name="Annotation profile for accessor-java" enabled="true">
+        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="accessor" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="accessor" target="1.8" />
+      <module name="API" target="1.8" />
+      <module name="application" target="1.8" />
+      <module name="core" target="1.8" />
+      <module name="forrest" target="1.8" />
+      <module name="jmx" target="1.8" />
+      <module name="scheduler" target="1.8" />
+      <module name="scheduling" target="1.8" />
+      <module name="server" target="1.8" />
+      <module name="teseo" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

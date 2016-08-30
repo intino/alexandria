@@ -1,0 +1,14 @@
+def type(action)
+	package $package+validname.scheduling;
+
+	import forrest.framework.scheduling.*;
+	import $package+validname.*;
+	import tara.magritte.Graph;
+
+	public class $name+firstUpperCase~Action {
+
+		public void execute(Graph graph) {
+
+		}
+	}
+end

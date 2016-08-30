@@ -1,0 +1,8 @@
+.tara
+gen
+test-gen
+out
+plugin/ide/ide.zip
+plugin/teseo/target/
+.idea/libraries
+.idea/dictionaries
