@@ -7,10 +7,10 @@ import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Application;
 import teseo.Resource;
-import teseo.codegeneration.server.action.JavaActionRenderer;
+import teseo.codegeneration.server.action.ActionRenderer;
 import teseo.codegeneration.schema.SchemaRenderer;
-import teseo.codegeneration.server.scheduling.JavaScheduledTriggerRenderer;
-import teseo.codegeneration.server.scheduling.JavaSchedulerRenderer;
+import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
+import teseo.codegeneration.server.scheduling.SchedulerRenderer;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +39,7 @@ public class JavaServerRenderer {
 	}
 
 	private void action(File destiny, String packageName) {
-		new JavaActionRenderer(graph).execute(destiny, packageName);
+		new ActionRenderer(graph).execute(destiny, packageName);
 	}
 
 	private void web(File gen, File src, String packageName) {
@@ -49,8 +49,8 @@ public class JavaServerRenderer {
 	}
 
 	private void scheduling(File gen, String packageName) {
-		new JavaScheduledTriggerRenderer(graph).execute(gen, packageName);
-		new JavaSchedulerRenderer(graph).execute(gen, packageName);
+		new ScheduledTriggerRenderer(graph).execute(gen, packageName);
+		new SchedulerRenderer(graph).execute(gen, packageName);
 	}
 
 	private void processApplication(Application application) {

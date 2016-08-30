@@ -14,10 +14,10 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class JavaSchedulerRenderer {
+public class SchedulerRenderer {
 	private final List<Application> applications;
 
-	public JavaSchedulerRenderer(Graph graph) {
+	public SchedulerRenderer(Graph graph) {
 		applications = graph.find(Application.class);
 	}
 
@@ -41,10 +41,10 @@ public class JavaSchedulerRenderer {
 
 	private Frame processTrigger(ScheduledTrigger scheduledTrigger) {
 		final Frame schdule = new Frame().addTypes("schedule").addSlot("name", scheduledTrigger.name());
-		schdule.addTypes(scheduledTrigger.id());
+		schdule.addTypes(scheduledTrigger.getClass().getSimpleName());
 		if (scheduledTrigger.startOnInit()) schdule.addTypes("onStart");
 		final Frame triggerFrame = new Frame().addTypes("trigger").addSlot("name", scheduledTrigger.id());
-		triggerFrame.addTypes(scheduledTrigger.id());
+		triggerFrame.addTypes(scheduledTrigger.getClass().getSimpleName());
 		if (scheduledTrigger.is(CronTrigger.class)) {
 			final CronTrigger cron = scheduledTrigger.as(CronTrigger.class);
 			triggerFrame.addTypes("cron")

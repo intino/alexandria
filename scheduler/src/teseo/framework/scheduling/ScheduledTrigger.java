@@ -2,6 +2,6 @@ package teseo.framework.scheduling;
 
 import org.quartz.Job;
 
-public interface ScheduledAction extends Job {
+public interface ScheduledTrigger extends Job {
 
 }

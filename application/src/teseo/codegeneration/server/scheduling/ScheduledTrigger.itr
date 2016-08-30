@@ -1,20 +1,18 @@
 def type(scheduled)
 	package $package+validname.scheduling;
 
-	import teseo.framework.scheduling.*;
 	import org.quartz.*;
-	import $package+validname.*;
 	import tara.magritte.Graph;
 
-	public class $name+firstUpperCase~Action implements ScheduledTrigger {
+	public class $name+firstUpperCase~Trigger implements teseo.framework.scheduling.ScheduledTrigger {
 
 		public void execute(JobExecutionContext context) throws JobExecutionException {
-			private Graph = (Graph) context.getMergedJobDataMap().get("graph");
+			Graph graph = (Graph) context.getMergedJobDataMap().get("graph");
 			$action...[$NL]
 		}
 	}
 end
 
 def type(action)
-    new $name~Action(graph).execute();
+    new $package+validname.action.$name+firstUpperCase~Action(graph).execute();
 end

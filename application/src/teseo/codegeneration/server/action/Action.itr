@@ -1,13 +1,17 @@
 def type(action)
-	package $package+validname.scheduling;
+	package $package+validname.action;
 
-	import teseo.framework.scheduling.*;
-	import $package+validname.*;
 	import tara.magritte.Graph;
 
 	public class $name+firstUpperCase~Action {
 
-		public void execute(Graph graph) {
+	    private final Graph graph;
+
+    	public $name+firstUpperCase~Action(Graph graph) {
+    		this.graph = graph;
+    	}
+
+		public void execute() {
 
 		}
 	}

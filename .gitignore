@@ -2,7 +2,7 @@
 gen
 test-gen
 out
-plugin/ide/ide.zip
-plugin/teseo/target/
+plugin/teseo/teseo.zip
+plugin/plugin/target/
 .idea/libraries
 .idea/dictionaries

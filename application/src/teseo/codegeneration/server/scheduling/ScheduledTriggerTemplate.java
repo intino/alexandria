@@ -18,8 +18,8 @@ public class ScheduledTriggerTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "scheduled"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".scheduling;\n\nimport teseo.framework.scheduling.*;\nimport org.quartz.*;\nimport ")).add(mark("package", "validname")).add(literal(".*;\nimport tara.magritte.Graph;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Action implements ScheduledTrigger {\n\n\tpublic void execute(JobExecutionContext context) throws JobExecutionException {\n\t\tprivate Graph = (Graph) context.getMergedJobDataMap().get(\"graph\");\n\t\t")).add(mark("action").multiple("\n")).add(literal("\n\t}\n}")),
-			rule().add((condition("type", "action"))).add(literal("new ")).add(mark("name")).add(literal("Action(graph).execute();"))
+			rule().add((condition("type", "scheduled"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".scheduling;\n\nimport org.quartz.*;\nimport tara.magritte.Graph;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Trigger implements teseo.framework.scheduling.ScheduledTrigger {\n\n\tpublic void execute(JobExecutionContext context) throws JobExecutionException {\n\t\tGraph graph = (Graph) context.getMergedJobDataMap().get(\"graph\");\n\t\t")).add(mark("action").multiple("\n")).add(literal("\n\t}\n}")),
+			rule().add((condition("type", "action"))).add(literal("new ")).add(mark("package", "validname")).add(literal(".action.")).add(mark("name", "firstUpperCase")).add(literal("Action(graph).execute();"))
 		);
 		return this;
 	}

@@ -11,10 +11,10 @@ import java.util.List;
 import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
-public class JavaActionRenderer {
+public class ActionRenderer {
 	private final List<Action> applications;
 
-	public JavaActionRenderer(Graph graph) {
+	public ActionRenderer(Graph graph) {
 		applications = graph.find(Action.class);
 	}
 

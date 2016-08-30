@@ -102,26 +102,27 @@ Facet Type on Data
 
 Concept Action
 
+
+Facet Scheduled on Application.Trigger is abstract
+	var boolean startOnInit
+	var string mean = ""
+
 !! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
 Facet Cron extends Scheduled
 	var string pattern
 	var boolean startOnInit = true
 
-Facet Scheduled on Application.Trigger
-	var boolean startOnInit
-	var string mean = ""
-
 Facet OneTime extends Scheduled
 	var string mean = "One time"
 
 Facet ProcessWatcher on Application.Trigger
-	var integer pid
-	var word:{OnStart OnTerminate} events
+	var string processName
+	var word[]:{OnStart OnTerminate} events
 	var function:ProcessChecker check
 
 Facet DirectoryWatcher on Application.Trigger
 	var resource directory
-	var word:{OnCreate OnDelete} event
+	var word[]:{OnCreate OnDelete} events
 	var function:DirectoryChecker check
 
 Facet JMSQueueWatcher on Application.Trigger

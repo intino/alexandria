@@ -1,16 +1,15 @@
 def type(scheduler)
 	package $package+validname;
 
-	import TeseoScheduler;
+	import tara.magritte.Graph;
+	import teseo.framework.scheduling.TeseoScheduler;
 	import $package+validname.scheduling.*;
 	import org.quartz.*;
-	import tara.magritte.Graph;
-	import java.util.Date;
 	import java.util.LinkedHashSet;
 	import java.util.Map;
 	import java.util.Set;
+
 	import static org.quartz.JobBuilder.newJob;
-	import static org.quartz.SimpleScheduleBuilder.*;
 	import static org.quartz.CronScheduleBuilder.*;
 	import static org.quartz.TriggerBuilder.newTrigger;
 
@@ -28,7 +27,7 @@ def type(scheduler)
 
 		$schedule+create...[$NL]
 
-		public static void create(Class actionClass, TeseoScheduler scheduler, Map<String, Object> parameters) {
+		public static void create(Class triggerClass, TeseoScheduler scheduler, Map<String, Object> parameters) {
 			$schedule+switch
 		}
 
@@ -43,7 +42,7 @@ end
 def type(schedule) !type(onStart) trigger(create)
 	public static void $name+SnakeCaseToCamelCase+firstLowerCase(TeseoScheduler scheduler, Map<String, Object> parameters) {
 		try {
-			JobDetail job = newJob($name+SnakeCaseToCamelCase~Action.class).withIdentity("$name").build();
+			JobDetail job = newJob($name+SnakeCaseToCamelCase~Trigger.class).withIdentity("$name").build();
 			for (Map.Entry<String, Object> entry : parameters.entrySet())
 				job.getJobDataMap().put(entry.getKey(), entry.getValue());
 			scheduler.scheduleJob(job, newSet($trigger...[, ]), true);
@@ -54,23 +53,19 @@ def type(schedule) !type(onStart) trigger(create)
 end
 
 def type(schedule) !type(onStart) trigger(switch)
-	if ($name+SnakeCaseToCamelCase~Action.class.equals(actionClass)) $name+SnakeCaseToCamelCase+firstLowerCase(scheduler, parameters);
+	if ($name+SnakeCaseToCamelCase~Trigger.class.equals(triggerClass)) $name+SnakeCaseToCamelCase+firstLowerCase(scheduler, parameters);
 end
 
 def type(schedule & onStart) trigger(init)
-	job = newJob($name+SnakeCaseToCamelCase~Action.class).withIdentity("$name").build();
+	job = newJob($name+SnakeCaseToCamelCase~Trigger.class).withIdentity("$name").build();
 	job.getJobDataMap().put("graph", graph);
 	scheduler.scheduleJob(job, newSet($trigger...[, ]), true);
 end
 
-def type(cron) trigger(trigger)
+def type(cronTrigger) trigger(trigger)
 	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")).build()
 end
 
-def type(oneTime) type(trigger) trigger(trigger)
+def type(oneTimeTrigger) trigger(trigger)
 	newTrigger().startNow().build()
-end
-
-def !type(cron) type(trigger) trigger(trigger)
-	newTrigger().withIdentity("$name").startAt(new Date($start~L)).withSchedule(simpleSchedule().withIntervalInSeconds($interval)).build()
 end

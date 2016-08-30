@@ -3,6 +3,7 @@ package teseo.codegeneration.server.scheduling;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
+import teseo.Action;
 import teseo.Application;
 import teseo.scheduled.application.ScheduledTrigger;
 
@@ -12,12 +13,12 @@ import java.util.List;
 import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
-public class JavaScheduledTriggerRenderer {
+public class ScheduledTriggerRenderer {
 	private final List<Application> applications;
 	private File genDestination;
 	private String packageName;
 
-	public JavaScheduledTriggerRenderer(Graph graph) {
+	public ScheduledTriggerRenderer(Graph graph) {
 		applications = graph.find(Application.class);
 	}
 
@@ -35,8 +36,9 @@ public class JavaScheduledTriggerRenderer {
 		Frame frame = new Frame().addTypes("scheduled");
 		frame.addSlot("name", trigger.name());
 		frame.addSlot("package", packageName);
-		if (!alreadyRendered(trigger))
-			writeFrame(destinyPackage(), trigger.name() + "Trigger", template().format(frame));
+		for (Action action : trigger.actions())
+			frame.addSlot("action", new Frame().addTypes("action").addSlot("name", action.name()).addSlot("package", packageName));
+		writeFrame(destinyPackage(), trigger.name() + "Trigger", template().format(frame));
 	}
 
 	private Template template() {

@@ -45,6 +45,7 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="forrest" />
+        <module name="plugin" />
         <module name="teseo" />
       </profile>
       <profile default="false" name="Annotation profile for jmx" enabled="true">
@@ -77,6 +78,7 @@
       <module name="core" target="1.8" />
       <module name="forrest" target="1.8" />
       <module name="jmx" target="1.8" />
+      <module name="plugin" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
       <module name="server" target="1.8" />
