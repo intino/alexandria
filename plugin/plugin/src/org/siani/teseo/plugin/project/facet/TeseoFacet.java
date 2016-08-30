@@ -39,6 +39,7 @@ public class TeseoFacet extends Facet<TeseoFacetConfiguration> {
 		final MavenManager mavenManager = new MavenManager(module);
 		mavenManager.addTeseo();
 		mavenManager.addTeseoServer();
+		mavenManager.addTeseoServer();
 	}
 
 	private void createApiSourceDirectory(Module module) {

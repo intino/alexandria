@@ -22,6 +22,7 @@ import java.io.File;
 public class MavenManager {
 	private static final String TESEO_GROUP_ID = "org.siani.teseo";
 	private static final String TESEO_ARTIFACT_ID = "application";
+	private static final String TESEO_SCHEDULER_ARTIFACT_ID = "scheduler";
 	private static final String TESEO_SERVER_ARTIFACT_ID = "server";
 	private static final String TESEO_VERSION = "[1.0.0, 2.0.0)";
 	private static final String VERSION = "version";
@@ -71,6 +72,13 @@ public class MavenManager {
 		commit();
 	}
 
+	public void addTeseoScheduler() {
+		if (hasTeseoDependency()) return;
+		Node dependencies = doc.getElementsByTagName(DEPENDENCIES).item(0);
+		dependencies.appendChild(createTeseoSchedulerDependency());
+		commit();
+	}
+
 	private boolean isTeseoDependency(Node item) {
 		NodeList childNodes = item.getChildNodes();
 		String[] artifactInfo = getArtifactInfo(childNodes);
@@ -96,6 +104,14 @@ public class MavenManager {
 		Element dependency = doc.createElement(DEPENDENCY);
 		dependency.appendChild(groupId(doc, TESEO_GROUP_ID));
 		dependency.appendChild(artifactId(doc, TESEO_ARTIFACT_ID));
+		dependency.appendChild(version(doc, TESEO_VERSION));
+		return dependency;
+	}
+
+	private Node createTeseoSchedulerDependency() {
+		Element dependency = doc.createElement(DEPENDENCY);
+		dependency.appendChild(groupId(doc, TESEO_GROUP_ID));
+		dependency.appendChild(artifactId(doc, TESEO_SCHEDULER_ARTIFACT_ID));
 		dependency.appendChild(version(doc, TESEO_VERSION));
 		return dependency;
 	}
