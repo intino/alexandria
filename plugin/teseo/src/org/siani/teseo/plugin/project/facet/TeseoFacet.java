@@ -20,7 +20,7 @@ import org.siani.teseo.plugin.project.facet.maven.MavenManager;
 import java.io.IOException;
 
 public class TeseoFacet extends Facet<TeseoFacetConfiguration> {
-	static final FacetTypeId<TeseoFacet> ID = new FacetTypeId<>("forrest");
+	static final FacetTypeId<TeseoFacet> ID = new FacetTypeId<>("teseo");
 	private static final Logger LOG = Logger.getInstance(TeseoFacet.class.getName());
 
 	TeseoFacet(@NotNull FacetType facetType,
@@ -28,17 +28,17 @@ public class TeseoFacet extends Facet<TeseoFacetConfiguration> {
 			   @NotNull String name,
 			   @NotNull TeseoFacetConfiguration configuration) {
 		super(facetType, module, name, configuration, null);
-		importForrestLibrary(module);
+		importTeseoLibrary(module);
 		if (module.isLoaded()) {
 			ApplicationManager.getApplication().assertIsDispatchThread();
 			ApplicationManager.getApplication().runWriteAction(() -> createApiSourceDirectory(module));
 		}
 	}
 
-	private void importForrestLibrary(Module module) {
+	private void importTeseoLibrary(Module module) {
 		final MavenManager mavenManager = new MavenManager(module);
-		mavenManager.addForrest();
-		mavenManager.addForrestServer();
+		mavenManager.addTeseo();
+		mavenManager.addTeseoServer();
 	}
 
 	private void createApiSourceDirectory(Module module) {

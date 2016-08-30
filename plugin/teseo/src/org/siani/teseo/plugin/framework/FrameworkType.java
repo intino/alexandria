@@ -25,13 +25,13 @@ public class FrameworkType extends FrameworkTypeEx {
 	@NotNull
 	@Override
 	public FrameworkSupportInModuleProvider createProvider() {
-		return new ForrestSupportProvider();
+		return new TeseoSupportProvider();
 	}
 
 	@NotNull
 	@Override
 	public String getPresentableName() {
-		return "Forrest Framework";
+		return "Teseo Framework";
 	}
 
 	@NotNull
@@ -40,7 +40,7 @@ public class FrameworkType extends FrameworkTypeEx {
 		return TeseoIcons.ICON_16;
 	}
 
-	private class ForrestSupportProvider extends FrameworkSupportInModuleProvider {
+	private class TeseoSupportProvider extends FrameworkSupportInModuleProvider {
 		@NotNull
 		@Override
 		public FrameworkTypeEx getFrameworkType() {

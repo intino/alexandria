@@ -56,7 +56,7 @@ def type(pom)
 
 	<dependencies>
         <dependency>
-            <groupId>org.siani.forrest</groupId>
+            <groupId>org.siani.teseo</groupId>
             <artifactId>accessor-java</artifactId>
             <version>$[1.0.0, 2.0.0)</version>
 		</dependency>

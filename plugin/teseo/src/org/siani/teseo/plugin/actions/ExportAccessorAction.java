@@ -33,7 +33,7 @@ public class ExportAccessorAction extends Action implements DumbAware {
 	private CompileStatusNotification export(final Module module) {
 		return (aborted, errors, warnings, compileContext) -> {
 			if (aborted || errors != 0) return;
-			ProgressManager.getInstance().run(new Task.Modal(module.getProject(), "Exporting Forrest Accessor", false) {
+			ProgressManager.getInstance().run(new Task.Modal(module.getProject(), "Exporting Teseo Accessor", false) {
 				@Override
 				public void run(@NotNull ProgressIndicator indicator) {
 					ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);

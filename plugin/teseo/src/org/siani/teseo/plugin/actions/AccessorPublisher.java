@@ -37,7 +37,7 @@ import static java.io.File.separator;
 import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory;
 
 class AccessorPublisher {
-	private static final String FORREST = "forrest";
+	private static final String TESEO = "teseo";
 	private static final Logger LOG = Logger.getInstance("Export Accessor: export");
 	private final Module module;
 	private File root;
@@ -45,7 +45,7 @@ class AccessorPublisher {
 	AccessorPublisher(Module module) {
 		this.module = module;
 		try {
-			this.root = Files.createTempDirectory(FORREST).toFile();
+			this.root = Files.createTempDirectory(TESEO).toFile();
 			FileSystemUtils.removeDir(this.root);
 		} catch (IOException e) {
 			root = null;
@@ -103,9 +103,9 @@ class AccessorPublisher {
 
 	private List<String> createSources() throws IOException {
 		List<String> apps = new ArrayList<>();
-		final String outLanguage = ForrestUtils.findOutLanguage(module);
-		String packageName = FORREST + separator + (outLanguage == null || outLanguage.isEmpty() ? "api" : outLanguage.toLowerCase());
-		for (Application app : Graph.load().loadStashes(StashDeserializer.stashFrom(new File(ForrestUtils.findForrest(module)))).wrap(TeseoApplication.class).find(Application.class)) {
+		final String outLanguage = TeseoUtils.findOutLanguage(module);
+		String packageName = TESEO + separator + (outLanguage == null || outLanguage.isEmpty() ? "api" : outLanguage.toLowerCase());
+		for (Application app : Graph.load().loadStashes(StashDeserializer.stashFrom(new File(TeseoUtils.findTeseo(module)))).wrap(TeseoApplication.class).find(Application.class)) {
 			File sourcesDestiny = new File(new File(root, app.name() + File.separator + "src"), packageName);
 			sourcesDestiny.mkdirs();
 			new JavaAccessorRenderer(app).execute(sourcesDestiny, packageName.replace(separator, "."));
@@ -146,6 +146,6 @@ class AccessorPublisher {
 	}
 
 	private void notifyError(String message) {
-		Bus.notify(new Notification("Forrest", "Accessor cannot be published. " + message, " ", ERROR), module.getProject());
+		Bus.notify(new Notification("Teseo", "Accessor cannot be published. " + message, " ", ERROR), module.getProject());
 	}
 }

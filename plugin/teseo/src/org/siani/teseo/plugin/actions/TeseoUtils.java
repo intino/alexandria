@@ -11,18 +11,18 @@ import java.util.List;
 import static org.jetbrains.jps.model.java.JavaResourceRootType.RESOURCE;
 import static org.jetbrains.jps.model.java.JavaResourceRootType.TEST_RESOURCE;
 
-class ForrestUtils {
-	private static final String FORREST = "forrest";
+class TeseoUtils {
+	private static final String TESEO = "teseo";
 	static final String STASH = ".stash";
 
-	static String findForrest(Module module) {
+	static String findTeseo(Module module) {
 		final VirtualFile resourcesRoot = getResourcesRoot(module, false);
 		if (resourcesRoot == null) return null;
 		for (VirtualFile children : resourcesRoot.getChildren())
-			if (children.getName().toLowerCase().endsWith("-forrest" + STASH) || children.getName().equalsIgnoreCase(FORREST + STASH))
+			if (children.getName().toLowerCase().endsWith("-teseo" + STASH) || children.getName().equalsIgnoreCase(TESEO + STASH))
 				return children.getPath();
 		for (VirtualFile children : resourcesRoot.getChildren())
-			if (FORREST.equalsIgnoreCase(children.getExtension())) return children.getPath();
+			if (TESEO.equalsIgnoreCase(children.getExtension())) return children.getPath();
 		return null;
 	}
 
@@ -32,9 +32,9 @@ class ForrestUtils {
 		final VirtualFile resourcesRoot = getResourcesRoot(module, false);
 		if (resourcesRoot == null) return null;
 		for (VirtualFile child : resourcesRoot.getChildren())
-			if (child.getName().toLowerCase().endsWith("-forrest" + STASH))
-				return child.getNameWithoutExtension().replace("-forrest", "").replace("-Forrest", "");
-			else if (FORREST.equalsIgnoreCase(child.getExtension()))
+			if (child.getName().toLowerCase().endsWith("-teseo" + STASH))
+				return child.getNameWithoutExtension().replace("-teseo", "").replace("-Teseo", "");
+			else if (TESEO.equalsIgnoreCase(child.getExtension()))
 				return child.getNameWithoutExtension();
 		return "";
 	}

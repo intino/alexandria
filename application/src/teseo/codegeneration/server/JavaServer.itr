@@ -1,11 +1,11 @@
 def type(server)
 	package $package+validname;
 
-	import forrest.framework.web.ForrestServer;
+	import teseo.framework.web.ForrestServer;
 	import $package+validname.actions.*;
 	import tara.magritte.Graph;
 
-	import static forrest.framework.actions.Router.Method.*;
+	import static teseo.framework.actions.Router.Method.*;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Actions {
 

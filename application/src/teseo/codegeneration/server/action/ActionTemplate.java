@@ -18,7 +18,7 @@ public class ActionTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "action"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".scheduling;\n\nimport forrest.framework.scheduling.*;\nimport ")).add(mark("package", "validname")).add(literal(".*;\nimport tara.magritte.Graph;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Action {\n\n\tpublic void execute(Graph graph) {\n\n\t}\n}"))
+			rule().add((condition("type", "action"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".scheduling;\n\nimport teseo.framework.scheduling.*;\nimport ")).add(mark("package", "validname")).add(literal(".*;\nimport tara.magritte.Graph;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Action {\n\n\tpublic void execute(Graph graph) {\n\n\t}\n}"))
 		);
 		return this;
 	}

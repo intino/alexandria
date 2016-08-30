@@ -3,7 +3,7 @@ package teseo.framework.web;
 import teseo.framework.actions.Router;
 import teseo.framework.web.actions.SparkRouter;
 
-public class SparkWebServer extends ForrestServer {
+public class SparkWebServer extends TeseoServer {
 	private final int port;
 	private final Router router;
 

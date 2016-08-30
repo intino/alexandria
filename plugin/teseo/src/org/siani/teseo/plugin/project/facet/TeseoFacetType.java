@@ -12,11 +12,11 @@ import org.siani.teseo.plugin.TeseoIcons;
 import javax.swing.*;
 
 public class TeseoFacetType extends FacetType<TeseoFacet, TeseoFacetConfiguration> {
-	private static final String STRING_ID = "forrest-tara";
+	private static final String STRING_ID = "teseo-tara";
 
 
 	public TeseoFacetType() {
-		super(TeseoFacet.ID, STRING_ID, "Forrest");
+		super(TeseoFacet.ID, STRING_ID, "Teseo");
 	}
 
 	public TeseoFacetConfiguration createDefaultConfiguration() {
@@ -37,7 +37,7 @@ public class TeseoFacetType extends FacetType<TeseoFacet, TeseoFacetConfiguratio
 	@NotNull
 	@Override
 	public String getDefaultFacetName() {
-		return "Forrest";
+		return "Teseo";
 	}
 
 	@Override

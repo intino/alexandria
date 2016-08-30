@@ -33,18 +33,18 @@ import static tara.intellij.messages.MessageProvider.message;
 public class CreateTeseoFileAction extends JavaCreateTemplateInPackageAction<TaraModelImpl> {
 
 	public CreateTeseoFileAction() {
-		super("Forrest File", "Creates a new Forrest File", ICON_16, true);
+		super("Teseo File", "Creates a new Teseo File", ICON_16, true);
 	}
 
 	@Override
 	protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-		builder.setTitle("Enter name for new Forrest File");
-		builder.addKind("Forrest", TeseoIcons.ICON_16, "Forrest");
+		builder.setTitle("Enter name for new Teseo File");
+		builder.addKind("Teseo", TeseoIcons.ICON_16, "Teseo");
 	}
 
 	@Override
 	protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-		return "Forrest File";
+		return "Teseo File";
 	}
 
 	@Override

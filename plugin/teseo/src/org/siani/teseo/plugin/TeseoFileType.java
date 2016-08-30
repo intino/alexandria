@@ -13,17 +13,17 @@ public class TeseoFileType implements FileType {
 
 	@NotNull
 	public String getName() {
-		return "Forrest";
+		return "Teseo";
 	}
 
 	@NotNull
 	public String getDescription() {
-		return "Forrest file";
+		return "Teseo file";
 	}
 
 	@NotNull
 	public String getDefaultExtension() {
-		return "forrest";
+		return "teseo";
 	}
 
 

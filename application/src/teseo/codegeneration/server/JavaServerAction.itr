@@ -1,11 +1,11 @@
 def type(action) !type(impl)
 	package $package.actions;
 
-	import forrest.framework.actions.Action;
-	import forrest.Error;
-	import static forrest.Commons.getError;
+	import teseo.framework.actions.Action;
+	import teseo.Error;
+	import static teseo.Commons.getError;
 	import static java.util.Collections.emptyMap;
-	import forrest.exceptions.*;
+	import teseo.exceptions.*;
 	import java.time.LocalDateTime;
 	import $package.*;
 	import com.google.gson.Gson;
@@ -37,11 +37,11 @@ end
 def type(action & impl)
 	package $package.actions;
 
-	import forrest.framework.actions.Action;
-	import forrest.Error;
-	import static forrest.Commons.getError;
+	import teseo.framework.actions.Action;
+	import teseo.Error;
+	import static teseo.Commons.getError;
 	import static java.util.Collections.emptyMap;
-	import forrest.exceptions.*;
+	import teseo.exceptions.*;
 	import $package.*;
 	import com.google.gson.Gson;
 	import tara.magritte.Graph;

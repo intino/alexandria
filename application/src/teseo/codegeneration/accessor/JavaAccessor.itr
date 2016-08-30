@@ -3,11 +3,11 @@ def type(accessor)
 
     import java.net.URL;
     import java.time.LocalDateTime;
-    import forrest.restful.core.Resource;
-    import forrest.restful.core.RestfulAccessor;
-    import forrest.restful.exceptions.RestfulFailure;
+    import teseo.restful.core.Resource;
+    import teseo.restful.core.RestfulAccessor;
+    import teseo.restful.exceptions.RestfulFailure;
     import com.google.gson.Gson;
-    import forrest.exceptions.*;
+    import teseo.exceptions.*;
     $schemaImport
 
     public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {

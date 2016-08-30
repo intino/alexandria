@@ -14,17 +14,17 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public abstract class ForrestServer implements AdapterProxy {
+public abstract class TeseoServer implements AdapterProxy {
 
     private final Map<String, RequestAdapter> requestAdapters = new HashMap<>();
     private final Map<String, ResponseAdapter> responseAdapters = new HashMap<>();
     private final String webDirectory;
 
-    public ForrestServer() {
+    public TeseoServer() {
         this("web/");
     }
 
-    public ForrestServer(String webDirectory) {
+    public TeseoServer(String webDirectory) {
         this.webDirectory = webDirectory;
     }
 

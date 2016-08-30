@@ -1,7 +1,7 @@
 package shop;
 
 //import com.google.gson.Gson;
-//import ForrestApplication;
+//import TeseoApplication;
 //import org.junit.Ignore;
 //import org.junit.Test;
 ////import productlist.Identification;
@@ -13,7 +13,7 @@ package shop;
 public class ShopTest {
 //    @Test
 //    public void should_generate_classes_of_js() throws Exception {
-//        Graph.load("shop").wrap(ForrestApplication.class).application().execute("test-gen", "productlist");
+//        Graph.load("shop").wrap(TeseoApplication.class).application().execute("test-gen", "productlist");
 //    }
 //
 //    @Test

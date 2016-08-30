@@ -37,19 +37,19 @@ import static java.util.Arrays.asList;
 
 public class CreateServerAction extends Action implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("restApiGenerator: Generate");
-	private static final String FORREST = "forrest";
+	private static final String TESEO = "teseo";
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {
 		Project project = e.getData(PlatformDataKeys.PROJECT);
 		final Module module = LangDataKeys.MODULE.getData(e.getDataContext());
 		if (projectExists(e, project)) return;
-		List<VirtualFile> files = filterForrest(getFilesFromEvent(e));
+		List<VirtualFile> files = filterTeseo(getFilesFromEvent(e));
 		if (files.isEmpty()) return;
 		new ApiGenerator(module).generateApi(getGenRoot(module), getApiRoot(module));
 	}
 
-	private List<VirtualFile> filterForrest(List<VirtualFile> filesFromEvent) {
+	private List<VirtualFile> filterTeseo(List<VirtualFile> filesFromEvent) {
 		return filesFromEvent;
 	}
 
@@ -101,9 +101,9 @@ public class CreateServerAction extends Action implements DumbAware {
 				notifyError("Gen source root not found.");
 				return;
 			}
-			String outLanguage = ForrestUtils.findOutLanguage(module);
+			String outLanguage = TeseoUtils.findOutLanguage(module);
 			if (outLanguage == null) outLanguage = module.getName().toLowerCase();
-			String packageName = (FORREST + File.separator + outLanguage).replace("-", "").toLowerCase();
+			String packageName = (TESEO + File.separator + outLanguage).replace("-", "").toLowerCase();
 			File gen = new File(genDirectory.getPath(), packageName);
 			gen.mkdirs();
 			File api = new File(apiDirectory.getPath(), packageName);
@@ -123,13 +123,13 @@ public class CreateServerAction extends Action implements DumbAware {
 				}
 
 				private void generate() {
-					final String forrestFile = ForrestUtils.findForrest(module);
-					if (forrestFile == null) {
-						notifyError("Forrest File corrupt or not found");
+					final String teseoFile = TeseoUtils.findTeseo(module);
+					if (teseoFile == null) {
+						notifyError("Teseo File corrupt or not found");
 						return;
 					}
-					final File file = new File(forrestFile);
-					final File dest = file.getName().endsWith(ForrestUtils.STASH) ? new File(file.getParent(), ForrestUtils.findOutLanguage(module) + "." + FORREST) : file;
+					final File file = new File(teseoFile);
+					final File dest = file.getName().endsWith(TeseoUtils.STASH) ? new File(file.getParent(), TeseoUtils.findOutLanguage(module) + "." + TESEO) : file;
 					final Graph graph = loadGraph(dest);
 					new JavaServerRenderer(graph).execute(gen, api, packageName);
 					refreshDirectory(gen);
@@ -163,7 +163,7 @@ public class CreateServerAction extends Action implements DumbAware {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Forrest", "Api for " + module.getName() + " generated", "to " + genRoot.getPath(), INFORMATION), module.getProject());
+						new Notification("Teseo", "Api for " + module.getName() + " generated", "to " + genRoot.getPath(), INFORMATION), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
@@ -175,7 +175,7 @@ public class CreateServerAction extends Action implements DumbAware {
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Forrest", "Actions cannot be generated. " + message, "", ERROR), module.getProject());
+					new Notification("Teseo", "Actions cannot be generated. " + message, "", ERROR), module.getProject());
 		}
 
 	}

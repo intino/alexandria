@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class FileListener implements com.intellij.openapi.components.ApplicationComponent {
 
-	private static final String FORREST = "Forrest";
+	private static final String Teseo = "Teseo";
 	private VirtualFileListener listener;
 
 	@Override
@@ -37,10 +37,10 @@ public class FileListener implements com.intellij.openapi.components.Application
 			public void fileCreated(@NotNull VirtualFileEvent event) {
 				final VirtualFile file = event.getFile();
 				final String stash = StashFileType.INSTANCE.getDefaultExtension();
-				if (stash.equals(file.getExtension()) && FORREST.equals(file.getNameWithoutExtension()) || file.getNameWithoutExtension().endsWith("-" + FORREST)) {
+				if (stash.equals(file.getExtension()) && Teseo.equals(file.getNameWithoutExtension()) || file.getNameWithoutExtension().endsWith("-" + Teseo)) {
 					try {
 
-						final String newName = file.getName().replace(stash, TeseoFileType.INSTANCE.getDefaultExtension()).replace("-" + FORREST, "");
+						final String newName = file.getName().replace(stash, TeseoFileType.INSTANCE.getDefaultExtension()).replace("-" + Teseo, "");
 						final VirtualFile old = event.getParent().findChild(newName);
 						if (old != null && old.exists()) old.delete(event.getRequestor());
 						file.rename(event.getRequestor(), newName);
@@ -85,6 +85,6 @@ public class FileListener implements com.intellij.openapi.components.Application
 	@NotNull
 	@Override
 	public String getComponentName() {
-		return "Forrest File Listener";
+		return "Teseo File Listener";
 	}
 }
