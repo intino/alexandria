@@ -16,11 +16,11 @@ import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import teseo.TeseoApplication;
-import teseo.codegeneration.server.JavaServerRenderer;
 import org.jetbrains.annotations.NotNull;
 import tara.io.StashDeserializer;
 import tara.magritte.Graph;
+import teseo.TeseoApplication;
+import teseo.codegeneration.server.web.JavaServerRenderer;
 
 import java.io.File;
 import java.net.MalformedURLException;

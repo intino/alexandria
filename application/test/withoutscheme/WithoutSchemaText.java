@@ -1,10 +1,10 @@
 package withoutscheme;
 
+import tara.magritte.Graph;
 import teseo.Application;
 import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
-import teseo.codegeneration.server.JavaServerRenderer;
-import tara.magritte.Graph;
+import teseo.codegeneration.server.web.JavaServerRenderer;
 
 import java.io.File;
 

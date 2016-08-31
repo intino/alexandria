@@ -1,8 +1,8 @@
 package happysense;
 
-import teseo.TeseoApplication;
-import teseo.codegeneration.server.JavaServerRenderer;
 import tara.magritte.Graph;
+import teseo.TeseoApplication;
+import teseo.codegeneration.server.web.JavaServerRenderer;
 
 import java.io.File;
 

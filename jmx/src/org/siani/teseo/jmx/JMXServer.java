@@ -66,7 +66,7 @@ public class JMXServer {
 	private static ObjectName createSimpleMBean(MBeanServer server, String mbeanClassName, String objectNameName, Object[] parameters) {
 		try {
 			ObjectName mbeanObjectName = ObjectName.getInstance(objectNameName);
-			server.createMBean(mbeanClassName, mbeanObjectName, parameters, null);
+			server.instantiate(mbeanClassName, mbeanObjectName, parameters, null);
 			return mbeanObjectName;
 		} catch (Exception e) {
 			System.err.println("\t!!! Could not init the " + mbeanClassName + " MBean !!!");

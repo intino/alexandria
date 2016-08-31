@@ -1,4 +1,4 @@
-package teseo.codegeneration.server;
+package teseo.codegeneration.server.web;
 
 import cottons.utils.Files;
 import org.siani.itrules.Template;
@@ -9,8 +9,8 @@ import teseo.Application;
 import teseo.Resource;
 import teseo.codegeneration.schema.SchemaRenderer;
 import teseo.codegeneration.server.action.ActionRenderer;
-import teseo.codegeneration.server.jmx.JMXTriggerRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
+import teseo.codegeneration.server.jmx.JMXTriggerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
 
@@ -41,10 +41,6 @@ public class JavaServerRenderer {
 		action(src, packageName);
 	}
 
-	private void action(File destiny, String packageName) {
-		new ActionRenderer(graph).execute(destiny, packageName);
-	}
-
 	private void web(File gen, File src, String packageName) {
 		new SchemaRenderer(graph).execute(destination, packageName);
 		new JavaServerActionRenderer(graph).execute(gen, src, packageName);
@@ -61,11 +57,17 @@ public class JavaServerRenderer {
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
+	private void action(File destiny, String packageName) {
+		new ActionRenderer(graph).execute(destiny, packageName);
+	}
+
 	private void processApplication(Application application) {
+		List<Resource> resources = application.node().findNode(Resource.class);
+		if (resources.isEmpty()) return;
 		Frame frame = new Frame().addTypes("server");
 		frame.addSlot("name", application.name());
 		frame.addSlot("package", packageName);
-		frame.addSlot("resources", (AbstractFrame[]) processResources(application.node().findNode(Resource.class)));
+		frame.addSlot("resources", (AbstractFrame[]) processResources(resources));
 		writeFrame(destination, snakeCaseToCamelCase(application.name()) + "Actions", template().format(frame));
 	}
 

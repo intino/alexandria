@@ -17,12 +17,8 @@ def type(jmx)
 
     	private Map<String, Object$[]> mbClasses(Graph graph) {
             Map<String, Object$[]> map = new HashMap<>();
-            $trigger+inmap
+            map.put("$package.jmx.$trigger+firstUpperCase", new Object$[$]{graph});
             return map;
     	}
     }
-end
-
-def trigger(inmap)
-    map.put($value+firstUpperCase+quoted, new Object$[]{graph});
 end

@@ -14,5 +14,5 @@ def type(scheduled)
 end
 
 def type(action)
-    new $package+validname.action.$name+firstUpperCase~Action(graph).execute();
+    new $package+validname.actions.$name+firstUpperCase~Action(graph).execute();
 end

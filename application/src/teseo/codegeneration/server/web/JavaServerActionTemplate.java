@@ -1,4 +1,4 @@
-package teseo.codegeneration.server;
+package teseo.codegeneration.server.web;
 
 import org.siani.itrules.*;
 

@@ -1,4 +1,4 @@
-package teseo.codegeneration.server;
+package teseo.codegeneration.server.web;
 
 import teseo.Application;
 import teseo.Resource;

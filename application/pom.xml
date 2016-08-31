@@ -62,11 +62,17 @@
         <dependency>
             <groupId>org.siani.cottons</groupId>
             <artifactId>cotton-utils</artifactId>
-            <version>1.0.4</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.siani.teseo</groupId>
             <artifactId>server</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.teseo</groupId>
+            <artifactId>jmx</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>

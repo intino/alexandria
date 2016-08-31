@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-    <id>org.siani.forrest</id>
+    <id>org.siani.teseo</id>
     <name>Teseo</name>
     <version>1.0.0</version>
     <vendor email="teseo@siani.es" url="http://www.siani.es">Siani</vendor>
@@ -11,20 +11,9 @@
     <change-notes><![CDATA[
       1.1.0
         - Support of modules with no tara facet
-        - Improved stability
-      1.0.4
-        - Updated client exporting.
-        - Updated teseo dependencies.
-      1.0.3
-        - Fixed server creating.
-        - Updated application.
-      1.0.2
-        - Added Client Exportation to Artifactory
-      1.0.1
-        - Added button in tools menu
-        - Added error message in case of non read stash
     ]]>
     </change-notes>
+
 
     <idea-version since-build="141.0"/>
     <depends>siani.dev.tara</depends>

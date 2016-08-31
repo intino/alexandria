@@ -1,5 +1,5 @@
 def type(action)
-	package $package+validname.action;
+	package $package+validname.actions;
 
 	import tara.magritte.Graph;
 

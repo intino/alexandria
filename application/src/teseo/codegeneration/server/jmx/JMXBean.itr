@@ -11,13 +11,13 @@ def type(jmx)
             this.graph = graph;
         }
 
-        $action
+        $action...[$NL$NL]
     }
 end
 
 def type(action) trigger(action)
     public [$returnType?void] execute$name+firstUpperCase($parameter...[, ]) {
-        [$returnType+return ]new $package+validname.action.$name+firstUpperCase~Action(graph).execute($parameter+parameterName...[, ]);
+        [$returnType+return ]new $package+validname.actions.$name+firstUpperCase~Action(graph).execute($parameter+parameterName...[, ]);
     }
 end
 

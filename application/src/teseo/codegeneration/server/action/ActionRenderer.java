@@ -42,7 +42,7 @@ public class ActionRenderer {
 	}
 
 	private File destinyPackage(File destiny) {
-		return new File(destiny, "action");
+		return new File(destiny, "actions");
 	}
 
 }

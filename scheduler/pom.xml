@@ -31,7 +31,6 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-
         <outputDirectory>../out/production/scheduling</outputDirectory>
         <testOutputDirectory>../out/test/scheduling</testOutputDirectory>
         <directory>../out/build/scheduler</directory>
