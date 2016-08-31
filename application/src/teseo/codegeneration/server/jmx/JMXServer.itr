@@ -1,0 +1,28 @@
+def type(jmx)
+	package $package+validname;
+
+    import org.siani.teseo.jmx.JMXServer;
+    import tara.magritte.Graph;
+
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class $name+firstUpperCase~JMX {
+
+    	public JMXServer init(int port, Graph graph) {
+    		JMXServer server = new JMXServer(mbClasses(graph));
+    		server.init(port);
+    		return server;
+    	}
+
+    	private Map<String, Object$[]> mbClasses(Graph graph) {
+            Map<String, Object$[]> map = new HashMap<>();
+            $trigger+inmap
+            return map;
+    	}
+    }
+end
+
+def trigger(inmap)
+    map.put($value+firstUpperCase+quoted, new Object$[]{graph});
+end

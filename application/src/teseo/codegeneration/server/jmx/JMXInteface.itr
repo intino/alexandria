@@ -1,0 +1,12 @@
+def type(jmx)
+	package $package+validname.jmx;
+
+    public interface $name+firstUpperCase~MBean {
+
+        $action...[$NL$NL]
+    }
+end
+
+def type(action) trigger(action)
+    [$returnType?void] execute$name+firstUpperCase($parameter...[, ]);
+end

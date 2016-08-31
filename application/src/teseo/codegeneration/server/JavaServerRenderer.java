@@ -7,8 +7,10 @@ import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Application;
 import teseo.Resource;
-import teseo.codegeneration.server.action.ActionRenderer;
 import teseo.codegeneration.schema.SchemaRenderer;
+import teseo.codegeneration.server.action.ActionRenderer;
+import teseo.codegeneration.server.jmx.JMXTriggerRenderer;
+import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
 
@@ -35,6 +37,7 @@ public class JavaServerRenderer {
 		Files.removeDir(gen);
 		web(gen, src, packageName);
 		scheduling(gen, packageName);
+		jmx(gen, packageName);
 		action(src, packageName);
 	}
 
@@ -51,6 +54,11 @@ public class JavaServerRenderer {
 	private void scheduling(File gen, String packageName) {
 		new ScheduledTriggerRenderer(graph).execute(gen, packageName);
 		new SchedulerRenderer(graph).execute(gen, packageName);
+	}
+
+	private void jmx(File gen, String packageName) {
+		new JMXTriggerRenderer(graph).execute(gen, packageName);
+		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
 	private void processApplication(Application application) {
@@ -76,7 +84,7 @@ public class JavaServerRenderer {
 	private Template template() {
 		Template template = JavaServerTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-","").toLowerCase());
+		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;
 	}
 }

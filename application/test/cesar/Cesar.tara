@@ -1,10 +1,10 @@
 dsl Teseo
 
 
-Action deploy
+Action deploy > returnType = "String"
 
-Action logServer
-Action logProject
+Action logServer > returnType = "String"
+Action logProject > returnType = "String"
 Action codeAnalysis
 
 Application(name = "app", path = "/app") app

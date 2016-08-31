@@ -10,7 +10,6 @@ import teseo.scheduled.application.ScheduledTrigger;
 import java.io.File;
 import java.util.List;
 
-import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
 public class ScheduledTriggerRenderer {
@@ -45,10 +44,6 @@ public class ScheduledTriggerRenderer {
 		final Template template = ScheduledTriggerTemplate.create();
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;
-	}
-
-	private boolean alreadyRendered(ScheduledTrigger trigger) {
-		return javaFile(destinyPackage(), trigger.name() + "Trigger").exists();
 	}
 
 	private File destinyPackage() {

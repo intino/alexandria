@@ -101,7 +101,7 @@ Facet Type on Data
 		var string type = @schemaElementName is reactive private
 
 Concept Action
-
+	var string returnType = "void"
 
 Facet Scheduled on Application.Trigger is abstract
 	var boolean startOnInit
