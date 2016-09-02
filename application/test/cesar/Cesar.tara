@@ -2,7 +2,7 @@ dsl Teseo
 
 Application(serversSchema schedulesSchema loggingSchema) app
 	Channel rest > consumers = empty
-	Channel scheduling > consumers = empty
+	Channel scheduling > consumers = codeAnalysis serverLogging projectLogging
 
 Schema serversSchema
 	Element(name = "")
@@ -76,11 +76,10 @@ Query(channel = app.rest, execute = '', schema = serversSchema) readServers
 
 Action(channel = app.rest, execute = '', schema = loggingSchema) serverLogging
 Action(channel = app.rest, execute = '', schema = loggingSchema) projectLogging
-Action(channel = app.rest, execute = '', empty) codeAnalysis
+Action(channel = app.rest, execute = '', schema = empty) codeAnalysis
 
 
 //--------------------- CONSUL ---------------------//
-
 Application(deploySchema loggingSchema) consulApp
 	Channel jmx
 		consumers = deploy retract logProject logServer

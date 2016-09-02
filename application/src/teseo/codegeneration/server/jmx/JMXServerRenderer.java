@@ -6,7 +6,6 @@ import tara.magritte.Graph;
 import tara.magritte.Layer;
 import teseo.Application;
 import teseo.helpers.Commons;
-import teseo.jmx.application.JMXTrigger;
 
 import java.io.File;
 import java.util.List;

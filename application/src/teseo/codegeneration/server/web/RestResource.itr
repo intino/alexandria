@@ -1,5 +1,5 @@
 def type(action) !type(impl)
-	package $package.actions;
+	package $package.resources;
 
 	import teseo.framework.actions.Action;
 	import teseo.Error;
@@ -35,7 +35,7 @@ def type(action) !type(impl)
 end
 
 def type(action & impl)
-	package $package.actions;
+	package $package.resources;
 
 	import teseo.framework.actions.Action;
 	import teseo.Error;

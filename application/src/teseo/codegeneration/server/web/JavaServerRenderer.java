@@ -43,7 +43,7 @@ public class JavaServerRenderer {
 
 	private void web(File gen, File src, String packageName) {
 		new SchemaRenderer(graph).execute(destination, packageName);
-		new JavaServerActionRenderer(graph).execute(gen, src, packageName);
+		new RestResourceRenderer(graph).execute(gen, src, packageName);
 		applications.forEach(this::processApplication);
 	}
 

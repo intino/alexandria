@@ -25,12 +25,6 @@ def type(scheduler)
 			}
 		}
 
-		$schedule+create...[$NL]
-
-		public static void create(Class triggerClass, TeseoScheduler scheduler, Map<String, Object> parameters) {
-			$schedule+switch
-		}
-
 		private static Set<Trigger> newSet(Trigger... triggers) {
 			LinkedHashSet<Trigger> set = new LinkedHashSet<>();
 			java.util.Collections.addAll(set, triggers);
@@ -39,24 +33,7 @@ def type(scheduler)
 	}
 end
 
-def type(schedule) !type(onStart) trigger(create)
-	public static void $name+SnakeCaseToCamelCase+firstLowerCase(TeseoScheduler scheduler, Map<String, Object> parameters) {
-		try {
-			JobDetail job = newJob($name+SnakeCaseToCamelCase~Trigger.class).withIdentity("$name").build();
-			for (Map.Entry<String, Object> entry : parameters.entrySet())
-				job.getJobDataMap().put(entry.getKey(), entry.getValue());
-			scheduler.scheduleJob(job, newSet($trigger...[, ]), true);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
-	}
-end
-
-def type(schedule) !type(onStart) trigger(switch)
-	if ($name+SnakeCaseToCamelCase~Trigger.class.equals(triggerClass)) $name+SnakeCaseToCamelCase+firstLowerCase(scheduler, parameters);
-end
-
-def type(schedule & onStart) trigger(init)
+def type(schedule) trigger(init)
 	job = newJob($name+SnakeCaseToCamelCase~Trigger.class).withIdentity("$name").build();
 	job.getJobDataMap().put("graph", graph);
 	scheduler.scheduleJob(job, newSet($trigger...[, ]), true);
@@ -66,6 +43,6 @@ def type(cronTrigger) trigger(trigger)
 	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")).build()
 end
 
-def type(oneTimeTrigger) trigger(trigger)
+def type(oneBoot) trigger(trigger)
 	newTrigger().startNow().build()
 end
