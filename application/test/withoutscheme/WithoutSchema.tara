@@ -1,7 +1,6 @@
 dsl Teseo
 
 
-Application(name = "happy-sense", path = "")
-	Api(title = "Interface for recovering all dashboard information", path = "/dashboard")
-		Resource(name = "today", title="Today opinions", path = "/today", method = Get)
-			Response(code = SuccessOk) as Text
+Service (title = "Interface for recovering all dashboard information", path = "/dashboard") as REST
+	Resource(name = "today", title="Today opinions", path = "/today", method = Get)
+		Response(code = SuccessOk) as Text

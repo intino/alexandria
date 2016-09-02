@@ -11,10 +11,15 @@ def type(action)
     		this.graph = graph;
     	}
 
-		public [$returnType?void] execute($parameter...[, ]) {
+		public [$returnType?void] execute($parameter+withType...[, ]) {
             $returnType+return
 		}
 	}
+end
+
+
+def type(parameter) trigger(withType)
+    $type $name
 end
 
 def attribute(void) trigger(return)

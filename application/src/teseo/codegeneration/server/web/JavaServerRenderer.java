@@ -8,9 +8,9 @@ import tara.magritte.Graph;
 import teseo.Application;
 import teseo.Resource;
 import teseo.codegeneration.schema.SchemaRenderer;
-import teseo.codegeneration.server.action.ActionRenderer;
+import teseo.codegeneration.action.ActionRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
-import teseo.codegeneration.server.jmx.JMXTriggerRenderer;
+import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
 
@@ -53,7 +53,7 @@ public class JavaServerRenderer {
 	}
 
 	private void jmx(File gen, String packageName) {
-		new JMXTriggerRenderer(graph).execute(gen, packageName);
+		new JMXOperationsServiceRenderer(graph).execute(gen, packageName);
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 

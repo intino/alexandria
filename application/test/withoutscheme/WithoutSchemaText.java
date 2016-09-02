@@ -1,10 +1,10 @@
 package withoutscheme;
 
 import tara.magritte.Graph;
-import teseo.Application;
 import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
 import teseo.codegeneration.server.web.JavaServerRenderer;
+import teseo.rest.RESTService;
 
 import java.io.File;
 
@@ -14,6 +14,6 @@ public class WithoutSchemaText {
         Graph withoutSchema = Graph.load("WithoutSchema").wrap(TeseoApplication.class);
         File genFolder = new File("test-gen", "withoutSchema");
         new JavaServerRenderer(withoutSchema).execute(genFolder, genFolder, "withoutSchema");
-        withoutSchema.find(Application.class).forEach(a -> new JavaAccessorRenderer(a).execute(new File("test-gen/" + a.name(), "withoutSchema"), "withoutSchema"));
+        withoutSchema.find(RESTService.class).forEach(rs -> new JavaAccessorRenderer(rs).execute(new File("test-gen/" + rs.name(), "withoutSchema"), "withoutSchema"));
     }
 }

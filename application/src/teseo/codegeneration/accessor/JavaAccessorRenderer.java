@@ -3,7 +3,6 @@ package teseo.codegeneration.accessor;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import teseo.Application;
 import teseo.Resource;
 import teseo.Schema;
 import teseo.codegeneration.schema.SchemaRenderer;
@@ -13,6 +12,7 @@ import teseo.file.FileData;
 import teseo.helpers.Commons;
 import teseo.html.HtmlData;
 import teseo.object.ObjectData;
+import teseo.rest.RESTService;
 import teseo.type.TypeData;
 
 import java.io.File;
@@ -22,29 +22,29 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static teseo.helpers.Commons.writeFrame;
 
 public class JavaAccessorRenderer {
-	private final Application application;
+	private final RESTService service;
 	private File destination;
 	private String packageName;
 
-	public JavaAccessorRenderer(Application application) {
-		this.application = application;
+	public JavaAccessorRenderer(RESTService application) {
+		this.service = application;
 	}
 
 	public void execute(File destination, String packageName) {
 		this.destination = destination;
 		this.packageName = packageName;
-		new SchemaRenderer(application.graph()).execute(destination, packageName);
-		processApplication(application);
+		new SchemaRenderer(service.graph()).execute(destination, packageName);
+		processService(service);
 	}
 
-	private void processApplication(Application application) {
+	private void processService(RESTService restService) {
 		Frame frame = new Frame().addTypes("accessor");
-		frame.addSlot("name", application.name());
+		frame.addSlot("name", restService.name());
 		frame.addSlot("package", packageName);
-		if (!application.graph().find(Schema.class).isEmpty())
+		if (!restService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("resources", (AbstractFrame[]) processResources(application.node().findNode(Resource.class)));
-		writeFrame(destination, snakeCaseToCamelCase(application.name()) + "Accessor", getTemplate().format(frame));
+		frame.addSlot("resources", (AbstractFrame[]) processResources(restService.node().findNode(Resource.class)));
+		writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {

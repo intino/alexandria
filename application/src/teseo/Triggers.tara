@@ -3,8 +3,8 @@ dsl Proteo
 
 use Teseo
 
-Concept Trigger extends Producer
-	has Schema
+Concept Trigger
+	var Action[] actions
 
 Facet Scheduled on Trigger is abstract
 

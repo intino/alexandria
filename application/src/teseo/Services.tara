@@ -33,7 +33,7 @@ Facet REST on Service
 			var string description = ""
 			var string url
 
-Concept Resource extends Producer is component
+Concept Resource
 	var string name
 	var string title
 	var string description = ""
@@ -49,14 +49,6 @@ Concept Resource extends Producer is component
 		var string description = ""
 
 Facet JMX on Service
-	Concept Operation extends Producer
-		var Schema schema
-		Concept Parameter extends Data
-			var string name
-	Concept Attribute extends Producer
-	Concept Notification extends Consumer
-
-
-
-
-
+	Concept Operation
+		var Action action
+	Concept Notification

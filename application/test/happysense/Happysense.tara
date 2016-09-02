@@ -1,18 +1,17 @@
 dsl Teseo
 
-Application(path = "", name = "happysense-dashboard")
-	Api(title = "Interface for recovering all dashboard information", path = "/dashboard")
-		Resource(title="List of categorizations", path = "/categorizations", method = Get, name="categorizations")
-			Response(code = SuccessOk) as Object(schema = CategorizationCatalogResponseSchema)
+Service (title = "Interface for recovering all dashboard information", path = "/dashboard") as REST
+	Resource(title="List of categorizations", path = "/categorizations", method = Get, name="categorizations")
+		Response(code = SuccessOk) as Object(schema = CategorizationCatalogResponseSchema)
 
-		Resource(title="Opinions summary", path = "/summary", method = Get, name = "summary")
-			Response(code = SuccessOk) as Object(schema = SummaryResponseSchema)
+	Resource(title="Opinions summary", path = "/summary", method = Get, name = "summary")
+		Response(code = SuccessOk) as Object(schema = SummaryResponseSchema)
 
-		Resource(title="Summary of opinions at some instant", path = "/snapshot", method = Get, name="snapshot")
-			Parameter(name = "scale", in = query) as Text
-			Parameter(name = "range", in = query) as Object(schema = RangeSchema)
-			Parameter(name = "filters", in = query) as Object(schema = FilterListSchema)
-			Response(code = SuccessOk) as Object(schema = OpinionSnapshotResponseSchema)
+	Resource(title="Summary of opinions at some instant", path = "/snapshot", method = Get, name="snapshot")
+		Parameter(name = "scale", in = query) as Text
+		Parameter(name = "range", in = query) as Object(schema = RangeSchema)
+		Parameter(name = "filters", in = query) as Object(schema = FilterListSchema)
+		Response(code = SuccessOk) as Object(schema = OpinionSnapshotResponseSchema)
 
 Schema RangeSchema
 	Element(name="range")
