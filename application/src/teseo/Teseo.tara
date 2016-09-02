@@ -1,78 +1,23 @@
 dsl Proteo
 
-Concept Data is abstract
-
-!! Application contains a set of APIs to expose
+!! Application contains a set of services to expose
 Concept Application
-	var string name
-	var string path
-	var string[] consumes = empty
-	var string[] produces = empty
-	Concept:{0..1} Info
-		var string title
-		var string version
-		var string description = ""
-		var string termsOfService = ""
-	Concept:{0..1} Contact
-		var string name = ""
-		var string url = ""
-		var string email = ""
-	Concept:{0..1} License
-		var string name
-		var string url = ""
-	Concept Tag
-		var string name
-		var string description = ""
-		Concept Document
-			var string description = ""
-			var string url
-	Concept:{0..1} Authentication
-		var string todo
-	!! API contains a portion of the resources that the application admits. This way, resources can be organised in different APIs
-	Concept Api
-		var string title
-		var string description = ""
-		var string path
-		var word[]:{http https ws wss} protocols = https
-		has Schema
-		has:{1..*} Resource
-	!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
-	Concept Trigger
-		var Action[] actions
+	has Channel
+	has Schema
 
-!! Schemas allows to define how objects are. This objects can be provided as either parameter or response
-Concept Schema
-	!! Root element of the object described. All schemas have one and only one root element
-	Concept:{1..1} Element
-		var string name
-		!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
-		Concept:{0..1} AttributeMap
-		!! Attribute of the element or member
-		Concept Attribute extends Data
-			var string name
-			var boolean required = true
-			var boolean multiple = false
-		Concept Member extends Element
-			var string name
-			var boolean required = false
-			var boolean multiple = true
+Concept Channel
+	var Consumer[] consumers = empty is private
+	var function:Add addConsumer = '' is private
+	var function:Notify notifyConsumers = '' is private
 
-Concept Resource is component
-	var string name
-	var string title
-	var string description = ""
-	var string path
-	var word:{Get Post Put Delete Options Head Patch} method
-	Concept Parameter extends Data
-		var string name
-		var string description = ""
-		var word:{body path form header query} in
-		var boolean required = true
-	Concept:{1..*} Response extends Data
-		var word:ResponseCodes code
-		var string description = ""
+Concept Consumer is abstract
+	var Channel channel
+	var function:Execute execute
 
-Facet Type on Data
+Concept Producer is abstract
+	var Channel channel
+
+Facet DataType on Data
 	var string type is reactive private
 	sub Real
     	var double defaultValue = 0
@@ -100,37 +45,22 @@ Facet Type on Data
 		var Schema schema
 		var string type = @schemaElementName is reactive private
 
-Concept Action
-	var string returnType = "void"
 
-Facet Scheduled on Application.Trigger is abstract
-	var boolean startOnInit
-	var string mean = ""
+Concept Data is abstract
 
-!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
-Facet Cron extends Scheduled
-	var string pattern
-	var boolean startOnInit = true
-
-Facet OneTime extends Scheduled
-	var string mean = "One time"
-
-Facet ProcessWatcher on Application.Trigger
-	var string processName
-	var word[]:{OnStart OnTerminate} events
-	var function:ProcessChecker check
-
-Facet DirectoryWatcher on Application.Trigger
-	var resource directory
-	var word[]:{OnCreate OnDelete} events
-	var function:DirectoryChecker check
-
-Facet JMSQueueWatcher on Application.Trigger
-	var string queue
-
-Facet JMSTopicWatcher on Application.Trigger
-	var string topic
-
-Facet JMSRequest on Application.Trigger
-
-Facet JMX on Application.Trigger
+!! Schemas allows to define how objects are. This objects can be provided as either parameter or response
+Concept Schema
+	!! Root element of the object described. All schemas have one and only one root element
+	Concept:{1..1} Element
+		var string name
+		!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
+		Concept:{0..1} AttributeMap
+		!! Attribute of the element or member
+		Concept Attribute extends Data
+			var string name
+			var boolean required = true
+			var boolean multiple = false
+		Concept Member extends Element
+			var string name
+			var boolean required = false
+			var boolean multiple = true

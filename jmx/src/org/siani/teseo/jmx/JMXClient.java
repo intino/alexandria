@@ -1,5 +1,9 @@
 package org.siani.teseo.jmx;
 
+import com.sun.tools.attach.AttachNotSupportedException;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
+
 import javax.management.*;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
@@ -8,66 +12,83 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 
 public class JMXClient {
 
-
+	private static final String CONNECTOR = "com.sun.management.jmxremote.localConnectorAddress";
 	private JMXServiceURL url = null;
 
 
 	public JMXClient(String serverDirection, int port) {
 		try {
-			url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + serverDirection + ":" + port + "/server");
+			url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + serverDirection + ":" + port + "/jmxrmi");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public JMXConnection connect(Map<String, Object[]> mbClasses) {
+	public JMXClient(String url) {
+		try {
+			this.url = new JMXServiceURL(url);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<String> allJMXLocalURLs() throws IOException {
+		List<String> list = new ArrayList<>();
+		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
+		for (VirtualMachineDescriptor desc : vms) {
+			VirtualMachine vm;
+			try {
+				vm = VirtualMachine.attach(desc);
+			} catch (AttachNotSupportedException e) {
+				continue;
+			}
+			Properties props = vm.getAgentProperties();
+			String connectorAddress = props.getProperty(CONNECTOR);
+			if (connectorAddress != null) list.add(connectorAddress);
+		}
+		return list;
+	}
+
+	public JMXConnection connect() {
 		if (url == null) return null;
 		try {
 			JMXConnector connector = JMXConnectorFactory.connect(url, null);
 			MBeanServerConnection connection = connector.getMBeanServerConnection();
-			return new JMXConnection(connection, connector, registerBeans(connection, mbClasses));
-		} catch (IOException | MalformedObjectNameException | ReflectionException | InstanceAlreadyExistsException | NotCompliantMBeanException | MBeanException e) {
+			return new JMXConnection(connection, connector);
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
 
-	private List<ObjectName> registerBeans(MBeanServerConnection connection, Map<String, Object[]> mbClasses) throws MalformedObjectNameException, IOException, NotCompliantMBeanException, ReflectionException, MBeanException, InstanceAlreadyExistsException {
-		List<ObjectName> objectNames = new ArrayList<>();
-		String domain = connection.getDefaultDomain();
-
-		for (String mbClass : mbClasses.keySet()) {
-			ObjectName stdMBeanName = new ObjectName(domain + ":type=" + mbClass + ",name=2");
-			connection.createMBean(mbClass, stdMBeanName, mbClasses.get(mbClass), null);
-			objectNames.add(stdMBeanName);
-		}
-		return objectNames;
-	}
-
 	public class JMXConnection {
 		private final MBeanServerConnection connection;
 		private final JMXConnector connector;
-		private final List<ObjectName> beans;
+		private List<ObjectName> beans;
 
-		JMXConnection(MBeanServerConnection connection, JMXConnector connector, List<ObjectName> beans) {
+		JMXConnection(MBeanServerConnection connection, JMXConnector connector) {
 			this.connection = connection;
 			this.connector = connector;
-			this.beans = beans;
+			try {
+				this.beans = new ArrayList<>(this.connection.queryNames(null, null));
+			} catch (IOException e) {
+				this.beans = new ArrayList<>();
+			}
 		}
 
 		public <T> T mBean(Class<T> mbClass) {
-			ObjectName objectName = findObjectName(mbClass.getName().replace("MBean", ""));
+			ObjectName objectName = findObjectName(mbClass.getName());
 			if (objectName == null) {
 				System.err.println("MBClass not registered");
 				return null;
 			}
-			return JMX.isMXBeanInterface(mbClass) ? JMX.newMBeanProxy(connection, objectName, mbClass, true) : null;
+			return JMX.newMBeanProxy(connection, objectName, mbClass, true);
 		}
 
 		private ObjectName findObjectName(String mbClass) {

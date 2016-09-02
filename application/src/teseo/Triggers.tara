@@ -1,0 +1,39 @@
+dsl Proteo
+
+
+use Teseo
+
+!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
+Concept Trigger extends Producer
+	has Schema
+
+Facet Scheduled on Trigger is abstract
+
+!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
+Facet Cron extends Scheduled
+	var string pattern
+	var string mean = ""
+
+Facet Boot extends Scheduled
+
+Facet ProcessWatcher on Trigger
+	var string processName
+	var word[]:{OnStart OnTerminate} events
+	var function:ProcessChecker check
+
+Facet DirectoryWatcher on Trigger
+	var resource directory
+	var word[]:{OnCreate OnDelete} events
+	var function:DirectoryChecker check
+
+Facet JMSQueueWatcher on Trigger
+	var string queue
+
+Facet JMSTopicWatcher on Trigger
+	var string topic
+
+Facet JMSRequest on Trigger
+
+
+
+

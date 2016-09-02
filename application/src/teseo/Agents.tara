@@ -1,0 +1,13 @@
+dsl Proteo
+
+use Teseo
+
+Concept Query extends Consumer
+	var Schema schema is concept
+
+Concept Action extends Consumer
+	has Schema is concept
+
+
+
+

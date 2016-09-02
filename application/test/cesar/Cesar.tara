@@ -1,23 +1,21 @@
 dsl Teseo
 
 
-Action deploy > returnType = "String"
-
+Action deploy
 Action logServer > returnType = "String"
 Action logProject > returnType = "String"
 Action codeAnalysis
 
-Application(name = "app", path = "/app") app
-	Trigger(actions = deploy) runDeployOneTime as OneTime(startOnInit = false)
-	Trigger(codeAnalysis) scheduleCodeAnalysis as Cron(mean = "everyDay", pattern ="0 0 11 * * ?")
-	Trigger(logServer) scheduleLogServer as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-	Trigger(logProject) scheduleLogProject as Cron(pattern = "0 * * * * *", mean = "everyMinute")
+Trigger(actions = deploy) runDeployOneTime as Boot
+Trigger(codeAnalysis) scheduleCodeAnalysis as Cron(mean = "everyDay", pattern ="0 0 11 * * ?")
+Trigger(logServer) scheduleLogServer as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+Trigger(logProject) scheduleLogProject as Cron(pattern = "0 * * * * *", mean = "everyMinute")
 
-	Trigger(deploy) runJMXDeploy as JMX
+Trigger(deploy) runJMXDeploy as JMX
 
-	Trigger(empty) as ProcessWatcher(processName="", events = OnStart OnTerminate, check = 'return true')
-	Trigger(empty) as DirectoryWatcher(directory="sample", events = OnCreate OnDelete, check = 'return true')
+Trigger(empty) as ProcessWatcher(processName="", events = OnStart OnTerminate, check = 'return true')
+Trigger(empty) as DirectoryWatcher(directory="sample", events = OnCreate OnDelete, check = 'return true')
 
-	Trigger(empty) as JMSQueueWatcher(queue = "")
-	Trigger(empty) as JMSTopicWatcher(topic = "")
-	Trigger(empty) as JMSRequest
+Trigger(empty) as JMSQueueWatcher(queue = "")
+Trigger(empty) as JMSTopicWatcher(topic = "")
+Trigger(empty) as JMSRequest

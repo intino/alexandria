@@ -1,0 +1,63 @@
+dsl Proteo
+
+use Teseo
+
+!! TODO
+Concept Service
+
+Facet REST on Service
+	var string title
+	var string description = ""
+	var string path
+	var word[]:{http https ws wss} protocols = https
+	has Schema
+	Concept:{1..*} Resource  extends Producer
+    	var string name
+	Concept:{0..1} Authentication
+		var string todo
+	Concept:{0..1} Info
+		var string title
+		var string version
+		var string description = ""
+		var string termsOfService = ""
+	Concept:{0..1} Contact
+		var string name = ""
+		var string url = ""
+		var string email = ""
+	Concept:{0..1} License
+		var string name
+		var string url = ""
+	Concept Tag
+		var string name
+		var string description = ""
+		Concept Document
+			var string description = ""
+			var string url
+
+Facet JMX on Service
+	Concept Operation extends Producer
+		var Schema schema
+		Concept Parameter extends Data
+			var string name
+	Concept Attribute extends Producer
+	Concept Notification extends Consumer
+
+
+Facet Method on REST.Resource
+	var string title
+	var string description = ""
+	var string path
+	Concept Parameter extends Data
+		var string name
+		var string description = ""
+		var word:{body path form header query} in
+		var boolean required = true
+	Concept:{1..*} Response extends Data
+		var word:ResponseCodes code
+		var string description = ""
+	sub Get
+	sub Post
+	sub Put
+	sub Delete
+
+
