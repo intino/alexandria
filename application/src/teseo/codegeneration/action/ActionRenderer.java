@@ -28,7 +28,7 @@ public class ActionRenderer {
 		frame.addSlot("name", action.name());
 		frame.addSlot("package", packageName);
 		if (action.schema() != null) setupSchema(action.schema(), frame);
-		frame.addSlot("returnType", action.response().asType().type());
+		frame.addSlot("returnType", action.response() == null ? "void" : action.response().asType().type());
 		if (!alreadyRendered(destiny, action))
 			writeFrame(destinyPackage(destiny), action.name() + "Action", template().format(frame));
 	}

@@ -14,5 +14,10 @@ def type(scheduled)
 end
 
 def type(action)
-    new $package+validname.actions.$name+firstUpperCase~Action(graph).execute();
+    new $package+validname.actions.$name+firstUpperCase~Action(graph).execute($parameter+name...[, ]);
+end
+
+
+def type(parameter) trigger(name)
+    $name
 end

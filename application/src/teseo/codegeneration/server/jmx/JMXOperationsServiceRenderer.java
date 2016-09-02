@@ -3,6 +3,8 @@ package teseo.codegeneration.server.jmx;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
+import teseo.Action;
+import teseo.Schema;
 import teseo.jmx.JMXService;
 import teseo.jmx.JMXService.Operation;
 
@@ -47,8 +49,16 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private Frame frameOf(Operation operation) {
-		return new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", operation.action().name()).
-				addSlot("package", packageName).addSlot("returnType", "void").addSlot("parameters", "void");
+		final Action action = operation.action();
+		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", action.name()).
+				addSlot("package", packageName).addSlot("returnType", action.response() == null ? "void" : action.response().asType().type());
+		if (action.schema() != null) setupSchema(action.schema(), frame);
+		return frame;
+	}
+
+	private void setupSchema(Schema schema, Frame frame) {
+		for (Schema.Element.Attribute attribute : schema.element().attributeList())
+			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", attribute.asType().type()));
 	}
 
 	private Template template() {

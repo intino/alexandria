@@ -4,6 +4,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Action;
+import teseo.Schema;
 import teseo.scheduled.ScheduledTrigger;
 
 import java.io.File;
@@ -30,9 +31,17 @@ public class ScheduledTriggerRenderer {
 		Frame frame = new Frame().addTypes("scheduled");
 		frame.addSlot("name", trigger.name());
 		frame.addSlot("package", packageName);
-		for (Action action : trigger.actions())
-			frame.addSlot("action", new Frame().addTypes("action").addSlot("name", action.name()).addSlot("package", packageName));
+		for (Action action : trigger.actions()) {
+			final Frame actionFrame = new Frame().addTypes("action").addSlot("name", action.name()).addSlot("package", packageName);
+			if (action.schema() != null) setupSchema(action.schema(), frame);
+			frame.addSlot("action", actionFrame);
+		}
 		writeFrame(destinyPackage(), trigger.name() + "Trigger", template().format(frame));
+	}
+
+	private void setupSchema(Schema schema, Frame frame) {
+		for (Schema.Element.Attribute attribute : schema.element().attributeList())
+			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", attribute.asType().type()));
 	}
 
 	private Template template() {

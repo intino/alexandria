@@ -2,6 +2,8 @@ def type(action)
 	package $package+validname.actions;
 
 	import tara.magritte.Graph;
+    import java.time.*;
+    import java.util.*;
 
 	public class $name+firstUpperCase~Action {
 

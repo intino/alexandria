@@ -26,6 +26,9 @@ end
 def type(jmx) type(interface)
 	package $package+validname.jmx;
 
+	import java.util.*;
+    import java.time.*;
+
     public interface $name+firstUpperCase~JMX {
 
         $operation+signature...[$NL$NL]
@@ -33,13 +36,20 @@ def type(jmx) type(interface)
 end
 
 def type(operation) trigger(signature)
-    [$returnType?void] execute$name+firstUpperCase($parameter...[, ]);
+    [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]);
 end
+
+def type(parameter) trigger(withType)
+    $type $name
+end
+
 
 def type(jmx) type(implementation)
 	package $package+validname.jmx;
 
     import tara.magritte.Graph;
+    import java.util.*;
+    import java.time.*;
 
     public class $name+firstUpperCase implements $name+firstUpperCase~JMX {
 
@@ -54,9 +64,13 @@ def type(jmx) type(implementation)
 end
 
 def type(operation) trigger(implementation)
-    public [$returnType?void] execute$name+firstUpperCase($parameter...[, ]) {
-        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action(graph).execute($parameter+parameterName...[, ]);
+    public [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]) {
+        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action(graph).execute($parameter+name...[, ]);
     }
+end
+
+def type(parameter) trigger(name)
+    $name
 end
 
 def attribute(void) trigger(return)
