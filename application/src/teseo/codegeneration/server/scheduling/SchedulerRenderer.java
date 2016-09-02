@@ -5,9 +5,9 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Application;
-import teseo.cron.application.CronTrigger;
+import teseo.cron.CronTrigger;
 import teseo.helpers.Commons;
-import teseo.scheduled.application.ScheduledTrigger;
+import teseo.scheduled.ScheduledTrigger;
 
 import java.io.File;
 import java.util.List;
@@ -42,7 +42,6 @@ public class SchedulerRenderer {
 	private Frame processTrigger(ScheduledTrigger scheduledTrigger) {
 		final Frame schdule = new Frame().addTypes("schedule").addSlot("name", scheduledTrigger.name());
 		schdule.addTypes(scheduledTrigger.getClass().getSimpleName());
-		if (scheduledTrigger.startOnInit()) schdule.addTypes("onStart");
 		final Frame triggerFrame = new Frame().addTypes("trigger").addSlot("name", scheduledTrigger.id());
 		triggerFrame.addTypes(scheduledTrigger.getClass().getSimpleName());
 		if (scheduledTrigger.is(CronTrigger.class)) {

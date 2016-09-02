@@ -3,7 +3,7 @@ def type(jmx)
 
     import tara.magritte.Graph;
 
-    public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
+    public class $name+firstUpperCase implements $name+firstUpperCase~JMX {
 
         private final Graph graph;
 

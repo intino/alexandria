@@ -1,7 +1,7 @@
 def type(jmx)
 	package $package+validname.jmx;
 
-    public interface $name+firstUpperCase~MBean {
+    public interface $name+firstUpperCase~JMX {
 
         $action...[$NL$NL]
     }

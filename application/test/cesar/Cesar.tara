@@ -1,21 +1,107 @@
 dsl Teseo
 
+Application(serversSchema schedulesSchema loggingSchema) app
+	Channel rest > consumers = empty
+	Channel scheduling > consumers = empty
 
-Action deploy
-Action logServer > returnType = "String"
-Action logProject > returnType = "String"
-Action codeAnalysis
+Schema serversSchema
+	Element(name = "")
+Schema schedulesSchema
+	Element(name = "")
+Schema loggingSchema
+	Element(name = "")
 
-Trigger(actions = deploy) runDeployOneTime as Boot
-Trigger(codeAnalysis) scheduleCodeAnalysis as Cron(mean = "everyDay", pattern ="0 0 11 * * ?")
-Trigger(logServer) scheduleLogServer as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-Trigger(logProject) scheduleLogProject as Cron(pattern = "0 * * * * *", mean = "everyMinute")
+Service(title = "Cesar API", path = "") cesar as REST
+	Resource(name = "createSystem", title = "Create new system", path = "systems", method = Put, channel = app.rest)
+		Parameter(name = "name", in = path)
+		Parameter(name = "repository", in = query) as Text
+		Response(SuccessOk)
+		Response(ErrorBadRequest)
+	Resource(name = "systems", title = "List of systems", path = "systems", method = Get, channel = app.rest)
+		Response(SuccessOk) as Text
+		Response(ErrorBadRequest)
+	Resource(name = "system", title = "A system", path = "systems/:system", method = Get, channel = app.rest)
+		Parameter(name = "system", in = path) as Text
+		Response(SuccessOk) as Text
+		Response(ErrorBadRequest)
+	Resource(name = "updateApplication", title = "Update system", path = "systems/:system", method = Post, channel = app.rest)
+		Parameter(name = "system", in = path) as Text
+		Parameter(name = "enabled", in = query) as Bool
+		Response(SuccessOk) as Text
+		Response(ErrorBadRequest)
+	Resource(name = "createApplicationVersion", title = "Create new system version", path = "systems/:system", method = Put, channel = app.rest)
+		Parameter(name = "system", in = path) as Text
+		Parameter(name = "version", in = query) as Text
+		Response(SuccessOk) as Bool
+		Response(ErrorBadRequest)
+	Resource(name = "systemVersion", title = "Version of an system", path = "systems/:system/:version", method = Get, channel = app.rest)
+		Parameter(name = "system", in = path) as Text
+		Parameter(name = "verion", in = path) as Text
+		Response(SuccessOk) as Text
+		Response(ErrorBadRequest)
 
-Trigger(deploy) runJMXDeploy as JMX
+	Resource(name = "servers", title = "List of servers", path = "servers", method = Get, channel = app.rest)
+		Response(SuccessOk) as Text
+		Response(ErrorBadRequest)
+	Resource(name = "createServer", title = "Create server", path = "server", method = Put, channel = app.rest)
+		Parameter(name = "url", in = query) as Text
+		Parameter(name = "freeCPU", in = query) as Real
+		Parameter(name = "connections", in = query) as Integer
+		Response(SuccessOk)
+		Response(ErrorBadRequest)
+	Resource(name = "updateServer", title = "Update server", path = "servers/:server", method = Post, channel = app.rest)
+		Parameter(name = "server", in = path) as Text
+		Response(SuccessOk)
+		Response(ErrorBadRequest)
+	Resource(name = "deleteServer", title = "Delete server", path = "servers/:server", method = Delete, channel = app.rest)
+		Parameter(name = "server", in = path) as Text
+		Response(SuccessOk)
+		Response(ErrorBadRequest)
+	Resource(name = "deployApplication", title = "Deploy system", path = "servers/:server/:system", method = Post, channel = app.rest)
+		Parameter(name = "system", in = path) as Text
+		Parameter(name = "isPublic", in = query) as Bool
+		Response(SuccessOk)
+		Response(ErrorBadRequest)
 
-Trigger(empty) as ProcessWatcher(processName="", events = OnStart OnTerminate, check = 'return true')
-Trigger(empty) as DirectoryWatcher(directory="sample", events = OnCreate OnDelete, check = 'return true')
+Service(title = "Build API", path = "build") build as REST
+	Resource(name = "listWebHook", title = "", path = "webhooks", method= Post, channel = app.rest)
+		Response(code = SuccessOk)
+		Response(ErrorBadRequest)
 
-Trigger(empty) as JMSQueueWatcher(queue = "")
-Trigger(empty) as JMSTopicWatcher(topic = "")
-Trigger(empty) as JMSRequest
+Trigger(app.scheduling) scheduleCodeAnalysis as Cron(mean = "everyDay", pattern ="0 0 11 * * ?")
+Trigger(app.scheduling) scheduleServerLogging as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+Trigger(app.scheduling) scheduleProjectLogging as Cron(pattern = "0 * * * * *", mean = "everyMinute")
+
+Query(channel = app.rest, execute = '', schema = serversSchema) readServers
+
+Action(channel = app.rest, execute = '', schema = loggingSchema) serverLogging
+Action(channel = app.rest, execute = '', schema = loggingSchema) projectLogging
+Action(channel = app.rest, execute = '', empty) codeAnalysis
+
+
+//--------------------- CONSUL ---------------------//
+
+Application(deploySchema loggingSchema) consulApp
+	Channel jmx
+		consumers = deploy retract logProject logServer
+
+Schema deploySchema
+	Element(name = "")
+
+Schema loggingSchema
+	Element(name = "")
+
+Service consulManager as JMX
+	Operation(channel = consulApp.jmx, schema = deploySchema) deploy
+		Parameter("system") as Text
+		Parameter("isPublic") as Bool
+	Operation(channel = consulApp.jmx, schema = deploySchema) retract
+		Parameter("system") as Text
+		Parameter("isPublic") as Bool
+	Operation(channel = consulApp.jmx, schema = deploySchema) logProject
+	Operation(channel = consulApp.jmx, schema = deploySchema) logServer
+
+Action(channel = consulApp.jmx, execute = '', deploySchema) deploy
+Action(channel = consulApp.jmx, execute = '', deploySchema) retract
+Action(channel = consulApp.jmx, execute = '', loggingSchema) logProject
+Action(channel = consulApp.jmx, execute = '', loggingSchema) logServer

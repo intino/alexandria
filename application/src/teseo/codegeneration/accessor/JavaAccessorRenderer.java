@@ -1,5 +1,8 @@
 package teseo.codegeneration.accessor;
 
+import org.siani.itrules.Template;
+import org.siani.itrules.model.AbstractFrame;
+import org.siani.itrules.model.Frame;
 import teseo.Application;
 import teseo.Resource;
 import teseo.Schema;
@@ -11,9 +14,6 @@ import teseo.helpers.Commons;
 import teseo.html.HtmlData;
 import teseo.object.ObjectData;
 import teseo.type.TypeData;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;

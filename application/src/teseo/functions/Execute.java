@@ -1,8 +1,7 @@
 package teseo.functions;
 
 @FunctionalInterface
-public interface Add {
+public interface Execute {
 
-
-	void add();
+	void execute();
 }

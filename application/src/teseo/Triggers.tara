@@ -3,7 +3,6 @@ dsl Proteo
 
 use Teseo
 
-!! http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/crontrigger.html
 Concept Trigger extends Producer
 	has Schema
 
@@ -33,7 +32,3 @@ Facet JMSTopicWatcher on Trigger
 	var string topic
 
 Facet JMSRequest on Trigger
-
-
-
-

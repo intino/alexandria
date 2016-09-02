@@ -1,12 +1,12 @@
 dsl Proteo
 
 !! Application contains a set of services to expose
-Concept Application
+Concept:{1..*} Application
+	var Schema[] schemas
 	has Channel
-	has Schema
 
 Concept Channel
-	var Consumer[] consumers = empty is private
+	var Consumer[] consumers
 	var function:Add addConsumer = '' is private
 	var function:Notify notifyConsumers = '' is private
 
@@ -15,9 +15,9 @@ Concept Consumer is abstract
 	var function:Execute execute
 
 Concept Producer is abstract
-	var Channel channel
+	var Channel[] channel
 
-Facet DataType on Data
+Facet Type on Data
 	var string type is reactive private
 	sub Real
     	var double defaultValue = 0
@@ -44,7 +44,6 @@ Facet DataType on Data
 	sub Object
 		var Schema schema
 		var string type = @schemaElementName is reactive private
-
 
 Concept Data is abstract
 

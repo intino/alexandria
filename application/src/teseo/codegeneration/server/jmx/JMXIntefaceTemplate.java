@@ -1,10 +1,11 @@
 package teseo.codegeneration.server.jmx;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class JMXIntefaceTemplate extends Template {
 
@@ -18,7 +19,7 @@ public class JMXIntefaceTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "jmx"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".jmx;\n\npublic interface ")).add(mark("name", "firstUpperCase")).add(literal("MBean {\n\n    ")).add(mark("action").multiple("\n\n")).add(literal("\n}")),
+				rule().add((condition("type", "jmx"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".jmx;\n\npublic interface ")).add(mark("name", "firstUpperCase")).add(literal("JMX {\n\n    ")).add(mark("action").multiple("\n\n")).add(literal("\n}")),
 			rule().add((condition("type", "action")), (condition("trigger", "action"))).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("parameter").multiple(", ")).add(literal(");"))
 		);
 		return this;

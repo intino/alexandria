@@ -11,8 +11,7 @@ Facet REST on Service
 	var string path
 	var word[]:{http https ws wss} protocols = https
 	has Schema
-	Concept:{1..*} Resource  extends Producer
-    	var string name
+	has:{1..*} Resource
 	Concept:{0..1} Authentication
 		var string todo
 	Concept:{0..1} Info
@@ -34,6 +33,21 @@ Facet REST on Service
 			var string description = ""
 			var string url
 
+Concept Resource extends Producer is component
+	var string name
+	var string title
+	var string description = ""
+	var string path
+	var word:{Get Post Put Delete} method
+	Concept Parameter extends Data
+		var string name
+		var string description = ""
+		var word:{body path form header query} in
+		var boolean required = true
+	Concept:{1..*} Response extends Data
+		var word:ResponseCodes code
+		var string description = ""
+
 Facet JMX on Service
 	Concept Operation extends Producer
 		var Schema schema
@@ -43,21 +57,6 @@ Facet JMX on Service
 	Concept Notification extends Consumer
 
 
-Facet Method on REST.Resource
-	var string title
-	var string description = ""
-	var string path
-	Concept Parameter extends Data
-		var string name
-		var string description = ""
-		var word:{body path form header query} in
-		var boolean required = true
-	Concept:{1..*} Response extends Data
-		var word:ResponseCodes code
-		var string description = ""
-	sub Get
-	sub Post
-	sub Put
-	sub Delete
+
 
 

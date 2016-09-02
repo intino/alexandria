@@ -5,7 +5,7 @@ import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Action;
 import teseo.Application;
-import teseo.jmx.application.JMXTrigger;
+import teseo.Trigger;
 
 import java.io.File;
 import java.util.List;
@@ -30,10 +30,10 @@ public class JMXTriggerRenderer {
 	}
 
 	private void processApplication(Application application) {
-		application.node().findNode(JMXTrigger.class).forEach(this::processTrigger);
+		application.node().findNode(Trigger.class).forEach(this::processTrigger);
 	}
 
-	private void processTrigger(JMXTrigger trigger) {
+	private void processTrigger(Trigger trigger) {
 		Frame frame = new Frame().addTypes("jmx");
 		frame.addSlot("name", trigger.name());
 		frame.addSlot("package", packageName);

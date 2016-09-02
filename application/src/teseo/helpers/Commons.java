@@ -1,7 +1,7 @@
 package teseo.helpers;
 
-import teseo.Application;
 import teseo.Resource;
+import teseo.rest.RESTService;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,10 +41,9 @@ public class Commons {
     }
 
     public static String path(Resource resource) {
-        String basePath = cleanPath(resource.ownerAs(Application.class).path());
-        String path = cleanPath(resource.ownerAs(Application.Api.class).path());
+        String basePath = cleanPath(resource.ownerAs(RESTService.class).path());
         String resourcePath = cleanPath(resource.path());
-        return format(basePath) + format(path) + resourcePath;
+        return format(basePath) + resourcePath;
     }
 
     private static String cleanPath(String path) {
