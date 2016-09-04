@@ -4,8 +4,9 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Action;
-import teseo.Schema;
+import teseo.object.ObjectData;
 import teseo.scheduled.ScheduledTrigger;
+import teseo.type.TypeData;
 
 import java.io.File;
 import java.util.List;
@@ -33,15 +34,19 @@ public class ScheduledTriggerRenderer {
 		frame.addSlot("package", packageName);
 		for (Action action : trigger.actions()) {
 			final Frame actionFrame = new Frame().addTypes("action").addSlot("name", action.name()).addSlot("package", packageName);
-			if (action.schema() != null) setupSchema(action.schema(), frame);
+			if (!action.parameterList().isEmpty()) setupParameters(action.parameterList(), frame);
 			frame.addSlot("action", actionFrame);
 		}
 		writeFrame(destinyPackage(), trigger.name() + "Trigger", template().format(frame));
 	}
 
-	private void setupSchema(Schema schema, Frame frame) {
-		for (Schema.Element.Attribute attribute : schema.element().attributeList())
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", attribute.asType().type()));
+	private void setupParameters(List<Action.Parameter> parameters, Frame frame) {
+		for (Action.Parameter parameter : parameters)
+			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+	}
+
+	private String formatType(TypeData typeData) {
+		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	private Template template() {

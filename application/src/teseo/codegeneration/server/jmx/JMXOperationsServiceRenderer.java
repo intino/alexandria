@@ -4,9 +4,10 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Action;
-import teseo.Schema;
 import teseo.jmx.JMXService;
 import teseo.jmx.JMXService.Operation;
+import teseo.object.ObjectData;
+import teseo.type.TypeData;
 
 import java.io.File;
 import java.util.List;
@@ -51,14 +52,18 @@ public class JMXOperationsServiceRenderer {
 	private Frame frameOf(Operation operation) {
 		final Action action = operation.action();
 		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", action.name()).
-				addSlot("package", packageName).addSlot("returnType", action.response() == null ? "void" : action.response().asType().type());
-		if (action.schema() != null) setupSchema(action.schema(), frame);
+				addSlot("package", packageName).addSlot("returnType", action.response() == null ? "void" : formatType(action.response().asType()));
+		setupParameters(action.parameterList(), frame);
 		return frame;
 	}
 
-	private void setupSchema(Schema schema, Frame frame) {
-		for (Schema.Element.Attribute attribute : schema.element().attributeList())
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", attribute.asType().type()));
+	private String formatType(TypeData typeData) {
+		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+	}
+
+	private void setupParameters(List<Action.Parameter> parameters, Frame frame) {
+		for (Action.Parameter attribute : parameters)
+			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", formatType(attribute.asType())));
 	}
 
 	private Template template() {

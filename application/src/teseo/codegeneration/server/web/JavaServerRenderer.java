@@ -5,12 +5,12 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
-import teseo.Application;
 import teseo.Resource;
-import teseo.codegeneration.schema.SchemaRenderer;
+import teseo.Service;
 import teseo.codegeneration.action.ActionRenderer;
-import teseo.codegeneration.server.jmx.JMXServerRenderer;
+import teseo.codegeneration.schema.SchemaRenderer;
 import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
+import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
 
@@ -22,13 +22,13 @@ import static teseo.helpers.Commons.*;
 
 public class JavaServerRenderer {
 	private final Graph graph;
-	private final List<Application> applications;
+	private final List<Service> services;
 	private File destination;
 	private String packageName;
 
 	public JavaServerRenderer(Graph graph) {
 		this.graph = graph;
-		applications = this.graph.find(Application.class);
+		services = this.graph.find(Service.class);
 	}
 
 	public void execute(File gen, File src, String packageName) {
@@ -44,7 +44,7 @@ public class JavaServerRenderer {
 	private void web(File gen, File src, String packageName) {
 		new SchemaRenderer(graph).execute(destination, packageName);
 		new RestResourceRenderer(graph).execute(gen, src, packageName);
-		applications.forEach(this::processApplication);
+		services.forEach(this::processService);
 	}
 
 	private void scheduling(File gen, String packageName) {
@@ -61,14 +61,14 @@ public class JavaServerRenderer {
 		new ActionRenderer(graph).execute(destiny, packageName);
 	}
 
-	private void processApplication(Application application) {
+	private void processService(Service application) {
 		List<Resource> resources = application.node().findNode(Resource.class);
 		if (resources.isEmpty()) return;
 		Frame frame = new Frame().addTypes("server");
 		frame.addSlot("name", application.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("resources", (AbstractFrame[]) processResources(resources));
-		writeFrame(destination, snakeCaseToCamelCase(application.name()) + "Actions", template().format(frame));
+		writeFrame(destination, snakeCaseToCamelCase(application.name()) + "Resources", template().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {

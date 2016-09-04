@@ -2,7 +2,7 @@ dsl Teseo
 
 Service(title = "Cesar API", path = "") cesar as REST
 	Resource(name = "createSystem", title = "Create new system", path = "systems", method = Put)
-		Parameter(name = "name", in = path)
+		Parameter(name = "name", in = path) as Text
 		Parameter(name = "repository", in = query) as Text
 		Response(SuccessOk)
 		Response(ErrorBadRequest)
@@ -60,12 +60,8 @@ Service(title = "Build API", path = "build") build as REST
 Trigger(consulLogging) scheduleServerLogging as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
 Trigger(consulSystemLogging) scheduleSystemLogging as Cron(pattern = "0 * * * * *", mean = "everyMinute")
 
-Action(empty) consulLogging
-Action(schema = systemLoggingSchema) consulSystemLogging
-
-Schema systemLoggingSchema
-	Element(name = "")
-		Attribute(name = "systemID") as Text
+Action consulLogging
+Action consulSystemLogging
 
 //--------------------- CONSUL ---------------------//
 
@@ -75,19 +71,19 @@ Service consulManager as JMX
 	Operation(systemLogging) logSystem
 	Operation(serverLogging) logServer
 
-Action(deploySchema) deploy
-	Response as Bool
-Action(deploySchema) retract
+Action deploy
 	Response as Bool
 
-Action(loggingSchema) systemLogging
+Action retract
+	Response as Bool
+
+Action systemLogging
+	Parameter(name = "systemID") as Text
 	Response as Object(schema = loggingSchema)
-Action(loggingSchema) serverLogging
+Action serverLogging
+	Parameter(name = "systemID") as Text
 	Response as Object(schema = loggingSchema)
 
-
-Schema deploySchema
-	Element(name = "")
 
 Schema loggingSchema
 	Element("stateLog")

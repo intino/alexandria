@@ -2,7 +2,8 @@ dsl Proteo
 
 
 Concept Action
-	var Schema schema
+	Concept Parameter extends Data
+		var string name
 	Concept:{0..1} Response extends Data
 
 Facet Type on Data

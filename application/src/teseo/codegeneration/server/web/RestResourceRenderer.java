@@ -4,9 +4,9 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
-import teseo.Application;
 import teseo.Resource;
 import teseo.Schema;
+import teseo.Service;
 import teseo.helpers.Commons;
 
 import java.io.File;
@@ -14,26 +14,26 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class RestResourceRenderer {
-	private final List<Application> applications;
+class RestResourceRenderer {
+	private final List<Service> services;
 	private File genDestination;
 	private File srcDestination;
 	private String packageName;
 	private static final String RESOURCES = "resources";
 
-	public RestResourceRenderer(Graph graph) {
-		applications = graph.find(Application.class);
+	RestResourceRenderer(Graph graph) {
+		services = graph.find(Service.class);
 	}
 
 	public void execute(File genDestination, File srcDestination, String packageName) {
 		this.genDestination = genDestination;
 		this.srcDestination = srcDestination;
 		this.packageName = packageName;
-		applications.forEach(this::processApplication);
+		services.forEach(this::processService);
 	}
 
-	private void processApplication(Application application) {
-		application.node().findNode(Resource.class).forEach(this::processResource);
+	private void processService(Service service) {
+		service.node().findNode(Resource.class).forEach(this::processResource);
 	}
 
 	private void processResource(Resource resource) {

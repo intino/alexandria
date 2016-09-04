@@ -1,6 +1,7 @@
 def type(action) !type(impl)
 	package $package.resources;
 
+	import teseo.framework.actions.Action.Input;
 	import teseo.framework.actions.Action;
 	import teseo.Error;
 	import static teseo.Commons.error;
