@@ -18,11 +18,11 @@ class TeseoUtils {
 	static String findTeseo(Module module) {
 		final VirtualFile resourcesRoot = getResourcesRoot(module, false);
 		if (resourcesRoot == null) return null;
-		for (VirtualFile children : resourcesRoot.getChildren())
-			if (children.getName().toLowerCase().endsWith("-teseo" + STASH) || children.getName().equalsIgnoreCase(TESEO + STASH))
-				return children.getPath();
-		for (VirtualFile children : resourcesRoot.getChildren())
-			if (TESEO.equalsIgnoreCase(children.getExtension())) return children.getPath();
+		for (VirtualFile child : resourcesRoot.getChildren())
+			if (TESEO.equalsIgnoreCase(child.getExtension())) return child.getPath();
+		for (VirtualFile child : resourcesRoot.getChildren())
+			if (child.getName().toLowerCase().endsWith("-teseo" + STASH) || child.getName().equalsIgnoreCase(TESEO + STASH))
+				return child.getPath();
 		return null;
 	}
 

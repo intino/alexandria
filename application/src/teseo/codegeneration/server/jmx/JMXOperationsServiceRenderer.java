@@ -37,7 +37,7 @@ public class JMXOperationsServiceRenderer {
 		frame.addSlot("package", packageName);
 		for (Operation operation : service.operationList())
 			frame.addSlot("operation", frameOf(operation));
-		writeFrame(destinyPackage(), service.name() + "JMX", template().format(frame));
+		writeFrame(destinyPackage(), service.name() + "MBean", template().format(frame));
 	}
 
 	private void writeImplementation(JMXService service) {

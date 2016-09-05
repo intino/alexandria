@@ -51,7 +51,7 @@ def type(jmx) type(implementation)
     import java.util.*;
     import java.time.*;
 
-    public class $name+firstUpperCase implements $name+firstUpperCase~JMX {
+    public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
 
         private final Graph graph;
 
