@@ -17,20 +17,6 @@
       <profile default="true" name="Default" enabled="false">
         <processorPath useClasspath="true" />
       </profile>
-      <profile default="false" name="Annotation profile for server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="server" />
-      </profile>
-      <profile default="false" name="Annotation profile for core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="core" />
-      </profile>
       <profile default="false" name="Annotation profile for application" enabled="true">
         <sourceOutputDir name="../out/build/API/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/API/generated-test-sources/test-annotations" />
@@ -63,12 +49,26 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile default="false" name="Annotation profile for accessor-java" enabled="true">
+      <profile default="false" name="Annotation profile for rest-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
+      </profile>
+      <profile default="false" name="Annotation profile for rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="accessor" />
+      </profile>
+      <profile default="false" name="Annotation profile for rest-core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="core" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

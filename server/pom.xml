@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.siani.teseo</groupId>
-    <artifactId>server</artifactId>
+    <artifactId>rest-server</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -135,7 +135,7 @@
         </dependency>
         <dependency>
             <groupId>org.siani.teseo</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>rest-core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
