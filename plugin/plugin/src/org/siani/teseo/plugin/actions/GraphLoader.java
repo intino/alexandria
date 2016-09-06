@@ -19,6 +19,7 @@ class GraphLoader {
 
 
 	static Graph loadGraph(Module module, File teseoFile) {
+		if (!teseoFile.exists()) return null;
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		final ClassLoader temporalLoader = createClassLoader(new File(CompilerModuleExtension.getInstance(module).getCompilerOutputPath().getPath()));
 		Thread.currentThread().setContextClassLoader(temporalLoader);
