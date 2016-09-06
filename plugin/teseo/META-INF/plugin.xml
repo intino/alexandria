@@ -32,13 +32,13 @@
         <action id="CreateTeseoAPI" class="org.siani.teseo.plugin.actions.CreateServicesAction"
                 text="Create Teseo Services"
                 description="Create Teseo Services">
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt R"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <action id="ExportClient" class="org.siani.teseo.plugin.actions.ExportAccessorAction"
                 text="Export Teseo Accessor"
                 description="Export Teseo Accessor to Artifactory">
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt F"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <action id="GenerateApi" class="org.siani.teseo.plugin.actions.GenerateApiAction"

@@ -12,22 +12,14 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.CompilerModuleExtension;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
-import tara.io.StashDeserializer;
 import tara.magritte.Graph;
-import teseo.TeseoApplication;
 import teseo.codegeneration.server.web.JavaServerRenderer;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,33 +122,13 @@ public class CreateServicesAction extends Action implements DumbAware {
 					}
 					final File file = new File(teseoFile);
 					final File dest = file.getName().endsWith(TeseoUtils.STASH) ? new File(file.getParent(), TeseoUtils.findOutLanguage(module) + "." + TESEO) : file;
-					final Graph graph = loadGraph(dest);
+					final Graph graph = GraphLoader.loadGraph(module, dest);
 					new JavaServerRenderer(graph).execute(gen, api, packageName);
 					refreshDirectory(gen);
 					refreshDirectory(api);
 					notifySuccess();
 				}
 			};
-		}
-
-		private Graph loadGraph(File teseoFile) {
-			final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
-			final ClassLoader temporalLoader = createClassLoader(new File(CompilerModuleExtension.getInstance(module).getCompilerOutputPath().getPath()));
-			Thread.currentThread().setContextClassLoader(temporalLoader);
-			final Graph graph = Graph.from(StashDeserializer.stashFrom(teseoFile)).wrap(TeseoApplication.class);
-			Thread.currentThread().setContextClassLoader(currentLoader);
-			return graph;
-		}
-
-		private ClassLoader createClassLoader(File directory) {
-			return AccessController.doPrivileged((PrivilegedAction<ClassLoader>) () -> {
-				try {
-					return new URLClassLoader(new URL[]{directory.toURI().toURL()}, this.getClass().getClassLoader());
-				} catch (MalformedURLException e) {
-					LOG.error(e.getMessage(), e);
-					return null;
-				}
-			});
 		}
 
 		private void notifySuccess() {

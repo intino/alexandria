@@ -16,9 +16,7 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.intellij.actions.utils.FileSystemUtils;
-import tara.io.StashDeserializer;
 import tara.magritte.Graph;
-import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
 import teseo.rest.RESTService;
 
@@ -105,7 +103,8 @@ class AccessorPublisher {
 		List<String> apps = new ArrayList<>();
 		final String outLanguage = TeseoUtils.findOutLanguage(module);
 		String packageName = TESEO + separator + (outLanguage == null || outLanguage.isEmpty() ? "api" : outLanguage.toLowerCase());
-		for (RESTService service : Graph.load().loadStashes(StashDeserializer.stashFrom(new File(TeseoUtils.findTeseo(module)))).wrap(TeseoApplication.class).find(RESTService.class)) {
+		final Graph graph = GraphLoader.loadGraph(module, new File(TeseoUtils.findTeseo(module)));
+		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), packageName);
 			sourcesDestiny.mkdirs();
 			new JavaAccessorRenderer(service).execute(sourcesDestiny, packageName.replace(separator, "."));
@@ -113,6 +112,7 @@ class AccessorPublisher {
 		}
 		return apps;
 	}
+
 
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
