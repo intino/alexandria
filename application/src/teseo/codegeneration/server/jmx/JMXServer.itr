@@ -29,7 +29,7 @@ def type(jmx) type(interface)
 	import java.util.*;
     import java.time.*;
 
-    public interface $name+firstUpperCase~JMX {
+    public interface $name+firstUpperCase~MBean {
 
         $operation+signature...[$NL$NL]
     }

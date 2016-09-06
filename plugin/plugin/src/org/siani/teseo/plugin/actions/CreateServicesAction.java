@@ -35,7 +35,7 @@ import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
 import static java.util.Arrays.asList;
 
-public class CreateServerAction extends Action implements DumbAware {
+public class CreateServicesAction extends Action implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("restApiGenerator: Generate");
 	private static final String TESEO = "teseo";
 
@@ -98,11 +98,11 @@ public class CreateServerAction extends Action implements DumbAware {
 
 		void generateApi(VirtualFile genDirectory, VirtualFile apiDirectory) {
 			if (genDirectory == null) {
-				notifyError("Gen source root not found.");
+				notifyError("gen source root not found.");
 				return;
 			}
 			String outLanguage = TeseoUtils.findOutLanguage(module);
-			if (outLanguage == null) outLanguage = module.getName().toLowerCase();
+			if (outLanguage == null || TESEO.equals(outLanguage)) outLanguage = module.getName().toLowerCase();
 			String packageName = (TESEO + File.separator + outLanguage).replace("-", "").toLowerCase();
 			File gen = new File(genDirectory.getPath(), packageName);
 			gen.mkdirs();
@@ -163,7 +163,7 @@ public class CreateServerAction extends Action implements DumbAware {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Teseo", "Api for " + module.getName() + " generated", "to " + genRoot.getPath(), INFORMATION), module.getProject());
+						new Notification("Teseo", "Services for " + module.getName() + " generated", "", INFORMATION), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
@@ -175,7 +175,7 @@ public class CreateServerAction extends Action implements DumbAware {
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Teseo", "Actions cannot be generated. " + message, "", ERROR), module.getProject());
+					new Notification("Teseo", "Services cannot be generated. " + message, "", ERROR), module.getProject());
 		}
 
 	}

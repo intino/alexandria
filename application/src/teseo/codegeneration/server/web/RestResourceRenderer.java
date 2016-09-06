@@ -46,9 +46,9 @@ class RestResourceRenderer {
 		frame.addSlot("parameters", (AbstractFrame[]) parameters(resource.parameterList()));
 		if (!resource.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(new File(genDestination, RESOURCES), resource.name() + "AbstractAction", template().format(frame));
-		if (!Commons.javaFile(new File(srcDestination, RESOURCES), resource.name() + "Action").exists())
-			Commons.writeFrame(new File(srcDestination, RESOURCES), resource.name() + "Action", template().format(frame.addTypes("impl")));
+		Commons.writeFrame(new File(genDestination, RESOURCES), resource.name() + "AbstractResource", template().format(frame));
+		if (!Commons.javaFile(new File(srcDestination, RESOURCES), resource.name() + "Resource").exists())
+			Commons.writeFrame(new File(srcDestination, RESOURCES), resource.name() + "Resource", template().format(frame.addTypes("impl")));
 	}
 
 	private AbstractFrame doTask(Resource resource) {

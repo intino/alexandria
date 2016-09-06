@@ -16,5 +16,5 @@ def type(server)
 end
 
 def type(resource)
-	server.route("$path[/:$parameters...[/:]]").as($method+firstUpperCase).with(new $name+firstUpperCase$~Action(graph));
+	server.route("$path[/:$parameters...[/:]]").as($method+firstUpperCase).with(new $name+firstUpperCase$~Resource(graph));
 end

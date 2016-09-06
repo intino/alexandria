@@ -80,13 +80,11 @@ public class GenerateApiAction extends AnAction {
 		return false;
 	}
 
-	public static ArrayList<TaraNode> getMainNodesOfFile(TaraModel file) {
+	private static ArrayList<TaraNode> getMainNodesOfFile(TaraModel file) {
 		Set<TaraNode> list = new LinkedHashSet<>();
 		TaraNode[] nodes = PsiTreeUtil.getChildrenOfType(file, TaraNodeImpl.class);
 		if (nodes == null) return new ArrayList<>(list);
-		for (TaraNode node : nodes) {
-			list.add(node);
-		}
+		Collections.addAll(list, nodes);
 		List<TaraNode> mainNodes = findMainNodes(file);
 		for (TaraNode main : mainNodes) {
 			if (list.contains(main)) continue;
