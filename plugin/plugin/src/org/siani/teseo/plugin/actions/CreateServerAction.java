@@ -139,11 +139,11 @@ public class CreateServerAction extends Action implements DumbAware {
 			};
 		}
 
-		private Graph loadGraph(File outDirectory) {
+		private Graph loadGraph(File teseoFile) {
 			final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 			final ClassLoader temporalLoader = createClassLoader(new File(CompilerModuleExtension.getInstance(module).getCompilerOutputPath().getPath()));
 			Thread.currentThread().setContextClassLoader(temporalLoader);
-			final Graph graph = Graph.load().loadStashes(StashDeserializer.stashFrom(outDirectory)).wrap(TeseoApplication.class);
+			final Graph graph = Graph.from(StashDeserializer.stashFrom(teseoFile)).wrap(TeseoApplication.class);
 			Thread.currentThread().setContextClassLoader(currentLoader);
 			return graph;
 		}
