@@ -90,7 +90,7 @@ class RequestWrapper extends SparkWrapper {
 			return (T) value;
 
 		if (returnType == LocalDateTime.class)
-			return (T) LocalDateTime.ofInstant(Instant.ofEpochSecond(Long.valueOf((String)value)), ZoneId.of("UTC"));
+			return (T) LocalDateTime.ofInstant(Instant.ofEpochMilli(Long.valueOf((String)value)), ZoneId.of("UTC"));
 
 		if (returnType == Double.class)
 			return (T) Double.valueOf((String) value);
