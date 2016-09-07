@@ -16,9 +16,7 @@ import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.intellij.actions.utils.FileSystemUtils;
-import tara.io.StashDeserializer;
 import tara.magritte.Graph;
-import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
 import teseo.rest.RESTService;
 
@@ -30,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -56,7 +55,7 @@ class AccessorPublisher {
 		try {
 			final List<String> apps = createSources();
 			final MavenProject project = MavenProjectsManager.getInstance(module.getProject()).findProject(module);
-			if (project == null) return;
+			if (project == null || apps.isEmpty()) return;
 			mvn(project);
 			for (String app : apps) notifySuccess(project.getMavenId(), app);
 		} catch (IOException | MavenInvocationException e) {
@@ -105,7 +104,9 @@ class AccessorPublisher {
 		List<String> apps = new ArrayList<>();
 		final String outLanguage = TeseoUtils.findOutLanguage(module);
 		String packageName = TESEO + separator + (outLanguage == null || outLanguage.isEmpty() ? "api" : outLanguage.toLowerCase());
-		for (RESTService service : Graph.load().loadStashes(StashDeserializer.stashFrom(new File(TeseoUtils.findTeseo(module)))).wrap(TeseoApplication.class).find(RESTService.class)) {
+		final Graph graph = GraphLoader.loadGraph(module, new File(TeseoUtils.findTeseo(module)));
+		if (graph == null) return Collections.emptyList();
+		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), packageName);
 			sourcesDestiny.mkdirs();
 			new JavaAccessorRenderer(service).execute(sourcesDestiny, packageName.replace(separator, "."));
@@ -113,6 +114,7 @@ class AccessorPublisher {
 		}
 		return apps;
 	}
+
 
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);

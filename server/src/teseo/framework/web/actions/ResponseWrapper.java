@@ -2,6 +2,7 @@ package teseo.framework.web.actions;
 
 import spark.Response;
 import spark.utils.IOUtils;
+import teseo.Error;
 import teseo.framework.actions.ResponseAdapter;
 import teseo.framework.web.utils.MimeTypes;
 
@@ -27,7 +28,7 @@ class ResponseWrapper extends SparkWrapper {
 		return (proxy, method, args) -> {
 
 			if (method.getName().equals(Redirect))
-				redirect((URL)args[0]);
+				redirect((URL) args[0]);
 			else
 				write(method, args);
 
@@ -43,14 +44,14 @@ class ResponseWrapper extends SparkWrapper {
 	private void write(Method method, Object[] args) throws IOException {
 		Object response = args[0];
 
-		if (response instanceof Error) {
-			writeError(adapterFor(method).adapt(response));
+		if (response instanceof teseo.Error) {
+			writeError((teseo.Error) response, adapterFor(method).adapt(response));
 		} else if (response instanceof File) {
 			writeFile((File) response);
 		} else if (response instanceof InputStream) {
-			writeStream((InputStream) response, args.length>1?(String)args[1]:null);
+			writeStream((InputStream) response, args.length > 1 ? (String) args[1] : null);
 		} else if (response instanceof byte[]) {
-			writeBytes((byte[]) response, args.length>1?(String)args[1]:null);
+			writeBytes((byte[]) response, args.length > 1 ? (String) args[1] : null);
 		} else {
 			writeResponse(adaptResponse(method, response), args.length > 1 ? (String) args[1] : null);
 		}
@@ -66,8 +67,8 @@ class ResponseWrapper extends SparkWrapper {
 		writeResponse(message, contentType, response.raw());
 	}
 
-	private void writeError(String message) throws IOException {
-		writeResponseError(message, response.raw());
+	private void writeError(Error response, String message) throws IOException {
+		writeResponseError(response.code(), message, this.response.raw());
 	}
 
 	private void writeFile(File file) {
@@ -132,8 +133,8 @@ class ResponseWrapper extends SparkWrapper {
 		}
 	}
 
-	private void writeResponseError(String error, HttpServletResponse response) throws IOException {
-		response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+	private void writeResponseError(String code, String error, HttpServletResponse response) throws IOException {
+		response.setStatus(Integer.parseInt(code));
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html");
 		response.getWriter().print(error);

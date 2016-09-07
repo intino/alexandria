@@ -12,7 +12,7 @@ def type(action) !type(impl)
 	import com.google.gson.Gson;
 	$schemaImport
 
-	public abstract class $name+firstUpperCase$~AbstractAction implements Action {
+	public abstract class $name+firstUpperCase$~AbstractResource implements Action {
 
 		@Override
 		public Task<Input, Output> task() {
@@ -49,11 +49,11 @@ def type(action & impl)
 	import static teseo.Commons.error;
     import static java.util.Collections.emptyMap;
 
-	public class $name+firstUpperCase$~Action extends $name+firstUpperCase$~AbstractAction {
+	public class $name+firstUpperCase$~Resource extends $name+firstUpperCase$~AbstractResource {
 
 		private Graph graph;
 
-		public $name+firstUpperCase$~Action(Graph graph) {
+		public $name+firstUpperCase$~Resource(Graph graph) {
 			this.graph = graph;
 		}
 

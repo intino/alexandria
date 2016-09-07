@@ -1,6 +1,6 @@
 dsl Teseo
 
-Service (title = "Interface for recovering all dashboard information", path = "/dashboard") as REST
+Service (title = "Interface for recovering all dashboard information", path = "/dashboard") rest as REST
 	Resource(title="List of categorizations", path = "/categorizations", method = Get, name="categorizations")
 		Response(code = SuccessOk) as Object(schema = CategorizationCatalogResponseSchema)
 

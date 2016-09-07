@@ -1,0 +1,38 @@
+dsl Teseo
+
+Service consulManager as JMX
+	Operation(deploy) deployOperation
+	Operation(retract) retractOperation
+	Operation(systemLogging) logSystem
+	Operation(serverLogging) logServer
+
+Action deploy
+	Parameter(name = "system") as Object(schema = System)
+	Response as Bool
+
+Action retract
+	Parameter(name = "systemID") as Text
+	Response as Bool
+
+Action systemLogging
+	Parameter(name = "systemID") as Text
+	Response as Object(schema = loggingSchema)
+
+Action serverLogging
+	Parameter(name = "systemID") as Text
+	Response as Object(schema = loggingSchema)
+
+
+Schema loggingSchema
+	Element("stateLog")
+		Attribute(name="instant") as DateTime
+		Attribute(name="memory") as Real
+		Attribute(name="cpu") as Real
+		Attribute(name="connections") as Integer
+
+Schema System
+	Element(name = "SystemSchema")
+		Attribute(name = "ID") as Text
+		Attribute(name="artifacts", multiple = true) as Text
+		Attribute(name="mainClass") as Text
+		Attribute(name="artifactory") as Text
