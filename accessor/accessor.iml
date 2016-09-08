@@ -47,7 +47,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.3.2.v20150730" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.3.2.v20150730" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.siani.teseo:core:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz:2.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: c3p0:c3p0:0.9.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />

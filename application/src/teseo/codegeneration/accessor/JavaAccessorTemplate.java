@@ -1,10 +1,11 @@
 package teseo.codegeneration.accessor;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class JavaAccessorTemplate extends Template {
 
@@ -42,7 +43,7 @@ public class JavaAccessorTemplate extends Template {
 			rule().add((condition("type", "exceptionResponse")), (condition("trigger", "throws"))).add(literal("if(e.code().equals(\"")).add(mark("code")).add(literal("\"))\n    throw new ")).add(mark("exceptionName")).add(literal("(e.label());")),
 			rule().add((condition("type", "exceptionResponses")), (condition("trigger", "declaration"))).add(literal("throws ")).add(expression().add(mark("exceptionResponse", "declaration").multiple(", ")).add(literal(", "))).add(literal("ErrorUnknown")),
 			rule().add((condition("type", "exceptionResponse")), (condition("trigger", "declaration"))).add(mark("exceptionName")),
-			rule().add((condition("type", "doInvoke"))).add(literal("accessor.")).add(mark("method", "firstLowerCase")).add(literal("(this.url, \"")).add(mark("relativePath")).add(literal("\"")).add(expression().add(literal(" + \"/\" + ")).add(mark("parameters", "SnakeCaseToCamelCase", "firstLowerCase").multiple(" + \"/\" + "))).add(literal(", parameters)")),
+				rule().add((condition("type", "doInvoke"))).add(literal("accessor.")).add(mark("type", "firstLowerCase")).add(literal("(this.url, \"")).add(mark("relativePath")).add(literal("\"")).add(expression().add(literal(" + \"/\" + ")).add(mark("parameters", "SnakeCaseToCamelCase", "firstLowerCase").multiple(" + \"/\" + "))).add(literal(", parameters)")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
 		return this;

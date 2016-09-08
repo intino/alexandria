@@ -135,7 +135,7 @@
         </dependency>
         <dependency>
             <groupId>org.siani.teseo</groupId>
-            <artifactId>rest-core</artifactId>
+            <artifactId>core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

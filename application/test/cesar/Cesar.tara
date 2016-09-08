@@ -1,56 +1,56 @@
 dsl Teseo
 
 Service(title = "Cesar Ops Service", path = "") cesar as REST
-	Resource(name = "createSystem", title = "Create new system", path = "systems", method = Put)
+	Resource(name = "createSystem", title = "Create new system", path = "systems", type = Put)
 		Parameter(name = "name", in = path) as Text
 		Parameter(name = "repository", in = query) as Text
 		Response
-	Resource(name = "systems", title = "List of systems", path = "systems", method = Get)
+	Resource(name = "systems", title = "List of systems", path = "systems", type = Get)
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "system", title = "A system", path = "systems/:system", method = Get)
+	Resource(name = "system", title = "A system", path = "systems/:system", type = Get)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "verion", in = path) as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "updateSystem", title = "Update system", path = "systems/:system", method = Post)
+	Resource(name = "updateSystem", title = "Update system", path = "systems/:system", type = Post)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "enabled", in = query) as Bool
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems/:system", method = Put)
+	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems/:system", type = Put)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "version", in = query) as Text
 		Response
 		Exception(ErrorBadRequest)
 
-	Resource(name = "servers", title = "List of servers", path = "servers", method = Get)
+	Resource(name = "servers", title = "List of servers", path = "servers", type = Get)
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "server", title = "A server", path = "servers/:server", method = Get)
+	Resource(name = "server", title = "A server", path = "servers/:server", type = Get)
 		Parameter(name = "server", in = path) as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "createServer", title = "Create server", path = "server", method = Put)
+	Resource(name = "createServer", title = "Create server", path = "server", type = Put)
 		Parameter(name = "url", in = query) as Text
 		Response
 		Exception (ErrorBadRequest)
-	Resource(name = "updateServer", title = "Update server", path = "servers/:server", method = Post)
+	Resource(name = "updateServer", title = "Update server", path = "servers/:server", type = Post)
 		Parameter(name = "server", in = path) as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deleteServer", title = "Delete server", path = "servers/:server", method = Delete)
+	Resource(name = "deleteServer", title = "Delete server", path = "servers/:server", type = Delete)
 		Parameter(name = "server", in = path) as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deploySystem", title = "Deploy system", path = "servers/:server/:system", method = Post)
+	Resource(name = "deploySystem", title = "Deploy system", path = "servers/:server/:system", type = Post)
 		Parameter(name = "server", in = path) as Text
 		Parameter(name = "system", in = path) as Text
     	Parameter(name = "isPublic", in = query) as Bool
     	Response
 
 Service(title = "Cesar Build Service", path = "build") build as REST
-	Resource(name = "listWebHook", title = "", path = "webhooks", method = Post)
+	Resource(name = "listWebHook", title = "", path = "webhooks", type = Post)
 		Response
 		Exception(ErrorBadRequest)
 

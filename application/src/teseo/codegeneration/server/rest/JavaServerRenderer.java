@@ -7,7 +7,6 @@ import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Resource;
 import teseo.Service;
-import teseo.codegeneration.action.ActionRenderer;
 import teseo.codegeneration.schema.SchemaRenderer;
 import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
@@ -35,40 +34,35 @@ public class JavaServerRenderer {
 		this.destination = gen;
 		this.packageName = packageName;
 		Files.removeDir(gen);
-		web(gen, src, packageName);
-		scheduling(gen, packageName);
-		jmx(gen, packageName);
-		action(src, packageName);
+		web(src, gen, packageName);
+		scheduling(src, gen, packageName);
+		jmx(src, gen, packageName);
 	}
 
-	private void web(File gen, File src, String packageName) {
+	private void web(File src, File gen, String packageName) {
 		new SchemaRenderer(graph).execute(destination, packageName);
 		new RestResourceRenderer(graph).execute(gen, src, packageName);
 		services.forEach(this::processService);
 	}
 
-	private void scheduling(File gen, String packageName) {
-		new ScheduledTriggerRenderer(graph).execute(gen, packageName);
+	private void scheduling(File src, File gen, String packageName) {
+		new ScheduledTriggerRenderer(graph).execute(src, gen, packageName);
 		new SchedulerRenderer(graph).execute(gen, packageName);
 	}
 
-	private void jmx(File gen, String packageName) {
-		new JMXOperationsServiceRenderer(graph).execute(gen, packageName);
+	private void jmx(File src, File gen, String packageName) {
+		new JMXOperationsServiceRenderer(graph).execute(src, gen, packageName);
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
-	private void action(File destiny, String packageName) {
-		new ActionRenderer(graph).execute(destiny, packageName);
-	}
-
-	private void processService(Service application) {
-		List<Resource> resources = application.node().findNode(Resource.class);
+	private void processService(Service service) {
+		List<Resource> resources = service.node().findNode(Resource.class);
 		if (resources.isEmpty()) return;
 		Frame frame = new Frame().addTypes("server");
-		frame.addSlot("name", application.name());
+		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("resources", (AbstractFrame[]) processResources(resources));
-		writeFrame(destination, snakeCaseToCamelCase(application.name()) + "Resources", template().format(frame));
+		writeFrame(destination, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {
@@ -76,11 +70,11 @@ public class JavaServerRenderer {
 	}
 
 	private Frame processResource(Resource resource) {
-		return new Frame().addTypes("resource", resource.method().toString())
+		return new Frame().addTypes("resource", resource.type().toString())
 				.addSlot("name", resource.name())
 				.addSlot("path", path(resource))
 				.addSlot("parameters", pathParameters(resource))
-				.addSlot("method", resource.method().toString());
+				.addSlot("method", resource.type().toString());
 	}
 
 	private Template template() {

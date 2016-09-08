@@ -1,8 +1,24 @@
 dsl Proteo
 
 
+use Services
+
 Concept Method is abstract
 	var string name
+	has Parameter
+	has:{1..1} Response
+	has Exception
+
+Concept Exception extends Data is component
+	var word:ExceptionCodes code
+	var string description = ""
+
+Concept Response extends Data
+	var string description = ""
+
+Concept Parameter extends Data
+	var string name
+	var boolean required = true
 
 Facet Type on Data
 	var string type is reactive private

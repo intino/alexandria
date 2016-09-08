@@ -126,7 +126,7 @@ def type(exceptionResponse) trigger(declaration)
 end
 
 def type(doInvoke)
-    accessor.$method+firstLowerCase(this.url, "$relativePath"[ + "/" + $parameters+SnakeCaseToCamelCase+firstLowerCase...[ + "/" + ]], parameters)
+    accessor.$type+firstLowerCase(this.url, "$relativePath"[ + "/" + $parameters+SnakeCaseToCamelCase+firstLowerCase...[ + "/" + ]], parameters)
 end
 
 def type(schemaImport)

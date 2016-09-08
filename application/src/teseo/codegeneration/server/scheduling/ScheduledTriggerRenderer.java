@@ -3,18 +3,18 @@ package teseo.codegeneration.server.scheduling;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
-import teseo.Action;
-import teseo.object.ObjectData;
+import teseo.codegeneration.action.ActionTemplate;
 import teseo.scheduled.ScheduledTrigger;
-import teseo.type.TypeData;
 
 import java.io.File;
 import java.util.List;
 
+import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
 public class ScheduledTriggerRenderer {
 	private final List<ScheduledTrigger> triggers;
+	private File srcDestination;
 	private File genDestination;
 	private String packageName;
 
@@ -22,7 +22,8 @@ public class ScheduledTriggerRenderer {
 		triggers = graph.find(ScheduledTrigger.class);
 	}
 
-	public void execute(File genDestination, String packageName) {
+	public void execute(File srcDestination, File genDestination, String packageName) {
+		this.srcDestination = srcDestination;
 		this.genDestination = genDestination;
 		this.packageName = packageName;
 		this.triggers.forEach(this::processTrigger);
@@ -32,21 +33,22 @@ public class ScheduledTriggerRenderer {
 		Frame frame = new Frame().addTypes("scheduled");
 		frame.addSlot("name", trigger.name());
 		frame.addSlot("package", packageName);
-		for (Action action : trigger.actions()) {
-			final Frame actionFrame = new Frame().addTypes("action").addSlot("name", action.name()).addSlot("package", packageName);
-			if (!action.parameterList().isEmpty()) setupParameters(action.parameterList(), frame);
-			frame.addSlot("action", actionFrame);
-		}
 		writeFrame(destinyPackage(), trigger.name() + "Trigger", template().format(frame));
+		createCorrespondingAction(trigger);
 	}
 
-	private void setupParameters(List<Action.Parameter> parameters, Frame frame) {
-		for (Action.Parameter parameter : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+	private void createCorrespondingAction(ScheduledTrigger trigger) {
+		Frame frame = new Frame().addTypes("action");
+		frame.addSlot("name", trigger.name());
+		frame.addSlot("package", packageName);
+		if (!alreadyRendered(srcDestination, trigger))
+			writeFrame(actionsPackage(srcDestination), trigger.name() + "Action", actionTemplate().format(frame));
 	}
 
-	private String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+	private Template actionTemplate() {
+		final Template template = ActionTemplate.create();
+		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
+		return template;
 	}
 
 	private Template template() {
@@ -54,6 +56,15 @@ public class ScheduledTriggerRenderer {
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;
 	}
+
+	private boolean alreadyRendered(File destiny, ScheduledTrigger trigger) {
+		return javaFile(actionsPackage(destiny), trigger.name() + "Action").exists();
+	}
+
+	private File actionsPackage(File destiny) {
+		return new File(destiny, "actions");
+	}
+
 
 	private File destinyPackage() {
 		return new File(genDestination, "scheduling");

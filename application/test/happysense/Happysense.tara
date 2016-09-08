@@ -1,17 +1,17 @@
 dsl Teseo
 
 Service (title = "Interface for recovering all dashboard information", path = "/dashboard") rest as REST
-	Resource(title="List of categorizations", path = "/categorizations", method = Get, name="categorizations", action = categorizations)
-		Response(code = SuccessOk) as Object(schema = CategorizationCatalogResponseSchema)
+	Resource(title="List of categorizations", path = "/categorizations", type = Get, name="categorizations")
+		Response as Object(schema = CategorizationCatalogResponseSchema)
 
-	Resource(title="Opinions summary", path = "/summary", method = Get, name = "summary", action = opinions)
-		Response(code = SuccessOk) as Object(schema = SummaryResponseSchema)
+	Resource(title="Opinions summary", path = "/summary", type = Get, name = "summary")
+		Response as Object(schema = SummaryResponseSchema)
 
-	Resource(title="Summary of opinions at some instant", path = "/snapshot", method = Get, name="snapshot", action = snapshot)
+	Resource(title="Summary of opinions at some instant", path = "/snapshot", type = Get, name="snapshot")
 		Parameter(name = "scale", in = query) as Text
 		Parameter(name = "range", in = query) as Object(schema = RangeSchema)
 		Parameter(name = "filters", in = query) as Object(schema = FilterListSchema)
-		Response(code = SuccessOk) as Object(schema = OpinionSnapshotResponseSchema)
+		Response as Object(schema = OpinionSnapshotResponseSchema)
 
 Schema RangeSchema
 	Element(name="range")
@@ -69,15 +69,3 @@ Schema OpinionSnapshotResponseSchema
 			Member("point")
 				Attribute(name="instant") as DateTime
 				Attribute(name="value") as Real
-
-Action categorizations
-	Response as Object(schema = CategorizationCatalogResponseSchema)
-
-Action opinions
-	Response as Object(schema = SummaryResponseSchema)
-
-Action snapshot
-	Parameter(name = "scale") as Text
-	Parameter(name = "range") as Object(schema = RangeSchema)
-	Parameter(name = "filters") as Object(schema = FilterListSchema)
-	Response as Object(schema = OpinionSnapshotResponseSchema)

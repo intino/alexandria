@@ -4,6 +4,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import teseo.Resource;
+import teseo.Response;
 import teseo.Schema;
 import teseo.codegeneration.schema.SchemaRenderer;
 import teseo.date.DateData;
@@ -52,10 +53,10 @@ public class JavaAccessorRenderer {
 	}
 
 	private Frame processResource(Resource resource) {
-		return new Frame().addTypes("resource", resource.method().toString())
+		return new Frame().addTypes("resource", resource.type().toString())
 				.addSlot("returnType", Commons.returnType(resource.response()))
 				.addSlot("name", resource.name())
-				.addSlot("parameters", (AbstractFrame[]) parameters(resource.parameterList()))
+				.addSlot("parameters", (AbstractFrame[]) parameters(resource.resourceParameterList()))
 				.addSlot("invokeSentence", invokeSentence(resource))
 				.addSlot("exceptionResponses", exceptionResponses(resource));
 	}
@@ -71,7 +72,7 @@ public class JavaAccessorRenderer {
 	}
 
 	private Frame invokeSentence(Resource resource) {
-		Resource.Response response = resource.response();
+		Response response = resource.response();
 		Frame result;
 		if (response.asType() == null) result = voidInvokeSentence();
 		else if (response.isObject()) result = objectInvokeSentence(response.asObject());
@@ -86,7 +87,7 @@ public class JavaAccessorRenderer {
 	private Frame doInvoke(Resource resource) {
 		return new Frame().addTypes("doInvoke")
 				.addSlot("relativePath", Commons.path(resource))
-				.addSlot("method", resource.method().toString())
+				.addSlot("type", resource.type().toString())
 				.addSlot("parameters", Commons.pathParameters(resource));
 	}
 

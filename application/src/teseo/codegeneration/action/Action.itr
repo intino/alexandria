@@ -8,7 +8,7 @@ def type(action)
 	public class $name+firstUpperCase~Action {
 
         public Graph graph;
-        [$parameter+type...[;$NL]]
+        [$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() {
             $returnType+return
@@ -18,7 +18,7 @@ end
 
 
 def type(parameter) trigger(type)
-    public $type $name
+    public $type $name;
 end
 
 def attribute(void) trigger(return)

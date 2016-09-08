@@ -8,15 +8,16 @@ def type(scheduled)
 
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			Graph graph = (Graph) context.getMergedJobDataMap().get("graph");
-			$action...[$NL]
+			$package+validname.actions.$name+firstUpperCase~Action action = new $package+validname.actions.$name+firstUpperCase~Action();
+            action.graph = graph;
+            action.execute();
 		}
 	}
 end
 
-def type(action)
-    new $package+validname.actions.$name+firstUpperCase~Action(graph).execute($parameter+name...[, ]);
+def type(parameter) trigger(assign)
+    action.$name = $name;
 end
-
 
 def type(parameter) trigger(name)
     $name

@@ -3,9 +3,9 @@ package teseo.codegeneration.server.jmx;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
+import teseo.Operation;
 import teseo.helpers.Commons;
 import teseo.jmx.JMXService;
-import teseo.jmx.JMXService.Operation;
 
 import java.io.File;
 import java.util.List;

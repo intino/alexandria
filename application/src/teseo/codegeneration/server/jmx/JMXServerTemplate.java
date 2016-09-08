@@ -1,10 +1,11 @@
 package teseo.codegeneration.server.jmx;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class JMXServerTemplate extends Template {
 
@@ -23,8 +24,8 @@ public class JMXServerTemplate extends Template {
 			rule().add((condition("type", "operation")), (condition("trigger", "signature"))).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("parameter", "withType").multiple(", ")).add(literal(");")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "withType"))).add(mark("type")).add(literal(" ")).add(mark("name")),
 			rule().add((condition("type", "jmx")), (condition("type", "implementation"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".jmx;\n\nimport tara.magritte.Graph;\nimport java.util.*;\nimport java.time.*;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal(" implements ")).add(mark("name", "firstUpperCase")).add(literal("MBean {\n\n    private final Graph graph;\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("(Graph graph) {\n        this.graph = graph;\n    }\n\n    ")).add(mark("operation", "implementation").multiple("\n\n")).add(literal("\n}")),
-			rule().add((condition("type", "operation")), (condition("trigger", "implementation"))).add(literal("public ")).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("parameter", "withType").multiple(", ")).add(literal(") {\n    ")).add(expression().add(mark("returnType", "return")).add(literal(" "))).add(literal("new ")).add(mark("package", "validname")).add(literal(".actions.")).add(mark("action", "firstUpperCase")).add(literal("Action(graph")).add(expression().add(literal(", ")).add(mark("parameter", "name").multiple(", "))).add(literal(").execute();\n}")),
-			rule().add((condition("type", "parameter")), (condition("trigger", "name"))).add(mark("name")),
+				rule().add((condition("type", "operation")), (condition("trigger", "implementation"))).add(literal("public ")).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("parameter", "withType").multiple(", ")).add(literal(") {\n    ")).add(mark("package", "validname")).add(literal(".actions.")).add(mark("action", "firstUpperCase")).add(literal("Action action = new ")).add(mark("package", "validname")).add(literal(".actions.")).add(mark("action", "firstUpperCase")).add(literal("Action();\n    action.graph = graph;\n    ")).add(expression().add(mark("parameter", "assign").multiple("\n"))).add(literal("\n    ")).add(expression().add(mark("returnType", "return")).add(literal(" "))).add(literal("new ")).add(mark("package", "validname")).add(literal(".actions.")).add(mark("action", "firstUpperCase")).add(literal("Action().execute();\n}")),
+				rule().add((condition("type", "parameter")), (condition("trigger", "assign"))).add(literal("action.")).add(mark("name")).add(literal(" = ")).add(mark("name")).add(literal(";")),
 			rule().add((condition("attribute", "void")), (condition("trigger", "return"))),
 			rule().add((condition("trigger", "return"))).add(literal("return"))
 		);

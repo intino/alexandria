@@ -3,8 +3,10 @@ package teseo.codegeneration.server.jmx;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
+import teseo.Operation;
+import teseo.Parameter;
+import teseo.codegeneration.action.ActionRenderer;
 import teseo.jmx.JMXService;
-import teseo.jmx.JMXService.Operation;
 import teseo.object.ObjectData;
 import teseo.type.TypeData;
 
@@ -16,6 +18,7 @@ import static teseo.helpers.Commons.writeFrame;
 public class JMXOperationsServiceRenderer {
 
 	private final List<JMXService> services;
+	private File src;
 	private File genDestination;
 	private String packageName;
 
@@ -23,14 +26,18 @@ public class JMXOperationsServiceRenderer {
 		services = graph.find(JMXService.class);
 	}
 
-	public void execute(File genDestination, String packageName) {
-		this.genDestination = genDestination;
+	public void execute(File src, File gen, String packageName) {
+		this.src = src;
+		this.genDestination = gen;
 		this.packageName = packageName;
-		this.services.forEach(this::writeInterface);
-		this.services.forEach(this::writeImplementation);
+		this.services.forEach((service) -> {
+			createInterface(service);
+			createImplementation(service);
+			createCorrespondingActions(service.operationList());
+		});
 	}
 
-	private void writeInterface(JMXService service) {
+	private void createInterface(JMXService service) {
 		Frame frame = new Frame().addTypes("jmx", "interface");
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
@@ -39,7 +46,7 @@ public class JMXOperationsServiceRenderer {
 		writeFrame(destinyPackage(), service.name() + "MBean", template().format(frame));
 	}
 
-	private void writeImplementation(JMXService service) {
+	private void createImplementation(JMXService service) {
 		Frame frame = new Frame().addTypes("jmx", "implementation");
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
@@ -48,10 +55,14 @@ public class JMXOperationsServiceRenderer {
 		writeFrame(destinyPackage(), service.name(), template().format(frame));
 	}
 
+	private void createCorrespondingActions(List<Operation> operations) {
+		for (Operation operation : operations) new ActionRenderer(operation).execute(src, packageName);
+	}
+
 	private Frame frameOf(Operation operation) {
-		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", action.name()).
-				addSlot("package", packageName).addSlot("returnType", operation.response() == null ? "void" : formatType(action.response().asType()));
-		setupParameters(action.parameterList(), frame);
+		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", operation.name()).
+				addSlot("package", packageName).addSlot("returnType", operation.response() == null ? "void" : formatType(operation.response().asType()));
+		setupParameters(operation.parameterList(), frame);
 		return frame;
 	}
 
@@ -59,9 +70,9 @@ public class JMXOperationsServiceRenderer {
 		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
-	private void setupParameters(List<Operation.Parameter> parameters, Frame frame) {
-		for (Action.Parameter attribute : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", attribute.name()).addSlot("type", formatType(attribute.asType())));
+	private void setupParameters(List<Parameter> parameters, Frame frame) {
+		for (Parameter parameter : parameters)
+			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
 	}
 
 	private Template template() {

@@ -1,44 +1,8 @@
-def type(action) !type(impl)
+def type(resource)
 	package $package.resources;
 
-	import teseo.framework.actions.Action.Input;
-	import teseo.framework.actions.Action;
-	import teseo.Error;
-	import static teseo.Commons.error;
-	import static java.util.Collections.emptyMap;
-	import teseo.exceptions.*;
-	import java.time.LocalDateTime;
-	import $package.*;
-	import com.google.gson.Gson;
-	$schemaImport
-
-	public abstract class $name+firstUpperCase$~AbstractResource implements Action {
-
-		@Override
-		public Task<Input, Output> task() {
-			return (input, output) -> {
-				try {
-					$doTask
-				} catch(TeseoException e) {
-					output.error(error(e.code(), e.message(), e.parameters()));
-				}
-			};
-		}
-
-		protected abstract $returnType+firstUpperCase+ReturnTypeFormatter doTask(Input input) throws $throws...[, ];
-
-		public interface Input extends Action.Input {
-
-			$parameter...[$NL$NL]
-
-		}
-	}
-end
-
-def type(action & impl)
-	package $package.resources;
-
-	import teseo.framework.actions.Action;
+    import org.apache.http.HttpRequest;
+    import org.apache.http.HttpResponse;
 	import teseo.Error;
 	import teseo.exceptions.*;
 	import $package.*;
@@ -49,16 +13,28 @@ def type(action & impl)
 	import static teseo.Commons.error;
     import static java.util.Collections.emptyMap;
 
-	public class $name+firstUpperCase$~Resource extends $name+firstUpperCase$~AbstractResource {
+	public class $name+firstUpperCase$~Resource {
 
 		private Graph graph;
+		private final HttpRequest request;
+		private final HttpResponse response;
 
-		public $name+firstUpperCase$~Resource(Graph graph) {
+		public $name+firstUpperCase$~Resource(Graph graph, HttpRequest request, HttpResponse response) {
 			this.graph = graph;
+			this.request = request;
+			this.response = response;
 		}
 
-		public $returnType+firstUpperCase+ReturnTypeFormatter doTask(Input input) throws $throws...[, ] {
-			[$returnType+return ]$package+validname.actions.$action+firstUpperCase~Action.execute(graph[, $parameter+name...[, ]]);
+		public void execute() throws $throws...[, ] {
+            $package+validname.actions.$name+firstUpperCase~Action action = new $package+validname.actions.$name+firstUpperCase~Action();
+            fill(action);
+            [$returnType+return]new $package+validname.actions.$name+firstUpperCase~Action().execute()[$returnType+ending];
+		}[
+        $returnType+write]
+
+		private void fill($package+validname.actions.$name+firstUpperCase~Action action) {
+		    action.graph = graph;
+		    $parameter+assign...[$NL]
 		}
 	}
 end
@@ -67,28 +43,36 @@ def attribute(void) trigger(return)
 end
 
 def trigger(return)
-    return
+    write(
 end
 
-def type(parameter) trigger(name)
-	input.$name+SnakeCaseToCamelCase+firstLowerCase()
+def attribute(void) trigger(ending)
 end
 
-
-def type(parameter)
-	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase();
+def trigger(ending)
+    )
 end
 
-def type(void) trigger(doTask)
-	doTask(input);
+def attribute(void) trigger(write)
 end
 
-def type(object) trigger(doTask)
-	output.write(new Gson().toJson(doTask(input), $returnType+firstUpperCase.class));
+def attribute(object) trigger(write)
+    private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+        response.write(new Gson().toJson(object, $value+firstUpperCase.class));
+    }
 end
 
-def trigger(doTask)
-	output.write(doTask(input).toString());
+def trigger(write)
+    private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+        response.write(object);
+    }
+end
+
+def type(parameter) trigger(type)
+	$parameterType
+end
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = ($parameterType) request.parameter("$name");
 end
 
 def type(schemaImport)

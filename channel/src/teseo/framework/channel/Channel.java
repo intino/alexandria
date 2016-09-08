@@ -32,7 +32,7 @@ public abstract class Channel {
 		}
 
 		private boolean isIn(LocalDateTime date) {
-			return date.isAfter(cursor) && cursor.plus(cursorStep);
+			return date.isAfter(cursor);//&& cursor.plus(cursorStep);
 		}
 
 		List<Message> finish() {

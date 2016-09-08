@@ -2,8 +2,8 @@ package teseo.codegeneration.action;
 
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import teseo.Action;
 import teseo.Method;
+import teseo.Parameter;
 import teseo.object.ObjectData;
 import teseo.type.TypeData;
 
@@ -23,22 +23,23 @@ public class ActionRenderer {
 
 	public void execute(File destiny, String packageName) {
 		this.packageName = packageName;
-		method.forEach(action -> processAction(action, destiny));
+		processMethod(destiny);
 	}
 
-	private void processAction(Action action, File destiny) {
+	private void processMethod(File destiny) {
 		Frame frame = new Frame().addTypes("action");
-		frame.addSlot("name", action.name());
+		frame.addSlot("name", method.name());
 		frame.addSlot("package", packageName);
-		setupParameters(action.parameterList(), frame);
-		frame.addSlot("returnType", action.response() == null ? "void" : formatType(action.response().asType()));
-		if (!alreadyRendered(destiny, action))
-			writeFrame(destinyPackage(destiny), action.name() + "Action", template().format(frame));
+		setupParameters(method.parameterList(), frame);
+		frame.addSlot("returnType", method.response() == null || method.response().asType() == null ? "void" : formatType(method.response().asType()))
+		;
+		if (!alreadyRendered(destiny, method))
+			writeFrame(destinyPackage(destiny), method.name() + "Action", template().format(frame));
 	}
 
 
-	private void setupParameters(List<Action.Parameter> parameters, Frame frame) {
-		for (Action.Parameter parameter : parameters)
+	private void setupParameters(List<Parameter> parameters, Frame frame) {
+		for (Parameter parameter : parameters)
 			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
 	}
 
@@ -52,8 +53,8 @@ public class ActionRenderer {
 		return template;
 	}
 
-	private boolean alreadyRendered(File destiny, Action action) {
-		return javaFile(destinyPackage(destiny), action.name() + "Action").exists();
+	private boolean alreadyRendered(File destiny, Method method) {
+		return javaFile(destinyPackage(destiny), method.name() + "Action").exists();
 	}
 
 	private File destinyPackage(File destiny) {

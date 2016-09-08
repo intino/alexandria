@@ -41,29 +41,17 @@ Concept Resource extends Method is component
 	var string title
 	var string description = ""
 	var string path
-	var word:{Get Post Put Delete} method
-	Concept Parameter extends Data
-		var string name
+	var word:{Get Post Put Delete} type
+	Concept Parameter extends Parameter
 		var string description = ""
 		var word:{body path form header query} in
-		var boolean required = true
-	Concept:{1..1} Response extends Data
-		var string description = ""
-	has Exception
+	has:{1..1} Response
 
 Concept Operation extends Method is component
-	Concept Parameter extends Data
-		var string name
-		var boolean required = true
-	Concept:{1..1} Response extends Data
-		var string description = ""
-	has Exception
+
+Concept Notification extends Method is component
 
 Facet JMX on Service
 	var string path = ""
 	has:{1..*} Operation
-	Concept Notification extends Method
-
-Concept Exception extends Data is component
-	var word:ExceptionCodes code
-	var string description = ""
+	has Notification

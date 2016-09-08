@@ -65,12 +65,15 @@ end
 
 def type(operation) trigger(implementation)
     public [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]) {
-        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action(graph[, $parameter+name...[, ]]).execute();
+        $package+validname.actions.$action+firstUpperCase~Action action = new $package+validname.actions.$action+firstUpperCase~Action();
+        action.graph = graph;
+        [$parameter+assign...[$NL]]
+        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action().execute();
     }
 end
 
-def type(parameter) trigger(name)
-    $name
+def type(parameter) trigger(assign)
+    action.$name = $name;
 end
 
 def attribute(void) trigger(return)

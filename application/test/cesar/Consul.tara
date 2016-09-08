@@ -1,26 +1,18 @@
 dsl Teseo
 
 Service consulManager as JMX
-	Operation(deploy) deployOperation
-	Operation(retract) retractOperation
-	Operation(systemLogging) logSystem
-	Operation(serverLogging) logServer
-
-Action deploy
-	Parameter(name = "system") as Object(schema = System)
-	Response as Bool
-
-Action retract
-	Parameter(name = "systemID") as Text
-	Response as Bool
-
-Action systemLogging
-	Parameter(name = "systemID") as Text
-	Response as Object(schema = loggingSchema)
-
-Action serverLogging
-	Parameter(name = "systemID") as Text
-	Response as Object(schema = loggingSchema)
+	Operation(name = "deploy") deploy
+		Parameter(name = "system") as Object(schema = System)
+		Response as Bool
+	Operation(name = "retract") retract
+		Parameter(name = "systemID") as Text
+		Response as Bool
+	Operation(name ="systemLogging") systemLogging
+		Parameter(name = "systemID") as Text
+		Response as Object(schema = loggingSchema)
+	Operation(name = "serverLogging") serverLogging
+		Parameter(name = "systemID") as Text
+		Response as Object(schema = loggingSchema)
 
 
 Schema loggingSchema

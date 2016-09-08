@@ -4,18 +4,24 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
-import teseo.*;
+import teseo.Resource;
+import teseo.Response;
+import teseo.Schema;
+import teseo.Service;
+import teseo.codegeneration.action.ActionRenderer;
 import teseo.helpers.Commons;
 
 import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static teseo.helpers.Commons.javaFile;
+import static teseo.helpers.Commons.writeFrame;
 
 class RestResourceRenderer {
 	private final List<Service> services;
-	private File genDestination;
-	private File srcDestination;
+	private File gen;
+	private File src;
 	private String packageName;
 	private static final String RESOURCES = "resources";
 
@@ -23,9 +29,9 @@ class RestResourceRenderer {
 		services = graph.find(Service.class);
 	}
 
-	public void execute(File genDestination, File srcDestination, String packageName) {
-		this.genDestination = genDestination;
-		this.srcDestination = srcDestination;
+	public void execute(File gen, File src, String packageName) {
+		this.gen = gen;
+		this.src = src;
 		this.packageName = packageName;
 		services.forEach(this::processService);
 	}
@@ -35,27 +41,31 @@ class RestResourceRenderer {
 	}
 
 	private void processResource(Resource resource) {
-		Frame frame = new Frame().addTypes("action");
+		Frame frame = fillResourceFrame(resource);
+		if (!javaFile(new File(src, RESOURCES), resource.name() + "Resource").exists())
+			writeFrame(new File(src, RESOURCES), resource.name() + "Resource", template().format(frame));
+		createCorrespondingAction(resource);
+	}
+
+	private void createCorrespondingAction(Resource resource) {
+		new ActionRenderer(resource).execute(src, packageName);
+	}
+
+	private Frame fillResourceFrame(Resource resource) {
+		Frame frame = new Frame().addTypes("resource");
 		frame.addSlot("name", resource.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("doTask", doTask(resource));
 		frame.addSlot("throws", throwCodes(resource));
 		frame.addSlot("returnType", Commons.returnType(resource.response()));
-		frame.addSlot("action", actionReference());
-		frame.addSlot("parameter", (AbstractFrame[]) parameters(resource.action().parameterList()));
+		frame.addSlot("parameter", (AbstractFrame[]) parameters(resource.resourceParameterList()));
 		if (!resource.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(new File(genDestination, RESOURCES), resource.name() + "AbstractResource", template().format(frame));
-		if (!Commons.javaFile(new File(srcDestination, RESOURCES), resource.name() + "Resource").exists())
-			Commons.writeFrame(new File(srcDestination, RESOURCES), resource.name() + "Resource", template().format(frame.addTypes("impl")));
-	}
-
-	private Frame actionReference() {
-		return null;
+		return frame;
 	}
 
 	private AbstractFrame doTask(Resource resource) {
-		Resource.Response response = resource.response();
+		Response response = resource.response();
 		return new Frame().addTypes(response.asType() == null ? "void" : response.isObject() ? "object" : "other")
 				.addSlot("returnType", Commons.returnType(resource.response()));
 	}
@@ -65,11 +75,11 @@ class RestResourceRenderer {
 		return throwCodes.length == 0 ? new String[]{"ErrorUnknown"} : throwCodes;
 	}
 
-	private Frame[] parameters(List<Method.Parameter> parameters) {
+	private Frame[] parameters(List<Resource.Parameter> parameters) {
 		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
 	}
 
-	private Frame parameter(Action.Parameter parameter) {
+	private Frame parameter(Resource.Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.required() ? "required" : "optional"))
 				.addSlot("name", parameter.name())
 				.addSlot("parameterType", parameter.asType().type());

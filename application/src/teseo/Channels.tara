@@ -1,32 +1,32 @@
 dsl Proteo
-
-Concept Channel
-	var word:TimeScale cursorStep
-
-	Concept:{1..*} Origin
-	Concept:{1..*} Destination
-
-Facet Origin on Channel.Origin
-	var object:teseo.MessageReader reader is private
-	sub File
-		var resource file
-		var object:java.lang.Class reader = '' is private
-	sub Service
-		var string server
-		Concept:{0..1} Authentication
-		sub Queue
-			var string location
-		sub Topic
-			var string location
-		sub DB
-			var string query
-		sub REST
-
-	sub Virtual
-
-Facet Mode on Service.Authentication
-	sub Credential
-		var string username
-		var string password
-	sub Certificate
-		var string certificate
+//
+//Concept Channel
+//	var word:TimeScale cursorStep
+//
+//	Concept:{1..*} Origin
+//	Concept:{1..*} Destination
+//
+//Facet Origin on Channel.Origin
+//	var object:teseo.MessageReader reader is private
+//	sub File
+//		var resource file
+//		var object:java.lang.Class reader = '' is private
+//	sub Service
+//		var string server
+//		Concept:{0..1} Authentication
+//		sub Queue
+//			var string location
+//		sub Topic
+//			var string location
+//		sub DB
+//			var string query
+//		sub REST
+//
+//	sub Virtual
+//
+//Facet Mode on Service.Authentication
+//	sub Credential
+//		var string username
+//		var string password
+//	sub Certificate
+//		var string certificate
