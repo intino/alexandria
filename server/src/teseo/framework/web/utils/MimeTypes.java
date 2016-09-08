@@ -350,7 +350,7 @@ public class MimeTypes {
 		mimeTypes.put("ogx", "application/ogg");
 		mimeTypes.put("old", "application/x-trash");
 		mimeTypes.put("otg", "application/vnd.oasis.opendocument.graphics-template");
-		mimeTypes.put("oth", "application/vnd.oasis.opendocument.text-web");
+		mimeTypes.put("oth", "application/vnd.oasis.opendocument.text-rest");
 		mimeTypes.put("otp", "application/vnd.oasis.opendocument.presentation-template");
 		mimeTypes.put("ots", "application/vnd.oasis.opendocument.spreadsheet-template");
 		mimeTypes.put("ott", "application/vnd.oasis.opendocument.text-template");

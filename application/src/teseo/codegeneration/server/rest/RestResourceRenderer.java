@@ -1,12 +1,10 @@
-package teseo.codegeneration.server.web;
+package teseo.codegeneration.server.rest;
 
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
-import teseo.Resource;
-import teseo.Schema;
-import teseo.Service;
+import teseo.*;
 import teseo.helpers.Commons;
 
 import java.io.File;
@@ -42,8 +40,9 @@ class RestResourceRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("doTask", doTask(resource));
 		frame.addSlot("throws", throwCodes(resource));
-		frame.addSlot("returnType", Commons.returnType(resource.responseList()));
-		frame.addSlot("parameters", (AbstractFrame[]) parameters(resource.parameterList()));
+		frame.addSlot("returnType", Commons.returnType(resource.response()));
+		frame.addSlot("action", actionReference());
+		frame.addSlot("parameter", (AbstractFrame[]) parameters(resource.action().parameterList()));
 		if (!resource.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		Commons.writeFrame(new File(genDestination, RESOURCES), resource.name() + "AbstractResource", template().format(frame));
@@ -51,22 +50,26 @@ class RestResourceRenderer {
 			Commons.writeFrame(new File(srcDestination, RESOURCES), resource.name() + "Resource", template().format(frame.addTypes("impl")));
 	}
 
+	private Frame actionReference() {
+		return null;
+	}
+
 	private AbstractFrame doTask(Resource resource) {
-		Resource.Response response = Commons.successResponse(resource.responseList());
+		Resource.Response response = resource.response();
 		return new Frame().addTypes(response.asType() == null ? "void" : response.isObject() ? "object" : "other")
-				.addSlot("returnType", Commons.returnType(resource.responseList()));
+				.addSlot("returnType", Commons.returnType(resource.response()));
 	}
 
 	private String[] throwCodes(Resource resource) {
-		String[] throwCodes = Commons.nonSuccessResponse(resource.responseList()).stream().map(r -> r.code().toString()).toArray(String[]::new);
+		String[] throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).toArray(String[]::new);
 		return throwCodes.length == 0 ? new String[]{"ErrorUnknown"} : throwCodes;
 	}
 
-	private Frame[] parameters(List<Resource.Parameter> parameters) {
+	private Frame[] parameters(List<Method.Parameter> parameters) {
 		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
 	}
 
-	private Frame parameter(Resource.Parameter parameter) {
+	private Frame parameter(Action.Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.required() ? "required" : "optional"))
 				.addSlot("name", parameter.name())
 				.addSlot("parameterType", parameter.asType().type());

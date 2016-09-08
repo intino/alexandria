@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import tara.magritte.Graph;
-import teseo.codegeneration.server.web.JavaServerRenderer;
+import teseo.codegeneration.server.rest.JavaServerRenderer;
 
 import java.io.File;
 import java.util.*;
@@ -135,7 +135,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Teseo", "Services for " + module.getName() + " generated", "", INFORMATION), module.getProject());
+						new Notification("Teseo", "Services for " + module.getName() + " generated", " ", INFORMATION), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
@@ -147,7 +147,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Teseo", "Services cannot be generated. " + message, "", ERROR), module.getProject());
+					new Notification("Teseo", "Services cannot be generated. " + message, " ", ERROR), module.getProject());
 		}
 
 	}

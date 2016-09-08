@@ -19,17 +19,17 @@ def type(action) !type(impl)
 			return (input, output) -> {
 				try {
 					$doTask
-				} catch(TeseoException e){
-					output.error(error(e.code(), e.message(), emptyMap()));
+				} catch(TeseoException e) {
+					output.error(error(e.code(), e.message(), e.parameters()));
 				}
 			};
 		}
 
 		protected abstract $returnType+firstUpperCase+ReturnTypeFormatter doTask(Input input) throws $throws...[, ];
 
-		protected interface Input extends Action.Input {
+		public interface Input extends Action.Input {
 
-			$parameters...[$NL$NL]
+			$parameter...[$NL$NL]
 
 		}
 	}
@@ -57,23 +57,26 @@ def type(action & impl)
 			this.graph = graph;
 		}
 
-		protected $returnType+firstUpperCase+ReturnTypeFormatter doTask(Input input) throws $throws...[, ] {
-			//TODO Insert action code here
-			$doTask+content
+		public $returnType+firstUpperCase+ReturnTypeFormatter doTask(Input input) throws $throws...[, ] {
+			[$returnType+return ]$package+validname.actions.$action+firstUpperCase~Action.execute(graph[, $parameter+name...[, ]]);
 		}
-
 	}
 end
 
+def attribute(void) trigger(return)
+end
+
+def trigger(return)
+    return
+end
+
+def type(parameter) trigger(name)
+	input.$name+SnakeCaseToCamelCase+firstLowerCase()
+end
+
+
 def type(parameter)
 	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase();
-end
-
-def type(void) trigger(content)
-end
-
-def trigger(content)
-	return null;
 end
 
 def type(void) trigger(doTask)

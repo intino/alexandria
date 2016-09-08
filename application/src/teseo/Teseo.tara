@@ -1,10 +1,8 @@
 dsl Proteo
 
 
-Concept Action
-	Concept Parameter extends Data
-		var string name
-	Concept:{0..1} Response extends Data
+Concept Method is abstract
+	var string name
 
 Facet Type on Data
 	var string type is reactive private

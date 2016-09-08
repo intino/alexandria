@@ -2,8 +2,8 @@ package teseo.codegeneration.action;
 
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.magritte.Graph;
 import teseo.Action;
+import teseo.Method;
 import teseo.object.ObjectData;
 import teseo.type.TypeData;
 
@@ -14,16 +14,16 @@ import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
 public class ActionRenderer {
-	private final List<Action> applications;
+	private final Method method;
 	private String packageName;
 
-	public ActionRenderer(Graph graph) {
-		applications = graph.find(Action.class);
+	public ActionRenderer(Method method) {
+		this.method = method;
 	}
 
 	public void execute(File destiny, String packageName) {
 		this.packageName = packageName;
-		applications.forEach(action -> processAction(action, destiny));
+		method.forEach(action -> processAction(action, destiny));
 	}
 
 	private void processAction(Action action, File destiny) {

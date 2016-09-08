@@ -1,94 +1,58 @@
 dsl Teseo
 
-Service(title = "Cesar API", path = "") cesar as REST
+Service(title = "Cesar Ops Service", path = "") cesar as REST
 	Resource(name = "createSystem", title = "Create new system", path = "systems", method = Put)
 		Parameter(name = "name", in = path) as Text
 		Parameter(name = "repository", in = query) as Text
-		Response(SuccessOk)
-		Response(ErrorBadRequest)
+		Response
 	Resource(name = "systems", title = "List of systems", path = "systems", method = Get)
-		Response(SuccessOk) as Text
-		Response(ErrorBadRequest)
+		Response as Text
+		Exception(ErrorBadRequest)
 	Resource(name = "system", title = "A system", path = "systems/:system", method = Get)
 		Parameter(name = "system", in = path) as Text
-		Response(SuccessOk) as Text
-		Response(ErrorBadRequest)
-	Resource(name = "updateApplication", title = "Update system", path = "systems/:system", method = Post)
+		Parameter(name = "verion", in = path) as Text
+		Response as Text
+		Exception(ErrorBadRequest)
+	Resource(name = "updateSystem", title = "Update system", path = "systems/:system", method = Post)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "enabled", in = query) as Bool
-		Response(SuccessOk) as Text
-		Response(ErrorBadRequest)
-	Resource(name = "createApplicationVersion", title = "Create new system version", path = "systems/:system", method = Put)
+		Response
+		Exception(ErrorBadRequest)
+	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems/:system", method = Put)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "version", in = query) as Text
-		Response(SuccessOk) as Bool
-		Response(ErrorBadRequest)
-	Resource(name = "systemVersion", title = "Version of an system", path = "systems/:system/:version", method = Get)
-		Parameter(name = "system", in = path) as Text
-		Parameter(name = "verion", in = path) as Text
-		Response(SuccessOk) as Text
-		Response(ErrorBadRequest)
+		Response
+		Exception(ErrorBadRequest)
 
 	Resource(name = "servers", title = "List of servers", path = "servers", method = Get)
-		Response(SuccessOk) as Text
-		Response(ErrorBadRequest)
+		Response as Text
+		Exception(ErrorBadRequest)
+	Resource(name = "server", title = "A server", path = "servers/:server", method = Get)
+		Parameter(name = "server", in = path) as Text
+		Response as Text
+		Exception(ErrorBadRequest)
 	Resource(name = "createServer", title = "Create server", path = "server", method = Put)
 		Parameter(name = "url", in = query) as Text
-		Parameter(name = "freeCPU", in = query) as Real
-		Parameter(name = "connections", in = query) as Integer
-		Response(SuccessOk)
-		Response(ErrorBadRequest)
+		Response
+		Exception (ErrorBadRequest)
 	Resource(name = "updateServer", title = "Update server", path = "servers/:server", method = Post)
 		Parameter(name = "server", in = path) as Text
-		Response(SuccessOk)
-		Response(ErrorBadRequest)
+		Response
+		Exception(ErrorBadRequest)
 	Resource(name = "deleteServer", title = "Delete server", path = "servers/:server", method = Delete)
 		Parameter(name = "server", in = path) as Text
-		Response(SuccessOk)
-		Response(ErrorBadRequest)
-	Resource(name = "deployApplication", title = "Deploy system", path = "servers/:server/:system", method = Post)
+		Response
+		Exception(ErrorBadRequest)
+	Resource(name = "deploySystem", title = "Deploy system", path = "servers/:server/:system", method = Post)
+		Parameter(name = "server", in = path) as Text
 		Parameter(name = "system", in = path) as Text
-		Parameter(name = "isPublic", in = query) as Bool
-		Response(SuccessOk)
-		Response(ErrorBadRequest)
+    	Parameter(name = "isPublic", in = query) as Bool
+    	Response
 
-Service(title = "Build API", path = "build") build as REST
-	Resource(name = "listWebHook", title = "", path = "webhooks", method= Post)
-		Response(code = SuccessOk)
-		Response(ErrorBadRequest)
+Service(title = "Cesar Build Service", path = "build") build as REST
+	Resource(name = "listWebHook", title = "", path = "webhooks", method = Post)
+		Response
+		Exception(ErrorBadRequest)
 
-Trigger(consulLogging) scheduleServerLogging as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-Trigger(consulSystemLogging) scheduleSystemLogging as Cron(pattern = "0 * * * * *", mean = "everyMinute")
-
-Action consulLogging
-Action consulSystemLogging
-
-//--------------------- CONSUL ---------------------//
-
-Service consulManager as JMX
-	Operation(deploy) deployOperation
-	Operation(retract) retractOperation
-	Operation(systemLogging) logSystem
-	Operation(serverLogging) logServer
-
-Action deploy
-	Response as Bool
-
-Action retract
-	Response as Bool
-
-Action systemLogging
-	Parameter(name = "systemID") as Text
-	Response as Object(schema = loggingSchema)
-Action serverLogging
-	Parameter(name = "systemID") as Text
-	Response as Object(schema = loggingSchema)
-
-
-Schema loggingSchema
-	Element("stateLog")
-		Attribute(name="instant") as DateTime
-		Attribute(name="memory") as Real
-		Attribute(name="cpu") as Real
-		Attribute(name="connections") as Integer
-		Attribute(name="freeHDD") as Real
+Trigger scheduleServerLogging as Cron(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+Trigger scheduleSystemLogging as Cron(pattern = "0 * * * * *", mean = "everyMinute")

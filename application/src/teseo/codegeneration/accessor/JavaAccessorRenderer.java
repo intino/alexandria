@@ -53,7 +53,7 @@ public class JavaAccessorRenderer {
 
 	private Frame processResource(Resource resource) {
 		return new Frame().addTypes("resource", resource.method().toString())
-				.addSlot("returnType", Commons.returnType(resource.responseList()))
+				.addSlot("returnType", Commons.returnType(resource.response()))
 				.addSlot("name", resource.name())
 				.addSlot("parameters", (AbstractFrame[]) parameters(resource.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(resource))
@@ -71,7 +71,7 @@ public class JavaAccessorRenderer {
 	}
 
 	private Frame invokeSentence(Resource resource) {
-		Resource.Response response = Commons.successResponse(resource.responseList());
+		Resource.Response response = resource.response();
 		Frame result;
 		if (response.asType() == null) result = voidInvokeSentence();
 		else if (response.isObject()) result = objectInvokeSentence(response.asObject());
@@ -91,17 +91,17 @@ public class JavaAccessorRenderer {
 	}
 
 	private Frame exceptionResponses(Resource resource) {
-		List<Resource.Response> responses = Commons.nonSuccessResponse(resource.responseList());
-		if (responses.isEmpty()) return new Frame().addTypes("exceptionResponses", "none");
+		List<teseo.Exception> exceptions = resource.exceptionList();
+		if (exceptions.isEmpty()) return new Frame().addTypes("exceptionResponses", "none");
 		return new Frame().addTypes("exceptionResponses")
-				.addSlot("exceptionResponse", (AbstractFrame[]) exceptionResponses(responses));
+				.addSlot("exceptionResponse", (AbstractFrame[]) exceptionResponses(exceptions));
 	}
 
-	private Frame[] exceptionResponses(List<Resource.Response> responses) {
+	private Frame[] exceptionResponses(List<teseo.Exception> responses) {
 		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
 	}
 
-	private Frame exceptionResponse(Resource.Response response) {
+	private Frame exceptionResponse(teseo.Exception response) {
 		return new Frame().addTypes("exceptionResponse")
 				.addSlot("code", response.code().value())
 				.addSlot("exceptionName", response.code().toString());

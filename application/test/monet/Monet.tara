@@ -1,97 +1,97 @@
 dsl Teseo
-
-Service (path = "", title = "Catalogs") as REST
-	Resource(name = "getCatalog", title = "Get entire catalog", path = "", method = Get)
-		Parameter(name = "catalog-name", in = path) as Text
-		Parameter(name = "start", in = query, required = false) as Integer
-		Parameter(name = "end", in = query, required = false) as Integer
-		Response(code = SuccessOk) as Object(catalogResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "getCatalogCount", title = "Get number of elements under catalog", path = "catalog-count", method = Get)
-		Parameter(name = "catalog-name", in = path) as Text
-		Response(code = SuccessOk) as Integer
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "getEntity", title = "Get full description of element under given catalog", path = "", method = Get)
-		Parameter(name = "catalog-name", in = path) as Text
-		Parameter(name = "entity-id", in = path) as Text
-		Response(code = SuccessOk) as Object(entityResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-
-Service (path = "", title = "Process management") as REST
-	Resource(name = "startProcess", title = "Start a process of the given name", path = "", method = Post)
-		Parameter(name = "process-name", in = path) as Text
-		Parameter(name = "requester-id", in = query) as Text
-		Parameter(name = "requester-uri", in = query, required = false) as Text
-		Response(code = SuccessOk) as Text
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "contextOf", title = "Context of the given process id", path = "context-of", method = Get)
-		Parameter(name = "id", in = path) as Text
-		Response(code = SuccessOk) as Object(schema = contextResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "notifyWorkItemEnding", title = "Communicated the end of a work item", path = "finished-work-item", method = Put)
-		Parameter(name = "id", in = path) as Text
-		Response(code = SuccessOk)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "prepareSignature", title = "Prepare signature for stamping", path = "prepare-signature", method = Get)
-		Parameter(name = "signature-id", in = path) as Text
-		Parameter(name = "certificate", in = query) as Text
-		Parameter(name = "label", in = query) as Text
-		Response(code = SuccessOk) as Text
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "stampSignature", title = "Stamp signature", path = "stamp-signature", method = Post)
-		Parameter(name = "signature-id", in = path) as Text
-		Parameter(name = "signature-content", in = query) as Text
-		Response(code = SuccessOk) as Text
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-Service(path = "", title = "Form management") as REST
-	Resource(name = "getForm", title = "Form data", path = "form", method = Get)
-		Parameter(name = "id", in = path) as Text
-		Response(code = SuccessOk) as Object(schema = formResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "validateField", title = "Field validation", path = "field-validation", method = Get)
-		Parameter(name = "form-id", in = query) as Text
-		Parameter(name = "field-label", in = query) as Text
-		Parameter(name = "field-value", in = query) as Text
-		Response(code = SuccessOk) as Object(fieldValidationResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "getFieldTypeAhead", title = "Field type ahead", path = "field-type-ahead", method = Get)
-		Parameter(name = "form-id", in = query) as Text
-		Parameter(name = "field-label", in = query) as Text
-		Parameter(name = "field-value", in = query) as Text
-		Response(code = SuccessOk) as Object(schema = fieldTypeAheadResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-Service(path = "", title = "File management") as REST //TODO
-	Resource(name = "getFieldTypeAhead", title = "Download file", path = "field-type-ahead", method = Get)
-		Parameter(name = "form-id", in = query) as Text
-		Parameter(name = "field-label", in = query) as Text
-		Response(code = SuccessOk) as Object(schema = fieldTypeAheadResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-
-Service(path= "", title = "Catalogs") as REST
-	Resource(name = "getCatalog", title = "Get entire catalog", path = "", method = Get)
-		Parameter(name = "catalog-name", in = path) as Text
-		Parameter(name = "start", in = query, required = false) as Integer
-		Parameter(name = "end", in = query, required = false) as Integer
-		Response(code = SuccessOk) as Object(catalogResponse)
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
-	Resource(name = "getCatalogCount", title = "Get number of elements under catalog", path = "catalog-count", method = Get)
-		Parameter(name = "catalog-name", in = path) as Text
-		Response(code = SuccessOk) as Integer
-		Response(code = ErrorNotFound)
-		Response(code = ErrorUnauthorized)
+//
+//Service (path = "", title = "Catalogs") as REST
+//	Resource(name = "getCatalog", title = "Get entire catalog", path = "", method = Get)
+//		Parameter(name = "catalog-name", in = path) as Text
+//		Parameter(name = "start", in = query, required = false) as Integer
+//		Parameter(name = "end", in = query, required = false) as Integer
+//		Response(code = SuccessOk) as Object(catalogResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "getCatalogCount", title = "Get number of elements under catalog", path = "catalog-count", method = Get)
+//		Parameter(name = "catalog-name", in = path) as Text
+//		Response(code = SuccessOk) as Integer
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "getEntity", title = "Get full description of element under given catalog", path = "", method = Get)
+//		Parameter(name = "catalog-name", in = path) as Text
+//		Parameter(name = "entity-id", in = path) as Text
+//		Response(code = SuccessOk) as Object(entityResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//
+//Service (path = "", title = "Process management") as REST
+//	Resource(name = "startProcess", title = "Start a process of the given name", path = "", method = Post)
+//		Parameter(name = "process-name", in = path) as Text
+//		Parameter(name = "requester-id", in = query) as Text
+//		Parameter(name = "requester-uri", in = query, required = false) as Text
+//		Response(code = SuccessOk) as Text
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "contextOf", title = "Context of the given process id", path = "context-of", method = Get)
+//		Parameter(name = "id", in = path) as Text
+//		Response(code = SuccessOk) as Object(schema = contextResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "notifyWorkItemEnding", title = "Communicated the end of a work item", path = "finished-work-item", method = Put)
+//		Parameter(name = "id", in = path) as Text
+//		Response(code = SuccessOk)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "prepareSignature", title = "Prepare signature for stamping", path = "prepare-signature", method = Get)
+//		Parameter(name = "signature-id", in = path) as Text
+//		Parameter(name = "certificate", in = query) as Text
+//		Parameter(name = "label", in = query) as Text
+//		Response(code = SuccessOk) as Text
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "stampSignature", title = "Stamp signature", path = "stamp-signature", method = Post)
+//		Parameter(name = "signature-id", in = path) as Text
+//		Parameter(name = "signature-content", in = query) as Text
+//		Response(code = SuccessOk) as Text
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//Service(path = "", title = "Form management") as REST
+//	Resource(name = "getForm", title = "Form data", path = "form", method = Get)
+//		Parameter(name = "id", in = path) as Text
+//		Response(code = SuccessOk) as Object(schema = formResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "validateField", title = "Field validation", path = "field-validation", method = Get)
+//		Parameter(name = "form-id", in = query) as Text
+//		Parameter(name = "field-label", in = query) as Text
+//		Parameter(name = "field-value", in = query) as Text
+//		Response(code = SuccessOk) as Object(fieldValidationResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "getFieldTypeAhead", title = "Field type ahead", path = "field-type-ahead", method = Get)
+//		Parameter(name = "form-id", in = query) as Text
+//		Parameter(name = "field-label", in = query) as Text
+//		Parameter(name = "field-value", in = query) as Text
+//		Response(code = SuccessOk) as Object(schema = fieldTypeAheadResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//Service(path = "", title = "File management") as REST //TODO
+//	Resource(name = "getFieldTypeAhead", title = "Download file", path = "field-type-ahead", method = Get)
+//		Parameter(name = "form-id", in = query) as Text
+//		Parameter(name = "field-label", in = query) as Text
+//		Response(code = SuccessOk) as Object(schema = fieldTypeAheadResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//
+//Service(path= "", title = "Catalogs") as REST
+//	Resource(name = "getCatalog", title = "Get entire catalog", path = "", method = Get)
+//		Parameter(name = "catalog-name", in = path) as Text
+//		Parameter(name = "start", in = query, required = false) as Integer
+//		Parameter(name = "end", in = query, required = false) as Integer
+//		Response(code = SuccessOk) as Object(catalogResponse)
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
+//	Resource(name = "getCatalogCount", title = "Get number of elements under catalog", path = "catalog-count", method = Get)
+//		Parameter(name = "catalog-name", in = path) as Text
+//		Response(code = SuccessOk) as Integer
+//		Response(code = ErrorNotFound)
+//		Response(code = ErrorUnauthorized)
 
 Schema catalogResponse
 	Element(name = "catalog")

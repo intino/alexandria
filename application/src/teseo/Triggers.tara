@@ -4,7 +4,6 @@ dsl Proteo
 use Teseo
 
 Concept Trigger
-	var Action[] actions
 
 Facet Scheduled on Trigger is abstract
 

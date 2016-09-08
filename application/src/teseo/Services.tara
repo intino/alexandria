@@ -2,8 +2,12 @@ dsl Proteo
 
 use Teseo
 
+Concept Board
+	var string path
+	has Service
 !! TODO
 Concept Service
+	has Method
 
 Facet REST on Service
 	var string title
@@ -33,8 +37,7 @@ Facet REST on Service
 			var string description = ""
 			var string url
 
-Concept Resource
-	var string name
+Concept Resource extends Method is component
 	var string title
 	var string description = ""
 	var string path
@@ -44,11 +47,23 @@ Concept Resource
 		var string description = ""
 		var word:{body path form header query} in
 		var boolean required = true
-	Concept:{1..*} Response extends Data
-		var word:ResponseCodes code
+	Concept:{1..1} Response extends Data
 		var string description = ""
+	has Exception
+
+Concept Operation extends Method is component
+	Concept Parameter extends Data
+		var string name
+		var boolean required = true
+	Concept:{1..1} Response extends Data
+		var string description = ""
+	has Exception
 
 Facet JMX on Service
-	Concept Operation
-		var Action action
-	Concept Notification
+	var string path = ""
+	has:{1..*} Operation
+	Concept Notification extends Method
+
+Concept Exception extends Data is component
+	var word:ExceptionCodes code
+	var string description = ""

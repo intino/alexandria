@@ -3,7 +3,7 @@ package withoutscheme;
 import tara.magritte.Graph;
 import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
-import teseo.codegeneration.server.web.JavaServerRenderer;
+import teseo.codegeneration.server.rest.JavaServerRenderer;
 import teseo.rest.RESTService;
 
 import java.io.File;

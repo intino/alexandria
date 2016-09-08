@@ -7,21 +7,18 @@ def type(action)
 
 	public class $name+firstUpperCase~Action {
 
-	    private final Graph graph;
+        public Graph graph;
+        [$parameter+type...[;$NL]]
 
-    	public $name+firstUpperCase~Action(Graph graph) {
-    		this.graph = graph;
-    	}
-
-		public [$returnType?void] execute($parameter+withType...[, ]) {
+		public [$returnType?void] execute() {
             $returnType+return
 		}
 	}
 end
 
 
-def type(parameter) trigger(withType)
-    $type $name
+def type(parameter) trigger(type)
+    public $type $name
 end
 
 def attribute(void) trigger(return)

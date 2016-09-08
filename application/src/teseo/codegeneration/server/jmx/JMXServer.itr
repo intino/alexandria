@@ -65,7 +65,7 @@ end
 
 def type(operation) trigger(implementation)
     public [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]) {
-        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action(graph).execute($parameter+name...[, ]);
+        [$returnType+return ]new $package+validname.actions.$action+firstUpperCase~Action(graph[, $parameter+name...[, ]]).execute();
     }
 end
 

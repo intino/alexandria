@@ -2,5 +2,6 @@ dsl Teseo
 
 
 Service (title = "Interface for recovering all dashboard information", path = "/dashboard") as REST
-	Resource(name = "today", title="Today opinions", path = "/today", method = Get)
+	Resource(name = "today", title="Today opinions", path = "/today", method = Get, action = opinions)
 		Response(code = SuccessOk) as Text
+Action opinions

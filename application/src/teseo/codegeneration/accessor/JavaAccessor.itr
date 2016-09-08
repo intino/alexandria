@@ -41,7 +41,7 @@ def type(parameter) trigger(declaration)
 end
 
 def type(parameter & query & required) type(dateTimeData | dateData) trigger(toMap)
-    put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).getEpochSecond()));
+    put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).toEpochMilli());
 end
 
 def type(parameter & query & required) type(htmlData | textData) trigger(toMap)
@@ -57,7 +57,7 @@ def type(parameter & query & required & objectData) trigger(toMap)
 end
 
 def type(parameter & query) type(dateTimeData | dateData) trigger(toMap)
-    if($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).getEpochSecond()));
+    if($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()));
 end
 
 def type(parameter & query) type(htmlData | textData) trigger(toMap)

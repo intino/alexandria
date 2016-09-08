@@ -1,4 +1,4 @@
-package teseo.codegeneration.server.web;
+package teseo.codegeneration.server.rest;
 
 import cottons.utils.Files;
 import org.siani.itrules.Template;

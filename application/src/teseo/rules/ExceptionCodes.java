@@ -2,11 +2,8 @@ package teseo.rules;
 
 import tara.lang.model.Rule;
 
-public enum ResponseCodes implements Rule<Enum> {
+public enum ExceptionCodes implements Rule<Enum> {
 
-    SuccessOk("200"),
-    SuccessCreated("201"),
-    SuccessNoContent("0"),
     ErrorBadRequest("400"),
     ErrorUnauthorized("401"),
     ErrorForbidden("403"),
@@ -15,7 +12,7 @@ public enum ResponseCodes implements Rule<Enum> {
 
     private String code;
 
-    ResponseCodes(String code) {
+    ExceptionCodes(String code) {
         this.code = code;
     }
 
@@ -25,6 +22,6 @@ public enum ResponseCodes implements Rule<Enum> {
 
     @Override
     public boolean accept(Enum value) {
-        return value instanceof ResponseCodes;
+        return value instanceof ExceptionCodes;
     }
 }

@@ -1,0 +1,54 @@
+dsl Proteo
+
+Concept Channel
+	var date from is reactive
+	var date to is reactive
+	var word:TimeScale forwardStep
+	var string spaceName = "default"
+	var function:Forward forward
+	var function:CanForward canForward
+	var function:TimeLineLoader timeLine = @channelTimeLineLoader
+
+	!! A stream that gets data from a CSV file
+	sub CSVChannel
+		var resource file
+		var string[] attributes = empty is private
+		var object:BufferedReader buffer = empty is private
+		var function:Command createBuffer = @csvCreateBuffer
+
+	!! A stream that gets data from a web service
+	sub WebServiceChannel
+		var string uri
+
+	!! A stream that gets data from a database
+	sub DatabaseChannel
+		var string uri
+		var string user
+		var string password
+		var string query
+
+	!! A stream that generates data
+	sub VirtualChannel
+		var integer count
+
+	!! Defines a communication channel on an uri
+	sub RestChannel
+		var date from = @channelFrom is reactive
+		var date to = @now is reactive
+		var string uri
+		var function:Forward forward = @restChannelForward is private
+		var function:CanForward canForward = @restChannelCanForward is private
+		var function:ChannelListener listener = @restChannelWrite is private
+
+	!! A stream that gets data from a jms server
+	sub JmsChannel
+		var string uri
+		var string queue
+		var date from = @channelFrom is reactive
+		var date to = @now is reactive
+		var function:Forward forward = @jmsChannelForward is private
+		var function:CanForward canForward = @jmsChannelCanForward is private
+
+		Concept:{1..1} Credential
+			var string username
+			var string password

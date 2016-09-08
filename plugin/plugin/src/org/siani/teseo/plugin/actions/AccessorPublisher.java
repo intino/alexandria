@@ -60,6 +60,7 @@ class AccessorPublisher {
 			for (String app : apps) notifySuccess(project.getMavenId(), app);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
+			LOG.error(e.getMessage());
 		}
 	}
 
@@ -148,6 +149,6 @@ class AccessorPublisher {
 	}
 
 	private void notifyError(String message) {
-		Bus.notify(new Notification("Teseo", "Accessor cannot be published. " + message, " ", ERROR), module.getProject());
+		Bus.notify(new Notification("Teseo", "Accessor cannot be published. ", message, ERROR), module.getProject());
 	}
 }

@@ -8,7 +8,7 @@ import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
-import teseo.codegeneration.server.web.JavaServerRenderer;
+import teseo.codegeneration.server.rest.JavaServerRenderer;
 
 import java.io.File;
 
