@@ -22,7 +22,6 @@ import static teseo.helpers.Commons.*;
 public class JavaServerRenderer {
 	private final Graph graph;
 	private final List<Service> services;
-	private File destination;
 	private String packageName;
 
 	public JavaServerRenderer(Graph graph) {
@@ -31,18 +30,17 @@ public class JavaServerRenderer {
 	}
 
 	public void execute(File gen, File src, String packageName) {
-		this.destination = gen;
 		this.packageName = packageName;
 		Files.removeDir(gen);
-		web(src, gen, packageName);
+		rest(src, gen, packageName);
 		scheduling(src, gen, packageName);
 		jmx(src, gen, packageName);
 	}
 
-	private void web(File src, File gen, String packageName) {
-		new SchemaRenderer(graph).execute(destination, packageName);
+	private void rest(File src, File gen, String packageName) {
+		new SchemaRenderer(graph).execute(gen, packageName);
 		new RestResourceRenderer(graph).execute(gen, src, packageName);
-		services.forEach(this::processService);
+		services.forEach((service) -> processService(service, gen));
 	}
 
 	private void scheduling(File src, File gen, String packageName) {
@@ -55,14 +53,14 @@ public class JavaServerRenderer {
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
-	private void processService(Service service) {
+	private void processService(Service service, File gen) {
 		List<Resource> resources = service.node().findNode(Resource.class);
 		if (resources.isEmpty()) return;
 		Frame frame = new Frame().addTypes("server");
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("resources", (AbstractFrame[]) processResources(resources));
-		writeFrame(destination, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
+		writeFrame(gen, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {

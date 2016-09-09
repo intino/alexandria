@@ -44,7 +44,7 @@ public class CertificateVerifier {
      * @return
      */
     @SuppressWarnings({ "resource", "unchecked", "rawtypes" })
-    public static boolean checkRootCertificate(byte[] signature, File storeFile, TYPE_PKCS typePKCSFile, String password, String certificateIndentifier){
+    public static boolean checkRootCertificate(byte[] signature, File storeFile, TYPE_PKCS typePKCSFile, String password){
         try{
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             byte[] storeBytes = storeBytes(storeFile);

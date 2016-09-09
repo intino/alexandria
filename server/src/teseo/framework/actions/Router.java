@@ -1,11 +1,11 @@
 package teseo.framework.actions;
 
 import teseo.framework.security.NullSecurityManager;
-import teseo.framework.security.SecurityManager;
+import teseo.framework.security.TeseoSecurityManager;
 import teseo.framework.services.PushService;
 
 public abstract class Router {
-    private SecurityManager securityManager = new NullSecurityManager();
+    private TeseoSecurityManager teseoSecurityManager = new NullSecurityManager();
 
     public Routing route(String path) {
         return new Routing(path);
@@ -17,8 +17,8 @@ public abstract class Router {
 
     public abstract void pushService(String route, PushService service);
 
-    public void securityManager(SecurityManager manager) {
-        this.securityManager = manager;
+    public void securityManager(TeseoSecurityManager manager) {
+        this.teseoSecurityManager = manager;
     }
 
     public class Routing {
@@ -57,7 +57,7 @@ public abstract class Router {
         Get, Post, Put, Delete
     }
 
-    protected SecurityManager securityManager() {
-        return this.securityManager;
+    protected TeseoSecurityManager securityManager() {
+        return this.teseoSecurityManager;
     }
 }

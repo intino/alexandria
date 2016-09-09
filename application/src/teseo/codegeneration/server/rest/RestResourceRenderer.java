@@ -80,9 +80,10 @@ class RestResourceRenderer {
 	}
 
 	private Frame parameter(Resource.Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.required() ? "required" : "optional"))
+		return new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.required() ? "required" : "optional"))
 				.addSlot("name", parameter.name())
-				.addSlot("parameterType", parameter.asType().type());
+				.addSlot("parameterType", parameter.asType().type())
+				.addSlot("in", parameter.in().name());
 	}
 
 	private Template template() {

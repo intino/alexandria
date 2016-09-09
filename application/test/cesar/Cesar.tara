@@ -8,17 +8,17 @@ Service(title = "Cesar Ops Service", path = "") cesar as REST
 	Resource(name = "systems", title = "List of systems", path = "systems", type = Get)
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "system", title = "A system", path = "systems/:system", type = Get)
+	Resource(name = "system", title = "A system", path = "systems", type = Get)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "verion", in = path) as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "updateSystem", title = "Update system", path = "systems/:system", type = Post)
+	Resource(name = "updateSystem", title = "Update system", path = "systems", type = Post)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "enabled", in = query) as Bool
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems/:system", type = Put)
+	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems", type = Put)
 		Parameter(name = "system", in = path) as Text
 		Parameter(name = "version", in = query) as Text
 		Response
@@ -27,7 +27,7 @@ Service(title = "Cesar Ops Service", path = "") cesar as REST
 	Resource(name = "servers", title = "List of servers", path = "servers", type = Get)
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "server", title = "A server", path = "servers/:server", type = Get)
+	Resource(name = "server", title = "A server", path = "servers", type = Get)
 		Parameter(name = "server", in = path) as Text
 		Response as Text
 		Exception(ErrorBadRequest)
@@ -35,15 +35,15 @@ Service(title = "Cesar Ops Service", path = "") cesar as REST
 		Parameter(name = "url", in = query) as Text
 		Response
 		Exception (ErrorBadRequest)
-	Resource(name = "updateServer", title = "Update server", path = "servers/:server", type = Post)
+	Resource(name = "updateServer", title = "Update server", path = "servers", type = Post)
 		Parameter(name = "server", in = path) as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deleteServer", title = "Delete server", path = "servers/:server", type = Delete)
+	Resource(name = "deleteServer", title = "Delete server", path = "servers", type = Delete)
 		Parameter(name = "server", in = path) as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deploySystem", title = "Deploy system", path = "servers/:server/:system", type = Post)
+	Resource(name = "deploySystem", title = "Deploy system", path = "servers", type = Post)
 		Parameter(name = "server", in = path) as Text
 		Parameter(name = "system", in = path) as Text
     	Parameter(name = "isPublic", in = query) as Bool

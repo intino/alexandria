@@ -6,8 +6,8 @@ import static java.util.Collections.emptyMap;
 
 public abstract class TeseoException extends Throwable {
 
-	private String code;
 	private final Map<String, String> parameters;
+	private String code;
 
 	public TeseoException(String code, String message) {
 		this(code, message, emptyMap());

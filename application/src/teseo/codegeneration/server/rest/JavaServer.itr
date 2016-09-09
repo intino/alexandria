@@ -1,7 +1,7 @@
 def type(server)
 	package $package+validname;
 
-	import teseo.framework.web.TeseoServer;
+	import teseo.framework.web.TeseoSpark;
 	import $package+validname.resources.*;
 	import tara.magritte.Graph;
 
@@ -9,12 +9,12 @@ def type(server)
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
-		public static void setup(TeseoServer server, Graph graph) {
+		public static void setup(TeseoSpark server, Graph graph) {
 			$resources...[$NL]
 		}
 	}
 end
 
 def type(resource)
-	server.route("$path[/:$parameters...[/:]]").as($method+firstUpperCase).with(new $name+firstUpperCase$~Resource(graph));
+	server.route("$path[/:$parameters...[/:]]").$method+firstlowerCase((manager) -> new $name+firstUpperCase$~Resource(graph, manager).execute());
 end

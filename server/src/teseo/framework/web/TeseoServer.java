@@ -4,7 +4,7 @@ import teseo.framework.actions.AdapterProxy;
 import teseo.framework.actions.RequestAdapter;
 import teseo.framework.actions.ResponseAdapter;
 import teseo.framework.actions.Router;
-import teseo.framework.security.SecurityManager;
+import teseo.framework.security.TeseoSecurityManager;
 import teseo.framework.services.PushService;
 import teseo.framework.web.actions.DefaultRequestAdapter;
 import teseo.framework.web.actions.DefaultResponseAdapter;
@@ -32,7 +32,7 @@ public abstract class TeseoServer implements AdapterProxy {
         router().pushService("/push", pushService);
     }
 
-    public void register(SecurityManager manager) {
+    public void register(TeseoSecurityManager manager) {
         router().securityManager(manager);
     }
 

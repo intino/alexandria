@@ -9,6 +9,8 @@ Concept Method is abstract
 	has:{1..1} Response
 	has Exception
 
+Concept Data is abstract
+
 Concept Exception extends Data is component
 	var word:ExceptionCodes code
 	var string description = ""
@@ -43,12 +45,13 @@ Facet Type on Data
 	sub Html
 		var string type = "String" is reactive private
 	sub File
-		var string type = "cotton.restful.core.Resource" is reactive private
+		var string type = "File" is reactive private
 	sub Object
 		var Schema schema
 		var string type = @schemaElementName is reactive private
 
-Concept Data is abstract
+Facet List on Data
+	var string type = "List" is reactive private
 
 !! Schemas allows to define how objects are. This objects can be provided as either parameter or response
 Concept Schema

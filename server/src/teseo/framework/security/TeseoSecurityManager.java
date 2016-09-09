@@ -1,5 +1,5 @@
 package teseo.framework.security;
 
-public interface SecurityManager {
+public interface TeseoSecurityManager {
     boolean check(String hash, String signature);
 }

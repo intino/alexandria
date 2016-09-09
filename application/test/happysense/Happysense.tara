@@ -9,8 +9,8 @@ Service (title = "Interface for recovering all dashboard information", path = "/
 
 	Resource(title="Summary of opinions at some instant", path = "/snapshot", type = Get, name="snapshot")
 		Parameter(name = "scale", in = query) as Text
-		Parameter(name = "range", in = query) as Object(schema = RangeSchema)
-		Parameter(name = "filters", in = query) as Object(schema = FilterListSchema)
+		Parameter(name = "range", in = body) as Object(schema = RangeSchema)
+		Parameter(name = "filters", in = body) as Object(schema = FilterListSchema)
 		Response as Object(schema = OpinionSnapshotResponseSchema)
 
 Schema RangeSchema

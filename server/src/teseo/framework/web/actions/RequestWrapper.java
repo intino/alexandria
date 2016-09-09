@@ -306,10 +306,8 @@ class RequestWrapper extends SparkWrapper {
 
 	private Object readPart(String method) throws IOException, ServletException {
 		Part part = request.raw().getPart(method);
-
 		if (part.getContentType() == null)
 			return readString(part.getInputStream());
-
 		return part.getInputStream();
 	}
 

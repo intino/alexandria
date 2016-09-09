@@ -1,41 +1,35 @@
 def type(resource)
 	package $package.resources;
 
-    import org.apache.http.HttpRequest;
-    import org.apache.http.HttpResponse;
-	import teseo.Error;
 	import teseo.exceptions.*;
 	import $package.*;
-	import com.google.gson.Gson;
 	import tara.magritte.Graph;
+	import teseo.framework.web.Resource;
+	import teseo.framework.web.SparkManager;
 	$schemaImport
 
-	import static teseo.Commons.error;
-    import static java.util.Collections.emptyMap;
-
-	public class $name+firstUpperCase$~Resource {
+	public class $name+firstUpperCase$~Resource implements Resource {
 
 		private Graph graph;
-		private final HttpRequest request;
-		private final HttpResponse response;
+		private SparkManager manager;
 
-		public $name+firstUpperCase$~Resource(Graph graph, HttpRequest request, HttpResponse response) {
+		public $name+firstUpperCase$~Resource(Graph graph, SparkManager manager) {
 			this.graph = graph;
-			this.request = request;
-			this.response = response;
+			this.manager = manager;
 		}
 
 		public void execute() throws $throws...[, ] {
-            $package+validname.actions.$name+firstUpperCase~Action action = new $package+validname.actions.$name+firstUpperCase~Action();
-            fill(action);
-            [$returnType+return]new $package+validname.actions.$name+firstUpperCase~Action().execute()[$returnType+ending];
-		}[
-        $returnType+write]
-
-		private void fill($package+validname.actions.$name+firstUpperCase~Action action) {
-		    action.graph = graph;
-		    $parameter+assign...[$NL]
+			$package+validname.actions.$name+firstUpperCase~Action action = new $package+validname.actions.$name+firstUpperCase~Action();
+			[$returnType+return]fill(action).execute()[$returnType+ending];
 		}
+
+		private $package+validname.actions.$name+firstUpperCase~Action fill($package+validname.actions.$name+firstUpperCase~Action action) {
+			action.graph = this.graph;[
+			$parameter+assign...[$NL]]
+			return action;
+		}
+        [
+        $returnType+write]
 	}
 end
 
@@ -43,36 +37,31 @@ def attribute(void) trigger(return)
 end
 
 def trigger(return)
-    write(
+	write(
 end
 
 def attribute(void) trigger(ending)
 end
 
 def trigger(ending)
-    )
+	)
 end
 
 def attribute(void) trigger(write)
 end
 
-def attribute(object) trigger(write)
-    private void write($value+firstUpperCase+ReturnTypeFormatter object) {
-        response.write(new Gson().toJson(object, $value+firstUpperCase.class));
-    }
-end
-
 def trigger(write)
-    private void write($value+firstUpperCase+ReturnTypeFormatter object) {
-        response.write(object);
-    }
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object);
+	}
 end
 
 def type(parameter) trigger(type)
 	$parameterType
 end
+
 def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = ($parameterType) request.parameter("$name");
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
 end
 
 def type(schemaImport)

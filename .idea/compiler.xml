@@ -63,7 +63,7 @@
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for rest-core" enabled="true">
+      <profile default="false" name="Annotation profile for core" enabled="true">
         <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
