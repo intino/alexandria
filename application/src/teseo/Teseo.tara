@@ -38,14 +38,14 @@ Facet Type on Data
 		var string type = "String" is reactive private
 	sub Date
 		var string format = "dd/MM/yyyy"
-		var string type = "LocalDate" is reactive private
+		var string type = "java.time.LocalDate" is reactive private
 	sub DateTime
 		var string format = "dd/MM/yyyy HH:mm:ss"
-		var string type = "LocalDateTime" is reactive private
+		var string type = "java.time.LocalDateTime" is reactive private
 	sub Html
 		var string type = "String" is reactive private
 	sub File
-		var string type = "File" is reactive private
+		var string type = "java.io.File" is reactive private
 	sub Object
 		var Schema schema
 		var string type = @schemaElementName is reactive private

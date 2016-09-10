@@ -84,7 +84,7 @@
         </dependency>
         <dependency>
             <groupId>org.siani.teseo</groupId>
-            <artifactId>accessor-java</artifactId>
+            <artifactId>rest-accessor-java</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
         </dependency>

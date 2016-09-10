@@ -19,8 +19,7 @@ def type(resource)
 		}
 
 		public void execute() throws $throws...[, ] {
-			$package+validname.actions.$name+firstUpperCase~Action action = new $package+validname.actions.$name+firstUpperCase~Action();
-			[$returnType+return]fill(action).execute()[$returnType+ending];
+			[$returnType+return]fill(new $package+validname.actions.$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
 		private $package+validname.actions.$name+firstUpperCase~Action fill($package+validname.actions.$name+firstUpperCase~Action action) {

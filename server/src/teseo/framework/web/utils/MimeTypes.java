@@ -556,7 +556,7 @@ public class MimeTypes {
 		mimeTypes.put("m3u8", "application/x-mpegURL");
 		mimeTypes.put("ts", "video/MP2T");
 
-		mimeTypes.entrySet().stream().forEach(e -> mimeTypesInverted.put(e.getValue(), e.getKey()));
+		mimeTypes.entrySet().forEach(e -> mimeTypesInverted.put(e.getValue(), e.getKey()));
 		mimeTypesInverted.put(XML, "xml");
 		mimeTypesInverted.put(PDF, "pdf");
 		mimeTypesInverted.put(TEXT, "txt");

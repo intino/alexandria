@@ -1,6 +1,5 @@
 package teseo.framework.web;
 
-import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+@SuppressWarnings("unchecked")
 public class SparkManager {
 
 
@@ -26,42 +26,38 @@ public class SparkManager {
 	}
 
 	public <T> T fromHeader(String name, Class<T> type) {
-		return (T) request.headers(name);
+		return SparkReader.read(request.headers(name), type);
 	}
 
 	public <T> T fromQuery(String name, Class<T> type) {
-		return (T) request.queryParams(name);
+		return SparkReader.read(request.queryParams(name), type);
 	}
 
-	public <T> T fromPath(String name, Class<T> schema) {
-		return (T) request.params(name);
+	public <T> T fromPath(String name, Class<T> type) {
+		return SparkReader.read(request.params(name), type);
 	}
 
-	public <T> T fromBody(String name, Class<T> schema) {
-		return new Gson().fromJson(request.body(), schema);
+	public <T> T fromBody(String name, Class<T> type) {
+		return SparkReader.read(request.body(), type);
 	}
 
-	public Object fromForm(String name) {
-		return readPart(name);
-	}
-
-	public Object fromForm(String name, Class schema) {
-		final Object o = readPart(name);
-		return o != null ? new Gson().fromJson(o.toString(), schema) : null;
+	public <T> T fromForm(String name, Class<T> type) {
+		Object o = readPart(name);
+		return o instanceof String ? SparkReader.read(o.toString(), type) : (T) o;
 	}
 
 	private Object readPart(String method) {
 		try {
 			Part part = request.raw().getPart(method);
 			if (part.getContentType() == null)
-				return readString(part.getInputStream());
+				return readStream(part.getInputStream());
 			return part.getInputStream();
 		} catch (IOException | ServletException e) {
 			return null;
 		}
 	}
 
-	private String readString(InputStream stream) throws IOException {
+	private String readStream(InputStream stream) throws IOException {
 		Scanner scanner = new Scanner(stream, "UTF-8").useDelimiter("\\A");
 		return scanner.hasNext() ? scanner.next() : "";
 	}

@@ -3,11 +3,14 @@ package cesar;
 import org.junit.Test;
 import tara.magritte.Graph;
 import teseo.TeseoApplication;
+import teseo.codegeneration.accessor.JavaAccessorRenderer;
 import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.rest.JavaServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
+import teseo.framework.web.TeseoSpark;
+import teseo.rest.RESTService;
 
 import java.io.File;
 
@@ -25,6 +28,7 @@ public class CesarTest {
 		new SchedulerRenderer(graph).execute(gen, CESAR);
 		new JMXOperationsServiceRenderer(graph).execute(gen, gen, CESAR);
 		new JMXServerRenderer(graph).execute(gen, CESAR);
+		graph.find(RESTService.class).forEach(a -> new JavaAccessorRenderer(a).execute(new File("test-gen", CESAR), CESAR));
 	}
 
 	@Test
@@ -36,5 +40,9 @@ public class CesarTest {
 		new SchedulerRenderer(graph).execute(gen, CESAR);
 		new JMXOperationsServiceRenderer(graph).execute(gen, gen, CESAR);
 		new JMXServerRenderer(graph).execute(gen, CESAR);
+	}
+
+	public static void main(String[] args) {
+		CesarResources.setup(new TeseoSpark(8080, false), null);
 	}
 }
