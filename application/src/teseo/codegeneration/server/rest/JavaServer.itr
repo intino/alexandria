@@ -10,11 +10,15 @@ def type(server)
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
 		public static void setup(TeseoSpark server, Graph graph) {
+			$secure
 			$resources...[$NL]
 		}
 	}
 end
 
+def type(secure)
+	server.secure(new teseo.framework.web.security.DefaultSecurityManager(new java.io.File("$file"), "$password"));
+end
 def type(resource)
 	server.route("$path[/:$parameters...[/:]]").$method+firstlowerCase((manager) -> new $name+firstUpperCase$~Resource(graph, manager).execute());
 end

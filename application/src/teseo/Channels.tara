@@ -4,41 +4,35 @@ Concept Channel
 	Concept Media is abstract
 
 Facet Input on Channel
+	Concept Parser
 	Concept:{1..*} Origin extends Channel.Media
 	Concept Receiver
 
 Facet Output on Channel
+	Concept Formatter
 	Concept:{1..*} Destination extends Channel.Media
 	Concept Publisher
 
 
+
 Facet Origin on Channel.Media
-	sub File
+	sub FFile
 		var resource file
-		var FileFormatter formatter
-	sub Service
-		var string server
+	sub SecuredOrigin
+		var string:url uri
 		Concept:{0..1} Authentication
 		sub DB
 			var string query
-		sub MessageService
-			var MessageParser parser
-			sub Queue
-				var string location
-			sub Topic
-				var string location
-			sub REST
+		sub Queue
+			var string location
+		sub Topic
+			var string location
 
 	sub Virtual
 
-Concept FileFormatter
 
 
-
-Concept MessageParser
-
-
-Facet Mode on Service.Authentication
+Facet Mode on SecuredOrigin.Authentication
 	sub Credential
 		var string username
 		var string password

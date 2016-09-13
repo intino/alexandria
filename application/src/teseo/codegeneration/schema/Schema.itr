@@ -1,8 +1,6 @@
 def type(element)
     package $package+validname.schemas;
 
-    import java.time.LocalDateTime;
-
     public class $name+firstUpperCase {
 
         $attribute+declaration...[$NL]

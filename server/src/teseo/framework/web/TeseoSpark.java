@@ -13,18 +13,16 @@ import static spark.Spark.webSocketIdleTimeoutMillis;
 
 public class TeseoSpark {
 
-	private final boolean secure;
 	private TeseoSecurityManager securityManager = new NullSecurityManager();
 	private final String webDirectory;
 	private static final int OneDay = 24 * 60 * 60 * 1000;
 
-	public TeseoSpark(int port, boolean secure) {
-		this(port, secure, "/web");
+	public TeseoSpark(int port) {
+		this(port, "/web");
 	}
 
-	public TeseoSpark(int port, boolean secure, String webDirectory) {
+	public TeseoSpark(int port, String webDirectory) {
 		Spark.port(port);
-		this.secure = secure;
 		this.webDirectory = webDirectory;
 	}
 
@@ -71,7 +69,7 @@ public class TeseoSpark {
 		}
 
 		private boolean validRequest(SparkManager manager) {
-			return !secure || securityManager.check(manager.fromQuery("hash", String.class), manager.fromQuery("signature", String.class));
+			return securityManager.check(manager.fromQuery("hash", String.class), manager.fromQuery("signature", String.class));
 		}
 
 		private Object execute(ResourceCaller caller, SparkManager manager) {

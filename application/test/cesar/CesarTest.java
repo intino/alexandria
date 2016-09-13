@@ -9,7 +9,6 @@ import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.rest.JavaServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
-import teseo.framework.web.TeseoSpark;
 import teseo.rest.RESTService;
 
 import java.io.File;
@@ -42,7 +41,5 @@ public class CesarTest {
 		new JMXServerRenderer(graph).execute(gen, CESAR);
 	}
 
-	public static void main(String[] args) {
-		CesarResources.setup(new TeseoSpark(8080, false), null);
-	}
+
 }

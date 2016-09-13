@@ -5,7 +5,6 @@ import tara.magritte.Graph;
 import teseo.TeseoApplication;
 import teseo.codegeneration.accessor.JavaAccessorRenderer;
 import teseo.codegeneration.server.rest.JavaServerRenderer;
-import teseo.framework.web.TeseoSpark;
 import teseo.rest.RESTService;
 
 import java.io.File;
@@ -22,7 +21,7 @@ public class HappySenseTest {
 
 
     public static void main(String[] args) throws Exception {
-        TeseoSpark teseoSpark = new TeseoSpark(8080, false);
-        RestResources.setup(teseoSpark, null);
+//        TeseoSpark teseoSpark = new TeseoSpark(8080, false);
+//        RestResources.setup(teseoSpark, null);
     }
 }

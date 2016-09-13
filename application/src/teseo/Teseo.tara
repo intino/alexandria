@@ -42,10 +42,9 @@ Facet Type on Data
 	sub DateTime
 		var string format = "dd/MM/yyyy HH:mm:ss"
 		var string type = "java.time.LocalDateTime" is reactive private
-	sub Html
-		var string type = "String" is reactive private
 	sub File
 		var string type = "java.io.File" is reactive private
+//		var word:{body path form header query} in = form
 	sub Object
 		var Schema schema
 		var string type = @schemaElementName is reactive private

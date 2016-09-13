@@ -1,11 +1,13 @@
 dsl Teseo
 
 Service(title = "Cesar Ops Service", path = "") cesar as REST
+	WithCertificate(store = "sample/", storePassword = "123456")
 	Resource(name = "createSystem", title = "Create new system", path = "systems", type = Put)
 		Parameter(name = "name", in = path) as Text
 		Parameter(name = "time", in = query) as DateTime
 		Parameter(name = "repository", in = query) as Text
 		Response
+
 	Resource(name = "systems", title = "List of systems", path = "systems", type = Get)
 		Response as Text
 		Exception(ErrorBadRequest)
@@ -32,9 +34,8 @@ Service(title = "Cesar Ops Service", path = "") cesar as REST
 		Parameter(name = "server", in = path) as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "createServer", title = "Create server", path = "server", type = Put)
+	Resource(name = "createServer", title = "Create server", path = "server", type = Post)
 		Parameter(name = "url", in = query) as Text
-		Parameter(name = "sourceFile", in = body) as File
 		Response
 		Exception (ErrorBadRequest)
 	Resource(name = "updateServer", title = "Update server", path = "servers", type = Post)

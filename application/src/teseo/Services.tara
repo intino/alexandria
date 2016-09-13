@@ -14,10 +14,18 @@ Facet REST on Service
 	var string description = ""
 	var string path
 	var word[]:{http https ws wss} protocols = https
+	Concept:{0..1} Authenticated
+		sub WithCertificate
+			var resource store
+			var string storePassword
+			Concept AllowedUsers
+				var resource[] certificate
+		sub WithPassword
+			Concept AllowedUsers
+				var string user
+				var string password
 	has Schema
 	has:{1..*} Resource
-	Concept:{0..1} Authentication
-		var string todo
 	Concept:{0..1} Info
 		var string title
 		var string version

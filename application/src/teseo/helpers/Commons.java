@@ -2,6 +2,7 @@ package teseo.helpers;
 
 import teseo.Resource;
 import teseo.Response;
+import teseo.file.FileData;
 import teseo.rest.RESTService;
 
 import java.io.File;
@@ -34,6 +35,10 @@ public class Commons {
 				.map(Resource.Parameter::name).toArray(String[]::new);
 	}
 
+	public static long queryParameters(Resource resource) {
+		return resource.resourceParameterList().stream().filter(p -> p.in() == Resource.Parameter.In.query).count();
+	}
+
 	public static String format(String path) {
 		return path.isEmpty() ? "" : path + "/";
 	}
@@ -54,4 +59,7 @@ public class Commons {
 		return response.asType().type();
 	}
 
+	public static int fileParameters(Resource resource) {
+		return (int) resource.resourceParameterList().stream().filter(p -> p.is(FileData.class)).count();
+	}
 }

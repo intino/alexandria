@@ -2,6 +2,7 @@ package teseo.framework.web;
 
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,20 @@ class SparkReader {
 		return adapt(object, type);
 	}
 
+	static <T> T read(Object object, Class<T> type) {
+		if (type == File.class && object instanceof InputStream) return (T) createTempFile((InputStream) object);
+		return null;
+	}
+
+	private static File createTempFile(InputStream inputStream) {
+		try {
+			return Files.write(Files.createTempFile("spark", "input"), readStream(inputStream)).toFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	private static File createTempFile(String object) {
 //		InputStream stream = new ByteArrayInputStream(object.getBytes(StandardCharsets.UTF_8));
 		try {
@@ -34,6 +49,15 @@ class SparkReader {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private static byte[] readStream(InputStream stream) throws IOException {
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		int nRead;
+		byte[] data = new byte[16384];
+		while ((nRead = stream.read(data, 0, data.length)) != -1) buffer.write(data, 0, nRead);
+		buffer.flush();
+		return buffer.toByteArray();
 	}
 
 	private static byte[] readBytes(String object) {

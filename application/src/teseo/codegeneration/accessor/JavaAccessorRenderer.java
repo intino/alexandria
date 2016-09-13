@@ -11,7 +11,6 @@ import teseo.date.DateData;
 import teseo.datetime.DateTimeData;
 import teseo.file.FileData;
 import teseo.helpers.Commons;
-import teseo.html.HtmlData;
 import teseo.object.ObjectData;
 import teseo.rest.RESTService;
 import teseo.type.TypeData;
@@ -42,22 +41,26 @@ public class JavaAccessorRenderer {
 		Frame frame = new Frame().addTypes("accessor");
 		frame.addSlot("name", restService.name());
 		frame.addSlot("package", packageName);
+		setupAuthentication(restService, frame);
 		if (!restService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("resources", (AbstractFrame[]) processResources(restService.node().findNode(Resource.class)));
+		frame.addSlot("resource", (AbstractFrame[]) restService.node().findNode(Resource.class).stream().
+				map(resource -> processResource(resource, restService.authenticated() != null, restService.withCertificate() != null)).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
 	}
 
-	private Frame[] processResources(List<Resource> resources) {
-		return resources.stream().map(this::processResource).toArray(Frame[]::new);
+	private void setupAuthentication(RESTService restService, Frame frame) {
+		if (restService.authenticated() != null) frame.addSlot("auth", "");
+		if (restService.withCertificate() != null) frame.addSlot("certificate", "");
+		else if (restService.withPassword() != null) frame.addSlot("user", "");
 	}
 
-	private Frame processResource(Resource resource) {
+	private Frame processResource(Resource resource, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource", resource.type().toString())
 				.addSlot("returnType", Commons.returnType(resource.response()))
 				.addSlot("name", resource.name())
-				.addSlot("parameters", (AbstractFrame[]) parameters(resource.resourceParameterList()))
-				.addSlot("invokeSentence", invokeSentence(resource))
+				.addSlot("parameter", (AbstractFrame[]) parameters(resource.resourceParameterList()))
+				.addSlot("invokeSentence", invokeSentence(resource, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(resource));
 	}
 
@@ -71,24 +74,29 @@ public class JavaAccessorRenderer {
 				.addSlot("parameterType", parameter.asType().type());
 	}
 
-	private Frame invokeSentence(Resource resource) {
+	private Frame invokeSentence(Resource resource, boolean authenticated, boolean cert) {
 		Response response = resource.response();
 		Frame result;
 		if (response.asType() == null) result = voidInvokeSentence();
 		else if (response.isObject()) result = objectInvokeSentence(response.asObject());
 		else if (response.isFile()) result = fileInvokeSentence(response.asFile());
-		else if (response.isHtml()) result = htmlInvokeSentence(response.asHtml());
 		else if (response.isDate()) result = dateInvokeSentence(response.asDate());
 		else if (response.isDateTime()) result = dateTimeInvokeSentence(response.asDateTime());
 		else result = primitiveInvokeSentence(response.asType());
-		return result.addSlot("doInvoke", doInvoke(resource));
+		return result.addSlot("doInvoke", doInvoke(resource, authenticated, cert));
 	}
 
-	private Frame doInvoke(Resource resource) {
-		return new Frame().addTypes("doInvoke")
+	private Frame doInvoke(Resource resource, boolean authenticated, boolean cert) {
+		final Frame frame = new Frame().addTypes("doInvoke")
 				.addSlot("relativePath", Commons.path(resource))
 				.addSlot("type", resource.type().toString())
-				.addSlot("parameters", Commons.pathParameters(resource));
+				.addSlot("pathParameters", Commons.pathParameters(resource));
+		if (authenticated) frame.addTypes("auth");
+		if (cert) frame.addTypes("cert");
+		if (Commons.queryParameters(resource) > 0) frame.addSlot("parameters", "parameters");
+		else if (Commons.fileParameters(resource) > 0) frame.addSlot("parameters", "resource");
+		return frame;
+
 	}
 
 	private Frame exceptionResponses(Resource resource) {
@@ -118,11 +126,6 @@ public class JavaAccessorRenderer {
 	}
 
 	private Frame fileInvokeSentence(FileData fileData) {
-		return new Frame().addTypes("invokeSentence", "file");
-		//TODO
-	}
-
-	private Frame htmlInvokeSentence(HtmlData htmlData) {
 		return new Frame().addTypes("invokeSentence", "file");
 		//TODO
 	}

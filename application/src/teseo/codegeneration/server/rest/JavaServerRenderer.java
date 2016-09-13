@@ -12,6 +12,7 @@ import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
 import teseo.codegeneration.server.scheduling.SchedulerRenderer;
+import teseo.rest.RESTService;
 
 import java.io.File;
 import java.util.List;
@@ -40,7 +41,7 @@ public class JavaServerRenderer {
 	private void rest(File src, File gen, String packageName) {
 		new SchemaRenderer(graph).execute(gen, packageName);
 		new RestResourceRenderer(graph).execute(gen, src, packageName);
-		services.forEach((service) -> processService(service, gen));
+		services.forEach((service) -> processService(service.as(RESTService.class), gen));
 	}
 
 	private void scheduling(File src, File gen, String packageName) {
@@ -53,13 +54,16 @@ public class JavaServerRenderer {
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
-	private void processService(Service service, File gen) {
+	private void processService(RESTService service, File gen) {
 		List<Resource> resources = service.node().findNode(Resource.class);
 		if (resources.isEmpty()) return;
-		Frame frame = new Frame().addTypes("server");
-		frame.addSlot("name", service.name());
-		frame.addSlot("package", packageName);
-		frame.addSlot("resources", (AbstractFrame[]) processResources(resources));
+		Frame frame = new Frame().addTypes("server").
+				addSlot("name", service.name()).
+				addSlot("package", packageName).
+				addSlot("resources", (AbstractFrame[]) processResources(resources));
+		final RESTService.WithCertificate secure = service.withCertificate();
+		if (secure != null && secure.store() != null)
+			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store().getPath()).addSlot("password", secure.storePassword()));
 		writeFrame(gen, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
 	}
 

@@ -92,7 +92,7 @@ public class FilesAccessor implements FilesApi {
             private RestfulApi.RestfulSecureConnection secure() throws FilesApiFailure {
                 try {
                     if (connection == null)
-                        connection = client.secureConnection(new URL(url), certificate, password);
+                        connection = client.secure(new URL(url), certificate, password);
                     return connection;
                 } catch (MalformedURLException error) {
                     throw new FilesApiFailure(error.getMessage());

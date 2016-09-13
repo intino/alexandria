@@ -1,6 +1,5 @@
 package teseo.restful.core;
 
-import teseo.restful.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -15,6 +14,7 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import teseo.restful.RestfulApi;
+import teseo.restful.exceptions.RestfulFailure;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -39,7 +39,7 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	@Override
-	public Resource getResource(URL url, String path) throws RestfulFailure {
+	public Resource resourceFrom(URL url, String path) throws RestfulFailure {
 		return doGetFile(url, path, emptyList());
 	}
 
@@ -69,6 +69,11 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	@Override
+	public Response put(URL url, String path, Resource resource) throws RestfulFailure {
+		return doPut(url, path, multipartEntityOf(resource));
+	}
+
+	@Override
 	public Response delete(URL url, String path) throws RestfulFailure {
 		return doDelete(url, path, emptyList());
 	}
@@ -79,25 +84,15 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	@Override
-	public RestfulSecureConnection secureConnection(URL url, URL certificate, String password) {
+	public RestfulSecureConnection secure(URL url, URL certificate, String password) {
 		return new RestfulSecureConnection() {
 			@Override
 			public Response get(String path) throws RestfulFailure {
-				return get(url, path);
-			}
-
-			@Override
-			public Response get(URL url, String path) throws RestfulFailure {
-				return get(url, path, emptyMap());
+				return get(path, emptyMap());
 			}
 
 			@Override
 			public Response get(String path, Map<String, String> parameters) throws RestfulFailure {
-				return get(url, path, parameters);
-			}
-
-			@Override
-			public Response get(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
 				List<NameValuePair> getParameters = parametersToNameValuePairs(parameters);
 				getParameters.addAll(parametersToNameValuePairs(secureParameters(new HashMap<>(parameters), certificate, password)));
 				return doGet(url, path, getParameters);
@@ -105,14 +100,7 @@ public class RestfulAccessor implements RestfulApi {
 
 			@Override
 			public Resource getResource(String path) throws RestfulFailure {
-				List<NameValuePair> parameters = parametersToNameValuePairs(secureParameters(emptyMap(), certificate, password));
-				return doGetFile(url, path, parameters);
-			}
-
-			@Override
-			public Resource getResource(URL url, String path) throws RestfulFailure {
-				List<NameValuePair> parameters = parametersToNameValuePairs(secureParameters(emptyMap(), certificate, password));
-				return doGetFile(url, path, parameters);
+				return doGetFile(url, path, parametersToNameValuePairs(secureParameters(emptyMap(), certificate, password)));
 			}
 
 			@Override
@@ -142,21 +130,12 @@ public class RestfulAccessor implements RestfulApi {
 
 			@Override
 			public Response delete(String path) throws RestfulFailure {
-				return delete(url, path);
+				return delete(path, emptyMap());
 			}
 
-			@Override
-			public Response delete(URL url, String path) throws RestfulFailure {
-				return delete(url, path, emptyMap());
-			}
 
 			@Override
 			public Response delete(String path, Map<String, String> parameters) throws RestfulFailure {
-				return delete(url, path, parameters);
-			}
-
-			@Override
-			public Response delete(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
 				List<NameValuePair> getParameters = parametersToNameValuePairs(parameters);
 				getParameters.addAll(parametersToNameValuePairs(secureParameters(new HashMap<>(parameters), certificate, password)));
 				return doDelete(url, path, getParameters);
@@ -171,7 +150,6 @@ public class RestfulAccessor implements RestfulApi {
 					throw new RestfulFailure(exception.getMessage());
 				}
 			}
-
 		};
 	}
 
