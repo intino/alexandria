@@ -1,4 +1,4 @@
-package teseo.codegeneration.accessor;
+package teseo.codegeneration.accessor.rest;
 
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
@@ -21,12 +21,12 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static teseo.helpers.Commons.writeFrame;
 
-public class JavaAccessorRenderer {
+public class RESTAccessorRenderer {
 	private final RESTService service;
 	private File destination;
 	private String packageName;
 
-	public JavaAccessorRenderer(RESTService application) {
+	public RESTAccessorRenderer(RESTService application) {
 		this.service = application;
 	}
 
@@ -45,14 +45,14 @@ public class JavaAccessorRenderer {
 		if (!restService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("resource", (AbstractFrame[]) restService.node().findNode(Resource.class).stream().
-				map(resource -> processResource(resource, restService.authenticated() != null, restService.withCertificate() != null)).toArray(Frame[]::new));
+				map(resource -> processResource(resource, restService.authenticated() != null, restService.authenticatedWithCertificate() != null)).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
 	}
 
 	private void setupAuthentication(RESTService restService, Frame frame) {
 		if (restService.authenticated() != null) frame.addSlot("auth", "");
-		if (restService.withCertificate() != null) frame.addSlot("certificate", "");
-		else if (restService.withPassword() != null) frame.addSlot("user", "");
+		if (restService.authenticatedWithCertificate() != null) frame.addSlot("certificate", "");
+		else if (restService.authenticatedWithPassword() != null) frame.addSlot("user", "");
 	}
 
 	private Frame processResource(Resource resource, boolean authenticated, boolean cert) {
@@ -146,7 +146,7 @@ public class JavaAccessorRenderer {
 	}
 
 	private Template getTemplate() {
-		Template template = JavaAccessorTemplate.create();
+		Template template = RESTAccessorTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());

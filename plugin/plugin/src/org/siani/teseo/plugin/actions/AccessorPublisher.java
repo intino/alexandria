@@ -17,7 +17,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.intellij.actions.utils.FileSystemUtils;
 import tara.magritte.Graph;
-import teseo.codegeneration.accessor.JavaAccessorRenderer;
+import teseo.codegeneration.accessor.rest.RESTAccessorRenderer;
 import teseo.rest.RESTService;
 
 import java.awt.*;
@@ -110,7 +110,7 @@ class AccessorPublisher {
 		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), packageName);
 			sourcesDestiny.mkdirs();
-			new JavaAccessorRenderer(service).execute(sourcesDestiny, packageName.replace(separator, "."));
+			new RESTAccessorRenderer(service).execute(sourcesDestiny, packageName.replace(separator, "."));
 			apps.add(service.name());
 		}
 		return apps;

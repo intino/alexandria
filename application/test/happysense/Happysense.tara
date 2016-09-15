@@ -1,71 +1,64 @@
 dsl Teseo
 
 Service (title = "Interface for recovering all dashboard information", path = "/dashboard") rest as REST
-	Resource(title="List of categorizations", path = "/categorizations", type = Get, name="categorizations")
+	Resource(title="List of categorizations", path = "/categorizations", type = Get) categorizations
 		Response as Object(schema = CategorizationCatalogResponseSchema)
 
-	Resource(title="Opinions summary", path = "/summary", type = Get, name = "summary")
+	Resource(title="Opinions summary", path = "/summary", type = Get) summary
 		Response as Object(schema = SummaryResponseSchema)
 
-	Resource(title="Summary of opinions at some instant", path = "/snapshot", type = Get, name="snapshot")
-		Parameter(name = "scale", in = query) as Text
-		Parameter(name = "range", in = body) as Object(schema = RangeSchema)
-		Parameter(name = "filters", in = body) as Object(schema = FilterListSchema)
+	Resource(title="Summary of opinions at some instant", path = "/snapshot", type = Get)snapshot
+		Parameter(in = query) scale as Text
+		Parameter(in = body) range as Object(schema = RangeSchema)
+		Parameter(in = body) filters as Object(schema = FilterListSchema)
 		Response as Object(schema = OpinionSnapshotResponseSchema)
 
 Schema RangeSchema
-	Element(name="range")
-		Attribute(name="from") as DateTime
-		Attribute(name="to") as DateTime
+	Attribute from as DateTime
+	Attribute to as DateTime
 
 Schema FilterListSchema
-	Element(name="filterList")
-		Attribute(multiple=true, name="filters") as Text
+	Attribute(multiple=true) filters as Text
 
 Schema CategorizationCatalogResponseSchema
-	Element("categorizationCatalog")
-		Member(name="categorization")
-			Attribute(name="name") as Text
-			Attribute(name="label") as Text
-			Member(name="category")
-				Attribute(name="name") as Text
-				Attribute(name="label") as Text
+	Member categorization
+		Attribute name as Text
+		Attribute label as Text
+		Member category
+			Attribute name as Text
+			Attribute label as Text
 
 Schema SummaryResponseSchema
-	Element("summary")
-		Member(name="today", multiple=false)
-			Member(name="count", multiple=false)
-				Attribute(name="total") as Integer
+	Member(multiple=false) today
+		Member(multiple=false) count
+			Attribute total as Integer
 
-		Member(name="total", multiple=false)
-			Member(name="count", multiple=false)
-				Attribute(name="total") as Integer
-				Attribute(name="satisfied") as Integer
-				Attribute(name="notVerySatisfied") as Integer
-				Attribute(name="dissatisfied") as Integer
+	Member(multiple=false) total
+		Member(multiple=false) count
+			Attribute total as Integer
+			Attribute satisfied as Integer
+			Attribute notVerySatisfied as Integer
+			Attribute dissatisfied as Integer
 
-			Member(name="difference", multiple=false)
-				Attribute(name="satisfied") as Real
-				Attribute(name="notVerySatisfied") as Real
-				Attribute(name="dissatisfied") as Real
+		Member(multiple=false) difference
+			Attribute satisfied as Real
+			Attribute notVerySatisfied as Real
+			Attribute dissatisfied as Real
 
 Schema OpinionSnapshotResponseSchema
-	Element("opinionSnapshot")
-		Attribute(name="instant") as DateTime
-		Attribute(name="scale") as Text
+	Attribute instant as DateTime
+	Attribute scale as Text
+	Member(multiple=false) count
+		Attribute total as Integer
+		Attribute satisfied as Integer
+		Attribute notVerySatisfied as Integer
+		Attribute dissatisfied as Integer
+	Member(multiple=false) difference
+		Attribute satisfied as Real
+		Attribute notVerySatisfied as Real
+		Attribute dissatisfied as Real
 
-		Member(name="count", multiple=false)
-			Attribute(name="total") as Integer
-			Attribute(name="satisfied") as Integer
-			Attribute(name="notVerySatisfied") as Integer
-			Attribute(name="dissatisfied") as Integer
-
-		Member(name="difference", multiple=false)
-			Attribute(name="satisfied") as Real
-			Attribute(name="notVerySatisfied") as Real
-			Attribute(name="dissatisfied") as Real
-
-		Member(name="timeLine", multiple=false)
-			Member("point")
-				Attribute(name="instant") as DateTime
-				Attribute(name="value") as Real
+	Member(multiple=false) timeLine
+		Member point
+			Attribute instant as DateTime
+			Attribute value as Real

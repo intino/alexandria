@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import tara.magritte.Graph;
-import teseo.codegeneration.server.rest.JavaServerRenderer;
+import teseo.codegeneration.server.rest.RESTServiceRenderer;
 
 import java.io.File;
 import java.util.*;
@@ -123,7 +123,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 					final File file = new File(teseoFile);
 					final File dest = file.getName().endsWith(TeseoUtils.STASH) ? new File(file.getParent(), TeseoUtils.findOutLanguage(module) + "." + TESEO) : file;
 					final Graph graph = GraphLoader.loadGraph(module, dest);
-					new JavaServerRenderer(graph).execute(gen, api, packageName);
+					new RESTServiceRenderer(graph).execute(gen, api, packageName);
 					refreshDirectory(gen);
 					refreshDirectory(api);
 					notifySuccess();

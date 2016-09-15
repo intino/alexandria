@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.siani.teseo</groupId>
             <artifactId>rest-server</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
+            <version>1.0.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -79,6 +79,12 @@
         <dependency>
             <groupId>org.siani.teseo</groupId>
             <artifactId>scheduler</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.teseo</groupId>
+            <artifactId>jms</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>

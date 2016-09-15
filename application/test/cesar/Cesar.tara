@@ -1,59 +1,56 @@
 dsl Teseo
 
 Service(title = "Cesar Ops Service", path = "") cesar as REST
-	WithCertificate(store = "sample/", storePassword = "123456")
-	Resource(name = "createSystem", title = "Create new system", path = "systems", type = Put)
-		Parameter(name = "name", in = path) as Text
-		Parameter(name = "time", in = query) as DateTime
-		Parameter(name = "repository", in = query) as Text
+	AuthenticatedWithCertificate(store = "sample/", storePassword = "123456")
+	Resource(title = "Create new system", path = "systems", type = Put) createSystem
+		Parameter(in = path) name as Text
+		Parameter(in = query) repository as Text
 		Response
-
-	Resource(name = "systems", title = "List of systems", path = "systems", type = Get)
+	Resource(title = "List of systems", path = "systems", type = Get) systems
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "system", title = "A system", path = "systems", type = Get)
-		Parameter(name = "system", in = path) as Text
-		Parameter(name = "version", in = path) as Text
+	Resource(title = "A system", path = "systems", type = Get) system
+		Parameter(in = path) system as Text
+		Parameter(in = path) version as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "updateSystem", title = "Update system", path = "systems", type = Post)
-		Parameter(name = "system", in = path) as Text
-		Parameter(name = "enabled", in = query) as Bool
+	Resource(title = "Update system", path = "systems", type = Post) updateSystem
+		Parameter(in = path) system as Text
+		Parameter(in = query) enabled as Bool
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "createSystemVersion", title = "Create new system version", path = "systems", type = Put)
-		Parameter(name = "system", in = path) as Text
-		Parameter(name = "version", in = query) as Text
+	Resource(title = "Create new system version", path = "systems", type = Put) createSystemVersion
+		Parameter(in = path) system as Text
+		Parameter(in = query) version as Text
 		Response
 		Exception(ErrorBadRequest)
-
-	Resource(name = "servers", title = "List of servers", path = "servers", type = Get)
+	Resource(title = "List of servers", path = "servers", type = Get) servers
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "server", title = "A server", path = "servers", type = Get)
-		Parameter(name = "server", in = path) as Text
+	Resource(title = "A server", path = "servers", type = Get) server
+		Parameter(in = path) server as Text
 		Response as Text
 		Exception(ErrorBadRequest)
-	Resource(name = "createServer", title = "Create server", path = "server", type = Post)
-		Parameter(name = "url", in = query) as Text
+	Resource(title = "Create server", path = "server", type = Post) createServer
+		Parameter(in = query) url as Text
 		Response
 		Exception (ErrorBadRequest)
-	Resource(name = "updateServer", title = "Update server", path = "servers", type = Post)
-		Parameter(name = "server", in = path) as Text
+	Resource(title = "Update server", path = "servers", type = Post) updateServer
+		Parameter(in = path) server as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deleteServer", title = "Delete server", path = "servers", type = Delete)
-		Parameter(name = "server", in = path) as Text
+	Resource(title = "Delete server", path = "servers", type = Delete) deleteServer
+		Parameter(in = path) server as Text
 		Response
 		Exception(ErrorBadRequest)
-	Resource(name = "deploySystem", title = "Deploy system", path = "servers", type = Post)
-		Parameter(name = "server", in = path) as Text
-		Parameter(name = "system", in = path) as Text
-    	Parameter(name = "isPublic", in = query) as Bool
+	Resource(title = "Deploy system", path = "servers", type = Post) deploySystem
+		Parameter(in = path) server as Text
+		Parameter(in = path) system as Text
+    	Parameter(in = query) isPublic as Bool
     	Response
 
 Service(title = "Cesar Build Service", path = "build") build as REST
-	Resource(name = "listWebHook", title = "", path = "webhooks", type = Post)
+	Resource(title = "", path = "webhooks", type = Post) webHooks
 		Response
 		Exception(ErrorBadRequest)
 

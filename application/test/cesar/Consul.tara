@@ -1,30 +1,28 @@
 dsl Teseo
 
 Service consulManager as JMX
-	Operation(name = "deploy") deploy
-		Parameter(name = "system") as Object(schema = System)
+	Operation deploy
+		Parameter system as Object(schema = System)
 		Response as Bool
-	Operation(name = "retract") retract
-		Parameter(name = "systemID") as Text
+	Operation retract
+		Parameter systemID as Text
 		Response as Bool
-	Operation(name ="systemLogging") systemLogging
-		Parameter(name = "systemID") as Text
+	Operation systemLogging
+		Parameter systemID as Text
 		Response as Object(schema = loggingSchema)
-	Operation(name = "serverLogging") serverLogging
-		Parameter(name = "systemID") as Text
+	Operation serverLogging
+		Parameter systemID as Text
 		Response as Object(schema = loggingSchema)
 
 
 Schema loggingSchema
-	Element("stateLog")
-		Attribute(name="instant") as DateTime
-		Attribute(name="memory") as Real
-		Attribute(name="cpu") as Real
-		Attribute(name="connections") as Integer
+	Attribute instant  as DateTime
+	Attribute memory  as Real
+	Attribute cpu  as Real
+	Attribute connections  as Integer
 
 Schema System
-	Element(name = "SystemSchema")
-		Attribute(name = "ID") as Text
-		Attribute(name="artifacts", multiple = true) as Text
-		Attribute(name="mainClass") as Text
-		Attribute(name="artifactory") as Text
+	Attribute ID as Text
+	Attribute(multiple = true)  artifacts as Text
+	Attribute mainClass as Text
+	Attribute artifactory as Text

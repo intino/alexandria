@@ -1,4 +1,4 @@
-package teseo.codegeneration.accessor;
+package teseo.codegeneration.accessor.rest;
 
 import org.siani.itrules.*;
 
@@ -6,14 +6,14 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.*;
 
-public class JavaAccessorTemplate extends Template {
+public class RESTAccessorTemplate extends Template {
 
-	protected JavaAccessorTemplate(Locale locale, LineSeparator separator) {
+	protected RESTAccessorTemplate(Locale locale, LineSeparator separator) {
 		super(locale, separator);
 	}
 
 	public static Template create() {
-		return new JavaAccessorTemplate(Locale.ENGLISH, LF).define();
+		return new RESTAccessorTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {

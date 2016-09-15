@@ -1,0 +1,30 @@
+dsl Proteo
+
+Concept:Named Channel
+	var integer:{ms} timeout = 0 ms
+	sub Input
+		Concept:{1..*} Origin extends Media
+	sub Output
+		Concept:{1..*} Destination extends Media
+
+Facet Feed on Channel
+	var word:{Implicit Explicit} ack = Implicit
+
+Concept Media is abstract
+
+Facet Origin on Media
+	sub SecuredOrigin
+		Concept:{0..1} Authentication
+		sub Queue
+			var string path
+		sub Topic
+			var string path
+			var word:{Volatile Durable} type = Volatile
+	sub Virtual
+
+Facet Mode on SecuredOrigin.Authentication
+	sub Credential
+		var string username
+		var string password
+	sub Certificate
+		var string certificate

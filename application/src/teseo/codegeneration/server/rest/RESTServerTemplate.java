@@ -6,14 +6,14 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.*;
 
-public class JavaServerTemplate extends Template {
+public class RESTServerTemplate extends Template {
 
-	protected JavaServerTemplate(Locale locale, LineSeparator separator) {
+	protected RESTServerTemplate(Locale locale, LineSeparator separator) {
 		super(locale, separator);
 	}
 
 	public static Template create() {
-		return new JavaServerTemplate(Locale.ENGLISH, LF).define();
+		return new RESTServerTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {

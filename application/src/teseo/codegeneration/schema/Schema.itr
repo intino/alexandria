@@ -1,4 +1,4 @@
-def type(element)
+def type(schema)
     package $package+validname.schemas;
 
     public class $name+firstUpperCase {

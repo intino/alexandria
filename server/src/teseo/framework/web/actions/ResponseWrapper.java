@@ -85,8 +85,10 @@ class ResponseWrapper extends SparkWrapper {
 	}
 
 	private void writeResponse(String content, String contentType, HttpServletResponse response) throws IOException {
-
 		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+		response.setHeader("Expires", "0"); // Proxies.
 		response.setContentType(contentType != null ? contentType : "text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 

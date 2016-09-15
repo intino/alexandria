@@ -1,0 +1,37 @@
+dsl Teseo
+
+Service monet as JMS
+	Resource(queue = "catalogs") catalogs
+		Parameter catalogs as Object(schema = CategorizationCatalog)
+		Parameter name as Text
+		Response as Bool
+	Resource(queue = "processes") processes
+		Response as Object(Processes)
+	Resource(queue = "empty") emptyRequest
+
+Schema CategorizationCatalog
+	Member categorization
+		Attribute name as Text
+		Attribute label as Text
+		Member category
+			Attribute name as Text
+			Attribute label as Text
+
+Schema Processes
+	Attribute name as Text
+	Attribute label as Text
+
+//Channel as Input
+//	Message
+//		Parameter open as Bool
+//		Parameter schema as Object()
+//	Origin as FFile(file = "sample/1.csv")
+//
+//Channel as Output
+//	Destination as Queue(uri = "sample/1.txt", location = "happysense")
+//
+//Channel as Output
+//
+//	Destination as Topic(uri = "", location = "ActiveMQ.Advisory.Connection")
+////		Authentication as Credential
+//

@@ -17,6 +17,7 @@
         <option value="$PROJECT_DIR$/jmx/pom.xml" />
         <option value="$PROJECT_DIR$/scheduling/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/jms/pom.xml" />
       </list>
     </option>
   </component>

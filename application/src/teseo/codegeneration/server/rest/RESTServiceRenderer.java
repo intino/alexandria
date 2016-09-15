@@ -8,6 +8,8 @@ import tara.magritte.Graph;
 import teseo.Resource;
 import teseo.Service;
 import teseo.codegeneration.schema.SchemaRenderer;
+import teseo.codegeneration.server.jms.JMSResourceRenderer;
+import teseo.codegeneration.server.jms.JMSServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.scheduling.ScheduledTriggerRenderer;
@@ -20,12 +22,12 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static teseo.helpers.Commons.*;
 
-public class JavaServerRenderer {
+public class RESTServiceRenderer {
 	private final Graph graph;
 	private final List<Service> services;
 	private String packageName;
 
-	public JavaServerRenderer(Graph graph) {
+	public RESTServiceRenderer(Graph graph) {
 		this.graph = graph;
 		services = this.graph.find(Service.class);
 	}
@@ -36,11 +38,12 @@ public class JavaServerRenderer {
 		rest(src, gen, packageName);
 		scheduling(src, gen, packageName);
 		jmx(src, gen, packageName);
+		jms(src, gen, packageName);
 	}
 
 	private void rest(File src, File gen, String packageName) {
 		new SchemaRenderer(graph).execute(gen, packageName);
-		new RestResourceRenderer(graph).execute(gen, src, packageName);
+		new RESTResourceRenderer(graph).execute(gen, src, packageName);
 		services.forEach((service) -> processService(service.as(RESTService.class), gen));
 	}
 
@@ -54,6 +57,11 @@ public class JavaServerRenderer {
 		new JMXServerRenderer(graph).execute(gen, packageName);
 	}
 
+	private void jms(File src, File gen, String packageName) {
+		new JMSResourceRenderer(graph).execute(src, gen, packageName);
+		new JMSServiceRenderer(graph).execute(gen, packageName);
+	}
+
 	private void processService(RESTService service, File gen) {
 		List<Resource> resources = service.node().findNode(Resource.class);
 		if (resources.isEmpty()) return;
@@ -61,7 +69,7 @@ public class JavaServerRenderer {
 				addSlot("name", service.name()).
 				addSlot("package", packageName).
 				addSlot("resources", (AbstractFrame[]) processResources(resources));
-		final RESTService.WithCertificate secure = service.withCertificate();
+		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store().getPath()).addSlot("password", secure.storePassword()));
 		writeFrame(gen, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
@@ -80,7 +88,7 @@ public class JavaServerRenderer {
 	}
 
 	private Template template() {
-		Template template = JavaServerTemplate.create();
+		Template template = RESTServerTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;

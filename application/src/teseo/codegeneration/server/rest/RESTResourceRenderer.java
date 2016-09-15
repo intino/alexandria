@@ -7,26 +7,25 @@ import tara.magritte.Graph;
 import teseo.Resource;
 import teseo.Response;
 import teseo.Schema;
-import teseo.Service;
 import teseo.codegeneration.action.ActionRenderer;
 import teseo.helpers.Commons;
+import teseo.rest.RESTService;
 
 import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static teseo.helpers.Commons.javaFile;
 import static teseo.helpers.Commons.writeFrame;
 
-class RestResourceRenderer {
-	private final List<Service> services;
+class RESTResourceRenderer {
+	private final List<RESTService> services;
 	private File gen;
 	private File src;
 	private String packageName;
 	private static final String RESOURCES = "resources";
 
-	RestResourceRenderer(Graph graph) {
-		services = graph.find(Service.class);
+	RESTResourceRenderer(Graph graph) {
+		services = graph.find(RESTService.class);
 	}
 
 	public void execute(File gen, File src, String packageName) {
@@ -36,14 +35,13 @@ class RestResourceRenderer {
 		services.forEach(this::processService);
 	}
 
-	private void processService(Service service) {
+	private void processService(RESTService service) {
 		service.node().findNode(Resource.class).forEach(this::processResource);
 	}
 
 	private void processResource(Resource resource) {
 		Frame frame = fillResourceFrame(resource);
-		if (!javaFile(new File(src, RESOURCES), resource.name() + "Resource").exists())
-			writeFrame(new File(src, RESOURCES), resource.name() + "Resource", template().format(frame));
+		writeFrame(new File(gen, RESOURCES), resource.name() + "Resource", template().format(frame));
 		createCorrespondingAction(resource);
 	}
 

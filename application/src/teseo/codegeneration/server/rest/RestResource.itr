@@ -8,12 +8,12 @@ def type(resource)
 	import teseo.framework.web.SparkManager;
 	$schemaImport
 
-	public class $name+firstUpperCase$~Resource implements Resource {
+	public class $name+firstUpperCase~Resource implements Resource {
 
 		private Graph graph;
 		private SparkManager manager;
 
-		public $name+firstUpperCase$~Resource(Graph graph, SparkManager manager) {
+		public $name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
 			this.graph = graph;
 			this.manager = manager;
 		}

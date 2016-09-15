@@ -35,17 +35,17 @@ public class SchemaRenderer {
 	}
 
 	private void processScheme(Schema schema) {
-		schema.node().findNode(Schema.Element.class).forEach(this::processElement);
+		schema.node().findNode(Schema.class).forEach(this::processSchema);
 	}
 
-	private void processElement(Schema.Element element) {
-		Frame frame = new Frame().addTypes("element");
+	private void processSchema(Schema element) {
+		Frame frame = new Frame().addTypes("schema");
 		frame.addSlot("name", element.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(element.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processAsAttribute(element.memberList()));
 		if (element.attributeMap() != null) frame.addSlot("attribute", attributeMap());
-		addReturningElementToAttributes(element.name(), frame.frames("attribute"));
+		addReturningValueToAttributes(element.name(), frame.frames("attribute"));
 		writeFrame(new File(destination, "schemas"), element.name(), template().format(frame));
 	}
 
@@ -55,15 +55,15 @@ public class SchemaRenderer {
 		return template;
 	}
 
-	private Frame[] processAttributes(List<Schema.Element.Attribute> attributes) {
+	private Frame[] processAttributes(List<Schema.Attribute> attributes) {
 		return attributes.stream().map(this::processAttribute).toArray(value -> new Frame[attributes.size()]);
 	}
 
-	private Frame[] processAsAttribute(List<Schema.Element.Member> members) {
+	private Frame[] processAsAttribute(List<Schema.Member> members) {
 		return members.stream().map(this::processAsAttribute).toArray(value -> new Frame[members.size()]);
 	}
 
-	private Frame processAttribute(Schema.Element.Attribute attribute) {
+	private Frame processAttribute(Schema.Attribute attribute) {
 		if (attribute.isReal()) return processAttribute(attribute.asReal());
 		else if (attribute.isInteger()) return processAttribute(attribute.asInteger());
 		else if (attribute.isBool()) return processAttribute(attribute.asBool());
@@ -75,39 +75,39 @@ public class SchemaRenderer {
 
 	private Frame processAttribute(RealData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name())
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
 				.addSlot("type", "double")
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private Frame processAttribute(IntegerData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name())
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private Frame processAttribute(BoolData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private Frame processAttribute(TextData attribute) {
 		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
 	}
 
 	private Frame processAttribute(DateTimeData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name()).addSlot("type", attribute.type());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
 	}
 
 	private Frame processAttribute(DateData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-				.addSlot("name", attribute.as(Schema.Element.Attribute.class).name()).addSlot("type", attribute.type());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
 	}
 
-	private Frame processAsAttribute(Schema.Element.Member member) {
+	private Frame processAsAttribute(Schema.Member member) {
 		return new Frame().addTypes(member.multiple() ? "multiple" : "single", "member")
 				.addSlot("name", member.name())
 				.addSlot("type", member.name());
@@ -117,13 +117,13 @@ public class SchemaRenderer {
 		return new Frame().addTypes("attributeMap");
 	}
 
-	private void addReturningElementToAttributes(String elementName, Iterator<AbstractFrame> attribute) {
+	private void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attribute) {
 		while (attribute.hasNext())
 			((Frame) attribute.next()).addSlot("element", elementName);
 	}
 
 	private boolean multiple(TypeData attribute) {
-		return attribute.as(Schema.Element.Attribute.class).multiple();
+		return attribute.as(Schema.Attribute.class).multiple();
 	}
 
 }

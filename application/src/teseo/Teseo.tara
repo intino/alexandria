@@ -1,25 +1,21 @@
 dsl Proteo
 
 
-use Services
-
-Concept Method is abstract
-	var string name
+Concept Method is abstract component
 	has Parameter
 	has:{1..1} Response
 	has Exception
 
-Concept Data is abstract
+Concept Data is abstract component
 
-Concept Exception extends Data is component
+Concept Exception extends Data
 	var word:ExceptionCodes code
 	var string description = ""
 
 Concept Response extends Data
 	var string description = ""
 
-Concept Parameter extends Data
-	var string name
+Concept:Named Parameter extends Data
 	var boolean required = true
 
 Facet Type on Data
@@ -44,27 +40,22 @@ Facet Type on Data
 		var string type = "java.time.LocalDateTime" is reactive private
 	sub File
 		var string type = "java.io.File" is reactive private
-//		var word:{body path form header query} in = form
+		var word:{body path form header query} in = form
 	sub Object
 		var Schema schema
-		var string type = @schemaElementName is reactive private
+		var string type = @schemaName is reactive private
 
 Facet List on Data
 	var string type = "List" is reactive private
 
 !! Schemas allows to define how objects are. This objects can be provided as either parameter or response
 Concept Schema
-	!! Root element of the object described. All schemas have one and only one root element
-	Concept:{1..1} Element
-		var string name
-		!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
-		Concept:{0..1} AttributeMap
-		!! Attribute of the element or member
-		Concept Attribute extends Data
-			var string name
-			var boolean required = true
-			var boolean multiple = false
-		Concept Member extends Element
-			var string name
-			var boolean required = false
-			var boolean multiple = true
+	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
+	Concept:{0..1} AttributeMap
+	!! Attribute of the element or member
+	Concept:Named Attribute extends Data
+		var boolean required = true
+		var boolean multiple = false
+	Concept:Named Member extends Schema
+		var boolean required = false
+		var boolean multiple = true
