@@ -6,7 +6,6 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Resource;
-import teseo.Service;
 import teseo.codegeneration.schema.SchemaRenderer;
 import teseo.codegeneration.server.jms.JMSResourceRenderer;
 import teseo.codegeneration.server.jms.JMSServiceRenderer;
@@ -24,12 +23,12 @@ import static teseo.helpers.Commons.*;
 
 public class RESTServiceRenderer {
 	private final Graph graph;
-	private final List<Service> services;
+	private final List<RESTService> services;
 	private String packageName;
 
 	public RESTServiceRenderer(Graph graph) {
 		this.graph = graph;
-		services = this.graph.find(Service.class);
+		services = this.graph.find(RESTService.class);
 	}
 
 	public void execute(File gen, File src, String packageName) {
@@ -63,7 +62,7 @@ public class RESTServiceRenderer {
 	}
 
 	private void processService(RESTService service, File gen) {
-		List<Resource> resources = service.node().findNode(Resource.class);
+		List<Resource> resources = service.resourceList();
 		if (resources.isEmpty()) return;
 		Frame frame = new Frame().addTypes("server").
 				addSlot("name", service.name()).
