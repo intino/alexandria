@@ -17,9 +17,9 @@ import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaModuleSourceRootTypes;
+import org.siani.teseo.plugin.TeseoFileType;
 import org.siani.teseo.plugin.TeseoIcons;
 import tara.intellij.actions.utils.TaraTemplates;
-import tara.intellij.lang.file.TaraFileType;
 import tara.intellij.lang.psi.impl.TaraModelImpl;
 import tara.intellij.project.module.ModuleProvider;
 
@@ -65,7 +65,7 @@ public class CreateTeseoFileAction extends JavaCreateTemplateInPackageAction<Tar
 	@Override
 	protected TaraModelImpl doCreate(PsiDirectory directory, String newName, String dsl) throws IncorrectOperationException {
 		String template = TaraTemplates.getTemplate("FILE");
-		String fileName = newName + "." + TaraFileType.INSTANCE.getDefaultExtension();
+		String fileName = newName + "." + TeseoFileType.instance().getDefaultExtension();
 		PsiFile file = createFromTemplate(directory, newName, fileName, template, true, "DSL", dsl);
 		return file instanceof TaraModelImpl ? (TaraModelImpl) file : error(file);
 	}

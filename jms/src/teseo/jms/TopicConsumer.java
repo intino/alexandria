@@ -1,37 +1,33 @@
 package teseo.jms;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.command.ActiveMQMessage;
-import org.apache.activemq.command.ConnectionInfo;
-
 import javax.jms.*;
 
 public class TopicConsumer {
 
-	private final String location;
-	private final String user;
-	private final String password;
+	private final Session session;
+	private final String queue;
 
-	public TopicConsumer(String location, String user, String password) {
-		this.location = location;
-		this.user = user;
-		this.password = password;
+	public TopicConsumer(Session session, String topic) {
+		this.session = session;
+		this.queue = topic;
 	}
 
-
-	public void subscribe(String topic) {
-
-	}
-
-	public void subscribe(String topic, String clientID) {
+	public void listen(Consumer reader) {
 		try {
-			Connection connection = new ActiveMQConnectionFactory(user, password, location).createConnection();
-			if (!clientID.isEmpty()) connection.setClientID(clientID);
-			connection.start();
-			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			Destination destination = session.createTopic(topic);
+			Destination destination = session.createTopic(queue);
 			MessageConsumer consumer = session.createConsumer(destination);
-			consumer.setMessageListener(message -> System.out.println(((ConnectionInfo) ((ActiveMQMessage) message).getDataStructure()).getClientId()));
+			consumer.setMessageListener(reader::consume);
+		} catch (Exception e) {
+			System.out.println("Caught: " + e);
+		}
+	}
+
+	public void read(int timeout, Consumer messageConsumer) {
+		try {
+			Destination destination = session.createTopic(queue);
+			MessageConsumer consumer = session.createConsumer(destination);
+			Message message = consumer.receive(timeout);
+			if (message != null) messageConsumer.consume(message);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

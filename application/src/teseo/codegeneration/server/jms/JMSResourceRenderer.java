@@ -7,7 +7,7 @@ import tara.magritte.Graph;
 import teseo.Parameter;
 import teseo.Response;
 import teseo.Schema;
-import teseo.codegeneration.action.ActionRenderer;
+import teseo.codegeneration.action.MethodActionRenderer;
 import teseo.helpers.Commons;
 import teseo.jms.JMSService;
 import teseo.jms.JMSService.Resource;
@@ -19,22 +19,20 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static teseo.helpers.Commons.writeFrame;
 
 public class JMSResourceRenderer {
-
-
 	private final List<JMSService> services;
 	private File gen;
 	private File src;
 	private String packageName;
 	private static final String RESOURCES = "resources";
 
-	public JMSResourceRenderer(Graph graph) {
+	public JMSResourceRenderer(Graph graph, File gen, File src, String packageName) {
 		services = graph.find(JMSService.class);
-	}
-
-	public void execute(File gen, File src, String packageName) {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+	}
+
+	public void execute() {
 		services.forEach(this::processService);
 	}
 
@@ -48,9 +46,8 @@ public class JMSResourceRenderer {
 		createCorrespondingAction(resource);
 	}
 
-
 	private void createCorrespondingAction(Resource resource) {
-		new ActionRenderer(resource).execute(src, packageName);
+		new MethodActionRenderer(resource, src, packageName).execute();
 	}
 
 	private Frame fillResourceFrame(Resource resource) {

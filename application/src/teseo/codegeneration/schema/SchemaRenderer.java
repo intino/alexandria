@@ -24,13 +24,13 @@ public class SchemaRenderer {
 	private File destination;
 	private String packageName;
 
-	public SchemaRenderer(Graph graph) {
+	public SchemaRenderer(Graph graph, File destination, String packageName) {
 		schemaList = graph.find(Schema.class);
-	}
-
-	public void execute(File destination, String packageName) {
 		this.destination = destination;
 		this.packageName = packageName;
+	}
+
+	public void execute() {
 		schemaList.forEach(this::processScheme);
 	}
 

@@ -28,7 +28,7 @@ public class JMSAccessorRenderer {
 	public void execute(File destination, String packageName) {
 		this.destination = destination;
 		this.packageName = packageName;
-		new SchemaRenderer(service.graph()).execute(destination, packageName);
+		new SchemaRenderer(service.graph(), destination, packageName).execute();
 		processService(service);
 	}
 

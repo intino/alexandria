@@ -7,6 +7,6 @@ import org.siani.teseo.plugin.TeseoFileType;
 public class TeseoFileTypeFactory extends com.intellij.openapi.fileTypes.FileTypeFactory {
 	@Override
 	public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-		consumer.consume(TeseoFileType.INSTANCE, TeseoFileType.INSTANCE.getDefaultExtension());
+		consumer.consume(TeseoFileType.instance(), TeseoFileType.instance().getDefaultExtension());
 	}
 }

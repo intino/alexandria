@@ -1,0 +1,42 @@
+def type(channels)
+	package $package;
+
+	import $package.channels.*;
+	import $package.schemas.*;
+	import tara.magritte.Graph;
+	import teseo.jms.*;
+
+	import javax.jms.Session;
+	import javax.jms.JMSException;
+
+	public class Channels {
+
+		public static void init(Session session, Graph graph) {
+			$channel...[$NL]
+		}
+
+		$channel+runner...[$NL$NL]
+	}
+end
+
+def type(channel & timeout & input) trigger(runner)
+	public static void consume$name+firstUpperCase(Session session, Graph graph) {
+		new $type~Consumer(session, "$path").read($timeout, new $name+firstUpperCase~Channel(graph));
+	}
+end
+
+def type(channel & output) trigger(runner)
+	public static void publish$name+firstUpperCase(Session session, $message object) throws JMSException {
+		new $type~Producer(session, "$path").produce(MessageFactory.createMessageFor(object));
+	}
+end
+
+def trigger(runner)
+end
+
+def type(channel & input) !type(timeout)
+	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Channel(graph));
+end
+
+def type(channel)
+end

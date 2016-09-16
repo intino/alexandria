@@ -1,34 +1,17 @@
 package teseo.jms;
 
-import javax.jms.*;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Session;
 
-public class QueueProducer {
 
-	private final Session session;
-	private Destination queue;
+public class QueueProducer extends Producer {
 
-	public QueueProducer(Session session, String queue) {
-		this.session = session;
-		try {
-			this.queue = session.createQueue(queue);
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
+	public QueueProducer(Session session, String path) throws JMSException {
+		super(session, session.createQueue(path));
 	}
 
-	public QueueProducer(Session session, Destination queue) {
-		this.session = session;
-		this.queue = queue;
-	}
-
-	public void produce(Message message) {
-		try {
-			MessageProducer producer = session.createProducer(queue);
-			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
-			producer.send(message);
-		} catch (Exception e) {
-			System.out.println("Caught: " + e);
-			e.printStackTrace();
-		}
+	public QueueProducer(Session session, Destination destination) throws JMSException {
+		super(session, destination);
 	}
 }

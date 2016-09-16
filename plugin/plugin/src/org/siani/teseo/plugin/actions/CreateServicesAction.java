@@ -123,7 +123,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 					final File file = new File(teseoFile);
 					final File dest = file.getName().endsWith(TeseoUtils.STASH) ? new File(file.getParent(), TeseoUtils.findOutLanguage(module) + "." + TESEO) : file;
 					final Graph graph = GraphLoader.loadGraph(module, dest);
-					new RESTServiceRenderer(graph).execute(gen, api, packageName);
+					new RESTServiceRenderer(graph).execute(gen, packageName);
 					refreshDirectory(gen);
 					refreshDirectory(api);
 					notifySuccess();

@@ -15,17 +15,21 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class SchedulerRenderer {
 	private final List<ScheduledTrigger> triggers;
+	private final File gen;
+	private final String packageName;
 
-	public SchedulerRenderer(Graph graph) {
+	public SchedulerRenderer(Graph graph, File gen, String packageName) {
 		triggers = graph.find(ScheduledTrigger.class);
+		this.gen = gen;
+		this.packageName = packageName;
 	}
 
-	public void execute(File destiny, String packageName) {
+	public void execute() {
 		if (triggers.isEmpty()) return;
 		Frame frame = new Frame().addTypes("scheduler");
 		frame.addSlot("package", packageName);
 		frame.addSlot("schedule", (AbstractFrame[]) processTriggers(triggers));
-		Commons.writeFrame(destiny, "Schedules", template().format(frame));
+		Commons.writeFrame(gen, "Schedules", template().format(frame));
 	}
 
 	private Frame[] processTriggers(List<ScheduledTrigger> triggers) {

@@ -14,17 +14,21 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMXServerRenderer {
 	private final List<JMXService> jmxServices;
+	private final File destiny;
+	private final String packageName;
 
-	public JMXServerRenderer(Graph graph) {
+	public JMXServerRenderer(Graph graph, File destiny, String packageName) {
 		jmxServices = graph.find(JMXService.class);
+		this.destiny = destiny;
+		this.packageName = packageName;
 	}
 
 
-	public void execute(File destiny, String packageName) {
-		jmxServices.forEach(service -> processService(service, destiny, packageName));
+	public void execute() {
+		jmxServices.forEach(this::processService);
 	}
 
-	private void processService(JMXService service, File destiny, String packageName) {
+	private void processService(JMXService service) {
 		final List<Operation> operations = service.operationList();
 		if (operations.isEmpty()) return;
 		Frame frame = new Frame().addTypes("jmxserver");

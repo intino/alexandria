@@ -30,6 +30,10 @@ public interface RequestConsumer {
 
 	default void response(Session session, Destination destination, Message message) {
 		if (session == null || destination == null || message == null) return;
-		new QueueProducer(session, destination).produce(message);
+		try {
+			new QueueProducer(session, destination).produce(message);
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
 	}
 }

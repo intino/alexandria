@@ -5,7 +5,7 @@ import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 import teseo.Operation;
 import teseo.Parameter;
-import teseo.codegeneration.action.ActionRenderer;
+import teseo.codegeneration.action.MethodActionRenderer;
 import teseo.jmx.JMXService;
 import teseo.object.ObjectData;
 import teseo.type.TypeData;
@@ -19,17 +19,17 @@ public class JMXOperationsServiceRenderer {
 
 	private final List<JMXService> services;
 	private File src;
-	private File genDestination;
+	private final File gen;
 	private String packageName;
 
-	public JMXOperationsServiceRenderer(Graph graph) {
+	public JMXOperationsServiceRenderer(Graph graph, File src, File gen, String packageName) {
 		services = graph.find(JMXService.class);
+		this.src = src;
+		this.gen = gen;
+		this.packageName = packageName;
 	}
 
-	public void execute(File src, File gen, String packageName) {
-		this.src = src;
-		this.genDestination = gen;
-		this.packageName = packageName;
+	public void execute() {
 		this.services.forEach((service) -> {
 			createInterface(service);
 			createImplementation(service);
@@ -56,7 +56,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
-		for (Operation operation : operations) new ActionRenderer(operation).execute(src, packageName);
+		for (Operation operation : operations) new MethodActionRenderer(operation, src, packageName).execute();
 	}
 
 	private Frame frameOf(Operation operation) {
@@ -82,6 +82,6 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private File destinyPackage() {
-		return new File(genDestination, "jmx");
+		return new File(gen, "jmx");
 	}
 }

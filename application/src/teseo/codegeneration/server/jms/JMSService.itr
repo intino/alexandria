@@ -1,5 +1,21 @@
 
 def type(jms)
+	package $package;
 
+	import $package.resources.*;
+	import tara.magritte.Graph;
+	import teseo.jms.QueueConsumer;
 
+	import javax.jms.Session;
+
+	public class $name+firstUpperCase~JMSService {
+
+		public static void init(Session session, Graph graph) {
+			$resource...[$NL]
+		}
+	}
+end
+
+def type(resource)
+	new QueueConsumer(session, "$queue").listen(new $name+firstUpperCase~Resource(graph));
 end

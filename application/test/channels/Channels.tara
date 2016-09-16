@@ -21,17 +21,16 @@ Schema Processes
 	Attribute name as Text
 	Attribute label as Text
 
-//Channel as Input
-//	Message
-//		Parameter open as Bool
-//		Parameter schema as Object()
-//	Origin as FFile(file = "sample/1.csv")
-//
-//Channel as Output
-//	Destination as Queue(uri = "sample/1.txt", location = "happysense")
-//
-//Channel as Output
-//
-//	Destination as Topic(uri = "", location = "ActiveMQ.Advisory.Connection")
-////		Authentication as Credential
-//
+
+InputChannel(path = "catalogs") opinions as Queue
+	Message as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
+	timeout = 1000 ms
+
+InputChannel(path = "processes") inputProcesses as Topic
+	Message as Object(schema = Processes)
+
+OutputChannel(path = "catalogs") outCatalogs as Queue
+	Message as Bool
+
+OutputChannel(path = "processes") outProcesses as Topic
+	Message as Object(schema = Processes)

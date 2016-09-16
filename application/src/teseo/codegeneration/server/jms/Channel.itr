@@ -1,0 +1,45 @@
+def type(channel)
+	package $package.channels;
+
+    import $package.schemas.*;
+    import com.google.gson.Gson;
+    import tara.magritte.Graph;
+    import teseo.jms.Consumer;
+
+    import javax.jms.*;
+
+    public class $name+FirstUpperCase~Channel implements Consumer {
+
+    	private Graph graph;
+
+    	public $name+FirstUpperCase~Channel(Graph graph) {
+    		this.graph = graph;
+    	}
+
+    	public void consume(Message message) {
+    		actionFor(message).execute();
+    	}
+
+    	private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
+			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
+			action.graph = this.graph;[
+			try {
+				$message+assign
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}]
+			return action;
+		}
+    }
+end
+
+def type(message & fileData) trigger(assign)
+	action.message = ((BytesMessage) message).getBytes();
+end
+
+
+def type(message) trigger(assign)
+	action.message = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
+end
+
+

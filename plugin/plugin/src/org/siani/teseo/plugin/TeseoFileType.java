@@ -1,14 +1,19 @@
 package org.siani.teseo.plugin;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tara.intellij.lang.file.TaraFileType;
 
-public class TeseoFileType implements FileType {
-	public static final TeseoFileType INSTANCE = new TeseoFileType();
+public class TeseoFileType extends TaraFileType {
+	private static TaraFileType INSTANCE;
+
 
 	private TeseoFileType() {
+		super();
+	}
+
+	public static TeseoFileType instance() {
+		return INSTANCE != null ? (TeseoFileType) INSTANCE : (TeseoFileType) (INSTANCE = new TeseoFileType());
 	}
 
 	@NotNull
@@ -26,27 +31,11 @@ public class TeseoFileType implements FileType {
 		return "teseo";
 	}
 
-
 	@Nullable
 	@Override
 	public javax.swing.Icon getIcon() {
 		return TeseoIcons.ICON_16;
 	}
 
-	@Override
-	public boolean isBinary() {
-		return true;
-	}
-
-	@Override
-	public boolean isReadOnly() {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public String getCharset(@NotNull VirtualFile file, @NotNull byte[] content) {
-		return null;
-	}
 
 }

@@ -18,14 +18,14 @@ public class ScheduledTriggerRenderer {
 	private File genDestination;
 	private String packageName;
 
-	public ScheduledTriggerRenderer(Graph graph) {
+	public ScheduledTriggerRenderer(Graph graph, File src, File gen, String packageName) {
 		triggers = graph.find(ScheduledTrigger.class);
+		this.srcDestination = src;
+		this.genDestination = gen;
+		this.packageName = packageName;
 	}
 
-	public void execute(File srcDestination, File genDestination, String packageName) {
-		this.srcDestination = srcDestination;
-		this.genDestination = genDestination;
-		this.packageName = packageName;
+	public void execute() {
 		this.triggers.forEach(this::processTrigger);
 	}
 

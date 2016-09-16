@@ -72,6 +72,13 @@
             <artifactId>activemq-all</artifactId>
             <version>5.14.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

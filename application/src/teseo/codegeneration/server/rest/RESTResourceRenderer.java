@@ -7,7 +7,7 @@ import tara.magritte.Graph;
 import teseo.Resource;
 import teseo.Response;
 import teseo.Schema;
-import teseo.codegeneration.action.ActionRenderer;
+import teseo.codegeneration.action.MethodActionRenderer;
 import teseo.helpers.Commons;
 import teseo.rest.RESTService;
 
@@ -17,21 +17,21 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static teseo.helpers.Commons.writeFrame;
 
-class RESTResourceRenderer {
+public class RESTResourceRenderer {
 	private final List<RESTService> services;
 	private File gen;
 	private File src;
 	private String packageName;
 	private static final String RESOURCES = "resources";
 
-	RESTResourceRenderer(Graph graph) {
+	public RESTResourceRenderer(Graph graph, File gen, File src, String packageName) {
 		services = graph.find(RESTService.class);
-	}
-
-	public void execute(File gen, File src, String packageName) {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+	}
+
+	public void execute() {
 		services.forEach(this::processService);
 	}
 
@@ -46,7 +46,7 @@ class RESTResourceRenderer {
 	}
 
 	private void createCorrespondingAction(Resource resource) {
-		new ActionRenderer(resource).execute(src, packageName);
+		new MethodActionRenderer(resource, src, packageName).execute();
 	}
 
 	private Frame fillResourceFrame(Resource resource) {

@@ -40,7 +40,7 @@ public class FileListener implements com.intellij.openapi.components.Application
 				if (stash.equals(file.getExtension()) && Teseo.equals(file.getNameWithoutExtension()) || file.getNameWithoutExtension().endsWith("-" + Teseo)) {
 					try {
 
-						final String newName = file.getName().replace(stash, TeseoFileType.INSTANCE.getDefaultExtension()).replace("-" + Teseo, "");
+						final String newName = file.getName().replace(stash, TeseoFileType.instance().getDefaultExtension()).replace("-" + Teseo, "");
 						final VirtualFile old = event.getParent().findChild(newName);
 						if (old != null && old.exists()) old.delete(event.getRequestor());
 						file.rename(event.getRequestor(), newName);
