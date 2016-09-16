@@ -35,13 +35,13 @@ import static com.intellij.notification.NotificationType.ERROR;
 import static java.io.File.separator;
 import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory;
 
-class AccessorPublisher {
+class AccessorsPublisher {
 	private static final String TESEO = "teseo";
 	private static final Logger LOG = Logger.getInstance("Export Accessor: export");
 	private final Module module;
 	private File root;
 
-	AccessorPublisher(Module module) {
+	AccessorsPublisher(Module module) {
 		this.module = module;
 		try {
 			this.root = Files.createTempDirectory(TESEO).toFile();

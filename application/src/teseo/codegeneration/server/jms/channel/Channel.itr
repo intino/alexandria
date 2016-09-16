@@ -1,0 +1,23 @@
+def type(channel)
+	package $package;
+
+	import $package.subscriptions.*;
+	import $package.schemas.*;
+	import tara.magritte.Graph;
+	import teseo.jms.*;
+
+	import javax.jms.Session;
+	import javax.jms.JMSException;
+
+	public class $name+firstUppercase~Channel {
+
+		public static void init(Session session, Graph graph) {
+			$subscription...[$NL]
+		}
+	}
+end
+
+
+def type(subscription)
+	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(graph));
+end

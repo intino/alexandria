@@ -29,9 +29,9 @@
         <action id="NewTeseoFile" class="org.siani.teseo.plugin.actions.CreateTeseoFileAction">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
-        <action id="CreateTeseoAPI" class="org.siani.teseo.plugin.actions.CreateServicesAction"
-                text="Create Teseo Services"
-                description="Create Teseo Services">
+        <action id="CreateTeseoAPI" class="org.siani.teseo.plugin.actions.CreateShellAction"
+                text="Create Teseo Shell"
+                description="Create Teseo Shell">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>

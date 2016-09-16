@@ -1,6 +1,5 @@
 package channels.service;
 
-import channels.MonetJMSService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.Connection;
@@ -12,7 +11,7 @@ public class ChannelsServerTest {
 		Connection connection = new ActiveMQConnectionFactory("happysense.sumus", "happysense.sumus", "tcp://bus.siani.es:61616").createConnection();
 		connection.start();
 		final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		MonetJMSService.init(session, null);
+//		MonetJMSService.init(session, null);
 		session.close();
 		connection.close();
 	}

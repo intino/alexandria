@@ -1,5 +1,5 @@
-def type(channel)
-	package $package.channels;
+def type(subscription)
+	package $package.subscriptions;
 
     import $package.schemas.*;
     import com.google.gson.Gson;
@@ -8,11 +8,11 @@ def type(channel)
 
     import javax.jms.*;
 
-    public class $name+FirstUpperCase~Channel implements Consumer {
+    public class $name+FirstUpperCase~Subscription implements Consumer {
 
     	private Graph graph;
 
-    	public $name+FirstUpperCase~Channel(Graph graph) {
+    	public $name+FirstUpperCase~Subscription(Graph graph) {
     		this.graph = graph;
     	}
 

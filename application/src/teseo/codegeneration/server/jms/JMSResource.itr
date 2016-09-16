@@ -43,8 +43,8 @@ def type(resource)
 				e.printStackTrace();
 				return null;
 			}
-		}
-	]}
+		}]
+	}
 end
 
 

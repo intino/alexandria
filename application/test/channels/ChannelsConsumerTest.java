@@ -13,8 +13,7 @@ public class ChannelsConsumerTest {
 		Connection connection = new ActiveMQConnectionFactory("happysense.sumus", "happysense.sumus", "tcp://bus.siani.es:61616").createConnection();
 		connection.start();
 		final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		Channels.init(session, null);
-		Channels.consumeInputCatalogs(session, null);
+		OpinionChannel.init(session, null);
 		session.close();
 		connection.close();
 	}

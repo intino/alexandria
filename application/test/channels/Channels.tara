@@ -21,16 +21,8 @@ Schema Processes
 	Attribute name as Text
 	Attribute label as Text
 
-
-InputChannel(path = "catalogs") opinions as Queue
-	Message as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
-	timeout = 1000 ms
-
-InputChannel(path = "processes") inputProcesses as Topic
-	Message as Object(schema = Processes)
-
-OutputChannel(path = "catalogs") outCatalogs as Queue
-	Message as Bool
-
-OutputChannel(path = "processes") outProcesses as Topic
-	Message as Object(schema = Processes)
+Channel opinion
+	Queue(path = "catalogs") opinions
+		Message as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
+	Topic(path = "processes") inputProcesses
+		Message as Object(schema = Processes)

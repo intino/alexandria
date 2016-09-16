@@ -37,7 +37,7 @@ public class ExportAccessorAction extends Action implements DumbAware {
 				@Override
 				public void run(@NotNull ProgressIndicator indicator) {
 					ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
-					final AccessorPublisher publishAccessor = new AccessorPublisher(module);
+					final AccessorsPublisher publishAccessor = new AccessorsPublisher(module);
 					publishAccessor.publish();
 				}
 			});

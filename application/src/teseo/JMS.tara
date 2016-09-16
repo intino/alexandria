@@ -3,8 +3,10 @@ dsl Proteo
 use Teseo
 
 Concept:Named Channel
+	has:{1..*} SubscriptionModel
+
+Concept SubscriptionModel is component
 	Concept:{1..1} Message extends Data
 	var string path
 	sub Queue
-	sub Topic
-		var word:{Volatile Durable} type = Volatile
+	sub Topic > var word:{Volatile Durable} type = Volatile

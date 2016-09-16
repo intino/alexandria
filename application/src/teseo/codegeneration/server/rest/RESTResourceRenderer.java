@@ -41,7 +41,7 @@ public class RESTResourceRenderer {
 
 	private void processResource(Resource resource) {
 		Frame frame = fillResourceFrame(resource);
-		writeFrame(new File(gen, RESOURCES), resource.name() + "Resource", template().format(frame));
+		writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(resource.name()) + "Resource", template().format(frame));
 		createCorrespondingAction(resource);
 	}
 

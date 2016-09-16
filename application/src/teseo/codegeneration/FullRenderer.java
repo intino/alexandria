@@ -3,10 +3,10 @@ package teseo.codegeneration;
 import cottons.utils.Files;
 import tara.magritte.Graph;
 import teseo.codegeneration.schema.SchemaRenderer;
-import teseo.codegeneration.server.jms.ChannelRenderer;
-import teseo.codegeneration.server.jms.ChannelServiceRenderer;
 import teseo.codegeneration.server.jms.JMSResourceRenderer;
 import teseo.codegeneration.server.jms.JMSServiceRenderer;
+import teseo.codegeneration.server.jms.channel.ChannelRenderer;
+import teseo.codegeneration.server.jms.channel.SubscriptionModelRenderer;
 import teseo.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import teseo.codegeneration.server.jmx.JMXServerRenderer;
 import teseo.codegeneration.server.rest.RESTResourceRenderer;
@@ -65,8 +65,8 @@ public class FullRenderer {
 	}
 
 	private void channels() {
-		new ChannelRenderer(graph, src, gen, packageName).execute();
-		new ChannelServiceRenderer(graph, gen, packageName).execute();
+		new SubscriptionModelRenderer(graph, src, gen, packageName).execute();
+		new ChannelRenderer(graph, gen, packageName).execute();
 	}
 
 }
