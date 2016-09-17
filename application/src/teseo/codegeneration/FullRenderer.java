@@ -23,7 +23,7 @@ public class FullRenderer {
 	private final File src;
 	private final String packageName;
 
-	public FullRenderer(Graph graph, File gen, File src, String packageName) {
+	public FullRenderer(Graph graph, File src, File gen, String packageName) {
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
