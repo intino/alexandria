@@ -64,7 +64,6 @@ public class JMSResourceRenderer {
 		return frame;
 	}
 
-
 	private String messageType(Response response) {
 		return response.isFile() ? "Bytes" : "Text";
 	}

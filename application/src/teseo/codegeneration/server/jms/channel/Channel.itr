@@ -17,7 +17,6 @@ def type(channel)
 	}
 end
 
-
 def type(subscription)
 	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(graph));
 end

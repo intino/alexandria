@@ -12,45 +12,28 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
+import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Graph;
-import teseo.codegeneration.server.rest.RESTServiceRenderer;
+import teseo.codegeneration.FullRenderer;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
-import static java.util.Arrays.asList;
+import static tara.intellij.lang.psi.impl.TaraUtil.getSourceRoots;
 
-public class CreateServicesAction extends Action implements DumbAware {
-	private static final Logger LOG = Logger.getInstance("restApiGenerator: Generate");
+public class CreateShellAction extends Action implements DumbAware {
+	private static final Logger LOG = Logger.getInstance("ShellGenerator: Generate");
 	private static final String TESEO = "teseo";
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {
 		Project project = e.getData(PlatformDataKeys.PROJECT);
 		final Module module = LangDataKeys.MODULE.getData(e.getDataContext());
-		if (projectExists(e, project)) return;
-		List<VirtualFile> files = filterTeseo(getFilesFromEvent(e));
-		if (files.isEmpty()) return;
-		new ApiGenerator(module).generateApi(getGenRoot(module), getApiRoot(module));
-	}
-
-	private List<VirtualFile> filterTeseo(List<VirtualFile> filesFromEvent) {
-		return filesFromEvent;
-	}
-
-	@NotNull
-	private static List<VirtualFile> getFilesFromEvent(AnActionEvent e) {
-		VirtualFile[] files = LangDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
-		if ((files == null) || (files.length == 0)) return Collections.emptyList();
-		final List<VirtualFile> virtualFiles = asList(files);
-		return virtualFiles.stream().filter(f -> f.getName().endsWith(".tara")).collect(Collectors.toList());
+		if (noProject(e, project) || module == null) return;
+		new ShellGenerator(module).generateShell(getGenRoot(module), TaraUtil.getSrcRoot(module));
 	}
 
 	private VirtualFile getGenRoot(Module module) {
@@ -59,21 +42,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 		return null;
 	}
 
-	private VirtualFile getApiRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "api".equals(file.getName())) return file;
-		return null;
-	}
-
-	private static List<VirtualFile> getSourceRoots(@NotNull Module module) {
-		final Set<VirtualFile> result = new LinkedHashSet<>();
-		final ModuleRootManager manager = ModuleRootManager.getInstance(module);
-		result.addAll(asList(manager.getSourceRoots()));
-		result.addAll(asList(manager.getContentRoots()));
-		return new ArrayList<>(result);
-	}
-
-	private boolean projectExists(AnActionEvent e, Project project) {
+	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {
 			LOG.error("actionPerformed: no project for " + e);
 			return true;
@@ -81,34 +50,34 @@ public class CreateServicesAction extends Action implements DumbAware {
 		return false;
 	}
 
-	private class ApiGenerator {
+	private class ShellGenerator {
 		private final Module module;
 
-		ApiGenerator(Module module) {
+		ShellGenerator(Module module) {
 			this.module = module;
 		}
 
-		void generateApi(VirtualFile genDirectory, VirtualFile apiDirectory) {
+		void generateShell(VirtualFile genDirectory, VirtualFile srcDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
 				return;
 			}
 			String outLanguage = TeseoUtils.findOutLanguage(module);
 			if (outLanguage == null || TESEO.equals(outLanguage)) outLanguage = module.getName().toLowerCase();
-			String packageName = (TESEO + File.separator + outLanguage).replace("-", "").toLowerCase();
+			String packageName = (outLanguage + File.separator + TESEO).replace("-", "").toLowerCase();
 			File gen = new File(genDirectory.getPath(), packageName);
 			gen.mkdirs();
-			File api = new File(apiDirectory.getPath(), packageName);
-			api.mkdirs();
-			makeAndGenerate(packageName.replace(File.separator, "."), gen, api);
+			File src = new File(srcDirectory.getPath(), packageName);
+			src.mkdirs();
+			makeAndGenerate(packageName.replace(File.separator, "."), gen, src);
 		}
 
 		private void makeAndGenerate(String packageName, File gen, File api) {
 			final CompilerManager compilerManager = CompilerManager.getInstance(module.getProject());
-			compilerManager.make(compilerManager.createModulesCompileScope(new Module[]{module}, true), generateApi(packageName, gen, api));
+			compilerManager.make(compilerManager.createModulesCompileScope(new Module[]{module}, true), generateShell(packageName, gen, api));
 		}
 
-		private CompileStatusNotification generateApi(String packageName, File gen, File api) {
+		private CompileStatusNotification generateShell(String packageName, File gen, File src) {
 			return new CompileStatusNotification() {
 				public void finished(final boolean aborted, final int errors, final int warnings, final CompileContext compileContext) {
 					generate();
@@ -123,9 +92,9 @@ public class CreateServicesAction extends Action implements DumbAware {
 					final File file = new File(teseoFile);
 					final File dest = file.getName().endsWith(TeseoUtils.STASH) ? new File(file.getParent(), TeseoUtils.findOutLanguage(module) + "." + TESEO) : file;
 					final Graph graph = GraphLoader.loadGraph(module, dest);
-					new RESTServiceRenderer(graph).execute(gen, packageName);
+					new FullRenderer(graph, src, gen, packageName).execute();
 					refreshDirectory(gen);
-					refreshDirectory(api);
+					refreshDirectory(src);
 					notifySuccess();
 				}
 			};
@@ -135,7 +104,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Teseo", "Services for " + module.getName() + " generated", " ", INFORMATION), module.getProject());
+						new Notification("Teseo", "Services for " + module.getName(), "Generated", INFORMATION), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
@@ -147,7 +116,7 @@ public class CreateServicesAction extends Action implements DumbAware {
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Teseo", "Services cannot be generated. " + message, " ", ERROR), module.getProject());
+					new Notification("Teseo", "Services cannot be generated.", message, ERROR), module.getProject());
 		}
 
 	}
