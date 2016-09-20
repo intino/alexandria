@@ -1,4 +1,4 @@
-package teseo.framework.channel;
+package teseo.jms.channel;
 
 
 public class TimeScale  {

@@ -1,4 +1,4 @@
-package teseo.framework.channel;
+package teseo.jms.channel;
 
 import java.io.BufferedReader;
 import java.io.File;

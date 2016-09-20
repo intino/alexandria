@@ -62,7 +62,7 @@
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for jms" enabled="true">
+      <profile default="false" name="Annotation profile for scheduler" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

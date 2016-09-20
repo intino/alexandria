@@ -1,4 +1,4 @@
-package teseo.framework.channel;
+package teseo.jms.channel;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
