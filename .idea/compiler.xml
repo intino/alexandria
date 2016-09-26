@@ -23,7 +23,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="API" />
-        <module name="application" />
       </profile>
       <profile default="false" name="Annotation profile for plugin" enabled="true">
         <sourceOutputDir name="../../out/build/plugin/generated-sources/annotations" />
@@ -48,12 +47,14 @@
         <processorPath useClasspath="true" />
         <module name="core" />
       </profile>
-      <profile default="false" name="Annotation profile for rest-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+      <profile default="false" name="Annotation profile for jms" enabled="true">
+        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="server" />
+        <module name="jms" />
+        <module name="scheduler" />
+        <module name="scheduling" />
       </profile>
       <profile default="false" name="Annotation profile for rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
@@ -62,14 +63,12 @@
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for scheduler" enabled="true">
-        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
+      <profile default="false" name="Annotation profile for rest-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="jms" />
-        <module name="scheduler" />
-        <module name="scheduling" />
+        <module name="server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

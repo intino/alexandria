@@ -7,7 +7,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/forrest/pom.xml" />
-        <option value="$PROJECT_DIR$/application/pom.xml" />
         <option value="$PROJECT_DIR$/server/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/forrest/pom.xml" />
         <option value="$PROJECT_DIR$/accessor/pom.xml" />
