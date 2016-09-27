@@ -1,5 +1,5 @@
-import org.siani.teseo.jmx.JMXClient;
-import teseo.consul.jmx.ConsulManagerMBean;
+import org.siani.pandora.jmx.JMXClient;
+import org.siani.pandora.consul.jmx.ConsulManagerMBean;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,4 +1,4 @@
-import org.siani.teseo.jmx.JMXServer;
+import org.siani.pandora.jmx.JMXServer;
 
 import java.util.Collections;
 

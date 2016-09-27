@@ -28,7 +28,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.0.91-beta" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.4.16" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.siani.teseo:server:1.0.0" level="project" />
+    <orderEntry type="module" module-name="server" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: com.sparkjava:spark-core:2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-simple:1.7.12" level="project" />
@@ -47,8 +47,5 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.3.2.v20150730" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.3.2.v20150730" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz:2.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: c3p0:c3p0:0.9.1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
   </component>
 </module>
