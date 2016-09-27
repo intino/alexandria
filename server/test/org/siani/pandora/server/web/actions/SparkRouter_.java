@@ -1,5 +1,6 @@
 package org.siani.pandora.server.web.actions;
 
+import org.junit.Ignore;
 import org.siani.pandora.server.actions.Action;
 import org.siani.pandora.server.actions.AdapterProxy;
 import org.siani.pandora.server.actions.Router;
@@ -21,6 +22,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
+@Ignore
 public class SparkRouter_ {
 
     private static final String BASE_URL = "http://localhost:8080";

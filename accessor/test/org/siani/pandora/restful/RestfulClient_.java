@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 import static java.lang.Thread.sleep;
-import static org.siani.pandora.actions.Router.Method.Post;
+import static org.siani.pandora.server.actions.Router.Method.Post;
 
 public class RestfulClient_ {
 	private static final String BaseUrl = "http://localhost:8080";
