@@ -9,11 +9,11 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.util.Date;
 import java.util.Set;
 
-public class TeseoScheduler {
+public class PandoraScheduler {
 
 	private Scheduler scheduler;
 
-	public TeseoScheduler() {
+	public PandoraScheduler() {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 		} catch (SchedulerException e) {
