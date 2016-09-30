@@ -30,7 +30,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="forrest" />
-        <module name="plugin" />
         <module name="teseo" />
       </profile>
       <profile default="false" name="Annotation profile for jmx" enabled="true">
@@ -54,7 +53,14 @@
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for jms" enabled="true">
+      <profile default="false" name="Annotation profile for rest-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
+      </profile>
+      <profile default="false" name="Annotation profile for scheduler" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -62,13 +68,6 @@
         <module name="jms" />
         <module name="scheduler" />
         <module name="scheduling" />
-      </profile>
-      <profile default="false" name="Annotation profile for rest-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
