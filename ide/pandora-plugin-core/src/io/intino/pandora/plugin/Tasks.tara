@@ -25,8 +25,7 @@ Facet ShutdownTrigger extends Scheduled on Task
 
 Facet DirectorySentinel on Task
 	var resource directory
-	var word[]:{OnCreate OnDelete} events
-	var function:DirectoryChecker check
+	var word[]:{OnCreate OnDelete OnModify} events
 
 Facet ProcessSentinel on Task
 	var string processName

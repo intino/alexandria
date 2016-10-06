@@ -55,3 +55,5 @@ Service(title = "Cesar Build Service", path = "build") build as REST
 
 Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
+
+Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)

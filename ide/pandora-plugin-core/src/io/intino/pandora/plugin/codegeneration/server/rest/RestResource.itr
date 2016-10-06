@@ -5,8 +5,8 @@ def type(resource)
 	import org.siani.pandora.exceptions.*;
 	import $package.*;
 	import tara.magritte.Graph;
-	import org.siani.pandora.server.web.Resource;
-    import org.siani.pandora.server.web.spark.SparkManager;
+	import org.siani.pandora.server.Resource;
+    import org.siani.pandora.server.spark.SparkManager;
 	$formatImport
 
 	public class $name+firstUpperCase~Resource implements Resource {
