@@ -1,0 +1,53 @@
+<idea-plugin version="2">
+    <id>io.intino.pandora</id>
+    <name>Pandora</name>
+    <version>1.0.0</version>
+    <vendor email="teseo@siani.es" url="http://www.siani.es">Siani</vendor>
+    <description><![CDATA[
+      Teseo helps to create API rest of platforms created with Tara.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      1.0.0
+        - Support of modules with no tara facet
+        - Support of jmx protocol
+    ]]>
+    </change-notes>
+    <depends>siani.dev.tara</depends>
+    <!--<depends>org.siani.tara.legio</depends>-->
+
+
+    <idea-version since-build="143.375"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="io.intino.pandora.plugin.file.PandoraFileTypeFactory"/>
+        <errorHandler implementation="io.intino.pandora.plugin.errorreporting.PluginErrorReportSubmitter"/>
+    </extensions>
+    <actions>
+        <action id="NewPandoraFile" class="io.intino.pandora.plugin.actions.CreatePandoraFileAction">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+        <action id="CreatePandoraAPI" class="io.intino.pandora.plugin.actions.CreateShellAction"
+                text="Create Pandora Shell"
+                description="Create Pandora Shell">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="ExportClient" class="io.intino.pandora.plugin.actions.ExportAccessorAction"
+                text="Export Pandora Accessor"
+                description="Export Pandora Accessor to Artifactory">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="GenerateApi" class="io.intino.pandora.plugin.actions.GenerateApiAction"
+                text="Generate api for this model"
+                description="Generate api for this model">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+        </action>
+    </actions>
+    <application-components>
+        <component>
+            <implementation-class>io.intino.pandora.plugin.project.FileListener</implementation-class>
+        </component>
+    </application-components>
+</idea-plugin>
