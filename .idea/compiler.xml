@@ -46,6 +46,13 @@
         <processorPath useClasspath="true" />
         <module name="core" />
       </profile>
+      <profile default="false" name="Annotation profile for pandora-plugin-core" enabled="true">
+        <sourceOutputDir name="../out/build/pandora-application/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/pandora-application/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pandora-plugin-core" />
+      </profile>
       <profile default="false" name="Annotation profile for rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
@@ -53,14 +60,7 @@
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for rest-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="server" />
-      </profile>
-      <profile default="false" name="Annotation profile for scheduler" enabled="true">
+      <profile default="false" name="Annotation profile for jms" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -68,6 +68,13 @@
         <module name="jms" />
         <module name="scheduler" />
         <module name="scheduling" />
+      </profile>
+      <profile default="false" name="Annotation profile for rest-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -78,6 +85,7 @@
       <module name="forrest" target="1.8" />
       <module name="jms" target="1.8" />
       <module name="jmx" target="1.8" />
+      <module name="pandora-plugin-core" target="1.8" />
       <module name="plugin" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />

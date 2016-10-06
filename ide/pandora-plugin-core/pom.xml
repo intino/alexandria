@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.siani.pandora</groupId>
+    <artifactId>pandora-plugin-core</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <tara.level>Application</tara.level>
+        <tara.dsl>Proteo</tara.dsl>
+        <tara.dsl.version>LATEST</tara.dsl.version>
+        <tara.out.dsl>Pandora</tara.out.dsl>
+        <tara.working.package>io.intino.pandora.plugin</tara.working.package>
+    </properties>
+
+    <build>
+        <outputDirectory>../out/production/pandora-application</outputDirectory>
+        <testOutputDirectory>../out/test/pandora-application</testOutputDirectory>
+        <directory>../out/build/pandora-application</directory>
+        <resources>
+            <resource>
+                <directory>${basedir}/../.tara/refactors</directory>
+            </resource>
+        </resources>
+    </build>
+    <repositories>
+        <repository>
+            <id>siani-maven</id>
+            <name>siani-maven-releases</name>
+            <url>http://artifactory.siani.es/artifactory/libs-release</url>
+        </repository>
+        <repository>
+            <id>siani-maven-snapshot</id>
+            <name>siani-maven-snapshot</name>
+            <url>http://artifactory.siani.es/artifactory/libs-snapshot</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>siani-maven</id>
+            <name>siani-maven-releases</name>
+            <url>https://artifactory.siani.es/artifactory/libs-release-local</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.tara</groupId>
+            <artifactId>proteo</artifactId>
+            <version>1.4.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.itrules</groupId>
+            <artifactId>itrules</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.cottons</groupId>
+            <artifactId>cotton-utils</artifactId>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.pandora</groupId>
+            <artifactId>rest-server</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.pandora</groupId>
+            <artifactId>jmx</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.pandora</groupId>
+            <artifactId>scheduler</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.pandora</groupId>
+            <artifactId>jms</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.pandora</groupId>
+            <artifactId>rest-accessor-java</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.0.11</version>
+        </dependency>
+        <!--SLACK-->
+        <dependency>
+            <groupId>com.github.Ullink</groupId>
+            <artifactId>simple-slack-api</artifactId>
+            <version>0.5.1</version>
+        </dependency>
+    </dependencies>
+</project>

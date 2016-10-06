@@ -1,0 +1,23 @@
+def type(server)
+	package $package+ValidPackage;
+
+    import org.siani.pandora.server.web.PandoraSpark;
+	import $package+ValidPackage.resources.*;
+	import tara.magritte.Graph;
+	import org.siani.pandora.server.web.security.DefaultSecurityManager;
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
+
+		public static void setup(PandoraSpark server, Graph graph) {
+			$secure
+			$resources...[$NL]
+		}
+	}
+end
+
+def type(secure)
+	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
+end
+def type(resource)
+	server.route("$path").$method+firstlowerCase((manager) -> new $name+firstUpperCase$~Resource(graph, manager).execute());
+end

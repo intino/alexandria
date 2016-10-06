@@ -1,0 +1,69 @@
+def type(resource)
+	package $package.resources;
+
+    import java.util.List;
+	import org.siani.pandora.exceptions.*;
+	import $package.*;
+	import tara.magritte.Graph;
+	import org.siani.pandora.server.web.Resource;
+    import org.siani.pandora.server.web.spark.SparkManager;
+	$formatImport
+
+	public class $name+firstUpperCase~Resource implements Resource {
+
+		private Graph graph;
+		private SparkManager manager;
+
+		public $name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
+			this.graph = graph;
+			this.manager = manager;
+		}
+
+		public void execute() throws $throws...[, ] {
+			[$returnType+return]fill(new $package+validname.actions.$name+firstUpperCase~Action()).execute()[$returnType+ending];
+		}
+
+		private $package+validname.actions.$name+firstUpperCase~Action fill($package+validname.actions.$name+firstUpperCase~Action action) {
+			action.graph = this.graph;[
+			$parameter+assign...[$NL]]
+			return action;
+		}
+        [
+        $returnType+write]
+	}
+end
+
+def attribute(void) trigger(return)
+end
+
+def trigger(return)
+	write(
+end
+
+def attribute(void) trigger(ending)
+end
+
+def trigger(ending)
+	)
+end
+
+def attribute(void) trigger(write)
+end
+
+def trigger(write)
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object);
+	}
+end
+
+def type(parameter) trigger(type)
+	$parameterType
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
+end
+
+def type(formatImport)
+	import $package.formats.*;
+end

@@ -1,0 +1,83 @@
+dsl Proteo
+
+use DataTypes
+
+Concept:Named Channel // TODO comprobar generación (rellenado)
+	var string id
+	Concept:{1..1} Message extends Data // TODO Múltiple
+		var string messageType // TODO meter type en properties. No puede llamarse type porque colisiona con la faceta Object
+	sub Queue
+	sub Topic
+
+Concept:Named Service
+	has:Named Exception
+
+Concept Method is abstract component
+	has Parameter
+	has Exception
+	Concept:{0..1} HasExceptions > var Exception exceptions
+	Concept:{1..1} Response extends Data
+		var string description = ""
+
+Concept Exception extends Data
+	var word:ExceptionCodes code
+	var string description = ""
+
+Facet REST on Service
+	var string title
+	var string description = ""
+	var string path
+	var word[]:{http https ws wss} protocols = https
+	Concept:{0..1} Authenticated
+		sub AuthenticatedWithCertificate
+			var resource store
+			var string storePassword
+			Concept AllowedUsers
+				var resource[] certificate
+		sub AuthenticatedWithPassword
+			Concept:{1..*} AllowedUsers
+				var string user
+				var string password
+	has:CheckPath Resource
+	Concept:{0..1} Info
+		var string title
+		var string version
+		var string description = ""
+		var string termsOfService = ""
+	Concept:SingleNamed Contact
+		var string url = ""
+		var string email = ""
+	Concept:SingleNamed License
+		var string url = ""
+	Concept:Named Tag
+		var string description = ""
+		Concept Document
+			var string description = ""
+			var string url
+
+Concept:CheckPath Resource extends Method // TODO OCTAVIO dentro del REST pero peta el codigo generado
+	var string title
+	var string description = ""
+	var string path
+	var word:{Get Post Put Delete} type
+	Concept:Named Parameter extends Parameter
+		var string description = ""
+		var word:{body path form header query} in
+
+Facet JMX on Service
+	var string path = ""
+	has:RequiredNamed Operation
+	has:Named Notification
+
+Concept Operation extends Method // TODO OCTAVIO quiero meterlo dentro de JMX pero peta el codigo generado
+Concept Notification extends Method
+
+Facet JMS on Service
+	Concept Resource extends Method
+		var string queue
+	Concept Authentication
+		sub CredentialSecured
+			var string username
+			var string password
+		sub CertificateSecured
+			var string certificate

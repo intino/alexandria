@@ -1,0 +1,27 @@
+dsl Pandora
+
+Service monet as JMS
+	Resource(queue = "catalogs") catalogs
+		Parameter catalogs as Object(format = CategorizationCatalog)
+		Parameter name as Text
+		Response as Bool
+	Resource(queue = "processes") processes
+		Response as Object(Processes)
+	Resource(queue = "empty") emptyRequest
+
+Format CategorizationCatalog
+	Attribute name as Text
+	Attribute label as Text
+	Format category
+		Attribute name as Text
+		Attribute label as Text
+
+Format Processes
+	Attribute name as Text
+	Attribute label as Text
+
+Queue(id = "catalogs") opinions
+	Message(messageType = "bool") as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
+Topic(id = "processes") inputProcesses
+	Message(messageType = "processes") as Object(format = Processes) // TODO meter type en el properties
+

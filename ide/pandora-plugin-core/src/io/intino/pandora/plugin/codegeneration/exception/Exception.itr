@@ -1,0 +1,12 @@
+def type(Exception)
+    package $package.exceptions;
+
+	import org.siani.pandora.exceptions.*;
+
+	public class $name+firstUpperCase$~Exception extends $code~Exception{
+
+	    public $name+firstUpperCase(String label, $type value){
+	        super(label); // TODO modify exceptions at pandora;
+	    }
+	}
+end

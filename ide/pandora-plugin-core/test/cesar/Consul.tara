@@ -1,0 +1,28 @@
+dsl Pandora
+
+Service consulManager as JMX
+	Operation deploy
+		Parameter system as Object(format = System)
+		Response as Bool
+	Operation retract
+		Parameter systemID as Text
+		Response as Bool
+	Operation systemLogging
+		Parameter systemID as Text
+		Response as Object(format = loggingFormat)
+	Operation serverLogging
+		Parameter systemID as Text
+		Response as Object(format = loggingFormat)
+
+
+Format loggingFormat
+	Attribute instant  as DateTime
+	Attribute memory  as Real
+	Attribute cpu  as Real
+	Attribute connections  as Integer
+
+Format System
+	Attribute ID as Text
+	Attribute(multiple = true)  artifacts as Text
+	Attribute mainClass as Text
+	Attribute artifactory as Text

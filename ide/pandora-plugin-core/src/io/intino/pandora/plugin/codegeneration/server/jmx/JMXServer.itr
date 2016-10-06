@@ -1,0 +1,84 @@
+def type(jmxserver)
+	package $package+ValidPackage;
+
+    import org.siani.pandora.jmx.JMXServer;
+    import tara.magritte.Graph;
+
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class JMX$name+firstUpperCase {
+
+    	public JMXServer init(int port, Graph graph) {
+    		JMXServer server = new JMXServer(mbClasses(graph));
+    		server.init(port);
+    		return server;
+    	}
+
+    	private Map<String, Object$[]> mbClasses(Graph graph) {
+            Map<String, Object$[]> map = new HashMap<>();
+            map.put("$package.jmx.$name+firstUpperCase", new Object$[$]{graph});
+            return map;
+    	}
+    }
+end
+
+def type(jmx) type(interface)
+	package $package+ValidPackage.jmx;
+
+	import java.util.*;
+    import java.time.*;
+
+    public interface $name+firstUpperCase~MBean {
+
+        $operation+signature...[$NL$NL]
+    }
+end
+
+def type(operation) trigger(signature)
+    [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]);
+end
+
+def type(parameter) trigger(withType)
+    $type $name
+end
+
+
+def type(jmx) type(implementation)
+	package $package+ValidPackage.jmx;
+
+    import tara.magritte.Graph;
+    import java.util.*;
+    import java.time.*;
+
+    public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
+
+        private final Graph graph;
+
+        public $name+firstUpperCase(Graph graph) {
+            this.graph = graph;
+        }
+
+        $operation+implementation...[$NL$NL]
+    }
+end
+
+def type(operation) trigger(implementation)
+    public [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]) {
+        $package+ValidPackage.actions.$action+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+firstUpperCase~Action();
+        action.graph = graph;
+        [$parameter+assign...[$NL]]
+        [$returnType+return ]new $package+ValidPackage.actions.$action+firstUpperCase~Action().execute();
+    }
+end
+
+def type(parameter) trigger(assign)
+    action.$name = $name;
+end
+
+def attribute(void) trigger(return)
+end
+
+def trigger(return)
+    return
+end

@@ -1,0 +1,117 @@
+def type(accessor)
+	package $package+validname;
+
+	import org.siani.pandora.exceptions.*;
+	import org.siani.pandora.jms.QueueProducer;
+	import com.google.gson.Gson;
+
+    import javax.jms.*;
+	$formatImport
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~JMSAccessor {
+
+		private final Session session;
+
+		public $name+firstUpperCase+SnakeCaseToCamelCase~JMSAccessor(Session session) {
+			this.session = session;
+		}
+
+		$resource...[$NL$NL]
+
+		$resource+interface...[$NL$NL]
+
+		private static String createRandomString() {
+			java.util.Random random = new java.util.Random(System.currentTimeMillis());
+			long randomLong = random.nextLong();
+			return Long.toHexString(randomLong);
+		}
+	}
+end
+
+def type(resource & reply) trigger(interface)
+	public interface $name+firstUpperCase~Response extends MessageListener {
+
+		void callback($reply+return value);
+
+		default void onMessage(Message message) {
+			try {
+				callback($reply);
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+end
+
+def type(resource) trigger(interface)
+end
+
+def type(resource & reply)
+	public void $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
+		Destination temporaryQueue = session.createTemporaryQueue();
+		session.createConsumer(temporaryQueue).setMessageListener(callback);
+		final $messageType~Message message = session.create$messageType~Message();
+		message.setJMSReplyTo(temporaryQueue);
+		message.setJMSCorrelationID(createRandomString());
+		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
+		new QueueProducer(session, "$queue").produce(message);
+	}
+
+	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
+		$parameter+assign...[$NL]
+	}
+end
+
+
+def type(resource)
+	public void $name([$parameter+signature...[, ]]) throws JMSException {
+		final TextMessage message = session.createTextMessage();
+		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
+		new QueueProducer(session, "$queue").produce(message);
+	}
+
+	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
+		$parameter+assign...[$NL]
+	}
+end
+
+def type(parameter) trigger(signature)
+	$type $name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter) trigger(name)
+	$name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter & objectData) trigger(assign)
+	message.setText(new Gson().toJson($name));
+end
+
+def type(parameter) trigger(assign)
+	message.setStringProperty("$name", $name);
+end
+
+def type(reply) trigger(type)
+	Text
+end
+
+def type(reply & fileData) trigger(type)
+	Bytes
+end
+
+def type(reply) trigger(return)
+	$value
+end
+
+
+def type(reply & fileData) trigger(reply)
+	((ByteMessage) message).getBytes()
+end
+
+def type(reply) trigger(reply)
+	new Gson().fromJson(((TextMessage) message).getText(), $value.class)
+end
+
+def type(formatImport)
+	import $package.formats.*;
+end

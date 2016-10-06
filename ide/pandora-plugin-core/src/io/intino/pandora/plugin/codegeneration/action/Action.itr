@@ -1,0 +1,34 @@
+def type(action)
+	package $package+validname.actions;
+
+	import tara.magritte.Graph;
+	import java.time.*;
+	import java.util.*;
+	$formatImport
+
+	public class $name+firstUpperCase~Action {
+
+		public Graph graph;
+		[$parameter+type...[$NL]]
+
+		public [$returnType?void] execute() [throws $throws...[, ] ]{
+			$returnType+return
+		}
+	}
+end
+
+
+def type(parameter) trigger(type)
+	public $type $name+SnakeCaseToCamelCase+FirstLowerCase;
+end
+
+def attribute(void) trigger(return)
+end
+
+def trigger(return)
+	return null;
+end
+
+def type(formatImport) trigger(formatImport)
+	import $package.formats.*;
+end

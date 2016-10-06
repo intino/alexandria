@@ -1,0 +1,70 @@
+def type(resource)
+	package $package.resources;
+
+	import org.siani.pandora.exceptions.*;
+	import $package.*;
+	import com.google.gson.Gson;
+	import tara.magritte.Graph;
+	import org.siani.pandora.jms.RequestConsumer;
+
+	import javax.jms.*;
+	$formatImport
+
+	public class $name+firstUpperCase~Resource implements RequestConsumer {
+
+		private Graph graph;
+
+		public  $name+firstUpperCase~Resource(Graph graph) {
+			this.graph = graph;
+		}
+
+		public void consume(Session session, Message request) {
+			$call
+		}
+
+		private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
+			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
+			action.graph = this.graph;[
+			try {
+				$parameter+assign
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}]
+			return action;
+		}
+		[
+		private Message responseMessage(Session session, String responseId, $returnType response) {
+			try {
+				$returnMessageType~Message message = session.create$returnMessageType~Message();
+				message.setJMSCorrelationID(responseId);
+				message.set$returnMessageType(new Gson().toJson(response));
+				return message;
+			} catch (JMSException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}]
+	}
+end
+
+
+def !type(void) trigger(call)
+	response(session, replyTo(request), responseMessage(session, idOf(request), actionFor(request).execute()));
+end
+
+def trigger(call)
+	actionFor(request).execute();
+end
+
+def type(parameter & objectData) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
+
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type~Property("$name");
+end
+
+def type(formatImport)
+	import $package.formats.*;
+end

@@ -1,0 +1,53 @@
+dsl Proteo
+
+
+Concept Data is abstract component
+
+Concept:Named Parameter extends Data
+	var boolean required = true
+
+Facet Type on Data
+	var string type is reactive private
+	sub Real
+    	var double defaultValue = 0
+		var string type = "Double" is reactive private
+	sub Integer
+		var integer defaultValue = 0
+		var string type = "Integer" is reactive private
+	sub Bool
+    	var boolean defaultValue = true
+		var string type = "Boolean" is reactive private
+	sub Text
+    	var string defaultValue = ""
+		var string type = "String" is reactive private
+	sub Date
+		var string format = "dd/MM/yyyy"
+		var string type = "java.time.LocalDate" is reactive private
+	sub DateTime
+		var string format = "dd/MM/yyyy HH:mm:ss"
+		var string type = "java.time.LocalDateTime" is reactive private
+	sub File
+		var string type = "java.io.File" is reactive private
+		var word:{body path form header query} in = form
+	sub Object
+		var Format format
+		var string type = @formatName is reactive private
+
+Facet List on Data
+
+!! Structures allows to define how objects are. This objects can be provided as either parameter or response
+Concept Format
+	var boolean required = false
+	var boolean multiple = true
+	!! AttributeMap is able to gather all parameters that are unknown when defining the structure. This can be consulted on runtime in the Action classes
+	Concept:{0..1} AttributeMap
+	!! Attribute of the member
+	Concept:Named Attribute extends Data
+		var boolean required = true
+		var boolean multiple = false
+	Concept Has
+		var Format reference
+		var boolean required = false
+		var boolean multiple = true
+	has Format
+
