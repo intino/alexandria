@@ -5,10 +5,7 @@ import com.intellij.ide.actions.JavaCreateTemplateInPackageAction;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
@@ -17,14 +14,11 @@ import com.intellij.util.IncorrectOperationException;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.java.JavaModuleSourceRootTypes;
 import tara.intellij.actions.utils.TaraTemplates;
 import tara.intellij.actions.utils.TaraTemplatesFactory;
 import tara.intellij.lang.psi.impl.TaraModelImpl;
 import tara.intellij.messages.MessageProvider;
-import tara.intellij.project.module.ModuleProvider;
 
-import java.util.List;
 import java.util.Map;
 
 import static io.intino.pandora.plugin.PandoraIcons.ICON_16;
@@ -50,9 +44,7 @@ public class CreatePandoraFileAction extends JavaCreateTemplateInPackageAction<T
 	@Override
 	protected boolean isAvailable(DataContext dataContext) {
 		PsiElement data = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
-		if (!(data instanceof PsiFile || data instanceof PsiDirectory)) return false;
-		Module module = ModuleProvider.moduleOf(data);
-		return super.isAvailable(dataContext) && isInApi(data instanceof PsiDirectory ? (PsiDirectory) data : (PsiDirectory) data.getParent(), module);
+		return (data instanceof PsiFile || data instanceof PsiDirectory) && super.isAvailable(dataContext);
 	}
 
 	@Nullable
@@ -69,29 +61,6 @@ public class CreatePandoraFileAction extends JavaCreateTemplateInPackageAction<T
 		PsiFile file = TaraTemplatesFactory.createFromTemplate(directory, newName, fileName, template, true, "DSL", dsl);
 		return file instanceof TaraModelImpl ? (TaraModelImpl) file : error(file);
 	}
-
-	private boolean isInApi(PsiDirectory dir, Module module) {
-		for (VirtualFile root : srcContentRoots(module))
-			if (isIn(root, dir) && "api".equalsIgnoreCase(root.getName())) return true;
-		return false;
-	}
-
-	private boolean isIn(VirtualFile sourceRoot, PsiElement dir) {
-		if (sourceRoot == null) return false;
-		PsiElement parent = dir;
-		while (parent != null && !sourceRoot.equals(virtualFileOf(parent)))
-			parent = parent.getParent();
-		return parent != null && virtualFileOf(parent).equals(sourceRoot);
-	}
-
-	private VirtualFile virtualFileOf(PsiElement element) {
-		return element instanceof PsiDirectory ? ((PsiDirectory) element).getVirtualFile() : ((PsiFile) element).getVirtualFile();
-	}
-
-	private List<VirtualFile> srcContentRoots(Module module) {
-		return ModuleRootManager.getInstance(module).getSourceRoots(JavaModuleSourceRootTypes.SOURCES);
-	}
-
 
 	private TaraModelImpl error(PsiFile file) {
 		final String description = file.getFileType().getDescription();

@@ -14,5 +14,5 @@ public class PandoraIcons {
 		return IconUtil.scale(icon, 0.5);
 	}
 
-	public static final Icon ICON_16 = RETINA ? scale(IconLoader.getIcon("/icons/icon-pandora-retina.png")) : IconLoader.getIcon("/icons/icon_16.png");
+	public static final Icon ICON_16 = RETINA ? scale(IconLoader.getIcon("/icons/icon_retina.png")) : IconLoader.getIcon("/icons/icon_16.png");
 }

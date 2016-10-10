@@ -14,8 +14,8 @@ Concept:Named Service
 
 Concept Method is abstract component
 	has Parameter
+	var Exception[] exceptionRefs = empty
 	has Exception
-	Concept:{0..1} HasExceptions > var Exception exceptions
 	Concept:{1..1} Response extends Data
 		var string description = ""
 

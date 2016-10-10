@@ -7,11 +7,11 @@ Service (path = "", title = "Catalogs") Monet as REST
 		Parameter (in = query, required = false) start as Integer
 		Parameter (in = query, required = false) end as Integer
 		Response as List Object(catalogElement)
-		HasExceptions(exceptions = CatalogNotFound CatalogNotAvailable)
+		exceptionRefs = CatalogNotFound CatalogNotAvailable
 	Resource (title = "Get number of elements under catalog", path = "catalog-count/:catalog-name", type = Get) getCatalogCount
 		Parameter (in = path) catalog-name as Text
 		Response as List Integer
-		HasExceptions(exceptions = CatalogNotFound CatalogNotAvailable)
+		exceptionRefs = CatalogNotFound CatalogNotAvailable
 	Resource (title = "Get full description of element under given catalog", path = "/:catalog-name/:entity-id", type = Get) getEntity
 		Parameter (in = path) catalog-name as Text
 		Parameter (in = path) entity-id as Text

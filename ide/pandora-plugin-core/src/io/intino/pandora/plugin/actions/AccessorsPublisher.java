@@ -17,7 +17,11 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
+import tara.StashBuilder;
+import tara.compiler.shared.Configuration;
 import tara.intellij.actions.utils.FileSystemUtils;
+import tara.intellij.lang.psi.impl.TaraUtil;
+import tara.io.Stash;
 import tara.magritte.Graph;
 
 import java.awt.*;
@@ -79,7 +83,7 @@ class AccessorsPublisher {
 
 	private InvocationResult invoke(File pom) throws MavenInvocationException, IOException {
 		final String ijMavenHome = MavenProjectsManager.getInstance(module.getProject()).getGeneralSettings().getMavenHome();
-		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(Arrays.asList("install", "deploy"));
+		InvocationRequest request = new DefaultInvocationRequest().setPomFile(pom).setGoals(Arrays.asList("clean", "install", "deploy"));
 		final File mavenHome = resolveMavenHomeDirectory(ijMavenHome);
 		if (mavenHome == null) return null;
 		LOG.info("Maven HOME: " + mavenHome.getAbsolutePath());
@@ -103,14 +107,15 @@ class AccessorsPublisher {
 
 	private List<String> createSources() throws IOException {
 		List<String> apps = new ArrayList<>();
-		final String outLanguage = PandoraUtils.findOutLanguage(module);
-		String packageName = PANDORA + separator + (outLanguage == null || outLanguage.isEmpty() ? "api" : outLanguage.toLowerCase());
-		final Graph graph = GraphLoader.loadGraph(module, new File(PandoraUtils.findPandora(module)));
+		final Configuration configuration = TaraUtil.configurationOf(module);
+		String generationPackage = configuration != null ? configuration.workingPackage() : "pandora";
+		final Stash[] stashes = PandoraUtils.findPandoraFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), PANDORA, "1.0.0", module.getName()).build()).toArray(Stash[]::new);
+		final Graph graph = GraphLoader.loadGraph(module, stashes).graph();
 		if (graph == null) return Collections.emptyList();
 		for (RESTService service : graph.find(RESTService.class)) {
-			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), packageName);
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage);
 			sourcesDestiny.mkdirs();
-			new RESTAccessorRenderer(service, sourcesDestiny, packageName.replace(separator, ".")).execute();
+			new RESTAccessorRenderer(service, sourcesDestiny, generationPackage.replace(separator, ".")).execute();
 			apps.add(service.name());
 		}
 		return apps;
