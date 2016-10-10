@@ -13,10 +13,8 @@
         - Support of jmx protocol
     ]]>
     </change-notes>
+
     <depends>siani.dev.tara</depends>
-    <!--<depends>org.siani.tara.legio</depends>-->
-
-
     <idea-version since-build="143.375"/>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -33,9 +31,9 @@
             <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
-        <action id="ExportClient" class="io.intino.pandora.plugin.actions.ExportAccessorAction"
-                text="Export Pandora Accessor"
-                description="Export Pandora Accessor to Artifactory">
+        <action id="Publish Client" class="io.intino.pandora.plugin.actions.PublishAccessorAction"
+                text="Publish Pandora Accessor"
+                description="Publish Pandora Accessor in Artifactory">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>

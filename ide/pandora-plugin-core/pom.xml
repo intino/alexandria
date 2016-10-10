@@ -39,6 +39,11 @@
             <name>siani-maven-snapshot</name>
             <url>http://artifactory.siani.es/artifactory/libs-snapshot</url>
         </repository>
+        <repository>
+            <id>siani-maven-language</id>
+            <name>siani-maven-language</name>
+            <url>http://artifactory.siani.es/artifactory/languages-release</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
@@ -56,6 +61,13 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
+            <groupId>tara.dsl</groupId>
+            <artifactId>pandora</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${user.home}/.tara/repository/tara/dsl/pandora/${version}/Pandora-${version}.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <version>LATEST</version>
@@ -69,6 +81,17 @@
             <groupId>org.siani.cottons</groupId>
             <artifactId>cotton-utils</artifactId>
             <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <version>2.0.11</version>
+        </dependency>
+        <!--SLACK-->
+        <dependency>
+            <groupId>com.github.Ullink</groupId>
+            <artifactId>simple-slack-api</artifactId>
+            <version>0.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.siani.pandora</groupId>
@@ -99,17 +122,6 @@
             <artifactId>rest-accessor-java</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-invoker</artifactId>
-            <version>2.0.11</version>
-        </dependency>
-        <!--SLACK-->
-        <dependency>
-            <groupId>com.github.Ullink</groupId>
-            <artifactId>simple-slack-api</artifactId>
-            <version>0.5.1</version>
         </dependency>
     </dependencies>
 </project>

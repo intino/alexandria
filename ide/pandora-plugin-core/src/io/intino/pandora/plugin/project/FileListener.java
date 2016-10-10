@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.project;
 import com.intellij.openapi.vfs.*;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import org.jetbrains.annotations.NotNull;
+import tara.intellij.lang.LanguageManager;
 import tara.intellij.lang.file.StashFileType;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class FileListener implements com.intellij.openapi.components.Application
 
 	@Override
 	public void initComponent() {
+		LanguageManager.register(new tara.dsl.Pandora());
 		listener = new VirtualFileListener() {
 			@Override
 			public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
