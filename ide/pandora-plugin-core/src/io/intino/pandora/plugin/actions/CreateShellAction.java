@@ -16,6 +16,7 @@ import com.intellij.psi.PsiFile;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
+import tara.dsl.Pandora;
 import tara.io.Stash;
 
 import java.io.File;
@@ -25,7 +26,7 @@ import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
 import static tara.intellij.lang.psi.impl.TaraUtil.*;
 
-public class CreateShellAction extends Action implements DumbAware {
+public class CreateShellAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: Generate");
 	private static final String PANDORA = "Pandora";
 
@@ -72,8 +73,8 @@ public class CreateShellAction extends Action implements DumbAware {
 		}
 
 		private void generate(String packageName, File gen, File src) {
-			final Stash[] stashes = pandoraFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), PANDORA, "1.0.0", module.getName()).build()).toArray(Stash[]::new);
-			new FullRenderer(GraphLoader.loadGraph(module, stashes).graph(), src, gen, packageName).execute();
+			final Stash[] stashes = pandoraFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
+			new FullRenderer(GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			notifySuccess();

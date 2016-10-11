@@ -81,3 +81,12 @@ Facet JMS on Service
 			var string password
 		sub CertificateSecured
 			var string certificate
+
+Facet SlackBot on Service
+	var string token
+	Concept Notification
+		var string channel
+	Concept:Named Request
+		var string description
+		Concept Parameter
+			var word:{Boolean String Double Integer} type

@@ -53,6 +53,13 @@
         <processorPath useClasspath="true" />
         <module name="pandora-plugin-core" />
       </profile>
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="slack" />
+      </profile>
       <profile default="false" name="Annotation profile for rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
@@ -90,6 +97,7 @@
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
       <module name="server" target="1.8" />
+      <module name="slack" target="1.8" />
       <module name="teseo" target="1.8" />
     </bytecodeTargetLevel>
   </component>

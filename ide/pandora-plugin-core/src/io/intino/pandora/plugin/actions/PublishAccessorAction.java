@@ -14,9 +14,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-public class PublishAccessorAction extends Action implements DumbAware {
+public class PublishAccessorAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Export Accessor: export");
-
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {

@@ -1,0 +1,50 @@
+def type(slack)
+	package $package+ValidPackage;
+
+    import io.intino.pandora.slack.Bot;
+
+    public class $name+firstUpperCase~SlackBot extends Bot {
+
+        public $name+firstUpperCase~SlackBot() {
+            super("$token");
+            $request+add...[$NL]
+        }
+		[
+        public void notify(String message) {
+            send("$channel", message);
+        }]
+
+		$request...[$NL]
+    }
+end
+
+def type(request) trigger(add)
+	add("$name", "$description", args -> $name($parameter+cast...[, ]));
+end
+
+def type(request)
+	private String $name($parameter...[, ]) {
+		return "";
+	}
+end
+
+def type(parameter & Boolean) trigger(cast)
+	Boolean.parseBoolean(args$[$pos])
+end
+
+def type(parameter & Double) trigger(cast)
+	Double.parseDouble(args$[$pos])
+end
+
+def type(parameter & Integer) trigger(cast)
+	Integer.parseInt(args$[$pos])
+end
+
+
+def type(parameter & String) trigger(cast)
+	args[$pos]
+end
+
+def type(parameter)
+	$type $name
+end

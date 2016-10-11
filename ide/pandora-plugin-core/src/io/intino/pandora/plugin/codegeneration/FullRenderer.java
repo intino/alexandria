@@ -11,6 +11,7 @@ import io.intino.pandora.plugin.codegeneration.server.jmx.JMXOperationsServiceRe
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXServerRenderer;
 import io.intino.pandora.plugin.codegeneration.server.rest.RESTResourceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
+import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
 import io.intino.pandora.plugin.rest.RESTService;
@@ -40,6 +41,7 @@ public class FullRenderer {
 		jmx();
 		jms();
 		channels();
+		slack();
 	}
 
 	private void formats() {
@@ -72,4 +74,8 @@ public class FullRenderer {
 		new ChannelRenderer(graph, gen, packageName).execute();
 	}
 
+	private void slack() {
+		new SlackRenderer(graph, src, packageName).execute();
+		new ChannelRenderer(graph, gen, packageName).execute();
+	}
 }

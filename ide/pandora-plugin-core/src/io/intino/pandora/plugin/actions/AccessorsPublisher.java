@@ -19,6 +19,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
+import tara.dsl.Pandora;
 import tara.intellij.actions.utils.FileSystemUtils;
 import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.io.Stash;
@@ -109,8 +110,8 @@ class AccessorsPublisher {
 		List<String> apps = new ArrayList<>();
 		final Configuration configuration = TaraUtil.configurationOf(module);
 		String generationPackage = configuration != null ? configuration.workingPackage() : "pandora";
-		final Stash[] stashes = PandoraUtils.findPandoraFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), PANDORA, "1.0.0", module.getName()).build()).toArray(Stash[]::new);
-		final Graph graph = GraphLoader.loadGraph(module, stashes).graph();
+		final Stash[] stashes = PandoraUtils.findPandoraFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
+		final Graph graph = GraphLoader.loadGraph(stashes).graph();
 		if (graph == null) return Collections.emptyList();
 		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage);

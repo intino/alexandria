@@ -8,6 +8,7 @@ Service monet as JMS
 	Resource(queue = "processes") processes
 		Response as Object(Processes)
 	Resource(queue = "empty") emptyRequest
+		Response
 
 Format CategorizationCatalog
 	Attribute name as Text

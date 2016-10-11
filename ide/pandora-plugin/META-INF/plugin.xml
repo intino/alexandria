@@ -37,11 +37,6 @@
             <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
-        <action id="GenerateApi" class="io.intino.pandora.plugin.actions.GenerateApiAction"
-                text="Generate api for this model"
-                description="Generate api for this model">
-            <add-to-group group-id="GenerateGroup" anchor="first"/>
-        </action>
     </actions>
     <application-components>
         <component>
