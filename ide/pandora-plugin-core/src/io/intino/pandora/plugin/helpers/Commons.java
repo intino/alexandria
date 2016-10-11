@@ -16,7 +16,6 @@ public class Commons {
 			packageFolder.mkdirs();
 			File file = javaFile(packageFolder, name);
 			Files.write(file.toPath(), format.getBytes());
-//            Logger.getGlobal().info(file.getAbsolutePath() + " generated");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
