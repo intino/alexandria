@@ -40,7 +40,7 @@ public class SlackRenderer {
 			final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
 			for (int i = 0; i < parameters.size(); i++)
 				requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
-						addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name())).addSlot("pos", i);
+						addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
 			frame.addSlot("request", requestFrame);
 		}
 		Commons.writeFrame(destiny, snakeCaseToCamelCase(service.name()) + "SlackBot", template().format(frame));

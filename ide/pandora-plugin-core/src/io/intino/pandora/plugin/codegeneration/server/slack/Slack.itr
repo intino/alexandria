@@ -1,25 +1,25 @@
 def type(slack)
 	package $package+ValidPackage;
 
-    import io.intino.pandora.slack.Bot;
+	import io.intino.pandora.slack.Bot;
 
-    public class $name+firstUpperCase~SlackBot extends Bot {
+	public class $name+firstUpperCase~SlackBot extends Bot {
 
-        public $name+firstUpperCase~SlackBot() {
-            super("$token");
-            $request+add...[$NL]
-        }
+		public $name+firstUpperCase~SlackBot(Graph graph) {
+			super("$token");
+			$request+add...[$NL]
+		}
 		[
-        public void notify(String message) {
-            send("$channel", message);
-        }]
+		public void notify(String message) {
+			send("$channel", message);
+		}]
 
-		$request...[$NL]
-    }
+		$request...[$NL$NL]
+	}
 end
 
 def type(request) trigger(add)
-	add("$name", "$description", args -> $name($parameter+cast...[, ]));
+	add("$name", "$description", args -> $name(graph[, $parameter+cast...[, ]]));
 end
 
 def type(request)
@@ -29,20 +29,20 @@ def type(request)
 end
 
 def type(parameter & Boolean) trigger(cast)
-	Boolean.parseBoolean(args$[$pos])
+	Boolean.parseBoolean(args$[~$pos])
 end
 
 def type(parameter & Double) trigger(cast)
-	Double.parseDouble(args$[$pos])
+	Double.parseDouble(args$[~$pos])
 end
 
 def type(parameter & Integer) trigger(cast)
-	Integer.parseInt(args$[$pos])
+	Integer.parseInt(args$[~$pos])
 end
 
 
 def type(parameter & String) trigger(cast)
-	args[$pos]
+	args$[~$pos]
 end
 
 def type(parameter)

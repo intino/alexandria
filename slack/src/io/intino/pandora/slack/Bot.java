@@ -54,7 +54,7 @@ public abstract class Bot {
         session.sendMessage(channel, message);
     }
 
-    interface Command {
+    public interface Command {
         String execute(String... args);
     }
 

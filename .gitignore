@@ -7,3 +7,4 @@ plugin/plugin/target/
 .idea/libraries
 .idea/dictionaries
 test-res/*.stash
+target/
