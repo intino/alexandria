@@ -1,6 +1,7 @@
 def type(slack)
 	package $package+ValidPackage;
 
+	import tara.magritte.Graph;
 	import io.intino.pandora.slack.Bot;
 
 	public class $name+firstUpperCase~SlackBot extends Bot {
@@ -23,7 +24,7 @@ def type(request) trigger(add)
 end
 
 def type(request)
-	private String $name($parameter...[, ]) {
+	private String $name(Graph graph[, $parameter...[, ]]) {
 		return "";
 	}
 end
