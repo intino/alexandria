@@ -65,5 +65,5 @@ def type(parameter) trigger(assign)
 end
 
 def type(schemaImport)
-	import $package.formats.*;
+	import $package.schemas.*;
 end

@@ -1,24 +1,23 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest;
 
 import com.google.gson.Gson;
+import io.intino.pandora.plugin.Exception;
+import io.intino.pandora.plugin.Response;
 import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.SwaggerSpec;
 import io.intino.pandora.plugin.rest.RESTService;
 import io.intino.pandora.plugin.rest.RESTService.Resource;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OpenApiDescriptor {
 
 	private final RESTService restService;
-	private final List<Schema> formats;
+	private final List<Schema> schemas;
 
 	public OpenApiDescriptor(RESTService restService) {
 		this.restService = restService;
-		this.formats = restService.graph().find(Schema.class);
+		this.schemas = restService.graph().find(Schema.class);
 	}
 
 	public String createJSONDescriptor() {
@@ -44,15 +43,46 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Path.Operation operation = new SwaggerSpec.Path.Operation();
 			operation.description = op.description();
 			operation.operationId = op.id();
+			addParameters(operation, op.parameterList());
+			addResponse(operation.responses, op.response());
+			addResponse(operation.responses, op.exceptionList());
 		}
 		return path;
 	}
 
-	private Map<String, SwaggerSpec.Definition> createDefinitions() {
-		for (Schema format : formats) {
+	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, Response response) {
+		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+		swaggerResponse.description = response.description();
+		responses.put("200", swaggerResponse);
+	}
 
+	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, List<Exception> exceptions) {
+		for (Exception exception : exceptions) {
+			SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+			swaggerResponse.description = exception.description();
+			responses.put(exception.code().value(), swaggerResponse);
 		}
-		return null;
+	}
+
+	private void addParameters(SwaggerSpec.Path.Operation operation, List<Resource.Parameter> parameters) {
+		List<SwaggerSpec.Path.Operation.Parameter> list = new ArrayList<>();
+		for (Resource.Parameter parameter : parameters) {
+			SwaggerSpec.Path.Operation.Parameter swaggerParameter = new SwaggerSpec.Path.Operation.Parameter();
+			swaggerParameter.description = parameter.description();
+			swaggerParameter.in = parameter.in().name();
+			swaggerParameter.name = parameter.name();
+			swaggerParameter.type = parameter.asType().type();
+		}
+		operation.parameters = list;
+	}
+
+	private Map<String, SwaggerSpec.Definition> createDefinitions() {
+		Map<String, SwaggerSpec.Definition> map = new LinkedHashMap<>();
+		for (Schema schema : schemas) {
+			SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
+			map.put(schema.name(), definition);
+		}
+		return map;
 	}
 
 }

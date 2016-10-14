@@ -1,10 +1,11 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class RESTAccessorTemplate extends Template {
 
@@ -58,7 +59,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().add((condition("type", "auth & cert & doInvoke"))).add(literal("accessor.secure(this.url, ")).add(mark("certificate")).add(literal("this.certificate, this.password).")).add(mark("type", "firstLowerCase")).add(literal("(")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
 			rule().add((condition("type", "auth & doInvoke"))).add(literal("accessor.secure(this.url, this.user, this.password).")).add(mark("type", "firstLowerCase")).add(literal("(")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
 			rule().add((condition("type", "doInvoke"))).add(literal("accessor.")).add(mark("type", "firstLowerCase")).add(literal("(this.url, ")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
-				rule().add((condition("type", "schemaImport")), (condition("trigger", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".formats.*;"))
+				rule().add((condition("type", "schemaImport")), (condition("trigger", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
 		return this;
 	}

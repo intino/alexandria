@@ -199,5 +199,5 @@ def type(doInvoke)
 end
 
 def type(schemaImport) trigger(schemaImport)
-	import $package.formats.*;
+	import $package.schemas.*;
 end

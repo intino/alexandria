@@ -1,5 +1,5 @@
 def type(format)
-    package $package+ValidPackage.formats;
+    package $package+ValidPackage.schemas;
 
     public class $name+firstUpperCase {
 

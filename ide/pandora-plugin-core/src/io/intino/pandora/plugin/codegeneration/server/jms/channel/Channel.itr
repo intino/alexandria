@@ -4,7 +4,7 @@ def type(channel)
 	import $package.subscriptions.*;
 	import tara.magritte.Graph;
 	import org.siani.pandora.jms.*;
-	$formatImport
+	$schemaImport
 
 	import javax.jms.Session;
 	import javax.jms.JMSException;
@@ -22,6 +22,6 @@ def type(subscription)
 end
 
 
-def type(formatImport)
-	import $package.formats.*;
+def type(schemaImport)
+	import $package.schemas.*;
 end

@@ -69,11 +69,6 @@
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
-            <artifactId>swagger-generator</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
             <artifactId>swagger-codegen-cli</artifactId>
             <version>2.1.2</version>
         </dependency>

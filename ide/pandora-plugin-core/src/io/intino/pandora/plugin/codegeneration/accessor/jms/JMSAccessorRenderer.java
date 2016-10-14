@@ -37,7 +37,7 @@ public class JMSAccessorRenderer {
 		frame.addSlot("name", jmsService.name());
 		frame.addSlot("package", packageName);
 		if (!jmsService.graph().find(Schema.class).isEmpty())
-			frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("resource", (AbstractFrame[]) jmsService.node().findNode(JMSService.Resource.class).stream().
 				map(this::processResource).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "JMSAccessor", getTemplate().format(frame));

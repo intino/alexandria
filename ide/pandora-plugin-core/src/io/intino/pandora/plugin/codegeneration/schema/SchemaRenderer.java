@@ -48,8 +48,8 @@ public class SchemaRenderer {
         frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(element.hasList()));
         if (element.attributeMap() != null) frame.addSlot("attribute", attributeMap());
         addReturningValueToAttributes(element.name(), frame.frames("attribute"));
-        writeFrame(new File(destination, "formats"), element.name(), template().format(frame));
-    }
+		writeFrame(new File(destination, "schemas"), element.name(), template().format(frame));
+	}
 
     private Template template() {
         final Template template = SchemaTemplate.create();

@@ -1,10 +1,11 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class RestResourceTemplate extends Template {
 
@@ -27,7 +28,7 @@ public class RestResourceTemplate extends Template {
 			rule().add((condition("trigger", "write"))).add(literal("private void write(")).add(mark("value", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" object) {\n\tmanager.write(object);\n}")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "type"))).add(mark("parameterType")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "assign"))).add(literal("action.")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" = manager.from")).add(mark("in", "firstUpperCase")).add(literal("(\"")).add(mark("name")).add(literal("\", ")).add(mark("parameterType")).add(literal(".class);")),
-			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".formats.*;"))
+				rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
 		return this;
 	}

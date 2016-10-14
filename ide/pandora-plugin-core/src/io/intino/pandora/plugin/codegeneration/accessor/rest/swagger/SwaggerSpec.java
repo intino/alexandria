@@ -1,6 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest.swagger;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class SwaggerSpec {
 			public List<String> schemes;
 			public boolean deprecated;
 			public List<Parameter> parameters;
-			public Map<String, Response> responses;
+			public Map<String, Response> responses = new LinkedHashMap<>();
 
 			public static class Parameter {
 				public String name;

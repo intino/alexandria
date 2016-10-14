@@ -4,7 +4,7 @@ def type(subscription)
     import com.google.gson.Gson;
     import tara.magritte.Graph;
     import org.siani.pandora.jms.Consumer;
-	$formatImport
+	$schemaImport
 
     import javax.jms.*;
 
@@ -42,8 +42,8 @@ def type(message) trigger(assign)
 	action.message = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
 end
 
-def type(formatImport)
-	import $package.formats.*;
+def type(schemaImport)
+	import $package.schemas.*;
 end
 
 

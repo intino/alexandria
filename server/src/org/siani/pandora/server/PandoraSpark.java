@@ -63,6 +63,10 @@ public class PandoraSpark {
 			Spark.post(path, (rq, rs) -> execute(caller, new SparkManager(rq, rs, sessionProvider())));
 		}
 
+		public void patch(ResourceCaller caller) {
+			Spark.patch(path, (rq, rs) -> execute(caller, new SparkManager(rq, rs, sessionProvider())));
+		}
+
 		public void put(ResourceCaller caller) {
 			Spark.put(path, (rq, rs) -> execute(caller, new SparkManager(rq, rs, sessionProvider())));
 		}

@@ -37,8 +37,8 @@ public class SubscriptionModelRenderer {
                 addSlot("name", channel.name()).
                 addSlot("message", message(channel.message()));
         if (!channel.graph().find(Schema.class).isEmpty())
-            frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
-        Commons.writeFrame(new File(gen, "subscriptions"), snakeCaseToCamelCase(channel.name()) + "Subscription", template().format(frame));
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+		Commons.writeFrame(new File(gen, "subscriptions"), snakeCaseToCamelCase(channel.name()) + "Subscription", template().format(frame));
         createCorrespondingAction(channel);
     }
 

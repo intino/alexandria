@@ -5,7 +5,7 @@ import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.CRLF;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class SchemaTemplate extends Template {
 
@@ -14,12 +14,12 @@ public class SchemaTemplate extends Template {
 	}
 
 	public static Template create() {
-		return new SchemaTemplate(Locale.ENGLISH, CRLF).define();
+		return new SchemaTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "format"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(".formats;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\n    ")).add(mark("attribute", "declaration").multiple("\n")).add(literal("\n\n    ")).add(mark("attribute", "getter").multiple("\n\n")).add(literal("\n\n    ")).add(mark("attribute", "setter").multiple("\n\n")).add(literal("\n\n}")),
+			rule().add((condition("type", "format"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(".schemas;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\n    ")).add(mark("attribute", "declaration").multiple("\n")).add(literal("\n\n    ")).add(mark("attribute", "getter").multiple("\n\n")).add(literal("\n\n    ")).add(mark("attribute", "setter").multiple("\n\n")).add(literal("\n\n}")),
 			rule().add((condition("type", "primitive & single")), (condition("trigger", "declaration"))).add(literal("private ")).add(mark("type")).add(literal(" ")).add(mark("name", "firstLowerCase")).add(expression().add(literal(" = ")).add(mark("defaultValue"))).add(literal(";")),
 			rule().add(not(condition("type", "primitive")), (condition("type", "single")), (condition("trigger", "declaration"))).add(literal("private ")).add(mark("type", "firstUpperCase")).add(literal(" ")).add(mark("name", "firstLowerCase")).add(expression().add(literal(" = ")).add(mark("defaultValue"))).add(literal(";")),
 			rule().add((condition("type", "multiple & member")), (condition("trigger", "declaration"))).add(literal("private java.util.List<")).add(mark("type", "firstUpperCase")).add(literal("> ")).add(mark("name", "firstLowerCase")).add(mark("<missing ID>")).add(literal("List = new java.util.ArrayList<>();")),

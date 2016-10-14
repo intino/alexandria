@@ -29,6 +29,6 @@ def trigger(return)
 	return null;
 end
 
-def type(formatImport) trigger(formatImport)
-	import $package.formats.*;
+def type(schemaImport) trigger(schemaImport)
+	import $package.schemas.*;
 end

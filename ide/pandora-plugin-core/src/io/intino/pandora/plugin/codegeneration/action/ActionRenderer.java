@@ -40,7 +40,7 @@ abstract class ActionRenderer {
 	}
 
 	String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".formats.") : "") + typeData.type();
+		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	protected void execute(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {

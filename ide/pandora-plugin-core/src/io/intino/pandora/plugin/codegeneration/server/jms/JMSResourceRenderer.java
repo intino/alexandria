@@ -60,7 +60,7 @@ public class JMSResourceRenderer {
 		if (!returnType.equals("void"))
 			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(resource.response()));
 		if (!resource.graph().find(Schema.class).isEmpty())
-			frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		return frame;
 	}
 
