@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 
 import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.Format;
+import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.codegeneration.action.ChannelActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
@@ -36,7 +36,7 @@ public class SubscriptionModelRenderer {
                 addSlot("package", packageName).
                 addSlot("name", channel.name()).
                 addSlot("message", message(channel.message()));
-        if (!channel.graph().find(Format.class).isEmpty())
+        if (!channel.graph().find(Schema.class).isEmpty())
             frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
         Commons.writeFrame(new File(gen, "subscriptions"), snakeCaseToCamelCase(channel.name()) + "Subscription", template().format(frame));
         createCorrespondingAction(channel);

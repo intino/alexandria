@@ -11,7 +11,7 @@ def type(accessor)
 	import org.siani.pandora.exceptions.*;
 	import com.google.gson.reflect.TypeToken;
 
-	$formatImport
+	$schemaImport
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
 
@@ -21,7 +21,7 @@ def type(accessor)
 		$user~private String user;][
 		$auth~private String password;]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor(URL url[, $certificate~URL certificate][$user, String user][$auth, String password]) {
+		public $operation+firstUpperCase+SnakeCaseToCamelCase$name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$user, String user][$auth, String password]) {
 			this.url = url;[
 			$certificate~this.certificate = certificate;][
 			$user~this.user = user;][
@@ -198,6 +198,6 @@ def type(doInvoke)
 	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters])
 end
 
-def type(formatImport) trigger(formatImport)
+def type(schemaImport) trigger(schemaImport)
 	import $package.formats.*;
 end

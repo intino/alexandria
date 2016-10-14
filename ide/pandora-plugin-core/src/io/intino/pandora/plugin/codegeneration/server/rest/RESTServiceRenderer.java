@@ -1,15 +1,17 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
-import io.intino.pandora.plugin.Resource;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.plugin.rest.RESTService.Resource;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -41,18 +43,23 @@ public class RESTServiceRenderer {
 	}
 
 	private Frame[] processResources(List<Resource> resources) {
-		return resources.stream().map(this::processResource).toArray(Frame[]::new);
+		List<Frame> list = new ArrayList<>();
+		for (Resource resource : resources) {
+			list.addAll(processResource(resource, resource.operationList()));
+		}
+		return list.toArray(new Frame[list.size()]);
 	}
 
-	private Frame processResource(Resource resource) {
-		return new Frame().addTypes("resource", resource.type().toString())
+	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
+		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.concept().name())
 				.addSlot("name", resource.name())
 				.addSlot("path", Commons.path(resource))
-				.addSlot("method", resource.type().toString());
+				.addSlot("method", operation.concept().name())).collect(Collectors.toList());
 	}
 
+
 	private Template template() {
-		Template template = RESTServerTemplate.create();
+		Template template = RESTServiceTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ValidPackage", Commons::validPackage);
 		return template;

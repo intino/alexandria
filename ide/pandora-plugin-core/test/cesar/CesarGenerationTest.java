@@ -26,4 +26,9 @@ public class CesarGenerationTest {
 		new FullRenderer(Graph.load("Consul").wrap(PandoraApplication.class), gen, gen, CONSUL).execute();
 
 	}
+
+
+	@Test
+	public void swaggerAccessorsCreator() throws Exception {
+	}
 }

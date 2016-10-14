@@ -1,10 +1,10 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
-import io.intino.pandora.plugin.Operation;
 import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.codegeneration.action.MethodActionRenderer;
+import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.jmx.JMXService;
+import io.intino.pandora.plugin.jmx.JMXService.Operation;
 import io.intino.pandora.plugin.object.ObjectData;
 import io.intino.pandora.plugin.type.TypeData;
 import org.siani.itrules.Template;
@@ -55,7 +55,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
-		for (Operation operation : operations) new MethodActionRenderer(operation, src, packageName).execute();
+		for (Operation operation : operations) new JMXActionRenderer(operation, src, packageName).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

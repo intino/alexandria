@@ -2,7 +2,7 @@ package io.intino.pandora.plugin.codegeneration;
 
 import cottons.utils.Files;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.pandora.plugin.codegeneration.format.FormatRenderer;
+import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.JMSResourceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
@@ -45,7 +45,7 @@ public class FullRenderer {
 	}
 
 	private void formats() {
-		new FormatRenderer(graph, gen, packageName).execute();
+		new SchemaRenderer(graph, gen, packageName).execute();
 	}
 
 	private void rest() {
