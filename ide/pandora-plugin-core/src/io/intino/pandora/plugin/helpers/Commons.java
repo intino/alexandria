@@ -1,9 +1,11 @@
 package io.intino.pandora.plugin.helpers;
 
-import io.intino.pandora.plugin.Method;
-import io.intino.pandora.plugin.Resource;
+import io.intino.pandora.plugin.Response;
 import io.intino.pandora.plugin.file.FileData;
 import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.plugin.rest.RESTService.Resource;
+import io.intino.pandora.plugin.rest.RESTService.Resource.Operation;
+import io.intino.pandora.plugin.rest.RESTService.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,13 +31,13 @@ public class Commons {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
-	public static String[] pathParameters(Resource resource) {
-		return resource.resourceParameterList().stream().filter(p -> p.in() == Resource.Parameter.In.path)
+	public static String[] pathParameters(Operation operation) {
+		return operation.parameterList().stream().filter(p -> p.in() == In.path)
 				.map(Resource.Parameter::name).toArray(String[]::new);
 	}
 
-	public static long queryParameters(Resource resource) {
-		return resource.resourceParameterList().stream().filter(p -> p.in() == Resource.Parameter.In.query).count();
+	public static long queryParameters(Operation resource) {
+		return resource.parameterList().stream().filter(p -> p.in() == In.query).count();
 	}
 
 	public static String format(String path) {
@@ -43,7 +45,7 @@ public class Commons {
 	}
 
 	public static String path(Resource resource) {
-		String basePath = cleanPath(resource.ownerAs(RESTService.class).path());
+		String basePath = cleanPath(resource.ownerAs(RESTService.class).basePath());
 		String resourcePath = cleanPath(resource.path());
 		return format(basePath) + resourcePath;
 	}
@@ -53,13 +55,13 @@ public class Commons {
 		return path.startsWith("/") ? path.substring(1) : path;
 	}
 
-	public static String returnType(Method.Response response) {
+	public static String returnType(Response response) {
 		if (response == null || response.asType() == null) return "void";
 		return response.isList() ? "List<" + response.asType().type() + ">" : response.asType().type();
 	}
 
-	public static int fileParameters(Resource resource) {
-		return (int) resource.resourceParameterList().stream().filter(p -> p.is(FileData.class)).count();
+	public static int fileParameters(Operation operation) {
+		return (int) operation.parameterList().stream().filter(p -> p.is(FileData.class)).count();
 	}
 
 	public static String validPackage(Object value) {

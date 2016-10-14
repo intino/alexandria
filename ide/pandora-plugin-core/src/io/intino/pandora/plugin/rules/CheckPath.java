@@ -24,9 +24,10 @@ public class CheckPath implements NodeRule {
 	}
 
 	public boolean accept(List<Node> nodes) {
-		for (Node node : nodes)
-			if (pathIsWrong(node)) return false;
 		return true;
+//		for (Node node : nodes)
+//			if (pathIsWrong(node)) return false;
+//		return true;
 	}
 
 	private boolean pathIsWrong(Node node) {
@@ -54,16 +55,16 @@ public class CheckPath implements NodeRule {
 		return false;
 	}
 
+	private boolean parameterIsInPath(Node node) {
+		return "path".equals(parameter(node, "in").values().get(0).toString());
+	}
+
 	private Parameter parameter(Node node, String name) {
 		return node.parameters().stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
 	}
 
-	private boolean parameterIsInPath(Node parameter) {
-		return "path".equals(parameter(parameter, "in").values().get(0).toString());
-	}
-
 	private boolean isParameter(Node component) {
-		return component.types().contains("Resource.Parameter");
+		return component.types().contains("Parameter");
 	}
 
 	public String errorMessage() {

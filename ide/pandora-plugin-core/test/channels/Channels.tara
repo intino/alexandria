@@ -2,7 +2,7 @@ dsl Pandora
 
 Service monet as JMS
 	Resource(queue = "catalogs") catalogs
-		Parameter catalogs as Object(format = CategorizationCatalog)
+		Parameter catalogs as Object(schema = CategorizationCatalog)
 		Parameter name as Text
 		Response as Bool
 	Resource(queue = "processes") processes
@@ -10,19 +10,19 @@ Service monet as JMS
 	Resource(queue = "empty") emptyRequest
 		Response
 
-Format CategorizationCatalog
+Schema CategorizationCatalog
 	Attribute name as Text
 	Attribute label as Text
-	Format category
+	Schema category
 		Attribute name as Text
 		Attribute label as Text
 
-Format Processes
+Schema Processes
 	Attribute name as Text
 	Attribute label as Text
 
 Queue(id = "catalogs") opinions
 	Message(messageType = "bool") as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
 Topic(id = "processes") inputProcesses
-	Message(messageType = "processes") as Object(format = Processes) // TODO meter type en el properties
+	Message(messageType = "processes") as Object(schema = Processes) // TODO meter type en el properties
 

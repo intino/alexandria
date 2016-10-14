@@ -1,23 +1,28 @@
 dsl Pandora
 
 
-Service (path = "", title = "Catalogs") Monet as REST
-	Resource (title = "Get entire catalog", path = "/:catalog-name", type = Get) getCatalog
-		Parameter (in = path) catalog-name as Text
-		Parameter (in = query, required = false) start as Integer
-		Parameter (in = query, required = false) end as Integer
-		Response as List Object(catalogElement)
-		exceptionRefs = CatalogNotFound CatalogNotAvailable
-	Resource (title = "Get number of elements under catalog", path = "catalog-count/:catalog-name", type = Get) getCatalogCount
-		Parameter (in = path) catalog-name as Text
-		Response as List Integer
-		exceptionRefs = CatalogNotFound CatalogNotAvailable
-	Resource (title = "Get full description of element under given catalog", path = "/:catalog-name/:entity-id", type = Get) getEntity
-		Parameter (in = path) catalog-name as Text
-		Parameter (in = path) entity-id as Text
-		Response as Object(entityResponse)
-		Exception(code = ErrorNotFound) EntityNotFound as Text
-		Exception(code = ErrorUnauthorized)
+Service Monet as REST(host = "", basePath = "/", consumes = "", produces = "")
+	Resource(path = "/catalogs/:catalog-name") Catalogs
+		Parameter(in = path, required = false) catalog-name as Text
+		Get(description = "Get entire catalog") getCatalog
+			Parameter(in = path, required = true) catalog-name as Text
+			Parameter(in = query, required = false) start as Integer
+			Parameter(in = query, required = false) end as Integer
+			Response as List Object(catalogElement)
+			exceptionRefs = CatalogNotFound CatalogNotAvailable
+		Patch > Response
+	Resource(path = "catalog-count/:catalog-name")
+		Get(description = "Get number of elements under catalog") getCatalogCount
+			Parameter(in = path, required = true) catalog-name as Text
+			Response as List Integer
+			exceptionRefs = CatalogNotFound CatalogNotAvailable
+	Resource(path = "/:catalog-name/:entity-id")
+		Get(description = "Get full description of element under given catalog")
+			Parameter(in = path, required = true) catalog-name as Text
+			Parameter (in = path) entity-id as Text
+			Response as Object(entityResponse)
+			Exception(code = ErrorNotFound) EntityNotFound as Text
+			Exception(code = ErrorUnauthorized)
 
 	Exception(code = ErrorNotFound) CatalogNotFound as Text // TODO obliga a poner nombre
 	Exception(code = ErrorUnauthorized) CatalogNotAvailable as Text
@@ -95,61 +100,61 @@ Service (path = "", title = "Catalogs") Monet as REST
 //		Response(code = ErrorNotFound)
 //		Response(code = ErrorUnauthorized)
 
-Format catalogElement
+Schema catalogElement
 	Attribute id as Text
 	Attribute (multiple = true) types as Text
 	Attribute created as Text
 	Attribute active as Bool
 
-Format entityResponse
+Schema entityResponse
 	Attribute id as Text
 	Attribute created as Text
 	Attribute active as Bool
-	Format layer
+	Schema layer
 		Attribute typeName as Text
 		AttributeMap
 
-Format contextResponse
+Schema contextResponse
 	Attribute label as Text(defaultValue = "")
 	Attribute description as Text(defaultValue = "")
-	Format file
+	Schema file
 		Attribute label as Text
 		Attribute downloadFileId as Text
-	Format record
+	Schema record
 		Attribute format as Text(defaultValue = "None")
 		Attribute data as Text
-	Format trace
+	Schema trace
 		Attribute instant as Text
 		Attribute message as Text
 
-Format formResponse
+Schema formResponse
 	Attribute id as Text
 	Attribute title as Text
 	Attribute description as Text
 	Attribute helper as Text
-	Format field
+	Schema field
 		Attribute type as Text
 		AttributeMap
-	Format display
+	Schema display
 		Attribute(multiple = true) forms as Text
 		// TODO ARRAY OF FORMS RECURSIVENESS IN DEFINITIONS OF FORMATS
 
-Format fieldValidationResponse
+Schema fieldValidationResponse
 	Attribute status as Bool
 	Attribute message as Text
-	Format field
+	Schema field
 		Attribute type as Text
 		AttributeMap
 
-Format fieldTypeAheadResponse
-	Format typeAheadElement
+Schema fieldTypeAheadResponse
+	Schema typeAheadElement
 		Attribute label as Text
 		Attribute id as Text
 
 
-Format Shop
+Schema Shop
 	Has(Product)
 
-Format Product
+Schema Product
 	Attribute name as Text
 	Attribute price as Real
