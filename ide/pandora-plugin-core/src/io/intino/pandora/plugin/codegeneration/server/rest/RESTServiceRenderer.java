@@ -35,7 +35,7 @@ public class RESTServiceRenderer {
 		Frame frame = new Frame().addTypes("server").
 				addSlot("name", service.name()).
 				addSlot("package", packageName).
-				addSlot("resources", (AbstractFrame[]) processResources(service.resourceList()));
+				addSlot("resource", (AbstractFrame[]) processResources(service.resourceList()));
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store().getPath()).addSlot("password", secure.storePassword()));
@@ -53,6 +53,7 @@ public class RESTServiceRenderer {
 	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
 		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.concept().name())
 				.addSlot("name", resource.name())
+				.addSlot("operation", operation.concept().name())
 				.addSlot("path", Commons.path(resource))
 				.addSlot("method", operation.concept().name())).collect(Collectors.toList());
 	}

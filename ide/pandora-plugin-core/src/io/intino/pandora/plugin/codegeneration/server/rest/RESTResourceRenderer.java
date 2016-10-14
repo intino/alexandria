@@ -43,7 +43,7 @@ public class RESTResourceRenderer {
 	private void processResource(Resource resource) {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = fillResourceFrame(resource, operation);
-			writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(resource.name()) + "Resource", template().format(frame));
+			writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
 			createCorrespondingAction(operation);
 		}
 	}
@@ -55,6 +55,7 @@ public class RESTResourceRenderer {
 	private Frame fillResourceFrame(Resource resource, Operation operation) {
 		Frame frame = new Frame().addTypes("resource");
 		frame.addSlot("name", resource.name());
+		frame.addSlot("operation", operation.concept().name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));
 		frame.addSlot("returnType", Commons.returnType(operation.response()));

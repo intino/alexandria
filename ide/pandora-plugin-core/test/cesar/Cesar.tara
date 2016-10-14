@@ -45,7 +45,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = path) server as Text
 			Response
 			Exception(ErrorBadRequest)
-	Resource(path = "/servers/:server/:system")
+	Resource(path = "/servers/:server/:system") deploySystem
 		Post(description = "Deploy system") deploySystem
 			Parameter(in = path) server as Text
 			Parameter(in = path) system as Text

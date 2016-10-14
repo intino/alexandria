@@ -1,6 +1,5 @@
 package cesar;
 
-import io.swagger.codegen.DefaultCodegen;
 
 import java.io.File;
 
@@ -8,7 +7,7 @@ public class Generator {
 
 
 	public void generate() {
-		DefaultCodegen generator = new DefaultCodegen();
+//		DefaultCodegen generator = new DefaultCodegen();
 	}
 
 	protected static File getTmpFolder() {

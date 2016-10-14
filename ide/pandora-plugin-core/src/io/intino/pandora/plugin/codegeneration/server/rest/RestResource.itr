@@ -14,16 +14,16 @@ def type(resource)
 		private Graph graph;
 		private SparkManager manager;
 
-		public $name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
+		public $operation+firstUpperCase$name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
 			this.graph = graph;
 			this.manager = manager;
 		}
 
 		public void execute() throws $throws...[, ] {
-			[$returnType+writeCall]fill(new $package+validname.actions.$name+firstUpperCase~Action()).execute()[$returnType+ending];
+			[$returnType+writeCall]fill(new $package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
-		private $package+validname.actions.$name+firstUpperCase~Action fill($package+validname.actions.$name+firstUpperCase~Action action) {
+		private $package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
 			action.graph = this.graph;[
 			$parameter+assign...[$NL]]
 			return action;
