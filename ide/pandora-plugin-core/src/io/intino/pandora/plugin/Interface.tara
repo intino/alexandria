@@ -17,6 +17,7 @@ Concept Exception extends Data
 	var string description = ""
 
 Concept Response extends Data is component
+	var string code = "200"
 	var string description = ""
 
 Facet REST on Service
@@ -27,7 +28,6 @@ Facet REST on Service
 	var word[]:{http https ws wss} protocols = https
 	var string[] consumes //text/plain; charset=utf-8   application/json multipart/form-data
 	var string[] produces //comprobar si es alguno de los MIME-types
-
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
 			var resource store

@@ -8,12 +8,12 @@ import java.util.Map;
 public class SwaggerSpec {
 
 	public String swagger = "2.0";
+	public Info info;
 	public String host;
 	public String basePath;
-	public List<String> schemas;
+	public List<String> schemes;
 	public List<String> consumes = Collections.singletonList("application/json");
 	public List<String> produces = Collections.singletonList("application/json");
-	public Info info;
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
 
@@ -25,18 +25,37 @@ public class SwaggerSpec {
 		public String description;
 		public String termsOfService;
 		public Contact contact;
-		public Licence licence;
+		public License license;
+
+		public Info(String version, String title, String description, String termsOfService, Contact contact, License license) {
+			this.version = version.isEmpty() ? null : version;
+			this.title = title.isEmpty() ? null : title;
+			this.description = description.isEmpty() ? null : description;
+			this.termsOfService = termsOfService.isEmpty() ? null : termsOfService;
+			this.contact = contact;
+			this.license = license;
+		}
 
 		public static class Contact {
 			public String name;
 			public String email;
 			public String url;
+
+			public Contact(String name, String email, String url) {
+				this.name = name.isEmpty() ? null : name;
+				this.email = email.isEmpty() ? null : email;
+				this.url = url.isEmpty() ? null : url;
+			}
 		}
 
-		public static class Licence {
+		public static class License {
 			public String name;
 			public String url;
 
+			public License(String name, String url) {
+				this.name = name.isEmpty() ? null : name;
+				this.url = url.isEmpty() ? null : url;
+			}
 		}
 	}
 
@@ -49,14 +68,14 @@ public class SwaggerSpec {
 		public Operation patch;
 
 		public static class Operation {
-			public List<String> tags;
 			public String summary;
 			public String description;
 			public String operationId;
+			public List<String> tags;
 			public List<String> consumes;
 			public List<String> produces;
 			public List<String> schemes;
-			public boolean deprecated;
+			public Boolean deprecated;
 			public List<Parameter> parameters;
 			public Map<String, Response> responses = new LinkedHashMap<>();
 
@@ -80,6 +99,11 @@ public class SwaggerSpec {
 				public static class Schema {
 					public String type;
 					public String $ref;
+
+					public Schema(String type, String $ref) {
+						this.type = type;
+						this.$ref = $ref;
+					}
 				}
 
 				public static class Header {
@@ -107,8 +131,8 @@ public class SwaggerSpec {
 			public String type;
 			public String $ref;
 			public String format;
-			public int minimum;
-			public int maximum;
+			public Integer minimum;
+			public Integer maximum;
 		}
 	}
 

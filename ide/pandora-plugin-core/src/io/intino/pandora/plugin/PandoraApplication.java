@@ -12,8 +12,4 @@ public class PandoraApplication extends GraphWrapper implements tara.magritte.Ap
 	public void execute(String... args) {
 	}
 
-	@Override
-	protected void update() {
-
-	}
 }

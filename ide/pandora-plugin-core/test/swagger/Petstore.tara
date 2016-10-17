@@ -1,0 +1,34 @@
+dsl Pandora
+
+Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http, consumes = "application/json", produces = "application/json")
+	Info(title = "Swagger Petstore", version = "1.0.0")
+		License MIT
+	Resource(path = "/pets") pets
+		Get(summary = "List all pets") listPets
+			tags = "pets"
+			Parameter(in = query, description = "How many items to return at one time (max 100)", required = false) limit as Integer
+			Response(description = "An paged array of pets") as List Object(schema = Pet)
+			Exception(ErrorBadRequest, "unexpected error") as Object(Error)
+
+		Post(summary = "Create a pet", tags = "pets") createPets
+			Response(code = "201", description = "Null response")
+			Exception(ErrorBadRequest, "unexpected error") as Object(Error)
+	Resource(path = "/pets/:petId") pet
+		Get(summary = "Info for a specific pet", tags = "pets") showPetById
+			Parameter(in = path) petId as Text
+				required = true
+				description = "The id of the pet to retrieve"
+			Response as List Object(schema = Pet)
+				description = "Expected response to a valid request"
+			Exception(ErrorBadRequest) as Object(Error)
+				description = "unexpected error"
+
+Schema Pet
+	Attribute id as Integer
+	Attribute name as Text
+	Attribute tag as Text
+		required = false
+
+Schema Error
+	Attribute code as Integer
+	Attribute message as Text
