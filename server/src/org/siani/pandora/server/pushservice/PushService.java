@@ -2,7 +2,7 @@ package org.siani.pandora.server.pushservice;
 
 import java.util.function.Consumer;
 
-public interface PushService<S extends Session, C extends Client> extends SessionProvider {
+public interface PushService<S extends Session<C>, C extends Client> extends SessionProvider<S, C> {
 
 	void onOpen(Consumer<C> client);
 

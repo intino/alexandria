@@ -3,7 +3,7 @@ package org.siani.pandora.server.ui.pushservice;
 import org.siani.pandora.server.pushservice.Client;
 import org.siani.pandora.server.spark.SparkSession;
 
-public class UISession extends SparkSession<UIClient> {
+public class UISession<C extends UIClient> extends SparkSession<C> {
     private User user;
     private Browser browser;
 

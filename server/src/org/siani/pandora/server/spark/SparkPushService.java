@@ -1,15 +1,9 @@
 package org.siani.pandora.server.spark;
 
-import org.siani.pandora.server.pushservice.AdapterProxy;
 import org.siani.pandora.server.pushservice.Client;
 import org.siani.pandora.server.pushservice.Session;
-import org.siani.pandora.server.pushservice.SessionManager;
 
-public class SparkPushService extends PushService<Session, Client> {
-
-	public SparkPushService(AdapterProxy adapterProxy, SessionManager sessionManager) {
-		super(adapterProxy, sessionManager);
-	}
+public class SparkPushService extends PushService<Session<Client>, Client> {
 
 	@Override
 	public Session createSession(String id) {

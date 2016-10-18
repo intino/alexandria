@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import org.siani.pandora.server.pushservice.*;
+import org.siani.pandora.server.ui.pushservice.DefaultRequestAdapter;
+import org.siani.pandora.server.ui.pushservice.DefaultResponseAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,19 +14,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class PushService<S extends Session, C extends Client> implements org.siani.pandora.server.pushservice.PushService<S, C> {
+public abstract class PushService<S extends Session<C>, C extends Client> implements org.siani.pandora.server.pushservice.PushService<S, C> {
 
 	protected final List<Consumer<C>> openConnectionListeners = new ArrayList<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
 	protected final AdapterProxy adapterProxy;
-	protected final SessionManager sessionManager;
+	protected final SessionManager<S, C> sessionManager;
 
 	private static final JsonParser Parser = new JsonParser();
 
-	public PushService(AdapterProxy adapterProxy, SessionManager sessionManager) {
-		this.adapterProxy = adapterProxy;
-		this.sessionManager = sessionManager;
+	public PushService() {
+		this.adapterProxy = defaultAdapterProxy();
+		this.sessionManager = new SessionManager<>();
 	}
 
 	@Override
@@ -59,16 +61,6 @@ public abstract class PushService<S extends Session, C extends Client> implement
 		openConnectionListeners.clear();
 
 		sessionManager.unlinkFromThread();
-	}
-
-	private void registerSession(String sessionId) {
-		if (sessionManager.session(sessionId) != null) return;
-		sessionManager.register(createSession(sessionId));
-	}
-
-	private void registerClient(C client) {
-		registerSession(client.sessionId());
-		sessionManager.register(client);
 	}
 
 	public void onMessage(C client, String message) {
@@ -110,6 +102,37 @@ public abstract class PushService<S extends Session, C extends Client> implement
 		client.send(serializeMessage(message));
 	}
 
+	@Override
+	public void linkToThread(C client) {
+		sessionManager.linkToThread(client);
+	}
+
+	@Override
+	public void unlinkFromThread() {
+		sessionManager.unlinkFromThread();
+	}
+
+	@Override
+	public void unRegister(C client) {
+		sessionManager.unRegister(client);
+	}
+
+	@Override
+	public S session(String id) {
+		registerSession(id);
+		return sessionManager.session(id);
+	}
+
+	@Override
+	public C client(String id) {
+		return sessionManager.client(id);
+	}
+
+	@Override
+	public C currentClient() {
+		return sessionManager.currentClient();
+	}
+
 	private void broadcastMessage(C client, Message message) {
 		messageListeners.get(client.id()).forEach(listener -> listener.accept(message));
 	}
@@ -143,19 +166,28 @@ public abstract class PushService<S extends Session, C extends Client> implement
         }
     }
 
-	@Override
-	public <S extends Session> S session(String id) {
-		registerSession(id);
-		return (S) sessionManager.session(id);
+	private AdapterProxy defaultAdapterProxy() {
+		return new AdapterProxy() {
+			@Override
+			public RequestAdapter requestAdapterOf(String name, Class clazz) {
+				return new DefaultRequestAdapter(clazz);
+			}
+
+			@Override
+			public ResponseAdapter responseAdapterOf(String name) {
+				return new DefaultResponseAdapter();
+			}
+		};
 	}
 
-	@Override
-	public <C extends Client> C client(String id) {
-		return (C) sessionManager.client(id);
+	private void registerSession(String sessionId) {
+		if (sessionManager.session(sessionId) != null) return;
+		sessionManager.register(createSession(sessionId));
 	}
 
-	@Override
-	public <C extends Client> C currentClient() {
-		return (C) sessionManager.currentClient();
+	private void registerClient(C client) {
+		registerSession(client.sessionId());
+		sessionManager.register(client);
 	}
+
 }
