@@ -8,7 +8,7 @@ def type(resource)
 	import org.siani.pandora.jms.RequestConsumer;
 
 	import javax.jms.*;
-	$formatImport
+	$schemaImport
 
 	public class $name+firstUpperCase~Resource implements RequestConsumer {
 
@@ -65,6 +65,6 @@ def type(parameter) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type~Property("$name");
 end
 
-def type(formatImport)
-	import $package.formats.*;
+def type(schemaImport)
+	import $package.schemas.*;
 end

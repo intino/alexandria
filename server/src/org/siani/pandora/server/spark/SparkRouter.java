@@ -38,6 +38,10 @@ public class SparkRouter<SM extends SparkManager> {
         Spark.post(path, (rq, rs) -> execute(caller, manager(rq, rs)));
     }
 
+    public void patch(PandoraSpark.ResourceCaller<SM> caller) {
+        Spark.patch(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+    }
+
     public void put(PandoraSpark.ResourceCaller<SM> caller) {
         Spark.put(path, (rq, rs) -> execute(caller, manager(rq, rs)));
     }

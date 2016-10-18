@@ -4,7 +4,7 @@ dsl Proteo
 Concept Data is abstract component
 
 Concept:Named Parameter extends Data
-	var boolean required = true
+	var boolean required = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defcto false
 
 Facet Type on Data
 	var string type is reactive private
@@ -30,13 +30,13 @@ Facet Type on Data
 		var string type = "java.io.File" is reactive private
 		var word:{body path form header query} in = form
 	sub Object
-		var Format format
-		var string type = @formatName is reactive private
+		var Schema schema
+		var string type = @schemaName is reactive private
 
 Facet List on Data
 
 !! Structures allows to define how objects are. This objects can be provided as either parameter or response
-Concept Format
+Concept Schema
 	var boolean required = false
 	var boolean multiple = true
 	!! AttributeMap is able to gather all parameters that are unknown when defining the structure. This can be consulted on runtime in the Action classes
@@ -46,8 +46,8 @@ Concept Format
 		var boolean required = true
 		var boolean multiple = false
 	Concept Has
-		var Format reference
+		var Schema reference
 		var boolean required = false
 		var boolean multiple = true
-	has Format
+	has Schema
 

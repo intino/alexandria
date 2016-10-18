@@ -7,23 +7,23 @@ def type(resource)
 	import tara.magritte.Graph;
 	import org.siani.pandora.server.Resource;
     import org.siani.pandora.server.spark.SparkManager;
-	$formatImport
+	$schemaImport
 
-	public class $name+firstUpperCase~Resource implements Resource {
+	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
 		private Graph graph;
 		private SparkManager manager;
 
-		public $name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
+		public $operation+firstUpperCase$name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
 			this.graph = graph;
 			this.manager = manager;
 		}
 
 		public void execute() throws $throws...[, ] {
-			[$returnType+return]fill(new $package+validname.actions.$name+firstUpperCase~Action()).execute()[$returnType+ending];
+			[$returnType+writeCall]fill(new $package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
-		private $package+validname.actions.$name+firstUpperCase~Action fill($package+validname.actions.$name+firstUpperCase~Action action) {
+		private $package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
 			action.graph = this.graph;[
 			$parameter+assign...[$NL]]
 			return action;
@@ -33,10 +33,10 @@ def type(resource)
 	}
 end
 
-def attribute(void) trigger(return)
+def attribute(void) trigger(writeCall)
 end
 
-def trigger(return)
+def trigger(writeCall)
 	write(
 end
 
@@ -64,6 +64,6 @@ def type(parameter) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
 end
 
-def type(formatImport)
-	import $package.formats.*;
+def type(schemaImport)
+	import $package.schemas.*;
 end

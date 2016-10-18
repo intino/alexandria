@@ -1,6 +1,6 @@
-package io.intino.pandora.plugin.codegeneration.format;
+package io.intino.pandora.plugin.codegeneration.schema;
 
-import io.intino.pandora.plugin.Format;
+import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.bool.BoolData;
 import io.intino.pandora.plugin.date.DateData;
 import io.intino.pandora.plugin.datetime.DateTimeData;
@@ -20,56 +20,56 @@ import java.util.List;
 
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
-public class FormatRenderer {
-    private final List<Format> formatList;
+public class SchemaRenderer {
+    private final List<Schema> formatList;
     private File destination;
     private String packageName;
 
-    public FormatRenderer(Graph graph, File destination, String packageName) {
-        formatList = graph.find(Format.class);
+    public SchemaRenderer(Graph graph, File destination, String packageName) {
+        formatList = graph.find(Schema.class);
         this.destination = destination;
         this.packageName = packageName;
     }
 
     public void execute() {
-        formatList.forEach(this::processFormats);
+        formatList.forEach(this::processSchemas);
     }
 
-    private void processFormats(Format format) {
-        format.node().findNode(Format.class).forEach(this::processFormat);
+    private void processSchemas(Schema format) {
+        format.node().findNode(Schema.class).forEach(this::processSchema);
     }
 
-    private void processFormat(Format element) {
+    private void processSchema(Schema element) {
         Frame frame = new Frame().addTypes("format");
         frame.addSlot("name", element.name());
         frame.addSlot("package", packageName);
         frame.addSlot("attribute", (AbstractFrame[]) processAttributes(element.attributeList()));
-        frame.addSlot("attribute", (AbstractFrame[]) processFormatsAsAttribute(element.formatList()));
+        frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(element.schemaList()));
         frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(element.hasList()));
         if (element.attributeMap() != null) frame.addSlot("attribute", attributeMap());
         addReturningValueToAttributes(element.name(), frame.frames("attribute"));
-        writeFrame(new File(destination, "formats"), element.name(), template().format(frame));
-    }
+		writeFrame(new File(destination, "schemas"), element.name(), template().format(frame));
+	}
 
     private Template template() {
-        final Template template = FormatTemplate.create();
+        final Template template = SchemaTemplate.create();
         template.add("ValidPackage", Commons::validPackage);
         return template;
     }
 
-    private Frame[] processAttributes(List<Format.Attribute> attributes) {
+    private Frame[] processAttributes(List<Schema.Attribute> attributes) {
         return attributes.stream().map(this::processAttribute).toArray(value -> new Frame[attributes.size()]);
     }
 
-    private Frame[] processFormatsAsAttribute(List<Format> members) {
-        return members.stream().map(this::processFormatAsAttribute).toArray(value -> new Frame[members.size()]);
+    private Frame[] processSchemasAsAttribute(List<Schema> members) {
+        return members.stream().map(this::processSchemaAsAttribute).toArray(value -> new Frame[members.size()]);
     }
 
-    private Frame[] processHasAsAttribute(List<Format.Has> members) {
+    private Frame[] processHasAsAttribute(List<Schema.Has> members) {
         return members.stream().map(this::processHasAsAttribute).toArray(value -> new Frame[members.size()]);
     }
 
-    private Frame processAttribute(Format.Attribute attribute) {
+    private Frame processAttribute(Schema.Attribute attribute) {
         if (attribute.isReal()) return processAttribute(attribute.asReal());
         else if (attribute.isInteger()) return processAttribute(attribute.asInteger());
         else if (attribute.isBool()) return processAttribute(attribute.asBool());
@@ -81,45 +81,45 @@ public class FormatRenderer {
 
     private Frame processAttribute(RealData attribute) {
         return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name())
+                .addSlot("name", attribute.as(Schema.Attribute.class).name())
                 .addSlot("type", "double")
                 .addSlot("defaultValue", attribute.defaultValue());
     }
 
     private Frame processAttribute(IntegerData attribute) {
         return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name())
+                .addSlot("name", attribute.as(Schema.Attribute.class).name())
                 .addSlot("type", attribute.type())
                 .addSlot("defaultValue", attribute.defaultValue());
     }
 
     private Frame processAttribute(BoolData attribute) {
         return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
+                .addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
     }
 
     private Frame processAttribute(TextData attribute) {
         return new Frame().addTypes(multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+                .addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
     }
 
     private Frame processAttribute(DateTimeData attribute) {
         return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name()).addSlot("type", attribute.type());
+                .addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
     }
 
     private Frame processAttribute(DateData attribute) {
         return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
-                .addSlot("name", attribute.as(Format.Attribute.class).name()).addSlot("type", attribute.type());
+                .addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
     }
 
-    private Frame processFormatAsAttribute(Format format) {
+    private Frame processSchemaAsAttribute(Schema format) {
         return new Frame().addTypes(format.multiple() ? "multiple" : "single", "member")
                 .addSlot("name", format.name())
                 .addSlot("type", format.name());
     }
 
-    private Frame processHasAsAttribute(Format.Has has) {
+    private Frame processHasAsAttribute(Schema.Has has) {
         return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member")
                 .addSlot("name", has.reference().name())
                 .addSlot("type", has.reference().name());
@@ -135,7 +135,7 @@ public class FormatRenderer {
     }
 
     private boolean multiple(TypeData attribute) {
-        return attribute.as(Format.Attribute.class).multiple();
+        return attribute.as(Schema.Attribute.class).multiple();
     }
 
 }

@@ -6,7 +6,7 @@ def type(accessor)
 	import com.google.gson.Gson;
 
     import javax.jms.*;
-	$formatImport
+	$schemaImport
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase~JMSAccessor {
 
@@ -112,6 +112,6 @@ def type(reply) trigger(reply)
 	new Gson().fromJson(((TextMessage) message).getText(), $value.class)
 end
 
-def type(formatImport)
-	import $package.formats.*;
+def type(schemaImport)
+	import $package.schemas.*;
 end

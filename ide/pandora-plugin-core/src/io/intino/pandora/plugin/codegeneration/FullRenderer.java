@@ -1,8 +1,7 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import cottons.utils.Files;
-import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.pandora.plugin.codegeneration.format.FormatRenderer;
+import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.JMSResourceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
@@ -14,7 +13,6 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
-import io.intino.pandora.plugin.rest.RESTService;
 import tara.magritte.Graph;
 
 import java.io.File;
@@ -45,13 +43,13 @@ public class FullRenderer {
 	}
 
 	private void formats() {
-		new FormatRenderer(graph, gen, packageName).execute();
+		new SchemaRenderer(graph, gen, packageName).execute();
 	}
 
 	private void rest() {
 		new RESTResourceRenderer(graph, gen, src, packageName).execute();
 		new RESTServiceRenderer(graph, gen, packageName).execute();
-		graph.find(RESTService.class).forEach(r -> new RESTAccessorRenderer(r, gen, packageName).execute());
+//		graph.find(RESTService.class).forEach(r -> new RESTAccessorRenderer(r, gen, packageName).execute());
 	}
 
 	private void jmx() {

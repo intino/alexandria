@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.accessor.jms;
 
-import io.intino.pandora.plugin.Format;
 import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.codegeneration.format.FormatRenderer;
+import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.jms.JMSService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
@@ -28,7 +28,7 @@ public class JMSAccessorRenderer {
 	public void execute(File destination, String packageName) {
 		this.destination = destination;
 		this.packageName = packageName;
-		new FormatRenderer(service.graph(), destination, packageName).execute();
+		new SchemaRenderer(service.graph(), destination, packageName).execute();
 		processService(service);
 	}
 
@@ -36,8 +36,8 @@ public class JMSAccessorRenderer {
 		Frame frame = new Frame().addTypes("accessor");
 		frame.addSlot("name", jmsService.name());
 		frame.addSlot("package", packageName);
-		if (!jmsService.graph().find(Format.class).isEmpty())
-			frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
+		if (!jmsService.graph().find(Schema.class).isEmpty())
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("resource", (AbstractFrame[]) jmsService.node().findNode(JMSService.Resource.class).stream().
 				map(this::processResource).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "JMSAccessor", getTemplate().format(frame));

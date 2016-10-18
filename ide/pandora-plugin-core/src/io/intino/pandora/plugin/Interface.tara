@@ -12,22 +12,22 @@ Concept:Named Channel // TODO comprobar generación (rellenado)
 Concept:Named Service
 	has:Named Exception
 
-Concept Method is abstract component
-	has Parameter
-	var Exception[] exceptionRefs = empty
-	has Exception
-	Concept:{1..1} Response extends Data
-		var string description = ""
-
 Concept Exception extends Data
 	var word:ExceptionCodes code
 	var string description = ""
 
-Facet REST on Service
-	var string title
+Concept Response extends Data is component
+	var string code = "200"
 	var string description = ""
-	var string path
+
+Facet REST on Service
+	var string swagger = "2.0" is private
+	var string host
+	var string description = ""
+	var string basePath
 	var word[]:{http https ws wss} protocols = https
+	var string[] consumes //text/plain; charset=utf-8   application/json multipart/form-data
+	var string[] produces //comprobar si es alguno de los MIME-types
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
 			var resource store
@@ -38,43 +38,63 @@ Facet REST on Service
 			Concept:{1..*} AllowedUsers
 				var string user
 				var string password
-	has:CheckPath Resource
 	Concept:{0..1} Info
 		var string title
 		var string version
 		var string description = ""
 		var string termsOfService = ""
-	Concept:SingleNamed Contact
-		var string url = ""
-		var string email = ""
-	Concept:SingleNamed License
-		var string url = ""
+		Concept:SingleNamed Contact
+			var string url = ""
+			var string email = ""
+		Concept:SingleNamed License
+			var string url = ""
 	Concept:Named Tag
 		var string description = ""
 		Concept Document
 			var string description = ""
 			var string url
-
-Concept:CheckPath Resource extends Method // TODO OCTAVIO dentro del REST pero peta el codigo generado
-	var string title
-	var string description = ""
-	var string path
-	var word:{Get Post Put Delete} type
-	Concept:Named Parameter extends Parameter
-		var string description = ""
-		var word:{body path form header query} in
+	Concept:CheckPath Resource
+		var string path
+		Concept:Named Parameter extends Parameter
+			var string description = ""
+			var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
+			//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
+			//TODO in debe ser form.
+		Concept Operation
+			var string[] tags = empty
+			var string summary = ""
+			var string description = ""
+			var resource externalDocumentation = empty
+			var string[] consumes = empty
+			var string[] produces = empty
+			var boolean deprecated = false
+			sub Get
+			sub Post
+			sub Put
+			sub Delete
+			sub Head
+			sub Options
+			sub Patch
+			has Parameter
+			has:{1..1} Response
+			var Exception[] exceptionRefs = empty
+			has Exception
 
 Facet JMX on Service
 	var string path = ""
-	has:RequiredNamed Operation
-	has:Named Notification
-
-Concept Operation extends Method // TODO OCTAVIO quiero meterlo dentro de JMX pero peta el codigo generado
-Concept Notification extends Method
+	Concept:RequiredNamed Operation
+		has Parameter
+		has Exception
+		has:{0..1} Response
+    Concept:Named Notification
 
 Facet JMS on Service
-	Concept Resource extends Method
+	Concept Resource
 		var string queue
+    	has Parameter
+    	var Exception[] exceptionRefs = empty
+    	has Exception
+    	has:{0..1} Response
 	Concept Authentication
 		sub CredentialSecured
 			var string username

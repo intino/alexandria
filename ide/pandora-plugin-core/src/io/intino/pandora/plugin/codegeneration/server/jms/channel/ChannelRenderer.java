@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 
 import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.Format;
 import io.intino.pandora.plugin.Queue;
+import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -33,8 +33,8 @@ public class ChannelRenderer {
                 addSlot("package", packageName).
                 addSlot("name", channel.name()).
                 addSlot("subscription", subscriptions(channel));
-        if (!channel.graph().find(Format.class).isEmpty())
-            frame.addSlot("formatImport", new Frame().addTypes("formatImport").addSlot("package", packageName));
+        if (!channel.graph().find(Schema.class).isEmpty())
+            frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
         Commons.writeFrame(gen, snakeCaseToCamelCase(channel.name()) + "Channel", template().format(frame));
     }
 

@@ -1,63 +1,66 @@
 dsl Pandora
 
-Service (title = "Interface for recovering all dashboard information", path = "/dashboard") rest as REST
-	Resource(title="List of categorizations", path = "/categorizations", type = Get) categorizations
-		Response as Object(format = CategorizationCatalogResponseFormat)
+Service (description = "Interface for recovering all dashboard inschemaion") rest as REST(host = "", basePath = "/dashboard", consumes = "", produces = "")
+	Resource(path = "/categorizations") categorizations
+		Get(description="List of categorizations")
+			Response as Object(schema = CategorizationCatalogResponseSchema)
 
-	Resource(title="Opinions summary", path = "/summary", type = Get) summary
-		Response as Object(format = SummaryResponseFormat)
+	Resource(path = "/summary") summary
+		Get(description = "Opinions summary")
+			Response as Object(schema = SummaryResponseSchema)
 
-	Resource(title="Summary of opinions at some instant", path = "/snapshot", type = Get)snapshot
-		Parameter(in = query) scale as Text
-		Parameter(in = body) range as Object(format = RangeFormat)
-		Parameter(in = body) filters as Object(format = FilterListFormat)
-		Response as Object(format = OpinionSnapshotResponseFormat)
+	Resource(path = "/snapshot")snapshot
+		Get(description = "Summary of opinions at some instant")
+			Parameter(in = query) scale as Text
+			Parameter(in = body) range as Object(schema = RangeSchema)
+			Parameter(in = body) filters as Object(schema = FilterListSchema)
+			Response as Object(schema = OpinionSnapshotResponseSchema)
 
-Format RangeFormat
+Schema RangeSchema
 	Attribute from as DateTime
 	Attribute to as DateTime
 
-Format FilterListFormat
+Schema FilterListSchema
 	Attribute(multiple=true) filters as Text
 
-Format CategorizationCatalogResponseFormat
+Schema CategorizationCatalogResponseSchema
 	Attribute name as Text
 	Attribute label as Text
-	Format category
+	Schema category
 		Attribute name as Text
 		Attribute label as Text
 
-Format SummaryResponseFormat
-	Format(multiple=false) today
-		Format(multiple=false) count
+Schema SummaryResponseSchema
+	Schema(multiple=false) today
+		Schema(multiple=false) count
 			Attribute total as Integer
 
-	Format(multiple=false) total
-		Format(multiple=false) count
+	Schema(multiple=false) total
+		Schema(multiple=false) count
 			Attribute total as Integer
 			Attribute satisfied as Integer
 			Attribute notVerySatisfied as Integer
 			Attribute dissatisfied as Integer
 
-		Format(multiple=false) difference
+		Schema(multiple=false) difference
 			Attribute satisfied as Real
 			Attribute notVerySatisfied as Real
 			Attribute dissatisfied as Real
 
-Format OpinionSnapshotResponseFormat
+Schema OpinionSnapshotResponseSchema
 	Attribute instant as DateTime
 	Attribute scale as Text
-	Format(multiple=false) count
+	Schema(multiple=false) count
 		Attribute total as Integer
 		Attribute satisfied as Integer
 		Attribute notVerySatisfied as Integer
 		Attribute dissatisfied as Integer
-	Format(multiple=false) difference
+	Schema(multiple=false) difference
 		Attribute satisfied as Real
 		Attribute notVerySatisfied as Real
 		Attribute dissatisfied as Real
 
-	Format(multiple=false) timeLine
-		Format point
+	Schema(multiple=false) timeLine
+		Schema point
 			Attribute instant as DateTime
 			Attribute value as Real

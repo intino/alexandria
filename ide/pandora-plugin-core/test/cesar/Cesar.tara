@@ -1,57 +1,62 @@
 dsl Pandora
 
-Service(title = "Cesar Ops Service", path = "") cesar as REST
-	Resource(title = "Create new system", path = "systems/:name", type = Put) createSystem
-		Parameter(in = path) name as Text
-		Parameter(in = query) repository as Text
-		Response
-	Resource(title = "List of systems", path = "systems", type = Get) systems
-		Response as Text
-		Exception(ErrorBadRequest)
-	Resource(title = "A system", path = "systems/:system/:version", type = Get) system
-		Parameter(in = path) system as Text
-		Parameter(in = path) version as Text
-		Response as Text
-		Exception(ErrorBadRequest)
-	Resource(title = "Update system", path = "systems/:system", type = Post) updateSystem
-		Parameter(in = path) system as Text
-		Parameter(in = query) enabled as Bool
-		Response
-		Exception(ErrorBadRequest)
-	Resource(title = "Create new system version", path = "systems/:system", type = Put) createSystemVersion
-		Parameter(in = path) system as Text
-		Parameter(in = query) version as Text
-		Response
-		Exception(ErrorBadRequest)
-	Resource(title = "List of servers", path = "servers", type = Get) servers
-		Response as Text
-		Exception(ErrorBadRequest)
-	Resource(title = "A server", path = "servers/:server", type = Get) server
-		Parameter(in = path) server as Text
-		Response as Text
-		Exception(ErrorBadRequest)
-	Resource(title = "Create server", path = "server", type = Post) createServer
-		Parameter(in = query) url as Text
-		Response
-		Exception (ErrorBadRequest)
-	Resource(title = "Update server", path = "servers/:server", type = Post) updateServer
-		Parameter(in = path) server as Text
-		Response
-		Exception(ErrorBadRequest)
-	Resource(title = "Delete server", path = "servers/:server", type = Delete) deleteServer
-		Parameter(in = path) server as Text
-		Response
-		Exception(ErrorBadRequest)
-	Resource(title = "Deploy system", path = "servers/:server/:system", type = Post) deploySystem
-		Parameter(in = path) server as Text
-		Parameter(in = path) system as Text
-    	Parameter(in = query) isPublic as Bool
-    	Response
+Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "", consumes = "", produces = "")
+	Resource(path = "/systems") systems
+		Get(description = "List of systems")
+			Response as Text
+			Exception(ErrorBadRequest)
 
-Service(title = "Cesar Build Service", path = "build") build as REST
-	Resource(title = "", path = "webhooks", type = Post) webHooks
-		Response
-		Exception(ErrorBadRequest)
+	Resource(path = "/systems/:system")  System
+		Put(description = "Create new system version")
+			Parameter(in = path) system as Text
+			Parameter(in = query) version as Text
+			Response
+			Exception(ErrorBadRequest)
+		Post(description = "Update system")
+			Parameter(in = path) system as Text
+			Parameter(in = query) enabled as Bool
+			Response
+			Exception(ErrorBadRequest)
+	Resource(path = "/systems/:system/:version") SystemVersion
+		Get(description = "A system of specific version")
+			Parameter(in = path) system as Text
+			Parameter(in = path) version as Text
+			Response as Text
+			Exception(ErrorBadRequest)
+
+	Resource(path = "/servers") servers
+		Get(description = "List of servers")
+			Response as Text
+			Exception(ErrorBadRequest)
+		Post(description = "Create server")
+			Parameter(in = query) url as Text
+			Response
+			Exception (ErrorBadRequest)
+	Resource(path = "/servers/:server") server
+		Get(description = "List of servers")
+			Parameter(in = path) server as Text
+			Response as Text
+			Exception(ErrorBadRequest)
+		Post(description = "Update server")
+			Parameter(in = path) server as Text
+			Response
+			Exception(ErrorBadRequest)
+		Delete(description = "Delete server") deleteServer
+			Parameter(in = path) server as Text
+			Response
+			Exception(ErrorBadRequest)
+	Resource(path = "/servers/:server/:system") deploySystem
+		Post(description = "Deploy system") deploySystem
+			Parameter(in = path) server as Text
+			Parameter(in = path) system as Text
+			Parameter(in = query) isPublic as Bool
+			Response
+
+Service(description = "Cesar Build Service") build as REST(host = "", basePath = "build", consumes = "", produces = "")
+	Resource(path = "/build") webHooks
+		Post(description = "")
+			Response
+			Exception(ErrorBadRequest)
 
 Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")

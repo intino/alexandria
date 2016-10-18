@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
-import io.intino.pandora.plugin.Operation;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.jmx.JMXService;
+import io.intino.pandora.plugin.jmx.JMXService.Operation;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -34,7 +34,7 @@ public class JMXServerRenderer {
 		Frame frame = new Frame().addTypes("jmxserver");
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
-		Commons.writeFrame(destiny, "JMX" +snakeCaseToCamelCase(service.name()), template().format(frame));
+		Commons.writeFrame(destiny, "JMX" + snakeCaseToCamelCase(service.name()), template().format(frame));
 	}
 
 

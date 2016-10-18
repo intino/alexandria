@@ -10,7 +10,7 @@ def type(server)
 
 		public static void setup(PandoraSpark server, Graph graph) {
 			$secure
-			$resources...[$NL]
+			$resource...[$NL]
 		}
 	}
 end
@@ -19,5 +19,5 @@ def type(secure)
 	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
 end
 def type(resource)
-	server.route("$path").$method+firstlowerCase((manager) -> new $name+firstUpperCase$~Resource(graph, manager).execute());
+	server.route("$path").$method+firstlowerCase((manager) -> new $operation+firstUpperCase~$name+firstUpperCase~Resource(graph, manager).execute());
 end
