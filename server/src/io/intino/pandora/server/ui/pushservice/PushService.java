@@ -1,10 +1,10 @@
-package io.intino.pandora.server.ui.pushservice;
+package org.siani.pandora.server.ui.pushservice;
 
-import io.intino.pandora.server.pushservice.AdapterProxy;
 import org.eclipse.jetty.websocket.api.Session;
-import io.intino.pandora.server.pushservice.SessionManager;
+import org.siani.pandora.server.pushservice.AdapterProxy;
+import org.siani.pandora.server.pushservice.SessionManager;
 
-public class PushService extends io.intino.pandora.server.spark.PushService<UISession, UIClient> {
+public class PushService extends org.siani.pandora.server.spark.PushService<UISession, UIClient> {
 
 	public PushService(AdapterProxy adapterProxy, SessionManager sessionManager) {
 		super(adapterProxy, sessionManager);

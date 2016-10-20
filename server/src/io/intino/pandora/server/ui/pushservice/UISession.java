@@ -3,7 +3,7 @@ package io.intino.pandora.server.ui.pushservice;
 import io.intino.pandora.server.spark.SparkSession;
 import io.intino.pandora.server.pushservice.Client;
 
-public class UISession extends SparkSession<UIClient> {
+public class UISession<C extends UIClient> extends SparkSession<C> {
     private User user;
     private Browser browser;
 
