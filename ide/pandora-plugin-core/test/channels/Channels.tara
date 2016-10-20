@@ -13,6 +13,7 @@ Service monet as JMS
 	Request(queue = "processes") binaries
 		Parameter type as Text
 		Response as File
+
 	Request(queue = "empty") emptyRequest
 		Response
 	Notification(queue = "") send
@@ -20,6 +21,10 @@ Service monet as JMS
 		Parameter number as Real
 		Parameter value as Integer
 		Parameter file as File
+
+	Notification(queue = "") sample
+		Parameter text as Text
+		Parameter number as Real
 
 Schema CategorizationCatalog
 	Attribute name as Text
