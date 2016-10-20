@@ -4,11 +4,11 @@ def type(accessor)
     import java.util.List;
     import java.util.ArrayList;
 	import java.net.URL;
-	import org.siani.pandora.restful.core.Resource;
-	import org.siani.pandora.restful.core.RestfulAccessor;
-	import org.siani.pandora.restful.exceptions.RestfulFailure;
+	import Resource;
+	import RestfulAccessor;
+	import RestfulFailure;
 	import com.google.gson.Gson;
-	import org.siani.pandora.exceptions.*;
+	import io.intino.pandora.exceptions.*;
 	import com.google.gson.reflect.TypeToken;
 
 	$schemaImport

@@ -2,9 +2,9 @@
     <id>io.intino.pandora</id>
     <name>Pandora</name>
     <version>1.0.0</version>
-    <vendor email="teseo@siani.es" url="http://www.siani.es">Siani</vendor>
+    <vendor email="pandora@siani.es" url="http://www.siani.es">Siani</vendor>
     <description><![CDATA[
-      Teseo helps to create API rest of platforms created with Tara.
+      Pandora helps to create API rest of platforms created with Tara.
     ]]></description>
 
     <change-notes><![CDATA[

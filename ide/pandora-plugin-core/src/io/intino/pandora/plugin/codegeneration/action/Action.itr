@@ -2,7 +2,7 @@ def type(action)
 	package $package+validname.actions;
 
 	import tara.magritte.Graph;
-	import org.siani.pandora.exceptions.*;
+	import io.intino.pandora.exceptions.*;
 	import java.time.*;
 	import java.util.*;
 	$schemaImport

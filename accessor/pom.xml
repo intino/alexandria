@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.siani.pandora</groupId>
+    <groupId>io.intino.pandora</groupId>
     <artifactId>rest-accessor-java</artifactId>
     <version>1.0.0</version>
 
@@ -112,7 +112,7 @@
             <version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
+            <groupId>io.intino.pandora</groupId>
             <artifactId>core</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -129,7 +129,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
+            <groupId>io.intino.pandora</groupId>
             <artifactId>rest-server</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>

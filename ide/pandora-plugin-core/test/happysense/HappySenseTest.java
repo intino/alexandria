@@ -5,7 +5,7 @@ import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.junit.Test;
-import org.siani.pandora.server.PandoraSpark;
+import io.intino.pandora.server.PandoraSpark;
 import tara.magritte.Graph;
 
 import java.io.File;

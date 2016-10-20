@@ -19,7 +19,13 @@
         <option value="$PROJECT_DIR$/jms/pom.xml" />
         <option value="$PROJECT_DIR$/ide/pandora-plugin-core/pom.xml" />
         <option value="$PROJECT_DIR$/slack/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">

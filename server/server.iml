@@ -10,6 +10,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="core" />
+    <orderEntry type="library" name="Maven: org.siani.cottons:cotton-utils:1.0.7" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.7" level="project" />
     <orderEntry type="library" name="Maven: com.sparkjava:spark-core:2.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.12" level="project" />
@@ -36,8 +39,5 @@
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
-    <orderEntry type="module" module-name="core" />
-    <orderEntry type="library" name="Maven: org.siani.cottons:cotton-utils:1.0.7" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.7" level="project" />
   </component>
 </module>

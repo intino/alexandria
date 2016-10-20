@@ -1,12 +1,12 @@
 def type(resource)
 	package $package.resources;
 
-    import java.util.List;
-	import org.siani.pandora.exceptions.*;
+	import java.util.List;
+	import io.intino.pandora.exceptions.*;
 	import $package.*;
 	import tara.magritte.Graph;
-	import org.siani.pandora.server.Resource;
-    import org.siani.pandora.server.spark.SparkManager;
+	import io.intino.pandora.server.Resource;
+	import io.intino.pandora.server.spark.SparkManager;
 	$schemaImport
 
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
@@ -28,8 +28,8 @@ def type(resource)
 			$parameter+assign...[$NL]]
 			return action;
 		}
-        [
-        $returnType+write]
+		[
+		$returnType+write]
 	}
 end
 

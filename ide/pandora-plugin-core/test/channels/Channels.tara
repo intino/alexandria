@@ -1,14 +1,25 @@
 dsl Pandora
 
 Service monet as JMS
-	Resource(queue = "catalogs") catalogs
+	Request(queue = "catalogs") catalogs
 		Parameter catalogs as Object(schema = CategorizationCatalog)
 		Parameter name as Text
 		Response as Bool
-	Resource(queue = "processes") processes
+
+	Request(queue = "processes") processes
+		Parameter entryPoint as File
 		Response as Object(Processes)
-	Resource(queue = "empty") emptyRequest
+
+	Request(queue = "processes") binaries
+		Parameter type as Text
+		Response as File
+	Request(queue = "empty") emptyRequest
 		Response
+	Notification(queue = "") send
+		Parameter text as Text
+		Parameter number as Real
+		Parameter value as Integer
+		Parameter file as File
 
 Schema CategorizationCatalog
 	Attribute name as Text
@@ -23,6 +34,7 @@ Schema Processes
 
 Queue(id = "catalogs") opinions
 	Message(messageType = "bool") as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
+
 Topic(id = "processes") inputProcesses
 	Message(messageType = "processes") as Object(schema = Processes) // TODO meter type en el properties
 

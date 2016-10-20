@@ -2,10 +2,11 @@ package io.intino.pandora.plugin.codegeneration;
 
 import cottons.utils.Files;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.JMSResourceRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.SubscriptionModelRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSNotificationRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSRequestRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXOperationsServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXServerRenderer;
 import io.intino.pandora.plugin.codegeneration.server.rest.RESTResourceRenderer;
@@ -58,8 +59,9 @@ public class FullRenderer {
 	}
 
 	private void jms() {
-		new JMSResourceRenderer(graph, src, gen, packageName).execute();
+		new JMSRequestRenderer(graph, src, gen, packageName).execute();
 		new JMSServiceRenderer(graph, gen, packageName).execute();
+		new JMSNotificationRenderer(graph, src, gen, packageName).execute();
 	}
 
 	private void scheduling() {

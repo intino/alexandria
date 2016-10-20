@@ -1,0 +1,62 @@
+def type(notification)
+	package $package.notifications;
+
+	import $package.*;
+	import io.intino.pandora.jms.QueueProducer;
+	import javax.jms.JMSException;
+	import javax.jms.Session;
+	import javax.jms.$returnMessageType~Message;
+
+	$schemaImport
+
+	public class $name+firstUpperCase~Notification {
+
+		private final Session session;
+
+		public $name+firstUpperCase~Notification(Session session) {
+			this.session = session;
+		}
+
+		public void notify([$parameter+signature...[, ]]) throws JMSException {
+			final $returnMessageType~Message message = session.create$returnMessageType~Message();
+			fillMessage(message[, $parameter+name...[, ]]);
+			new QueueProducer(session, "$queue").produce(message);
+		}
+
+		private void fillMessage($returnMessageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
+			$parameter+assign...[$NL]
+		}
+	}
+end
+def type(parameter) trigger(name)
+	$name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter) trigger(signature)
+	$type $name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter & fileData) trigger(assign)
+	try {
+		message.writeBytes(java.nio.file.Files.readAllBytes($name.toPath()));
+	} catch (java.io.IOException e) {
+		throw new JMSException("file cannot be read");
+	}
+
+end
+
+def type(parameter & objectData) trigger(assign)
+	message.setText(new Gson().toJson($name));
+end
+
+def type(parameter) trigger(assign)
+	message.set$type+formatted~Property("$name", $name);
+end
+
+def attribute(Integer) trigger(formatted)
+	Int
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

@@ -1,7 +1,7 @@
 def type(Exception)
     package $package.exceptions;
 
-	import org.siani.pandora.exceptions.*;
+	import io.intino.pandora.exceptions.*;
 
 	public class $name+firstUpperCase$~Exception extends $code~Exception{
 
