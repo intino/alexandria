@@ -1,10 +1,14 @@
 package io.intino.pandora.server.spark;
 
+import io.intino.pandora.server.pushservice.Session;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.intino.pandora.server.pushservice.*;
+import io.intino.pandora.server.ui.pushservice.DefaultRequestAdapter;
+import io.intino.pandora.server.ui.pushservice.DefaultResponseAdapter;;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,19 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class PushService<S extends Session, C extends Client> implements io.intino.pandora.server.pushservice.PushService<S, C> {
+public abstract class PushService<S extends Session<C>, C extends Client> implements io.intino.pandora.server.pushservice.PushService<S, C> {
 
 	protected final List<Consumer<C>> openConnectionListeners = new ArrayList<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
 	protected final AdapterProxy adapterProxy;
-	protected final SessionManager sessionManager;
+	protected final SessionManager<S, C> sessionManager;
 
 	private static final JsonParser Parser = new JsonParser();
 
-	public PushService(AdapterProxy adapterProxy, SessionManager sessionManager) {
-		this.adapterProxy = adapterProxy;
-		this.sessionManager = sessionManager;
+	public PushService() {
+		this.adapterProxy = defaultAdapterProxy();
+		this.sessionManager = new SessionManager<>();
 	}
 
 	@Override
@@ -36,7 +40,11 @@ public abstract class PushService<S extends Session, C extends Client> implement
 	public Connection onMessage(String clientId, Consumer<Message> consumer) {
 		messageListeners.putIfAbsent(clientId, new ArrayList<>());
 		messageListeners.get(clientId).add(consumer);
-		return () -> { synchronized(messageListeners) { messageListeners.get(clientId).remove(consumer); } };
+		return () -> {
+			synchronized (messageListeners) {
+				messageListeners.get(clientId).remove(consumer);
+			}
+		};
 	}
 
 	@Override
@@ -59,16 +67,6 @@ public abstract class PushService<S extends Session, C extends Client> implement
 		openConnectionListeners.clear();
 
 		sessionManager.unlinkFromThread();
-	}
-
-	private void registerSession(String sessionId) {
-		if (sessionManager.session(sessionId) != null) return;
-		sessionManager.register(createSession(sessionId));
-	}
-
-	private void registerClient(C client) {
-		registerSession(client.sessionId());
-		sessionManager.register(client);
 	}
 
 	public void onMessage(C client, String message) {
@@ -110,52 +108,92 @@ public abstract class PushService<S extends Session, C extends Client> implement
 		client.send(serializeMessage(message));
 	}
 
+	@Override
+	public void linkToThread(C client) {
+		sessionManager.linkToThread(client);
+	}
+
+	@Override
+	public void unlinkFromThread() {
+		sessionManager.unlinkFromThread();
+	}
+
+	@Override
+	public void unRegister(C client) {
+		sessionManager.unRegister(client);
+	}
+
+	@Override
+	public S session(String id) {
+		registerSession(id);
+		return sessionManager.session(id);
+	}
+
+	@Override
+	public C client(String id) {
+		return sessionManager.client(id);
+	}
+
+	@Override
+	public C currentClient() {
+		return sessionManager.currentClient();
+	}
+
 	private void broadcastMessage(C client, Message message) {
 		messageListeners.get(client.id()).forEach(listener -> listener.accept(message));
 	}
 
 	private String serializeMessage(Message message) {
-        JsonObject result = new JsonObject();
+		JsonObject result = new JsonObject();
 		Map<String, Object> parameters = message.parameters();
 
-        result.addProperty("name", message.name());
+		result.addProperty("name", message.name());
 		result.add("parameters", serializeMessageParameters(parameters));
 
-        return result.toString();
-    }
-
-    private JsonElement serializeMessageParameters(Map<String, Object> parameters) {
-        JsonObject result = new JsonObject();
-        parameters.entrySet().stream().forEach(e -> {
-            result.add(e.getKey(), serializeMessageParameter(e.getKey(), e.getValue()));
-        });
-        return result;
-    }
-
-    private JsonElement serializeMessageParameter(String key, Object value) {
-        ResponseAdapter adapter = adapterProxy.responseAdapterOf(key);
-        String result = value instanceof List ? adapter.adaptList((List) value) : adapter.adapt(value);
-
-        try {
-            return Parser.parse(result);
-        } catch (Exception exception) {
-            return new JsonPrimitive(result);
-        }
-    }
-
-	@Override
-	public <S extends Session> S session(String id) {
-		registerSession(id);
-		return (S) sessionManager.session(id);
+		return result.toString();
 	}
 
-	@Override
-	public <C extends Client> C client(String id) {
-		return (C) sessionManager.client(id);
+	private JsonElement serializeMessageParameters(Map<String, Object> parameters) {
+		JsonObject result = new JsonObject();
+		parameters.entrySet().stream().forEach(e -> {
+			result.add(e.getKey(), serializeMessageParameter(e.getKey(), e.getValue()));
+		});
+		return result;
 	}
 
-	@Override
-	public <C extends Client> C currentClient() {
-		return (C) sessionManager.currentClient();
+	private JsonElement serializeMessageParameter(String key, Object value) {
+		ResponseAdapter adapter = adapterProxy.responseAdapterOf(key);
+		String result = value instanceof List ? adapter.adaptList((List) value) : adapter.adapt(value);
+
+		try {
+			return Parser.parse(result);
+		} catch (Exception exception) {
+			return new JsonPrimitive(result);
+		}
 	}
+
+	private AdapterProxy defaultAdapterProxy() {
+		return new AdapterProxy() {
+			@Override
+			public RequestAdapter requestAdapterOf(String name, Class clazz) {
+				return new DefaultRequestAdapter(clazz);
+			}
+
+			@Override
+			public ResponseAdapter responseAdapterOf(String name) {
+				return new DefaultResponseAdapter();
+			}
+		};
+	}
+
+	private void registerSession(String sessionId) {
+		if (sessionManager.session(sessionId) != null) return;
+		sessionManager.register(createSession(sessionId));
+	}
+
+	private void registerClient(C client) {
+		registerSession(client.sessionId());
+		sessionManager.register(client);
+	}
+
 }

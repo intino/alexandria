@@ -1,7 +1,7 @@
-package org.siani.pandora.server.ui.spark;
+package io.intino.pandora.server.ui.spark;
 
-import org.siani.pandora.server.spark.SparkRouter;
-import org.siani.pandora.server.ui.pushservice.PushService;
+import io.intino.pandora.server.spark.SparkRouter;
+import io.intino.pandora.server.ui.pushservice.PushService;
 import spark.Request;
 import spark.Response;
 

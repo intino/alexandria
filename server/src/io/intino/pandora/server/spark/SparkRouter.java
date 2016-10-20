@@ -1,8 +1,8 @@
-package org.siani.pandora.server.spark;
+package io.intino.pandora.server.spark;
 
-import org.siani.pandora.exceptions.PandoraException;
-import org.siani.pandora.server.PandoraSpark;
-import org.siani.pandora.server.pushservice.PushService;
+import io.intino.pandora.exceptions.PandoraException;
+import io.intino.pandora.server.PandoraSpark;
+import io.intino.pandora.server.pushservice.PushService;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -36,10 +36,6 @@ public class SparkRouter<SM extends SparkManager> {
 
     public void post(PandoraSpark.ResourceCaller<SM> caller) {
         Spark.post(path, (rq, rs) -> execute(caller, manager(rq, rs)));
-    }
-
-    public void patch(PandoraSpark.ResourceCaller<SM> caller) {
-        Spark.patch(path, (rq, rs) -> execute(caller, manager(rq, rs)));
     }
 
     public void put(PandoraSpark.ResourceCaller<SM> caller) {

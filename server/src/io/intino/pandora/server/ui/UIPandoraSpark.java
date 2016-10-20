@@ -1,7 +1,7 @@
-package org.siani.pandora.server.ui;
+package io.intino.pandora.server.ui;
 
-import org.siani.pandora.server.PandoraSpark;
-import org.siani.pandora.server.ui.spark.UIRouter;
+import io.intino.pandora.server.PandoraSpark;
+import io.intino.pandora.server.ui.spark.UIRouter;
 
 public class UIPandoraSpark extends PandoraSpark<UIRouter> {
 

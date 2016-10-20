@@ -1,8 +1,8 @@
-package org.siani.pandora.server.ui.spark;
+package io.intino.pandora.server.ui.spark;
 
-import org.siani.pandora.server.ui.pushservice.PushService;
-import org.siani.pandora.server.ui.pushservice.UIClient;
-import org.siani.pandora.server.ui.pushservice.UISession;
+import io.intino.pandora.server.ui.pushservice.PushService;
+import io.intino.pandora.server.ui.pushservice.UIClient;
+import io.intino.pandora.server.ui.pushservice.UISession;
 import spark.Request;
 import spark.Response;
 
@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-public class UISparkManager extends org.siani.pandora.server.spark.SparkManager {
+public class UISparkManager extends io.intino.pandora.server.spark.SparkManager {
 	private PushService pushService;
 
 	private static final String XForwardedProto = "X-Forwarded-Proto";
