@@ -38,7 +38,7 @@ public class SlackRenderer {
 			requestFrame.addSlot("name", request.name());
 			requestFrame.addSlot("description", request.description());
 			final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
-			for (int i = 0; i < parameters.size(); i++)
+			for (int i = 1; i < parameters.size(); i++)
 				requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
 						addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
 			frame.addSlot("request", requestFrame);
@@ -50,7 +50,7 @@ public class SlackRenderer {
 	private Template template() {
 		Template template = SlackTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
+		template.add("validname", value -> value.toString().replace("-", ""));
 		template.add("quoted", value -> '"' + value.toString() + '"');
 		return template;
 	}
