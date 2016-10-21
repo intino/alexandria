@@ -8,15 +8,13 @@ import org.siani.pandora.server.pushservice.*;
 import org.siani.pandora.server.ui.pushservice.DefaultRequestAdapter;
 import org.siani.pandora.server.ui.pushservice.DefaultResponseAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 public abstract class PushService<S extends Session<C>, C extends Client> implements org.siani.pandora.server.pushservice.PushService<S, C> {
 
-	protected final List<Consumer<C>> openConnectionListeners = new ArrayList<>();
+	protected final Queue<Consumer<C>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
 	protected final AdapterProxy adapterProxy;
