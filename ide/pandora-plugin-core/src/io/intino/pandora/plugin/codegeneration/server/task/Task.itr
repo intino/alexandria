@@ -3,23 +3,23 @@ def type(scheduled)
 
 	import org.quartz.*;
 	import tara.magritte.Graph;
-    import org.siani.pandora.scheduling.ScheduledTrigger;
+	import io.intino.pandora.scheduling.ScheduledTrigger;
 
 	public class $name+firstUpperCase~Task implements ScheduledTrigger {
 
 		public void execute(JobExecutionContext context) throws JobExecutionException {
 			Graph graph = (Graph) context.getMergedJobDataMap().get("graph");
 			$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
-            action.graph = graph;
-            action.execute();
+			action.graph = graph;
+			action.execute();
 		}
 	}
 end
 
 def type(parameter) trigger(assign)
-    action.$name = $name;
+	action.$name = $name;
 end
 
 def type(parameter) trigger(name)
-    $name
+	$name
 end

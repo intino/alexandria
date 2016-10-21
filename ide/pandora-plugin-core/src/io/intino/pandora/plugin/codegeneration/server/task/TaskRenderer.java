@@ -48,7 +48,7 @@ public class TaskRenderer {
 	private Frame[] parameters(DirectorySentinelTask task) {
 		List<Frame> list = new ArrayList<>();
 		list.add(new Frame().addTypes("parameter").addSlot("type", URL.class.getCanonicalName()).addSlot("name", "directory"));
-		list.add(new Frame().addTypes("parameter").addSlot("type", "org.siani.pandora.scheduling.directory.PandoraDirectorySentinel.Event").addSlot("name", "event"));
+		list.add(new Frame().addTypes("parameter").addSlot("type", "PandoraDirectorySentinel.Event").addSlot("name", "event"));
 		return list.toArray(new Frame[list.size()]);
 	}
 

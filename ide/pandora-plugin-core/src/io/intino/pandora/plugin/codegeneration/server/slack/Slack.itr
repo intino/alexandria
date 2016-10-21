@@ -4,9 +4,9 @@ def type(slack)
 	import tara.magritte.Graph;
 	import io.intino.pandora.slack.Bot;
 
-	public class $name+firstUpperCase~SlackBot extends Bot {
+	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
 
-		public $name+firstUpperCase~SlackBot(Graph graph) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot(Graph graph) {
 			super("$token");
 			$request+add...[$NL]
 		}
@@ -20,11 +20,11 @@ def type(slack)
 end
 
 def type(request) trigger(add)
-	add("$name", "$description", args -> $name(graph[, $parameter+cast...[, ]]));
+	add("$name", "$description", (properties, args) -> $name+snakeCaseToCamelCase+firstLowerCase(graph, properties[, $parameter+cast...[, ]]));
 end
 
 def type(request)
-	private String $name(Graph graph[, $parameter...[, ]]) {
+	private String $name+snakeCaseToCamelCase+firstLowerCase(Graph graph, MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end

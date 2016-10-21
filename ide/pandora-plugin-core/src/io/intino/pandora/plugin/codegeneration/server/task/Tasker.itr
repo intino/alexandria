@@ -2,8 +2,8 @@ def type(tasker)
 	package $package+ValidPackage;
 
 	import tara.magritte.Graph;
-	import org.siani.pandora.scheduling.PandoraTasker;
-	import org.siani.pandora.scheduling.directory.PandoraDirectorySentinel;
+	import io.intino.pandora.scheduling.PandoraTasker;
+	import io.intino.pandora.scheduling.directory.PandoraDirectorySentinel;
 	import $package+ValidPackage.scheduling.*;
 	import org.quartz.*;
 	import java.util.LinkedHashSet;

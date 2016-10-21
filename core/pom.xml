@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.siani.pandora</groupId>
+    <groupId>io.intino.pandora</groupId>
     <artifactId>core</artifactId>
     <version>1.0.0</version>
 
@@ -33,17 +33,8 @@
         <outputDirectory>../out/production/core</outputDirectory>
         <testOutputDirectory>../out/test/core</testOutputDirectory>
         <directory>../out/build/core</directory>
-        <resources>
-            <resource>
-                <directory>res</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>test-res</directory>
-            </testResource>
-        </testResources>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>org.siani.cottons</groupId>

@@ -1,8 +1,8 @@
 def type(accessor)
 	package $package+validname;
 
-	import org.siani.pandora.exceptions.*;
-	import org.siani.pandora.jms.QueueProducer;
+	import io.intino.pandora.exceptions.*;
+	import QueueProducer;
 	import com.google.gson.Gson;
 
     import javax.jms.*;

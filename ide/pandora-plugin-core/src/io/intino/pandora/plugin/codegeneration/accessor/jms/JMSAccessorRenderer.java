@@ -38,12 +38,12 @@ public class JMSAccessorRenderer {
 		frame.addSlot("package", packageName);
 		if (!jmsService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("resource", (AbstractFrame[]) jmsService.node().findNode(JMSService.Resource.class).stream().
-				map(this::processResource).toArray(Frame[]::new));
+		frame.addSlot("resource", (AbstractFrame[]) jmsService.node().findNode(JMSService.Request.class).stream().
+				map(this::processRequest).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "JMSAccessor", getTemplate().format(frame));
 	}
 
-	private Frame processResource(JMSService.Resource resource) {
+	private Frame processRequest(JMSService.Request resource) {
 		final Frame frame = new Frame().addTypes("resource")
 				.addSlot("name", resource.name())
 				.addSlot("queue", resource.queue())

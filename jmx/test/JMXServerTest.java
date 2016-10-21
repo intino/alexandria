@@ -1,4 +1,4 @@
-import org.siani.pandora.jmx.JMXServer;
+import io.intino.pandora.jmx.JMXServer;
 
 import java.util.Collections;
 

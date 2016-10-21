@@ -1,11 +1,10 @@
 package io.intino.pandora.plugin.codegeneration.accessor.jms;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
+import org.siani.itrules.*;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.LF;
+import static org.siani.itrules.LineSeparator.*;
 
 public class JMSAccessorTemplate extends Template {
 
@@ -19,7 +18,7 @@ public class JMSAccessorTemplate extends Template {
 
 	public Template define() {
 		add(
-				rule().add((condition("type", "accessor"))).add(literal("package ")).add(mark("package", "validname")).add(literal(";\n\nimport org.siani.pandora.exceptions.*;\nimport org.siani.pandora.jms.QueueProducer;\nimport com.google.gson.Gson;\n\nimport javax.jms.*;\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "firstUpperCase", "SnakeCaseToCamelCase")).add(literal("JMSAccessor {\n\n\tprivate final Session session;\n\n\tpublic ")).add(mark("name", "firstUpperCase", "SnakeCaseToCamelCase")).add(literal("JMSAccessor(Session session) {\n\t\tthis.session = session;\n\t}\n\n\t")).add(mark("resource").multiple("\n\n")).add(literal("\n\n\t")).add(mark("resource", "interface").multiple("\n\n")).add(literal("\n\n\tprivate static String createRandomString() {\n\t\tjava.util.Random random = new java.util.Random(System.currentTimeMillis());\n\t\tlong randomLong = random.nextLong();\n\t\treturn Long.toHexString(randomLong);\n\t}\n}")),
+				rule().add((condition("type", "accessor"))).add(literal("package ")).add(mark("package", "validname")).add(literal(";\n\nimport io.intino.pandora.exceptions.*;\nimport QueueProducer;\nimport com.google.gson.Gson;\n\nimport javax.jms.*;\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "firstUpperCase", "SnakeCaseToCamelCase")).add(literal("JMSAccessor {\n\n\tprivate final Session session;\n\n\tpublic ")).add(mark("name", "firstUpperCase", "SnakeCaseToCamelCase")).add(literal("JMSAccessor(Session session) {\n\t\tthis.session = session;\n\t}\n\n\t")).add(mark("resource").multiple("\n\n")).add(literal("\n\n\t")).add(mark("resource", "interface").multiple("\n\n")).add(literal("\n\n\tprivate static String createRandomString() {\n\t\tjava.util.Random random = new java.util.Random(System.currentTimeMillis());\n\t\tlong randomLong = random.nextLong();\n\t\treturn Long.toHexString(randomLong);\n\t}\n}")),
 			rule().add((condition("type", "resource & reply")), (condition("trigger", "interface"))).add(literal("public interface ")).add(mark("name", "firstUpperCase")).add(literal("Response extends MessageListener {\n\n\tvoid callback(")).add(mark("reply", "return")).add(literal(" value);\n\n\tdefault void onMessage(Message message) {\n\t\ttry {\n\t\t\tcallback(")).add(mark("reply")).add(literal(");\n\t\t} catch (JMSException e) {\n\t\t\te.printStackTrace();\n\t\t}\n\t}\n}")),
 			rule().add((condition("type", "resource")), (condition("trigger", "interface"))),
 			rule().add((condition("type", "resource & reply"))).add(literal("public void ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter", "signature").multiple(", ")).add(literal(", "))).add(mark("name", "firstUpperCase")).add(literal("Response callback) throws JMSException {\n\tDestination temporaryQueue = session.createTemporaryQueue();\n\tsession.createConsumer(temporaryQueue).setMessageListener(callback);\n\tfinal ")).add(mark("messageType")).add(literal("Message message = session.create")).add(mark("messageType")).add(literal("Message();\n\tmessage.setJMSReplyTo(temporaryQueue);\n\tmessage.setJMSCorrelationID(createRandomString());\n\tfill")).add(mark("name", "firstUpperCase")).add(literal("(message")).add(expression().add(literal(", ")).add(mark("parameter", "name").multiple(", "))).add(literal(");\n\tnew QueueProducer(session, \"")).add(mark("queue")).add(literal("\").produce(message);\n}\n\nprivate void fill")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("messageType")).add(literal("Message message")).add(expression().add(literal(", ")).add(mark("parameter", "signature").multiple(", "))).add(literal(") throws JMSException {\n\t")).add(mark("parameter", "assign").multiple("\n")).add(literal("\n}")),

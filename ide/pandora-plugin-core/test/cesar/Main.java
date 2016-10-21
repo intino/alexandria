@@ -1,6 +1,6 @@
 package cesar;
 
-import org.siani.pandora.scheduling.PandoraTasker;
+import io.intino.pandora.scheduling.PandoraTasker;
 
 public class Main {
 

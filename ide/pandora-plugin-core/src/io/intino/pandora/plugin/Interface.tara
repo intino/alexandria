@@ -12,6 +12,7 @@ Concept:Named Channel // TODO comprobar generación (rellenado)
 Concept:Named Service
 	has:Named Exception
 
+
 Concept Exception extends Data
 	var word:ExceptionCodes code
 	var string description = ""
@@ -89,12 +90,15 @@ Facet JMX on Service
     Concept:Named Notification
 
 Facet JMS on Service
-	Concept Resource
+	Concept:Named Request
 		var string queue
-    	has Parameter
+		has:Named Parameter
     	var Exception[] exceptionRefs = empty
     	has Exception
     	has:{0..1} Response
+	Concept:Named Notification
+		var string queue
+		has:Named Parameter
 	Concept Authentication
 		sub CredentialSecured
 			var string username

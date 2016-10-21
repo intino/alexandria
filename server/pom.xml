@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.siani.pandora</groupId>
+    <groupId>io.intino.pandora</groupId>
     <artifactId>rest-server</artifactId>
     <version>1.0.0</version>
 
@@ -12,14 +12,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>siani-maven</id>
-            <name>siani-maven-releases</name>
-            <url>https://artifactory.siani.es/artifactory/libs-release-local</url>
-        </repository>
-    </distributionManagement>
 
     <repositories>
         <repository>
@@ -29,12 +21,18 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>siani-maven</id>
+            <name>siani-maven-releases</name>
+            <url>https://artifactory.siani.es/artifactory/libs-release-local</url>
+        </repository>
+    </distributionManagement>
+
     <build>
-        <sourceDirectory>src</sourceDirectory>
-        <!--<testSourceDirectory>test</testSourceDirectory>-->
         <testResources>
             <testResource>
-                <directory>../../web/test-res</directory>
+                <directory>test-res</directory>
             </testResource>
         </testResources>
 
@@ -44,6 +42,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-core</artifactId>
@@ -80,11 +83,6 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
             <version>1.45</version>
-        </dependency>
-        <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>core</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

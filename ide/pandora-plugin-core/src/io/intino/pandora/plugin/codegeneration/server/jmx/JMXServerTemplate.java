@@ -1,11 +1,10 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
+import org.siani.itrules.*;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.CRLF;
+import static org.siani.itrules.LineSeparator.*;
 
 public class JMXServerTemplate extends Template {
 
@@ -14,12 +13,12 @@ public class JMXServerTemplate extends Template {
 	}
 
 	public static Template create() {
-		return new JMXServerTemplate(Locale.ENGLISH, CRLF).define();
+		return new JMXServerTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "jmxserver"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(";\n\nimport org.siani.pandora.jmx.JMXServer;\nimport tara.magritte.Graph;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class JMX")).add(mark("name", "firstUpperCase")).add(literal(" {\n\n\tpublic JMXServer init(int port, Graph graph) {\n\t\tJMXServer server = new JMXServer(mbClasses(graph));\n\t\tserver.init(port);\n\t\treturn server;\n\t}\n\n\tprivate Map<String, Object[]> mbClasses(Graph graph) {\n        Map<String, Object[]> map = new HashMap<>();\n        map.put(\"")).add(mark("package")).add(literal(".jmx.")).add(mark("name", "firstUpperCase")).add(literal("\", new Object[]{graph});\n        return map;\n\t}\n}")),
+				rule().add((condition("type", "jmxserver"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(";\n\nimport io.intino.pandora.jmx.JMXServer;\nimport tara.magritte.Graph;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class JMX")).add(mark("name", "firstUpperCase")).add(literal(" {\n\n\tpublic JMXServer init(int port, Graph graph) {\n\t\tJMXServer server = new JMXServer(mbClasses(graph));\n\t\tserver.init(port);\n\t\treturn server;\n\t}\n\n\tprivate Map<String, Object[]> mbClasses(Graph graph) {\n        Map<String, Object[]> map = new HashMap<>();\n        map.put(\"")).add(mark("package")).add(literal(".jmx.")).add(mark("name", "firstUpperCase")).add(literal("\", new Object[]{graph});\n        return map;\n\t}\n}")),
 			rule().add((condition("type", "jmx")), (condition("type", "interface"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(".jmx;\n\nimport java.util.*;\nimport java.time.*;\n\npublic interface ")).add(mark("name", "firstUpperCase")).add(literal("MBean {\n\n    ")).add(mark("operation", "signature").multiple("\n\n")).add(literal("\n}")),
 			rule().add((condition("type", "operation")), (condition("trigger", "signature"))).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("parameter", "withType").multiple(", ")).add(literal(");")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "withType"))).add(mark("type")).add(literal(" ")).add(mark("name")),

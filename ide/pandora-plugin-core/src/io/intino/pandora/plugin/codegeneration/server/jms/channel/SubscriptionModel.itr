@@ -3,7 +3,7 @@ def type(subscription)
 
     import com.google.gson.Gson;
     import tara.magritte.Graph;
-    import org.siani.pandora.jms.Consumer;
+    import io.intino.pandora.jms.Consumer;
 	$schemaImport
 
     import javax.jms.*;
