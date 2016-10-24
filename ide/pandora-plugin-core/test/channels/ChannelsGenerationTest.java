@@ -14,7 +14,7 @@ public class ChannelsGenerationTest {
 	@Test
 	public void testChannelsGeneration() throws Exception {
 		File gen = new File("test-gen", CHANNELS);
-		new FullRenderer(Graph.load("Channels").wrap(PandoraApplication.class), gen, gen, CHANNELS).execute();
+		new FullRenderer(null, Graph.load("Channels").wrap(PandoraApplication.class), gen, gen, CHANNELS).execute();
 	}
 
 }

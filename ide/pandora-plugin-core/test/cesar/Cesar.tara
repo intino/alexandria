@@ -4,47 +4,48 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 
 	Resource(path = "/systems/:system")  System
 		Put(description = "Create new system version")
 			Parameter(in = path) system as Text
 			Parameter(in = query) version as Text
+			Parameter(in = form) sample as File
 			Response
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 		Post(description = "Update system")
 			Parameter(in = path) system as Text
 			Parameter(in = query) enabled as Bool
 			Response
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 	Resource(path = "/systems/:system/:version") SystemVersion
 		Get(description = "A system of specific version")
 			Parameter(in = path) system as Text
 			Parameter(in = path) version as Text
 			Response as Text
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 
 	Resource(path = "/servers") servers
 		Get(description = "List of servers")
 			Response as Text
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 		Post(description = "Create server")
 			Parameter(in = query) url as Text
 			Response
-			Exception (ErrorBadRequest)
+			Exception (BadRequest)
 	Resource(path = "/servers/:server") server
 		Get(description = "List of servers")
 			Parameter(in = path) server as Text
 			Response as Text
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 		Post(description = "Update server")
 			Parameter(in = path) server as Text
 			Response
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 		Delete(description = "Delete server") deleteServer
 			Parameter(in = path) server as Text
 			Response
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 	Resource(path = "/servers/:server/:system") deploySystem
 		Post(description = "Deploy system") deploySystem
 			Parameter(in = path) server as Text
@@ -56,7 +57,7 @@ Service(description = "Cesar Build Service") build as REST(host = "", basePath =
 	Resource(path = "/build") webHooks
 		Post(description = "")
 			Response
-			Exception(ErrorBadRequest)
+			Exception(BadRequest)
 
 Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")

@@ -1,0 +1,49 @@
+def type(box)
+	package $package;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+    import java.util.UUID;
+    [import tara.magritte.Graph;$tara+import]
+
+    public class $name~Box {
+
+		$name~Configuration configuration;
+    	private Map<String, Object> map = new LinkedHashMap<>();
+
+		[
+		private String graphID;
+
+		public $tara~Box(Graph graph) {
+			map.put(graphID = UUID.randomUUID().toString(), graph);
+		}
+
+		public Graph graph() {
+			return (Graph) map.get(graphID);
+		}
+		]
+
+    	public $name~Box($name~Configuration configuration) {
+    		this.configuration = configuration;
+    	}
+
+		$service...[$NL]
+
+    	public <T> T get(Class<T> tClass) {
+    		return (T) map.values().stream().filter(tClass::isInstance).findFirst().orElse(null);
+    	}
+
+
+    	public <T> T get(String object, Class<T> tClass) {
+    		return (T) map.get(object);
+    	}
+
+    	public $name~BoxConfiguration put(Object object) {
+    		map.put("", object);
+    		return this;
+    	}
+    }
+end
+
+def trigger(import)
+end

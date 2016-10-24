@@ -9,15 +9,15 @@ import javax.jms.MessageNotWriteableException;
 
 public class MessageFactory {
 
-	public Message textMessage() {
+	public static Message textMessage() {
 		return new ActiveMQTextMessage();
 	}
 
-	public Message objectMessage() {
+	public static Message objectMessage() {
 		return new ActiveMQObjectMessage();
 	}
 
-	public Message byteMessage() {
+	public static Message byteMessage() {
 		return new ActiveMQBytesMessage();
 	}
 

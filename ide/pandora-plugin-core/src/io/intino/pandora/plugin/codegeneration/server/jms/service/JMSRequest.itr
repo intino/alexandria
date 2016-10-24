@@ -19,14 +19,16 @@ def type(request)
 		}
 
 		public void consume(Session session, Message request) {
-			$call
+			[$exception+try
+				]$call[
+			$exception+catch]
 		}
 
 		private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
 			action.graph = this.graph;[
 			try {
-				$parameter+assign
+				$parameter+assign...[$NL]
 			} catch (JMSException e) {
 				e.printStackTrace();
 			}]
@@ -48,7 +50,7 @@ def type(request)
 end
 
 def attribute(Bytes) trigger(return)
-	message.writeBytes(readFile(response));
+	message.writeBytes(toByteArray(response));
 end
 
 def trigger(return)
@@ -63,15 +65,24 @@ def trigger(call)
 	actionFor(request).execute();
 end
 
+def trigger(try)
+	try {
+end
+
+def trigger(catch)
+	} catch (PandoraException e) {
+		response(session, replyTo(request), exceptionMessage(session, idOf(request), e));
+	}
+end
+
 def type(parameter & FileData) trigger(assign)
     byte$[] data = new byte$[(int) ((BytesMessage) message).getBodyLength()];
     ((BytesMessage) message).readBytes(data);
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = newTemporalFile(data);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = toInputStream(data);
 end
 
 def type(parameter & objectData) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
-
 end
 
 def type(parameter) trigger(assign)

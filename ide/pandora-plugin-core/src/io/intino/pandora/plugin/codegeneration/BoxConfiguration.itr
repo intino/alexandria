@@ -1,0 +1,47 @@
+def type(boxConfiguration)
+	public class $name~Configuration {
+
+	$service+field
+
+	service...[$NL]
+
+	$service+confClass
+	}
+end
+
+def type(service) trigger(field)
+	$name+firstUpperCase~Configuration $name+firstLowerCase~Configuration;
+end
+
+def type(service & jms)
+	public $configuration~Configuration $name~Configuration(String url, String user, String password[, $customParameters...[, ]]) {
+		this.$name+firstLowerCase~Configuration = new this.$name+firstLowerCase~Configuration();
+		this.$name+firstLowerCase~Configuration.url = url;
+		this.$name+firstLowerCase~Configuration.user = user;
+		this.$name+firstLowerCase~Configuration.password = password;
+		return this;
+	}
+
+	public $configuration~Configuration $name~Configuration() {
+		return this.$name+firstLowerCase~Configuration;
+	}
+end
+
+def type(service & rest)
+	public $configuration~Configuration $name~Configuration() {
+		return this;
+	}
+
+	public $configuration~Configuration $name~Configuration() {
+		return $name+firstLowerCase~Configuration;
+	}
+end
+
+def type(service & jms) trigger(confClass)
+	public static class $name+firstUpperCase~Configuration {
+		String url;
+		String user;
+		String password;
+		$customParameters...[$NL]
+	}
+end

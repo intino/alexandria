@@ -4,11 +4,13 @@ Service monet as JMS
 	Request(queue = "catalogs") catalogs
 		Parameter catalogs as Object(schema = CategorizationCatalog)
 		Parameter name as Text
+		Parameter fileOption as File
 		Response as Bool
 
 	Request(queue = "processes") processes
 		Parameter entryPoint as File
 		Response as Object(Processes)
+		Exception(code = BadRequest) as Text
 
 	Request(queue = "processes") binaries
 		Parameter type as Text

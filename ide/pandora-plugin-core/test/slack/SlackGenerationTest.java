@@ -14,7 +14,7 @@ public class SlackGenerationTest {
 	@Test
 	public void testSlack() throws Exception {
 		File gen = new File("test-gen", SLACK);
-		new FullRenderer(Graph.load("Slack").wrap(PandoraApplication.class), gen, gen, SLACK).execute();
+		new FullRenderer(null, Graph.load("Slack").wrap(PandoraApplication.class), gen, gen, SLACK).execute();
 	}
 
 }

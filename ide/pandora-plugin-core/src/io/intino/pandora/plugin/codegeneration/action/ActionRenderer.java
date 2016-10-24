@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Exception;
 import io.intino.pandora.plugin.Parameter;
 import io.intino.pandora.plugin.Response;
@@ -16,10 +17,12 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 abstract class ActionRenderer {
+	protected final Project project;
 	protected final File destiny;
 	protected String packageName;
 
-	ActionRenderer(File destiny, String packageName) {
+	ActionRenderer(Project project, File destiny, String packageName) {
+		this.project = project;
 		this.destiny = destiny;
 		this.packageName = packageName;
 	}
@@ -39,10 +42,6 @@ abstract class ActionRenderer {
 		return new File(destiny, "actions");
 	}
 
-	String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
-	}
-
 	protected void execute(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", name);
@@ -55,12 +54,17 @@ abstract class ActionRenderer {
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		if (!alreadyRendered(destiny, name))
 			Commons.writeFrame(destinyPackage(destiny), firstUpperCase(name) + "Action", template().format(frame));
+		else
+			new ActionUpdater(project, Commons.javaFile(destinyPackage(destiny), firstUpperCase(name) + "Action"), packageName, parameters).update();
 	}
-
 
 	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {
 		for (Parameter parameter : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+			frame.addSlot("parameter", new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName()).addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+	}
+
+	String formatType(TypeData typeData) {
+		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	protected String firstUpperCase(String value) {

@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.codegeneration.action.RESTActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
@@ -20,12 +21,14 @@ import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class RESTResourceRenderer {
 	private static final String RESOURCES = "resources";
+	private final Project project;
 	private final List<RESTService> services;
 	private File gen;
 	private File src;
 	private String packageName;
 
-	public RESTResourceRenderer(Graph graph, File gen, File src, String packageName) {
+	public RESTResourceRenderer(Project project, Graph graph, File gen, File src, String packageName) {
+		this.project = project;
 		services = graph.find(RESTService.class);
 		this.gen = gen;
 		this.src = src;
@@ -49,7 +52,7 @@ public class RESTResourceRenderer {
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTActionRenderer(operation, src, packageName).execute();
+		new RESTActionRenderer(project, operation, src, packageName).execute();
 	}
 
 	private Frame fillResourceFrame(Resource resource, Operation operation) {

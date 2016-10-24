@@ -18,6 +18,10 @@ def type(action)
 	}
 end
 
+def type(parameter) type(fileData) trigger(type)
+	public java.io.InputStream $name+SnakeCaseToCamelCase+FirstLowerCase;
+end
+
 def type(parameter) trigger(type)
 	public $type $name+SnakeCaseToCamelCase+FirstLowerCase;
 end

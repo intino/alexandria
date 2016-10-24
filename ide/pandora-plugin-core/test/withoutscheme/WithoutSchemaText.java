@@ -10,6 +10,6 @@ public class WithoutSchemaText {
 
 	public static void main(String[] args) {
 		File genFolder = new File("test-gen", "withoutschema");
-		new FullRenderer(Graph.load("WithoutSchema").wrap(PandoraApplication.class), genFolder, genFolder, "withoutschema").execute();
+		new FullRenderer(null, Graph.load("WithoutSchema").wrap(PandoraApplication.class), genFolder, genFolder, "withoutschema").execute();
 	}
 }

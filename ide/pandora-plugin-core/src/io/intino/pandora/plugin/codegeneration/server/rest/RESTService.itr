@@ -1,10 +1,10 @@
 def type(server)
 	package $package+ValidPackage;
 
-	import PandoraSpark;
+	import io.intino.pandora.server.PandoraSpark;
 	import $package+ValidPackage.resources.*;
 	import tara.magritte.Graph;
-	import DefaultSecurityManager;
+	import io.intino.pandora.server.security.DefaultSecurityManager;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 

@@ -23,7 +23,7 @@ public class HappySenseTest {
     public void testCreation() {
         Graph happysense = Graph.load("Happysense").wrap(PandoraApplication.class);
         File gen = new File("test-gen", HAPPYSENSE);
-        new FullRenderer(happysense, gen, gen, HAPPYSENSE).execute();
+        new FullRenderer(null, happysense, gen, gen, HAPPYSENSE).execute();
         happysense.find(RESTService.class).forEach(a -> new RESTAccessorRenderer(a, new File("test-gen/happysense"), HAPPYSENSE).execute());
     }
 }

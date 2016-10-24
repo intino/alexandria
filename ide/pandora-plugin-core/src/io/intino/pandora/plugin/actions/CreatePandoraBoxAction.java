@@ -26,7 +26,7 @@ import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
 import static tara.intellij.lang.psi.impl.TaraUtil.*;
 
-public class CreateShellAction extends PandoraAction implements DumbAware {
+public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: Generate");
 	private static final String PANDORA = "Pandora";
 
@@ -37,7 +37,7 @@ public class CreateShellAction extends PandoraAction implements DumbAware {
 		if (noProject(e, project) || module == null) return;
 		List<PsiFile> pandoraFiles = PandoraUtils.findPandoraFiles(module);
 		FileDocumentManager.getInstance().saveAllDocuments();
-		new ShellGenerator(module, pandoraFiles).generateShell(getGenRoot(module), getSrcRoot(module));
+		new PandoraGenerator(module, pandoraFiles).generate(getGenRoot(module), getSrcRoot(module));
 	}
 
 	private boolean noProject(AnActionEvent e, Project project) {
@@ -48,17 +48,17 @@ public class CreateShellAction extends PandoraAction implements DumbAware {
 		return false;
 	}
 
-	private class ShellGenerator {
+	private class PandoraGenerator {
 
 		private final Module module;
 		private final List<PsiFile> pandoraFiles;
 
-		ShellGenerator(Module module, List<PsiFile> pandoraFiles) {
+		PandoraGenerator(Module module, List<PsiFile> pandoraFiles) {
 			this.module = module;
 			this.pandoraFiles = pandoraFiles;
 		}
 
-		void generateShell(VirtualFile genDirectory, VirtualFile srcDirectory) {
+		void generate(VirtualFile genDirectory, VirtualFile srcDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
 				return;
@@ -74,7 +74,7 @@ public class CreateShellAction extends PandoraAction implements DumbAware {
 
 		private void generate(String packageName, File gen, File src) {
 			final Stash[] stashes = pandoraFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
-			new FullRenderer(GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
+			new FullRenderer(module.getProject(), GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			notifySuccess();

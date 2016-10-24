@@ -25,7 +25,7 @@
         <action id="NewPandoraFile" class="io.intino.pandora.plugin.actions.CreatePandoraFileAction">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
-        <action id="CreatePandoraAPI" class="io.intino.pandora.plugin.actions.CreateShellAction"
+        <action id="CreatePandoraAPI" class="io.intino.pandora.plugin.actions.CreatePandoraBoxAction"
                 text="Create Pandora Shell"
                 description="Create Pandora Shell">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>

@@ -11,9 +11,9 @@ public class MonetTest {
 
 	private static final String MONET = "monet";
 
-    @Test
+	@Test
 	public void test() {
 		final File gen = new File("test-gen", MONET);
-		new FullRenderer(Graph.load("Monet").wrap(PandoraApplication.class), gen, gen, MONET).execute();
+		new FullRenderer(null, Graph.load("Monet").wrap(PandoraApplication.class), gen, gen, MONET).execute();
 	}
 }

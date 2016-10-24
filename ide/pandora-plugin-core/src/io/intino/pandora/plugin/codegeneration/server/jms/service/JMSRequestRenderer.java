@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.service;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Parameter;
 import io.intino.pandora.plugin.Response;
 import io.intino.pandora.plugin.Schema;
@@ -20,12 +21,14 @@ import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class JMSRequestRenderer {
 	private static final String REQUESTS = "requests";
+	private final Project project;
 	private final List<JMSService> services;
 	private File gen;
 	private File src;
 	private String packageName;
 
-	public JMSRequestRenderer(Graph graph, File src, File gen, String packageName) {
+	public JMSRequestRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+		this.project = project;
 		services = graph.find(JMSService.class);
 		this.gen = gen;
 		this.src = src;
@@ -47,19 +50,21 @@ public class JMSRequestRenderer {
 	}
 
 	private void createCorrespondingAction(Request request) {
-		new JMSRequestActionRenderer(request, src, packageName).execute();
+		new JMSRequestActionRenderer(project, request, src, packageName).execute();
 	}
 
-	private Frame fillRequestFrame(Request resource) {
-		final String returnType = Commons.returnType(resource.response());
+	private Frame fillRequestFrame(Request request) {
+		final String returnType = Commons.returnType(request.response());
 		Frame frame = new Frame().addTypes("request").
-				addSlot("name", resource.name()).
+				addSlot("name", request.name()).
 				addSlot("package", packageName).
 				addSlot("call", new Frame().addTypes(returnType)).
-				addSlot("parameter", (AbstractFrame[]) parameters(resource.parameterList()));
+				addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()));
 		if (!returnType.equals("void"))
-			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(resource.response()));
-		if (!resource.graph().find(Schema.class).isEmpty())
+			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(request.response()));
+		if (!request.exceptionList().isEmpty())
+			frame.addSlot("exception", "");
+		if (!request.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		return frame;
 	}

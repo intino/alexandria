@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.exception;
 
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -7,32 +8,39 @@ import tara.magritte.Graph;
 import java.io.File;
 import java.util.List;
 
+
 public class ExceptionRenderer {
 
-    private static final String EXCEPTIONS = "exceptions";
+	private static final String EXCEPTIONS = "exceptions";
 	private final List<io.intino.pandora.plugin.Exception> exceptions;
 	private File gen;
-    private String packageName;
+	private String packageName;
 
-    public ExceptionRenderer(Graph graph, File gen, String packageName) {
-		exceptions = graph.find(io.intino.pandora.plugin.Exception.class);
+	public ExceptionRenderer(Graph graph, File gen, String packageName) {
+		this.exceptions = graph.find(io.intino.pandora.plugin.Exception.class);
 		this.gen = gen;
-        this.packageName = packageName;
-    }
+		this.packageName = packageName;
+	}
 
-    public void execute() {
-        exceptions.forEach(this::processException);
-    }
+	public void execute() {
+		exceptions.forEach(this::processException);
+	}
 
 	private void processException(io.intino.pandora.plugin.Exception exception) {
-//        if(exception.name())
-        Frame frame = new Frame().addTypes("exception");
-        frame.addSlot("name", exception.name());
-        frame.addSlot("package", packageName);
-    }
+		Frame frame = new Frame().addTypes("exception");
+		frame.addSlot("name", exception.name());
+		frame.addSlot("code", exception.code());
+		frame.addSlot("package", packageName);
+		Commons.writeFrame(destinyPackage(gen), Commons.firstUpperCase(exception.name()), template().format(frame));
+	}
 
-    private Template template() {
-        return ExceptionTemplate.create();
-    }
+	private File destinyPackage(File destiny) {
+		return new File(destiny, EXCEPTIONS);
+	}
+
+	private Template template() {
+		return ExceptionTemplate.create();
+	}
+
 
 }

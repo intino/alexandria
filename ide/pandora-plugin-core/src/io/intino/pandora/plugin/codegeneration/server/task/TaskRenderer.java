@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.server.task;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Task;
 import io.intino.pandora.plugin.codegeneration.action.ActionTemplate;
 import io.intino.pandora.plugin.directorysentinel.DirectorySentinelTask;
@@ -23,7 +24,7 @@ public class TaskRenderer {
 	private File genDestination;
 	private String packageName;
 
-	public TaskRenderer(Graph graph, File src, File gen, String packageName) {
+	public TaskRenderer(Project project, Graph graph, File src, File gen, String packageName) {
 		scheduledTasks = graph.find(ScheduledTask.class);
 		tasks = graph.find(Task.class).stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
 		this.srcDestination = src;
@@ -48,7 +49,7 @@ public class TaskRenderer {
 	private Frame[] parameters(DirectorySentinelTask task) {
 		List<Frame> list = new ArrayList<>();
 		list.add(new Frame().addTypes("parameter").addSlot("type", URL.class.getCanonicalName()).addSlot("name", "directory"));
-		list.add(new Frame().addTypes("parameter").addSlot("type", "PandoraDirectorySentinel.Event").addSlot("name", "event"));
+		list.add(new Frame().addTypes("parameter").addSlot("type", "io.intino.pandora.scheduling.directory.PandoraDirectorySentinel.Event").addSlot("name", "event"));
 		return list.toArray(new Frame[list.size()]);
 	}
 

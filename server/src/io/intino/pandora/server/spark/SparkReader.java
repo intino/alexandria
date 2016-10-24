@@ -3,12 +3,8 @@ package io.intino.pandora.server.spark;
 import com.google.gson.Gson;
 import io.intino.pandora.Error;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -22,43 +18,13 @@ class SparkReader {
 
 	static <T> T read(String object, Class<T> type) {
 		if (type == Error.class || type == Collection.class) return adaptFromJSON(object, type);
-		else if (type == File.class) return (T) createTempFile(object);
-		else if (type == InputStream.class) return null;
 		else if (type == byte[].class) readBytes(object);
 		return adapt(object, type);
 	}
 
 	static <T> T read(Object object, Class<T> type) {
-		if (type == File.class && object instanceof InputStream) return (T) createTempFile((InputStream) object);
+		if (type == InputStream.class && object instanceof InputStream) return (T) object;
 		return null;
-	}
-
-	private static File createTempFile(InputStream inputStream) {
-		try {
-			return Files.write(Files.createTempFile("spark", "input"), readStream(inputStream)).toFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static File createTempFile(String object) {
-//		InputStream stream = new ByteArrayInputStream(object.getBytes(StandardCharsets.UTF_8));
-		try {
-			return Files.write(Files.createTempFile("spark", "input"), object.getBytes()).toFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	private static byte[] readStream(InputStream stream) throws IOException {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int nRead;
-		byte[] data = new byte[16384];
-		while ((nRead = stream.read(data, 0, data.length)) != -1) buffer.write(data, 0, nRead);
-		buffer.flush();
-		return buffer.toByteArray();
 	}
 
 	private static byte[] readBytes(String object) {

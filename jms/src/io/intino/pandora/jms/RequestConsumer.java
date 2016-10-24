@@ -1,13 +1,13 @@
 package io.intino.pandora.jms;
 
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import java.io.File;
+import com.google.gson.Gson;
+import io.intino.pandora.exceptions.PandoraException;
+
+import javax.jms.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
 
 public interface RequestConsumer {
 
@@ -41,22 +41,36 @@ public interface RequestConsumer {
 		}
 	}
 
-	default File newTemporalFile(byte[] content) {
-		try {
-			final Path tempFile = Files.createTempFile(null, null);
-			Files.write(tempFile, content);
-			tempFile.toFile().deleteOnExit();
-			return tempFile.toFile();
-		} catch (IOException e) {
-			return null;
-		}
+	default InputStream toInputStream(byte[] content) {
+		return new ByteArrayInputStream(content);
 	}
 
-	default byte[] readFile(File file) {
+	default byte[] toByteArray(InputStream stream) {
 		try {
-			return Files.readAllBytes(file.toPath());
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			int nRead;
+			byte[] data = new byte[16384];
+			while ((nRead = stream.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+			return buffer.toByteArray();
 		} catch (IOException e) {
-			return new byte[0];
+			e.printStackTrace();
+		}
+		return new byte[0];
+	}
+
+
+	default Message exceptionMessage(Session session, String responseId, PandoraException response) {
+		try {
+			TextMessage message = session.createTextMessage();
+			message.setJMSCorrelationID(responseId);
+			message.setText(new Gson().toJson(response));
+			return message;
+		} catch (JMSException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Parameter;
 import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
@@ -16,12 +17,14 @@ import java.util.List;
 
 public class JMXOperationsServiceRenderer {
 
+	private final Project project;
 	private final List<JMXService> services;
 	private File src;
 	private final File gen;
 	private String packageName;
 
-	public JMXOperationsServiceRenderer(Graph graph, File src, File gen, String packageName) {
+	public JMXOperationsServiceRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+		this.project = project;
 		services = graph.find(JMXService.class);
 		this.src = src;
 		this.gen = gen;
@@ -55,7 +58,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
-		for (Operation operation : operations) new JMXActionRenderer(operation, src, packageName).execute();
+		for (Operation operation : operations) new JMXActionRenderer(project, operation, src, packageName).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

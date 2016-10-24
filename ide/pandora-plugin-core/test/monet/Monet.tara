@@ -21,11 +21,11 @@ Service Monet as REST(host = "", basePath = "/", consumes = "", produces = "")
 			Parameter(in = path, required = true) catalog-name as Text
 			Parameter (in = path) entity-id as Text
 			Response as Object(entityResponse)
-			Exception(code = ErrorNotFound) EntityNotFound as Text
-			Exception(code = ErrorUnauthorized)
+			Exception(code = NotFound) EntityNotFound as Text
+			Exception(code = Unauthorized)
 
-	Exception(code = ErrorNotFound) CatalogNotFound as Text // TODO obliga a poner nombre
-	Exception(code = ErrorUnauthorized) CatalogNotAvailable as Text
+	Exception(code = NotFound) CatalogNotFound as Text // TODO obliga a poner nombre
+	Exception(code = Unauthorized) CatalogNotAvailable as Text
 
 //Service (path = "", title = "Process management") as REST
 //	Resource startProcess", title = "Start a process of the given name", path = "", method = Post)
@@ -33,58 +33,58 @@ Service Monet as REST(host = "", basePath = "/", consumes = "", produces = "")
 //		Parameter requester-id", in = query) as Text
 //		Parameter requester-uri", in = query, required = false) as Text
 //		Response(code = SuccessOk) as Text
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource contextOf", title = "Context of the given process id", path = "context-of", method = Get)
 //		Parameter id", in = path) as Text
 //		Response(code = SuccessOk) as Object(format = contextResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource notifyWorkItemEnding", title = "Communicated the end of a work item", path = "finished-work-item", method = Put)
 //		Parameter id", in = path) as Text
 //		Response(code = SuccessOk)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource prepareSignature", title = "Prepare signature for stamping", path = "prepare-signature", method = Get)
 //		Parameter signature-id", in = path) as Text
 //		Parameter certificate", in = query) as Text
 //		Parameter label", in = query) as Text
 //		Response(code = SuccessOk) as Text
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource stampSignature", title = "Stamp signature", path = "stamp-signature", method = Post)
 //		Parameter signature-id", in = path) as Text
 //		Parameter signature-content", in = query) as Text
 //		Response(code = SuccessOk) as Text
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //Service(path = "", title = "Form management") as REST
 //	Resource getForm", title = "Form data", path = "form", method = Get)
 //		Parameter id", in = path) as Text
 //		Response(code = SuccessOk) as Object(format = formResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource validateField", title = "Field validation", path = "field-validation", method = Get)
 //		Parameter form-id", in = query) as Text
 //		Parameter field-label", in = query) as Text
 //		Parameter field-value", in = query) as Text
 //		Response(code = SuccessOk) as Object(fieldValidationResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource getFieldTypeAhead", title = "Field type ahead", path = "field-type-ahead", method = Get)
 //		Parameter form-id", in = query) as Text
 //		Parameter field-label", in = query) as Text
 //		Parameter field-value", in = query) as Text
 //		Response(code = SuccessOk) as Object(format = fieldTypeAheadResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //Service(path = "", title = "File management") as REST //TODO
 //	Resource getFieldTypeAhead", title = "Download file", path = "field-type-ahead", method = Get)
 //		Parameter form-id", in = query) as Text
 //		Parameter field-label", in = query) as Text
 //		Response(code = SuccessOk) as Object(format = fieldTypeAheadResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //
 //Service(path= "", title = "Catalogs") as REST
 //	Resource getCatalog", title = "Get entire catalog", path = "", method = Get)
@@ -92,13 +92,13 @@ Service Monet as REST(host = "", basePath = "/", consumes = "", produces = "")
 //		Parameter start", in = query, required = false) as Integer
 //		Parameter end", in = query, required = false) as Integer
 //		Response(code = SuccessOk) as Object(catalogResponse)
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 //	Resource getCatalogCount", title = "Get number of elements under catalog", path = "catalog-count", method = Get)
 //		Parameter catalog-name", in = path) as Text
 //		Response(code = SuccessOk) as Integer
-//		Response(code = ErrorNotFound)
-//		Response(code = ErrorUnauthorized)
+//		Response(code = NotFound)
+//		Response(code = Unauthorized)
 
 Schema catalogElement
 	Attribute id as Text

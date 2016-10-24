@@ -1,10 +1,11 @@
 package io.intino.pandora.plugin.codegeneration;
 
+import com.intellij.openapi.project.Project;
 import cottons.utils.Files;
+import io.intino.pandora.plugin.codegeneration.exception.ExceptionRenderer;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.SubscriptionModelRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSNotifierRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSRequestRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXOperationsServiceRenderer;
@@ -14,18 +15,22 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
+import org.jetbrains.annotations.Nullable;
 import tara.magritte.Graph;
 
 import java.io.File;
 
 public class FullRenderer {
 
+	@Nullable
+	private final Project project;
 	private final Graph graph;
 	private final File gen;
 	private final File src;
 	private final String packageName;
 
-	public FullRenderer(Graph graph, File src, File gen, String packageName) {
+	public FullRenderer(@Nullable Project project, Graph graph, File src, File gen, String packageName) {
+		this.project = project;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
@@ -34,7 +39,8 @@ public class FullRenderer {
 
 	public void execute() {
 		Files.removeDir(gen);
-		formats();
+		schemas();
+		exceptions();
 		rest();
 		scheduling();
 		jmx();
@@ -43,39 +49,41 @@ public class FullRenderer {
 		slack();
 	}
 
-	private void formats() {
+	private void schemas() {
 		new SchemaRenderer(graph, gen, packageName).execute();
 	}
 
+	private void exceptions() {
+		new ExceptionRenderer(graph, gen, packageName).execute();
+	}
+
 	private void rest() {
-		new RESTResourceRenderer(graph, gen, src, packageName).execute();
+		new RESTResourceRenderer(project, graph, gen, src, packageName).execute();
 		new RESTServiceRenderer(graph, gen, packageName).execute();
 //		graph.find(RESTService.class).forEach(r -> new RESTAccessorRenderer(r, gen, packageName).execute());
 	}
 
 	private void jmx() {
-		new JMXOperationsServiceRenderer(graph, src, gen, packageName).execute();
+		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName).execute();
 		new JMXServerRenderer(graph, gen, packageName).execute();
 	}
 
 	private void jms() {
-		new JMSRequestRenderer(graph, src, gen, packageName).execute();
+		new JMSRequestRenderer(project, graph, src, gen, packageName).execute();
 		new JMSServiceRenderer(graph, gen, packageName).execute();
-		new JMSNotifierRenderer(graph, gen, packageName).execute();
 	}
 
 	private void scheduling() {
-		new TaskRenderer(graph, src, gen, packageName).execute();
+		new TaskRenderer(project, graph, src, gen, packageName).execute();
 		new TaskerRenderer(graph, gen, packageName).execute();
 	}
 
 	private void channels() {
-		new SubscriptionModelRenderer(graph, src, gen, packageName).execute();
+		new SubscriptionModelRenderer(project, graph, src, gen, packageName).execute();
 		new ChannelRenderer(graph, gen, packageName).execute();
 	}
 
 	private void slack() {
 		new SlackRenderer(graph, src, packageName).execute();
-		new ChannelRenderer(graph, gen, packageName).execute();
 	}
 }

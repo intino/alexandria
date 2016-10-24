@@ -1,12 +1,18 @@
-def type(Exception)
+def type(exception)
     package $package.exceptions;
 
 	import io.intino.pandora.exceptions.*;
+	import java.util.Map;
+	import java.util.LinkedHashMap;
 
-	public class $name+firstUpperCase$~Exception extends $code~Exception{
+	public class $name+firstUpperCase extends  io.intino.pandora.exceptions.$code {
 
-	    public $name+firstUpperCase(String label, $type value){
-	        super(label); // TODO modify exceptions at pandora;
+	    public $name+firstUpperCase(String message) {
+	        super(message);
 	    }
+
+	    public $name+firstUpperCase(String message, Map<String, String> parameters) {
+			super(message, parameters);
+		}
 	}
 end

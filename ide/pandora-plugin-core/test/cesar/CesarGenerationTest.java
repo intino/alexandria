@@ -16,14 +16,14 @@ public class CesarGenerationTest {
 	@Test
 	public void testCesar() throws Exception {
 		File gen = new File("test-gen", CESAR);
-		new FullRenderer(Graph.load("Cesar").wrap(PandoraApplication.class), gen, gen, CESAR).execute();
+		new FullRenderer(null, Graph.load("Cesar").wrap(PandoraApplication.class), gen, gen, CESAR).execute();
 
 	}
 
 	@Test
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
-		new FullRenderer(Graph.load("Consul").wrap(PandoraApplication.class), gen, gen, CONSUL).execute();
+		new FullRenderer(null, Graph.load("Consul").wrap(PandoraApplication.class), gen, gen, CONSUL).execute();
 
 	}
 

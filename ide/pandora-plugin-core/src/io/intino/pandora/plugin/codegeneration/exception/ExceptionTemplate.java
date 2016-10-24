@@ -18,7 +18,7 @@ public class ExceptionTemplate extends Template {
 
 	public Template define() {
 		add(
-				rule().add((condition("type", "Exception"))).add(literal("package ")).add(mark("package")).add(literal(".exceptions;\n\nimport io.intino.pandora.exceptions.*;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(mark("<missing ID>")).add(literal("Exception extends ")).add(mark("code")).add(literal("Exception{\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("(String label, ")).add(mark("type")).add(literal(" value){\n        super(label); // TODO modify exceptions at pandora;\n    }\n}"))
+			rule().add((condition("type", "exception"))).add(literal("package ")).add(mark("package")).add(literal(".exceptions;\n\nimport io.intino.pandora.exceptions.*;\nimport java.util.Map;\nimport java.util.LinkedHashMap;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal(" extends  io.intino.pandora.exceptions.")).add(mark("code")).add(literal(" {\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("(String message) {\n        super(message);\n    }\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("(String message, Map<String, String> parameters) {\n\t\tsuper(message, parameters);\n\t}\n}"))
 		);
 		return this;
 	}
