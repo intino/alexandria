@@ -12,7 +12,7 @@ def type(action)
 		public Graph graph;
 		[$parameter+type...[$NL]]
 
-		public [$returnType?void] execute() [throws $throws...[, ] ]{
+		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
 			$returnType+return
 		}
 	}

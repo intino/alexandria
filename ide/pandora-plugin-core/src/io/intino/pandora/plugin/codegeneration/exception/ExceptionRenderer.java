@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.exception;
 
+import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -17,7 +18,7 @@ public class ExceptionRenderer {
 	private String packageName;
 
 	public ExceptionRenderer(Graph graph, File gen, String packageName) {
-		this.exceptions = graph.find(io.intino.pandora.plugin.Exception.class);
+		this.exceptions = ((PandoraApplication) graph.application()).exceptionList();
 		this.gen = gen;
 		this.packageName = packageName;
 	}

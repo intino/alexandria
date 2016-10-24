@@ -43,6 +43,14 @@ abstract class ActionRenderer {
 	}
 
 	protected void execute(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
+		if (!alreadyRendered(destiny, name)) createNewClass(name, response, parameters, exceptions, schemas);
+		else {
+			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(name) + "Action");
+			new ActionUpdater(project, destiny, packageName, parameters, exceptions, response.asType()).update();
+		}
+	}
+
+	private void createNewClass(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
@@ -52,10 +60,7 @@ abstract class ActionRenderer {
 			frame.addSlot("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		if (!alreadyRendered(destiny, name))
-			Commons.writeFrame(destinyPackage(destiny), firstUpperCase(name) + "Action", template().format(frame));
-		else
-			new ActionUpdater(project, Commons.javaFile(destinyPackage(destiny), firstUpperCase(name) + "Action"), packageName, parameters).update();
+		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(name) + "Action", template().format(frame));
 	}
 
 	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {

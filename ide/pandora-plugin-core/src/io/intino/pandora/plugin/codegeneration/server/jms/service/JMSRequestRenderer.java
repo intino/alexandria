@@ -62,7 +62,7 @@ public class JMSRequestRenderer {
 				addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()));
 		if (!returnType.equals("void"))
 			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(request.response()));
-		if (!request.exceptionList().isEmpty())
+		if (!request.exceptionList().isEmpty() || !request.exceptionRefs().isEmpty())
 			frame.addSlot("exception", "");
 		if (!request.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
