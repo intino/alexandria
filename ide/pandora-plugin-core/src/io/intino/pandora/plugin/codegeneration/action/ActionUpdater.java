@@ -70,7 +70,7 @@ class ActionUpdater {
 	}
 
 	private String exceptionReference(Exception exception) {
-		return packageName + ".exception." + Commons.firstUpperCase(exception.name());
+		return packageName + ".exceptions." + Commons.firstUpperCase(exception.name());
 	}
 
 	private void updateReturnType(PsiMethod psiMethod) {
