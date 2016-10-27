@@ -46,7 +46,7 @@ abstract class ActionRenderer {
 		if (!alreadyRendered(destiny, name)) createNewClass(name, response, parameters, exceptions, schemas);
 		else {
 			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(name) + "Action");
-			new ActionUpdater(project, destiny, packageName, parameters, exceptions, response.asType()).update();
+			new ActionUpdater(project, destiny, packageName, parameters, exceptions, response).update();
 		}
 	}
 
@@ -64,8 +64,11 @@ abstract class ActionRenderer {
 	}
 
 	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {
-		for (Parameter parameter : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName()).addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+		for (Parameter parameter : parameters) {
+			final Frame parameterFrame = new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName());
+			if (parameter.isList()) parameterFrame.addTypes("list");
+			frame.addSlot("parameter", parameterFrame.addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+		}
 	}
 
 	String formatType(TypeData typeData) {

@@ -3,7 +3,7 @@ def type(jms)
 	package $package;
 
 	import $package.requests.*;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.jms.QueueConsumer;
 	import io.intino.pandora.jms.QueueProducer;
 
@@ -19,7 +19,8 @@ def type(jms)
 
 		private Session session;
 
-		public void $name+firstUpperCase~JMSService(Session session, Graph graph) {
+		public $name+firstUpperCase~JMSService(Session session, Box box) {
+			this.session = session;
 			$request...[$NL]
 		}
 
@@ -44,7 +45,7 @@ def type(jms)
 end
 
 def type(request)
-	new QueueConsumer(session, "$queue").listen(new $name+firstUpperCase~Request(graph));
+	new QueueConsumer(session, "$queue").listen(new $name+firstUpperCase~Request(box));
 end
 
 def type(notification)

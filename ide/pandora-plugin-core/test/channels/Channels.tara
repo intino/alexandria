@@ -42,6 +42,10 @@ Schema Processes
 Queue(id = "catalogs") opinions
 	Message(messageType = "bool") as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
 
+
+Queue(id = "catalogs") opinions
+	Message(messageType = "bool") as Text
+
 Topic(id = "processes") inputProcesses
 	Message(messageType = "processes") as Object(schema = Processes) // TODO meter type en el properties
 

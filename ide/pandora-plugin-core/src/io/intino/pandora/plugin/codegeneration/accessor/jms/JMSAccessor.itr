@@ -2,7 +2,7 @@ def type(accessor)
 	package $package+validname;
 
 	import io.intino.pandora.exceptions.*;
-	import QueueProducer;
+	import io.intino.pandora.jms.QueueProducer;
 	import com.google.gson.Gson;
 
     import javax.jms.*;
@@ -16,19 +16,35 @@ def type(accessor)
 			this.session = session;
 		}
 
-		$resource...[$NL$NL]
+		$request...[$NL$NL]
 
-		$resource+interface...[$NL$NL]
+		$request+interface...[$NL$NL]
 
 		private static String createRandomString() {
 			java.util.Random random = new java.util.Random(System.currentTimeMillis());
 			long randomLong = random.nextLong();
 			return Long.toHexString(randomLong);
 		}
+
+		private byte$[] toByteArray(java.io.InputStream stream) {
+			try {
+				java.io.ByteArrayOutputStream buffer = new java.io.ByteArrayOutputStream();
+				int nRead;
+				byte$[] data = new byte$[16384];
+				while ((nRead = stream.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+				return buffer.toByteArray();
+			} catch (java.io.IOException e) {
+				e.printStackTrace();
+			}
+			return new byte$[0];
+		}
 	}
 end
 
-def type(resource & reply) trigger(interface)
+def type(request & reply) trigger(interface)
 	public interface $name+firstUpperCase~Response extends MessageListener {
 
 		void callback($reply+return value);
@@ -43,10 +59,10 @@ def type(resource & reply) trigger(interface)
 	}
 end
 
-def type(resource) trigger(interface)
+def type(request) trigger(interface)
 end
 
-def type(resource & reply)
+def type(request & reply)
 	public void $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
 		Destination temporaryQueue = session.createTemporaryQueue();
 		session.createConsumer(temporaryQueue).setMessageListener(callback);
@@ -63,7 +79,7 @@ def type(resource & reply)
 end
 
 
-def type(resource)
+def type(request)
 	public void $name([$parameter+signature...[, ]]) throws JMSException {
 		final TextMessage message = session.createTextMessage();
 		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
@@ -73,6 +89,10 @@ def type(resource)
 	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
 		$parameter+assign...[$NL]
 	}
+end
+
+def type(parameter & list) trigger(signature)
+	java.util.List<$type> $name+SnakeCaseToCamelCase+firstLowerCase
 end
 
 def type(parameter) trigger(signature)
@@ -87,8 +107,16 @@ def type(parameter & objectData) trigger(assign)
 	message.setText(new Gson().toJson($name));
 end
 
+def type(parameter & fileData) trigger(assign)
+	message.writeBytes(toByteArray($name));
+end
+
+def type(parameter & list) trigger(assign)
+	message.setStringProperty("$name", new Gson().toJson($name));
+end
+
 def type(parameter) trigger(assign)
-	message.setStringProperty("$name", $name);
+	message.set$type+format~Property("$name", $name);
 end
 
 def type(reply) trigger(type)
@@ -103,6 +131,9 @@ def type(reply) trigger(return)
 	$value
 end
 
+def attribute(Integer) trigger(format)
+	Int
+end
 
 def type(reply & fileData) trigger(reply)
 	((ByteMessage) message).getBytes()

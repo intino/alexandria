@@ -1,5 +1,6 @@
 package io.intino.pandora.plugin.codegeneration;
 
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import cottons.utils.Files;
 import io.intino.pandora.plugin.codegeneration.exception.ExceptionRenderer;
@@ -24,13 +25,16 @@ public class FullRenderer {
 
 	@Nullable
 	private final Project project;
+	@Nullable
+	private final Module module;
 	private final Graph graph;
 	private final File gen;
 	private final File src;
 	private final String packageName;
 
-	public FullRenderer(@Nullable Project project, Graph graph, File src, File gen, String packageName) {
-		this.project = project;
+	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
+		this.project = module == null ? null : module.getProject();
+		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
@@ -47,6 +51,8 @@ public class FullRenderer {
 		jms();
 		channels();
 		slack();
+		box();
+		main();
 	}
 
 	private void schemas() {
@@ -60,7 +66,6 @@ public class FullRenderer {
 	private void rest() {
 		new RESTResourceRenderer(project, graph, gen, src, packageName).execute();
 		new RESTServiceRenderer(graph, gen, packageName).execute();
-//		graph.find(RESTService.class).forEach(r -> new RESTAccessorRenderer(r, gen, packageName).execute());
 	}
 
 	private void jmx() {
@@ -85,5 +90,14 @@ public class FullRenderer {
 
 	private void slack() {
 		new SlackRenderer(graph, src, packageName).execute();
+	}
+
+	private void box() {
+		new BoxRenderer(graph, gen, packageName, module).execute();
+		new BoxConfigurationRenderer(graph, gen, packageName, module).execute();
+	}
+
+	private void main() {
+		new MainRenderer(graph, src, packageName, module).execute();
 	}
 }

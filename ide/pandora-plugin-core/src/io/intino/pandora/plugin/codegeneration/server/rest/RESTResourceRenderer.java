@@ -70,7 +70,7 @@ public class RESTResourceRenderer {
 
 	private String[] throwCodes(Operation resource) {
 		String[] throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).toArray(String[]::new);
-		return throwCodes.length == 0 ? new String[]{"ErrorUnknown"} : throwCodes;
+		return throwCodes.length == 0 ? new String[]{"Unknown"} : throwCodes;
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
@@ -78,7 +78,9 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.required() ? "required" : "optional"))
+		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.required() ? "required" : "optional"));
+		if (parameter.isList()) parameterFrame.addTypes("List");
+		return parameterFrame
 				.addSlot("name", parameter.name())
 				.addSlot("parameterType", parameter.asType().type())
 				.addSlot("in", parameter.in().name());

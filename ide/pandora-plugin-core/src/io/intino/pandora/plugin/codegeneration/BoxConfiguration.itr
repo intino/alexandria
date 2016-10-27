@@ -1,40 +1,22 @@
 def type(boxConfiguration)
+	package $package;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+    import java.util.UUID;
+    [import tara.magritte.Graph;$tara+import]
+
 	public class $name~Configuration {
 
-	$service+field
+		$service+field...[$NL]
 
-	service...[$NL]
-
-	$service+confClass
+		$service...[$NL$NL]
+		$service+confClass...[$NL]
 	}
 end
 
 def type(service) trigger(field)
 	$name+firstUpperCase~Configuration $name+firstLowerCase~Configuration;
-end
-
-def type(service & jms)
-	public $configuration~Configuration $name~Configuration(String url, String user, String password[, $customParameters...[, ]]) {
-		this.$name+firstLowerCase~Configuration = new this.$name+firstLowerCase~Configuration();
-		this.$name+firstLowerCase~Configuration.url = url;
-		this.$name+firstLowerCase~Configuration.user = user;
-		this.$name+firstLowerCase~Configuration.password = password;
-		return this;
-	}
-
-	public $configuration~Configuration $name~Configuration() {
-		return this.$name+firstLowerCase~Configuration;
-	}
-end
-
-def type(service & rest)
-	public $configuration~Configuration $name~Configuration() {
-		return this;
-	}
-
-	public $configuration~Configuration $name~Configuration() {
-		return $name+firstLowerCase~Configuration;
-	}
 end
 
 def type(service & jms) trigger(confClass)
@@ -43,5 +25,41 @@ def type(service & jms) trigger(confClass)
 		String user;
 		String password;
 		$customParameters...[$NL]
+	}
+end
+
+
+def type(service & rest) trigger(confClass)
+	public static class $name+firstUpperCase~Configuration {
+		int port;
+		String webDirectory;
+		$customParameters...[$NL]
+	}
+end
+
+def type(service & jms)
+	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(String url, String user, String password[, $customParameters...[, ]]) {
+		this.$name+firstLowerCase~Configuration = new $name+firstUpperCase~Configuration();
+		this.$name+firstLowerCase~Configuration.url = url;
+		this.$name+firstLowerCase~Configuration.user = user;
+		this.$name+firstLowerCase~Configuration.password = password;
+		return this;
+	}
+
+	public $name+firstUpperCase~Configuration $name+firstLowerCase~Configuration() {
+		return this.$name+firstLowerCase~Configuration;
+	}
+end
+
+def type(service & rest)
+	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(int port, String webDirectory[, $customParameters...[, ]]) {
+		this.$name+firstLowerCase~Configuration = new $name+firstUpperCase~Configuration();
+		this.$name+firstLowerCase~Configuration.port = port;
+		this.$name+firstLowerCase~Configuration.webDirectory = webDirectory;
+		return this;
+	}
+
+	public $name+firstUpperCase~Configuration $name+firstLowerCase~Configuration() {
+		return $name+firstLowerCase~Configuration;
 	}
 end

@@ -6,6 +6,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.pandora.plugin.Exception;
 import io.intino.pandora.plugin.Parameter;
+import io.intino.pandora.plugin.Response;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.object.ObjectData;
 import io.intino.pandora.plugin.type.TypeData;
@@ -23,15 +24,15 @@ class ActionUpdater {
 	private final String packageName;
 	private final List<? extends Parameter> parameters;
 	private final List<Exception> exceptions;
-	private final TypeData returnType;
+	private final Response response;
 	private final PsiFile file;
 
-	ActionUpdater(Project project, File destiny, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, TypeData returnType) {
+	ActionUpdater(Project project, File destiny, String packageName, List<? extends Parameter> parameters, List<Exception> exceptions, Response response) {
 		this.project = project;
 		this.packageName = packageName;
 		this.parameters = parameters;
 		this.exceptions = exceptions;
-		this.returnType = returnType;
+		this.response = response;
 		file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(destiny, true));
 	}
 
@@ -57,7 +58,7 @@ class ActionUpdater {
 		for (PsiField field : psiClass.getFields()) field.delete();
 		for (Parameter parameter : parameters)
 			psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling());
-		if (!Arrays.stream(psiClass.getAllFields()).anyMatch(f -> "graph".equalsIgnoreCase(f.getName())))
+		if (!Arrays.stream(psiClass.getAllFields()).anyMatch(f -> "box".equalsIgnoreCase(f.getName())))
 			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
 	}
 
@@ -75,11 +76,11 @@ class ActionUpdater {
 
 	private void updateReturnType(PsiMethod psiMethod) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(formatType(returnType), psiMethod)));
+		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(formatType(response.asType(), response.isList()), psiMethod)));
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
-		PsiField field = elementFactory.createField(parameter.name(), elementFactory.createTypeFromText(formatType(parameter.asType()), psiClass));
+		PsiField field = elementFactory.createField(parameter.name(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
 		if (field.getModifierList() == null) return field;
 		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
 		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
@@ -87,14 +88,15 @@ class ActionUpdater {
 	}
 
 	private PsiField createGraphField(PsiClass psiClass, PsiElementFactory elementFactory) {
-		PsiField field = elementFactory.createField("graph", elementFactory.createTypeFromText("tara.magritte.Graph", psiClass));
+		PsiField field = elementFactory.createField("box", elementFactory.createTypeFromText("io.intino.pandora.Box", psiClass));
 		if (field.getModifierList() == null) return field;
 		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
 		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
 		return field;
 	}
 
-	private String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+	private String formatType(TypeData typeData, boolean list) {
+		final String type = (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+		return list ? "List<" + type + ">" : type;
 	}
 }

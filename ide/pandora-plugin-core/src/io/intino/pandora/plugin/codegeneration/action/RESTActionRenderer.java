@@ -18,6 +18,7 @@ public class RESTActionRenderer extends ActionRenderer {
 
 	public void execute() {
 		execute(firstUpperCase(operation.concept().name()) + firstUpperCase(operation.owner().name()),
-				operation.response(), operation.parameterList(), Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().find(Schema.class));
+				operation.response(), operation.parameterList(),
+				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().find(Schema.class));
 	}
 }

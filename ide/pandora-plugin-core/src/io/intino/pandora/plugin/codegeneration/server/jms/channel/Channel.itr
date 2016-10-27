@@ -2,7 +2,7 @@ def type(channel)
 	package $package;
 
 	import $package.subscriptions.*;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.jms.*;
 	$schemaImport
 
@@ -11,14 +11,14 @@ def type(channel)
 
 	public class $name+firstUppercase~Channel {
 
-		public static void init(Session session, Graph graph) {
+		public static void init(Session session, Box box) {
 			$subscription...[$NL]
 		}
 	}
 end
 
 def type(subscription)
-	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(graph));
+	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(box));
 end
 
 

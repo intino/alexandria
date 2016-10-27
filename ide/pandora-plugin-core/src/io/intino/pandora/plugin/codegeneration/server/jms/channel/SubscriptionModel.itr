@@ -2,7 +2,7 @@ def type(subscription)
 	package $package.subscriptions;
 
     import com.google.gson.Gson;
-    import tara.magritte.Graph;
+    import io.intino.pandora.Box;
     import io.intino.pandora.jms.Consumer;
 	$schemaImport
 
@@ -10,10 +10,10 @@ def type(subscription)
 
     public class $name+FirstUpperCase~Subscription implements Consumer {
 
-    	private Graph graph;
+    	private Box box;
 
-    	public $name+FirstUpperCase~Subscription(Graph graph) {
-    		this.graph = graph;
+    	public $name+FirstUpperCase~Subscription(Box box) {
+    		this.box = box;
     	}
 
     	public void consume(Message message) {
@@ -22,7 +22,7 @@ def type(subscription)
 
     	private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
-			action.graph = this.graph;[
+			action.box = this.box;[
 			try {
 				$message+assign
 			} catch (JMSException e) {

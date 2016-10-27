@@ -1,0 +1,115 @@
+dsl Pandora
+
+//Define federation-name
+Exception (NotFound) agentNotFound
+
+Service AgentService as JMS
+
+	Request(queue="{federation}.authentication") connect
+		Parameter token as Bool
+		Response as List Object(RequirementList)
+
+	Request(queue="{federation}.works") requestForEdition
+		Parameter token as Text
+		Parameter dialog as List Text
+		Parameter requirements as Object(RequirementList)
+		Response workId as Text
+		exceptionRefs = agentNotFound
+
+	Request(queue="{federation}.works.{token}") updateEdition
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter dialog as Text
+		Response as Bool
+		Exception (NotFound) workNotFound
+	Request(queue="{federation}.works.{token}") blabla
+		Parameter token as File
+		Parameter workId as Text
+		Parameter dialog as Integer
+		Response as List Bool
+		Exception (NotFound) workNotFound
+
+	Request(queue="{federation}.works") requestForSignature
+		Parameter token as Text
+		Parameter requirements as Object(RequirementList)
+		Response workId as Text
+
+	Request(queue="{federation}.works.{token}") finishWork
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter dialog as Text
+		Response as Bool
+		Exception (NotFound) workNotFound
+
+	Notification("{federation}.works.{token}") workReceived
+		Parameter workId as Text
+		Parameter dialog as Text
+
+	Notification("{federation}.works.{token}") workFinished
+		Parameter token as Text
+		Parameter workId as Text
+
+	Notification("{federation}.works.{token}") workCancelled
+		Parameter token as Text
+		Parameter workId as Text
+
+	Notification("{federation}.works.{token}") workReleased
+		Parameter token as Text
+		Parameter workId as Text
+
+	Notification("{federation}.works.{token}.document") documentSigned
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter document as File
+
+	Notification("{federation}.works.{token}.dialog") fieldModified
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter field as Text
+		Parameter value as Text
+
+	Notification("{federation}.works.{token}.dialog") fieldFileAdded
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter field as Text
+		Parameter label as Text
+		Parameter content as File
+		Parameter contentType as Text
+
+	Notification("{federation}.works.{token}.dialog") fieldFileRemoved
+		Parameter token as Text
+		Parameter workId as Text
+		Parameter field as Text
+		Parameter fileId as Text
+
+Schema AttributeList
+	Attribute name as Text
+	Attribute value as Text
+
+
+Schema RequirementList
+	Schema:{0..1} Capability
+		Attribute name as Text
+		Attribute offered as Bool
+
+	Schema:{0..1} Assigned
+		Attribute agent as Text
+
+	Schema:{0..*} Skill
+		Attribute name as Text
+
+	Schema:{0..*} Location
+		Attribute wktPoint as Text
+
+	Schema:{0..*} Authorization
+		Attribute name as Text
+
+
+Schema Signature
+	Attribute signatureId as Text
+
+	Schema:{0..1} Authorization
+		Attribute name as Text
+
+	Schema:{0..1} Assigned
+		Attribute username as Text

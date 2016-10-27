@@ -74,7 +74,7 @@ public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 
 		private void generate(String packageName, File gen, File src) {
 			final Stash[] stashes = pandoraFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
-			new FullRenderer(module.getProject(), GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
+			new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			notifySuccess();

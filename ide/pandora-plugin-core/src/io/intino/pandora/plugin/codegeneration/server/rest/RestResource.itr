@@ -4,18 +4,18 @@ def type(resource)
 	import java.util.List;
 	import io.intino.pandora.exceptions.*;
 	import $package.*;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.server.Resource;
 	import io.intino.pandora.server.spark.SparkManager;
 	$schemaImport
 
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
-		private Graph graph;
+		private Box box;
 		private SparkManager manager;
 
-		public $operation+firstUpperCase$name+firstUpperCase~Resource(Graph graph, SparkManager manager) {
-			this.graph = graph;
+		public $operation+firstUpperCase$name+firstUpperCase~Resource(Box box, SparkManager manager) {
+			this.box = box;
 			this.manager = manager;
 		}
 
@@ -24,7 +24,7 @@ def type(resource)
 		}
 
 		private $package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validname.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
-			action.graph = this.graph;[
+			action.box = this.box;[
 			$parameter+assign...[$NL]]
 			return action;
 		}

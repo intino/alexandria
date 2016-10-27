@@ -2,15 +2,15 @@ def type(scheduled)
 	package $package+ValidPackage.scheduling;
 
 	import org.quartz.*;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.scheduling.ScheduledTrigger;
 
 	public class $name+firstUpperCase~Task implements ScheduledTrigger {
 
 		public void execute(JobExecutionContext context) throws JobExecutionException {
-			Graph graph = (Graph) context.getMergedJobDataMap().get("graph");
+			Box box = (Box) context.getMergedJobDataMap().get("box");
 			$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
-			action.graph = graph;
+			action.box = box;
 			action.execute();
 		}
 	}

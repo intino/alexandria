@@ -3,12 +3,12 @@ def type(server)
 
 	import io.intino.pandora.server.PandoraSpark;
 	import $package+ValidPackage.resources.*;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.server.security.DefaultSecurityManager;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
-		public static void setup(PandoraSpark server, Graph graph) {
+		public static void setup(PandoraSpark server, Box box) {
 			$secure
 			$resource...[$NL]
 		}
@@ -19,5 +19,5 @@ def type(secure)
 	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
 end
 def type(resource)
-	server.route("$path").$method+firstlowerCase((manager) -> new $operation+firstUpperCase~$name+firstUpperCase~Resource(graph, manager).execute());
+	server.route("$path").$method+firstlowerCase((manager) -> new $operation+firstUpperCase~$name+firstUpperCase~Resource(box, manager).execute());
 end

@@ -2,22 +2,22 @@ def type(jmxserver)
 	package $package+ValidPackage;
 
     import io.intino.pandora.jmx.JMXServer;
-    import tara.magritte.Graph;
+    import io.intino.pandora.Box;
 
     import java.util.HashMap;
     import java.util.Map;
 
     public class JMX$name+firstUpperCase {
 
-    	public JMXServer init(int port, Graph graph) {
-    		JMXServer server = new JMXServer(mbClasses(graph));
+    	public JMXServer init(int port, Box box) {
+    		JMXServer server = new JMXServer(mbClasses(box));
     		server.init(port);
     		return server;
     	}
 
-    	private Map<String, Object$[]> mbClasses(Graph graph) {
+    	private Map<String, Object$[]> mbClasses(Box box) {
             Map<String, Object$[]> map = new HashMap<>();
-            map.put("$package.jmx.$name+firstUpperCase", new Object$[$]{graph});
+            map.put("$package.jmx.$name+firstUpperCase", new Object$[$]{box});
             return map;
     	}
     }
@@ -47,16 +47,16 @@ end
 def type(jmx) type(implementation)
 	package $package+ValidPackage.jmx;
 
-    import tara.magritte.Graph;
+    import io.intino.pandora.Box;
     import java.util.*;
     import java.time.*;
 
     public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
 
-        private final Graph graph;
+        private final Box box;
 
-        public $name+firstUpperCase(Graph graph) {
-            this.graph = graph;
+        public $name+firstUpperCase(Box box) {
+            this.box = box;
         }
 
         $operation+implementation...[$NL$NL]
@@ -66,7 +66,7 @@ end
 def type(operation) trigger(implementation)
     public [$returnType?void] execute$name+firstUpperCase($parameter+withType...[, ]) {
         $package+ValidPackage.actions.$action+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+firstUpperCase~Action();
-        action.graph = graph;
+        action.box = box;
         [$parameter+assign...[$NL]]
         [$returnType+return ]new $package+ValidPackage.actions.$action+firstUpperCase~Action().execute();
     }

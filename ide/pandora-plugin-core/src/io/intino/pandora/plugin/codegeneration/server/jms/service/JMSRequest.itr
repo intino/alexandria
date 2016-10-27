@@ -4,18 +4,19 @@ def type(request)
 	import io.intino.pandora.exceptions.*;
 	import $package.*;
 	import com.google.gson.Gson;
-	import tara.magritte.Graph;
+	import io.intino.pandora.Box;
 	import io.intino.pandora.jms.RequestConsumer;
+	import java.util.List;
 
 	import javax.jms.*;
 	$schemaImport
 
 	public class $name+firstUpperCase~Request implements RequestConsumer {
 
-		private Graph graph;
+		private Box box;
 
-		public $name+firstUpperCase~Request(Graph graph) {
-			this.graph = graph;
+		public $name+firstUpperCase~Request(Box box) {
+			this.box = box;
 		}
 
 		public void consume(Session session, Message request) {
@@ -26,7 +27,7 @@ def type(request)
 
 		private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
-			action.graph = this.graph;[
+			action.box = this.box;[
 			try {
 				$parameter+assign...[$NL]
 			} catch (JMSException e) {
@@ -85,8 +86,16 @@ def type(parameter & objectData) trigger(assign)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
 end
 
+def type(parameter & List) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new Gson().fromJson(message.getStringProperty("$name"),  new com.google.gson.reflect.TypeToken<java.util.ArrayList<$type>>(){}.getType());
+end
+
 def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type~Property("$name");
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = message.get$type+format~Property("$name");
+end
+
+def attribute(Integer) trigger(format)
+	Int
 end
 
 def type(schemaImport)

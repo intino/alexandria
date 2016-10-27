@@ -78,7 +78,9 @@ public class JMSRequestRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName())
+		final Frame frame = new Frame();
+		if (parameter.isList()) frame.addTypes("List");
+		return frame.addTypes("parameter", parameter.asType().getClass().getSimpleName())
 				.addSlot("name", parameter.name())
 				.addSlot("type", parameter.asType().type());
 	}

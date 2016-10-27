@@ -166,12 +166,12 @@ def type(invokeSentence & primitive)
 end
 
 def type(exceptionResponses & none) trigger(throws)
-	throw new ErrorUnknown(e.label());
+	throw new Unknown(e.label());
 end
 
 def type(exceptionResponses) trigger(throws)
 	$exceptionResponse+throws...[$NLelse ]
-	throw new ErrorUnknown(e.label());
+	throw new Unknown(e.label());
 end
 
 def type(exceptionResponse) trigger(throws)
@@ -179,7 +179,7 @@ def type(exceptionResponse) trigger(throws)
 end
 
 def type(exceptionResponses) trigger(declaration)
-	throws [$exceptionResponse+declaration...[, ], ]ErrorUnknown
+	throws [$exceptionResponse+declaration...[, ], ]Unknown
 end
 
 def type(exceptionResponse) trigger(declaration)

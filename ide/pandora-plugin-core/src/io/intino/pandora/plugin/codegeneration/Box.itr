@@ -1,21 +1,30 @@
 def type(box)
 	package $package;
 
+	import org.apache.activemq.ActiveMQConnectionFactory;
+
+	import javax.jms.Connection;
+	import javax.jms.Session;
     import java.util.LinkedHashMap;
     import java.util.Map;
     import java.util.UUID;
+	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
     [import tara.magritte.Graph;$tara+import]
+    public class $name~Box extends [$parent~Box?io.intino.pandora.Box] {
 
-    public class $name~Box {
-
-		$name~Configuration configuration;
+		private $name~Configuration configuration;
+		[$hasREST~private io.intino.pandora.server.PandoraSpark restServer;]
+		private javax.jms.Session jmsSession;
     	private Map<String, Object> map = new LinkedHashMap<>();
+		[$service+field...[$NL]]
+		[$channel+field...[$NL]]
+		[$process+field...[$NL]][
 
-		[
 		private String graphID;
 
-		public $tara~Box(Graph graph) {
+		public $tara~Box(Graph graph, $tara~Configuration configuration) {
 			map.put(graphID = UUID.randomUUID().toString(), graph);
+			this.configuration = configuration;
 		}
 
 		public Graph graph() {
@@ -23,11 +32,11 @@ def type(box)
 		}
 		]
 
-    	public $name~Box($name~Configuration configuration) {
+    	public $name+firstUpperCase~Box($name+firstUpperCase~Configuration configuration) {
     		this.configuration = configuration;
     	}
 
-		$service...[$NL]
+		$service+getter...[$NL]
 
     	public <T> T get(Class<T> tClass) {
     		return (T) map.values().stream().filter(tClass::isInstance).findFirst().orElse(null);
@@ -38,12 +47,87 @@ def type(box)
     		return (T) map.get(object);
     	}
 
-    	public $name~BoxConfiguration put(Object object) {
-    		map.put("", object);
+    	public $name~Box put(String name, Object object) {
+    		map.put(name, object);
     		return this;
     	}
+
+    	public void init() {[
+    		$parent+parentInit~super.init();? ]
+			initRESTServices();
+			initJMSServices();
+			initChannels();
+			initProcesses();
+    	}
+
+		private void initRESTServices() {
+			$service+rest...[$NL]
+		}
+
+		private void initJMSServices() {
+			$service+jms...[$NL]
+		}
+
+		private void initChannels() {
+			$channel+channels...[$NL]
+		}
+
+		private void initProcesses() {
+			$process+process...[$NL]
+		}
+
+		public void stopJMSServices() {
+
+		}
+
     }
 end
 
+
+def type(service & rest) trigger(rest)
+	if (restServer == null) restServer = new PandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory]);
+	$name+FirstUpperCase~Resources.setup(restServer, this);
+end
+
+def type(service & jms) trigger(jms)
+	if (jmsSession == null) {
+		try {
+			Connection connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+			connection.start();
+			this.jmsSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		} catch (javax.jms.JMSException e) {
+			e.printStackTrace();
+		}
+	}
+	this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(jmsSession, this);
+end
+
+def type(service & jms) trigger(field)
+	private $name+firstUpperCase~JMSService $name+firstlowerCase;
+end
+
+def type(service & jms) trigger(getter)
+	public $name+firstUpperCase~JMSService $name+firstlowerCase() {
+		return $name+firstlowerCase;
+	}
+end
+
+def type(service) trigger(getter)
+end
+
+def type(service)
+end
+
+def type(channel) trigger(init)
+
+end
+
+def type(process) trigger(init)
+
+end
+
 def trigger(import)
+end
+
+def trigger(parentInit)
 end

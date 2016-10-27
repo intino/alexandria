@@ -38,20 +38,20 @@ public class JMSAccessorRenderer {
 		frame.addSlot("package", packageName);
 		if (!jmsService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("resource", (AbstractFrame[]) jmsService.node().findNode(JMSService.Request.class).stream().
+		frame.addSlot("request", (AbstractFrame[]) jmsService.node().findNode(JMSService.Request.class).stream().
 				map(this::processRequest).toArray(Frame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "JMSAccessor", getTemplate().format(frame));
 	}
 
-	private Frame processRequest(JMSService.Request resource) {
-		final Frame frame = new Frame().addTypes("resource")
-				.addSlot("name", resource.name())
-				.addSlot("queue", resource.queue())
-				.addSlot("parameter", (AbstractFrame[]) parameters(resource.parameterList()))
-				.addSlot("messageType", messageType(resource.parameterList()));
-		if (resource.response() != null) {
+	private Frame processRequest(JMSService.Request request) {
+		final Frame frame = new Frame().addTypes("request")
+				.addSlot("name", request.name())
+				.addSlot("queue", request.queue())
+				.addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()))
+				.addSlot("messageType", messageType(request.parameterList()));
+		if (request.response() != null) {
 			frame.addTypes("reply");
-			frame.addSlot("reply", new Frame().addTypes("reply", resource.response().asType().getClass().getSimpleName()).addSlot("value", resource.response().asType().type()));
+			frame.addSlot("reply", new Frame().addTypes("reply", request.response().asType().getClass().getSimpleName()).addSlot("value", request.response().asType().type()));
 		}
 		return frame;
 	}
