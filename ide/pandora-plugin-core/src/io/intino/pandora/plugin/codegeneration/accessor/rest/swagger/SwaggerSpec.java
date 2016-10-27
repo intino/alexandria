@@ -1,9 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest.swagger;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SwaggerSpec {
 
@@ -12,8 +9,8 @@ public class SwaggerSpec {
 	public String host;
 	public String basePath;
 	public List<String> schemes;
-	public List<String> consumes = Collections.singletonList("application/json");
-	public List<String> produces = Collections.singletonList("application/json");
+	public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
+	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
 
@@ -72,8 +69,8 @@ public class SwaggerSpec {
 			public String description;
 			public String operationId;
 			public List<String> tags;
-			public List<String> consumes;
-			public List<String> produces;
+			public List<String> consumes = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
+			public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
 			public List<String> schemes;
 			public Boolean deprecated;
 			public List<Parameter> parameters;

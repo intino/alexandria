@@ -62,6 +62,10 @@ def type(service & rest)
 		return this;
 	}
 
+	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
+		return $name+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]]);
+	}
+
 	public $name+firstUpperCase~Configuration $name+firstLowerCase~Configuration() {
 		return $name+firstLowerCase~Configuration;
 	}
@@ -70,7 +74,9 @@ end
 def type(custom) trigger(signature)
 	$type $name
 end
-
+def type(custom) trigger(name)
+	$name
+end
 
 def type(custom) trigger(field)
 	public $type $name;

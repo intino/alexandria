@@ -12,10 +12,10 @@ import io.intino.pandora.plugin.object.ObjectData;
 import io.intino.pandora.plugin.type.TypeData;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static java.util.Arrays.stream;
 
 
 class ActionUpdater {
@@ -55,10 +55,10 @@ class ActionUpdater {
 
 	private void updateFields(PsiClass psiClass) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		for (PsiField field : psiClass.getFields()) field.delete();
-		for (Parameter parameter : parameters)
-			psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling());
-		if (!Arrays.stream(psiClass.getAllFields()).anyMatch(f -> "box".equalsIgnoreCase(f.getName())))
+		parameters.stream().
+				filter(parameter -> !stream(psiClass.getAllFields()).anyMatch(f -> parameter.name().equalsIgnoreCase(f.getName()))).
+				forEach(parameter -> psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling()));
+		if (!stream(psiClass.getAllFields()).anyMatch(f -> "box".equalsIgnoreCase(f.getName())))
 			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
 	}
 

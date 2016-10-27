@@ -27,8 +27,6 @@ Facet REST on Service
 	var string description = ""
 	var string basePath
 	var word[]:{http https ws wss} protocols = https
-	var string[] consumes //text/plain; charset=utf-8   application/json multipart/form-data
-	var string[] produces //comprobar si es alguno de los MIME-types
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
 			var resource store
@@ -66,8 +64,6 @@ Facet REST on Service
 			var string summary = ""
 			var string description = ""
 			var resource externalDocumentation = empty
-			var string[] consumes = empty
-			var string[] produces = empty
 			var boolean deprecated = false
 			sub Get
 			sub Post
