@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 public class RESTActionRenderer extends ActionRenderer {
 	private final Resource.Operation operation;
 
-	public RESTActionRenderer(Project project, Resource.Operation operation, File destiny, String packageName) {
-		super(project, destiny, packageName);
+	public RESTActionRenderer(Project project, Resource.Operation operation, File destiny, String packageName, String boxName) {
+		super(project, destiny, packageName, boxName);
 		this.operation = operation;
 	}
 

@@ -6,7 +6,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Response as Text
 			Exception(BadRequest)
 
-	Resource(path = "/systems/:system")  System
+	Resource(path = "/systems/{system}")  System
 		Put(description = "Create new system version")
 			Parameter(in = path) system as Text
 			Parameter(in = query) version as Text
@@ -18,7 +18,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = query) enabled as Bool
 			Response
 			Exception(BadRequest)
-	Resource(path = "/systems/:system/:version") SystemVersion
+	Resource(path = "/systems/{system}/{version}") SystemVersion
 		Get(description = "A system of specific version")
 			Parameter(in = path) system as Text
 			Parameter(in = path) version as Text
@@ -33,7 +33,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = query) url as Text
 			Response
 			Exception (BadRequest)
-	Resource(path = "/servers/:server") server
+	Resource(path = "/servers/{server}") server
 		Get(description = "List of servers")
 			Parameter(in = path) server as Text
 			Response as Text
@@ -46,7 +46,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = path) server as Text
 			Response
 			Exception(BadRequest)
-	Resource(path = "/servers/:server/:system") deploySystem
+	Resource(path = "/servers/{server}/{system}") deploySystem
 		Post(description = "Deploy system") deploySystem
 			Parameter(in = path) server as Text
 			Parameter(in = path) system as Text

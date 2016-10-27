@@ -6,7 +6,7 @@ def type(slack)
 
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot(Box box) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+FirstUpperCase~Box box) {
 			super("$token");
 			$request+add...[$NL]
 		}

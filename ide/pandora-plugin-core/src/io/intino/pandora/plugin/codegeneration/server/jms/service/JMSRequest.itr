@@ -13,9 +13,9 @@ def type(request)
 
 	public class $name+firstUpperCase~Request implements RequestConsumer {
 
-		private Box box;
+		private $box+firstUpperCase~Box box;
 
-		public $name+firstUpperCase~Request(Box box) {
+		public $name+firstUpperCase~Request($box+firstUpperCase~Box box) {
 			this.box = box;
 		}
 

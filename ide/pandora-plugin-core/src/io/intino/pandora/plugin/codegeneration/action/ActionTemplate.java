@@ -1,10 +1,11 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class ActionTemplate extends Template {
 
@@ -18,7 +19,7 @@ public class ActionTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "action"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".actions;\n\nimport io.intino.pandora.Box;\nimport io.intino.pandora.exceptions.*;\nimport java.time.*;\nimport java.util.*;\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Action {\n\n\tpublic Box box;\n\t")).add(mark("parameter", "type").multiple("\n")).add(literal("\n\n\tpublic ")).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute() ")).add(expression().add(literal("throws ")).add(mark("throws", "FirstUpperCase").multiple(", ")).add(literal(" "))).add(literal("{\n\t\t")).add(mark("returnType", "return")).add(literal("\n\t}\n}")),
+			rule().add((condition("type", "action"))).add(literal("package ")).add(mark("package", "validname")).add(literal(".actions;\n\nimport ")).add(mark("package", "validname")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\nimport io.intino.pandora.exceptions.*;\nimport java.time.*;\nimport java.util.*;\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Action {\n\n\tpublic ")).add(mark("box", "firstUpperCase")).add(literal("Box box;\n\t")).add(mark("parameter", "type").multiple("\n")).add(literal("\n\n\tpublic ")).add(expression().add(mark("returnType")).or(expression().add(literal("void")))).add(literal(" execute() ")).add(expression().add(literal("throws ")).add(mark("throws", "FirstUpperCase").multiple(", ")).add(literal(" "))).add(literal("{\n\t\t")).add(mark("returnType", "return")).add(literal("\n\t}\n}")),
 			rule().add((condition("type", "parameter & fileData")), (condition("trigger", "type"))).add(literal("public java.io.InputStream ")).add(mark("name", "SnakeCaseToCamelCase", "FirstLowerCase")).add(literal(";")),
 			rule().add((condition("type", "parameter & list")), (condition("trigger", "type"))).add(literal("public java.util.List<")).add(mark("type")).add(literal("> ")).add(mark("name", "SnakeCaseToCamelCase", "FirstLowerCase")).add(literal(";")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "type"))).add(literal("public ")).add(mark("type")).add(literal(" ")).add(mark("name", "SnakeCaseToCamelCase", "FirstLowerCase")).add(literal(";")),

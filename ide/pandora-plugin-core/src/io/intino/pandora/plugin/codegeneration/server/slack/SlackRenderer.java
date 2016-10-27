@@ -15,11 +15,13 @@ public class SlackRenderer {
 	private final List<SlackBotService> slackServices;
 	private final File destiny;
 	private final String packageName;
+	private final String boxName;
 
-	public SlackRenderer(Graph graph, File destiny, String packageName) {
+	public SlackRenderer(Graph graph, File destiny, String packageName, String boxName) {
 		slackServices = graph.find(SlackBotService.class);
 		this.destiny = destiny;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 
@@ -30,9 +32,10 @@ public class SlackRenderer {
 	private void processService(SlackBotService service) {
 		final List<SlackBotService.Request> requests = service.requestList();
 		Frame frame = new Frame().addTypes("slack");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", service.name());
-		frame.addSlot("token", service.token());
+		frame.addSlot("package", packageName).
+				addSlot("name", service.name()).
+				addSlot("box", boxName).
+				addSlot("token", service.token());
 		for (SlackBotService.Request request : requests) {
 			final Frame requestFrame = new Frame().addTypes("request");
 			requestFrame.addSlot("name", request.name());

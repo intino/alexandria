@@ -11,8 +11,8 @@ public class ChannelActionRenderer extends ActionRenderer {
 	private final Channel model;
 
 
-	public ChannelActionRenderer(Project project, Channel model, File destiny, String packageName) {
-		super(project, destiny, packageName);
+	public ChannelActionRenderer(Project project, Channel model, File destiny, String packageName, String boxName) {
+		super(project, destiny, packageName, boxName);
 		this.model = model;
 	}
 
@@ -20,6 +20,7 @@ public class ChannelActionRenderer extends ActionRenderer {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", model.name());
 		frame.addSlot("package", packageName);
+		frame.addSlot("boxName", boxName);
 		setupMessage(model.message(), frame);
 		frame.addSlot("returnType", "void");
 		if (!alreadyRendered(destiny, model.name()))

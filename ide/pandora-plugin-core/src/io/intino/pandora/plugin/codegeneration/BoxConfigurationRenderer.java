@@ -2,6 +2,7 @@ package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.plugin.Service;
 import io.intino.pandora.plugin.jms.JMSService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.siani.itrules.Template;
@@ -11,18 +12,21 @@ import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Graph;
 
 import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.pandora.plugin.helpers.Commons.extractParameters;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
-public class BoxConfigurationRenderer {
+class BoxConfigurationRenderer {
 
 	private final PandoraApplication application;
 	private final File gen;
 	private final String packageName;
 	private final Module module;
 
-	public BoxConfigurationRenderer(Graph graph,  File gen, String packageName, Module module) {
+	BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module) {
 		this.application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
@@ -31,16 +35,54 @@ public class BoxConfigurationRenderer {
 
 	public void execute() {
 		Frame frame = new Frame().addTypes("boxconfiguration");
-		final String name = name();
-		frame.addSlot("name", name);
+		final String boxName = name();
+		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		for (RESTService service : application.rESTServiceList())
-			frame.addSlot("service", new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", name));
-		for (JMSService service : application.jMSServiceList())
-			frame.addSlot("service", new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
+		addRESTServices(frame, boxName);
+		addJMSServices(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
-		writeFrame(gen, snakeCaseToCamelCase(name) + "Configuration", template().format(frame));
+		writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
 
+	}
+
+	private void addRESTServices(Frame frame, String name) {
+		for (RESTService service : application.rESTServiceList()) {
+			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", name);
+			addCustomVariables(service.as(Service.class), restFrame);
+			frame.addSlot("service", restFrame);
+		}
+	}
+
+	private void addJMSServices(Frame frame, String name) {
+		for (JMSService service : application.jMSServiceList()) {
+			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name);
+			addCustomVariables(service.as(Service.class), jmsFrame);
+			frame.addSlot("service", jmsFrame);
+		}
+	}
+
+	private void addCustomVariables(Service service, Frame jmsFrame) {
+		for (String custom : findCustomParameters(service))
+			jmsFrame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", service.name()).
+					addSlot("name", custom).addSlot("type", "String"));
+	}
+
+	private Set<String> findCustomParameters(Service service) {
+		return service.isJMS() ? findCustomParameters(service.asJMS()) : findCustomParameters(service.asREST());
+	}
+
+	private Set<String> findCustomParameters(JMSService service) {
+		Set<String> list = new LinkedHashSet<>();
+		for (JMSService.Request request : service.requestList())
+			list.addAll(extractParameters(request.queue()));
+		return list;
+	}
+
+	private Set<String> findCustomParameters(RESTService service) {
+		Set<String> list = new LinkedHashSet<>();
+		for (RESTService.Resource resource : service.resourceList())
+			list.addAll(extractParameters(resource.path()));
+		return list;
 	}
 
 	private String name() {

@@ -17,12 +17,14 @@ public class ChannelRenderer {
     private final List<Channel> channels;
     private final File gen;
     private final String packageName;
+	private final String boxName;
 
-    public ChannelRenderer(Graph graph, File gen, String packageName) {
-        channels = graph.find(Channel.class);
+	public ChannelRenderer(Graph graph, File gen, String packageName, String boxName) {
+		channels = graph.find(Channel.class);
         this.gen = gen;
         this.packageName = packageName;
-    }
+		this.boxName = boxName;
+	}
 
     public void execute() {
         channels.forEach(this::processChannel);
@@ -32,7 +34,8 @@ public class ChannelRenderer {
         Frame frame = new Frame().addTypes("channel").
                 addSlot("package", packageName).
                 addSlot("name", channel.name()).
-                addSlot("subscription", subscriptions(channel));
+				addSlot("box", boxName).
+				addSlot("subscription", subscriptions(channel));
         if (!channel.graph().find(Schema.class).isEmpty())
             frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
         Commons.writeFrame(gen, snakeCaseToCamelCase(channel.name()) + "Channel", template().format(frame));

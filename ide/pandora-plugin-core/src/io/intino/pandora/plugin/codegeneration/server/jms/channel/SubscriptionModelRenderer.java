@@ -20,13 +20,15 @@ public class SubscriptionModelRenderer {
 	private File src;
 	private File gen;
 	private String packageName;
+	private final String boxName;
 
-	public SubscriptionModelRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+	public SubscriptionModelRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
 		channels = graph.find(Channel.class);
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -37,6 +39,7 @@ public class SubscriptionModelRenderer {
 		final Frame frame = new Frame().addTypes("subscription").
 				addSlot("type", "Consumer").
 				addSlot("package", packageName).
+				addSlot("box", boxName).
 				addSlot("name", channel.name()).
 				addSlot("message", message(channel.message()));
 		if (!channel.graph().find(Schema.class).isEmpty())
@@ -47,7 +50,7 @@ public class SubscriptionModelRenderer {
 
 
 	private void createCorrespondingAction(Channel channel) {
-		new ChannelActionRenderer(project, channel, src, packageName).execute();
+		new ChannelActionRenderer(project, channel, src, packageName, boxName).execute();
 	}
 
 	private Frame message(Channel.Message message) {

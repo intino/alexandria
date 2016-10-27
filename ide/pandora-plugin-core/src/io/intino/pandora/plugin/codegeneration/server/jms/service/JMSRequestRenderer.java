@@ -26,13 +26,15 @@ public class JMSRequestRenderer {
 	private File gen;
 	private File src;
 	private String packageName;
+	private final String boxName;
 
-	public JMSRequestRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+	public JMSRequestRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
 		services = graph.find(JMSService.class);
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -50,13 +52,14 @@ public class JMSRequestRenderer {
 	}
 
 	private void createCorrespondingAction(Request request) {
-		new JMSRequestActionRenderer(project, request, src, packageName).execute();
+		new JMSRequestActionRenderer(project, request, src, packageName, boxName).execute();
 	}
 
 	private Frame fillRequestFrame(Request request) {
 		final String returnType = Commons.returnType(request.response());
 		Frame frame = new Frame().addTypes("request").
 				addSlot("name", request.name()).
+				addSlot("box", boxName).
 				addSlot("package", packageName).
 				addSlot("call", new Frame().addTypes(returnType)).
 				addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()));

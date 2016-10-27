@@ -17,6 +17,8 @@ import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
 import org.jetbrains.annotations.Nullable;
+import tara.compiler.shared.Configuration;
+import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Graph;
 
 import java.io.File;
@@ -31,6 +33,7 @@ public class FullRenderer {
 	private final File gen;
 	private final File src;
 	private final String packageName;
+	private final String boxName;
 
 	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -39,6 +42,7 @@ public class FullRenderer {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+		this.boxName = boxName();
 	}
 
 	public void execute() {
@@ -64,37 +68,46 @@ public class FullRenderer {
 	}
 
 	private void rest() {
-		new RESTResourceRenderer(project, graph, gen, src, packageName).execute();
-		new RESTServiceRenderer(graph, gen, packageName).execute();
+		new RESTResourceRenderer(project, graph, gen, src, packageName, boxName).execute();
+		new RESTServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void jmx() {
-		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName).execute();
-		new JMXServerRenderer(graph, gen, packageName).execute();
+		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new JMXServerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void jms() {
-		new JMSRequestRenderer(project, graph, src, gen, packageName).execute();
-		new JMSServiceRenderer(graph, gen, packageName).execute();
+		new JMSRequestRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void scheduling() {
-		new TaskRenderer(project, graph, src, gen, packageName).execute();
-		new TaskerRenderer(graph, gen, packageName).execute();
+		new TaskRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new TaskerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void channels() {
-		new SubscriptionModelRenderer(project, graph, src, gen, packageName).execute();
-		new ChannelRenderer(graph, gen, packageName).execute();
+		new SubscriptionModelRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new ChannelRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void slack() {
-		new SlackRenderer(graph, src, packageName).execute();
+		new SlackRenderer(graph, src, packageName, boxName).execute();
 	}
 
 	private void box() {
 		new BoxRenderer(graph, gen, packageName, module).execute();
 		new BoxConfigurationRenderer(graph, gen, packageName, module).execute();
+	}
+
+	private String boxName() {
+		if (module != null) {
+			final Configuration configuration = TaraUtil.configurationOf(module);
+			final String dsl = configuration.outDSL();
+			if (dsl == null || dsl.isEmpty()) return module.getName();
+			else return dsl;
+		} else return "System";
 	}
 
 	private void main() {

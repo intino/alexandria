@@ -9,8 +9,8 @@ import java.io.File;
 public class JMXActionRenderer extends ActionRenderer {
 	private final Operation operation;
 
-	public JMXActionRenderer(Project project, Operation operation, File destiny, String packageName) {
-		super(project, destiny, packageName);
+	public JMXActionRenderer(Project project, Operation operation, File destiny, String packageName, String boxName) {
+		super(project, destiny, packageName, boxName);
 		this.operation = operation;
 	}
 

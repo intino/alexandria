@@ -21,17 +21,20 @@ public class TaskerRenderer {
 	private final List<Task> tasks;
 	private final File gen;
 	private final String packageName;
+	private final String boxName;
 
-	public TaskerRenderer(Graph graph, File gen, String packageName) {
+	public TaskerRenderer(Graph graph, File gen, String packageName, String boxName) {
 		tasks = graph.find(Task.class);
 		this.gen = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
 		if (tasks.isEmpty()) return;
 		Frame frame = new Frame().addTypes("tasker");
 		frame.addSlot("package", packageName);
+		frame.addSlot("box", boxName);
 		frame.addSlot("task", (AbstractFrame[]) processTasks(tasks));
 		Commons.writeFrame(gen, "Tasks", template().format(frame));
 	}

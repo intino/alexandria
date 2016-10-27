@@ -36,6 +36,10 @@ def type(box)
     		this.configuration = configuration;
     	}
 
+    	public $name+firstUpperCase~Configuration configuration() {
+			return configuration;
+		}
+
 		$service+getter...[$NL]
 
     	public <T> T get(Class<T> tClass) {

@@ -23,13 +23,15 @@ public class TaskRenderer {
 	private File srcDestination;
 	private File genDestination;
 	private String packageName;
+	private final String boxName;
 
-	public TaskRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+	public TaskRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		scheduledTasks = graph.find(ScheduledTask.class);
 		tasks = graph.find(Task.class).stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
 		this.srcDestination = src;
 		this.genDestination = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -40,6 +42,7 @@ public class TaskRenderer {
 	private void processDirectorySentinel(Task task) {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", task.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(task.asDirectorySentinel()));
 		if (!alreadyRendered(srcDestination, task))
@@ -60,6 +63,7 @@ public class TaskRenderer {
 	private void processTrigger(ScheduledTask task) {
 		Frame frame = new Frame().addTypes("scheduled");
 		frame.addSlot("name", task.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		Commons.writeFrame(destinyPackage(), task.name() + "Task", template().format(frame));
 		createCorrespondingAction(task);
@@ -68,6 +72,7 @@ public class TaskRenderer {
 	private void createCorrespondingAction(ScheduledTask task) {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", task.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		if (!alreadyRendered(srcDestination, task.as(Task.class)))
 			Commons.writeFrame(actionsPackage(srcDestination), task.name() + "Action", actionTemplate().format(frame));

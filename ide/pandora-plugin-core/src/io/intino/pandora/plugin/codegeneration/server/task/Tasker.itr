@@ -1,7 +1,7 @@
 def type(tasker)
 	package $package+ValidPackage;
 
-	import io.intino.pandora.Box;
+	import $package+ValidPackage.$box+FirstUpperCase~Box;
 	import io.intino.pandora.scheduling.PandoraTasker;
 	import io.intino.pandora.scheduling.directory.PandoraDirectorySentinel;
 	import $package+ValidPackage.scheduling.*;
@@ -20,7 +20,7 @@ def type(tasker)
 
 		}
 
-		public static void init(PandoraTasker tasker, Box box) {
+		public static void init(PandoraTasker tasker, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$task+init...[$NL]

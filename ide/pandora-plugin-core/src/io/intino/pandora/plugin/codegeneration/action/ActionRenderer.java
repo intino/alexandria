@@ -20,11 +20,13 @@ abstract class ActionRenderer {
 	protected final Project project;
 	protected final File destiny;
 	protected String packageName;
+	protected final String boxName;
 
-	ActionRenderer(Project project, File destiny, String packageName) {
+	ActionRenderer(Project project, File destiny, String packageName, String boxName) {
 		this.project = project;
 		this.destiny = destiny;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	protected Template template() {
@@ -54,6 +56,7 @@ abstract class ActionRenderer {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
+		frame.addSlot("box", boxName);
 		setupParameters(parameters, frame);
 		frame.addSlot("returnType", Commons.returnType(response));
 		if (!exceptions.isEmpty())

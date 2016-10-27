@@ -10,6 +10,10 @@ import io.intino.pandora.plugin.rest.RESTService.Resource.Parameter.In;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Commons {
 
@@ -53,6 +57,14 @@ public class Commons {
 	private static String cleanPath(String path) {
 		path = path.endsWith("/") ? path.substring(path.length() - 1) : path;
 		return path.startsWith("/") ? path.substring(1) : path;
+	}
+
+	public static Set<String> extractParameters(String text) {
+		Set<String> list = new LinkedHashSet<>();
+		Pattern pattern = Pattern.compile("\\{([^\\}]*)\\}");
+		Matcher matcher = pattern.matcher(text);
+		while (matcher.find()) list.add(matcher.group(1));
+		return list;
 	}
 
 	public static String returnType(Response response) {

@@ -26,13 +26,15 @@ public class RESTResourceRenderer {
 	private File gen;
 	private File src;
 	private String packageName;
+	private final String boxName;
 
-	public RESTResourceRenderer(Project project, Graph graph, File gen, File src, String packageName) {
+	public RESTResourceRenderer(Project project, Graph graph, File gen, File src, String packageName, String boxName) {
 		this.project = project;
 		services = graph.find(RESTService.class);
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -52,12 +54,13 @@ public class RESTResourceRenderer {
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTActionRenderer(project, operation, src, packageName).execute();
+		new RESTActionRenderer(project, operation, src, packageName, boxName).execute();
 	}
 
 	private Frame fillResourceFrame(Resource resource, Operation operation) {
 		Frame frame = new Frame().addTypes("resource");
 		frame.addSlot("name", resource.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("operation", operation.concept().name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));

@@ -11,6 +11,7 @@ def type(boxConfiguration)
 		$service+field...[$NL]
 
 		$service...[$NL$NL]
+
 		$service+confClass...[$NL]
 	}
 end
@@ -21,28 +22,29 @@ end
 
 def type(service & jms) trigger(confClass)
 	public static class $name+firstUpperCase~Configuration {
-		String url;
-		String user;
-		String password;
-		$customParameters...[$NL]
+		public String url;
+		public String user;
+		public String password;
+		$custom+field...[$NL]
 	}
 end
 
 
 def type(service & rest) trigger(confClass)
 	public static class $name+firstUpperCase~Configuration {
-		int port;
-		String webDirectory;
-		$customParameters...[$NL]
+		public int port;
+		public String webDirectory;
+		$custom+field...[$NL]
 	}
 end
 
 def type(service & jms)
-	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(String url, String user, String password[, $customParameters...[, ]]) {
+	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(String url, String user, String password[, $custom+signature...[, ]]) {
 		this.$name+firstLowerCase~Configuration = new $name+firstUpperCase~Configuration();
 		this.$name+firstLowerCase~Configuration.url = url;
 		this.$name+firstLowerCase~Configuration.user = user;
 		this.$name+firstLowerCase~Configuration.password = password;
+		$custom+assign...[$NL]
 		return this;
 	}
 
@@ -52,14 +54,28 @@ def type(service & jms)
 end
 
 def type(service & rest)
-	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(int port, String webDirectory[, $customParameters...[, ]]) {
+	public $configuration+firstUpperCase~Configuration $name+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
 		this.$name+firstLowerCase~Configuration = new $name+firstUpperCase~Configuration();
 		this.$name+firstLowerCase~Configuration.port = port;
 		this.$name+firstLowerCase~Configuration.webDirectory = webDirectory;
+		$custom+assign...[$NL]
 		return this;
 	}
 
 	public $name+firstUpperCase~Configuration $name+firstLowerCase~Configuration() {
 		return $name+firstLowerCase~Configuration;
 	}
+end
+
+def type(custom) trigger(signature)
+	$type $name
+end
+
+
+def type(custom) trigger(field)
+	public $type $name;
+end
+
+def type(custom) trigger(assign)
+	this.$conf+firstLowerCase~Configuration.$name = $name;
 end

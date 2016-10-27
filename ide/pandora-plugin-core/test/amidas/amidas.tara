@@ -5,7 +5,7 @@ Exception (NotFound) agentNotFound
 
 Service AgentService as JMS
 
-	Request(queue="{federation}.authentication") connect
+	Request(queue="authentication") connect
 		Parameter token as Bool
 		Response as List Object(RequirementList)
 

@@ -11,10 +11,10 @@ def type(resource)
 
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
-		private Box box;
+		private $box+FirstUpperCase~Box box;
 		private SparkManager manager;
 
-		public $operation+firstUpperCase$name+firstUpperCase~Resource(Box box, SparkManager manager) {
+		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
 		}

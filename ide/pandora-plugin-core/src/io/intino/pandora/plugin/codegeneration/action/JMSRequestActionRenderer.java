@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 public class JMSRequestActionRenderer extends ActionRenderer {
 	private final Request request;
 
-	public JMSRequestActionRenderer(Project project, Request request, File destiny, String packageName) {
-		super(project,destiny, packageName);
+	public JMSRequestActionRenderer(Project project, Request request, File destiny, String packageName, String boxName) {
+		super(project, destiny, packageName, boxName);
 		this.request = request;
 	}
 

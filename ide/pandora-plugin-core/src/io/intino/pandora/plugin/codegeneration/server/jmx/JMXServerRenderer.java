@@ -16,11 +16,13 @@ public class JMXServerRenderer {
 	private final List<JMXService> jmxServices;
 	private final File destiny;
 	private final String packageName;
+	private final String boxName;
 
-	public JMXServerRenderer(Graph graph, File destiny, String packageName) {
+	public JMXServerRenderer(Graph graph, File destiny, String packageName, String boxName) {
 		jmxServices = graph.find(JMXService.class);
 		this.destiny = destiny;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 
@@ -33,6 +35,7 @@ public class JMXServerRenderer {
 		if (operations.isEmpty()) return;
 		Frame frame = new Frame().addTypes("jmxserver");
 		frame.addSlot("name", service.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		Commons.writeFrame(destiny, "JMX" + snakeCaseToCamelCase(service.name()), template().format(frame));
 	}

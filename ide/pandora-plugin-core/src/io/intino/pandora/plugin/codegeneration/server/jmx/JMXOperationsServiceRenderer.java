@@ -22,13 +22,15 @@ public class JMXOperationsServiceRenderer {
 	private File src;
 	private final File gen;
 	private String packageName;
+	private final String boxName;
 
-	public JMXOperationsServiceRenderer(Project project, Graph graph, File src, File gen, String packageName) {
+	public JMXOperationsServiceRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
-		services = graph.find(JMXService.class);
+		this.services = graph.find(JMXService.class);
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -43,6 +45,7 @@ public class JMXOperationsServiceRenderer {
 		Frame frame = new Frame().addTypes("jmx", "interface");
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
+		frame.addSlot("box", boxName);
 		for (Operation operation : service.operationList())
 			frame.addSlot("operation", frameOf(operation));
 		Commons.writeFrame(destinyPackage(), service.name() + "MBean", template().format(frame));
@@ -58,7 +61,8 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
-		for (Operation operation : operations) new JMXActionRenderer(project, operation, src, packageName).execute();
+		for (Operation operation : operations)
+			new JMXActionRenderer(project, operation, src, packageName, boxName).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

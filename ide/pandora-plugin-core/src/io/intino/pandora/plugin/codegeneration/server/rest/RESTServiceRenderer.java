@@ -19,11 +19,13 @@ public class RESTServiceRenderer {
 	private final List<RESTService> services;
 	private final File gen;
 	private String packageName;
+	private final String boxName;
 
-	public RESTServiceRenderer(Graph graph, File gen, String packageName) {
+	public RESTServiceRenderer(Graph graph, File gen, String packageName, String boxName) {
 		services = graph.find(RESTService.class);
 		this.gen = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -34,6 +36,7 @@ public class RESTServiceRenderer {
 		if (service.resourceList().isEmpty()) return;
 		Frame frame = new Frame().addTypes("server").
 				addSlot("name", service.name()).
+				addSlot("box", boxName).
 				addSlot("package", packageName).
 				addSlot("resource", (AbstractFrame[]) processResources(service.resourceList()));
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
@@ -54,8 +57,15 @@ public class RESTServiceRenderer {
 		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.concept().name())
 				.addSlot("name", resource.name())
 				.addSlot("operation", operation.concept().name())
-				.addSlot("path", Commons.path(resource))
+				.addSlot("path", customize(Commons.path(resource)))
 				.addSlot("method", operation.concept().name())).collect(Collectors.toList());
+	}
+
+	private Frame customize(String path) {
+		Frame frame = new Frame().addTypes("path");
+		frame.addSlot("name", path);
+		for (String parameter : Commons.extractParameters(path)) frame.addSlot("custom", parameter);
+		return frame;
 	}
 
 

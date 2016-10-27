@@ -1,6 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.service;
 
 import io.intino.pandora.plugin.Parameter;
+import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.jms.JMSService;
 import org.siani.itrules.Template;
 import org.siani.itrules.engine.formatters.StringFormatter;
@@ -19,11 +20,13 @@ public class JMSServiceRenderer {
 	private final List<JMSService> services;
 	private File gen;
 	private String packageName;
+	private final String boxName;
 
-	public JMSServiceRenderer(Graph graph, File gen, String packageName) {
+	public JMSServiceRenderer(Graph graph, File gen, String packageName, String boxName) {
 		services = graph.find(JMSService.class);
 		this.gen = gen;
 		this.packageName = packageName;
+		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -33,6 +36,7 @@ public class JMSServiceRenderer {
 	private void processService(JMSService service) {
 		Frame frame = new Frame().addTypes("jms").
 				addSlot("name", service.name()).
+				addSlot("box", boxName).
 				addSlot("package", packageName).
 				addSlot("request", (AbstractFrame[]) processRequests(service.requestList())).
 				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList()));
@@ -44,7 +48,16 @@ public class JMSServiceRenderer {
 	}
 
 	private Frame processRequest(JMSService.Request request) {
-		return new Frame().addTypes("request").addSlot("name", request.name()).addSlot("queue", request.queue());
+		return new Frame().addTypes("request").
+				addSlot("name", request.name()).
+				addSlot("queue", customize(request.queue()));
+	}
+
+	private Frame customize(String queue) {
+		Frame frame = new Frame().addTypes("queue");
+		frame.addSlot("name", queue);
+		for (String parameter : Commons.extractParameters(queue)) frame.addSlot("custom", parameter);
+		return frame;
 	}
 
 	private Frame[] processNotifications(List<JMSService.Notification> notifications) {
@@ -55,7 +68,7 @@ public class JMSServiceRenderer {
 		return new Frame().addTypes("notification").
 				addSlot("name", notification.name()).
 				addSlot("package", packageName).
-				addSlot("queue", notification.queue()).
+				addSlot("queue", customize(notification.queue())).
 				addSlot("parameter", (AbstractFrame[]) parameters(notification.parameterList())).
 				addSlot("returnMessageType", messageType(notification.parameterList()));
 	}
