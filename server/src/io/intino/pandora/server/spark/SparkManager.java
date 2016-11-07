@@ -23,6 +23,10 @@ public class SparkManager {
 		new SparkWriter(response).write(object);
 	}
 
+	public void write(Object object, String name) {
+		new SparkWriter(response).write(object, name);
+	}
+
 	public <T> T fromHeader(String name, Class<T> type) {
 		return SparkReader.read(request.headers(name), type);
 	}

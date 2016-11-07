@@ -1,7 +1,5 @@
 package io.intino.pandora.server.ui.displays;
 
-import io.intino.pandora.server.pushservice.Client;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,10 +7,11 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 
 public class DisplayAgent {
-    Client client;
+    Display display;
     MessageCarrier carrier;
 
-    public DisplayAgent(MessageCarrier carrier) {
+    public DisplayAgent(Display display, MessageCarrier carrier) {
+        this.display = display;
         this.carrier = carrier;
     }
 
@@ -78,7 +77,7 @@ public class DisplayAgent {
 
     private Map<String, Object> addIdTo(Map<String, Object> parameters) {
         HashMap parametersWithId = new HashMap(parameters);
-        parametersWithId.put("id", client.id());
+        parametersWithId.put("id", display.id());
         return parametersWithId;
     }
 

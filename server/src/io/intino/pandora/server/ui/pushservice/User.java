@@ -1,5 +1,6 @@
 package io.intino.pandora.server.ui.pushservice;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ public class User {
     private String username;
     private String fullName;
     private String email;
+    private URL photo;
     private String language;
     private Map<String, String> preferences = new HashMap<>();
 
@@ -36,6 +38,15 @@ public class User {
 
     public User email(String email) {
         this.email = email;
+        return this;
+    }
+
+    public URL photo() {
+        return photo;
+    }
+
+    public User photo(URL photo) {
+        this.photo = photo;
         return this;
     }
 

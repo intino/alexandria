@@ -67,6 +67,10 @@ public class UISparkManager extends io.intino.pandora.server.spark.SparkManager 
 		return languageOf(request.queryParams("language"));
 	}
 
+	public void redirect(String location) {
+		response.redirect(location);
+	}
+
 	private String generateBaseUrl() {
 
 		try {
