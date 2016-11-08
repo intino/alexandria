@@ -5,10 +5,10 @@ import io.intino.pandora.server.Resource;
 import io.intino.pandora.server.activity.pushservice.ActivityClient;
 import io.intino.pandora.server.activity.spark.ActivitySparkManager;
 
-public class BeforeDisplayResource implements Resource {
+public class BeforeDisplayRequest implements Resource {
     private final ActivitySparkManager manager;
 
-    public BeforeDisplayResource(ActivitySparkManager manager) {
+    public BeforeDisplayRequest(ActivitySparkManager manager) {
         this.manager = manager;
     }
 

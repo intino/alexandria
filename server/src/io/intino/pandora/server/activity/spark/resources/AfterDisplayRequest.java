@@ -4,10 +4,10 @@ import io.intino.pandora.exceptions.PandoraException;
 import io.intino.pandora.server.Resource;
 import io.intino.pandora.server.activity.spark.ActivitySparkManager;
 
-public class AfterDisplayResource implements Resource {
+public class AfterDisplayRequest implements Resource {
     private final ActivitySparkManager manager;
 
-    public AfterDisplayResource(ActivitySparkManager manager) {
+    public AfterDisplayRequest(ActivitySparkManager manager) {
         this.manager = manager;
     }
 
