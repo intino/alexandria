@@ -1,4 +1,4 @@
-package io.intino.pandora.server.activity.pushservice;
+package io.intino.pandora.server.activity.services.push;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

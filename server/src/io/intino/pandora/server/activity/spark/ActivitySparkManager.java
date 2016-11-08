@@ -1,8 +1,9 @@
 package io.intino.pandora.server.activity.spark;
 
-import io.intino.pandora.server.activity.pushservice.PushService;
-import io.intino.pandora.server.activity.pushservice.ActivityClient;
-import io.intino.pandora.server.activity.pushservice.ActivitySession;
+import io.intino.pandora.server.activity.services.AuthService;
+import io.intino.pandora.server.activity.services.push.ActivityClient;
+import io.intino.pandora.server.activity.services.push.ActivitySession;
+import io.intino.pandora.server.activity.services.push.PushService;
 import spark.Request;
 import spark.Response;
 
@@ -11,18 +12,24 @@ import java.net.URL;
 import java.util.Locale;
 
 public class ActivitySparkManager extends io.intino.pandora.server.spark.SparkManager {
-	private PushService pushService;
+	private final PushService pushService;
+	private final AuthService authService;
 
 	private static final String XForwardedProto = "X-Forwarded-Proto";
 	private static final String XForwardedPath = "X-Forwarded-Path";
 
-	public ActivitySparkManager(Request request, Response response, PushService pushService) {
+	public ActivitySparkManager(Request request, Response response, PushService pushService, AuthService authService) {
 		super(request, response);
 		this.pushService = pushService;
+		this.authService = authService;
 	}
 
 	public PushService pushService() {
 		return this.pushService;
+	}
+
+	public AuthService authService() {
+		return this.authService;
 	}
 
 	public void linkToThread(ActivityClient client) {

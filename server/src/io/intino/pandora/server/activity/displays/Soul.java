@@ -1,6 +1,6 @@
 package io.intino.pandora.server.activity.displays;
 
-import io.intino.pandora.server.activity.pushservice.ActivitySession;
+import io.intino.pandora.server.activity.services.push.ActivitySession;
 
 import java.net.MalformedURLException;
 import java.net.URL;

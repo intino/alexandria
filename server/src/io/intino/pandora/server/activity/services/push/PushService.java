@@ -1,4 +1,4 @@
-package io.intino.pandora.server.activity.pushservice;
+package io.intino.pandora.server.activity.services.push;
 
 import org.eclipse.jetty.websocket.api.Session;
 

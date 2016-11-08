@@ -14,8 +14,8 @@ import static spark.Spark.webSocket;
 import static spark.Spark.webSocketIdleTimeoutMillis;
 
 public class SparkRouter<SM extends SparkManager> {
-    private Consumer<PushService> pushConsumer = null;
     private Function<SparkManager, Boolean> validator = null;
+    private Consumer<PushService> pushServiceConsumer = null;
     protected PushService pushService;
 
     private static final int OneDay = 24 * 60 * 60 * 1000;
@@ -51,7 +51,7 @@ public class SparkRouter<SM extends SparkManager> {
     }
 
     public void push(PushService service) {
-        if (this.pushConsumer != null) this.pushConsumer.accept(service);
+        if (this.pushServiceConsumer != null) this.pushServiceConsumer.accept(service);
         PushServiceHandler.inject(service);
         webSocketIdleTimeoutMillis(OneDay);
         webSocket(path, PushServiceHandler.class);
@@ -61,8 +61,8 @@ public class SparkRouter<SM extends SparkManager> {
         this.pushService = pushService;
     }
 
-    public void whenRegister(Consumer<PushService> pushServiceConsumer) {
-        this.pushConsumer = pushServiceConsumer;
+    public void whenRegisterPushService(Consumer<PushService> pushServiceConsumer) {
+        this.pushServiceConsumer = pushServiceConsumer;
     }
 
     public void whenValidate(Function<SparkManager, Boolean> validator) {

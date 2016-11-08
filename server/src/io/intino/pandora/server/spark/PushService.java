@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.intino.pandora.server.pushservice.*;
-import io.intino.pandora.server.activity.pushservice.DefaultRequestAdapter;
-import io.intino.pandora.server.activity.pushservice.DefaultResponseAdapter;;
+import io.intino.pandora.server.activity.services.push.DefaultRequestAdapter;
+import io.intino.pandora.server.activity.services.push.DefaultResponseAdapter;;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;

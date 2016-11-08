@@ -2,7 +2,7 @@ package io.intino.pandora.server.activity.spark.resources;
 
 import io.intino.pandora.exceptions.PandoraException;
 import io.intino.pandora.server.Resource;
-import io.intino.pandora.server.activity.pushservice.ActivityClient;
+import io.intino.pandora.server.activity.services.push.ActivityClient;
 import io.intino.pandora.server.activity.spark.ActivitySparkManager;
 
 public class BeforeDisplayRequest implements Resource {

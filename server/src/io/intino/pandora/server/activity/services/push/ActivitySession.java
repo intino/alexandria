@@ -1,4 +1,4 @@
-package io.intino.pandora.server.activity.pushservice;
+package io.intino.pandora.server.activity.services.push;
 
 import io.intino.pandora.server.spark.SparkSession;
 import io.intino.pandora.server.pushservice.Client;

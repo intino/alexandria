@@ -16,8 +16,10 @@ public class PandoraSpark<R extends SparkRouter> {
 	private final String webDirectory;
 	protected PushService pushService;
 
+	protected static final String WebDirectory = "/web";
+
 	public PandoraSpark(int port) {
-		this(port, "/web");
+		this(port, WebDirectory);
 	}
 
 	public PandoraSpark(int port, String webDirectory) {
@@ -38,7 +40,7 @@ public class PandoraSpark<R extends SparkRouter> {
 		R router = createRouter(path);
 		router.inject(pushService);
 
-		router.whenRegister(new Consumer<PushService>() {
+		router.whenRegisterPushService(new Consumer<PushService>() {
 			@Override
 			public void accept(PushService pushService) {
 				PandoraSpark.this.pushService = pushService;

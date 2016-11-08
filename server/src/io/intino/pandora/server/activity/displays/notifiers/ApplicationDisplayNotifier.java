@@ -3,7 +3,7 @@ package io.intino.pandora.server.activity.displays.notifiers;
 import io.intino.pandora.server.activity.displays.Display;
 import io.intino.pandora.server.activity.displays.DisplayNotifier;
 import io.intino.pandora.server.activity.displays.MessageCarrier;
-import io.intino.pandora.server.activity.pushservice.User;
+import io.intino.pandora.server.activity.services.push.User;
 
 public class ApplicationDisplayNotifier extends DisplayNotifier {
 
