@@ -1,4 +1,4 @@
-package io.intino.pandora.server.ui.pushservice;
+package io.intino.pandora.server.activity.pushservice;
 
 public class Browser {
     private String baseUrl;
@@ -15,8 +15,8 @@ public class Browser {
         this.baseUrl = baseUrl;
     }
 
-    public String baseResourceUrl() {
-        return this.baseUrl.toString() + "/resource";
+    public String baseAssetUrl() {
+        return this.baseUrl.toString() + "/asset";
     }
 
     public String pushUrl(String sessionId, String clientId, String language) {

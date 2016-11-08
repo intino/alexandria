@@ -1,12 +1,15 @@
-package io.intino.pandora.server.ui.displays;
+package io.intino.pandora.server.activity.displays;
 
+import io.intino.pandora.server.activity.Asset;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
-public class Display<A extends DisplayAgent> {
+public class Display<A extends DisplayNotifier> {
     private final String id;
     private final List<Display> children = new ArrayList<>();
     protected DisplayRepository repository;
@@ -48,6 +51,14 @@ public class Display<A extends DisplayAgent> {
 
     protected <S extends Soul> S soul() {
         return (S) soulProvider.soul();
+    }
+
+    protected String assetUrl(URL asset) {
+        return Asset.toResource(soul().baseAssetUrl(), asset).toUrl().toString();
+    }
+
+    protected String assetUrl(URL asset, String label) {
+        return Asset.toResource(soul().baseAssetUrl(), asset).setLabel(label).toUrl().toString();
     }
 
     private void propagateLanguageChanged(String language) {

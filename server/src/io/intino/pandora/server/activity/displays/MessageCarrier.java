@@ -1,4 +1,4 @@
-package io.intino.pandora.server.ui.displays;
+package io.intino.pandora.server.activity.displays;
 
 import io.intino.pandora.server.pushservice.Message;
 import io.intino.pandora.server.pushservice.Client;

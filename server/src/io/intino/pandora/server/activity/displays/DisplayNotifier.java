@@ -1,4 +1,4 @@
-package io.intino.pandora.server.ui.displays;
+package io.intino.pandora.server.activity.displays;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,11 +6,11 @@ import java.util.Map;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 
-public class DisplayAgent {
+public class DisplayNotifier {
     Display display;
     MessageCarrier carrier;
 
-    public DisplayAgent(Display display, MessageCarrier carrier) {
+    public DisplayNotifier(Display display, MessageCarrier carrier) {
         this.display = display;
         this.carrier = carrier;
     }

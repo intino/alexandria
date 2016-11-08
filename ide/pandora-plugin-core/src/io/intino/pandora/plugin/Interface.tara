@@ -12,6 +12,31 @@ Concept:Named Channel // TODO comprobar generación (rellenado)
 Concept:Named Service
 	has:Named Exception
 
+Concept:Named Activity
+	Concept Authenticated
+		var string:url by
+
+	Concept AbstractPage
+		var Display[] displays = empty
+		var string[] paths
+
+		Concept Display
+			var Display[] displays = empty
+
+			Concept Request extends Data
+				var Exception[] exceptionRefs = empty
+				has Exception
+			Concept Notification extends Data
+				var Exception[] exceptionRefs = empty
+				has Exception
+
+		sub:{1..1} Home
+			var string[] paths = "" "/" "/index" "/home"
+
+		sub Page
+
+
+Facet Private on Activity.AbstractPage
 
 Concept Exception extends Data
 	var word:ExceptionCodes code

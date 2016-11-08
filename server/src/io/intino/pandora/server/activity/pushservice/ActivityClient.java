@@ -1,12 +1,12 @@
-package io.intino.pandora.server.ui.pushservice;
+package io.intino.pandora.server.activity.pushservice;
 
 import io.intino.pandora.server.spark.SparkClient;
-import io.intino.pandora.server.ui.displays.Soul;
+import io.intino.pandora.server.activity.displays.Soul;
 
-public class UIClient<S extends Soul> extends SparkClient {
+public class ActivityClient<S extends Soul> extends SparkClient {
     private S soul;
 
-    public UIClient(org.eclipse.jetty.websocket.api.Session session) {
+    public ActivityClient(org.eclipse.jetty.websocket.api.Session session) {
         super(session);
     }
 

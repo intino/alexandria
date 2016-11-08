@@ -1,8 +1,8 @@
-package io.intino.pandora.server.ui.spark;
+package io.intino.pandora.server.activity.spark;
 
-import io.intino.pandora.server.ui.pushservice.PushService;
-import io.intino.pandora.server.ui.pushservice.UIClient;
-import io.intino.pandora.server.ui.pushservice.UISession;
+import io.intino.pandora.server.activity.pushservice.PushService;
+import io.intino.pandora.server.activity.pushservice.ActivityClient;
+import io.intino.pandora.server.activity.pushservice.ActivitySession;
 import spark.Request;
 import spark.Response;
 
@@ -10,13 +10,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-public class UISparkManager extends io.intino.pandora.server.spark.SparkManager {
+public class ActivitySparkManager extends io.intino.pandora.server.spark.SparkManager {
 	private PushService pushService;
 
 	private static final String XForwardedProto = "X-Forwarded-Proto";
 	private static final String XForwardedPath = "X-Forwarded-Path";
 
-	public UISparkManager(Request request, Response response, PushService pushService) {
+	public ActivitySparkManager(Request request, Response response, PushService pushService) {
 		super(request, response);
 		this.pushService = pushService;
 	}
@@ -25,7 +25,7 @@ public class UISparkManager extends io.intino.pandora.server.spark.SparkManager 
 		return this.pushService;
 	}
 
-	public void linkToThread(UIClient client) {
+	public void linkToThread(ActivityClient client) {
 		pushService.linkToThread(client);
 	}
 
@@ -33,19 +33,19 @@ public class UISparkManager extends io.intino.pandora.server.spark.SparkManager 
 		pushService.unlinkFromThread();
 	}
 
-	public void unRegister(UIClient client) {
+	public void unRegister(ActivityClient client) {
 		pushService.unRegister(client);
 	}
 
-	public UISession currentSession() {
+	public ActivitySession currentSession() {
 		return pushService.session(request.session().id());
 	}
 
-	public UIClient client(String id) {
+	public ActivityClient client(String id) {
 		return pushService.client(id);
 	}
 
-	public UIClient currentClient() {
+	public ActivityClient currentClient() {
 		return pushService.currentClient();
 	}
 

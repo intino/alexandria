@@ -1,13 +1,13 @@
-package io.intino.pandora.server.ui.pushservice;
+package io.intino.pandora.server.activity.pushservice;
 
 import io.intino.pandora.server.spark.SparkSession;
 import io.intino.pandora.server.pushservice.Client;
 
-public class UISession<C extends UIClient> extends SparkSession<C> {
+public class ActivitySession<C extends ActivityClient> extends SparkSession<C> {
     private User user;
     private Browser browser;
 
-    public UISession(String id) {
+    public ActivitySession(String id) {
         super(id);
         this.browser = new Browser();
     }

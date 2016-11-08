@@ -1,4 +1,4 @@
-package io.intino.pandora.server.ui.pushservice;
+package io.intino.pandora.server.activity.pushservice;
 
 import java.net.URL;
 import java.util.HashMap;
