@@ -16,24 +16,24 @@ Concept:Named Activity
 	Concept Authenticated
 		var string:url by
 
-	Concept AbstractPage
-		var Display[] displays = empty
+	Concept:Named AbstractPage
+		var Display rootDisplay
 		var string[] paths
-
-		Concept Display
-			var Display[] displays = empty
-
-			Concept Request extends Data
-				var Exception[] exceptionRefs = empty
-				has Exception
-			Concept Notification extends Data
-				var Exception[] exceptionRefs = empty
-				has Exception
 
 		sub:{1..1} Home
 			var string[] paths = "" "/" "/index" "/home"
 
 		sub Page
+
+	Concept:Named Display
+		var Display[] displays = empty
+
+		Concept Request extends Data
+			var Exception[] exceptionRefs = empty
+			has Exception
+		Concept Notification extends Data
+			var Exception[] exceptionRefs = empty
+			has Exception
 
 
 Facet Private on Activity.AbstractPage
