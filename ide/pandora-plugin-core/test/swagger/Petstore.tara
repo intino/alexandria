@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http, consumes = "application/json", produces = "application/json")
+Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http)
 	Info(title = "Swagger Petstore", version = "1.0.0")
 		License MIT
 	Resource(path = "/pets") pets

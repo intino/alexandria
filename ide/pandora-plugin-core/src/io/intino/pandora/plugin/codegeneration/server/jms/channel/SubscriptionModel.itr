@@ -2,7 +2,7 @@ def type(subscription)
 	package $package.subscriptions;
 
     import com.google.gson.Gson;
-    import io.intino.pandora.Box;
+	import $package+validname.$box+firstUpperCase~Box;
     import io.intino.pandora.jms.Consumer;
 	$schemaImport
 
@@ -10,9 +10,9 @@ def type(subscription)
 
     public class $name+FirstUpperCase~Subscription implements Consumer {
 
-    	private Box box;
+    	private $box+firstUpperCase~Box box;
 
-    	public $name+FirstUpperCase~Subscription(Box box) {
+    	public $name+FirstUpperCase~Subscription($box+firstUpperCase~Box box) {
     		this.box = box;
     	}
 

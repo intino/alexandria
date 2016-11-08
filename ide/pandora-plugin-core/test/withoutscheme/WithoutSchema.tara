@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service (description = "Interface for recovering all dashboard information", basePath = "/dashboard") dashboard as REST(host = "", consumes = "", produces = "")
+Service (description = "Interface for recovering all dashboard information", basePath = "/dashboard") dashboard as REST(host = "")
 	Resource(path = "/today") today
 		Get(description = "Opinions Today")
 			Response as Text

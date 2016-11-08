@@ -29,13 +29,6 @@ abstract class ActionRenderer {
 		this.boxName = boxName;
 	}
 
-	protected Template template() {
-		final Template template = ActionTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		return template;
-	}
-
 	boolean alreadyRendered(File destiny, String action) {
 		return Commons.javaFile(destinyPackage(destiny), action + "Action").exists();
 	}
@@ -80,5 +73,12 @@ abstract class ActionRenderer {
 
 	protected String firstUpperCase(String value) {
 		return value.substring(0, 1).toUpperCase() + value.substring(1);
+	}
+
+	protected Template template() {
+		final Template template = ActionTemplate.create();
+		template.add("ValidPackage", Commons::validPackage);
+		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
+		return template;
 	}
 }

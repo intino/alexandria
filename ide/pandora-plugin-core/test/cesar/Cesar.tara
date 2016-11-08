@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "", consumes = "", produces = "")
+Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "")
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
@@ -53,7 +53,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = query) isPublic as Bool
 			Response
 
-Service(description = "Cesar Build Service") build as REST(host = "", basePath = "build", consumes = "", produces = "")
+Service(description = "Cesar Build Service") build as REST(host = "", basePath = "build")
 	Resource(path = "/build") webHooks
 		Post(description = "")
 			Response

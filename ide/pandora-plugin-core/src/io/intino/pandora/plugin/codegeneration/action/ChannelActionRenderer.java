@@ -20,7 +20,7 @@ public class ChannelActionRenderer extends ActionRenderer {
 		Frame frame = new Frame().addTypes("action");
 		frame.addSlot("name", model.name());
 		frame.addSlot("package", packageName);
-		frame.addSlot("boxName", boxName);
+		frame.addSlot("box", boxName);
 		setupMessage(model.message(), frame);
 		frame.addSlot("returnType", "void");
 		if (!alreadyRendered(destiny, model.name()))

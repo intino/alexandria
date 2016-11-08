@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration;
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.jms.JMSService;
 import io.intino.pandora.plugin.rest.RESTService;
@@ -40,13 +41,14 @@ class BoxRenderer {
 		frame.addSlot("package", packageName);
 		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists())
 			frame.addSlot("parent", configuration.dsl());
-
 		if (!application.rESTServiceList().isEmpty())
 			frame.addSlot("hasREST", "");
 		for (RESTService service : application.rESTServiceList())
 			frame.addSlot("service", new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : application.jMSServiceList())
 			frame.addSlot("service", new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
+		for (Channel channel : application.channelList())
+			frame.addSlot("channel", new Frame().addTypes("channel").addSlot("name", channel.name()).addSlot("configuration", name));
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}
@@ -54,7 +56,6 @@ class BoxRenderer {
 	private boolean parentExists() {
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 		return facade.findClass(configuration.dslWorkingPackage() + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
-
 	}
 
 	private String name() {
