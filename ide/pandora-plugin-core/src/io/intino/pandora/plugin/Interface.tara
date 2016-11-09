@@ -31,6 +31,11 @@ Concept:Named Activity
 		Concept Request extends Data
 			var Exception[] exceptionRefs = empty
 			has Exception
+
+		Concept RequestFile extends Data
+			var Exception[] exceptionRefs = empty
+			has Exception
+
 		Concept Notification extends Data
 			var Exception[] exceptionRefs = empty
 			has Exception
