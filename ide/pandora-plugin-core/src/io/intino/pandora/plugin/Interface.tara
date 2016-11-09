@@ -32,16 +32,13 @@ Concept:Named Activity
 			var Exception[] exceptionRefs = empty
 			has Exception
 
-		Concept RequestFile extends Data
-			var Exception[] exceptionRefs = empty
-			has Exception
-
 		Concept Notification extends Data
 			var Exception[] exceptionRefs = empty
 			has Exception
 
 
-Facet Private on Activity.AbstractPage
+Facet Restricted on Activity.AbstractPage
+Facet FileResponse on Activity.Display.Request
 
 Concept Exception extends Data
 	var word:ExceptionCodes code
