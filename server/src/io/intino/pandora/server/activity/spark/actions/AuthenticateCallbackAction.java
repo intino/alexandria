@@ -21,7 +21,7 @@ public class AuthenticateCallbackAction {
         ActivityClient client = (ActivityClient) session.currentClient();
         if (client == null) return;
 
-        client.soul().applicationDisplay().user(user);
+        client.soul().user(user);
     }
 
 }

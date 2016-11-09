@@ -1,6 +1,7 @@
 package io.intino.pandora.server.activity.displays;
 
 import io.intino.pandora.server.activity.services.push.ActivitySession;
+import io.intino.pandora.server.activity.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,16 +14,15 @@ import java.util.function.Consumer;
 public abstract class Soul implements DisplayRepository {
     private final Map<String, Display> displays = new HashMap();
     private final List<Consumer<Display>> registerListeners = new ArrayList<>();
-    protected final ApplicationDisplay applicationDisplay;
     protected final ActivitySession session;
+    protected User user;
 
-    public Soul(ApplicationDisplay applicationDisplay, ActivitySession session) {
-        this.applicationDisplay = applicationDisplay;
+    public Soul(ActivitySession session) {
         this.session = session;
     }
 
-    public <AD extends ApplicationDisplay> AD applicationDisplay() {
-        return (AD) this.applicationDisplay;
+    public void user(User user) {
+        this.user = user;
     }
 
     public abstract void personify();
