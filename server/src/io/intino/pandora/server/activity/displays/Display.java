@@ -9,19 +9,19 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
-public class Display<A extends DisplayNotifier> {
+public class Display<N extends DisplayNotifier> {
     private final String id;
     private final List<Display> children = new ArrayList<>();
     protected DisplayRepository repository;
-    protected A agent;
+    protected N notifier;
     private SoulProvider soulProvider;
 
     public Display() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public void inject(A agent) {
-        this.agent = agent;
+    public void inject(N notifier) {
+        this.notifier = notifier;
     }
 
     public void inject(DisplayRepository repository) {
@@ -33,12 +33,12 @@ public class Display<A extends DisplayNotifier> {
     }
 
     public final void personify() {
-        agent.personify(id, name());
+        notifier.personify(id, name());
         init();
     }
 
     public final void personifyOnce() {
-        agent.personifyOnce(id, name());
+        notifier.personifyOnce(id, name());
         init();
     }
 
@@ -75,7 +75,7 @@ public class Display<A extends DisplayNotifier> {
     }
 
     public void die() {
-        agent.die(id);
+        notifier.die(id);
     }
 
     public <T extends Display> List<T> children(Class<T> clazz) {

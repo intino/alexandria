@@ -34,6 +34,7 @@ Concept:Named Activity
 			has Exception
 
 		Concept Notification extends Data
+			var word:{All Client Display} to = Display
 			var Exception[] exceptionRefs = empty
 			has Exception
 
