@@ -1,0 +1,46 @@
+def type(display)
+	package $package.displays.notifiers;
+
+	import io.intino.pandora.exceptions.*;
+	import $package.*;
+	import $package+validname.$box+firstUpperCase~Box;
+	$schemaImport
+    import com.monentia.ebar.pandora.displays.notifiers.ApplicationDisplayNotifier;
+    import io.intino.pandora.server.activity.displays.Display;
+    import io.intino.pandora.server.activity.services.push.User;
+
+    public class ApplicationDisplay extends Display<ApplicationDisplayNotifier> {
+        private EbarBox box;
+
+        public ApplicationDisplay(EbarBox box) {
+            super();
+            this.box = box;
+        }
+
+        public void user(User user) {
+            notifier.userRefresh(schemaUser(user));
+            personifyStationCatalogDisplay(user);
+        }
+
+        private com.monentia.ebar.pandora.schemas.User schemaUser(User user) {
+            return new com.monentia.ebar.pandora.schemas.User()
+                    .username(user.username())
+                    .fullName(user.fullName())
+                    .email(user.email())
+                    .photo(user.photo().toString())
+                    .language(user.language());
+        }
+
+        public void logout() {
+            notifier.userLoggedOut();
+        }
+
+        private void personifyStationCatalogDisplay(User user) {
+            StationCatalogDisplay display = new StationCatalogDisplay(box);
+            addAndPersonify(display);
+            display.refresh();
+        }
+
+    }
+	
+end
