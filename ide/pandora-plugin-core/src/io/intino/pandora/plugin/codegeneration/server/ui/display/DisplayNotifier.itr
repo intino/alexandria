@@ -1,0 +1,43 @@
+def type(notifier)
+	package $package.displays.notifiers;
+
+	import io.intino.pandora.exceptions.*;
+	import $package.*;
+	$schemaImport
+    import io.intino.pandora.server.activity.displays.Display;
+    import io.intino.pandora.server.activity.displays.DisplayNotifier;
+    import io.intino.pandora.server.activity.displays.MessageCarrier;
+
+    public class $name+FirstUpperCase~DisplayNotifier extends DisplayNotifier {
+
+        public $name+FirstUpperCase~DisplayNotifier(Display display, MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+
+		$notification...[$NL$NL]
+    }
+
+end
+
+def type(notification) trigger(notification)
+	public void $name+firstLowercase($parameter+signature) {
+		putToOwner("$name+firstLowercase"[, "$parameter+name", $parameter+name]);
+	}
+end
+
+def type(parameter) trigger(signature)
+	$parameterType $name+firstLowerCase
+end
+
+def type(parameter) trigger(name)
+	$name+firstLowerCase
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
