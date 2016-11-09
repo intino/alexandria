@@ -7,24 +7,22 @@ import java.net.URL;
 
 public interface AuthService {
 
-    Authenticating authenticate(URL federation);
-    boolean valid(URL federation, Token accessToken);
-    FederationInfo info(URL federation, Token accessToken) throws CouldNotObtainInfo;
-    UserInfo me(URL federation, Token accessToken) throws CouldNotObtainInfo;
-    void logout(URL federation, Token accessToken) throws CouldNotLogout;
+    URL url();
+    Space space();
+    Authentication authenticate() throws SpaceAuthCallbackUrlIsNull;
+    boolean valid(Token accessToken);
+    FederationInfo info(Token accessToken) throws CouldNotObtainInfo;
+    UserInfo me(Token accessToken) throws CouldNotObtainInfo;
+    void logout(Token accessToken) throws CouldNotLogout;
 
-    void addPushListener(URL federation, Token accessToken, FederationNotificationListener listener) throws CouldNotObtainInfo;
+    void addPushListener(Token accessToken, FederationNotificationListener listener) throws CouldNotObtainInfo;
 
-    interface Authenticating {
-        Authentication with(Space space);
-
-        interface Authentication {
-            Token requestToken() throws CouldNotObtainRequestToken;
-            URL authenticationUrl(Token requestToken) throws CouldNotObtainAuthorizationUrl;
-            Token accessToken();
-            Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken;
-            void invalidate() throws CouldNotInvalidateAccessToken;
-        }
+    interface Authentication {
+        Token requestToken() throws CouldNotObtainRequestToken;
+        URL authenticationUrl(Token requestToken) throws CouldNotObtainAuthorizationUrl;
+        Token accessToken();
+        Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken;
+        void invalidate() throws CouldNotInvalidateAccessToken;
     }
 
     interface FederationNotificationListener {
