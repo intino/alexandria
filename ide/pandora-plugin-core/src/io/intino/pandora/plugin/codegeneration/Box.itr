@@ -6,15 +6,15 @@ def type(box)
 	import javax.jms.Connection;
 	import javax.jms.Session;
     import java.util.LinkedHashMap;
+    import java.util.logging.Logger;
     import java.util.Map;
     import java.util.UUID;
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
     [import tara.magritte.Graph;$tara+import]
     public class $name~Box extends [$parent~Box?io.intino.pandora.Box] {
-
+		private static Logger LOG = Logger.getGlobal();
 		private $name~Configuration configuration;
 		[$hasREST~private io.intino.pandora.server.PandoraSpark restServer;]
-		private javax.jms.Session jmsSession;
     	private Map<String, Object> map = new LinkedHashMap<>();
 		[$service+field...[$NL]]
 		[$channel+field...[$NL]]
@@ -69,11 +69,17 @@ def type(box)
 		}
 
 		private void initJMSServices() {
+			Connection connection;
 			$service+jms...[$NL]
 		}
 
 		private void initChannels() {
-			$channel+channels...[$NL]
+			try {
+				Connection connection;
+				$channel+init...[$NL]
+			} catch (javax.jms.JMSException e) {
+				LOG.severe(e.getMessage());
+			}
 		}
 
 		private void initProcesses() {
@@ -87,6 +93,11 @@ def type(box)
     }
 end
 
+def type(channel) trigger(init)
+	connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+	connection.start();
+	$name+firstUpperCase~Channel.init(connection.createSession(false, Session.AUTO_ACKNOWLEDGE), this);
+end
 
 def type(service & rest) trigger(rest)
 	if (restServer == null) restServer = new PandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory]);
@@ -94,16 +105,13 @@ def type(service & rest) trigger(rest)
 end
 
 def type(service & jms) trigger(jms)
-	if (jmsSession == null) {
-		try {
-			Connection connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
-			connection.start();
-			this.jmsSession = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-		} catch (javax.jms.JMSException e) {
-			e.printStackTrace();
-		}
+	try {
+		connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+		connection.start();
+		this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(connection.createSession(false, Session.AUTO_ACKNOWLEDGE), this);
+	} catch (javax.jms.JMSException e) {
+		LOG.severe(e.getMessage());
 	}
-	this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(jmsSession, this);
 end
 
 def type(service & jms) trigger(field)
@@ -122,12 +130,9 @@ end
 def type(service)
 end
 
-def type(channel) trigger(init)
-
-end
 
 def type(process) trigger(init)
-
+	//TODO
 end
 
 def trigger(import)

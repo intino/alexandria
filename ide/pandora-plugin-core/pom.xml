@@ -19,9 +19,9 @@
     </properties>
 
     <build>
-        <outputDirectory>../out/production/pandora-application</outputDirectory>
-        <testOutputDirectory>../out/test/pandora-application</testOutputDirectory>
-        <directory>../out/build/pandora-application</directory>
+        <outputDirectory>../../out/production/pandora-plugin-core</outputDirectory>
+        <testOutputDirectory>../../out/test/pandora-plugin-core</testOutputDirectory>
+        <directory>../../out/build/pandora-plugin-core</directory>
         <resources>
             <resource>
                 <directory>${basedir}/../.tara/refactors</directory>

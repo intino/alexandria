@@ -1,7 +1,7 @@
 dsl Pandora
 
 
-Service Monet as REST(host = "", basePath = "/", consumes = "", produces = "")
+Service Monet as REST(host = "", basePath = "/")
 	Resource(path = "/catalogs/:catalog-name") Catalogs
 		Parameter(in = path, required = false) catalog-name as Text
 		Get(description = "Get entire catalog") getCatalog

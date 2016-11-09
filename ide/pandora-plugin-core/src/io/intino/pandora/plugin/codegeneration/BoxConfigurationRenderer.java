@@ -1,6 +1,7 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
+import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.Service;
 import io.intino.pandora.plugin.jms.JMSService;
@@ -40,6 +41,7 @@ class BoxConfigurationRenderer {
 		frame.addSlot("package", packageName);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
+		addChannels(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
 		writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
 
@@ -58,6 +60,13 @@ class BoxConfigurationRenderer {
 			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name);
 			addCustomVariables(service.as(Service.class), jmsFrame);
 			frame.addSlot("service", jmsFrame);
+		}
+	}
+
+	private void addChannels(Frame frame, String name) {
+		for (Channel channel : application.channelList()) {
+			Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", name);
+			frame.addSlot("service", channelFrame);
 		}
 	}
 
