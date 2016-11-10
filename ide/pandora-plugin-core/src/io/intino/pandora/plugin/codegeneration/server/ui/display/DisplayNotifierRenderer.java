@@ -7,9 +7,6 @@ import tara.magritte.Graph;
 import java.io.File;
 import java.util.List;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
-
 public class DisplayNotifierRenderer {
 
 	private static final String DISPLAYS = "displays";
@@ -29,7 +26,7 @@ public class DisplayNotifierRenderer {
 
 	private void processDisplay(Activity.Display display) {
 		Frame frame = new Frame().addTypes("display");
-		writeFrame(new File(gen, DISPLAYS), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
+//		writeFrame(new File(gen, DISPLAYS), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
 	}
 
 }

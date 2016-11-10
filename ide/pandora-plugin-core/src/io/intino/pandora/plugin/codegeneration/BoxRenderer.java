@@ -55,7 +55,8 @@ class BoxRenderer {
 
 	private boolean parentExists() {
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		return facade.findClass(configuration.dslWorkingPackage() + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
+		String workingPackage = configuration.dslWorkingPackage();
+		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
 	}
 
 	private String name() {

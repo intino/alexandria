@@ -7,7 +7,7 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			Graph graph = Graph.load("Model").wrap($language~Application.class);
+			Graph graph = Graph.load("Model").wrap([$dslPackage.]$language~Application.class, null);//TODO
 			$name+firstUpperCase~Configuration configuration = args.length != 0 ? createConfigurationFromArgs(): loadDevelopConfiguration();
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
@@ -15,11 +15,11 @@ def type(main)
 		}
 
 		private static $name+firstUpperCase~Configuration createConfigurationFromArgs() {
-			$name+firstUpperCase~Configuration configuration = new $name+firstUpperCase~Configuration();
+			return new $name+firstUpperCase~Configuration();//TODO
 		}
 
 		private static $name+firstUpperCase~Configuration loadDevelopConfiguration() {
-        	$name+firstUpperCase~Configuration configuration = new $name+firstUpperCase~Configuration();
+        	return new $name+firstUpperCase~Configuration();//TODO
 		}
 	}
 end
