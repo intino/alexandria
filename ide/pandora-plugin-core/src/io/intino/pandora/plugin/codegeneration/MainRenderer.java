@@ -31,8 +31,15 @@ public class MainRenderer {
 
 	public void execute() {
 		Frame frame = new Frame().addTypes("main");
-		if (configuration != null && configuration.level().equals(Configuration.Level.System))
-			writeFrame(src, "Main", template().format(frame));
+		frame.addSlot("package", packageName);
+		frame.addSlot("name", name());
+		if (configuration != null) {
+			if (configuration.dslWorkingPackage() != null)
+				frame.addSlot("dslPackage", configuration.dslWorkingPackage());
+			frame.addSlot("language", configuration.dsl());
+			if (configuration.level().equals(Configuration.Level.System))
+				writeFrame(src, "Main", template().format(frame));
+		}
 	}
 
 
@@ -43,4 +50,13 @@ public class MainRenderer {
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;
 	}
+
+	private String name() {
+		if (module != null) {
+			final String dsl = configuration.outDSL();
+			if (dsl == null || dsl.isEmpty()) return module.getName();
+			else return dsl;
+		} else return "System";
+	}
+
 }
