@@ -3,7 +3,7 @@ import org.junit.Test;
 import tara.magritte.Graph;
 import io.intino.pandora.plugin.PandoraApplication;
 
-public class ebarTest {
+public class EbarTest {
 
 	private PandoraApplication application;
 
