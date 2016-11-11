@@ -1,0 +1,37 @@
+def type(display)
+	package $package.displays.requesters;
+
+	import $package.displays.$name+firstUpperCase~Display
+	import io.intino.pandora.exceptions.*;
+	import $package.*;
+	$schemaImport
+
+	import $package+validname.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+	import io.intino.pandora.exceptions.PandoraException;
+	import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;
+	import io.intino.pandora.server.activity.spark.ActivitySparkManager;
+	import io.intino.pandora.server.activity.spark.resources.DisplayRequester;
+
+	public class $name+firstUpperCase~DisplayRequester extends DisplayRequester {
+
+		public $name+firstUpperCase~DisplayRequester(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+		}
+
+		@Override
+		public void execute() throws PandoraException {
+			$name+firstUpperCase~Display display = display();
+			String operation = operation();
+
+			$request...[$NL]
+		}
+	}
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) {
+		$name();
+		display.$name();
+	}
+end
