@@ -22,24 +22,11 @@ def type(subscription)
 
     	private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
-			action.box = this.box;[
-			try {
-				$message+assign
-			} catch (JMSException e) {
-				e.printStackTrace();
-			}]
+			action.box = this.box;
+			action.message = textFrom(message);
 			return action;
 		}
     }
-end
-
-def type(message & fileData) trigger(assign)
-	action.message = ((BytesMessage) message).getBytes();
-end
-
-
-def type(message) trigger(assign)
-	action.message = new Gson().fromJson(((TextMessage) message).getText(), $type.class);
 end
 
 def type(schemaImport)

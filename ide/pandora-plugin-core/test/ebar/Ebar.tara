@@ -4,6 +4,7 @@ Activity UI
 	Authenticated(by="http://localhost:8081")
 
 	Home(application) home as Restricted
+	Page(error, paths="/error") errorPage
 
 	Display application
 		displays = stationCatalog
@@ -14,15 +15,16 @@ Activity UI
 		Request logout as Text
 
 	Display pageDisplay
-		Notification clear as Text
-		Notification countRefresh as Integer
+		Notification(Client) clear as Text
+		Notification(Client) refreshCount as Integer
 
 		Request page as Integer
 
 	Display stationCatalog
 		displays = episodeCatalog
 
-		Notification refresh as Object(StationList)
+		Notification(Client) refresh as Object(StationList)
+		Notification(Client) refreshSelection as Object(Selection)
 
 		Request state
 		Request location as Object(Bounds)
@@ -31,14 +33,19 @@ Activity UI
 	Display episodeCatalog
 		displays = episodeCatalogToolbar
 
-		Notification refresh as Object(EpisodeList)
-			to = Client
-		Request episode as Text
-			responseType = Asset
+		Notification(Client) refresh as Object(EpisodeList)
+
+		Request(Asset) downloadEpisode as Text
 
 	Display episodeCatalogToolbar
-		Notification refresh as Integer
-		Request range as Object(Range)
+		Notification refresh as Object(ToolbarInfo)
+
+		Request previousInstant
+		Request nextInstant
+		Request setInstant as Date
+
+	Display error
+
 
 Schema User
 	Attribute username as Text
@@ -77,6 +84,6 @@ Schema Bounds
 Schema Selection
 	Attribute(multiple=true) items as Text
 
-Schema Range
-	Attribute from as Integer
-	Attribute to as Integer
+Schema ToolbarInfo
+	Attribute count as Integer
+	Attribute instant as Integer

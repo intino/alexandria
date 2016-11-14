@@ -47,8 +47,11 @@ class BoxRenderer {
 			frame.addSlot("service", new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : application.jMSServiceList())
 			frame.addSlot("service", new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
-		for (Channel channel : application.channelList())
-			frame.addSlot("channel", new Frame().addTypes("channel").addSlot("name", channel.name()).addSlot("configuration", name));
+		for (Channel channel : application.channelList()) {
+			final Frame channelFrame = new Frame().addTypes("channel").addSlot("name", channel.name());
+			if (channel.isDurable()) channelFrame.addSlot("durable", channel.name());
+			frame.addSlot("channel", channelFrame.addSlot("configuration", name));
+		}
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}

@@ -66,6 +66,7 @@ class BoxConfigurationRenderer {
 	private void addChannels(Frame frame, String name) {
 		for (Channel channel : application.channelList()) {
 			Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", name);
+			if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
 			frame.addSlot("service", channelFrame);
 		}
 	}

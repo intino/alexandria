@@ -14,9 +14,15 @@ public class TopicConsumer {
 
 	public void listen(Consumer reader) {
 		try {
-			Destination destination = session.createTopic(queue);
-			MessageConsumer consumer = session.createConsumer(destination);
-			consumer.setMessageListener(reader::consume);
+			session.createConsumer(session.createTopic(queue)).setMessageListener(reader::consume);
+		} catch (Exception e) {
+			System.out.println("Caught: " + e);
+		}
+	}
+
+	public void listen(Consumer reader, String clientID) {
+		try {
+			session.createDurableSubscriber(session.createTopic(queue), clientID).setMessageListener(reader::consume);
 		} catch (Exception e) {
 			System.out.println("Caught: " + e);
 		}
