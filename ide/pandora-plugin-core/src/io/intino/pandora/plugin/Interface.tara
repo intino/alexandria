@@ -2,18 +2,19 @@ dsl Proteo
 
 use DataTypes
 
-Concept:Named Channel // TODO comprobar generación (rellenado)
-	var string id
-	Concept:{1..1} Message extends Data // TODO Múltiple
-		var string messageType // TODO meter type en properties. No puede llamarse type porque colisiona con la faceta Object
+Concept:Named Channel
+	var string path
 	sub Queue
 	sub Topic
+
+Facet Durable on Channel
+	var string id
 
 Concept:Named Service
 	has:Named Exception
 
 Concept:Named Activity
-	Concept Authenticated
+	Concept:{0..1} Authenticated
 		var string:url by
 
 	Concept:Named AbstractPage

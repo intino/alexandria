@@ -11,9 +11,10 @@ def type(box)
     import java.util.UUID;
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
     [import tara.magritte.Graph;$tara+import]
-    public class $name~Box extends [$parent~Box?io.intino.pandora.Box] {
+
+    public class $name+FirstUpperCase~Box extends [$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
-		private $name~Configuration configuration;
+		private $name+FirstUpperCase~Configuration configuration;
 		[$hasREST~private io.intino.pandora.server.PandoraSpark restServer;]
     	private Map<String, Object> map = new LinkedHashMap<>();
 		[$service+field...[$NL]]
@@ -22,7 +23,7 @@ def type(box)
 
 		private String graphID;
 
-		public $tara~Box(Graph graph, $tara~Configuration configuration) {
+		public $tara+FirstUpperCase~Box(Graph graph, $tara+FirstUpperCase~Configuration configuration) {
 			map.put(graphID = UUID.randomUUID().toString(), graph);
 			this.configuration = configuration;
 		}
@@ -51,7 +52,7 @@ def type(box)
     		return (T) map.get(object);
     	}
 
-    	public $name~Box put(String name, Object object) {
+    	public $name+firstUpperCase~Box put(String name, Object object) {
     		map.put(name, object);
     		return this;
     	}
@@ -74,12 +75,12 @@ def type(box)
 		}
 
 		private void initChannels() {
-			try {
+			[try {
 				Connection connection;
 				$channel+init...[$NL]
 			} catch (javax.jms.JMSException e) {
 				LOG.severe(e.getMessage());
-			}
+			}]
 		}
 
 		private void initProcesses() {

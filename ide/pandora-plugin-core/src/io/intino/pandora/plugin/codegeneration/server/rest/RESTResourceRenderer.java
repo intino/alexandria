@@ -28,7 +28,7 @@ public class RESTResourceRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public RESTResourceRenderer(Project project, Graph graph, File gen, File src, String packageName, String boxName) {
+	public RESTResourceRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
 		services = graph.find(RESTService.class);
 		this.gen = gen;

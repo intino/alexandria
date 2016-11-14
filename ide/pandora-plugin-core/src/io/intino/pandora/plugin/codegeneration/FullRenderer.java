@@ -16,6 +16,9 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
+import io.intino.pandora.plugin.codegeneration.server.ui.display.DisplayRenderer;
+import io.intino.pandora.plugin.codegeneration.server.ui.web.ActivityRenderer;
+import io.intino.pandora.plugin.codegeneration.server.ui.web.ResourceRenderer;
 import org.jetbrains.annotations.Nullable;
 import tara.compiler.shared.Configuration;
 import tara.intellij.lang.psi.impl.TaraUtil;
@@ -55,6 +58,7 @@ public class FullRenderer {
 		jms();
 		channels();
 		slack();
+		ui();
 		box();
 		main();
 	}
@@ -68,7 +72,7 @@ public class FullRenderer {
 	}
 
 	private void rest() {
-		new RESTResourceRenderer(project, graph, gen, src, packageName, boxName).execute();
+		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new RESTServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
@@ -94,6 +98,12 @@ public class FullRenderer {
 
 	private void slack() {
 		new SlackRenderer(graph, src, packageName, boxName).execute();
+	}
+
+	private void ui() {
+		new DisplayRenderer(graph, src, gen, packageName, boxName).execute();
+		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new ActivityRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void box() {
