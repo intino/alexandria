@@ -21,15 +21,10 @@ public class ChannelActionRenderer extends ActionRenderer {
 		frame.addSlot("name", channel.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		setupMessage(channel.message(), frame);
+		frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", "message").addSlot("type", "String"));
 		frame.addSlot("returnType", "void");
 		if (!alreadyRendered(destiny, channel.name()))
 			Commons.writeFrame(destinyPackage(destiny), channel.name() + "Action", template().format(frame));
 		//TODO else Update
 	}
-
-	private void setupMessage(Channel.Message message, Frame frame) {
-		frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", "message").addSlot("type", formatType(message.asType())));
-	}
-
 }

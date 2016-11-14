@@ -34,6 +34,7 @@ def type(service & channel) trigger(confClass)
 		public String url;
 		public String user;
 		public String password;
+		[public final String clientID = "$clientID";]
 		$custom+field...[$NL]
 	}
 end
@@ -75,6 +76,10 @@ def type(service & channel)
 	public $name+firstUpperCase~Configuration $name+firstLowerCase~Configuration() {
 		return this.$name+firstLowerCase~Configuration;
 	}
+end
+
+def type(durable) trigger(assign)
+	[$name+firstLowerCase~Configuration.clientID ]
 end
 
 def type(service & rest)

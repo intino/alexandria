@@ -2,6 +2,8 @@ package io.intino.pandora.plugin.codegeneration.server.ui.display;
 
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.plugin.date.DateData;
+import io.intino.pandora.plugin.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -58,6 +60,7 @@ public class DisplayRenderer {
 	private Frame frameOf(Activity.Display.Notification notification) {
 		final Frame frame = new Frame().addTypes("notification");
 		frame.addSlot("name", notification.name());
+		frame.addSlot("target", notification.to().name());
 		if (notification.asType() != null) frame.addSlot("parameter", notification.asType().type());
 		return frame;
 	}
@@ -70,8 +73,14 @@ public class DisplayRenderer {
 	private Frame frameOf(Activity.Display.Request request) {
 		final Frame frame = new Frame().addTypes("request");
 		frame.addSlot("name", request.name());
-		if (request.asType() != null) frame.addSlot("parameter", request.asType().type());
+		if (request.asType() != null) frame.addSlot("parameter", type(request));
 		return frame;
+	}
+
+	private String type(Activity.Display.Request request) {
+		final TypeData typeData = request.asType();
+		if (typeData.is(DateData.class)) return "Long";
+		else return typeData.type();
 	}
 
 	private Template displayNotifierTemplate() {

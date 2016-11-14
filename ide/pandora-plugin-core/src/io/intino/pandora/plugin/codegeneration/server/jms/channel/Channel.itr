@@ -11,16 +11,19 @@ def type(channel)
 
 	public class $name+firstUppercase~Channel {
 
-		public static void init(Session session, Box box) {
+		public static void init(Session session, $box~Box box) {
 			$subscription...[$NL]
 		}
 	}
 end
 
 def type(subscription)
-	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(box));
+	new $type~Consumer(session, "$path").listen(new $name+firstUpperCase~Subscription(box)[, $durable]);
 end
 
+def trigger(durable)
+	box.configuration().$value+firstLowerCase~Configuration.clientID
+end
 
 def type(schemaImport)
 	import $package.schemas.*;

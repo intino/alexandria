@@ -8,7 +8,7 @@ Concept:Named Channel
 	sub Topic
 
 Facet Durable on Channel
-	var string id
+	var string clientID
 
 Concept:Named Service
 	has:Named Exception

@@ -39,10 +39,10 @@ Schema Processes
 	Attribute name as Text
 	Attribute label as Text
 
-Queue(id = "catalogs") opinions
-	Message(messageType = "bool") as Bool // TODO si no lo pones o pones varios no se queja ERROORRR
+Queue(path = "catalogs") opinions
+
+Topic(path = "sample") durableChannel as Durable("sample-id")
 
 
-Topic(id = "processes") inputProcesses
-	Message(messageType = "processes") as Object(schema = Processes) // TODO meter type en el properties
+Topic(path = "processes") inputProcesses
 

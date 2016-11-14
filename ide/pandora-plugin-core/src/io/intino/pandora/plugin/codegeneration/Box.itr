@@ -96,8 +96,13 @@ end
 
 def type(channel) trigger(init)
 	connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
-	connection.start();
+	[$durable
+	]connection.start();
 	$name+firstUpperCase~Channel.init(connection.createSession(false, Session.AUTO_ACKNOWLEDGE), this);
+end
+
+def trigger(durable)
+	connection.setClientID(configuration.$value+firstLowerCase~Configuration.clientID);
 end
 
 def type(service & rest) trigger(rest)
