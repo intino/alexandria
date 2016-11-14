@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration.action;
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.helpers.Commons;
+import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -22,7 +23,8 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
 		frame.addSlot("returnType", "String");
-		frame.addSlot("parameter", parameters());
+		frame.addSlot("parameter", (AbstractFrame[]) parameters());
+		frame.addSlot("ui", "");
 		if (!alreadyRendered(destiny, page.name()))
 			Commons.writeFrame(destinyPackage(destiny), page.name() + "Action", template().format(frame));
 		//TODO else Update

@@ -32,14 +32,12 @@ public class ActivityRenderer {
 	}
 
 	private void processActivity(Activity activity) {
-		Frame frame = new Frame().addTypes("activity");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", activity.name());
-		frame.addSlot("box", boxName);
+		Frame frame = new Frame().addTypes("activity").
+				addSlot("package", packageName).
+				addSlot("name", activity.name()).
+				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
+				addSlot("display", displaysFrame(activity.displayList()));
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
-		frame.addSlot("resource", resourcesFrame(activity.abstractPageList()));
-		frame.addSlot("display", displaysFrame(activity.displayList()));
-		frame.addSlot("auth", displaysFrame(activity.displayList()));
 		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
 	}
 

@@ -20,6 +20,7 @@ import tara.dsl.Pandora;
 import tara.io.Stash;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -74,6 +75,10 @@ public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 
 		private void generate(String packageName, File gen, File src) {
 			final Stash[] stashes = pandoraFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
+			if (Arrays.stream(stashes).filter(stash -> stash == null).count() > 0) {
+				notifyError("Models have errors");
+				return;
+			}
 			new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
 			refreshDirectory(gen);
 			refreshDirectory(src);

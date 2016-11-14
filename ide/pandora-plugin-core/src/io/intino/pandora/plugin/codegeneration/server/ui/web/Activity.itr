@@ -1,6 +1,7 @@
 def type(activity)
 	package $package;
 
+	import $package.displays.*;
     import $package.displays.notifiers.*;
     import $package.displays.requesters.*;
     import $package.resources.*;
@@ -40,7 +41,7 @@ def type(activity)
 
         private static DisplayNotifierProvider notifierProvider() {
             return (display, messageCarrier) -> {
-                $display...[$NL]
+                $display+provider...[$NL]
                 return new DisplayNotifier(display, messageCarrier);
             };
         }
@@ -56,6 +57,9 @@ def trigger(path)
 	spark.route("$value").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
+def type(display) trigger(provider)
+	if (display instanceof $name+firstUpperCase~Display) return new $name+firstUpperCase~DisplayNotifier(display, messageCarrier);
+end
 
 def type(display)
 	spark.route("/$name+lowecase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
@@ -66,8 +70,4 @@ end
 
 def trigger(asset)
 	spark.route("/$value+lowecase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
-end
-
-def type(display)
-	if (display instanceof $name+firstUpperCase~Display) return new $name+firstUpperCase~DisplayNotifier(display, messageCarrier);
 end
