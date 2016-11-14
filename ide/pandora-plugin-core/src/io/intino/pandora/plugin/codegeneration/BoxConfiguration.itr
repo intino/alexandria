@@ -6,7 +6,7 @@ def type(boxConfiguration)
     import java.util.UUID;
     [import tara.magritte.Graph;$tara+import]
 
-	public class $name~Configuration {
+	public class $name+firstUpperCase~Configuration {
 
 		$service+field...[$NL]
 

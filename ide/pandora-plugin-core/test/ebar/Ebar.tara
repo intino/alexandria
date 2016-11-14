@@ -1,0 +1,82 @@
+dsl Pandora
+
+Activity UI
+	Authenticated(by="http://localhost:8081")
+
+	Home(application) home as Restricted
+
+	Display application
+		displays = stationCatalog
+
+		Notification userRefresh as Object(User)
+		Notification userLoggedOut
+
+		Request logout as Text
+
+	Display pageDisplay
+		Notification clear as Text
+		Notification countRefresh as Integer
+
+		Request page as Integer
+
+	Display stationCatalog
+		displays = episodeCatalog
+
+		Notification refresh as Object(StationList)
+
+		Request state
+		Request location as Object(Bounds)
+		Request selection as Object(Selection)
+
+	Display episodeCatalog
+		displays = episodeCatalogToolbar
+
+		Notification refresh as Object(EpisodeList)
+			to = Client
+		Request episode as Text
+			responseType = Asset
+
+	Display episodeCatalogToolbar
+		Notification refresh as Integer
+		Request range as Object(Range)
+
+Schema User
+	Attribute username as Text
+	Attribute fullName as Text
+	Attribute email as Text
+	Attribute photo as Text
+	Attribute language as Text
+
+Schema StationList
+	Schema Station
+		Attribute name as Text
+		Attribute label as Text
+		Attribute latitude as Integer
+		Attribute longitude as Integer
+		Attribute icon as Text
+		Attribute floatLevel as Integer
+		Attribute pumpAState as Integer
+		Attribute pumpBState as Integer
+
+Schema EpisodeList
+	Schema Episode
+		Attribute name as Text
+		Attribute label as Text
+		Attribute instant as Integer
+		Attribute icon as Text
+
+Schema Bounds
+	Schema NorthEast
+		Attribute longitude as Text
+		Attribute latitude as Text
+
+	Schema SouthWest
+		Attribute longitude as Text
+		Attribute latitude as Text
+
+Schema Selection
+	Attribute(multiple=true) items as Text
+
+Schema Range
+	Attribute from as Integer
+	Attribute to as Integer

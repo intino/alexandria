@@ -103,10 +103,11 @@
             <artifactId>simpleslackapi</artifactId>
             <version>LATEST</version>
         </dependency>
+
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>rest-server</artifactId>
-            <version>1.0.0</version>
+            <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>

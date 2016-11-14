@@ -1,0 +1,73 @@
+def type(activity)
+	package $package;
+
+    import $package.displays.notifiers.*;
+    import $package.displays.requesters.*;
+    import $package.resources.*;
+
+    import io.intino.pandora.server.activity.ActivityPandoraSpark;
+    import io.intino.pandora.server.activity.displays.DisplayNotifier;
+    import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;
+    import io.intino.pandora.server.activity.services.push.PushService;
+    import io.intino.pandora.server.activity.spark.resources.AfterDisplayRequest;
+    import io.intino.pandora.server.activity.spark.resources.AssetResource;
+    import io.intino.pandora.server.activity.spark.resources.AuthenticateCallbackResource;
+    import io.intino.pandora.server.activity.spark.resources.BeforeDisplayRequest;
+
+    import java.net.MalformedURLException;
+    import java.net.URL;
+
+    public class UIActivity {
+
+        public static void init(ActivityPandoraSpark spark, $box+FirstUpperCase~Box box) {
+            spark.route("/push").push(new PushService());
+            spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
+            spark.route("/asset/:name").get(manager -> new AssetResource(name -> box.graph().loadResource(name), manager, notifierProvider()).execute());
+
+			$resource...[$NL]
+
+			$display...[$NL]
+
+        }
+
+        public static URL authServiceUrl() {
+            try {
+                return new URL("$auth");
+            } catch (MalformedURLException e) {
+                return null;
+            }
+        }
+
+        private static DisplayNotifierProvider notifierProvider() {
+            return (display, messageCarrier) -> {
+                $display...[$NL]
+                return new DisplayNotifier(display, messageCarrier);
+            };
+        }
+    }
+end
+
+
+def type(abstractPage) trigger(resource)
+	$path...[$NL]
+end
+
+def trigger(path)
+	spark.route("$value").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+end
+
+
+def type(display)
+	spark.route("/$name+lowecase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+	spark.route("/$name+lowecase/:displayId").post(manager -> new $name+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	$asset
+	spark.route("/$name+lowecase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+end
+
+def trigger(asset)
+	spark.route("/$value+lowecase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+end
+
+def type(display)
+	if (display instanceof $name+firstUpperCase~Display) return new $name+firstUpperCase~DisplayNotifier(display, messageCarrier);
+end
