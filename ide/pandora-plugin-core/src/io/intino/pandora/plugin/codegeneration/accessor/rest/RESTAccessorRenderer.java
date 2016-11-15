@@ -50,7 +50,7 @@ public class RESTAccessorRenderer {
 		List<Frame> resourceFrames = new ArrayList<>();
 		for (Resource resource : restService.node().findNode(Resource.class))
 			resourceFrames.addAll(resource.operationList().stream().
-					map(r -> processResource(r, restService.authenticated() != null,
+					map(operation -> processResource(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
 		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
@@ -65,8 +65,8 @@ public class RESTAccessorRenderer {
 	private Frame processResource(Operation operation, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response()))
-				.addSlot("operation", operation.name())
-				.addSlot("resource", operation.owner().name())
+				.addSlot("operation", operation.concept().name())
+				.addSlot("name", operation.owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(operation, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(operation));
