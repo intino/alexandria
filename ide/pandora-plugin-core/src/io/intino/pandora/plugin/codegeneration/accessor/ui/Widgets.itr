@@ -1,0 +1,8 @@
+def type(widgets)
+	$widget...[$NL]
+end
+
+def trigger(widget)
+	<link rel="import" href="$value~-widget.html">
+
+end
