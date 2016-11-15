@@ -1,0 +1,33 @@
+def type(widget)
+	var ApplicationWidgetBehaviors = ApplicationWidgetBehaviors || {};
+
+    ApplicationWidgetBehaviors.NotifierListener = {
+
+        listenToDisplay : function() {
+            var widget = this;
+            $notification...[$NL]
+            this.when("userLoggedOut")[$type].execute(function(parameters) {
+                widget._userLoggedOut();
+            });
+        }
+
+    };
+end
+
+
+def trigger(notification)
+	this.when("$name").toSelf().execute(function(parameters) {
+		widget._$name([$parameter]);
+	});
+end
+
+def trigger(parameter)
+	parameters.value
+end
+
+def attribute(Display) trigger(type)
+	.toSelf()
+end
+
+def trigger(type)
+end
