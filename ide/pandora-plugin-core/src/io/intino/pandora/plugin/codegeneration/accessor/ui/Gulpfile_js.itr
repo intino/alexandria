@@ -1,0 +1,197 @@
+def type(configuration)
+	'use strict';
+
+	// Include Gulp & tools we'll use
+	const gulp = require('gulp');
+	const $$ = require('gulp-load-plugins')();
+	const del = require('del');
+	const runSequence = require('run-sequence');
+	const merge = require('merge-stream');
+	const path = require('path');
+
+	const INSTALL_PATH = '../$appModule/res/www';
+	const OUTPUT_PATH = '../out/production/$appModule/www';
+
+	const AUTOPREFIXER_BROWSERS = $[
+		'ie >= 10',
+		'ie_mob >= 10',
+		'ff >= 30',
+		'chrome >= 34',
+		'safari >= 7',
+		'opera >= 23',
+		'ios >= 7',
+		'android >= 4.4',
+		'bb >= 10'
+	];
+
+	const DIST = 'dist';
+
+	const dist = subpath => !subpath ? DIST : path.join(DIST, subpath);
+
+	const styleTask = (stylesPath, srcs) => {
+		return gulp.src(srcs.map(src => path.join('app', stylesPath, src)))
+	.pipe($$.changed(stylesPath, {extension: '.css'}))
+			.pipe($$.autoprefixer(AUTOPREFIXER_BROWSERS))
+			.pipe(gulp.dest('.tmp/' + stylesPath))
+			.pipe($$.minifyCss())
+			.pipe(gulp.dest(dist(stylesPath)))
+			.pipe($$.size({title: stylesPath}));
+	};
+
+	const lint = src => {
+		return gulp.src(src)
+			.pipe($$.eslint())
+			.pipe($$.eslint.format())
+			.pipe($$.eslint.failAfterError());
+	};
+
+	const transpile = srcs => {
+		return gulp.src(srcs)
+			.pipe($$.sourcemaps.init())
+			.pipe($$.if('*.html', $$.crisper({scriptInHead: false})))
+			.pipe($$.if('*.js', $$.babel({presets: $['es2015']})))
+			.pipe($$.sourcemaps.write('.'))
+			.pipe(gulp.dest('.tmp/'))
+			.pipe(gulp.dest(dist()));
+	};
+
+	const imageOptimizeTask = (src, dest) => {
+		return gulp.src(src)
+			.pipe($$.imagemin({
+				progressive: true,
+				interlaced: true
+			}))
+			.pipe(gulp.dest(dest))
+			.pipe($$.size({title: 'images'}));
+	};
+
+	const optimizeHtmlTask = (src, dest) => {
+		return gulp.src(src)
+			.pipe($$.if('*.js', $$.uglify({preserveComments: 'none'})))
+			.pipe($$.if('*.css', $$.minifyCss()))
+			.pipe($$.useref())
+			.pipe($$.if('*.html', $$.htmlmin({
+				quotes: true,
+				empty: true,
+				spare: true
+			})))
+			.pipe(gulp.dest(dest))
+			.pipe($$.size({title: 'html'}));
+	};
+
+	gulp.task('styles', () => styleTask('styles', $['**/*.css']));
+
+	gulp.task('widgets', () => styleTask('widgets', $['**/*.css']));
+
+	gulp.task('images', () => imageOptimizeTask('app/images/**/*', dist('images')));
+
+	gulp.task('transpile', () => transpile($['app/**/*.{js,html}', '!app/bower_components/**/*', '!app/home.html']));
+
+	gulp.task('lint', () => lint($['app/scripts/**/*.js', 'app/widgets/**/*.html', 'gulpfile.js']));
+
+	// Copy all bower_components over to help js task and vulcanize work together
+	gulp.task('bowertotmp', () => gulp.src($['app/bower_components/**/*']).pipe(gulp.dest('.tmp/bower_components/')));
+
+	// Copy all files at the root level (app)
+	gulp.task('copy', () => {
+		const app = gulp.src($[
+			'app/*',
+			'!app/widgets',
+			'!app/bower_components',
+			'!**/.DS_Store'
+		], {dot: true}).pipe(gulp.dest(dist()));
+
+	// Copy over only the bower_components we need
+	// These are things which cannot be vulcanized
+	const bower = gulp.src($[
+		'app/bower_components/{jquery,webcomponentsjs,moment,numeral,promise-polyfill}/**/*',
+		'app/bower_components/{cotton-cookies,cotton-push}/*.js'
+	]).pipe(gulp.dest(dist('bower_components')));
+
+	return merge(app, bower)
+		.pipe($$.size({title: 'copy'}));
+	});
+
+	// Copy web fonts to dist
+	gulp.task('fonts', () => {
+		return gulp.src($['app/fonts/**'])
+			.pipe(gulp.dest(dist('fonts')))
+			.pipe($$.size({title: 'fonts'}));
+	});
+
+	// Scan your HTML for assets & optimize them
+	gulp.task('html', () => optimizeHtmlTask($[dist('/**/*.html'), '!' + dist('/{widgets,test}/**/*.html')], dist()));
+
+	// Vulcanize granular configuration
+	gulp.task('vulcanize', () => {
+		del($[dist() + '/widgets']);
+
+		return gulp.src('.tmp/elements.html')
+			.pipe($$.vulcanize({
+				stripComments: true,
+				inlineCss: true,
+				inlineScripts: true
+			}))/*
+			.pipe($$.htmlmin({
+				collapseWhitespace: true,
+				removeComments: true,
+				removeTagWhitespace: true,
+				minifyCSS: true,
+				minifyJS: true
+			}))*/
+			.pipe($$.replace('<iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>', '<!-- commented by sumus to fix important events bug <iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>-->')) // fix important paper-chip bug
+			.pipe(gulp.dest(dist('')))
+			.pipe($$.size({title: 'vulcanize'}));
+	});
+
+	gulp.task('resolve-dependencies-url', () => {
+		return gulp.src($[dist('index.html'), dist('error.html')])
+			.pipe($$.replace('src="', 'src="$$url/'))
+			.pipe($$.replace('href="', 'href="$$url/'))
+			.pipe(gulp.dest(dist()));
+	});
+
+	gulp.task('refresh-dev-server', $['package'], () => runSequence('install', 'refresh-browser'));
+
+	gulp.task('refresh-browser', () => gulp.src(OUTPUT_PATH + '/home.html').pipe($$.livereload()));
+
+	gulp.task('clean', () => del($['.tmp', dist()]));
+
+	gulp.task('package', cb => {
+		runSequence('bowertotmp', $['copy', 'styles'], 'widgets', /*'lint', */'transpile', $['images', 'fonts', 'html'], 'vulcanize', 'resolve-dependencies-url', cb);
+	});
+
+	gulp.task('install', () => {
+		del($[INSTALL_PATH, OUTPUT_PATH]);
+		gulp.src($['dist/**/*'], { dot: true }).pipe(gulp.dest(INSTALL_PATH));
+		gulp.src($['dist/**/*'], { dot: true }).pipe(gulp.dest(OUTPUT_PATH));
+	});
+
+	// Watch files for changes & reload
+	gulp.task('watch', () => {
+		gulp.watch($['app/**/*.html'], $['refresh-dev-server']);
+		gulp.watch($['app/styles/**/*.css'], $['styles', 'refresh-dev-server']);
+		gulp.watch($['app/widgets/**/*.css'], $['widgets', 'refresh-dev-server']);
+		gulp.watch($['app/widgets/**/*.html'], $['widgets', 'refresh-dev-server']);
+		gulp.watch($['app/images/**/*'], $['refresh-dev-server']);
+
+	$$.livereload.listen({
+		port: 35729,
+		basePath: '.'
+	});
+	});
+
+	gulp.task('default', cb => {
+		runSequence('clean', 'package', 'install', cb);
+	});
+
+	gulp.task('dev', cb => {
+		runSequence('default', 'watch', cb);
+	});
+
+	gulp.task('deploy', cb => {
+		runSequence('default', 'test:local', cb);
+	});
+
+	require('web-component-tester').gulp.init(gulp);
+end
