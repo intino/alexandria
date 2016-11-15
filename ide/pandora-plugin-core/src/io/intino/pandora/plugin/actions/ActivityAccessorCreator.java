@@ -31,7 +31,6 @@ class ActivityAccessorCreator {
 		final Module webModule = getOrCreateModule();
 		ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(appModule, webModule, activity);
 		renderer.execute();
-
 	}
 
 	private Module getOrCreateModule() {
