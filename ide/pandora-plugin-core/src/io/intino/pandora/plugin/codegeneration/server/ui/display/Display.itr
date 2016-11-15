@@ -21,7 +21,6 @@ def type(display)
     }
 end
 
-
 def type(request)
 	public void $name([$parameter value]) {
 
