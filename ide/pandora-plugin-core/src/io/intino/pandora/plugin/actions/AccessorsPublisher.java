@@ -36,8 +36,9 @@ import static com.intellij.notification.NotificationType.INFORMATION;
 import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory;
 
 class AccessorsPublisher {
+	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
 	private static final String PANDORA = "pandora";
-	private static final Logger LOG = Logger.getInstance("Export Accessor: export");
+	private static final String REST_ACCESSOR_JAVA = "-rest-accessor-java";
 	private final Module module;
 	private final Graph graph;
 	private final String generationPackage;
@@ -75,7 +76,7 @@ class AccessorsPublisher {
 	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, conf.groupId(), file.getName() + "-rest-accessor-java", conf.modelVersion());
+			final File pom = createPom(file, conf.groupId(), file.getName() + REST_ACCESSOR_JAVA, conf.modelVersion());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -153,7 +154,7 @@ class AccessorsPublisher {
 	private String newDependency(Configuration conf, String app) {
 		return "<dependency>\n" +
 				"    <groupId>" + conf.groupId() + "</groupId>\n" +
-				"    <artifactId>" + app + "-" + "accessor-java</artifactId>\n" +
+				"    <artifactId>" + app + REST_ACCESSOR_JAVA +"</artifactId>\n" +
 				"    <version>" + conf.modelVersion() + "</version>\n" +
 				"</dependency>";
 	}

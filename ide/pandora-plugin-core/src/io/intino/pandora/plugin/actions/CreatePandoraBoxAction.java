@@ -28,7 +28,7 @@ import static com.intellij.notification.NotificationType.INFORMATION;
 import static tara.intellij.lang.psi.impl.TaraUtil.*;
 
 public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
-	private static final Logger LOG = Logger.getInstance("ShellGenerator: Generate");
+	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
 	private static final String PANDORA = "Pandora";
 
 	@Override

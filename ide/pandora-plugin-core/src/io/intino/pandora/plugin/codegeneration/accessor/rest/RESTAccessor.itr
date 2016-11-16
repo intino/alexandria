@@ -33,7 +33,7 @@ def type(accessor)
 end
 
 def type(resource)
-	public $returnType+firstUpperCase+ReturnTypeFormatter $operation+firstLowerCase+SnakeCaseToCamelCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
+	public $returnType+firstUpperCase+ReturnTypeFormatter $operation+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		try {
 			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
 				$parameter+declaration...[$NL]
