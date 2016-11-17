@@ -16,6 +16,14 @@ Service(description = "Interface for recovering all dashboard inschemaion") rest
 			Parameter(in = body) filters as Object(schema = FilterListSchema)
 			Response as Object(schema = OpinionSnapshotResponseSchema)
 
+	Resource(path = "/snapshot/:id/download") downloadSnapshot
+		Get (description="Download opinions at some instant") DDD
+			Parameter(in = path, required = true) id as Text
+			Parameter(in = query, required = true) username as Text
+			Parameter(in = query) language as Text
+			Response as File
+			Exception(code = Unauthorized)
+
 Schema RangeSchema
 	Attribute from as DateTime
 	Attribute to as DateTime
