@@ -92,9 +92,17 @@ public class RESTResourceRenderer {
 	private Template template() {
 		Template template = RestResourceTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
+		template.add("ReturnTypeFormatter", (value) -> {
+			if (value.equals("Void")) return "void";
+			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
+			else return value;
+		});
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		return template;
+	}
+
+	public static String firstLowerCase(String value) {
+		return value.substring(0, 1).toLowerCase() + value.substring(1);
 	}
 
 }

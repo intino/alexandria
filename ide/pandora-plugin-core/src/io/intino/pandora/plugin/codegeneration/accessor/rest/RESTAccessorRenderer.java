@@ -171,9 +171,17 @@ public class RESTAccessorRenderer {
 	private Template getTemplate() {
 		Template template = RESTAccessorTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
+		template.add("ReturnTypeFormatter", (value) -> {
+			if (value.equals("Void")) return "void";
+			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
+			else return value;
+		});
 		template.add("ValidPackage", Commons::validPackage);
 		return template;
+	}
+
+	public static String firstLowerCase(String value) {
+		return value.substring(0, 1).toLowerCase() + value.substring(1);
 	}
 
 }
