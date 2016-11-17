@@ -11,6 +11,7 @@ Service Monet as REST(host = "", basePath = "/")
 			Response as List Object(catalogElement)
 			exceptionRefs = CatalogNotFound CatalogNotAvailable
 		Patch > Response
+
 	Resource(path = "catalog-count/:catalog-name")
 		Get(description = "Get number of elements under catalog") getCatalogCount
 			Parameter(in = path, required = true) catalog-name as Text
@@ -23,6 +24,7 @@ Service Monet as REST(host = "", basePath = "/")
 			Response as Object(entityResponse)
 			Exception(code = NotFound) EntityNotFound as Text
 			Exception(code = Unauthorized)
+
 
 	Exception(code = NotFound) CatalogNotFound as Text // TODO obliga a poner nombre
 	Exception(code = Unauthorized) CatalogNotAvailable as Text
