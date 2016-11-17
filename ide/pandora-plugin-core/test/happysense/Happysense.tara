@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service (description = "Interface for recovering all dashboard inschemaion") rest as REST(host = "", basePath = "/dashboard")
+Service(description = "Interface for recovering all dashboard inschemaion") rest as REST(host = "", basePath = "/dashboard")
 	Resource(path = "/categorizations") categorizations
 		Get(description="List of categorizations")
 			Response as Object(schema = CategorizationCatalogResponseSchema)

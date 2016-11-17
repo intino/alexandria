@@ -71,10 +71,10 @@ Facet REST on Service
 		var string version
 		var string description = ""
 		var string termsOfService = ""
-		Concept:SingleNamed Contact
+		Concept:Named:{0..1} Contact
 			var string url = ""
 			var string email = ""
-		Concept:SingleNamed License
+		Concept:Named:{0..1} License
 			var string url = ""
 	Concept:Named Tag
 		var string description = ""
@@ -108,7 +108,7 @@ Facet REST on Service
 
 Facet JMX on Service
 	var string path = ""
-	Concept:RequiredNamed Operation
+	Concept:Named:{1..*} Operation
 		has Parameter
 		has Exception
 		has:{0..1} Response
