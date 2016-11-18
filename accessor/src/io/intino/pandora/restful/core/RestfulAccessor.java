@@ -39,8 +39,13 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	@Override
-	public Resource resourceFrom(URL url, String path) throws RestfulFailure {
+	public Resource getResource(URL url, String path) throws RestfulFailure {
 		return doGetFile(url, path, emptyList());
+	}
+
+	@Override
+	public Resource getResource(URL url, String path, Map<String, String> parameters) throws RestfulFailure {
+		return doGetFile(url, path, parametersToNameValuePairs(parameters));
 	}
 
 	@Override
@@ -101,6 +106,11 @@ public class RestfulAccessor implements RestfulApi {
 			@Override
 			public Resource getResource(String path) throws RestfulFailure {
 				return doGetFile(url, path, parametersToNameValuePairs(secureParameters(emptyMap(), certificate, password)));
+			}
+
+			@Override
+			public Resource getResource(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doGetFile(url, path, parametersToNameValuePairs(secureParameters(parameters, certificate, password)));
 			}
 
 			@Override
@@ -298,14 +308,14 @@ public class RestfulAccessor implements RestfulApi {
 		}
 	}
 
-	private Map<String, Object> parametersOf(Resource resource) {
-		return new HashMap<String, Object>() {{
+	private Map<String, String> parametersOf(Resource resource) {
+		return new HashMap<String, String>() {{
 			put("contentType", resource.contentType());
 			resource.parameters().entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
 		}};
 	}
 
-	private Map<String, String> secureParameters(Map<String, Object> parameters, URL certificate, String password) throws RestfulFailure {
+	private Map<String, String> secureParameters(Map<String, String> parameters, URL certificate, String password) throws RestfulFailure {
 		if (certificate == null)
 			return emptyMap();
 
