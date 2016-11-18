@@ -14,19 +14,17 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Signer {
+class Signer {
 	private static final String ParameterMask = "%s=%s";
 
 	static {
 		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 	}
 
-	public String hash(Map<String, Object> parameters, long timestamp) {
+	String hash(Map<String, String> parameters, long timestamp) {
 		StringBuilder result = new StringBuilder();
 
-		for (Map.Entry<String, Object> param : parameters.entrySet()) {
-			if (!(param.getValue() instanceof String))
-				continue;
+		for (Map.Entry<String, String> param : parameters.entrySet()) {
 			result.append(String.format(ParameterMask, param.getKey(), param.getValue()));
 			result.append("&");
 		}
@@ -36,7 +34,7 @@ public class Signer {
 		return result.toString();
 	}
 
-	public String sign(String text, URL certificate, String password) throws Exception {
+	String sign(String text, URL certificate, String password) throws Exception {
 		byte[] data = signText(text.getBytes(), certificate, password);
 		return new String(Base64.encode(data));
 	}

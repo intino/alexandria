@@ -86,7 +86,7 @@ def type(parameter & query) type(boolData | integerData | realData) trigger(decl
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
-def type(parameter & query & objectData) trigger(declaration)
+def type(parameter & objectData) type(query | body) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf(new Gson().toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
@@ -122,15 +122,7 @@ def type(invokeSentence & file & list)
 end
 
 def type(invokeSentence & file)
-	return null; //TODO
-end
-
-def type(invokeSentence & html & list)
-	return null; //TODO
-end
-
-def type(invokeSentence & html)
-	return null; //TODO
+	return $doInvoke.content();
 end
 
 def type(invokeSentence & date & list)
@@ -192,6 +184,10 @@ end
 
 def type(auth & doInvoke)
 	accessor.secure(this.url, this.user, this.password).$type+firstLowerCase($relativePath[, $parameters])
+end
+
+def type(doInvoke)
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters])
 end
 
 def type(doInvoke)

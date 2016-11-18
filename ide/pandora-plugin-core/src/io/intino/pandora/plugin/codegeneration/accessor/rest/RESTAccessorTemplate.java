@@ -30,7 +30,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().add((condition("type", "parameter & query")), (condition("type", "dateTimeData | dateData")), (condition("trigger", "declaration"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" != null) put(\"")).add(mark("name")).add(literal("\", String.valueOf(")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(".toInstant(java.time.ZoneOffset.UTC).toEpochMilli()));")),
 			rule().add((condition("type", "parameter & query")), (condition("type", "textData")), (condition("trigger", "declaration"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" != null) put(\"")).add(mark("name")).add(literal("\", ")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(");")),
 			rule().add((condition("type", "parameter & query")), (condition("type", "boolData | integerData | realData")), (condition("trigger", "declaration"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" != null) put(\"")).add(mark("name")).add(literal("\", String.valueOf(")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal("));")),
-			rule().add((condition("type", "parameter & query & objectData")), (condition("trigger", "declaration"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" != null) put(\"")).add(mark("name")).add(literal("\", String.valueOf(new Gson().toJson(")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(")));")),
+			rule().add((condition("type", "parameter & objectData")), (condition("type", "query | body")), (condition("trigger", "declaration"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" != null) put(\"")).add(mark("name")).add(literal("\", String.valueOf(new Gson().toJson(")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(")));")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "declaration"))),
 			rule().add((condition("type", "parameter")), (condition("trigger", "fileDeclaration"))),
 			rule().add((condition("type", "fileData")), (condition("trigger", "exception"))).add(literal("catch (java.io.IOException e) {\n\te.printStackTrace();\n}")),
@@ -39,9 +39,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().add((condition("type", "invokeSentence & object & list"))).add(literal("return new Gson().fromJson(")).add(mark("doInvoke")).add(literal(".content(), new TypeToken<ArrayList<")).add(mark("returnType")).add(literal(">>(){}.getType());")),
 			rule().add((condition("type", "invokeSentence & object"))).add(literal("return new Gson().fromJson(")).add(mark("doInvoke")).add(literal(".content(), ")).add(mark("returnType", "firstUpperCase")).add(literal(".class);")),
 			rule().add((condition("type", "invokeSentence & file & list"))).add(literal("return null; //TODO")),
-			rule().add((condition("type", "invokeSentence & file"))).add(literal("return null; //TODO")),
-			rule().add((condition("type", "invokeSentence & html & list"))).add(literal("return null; //TODO")),
-			rule().add((condition("type", "invokeSentence & html"))).add(literal("return null; //TODO")),
+			rule().add((condition("type", "invokeSentence & file"))).add(literal("return ")).add(mark("doInvoke")).add(literal(".content();")),
 			rule().add((condition("type", "invokeSentence & date & list"))).add(literal("return null; //TODO")),
 			rule().add((condition("type", "invokeSentence & date"))).add(literal("return null; //TODO")),
 			rule().add((condition("type", "invokeSentence & datetime & list"))).add(literal("return null; //TODO")),
@@ -57,6 +55,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().add((condition("type", "exceptionResponse")), (condition("trigger", "declaration"))).add(mark("exceptionName")),
 			rule().add((condition("type", "auth & cert & doInvoke"))).add(literal("accessor.secure(this.url, ")).add(mark("certificate")).add(literal("this.certificate, this.password).")).add(mark("type", "firstLowerCase")).add(literal("(")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
 			rule().add((condition("type", "auth & doInvoke"))).add(literal("accessor.secure(this.url, this.user, this.password).")).add(mark("type", "firstLowerCase")).add(literal("(")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
+			rule().add((condition("type", "doInvoke"))).add(literal("accessor.")).add(mark("type", "firstLowerCase")).add(literal("(this.url, ")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
 			rule().add((condition("type", "doInvoke"))).add(literal("accessor.")).add(mark("type", "firstLowerCase")).add(literal("(this.url, ")).add(mark("relativePath")).add(expression().add(literal(", ")).add(mark("parameters"))).add(literal(")")),
 			rule().add((condition("type", "schemaImport")), (condition("trigger", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);

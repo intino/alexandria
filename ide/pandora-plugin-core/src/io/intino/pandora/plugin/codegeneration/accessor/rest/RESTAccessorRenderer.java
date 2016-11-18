@@ -50,7 +50,7 @@ public class RESTAccessorRenderer {
 		List<Frame> resourceFrames = new ArrayList<>();
 		for (Resource resource : restService.node().findNode(Resource.class))
 			resourceFrames.addAll(resource.operationList().stream().
-					map(operation -> processResource(operation, restService.authenticated() != null,
+					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
 		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
@@ -62,7 +62,7 @@ public class RESTAccessorRenderer {
 		else if (restService.authenticatedWithPassword() != null) frame.addSlot("user", "");
 	}
 
-	private Frame processResource(Operation operation, boolean authenticated, boolean cert) {
+	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response()))
 				.addSlot("operation", operation.concept().name())
@@ -95,14 +95,14 @@ public class RESTAccessorRenderer {
 		return result.addSlot("doInvoke", doInvoke(operation, authenticated, cert));
 	}
 
-	private Frame doInvoke(Operation resource, boolean authenticated, boolean cert) {
+	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final Frame frame = new Frame().addTypes("doInvoke")
-				.addSlot("relativePath", processPath(Commons.path(resource.owner().as(Resource.class))))
-				.addSlot("type", resource.concept().name().toLowerCase());
+				.addSlot("relativePath", processPath(Commons.path(operation.owner().as(Resource.class))))
+				.addSlot("type", operation.response().isFile()? "getResource": operation.concept().name().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
-		if (Commons.queryParameters(resource) > 0) frame.addSlot("parameters", "parameters");
-		else if (Commons.fileParameters(resource) > 0) frame.addSlot("parameters", "resource");
+		if (Commons.queryParameters(operation) > 0) frame.addSlot("parameters", "parameters");
+		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
 		return frame;
 
 	}
