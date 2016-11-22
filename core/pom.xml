@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.intino.pandora</groupId>
-    <artifactId>core</artifactId>
+    <artifactId>pandora-core</artifactId>
     <version>1.0.0</version>
 
     <properties>

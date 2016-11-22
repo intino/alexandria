@@ -131,14 +131,14 @@ def type(configuration)
 				stripComments: true,
 				inlineCss: true,
 				inlineScripts: true
-			}))/*
+			}))
 			.pipe($$.htmlmin({
 				collapseWhitespace: true,
 				removeComments: true,
 				removeTagWhitespace: true,
 				minifyCSS: true,
 				minifyJS: true
-			}))*/
+			}))
 			.pipe($$.replace('<iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>', '<!-- commented by sumus to fix important events bug <iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>-->')) // fix important paper-chip bug
 			.pipe(gulp.dest(dist('')))
 			.pipe($$.size({title: 'vulcanize'}));

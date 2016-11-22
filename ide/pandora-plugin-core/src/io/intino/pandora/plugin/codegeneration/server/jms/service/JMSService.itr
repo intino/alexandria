@@ -4,8 +4,8 @@ def type(jms)
 
 	import $package.requests.*;
 	import io.intino.pandora.Box;
-	import io.intino.pandora.jms.QueueConsumer;
-	import io.intino.pandora.jms.QueueProducer;
+	import io.intino.pandora.jms.$model~Consumer;
+	import io.intino.pandora.jms.$model~Producer;
 
 	import javax.jms.BytesMessage;
     import javax.jms.JMSException;
@@ -47,14 +47,14 @@ def type(jms)
 end
 
 def type(request)
-	new QueueConsumer(session, $queue+format).listen(new $name+firstUpperCase~Request(box));
+	new $model~Consumer(session, $queue+format).listen(new $name+firstUpperCase~Request(box));
 end
 
 def type(notification)
 	public void notify$name+firstUpperCase([$parameter+signature...[, ]]) throws JMSException {
 		final $returnMessageType~Message message = session.create$returnMessageType~Message();
 		fill$name+firstUpperCase~Message(message[, $parameter+name...[, ]]);
-		new QueueProducer(session, $queue+format).produce(message);
+		new $model~Producer(session, $queue+format).produce(message);
 	}
 
 	private void fill$name+firstUpperCase~Message($returnMessageType~Message message[, $parameter+signature...[, ]]) throws JMSException {

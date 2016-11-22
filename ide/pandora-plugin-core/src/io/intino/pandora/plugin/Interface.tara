@@ -115,14 +115,15 @@ Facet JMX on Service
     Concept:Named Notification
 
 Facet JMS on Service
+	var word:{Queue Topic} subscriptionModel
 	Concept:Named Request
-		var string queue
+		var string path
 		has:Named Parameter
     	var Exception[] exceptionRefs = empty
     	has Exception
     	has:{0..1} Response
 	Concept:Named Notification
-		var string queue
+		var string path
 		has:Named Parameter
 	Concept Authentication
 		sub CredentialSecured

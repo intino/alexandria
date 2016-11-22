@@ -114,6 +114,7 @@ public class FullRenderer {
 	private String boxName() {
 		if (module != null) {
 			final Configuration configuration = TaraUtil.configurationOf(module);
+			if (configuration == null) return "";
 			final String dsl = configuration.outDSL();
 			if (dsl == null || dsl.isEmpty()) return module.getName();
 			else return dsl;
