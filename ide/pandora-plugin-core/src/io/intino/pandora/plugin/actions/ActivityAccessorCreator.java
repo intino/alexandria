@@ -40,7 +40,9 @@ class ActivityAccessorCreator {
 			for (Module m : modules) if (m.getName().equals(activity.name() + "-activity")) return m;
 			Module webModule = manager.newModule(project.getBasePath() + File.separator + activity.name().toLowerCase() + "-activity" + File.separator + activity.name().toLowerCase() + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION, WebModuleType.WEB_MODULE);
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
-			model.addContentEntry(new File(webModule.getModuleFilePath()).getParent());
+			final File parent = new File(webModule.getModuleFilePath()).getParentFile();
+			parent.mkdirs();
+			model.addContentEntry(parent.getAbsolutePath());
 			model.commit();
 			return webModule;
 		});

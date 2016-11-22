@@ -12,6 +12,16 @@ public class TopicConsumer {
 		this.queue = topic;
 	}
 
+	public void listen(RequestConsumer listener) {
+		try {
+			Destination destination = session.createQueue(queue);
+			MessageConsumer consumer = session.createConsumer(destination);
+			consumer.setMessageListener(message -> listener.consume(session, message));
+		} catch (Exception e) {
+			System.out.println("Caught: " + e);
+		}
+	}
+
 	public void listen(Consumer reader) {
 		try {
 			session.createConsumer(session.createTopic(queue)).setMessageListener(reader::consume);

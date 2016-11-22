@@ -84,7 +84,7 @@ class BoxConfigurationRenderer {
 	private Set<String> findCustomParameters(JMSService service) {
 		Set<String> list = new LinkedHashSet<>();
 		for (JMSService.Request request : service.requestList())
-			list.addAll(extractParameters(request.queue()));
+			list.addAll(extractParameters(request.path()));
 		return list;
 	}
 

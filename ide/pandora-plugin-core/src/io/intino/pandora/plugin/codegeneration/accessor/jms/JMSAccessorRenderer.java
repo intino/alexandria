@@ -46,7 +46,7 @@ public class JMSAccessorRenderer {
 	private Frame processRequest(JMSService.Request request) {
 		final Frame frame = new Frame().addTypes("request")
 				.addSlot("name", request.name())
-				.addSlot("queue", request.queue())
+				.addSlot("queue", request.path())
 				.addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()))
 				.addSlot("messageType", messageType(request.parameterList()));
 		if (request.response() != null) {

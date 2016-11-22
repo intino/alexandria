@@ -3,38 +3,37 @@ dsl Pandora
 //Define federation-name
 Exception (NotFound) agentNotFound
 
-Service AgentService as JMS
-
-	Request(queue="authentication") connect
+Service AgentService as JMS(Topic)
+	Request(path="authentication") connect
 		Parameter token as Bool
 		Response as List Object(RequirementList)
 
-	Request(queue="{federation}.works") requestForEdition
+	Request(path="{federation}.works") requestForEdition
 		Parameter token as Text
 		Parameter dialog as List Text
 		Parameter requirements as Object(RequirementList)
 		Response workId as Text
 		exceptionRefs = agentNotFound
 
-	Request(queue="{federation}.works.{token}") updateEdition
+	Request(path="{federation}.works.{token}") updateEdition
 		Parameter token as Text
 		Parameter workId as Text
 		Parameter dialog as Text
 		Response as Bool
 		Exception (NotFound) workNotFound
-	Request(queue="{federation}.works.{token}") blabla
+	Request(path="{federation}.works.{token}") blabla
 		Parameter token as File
 		Parameter workId as Text
 		Parameter dialog as Integer
 		Response as List Bool
 		Exception (NotFound) workNotFound
 
-	Request(queue="{federation}.works") requestForSignature
+	Request(path="{federation}.works") requestForSignature
 		Parameter token as Text
 		Parameter requirements as Object(RequirementList)
 		Response workId as Text
 
-	Request(queue="{federation}.works.{token}") finishWork
+	Request(path="{federation}.works.{token}") finishWork
 		Parameter token as Text
 		Parameter workId as Text
 		Parameter dialog as Text
@@ -88,28 +87,28 @@ Schema AttributeList
 
 
 Schema RequirementList
-	Schema:{0..1} Capability
+	Schema Capability
 		Attribute name as Text
 		Attribute offered as Bool
 
-	Schema:{0..1} Assigned
+	Schema Assigned
 		Attribute agent as Text
 
-	Schema:{0..*} Skill
+	Schema Skill
 		Attribute name as Text
 
-	Schema:{0..*} Location
+	Schema Location
 		Attribute wktPoint as Text
 
-	Schema:{0..*} Authorization
+	Schema Authorization
 		Attribute name as Text
 
 
 Schema Signature
 	Attribute signatureId as Text
 
-	Schema:{0..1} Authorization
+	Schema Authorization
 		Attribute name as Text
 
-	Schema:{0..1} Assigned
+	Schema Assigned
 		Attribute username as Text

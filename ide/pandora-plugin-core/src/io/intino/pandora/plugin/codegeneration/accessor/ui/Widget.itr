@@ -23,11 +23,11 @@ def type(widget)
             Polymer({
                 is: '$name~-widget',
 
-                behaviors: [ CottonBehaviors.CarrierBehavior,
+                behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
                              CottonBehaviors.TranslatorBehavior,
                              $name+firstuppercase~WidgetBehaviors.Requester,
-                             $name+firstuppercase~WidgetBehaviors.NotifierListener ],
+                             $name+firstuppercase~WidgetBehaviors.NotifierListener $],
 
                 properties : {
                 },
