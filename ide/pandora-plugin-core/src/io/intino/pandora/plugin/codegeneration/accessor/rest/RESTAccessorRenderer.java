@@ -50,7 +50,7 @@ public class RESTAccessorRenderer {
 		List<Frame> resourceFrames = new ArrayList<>();
 		for (Resource resource : restService.node().findNode(Resource.class))
 			resourceFrames.addAll(resource.operationList().stream().
-					map(r -> processResource(r, restService.authenticated() != null,
+					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
 		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
@@ -62,11 +62,11 @@ public class RESTAccessorRenderer {
 		else if (restService.authenticatedWithPassword() != null) frame.addSlot("user", "");
 	}
 
-	private Frame processResource(Operation operation, boolean authenticated, boolean cert) {
+	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response()))
-				.addSlot("operation", operation.name())
-				.addSlot("resource", operation.owner().name())
+				.addSlot("operation", operation.concept().name())
+				.addSlot("name", operation.owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(operation, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(operation));
@@ -95,14 +95,14 @@ public class RESTAccessorRenderer {
 		return result.addSlot("doInvoke", doInvoke(operation, authenticated, cert));
 	}
 
-	private Frame doInvoke(Operation resource, boolean authenticated, boolean cert) {
+	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final Frame frame = new Frame().addTypes("doInvoke")
-				.addSlot("relativePath", processPath(Commons.path(resource.owner().as(Resource.class))))
-				.addSlot("type", resource.concept().name().toLowerCase());
+				.addSlot("relativePath", processPath(Commons.path(operation.owner().as(Resource.class))))
+				.addSlot("type", operation.response().isFile()? "getResource": operation.concept().name().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
-		if (Commons.queryParameters(resource) > 0) frame.addSlot("parameters", "parameters");
-		else if (Commons.fileParameters(resource) > 0) frame.addSlot("parameters", "resource");
+		if (Commons.queryParameters(operation) > 0) frame.addSlot("parameters", "parameters");
+		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
 		return frame;
 
 	}
@@ -171,9 +171,17 @@ public class RESTAccessorRenderer {
 	private Template getTemplate() {
 		Template template = RESTAccessorTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
+		template.add("ReturnTypeFormatter", (value) -> {
+			if (value.equals("Void")) return "void";
+			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
+			else return value;
+		});
 		template.add("ValidPackage", Commons::validPackage);
 		return template;
+	}
+
+	public static String firstLowerCase(String value) {
+		return value.substring(0, 1).toLowerCase() + value.substring(1);
 	}
 
 }

@@ -47,7 +47,7 @@ def type(page)
 				}
 			});
 
-			manager.write($name+firstLowerCase~Action.render());
+			manager.write($name+firstLowerCase~Action.execute());
 		}
 
 	}

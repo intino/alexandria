@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.intino.pandora</groupId>
-    <artifactId>rest-accessor-java</artifactId>
+    <artifactId>pandora-rest-accessor-java</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -113,7 +113,7 @@
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>pandora-core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -130,8 +130,8 @@
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>rest-server</artifactId>
-            <version>1.0.0</version>
+            <artifactId>panora-server</artifactId>
+            <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

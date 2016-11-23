@@ -1,7 +1,7 @@
 def type(display)
 	package $package.displays.requesters;
 
-	import $package.displays.$name+firstUpperCase~Display
+	import $package.displays.$name+firstUpperCase~Display;
 	import io.intino.pandora.exceptions.*;
 	import $package.*;
 	$schemaImport
@@ -24,14 +24,27 @@ def type(display)
 			$name+firstUpperCase~Display display = display();
 			String operation = operation();
 
-			$request...[$NL]
+			$request...[$NL~else ]
 		}
 	}
 end
 
-def type(request) trigger(request)
+def type(request & asset) trigger(request)
 	if (operation.equals("$name")) {
-		$name();
-		display.$name();
+		ActivityFile file = display.$name($parameter);
+		manager.write(file.content(), file.label());
 	}
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) display.$name($parameter);
+end
+
+def	 trigger(parameter)
+	manager.fromQuery("value", $value+FirstUpperCase.class)
+end
+
+
+def type(schemaImport)
+	import $package.schemas.*;
 end

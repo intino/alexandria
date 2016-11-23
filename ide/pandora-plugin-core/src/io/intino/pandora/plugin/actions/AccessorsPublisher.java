@@ -2,7 +2,7 @@ package io.intino.pandora.plugin.actions;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
-import com.intellij.notification.NotificationType;
+import com.intellij.notification.Notifications;
 import com.intellij.notification.Notifications.Bus;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
@@ -12,17 +12,12 @@ import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRendere
 import io.intino.pandora.plugin.rest.RESTService;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.idea.maven.model.MavenId;
-import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
-import tara.dsl.Pandora;
 import tara.intellij.actions.utils.FileSystemUtils;
 import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.io.Stash;
 import tara.magritte.Graph;
 
 import java.awt.*;
@@ -37,17 +32,22 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
-import static java.io.File.separator;
+import static com.intellij.notification.NotificationType.INFORMATION;
 import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory;
 
 class AccessorsPublisher {
+	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
 	private static final String PANDORA = "pandora";
-	private static final Logger LOG = Logger.getInstance("Export Accessor: export");
+	private static final String REST_ACCESSOR_JAVA = "-rest-accessor-java";
 	private final Module module;
+	private final Graph graph;
+	private final String generationPackage;
 	private File root;
 
-	AccessorsPublisher(Module module) {
+	AccessorsPublisher(Module module, Graph graph, String generationPackage) {
 		this.module = module;
+		this.graph = graph;
+		this.generationPackage = generationPackage;
 		try {
 			this.root = Files.createTempDirectory(PANDORA).toFile();
 			FileSystemUtils.removeDir(this.root);
@@ -59,20 +59,24 @@ class AccessorsPublisher {
 	void publish() {
 		try {
 			final List<String> apps = createSources();
-			final MavenProject project = MavenProjectsManager.getInstance(module.getProject()).findProject(module);
-			if (project == null || apps.isEmpty()) return;
-			mvn(project);
-			for (String app : apps) notifySuccess(project.getMavenId(), app);
+			final Configuration configuration = TaraUtil.configurationOf(module);
+			if (configuration == null) return;
+			else if (apps.isEmpty()) {
+				notifyNothingDone();
+				return;
+			}
+			mvn(configuration);
+			for (String app : apps) notifySuccess(configuration, app);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
 		}
 	}
 
-	private void mvn(MavenProject project) throws MavenInvocationException, IOException {
+	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, project.getMavenId().getGroupId(), file.getName() + "-accessor-java", project.getMavenId().getVersion());
+			final File pom = createPom(file, conf.groupId(), file.getName() + REST_ACCESSOR_JAVA, conf.modelVersion());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -108,15 +112,11 @@ class AccessorsPublisher {
 
 	private List<String> createSources() throws IOException {
 		List<String> apps = new ArrayList<>();
-		final Configuration configuration = TaraUtil.configurationOf(module);
-		String generationPackage = configuration != null ? configuration.workingPackage() : "pandora";
-		final Stash[] stashes = PandoraUtils.findPandoraFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
-		final Graph graph = GraphLoader.loadGraph(stashes).graph();
 		if (graph == null) return Collections.emptyList();
 		for (RESTService service : graph.find(RESTService.class)) {
-			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage);
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new RESTAccessorRenderer(service, sourcesDestiny, generationPackage.replace(separator, ".")).execute();
+			new RESTAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
 			apps.add(service.name());
 		}
 		return apps;
@@ -131,13 +131,18 @@ class AccessorsPublisher {
 		return pomFile;
 	}
 
-	private void notifySuccess(MavenId id, String app) {
+	private void notifySuccess(Configuration conf, String app) {
 		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
-		balloon.createNotification(app + " Accessor generated and uploaded", message(), NotificationType.INFORMATION, (n, e) -> {
-			StringSelection selection = new StringSelection(newDependency(id, app));
+		balloon.createNotification(app + " Accessor generated and uploaded", message(), INFORMATION, (n, e) -> {
+			StringSelection selection = new StringSelection(newDependency(conf, app));
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			clipboard.setContents(selection, selection);
 		}).setImportant(true).notify(module.getProject());
+	}
+
+	private void notifyNothingDone() {
+		Notifications.Bus.notify(
+				new Notification("Pandora", "None rest services are found in module", module.getName(), INFORMATION), module.getProject());
 	}
 
 	@NotNull
@@ -146,11 +151,11 @@ class AccessorsPublisher {
 	}
 
 	@NotNull
-	private String newDependency(MavenId id, String app) {
+	private String newDependency(Configuration conf, String app) {
 		return "<dependency>\n" +
-				"    <groupId>" + id.getGroupId() + "</groupId>\n" +
-				"    <artifactId>" + app + "-" + "accessor-java</artifactId>\n" +
-				"    <version>" + id.getVersion() + "</version>\n" +
+				"    <groupId>" + conf.groupId() + "</groupId>\n" +
+				"    <artifactId>" + app + REST_ACCESSOR_JAVA +"</artifactId>\n" +
+				"    <version>" + conf.modelVersion() + "</version>\n" +
 				"</dependency>";
 	}
 

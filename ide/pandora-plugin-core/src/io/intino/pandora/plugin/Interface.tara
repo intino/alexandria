@@ -8,7 +8,7 @@ Concept:Named Channel
 	sub Topic
 
 Facet Durable on Channel
-	var string id
+	var string clientID
 
 Concept:Named Service
 	has:Named Exception
@@ -71,10 +71,10 @@ Facet REST on Service
 		var string version
 		var string description = ""
 		var string termsOfService = ""
-		Concept:SingleNamed Contact
+		Concept:Named:{0..1} Contact
 			var string url = ""
 			var string email = ""
-		Concept:SingleNamed License
+		Concept:Named:{0..1} License
 			var string url = ""
 	Concept:Named Tag
 		var string description = ""
@@ -88,7 +88,7 @@ Facet REST on Service
 			var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
 			//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
 			//TODO in debe ser form.
-		Concept Operation
+		Concept:CheckFormParameters:CheckFileParameter Operation
 			var string[] tags = empty
 			var string summary = ""
 			var string description = ""
@@ -108,21 +108,22 @@ Facet REST on Service
 
 Facet JMX on Service
 	var string path = ""
-	Concept:RequiredNamed Operation
+	Concept:Named:{1..*} Operation
 		has Parameter
 		has Exception
 		has:{0..1} Response
     Concept:Named Notification
 
 Facet JMS on Service
+	var word:{Queue Topic} subscriptionModel
 	Concept:Named Request
-		var string queue
+		var string path
 		has:Named Parameter
     	var Exception[] exceptionRefs = empty
     	has Exception
     	has:{0..1} Response
 	Concept:Named Notification
-		var string queue
+		var string path
 		has:Named Parameter
 	Concept Authentication
 		sub CredentialSecured
