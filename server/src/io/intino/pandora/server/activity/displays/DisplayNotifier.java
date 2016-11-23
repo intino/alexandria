@@ -76,6 +76,7 @@ public class DisplayNotifier {
 
     private Map<String, Object> addIdAndNameTo(Map<String, Object> parameters) {
         HashMap parametersWithId = new HashMap(parameters);
+        parametersWithId.put("id", display.id());
         parametersWithId.put("name", display.name());
         return parametersWithId;
     }
