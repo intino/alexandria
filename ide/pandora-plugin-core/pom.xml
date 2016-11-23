@@ -83,6 +83,12 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
+            <groupId>org.siani.tara</groupId>
+            <artifactId>language</artifactId>
+            <scope>provided</scope>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
             <groupId>org.siani.itrules</groupId>
             <artifactId>itrules</artifactId>
             <version>LATEST</version>
@@ -149,12 +155,6 @@
         <dependency>
             <groupId>org.siani.tara</groupId>
             <artifactId>io</artifactId>
-            <version>LATEST</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.siani.tara</groupId>
-            <artifactId>language</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>

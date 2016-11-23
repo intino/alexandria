@@ -10,7 +10,8 @@ public interface RestfulApi {
     Response get(URL url, String path) throws RestfulFailure;
     Response get(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
 
-    Resource resourceFrom(URL url, String path) throws RestfulFailure;
+    Resource getResource(URL url, String path) throws RestfulFailure;
+    Resource getResource(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
 
     Response post(URL url, String path) throws RestfulFailure;
     Response post(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
@@ -30,6 +31,7 @@ public interface RestfulApi {
         Response get(String path, Map<String, String> parameters) throws RestfulFailure;
 
         Resource getResource(String path) throws RestfulFailure;
+        Resource getResource(String path, Map<String, String> parameters) throws RestfulFailure;
 
         Response post(String path) throws RestfulFailure;
         Response post(String path, Map<String, String> parameters) throws RestfulFailure;

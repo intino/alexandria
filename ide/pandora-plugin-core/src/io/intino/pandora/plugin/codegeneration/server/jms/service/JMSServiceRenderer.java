@@ -38,19 +38,21 @@ public class JMSServiceRenderer {
 				addSlot("name", service.name()).
 				addSlot("box", boxName).
 				addSlot("package", packageName).
-				addSlot("request", (AbstractFrame[]) processRequests(service.requestList())).
-				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList()));
+				addSlot("model", service.subscriptionModel().name()).
+				addSlot("request", (AbstractFrame[]) processRequests(service.requestList(), service.subscriptionModel().name())).
+				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList(), service.subscriptionModel().name()));
 		writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name()).toString() + "JMSService", template().format(frame));
 	}
 
-	private Frame[] processRequests(List<JMSService.Request> requests) {
-		return requests.stream().map(this::processRequest).toArray(Frame[]::new);
+	private Frame[] processRequests(List<JMSService.Request> requests, String subscriptionModel) {
+		return requests.stream().map((request) -> processRequest(request, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processRequest(JMSService.Request request) {
+	private Frame processRequest(JMSService.Request request, String subscriptionModel) {
 		return new Frame().addTypes("request").
 				addSlot("name", request.name()).
-				addSlot("queue", customize(request.queue()));
+				addSlot("model", subscriptionModel).
+				addSlot("queue", customize(request.path()));
 	}
 
 	private Frame customize(String queue) {
@@ -60,15 +62,16 @@ public class JMSServiceRenderer {
 		return frame;
 	}
 
-	private Frame[] processNotifications(List<JMSService.Notification> notifications) {
-		return notifications.stream().map(this::processNotification).toArray(Frame[]::new);
+	private Frame[] processNotifications(List<JMSService.Notification> notifications, String subscriptionModel) {
+		return notifications.stream().map((notification) -> processNotification(notification, subscriptionModel)).toArray(Frame[]::new);
 	}
 
-	private Frame processNotification(JMSService.Notification notification) {
+	private Frame processNotification(JMSService.Notification notification, String subscriptionModel) {
 		return new Frame().addTypes("notification").
 				addSlot("name", notification.name()).
 				addSlot("package", packageName).
-				addSlot("queue", customize(notification.queue())).
+				addSlot("queue", customize(notification.path())).
+				addSlot("model", subscriptionModel).
 				addSlot("parameter", (AbstractFrame[]) parameters(notification.parameterList())).
 				addSlot("returnMessageType", messageType(notification.parameterList()));
 	}

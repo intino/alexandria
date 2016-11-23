@@ -4,11 +4,11 @@ def type(accessor)
     import java.util.List;
     import java.util.ArrayList;
 	import java.net.URL;
-	import Resource;
-	import RestfulAccessor;
-	import RestfulFailure;
-	import com.google.gson.Gson;
 	import io.intino.pandora.exceptions.*;
+	import io.intino.pandora.restful.core.RestfulAccessor;
+	import io.intino.pandora.restful.core.Resource;
+	import io.intino.pandora.restful.exceptions.RestfulFailure;
+	import com.google.gson.Gson;
 	import com.google.gson.reflect.TypeToken;
 
 	$schemaImport
@@ -21,7 +21,7 @@ def type(accessor)
 		$user~private String user;][
 		$auth~private String password;]
 
-		public $operation+firstUpperCase+SnakeCaseToCamelCase$name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$user, String user][$auth, String password]) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$user, String user][$auth, String password]) {
 			this.url = url;[
 			$certificate~this.certificate = certificate;][
 			$user~this.user = user;][
@@ -33,7 +33,7 @@ def type(accessor)
 end
 
 def type(resource)
-	public $returnType+firstUpperCase+ReturnTypeFormatter $name($parameter+signature...[, ]) $exceptionResponses+declaration {
+	public $returnType+firstUpperCase+ReturnTypeFormatter $operation+firstLowerCase~$name+SnakeCaseToCamelCase+firstUpperCase($parameter+signature...[, ]) $exceptionResponses+declaration {
 		try {
 			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
 				$parameter+declaration...[$NL]
@@ -86,7 +86,7 @@ def type(parameter & query) type(boolData | integerData | realData) trigger(decl
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
-def type(parameter & query & objectData) trigger(declaration)
+def type(parameter & objectData) type(query | body) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf(new Gson().toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
@@ -122,15 +122,7 @@ def type(invokeSentence & file & list)
 end
 
 def type(invokeSentence & file)
-	return null; //TODO
-end
-
-def type(invokeSentence & html & list)
-	return null; //TODO
-end
-
-def type(invokeSentence & html)
-	return null; //TODO
+	return $doInvoke.content();
 end
 
 def type(invokeSentence & date & list)
@@ -192,6 +184,10 @@ end
 
 def type(auth & doInvoke)
 	accessor.secure(this.url, this.user, this.password).$type+firstLowerCase($relativePath[, $parameters])
+end
+
+def type(doInvoke)
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters])
 end
 
 def type(doInvoke)

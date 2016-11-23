@@ -18,10 +18,21 @@ end
 
 def type(notification) trigger(notification)
 	public void $name+firstLowercase($parameter+firstUpperCase $parameter+firstLowerCase) {
-		putToOwner("$name+firstLowercase"[, "$parameter+firstLowercase", $parameter+firstLowercase]);
+		put[$target]("$name+firstLowercase"[, "$parameter+firstLowercase", $parameter+firstLowercase]);
 	}
 end
 
 def type(schemaImport)
 	import $package.schemas.*;
+end
+
+def attribute(All) trigger(target)
+	ToAll
+end
+
+def attribute(Display) trigger(target)
+	ToDisplay
+end
+
+def attribute(Client) trigger(target)
 end

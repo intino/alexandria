@@ -32,20 +32,6 @@
         <module name="forrest" />
         <module name="teseo" />
       </profile>
-      <profile default="false" name="Annotation profile for jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="jmx" />
-      </profile>
-      <profile default="false" name="Annotation profile for core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="core" />
-      </profile>
       <profile default="false" name="Annotation profile for pandora-plugin-core" enabled="true">
         <sourceOutputDir name="../../out/build/pandora-plugin-core/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/pandora-plugin-core/generated-test-sources/test-annotations" />
@@ -60,21 +46,28 @@
         <processorPath useClasspath="true" />
         <module name="slack" />
       </profile>
-      <profile default="false" name="Annotation profile for rest-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="server" />
-      </profile>
-      <profile default="false" name="Annotation profile for rest-accessor-java" enabled="true">
+      <profile default="false" name="Annotation profile for pandora-rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile default="false" name="Annotation profile for jms" enabled="true">
+      <profile default="false" name="Annotation profile for pandora-core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="core" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-scheduler" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -82,6 +75,13 @@
         <module name="jms" />
         <module name="scheduler" />
         <module name="scheduling" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="jmx" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

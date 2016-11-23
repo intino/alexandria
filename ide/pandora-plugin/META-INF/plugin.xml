@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>io.intino.pandora</id>
     <name>Pandora</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <vendor email="pandora@siani.es" url="http://www.siani.es">Siani</vendor>
     <description><![CDATA[
       Pandora helps to create API rest of platforms created with Tara.
@@ -19,7 +19,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="io.intino.pandora.plugin.file.PandoraFileTypeFactory"/>
-        <errorHandler implementation="io.intino.pandora.plugin.errorreporting.PluginErrorReportSubmitter"/>
+        <errorHandler implementation="io.intino.pandora.plugin.errorreporting.PandoraErrorReportSubmitter"/>
     </extensions>
     <actions>
         <action id="NewPandoraFile" class="io.intino.pandora.plugin.actions.CreatePandoraFileAction">
@@ -35,6 +35,11 @@
                 text="Publish Pandora Accessor"
                 description="Publish Pandora Accessor in Artifactory">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="Create Web Client" class="io.intino.pandora.plugin.actions.CreateActivityAccessorAction"
+                text="Create Activity Accessor"
+                description="Creates UI accessor in a web module">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>

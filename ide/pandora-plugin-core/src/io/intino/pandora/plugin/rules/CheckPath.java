@@ -3,8 +3,9 @@ package io.intino.pandora.plugin.rules;
 import tara.lang.model.EmptyNode;
 import tara.lang.model.Node;
 import tara.lang.model.Parameter;
-import tara.lang.model.rules.composition.NodeRule;
+import tara.lang.model.rules.NodeRule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.intino.pandora.plugin.rules.CheckPath.Cause.*;
@@ -15,19 +16,8 @@ public class CheckPath implements NodeRule {
 
 	private Cause cause;
 
-	public int min() {
-		return 0;
-	}
-
-	public int max() {
-		return Integer.MAX_VALUE;
-	}
-
-	public boolean accept(List<Node> nodes) {
-		return true;
-//		for (Node node : nodes)
-//			if (pathIsWrong(node)) return false;
-//		return true;
+	public boolean accept(Node node) {
+		return !pathIsWrong(node);
 	}
 
 	private boolean pathIsWrong(Node node) {
@@ -40,8 +30,10 @@ public class CheckPath implements NodeRule {
 	}
 
 	private boolean pathIsWrong(String pathValue, Node node) {
+		if (node == null) return false;
 		List<String> parametersInPath = stream(pathValue.split("/")).filter(s -> s.startsWith(":")).map(s -> s.substring(1)).collect(toList());
-		List<String> parametersDeclaredInPath = node.components().stream().filter(c -> isParameter(c) && parameterIsInPath(c)).map(Node::name).collect(toList());
+		List<String> parametersDeclaredInPath = pathParametersFromNode(node);
+		parametersDeclaredInPath.addAll(pathParametersInMethods(node.components()));
 		for (String parameterName : parametersInPath) {
 			if (parametersDeclaredInPath.contains(parameterName)) continue;
 			cause = ParameterNotDeclared;
@@ -55,6 +47,16 @@ public class CheckPath implements NodeRule {
 		return false;
 	}
 
+	private List<String> pathParametersFromNode(Node node) {
+		return node.components().stream().filter(c -> isParameter(c) && parameterIsInPath(c)).map(Node::name).collect(toList());
+	}
+
+	private List<String> pathParametersInMethods(List<Node> methods) {
+		List<String> parameters = new ArrayList<>();
+		for (Node component : methods) parameters.addAll(pathParametersFromNode(component));
+		return parameters;
+	}
+
 	private boolean parameterIsInPath(Node node) {
 		return "path".equals(parameter(node, "in").values().get(0).toString());
 	}
@@ -64,7 +66,7 @@ public class CheckPath implements NodeRule {
 	}
 
 	private boolean isParameter(Node component) {
-		return component.types().contains("Parameter");
+		return component.simpleType().equals("REST:Service.Resource.Parameter");
 	}
 
 	public String errorMessage() {
