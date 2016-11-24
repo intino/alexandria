@@ -17,9 +17,12 @@ def type(display)
 end
 
 def type(notification) trigger(notification)
-	public void $name+firstLowercase($parameter+firstUpperCase $parameter+firstLowerCase) {
-		put[$target]("$name+firstLowercase"[, "$parameter+firstLowercase", $parameter+firstLowercase]);
+	public void $name+firstLowercase([$parameter+firstUpperCase value]) {
+		put[$target]("$name+firstLowercase"[, "value", $parameter+empty~value]);
 	}
+end
+
+def trigger(empty)
 end
 
 def type(schemaImport)

@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service monet as JMS
+Service monet as JMS(subscriptionModel = Queue)
 	Request(path = "catalogs") catalogs
 		Parameter catalogs as Object(schema = CategorizationCatalog)
 		Parameter name as Text

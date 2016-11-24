@@ -13,7 +13,7 @@ end
 
 
 def trigger(notification)
-	this.when("$name").[$type].execute(function(parameters) {
+	this.when("$name")[$type].execute(function(parameters) {
 		widget._$name([$parameter]);
 	});
 end

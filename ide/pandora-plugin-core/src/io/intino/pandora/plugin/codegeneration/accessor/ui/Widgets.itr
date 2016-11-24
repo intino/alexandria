@@ -3,6 +3,6 @@ def type(widgets)
 end
 
 def trigger(widget)
-	<link rel="import" href="$value~-widget.html">
+	<link rel="import" href="$value+lowercase~-widget.html">
 
 end
