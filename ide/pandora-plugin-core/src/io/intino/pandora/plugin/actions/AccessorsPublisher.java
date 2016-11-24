@@ -100,7 +100,10 @@ class AccessorsPublisher {
 
 	private void log(Invoker invoker) throws IOException {
 		invoker.setErrorHandler(LOG::error);
-		invoker.setOutputHandler(System.out::println);
+		invoker.setOutputHandler(s -> {
+			LOG.info(s);
+			System.out.println(s);
+		});
 	}
 
 	private void config(InvocationRequest request, File mavenHome) {
@@ -154,7 +157,7 @@ class AccessorsPublisher {
 	private String newDependency(Configuration conf, String app) {
 		return "<dependency>\n" +
 				"    <groupId>" + conf.groupId() + "</groupId>\n" +
-				"    <artifactId>" + app + REST_ACCESSOR_JAVA +"</artifactId>\n" +
+				"    <artifactId>" + app + REST_ACCESSOR_JAVA + "</artifactId>\n" +
 				"    <version>" + conf.modelVersion() + "</version>\n" +
 				"</dependency>";
 	}

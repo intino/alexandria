@@ -16,6 +16,7 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
+import io.intino.pandora.plugin.codegeneration.server.ui.SchemaAdaptersRenderer;
 import io.intino.pandora.plugin.codegeneration.server.ui.display.DisplayRenderer;
 import io.intino.pandora.plugin.codegeneration.server.ui.web.ActivityRenderer;
 import io.intino.pandora.plugin.codegeneration.server.ui.web.ResourceRenderer;
@@ -104,6 +105,7 @@ public class FullRenderer {
 		new DisplayRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, gen, packageName, boxName).execute();
+		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
 	private void box() {
