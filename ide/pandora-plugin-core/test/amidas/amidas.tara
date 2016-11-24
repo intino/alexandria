@@ -86,6 +86,14 @@ Schema AttributeList
 	Attribute value as Text
 
 
+Schema(multiple=false) Timeline
+	Attribute satisfiedAverage as Real
+
+	Schema(multiple=false) Satisfied
+		Schema Point
+			Attribute instant as DateTime
+			Attribute value as Real
+
 Schema RequirementList
 	Schema Capability
 		Attribute name as Text
@@ -104,6 +112,18 @@ Schema RequirementList
 		Attribute name as Text
 
 
+Schema User
+	Attribute queryContext as Text
+
+	Schema(multiple=false) Range
+		Attribute from as DateTime
+		Attribute to as DateTime
+
+	Schema Query
+		Attribute name as Text
+		Attribute label as Text
+
+
 Schema Signature
 	Attribute signatureId as Text
 
@@ -112,3 +132,15 @@ Schema Signature
 
 	Schema Assigned
 		Attribute username as Text
+
+Schema MeasureThread
+    Attribute id as Text
+    Attribute instant as DateTime
+    Attribute contact as Text
+    Attribute allowContact as Bool
+    Attribute service as Text
+    Attribute client as Text
+    Attribute comments as Text
+    Attribute nationality as Text
+    Attribute checkInDate as DateTime
+    Attribute checkOutDate as DateTime

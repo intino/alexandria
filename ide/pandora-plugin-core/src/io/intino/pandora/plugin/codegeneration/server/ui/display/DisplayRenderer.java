@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.pandora.plugin.helpers.Commons.javaFile;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class DisplayRenderer {
@@ -49,7 +50,8 @@ public class DisplayRenderer {
 		frame.addSlot("box", boxName);
 		writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
 		writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name() + "DisplayRequester"), displayRequesterTemplate().format(frame));
-		writeFrame(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display"), displayTemplate().format(frame));
+		if (!javaFile(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display")).exists())
+			writeFrame(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display"), displayTemplate().format(frame));
 	}
 
 	private Frame[] framesOfNotifications(List<Activity.Display.Notification> notifications) {
