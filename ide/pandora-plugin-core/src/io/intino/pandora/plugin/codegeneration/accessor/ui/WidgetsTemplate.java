@@ -1,10 +1,11 @@
 package io.intino.pandora.plugin.codegeneration.accessor.ui;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class WidgetsTemplate extends Template {
 
@@ -19,7 +20,7 @@ public class WidgetsTemplate extends Template {
 	public Template define() {
 		add(
 			rule().add((condition("type", "widgets"))).add(mark("widget").multiple("\n")),
-			rule().add((condition("trigger", "widget"))).add(literal("<link rel=\"import\" href=\"")).add(mark("value")).add(literal("-widget.html\">\n"))
+				rule().add((condition("trigger", "widget"))).add(literal("<link rel=\"import\" href=\"")).add(mark("value", "lowercase")).add(literal("-widget.html\">\n"))
 		);
 		return this;
 	}

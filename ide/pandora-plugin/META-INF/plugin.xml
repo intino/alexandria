@@ -22,6 +22,9 @@
         <errorHandler implementation="io.intino.pandora.plugin.errorreporting.PandoraErrorReportSubmitter"/>
     </extensions>
     <actions>
+        <group id="PandoraToolsGroup" popup="true" text="Pandora" class="io.intino.pandora.plugin.actions.PandoraActionGroup">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
         <action id="NewPandoraFile" class="io.intino.pandora.plugin.actions.CreatePandoraFileAction">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
@@ -29,18 +32,13 @@
                 text="Create Pandora Shell"
                 description="Create Pandora Shell">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt S"/>
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="PandoraToolsGroup"/>
         </action>
         <action id="Publish Client" class="io.intino.pandora.plugin.actions.PublishAccessorAction"
                 text="Publish Pandora Accessor"
                 description="Publish Pandora Accessor in Artifactory">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt A"/>
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
-        <action id="Create Web Client" class="io.intino.pandora.plugin.actions.CreateActivityAccessorAction"
-                text="Create Activity Accessor"
-                description="Creates UI accessor in a web module">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="PandoraToolsGroup"/>
         </action>
     </actions>
     <application-components>

@@ -8,3 +8,4 @@ plugin/plugin/target/
 .idea/dictionaries
 test-res/*.stash
 target/
+workspace.xml

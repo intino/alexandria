@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import cottons.utils.Files;
+import io.intino.pandora.plugin.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.pandora.plugin.codegeneration.exception.ExceptionRenderer;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
@@ -105,6 +106,7 @@ public class FullRenderer {
 		new DisplayRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, gen, packageName, boxName).execute();
+		new ActivityAccessorCreator(module, graph).execute();
 		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
