@@ -41,13 +41,18 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createPages() throws IOException {
-		for (Activity.AbstractPage page : activity.abstractPageList()) {
+		for (Activity.AbstractPage page : activity.abstractPageList())
 			Files.write(new File(rooDirectory(), "app" + separator + page.name() + ".html").toPath(), PageTemplate.create().format(pageFrame(page)).getBytes());
-		}
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
 		return new Frame().addTypes("page").addSlot("rootDisplay", page.rootDisplay().name());
+	}
+
+	private void createWidget(Display display) throws IOException {
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
+		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html");
+		if (!file.exists()) Files.write(file.toPath(), WidgetTemplate.create().format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
@@ -59,11 +64,6 @@ public class ActivityAccessorRenderer {
 			widgets.addSlot("widget", display.name());
 		}
 		Files.write(new File(rooDirectory(), "app" + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
-	}
-
-	private void createWidget(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
-		Files.write(new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html").toPath(), WidgetTemplate.create().format(frame).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
@@ -97,9 +97,12 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void writeConfigurationFiles(Frame frame) throws IOException {
-		Files.write(new File(rooDirectory(), "bower.json").toPath(), BowerTemplate.create().format(frame).getBytes());
-		Files.write(new File(rooDirectory(), "package.json").toPath(), Package_jsonTemplate.create().format(frame).getBytes());
-		Files.write(new File(rooDirectory(), "gulpfile.js").toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
+		File file = new File(rooDirectory(), "bower.json");
+		if (!file.exists()) Files.write(file.toPath(), BowerTemplate.create().format(frame).getBytes());
+		file = new File(rooDirectory(), "package.json");
+		if (!file.exists()) Files.write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
+		file = new File(rooDirectory(), "gulpfile.js");
+		if (!file.exists()) Files.write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
 	}
 
 	private void createStaticFiles() throws IOException {
@@ -109,9 +112,9 @@ public class ActivityAccessorRenderer {
 		new File(root, "app" + separator + "styles").mkdirs();
 		new File(root, "app" + separator + "widgets").mkdirs();
 		File file = new File(root, "app" + separator + "elements.html");
-		copyStream(inputFrom("/ui/elements.html"), new FileOutputStream(file));
+		if (!file.exists()) copyStream(inputFrom("/ui/elements.html"), new FileOutputStream(file));
 		file = new File(root, "app" + separator + "main.js");
-		copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
+		if (!file.exists()) copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
 	}
 
 	private File rooDirectory() {

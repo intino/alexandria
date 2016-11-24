@@ -1,30 +1,30 @@
 dsl Pandora
 
 Service monet as JMS
-	Request(queue = "catalogs") catalogs
+	Request(path = "catalogs") catalogs
 		Parameter catalogs as Object(schema = CategorizationCatalog)
 		Parameter name as Text
 		Parameter fileOption as File
 		Response as Bool
 
-	Request(queue = "processes") processes
+	Request(path = "processes") processes
 		Parameter entryPoint as File
 		Response as Object(Processes)
 		Exception(code = BadRequest) as Text
 
-	Request(queue = "processes") binaries
+	Request(path = "processes") binaries
 		Parameter type as Text
 		Response as File
 
-	Request(queue = "empty") emptyRequest
+	Request(path = "empty") emptyRequest
 		Response
-	Notification(queue = "") send
+	Notification(path = "") send
 		Parameter text as Text
 		Parameter number as Real
 		Parameter value as Integer
 		Parameter file as File
 
-	Notification(queue = "") sample
+	Notification(path = "") sample
 		Parameter text as Text
 		Parameter number as Real
 

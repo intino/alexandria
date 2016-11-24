@@ -11,6 +11,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import tara.StashBuilder;
 import tara.dsl.Pandora;
+import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.io.Stash;
 import tara.magritte.Graph;
 
@@ -34,6 +35,9 @@ public class CreateActivityAccessorAction extends PandoraAction implements DumbA
 		final Stash[] stashes = PandoraUtils.findPandoraFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Pandora(), module.getName()).build()).toArray(Stash[]::new);
 		if (Arrays.stream(stashes).filter(stash -> stash == null).count() > 0) {
 			notifyError(module, "Models have errors");
+			return;
+		} else if (TaraUtil.configurationOf(module) == null) {
+			notifyError(module, "Module configuration not found");
 			return;
 		}
 		final Graph graph = GraphLoader.loadGraph(stashes).graph();
