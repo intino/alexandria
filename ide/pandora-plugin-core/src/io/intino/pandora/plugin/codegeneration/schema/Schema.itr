@@ -1,102 +1,101 @@
 def type(format)
-    package $package+ValidPackage.schemas;
+	package $package+ValidPackage.schemas;
 
-    public class $name+firstUpperCase {
+	public class $name+firstUpperCase {
 
-        $attribute+declaration...[$NL]
+		$attribute+declaration...[$NL]
 
-        $attribute+getter...[$NL$NL]
+		$attribute+getter...[$NL$NL]
 
-        $attribute+setter...[$NL$NL]
-
-    }
+		$attribute+setter...[$NL$NL]
+	}
 end
 
 def type(primitive & single) trigger(declaration)
-    private $type $name+firstLowerCase[ = $defaultValue];
+	private $type $name+firstLowerCase[ = $defaultValue];
 end
 
 def !type(primitive) type(single) trigger(declaration)
-    private $type+firstUpperCase $name+firstLowerCase[ = $defaultValue];
+	private $type+firstUpperCase $name+firstLowerCase[ = $defaultValue];
 end
 
 def type(multiple & member) trigger(declaration)
-    private java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List = new java.util.ArrayList<>();
+	private java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List = new java.util.ArrayList<>();
 end
 
 def type(multiple) trigger(declaration)
-    private java.util.List<$type+firstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
+	private java.util.List<$type+firstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
 def type(attributeMap) trigger(declaration)
-    private java.util.Map<String, String> attributeMap = new java.util.HashMap<>();
+	private java.util.Map<String, String> attributeMap = new java.util.HashMap<>();
 end
 
 def type(primitive & single) trigger(getter)
-    public $type $name+firstLowerCase() {
-        return this.$name+firstLowerCase;
-    }
+	public $type $name+firstLowerCase() {
+		return this.$name+firstLowerCase;
+	}
 end
 
 def !type(primitive) type(single) trigger(getter)
-    public $type+firstUpperCase $name+firstLowerCase() {
-        return this.$name+firstLowerCase;
-    }
+	public $type+firstUpperCase $name+firstLowerCase() {
+		return this.$name+firstLowerCase;
+	}
 end
 
 def type(multiple & member) trigger(getter)
-    public java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List() {
-        return this.$name+firstLowerCase$~List;
-    }
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List() {
+		return this.$name+firstLowerCase$~List;
+	}
 end
 
 def type(multiple) trigger(getter)
-    public java.util.List<$type+firstUpperCase> $name+firstLowerCase() {
-        return this.$name+firstLowerCase;
-    }
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase() {
+		return this.$name+firstLowerCase;
+	}
 end
 
 def type(attributeMap) trigger(getter)
-    public java.util.List<String> attributeNames() {
-        return new java.util.ArrayList<>(this.attributeMap.keySet());
-    }
+	public java.util.List<String> attributeNames() {
+		return new java.util.ArrayList<>(this.attributeMap.keySet());
+	}
 
-    public String attributeValue(String key) {
-        return this.attributeMap.get(key);
-    }
+	public String attributeValue(String key) {
+		return this.attributeMap.get(key);
+	}
 end
 
 def type(primitive & single) trigger(setter)
-    public $element+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
-        this.$name+firstLowerCase = $name+firstLowerCase;
-        return this;
-    }
+	public $element+firstUpperCase $name+firstLowerCase($type $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
 end
 
 def !type(primitive) type(single) trigger(setter)
-    public $element+firstUpperCase $name+firstLowerCase($type+firstUpperCase $name+firstLowerCase) {
-        this.$name+firstLowerCase = $name+firstLowerCase;
-        return this;
-    }
+	public $element+firstUpperCase $name+firstLowerCase($type+firstUpperCase $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
 end
 
 def type(multiple & member) trigger(setter)
-    public $element+firstUpperCase $name+firstLowerCase$~List(java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List) {
-        this.$name+firstLowerCase$~List = $name+firstLowerCase$~List;
-        return this;
-    }
+	public $element+firstUpperCase $name+firstLowerCase$~List(java.util.List<$type+firstUpperCase> $name+firstLowerCase$~List) {
+		this.$name+firstLowerCase$~List = $name+firstLowerCase$~List;
+		return this;
+	}
 end
 
 def type(multiple) trigger(setter)
-    public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type+firstUpperCase> $name+firstLowerCase) {
-        this.$name+firstLowerCase = $name+firstLowerCase;
-        return this;
-    }
+	public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type+firstUpperCase> $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
 end
 
 def type(attributeMap) trigger(setter)
-    public $element+firstUpperCase addAttribute(String key, String value) {
-        this.attributeMap.put(key, value);
-        return this;
-    }
+	public $element+firstUpperCase addAttribute(String key, String value) {
+		this.attributeMap.put(key, value);
+		return this;
+	}
 end
