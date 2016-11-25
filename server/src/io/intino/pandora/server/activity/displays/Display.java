@@ -1,6 +1,7 @@
 package io.intino.pandora.server.activity.displays;
 
 import io.intino.pandora.server.activity.Asset;
+import io.intino.pandora.server.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,9 +16,14 @@ public class Display<N extends DisplayNotifier> {
     protected DisplayRepository repository;
     protected N notifier;
     private SoulProvider soulProvider;
+    private ActivitySession session;
 
     public Display() {
         this.id = UUID.randomUUID().toString();
+    }
+
+    public void inject(ActivitySession session) {
+        this.session = session;
     }
 
     public void inject(N notifier) {
@@ -44,6 +50,10 @@ public class Display<N extends DisplayNotifier> {
 
     public void setLanguage(String language) {
         propagateLanguageChanged(language);
+    }
+
+    public ActivitySession session() {
+        return session;
     }
 
     protected void init() {
