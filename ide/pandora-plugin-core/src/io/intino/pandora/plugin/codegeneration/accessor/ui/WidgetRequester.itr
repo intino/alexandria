@@ -3,7 +3,7 @@ def type(widget)
 
     $name+FirstUpperCase~WidgetBehaviors.Requester = {
 
-        $requester...[$NL]
+        $requester...[,$NL]
 
     };
 end
