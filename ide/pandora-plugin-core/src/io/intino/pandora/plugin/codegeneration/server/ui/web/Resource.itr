@@ -34,6 +34,7 @@ def type(page)
 				io.intino.pandora.server.activity.displays.Soul soul = $name+firstLowerCase~Action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier($name+firstLowerCase~Action.session, client, display));
+					display.inject($name+firstLowerCase~Action.session);
 					display.inject(soul);
 					display.inject(() -> soul);
 				});
