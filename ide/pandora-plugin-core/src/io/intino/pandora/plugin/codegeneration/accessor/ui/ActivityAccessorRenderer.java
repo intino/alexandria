@@ -9,8 +9,10 @@ import tara.magritte.Layer;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static java.io.File.separator;
+import static sun.plugin.javascript.navig.JSType.Layer;
 
 public class ActivityAccessorRenderer {
 	private final Module appModule;
@@ -41,8 +43,11 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createPages() throws IOException {
-		for (Activity.AbstractPage page : activity.abstractPageList())
-			Files.write(new File(rooDirectory(), "app" + separator + page.name() + ".html").toPath(), PageTemplate.create().format(pageFrame(page)).getBytes());
+		for (Activity.AbstractPage page : activity.abstractPageList()) {
+			Path pagePath = new File(rooDirectory(), "app" + separator + page.name() + ".html").toPath();
+			if (!Files.exists(pagePath))
+				Files.write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
+		}
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
