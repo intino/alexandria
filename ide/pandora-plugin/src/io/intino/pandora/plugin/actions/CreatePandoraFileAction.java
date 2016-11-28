@@ -26,6 +26,7 @@ import static io.intino.pandora.plugin.PandoraIcons.ICON_16;
 
 public class CreatePandoraFileAction extends JavaCreateTemplateInPackageAction<TaraModelImpl> {
 
+
 	public CreatePandoraFileAction() {
 		super("Pandora File", "Creates a new Pandora File", ICON_16, true);
 	}

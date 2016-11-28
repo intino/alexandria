@@ -10,6 +10,9 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import io.intino.pandora.plugin.PandoraIcons;
+import io.intino.pandora.plugin.utils.GraphLoader;
+import io.intino.pandora.plugin.utils.PandoraUtils;
 import org.jetbrains.annotations.NotNull;
 import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
@@ -22,6 +25,10 @@ import java.io.File;
 
 public class PublishAccessorAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Publish Accessor: publish");
+
+	public PublishAccessorAction() {
+		super("Publish Pandora Accessor", "Publish Pandora Accessor in Artifactory", PandoraIcons.ICON_16);
+	}
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {
