@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.pandora.plugin.Activity.Display.Request.ResponseType.Asset;
 import static io.intino.pandora.plugin.helpers.Commons.javaFile;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
@@ -74,6 +75,7 @@ public class DisplayRenderer {
 
 	private Frame frameOf(Activity.Display.Request request) {
 		final Frame frame = new Frame().addTypes("request");
+		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name());
 		if (request.asType() != null) frame.addSlot("parameter", type(request));
 		return frame;
