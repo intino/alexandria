@@ -5,10 +5,16 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
 import io.intino.pandora.plugin.PandoraIcons;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.io.File;
 
 public abstract class PandoraAction extends Action {
+
+	public PandoraAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+		super(text, description, icon);
+	}
 
 	@Override
 	public void update(AnActionEvent e) {
