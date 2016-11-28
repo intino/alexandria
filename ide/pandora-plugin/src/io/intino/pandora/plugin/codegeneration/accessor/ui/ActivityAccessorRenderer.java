@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.io.File.separator;
-import static sun.plugin.javascript.navig.JSType.Layer;
 
 public class ActivityAccessorRenderer {
 	private final Module appModule;

@@ -22,6 +22,28 @@
         <outputDirectory>../../out/production/pandora-plugin</outputDirectory>
         <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
         <directory>../../out/build/pandora-plugin</directory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>tara.dsl:pandora:*</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <repositories>
         <repository>
@@ -59,8 +81,6 @@
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
             <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${user.home}/.tara/repository/tara/dsl/pandora/${version}/Pandora-${version}.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -71,6 +91,13 @@
             <groupId>org.siani.cottons</groupId>
             <artifactId>cotton-utils</artifactId>
             <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.1</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
