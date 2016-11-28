@@ -1,0 +1,35 @@
+[[builder]]
+
+	plugin = "Pandora"
+	version = 1.0.0
+	changeNotes=""
+
+	[[builder.group]]
+	id="PandoraToolsGroup"
+	popup="true"
+	text="Pandora"
+	aClass="io.intino.pandora.plugin.actions.PandoraActionGroup"
+	groupId="ToolsMenu"
+	anchor="last"
+
+	[[builder.action]]
+	id="NewPandoraFile"
+	aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
+	groupId="NewGroup"
+	anchor="first"
+
+	[[builder.action]]
+	id="CreatePandoraAPI"
+	aClass="io.intino.pandora.plugin.actions.CreatePandoraBoxAction"
+	text="Create Pandora Shell"
+	description="Create Pandora Shell">
+	keyboard-shortcut="control alt S"
+	groupId="PandoraToolsGroup"/>
+
+	[[builder.action]]
+	id="Publish Client"
+	aClass="io.intino.pandora.plugin.actions.PublishAccessorAction"
+	text="Publish Pandora Accessor"
+	description="Publish Pandora Accessor in Artifactory"
+	keymap="control alt A"
+	groupId="PandoraToolsGroup"

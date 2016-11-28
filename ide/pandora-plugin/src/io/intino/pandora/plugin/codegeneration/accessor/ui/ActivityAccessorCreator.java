@@ -21,8 +21,8 @@ public class ActivityAccessorCreator {
 	private final Activity activity;
 
 	public ActivityAccessorCreator(Module module, Graph graph) {
-		this.project = module.getProject();
-		appModule = module;
+		this.project = module == null ? null : module.getProject();
+		this.appModule = module;
 		this.activity = graph.find(Activity.class).get(0);
 	}
 

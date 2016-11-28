@@ -6,7 +6,6 @@ import org.junit.Test;
 import tara.magritte.Graph;
 
 import java.io.File;
-
 public class CesarGenerationTest {
 
 	private static final String CESAR = "cesar";
@@ -24,7 +23,6 @@ public class CesarGenerationTest {
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
 		new FullRenderer(null, Graph.load("Consul").wrap(PandoraApplication.class), gen, gen, CONSUL).execute();
-
 	}
 
 

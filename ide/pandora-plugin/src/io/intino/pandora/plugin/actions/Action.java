@@ -4,9 +4,17 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import io.intino.pandora.plugin.PandoraIcons;
+import org.jetbrains.annotations.Nullable;
 import tara.intellij.project.TaraModuleType;
 
+import javax.swing.*;
+
 abstract class Action extends AnAction {
+
+
+	public Action(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+		super(text, description, icon);
+	}
 
 	@Override
 	public void update(AnActionEvent e) {
