@@ -1,8 +1,8 @@
 def type(widget)
-	<script src="$name~widget/requester.js"></script>
-    <script src="$name~widget/notifier-listener.js"></script>
+	<script src="$name+lowercase~widget/requester.js"></script>
+    <script src="$name+lowercase~widget/notifier-listener.js"></script>
 
-    <dom-module id="$name~-widget">
+    <dom-module id="$name~-widget">  --> PONER EN SNAKE CASE
 
         <template>
             $innerDisplay...[$NL]
@@ -21,7 +21,7 @@ def type(widget)
             };
 
             Polymer({
-                is: '$name~-widget',
+                is: '$name~-widget', --> PONER EN SNAKE CASE
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
