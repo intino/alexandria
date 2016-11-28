@@ -6,8 +6,9 @@
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/jmx/jmx.iml" filepath="$PROJECT_DIR$/jmx/jmx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" group="plugin" />
-      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin-core/pandora-plugin-core.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin-core/pandora-plugin-core.iml" group="plugin" />
+      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin-core.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin-core.iml" group="plugin" />
+      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin-old/pandora-plugin-old.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin-old/pandora-plugin-old.iml" group="plugin" />
       <module fileurl="file://$PROJECT_DIR$/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/scheduler/scheduler.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/slack/slack.iml" filepath="$PROJECT_DIR$/slack/slack.iml" />

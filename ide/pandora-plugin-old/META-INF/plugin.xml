@@ -17,10 +17,6 @@
     <depends>siani.dev.tara</depends>
     <idea-version since-build="143.375"/>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="io.intino.pandora.plugin.file.PandoraFileTypeFactory"/>
-        <errorHandler implementation="io.intino.pandora.plugin.errorreporting.PandoraErrorReportSubmitter"/>
-    </extensions>
     <actions>
         <group id="PandoraToolsGroup" popup="true" text="Pandora" class="io.intino.pandora.plugin.actions.PandoraActionGroup">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
@@ -41,9 +37,4 @@
             <add-to-group group-id="PandoraToolsGroup"/>
         </action>
     </actions>
-    <application-components>
-        <component>
-            <implementation-class>io.intino.pandora.plugin.project.FileListener</implementation-class>
-        </component>
-    </application-components>
 </idea-plugin>

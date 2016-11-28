@@ -13,7 +13,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
+import io.intino.pandora.plugin.utils.GraphLoader;
+import io.intino.pandora.plugin.utils.PandoraUtils;
 import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
 import tara.dsl.Pandora;
@@ -30,6 +33,11 @@ import static tara.intellij.lang.psi.impl.TaraUtil.*;
 public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
 	private static final String PANDORA = "Pandora";
+
+	public CreatePandoraBoxAction() {
+		super("Create Pandora Box", "Creates Pandora Box", PandoraIcons.ICON_16);
+	}
+
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {

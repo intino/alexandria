@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.actions;
+package io.intino.pandora.plugin.utils;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -13,12 +13,9 @@ import com.intellij.util.indexing.FileBasedIndex;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import tara.intellij.lang.psi.TaraModel;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-class PandoraUtils {
+public class PandoraUtils {
 
 	public static List<PsiFile> findPandoraFiles(Module module) {
 		if (module == null) return Collections.emptyList();
@@ -31,7 +28,7 @@ class PandoraUtils {
 	private static List<PsiFile> pandoraFiles(Module module) {
 		List<PsiFile> pandoraFiles = new ArrayList<>();
 		Collection<VirtualFile> files = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, PandoraFileType.instance(), GlobalSearchScope.moduleScope(module));
-		files.stream().filter(file -> file != null).forEach(file -> {
+		files.stream().filter(Objects::nonNull).forEach(file -> {
 			TaraModel pandoraFile = (TaraModel) PsiManager.getInstance(module.getProject()).findFile(file);
 			if (pandoraFile != null) pandoraFiles.add(pandoraFile);
 		});

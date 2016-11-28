@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.intino.pandora</groupId>
-    <artifactId>pandora-plugin-core</artifactId>
+    <artifactId>pandora-plugin</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -19,14 +19,9 @@
     </properties>
 
     <build>
-        <outputDirectory>../../out/production/pandora-plugin-core</outputDirectory>
-        <testOutputDirectory>../../out/test/pandora-plugin-core</testOutputDirectory>
-        <directory>../../out/build/pandora-plugin-core</directory>
-        <resources>
-            <resource>
-                <directory>${basedir}/../.tara/refactors</directory>
-            </resource>
-        </resources>
+        <outputDirectory>../../out/production/pandora-plugin</outputDirectory>
+        <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
+        <directory>../../out/build/pandora-plugin</directory>
     </build>
     <repositories>
         <repository>
@@ -73,13 +68,21 @@
             <version>2.1.2</version>
         </dependency>
         <dependency>
+            <groupId>org.siani.cottons</groupId>
+            <artifactId>cotton-utils</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+            <scope>provided</scope>
             <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
+            <scope>provided</scope>
             <version>LATEST</version>
         </dependency>
         <dependency>
@@ -91,24 +94,16 @@
         <dependency>
             <groupId>org.siani.itrules</groupId>
             <artifactId>itrules</artifactId>
-            <version>LATEST</version>
-        </dependency>
-        <dependency>
-            <groupId>org.siani.cottons</groupId>
-            <artifactId>cotton-utils</artifactId>
+            <scope>provided</scope>
             <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-invoker</artifactId>
+            <scope>provided</scope>
             <version>2.0.11</version>
         </dependency>
-        <!--SLACK-->
-        <dependency>
-            <groupId>com.ullink.slack</groupId>
-            <artifactId>simpleslackapi</artifactId>
-            <version>LATEST</version>
-        </dependency>
+
 
         <dependency>
             <groupId>io.intino.pandora</groupId>
