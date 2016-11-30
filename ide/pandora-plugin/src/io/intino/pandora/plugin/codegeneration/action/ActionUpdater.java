@@ -56,9 +56,9 @@ class ActionUpdater {
 	private void updateFields(PsiClass psiClass) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
 		parameters.stream().
-				filter(parameter -> !stream(psiClass.getAllFields()).anyMatch(f -> parameter.name().equalsIgnoreCase(f.getName()))).
+				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> parameter.name().equalsIgnoreCase(f.getName()))).
 				forEach(parameter -> psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling()));
-		if (!stream(psiClass.getAllFields()).anyMatch(f -> "box".equalsIgnoreCase(f.getName())))
+		if (stream(psiClass.getAllFields()).noneMatch(f -> "box".equalsIgnoreCase(f.getName())))
 			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
 	}
 
@@ -96,6 +96,7 @@ class ActionUpdater {
 	}
 
 	private String formatType(TypeData typeData, boolean list) {
+		if (typeData == null || typeData.type() == null) return "void";
 		final String type = (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 		return list ? "List<" + type + ">" : type;
 	}
