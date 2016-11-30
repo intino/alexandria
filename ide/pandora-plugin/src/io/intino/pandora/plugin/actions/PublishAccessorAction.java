@@ -1,6 +1,7 @@
 package io.intino.pandora.plugin.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
@@ -28,6 +29,8 @@ public class PublishAccessorAction extends PandoraAction implements DumbAware {
 
 	public PublishAccessorAction() {
 		super("Publish Pandora Accessor", "Publish Pandora Accessor in Artifactory", PandoraIcons.ICON_16);
+		this.setShortcutSet(CustomShortcutSet.fromString("control alt A"));
+
 	}
 
 	@Override

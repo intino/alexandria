@@ -31,14 +31,6 @@ def type(activity)
 
         }
 
-        public static URL authServiceUrl() {
-            try {
-                return new URL("$auth");
-            } catch (MalformedURLException e) {
-                return null;
-            }
-        }
-
         private static DisplayNotifierProvider notifierProvider() {
             return (display, messageCarrier) -> {
                 $display+provider...[$NL]
@@ -70,4 +62,12 @@ end
 
 def trigger(asset)
 	spark.route("/$value+lowecase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+end
+
+def trigger(quoted)
+	"value"
+end
+
+def type(custom) trigger(custom)
+	.replace("{$value}", configuration.$value)
 end

@@ -13,26 +13,29 @@ import io.intino.pandora.plugin.Activity;
 import tara.magritte.Graph;
 
 import java.io.File;
+import java.util.List;
 
 public class ActivityAccessorCreator {
 
 	private final Project project;
 	private final Module appModule;
-	private final Activity activity;
+	private final List<Activity> activities;
 
 	public ActivityAccessorCreator(Module module, Graph graph) {
 		this.project = module == null ? null : module.getProject();
 		this.appModule = module;
-		this.activity = graph.find(Activity.class).get(0);
+		activities = graph.find(Activity.class);
 	}
 
 	public void execute() {
-		final Module webModule = getOrCreateModule();
-		ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(appModule, webModule, activity);
-		renderer.execute();
+		for (Activity activity : activities) {
+			Module webModule = getOrCreateModule(activity);
+			ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(appModule, webModule, activity);
+			renderer.execute();
+		}
 	}
 
-	private Module getOrCreateModule() {
+	private Module getOrCreateModule(Activity activity) {
 		return ApplicationManager.getApplication().runWriteAction((Computable<Module>) () -> {
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module[] modules = manager.getModules();
