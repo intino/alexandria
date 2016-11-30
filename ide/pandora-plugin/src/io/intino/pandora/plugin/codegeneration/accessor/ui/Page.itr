@@ -38,9 +38,11 @@ def type(page)
                 </style>
 
                 <script>
-                    Polymer({
-                        is: 'page-body'
-                    });
+					HTMLImports.whenReady(function() {
+						Polymer({
+							is: 'page-body'
+						});
+					});
                 </script>
             </dom-module>
 
