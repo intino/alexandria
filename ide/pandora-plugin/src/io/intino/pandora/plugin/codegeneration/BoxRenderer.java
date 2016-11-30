@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration;
 import com.intellij.openapi.module.Module;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.jms.JMSService;
@@ -18,7 +19,7 @@ import java.io.File;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
-class BoxRenderer {
+public class BoxRenderer {
 
 	private final File gen;
 	private final String packageName;
@@ -26,7 +27,7 @@ class BoxRenderer {
 	private final PandoraApplication application;
 	private final Configuration configuration;
 
-	BoxRenderer(Graph graph, File gen, String packageName, Module module) {
+	public BoxRenderer(Graph graph, File gen, String packageName, Module module) {
 		application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
@@ -41,19 +42,28 @@ class BoxRenderer {
 		frame.addSlot("package", packageName);
 		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists())
 			frame.addSlot("parent", configuration.dsl());
-		if (!application.rESTServiceList().isEmpty())
+		if (!application.rESTServiceList().isEmpty() || !application.activityList().isEmpty())
 			frame.addSlot("hasREST", "");
 		for (RESTService service : application.rESTServiceList())
-			frame.addSlot("service", new Frame().addTypes("service", "rest").addSlot("name", service.name()));
+			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : application.jMSServiceList())
-			frame.addSlot("service", new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
+			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
 		for (Channel channel : application.channelList()) {
 			final Frame channelFrame = new Frame().addTypes("channel").addSlot("name", channel.name());
 			if (channel.isDurable()) channelFrame.addSlot("durable", channel.name());
-			frame.addSlot("channel", channelFrame.addSlot("configuration", name));
+			frame.addSlot("channel", (Frame) channelFrame.addSlot("configuration", name));
+		}
+		for (Activity activity : application.activityList()) {
+			frame.addSlot("activity", (Frame) activityFrame(activity));
 		}
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
+	}
+
+	private Frame activityFrame(Activity activity) {
+		Frame frame = new Frame();
+		frame.addTypes("activity").addSlot("name", activity.name());
+		return frame;
 	}
 
 	private boolean parentExists() {

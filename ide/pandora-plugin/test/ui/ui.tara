@@ -1,0 +1,203 @@
+dsl Pandora
+
+Activity UI
+	Home(rootDisplay = application) homePage
+	Page(rootDisplay = error, paths = "/error") errorPage
+
+	Display application
+		displays = olap dashboard pivotTable
+
+		Notification info as Object(ApplicationInfo)
+		Notification boards as Object(BoardList)
+		Notification user as Object(UserInfo)
+		Notification userLoggedOut
+
+		Request logout
+
+	Display olap
+		Notification timeline as Object(Timeline)
+		Notification range as Object(Range)
+		Notification showTimeSeries
+		Notification scales as Object(ScaleList)
+		Notification updateScale as Object(Scale)
+		Notification enableDrill
+		Notification disableDrill
+		Notification enableFilter
+		Notification disableFilter
+		Notification filtering
+		Notification notFiltering
+		Notification drilling
+		Notification notDrilling
+		Notification filters as Object(FilterList)
+		Notification refreshTickets as Object(NameList)
+		Notification refreshSelectedTickets as Object(NameList)
+
+		Request addTicket as Text
+		Request removeTicket as Text
+		Request updateScale as Text
+		Request updateRange as Object(RequestRange)
+		Request(Asset) export as Object(RequestRange)
+		Request toggleDrill
+		Request toggleFilter
+		Request removeFilter as Text
+
+	Display timeSeries
+		Notification zoomRange as Object(Range)
+		Notification range as Object(Range)
+		Notification timeline as Object(Timeline)
+		Notification formats as Object(FormatterList)
+		Notification updateScale as Object(Scale)
+		Notification loading
+		Notification loaded
+		Notification clear
+		Notification eventListCount as Real
+		Notification eventList as Object(EventList)
+		Notification addSeries as Object(SerieList)
+		Notification removeSeries as Object(NameList)
+		Notification addPoints as Object(Points)
+
+		Request updateRange as Object(RequestRange)
+		Request updateRangeAndScale as Object(RequestRange)
+		Request move as Object(RequestRange)
+
+	Display analyze
+		displays = categorization
+		Notification categorizations as Object(CategorizationViewList)
+		Notification hide
+		Notification show
+
+	Display categorization
+		Notification categorization as Object(CategorizationView)
+		Notification enableSelection
+		Notification disableSelection
+		Notification loading
+		Notification loaded
+		Notification refreshHistogram as Object(Histogram)
+		Notification refreshSelected as Object(CategoryViewList)
+
+		Request toggle as Object(RequestCategory)
+		Request refresh
+
+	Display dashboard
+	Display pivotTable
+	Display error
+
+Schema ApplicationInfo
+	Attribute title as Text
+	Attribute subtitle as Text
+	Attribute logo as Text
+
+Schema BoardList
+	Schema Board
+		Attribute label as Text
+
+Schema UserInfo
+	Attribute fullName as Text
+	Attribute photo as Text
+
+Schema Timeline
+	Attribute min as Real
+	Attribute max as Real
+
+Schema RequestRange
+	Attribute from as Integer
+	Attribute to as Integer
+
+Schema Range
+	Attribute min as Real
+	Attribute max as Real
+
+Schema ScaleList
+	Has(Scale)
+
+Schema Scale
+	Attribute name as Text
+	Attribute label as Text
+	Attribute symbol as Text
+
+Schema FilterList
+	Schema Filter
+		Schema(multiple=false) Categorization
+			Attribute name as Text
+			Attribute label as Text
+		Schema Category
+			Attribute name as Text
+			Attribute label as Text
+
+Schema CategorizationViewList
+	Has(CategorizationView)
+
+Schema CategorizationView
+	Attribute name as Text
+	Attribute label as Text
+
+	Has(CategoryView)
+	Has(CategorizationView, multiple=false) subCategorization
+
+Schema CategoryViewList
+	Has(CategoryView)
+
+Schema CategoryView
+	Attribute name as Text
+	Attribute label as Text
+	Has(CategoryView)
+
+Schema FormatterList
+	Schema Formatter
+		Attribute name as Text
+		Attribute format as Text
+
+Schema EventList
+	Schema Event
+		Attribute label as Text
+		Attribute instant as Real
+		Attribute render as Text
+		Attribute icon as Text
+
+Schema SerieList
+	Has(Serie)
+
+Schema Serie
+	Attribute label as Text
+	Attribute group as Text
+	Attribute metric as Text
+	Attribute color as Text
+	Attribute axisColor as Text
+	Attribute style as Text
+	Attribute min as Integer
+	Attribute max as Integer
+
+	Has(DecimalPlaces, multiple=false)
+	Schema data
+		Attribute instant as Real
+		Attribute value as Real
+
+Schema DecimalPlaces
+	Attribute absolute as Integer
+	Attribute percentage as Integer
+
+Schema Points
+	Has(SerieList, multiple=false)
+	Has(Scale, multiple=false)
+
+Schema NameList
+	Attribute(multiple=true) names as Text
+
+Schema Histogram
+	Has(CategoryView)
+	Has(Ticket)
+
+Schema Ticket
+	Attribute label as Text
+	Attribute(multiple=true) values as Real
+
+	Schema Indicator
+		Attribute label as Text
+		Attribute color as Text
+		Attribute(multiple=true) values as Real
+
+		Has(DecimalPlaces, multiple=false)
+
+Schema RequestCategory
+	Attribute name as Text
+	Attribute categorization as Text
