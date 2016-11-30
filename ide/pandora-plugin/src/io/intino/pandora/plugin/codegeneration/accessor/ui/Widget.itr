@@ -2,7 +2,7 @@ def type(widget)
 	<script src="$name+lowercase~widget/requester.js"></script>
     <script src="$name+lowercase~widget/notifier-listener.js"></script>
 
-    <dom-module id="$name~-widget">  //TODO PONER $NAME EN SNAKE CASE
+    <dom-module id="$name+camelCaseToSnakeCase-widget">
 
         <template>
             $innerDisplay...[$NL]

@@ -9,3 +9,4 @@ plugin/plugin/target/
 test-res/*.stash
 target/
 workspace.xml
+/ide/pandora-plugin/dependency-reduced-pom.xml
