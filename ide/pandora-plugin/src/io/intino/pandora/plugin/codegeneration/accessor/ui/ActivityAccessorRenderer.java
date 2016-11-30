@@ -8,10 +8,12 @@ import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Layer;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static java.io.File.separator;
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.write;
 
 public class ActivityAccessorRenderer {
 	private final Module appModule;
@@ -44,8 +46,7 @@ public class ActivityAccessorRenderer {
 	private void createPages() throws IOException {
 		for (Activity.AbstractPage page : activity.abstractPageList()) {
 			Path pagePath = new File(rooDirectory(), "app" + separator + page.name() + ".html").toPath();
-			if (!Files.exists(pagePath))
-				Files.write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
+			if (!exists(pagePath)) write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
 		}
 	}
 
@@ -56,7 +57,8 @@ public class ActivityAccessorRenderer {
 	private void createWidget(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
 		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html");
-		if (!file.exists()) Files.write(file.toPath(), WidgetTemplate.create().format(frame).getBytes());
+		if (!file.exists())
+			write(file.toPath(), WidgetTemplate.create().add("camelCaseToSnakeCase", value -> camelCaseToSnakeCase(value.toString())).format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
@@ -67,21 +69,21 @@ public class ActivityAccessorRenderer {
 			createWidget(display);
 			widgets.addSlot("widget", display.name());
 		}
-		Files.write(new File(rooDirectory(), "app" + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
+		write(new File(rooDirectory(), "app" + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
 		file.getParentFile().mkdirs();
-		Files.write(file.toPath(), WidgetRequesterTemplate.create().format(frame).getBytes());
+		write(file.toPath(), WidgetRequesterTemplate.create().format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		Files.write(file.toPath(), WidgetNotifierTemplate.create().format(frame).getBytes());
+		write(file.toPath(), WidgetNotifierTemplate.create().format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Request r) {
@@ -102,11 +104,11 @@ public class ActivityAccessorRenderer {
 
 	private void writeConfigurationFiles(Frame frame) throws IOException {
 		File file = new File(rooDirectory(), "bower.json");
-		if (!file.exists()) Files.write(file.toPath(), BowerTemplate.create().format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), BowerTemplate.create().format(frame).getBytes());
 		file = new File(rooDirectory(), "package.json");
-		if (!file.exists()) Files.write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
 		file = new File(rooDirectory(), "gulpfile.js");
-		if (!file.exists()) Files.write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
 	}
 
 	private void createStaticFiles() throws IOException {

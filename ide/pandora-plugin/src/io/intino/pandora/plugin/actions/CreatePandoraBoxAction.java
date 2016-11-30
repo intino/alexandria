@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.actions;
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
@@ -37,6 +38,7 @@ public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 
 	public CreatePandoraBoxAction() {
 		super("Create Pandora Box", "Creates Pandora Box", PandoraIcons.ICON_16);
+		this.setShortcutSet(CustomShortcutSet.fromString("control alt S"));
 	}
 
 

@@ -1,10 +1,6 @@
 def type(box)
 	package $package;
 
-	import org.apache.activemq.ActiveMQConnectionFactory;
-
-	import javax.jms.Connection;
-	import javax.jms.Session;
     import java.util.LinkedHashMap;
     import java.util.logging.Logger;
     import java.util.Map;
@@ -15,7 +11,7 @@ def type(box)
     public class $name+FirstUpperCase~Box extends [$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
 		private $name+FirstUpperCase~Configuration configuration;
-		[$hasREST~private io.intino.pandora.server.PandoraSpark restServer;]
+		[$hasREST~private io.intino.pandora.server.PandoraSpark pandoraServer;]
     	private Map<String, Object> map = new LinkedHashMap<>();
 		[$service+field...[$NL]]
 		[$channel+field...[$NL]]
@@ -59,6 +55,7 @@ def type(box)
 
     	public void init() {[
     		$parent+parentInit~super.init();? ]
+			initActivities();
 			initRESTServices();
 			initJMSServices();
 			initChannels();
@@ -70,13 +67,17 @@ def type(box)
 		}
 
 		private void initJMSServices() {
-			Connection connection;
-			$service+jms...[$NL]
+			[javax.jms.Connection connection;
+			$service+jms...[$NL]]
+		}
+
+		private void initActivities() {
+			$activity...[$NL]
 		}
 
 		private void initChannels() {
 			[try {
-				Connection connection;
+				javax.jms.Connection connection;
 				$channel+init...[$NL]
 			} catch (javax.jms.JMSException e) {
 				LOG.severe(e.getMessage());
@@ -95,10 +96,10 @@ def type(box)
 end
 
 def type(channel) trigger(init)
-	connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
 	[$durable
 	]connection.start();
-	$name+firstUpperCase~Channel.init(connection.createSession(false, Session.AUTO_ACKNOWLEDGE), this);
+	$name+firstUpperCase~Channel.init(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 end
 
 def trigger(durable)
@@ -106,15 +107,20 @@ def trigger(durable)
 end
 
 def type(service & rest) trigger(rest)
-	if (restServer == null) restServer = new PandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory]);
-	$name+FirstUpperCase~Resources.setup(restServer, this);
+	if (pandoraServer == null) pandoraServer = new PandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory]);
+	$name+FirstUpperCase~Resources.setup(pandoraServer, this);
+end
+
+def type(activity) trigger(activity)
+	if (pandoraServer == null) pandoraServer = new io.intino.pandora.server.activity.ActivityPandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory], configuration.$name+firstLowerCase~Configuration.authService);
+	$name+FirstUpperCase~Activity.init((io.intino.pandora.server.activity.ActivityPandoraSpark) pandoraServer, this);
 end
 
 def type(service & jms) trigger(jms)
 	try {
-		connection = new ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
-		this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(connection.createSession(false, Session.AUTO_ACKNOWLEDGE), this);
+		this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}

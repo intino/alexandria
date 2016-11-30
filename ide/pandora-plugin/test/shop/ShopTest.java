@@ -25,7 +25,7 @@ public class ShopTest {
 //    }
 //
 //    private Product newProduct() {
-//        Product product = new Product().name("Coke").price(1.5);
+//        Product product = new Product().assertLoadToml("Coke").price(1.5);
 //        product.recordList().add(new Record().key("volume").value("2l"));
 //        return product.identification(new Identification().barcode(124142213));
 //    }
