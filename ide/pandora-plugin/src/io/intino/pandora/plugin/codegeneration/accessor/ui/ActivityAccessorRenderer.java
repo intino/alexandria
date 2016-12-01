@@ -108,7 +108,7 @@ public class ActivityAccessorRenderer {
 		file = new File(rooDirectory(), "package.json");
 		if (!file.exists()) write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
 		file = new File(rooDirectory(), "gulpfile.js");
-		if (!file.exists()) write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
+		write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
 	}
 
 	private void createStaticFiles() throws IOException {
