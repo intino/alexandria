@@ -85,7 +85,7 @@ def type(configuration)
 
 	gulp.task('images', () => imageOptimizeTask('app/images/**/*', dist('images')));
 
-	gulp.task('transpile', () => transpile($['app/**/*.{js,html}', '!app/bower_components/**/*', '!app/home.html']));
+	gulp.task('transpile', () => transpile($['app/**/*.{js,html}', '!app/bower_components/**/*'[, $page+transpile...[, ]]));
 
 	gulp.task('lint', () => lint($['app/scripts/**/*.js', 'app/widgets/**/*.html', 'gulpfile.js']));
 
@@ -145,7 +145,7 @@ def type(configuration)
 	});
 
 	gulp.task('resolve-dependencies-url', () => {
-		return gulp.src($[dist('index.html'), dist('error.html')])
+		return gulp.src($[$page+resolve...[, ]])
 			.pipe($$.replace('src="', 'src="$$url/'))
 			.pipe($$.replace('href="', 'href="$$url/'))
 			.pipe(gulp.dest(dist()));
@@ -153,7 +153,7 @@ def type(configuration)
 
 	gulp.task('refresh-dev-server', $['package'], () => runSequence('install', 'refresh-browser'));
 
-	gulp.task('refresh-browser', () => gulp.src(OUTPUT_PATH + '/home.html').pipe($$.livereload()));
+	gulp.task('refresh-browser', () => gulp.src($[$page+refresh...[, ]]).pipe($$.livereload()));
 
 	gulp.task('clean', () => del($['.tmp', dist()]));
 
@@ -194,4 +194,16 @@ def type(configuration)
 	});
 
 	require('web-component-tester').gulp.init(gulp);
+end
+
+def type(page) trigger(resolve)
+	dist('$name.html')
+end
+
+def type(page) trigger(refresh)
+	OUTPUT_PATH + '/$name.html'
+end
+
+def type(page) trigger(transpile)
+	'!app/$name.html'
 end
