@@ -8,48 +8,57 @@ def type(box)
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
     [import tara.magritte.Graph;$tara+import]
 
-    public class $name+FirstUpperCase~Box extends [$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
+    public class $name+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
-		private $name+FirstUpperCase~Configuration configuration;
-		[$hasREST~private io.intino.pandora.server.PandoraSpark pandoraServer;]
-    	private Map<String, Object> map = new LinkedHashMap<>();
+		[$hasParent?protected $name+FirstUpperCase~Configuration configuration;]
+    	[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();]
 		[$service+field...[$NL]]
 		[$channel+field...[$NL]]
-		[$process+field...[$NL]][
+		[$process+field...[$NL]]
 
 		private String graphID;
 
+		public $name+firstUpperCase~Box($name+firstUpperCase~Configuration configuration) {
+			[$hasParent~super(configuration);
+			]this.configuration = configuration;[
+			$service+setup...[$NL]][
+			$activity+setup...[$NL]]
+		}
+
+
 		public $tara+FirstUpperCase~Box(Graph graph, $tara+FirstUpperCase~Configuration configuration) {
-			map.put(graphID = UUID.randomUUID().toString(), graph);
-			this.configuration = configuration;
+			[$hasParent~super(configuration);
+			]map.put(graphID = UUID.randomUUID().toString(), graph);
+			this.configuration = configuration;[
+			$service+setup...[$NL]][
+			$activity+setup...[$NL]]
 		}
 
 		public Graph graph() {
-			return (Graph) map.get(graphID);
+			return (Graph) map().get(graphID);
 		}
-		]
 
-    	public $name+firstUpperCase~Box($name+firstUpperCase~Configuration configuration) {
-    		this.configuration = configuration;
-    	}
+		protected Map<String, Object> map() {
+			return map;
+		}
 
     	public $name+firstUpperCase~Configuration configuration() {
-			return configuration;
+			return ($name+firstUpperCase~Configuration) configuration;
 		}
 
 		$service+getter...[$NL]
 
     	public <T> T get(Class<T> tClass) {
-    		return (T) map.values().stream().filter(tClass::isInstance).findFirst().orElse(null);
+    		return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
     	}
 
 
     	public <T> T get(String object, Class<T> tClass) {
-    		return (T) map.get(object);
+    		return (T) map().get(object);
     	}
 
     	public $name+firstUpperCase~Box put(String name, Object object) {
-    		map.put(name, object);
+    		map().put(name, object);
     		return this;
     	}
 
@@ -95,30 +104,36 @@ def type(box)
     }
 end
 
+
+def type(activity) trigger(setup)
+	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+firstLowerCase~Configuration.port[, configuration().$name+firstLowerCase~Configuration.webDirectory], configuration().$name+firstLowerCase~Configuration.authService);
+end
+
+def type(service & rest) trigger(setup)
+	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+firstLowerCase~Configuration.port[, configuration().$name+firstLowerCase~Configuration.webDirectory], null);
+end
+
 def type(channel) trigger(init)
-	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+firstLowerCase~Configuration.user, configuration().$name+firstLowerCase~Configuration.password, configuration().$name+firstLowerCase~Configuration.url).createConnection();
 	[$durable
 	]connection.start();
 	$name+firstUpperCase~Channel.init(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 end
 
 def trigger(durable)
-	connection.setClientID(configuration.$value+firstLowerCase~Configuration.clientID);
+	connection.setClientID(configuration().$value+firstLowerCase~Configuration.clientID);
 end
-
 def type(service & rest) trigger(rest)
-	if (pandoraServer == null) pandoraServer = new PandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory]);
-	$name+FirstUpperCase~Resources.setup(pandoraServer, this);
+	$name+FirstUpperCase~Resources.setup(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
 end
 
 def type(activity) trigger(activity)
-	if (pandoraServer == null) pandoraServer = new io.intino.pandora.server.activity.ActivityPandoraSpark(configuration.$name+firstLowerCase~Configuration.port[, configuration.$name+firstLowerCase~Configuration.webDirectory], configuration.$name+firstLowerCase~Configuration.authService);
-	$name+FirstUpperCase~Activity.init((io.intino.pandora.server.activity.ActivityPandoraSpark) pandoraServer, this);
+	$name+FirstUpperCase~Activity.init(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
 end
 
 def type(service & jms) trigger(jms)
 	try {
-		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.$name+firstLowerCase~Configuration.user, configuration.$name+firstLowerCase~Configuration.password, configuration.$name+firstLowerCase~Configuration.url).createConnection();
+		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+firstLowerCase~Configuration.user, configuration().$name+firstLowerCase~Configuration.password, configuration().$name+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
 		this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 	} catch (javax.jms.JMSException e) {

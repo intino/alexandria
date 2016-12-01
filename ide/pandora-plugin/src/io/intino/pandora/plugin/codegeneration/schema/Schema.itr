@@ -1,4 +1,4 @@
-def type(format)
+def type(schema)
 	package $package+ValidPackage.schemas;
 
 	public class $name+firstUpperCase {

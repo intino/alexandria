@@ -9,17 +9,17 @@ def type(main)
 		public static void main(String$[] args) {
 			Graph graph = Graph.load("Model").wrap([$dslPackage.]$language~Application.class, null);//TODO
 			$name+firstUpperCase~Configuration configuration = args.length != 0 ? createConfigurationFromArgs(): loadDevelopConfiguration();
-			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
-			box.init();
-			graph.application().execute();
+			run(configuration);
 		}
 
 		private static $name+firstUpperCase~Configuration createConfigurationFromArgs() {
 			return new $name+firstUpperCase~Configuration();//TODO
 		}
 
-		private static $name+firstUpperCase~Configuration loadDevelopConfiguration() {
-        	return new $name+firstUpperCase~Configuration();//TODO
+		public static void run($name+firstUpperCase~Configuration configuration) {
+			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
+			box.init();
+			graph.application().execute();
 		}
 	}
 end
