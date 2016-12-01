@@ -85,7 +85,7 @@ def type(configuration)
 
 	gulp.task('images', () => imageOptimizeTask('app/images/**/*', dist('images')));
 
-	gulp.task('transpile', () => transpile($['app/**/*.{js,html}', '!app/bower_components/**/*'[, $page+transpile...[, ]]));
+	gulp.task('transpile', () => transpile($['app/**/*.{js,html}', '!app/bower_components/**/*'[, $page+transpile...[, ]]]));
 
 	gulp.task('lint', () => lint($['app/scripts/**/*.js', 'app/widgets/**/*.html', 'gulpfile.js']));
 
