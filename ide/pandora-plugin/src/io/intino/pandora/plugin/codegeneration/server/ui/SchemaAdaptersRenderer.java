@@ -31,8 +31,8 @@ public class SchemaAdaptersRenderer {
 
 	public void execute() {
 		if (graph.find(Activity.class).isEmpty()) return;
-		final Frame[] collect = schemas.stream().map(this::processSchema).toArray(Frame[]::new);
-		writeFrame(new File(destination, "schemas"), "ActivitySchemaAdapters", template().format(new Frame().addTypes("adapters").addSlot("package", packageName).addSlot("format", collect)));
+		final Frame[] schemaFrames = schemas.stream().map(this::processSchema).toArray(Frame[]::new);
+		writeFrame(new File(destination, "schemas"), "ActivitySchemaAdapters", template().format(new Frame().addTypes("adapters").addSlot("package", packageName).addSlot("schema", schemaFrames)));
 	}
 
 	private Template template() {

@@ -11,19 +11,23 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import com.intellij.testFramework.PsiTestUtil;
 import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import io.intino.pandora.plugin.utils.GraphLoader;
 import io.intino.pandora.plugin.utils.PandoraUtils;
+import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.StashBuilder;
 import tara.compiler.shared.Configuration;
 import tara.dsl.Pandora;
 import tara.io.Stash;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -119,7 +123,18 @@ public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 	private VirtualFile getGenRoot(Module module) {
 		for (VirtualFile file : getSourceRoots(module))
 			if (file.isDirectory() && "gen".equals(file.getName())) return file;
-		return null;
+		final VirtualFile genDirectory = createGenDirectory(module);
+		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
+		return genDirectory;
+	}
+
+	private VirtualFile createGenDirectory(Module module) {
+		try {
+			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+			return VfsUtil.createDirectoryIfMissing(contentRoots[0], "gen");
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 }

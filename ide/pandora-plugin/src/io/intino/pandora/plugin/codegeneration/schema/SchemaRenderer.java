@@ -47,9 +47,7 @@ public class SchemaRenderer {
 
 	@NotNull
 	public static Frame createSchemaFrame(Schema element, String packageName) {
-		Frame frame = new Frame().addTypes("format");
-		frame.addSlot("name", element.name());
-		frame.addSlot("package", packageName);
+		Frame frame = new Frame().addTypes("schema").addSlot("name", element.name()).addSlot("package", packageName);
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(element.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(element.schemaList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(element.hasList()));
@@ -91,47 +89,47 @@ public class SchemaRenderer {
 	}
 
 	private static Frame processAttribute(RealData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
 				.addSlot("name", attribute.as(Schema.Attribute.class).name())
 				.addSlot("type", "double")
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(IntegerData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(BoolData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(TextData attribute) {
-		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
 	}
 
 	private static Frame processAttribute(DateTimeData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
 	}
 
 	private static Frame processAttribute(DateData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single")
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
 	}
 
 	private static Frame processSchemaAsAttribute(Schema format) {
-		return new Frame().addTypes(format.multiple() ? "multiple" : "single", "member")
+		return new Frame().addTypes(format.multiple() ? "multiple" : "single", "member", format.name())
 				.addSlot("name", format.name())
 				.addSlot("type", format.name());
 	}
 
 	private static Frame processHasAsAttribute(Schema.Has has) {
-		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member")
+		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name())
 				.addSlot("name", has.reference().name())
 				.addSlot("type", has.reference().name());
 	}

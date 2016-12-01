@@ -5,7 +5,7 @@
 
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.4</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -71,6 +71,26 @@
                             <sources>
                                 <source>gen</source>
                             </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>${project.build.sourceDirectory}/../test-gen</directory>
+                                </fileset>
+                            </filesets>
                         </configuration>
                     </execution>
                 </executions>
@@ -166,37 +186,37 @@
 
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>rest-server</artifactId>
+            <artifactId>pandora-server</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>jmx</artifactId>
+            <artifactId>pandora-jmx</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>scheduler</artifactId>
+            <artifactId>pandora-scheduler</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>jms</artifactId>
+            <artifactId>pandora-jms</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>slack</artifactId>
+            <artifactId>pandora-slack</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>rest-accessor-java</artifactId>
+            <artifactId>pandora-rest-accessor-java</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
         </dependency>

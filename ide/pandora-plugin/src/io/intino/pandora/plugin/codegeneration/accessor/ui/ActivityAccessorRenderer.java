@@ -35,6 +35,7 @@ public class ActivityAccessorRenderer {
 			frame.addSlot("activityName", activity.name());
 			frame.addSlot("application", TaraUtil.configurationOf(appModule).artifactId());
 			frame.addSlot("version", TaraUtil.configurationOf(appModule).modelVersion());
+			for (Activity.AbstractPage abstractPage : activity.abstractPageList()) frame.addSlot("page", (Frame) pageFrame(abstractPage));
 			writeConfigurationFiles(frame);
 			createWidgets();
 			createPages();
@@ -51,7 +52,7 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		return new Frame().addTypes("page").addSlot("rootDisplay", page.rootDisplay().name());
+		return new Frame().addTypes("page").addSlot("rootDisplay", page.rootDisplay().name()).addSlot("name", page.name());
 	}
 
 	private void createWidget(Display display) throws IOException {
@@ -108,6 +109,7 @@ public class ActivityAccessorRenderer {
 		file = new File(rooDirectory(), "package.json");
 		if (!file.exists()) write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
 		file = new File(rooDirectory(), "gulpfile.js");
+
 		write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
 	}
 

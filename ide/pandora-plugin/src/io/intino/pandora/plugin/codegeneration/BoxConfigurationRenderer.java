@@ -1,6 +1,8 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
@@ -27,12 +29,14 @@ public class BoxConfigurationRenderer {
 	private final File gen;
 	private final String packageName;
 	private final Module module;
+	private final Configuration configuration;
 
 	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module) {
 		this.application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
+		configuration = module != null ? TaraUtil.configurationOf(module) : null;
 	}
 
 	public void execute() {
@@ -40,6 +44,10 @@ public class BoxConfigurationRenderer {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
+		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists()) {
+			frame.addSlot("parent", configuration.dsl());
+			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
+		}
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addChannels(frame, boxName);
@@ -111,6 +119,12 @@ public class BoxConfigurationRenderer {
 			if (dsl == null || dsl.isEmpty()) return module.getName();
 			else return dsl;
 		} else return "System";
+	}
+
+	private boolean parentExists() {
+		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
+		String workingPackage = configuration.dslWorkingPackage();
+		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
 	}
 
 
