@@ -89,7 +89,10 @@ public class ActivityAccessorRenderer {
 
 	private Frame frameOf(Display.Request r) {
 		final Frame frame = new Frame().addTypes("requester").addSlot("name", r.name());
-		if (r.isType()) frame.addSlot("parameter", "");
+		if (r.isType()) {
+			frame.addSlot("parameter", "");
+			frame.addSlot("parameterSignature", "");
+		}
 		frame.addSlot("method", r.responseType().name());
 		return frame;
 	}

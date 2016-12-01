@@ -5,7 +5,7 @@
 
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -24,18 +24,25 @@
         <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
         <directory>../../out/build/pandora-plugin</directory>
         <!--<testSourceDirectory>test</testSourceDirectory>-->
-        <sourceDirectory>src</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>res</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>test-res</directory>
-            </testResource>
-        </testResources>
+        <!--<sourceDirectory>src</sourceDirectory>-->
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<directory>res</directory>-->
+            <!--</resource>-->
+        <!--</resources>-->
+        <!--<testResources>-->
+            <!--<testResource>-->
+                <!--<directory>test-res</directory>-->
+            <!--</testResource>-->
+        <!--</testResources>-->
         <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -88,7 +95,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${project.build.sourceDirectory}/../test-gen</directory>
+                                    <directory>${basedir}/test-gen</directory>
                                 </fileset>
                             </filesets>
                         </configuration>
