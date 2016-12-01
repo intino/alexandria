@@ -10,13 +10,18 @@ end
 
 
 def trigger(requester)
-	$name : function() {
+	$name : function([$parameterSignature]) {
 		this.$method("$name"[, $parameter]);
 	}
 end
 
 def trigger(parameter)
 	{ "value" : value }
+end
+
+
+def trigger(parameterSignature)
+	value
 end
 
 def attribute(Asset) trigger(method)
