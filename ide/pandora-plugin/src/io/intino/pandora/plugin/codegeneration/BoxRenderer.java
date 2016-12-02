@@ -40,10 +40,11 @@ public class BoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists())
+		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists()) {
 			frame.addSlot("parent", configuration.dsl());
-		if (!application.rESTServiceList().isEmpty() || !application.activityList().isEmpty())
-			frame.addSlot("hasREST", "");
+			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
+			frame.addSlot("hasParent", "");
+		}
 		for (RESTService service : application.rESTServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : application.jMSServiceList())
@@ -53,9 +54,8 @@ public class BoxRenderer {
 			if (channel.isDurable()) channelFrame.addSlot("durable", channel.name());
 			frame.addSlot("channel", (Frame) channelFrame.addSlot("configuration", name));
 		}
-		for (Activity activity : application.activityList()) {
+		for (Activity activity : application.activityList())
 			frame.addSlot("activity", (Frame) activityFrame(activity));
-		}
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}

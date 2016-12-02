@@ -3,13 +3,14 @@ def type(adapters)
 
 	public class ActivitySchemaAdapters {
 
-		$format...[$NL$NL]
+		$schema...[$NL$NL]
 
 	}
 
 
 end
-def type(format)
+
+def type(schema)
 
 	public static $name+firstUpperCase $name+firstLowerCase~FromLayer(tara.magritte.Layer layer) {
 		return $name+firstLowerCase~FromNode(layer.node());
@@ -28,8 +29,16 @@ def type(format)
 	}
 end
 
+def type(single & string) !type(member) trigger(fromLayer)
+	if (variable.equals("$name+firstLowerCase")) schema.$name+firstLowerCase(($type+FirstUpperCase+typeFormat) variables.get(variable).get(0).toString());
+end
+
 def type(single) !type(member) trigger(fromLayer)
 	if (variable.equals("$name+firstLowerCase")) schema.$name+firstLowerCase(($type+FirstUpperCase+typeFormat) variables.get(variable).get(0));
+end
+
+def type(multiple & string) !type(member) trigger(fromLayer)
+	if (variable.equals("$name+FirstLowerCase")) schema.$name+firstLowerCase().add((($type+FirstUpperCase+typeFormat) variables.get(variable).get(0).toString()));
 end
 
 def type(multiple) !type(member) trigger(fromLayer)

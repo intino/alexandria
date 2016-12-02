@@ -1,13 +1,12 @@
 def type(widget)
-	var ApplicationWidgetBehaviors = ApplicationWidgetBehaviors || {};
+	var $name+FirstUpperCase~WidgetBehaviors = $name+FirstUpperCase~WidgetBehaviors || {};
 
-    ApplicationWidgetBehaviors.NotifierListener = {
+    $name+FirstUpperCase~WidgetBehaviors.NotifierListener = {
 
         listenToDisplay : function() {
             var widget = this;
             $notification...[$NL]
         }
-
     };
 end
 
