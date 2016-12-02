@@ -73,7 +73,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".structures.") : "") + typeData.type();
+		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	private void setupParameters(List<Parameter> parameters, Frame frame) {
