@@ -21,7 +21,7 @@ def type(widget)
             };
 
             Polymer({
-                is: '$name~-widget', //TODO PONER $NAME EN SNAKE CASE
+                is: '$name+camelCaseToSnakeCase-widget',
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
