@@ -15,15 +15,15 @@ import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class MainRenderer {
 
-	private final File src;
+	private final File gen;
 	private final String packageName;
 	private final Module module;
 	private final PandoraApplication application;
 	private final Configuration configuration;
 
-	public MainRenderer(Graph graph, File src, String packageName, Module module) {
+	public MainRenderer(Graph graph, File gen, String packageName, Module module) {
 		application = graph.application();
-		this.src = src;
+		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
@@ -38,7 +38,7 @@ public class MainRenderer {
 				frame.addSlot("dslPackage", configuration.dslWorkingPackage());
 			frame.addSlot("language", configuration.dsl());
 			if (configuration.level().equals(Configuration.Level.System))
-				writeFrame(src, "Main", template().format(frame));
+				writeFrame(gen, "Main", template().format(frame));
 		}
 	}
 

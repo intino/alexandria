@@ -1,12 +1,11 @@
 dsl Pandora
 
-Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "")
+Service(description = "Cesar Ops Service") cesar as REST(host = "", basePath = "/cesar")
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
 			Exception(BadRequest)
-
-	Resource(path = "/systems/:system")  System
+	Resource(path = "/systems/:system") System
 		Put(description = "Create new system version")
 			Parameter(in = path) system as Text
 			Parameter(in = query) version as Text
@@ -33,6 +32,7 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = query) url as Text
 			Response
 			Exception (BadRequest)
+
 	Resource(path = "/servers/:server") server
 		Get(description = "List of servers")
 			Parameter(in = path) server as Text
@@ -46,20 +46,18 @@ Service(description = "Cesar Ops Service", basePath = "") cesar as REST(host = "
 			Parameter(in = path) server as Text
 			Response
 			Exception(BadRequest)
-	Resource(path = "/servers/:server/:system") deploySystem
+	Resource(path = "/deploy") deploySystem
 		Post(description = "Deploy system") deploySystem
-			Parameter(in = path) server as Text
-			Parameter(in = path) system as Text
-			Parameter(in = query) isPublic as Bool
+			Parameter(in = body) system as Object(SystemSchema)
 			Response
 
-Service(description = "Cesar Build Service") build as REST(host = "", basePath = "build")
-	Resource(path = "/build") webHooks
-		Post(description = "")
-			Response
-			Exception(BadRequest)
+//Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+//Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
 
-Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
+//Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)
 
-Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)
+
+Schema SystemSchema
+	Attribute id as Text
+	Attribute artifact as Text
+	Attribute isPublic as Bool

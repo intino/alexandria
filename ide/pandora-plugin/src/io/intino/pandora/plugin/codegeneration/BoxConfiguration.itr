@@ -6,7 +6,7 @@ def type(boxConfiguration)
     import java.util.UUID;
     [import tara.magritte.Graph;$tara+import]
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+	public class $name+snakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.pandora.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
 
 		$service+field...[$NL]
 
@@ -47,7 +47,6 @@ def type(service & activity) trigger(confClass)
 		$custom+field...[$NL]
 	}
 end
-
 
 def type(service & rest) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+snakeCaseToCamelCase+firstUpperCase~Configuration {
