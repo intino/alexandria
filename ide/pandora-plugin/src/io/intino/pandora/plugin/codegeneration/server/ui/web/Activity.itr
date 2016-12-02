@@ -18,7 +18,7 @@ def type(activity)
     import java.net.MalformedURLException;
     import java.net.URL;
 
-    public class $name~Activity {
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity {
 
         public static void init(ActivityPandoraSpark spark, $box+FirstUpperCase~Box box) {
             spark.route("/push").push(new PushService());
@@ -54,14 +54,14 @@ def type(display) trigger(provider)
 end
 
 def type(display)
-	spark.route("/$name+lowecase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowecase/:displayId").post(manager -> new $name+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
 	$asset
-	spark.route("/$name+lowecase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
 def trigger(asset)
-	spark.route("/$value+lowecase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
 end
 
 def trigger(quoted)

@@ -35,11 +35,11 @@ Facet Type on Data
 
 Facet List on Data
 
-!! Structures allows to define how objects are. This objects can be provided as either parameter or response
+!! Schemas allows to define how objects are. This objects can be provided as either parameter or response
 Concept Schema
 	var boolean required = false
 	var boolean multiple = true
-	!! AttributeMap is able to gather all parameters that are unknown when defining the structure. This can be consulted on runtime in the Action classes
+	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
 	Concept:{0..1} AttributeMap
 	!! Attribute of the member
 	Concept:Named Attribute extends Data

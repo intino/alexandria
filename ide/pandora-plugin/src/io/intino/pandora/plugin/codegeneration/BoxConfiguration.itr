@@ -6,7 +6,7 @@ def type(boxConfiguration)
     import java.util.UUID;
     [import tara.magritte.Graph;$tara+import]
 
-	public class $name+snakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.pandora.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.pandora.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
 
 		$service+field...[$NL]
 
