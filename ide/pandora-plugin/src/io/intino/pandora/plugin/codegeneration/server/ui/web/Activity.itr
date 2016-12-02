@@ -18,7 +18,7 @@ def type(activity)
     import java.net.MalformedURLException;
     import java.net.URL;
 
-    public class UIActivity {
+    public class $name~Activity {
 
         public static void init(ActivityPandoraSpark spark, $box+FirstUpperCase~Box box) {
             spark.route("/push").push(new PushService());
