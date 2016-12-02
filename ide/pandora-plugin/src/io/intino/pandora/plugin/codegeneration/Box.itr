@@ -8,9 +8,9 @@ def type(box)
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
     [import tara.magritte.Graph;$tara+import]
 
-    public class $name+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
-		[$hasParent?protected $name+FirstUpperCase~Configuration configuration;]
+		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;]
     	[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();]
 		[$service+field...[$NL]]
 		[$channel+field...[$NL]]
@@ -18,7 +18,7 @@ def type(box)
 
 		private String graphID;
 
-		public $name+firstUpperCase~Box($name+firstUpperCase~Configuration configuration) {
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);
 			]this.configuration = configuration;[
 			$service+setup...[$NL]][
@@ -26,7 +26,7 @@ def type(box)
 		}
 
 
-		public $tara+FirstUpperCase~Box(Graph graph, $tara+FirstUpperCase~Configuration configuration) {
+		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);
 			]map.put(graphID = UUID.randomUUID().toString(), graph);
 			this.configuration = configuration;[
@@ -42,8 +42,8 @@ def type(box)
 			return map;
 		}
 
-    	public $name+firstUpperCase~Configuration configuration() {
-			return ($name+firstUpperCase~Configuration) configuration;
+    	public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
 
 		$service+getter...[$NL]
@@ -57,7 +57,7 @@ def type(box)
     		return (T) map().get(object);
     	}
 
-    	public $name+firstUpperCase~Box put(String name, Object object) {
+    	public $name+SnakeCaseToCamelCase+firstUpperCase~Box put(String name, Object object) {
     		map().put(name, object);
     		return this;
     	}
@@ -106,48 +106,48 @@ end
 
 
 def type(activity) trigger(setup)
-	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+firstLowerCase~Configuration.port[, configuration().$name+firstLowerCase~Configuration.webDirectory], configuration().$name+firstLowerCase~Configuration.authService);
+	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+firstLowerCase~Configuration.port[, configuration().$name+firstLowerCase~Configuration.webDirectory], null);
+	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
 def type(channel) trigger(init)
-	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+firstLowerCase~Configuration.user, configuration().$name+firstLowerCase~Configuration.password, configuration().$name+firstLowerCase~Configuration.url).createConnection();
+	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 	[$durable
 	]connection.start();
-	$name+firstUpperCase~Channel.init(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
+	$name+SnakeCaseToCamelCase+firstUpperCase~Channel.init(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 end
 
 def trigger(durable)
 	connection.setClientID(configuration().$value+firstLowerCase~Configuration.clientID);
 end
 def type(service & rest) trigger(rest)
-	$name+FirstUpperCase~Resources.setup(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
 end
 
 def type(activity) trigger(activity)
-	$name+FirstUpperCase~Activity.init(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
 end
 
 def type(service & jms) trigger(jms)
 	try {
-		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+firstLowerCase~Configuration.user, configuration().$name+firstLowerCase~Configuration.password, configuration().$name+firstLowerCase~Configuration.url).createConnection();
+		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
-		this.$name+firstLowerCase = new $name+firstUpperCase~JMSService(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
+		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~JMSService(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}
 end
 
 def type(service & jms) trigger(field)
-	private $name+firstUpperCase~JMSService $name+firstlowerCase;
+	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(getter)
-	public $name+firstUpperCase~JMSService $name+firstlowerCase() {
-		return $name+firstlowerCase;
+	public $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase;
 	}
 end
 

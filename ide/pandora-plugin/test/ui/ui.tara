@@ -1,6 +1,6 @@
 dsl Pandora
 
-Activity UI
+Activity Sumus-Web
 	Home(rootDisplay = application) homePage
 	Page(rootDisplay = error, paths = "/error") errorPage
 
