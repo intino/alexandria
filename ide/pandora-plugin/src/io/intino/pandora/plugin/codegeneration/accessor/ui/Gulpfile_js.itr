@@ -9,8 +9,8 @@ def type(configuration)
 	const merge = require('merge-stream');
 	const path = require('path');
 
-	const INSTALL_PATH = '../$appModule/res/www';
-	const OUTPUT_PATH = '../out/production/$appModule/www';
+	const INSTALL_PATH = '../$appModule/res/www/$activityName+lowercase';
+	const OUTPUT_PATH = '../out/production/$appModule/www/$activityName+lowercase';
 
 	const AUTOPREFIXER_BROWSERS = $[
 		'ie >= 10',

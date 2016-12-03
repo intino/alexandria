@@ -1,0 +1,6 @@
+dsl Pandora
+
+Activity Test-Web
+	Home(rootDisplay = application) homePage
+
+	Display application

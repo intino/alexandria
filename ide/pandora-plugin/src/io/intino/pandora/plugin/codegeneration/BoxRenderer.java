@@ -1,8 +1,6 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
@@ -26,13 +24,15 @@ public class BoxRenderer {
 	private final Module module;
 	private final PandoraApplication application;
 	private final Configuration configuration;
+	private boolean parentExists;
 
-	public BoxRenderer(Graph graph, File gen, String packageName, Module module) {
+	public BoxRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists) {
 		application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.parentExists = parentExists;
 	}
 
 	public void execute() {
@@ -40,7 +40,7 @@ public class BoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists()) {
+		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 			frame.addSlot("hasParent", "");
@@ -64,12 +64,6 @@ public class BoxRenderer {
 		Frame frame = new Frame();
 		frame.addTypes("activity").addSlot("name", activity.name());
 		return frame;
-	}
-
-	private boolean parentExists() {
-		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		String workingPackage = configuration.dslWorkingPackage();
-		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
 	}
 
 	private String name() {

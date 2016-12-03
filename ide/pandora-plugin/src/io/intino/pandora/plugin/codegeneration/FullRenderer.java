@@ -2,6 +2,8 @@ package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.pandora.plugin.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.pandora.plugin.codegeneration.exception.ExceptionRenderer;
@@ -39,9 +41,11 @@ public class FullRenderer {
 	private final File src;
 	private final String packageName;
 	private final String boxName;
+	private final boolean parentExists;
 
 	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
 		this.project = module == null ? null : module.getProject();
+		parentExists = parentExists(module);
 		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
@@ -111,8 +115,8 @@ public class FullRenderer {
 	}
 
 	private void box() {
-		new BoxRenderer(graph, gen, packageName, module).execute();
-		new BoxConfigurationRenderer(graph, gen, packageName, module).execute();
+		new BoxRenderer(graph, gen, packageName, module, parentExists).execute();
+		new BoxConfigurationRenderer(graph, gen, packageName, module, parentExists).execute();
 	}
 
 	private String boxName() {
@@ -123,6 +127,13 @@ public class FullRenderer {
 			if (dsl == null || dsl.isEmpty()) return module.getName();
 			else return dsl;
 		} else return "System";
+	}
+
+	private static boolean parentExists(Module module) {
+		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
+		final Configuration configuration = TaraUtil.configurationOf(module);
+		String workingPackage = configuration.dslWorkingPackage();
+		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
 	}
 
 	private void main() {
