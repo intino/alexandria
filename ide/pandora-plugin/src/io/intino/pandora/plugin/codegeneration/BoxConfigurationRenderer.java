@@ -1,8 +1,6 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
@@ -30,13 +28,15 @@ public class BoxConfigurationRenderer {
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
+	private boolean parentExists;
 
-	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module) {
+	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists) {
 		this.application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.parentExists = parentExists;
 	}
 
 	public void execute() {
@@ -44,7 +44,7 @@ public class BoxConfigurationRenderer {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists()) {
+		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 		}
@@ -120,13 +120,6 @@ public class BoxConfigurationRenderer {
 			else return dsl;
 		} else return "System";
 	}
-
-	private boolean parentExists() {
-		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		String workingPackage = configuration.dslWorkingPackage();
-		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
-	}
-
 
 	private Template template() {
 		Template template = BoxConfigurationTemplate.create();

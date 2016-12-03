@@ -9,7 +9,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -36,7 +35,7 @@ import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
 import static tara.intellij.lang.psi.impl.TaraUtil.*;
 
-public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
+public class CreatePandoraBoxAction extends PandoraAction {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
 	private static final String PANDORA = "Pandora";
 
@@ -51,10 +50,12 @@ public class CreatePandoraBoxAction extends PandoraAction implements DumbAware {
 		Project project = e.getData(PlatformDataKeys.PROJECT);
 		final Module module = LangDataKeys.MODULE.getData(e.getDataContext());
 		if (noProject(e, project) || module == null) return;
-		List<PsiFile> pandoraFiles = PandoraUtils.findPandoraFiles(module);
+		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
+		List<PsiFile> pandoraFiles = PandoraUtils.findPandoraFiles(module);
 		new PandoraGenerator(module, pandoraFiles).generate(getGenRoot(module), getSrcRoot(module));
 	}
+
 
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {

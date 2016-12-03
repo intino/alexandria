@@ -15,6 +15,7 @@ import java.io.File;
 public class UIGenerationTest {
 
 	private static final String UI = "ui";
+	private static final String TEST = "test";
 
 
 	@Test
@@ -30,6 +31,21 @@ public class UIGenerationTest {
 //		new ActivityAccessorCreator(null, graph).execute();
 //		new FullRenderer(null, graph, gen, gen, UI).execute();
 	}
+
+	@Test
+	public void testTest() throws Exception {
+		File gen = new File("test-gen", TEST);
+		final Graph graph = Graph.load("Ui").wrap(PandoraApplication.class);
+		new DisplayRenderer(graph, gen, gen, TEST, "System").execute();
+		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
+		new ActivityRenderer(graph, gen, TEST, "System").execute();
+		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
+		new BoxRenderer(graph, gen, TEST, null).execute();
+		new BoxConfigurationRenderer(graph, gen, TEST, null).execute();
+//		new ActivityAccessorCreator(null, graph).execute();
+//		new FullRenderer(null, graph, gen, gen, TEST).execute();
+	}
+
 
 	@Test
 	public void swaggerAccessorsCreator() throws Exception {
