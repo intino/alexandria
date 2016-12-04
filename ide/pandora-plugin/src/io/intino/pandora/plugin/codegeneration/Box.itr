@@ -156,7 +156,7 @@ def type(service & jms) trigger(field)
 end
 
 def type(service & jmx) trigger(field)
-	private JMX$name+SnakeCaseToCamelCase+firstUpperCase $name+SnakeCaseToCamelCase+firstlowerCase;
+	private io.intino.pandora.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(getter)

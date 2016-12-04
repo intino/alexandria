@@ -23,7 +23,6 @@
         <outputDirectory>../../out/production/pandora-plugin</outputDirectory>
         <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
         <directory>../../out/build/pandora-plugin</directory>
-        <!--<testSourceDirectory>test</testSourceDirectory>-->
         <!--<sourceDirectory>src</sourceDirectory>-->
         <!--<resources>-->
             <!--<resource>-->
