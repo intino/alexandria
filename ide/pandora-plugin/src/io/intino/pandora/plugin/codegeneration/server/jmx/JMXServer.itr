@@ -53,9 +53,9 @@ def type(jmx) type(implementation)
 
     public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
 
-        private final Box box;
+        private final $box~Box box;
 
-        public $name+firstUpperCase(Box box) {
+        public $name+firstUpperCase($box~Box box) {
             this.box = box;
         }
 
