@@ -6,6 +6,7 @@ import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.Service;
 import io.intino.pandora.plugin.jms.JMSService;
+import io.intino.pandora.plugin.jmx.JMXService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -50,6 +51,7 @@ public class BoxConfigurationRenderer {
 		}
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
+		addJMXServices(frame, boxName);
 		addChannels(frame, boxName);
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
@@ -76,6 +78,13 @@ public class BoxConfigurationRenderer {
 		for (JMSService service : application.jMSServiceList()) {
 			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", boxName);
 			addUserVariables(service.as(Service.class), jmsFrame);
+			frame.addSlot("service", jmsFrame);
+		}
+	}
+
+	private void addJMXServices(Frame frame, String boxName) {
+		for (JMXService service : application.jMXServiceList()) {
+			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name()).addSlot("configuration", boxName);
 			frame.addSlot("service", jmsFrame);
 		}
 	}

@@ -26,8 +26,8 @@ public class UIGenerationTest {
 		new ResourceRenderer(null, graph, gen, gen, UI, "System").execute();
 		new ActivityRenderer(graph, gen, UI, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, UI).execute();
-		new BoxRenderer(graph, gen, UI, null).execute();
-		new BoxConfigurationRenderer(graph, gen, UI, null).execute();
+		new BoxRenderer(graph, gen, UI, null, false).execute();
+		new BoxConfigurationRenderer(graph, gen, UI, null, false).execute();
 //		new ActivityAccessorCreator(null, graph).execute();
 //		new FullRenderer(null, graph, gen, gen, UI).execute();
 	}
@@ -40,8 +40,8 @@ public class UIGenerationTest {
 		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ActivityRenderer(graph, gen, TEST, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
-		new BoxRenderer(graph, gen, TEST, null).execute();
-		new BoxConfigurationRenderer(graph, gen, TEST, null).execute();
+		new BoxRenderer(graph, gen, TEST, null, false).execute();
+		new BoxConfigurationRenderer(graph, gen, TEST, null, false).execute();
 //		new ActivityAccessorCreator(null, graph).execute();
 //		new FullRenderer(null, graph, gen, gen, TEST).execute();
 	}
