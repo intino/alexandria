@@ -1,8 +1,8 @@
 dsl Pandora
 
-Service consulManager as JMX
+Service ConsulManager as JMX
 	Operation deploy
-		Parameter system as Object(schema = System)
+		Parameter system as Object(schema = ConsulSystemSchema)
 		Response as Bool
 	Operation retract
 		Parameter systemID as Text
@@ -14,15 +14,16 @@ Service consulManager as JMX
 		Parameter systemID as Text
 		Response as Object(schema = loggingSchema)
 
-
 Schema loggingSchema
-	Attribute instant  as DateTime
-	Attribute memory  as Real
-	Attribute cpu  as Real
-	Attribute connections  as Integer
+	Attribute instant as DateTime
+	Attribute memory as Real
+	Attribute cpu as Real
+	Attribute connections as Integer
 
-Schema System
-	Attribute ID as Text
-	Attribute(multiple = true)  artifacts as Text
-	Attribute mainClass as Text
-	Attribute artifactory as Text
+Schema ConsulSystemSchema
+	Attribute name as Text
+	Attribute artifact as Text
+	Attribute(multiple = true) parameters as Text List
+	Schema artifactory
+		Attribute id as Text
+		Attribute url as Text

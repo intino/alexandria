@@ -130,10 +130,14 @@ public class FullRenderer {
 	}
 
 	private static boolean parentExists(Module module) {
-		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		final Configuration configuration = TaraUtil.configurationOf(module);
-		String workingPackage = configuration.dslWorkingPackage();
-		return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
+		try {
+			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
+			final Configuration configuration = TaraUtil.configurationOf(module);
+			String workingPackage = configuration.dslWorkingPackage();
+			return workingPackage != null && facade.findClass(workingPackage + ".pandora." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private void main() {

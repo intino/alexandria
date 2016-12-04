@@ -5,6 +5,7 @@ import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Channel;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.jms.JMSService;
+import io.intino.pandora.plugin.jmx.JMXService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -49,6 +50,8 @@ public class BoxRenderer {
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : application.jMSServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
+		for (JMXService service : application.jMXServiceList())
+			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jmx").addSlot("name", service.name()).addSlot("configuration", name));
 		for (Channel channel : application.channelList()) {
 			final Frame channelFrame = new Frame().addTypes("channel").addSlot("name", channel.name());
 			if (channel.isDurable()) channelFrame.addSlot("durable", channel.name());

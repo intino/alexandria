@@ -38,17 +38,23 @@
         <module name="pandora-plugin" />
         <module name="pandora-plugin-core" />
       </profile>
-      <profile name="Annotation profile for pandora-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for pandora-rest-accessor-java" enabled="true">
+        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="server" />
+        <module name="accessor" />
       </profile>
       <profile name="Annotation profile for pandora-core" enabled="true">
         <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
+      </profile>
+      <profile name="Annotation profile for pandora-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jmx" />
       </profile>
       <profile name="Annotation profile for pandora-scheduler" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
@@ -58,17 +64,11 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for pandora-jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for pandora-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jmx" />
-      </profile>
-      <profile name="Annotation profile for pandora-rest-accessor-java" enabled="true">
-        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="accessor" />
+        <module name="server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

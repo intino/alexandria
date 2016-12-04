@@ -1,12 +1,15 @@
 package cesar;
 
 import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.plugin.codegeneration.BoxConfigurationRenderer;
+import io.intino.pandora.plugin.codegeneration.BoxRenderer;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import org.junit.Ignore;
 import org.junit.Test;
 import tara.magritte.Graph;
 
 import java.io.File;
+
 public class CesarGenerationTest {
 
 	private static final String CESAR = "cesar";
@@ -24,7 +27,9 @@ public class CesarGenerationTest {
 	@Test
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
-		new FullRenderer(null, Graph.load("Consul").wrap(PandoraApplication.class), gen, gen, CONSUL).execute();
+		Graph graph = Graph.load("Consul").wrap(PandoraApplication.class);
+		new BoxRenderer(graph, gen, CONSUL, null, false).execute();
+		new BoxConfigurationRenderer(graph, gen, CONSUL, null, false).execute();
 	}
 
 

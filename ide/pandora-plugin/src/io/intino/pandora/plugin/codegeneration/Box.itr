@@ -67,6 +67,7 @@ def type(box)
 			initActivities();
 			initRESTServices();
 			initJMSServices();
+			initJMXServices();
 			initChannels();
 			initProcesses();
     	}
@@ -78,6 +79,10 @@ def type(box)
 		private void initJMSServices() {
 			[javax.jms.Connection connection;
 			$service+jms...[$NL]]
+		}
+
+		private void initJMXServices() {
+			$service+jmx...[$NL]
 		}
 
 		private void initActivities() {
@@ -123,6 +128,11 @@ end
 def trigger(durable)
 	connection.setClientID(configuration().$value+firstLowerCase~Configuration.clientID);
 end
+
+def type(service & jmx) trigger(jmx)
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port, this);
+end
+
 def type(service & rest) trigger(rest)
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.pandora.server.activity.ActivityPandoraSpark.instance(), this);
 end
@@ -143,6 +153,10 @@ end
 
 def type(service & jms) trigger(field)
 	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & jmx) trigger(field)
+	private JMX$name+SnakeCaseToCamelCase+firstUpperCase $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(getter)
