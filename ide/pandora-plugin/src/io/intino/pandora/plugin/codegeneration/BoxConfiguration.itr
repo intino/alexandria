@@ -41,8 +41,7 @@ end
 
 def type(service & jmx) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public String url;
-		public String port;
+		public int port;
 	}
 end
 
@@ -80,7 +79,7 @@ end
 
 
 def type(service & jmx)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String port) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		return this;
