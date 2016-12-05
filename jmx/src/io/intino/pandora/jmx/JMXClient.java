@@ -1,23 +1,20 @@
 package io.intino.pandora.jmx;
 
-import com.sun.tools.attach.AttachNotSupportedException;
-import com.sun.tools.attach.VirtualMachine;
-import com.sun.tools.attach.VirtualMachineDescriptor;
+import com.sun.tools.attach.*;
 
 import javax.management.*;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 
 public class JMXClient {
 
-	private static final String CONNECTOR = "com.sun.management.jmxremote.localConnectorAddress";
+	private static final String CONNECTOR_ADDRESS = "com.sun.management.jmxremote.localConnectorAddress";
 	private JMXServiceURL url = null;
 
 
@@ -37,8 +34,8 @@ public class JMXClient {
 		}
 	}
 
-	public static List<String> allJMXLocalURLs() throws IOException {
-		List<String> list = new ArrayList<>();
+	public static Map<String, String> allJMXLocalURLs() throws IOException, AgentLoadException, AgentInitializationException {
+		Map<String, String> set = new LinkedHashMap<>();
 		List<VirtualMachineDescriptor> vms = VirtualMachine.list();
 		for (VirtualMachineDescriptor desc : vms) {
 			VirtualMachine vm;
@@ -48,10 +45,16 @@ public class JMXClient {
 				continue;
 			}
 			Properties props = vm.getAgentProperties();
-			String connectorAddress = props.getProperty(CONNECTOR);
-			if (connectorAddress != null) list.add(connectorAddress);
+			String connectorAddress = props.getProperty(CONNECTOR_ADDRESS);
+			if (connectorAddress == null) {
+				String agent = vm.getSystemProperties().getProperty("java.home") +
+						File.separator + "lib" + File.separator + "management-agent.jar";
+				vm.loadAgent(agent);
+				connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);
+			}
+			if (connectorAddress != null) set.put(desc.displayName(), connectorAddress);
 		}
-		return list;
+		return set;
 	}
 
 	public JMXConnection connect() {

@@ -54,6 +54,7 @@ public class JMXOperationsServiceRenderer {
 	private void createImplementation(JMXService service) {
 		Frame frame = new Frame().addTypes("jmx", "implementation");
 		frame.addSlot("name", service.name());
+		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		for (Operation operation : service.operationList())
 			frame.addSlot("operation", frameOf(operation));

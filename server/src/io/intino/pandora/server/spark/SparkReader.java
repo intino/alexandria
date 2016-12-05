@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import io.intino.pandora.Error;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +39,12 @@ class SparkReader {
 	}
 
 	private static <T> T adaptFromJSON(String object, Class<T> type) {
-		return new Gson().fromJson(object, type);
+		try {
+			return object == null || object.isEmpty() ? null : new Gson().fromJson(URLDecoder.decode(object, "UTF-8"), type);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private static <T> T adaptPrimitive(String object, Class<T> type) {

@@ -44,6 +44,10 @@ public class Commons {
 		return resource.parameterList().stream().filter(p -> p.in() == In.query).count();
 	}
 
+	public static long bodyParameters(Operation resource) {
+		return resource.parameterList().stream().filter(p -> p.in() == In.body).count();
+	}
+
 	public static String format(String path) {
 		return path.isEmpty() ? "" : path + "/";
 	}

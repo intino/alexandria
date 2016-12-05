@@ -3,7 +3,6 @@ def type(jmxserver)
 
     import io.intino.pandora.jmx.JMXServer;
     import io.intino.pandora.Box;
-
     import java.util.HashMap;
     import java.util.Map;
 
@@ -47,15 +46,15 @@ end
 def type(jmx) type(implementation)
 	package $package+ValidPackage.jmx;
 
-    import io.intino.pandora.Box;
+    import $package.$box+FirstUpperCase~Box;
     import java.util.*;
     import java.time.*;
 
     public class $name+firstUpperCase implements $name+firstUpperCase~MBean {
 
-        private final $box~Box box;
+        private final $box+FirstUpperCase~Box box;
 
-        public $name+firstUpperCase($box~Box box) {
+        public $name+firstUpperCase($box+FirstUpperCase~Box box) {
             this.box = box;
         }
 
@@ -68,7 +67,7 @@ def type(operation) trigger(implementation)
         $package+ValidPackage.actions.$action+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+firstUpperCase~Action();
         action.box = box;
         [$parameter+assign...[$NL]]
-        [$returnType+return ]new $package+ValidPackage.actions.$action+firstUpperCase~Action().execute();
+        [$returnType+return ]action.execute();
     }
 end
 
