@@ -29,8 +29,8 @@ public class RESTAccessorRenderer {
 	private File destination;
 	private String packageName;
 
-	public RESTAccessorRenderer(RESTService application, File destination, String packageName) {
-		this.service = application;
+	public RESTAccessorRenderer(RESTService restService, File destination, String packageName) {
+		this.service = restService;
 		this.destination = destination;
 		this.packageName = packageName;
 	}
@@ -101,7 +101,7 @@ public class RESTAccessorRenderer {
 				.addSlot("type", operation.response().isFile()? "getResource": operation.concept().name().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
-		if (Commons.queryParameters(operation) > 0) frame.addSlot("parameters", "parameters");
+		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0) frame.addSlot("parameters", "parameters");
 		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
 		return frame;
 

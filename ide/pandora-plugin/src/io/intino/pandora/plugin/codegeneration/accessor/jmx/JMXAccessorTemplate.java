@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.accessor.rest;
+package io.intino.pandora.plugin.codegeneration.accessor.jmx;
 
 import org.siani.itrules.*;
 
@@ -6,14 +6,14 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.*;
 
-public class RESTAccessorTemplate extends Template {
+public class JMXAccessorTemplate extends Template {
 
-	protected RESTAccessorTemplate(Locale locale, LineSeparator separator) {
+	protected JMXAccessorTemplate(Locale locale, LineSeparator separator) {
 		super(locale, separator);
 	}
 
 	public static Template create() {
-		return new RESTAccessorTemplate(Locale.ENGLISH, LF).define();
+		return new JMXAccessorTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {

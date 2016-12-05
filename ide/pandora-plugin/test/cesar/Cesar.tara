@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service(description = "Cesar Ops Service") cesar as REST(host = "", basePath = "/cesar")
+Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath = "")
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
@@ -9,7 +9,6 @@ Service(description = "Cesar Ops Service") cesar as REST(host = "", basePath = "
 		Put(description = "Create new system version")
 			Parameter(in = path) system as Text
 			Parameter(in = query) version as Text
-			Parameter(in = form) sample as File
 			Response
 			Exception(BadRequest)
 		Post(description = "Update system")
@@ -58,6 +57,9 @@ Service(description = "Cesar Ops Service") cesar as REST(host = "", basePath = "
 
 
 Schema SystemSchema
-	Attribute id as Text
+	Attribute name as Text
 	Attribute artifact as Text
-	Attribute isPublic as Bool
+	Attribute(multiple = true) parameters as Text List
+	Schema artifactory
+		Attribute id as Text
+		Attribute url as Text

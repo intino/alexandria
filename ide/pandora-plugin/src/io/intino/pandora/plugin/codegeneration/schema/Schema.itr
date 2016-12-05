@@ -1,7 +1,7 @@
 def type(schema)
 	package $package+ValidPackage.schemas;
 
-	public class $name+firstUpperCase {
+	public class $name+firstUpperCase implements java.io.Serializable {
 
 		$attribute+declaration...[$NL]
 

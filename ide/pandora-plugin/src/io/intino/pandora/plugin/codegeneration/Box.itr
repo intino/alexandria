@@ -66,8 +66,8 @@ def type(box)
     		$parent+parentInit~super.init();? ]
 			initActivities();
 			initRESTServices();
-			initJMSServices();
 			initJMXServices();
+			initJMSServices();
 			initChannels();
 			initProcesses();
     	}
@@ -151,12 +151,12 @@ def type(service & jms) trigger(jms)
 	}
 end
 
-def type(service & jms) trigger(field)
-	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
-end
-
 def type(service & jmx) trigger(field)
 	private io.intino.pandora.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & jms) trigger(field)
+	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(getter)
