@@ -30,6 +30,15 @@ public class JMXAccessorRenderer {
 		processService(service);
 	}
 
+	private void createInterface(JMXService service) {
+		Frame frame = new Frame().addTypes("jmx", "interface");
+		frame.addSlot("name", service.name());
+		frame.addSlot("package", packageName);
+		for (JMXService.Operation operation : service.operationList())
+			frame.addSlot("operation", frameOf(operation));
+		Commons.writeFrame(destinyPackage(), service.name() + "MBean", template().format(frame));
+	}
+
 	private void processService(JMXService service) {
 		Frame frame = new Frame().addTypes("accessor");
 		frame.addSlot("name", service.name());
