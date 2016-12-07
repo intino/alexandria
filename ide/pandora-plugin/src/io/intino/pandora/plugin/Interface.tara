@@ -18,10 +18,10 @@ Concept:Named Activity
 		var string:url by
 
 	Concept:Named AbstractPage
-		var Display rootDisplay
+		var Display uses
 		var string[] paths
 
-		sub:{1..1} Home
+		sub:{0..1} Home
 			var string[] paths = "" "/" "/index" "/home"
 
 		sub Page

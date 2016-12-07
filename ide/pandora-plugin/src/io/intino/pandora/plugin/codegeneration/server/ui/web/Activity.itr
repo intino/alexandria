@@ -18,7 +18,7 @@ def type(activity)
     import java.net.MalformedURLException;
     import java.net.URL;
 
-    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity {
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.pandora.server.activity.Activity {
 
         public static void init(ActivityPandoraSpark spark, $box+FirstUpperCase~Box box) {
             spark.route("/push").push(new PushService());
@@ -29,14 +29,12 @@ def type(activity)
 
 			$display...[$NL]
 
+			registerNotifiers();
         }
 
-        private static DisplayNotifierProvider notifierProvider() {
-            return (display, messageCarrier) -> {
-                $display+provider...[$NL]
-                return new DisplayNotifier(display, messageCarrier);
-            };
-        }
+		private static void registerNotifiers() {
+			$display+provider...[$NL]
+		}
     }
 end
 
@@ -50,7 +48,7 @@ def trigger(path)
 end
 
 def type(display) trigger(provider)
-	if (display instanceof $name+firstUpperCase~Display) return new $name+firstUpperCase~DisplayNotifier(display, messageCarrier);
+	register($name+firstUpperCase~DisplayNotifier.class).forDisplay($name+firstUpperCase~Display.class);
 end
 
 def type(display)
