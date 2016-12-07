@@ -51,6 +51,7 @@ public class SparkRouter<SM extends SparkManager> {
     }
 
     public void push(PushService service) {
+        if (this.pushService != null) return;
         if (this.pushServiceConsumer != null) this.pushServiceConsumer.accept(service);
         PushServiceHandler.inject(service);
         webSocketIdleTimeoutMillis(OneDay);
