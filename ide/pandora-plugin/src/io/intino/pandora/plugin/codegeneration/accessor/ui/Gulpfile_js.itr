@@ -42,11 +42,11 @@ def type(configuration)
 
 	gulp.task('prepare-compile', cb => {
 		return eventStream.concat(
-			gulp.src('app/fonts/**/*').pipe(gulp.dest(compilePath("/fonts"))),
-			gulp.src('app/styles/**/*').pipe(gulp.dest(compilePath("/styles"))),
-			gulp.src('app/bower_components/**/*').pipe(gulp.dest(compilePath("/bower_components"))),
-			gulp.src('app/widgets/**/*').pipe(gulp.dest(compilePath("/widgets"))),
-			gulp.src('app/widgets.html').pipe(gulp.dest(compilePath()))
+			gulp.src('src/fonts/**/*').pipe(gulp.dest(compilePath("/fonts"))),
+			gulp.src('src/styles/**/*').pipe(gulp.dest(compilePath("/styles"))),
+			gulp.src('src/widgets/**/*').pipe(gulp.dest(compilePath("/widgets"))),
+			gulp.src('src/widgets.html').pipe(gulp.dest(compilePath())),
+			gulp.src('gen/**/*').pipe(gulp.dest(compilePath("/gen")))
 		);
 	});
 
@@ -64,12 +64,12 @@ def type(configuration)
 
 	gulp.task('union', cb => {
 		return eventStream.concat(
-			unionFonts('app/fonts/**/*', packagePath("/fonts")),
-			unionStyles('app/styles/**/*', packagePath("/styles")),
-			gulp.src('app/styles/**/*').pipe(gulp.dest(packagePath("/styles"))),
-			unionImages('app/images/**/*', packagePath("/images")),
-			gulp.src($['app/*.{html,js}', '!app/widgets.html', '!**/.DS_Store']).pipe(gulp.dest(packagePath(''))),
-			unionBower()
+			unionFonts('src/fonts/**/*', packagePath("/fonts")),
+			unionStyles('src/styles/**/*', packagePath("/styles")),
+			gulp.src('src/styles/**/*').pipe(gulp.dest(packagePath("/styles"))),
+			unionImages('src/images/**/*', packagePath("/images")),
+			gulp.src($['src/*.{html,js}', '!src/widgets.html', '!**/.DS_Store']).pipe(gulp.dest(packagePath(''))),
+			unionGen()
 		);
 	});
 
@@ -92,13 +92,13 @@ def type(configuration)
 	gulp.task('watch', () => {
 		const tasksToLaunch = $['refresh-dev-server'];
 
-		gulp.watch($['app/**/*.html'], tasksToLaunch);
-		gulp.watch($['app/styles/**/*.css'], tasksToLaunch);
-		gulp.watch($['app/widgets/**/*.css'], tasksToLaunch);
-		gulp.watch($['app/widgets/**/*.html'], tasksToLaunch);
-		gulp.watch($['app/images/**/*'], tasksToLaunch);
+		gulp.watch($['src/**/*.html'], tasksToLaunch);
+		gulp.watch($['src/styles/**/*.css'], tasksToLaunch);
+		gulp.watch($['src/widgets/**/*.css'], tasksToLaunch);
+		gulp.watch($['src/widgets/**/*.html'], tasksToLaunch);
+		gulp.watch($['src/images/**/*'], tasksToLaunch);
 
-		gulp.src('app/fonts/**/*').pipe(gulp.dest(compilePath("/fonts")));
+		gulp.src('src/fonts/**/*').pipe(gulp.dest(compilePath("/fonts")));
 		$$.livereload.listen({ port: WatchPort, basePath: '.' });
 	});
 
@@ -126,10 +126,10 @@ def type(configuration)
 	const installPath = subpath => !subpath ? InstallPath : path.join(InstallPath, subpath);
 	const outputPath = subpath => !subpath ? OutputPath : path.join(OutputPath, subpath);
 
-	const unionBower = () => {
-		return gulp.src($['app/bower_components/{jquery,webcomponentsjs,moment,numeral,promise-polyfill}/**/*',
-			'app/bower_components/{cotton-cookies,cotton-push}/*.js'])
-			.pipe(gulp.dest(packagePath('bower_components')));
+	const unionGen = () => {
+		return gulp.src($['gen/{jquery,webcomponentsjs,moment,numeral,promise-polyfill}/**/*',
+			'gen/{cotton-cookies,cotton-push}/*.js'])
+			.pipe(gulp.dest(packagePath('gen')));
 	};
 
 	const unionStyles = (src, dest) => {
