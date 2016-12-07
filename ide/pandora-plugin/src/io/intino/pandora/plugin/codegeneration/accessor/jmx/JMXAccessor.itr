@@ -4,7 +4,7 @@ def type(accessor)
     import java.util.List;
     import java.util.ArrayList;
 	import io.intino.pandora.exceptions.*;
-	import $package+ValidPackage.$name+firstUpperCase+SnakeCaseToCamelCase~MBean;
+	import $package+ValidPackage.jmx.$name+firstUpperCase+SnakeCaseToCamelCase~MBean;
     import io.intino.pandora.jmx.JMXClient;
 
 	$schemaImport
@@ -30,10 +30,10 @@ def type(operation)
 end
 
 def type(parameter) trigger(signature)
-	$parameterType $name+SnakeCaseToCamelCase+firstLowerCase
+	$type $name+SnakeCaseToCamelCase+firstLowerCase
 end
 
-def type(parameter) trigger(signature)
+def type(parameter) trigger(name)
 	$name+SnakeCaseToCamelCase+firstLowerCase
 end
 

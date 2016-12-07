@@ -8,7 +8,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
+import io.intino.pandora.plugin.codegeneration.accessor.jms.JMSAccessorRenderer;
+import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.pandora.plugin.jms.JMSService;
+import io.intino.pandora.plugin.jmx.JMXService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
@@ -43,9 +47,11 @@ class AccessorsPublisher {
 	private final Graph graph;
 	private final String generationPackage;
 	private File root;
+	private Configuration configuration;
 
 	AccessorsPublisher(Module module, Graph graph, String generationPackage) {
 		this.module = module;
+		configuration = TaraUtil.configurationOf(module);
 		this.graph = graph;
 		this.generationPackage = generationPackage;
 		try {
@@ -57,16 +63,15 @@ class AccessorsPublisher {
 	}
 
 	void publish() {
+		if (configuration == null) return;
 		try {
 			final List<String> apps = createSources();
-			final Configuration configuration = TaraUtil.configurationOf(module);
-			if (configuration == null) return;
-			else if (apps.isEmpty()) {
+			if (apps.isEmpty()) {
 				notifyNothingDone();
 				return;
 			}
 			mvn(configuration);
-			for (String app : apps) notifySuccess(configuration, app);
+			notifySuccess(configuration, apps);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
@@ -116,6 +121,36 @@ class AccessorsPublisher {
 	private List<String> createSources() throws IOException {
 		List<String> apps = new ArrayList<>();
 		if (graph == null) return Collections.emptyList();
+		apps.addAll(rest());
+		apps.addAll(jms());
+		apps.addAll(jmx());
+		return apps;
+	}
+
+	private List<String> jmx() {
+		List<String> apps = new ArrayList<>();
+		for (JMXService service : graph.find(JMXService.class)) {
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			sourcesDestiny.mkdirs();
+			new JMXAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
+			apps.add(service.name());
+		}
+		return apps;
+	}
+
+	private List<String> jms() {
+		List<String> apps = new ArrayList<>();
+		for (JMSService service : graph.find(JMSService.class)) {
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			sourcesDestiny.mkdirs();
+			new JMSAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
+			apps.add(service.name());
+		}
+		return apps;
+	}
+
+	private List<String> rest() {
+		List<String> apps = new ArrayList<>();
 		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
@@ -134,13 +169,15 @@ class AccessorsPublisher {
 		return pomFile;
 	}
 
-	private void notifySuccess(Configuration conf, String app) {
+	private void notifySuccess(Configuration conf, List<String> apps) {
 		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
-		balloon.createNotification(app + " Accessor generated and uploaded", message(), INFORMATION, (n, e) -> {
-			StringSelection selection = new StringSelection(newDependency(conf, app));
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(selection, selection);
-		}).setImportant(true).notify(module.getProject());
+		for (String app : apps) {
+			balloon.createNotification("Accessors generated and uploaded", message(), INFORMATION, (n, e) -> {
+				StringSelection selection = new StringSelection(newDependency(conf, app));
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(selection, selection);
+			}).setImportant(true).notify(module.getProject());
+		}
 	}
 
 	private void notifyNothingDone() {

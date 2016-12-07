@@ -1,8 +1,8 @@
 dsl Pandora
 
 Activity Sumus-Web
-	Home(rootDisplay = application) homePage
-	Page(rootDisplay = error, paths = "/error") errorPage
+	Home(uses = application) homePage
+	Page(uses = error, paths = "/error") errorPage
 
 	Display application
 		displays = olap dashboard pivotTable
