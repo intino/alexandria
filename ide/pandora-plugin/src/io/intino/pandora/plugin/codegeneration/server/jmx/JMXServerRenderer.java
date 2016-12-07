@@ -14,13 +14,13 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMXServerRenderer {
 	private final List<JMXService> jmxServices;
-	private final File destiny;
+	private final File destination;
 	private final String packageName;
 	private final String boxName;
 
-	public JMXServerRenderer(Graph graph, File destiny, String packageName, String boxName) {
+	public JMXServerRenderer(Graph graph, File destination, String packageName, String boxName) {
 		jmxServices = graph.find(JMXService.class);
-		this.destiny = destiny;
+		this.destination = destination;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
@@ -37,7 +37,7 @@ public class JMXServerRenderer {
 		frame.addSlot("name", service.name());
 		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
-		Commons.writeFrame(destiny, "JMX" + snakeCaseToCamelCase(service.name()), template().format(frame));
+		Commons.writeFrame(destination, "JMX" + snakeCaseToCamelCase(service.name()), template().format(frame));
 	}
 
 

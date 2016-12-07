@@ -2,6 +2,7 @@ package io.intino.pandora.plugin.codegeneration.server.jmx;
 
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Parameter;
+import io.intino.pandora.plugin.Schema;
 import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.plugin.jmx.JMXService;
@@ -46,9 +47,11 @@ public class JMXOperationsServiceRenderer {
 		frame.addSlot("name", service.name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
+		if (!service.graph().find(Schema.class).isEmpty())
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		for (Operation operation : service.operationList())
 			frame.addSlot("operation", frameOf(operation));
-		Commons.writeFrame(destinyPackage(), service.name() + "MBean", template().format(frame));
+		Commons.writeFrame(destinationPackage(), service.name() + "MBean", template().format(frame));
 	}
 
 	private void createImplementation(JMXService service) {
@@ -58,7 +61,7 @@ public class JMXOperationsServiceRenderer {
 		frame.addSlot("package", packageName);
 		for (Operation operation : service.operationList())
 			frame.addSlot("operation", frameOf(operation));
-		Commons.writeFrame(destinyPackage(), service.name(), template().format(frame));
+		Commons.writeFrame(destinationPackage(), service.name(), template().format(frame));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
@@ -88,7 +91,7 @@ public class JMXOperationsServiceRenderer {
 		return template;
 	}
 
-	private File destinyPackage() {
+	private File destinationPackage() {
 		return new File(gen, "jmx");
 	}
 }

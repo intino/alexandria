@@ -131,6 +131,7 @@ public class FullRenderer {
 
 	private static boolean parentExists(Module module) {
 		try {
+			if(module == null) return false;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final Configuration configuration = TaraUtil.configurationOf(module);
 			String workingPackage = configuration.dslWorkingPackage();

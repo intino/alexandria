@@ -1,9 +1,9 @@
 package cesar;
 
 import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.BoxConfigurationRenderer;
-import io.intino.pandora.plugin.codegeneration.BoxRenderer;
+import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.pandora.plugin.jmx.JMXService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +15,6 @@ public class CesarGenerationTest {
 
 	private static final String CESAR = "cesar";
 	private static final String CONSUL = "consul";
-
 
 	@Test
 	@Ignore
@@ -31,8 +30,9 @@ public class CesarGenerationTest {
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
 		Graph graph = Graph.load("Consul").wrap(PandoraApplication.class);
-		new BoxRenderer(graph, gen, CONSUL, null, false).execute();
-		new BoxConfigurationRenderer(graph, gen, CONSUL, null, false).execute();
+//		new FullRenderer(null, graph, gen, gen, CONSUL).execute();
+//		new BoxConfigurationRenderer(graph, gen, CONSUL, null, false).execute();
+		graph.find(JMXService.class).forEach(a -> new JMXAccessorRenderer(a, gen, CONSUL).execute());
 	}
 
 	@Test
