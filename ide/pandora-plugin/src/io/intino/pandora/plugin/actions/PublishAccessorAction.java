@@ -26,11 +26,18 @@ import java.io.File;
 
 public class PublishAccessorAction extends PandoraAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Publish Accessor: publish");
+	private static final String TEXT = "Publish Pandora Accessor";
 
 	public PublishAccessorAction() {
-		super("Publish Pandora Accessor", "Publish Pandora Accessor in Artifactory", PandoraIcons.ICON_16);
+		super(TEXT, "Publish Pandora Accessor in Artifactory", PandoraIcons.ICON_16);
 		this.setShortcutSet(CustomShortcutSet.fromString("control alt A"));
+	}
 
+	@Override
+	public void update(AnActionEvent e) {
+		super.update(e);
+		final Module module = e.getData(LangDataKeys.MODULE);
+		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName());
 	}
 
 	@Override
