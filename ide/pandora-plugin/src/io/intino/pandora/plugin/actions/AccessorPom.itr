@@ -6,7 +6,9 @@ def type(pom)
 	<groupId>$group+lowercase</groupId>
 	<artifactId>$artifact+lowercase</artifactId>
 	<version>$version</version>
-
+	[<licenses>
+		$license...[$NL]
+	</licenses>]
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -18,48 +20,92 @@ def type(pom)
 		<testOutputDirectory>out/test/$artifact+lowercase</testOutputDirectory>
 		<directory>out/build/$artifact+lowercase</directory>
 		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
 	</build>
 
+
 	<repositories>
-		<repository>
-			<id>siani-maven</id>
-			<name>siani-maven-releases</name>
-			<url>http://artifactory.siani.es/artifactory/libs-release</url>
-		</repository>
-		<repository>
-			<id>siani-maven-snapshot</id>
-			<name>siani-maven-snapshot</name>
-			<url>http://artifactory.siani.es/artifactory/libs-snapshot</url>
-		</repository>
+		$repository+release...[$NL]
 	</repositories>
 
 	<distributionManagement>
-		<repository>
-			<id>siani-maven</id>
-			<name>siani-maven-releases</name>
-			<url>https://artifactory.siani.es/artifactory/libs-release-local</url>
-		</repository>
+		$repository+distribution...[$NL]
 	</distributionManagement>
 
 	<dependencies>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>rest-accessor-java</artifactId>
+            <artifactId>pandora-rest-accessor-java</artifactId>
             <version>$[1.0.0, 2.0.0)</version>
+		</dependency>
+		<dependency>
+			<groupId>io.intino.pandora</groupId>
+			<artifactId>pandora-jmx</artifactId>
+			<version>$[1.0.0, 2.0.0)</version>
+		</dependency>
+		<dependency>
+			<groupId>io.intino.pandora</groupId>
+			<artifactId>pandora-jms</artifactId>
+			<version>$[1.0.0, 2.0.0)</version>
 		</dependency>
 	</dependencies>
 </project>
+end
+
+def type(repository) type(Distribution) trigger(distribution)
+	<repository>
+		<id>$name</id>
+		<name>$name</name>
+		<url>$url</url>
+	</repository>
+end
+
+def trigger(distribution)
+end
+
+def type(repository) !type(distribution) trigger(release)
+	<repository>
+		<id>$name</id>
+		<url>$url</url>
+	</repository>
+end
+
+
+def type(GPL) trigger(license)
+	<license>
+		<name>The GNU General Public License v3.0</name>
+		<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+	</license>
+end
+
+def type(BSD) trigger(license)
+	<license>
+		<name>BSD 3-Clause License</name>
+		<url>https://opensource.org/licenses/BSD-3-Clause</url>
+	</license>
 end

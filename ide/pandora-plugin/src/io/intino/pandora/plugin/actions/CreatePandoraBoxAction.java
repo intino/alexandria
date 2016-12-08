@@ -38,12 +38,19 @@ import static tara.intellij.lang.psi.impl.TaraUtil.*;
 public class CreatePandoraBoxAction extends PandoraAction {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
 	private static final String PANDORA = "Pandora";
+	private static final String TEXT = "Create Pandora Box";
 
 	public CreatePandoraBoxAction() {
-		super("Create Pandora Box", "Creates Pandora Box", PandoraIcons.ICON_16);
+		super(TEXT, "Creates Pandora Box", PandoraIcons.ICON_16);
 		this.setShortcutSet(CustomShortcutSet.fromString("control alt S"));
 	}
 
+	@Override
+	public void update(AnActionEvent e) {
+		super.update(e);
+		final Module module = e.getData(LangDataKeys.MODULE);
+		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName());
+	}
 
 	@Override
 	public void actionPerformed(AnActionEvent e) {

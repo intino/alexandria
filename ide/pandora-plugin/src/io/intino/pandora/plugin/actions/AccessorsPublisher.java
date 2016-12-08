@@ -2,6 +2,7 @@ package io.intino.pandora.plugin.actions;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.notification.Notifications.Bus;
 import com.intellij.openapi.diagnostic.Logger;
@@ -30,9 +31,8 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -42,7 +42,7 @@ import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory
 class AccessorsPublisher {
 	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
 	private static final String PANDORA = "pandora";
-	private static final String REST_ACCESSOR_JAVA = "-rest-accessor-java";
+	private static final String ACCESSOR = "-accessor";
 	private final Module module;
 	private final Graph graph;
 	private final String generationPackage;
@@ -67,7 +67,10 @@ class AccessorsPublisher {
 		try {
 			final List<String> apps = createSources();
 			if (apps.isEmpty()) {
-				notifyNothingDone();
+				notify("None rest services are found in module", INFORMATION);
+				return;
+			} else if (configuration.distributionRepository() == null) {
+				notify("There isn't distribution repository defined", ERROR);
 				return;
 			}
 			mvn(configuration);
@@ -81,7 +84,7 @@ class AccessorsPublisher {
 	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, conf.groupId(), file.getName() + REST_ACCESSOR_JAVA, conf.modelVersion());
+			final File pom = createPom(file, conf.groupId(), file.getName() + ACCESSOR, conf.modelVersion());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -163,10 +166,20 @@ class AccessorsPublisher {
 
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
+		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
+		SimpleEntry<String, String> distroRepo = configuration.distributionRepository();
+		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
 		final Template template = AccessorPomTemplate.create();
 		final File pomFile = new File(root, "pom.xml");
 		Files.write(pomFile.toPath(), template.format(frame).getBytes());
 		return pomFile;
+	}
+
+	private Frame createRepositoryFrame(String url, String id, String type) {
+		return new Frame().addTypes("repository", "release", type).
+				addSlot("name", id).
+				addSlot("url", url).
+				addSlot("type", new Random().nextInt() % 10);
 	}
 
 	private void notifySuccess(Configuration conf, List<String> apps) {
@@ -180,9 +193,9 @@ class AccessorsPublisher {
 		}
 	}
 
-	private void notifyNothingDone() {
+	private void notify(String message, NotificationType type) {
 		Notifications.Bus.notify(
-				new Notification("Pandora", "None rest services are found in module", module.getName(), INFORMATION), module.getProject());
+				new Notification("Pandora", message, module.getName(), type), module.getProject());
 	}
 
 	@NotNull
@@ -193,8 +206,8 @@ class AccessorsPublisher {
 	@NotNull
 	private String newDependency(Configuration conf, String app) {
 		return "<dependency>\n" +
-				"    <groupId>" + conf.groupId() + "</groupId>\n" +
-				"    <artifactId>" + app + REST_ACCESSOR_JAVA + "</artifactId>\n" +
+				"    <groupId>" + conf.groupId().toLowerCase() + "</groupId>\n" +
+				"    <artifactId>" + app.toLowerCase() + ACCESSOR + "</artifactId>\n" +
 				"    <version>" + conf.modelVersion() + "</version>\n" +
 				"</dependency>";
 	}
