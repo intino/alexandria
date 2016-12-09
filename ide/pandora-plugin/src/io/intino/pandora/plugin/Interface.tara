@@ -14,6 +14,8 @@ Concept:Named Service
 	has:Named Exception
 
 Concept:Named Activity
+	var word:{Ajax Android} type = Ajax
+
 	Concept:{0..1} Authenticated
 		var string:url by
 
