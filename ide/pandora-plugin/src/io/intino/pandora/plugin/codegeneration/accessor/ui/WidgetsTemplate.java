@@ -19,7 +19,7 @@ public class WidgetsTemplate extends Template {
 	public Template define() {
 		add(
 			rule().add((condition("type", "widgets"))).add(mark("widget").multiple("\n")),
-			rule().add((condition("trigger", "widget"))).add(literal("<link rel=\"import\" href=\"")).add(mark("value", "lowercase")).add(literal("-widget.html\">\n"))
+			rule().add((condition("trigger", "widget"))).add(literal("<link rel=\"import\" href=\"")).add(mark("value", "lowercase")).add(literal("-widget.html\">"))
 		);
 		return this;
 	}

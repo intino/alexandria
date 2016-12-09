@@ -4,5 +4,4 @@ end
 
 def trigger(widget)
 	<link rel="import" href="$value+lowercase~-widget.html">
-
 end
