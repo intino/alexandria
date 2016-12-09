@@ -5,7 +5,7 @@
 
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -15,7 +15,7 @@
         <tara.dsl.version>LATEST</tara.dsl.version>
         <tara.out.dsl>Pandora</tara.out.dsl>
         <tara.out.dsl.version>1.0.0</tara.out.dsl.version>
-        <tara.working.package>io.intino.pandora.plugin</tara.working.package>
+        <tara.working.package>io.intino.pandora.model</tara.working.package>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -71,7 +71,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>tara.dsl:pandora</include>
+                                    <include>io.intino.pandora:pandora-model</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -127,14 +127,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>LATEST</version>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-model</artifactId>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
+            <scope>system</scope>
+            <systemPath>${user.home}/.m2/repository/tara/dsl/pandora/${version}/Pandora-${version}.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
@@ -185,7 +187,11 @@
             <version>2.0.11</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>LATEST</version>
+        </dependency>x
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>pandora-server</artifactId>

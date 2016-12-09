@@ -1,7 +1,7 @@
 package amidas;
 
-import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.model.codegeneration.schema.SchemaRenderer;
 import org.junit.Test;
 import tara.magritte.Graph;
 

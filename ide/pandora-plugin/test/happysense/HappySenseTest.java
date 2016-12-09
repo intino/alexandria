@@ -1,9 +1,9 @@
 package happysense;
 
-import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.FullRenderer;
-import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.model.codegeneration.FullRenderer;
+import io.intino.pandora.model.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.pandora.model.rest.RESTService;
 import org.junit.Test;
 import io.intino.pandora.server.PandoraSpark;
 import tara.magritte.Graph;
