@@ -2,13 +2,18 @@ package io.intino.pandora.plugin.actions;
 
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.notification.Notifications.Bus;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
+import io.intino.pandora.plugin.codegeneration.accessor.jms.JMSAccessorRenderer;
+import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.pandora.plugin.jms.JMSService;
+import io.intino.pandora.plugin.jmx.JMXService;
 import io.intino.pandora.plugin.rest.RESTService;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +31,8 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -38,14 +42,16 @@ import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory
 class AccessorsPublisher {
 	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
 	private static final String PANDORA = "pandora";
-	private static final String REST_ACCESSOR_JAVA = "-rest-accessor-java";
+	private static final String ACCESSOR = "-accessor";
 	private final Module module;
 	private final Graph graph;
 	private final String generationPackage;
 	private File root;
+	private Configuration configuration;
 
 	AccessorsPublisher(Module module, Graph graph, String generationPackage) {
 		this.module = module;
+		configuration = TaraUtil.configurationOf(module);
 		this.graph = graph;
 		this.generationPackage = generationPackage;
 		try {
@@ -57,16 +63,18 @@ class AccessorsPublisher {
 	}
 
 	void publish() {
+		if (configuration == null) return;
 		try {
 			final List<String> apps = createSources();
-			final Configuration configuration = TaraUtil.configurationOf(module);
-			if (configuration == null) return;
-			else if (apps.isEmpty()) {
-				notifyNothingDone();
+			if (apps.isEmpty()) {
+				notify("None rest services are found in module", INFORMATION);
+				return;
+			} else if (configuration.distributionRepository() == null) {
+				notify("There isn't distribution repository defined", ERROR);
 				return;
 			}
 			mvn(configuration);
-			for (String app : apps) notifySuccess(configuration, app);
+			notifySuccess(configuration, apps);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
@@ -76,7 +84,7 @@ class AccessorsPublisher {
 	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, conf.groupId(), file.getName() + REST_ACCESSOR_JAVA, conf.modelVersion());
+			final File pom = createPom(file, conf.groupId(), file.getName() + ACCESSOR, conf.modelVersion());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -116,6 +124,36 @@ class AccessorsPublisher {
 	private List<String> createSources() throws IOException {
 		List<String> apps = new ArrayList<>();
 		if (graph == null) return Collections.emptyList();
+		apps.addAll(rest());
+		apps.addAll(jms());
+		apps.addAll(jmx());
+		return apps;
+	}
+
+	private List<String> jmx() {
+		List<String> apps = new ArrayList<>();
+		for (JMXService service : graph.find(JMXService.class)) {
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			sourcesDestiny.mkdirs();
+			new JMXAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
+			apps.add(service.name());
+		}
+		return apps;
+	}
+
+	private List<String> jms() {
+		List<String> apps = new ArrayList<>();
+		for (JMSService service : graph.find(JMSService.class)) {
+			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+			sourcesDestiny.mkdirs();
+			new JMSAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
+			apps.add(service.name());
+		}
+		return apps;
+	}
+
+	private List<String> rest() {
+		List<String> apps = new ArrayList<>();
 		for (RESTService service : graph.find(RESTService.class)) {
 			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
@@ -128,24 +166,36 @@ class AccessorsPublisher {
 
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
+		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
+		SimpleEntry<String, String> distroRepo = configuration.distributionRepository();
+		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
 		final Template template = AccessorPomTemplate.create();
 		final File pomFile = new File(root, "pom.xml");
 		Files.write(pomFile.toPath(), template.format(frame).getBytes());
 		return pomFile;
 	}
 
-	private void notifySuccess(Configuration conf, String app) {
-		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
-		balloon.createNotification(app + " Accessor generated and uploaded", message(), INFORMATION, (n, e) -> {
-			StringSelection selection = new StringSelection(newDependency(conf, app));
-			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-			clipboard.setContents(selection, selection);
-		}).setImportant(true).notify(module.getProject());
+	private Frame createRepositoryFrame(String url, String id, String type) {
+		return new Frame().addTypes("repository", "release", type).
+				addSlot("name", id).
+				addSlot("url", url).
+				addSlot("type", new Random().nextInt() % 10);
 	}
 
-	private void notifyNothingDone() {
+	private void notifySuccess(Configuration conf, List<String> apps) {
+		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
+		for (String app : apps) {
+			balloon.createNotification("Accessors generated and uploaded", message(), INFORMATION, (n, e) -> {
+				StringSelection selection = new StringSelection(newDependency(conf, app));
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				clipboard.setContents(selection, selection);
+			}).setImportant(true).notify(module.getProject());
+		}
+	}
+
+	private void notify(String message, NotificationType type) {
 		Notifications.Bus.notify(
-				new Notification("Pandora", "None rest services are found in module", module.getName(), INFORMATION), module.getProject());
+				new Notification("Pandora", message, module.getName(), type), module.getProject());
 	}
 
 	@NotNull
@@ -156,8 +206,8 @@ class AccessorsPublisher {
 	@NotNull
 	private String newDependency(Configuration conf, String app) {
 		return "<dependency>\n" +
-				"    <groupId>" + conf.groupId() + "</groupId>\n" +
-				"    <artifactId>" + app + REST_ACCESSOR_JAVA + "</artifactId>\n" +
+				"    <groupId>" + conf.groupId().toLowerCase() + "</groupId>\n" +
+				"    <artifactId>" + app.toLowerCase() + ACCESSOR + "</artifactId>\n" +
 				"    <version>" + conf.modelVersion() + "</version>\n" +
 				"</dependency>";
 	}

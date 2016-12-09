@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.server.ui.display;
+package io.intino.pandora.plugin.codegeneration.server.activity.display;
 
 import org.siani.itrules.LineSeparator;
 import org.siani.itrules.Template;

@@ -16,6 +16,7 @@ import static java.nio.file.Files.exists;
 import static java.nio.file.Files.write;
 
 public class ActivityAccessorRenderer {
+	private static final String SRC_DIRECTORY = "src";
 	private final Module appModule;
 	private final Module webModule;
 	private final Activity activity;
@@ -35,6 +36,7 @@ public class ActivityAccessorRenderer {
 			frame.addSlot("activityName", activity.name());
 			frame.addSlot("application", TaraUtil.configurationOf(appModule).artifactId());
 			frame.addSlot("version", TaraUtil.configurationOf(appModule).modelVersion());
+			frame.addSlot("port", (int) (Math.random() * 1000));
 			for (Activity.AbstractPage abstractPage : activity.abstractPageList()) frame.addSlot("page", (Frame) pageFrame(abstractPage));
 			writeConfigurationFiles(frame);
 			createWidgets();
@@ -46,18 +48,18 @@ public class ActivityAccessorRenderer {
 
 	private void createPages() throws IOException {
 		for (Activity.AbstractPage page : activity.abstractPageList()) {
-			Path pagePath = new File(rooDirectory(), "app" + separator + page.name() + ".html").toPath();
+			Path pagePath = new File(rooDirectory(), SRC_DIRECTORY + separator + page.name() + ".html").toPath();
 			if (!exists(pagePath)) write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
 		}
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		return new Frame().addTypes("page").addSlot("rootDisplay", page.rootDisplay().name()).addSlot("name", page.name());
+		return new Frame().addTypes("page").addSlot("rootDisplay", page.uses().name()).addSlot("name", page.name());
 	}
 
 	private void createWidget(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
-		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html");
+		final File file = new File(rooDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html");
 		if (!file.exists())
 			write(file.toPath(), WidgetTemplate.create().add("camelCaseToSnakeCase", value -> camelCaseToSnakeCase(value.toString())).format(frame).getBytes());
 	}
@@ -70,19 +72,19 @@ public class ActivityAccessorRenderer {
 			createWidget(display);
 			widgets.addSlot("widget", display.name());
 		}
-		write(new File(rooDirectory(), "app" + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
+		write(new File(rooDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
+		final File file = new File(rooDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), WidgetRequesterTemplate.create().format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(rooDirectory(), "app" + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
+		final File file = new File(rooDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), WidgetNotifierTemplate.create().format(frame).getBytes());
 	}
@@ -112,19 +114,18 @@ public class ActivityAccessorRenderer {
 		file = new File(rooDirectory(), "package.json");
 		if (!file.exists()) write(file.toPath(), Package_jsonTemplate.create().format(frame).getBytes());
 		file = new File(rooDirectory(), "gulpfile.js");
-
 		write(file.toPath(), Gulpfile_jsTemplate.create().format(frame).getBytes());
 	}
 
 	private void createStaticFiles() throws IOException {
 		File root = rooDirectory();
-		new File(root, "app" + separator + "fonts").mkdirs();
-		new File(root, "app" + separator + "images").mkdirs();
-		new File(root, "app" + separator + "styles").mkdirs();
-		new File(root, "app" + separator + "widgets").mkdirs();
-		File file = new File(root, "app" + separator + "components.html");
+		new File(root, SRC_DIRECTORY + separator + "fonts").mkdirs();
+		new File(root, SRC_DIRECTORY + separator + "images").mkdirs();
+		new File(root, SRC_DIRECTORY + separator + "styles").mkdirs();
+		new File(root, SRC_DIRECTORY + separator + "widgets").mkdirs();
+		File file = new File(root, SRC_DIRECTORY + separator + "components.html");
 		if (!file.exists()) copyStream(inputFrom("/ui/components.html"), new FileOutputStream(file));
-		file = new File(root, "app" + separator + "main.js");
+		file = new File(root, SRC_DIRECTORY + separator + "main.js");
 		if (!file.exists()) copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
 	}
 

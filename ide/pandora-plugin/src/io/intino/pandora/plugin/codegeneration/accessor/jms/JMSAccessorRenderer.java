@@ -21,13 +21,13 @@ public class JMSAccessorRenderer {
 	private String packageName;
 
 
-	public JMSAccessorRenderer(JMSService application) {
+	public JMSAccessorRenderer(JMSService application, File destination, String packageName) {
 		this.service = application;
-	}
-
-	public void execute(File destination, String packageName) {
 		this.destination = destination;
 		this.packageName = packageName;
+	}
+
+	public void execute() {
 		new SchemaRenderer(service.graph(), destination, packageName).execute();
 		processService(service);
 	}

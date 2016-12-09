@@ -17,7 +17,7 @@ def type(page)
 
             <script src="main.js"></script>
 
-            <link rel="import" href="elements.html">
+            <link rel="import" href="components.html">
         </head>
 
         <body unresolved class="fullbleed">
@@ -55,5 +55,5 @@ def type(page)
         </body>
     </html>
 
-	
+
 end

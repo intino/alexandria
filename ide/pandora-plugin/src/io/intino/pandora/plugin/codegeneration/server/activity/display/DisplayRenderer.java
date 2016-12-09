@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.server.ui.display;
+package io.intino.pandora.plugin.codegeneration.server.activity.display;
 
 import io.intino.pandora.plugin.Activity;
 import io.intino.pandora.plugin.Schema;
