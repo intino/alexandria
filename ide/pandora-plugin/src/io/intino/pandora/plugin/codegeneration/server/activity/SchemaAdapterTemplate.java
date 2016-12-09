@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.server.ui;
+package io.intino.pandora.plugin.codegeneration.server.activity;
 
 import org.siani.itrules.*;
 
