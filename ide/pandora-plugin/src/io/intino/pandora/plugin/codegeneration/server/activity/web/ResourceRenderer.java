@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.server.ui.web;
+package io.intino.pandora.plugin.codegeneration.server.activity.web;
 
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.plugin.Activity;

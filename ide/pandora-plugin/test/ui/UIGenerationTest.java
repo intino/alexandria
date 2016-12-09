@@ -3,10 +3,10 @@ package ui;
 import io.intino.pandora.plugin.PandoraApplication;
 import io.intino.pandora.plugin.codegeneration.BoxConfigurationRenderer;
 import io.intino.pandora.plugin.codegeneration.BoxRenderer;
-import io.intino.pandora.plugin.codegeneration.server.ui.SchemaAdaptersRenderer;
-import io.intino.pandora.plugin.codegeneration.server.ui.display.DisplayRenderer;
-import io.intino.pandora.plugin.codegeneration.server.ui.web.ActivityRenderer;
-import io.intino.pandora.plugin.codegeneration.server.ui.web.ResourceRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
 import org.junit.Test;
 import tara.magritte.Graph;
 

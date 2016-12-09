@@ -9,7 +9,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import io.intino.pandora.plugin.Activity;
+import org.jetbrains.annotations.NotNull;
 import tara.magritte.Graph;
 
 import java.io.File;
@@ -40,14 +43,21 @@ public class ActivityAccessorCreator {
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module[] modules = manager.getModules();
 			for (Module m : modules) if (m.getName().equals(activity.name() + "-activity")) return m;
-			Module webModule = manager.newModule(project.getBasePath() + File.separator + activity.name().toLowerCase() + "-activity" + File.separator + activity.name().toLowerCase() + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION, WebModuleType.WEB_MODULE);
+			Module webModule = manager.newModule(modulePath(activity), WebModuleType.WEB_MODULE);
 			final ModifiableRootModel model = ModuleRootManager.getInstance(webModule).getModifiableModel();
 			final File parent = new File(webModule.getModuleFilePath()).getParentFile();
 			parent.mkdirs();
-			model.addContentEntry(parent.getAbsolutePath());
+			final VirtualFile vFile = VfsUtil.findFileByIoFile(parent, true);
+			if (vFile != null) model.addContentEntry(vFile);
+			else model.addContentEntry(parent.getAbsolutePath());
 			model.commit();
 			return webModule;
 		});
+	}
+
+	@NotNull
+	private String modulePath(Activity activity) {
+		return project.getBasePath() + File.separator + activity.name().toLowerCase() + "-activity" + File.separator + activity.name().toLowerCase() + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
 
 }
