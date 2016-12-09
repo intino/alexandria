@@ -122,8 +122,8 @@ public class ActivityAccessorRenderer {
 		new File(root, "app" + separator + "images").mkdirs();
 		new File(root, "app" + separator + "styles").mkdirs();
 		new File(root, "app" + separator + "widgets").mkdirs();
-		File file = new File(root, "app" + separator + "elements.html");
-		if (!file.exists()) copyStream(inputFrom("/ui/elements.html"), new FileOutputStream(file));
+		File file = new File(root, "app" + separator + "components.html");
+		if (!file.exists()) copyStream(inputFrom("/ui/components.html"), new FileOutputStream(file));
 		file = new File(root, "app" + separator + "main.js");
 		if (!file.exists()) copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
 	}

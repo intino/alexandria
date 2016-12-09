@@ -10,10 +10,10 @@ def type(page)
 
             <link rel="icon" type="image/png" href="images/favicon.ico">
 
-            <script src="bower_components/jquery/dist/jquery.min.js"></script>
-            <script src="bower_components/cotton-push/PushService.js"></script>
-            <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-            <script src="bower_components/moment/min/moment-with-locales.min.js"></script>
+            <script src="lib/jquery/dist/jquery.min.js"></script>
+            <script src="lib/cotton-push/PushService.js"></script>
+            <script src="lib/webcomponentsjs/webcomponents-lite.min.js"></script>
+            <script src="lib/moment/min/moment-with-locales.min.js"></script>
 
             <script src="main.js"></script>
 

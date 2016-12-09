@@ -2,12 +2,12 @@ package io.intino.pandora.server.activity.spark.actions;
 
 import cottons.utils.StreamHelper;
 import io.intino.pandora.server.activity.services.push.Browser;
-import org.bouncycastle.util.encoders.Base64;
 
 import java.io.IOException;
 import java.net.URL;
 
 import static java.lang.String.format;
+import static java.util.Base64.getEncoder;
 import static spark.utils.IOUtils.toByteArray;
 
 
@@ -56,7 +56,7 @@ public abstract class PageAction {
 
 	private String encode(URL logo) {
 		try {
-			return "data:image/png;base64," + Base64.encode(toByteArray(logo.openStream()));
+			return "data:image/png;base64," + new String(getEncoder().encode(toByteArray(logo.openStream())));
 		} catch (IOException e) {
 			return "";
 		}
