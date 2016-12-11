@@ -132,8 +132,6 @@
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
             <version>1.0.9</version>
-            <scope>system</scope>
-            <systemPath>${user.home}/.m2/repository/tara/dsl/pandora/${version}/Pandora-${version}.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
