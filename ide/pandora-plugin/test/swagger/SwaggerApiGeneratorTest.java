@@ -2,17 +2,15 @@ package swagger;
 
 
 import io.intino.pandora.model.PandoraApplication;
-import io.intino.pandora.model.codegeneration.accessor.rest.swagger.OpenApiDescriptor;
-import io.intino.pandora.model.codegeneration.accessor.rest.swagger.SwaggerGenerator;
 import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.OpenApiDescriptor;
+import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.SwaggerGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import tara.magritte.Graph;
 
 import java.io.File;
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
 @Ignore
 public class SwaggerApiGeneratorTest {
 

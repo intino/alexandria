@@ -19,20 +19,15 @@
     </properties>
 
     <build>
-        <outputDirectory>../../out/production/pandora-plugin</outputDirectory>
-        <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
-        <directory>../../out/build/pandora-plugin</directory>
+        <outputDirectory>../../out/production/pandora-model</outputDirectory>
+        <testOutputDirectory>../../out/test/pandora-model</testOutputDirectory>
+        <directory>../../out/build/pandora-model</directory>
         <!--<sourceDirectory>src</sourceDirectory>-->
         <!--<resources>-->
         <!--<resource>-->
         <!--<directory>res</directory>-->
         <!--</resource>-->
         <!--</resources>-->
-        <!--<testResources>-->
-        <!--<testResource>-->
-        <!--<directory>test-res</directory>-->
-        <!--</testResource>-->
-        <!--</testResources>-->
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -83,21 +78,22 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>LATEST</version>
-        </dependency>
-        <dependency>
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>
             <artifactId>language</artifactId>
             <scope>provided</scope>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <version>LATEST</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
