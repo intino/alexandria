@@ -24,15 +24,10 @@
         <testOutputDirectory>../../out/test/pandora-plugin</testOutputDirectory>
         <directory>../../out/build/pandora-plugin</directory>
         <!--<sourceDirectory>src</sourceDirectory>-->
-        <!--<resources>-->
-            <!--<resource>-->
-                <!--<directory>res</directory>-->
-            <!--</resource>-->
-        <!--</resources>-->
         <!--<testResources>-->
-            <!--<testResource>-->
-                <!--<directory>test-res</directory>-->
-            <!--</testResource>-->
+        <!--<testResource>-->
+        <!--<directory>test-res</directory>-->
+        <!--</testResource>-->
         <!--</testResources>-->
         <plugins>
             <plugin>
@@ -69,9 +64,11 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>false</minimizeJar>
                             <artifactSet>
                                 <includes>
-                                    <include>io.intino.pandora:pandora-model</include>
+                                    <include>tara.dsl:pandora:*</include>
+                                    <include>io.intino.pandora:pandora-model:jar:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -134,7 +131,7 @@
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.9</version>
             <scope>system</scope>
             <systemPath>${user.home}/.m2/repository/tara/dsl/pandora/${version}/Pandora-${version}.jar</systemPath>
         </dependency>
@@ -191,7 +188,8 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>LATEST</version>
-        </dependency>x
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>pandora-server</artifactId>
