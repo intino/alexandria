@@ -81,7 +81,7 @@
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <scope>provided</scope>
-            <version>1.0</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>

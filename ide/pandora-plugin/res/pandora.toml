@@ -6,19 +6,19 @@ changeNotes=""
 id="PandoraToolsGroup"
 popup="true"
 text="Pandora"
-aClass="io.intino.pandora.model.actions.PandoraActionGroup"
+aClass="io.intino.pandora.plugin.actions.PandoraActionGroup"
 groupId="ToolsMenu"
 anchor="last"
 
 [[actions]]
 id="NewPandoraFile"
-aClass="io.intino.pandora.model.actions.CreatePandoraFileAction"
+aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
 groupId="NewGroup"
 anchor="first"
 
 [[actions]]
 id="CreatePandoraAPI"
-aClass="io.intino.pandora.model.actions.CreatePandoraBoxAction"
+aClass="io.intino.pandora.plugin.actions.CreatePandoraBoxAction"
 text="Create Pandora Shell"
 description="Create Pandora Shell"
 shortcut="control alt S"
@@ -26,7 +26,7 @@ groupId="PandoraToolsGroup"
 
 [[actions]]
 id="PublishAccesors"
-aClass="io.intino.pandora.model.actions.PublishAccessorAction"
+aClass="io.intino.pandora.plugin.actions.PublishAccessorAction"
 text="Publish Pandora Accessor"
 description="Publish Pandora Accessor in Artifactory"
 shortcut="control alt A"

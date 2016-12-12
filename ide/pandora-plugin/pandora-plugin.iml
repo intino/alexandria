@@ -16,17 +16,18 @@
       <sourceFolder url="file://$MODULE_DIR$/test-res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test-gen" isTestSource="true" />
     </content>
     <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="pandora-plugin-core" />
+    <orderEntry type="module" module-name="pandora-model" />
     <orderEntry type="library" name="Maven: tara.dsl:pandora:1.0.9" level="project" />
     <orderEntry type="library" name="Maven: io.swagger:swagger-codegen-cli:2.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.siani.cottons:cotton-utils:1.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.moandjiezana.toml:toml4j:0.7.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.7" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.tara:proteo-alone:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.tara:proteo-alone:1.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.tara:language:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.itrules:itrules:1.9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />
@@ -61,7 +62,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8.0">
         <CLASSES>
-          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/lib/tools.jar!/" />
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
