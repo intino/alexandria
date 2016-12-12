@@ -1,6 +1,8 @@
 name="Pandora"
 version="1.0.0"
 changeNotes=""
+gulpFileTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Gulpfile_jsTemplate.class"
+packageJsonTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Package_jsonTemplate.class"
 
 [[groups]]
 id="PandoraToolsGroup"

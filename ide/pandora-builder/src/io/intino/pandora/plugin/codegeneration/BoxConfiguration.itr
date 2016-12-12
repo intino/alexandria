@@ -49,8 +49,8 @@ def type(service & activity) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		public int port;
 		public String webDirectory;
-		public io.intino.pandora.server.activity.services.AuthService authService;
 		$custom+field...[$NL]
+		public io.intino.pandora.server.activity.services.AuthService authService;
 	}
 end
 
