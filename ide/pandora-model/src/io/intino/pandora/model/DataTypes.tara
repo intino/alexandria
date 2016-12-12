@@ -1,0 +1,53 @@
+dsl Proteo
+
+
+Concept Data is abstract
+
+Concept:Named Parameter extends Data is component
+	var boolean required = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defcto false
+
+Facet Type on Data
+	var string type is reactive private
+	sub Real
+    	var double defaultValue = 0
+		var string type = "Double" is reactive private
+	sub Integer
+		var integer defaultValue = 0
+		var string type = "Integer" is reactive private
+	sub Bool
+    	var boolean defaultValue = true
+		var string type = "Boolean" is reactive private
+	sub Text
+    	var string defaultValue = ""
+		var string type = "String" is reactive private
+	sub Date
+		var string format = "dd/MM/yyyy"
+		var string type = "java.time.LocalDate" is reactive private
+	sub DateTime
+		var string format = "dd/MM/yyyy HH:mm:ss"
+		var string type = "java.time.LocalDateTime" is reactive private
+	sub File
+		var string type = "java.io.InputStream" is reactive private
+		var word:{body path form header query} in = form
+	sub Object
+		var Schema schema
+		var string type = @schemaName is reactive private
+
+Facet List on Data
+
+!! Schemas allows to define how objects are. This objects can be provided as either parameter or response
+Concept Schema
+	var boolean required = false
+	var boolean multiple = true
+	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
+	Concept:{0..1} AttributeMap
+	!! Attribute of the member
+	Concept:Named Attribute extends Data
+		var boolean required = true
+		var boolean multiple = false
+	Concept Has
+		var Schema reference
+		var boolean required = false
+		var boolean multiple = true
+	has Schema
+

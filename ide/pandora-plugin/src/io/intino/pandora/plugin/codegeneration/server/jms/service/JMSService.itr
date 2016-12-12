@@ -1,0 +1,95 @@
+
+def type(jms)
+	package $package;
+
+	import $package.requests.*;
+	import io.intino.pandora.Box;
+	import io.intino.pandora.jms.$model~Consumer;
+	import io.intino.pandora.jms.$model~Producer;
+
+	import javax.jms.BytesMessage;
+    import javax.jms.JMSException;
+    import javax.jms.Session;
+    import javax.jms.TextMessage;
+    import java.io.ByteArrayOutputStream;
+    import java.io.IOException;
+    import java.io.InputStream;
+
+	public class $name+firstUpperCase~JMSService {
+
+		private Session session;
+		private $box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration;
+
+		public $name+firstUpperCase~JMSService(Session session, $box+firstUpperCase~Box box) {
+			this.session = session;
+			this.configuration = box.configuration().$name+firstLowerCase~Configuration;
+			$request...[$NL]
+		}
+
+		$notification...[$NL$NL]
+
+		private byte$[] toByteArray(InputStream stream) {
+			try {
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte$[] data = new byte$[16384];
+				while ((nRead = stream.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+				return buffer.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return new byte$[0];
+		}
+	}
+end
+
+def type(request)
+	new $model~Consumer(session, $queue+format).listen(new $name+firstUpperCase~Request(box));
+end
+
+def type(notification)
+	public void notify$name+firstUpperCase([$parameter+signature...[, ]]) throws JMSException {
+		final $returnMessageType~Message message = session.create$returnMessageType~Message();
+		fill$name+firstUpperCase~Message(message[, $parameter+name...[, ]]);
+		new $model~Producer(session, $queue+format).produce(message);
+	}
+
+	private void fill$name+firstUpperCase~Message($returnMessageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
+		$parameter+assign...[$NL]
+	}
+end
+
+def type(queue) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", configuration.$value)
+end
+
+def type(parameter) trigger(name)
+	$name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter) trigger(signature)
+	$type $name+SnakeCaseToCamelCase+firstLowerCase
+end
+
+def type(parameter & fileData) trigger(assign)
+	message.writeBytes(toByteArray($name));
+end
+
+def type(parameter & objectData) trigger(assign)
+	message.setText(new Gson().toJson($name));
+end
+
+def type(parameter) trigger(assign)
+	message.set$type+formatted~Property("$name", $name);
+end
+
+def attribute(Integer) trigger(formatted)
+	Int
+end

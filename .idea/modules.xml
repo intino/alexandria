@@ -2,15 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/accessor/accessor.iml" filepath="$PROJECT_DIR$/accessor/accessor.iml" group="kernel/web" />
-      <module fileurl="file://$PROJECT_DIR$/application/application.iml" filepath="$PROJECT_DIR$/application/application.iml" group="plugin" />
-      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" group="kernel/web" />
-      <module fileurl="file://$PROJECT_DIR$/plugin/ide/ide.iml" filepath="$PROJECT_DIR$/plugin/ide/ide.iml" group="plugin" />
-      <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" group="kernel" />
-      <module fileurl="file://$PROJECT_DIR$/jmx/jmx.iml" filepath="$PROJECT_DIR$/jmx/jmx.iml" group="kernel" />
-      <module fileurl="file://$PROJECT_DIR$/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/scheduler/scheduler.iml" group="kernel" />
-      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" group="kernel/web" />
-      <module fileurl="file://$PROJECT_DIR$/plugin/teseo/teseo.iml" filepath="$PROJECT_DIR$/plugin/teseo/teseo.iml" group="plugin" />
+      <module fileurl="file://$PROJECT_DIR$/accessor/accessor.iml" filepath="$PROJECT_DIR$/accessor/accessor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jmx/jmx.iml" filepath="$PROJECT_DIR$/jmx/jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ide/pandora-model/pandora-model.iml" filepath="$PROJECT_DIR$/ide/pandora-model/pandora-model.iml" group="plugin" />
+      <module fileurl="file://$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" filepath="$PROJECT_DIR$/ide/pandora-plugin/pandora-plugin.iml" group="plugin" />
+      <module fileurl="file://$PROJECT_DIR$/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/scheduler/scheduler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slack/slack.iml" filepath="$PROJECT_DIR$/slack/slack.iml" />
     </modules>
   </component>
 </project>

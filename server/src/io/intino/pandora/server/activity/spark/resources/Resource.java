@@ -1,0 +1,171 @@
+package io.intino.pandora.server.activity.spark.resources;
+
+import io.intino.pandora.exceptions.PandoraException;
+import io.intino.pandora.server.activity.displays.Display;
+import io.intino.pandora.server.activity.displays.DisplayNotifier;
+import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;
+import io.intino.pandora.server.activity.displays.MessageCarrier;
+import io.intino.pandora.server.activity.services.AuthService;
+import io.intino.pandora.server.activity.services.AuthService.Authentication;
+import io.intino.pandora.server.activity.services.auth.Space;
+import io.intino.pandora.server.activity.services.auth.exceptions.CouldNotInvalidateAccessToken;
+import io.intino.pandora.server.activity.services.auth.exceptions.CouldNotObtainAuthorizationUrl;
+import io.intino.pandora.server.activity.services.auth.exceptions.CouldNotObtainRequestToken;
+import io.intino.pandora.server.activity.services.auth.exceptions.SpaceAuthCallbackUrlIsNull;
+import io.intino.pandora.server.activity.services.push.ActivityClient;
+import io.intino.pandora.server.activity.services.push.ActivitySession;
+import io.intino.pandora.server.activity.services.push.Browser;
+import io.intino.pandora.server.activity.spark.ActivitySparkManager;
+import io.intino.pandora.server.activity.utils.RequestHelper;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+public abstract class Resource implements io.intino.pandora.server.Resource {
+    private final DisplayNotifierProvider notifierProvider;
+    protected final ActivitySparkManager manager;
+
+    static final Map<String, String> authenticationIdMap = new HashMap<>();
+    static final Map<String, Authentication> authenticationMap = new HashMap<>();
+
+    public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+        this.manager = manager;
+        this.notifierProvider = notifierProvider;
+    }
+
+    @Override
+    public void execute() throws PandoraException {
+        fillBrowser(manager);
+    }
+
+    protected boolean isLogged() {
+        if (!isFederated()) return true;
+
+        String authId = manager.fromQuery("authId", String.class);
+        Authentication authentication = authenticationOf(authId).orElse(null);
+        return authentication != null && manager.authService().valid(authentication.accessToken());
+    }
+
+    protected synchronized void authenticate() {
+        String authId = UUID.randomUUID().toString();
+        Space space = space();
+        space.setAuthId(authId);
+        space.setBaseUrl(manager.baseUrl());
+        saveAuthenticationId(authId);
+        Authentication authentication = createAuthentication(authId);
+        authenticate(authentication);
+    }
+
+    protected void logout() {
+        Optional<Authentication> authentication = authentication();
+
+        if (!authentication.isPresent())
+            return;
+
+        try {
+            authentication.get().invalidate();
+            removeAuthentication(manager.currentSession().id());
+        } catch (CouldNotInvalidateAccessToken error) {
+            error.printStackTrace();
+        }
+    }
+
+    protected DisplayNotifier notifier(ActivitySession session, ActivityClient client, Display display) {
+        return notifierProvider.agent(display, carrier(session, client));
+    }
+
+    Optional<Authentication> authentication() {
+        return authenticationOf(manager.fromQuery("authId", String.class));
+    }
+
+    Optional<Authentication> authenticationOf(String authenticationId) {
+        return Optional.ofNullable(authenticationMap.get(locateAuthenticationId(authenticationId)));
+    }
+
+    void removeAuthentication(String sessionId) {
+        String authenticationId = authenticationIdMap.get(sessionId);
+        authenticationIdMap.remove(sessionId);
+        authenticationMap.remove(authenticationId);
+    }
+
+    String authenticationId() {
+        String sessionId = manager.currentSession().id();
+        return authenticationIdMap.containsKey(sessionId) ? authenticationIdMap.get(sessionId) : null;
+    }
+
+    String home() {
+        String authId = authenticationId();
+        return manager.baseUrl() + (authId != null ? "/?authId=" + authId : "");
+    }
+
+    private Space space() {
+        AuthService authService = manager.authService();
+        return authService != null ? authService.space() : null;
+    }
+
+    private URL amidasUrl() {
+        AuthService authService = manager.authService();
+        return authService != null ? authService.url() : null;
+    }
+
+    private boolean isFederated() {
+        return manager.authService() != null;
+    }
+
+    private void registerAuthentication(String authenticationId, Authentication authentication) {
+        authenticationMap.put(authenticationId, authentication);
+    }
+
+    private String locateAuthenticationId(String authenticationId) {
+
+        if (authenticationId != null && !authenticationId.isEmpty()) {
+            saveAuthenticationId(authenticationId);
+            return authenticationId;
+        }
+
+        return authenticationIdMap.get(manager.currentSession().id());
+    }
+
+    private void saveAuthenticationId(String authenticationId) {
+        authenticationIdMap.put(manager.currentSession().id(), authenticationId);
+    }
+
+    private Authentication createAuthentication(String authenticationId) {
+        try {
+            registerAuthentication(authenticationId, manager.authService().authenticate());
+            return authenticationOf(authenticationId).get();
+        } catch (SpaceAuthCallbackUrlIsNull spaceAuthCallbackUrlIsNull) {
+            spaceAuthCallbackUrlIsNull.printStackTrace();
+            return null;
+        }
+    }
+
+    private void authenticate(Authentication authentication) {
+        try {
+            manager.redirect(RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString());
+        } catch (CouldNotObtainRequestToken | CouldNotObtainAuthorizationUrl | IOException error) {
+            manager.redirect(errorPageUrl());
+        }
+    }
+
+    private String errorPageUrl() {
+        return manager.baseUrl() + "/error";
+    }
+
+    private MessageCarrier carrier(ActivitySession session, ActivityClient client) {
+        return new MessageCarrier(manager.pushService(), session, client);
+    }
+
+    private void fillBrowser(ActivitySparkManager manager) {
+        Browser browser = manager.currentSession().browser();
+        browser.baseUrl(manager.baseUrl());
+        browser.language(manager.languageFromUrl());
+        browser.metadataLanguage(manager.languageFromHeader());
+    }
+
+}
+

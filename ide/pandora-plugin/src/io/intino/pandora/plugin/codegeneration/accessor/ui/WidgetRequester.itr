@@ -1,0 +1,33 @@
+def type(widget)
+	var $name+FirstUpperCase~WidgetBehaviors = $name+FirstUpperCase~WidgetBehaviors || {};
+
+    $name+FirstUpperCase~WidgetBehaviors.Requester = {
+
+        $requester...[,$NL]
+
+    };
+end
+
+
+def trigger(requester)
+	$name : function([$parameterSignature]) {
+		this.$method("$name"[, $parameter]);
+	}
+end
+
+def trigger(parameter)
+	{ "value" : value }
+end
+
+
+def trigger(parameterSignature)
+	value
+end
+
+def attribute(Asset) trigger(method)
+	download
+end
+
+def trigger(method)
+	carry
+end

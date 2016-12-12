@@ -1,0 +1,33 @@
+name="Pandora"
+version="1.0.0"
+changeNotes=""
+
+[[groups]]
+id="PandoraToolsGroup"
+popup="true"
+text="Pandora"
+aClass="io.intino.pandora.model.actions.PandoraActionGroup"
+groupId="ToolsMenu"
+anchor="last"
+
+[[actions]]
+id="NewPandoraFile"
+aClass="io.intino.pandora.model.actions.CreatePandoraFileAction"
+groupId="NewGroup"
+anchor="first"
+
+[[actions]]
+id="CreatePandoraAPI"
+aClass="io.intino.pandora.model.actions.CreatePandoraBoxAction"
+text="Create Pandora Shell"
+description="Create Pandora Shell"
+keyboard-shortcut="control alt S"
+groupId="PandoraToolsGroup"
+
+[[actions]]
+id="PublishAccesors"
+aClass="io.intino.pandora.model.actions.PublishAccessorAction"
+text="Publish Pandora Accessor"
+description="Publish Pandora Accessor in Artifactory"
+keymap="control alt A"
+groupId="PandoraToolsGroup"
