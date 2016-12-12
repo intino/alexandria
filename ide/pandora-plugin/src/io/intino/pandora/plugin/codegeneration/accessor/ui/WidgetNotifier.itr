@@ -1,0 +1,29 @@
+def type(widget)
+	var $name+FirstUpperCase~WidgetBehaviors = $name+FirstUpperCase~WidgetBehaviors || {};
+
+    $name+FirstUpperCase~WidgetBehaviors.NotifierListener = {
+
+        listenToDisplay : function() {
+            var widget = this;
+            $notification...[$NL]
+        }
+    };
+end
+
+
+def trigger(notification)
+	this.when("$name")[$type].execute(function(parameters) {
+		widget._$name([$parameter]);
+	});
+end
+
+def trigger(parameter)
+	parameters.value
+end
+
+def attribute(Display) trigger(type)
+	.toSelf()
+end
+
+def trigger(type)
+end

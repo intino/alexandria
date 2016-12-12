@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.siani.teseo</groupId>
-    <artifactId>jmx</artifactId>
+    <groupId>io.intino.pandora</groupId>
+    <artifactId>pandora-jmx</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -23,6 +23,12 @@
 
     <repositories>
         <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
             <id>siani-maven</id>
             <name>siani-maven-releases</name>
             <url>http://artifactory.siani.es/artifactory/libs-release</url>
@@ -31,7 +37,6 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-
         <outputDirectory>../out/production/jmx</outputDirectory>
         <testOutputDirectory>../out/test/jmx</testOutputDirectory>
         <directory>../out/build/jmx</directory>
@@ -50,6 +55,18 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -59,6 +76,14 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+            <version>1.8.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/../lib/tools.jar</systemPath>  <!--Deploy over osx-->
+            <!--<systemPath>${java.home}/lib/tools.jar</systemPath>  &lt;!&ndash;Deploy over windows or linux&ndash;&gt;-->
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

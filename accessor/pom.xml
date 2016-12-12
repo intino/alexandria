@@ -2,10 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.siani.teseo</groupId>
-    <artifactId>accessor-java</artifactId>
+    <modelVersion>4.0.0</modelVersion>s
+    <groupId>io.intino.pandora</groupId>
+    <artifactId>pandora-rest-accessor-java</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -112,8 +111,8 @@
             <version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.teseo</groupId>
-            <artifactId>core</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -129,9 +128,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.siani.teseo</groupId>
-            <artifactId>server</artifactId>
-            <version>1.0.0</version>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>panora-server</artifactId>
+            <version>LATEST</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

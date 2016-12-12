@@ -1,0 +1,47 @@
+def type(widget)
+	<script src="$name+lowercase~widget/requester.js"></script>
+    <script src="$name+lowercase~widget/notifier-listener.js"></script>
+
+    <dom-module id="$name+camelCaseToSnakeCase-widget">
+
+        <template>
+            $innerDisplay...[$NL]
+        </template>
+
+        <style>
+        </style>
+
+        <script>
+
+            const $name+firstuppercase~WidgetDictionary = {
+                es: {
+                },
+                en: {
+                }
+            };
+
+            Polymer({
+                is: '$name+camelCaseToSnakeCase-widget',
+
+                behaviors: $[ CottonBehaviors.CarrierBehavior,
+                             CottonBehaviors.PushBehavior,
+                             CottonBehaviors.TranslatorBehavior,
+                             $name+firstuppercase~WidgetBehaviors.Requester,
+                             $name+firstuppercase~WidgetBehaviors.NotifierListener $],
+
+                properties : {
+                },
+
+                attached : function() {
+                    this.translate($name+firstuppercase~WidgetDictionary);
+                    this.listenToDisplay();
+                }
+
+            });
+        </script>
+    </dom-module>
+end
+
+def trigger(innerDisplay)
+	<div><cotton-zombie display="$value~Display" widget="$value~Widget"></cotton-zombie></div>
+end

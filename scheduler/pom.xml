@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.siani.teseo</groupId>
-    <artifactId>scheduler</artifactId>
+    <groupId>io.intino.pandora</groupId>
+    <artifactId>pandora-scheduler</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -31,7 +31,6 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-
         <outputDirectory>../out/production/scheduling</outputDirectory>
         <testOutputDirectory>../out/test/scheduling</testOutputDirectory>
         <directory>../out/build/scheduler</directory>
@@ -40,15 +39,15 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

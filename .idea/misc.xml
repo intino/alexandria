@@ -7,7 +7,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/forrest/pom.xml" />
-        <option value="$PROJECT_DIR$/application/pom.xml" />
         <option value="$PROJECT_DIR$/server/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/forrest/pom.xml" />
         <option value="$PROJECT_DIR$/accessor/pom.xml" />
@@ -16,20 +15,22 @@
         <option value="$PROJECT_DIR$/plugin/teseo/pom.xml" />
         <option value="$PROJECT_DIR$/jmx/pom.xml" />
         <option value="$PROJECT_DIR$/scheduling/pom.xml" />
+        <option value="$PROJECT_DIR$/plugin/plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/jms/pom.xml" />
+        <option value="$PROJECT_DIR$/slack/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/pandora-plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/pandora-plugin-core/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/pandora-model/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </set>
+    </option>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

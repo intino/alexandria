@@ -1,0 +1,36 @@
+def type(subscription)
+	package $package.subscriptions;
+
+    import com.google.gson.Gson;
+	import $package+validname.$box+firstUpperCase~Box;
+    import io.intino.pandora.jms.Consumer;
+	$schemaImport
+
+    import javax.jms.*;
+
+    public class $name+FirstUpperCase~Subscription implements Consumer {
+
+    	private $box+firstUpperCase~Box box;
+
+    	public $name+FirstUpperCase~Subscription($box+firstUpperCase~Box box) {
+    		this.box = box;
+    	}
+
+    	public void consume(Message message) {
+    		actionFor(message).execute();
+    	}
+
+    	private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
+			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
+			action.box = this.box;
+			action.message = textFrom(message);
+			return action;
+		}
+    }
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+
