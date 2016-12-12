@@ -21,12 +21,12 @@ public class UIGenerationTest {
 	@Test
 	public void testUI() throws Exception {
 		File gen = new File("test-gen", UI);
-		final Graph graph = Graph.load("Ui").wrap(PandoraApplication.class);
-		new DisplayRenderer(graph, gen, gen, UI, "System").execute();
-		new ResourceRenderer(null, graph, gen, gen, UI, "System").execute();
-		new ActivityRenderer(graph, gen, UI, "System").execute();
-		new SchemaAdaptersRenderer(graph, gen, UI).execute();
-		new BoxRenderer(graph, gen, UI, null, false).execute();
+		final Graph graph = Graph.load("ui").wrap(PandoraApplication.class);
+//		new DisplayRenderer(graph, gen, gen, UI, "System").execute();
+//		new ResourceRenderer(null, graph, gen, gen, UI, "System").execute();
+//		new ActivityRenderer(graph, gen, UI, "System").execute();
+//		new SchemaAdaptersRenderer(graph, gen, UI).execute();
+//		new BoxRenderer(graph, gen, UI, null, false).execute();
 		new BoxConfigurationRenderer(graph, gen, UI, null, false).execute();
 //		new ActivityAccessorCreator(null, graph).execute();
 //		new FullRenderer(null, graph, gen, gen, UI).execute();

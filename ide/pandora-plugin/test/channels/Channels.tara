@@ -28,6 +28,13 @@ Service monet as JMS(subscriptionModel = Queue)
 		Parameter text as Text
 		Parameter number as Real
 
+
+Service JmsOpinions as JMS(subscriptionModel = Topic)
+	Request(path="scala.happysense.opinions") JmsRegisterOpinion
+		Parameter opinion as Text
+		Parameter area as Text
+		Parameter room as Text
+
 Schema CategorizationCatalog
 	Attribute name as Text
 	Attribute label as Text

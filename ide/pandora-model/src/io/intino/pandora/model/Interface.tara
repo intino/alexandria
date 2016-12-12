@@ -41,7 +41,6 @@ Concept:Named Activity
 			var Exception[] exceptionRefs = empty
 			has Exception
 
-
 Facet Restricted on Activity.AbstractPage
 
 Concept Exception extends Data
