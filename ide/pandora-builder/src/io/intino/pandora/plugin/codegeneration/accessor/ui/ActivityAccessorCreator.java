@@ -18,6 +18,9 @@ import tara.magritte.Graph;
 import java.io.File;
 import java.util.List;
 
+import static tara.intellij.project.configuration.ConfigurationManager.newExternalProvider;
+import static tara.intellij.project.configuration.ConfigurationManager.register;
+
 public class ActivityAccessorCreator {
 
 	private final Project project;
@@ -33,8 +36,8 @@ public class ActivityAccessorCreator {
 	public void execute() {
 		for (Activity activity : activities) {
 			Module webModule = getOrCreateModule(activity);
-			ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(appModule, webModule, activity);
-			renderer.execute();
+			new ActivityAccessorRenderer(appModule, webModule, activity).execute();
+			register(webModule, newExternalProvider(webModule));
 		}
 	}
 
