@@ -34,8 +34,8 @@ def type(service & channel) trigger(confClass)
 		public String url;
 		public String user;
 		public String password;
-		[public final String clientID = "$clientID";]
 		$custom+field...[$NL]
+		[public String clientID = "$clientID"][$custom+replace...[]];
 	}
 end
 
@@ -51,8 +51,21 @@ def type(service & activity) trigger(confClass)
 		public String webDirectory;
 		public io.intino.pandora.server.activity.services.AuthService authService;
 		$custom+field...[$NL]
+
+		[public java.net.URL authServiceUrl() {
+			try {
+				return new java.net.URL("$auth"$custom+replace...[]);
+			} catch (java.net.MalformedURLException e) {
+				return null;
+			}
+		}]
 	}
 end
+
+def type(custom) trigger(replace)
+	.replace("{$name}", $name+validname+firstLowerCase)
+end
+
 
 def type(service & rest) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+snakeCaseToCamelCase+firstUpperCase~Configuration {
@@ -139,7 +152,7 @@ def type(service & activity)
 	}
 
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, io.intino.pandora.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]], authService);
+		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/", authService[, $custom+name...[, ]]);
 	}
 
 	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
@@ -148,16 +161,16 @@ def type(service & activity)
 end
 
 def type(custom) trigger(signature)
-	$type $name
+	$type $name+validname+firstLowerCase
 end
 def type(custom) trigger(name)
-	$name
+	$name+validname+firstLowerCase
 end
 
 def type(custom) trigger(field)
-	public $type $name;
+	public $type $name+validname+firstLowerCase;
 end
 
 def type(custom) trigger(assign)
-	this.$conf+firstLowerCase~Configuration.$name = $name;
+	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
 end
