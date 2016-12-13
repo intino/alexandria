@@ -12,7 +12,7 @@ public class SparkSession<C extends Client> implements Session<C> {
 	private final Map<String, C> clientsMap = new HashMap<>();
 	private final String id;
 	private String currentClient;
-	private Consumer<Void> logoutListener;
+	private Consumer<Boolean> logoutListener;
 
 	public SparkSession(String id) {
 		this.id = id;
@@ -55,13 +55,13 @@ public class SparkSession<C extends Client> implements Session<C> {
 		clientsMap.values().stream().forEach(client -> client.send(message));
 	}
 
-	public void whenLogout(Consumer<Void> listener) {
+	public void whenLogout(Consumer<Boolean> listener) {
 		this.logoutListener = listener;
 	}
 
 	@Override
 	public void logout() {
 		if (logoutListener != null)
-			logoutListener.accept(null);
+			logoutListener.accept(true);
 	}
 }

@@ -31,18 +31,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="slack" />
       </profile>
-      <profile name="Annotation profile for pandora-plugin" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="pandora-plugin" />
-      </profile>
       <profile name="Annotation profile for pandora-model" enabled="true">
         <sourceOutputDir name="../../out/build/pandora-model/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/pandora-model/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="pandora-model" />
         <module name="pandora-plugin-core" />
+      </profile>
+      <profile name="Annotation profile for pandora-plugin" enabled="true">
+        <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="pandora-builder" />
       </profile>
       <profile name="Annotation profile for pandora-server" enabled="true">
         <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
@@ -86,6 +86,7 @@
       <module name="forrest" target="1.8" />
       <module name="jms" target="1.8" />
       <module name="jmx" target="1.8" />
+      <module name="pandora-builder" target="1.8" />
       <module name="pandora-model" target="1.8" />
       <module name="pandora-plugin" target="1.8" />
       <module name="pandora-plugin-core" target="1.8" />
