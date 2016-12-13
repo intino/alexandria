@@ -129,7 +129,7 @@
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>panora-server</artifactId>
+            <artifactId>pandora-server</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
