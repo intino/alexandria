@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.accessor.ui;
+package io.intino.pandora.plugin.codegeneration.accessor.ui.gulp;
 
 import org.siani.itrules.*;
 
