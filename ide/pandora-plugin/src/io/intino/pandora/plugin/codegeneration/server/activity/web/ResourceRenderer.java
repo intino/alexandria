@@ -1,8 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.server.activity.web;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Activity;
+import io.intino.pandora.model.Activity;
 import io.intino.pandora.plugin.codegeneration.action.UIActionRenderer;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class ResourceRenderer {
 
@@ -42,7 +42,7 @@ public class ResourceRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", page.name());
 		frame.addSlot("box", boxName);
-		writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name() + "Resource"), template().format(frame));
+		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name() + "Resource"), template().format(frame));
 		createCorrespondingAction(page);
 	}
 

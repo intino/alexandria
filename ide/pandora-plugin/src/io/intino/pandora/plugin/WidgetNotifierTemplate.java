@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.codegeneration.accessor.ui;
+package io.intino.pandora.plugin;
 
 import org.siani.itrules.*;
 

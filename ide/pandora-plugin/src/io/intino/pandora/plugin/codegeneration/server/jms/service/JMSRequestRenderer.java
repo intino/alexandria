@@ -1,13 +1,13 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.service;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.Response;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Parameter;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.action.JMSRequestActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.jms.JMSService;
-import io.intino.pandora.plugin.jms.JMSService.Request;
+import io.intino.pandora.model.jms.JMSService;
+import io.intino.pandora.model.jms.JMSService.Request;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class JMSRequestRenderer {
 	private static final String REQUESTS = "requests";
@@ -47,7 +46,7 @@ public class JMSRequestRenderer {
 
 	private void processRequest(Request resource) {
 		Frame frame = fillRequestFrame(resource);
-		writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name()) + "Request", template().format(frame));
+		Commons.writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name()) + "Request", template().format(frame));
 		createCorrespondingAction(resource);
 	}
 

@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 
-import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.Queue;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Queue;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;

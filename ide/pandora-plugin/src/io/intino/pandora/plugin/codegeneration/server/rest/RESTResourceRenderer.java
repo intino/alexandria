@@ -1,13 +1,13 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.action.RESTActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.rest.RESTService;
-import io.intino.pandora.plugin.rest.RESTService.Resource;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Operation;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Parameter;
+import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.rest.RESTService.Resource;
+import io.intino.pandora.model.rest.RESTService.Resource.Operation;
+import io.intino.pandora.model.rest.RESTService.Resource.Parameter;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -17,7 +17,6 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class RESTResourceRenderer {
 	private static final String RESOURCES = "resources";
@@ -48,7 +47,7 @@ public class RESTResourceRenderer {
 	private void processResource(Resource resource) {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = fillResourceFrame(resource, operation);
-			writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
+			Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
 			createCorrespondingAction(operation);
 		}
 	}

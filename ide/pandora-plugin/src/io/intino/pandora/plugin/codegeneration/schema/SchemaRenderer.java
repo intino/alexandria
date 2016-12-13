@@ -1,14 +1,14 @@
 package io.intino.pandora.plugin.codegeneration.schema;
 
-import io.intino.pandora.plugin.Schema;
-import io.intino.pandora.plugin.bool.BoolData;
-import io.intino.pandora.plugin.date.DateData;
-import io.intino.pandora.plugin.datetime.DateTimeData;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.bool.BoolData;
+import io.intino.pandora.model.date.DateData;
+import io.intino.pandora.model.datetime.DateTimeData;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.integer.IntegerData;
-import io.intino.pandora.plugin.real.RealData;
-import io.intino.pandora.plugin.text.TextData;
-import io.intino.pandora.plugin.type.TypeData;
+import io.intino.pandora.model.integer.IntegerData;
+import io.intino.pandora.model.real.RealData;
+import io.intino.pandora.model.text.TextData;
+import io.intino.pandora.model.type.TypeData;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import static io.intino.pandora.plugin.codegeneration.server.rest.RESTResourceRenderer.firstLowerCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class SchemaRenderer {
 	private final List<Schema> schemas;
@@ -42,7 +41,7 @@ public class SchemaRenderer {
 	}
 
 	private void processSchema(Schema element) {
-		writeFrame(new File(destination, "schemas"), element.name(), template().format(createSchemaFrame(element, packageName)));
+		Commons.writeFrame(new File(destination, "schemas"), element.name(), template().format(createSchemaFrame(element, packageName)));
 	}
 
 	@NotNull

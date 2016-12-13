@@ -1,6 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.server.activity.web;
 
-import io.intino.pandora.plugin.Activity;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class ActivityRenderer {
 
@@ -38,7 +38,7 @@ public class ActivityRenderer {
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
 				addSlot("display", displaysFrame(activity.displayList()));
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
-		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
+		Commons.writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
 	}
 
 	private Frame[] resourcesFrame(List<Activity.AbstractPage> pages) {

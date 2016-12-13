@@ -122,7 +122,7 @@ def type(configuration)
 				inlineCss: true,
 				inlineScripts: true
 			}))
-			.pipe($$.replace('<iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\/iron-a11y-keys>', '<!-- commented by sumus to fix important events bug <iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\/iron-a11y-keys>-->')) // fix important paper-chip bug
+			.pipe($$.replace('<iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>', '<!-- commented by sumus to fix important events bug <iron-a11y-keys target="{{}}" keys="space enter" on-keys-pressed="toggleOpened"><\\/iron-a11y-keys>-->')) // fix important paper-chip bug
 			.pipe(gulp.dest(packagePath()))
 			.pipe($$.size({title: 'vulcanize'}));
 	};

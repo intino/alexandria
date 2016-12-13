@@ -1,12 +1,12 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import io.intino.pandora.plugin.Activity;
-import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.jms.JMSService;
-import io.intino.pandora.plugin.jmx.JMXService;
-import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.model.jms.JMSService;
+import io.intino.pandora.model.jmx.JMXService;
+import io.intino.pandora.model.rest.RESTService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.compiler.shared.Configuration;

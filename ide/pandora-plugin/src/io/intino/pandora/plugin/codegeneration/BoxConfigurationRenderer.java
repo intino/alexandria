@@ -1,20 +1,22 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import io.intino.pandora.plugin.Activity;
-import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.Service;
-import io.intino.pandora.plugin.jms.JMSService;
-import io.intino.pandora.plugin.jmx.JMXService;
-import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.model.Service;
+import io.intino.pandora.model.jms.JMSService;
+import io.intino.pandora.model.jmx.JMXService;
+import io.intino.pandora.model.rest.RESTService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.compiler.shared.Configuration;
 import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Graph;
+import tara.magritte.Layer;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -59,17 +61,10 @@ public class BoxConfigurationRenderer {
 
 	}
 
-	private void addActivities(Frame frame, String boxName) {
-		for (Activity activity : application.activityList()) {
-			Frame restFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name()).addSlot("configuration", boxName);
-			frame.addSlot("service", restFrame);
-		}
-	}
-
 	private void addRESTServices(Frame frame, String boxName) {
 		for (RESTService service : application.rESTServiceList()) {
 			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", boxName);
-			addUserVariables(service.as(Service.class), restFrame);
+			addUserVariables(service.as(Service.class), restFrame, findCustomParameters(service));
 			frame.addSlot("service", restFrame);
 		}
 	}
@@ -77,7 +72,7 @@ public class BoxConfigurationRenderer {
 	private void addJMSServices(Frame frame, String boxName) {
 		for (JMSService service : application.jMSServiceList()) {
 			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", boxName);
-			addUserVariables(service.as(Service.class), jmsFrame);
+			addUserVariables(service.as(Service.class), jmsFrame, findCustomParameters(service));
 			frame.addSlot("service", jmsFrame);
 		}
 	}
@@ -92,33 +87,52 @@ public class BoxConfigurationRenderer {
 	private void addChannels(Frame frame, String boxName) {
 		for (Channel channel : application.channelList()) {
 			Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
+			addUserVariables(channel, channelFrame, findCustomParameters(channel));
 			if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
 			frame.addSlot("service", channelFrame);
 		}
 	}
 
-	private void addUserVariables(Service service, Frame jmsFrame) {
-		for (String custom : findCustomParameters(service))
-			jmsFrame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", service.name()).
-					addSlot("name", custom).addSlot("type", "String"));
+	private void addActivities(Frame frame, String boxName) {
+		for (Activity activity : application.activityList()) {
+			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name()).addSlot("configuration", boxName);
+			frame.addSlot("service", activityFrame);
+			if (activity.authenticated() != null) activityFrame.addSlot("auth", activity.authenticated().by());
+			addUserVariables(activity, activityFrame, findCustomParameters(activity));
+		}
 	}
 
-	private Set<String> findCustomParameters(Service service) {
-		return service.isJMS() ? findCustomParameters(service.asJMS()) : findCustomParameters(service.asREST());
+	private void addUserVariables(Layer activity, Frame frame, Collection<String> userVariables) {
+		for (String custom : userVariables)
+			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", activity.name()).addSlot("name", custom).addSlot("type", "String"));
+	}
+
+	private Set<String> findCustomParameters(Channel channel) {
+		Set<String> set = new LinkedHashSet<>();
+		set.addAll(extractParameters(channel.path()));
+		if (channel.isDurable()) set.addAll(extractParameters(channel.asDurable().clientID()));
+		return set;
 	}
 
 	private Set<String> findCustomParameters(JMSService service) {
-		Set<String> list = new LinkedHashSet<>();
+		Set<String> set = new LinkedHashSet<>();
 		for (JMSService.Request request : service.requestList())
-			list.addAll(extractParameters(request.path()));
-		return list;
+			set.addAll(extractParameters(request.path()));
+		return set;
 	}
 
 	private Set<String> findCustomParameters(RESTService service) {
-		Set<String> list = new LinkedHashSet<>();
+		Set<String> set = new LinkedHashSet<>();
 		for (RESTService.Resource resource : service.resourceList())
-			list.addAll(extractParameters(resource.path()));
-		return list;
+			set.addAll(extractParameters(resource.path()));
+		return set;
+	}
+
+	private Set<String> findCustomParameters(Activity activity) {
+		Set<String> set = new LinkedHashSet<>();
+		if (activity.authenticated() != null)
+			set.addAll(extractParameters(activity.authenticated().by()));
+		return set;
 	}
 
 	private String name() {
@@ -134,7 +148,7 @@ public class BoxConfigurationRenderer {
 		Template template = BoxConfigurationTemplate.create();
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
+		template.add("validname", value -> snakeCaseToCamelCase(value.toString().replace(".", "-")));
 		return template;
 	}
 }

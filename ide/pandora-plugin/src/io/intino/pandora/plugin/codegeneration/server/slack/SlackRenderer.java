@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.server.slack;
 
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.slackbot.SlackBotService;
+import io.intino.pandora.model.slackbot.SlackBotService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;

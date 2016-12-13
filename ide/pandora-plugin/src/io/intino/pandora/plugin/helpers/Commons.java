@@ -1,11 +1,11 @@
 package io.intino.pandora.plugin.helpers;
 
-import io.intino.pandora.plugin.Response;
-import io.intino.pandora.plugin.file.FileData;
-import io.intino.pandora.plugin.rest.RESTService;
-import io.intino.pandora.plugin.rest.RESTService.Resource;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Operation;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Parameter.In;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.file.FileData;
+import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.rest.RESTService.Resource;
+import io.intino.pandora.model.rest.RESTService.Resource.Operation;
+import io.intino.pandora.model.rest.RESTService.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;

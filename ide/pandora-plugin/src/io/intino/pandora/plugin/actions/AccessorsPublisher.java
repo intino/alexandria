@@ -12,9 +12,9 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import io.intino.pandora.plugin.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.pandora.plugin.jms.JMSService;
-import io.intino.pandora.plugin.jmx.JMXService;
-import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.model.jms.JMSService;
+import io.intino.pandora.model.jmx.JMXService;
+import io.intino.pandora.model.rest.RESTService;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
@@ -31,8 +31,8 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 import java.util.List;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -69,7 +69,7 @@ class AccessorsPublisher {
 			if (apps.isEmpty()) {
 				notify("None rest services are found in module", INFORMATION);
 				return;
-			} else if (configuration.distributionRepository() == null) {
+			} else if (configuration.distributionReleaseRepository() == null) {
 				notify("There isn't distribution repository defined", ERROR);
 				return;
 			}
@@ -167,7 +167,7 @@ class AccessorsPublisher {
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
 		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
-		SimpleEntry<String, String> distroRepo = configuration.distributionRepository();
+		SimpleEntry<String, String> distroRepo = configuration.distributionReleaseRepository();
 		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
 		final Template template = AccessorPomTemplate.create();
 		final File pomFile = new File(root, "pom.xml");

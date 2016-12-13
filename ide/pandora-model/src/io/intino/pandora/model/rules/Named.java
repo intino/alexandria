@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.rules;
+package io.intino.pandora.model.rules;
 
 import tara.lang.model.Node;
 import tara.lang.model.rules.NodeRule;

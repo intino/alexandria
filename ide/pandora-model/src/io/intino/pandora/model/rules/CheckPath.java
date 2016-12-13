@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.rules;
+package io.intino.pandora.model.rules;
 
 import tara.lang.model.EmptyNode;
 import tara.lang.model.Node;
@@ -8,7 +8,6 @@ import tara.lang.model.rules.NodeRule;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.intino.pandora.plugin.rules.CheckPath.Cause.*;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
@@ -23,7 +22,7 @@ public class CheckPath implements NodeRule {
 	private boolean pathIsWrong(Node node) {
 		if (parameter(node, "path") == null) return false;
 		if (parameter(node, "path").values().get(0) instanceof EmptyNode) {
-			cause = NullPath;
+			cause = Cause.NullPath;
 			return true;
 		}
 		return pathIsWrong((String) parameter(node, "path").values().get(0), node);
@@ -36,12 +35,12 @@ public class CheckPath implements NodeRule {
 		parametersDeclaredInPath.addAll(pathParametersInMethods(node.components()));
 		for (String parameterName : parametersInPath) {
 			if (parametersDeclaredInPath.contains(parameterName)) continue;
-			cause = ParameterNotDeclared;
+			cause = Cause.ParameterNotDeclared;
 			return true;
 		}
 		for (String parameterName : parametersDeclaredInPath) {
 			if (parametersInPath.contains(parameterName)) continue;
-			cause = ParameterNotInPath;
+			cause = Cause.ParameterNotInPath;
 			return true;
 		}
 		return false;
@@ -70,8 +69,8 @@ public class CheckPath implements NodeRule {
 	}
 
 	public String errorMessage() {
-		if (cause == NullPath) return "Path cannot be empty";
-		else if (cause == ParameterNotDeclared) return "Parameters in path must be declared as \"Parameter\"";
+		if (cause == Cause.NullPath) return "Path cannot be empty";
+		else if (cause == Cause.ParameterNotDeclared) return "Parameters in path must be declared as \"Parameter\"";
 		else return "Declared parameter is not visible in resource's path";
 	}
 

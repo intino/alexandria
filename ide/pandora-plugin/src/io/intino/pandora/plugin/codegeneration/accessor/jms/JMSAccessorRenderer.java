@@ -1,9 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.accessor.jms;
 
-import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Parameter;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
-import io.intino.pandora.plugin.jms.JMSService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;

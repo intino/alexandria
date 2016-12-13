@@ -17,10 +17,11 @@
         <option value="$PROJECT_DIR$/scheduling/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/plugin/pom.xml" />
         <option value="$PROJECT_DIR$/jms/pom.xml" />
-        <option value="$PROJECT_DIR$/ide/pandora-plugin-core/pom.xml" />
         <option value="$PROJECT_DIR$/slack/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/ide/pandora-plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/pandora-plugin-core/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/pandora-model/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

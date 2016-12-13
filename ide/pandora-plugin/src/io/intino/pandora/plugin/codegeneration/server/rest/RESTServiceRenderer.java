@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.rest.RESTService;
-import io.intino.pandora.plugin.rest.RESTService.Resource;
+import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.rest.RESTService.Resource;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;

@@ -1,8 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
-import io.intino.pandora.plugin.Activity;
-import io.intino.pandora.plugin.Activity.Display;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.model.Activity.Display;
+import io.intino.pandora.plugin.WidgetNotifierTemplate;
 import org.siani.itrules.model.Frame;
 import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.magritte.Layer;
@@ -54,7 +55,7 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		return new Frame().addTypes("page").addSlot("rootDisplay", page.uses().name()).addSlot("name", page.name());
+		return new Frame().addTypes("page").addSlot("uses", page.uses().name()).addSlot("name", page.name());
 	}
 
 	private void createWidget(Display display) throws IOException {

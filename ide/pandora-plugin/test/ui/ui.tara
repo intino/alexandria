@@ -1,23 +1,25 @@
 dsl Pandora
 
-Activity Sumus-Web
-	Home(uses = application) homePage
+Activity Platform-Web
+
+	Page(uses = analytics, paths = "/analytics") analyticsPage
 	Page(uses = error, paths = "/error") errorPage
 
-	Display application
+	Display analytics
 		displays = olap dashboard pivotTable
 
-		Notification info as Object(ApplicationInfo)
-		Notification boards as Object(BoardList)
+		Notification info as Object(PlatformInfo)
+		Notification boardList as Object(BoardList)
 		Notification user as Object(UserInfo)
 		Notification userLoggedOut
+		Notification(Client) loading
+		Notification(Client) loaded
 
 		Request logout
 
 	Display olap
 		Notification timeline as Object(Timeline)
-		Notification range as Object(Range)
-		Notification showTimeSeries
+		Notification timeRange as Object(Range)
 		Notification scales as Object(ScaleList)
 		Notification updateScale as Object(Scale)
 		Notification enableDrill
@@ -28,9 +30,9 @@ Activity Sumus-Web
 		Notification notFiltering
 		Notification drilling
 		Notification notDrilling
-		Notification filters as Object(FilterList)
-		Notification refreshTickets as Object(NameList)
-		Notification refreshSelectedTickets as Object(NameList)
+		Notification filterList as Object(FilterList)
+		Notification ticketList as Object(NameList)
+		Notification selectedTicketList as Object(NameList)
 
 		Request addTicket as Text
 		Request removeTicket as Text
@@ -43,12 +45,12 @@ Activity Sumus-Web
 
 	Display timeSeries
 		Notification zoomRange as Object(Range)
-		Notification range as Object(Range)
+		Notification timeRange as Object(Range)
 		Notification timeline as Object(Timeline)
 		Notification formats as Object(FormatterList)
 		Notification updateScale as Object(Scale)
-		Notification loading
-		Notification loaded
+		Notification(Client) loading
+		Notification(Client) loaded
 		Notification clear
 		Notification eventListCount as Real
 		Notification eventList as Object(EventList)
@@ -62,7 +64,7 @@ Activity Sumus-Web
 
 	Display analyze
 		displays = categorization
-		Notification categorizations as Object(CategorizationViewList)
+		Notification categorizationList as Object(CategorizationViewList)
 		Notification hide
 		Notification show
 
@@ -70,8 +72,8 @@ Activity Sumus-Web
 		Notification categorization as Object(CategorizationView)
 		Notification enableSelection
 		Notification disableSelection
-		Notification loading
-		Notification loaded
+		Notification(Client) loading
+		Notification(Client) loaded
 		Notification refreshHistogram as Object(Histogram)
 		Notification refreshSelected as Object(CategoryViewList)
 
@@ -82,7 +84,7 @@ Activity Sumus-Web
 	Display pivotTable
 	Display error
 
-Schema ApplicationInfo
+Schema PlatformInfo
 	Attribute title as Text
 	Attribute subtitle as Text
 	Attribute logo as Text
@@ -100,8 +102,8 @@ Schema Timeline
 	Attribute max as Real
 
 Schema RequestRange
-	Attribute from as Integer
-	Attribute to as Integer
+	Attribute from as Real
+	Attribute to as Real
 
 Schema Range
 	Attribute min as Real

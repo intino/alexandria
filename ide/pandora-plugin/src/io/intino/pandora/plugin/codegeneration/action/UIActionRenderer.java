@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Activity;
+import io.intino.pandora.model.Activity;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;

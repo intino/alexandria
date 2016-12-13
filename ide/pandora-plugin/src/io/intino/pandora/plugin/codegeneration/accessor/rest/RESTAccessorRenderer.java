@@ -1,18 +1,18 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest;
 
-import io.intino.pandora.plugin.Response;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
-import io.intino.pandora.plugin.date.DateData;
-import io.intino.pandora.plugin.datetime.DateTimeData;
-import io.intino.pandora.plugin.file.FileData;
+import io.intino.pandora.model.date.DateData;
+import io.intino.pandora.model.datetime.DateTimeData;
+import io.intino.pandora.model.file.FileData;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.object.ObjectData;
-import io.intino.pandora.plugin.rest.RESTService;
-import io.intino.pandora.plugin.rest.RESTService.Resource;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Operation;
-import io.intino.pandora.plugin.rest.RESTService.Resource.Parameter;
-import io.intino.pandora.plugin.type.TypeData;
+import io.intino.pandora.model.object.ObjectData;
+import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.rest.RESTService.Resource;
+import io.intino.pandora.model.rest.RESTService.Resource.Operation;
+import io.intino.pandora.model.rest.RESTService.Resource.Parameter;
+import io.intino.pandora.model.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -123,17 +123,17 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame exceptionResponses(Operation operation) {
-		List<io.intino.pandora.plugin.Exception> exceptions = operation.exceptionList();
+		List<io.intino.pandora.model.Exception> exceptions = operation.exceptionList();
 		if (exceptions.isEmpty()) return new Frame().addTypes("exceptionResponses", "none");
 		return new Frame().addTypes("exceptionResponses")
 				.addSlot("exceptionResponse", (AbstractFrame[]) exceptionResponses(exceptions));
 	}
 
-	private Frame[] exceptionResponses(List<io.intino.pandora.plugin.Exception> responses) {
+	private Frame[] exceptionResponses(List<io.intino.pandora.model.Exception> responses) {
 		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
 	}
 
-	private Frame exceptionResponse(io.intino.pandora.plugin.Exception response) {
+	private Frame exceptionResponse(io.intino.pandora.model.Exception response) {
 		return new Frame().addTypes("exceptionResponse")
 				.addSlot("code", response.code().value())
 				.addSlot("exceptionName", response.code().toString());
