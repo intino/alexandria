@@ -49,8 +49,8 @@ def type(service & activity) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		public int port;
 		public String webDirectory;
+		public io.intino.pandora.server.activity.services.AuthService authService;
 		$custom+field...[$NL]
-<<<<<<< HEAD:ide/pandora-plugin/src/io/intino/pandora/plugin/codegeneration/BoxConfiguration.itr
 
 		[public java.net.URL authServiceUrl() {
 			try {
@@ -59,9 +59,6 @@ def type(service & activity) trigger(confClass)
 				return null;
 			}
 		}]
-=======
-		public io.intino.pandora.server.activity.services.AuthService authService;
->>>>>>> feature/bower_gulp_to_legio:ide/pandora-builder/src/io/intino/pandora/plugin/codegeneration/BoxConfiguration.itr
 	}
 end
 

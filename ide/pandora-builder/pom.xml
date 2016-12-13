@@ -5,7 +5,7 @@
 
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.11</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -126,12 +126,12 @@
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>pandora-model</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.11</version>
         </dependency>
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.11</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
