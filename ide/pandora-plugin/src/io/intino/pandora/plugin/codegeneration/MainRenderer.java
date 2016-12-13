@@ -1,7 +1,8 @@
 package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.compiler.shared.Configuration;
@@ -11,7 +12,6 @@ import tara.magritte.Graph;
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class MainRenderer {
 
@@ -38,7 +38,7 @@ public class MainRenderer {
 				frame.addSlot("dslPackage", configuration.dslWorkingPackage());
 			frame.addSlot("language", configuration.dsl());
 			if (configuration.level().equals(Configuration.Level.System))
-				writeFrame(gen, "Main", template().format(frame));
+				Commons.writeFrame(gen, "Main", template().format(frame));
 		}
 	}
 

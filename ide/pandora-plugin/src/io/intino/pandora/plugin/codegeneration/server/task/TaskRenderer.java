@@ -1,11 +1,11 @@
 package io.intino.pandora.plugin.codegeneration.server.task;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Task;
+import io.intino.pandora.model.Task;
 import io.intino.pandora.plugin.codegeneration.action.ActionTemplate;
-import io.intino.pandora.plugin.directorysentinel.DirectorySentinelTask;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.scheduled.ScheduledTask;
+import io.intino.pandora.model.scheduled.ScheduledTask;
+import io.intino.pandora.model.directorysentinel.DirectorySentinelTask;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;

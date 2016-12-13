@@ -14,7 +14,7 @@ Concept:Named Service
 	has:Named Exception
 
 Concept:Named Activity
-	var word:{Ajax Android} type = Ajax
+	var word:{Ajax} type = Ajax
 
 	Concept:{0..1} Authenticated
 		var string:url by
@@ -40,7 +40,6 @@ Concept:Named Activity
 			var word:{All Client Display} to = Display
 			var Exception[] exceptionRefs = empty
 			has Exception
-
 
 Facet Restricted on Activity.AbstractPage
 

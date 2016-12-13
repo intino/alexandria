@@ -4,12 +4,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
-import io.intino.pandora.plugin.Exception;
-import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.Response;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.object.ObjectData;
-import io.intino.pandora.plugin.type.TypeData;
+import io.intino.pandora.model.Exception;
+import io.intino.pandora.model.Parameter;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.object.ObjectData;
+import io.intino.pandora.model.type.TypeData;
 
 import java.io.File;
 import java.util.List;

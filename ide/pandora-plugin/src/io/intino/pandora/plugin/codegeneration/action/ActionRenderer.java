@@ -1,13 +1,13 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Exception;
-import io.intino.pandora.plugin.Parameter;
-import io.intino.pandora.plugin.Response;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Exception;
+import io.intino.pandora.model.Parameter;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.object.ObjectData;
-import io.intino.pandora.plugin.type.TypeData;
+import io.intino.pandora.model.object.ObjectData;
+import io.intino.pandora.model.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 

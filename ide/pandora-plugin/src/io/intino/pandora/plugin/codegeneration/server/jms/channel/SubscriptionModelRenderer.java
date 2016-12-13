@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Channel;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.action.ChannelActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;

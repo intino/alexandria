@@ -10,3 +10,6 @@ test-res/*.stash
 target/
 workspace.xml
 /ide/pandora-plugin/dependency-reduced-pom.xml
+slack/target
+workspace.xml
+dependency-reduced-pom.xml

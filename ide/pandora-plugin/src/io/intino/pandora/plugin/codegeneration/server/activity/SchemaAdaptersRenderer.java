@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.server.activity;
 
-import io.intino.pandora.plugin.Activity;
-import io.intino.pandora.plugin.Schema;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.Collection;
 
 import static io.intino.pandora.plugin.codegeneration.server.rest.RESTResourceRenderer.firstLowerCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class SchemaAdaptersRenderer {
 
@@ -32,7 +31,7 @@ public class SchemaAdaptersRenderer {
 	public void execute() {
 		if (graph.find(Activity.class).isEmpty()) return;
 		final Frame[] schemaFrames = schemas.stream().map(this::processSchema).toArray(Frame[]::new);
-		writeFrame(new File(destination, "schemas"), "ActivitySchemaAdapters", template().format(new Frame().addTypes("adapters").addSlot("package", packageName).addSlot("schema", schemaFrames)));
+		Commons.writeFrame(new File(destination, "schemas"), "ActivitySchemaAdapters", template().format(new Frame().addTypes("adapters").addSlot("package", packageName).addSlot("schema", schemaFrames)));
 	}
 
 	private Template template() {

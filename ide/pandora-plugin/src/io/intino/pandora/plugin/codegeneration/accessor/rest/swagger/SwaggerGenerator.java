@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.accessor.rest.swagger;
 
-import io.intino.pandora.plugin.PandoraApplication;
-import io.intino.pandora.plugin.rest.RESTService;
+import io.intino.pandora.model.PandoraApplication;
+import io.intino.pandora.model.rest.RESTService;
 import io.swagger.codegen.SwaggerCodegen;
 
 import java.io.File;

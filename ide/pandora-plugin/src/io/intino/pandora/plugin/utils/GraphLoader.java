@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.utils;
 
 import com.intellij.openapi.diagnostic.Logger;
-import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.model.PandoraApplication;
 import tara.io.Stash;
 import tara.magritte.Graph;
 

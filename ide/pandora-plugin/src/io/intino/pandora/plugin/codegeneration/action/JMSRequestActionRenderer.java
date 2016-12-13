@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Schema;
-import io.intino.pandora.plugin.jms.JMSService.Request;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.jms.JMSService.Request;
 
 import java.io.File;
 import java.util.stream.Collectors;

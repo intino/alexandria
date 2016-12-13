@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.plugin.Schema;
-import io.intino.pandora.plugin.jmx.JMXService.Operation;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.jmx.JMXService.Operation;
 
 import java.io.File;
 

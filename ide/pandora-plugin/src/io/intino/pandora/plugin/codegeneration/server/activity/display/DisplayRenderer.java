@@ -1,9 +1,10 @@
 package io.intino.pandora.plugin.codegeneration.server.activity.display;
 
-import io.intino.pandora.plugin.Activity;
-import io.intino.pandora.plugin.Schema;
-import io.intino.pandora.plugin.date.DateData;
-import io.intino.pandora.plugin.type.TypeData;
+import io.intino.pandora.model.Activity;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.date.DateData;
+import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -13,9 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.Activity.Display.Request.ResponseType.Asset;
-import static io.intino.pandora.plugin.helpers.Commons.javaFile;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
+import static io.intino.pandora.model.Activity.Display.Request.ResponseType.Asset;
 
 public class DisplayRenderer {
 
@@ -49,10 +48,10 @@ public class DisplayRenderer {
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
 		frame.addSlot("request", framesOfRequests(display.requestList()));
 		frame.addSlot("box", boxName);
-		writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
-		writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name() + "DisplayRequester"), displayRequesterTemplate().format(frame));
-		if (!javaFile(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display")).exists())
-			writeFrame(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display"), displayTemplate().format(frame));
+		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
+		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name() + "DisplayRequester"), displayRequesterTemplate().format(frame));
+		if (!Commons.javaFile(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display")).exists())
+			Commons.writeFrame(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display"), displayTemplate().format(frame));
 	}
 
 	private Frame[] framesOfNotifications(List<Activity.Display.Notification> notifications) {

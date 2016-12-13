@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.jmx.JMXService;
-import io.intino.pandora.plugin.jmx.JMXService.Operation;
+import io.intino.pandora.model.jmx.JMXService;
+import io.intino.pandora.model.jmx.JMXService.Operation;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;

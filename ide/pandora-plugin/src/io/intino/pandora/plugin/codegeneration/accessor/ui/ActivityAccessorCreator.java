@@ -11,7 +11,7 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import io.intino.pandora.plugin.Activity;
+import io.intino.pandora.model.Activity;
 import org.jetbrains.annotations.NotNull;
 import tara.magritte.Graph;
 

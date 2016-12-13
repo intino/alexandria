@@ -1,6 +1,6 @@
 package io.intino.pandora.plugin.codegeneration.exception;
 
-import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -13,7 +13,7 @@ import java.util.List;
 public class ExceptionRenderer {
 
 	private static final String EXCEPTIONS = "exceptions";
-	private final List<io.intino.pandora.plugin.Exception> exceptions;
+	private final List<io.intino.pandora.model.Exception> exceptions;
 	private File gen;
 	private String packageName;
 
@@ -27,7 +27,7 @@ public class ExceptionRenderer {
 		exceptions.forEach(this::processException);
 	}
 
-	private void processException(io.intino.pandora.plugin.Exception exception) {
+	private void processException(io.intino.pandora.model.Exception exception) {
 		Frame frame = new Frame().addTypes("exception");
 		frame.addSlot("name", exception.name());
 		frame.addSlot("code", exception.code());

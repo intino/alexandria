@@ -1,4 +1,4 @@
-package io.intino.pandora.plugin.functions;
+package io.intino.pandora.model.functions;
 
 @FunctionalInterface
 public interface Init {

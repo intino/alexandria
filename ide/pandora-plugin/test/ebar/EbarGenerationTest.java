@@ -1,6 +1,6 @@
 package ebar;
 
-import io.intino.pandora.plugin.PandoraApplication;
+import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import org.junit.Ignore;
 import org.junit.Test;

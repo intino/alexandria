@@ -1,8 +1,8 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.service;
 
-import io.intino.pandora.plugin.Parameter;
+import io.intino.pandora.model.Parameter;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.plugin.jms.JMSService;
+import io.intino.pandora.model.jms.JMSService;
 import org.siani.itrules.Template;
 import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.AbstractFrame;
@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
 
 public class JMSServiceRenderer {
 
@@ -41,7 +40,7 @@ public class JMSServiceRenderer {
 				addSlot("model", service.subscriptionModel().name()).
 				addSlot("request", (AbstractFrame[]) processRequests(service.requestList(), service.subscriptionModel().name())).
 				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList(), service.subscriptionModel().name()));
-		writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name()).toString() + "JMSService", template().format(frame));
+		Commons.writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name()).toString() + "JMSService", template().format(frame));
 	}
 
 	private Frame[] processRequests(List<JMSService.Request> requests, String subscriptionModel) {

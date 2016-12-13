@@ -2,11 +2,11 @@ package io.intino.pandora.plugin.codegeneration.accessor.rest.swagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.intino.pandora.plugin.Exception;
-import io.intino.pandora.plugin.Response;
-import io.intino.pandora.plugin.Schema;
-import io.intino.pandora.plugin.rest.RESTService;
-import io.intino.pandora.plugin.rest.RESTService.Resource;
+import io.intino.pandora.model.Exception;
+import io.intino.pandora.model.Response;
+import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.rest.RESTService.Resource;
 import org.jetbrains.annotations.NotNull;
 import tara.magritte.Layer;
 

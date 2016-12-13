@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 
-public abstract class PandoraAction extends Action {
+public abstract class PandoraAction extends io.intino.pandora.plugin.actions.Action {
 
 	public PandoraAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
