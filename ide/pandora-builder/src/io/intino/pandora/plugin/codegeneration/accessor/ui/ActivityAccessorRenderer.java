@@ -11,6 +11,7 @@ import tara.magritte.Layer;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static java.io.File.separator;
@@ -109,10 +110,9 @@ public class ActivityAccessorRenderer {
 		frame.addSlot("groupID", configuration.groupId());
 		frame.addSlot("artifactID", configuration.artifactId());
 		frame.addSlot("version", configuration.modelVersion());
-		for (String repository : configuration.repositories()) {
-
-		}
-
+		final Map<String, String> releaseRepositories = configuration.releaseRepositories();
+		for (String repository : releaseRepositories.keySet())
+			frame.addSlot("repository", new Frame().addTypes("repository", "release").addSlot("type", "Release").addSlot("url", repository).addSlot("id", releaseRepositories.get(repository)));
 		File file = new File(rootDirectory(), "configuration.legio");
 		if (!file.exists()) write(file.toPath(), ConfigurationTemplate.create().format(frame).getBytes());
 	}
