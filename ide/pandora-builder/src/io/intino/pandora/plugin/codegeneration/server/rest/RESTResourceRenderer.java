@@ -2,12 +2,13 @@ package io.intino.pandora.plugin.codegeneration.server.rest;
 
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.codegeneration.action.RESTActionRenderer;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.rest.RESTService.Resource;
 import io.intino.pandora.model.rest.RESTService.Resource.Operation;
 import io.intino.pandora.model.rest.RESTService.Resource.Parameter;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.action.RESTActionRenderer;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -89,19 +90,6 @@ public class RESTResourceRenderer {
 	}
 
 	private Template template() {
-		Template template = RestResourceTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> {
-			if (value.equals("Void")) return "void";
-			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
-			else return value;
-		});
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return Formatters.customize(RestResourceTemplate.create());
 	}
-
-	public static String firstLowerCase(String value) {
-		return value.substring(0, 1).toLowerCase() + value.substring(1);
-	}
-
 }

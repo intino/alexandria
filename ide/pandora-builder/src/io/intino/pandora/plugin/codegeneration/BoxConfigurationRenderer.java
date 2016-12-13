@@ -145,10 +145,6 @@ public class BoxConfigurationRenderer {
 	}
 
 	private Template template() {
-		Template template = BoxConfigurationTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
-		template.add("validname", value -> snakeCaseToCamelCase(value.toString().replace(".", "-")));
-		return template;
+		return Formatters.customize(BoxConfigurationTemplate.create());
 	}
 }

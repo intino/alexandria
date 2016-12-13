@@ -34,8 +34,8 @@ def type(service & channel) trigger(confClass)
 		public String url;
 		public String user;
 		public String password;
+		[public String clientID = "$clientID"];
 		$custom+field...[$NL]
-		[public String clientID = "$clientID"][$custom+replace...[]];
 	}
 end
 

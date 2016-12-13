@@ -5,16 +5,15 @@ import io.intino.pandora.model.Exception;
 import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Response;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
-
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 abstract class ActionRenderer {
 	protected final Project project;
@@ -67,7 +66,7 @@ abstract class ActionRenderer {
 		}
 	}
 
-	String formatType(TypeData typeData) {
+	private String formatType(TypeData typeData) {
 		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
@@ -76,9 +75,6 @@ abstract class ActionRenderer {
 	}
 
 	protected Template template() {
-		final Template template = ActionTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		return template;
+		return Formatters.customize(ActionTemplate.create());
 	}
 }

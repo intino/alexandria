@@ -2,12 +2,13 @@ package io.intino.pandora.plugin.codegeneration.accessor.jmx;
 
 import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jmx.JMXServerTemplate;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jmx.JMXServerTemplate;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -75,29 +76,11 @@ public class JMXAccessorRenderer {
 	}
 
 	private Template template() {
-		Template template = JMXAccessorTemplate.create();
-		format(template);
-		return template;
+		return Formatters.customize(JMXAccessorTemplate.create());
 	}
 
 	private Template interfaceTemplate() {
-		Template template = JMXServerTemplate.create();
-		format(template);
-		return template;
-	}
-
-	private void format(Template template) {
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> {
-			if (value.equals("Void")) return "void";
-			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
-			else return value;
-		});
-		template.add("ValidPackage", Commons::validPackage);
-	}
-
-	public static String firstLowerCase(String value) {
-		return value.substring(0, 1).toLowerCase() + value.substring(1);
+		return Formatters.customize(JMXServerTemplate.create());
 	}
 
 }

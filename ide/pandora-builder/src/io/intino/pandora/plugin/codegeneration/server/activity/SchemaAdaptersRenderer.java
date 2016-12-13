@@ -2,6 +2,7 @@ package io.intino.pandora.plugin.codegeneration.server.activity;
 
 import io.intino.pandora.model.Activity;
 import io.intino.pandora.model.Schema;
+import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
@@ -11,7 +12,8 @@ import tara.magritte.Graph;
 import java.io.File;
 import java.util.Collection;
 
-import static io.intino.pandora.plugin.codegeneration.server.rest.RESTResourceRenderer.firstLowerCase;
+import static io.intino.pandora.plugin.codegeneration.Formatters.firstLowerCase;
+
 
 public class SchemaAdaptersRenderer {
 
@@ -35,11 +37,11 @@ public class SchemaAdaptersRenderer {
 	}
 
 	private Template template() {
-		final Template template = SchemaAdapterTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
+		Template template = Formatters.customize(SchemaAdapterTemplate.create());
 		template.add("typeFormat", (value) -> value.toString().contains(".") ? firstLowerCase(value.toString()) : value);
 		return template;
 	}
+
 
 	private Frame processSchema(Schema element) {
 		return SchemaRenderer.createSchemaFrame(element, packageName);
