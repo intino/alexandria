@@ -28,6 +28,7 @@ def type(page)
 			String clientId = UUID.randomUUID().toString();
 			$name+firstUpperCase~Action $name+firstLowercase~Action = new $name+firstUpperCase~Action();
 			$name+firstLowercase~Action.session = manager.currentSession();
+			$name+firstLowercase~Action.session.whenLogout(() -> logout());
 			$name+firstLowercase~Action.box = box;
 			$name+firstLowercase~Action.clientId = clientId;
 			manager.pushService().onOpen(client -> {
