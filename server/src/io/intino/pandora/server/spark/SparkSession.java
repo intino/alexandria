@@ -6,11 +6,13 @@ import io.intino.pandora.server.pushservice.Session;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SparkSession<C extends Client> implements Session<C> {
 	private final Map<String, C> clientsMap = new HashMap<>();
 	private final String id;
 	private String currentClient;
+	private Consumer<Void> logoutListener;
 
 	public SparkSession(String id) {
 		this.id = id;
@@ -51,5 +53,15 @@ public class SparkSession<C extends Client> implements Session<C> {
 
 	public void send(String message) {
 		clientsMap.values().stream().forEach(client -> client.send(message));
+	}
+
+	public void whenLogout(Consumer<Void> listener) {
+		this.logoutListener = listener;
+	}
+
+	@Override
+	public void logout() {
+		if (logoutListener != null)
+			logoutListener.accept(null);
 	}
 }
