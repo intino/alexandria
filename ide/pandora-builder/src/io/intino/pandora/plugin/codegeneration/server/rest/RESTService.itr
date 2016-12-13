@@ -9,7 +9,7 @@ def type(server)
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
 		public static void setup(PandoraSpark server, $box+FirstUpperCase~Box box) {
-			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = box.configuration().$name+firstLowerCase~Configuration;;
+			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = box.configuration().$name+firstLowerCase~Configuration;
 			$secure
 			$resource...[$NL]
 		}

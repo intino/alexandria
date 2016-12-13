@@ -80,9 +80,6 @@ public class Commons {
 		return (int) operation.parameterList().stream().filter(p -> p.is(FileData.class)).count();
 	}
 
-	public static String validPackage(Object value) {
-		return value.toString().replace("-", "").toLowerCase();
-	}
 
 	public static String firstUpperCase(String value) {
 		return value.substring(0, 1).toUpperCase() + value.substring(1);

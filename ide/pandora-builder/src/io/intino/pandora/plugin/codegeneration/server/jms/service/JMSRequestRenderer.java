@@ -4,10 +4,11 @@ import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Response;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.codegeneration.action.JMSRequestActionRenderer;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jms.JMSService.Request;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.action.JMSRequestActionRenderer;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -88,10 +89,6 @@ public class JMSRequestRenderer {
 	}
 
 	private Template template() {
-		Template template = JMSRequestTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return Formatters.customize(JMSRequestTemplate.create());
 	}
 }

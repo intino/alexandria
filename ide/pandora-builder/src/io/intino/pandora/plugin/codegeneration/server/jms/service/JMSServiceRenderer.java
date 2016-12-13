@@ -1,8 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.server.jms.service;
 
 import io.intino.pandora.model.Parameter;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.jms.JMSService;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.AbstractFrame;
@@ -11,8 +12,6 @@ import tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
-
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class JMSServiceRenderer {
 
@@ -76,10 +75,7 @@ public class JMSServiceRenderer {
 	}
 
 	private Template template() {
-		Template template = JMSServiceTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return Formatters.customize(JMSServiceTemplate.create());
 	}
 
 	private String messageType(List<Parameter> parameters) {
