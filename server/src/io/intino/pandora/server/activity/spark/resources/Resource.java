@@ -61,7 +61,7 @@ public abstract class Resource implements io.intino.pandora.server.Resource {
     }
 
     protected void logout() {
-        Optional<Authentication> authentication = authentication();
+        Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
 
         if (!authentication.isPresent())
             return;
@@ -80,6 +80,11 @@ public abstract class Resource implements io.intino.pandora.server.Resource {
 
     Optional<Authentication> authentication() {
         return authenticationOf(manager.fromQuery("authId", String.class));
+    }
+
+    Optional<Authentication> authentication(String sessionId) {
+        String authenticationId = authenticationIdMap.get(sessionId);
+        return Optional.ofNullable(authenticationMap.get(authenticationId));
     }
 
     Optional<Authentication> authenticationOf(String authenticationId) {
