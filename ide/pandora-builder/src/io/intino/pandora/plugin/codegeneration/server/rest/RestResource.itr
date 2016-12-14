@@ -1,0 +1,69 @@
+def type(resource)
+	package $package.resources;
+
+	import java.util.List;
+	import io.intino.pandora.exceptions.*;
+	import $package.*;
+	import io.intino.pandora.Box;
+	import io.intino.pandora.server.Resource;
+	import io.intino.pandora.server.spark.SparkManager;
+	$schemaImport
+
+	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
+
+		private $box+FirstUpperCase~Box box;
+		private SparkManager manager;
+
+		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
+			this.box = box;
+			this.manager = manager;
+		}
+
+		public void execute() throws $throws...[, ] {
+			[$returnType+writeCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
+		}
+
+		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
+			action.box = this.box;[
+			$parameter+assign...[$NL]]
+			return action;
+		}
+		[
+		$returnType+write]
+	}
+end
+
+def attribute(void) trigger(writeCall)
+end
+
+def trigger(writeCall)
+	write(
+end
+
+def attribute(void) trigger(ending)
+end
+
+def trigger(ending)
+	)
+end
+
+def attribute(void) trigger(write)
+end
+
+def trigger(write)
+	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
+		manager.write(object);
+	}
+end
+
+def type(parameter) trigger(type)
+	$parameterType
+end
+
+def type(parameter) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

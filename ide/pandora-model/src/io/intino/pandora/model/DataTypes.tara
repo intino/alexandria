@@ -14,6 +14,9 @@ Facet Type on Data
 	sub Integer
 		var integer defaultValue = 0
 		var string type = "Integer" is reactive private
+	sub LongInteger
+		var integer defaultValue = 0
+		var string type = "Long" is reactive private
 	sub Bool
     	var boolean defaultValue = true
 		var string type = "Boolean" is reactive private
