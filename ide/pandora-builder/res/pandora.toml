@@ -1,0 +1,35 @@
+name="Pandora"
+version="1.0.0"
+changeNotes=""
+gulpFileTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Gulpfile_jsTemplate.class"
+packageJsonTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Package_jsonTemplate.class"
+
+[[groups]]
+id="PandoraToolsGroup"
+popup="true"
+text="Pandora"
+aClass="io.intino.pandora.plugin.actions.PandoraActionGroup"
+groupId="ToolsMenu"
+anchor="last"
+
+[[actions]]
+id="NewPandoraFile"
+aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
+groupId="NewGroup"
+anchor="first"
+
+[[actions]]
+id="CreatePandoraAPI"
+aClass="io.intino.pandora.plugin.actions.CreatePandoraBoxAction"
+text="Create Pandora Shell"
+description="Create Pandora Shell"
+shortcut="control alt S"
+groupId="PandoraToolsGroup"
+
+[[actions]]
+id="PublishAccesors"
+aClass="io.intino.pandora.plugin.actions.PublishAccessorAction"
+text="Publish Pandora Accessor"
+description="Publish Pandora Accessor in Artifactory"
+shortcut="control alt A"
+groupId="PandoraToolsGroup"

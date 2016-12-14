@@ -1,0 +1,44 @@
+def type(channel)
+	package $package+validPackage;
+
+	import $package+validPackage.subscriptions.*;
+	import io.intino.pandora.Box;
+	import io.intino.pandora.jms.*;
+	$schemaImport
+
+	import javax.jms.Session;
+	import javax.jms.JMSException;
+
+	public class $name+firstUppercase~Channel {
+
+		public static void init(Session session, $box~Box box) {
+			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = box.configuration().$name+firstLowerCase~Configuration;
+			$subscription...[$NL]
+		}
+	}
+end
+
+def type(subscription)
+	new $type~Consumer(session, $path+format).listen(new $name+firstUpperCase~Subscription(box)[, $durable]);
+end
+
+def type(durable) trigger(durable)
+	configuration.clientID[$custom+replace...[]]
+end
+
+def type(custom) trigger(replace)
+	.replace("{$value}", $value+validname+firstLowerCase)
+end
+
+def type(path) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", configuration.$value+validname+firstLowerCase)
+end
+
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

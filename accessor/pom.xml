@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>s
+    <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-rest-accessor-java</artifactId>
     <version>1.0.0</version>
@@ -12,14 +12,6 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>siani-maven</id>
-            <name>siani-maven-releases</name>
-            <url>https://artifactory.siani.es/artifactory/libs-release-local</url>
-        </repository>
-    </distributionManagement>
-
     <repositories>
         <repository>
             <id>siani-maven</id>
@@ -27,6 +19,14 @@
             <url>http://artifactory.siani.es/artifactory/libs-release</url>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <outputDirectory>../out/production/accessor</outputDirectory>
@@ -129,7 +129,7 @@
         </dependency>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>panora-server</artifactId>
+            <artifactId>pandora-server</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
