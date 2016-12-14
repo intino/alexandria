@@ -6,7 +6,7 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-	import $package+validname.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
 	import io.intino.pandora.exceptions.PandoraException;
 	import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;

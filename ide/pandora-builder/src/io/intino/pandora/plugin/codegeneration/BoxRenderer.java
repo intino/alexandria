@@ -7,6 +7,7 @@ import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.compiler.shared.Configuration;
@@ -57,9 +58,18 @@ public class BoxRenderer {
 	private void channels(Frame frame, String name) {
 		for (Channel channel : application.channelList()) {
 			final Frame channelFrame = new Frame().addTypes("channel").addSlot("name", channel.name());
-			if (channel.isDurable()) channelFrame.addSlot("durable", channel.name());
+			if (channel.isDurable()) channelFrame.addSlot("durable", customizeDurable(channel.asDurable().clientID(), channel.name()));
 			frame.addSlot("channel", (Frame) channelFrame.addSlot("configuration", name));
 		}
+	}
+
+	private Frame customizeDurable(String clientId, String channelName) {
+		Frame frame = new Frame().addTypes("durable");
+		frame.addSlot("channel", channelName);
+		for (String parameter : Commons.extractParameters(clientId)) {
+			frame.addSlot("custom", new Frame().addSlot("value", parameter).addSlot("channel", channelName));
+		}
+		return frame;
 	}
 
 	private void services(Frame frame, String name) {

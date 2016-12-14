@@ -126,7 +126,11 @@ def type(channel) trigger(init)
 end
 
 def trigger(durable)
-	connection.setClientID(configuration().$value+firstLowerCase~Configuration.clientID);
+	connection.setClientID(configuration().$channel+firstLowerCase~Configuration.clientID[$custom+replace...[]]);
+end
+
+def trigger(replace)
+	.replace("{$value}", configuration().$channel+firstLowerCase~Configuration.$value+validname+firstLowerCase)
 end
 
 def type(service & jmx) trigger(jmx)

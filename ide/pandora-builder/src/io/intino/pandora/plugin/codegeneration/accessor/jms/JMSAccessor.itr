@@ -1,5 +1,5 @@
 def type(accessor)
-	package $package+validname;
+	package $package+validPackage;
 
 	import io.intino.pandora.exceptions.*;
 	import io.intino.pandora.jms.QueueProducer;

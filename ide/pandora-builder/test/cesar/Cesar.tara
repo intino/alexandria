@@ -13,7 +13,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 		Post(description = "Update system")
 			Parameter(in = path) system as Text
-			Parameter(in = query) enabled as Bool
+			Parameter(in = query) enabled as LongInteger
 			Response
 			Exception(BadRequest)
 	Resource(path = "/systems/:system/:version") SystemVersion
