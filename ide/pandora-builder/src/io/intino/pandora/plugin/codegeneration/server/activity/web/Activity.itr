@@ -1,10 +1,10 @@
 def type(activity)
-	package $package;
+	package $package+validPackage;
 
-	import $package.displays.*;
-    import $package.displays.notifiers.*;
-    import $package.displays.requesters.*;
-    import $package.resources.*;
+	import $package+validPackage.displays.*;
+    import $package+validPackage.displays.notifiers.*;
+    import $package+validPackage.displays.requesters.*;
+    import $package+validPackage.resources.*;
 
     import io.intino.pandora.server.activity.ActivityPandoraSpark;
     import io.intino.pandora.server.activity.displays.DisplayNotifier;

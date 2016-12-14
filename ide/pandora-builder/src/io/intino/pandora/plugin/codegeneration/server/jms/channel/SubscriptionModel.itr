@@ -2,7 +2,7 @@ def type(subscription)
 	package $package.subscriptions;
 
     import com.google.gson.Gson;
-	import $package+validname.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+firstUpperCase~Box;
     import io.intino.pandora.jms.Consumer;
 	$schemaImport
 

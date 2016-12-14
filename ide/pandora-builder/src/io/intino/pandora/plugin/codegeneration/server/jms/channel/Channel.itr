@@ -1,7 +1,7 @@
 def type(channel)
-	package $package;
+	package $package+validPackage;
 
-	import $package.subscriptions.*;
+	import $package+validPackage.subscriptions.*;
 	import io.intino.pandora.Box;
 	import io.intino.pandora.jms.*;
 	$schemaImport
