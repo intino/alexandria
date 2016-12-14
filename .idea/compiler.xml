@@ -38,11 +38,12 @@
         <module name="pandora-model" />
         <module name="pandora-plugin-core" />
       </profile>
-      <profile name="Annotation profile for pandora-plugin" enabled="true">
+      <profile name="Annotation profile for pandora-builder-test" enabled="true">
         <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="pandora-builder" />
+        <module name="pandora-test" />
       </profile>
       <profile name="Annotation profile for pandora-server" enabled="true">
         <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
@@ -90,6 +91,7 @@
       <module name="pandora-model" target="1.8" />
       <module name="pandora-plugin" target="1.8" />
       <module name="pandora-plugin-core" target="1.8" />
+      <module name="pandora-test" target="1.8" />
       <module name="plugin" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
