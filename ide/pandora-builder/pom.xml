@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
     <version>1.0.14</version>
@@ -88,7 +87,8 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>gen</source>
+                                <source>../pandora-model/src</source>
+                                <source>../pandora-model/gen</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -123,15 +123,11 @@
     </distributionManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>io.intino.pandora</groupId>
-            <artifactId>pandora-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
