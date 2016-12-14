@@ -5,7 +5,7 @@ def type(display)
 	import $package.*;
 	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
-    import $package+validname.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
     import io.intino.pandora.server.activity.displays.Display;
     import io.intino.pandora.server.activity.services.push.User;
 

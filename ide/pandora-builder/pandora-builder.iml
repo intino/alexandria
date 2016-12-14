@@ -18,7 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/test-gen" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="pandora-model" />
     <orderEntry type="library" name="Maven: tara.dsl:pandora:1.0.12" level="project" />
