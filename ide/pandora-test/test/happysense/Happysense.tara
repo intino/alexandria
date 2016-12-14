@@ -4,7 +4,6 @@ Service(description = "Interface for recovering all dashboard inschemaion") rest
 	Resource(path = "/categorizations") categorizations
 		Get(description="List of categorizations")
 			Response as Object(schema = CategorizationCatalogResponseSchema)
-
 	Resource(path = "/summary") summary
 		Get(description = "Opinions summary")
 			Response as Object(schema = SummaryResponseSchema)

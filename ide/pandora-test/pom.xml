@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.intino.pandora</groupId>
-    <artifactId>pandora-plugin</artifactId>
+    <artifactId>pandora-builder-test</artifactId>
     <version>1.0.14</version>
 
     <properties>
@@ -133,18 +133,13 @@
             <artifactId>pandora</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-cli</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.siani.cottons</groupId>
-            <artifactId>cotton-utils</artifactId>
-            <version>LATEST</version>
-        </dependency>
 
-
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.1</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -156,7 +151,7 @@
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>
@@ -175,6 +170,61 @@
             <artifactId>maven-invoker</artifactId>
             <scope>provided</scope>
             <version>2.0.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-server</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jmx</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-scheduler</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jms</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-slack</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-rest-accessor-java</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.tara</groupId>
+            <artifactId>io</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
