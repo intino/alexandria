@@ -10,37 +10,36 @@
 
     <distributionManagement>
         <repository>
-            <id>siani-maven</id>
-            <name>siani-maven-releases</name>
-            <url>https://artifactory.siani.es/artifactory/libs-release-local</url>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
         </repository>
-
     </distributionManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>slack</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-slack</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>rest-server</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-server</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>jms</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jms</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>jmx</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jmx</artifactId>
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.pandora</groupId>
-            <artifactId>scheduler</artifactId>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-scheduler</artifactId>
             <version>LATEST</version>
         </dependency>
     </dependencies>

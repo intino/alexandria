@@ -5,7 +5,7 @@
 
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -14,8 +14,8 @@
         <tara.dsl>Proteo</tara.dsl>
         <tara.dsl.version>LATEST</tara.dsl.version>
         <tara.out.dsl>Pandora</tara.out.dsl>
-        <tara.out.dsl.version>1.0.0</tara.out.dsl.version>
-        <tara.working.package>io.intino.pandora.model</tara.working.package>
+        <tara.out.dsl.version>1.0.12</tara.out.dsl.version>
+        <tara.working.package>io.intino.pandora.builder</tara.working.package>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -126,12 +126,12 @@
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>pandora-model</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.12</version>
         </dependency>
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.12</version>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
