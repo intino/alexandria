@@ -52,6 +52,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -67,29 +68,9 @@
                             <artifactSet>
                                 <includes>
                                     <include>tara.dsl:pandora:*</include>
-                                    <include>io.intino.pandora:pandora-model:jar:*</include>
+                                    <include>io.intino.pandora:model:jar:*</include>
                                 </includes>
                             </artifactSet>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>../pandora-model/src</source>
-                                <source>../pandora-model/gen</source>
-                            </sources>
                         </configuration>
                     </execution>
                 </executions>
@@ -123,7 +104,11 @@
     </distributionManagement>
 
     <dependencies>
-
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0.0</version>
+        </dependency>
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>pandora</artifactId>
