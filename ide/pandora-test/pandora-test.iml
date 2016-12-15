@@ -13,10 +13,11 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="pandora-builder" scope="TEST" />
+    <orderEntry type="module" module-name="pandora-model" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:pandora:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-codegen-cli:2.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.siani.cottons:cotton-utils:1.0.7" level="project" />
-    <orderEntry type="module" module-name="pandora-model" />
+    <orderEntry type="library" name="Maven: io.intino.pandora:pandora-model:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.moandjiezana.toml:toml4j:0.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.google.code.gson:gson:2.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.siani.tara:proteo-alone:1.0.0" level="project" />
@@ -55,7 +56,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.8.0">
         <CLASSES>
-          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_91.jdk/Contents/Home/lib/tools.jar!/" />
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

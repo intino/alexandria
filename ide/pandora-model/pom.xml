@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
-    <artifactId>pandora-model</artifactId>
+    <artifactId>model</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -21,12 +21,11 @@
         <outputDirectory>../../out/production/pandora-model</outputDirectory>
         <testOutputDirectory>../../out/test/pandora-model</testOutputDirectory>
         <directory>../../out/build/pandora-model</directory>
-        <!--<sourceDirectory>src</sourceDirectory>-->
-        <!--<resources>-->
-        <!--<resource>-->
-        <!--<directory>res</directory>-->
-        <!--</resource>-->
-        <!--</resources>-->
+        <resources>
+            <resource>
+                <directory>res</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -46,6 +45,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <finalName>pandora-model</finalName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
