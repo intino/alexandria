@@ -2,23 +2,29 @@ package io.intino.pandora.plugin.actions;
 
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.ide.actions.JavaCreateTemplateInPackageAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tara.intellij.actions.utils.TaraTemplates;
 import tara.intellij.actions.utils.TaraTemplatesFactory;
 import tara.intellij.lang.psi.impl.TaraModelImpl;
+import tara.intellij.lang.psi.impl.TaraUtil;
 import tara.intellij.messages.MessageProvider;
 
+import java.io.File;
 import java.util.Map;
 
 import static io.intino.pandora.plugin.PandoraIcons.ICON_16;
@@ -80,5 +86,25 @@ public class CreatePandoraFileAction extends JavaCreateTemplateInPackageAction<T
 		Document doc = instance.getDocument(file);
 		if (doc == null) return;
 		instance.commitDocument(doc);
+	}
+
+	@SuppressWarnings("Duplicates")
+	@Override
+	public void update(AnActionEvent e) {
+		e.getPresentation().setIcon(PandoraIcons.ICON_16);
+		final Module module = e.getData(LangDataKeys.MODULE);
+		boolean enabled = module != null && legioFile(module).exists();
+		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+		if (!file.exists()) return;
+		String version = file.getParentFile().getName();
+		final String interfaceVersion = TaraUtil.configurationOf(module).interfaceVersion();
+		e.getPresentation().setVisible(enabled & version.equals(interfaceVersion));
+		e.getPresentation().setEnabled(enabled & version.equals(interfaceVersion));
+	}
+
+	@NotNull
+	private File legioFile(Module module) {
+		File moduleRoot = new File(module.getModuleFilePath()).getParentFile();
+		return new File(moduleRoot, "configuration.legio");
 	}
 }
