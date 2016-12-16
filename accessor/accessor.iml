@@ -6,14 +6,9 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/out/build/accessor" />
-      <excludeFolder url="file://$MODULE_DIR$/out/production/accessor" />
-      <excludeFolder url="file://$MODULE_DIR$/out/test/accessor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: io.intino.pandora:core:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.pandora:rest-server:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.pandora:panora-server:1.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
