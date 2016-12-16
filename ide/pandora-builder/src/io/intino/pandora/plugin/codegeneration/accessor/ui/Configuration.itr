@@ -15,7 +15,6 @@ def type(configuration & legio)
 			WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
 end
 
-
 def type(repository & distribution) trigger(distribution)
 	$type("$url", "$id")
 end

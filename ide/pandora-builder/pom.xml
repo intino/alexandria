@@ -4,17 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.16</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <tara.level>Application</tara.level>
-        <tara.dsl>Proteo</tara.dsl>
-        <tara.dsl.version>LATEST</tara.dsl.version>
-        <tara.out.dsl>Pandora</tara.out.dsl>
-        <tara.out.dsl.version>${project.version}</tara.out.dsl.version>
-        <tara.working.package>io.intino.pandora.builder</tara.working.package>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -30,30 +24,6 @@
         <!--</testResources>-->
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${basedir}/test-gen</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
@@ -64,7 +34,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <minimizeJar>false</minimizeJar>
+                            <minimizeJar>false</minimizeJar><!--important-->
                             <artifactSet>
                                 <includes>
                                     <include>tara.dsl:pandora:*</include>
@@ -77,6 +47,7 @@
             </plugin>
         </plugins>
     </build>
+
     <repositories>
         <repository>
             <id>siani-maven</id>
@@ -126,7 +97,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -137,7 +107,7 @@
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>

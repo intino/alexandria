@@ -36,6 +36,7 @@ public class ActivityAccessorCreator {
 	}
 
 	public void execute() {
+		if (javaModule == null) return;
 		for (Activity activity : activities) {
 			Module webModule = getOrCreateModule(activity);
 			final ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(javaModule, webModule, activity);

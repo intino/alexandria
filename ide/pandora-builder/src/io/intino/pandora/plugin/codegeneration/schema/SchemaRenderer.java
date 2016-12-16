@@ -5,6 +5,7 @@ import io.intino.pandora.model.bool.BoolData;
 import io.intino.pandora.model.date.DateData;
 import io.intino.pandora.model.datetime.DateTimeData;
 import io.intino.pandora.model.integer.IntegerData;
+import io.intino.pandora.model.longinteger.LongIntegerData;
 import io.intino.pandora.model.real.RealData;
 import io.intino.pandora.model.text.TextData;
 import io.intino.pandora.model.type.TypeData;
@@ -84,6 +85,7 @@ public class SchemaRenderer {
 		else if (attribute.isText()) return processAttribute(attribute.asText());
 		else if (attribute.isDateTime()) return processAttribute(attribute.asDateTime());
 		else if (attribute.isDate()) return processAttribute(attribute.asDate());
+		else if (attribute.isLongInteger()) return processAttribute(attribute.asLongInteger());
 		return null;
 	}
 
@@ -101,24 +103,37 @@ public class SchemaRenderer {
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
+	private static Frame processAttribute(LongIntegerData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("type", attribute.type())
+				.addSlot("defaultValue", attribute.defaultValue()+"L");
+	}
+
 	private static Frame processAttribute(BoolData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", attribute.defaultValue());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("type", attribute.type())
+				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(TextData attribute) {
 		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type()).addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("type", attribute.type())
+				.addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
 	}
 
 	private static Frame processAttribute(DateTimeData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("type", attribute.type());
 	}
 
 	private static Frame processAttribute(DateData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name()).addSlot("type", attribute.type());
+				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("type", attribute.type());
 	}
 
 	private static Frame processSchemaAsAttribute(Schema format) {

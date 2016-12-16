@@ -2,7 +2,7 @@ def type(widget)
 	<script src="$name+lowercase~widget/requester.js"></script>
     <script src="$name+lowercase~widget/notifier-listener.js"></script>
 
-    <dom-module id="$name+camelCaseToSnakeCase-widget">
+    <dom-module id="$name+camelCaseToSnakeCase~-widget">
 
         <template>
             $innerDisplay...[$NL]
@@ -21,7 +21,7 @@ def type(widget)
             };
 
             Polymer({
-                is: '$name+camelCaseToSnakeCase-widget',
+                is: '$name+camelCaseToSnakeCase~-widget',
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
