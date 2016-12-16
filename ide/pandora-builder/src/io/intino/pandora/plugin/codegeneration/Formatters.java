@@ -33,6 +33,15 @@ public class Formatters {
 		};
 	}
 
+	public static Formatter camelCaseToSnakeCase() {
+		return value -> {
+//			String regex = "([a-z])([A-Z]+)";
+//			String replacement = "$1-$2";
+//			return value.toString().replaceAll(regex, replacement).toLowerCase();
+			return StringHelper.camelCaseToSnakeCase(value.toString());
+		};
+	}
+
 	public static Formatter quoted() {
 		return value -> '"' + value.toString() + '"';
 	}
@@ -48,6 +57,7 @@ public class Formatters {
 		template.add("returnTypeFormatter", returnTypeFormatter());
 		template.add("quoted", quoted());
 		template.add("validPackage", validPackage());
+		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
 		return template;
 	}
 
