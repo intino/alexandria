@@ -111,6 +111,11 @@ Schema Range
 Schema ScaleList
 	Has(Scale)
 
+
+Schema Alert
+    Attribute active as Bool
+    Attribute(multiple=true) mailingList as Text
+
 Schema Scale
 	Attribute name as LongInteger
 	Attribute label as Text

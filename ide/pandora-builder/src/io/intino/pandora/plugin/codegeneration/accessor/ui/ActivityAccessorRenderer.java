@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
+import static io.intino.pandora.plugin.codegeneration.Formatters.customize;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.write;
@@ -71,9 +72,9 @@ public class ActivityAccessorRenderer {
 
 	private void createWidget(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
-		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "-widget.html");
+		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
-			write(file.toPath(), WidgetTemplate.create().add("camelCaseToSnakeCase", value -> camelCaseToSnakeCase(value.toString())).format(frame).getBytes());
+			write(file.toPath(), customize(WidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
@@ -84,21 +85,21 @@ public class ActivityAccessorRenderer {
 			createWidget(display);
 			widgets.addSlot("widget", display.name());
 		}
-		write(new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), WidgetsTemplate.create().format(widgets).getBytes());
+		write(new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), customize(WidgetsTemplate.create()).format(widgets).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), WidgetRequesterTemplate.create().format(frame).getBytes());
+		write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), WidgetNotifierTemplate.create().format(frame).getBytes());
+		write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Request r) {
