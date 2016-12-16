@@ -48,8 +48,11 @@ public class CreatePandoraBoxAction extends PandoraAction {
 	@Override
 	public void update(AnActionEvent e) {
 		super.update(e);
+		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+		if (!file.exists()) return;
+		String version = file.getParentFile().getName();
 		final Module module = e.getData(LangDataKeys.MODULE);
-		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName());
+		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + version + ")");
 	}
 
 	@Override
@@ -62,7 +65,6 @@ public class CreatePandoraBoxAction extends PandoraAction {
 		List<PsiFile> pandoraFiles = PandoraUtils.findPandoraFiles(module);
 		new PandoraGenerator(module, pandoraFiles).generate(getGenRoot(module), getSrcRoot(module));
 	}
-
 
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {

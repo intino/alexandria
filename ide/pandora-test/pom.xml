@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.intino.pandora</groupId>
+    <artifactId>pandora-builder-test</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <tara.level>Application</tara.level>
+        <tara.dsl>Proteo</tara.dsl>
+        <tara.dsl.version>LATEST</tara.dsl.version>
+        <tara.out.dsl>Pandora</tara.out.dsl>
+        <tara.out.dsl.version>${project.version}</tara.out.dsl.version>
+        <tara.working.package>io.intino.pandora.builder</tara.working.package>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <outputDirectory>../../out/production/pandora-builder-test</outputDirectory>
+        <testOutputDirectory>../../out/test/pandora-builder-test</testOutputDirectory>
+        <directory>../../out/build/pandora-builder-test</directory>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-plugin</artifactId>
+            <scope>test</scope>
+            <version>1.0.15</version>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>model</artifactId>
+            <scope>test</scope>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <scope>test</scope>
+            <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.tara</groupId>
+            <artifactId>proteo</artifactId>
+            <scope>test</scope>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.tara</groupId>
+            <artifactId>language</artifactId>
+            <scope>test</scope>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.siani.itrules</groupId>
+            <artifactId>itrules</artifactId>
+            <scope>test</scope>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-invoker</artifactId>
+            <scope>test</scope>
+            <version>2.0.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-server</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jmx</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-scheduler</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-jms</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-slack</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-rest-accessor-java</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

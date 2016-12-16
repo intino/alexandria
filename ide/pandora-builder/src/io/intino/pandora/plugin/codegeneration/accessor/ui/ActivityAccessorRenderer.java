@@ -30,9 +30,26 @@ public class ActivityAccessorRenderer {
 		this.activity = activity;
 	}
 
+	boolean createConfigurationFile() {
+		final Configuration configuration = TaraUtil.configurationOf(appModule);
+		Frame frame = new Frame();
+		frame.addTypes("configuration", "legio");
+		frame.addSlot("groupID", configuration.groupId());
+		frame.addSlot("artifactID", configuration.artifactId());
+		frame.addSlot("version", configuration.modelVersion());
+		final Map<String, String> releaseRepositories = configuration.releaseRepositories();
+		for (String repository : releaseRepositories.keySet())
+			frame.addSlot("repository", new Frame().addTypes("repository", "release").addSlot("type", "Release").addSlot("url", repository).addSlot("id", releaseRepositories.get(repository)));
+		File file = new File(rootDirectory(), "configuration.legio");
+		if (!file.exists()) try {
+			return write(file.toPath(), ConfigurationTemplate.create().format(frame).getBytes()).toFile().exists();
+		} catch (IOException ignored) {
+		}
+		return false;
+	}
+
 	public void execute() {
 		try {
-			createConfigurationFile();
 			createStaticFiles();
 			createWidgets();
 			createPages();
@@ -101,20 +118,6 @@ public class ActivityAccessorRenderer {
 			frame.addSlot("type", n.to().name());
 		}
 		return frame;
-	}
-
-	private void createConfigurationFile() throws IOException {
-		final Configuration configuration = TaraUtil.configurationOf(appModule);
-		Frame frame = new Frame();
-		frame.addTypes("configuration", "legio");
-		frame.addSlot("groupID", configuration.groupId());
-		frame.addSlot("artifactID", configuration.artifactId());
-		frame.addSlot("version", configuration.modelVersion());
-		final Map<String, String> releaseRepositories = configuration.releaseRepositories();
-		for (String repository : releaseRepositories.keySet())
-			frame.addSlot("repository", new Frame().addTypes("repository", "release").addSlot("type", "Release").addSlot("url", repository).addSlot("id", releaseRepositories.get(repository)));
-		File file = new File(rootDirectory(), "configuration.legio");
-		if (!file.exists()) write(file.toPath(), ConfigurationTemplate.create().format(frame).getBytes());
 	}
 
 	private void createStaticFiles() throws IOException {
