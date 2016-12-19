@@ -8,6 +8,10 @@ import cottons.utils.Files;
 import io.intino.pandora.plugin.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.pandora.plugin.codegeneration.exception.ExceptionRenderer;
 import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
+import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.channel.SubscriptionModelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSRequestRenderer;
@@ -19,10 +23,6 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
 import org.jetbrains.annotations.Nullable;
 import tara.compiler.shared.Configuration;
 import tara.intellij.lang.psi.impl.TaraUtil;
@@ -131,7 +131,7 @@ public class FullRenderer {
 
 	private static boolean parentExists(Module module) {
 		try {
-			if(module == null) return false;
+			if (module == null) return false;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final Configuration configuration = TaraUtil.configurationOf(module);
 			String workingPackage = configuration.dslWorkingPackage();
