@@ -47,23 +47,14 @@ public class SchemaRenderer {
 	}
 
 	@NotNull
-	public static Frame createSchemaFrame(Schema element, String packageName) {
-		Frame frame = new Frame().addTypes("schema").addSlot("name", element.name()).addSlot("package", packageName);
-		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(element.attributeList()));
-		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(element.schemaList()));
-		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(element.hasList()));
-		if (element.attributeMap() != null) frame.addSlot("attribute", attributeMap());
-		addReturningValueToAttributes(element.name(), frame.frames("attribute"));
+	public static Frame createSchemaFrame(Schema schema, String packageName) {
+		Frame frame = new Frame().addTypes("schema").addSlot("name", schema.name()).addSlot("package", packageName);
+		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
+		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList()));
+		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList()));
+		if (schema.attributeMap() != null) frame.addSlot("attribute", attributeMap());
+		addReturningValueToAttributes(schema.name(), frame.frames("attribute"));
 		return frame;
-	}
-
-	private Template template() {
-		Template template = Formatters.customize(SchemaTemplate.create());
-		template.add("typeFormat", (value) -> {
-			if (value.toString().contains(".")) return firstLowerCase(value.toString());
-			else return value;
-		});
-		return template;
 	}
 
 	private static Frame[] processAttributes(List<Schema.Attribute> attributes) {
@@ -152,13 +143,22 @@ public class SchemaRenderer {
 		return new Frame().addTypes("attributeMap");
 	}
 
-	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attribute) {
-		while (attribute.hasNext())
-			((Frame) attribute.next()).addSlot("element", elementName);
+	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {
+		while (attributes.hasNext())
+			((Frame) attributes.next()).addSlot("element", elementName);
 	}
 
 	private static boolean multiple(TypeData attribute) {
 		return attribute.as(Schema.Attribute.class).multiple();
+	}
+
+	private Template template() {
+		Template template = Formatters.customize(SchemaTemplate.create());
+		template.add("typeFormat", (value) -> {
+			if (value.toString().contains(".")) return firstLowerCase(value.toString());
+			else return value;
+		});
+		return template;
 	}
 
 }
