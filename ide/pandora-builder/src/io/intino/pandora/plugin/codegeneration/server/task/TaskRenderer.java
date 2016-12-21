@@ -2,10 +2,11 @@ package io.intino.pandora.plugin.codegeneration.server.task;
 
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Task;
+import io.intino.pandora.model.directorysentinel.DirectorySentinelTask;
+import io.intino.pandora.model.scheduled.ScheduledTask;
+import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.codegeneration.action.ActionTemplate;
 import io.intino.pandora.plugin.helpers.Commons;
-import io.intino.pandora.model.scheduled.ScheduledTask;
-import io.intino.pandora.model.directorysentinel.DirectorySentinelTask;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -79,15 +80,11 @@ public class TaskRenderer {
 	}
 
 	private Template actionTemplate() {
-		final Template template = ActionTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+		return Formatters.customize(ActionTemplate.create());
 	}
 
 	private Template template() {
-		final Template template = TaskTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+		return Formatters.customize(TaskTemplate.create());
 	}
 
 	private boolean alreadyRendered(File destiny, Task task) {

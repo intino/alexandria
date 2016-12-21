@@ -1,8 +1,8 @@
 def type(page)
-	package $package.resources;
+	package $package+validPackage.resources;
 
-	import $package+validname.$box+firstUpperCase~Box;
-	import $package+validname.actions.$name+firstUpperCase~Action;
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.actions.$name+firstUpperCase~Action;
 	import io.intino.pandora.exceptions.PandoraException;
 	import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;
 

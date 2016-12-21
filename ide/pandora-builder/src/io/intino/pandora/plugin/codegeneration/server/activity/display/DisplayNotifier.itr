@@ -1,8 +1,8 @@
 def type(display)
-	package $package.displays.notifiers;
+	package $package+validPackage.displays.notifiers;
 
 	import io.intino.pandora.exceptions.*;
-	import $package.*;
+	import $package+validPackage.*;
 	$schemaImport
 
     public class $name+FirstUpperCase~DisplayNotifier extends io.intino.pandora.server.activity.displays.DisplayNotifier {

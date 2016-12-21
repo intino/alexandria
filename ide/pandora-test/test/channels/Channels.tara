@@ -48,7 +48,7 @@ Schema Processes
 
 Queue(path = "catalogs") opinions
 
-Topic(path = "sample") durableChannel as Durable("sample-id")
+Topic(path = "{sample}") durableChannel as Durable("{sample-id}")
 
 
 Topic(path = "processes") inputProcesses

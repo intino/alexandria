@@ -3,9 +3,9 @@ def type(display)
 
 	import io.intino.pandora.exceptions.*;
 	import $package.*;
-	import $package+validname.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
-    import $package+validname.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
     import io.intino.pandora.server.activity.displays.Display;
     import io.intino.pandora.server.activity.services.push.User;
 

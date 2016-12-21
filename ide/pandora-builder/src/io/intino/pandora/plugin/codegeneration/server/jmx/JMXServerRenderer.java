@@ -1,8 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.server.jmx;
 
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.jmx.JMXService.Operation;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -42,10 +43,7 @@ public class JMXServerRenderer {
 
 
 	private Template template() {
-		Template template = JMXServerTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		template.add("quoted", value -> '"' + value.toString() + '"');
-		return template;
+		return Formatters.customize(JMXServerTemplate.create());
 	}
+
 }

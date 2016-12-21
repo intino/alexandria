@@ -37,7 +37,10 @@ public class PublishAccessorAction extends PandoraAction implements DumbAware {
 	public void update(AnActionEvent e) {
 		super.update(e);
 		final Module module = e.getData(LangDataKeys.MODULE);
-		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName());
+		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+		if (!file.exists()) return;
+		String version = file.getParentFile().getName();
+		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + version + ")");
 	}
 
 	@Override

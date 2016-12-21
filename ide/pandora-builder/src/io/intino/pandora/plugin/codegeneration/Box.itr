@@ -26,7 +26,7 @@ def type(box)
 		}
 
 
-		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
+		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(tara.magritte.Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);
 			]map.put(graphID = UUID.randomUUID().toString(), graph);
 			this.configuration = configuration;[
@@ -34,8 +34,8 @@ def type(box)
 			$activity+setup...[$NL]]
 		}
 
-		public Graph graph() {
-			return (Graph) map().get(graphID);
+		public tara.magritte.Graph graph() {
+			return (tara.magritte.Graph) map().get(graphID);
 		}
 
 		protected Map<String, Object> map() {
@@ -126,7 +126,11 @@ def type(channel) trigger(init)
 end
 
 def trigger(durable)
-	connection.setClientID(configuration().$value+firstLowerCase~Configuration.clientID);
+	connection.setClientID(configuration().$channel+firstLowerCase~Configuration.clientID[$custom+replace...[]]);
+end
+
+def trigger(replace)
+	.replace("{$value}", configuration().$channel+firstLowerCase~Configuration.$value+validname+firstLowerCase)
 end
 
 def type(service & jmx) trigger(jmx)

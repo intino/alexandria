@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Channel;
 import io.intino.pandora.model.Schema;
+import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.codegeneration.action.ChannelActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
@@ -53,9 +54,6 @@ public class SubscriptionModelRenderer {
 	}
 
 	private Template template() {
-		Template template = SubscriptionModelTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return Formatters.customize(SubscriptionModelTemplate.create());
 	}
 }

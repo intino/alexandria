@@ -2,17 +2,18 @@ package io.intino.pandora.plugin.codegeneration.accessor.rest;
 
 import io.intino.pandora.model.Response;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.model.date.DateData;
 import io.intino.pandora.model.datetime.DateTimeData;
 import io.intino.pandora.model.file.FileData;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.rest.RESTService.Resource;
 import io.intino.pandora.model.rest.RESTService.Resource.Operation;
 import io.intino.pandora.model.rest.RESTService.Resource.Parameter;
 import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.schema.SchemaRenderer;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -53,7 +54,7 @@ public class RESTAccessorRenderer {
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
-		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", getTemplate().format(frame));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", template().format(frame));
 	}
 
 	private void setupAuthentication(RESTService restService, Frame frame) {
@@ -98,7 +99,7 @@ public class RESTAccessorRenderer {
 	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final Frame frame = new Frame().addTypes("doInvoke")
 				.addSlot("relativePath", processPath(Commons.path(operation.owner().as(Resource.class))))
-				.addSlot("type", operation.response().isFile()? "getResource": operation.concept().name().toLowerCase());
+				.addSlot("type", operation.response().isFile() ? "getResource" : operation.concept().name().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0) frame.addSlot("parameters", "parameters");
@@ -168,16 +169,8 @@ public class RESTAccessorRenderer {
 				.addSlot("returnType", typeData.type());
 	}
 
-	private Template getTemplate() {
-		Template template = RESTAccessorTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> {
-			if (value.equals("Void")) return "void";
-			else if (value.toString().contains(".")) return firstLowerCase(value.toString());
-			else return value;
-		});
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+	private Template template() {
+		return Formatters.customize(RESTAccessorTemplate.create());
 	}
 
 	public static String firstLowerCase(String value) {

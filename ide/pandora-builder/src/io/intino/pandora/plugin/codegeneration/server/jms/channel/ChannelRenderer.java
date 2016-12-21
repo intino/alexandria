@@ -3,6 +3,7 @@ package io.intino.pandora.plugin.codegeneration.server.jms.channel;
 import io.intino.pandora.model.Channel;
 import io.intino.pandora.model.Queue;
 import io.intino.pandora.model.Schema;
+import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -43,17 +44,28 @@ public class ChannelRenderer {
 
 	private Frame subscriptions(Channel channel) {
 		final Frame frame = new Frame().addTypes("subscription").
-				addSlot("path", channel.path()).
+				addSlot("path", customize(channel.path())).
 				addSlot("type", channel.is(Queue.class) ? "Queue" : "Topic").
 				addSlot("name", channel.name());
-		if (channel.isDurable()) frame.addSlot("durable", channel.name());
+		if (channel.isDurable()) frame.addSlot("durable", customizeDurable(channel.asDurable().clientID()));
+		return frame;
+	}
+
+	private Frame customize(String path) {
+		Frame frame = new Frame().addTypes("path");
+		frame.addSlot("name", path);
+		for (String parameter : Commons.extractParameters(path)) frame.addSlot("custom", parameter);
+		return frame;
+	}
+
+	private Frame customizeDurable(String clientId) {
+		Frame frame = new Frame().addTypes("durable");
+		frame.addSlot("value", "");
+		for (String parameter : Commons.extractParameters(clientId)) frame.addSlot("custom", parameter);
 		return frame;
 	}
 
 	private Template template() {
-		Template template = ChannelTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		return template;
+		return Formatters.customize(ChannelTemplate.create());
 	}
 }

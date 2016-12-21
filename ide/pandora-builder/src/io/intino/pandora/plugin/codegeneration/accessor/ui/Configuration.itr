@@ -4,7 +4,7 @@ def type(configuration & legio)
 	Project(groupId = "$groupID", version = "1.0.0") $artifactID~Activity
 		Repositories
 			$repository
-		Dependencies
+		WebDependencies
 			WebComponent("Polymer/polymer", "^1.4.0") polymer
 			WebComponent(version = "~3.1.0") jquery
 			WebComponent(version = "~2.13.0") moment
@@ -14,7 +14,6 @@ def type(configuration & legio)
 			WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "latest") cotton-translator
 			WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
 end
-
 
 def type(repository & distribution) trigger(distribution)
 	$type("$url", "$id")

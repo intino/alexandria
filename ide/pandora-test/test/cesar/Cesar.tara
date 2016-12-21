@@ -13,7 +13,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 		Post(description = "Update system")
 			Parameter(in = path) system as Text
-			Parameter(in = query) enabled as Bool
+			Parameter(in = query) enabled as LongInteger
 			Response
 			Exception(BadRequest)
 	Resource(path = "/systems/:system/:version") SystemVersion
@@ -56,10 +56,18 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 //Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)
 
 
+
 Schema SystemSchema
 	Attribute name as Text
 	Attribute artifact as Text
-	Attribute(multiple = true) parameters as Text List
+	Has(reference = Parameter)
 	Schema artifactory
 		Attribute id as Text
 		Attribute url as Text
+		Attribute user as Text
+		Attribute password as Text
+
+Schema Parameter
+	Attribute name as Text
+	Attribute type as Text
+	Attribute value as Text
