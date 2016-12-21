@@ -17,6 +17,7 @@ public class ActivitySparkManager extends io.intino.pandora.server.spark.SparkMa
 
 	private static final String XForwardedProto = "X-Forwarded-Proto";
 	private static final String XForwardedPath = "X-Forwarded-Path";
+	private static final String XForwardedPort = "X-Forwarded-Port";
 
 	public ActivitySparkManager(Request request, Response response, PushService pushService, AuthService authService) {
 		super(request, response);
@@ -84,7 +85,8 @@ public class ActivitySparkManager extends io.intino.pandora.server.spark.SparkMa
 			URL url = new URL(request.raw().getRequestURL().toString());
 			String baseUrl = url.getProtocol() + "://" + url.getHost();
 
-			int port = url.getPort();
+			int port = getHeaderPort();
+			if (port == -1) port = url.getPort();
 			if (port != 80 && port != -1) baseUrl += ":" + port;
 
 			return baseUrl;
@@ -109,6 +111,15 @@ public class ActivitySparkManager extends io.intino.pandora.server.spark.SparkMa
 			return url;
 
 		return url + (forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath);
+	}
+
+	private int getHeaderPort() {
+		String forwardedPort = request.raw().getHeader(XForwardedPort);
+
+		if (forwardedPort == null || forwardedPort.isEmpty())
+			return -1;
+
+		return Integer.valueOf(forwardedPort);
 	}
 
 	private String languageOf(String language) {
