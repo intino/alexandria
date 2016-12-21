@@ -3,12 +3,13 @@ package io.intino.pandora.plugin.codegeneration.server.jmx;
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Schema;
-import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.jmx.JMXService.Operation;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 import tara.magritte.Graph;
@@ -86,9 +87,7 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private Template template() {
-		final Template template = JMXServerTemplate.create();
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+		return Formatters.customize(JMXServerTemplate.create());
 	}
 
 	private File destinationPackage() {

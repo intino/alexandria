@@ -1,12 +1,12 @@
 def type(display)
-	package $package.displays.requesters;
+	package $package+validPackage.displays.requesters;
 
-	import $package.displays.$name+firstUpperCase~Display;
+	import $package+validPackage.displays.$name+firstUpperCase~Display;
 	import io.intino.pandora.exceptions.*;
-	import $package.*;
+	import $package+validPackage.*;
 	$schemaImport
 
-	import $package+validname.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
 	import io.intino.pandora.exceptions.PandoraException;
 	import io.intino.pandora.server.activity.displays.DisplayNotifierProvider;

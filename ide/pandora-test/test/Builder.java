@@ -15,6 +15,7 @@ public class Builder {
 		final Toml read = new Toml().read(manifest);
 		System.out.println(read.getString("name"));
 		return manifest == null ? null : read.to(Builder.class);
+
 	}
 
 	static class Action {

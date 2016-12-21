@@ -1,8 +1,9 @@
 package io.intino.pandora.plugin.codegeneration.server.rest;
 
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.rest.RESTService.Resource;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -70,9 +71,6 @@ public class RESTServiceRenderer {
 
 
 	private Template template() {
-		Template template = RESTServiceTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+		return Formatters.customize(RESTServiceTemplate.create());
 	}
 }

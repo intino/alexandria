@@ -3,8 +3,9 @@ package io.intino.pandora.plugin.codegeneration.server.task;
 import io.intino.pandora.model.Task;
 import io.intino.pandora.model.crontrigger.CronTriggerTask;
 import io.intino.pandora.model.directorysentinel.DirectorySentinelTask;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.scheduled.ScheduledTask;
+import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -14,8 +15,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class TaskerRenderer {
 	private final List<Task> tasks;
@@ -71,9 +70,6 @@ public class TaskerRenderer {
 	}
 
 	private Template template() {
-		Template template = TaskerTemplate.create();
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ValidPackage", Commons::validPackage);
-		return template;
+		return Formatters.customize(TaskerTemplate.create());
 	}
 }
