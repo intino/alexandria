@@ -104,7 +104,12 @@ public class CreatePandoraBoxAction extends PandoraAction {
 				notifyError("Models have errors");
 				return;
 			}
-			new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
+			try {
+				new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
+			} catch (Exception e) {
+				notifyError(e.getMessage());
+				return;
+			}
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			notifySuccess();
