@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.4</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -81,11 +81,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>tara.dsl</groupId>
-            <artifactId>pandora</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-codegen-cli</artifactId>
             <version>2.1.2</version>
@@ -107,7 +102,7 @@
             <groupId>org.siani.tara</groupId>
             <artifactId>proteo-alone</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>org.siani.tara</groupId>
@@ -126,6 +121,11 @@
             <artifactId>maven-invoker</artifactId>
             <scope>provided</scope>
             <version>2.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>tara.dsl</groupId>
+            <artifactId>pandora</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

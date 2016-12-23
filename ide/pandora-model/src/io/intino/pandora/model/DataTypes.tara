@@ -23,6 +23,9 @@ Facet Type on Data
 	sub Text
     	var string defaultValue = ""
 		var string type = "String" is reactive private
+	sub Instant
+		var string format = "dd/MM/yyyy"
+		var string type = "java.time.Instant" is reactive private
 	sub Date
 		var string format = "dd/MM/yyyy"
 		var string type = "java.time.LocalDate" is reactive private

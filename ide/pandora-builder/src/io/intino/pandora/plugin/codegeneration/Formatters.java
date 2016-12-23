@@ -34,12 +34,7 @@ public class Formatters {
 	}
 
 	public static Formatter camelCaseToSnakeCase() {
-		return value -> {
-//			String regex = "([a-z])([A-Z]+)";
-//			String replacement = "$1-$2";
-//			return value.toString().replaceAll(regex, replacement).toLowerCase();
-			return StringHelper.camelCaseToSnakeCase(value.toString());
-		};
+		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
 	}
 
 	public static Formatter quoted() {

@@ -18,6 +18,7 @@ import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tara.compiler.shared.Configuration;
 import tara.intellij.actions.utils.TaraTemplates;
 import tara.intellij.actions.utils.TaraTemplatesFactory;
 import tara.intellij.lang.psi.impl.TaraModelImpl;
@@ -97,9 +98,11 @@ public class CreatePandoraFileAction extends JavaCreateTemplateInPackageAction<T
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;
 		String version = file.getParentFile().getName();
-		final String interfaceVersion = TaraUtil.configurationOf(module).interfaceVersion();
-		e.getPresentation().setVisible(enabled & version.equals(interfaceVersion));
-		e.getPresentation().setEnabled(enabled & version.equals(interfaceVersion));
+		final Configuration configuration = TaraUtil.configurationOf(module);
+		if (configuration == null) enabled = false;
+		final String interfaceVersion = configuration == null ? null : configuration.interfaceVersion();
+		e.getPresentation().setVisible(enabled && version.equals(interfaceVersion));
+		e.getPresentation().setEnabled(enabled && version.equals(interfaceVersion));
 	}
 
 	@NotNull
