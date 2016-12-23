@@ -27,12 +27,6 @@
     <dependencies>
         <dependency>
             <groupId>io.intino.pandora</groupId>
-            <artifactId>pandora-plugin</artifactId>
-            <scope>test</scope>
-            <version>1.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.pandora</groupId>
             <artifactId>model</artifactId>
             <scope>test</scope>
             <version>1.0.0</version>
@@ -116,6 +110,12 @@
             <artifactId>pandora-rest-accessor-java</artifactId>
             <version>1.0.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-plugin</artifactId>
+            <scope>test</scope>
+            <version>1.1.3</version>
         </dependency>
     </dependencies>
 </project>
