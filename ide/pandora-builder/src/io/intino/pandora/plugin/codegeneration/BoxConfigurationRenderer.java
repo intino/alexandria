@@ -23,6 +23,7 @@ import java.util.Set;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.pandora.plugin.helpers.Commons.extractParameters;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
+import static tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer {
 
@@ -47,7 +48,7 @@ public class BoxConfigurationRenderer {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists) {
+		if (parentExists && configuration != null && !Platform.equals(configuration.level())) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 		}
