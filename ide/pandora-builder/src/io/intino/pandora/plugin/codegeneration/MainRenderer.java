@@ -12,6 +12,7 @@ import tara.magritte.Graph;
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static tara.compiler.shared.Configuration.Level.System;
 
 public class MainRenderer {
 
@@ -33,12 +34,10 @@ public class MainRenderer {
 		Frame frame = new Frame().addTypes("main");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", name());
-		if (configuration != null) {
-			if (configuration.dslWorkingPackage() != null)
-				frame.addSlot("dslPackage", configuration.dslWorkingPackage());
+		if (configuration != null && System.equals(configuration.level())) {
+			if (configuration.dslWorkingPackage() != null) frame.addSlot("dslPackage", configuration.dslWorkingPackage());
 			frame.addSlot("language", configuration.dsl());
-			if (configuration.level().equals(Configuration.Level.System))
-				Commons.writeFrame(gen, "Main", template().format(frame));
+			Commons.writeFrame(gen, "Main", template().format(frame));
 		}
 	}
 

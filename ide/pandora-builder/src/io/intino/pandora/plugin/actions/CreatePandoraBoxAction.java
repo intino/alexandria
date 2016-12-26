@@ -107,7 +107,8 @@ public class CreatePandoraBoxAction extends PandoraAction {
 			try {
 				new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
 			} catch (Exception e) {
-				notifyError(e.getMessage());
+				e.printStackTrace();
+				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
 				return;
 			}
 			refreshDirectory(gen);
