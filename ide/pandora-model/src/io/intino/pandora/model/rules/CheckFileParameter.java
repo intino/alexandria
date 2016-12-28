@@ -1,8 +1,8 @@
 package io.intino.pandora.model.rules;
 
-import tara.lang.model.Node;
-import tara.lang.model.Parameter;
-import tara.lang.model.rules.NodeRule;
+import io.intino.tara.lang.model.Node;
+import io.intino.tara.lang.model.Parameter;
+import io.intino.tara.lang.model.rules.NodeRule;
 
 import java.util.List;
 import java.util.stream.Collectors;

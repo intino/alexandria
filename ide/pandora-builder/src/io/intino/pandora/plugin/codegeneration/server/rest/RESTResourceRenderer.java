@@ -12,7 +12,7 @@ import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import tara.magritte.Graph;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;

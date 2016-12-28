@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: org.siani.cottons:cotton-utils:1.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.7" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.tara:proteo-alone:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte-lite:1.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.tara:language:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.itrules:itrules:1.9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />

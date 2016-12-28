@@ -20,10 +20,10 @@ import io.intino.pandora.plugin.codegeneration.FullRenderer;
 import io.intino.pandora.plugin.utils.GraphLoader;
 import io.intino.pandora.plugin.utils.PandoraUtils;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
-import tara.StashBuilder;
-import tara.compiler.shared.Configuration;
+import io.intino.tara.StashBuilder;
+import io.intino.tara.compiler.shared.Configuration;
 import tara.dsl.Pandora;
-import tara.io.Stash;
+import io.intino.tara.io.Stash;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import java.util.Objects;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
-import static tara.intellij.lang.psi.impl.TaraUtil.*;
+import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreatePandoraBoxAction extends PandoraAction {
 	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
