@@ -7,7 +7,7 @@ import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.OpenApiDesc
 import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.SwaggerGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
-import tara.magritte.Graph;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.Collections;

@@ -11,7 +11,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
 import io.intino.pandora.plugin.file.PandoraFileType;
-import tara.intellij.lang.psi.TaraModel;
+import io.intino.tara.plugin.lang.psi.TaraModel;
 
 import java.util.*;
 

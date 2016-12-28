@@ -8,7 +8,7 @@ import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.pandora.plugin.codegeneration.accessor.rest.RESTAccessorRenderer;
 import org.junit.Ignore;
 import org.junit.Test;
-import tara.magritte.Graph;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 

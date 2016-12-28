@@ -1,7 +1,7 @@
 package io.intino.pandora.model.rules;
 
-import tara.lang.model.Node;
-import tara.lang.model.rules.NodeRule;
+import io.intino.tara.lang.model.Node;
+import io.intino.tara.lang.model.rules.NodeRule;
 
 public class Named implements NodeRule {
 

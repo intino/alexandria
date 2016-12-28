@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.actions.utils.FileSystemUtils;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Graph;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.actions.utils.FileSystemUtils;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.magritte.Graph;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
