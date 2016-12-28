@@ -10,10 +10,10 @@ import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Graph;
-import tara.magritte.Layer;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.magritte.Graph;
+import io.intino.tara.magritte.Layer;
 
 import java.io.File;
 import java.util.Collection;
@@ -23,6 +23,7 @@ import java.util.Set;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.pandora.plugin.helpers.Commons.extractParameters;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
+import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer {
 
@@ -47,7 +48,7 @@ public class BoxConfigurationRenderer {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists) {
+		if (parentExists && configuration != null && !Platform.equals(configuration.level())) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 		}

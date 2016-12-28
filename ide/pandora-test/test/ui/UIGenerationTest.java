@@ -8,7 +8,7 @@ import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRe
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
 import org.junit.Test;
-import tara.magritte.Graph;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 

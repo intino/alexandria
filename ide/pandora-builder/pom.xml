@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.1.4</version>
+    <version>1.2.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -91,7 +91,6 @@
             <version>LATEST</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -99,8 +98,8 @@
             <version>2.7</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.tara</groupId>
-            <artifactId>proteo-alone</artifactId>
+            <groupId>io.intino.tara</groupId>
+            <artifactId>magritte-lite</artifactId>
             <scope>provided</scope>
             <version>LATEST</version>
         </dependency>

@@ -15,12 +15,12 @@ import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.utils.GraphLoader;
 import io.intino.pandora.plugin.utils.PandoraUtils;
 import org.jetbrains.annotations.NotNull;
-import tara.StashBuilder;
-import tara.compiler.shared.Configuration;
+import io.intino.tara.StashBuilder;
+import io.intino.tara.compiler.shared.Configuration;
 import tara.dsl.Pandora;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.io.Stash;
-import tara.magritte.Graph;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.io.Stash;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 

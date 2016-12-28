@@ -4,7 +4,7 @@ def type(boxConfiguration)
     import java.util.LinkedHashMap;
     import java.util.Map;
     import java.util.UUID;
-    [import tara.magritte.Graph;$tara+import]
+    [import io.intino.tara.magritte.Graph;$tara+import]
 
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.pandora.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
 

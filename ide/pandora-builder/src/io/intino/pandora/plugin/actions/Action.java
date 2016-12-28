@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import io.intino.pandora.plugin.PandoraIcons;
 import org.jetbrains.annotations.Nullable;
-import tara.intellij.project.TaraModuleType;
+import io.intino.tara.plugin.project.TaraModuleType;
 
 import javax.swing.*;
 

@@ -1,7 +1,7 @@
 def type(main)
 	package $package;
 
-    import tara.magritte.Graph;
+    import io.intino.tara.magritte.Graph;
     import io.intino.pandora.Box;
 
 	public class Main {
