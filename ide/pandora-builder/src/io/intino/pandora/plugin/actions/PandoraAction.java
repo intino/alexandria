@@ -6,7 +6,7 @@ import com.intellij.openapi.module.Module;
 import io.intino.pandora.plugin.PandoraIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tara.intellij.lang.psi.impl.TaraUtil;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 
 import javax.swing.*;
 import java.io.File;

@@ -6,7 +6,7 @@ def type(box)
     import java.util.Map;
     import java.util.UUID;
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
-    [import tara.magritte.Graph;$tara+import]
+    [import io.intino.tara.magritte.Graph;$tara+import]
 
     public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();

@@ -5,14 +5,14 @@ import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Graph;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static tara.compiler.shared.Configuration.Level.System;
+import static io.intino.tara.compiler.shared.Configuration.Level.System;
 
 public class MainRenderer {
 

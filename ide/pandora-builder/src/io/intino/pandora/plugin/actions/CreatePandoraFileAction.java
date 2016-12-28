@@ -18,12 +18,12 @@ import io.intino.pandora.plugin.PandoraIcons;
 import io.intino.pandora.plugin.file.PandoraFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tara.compiler.shared.Configuration;
-import tara.intellij.actions.utils.TaraTemplates;
-import tara.intellij.actions.utils.TaraTemplatesFactory;
-import tara.intellij.lang.psi.impl.TaraModelImpl;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.intellij.messages.MessageProvider;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.actions.utils.TaraTemplates;
+import io.intino.tara.plugin.actions.utils.TaraTemplatesFactory;
+import io.intino.tara.plugin.lang.psi.impl.TaraModelImpl;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.plugin.messages.MessageProvider;
 
 import java.io.File;
 import java.util.Map;

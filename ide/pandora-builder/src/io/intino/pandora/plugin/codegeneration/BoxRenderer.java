@@ -10,9 +10,9 @@ import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Graph;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 
