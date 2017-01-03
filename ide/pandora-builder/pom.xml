@@ -34,11 +34,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>false</minimizeJar><!--important-->
                             <artifactSet>
                                 <includes>
                                     <include>tara.dsl:pandora:*</include>
-                                    <include>io.intino.pandora:model:jar:*</include>
+                                    <include>io.intino.pandora:model:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -13,7 +13,7 @@ def type(accessor)
 
 		private $name+validName+firstUpperCase~MBean bean;
 
-		public $name+validName+firstUpperCase~JMXAccessor(String url, int port) {
+		public $name+validName+firstUpperCase~JMXAccessor(String url, int port) throws java.io.IOException {
 			JMXClient server = new JMXClient(url, port);
 			JMXClient.JMXConnection connection = server.connect();
 			bean = connection.mBean($name+validName+firstUpperCase~MBean.class);

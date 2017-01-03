@@ -69,7 +69,7 @@ Schema EpisodeList
 	Schema Episode
 		Attribute name as Text
 		Attribute label as Text
-		Attribute instant as Integer
+		Attribute Instant as Integer
 		Attribute icon as Text
 
 Schema Bounds
@@ -86,4 +86,4 @@ Schema Selection
 
 Schema ToolbarInfo
 	Attribute count as Integer
-	Attribute instant as Integer
+	Attribute Instant as Integer
