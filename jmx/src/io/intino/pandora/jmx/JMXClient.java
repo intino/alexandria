@@ -57,16 +57,11 @@ public class JMXClient {
 		return set;
 	}
 
-	public JMXConnection connect() {
-		if (url == null) return null;
-		try {
-			JMXConnector connector = JMXConnectorFactory.connect(url, null);
-			MBeanServerConnection connection = connector.getMBeanServerConnection();
-			return new JMXConnection(connection, connector);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public JMXConnection connect() throws IOException {
+		if (url == null) throw new IOException("url cannot be null");
+		JMXConnector connector = JMXConnectorFactory.connect(url, null);
+		MBeanServerConnection connection = connector.getMBeanServerConnection();
+		return new JMXConnection(connection, connector);
 	}
 
 

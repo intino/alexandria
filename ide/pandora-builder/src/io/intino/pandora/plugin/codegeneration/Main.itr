@@ -10,6 +10,8 @@ def type(main)
 			Graph graph = Graph.load("Model").wrap([$dslPackage.]$language~Application.class, null);//TODO
 			$name+firstUpperCase~Configuration configuration = args.length != 0 ? createConfigurationFromArgs(): loadDevelopConfiguration();
 			run(configuration);
+			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
+
 		}
 
 		private static $name+firstUpperCase~Configuration createConfigurationFromArgs() {
@@ -20,6 +22,12 @@ def type(main)
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
 			graph.application().execute();
+		}
+
+		private static Runnable exit() {
+			return ()->{
+				[$rest~Spark.stop();]
+			};
 		}
 	}
 end
