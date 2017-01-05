@@ -11,10 +11,10 @@ def type(box)
     public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;]
-    	[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();]
-		[$service+field...[$NL]]
-		[$channel+field...[$NL]]
-		[$process+field...[$NL]]
+    		[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();][
+		$service+field...[$NL]][
+		$channel+field...[$NL]][
+		$task+field]
 
 		private String graphID;
 
@@ -42,35 +42,37 @@ def type(box)
 			return map;
 		}
 
-    	public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+    		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
 
 		$service+getter...[$NL]
 
-    	public <T> T get(Class<T> tClass) {
-    		return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
-    	}
+		$task+getter...[$NL]
+
+		public <T> T get(Class<T> tClass) {
+			return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
+		}
 
 
-    	public <T> T get(String object, Class<T> tClass) {
-    		return (T) map().get(object);
-    	}
+		public <T> T get(String object, Class<T> tClass) {
+			return (T) map().get(object);
+		}
 
-    	public $name+SnakeCaseToCamelCase+firstUpperCase~Box put(String name, Object object) {
-    		map().put(name, object);
-    		return this;
-    	}
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box put(String name, Object object) {
+			map().put(name, object);
+			return this;
+		}
 
-    	public void init() {[
-    		$parent+parentInit~super.init();? ]
+		public void init() {[
+			$parent+parentInit~super.init();? ]
 			initActivities();
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
 			initChannels();
-			initProcesses();
-    	}
+			initTasks();
+		}
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -98,8 +100,8 @@ def type(box)
 			}]
 		}
 
-		private void initProcesses() {
-			$process+process...[$NL]
+		private void initTasks() {
+			$task+init...[$NL]
 		}
 
 		public void stopJMSServices() {
@@ -175,9 +177,18 @@ end
 def type(service)
 end
 
+def type(task) trigger(field)
+	io.intino.pandora.scheduling.PandoraTasker tasker = new io.intino.pandora.scheduling.PandoraTasker();
+end
 
-def type(process) trigger(init)
-	//TODO
+def type(task) trigger(init)
+	Tasks.init(this.tasker, this);
+end
+
+def type(task) trigger(getter)
+	public io.intino.pandora.scheduling.PandoraTasker tasker() {
+		return this.tasker;
+	}
 end
 
 def trigger(import)
