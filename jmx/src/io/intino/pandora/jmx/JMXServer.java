@@ -12,9 +12,11 @@ import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class JMXServer {
 
+	private static final Logger logger = Logger.getGlobal();
 
 	private final Map<String, Object[]> mbClasses;
 	private final List<ObjectName> registeredBeans = new ArrayList<>();
@@ -49,7 +51,7 @@ public class JMXServer {
 		try {
 			if (connector != null && connector.isActive()) connector.stop();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 	}
 
@@ -60,16 +62,17 @@ public class JMXServer {
 			connector = JMXConnectorServerFactory.newJMXConnectorServer(url, null, server);
 			connector.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 	}
 
 	private void registerMBean(MBeanServer server, String mbeanClassName, Object[] parameters) {
 		try {
-			String objectNameName = server.getDefaultDomain() + ":type=" + Class.forName(mbeanClassName).getInterfaces()[0].getName() + ",name=1";
+			final Class<?> mbeanClass = Class.forName(mbeanClassName);
+			String objectNameName = "Pandora" + ":type=" + mbeanClass.getInterfaces()[0].getName() + ",name=" + mbeanClass.getSimpleName();
 			registeredBeans.add(createSimpleMBean(server, mbeanClassName, objectNameName, parameters));
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 	}
 
@@ -79,8 +82,7 @@ public class JMXServer {
 			server.registerMBean(newInstance(mbeanClassName, parameters), mbeanObjectName);
 			return mbeanObjectName;
 		} catch (Exception e) {
-			System.err.println("Could not init the " + mbeanClassName + " MBean: " + e.getMessage());
-			e.printStackTrace();
+			logger.severe("Could not init the " + mbeanClassName + " MBean: " + e.getMessage());
 			return null;
 		}
 	}
@@ -90,7 +92,7 @@ public class JMXServer {
 			final Class<?> aClass = Class.forName(mbeanClassName);
 			return aClass.getDeclaredConstructors()[0].newInstance(parameters);
 		} catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-			e.printStackTrace();
+			logger.severe(e.getMessage());
 			return null;
 		}
 	}

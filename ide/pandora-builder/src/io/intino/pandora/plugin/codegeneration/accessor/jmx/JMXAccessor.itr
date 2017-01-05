@@ -11,12 +11,17 @@ def type(accessor)
 
 	public class $name+validName+firstUpperCase~JMXAccessor {
 
+		private final JMXClient.JMXConnection connection;
 		private $name+validName+firstUpperCase~MBean bean;
 
 		public $name+validName+firstUpperCase~JMXAccessor(String url, int port) throws java.io.IOException {
 			JMXClient server = new JMXClient(url, port);
-			JMXClient.JMXConnection connection = server.connect();
+			connection = server.connect();
 			bean = connection.mBean($name+validName+firstUpperCase~MBean.class);
+		}
+
+		public void closeJMXConnection() {
+			connection.close();
 		}
 
 		$operation...[$NL$NL]

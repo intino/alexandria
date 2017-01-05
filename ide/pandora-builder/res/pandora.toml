@@ -16,6 +16,7 @@ anchor="last"
 id="NewPandoraFile"
 aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
 groupId="NewGroup"
+relativeToAction="NewTaraFile"
 anchor="first"
 
 [[actions]]

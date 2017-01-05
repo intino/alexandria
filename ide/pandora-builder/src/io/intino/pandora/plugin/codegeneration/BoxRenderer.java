@@ -8,11 +8,11 @@ import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.magritte.Graph;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 
@@ -45,6 +45,7 @@ public class BoxRenderer {
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
+		tasks(frame, name);
 		channels(frame, name);
 		activities(frame);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
@@ -53,6 +54,11 @@ public class BoxRenderer {
 	private void activities(Frame frame) {
 		for (Activity activity : application.activityList())
 			frame.addSlot("activity", (Frame) activityFrame(activity));
+	}
+
+	private void tasks(Frame frame, String name) {
+		if (!application.taskList().isEmpty())
+			frame.addSlot("task", new Frame().addTypes("task"));
 	}
 
 	private void channels(Frame frame, String name) {

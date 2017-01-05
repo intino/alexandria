@@ -9,12 +9,14 @@ def type(tasker)
 	import java.util.LinkedHashSet;
 	import java.util.Map;
 	import java.util.Set;
+	import java.util.logging.Logger;
 
 	import static org.quartz.JobBuilder.newJob;
 	import static org.quartz.CronScheduleBuilder.*;
 	import static org.quartz.TriggerBuilder.newTrigger;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase~Tasks {
+		private static final Logger logger = Logger.getGlobal();
 
 		private $name+firstUpperCase+SnakeCaseToCamelCase~Tasks() {
 
@@ -26,7 +28,7 @@ def type(tasker)
 				$task+init...[$NL]
 				tasker.startSchedules();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.severe(e.getMessage());
 			}
 		}
 
