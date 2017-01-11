@@ -4,19 +4,24 @@ def type(accessor)
     import java.util.List;
     import java.util.ArrayList;
 	import io.intino.pandora.exceptions.*;
-	import $package+ValidPackage.jmx.$name+firstUpperCase+SnakeCaseToCamelCase~MBean;
+	import $package+ValidPackage.jmx.$name+validName+firstUpperCase~MBean;
     import io.intino.pandora.jmx.JMXClient;
 
 	$schemaImport
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase~JMXAccessor {
+	public class $name+validName+firstUpperCase~JMXAccessor {
 
-		private $name+firstUpperCase+SnakeCaseToCamelCase~MBean bean;
+		private final JMXClient.JMXConnection connection;
+		private $name+validName+firstUpperCase~MBean bean;
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~JMXAccessor(String url, int port) {
+		public $name+validName+firstUpperCase~JMXAccessor(String url, int port) throws java.io.IOException {
 			JMXClient server = new JMXClient(url, port);
-			JMXClient.JMXConnection connection = server.connect();
-			bean = connection.mBean($name+firstUpperCase+SnakeCaseToCamelCase~MBean.class);
+			connection = server.connect();
+			bean = connection.mBean($name+validName+firstUpperCase~MBean.class);
+		}
+
+		public void closeJMXConnection() {
+			connection.close();
 		}
 
 		$operation...[$NL$NL]
@@ -24,17 +29,17 @@ def type(accessor)
 end
 
 def type(operation)
-	public $returnType+firstUpperCase+ReturnTypeFormatter $name+SnakeCaseToCamelCase+firstLowerCase($parameter+signature...[$NL]) {
-		return bean != null ? bean.$name+SnakeCaseToCamelCase+firstLowerCase($parameter+name...[$NL]) : null;
+	public $returnType+firstUpperCase+ReturnTypeFormatter $name+validName+firstLowerCase($parameter+signature...[$NL]) {
+		return bean != null ? bean.$name+validName+firstLowerCase($parameter+name...[$NL]) : null;
 	}
 end
 
 def type(parameter) trigger(signature)
-	$type $name+SnakeCaseToCamelCase+firstLowerCase
+	$type $name+validName+firstLowerCase
 end
 
 def type(parameter) trigger(name)
-	$name+SnakeCaseToCamelCase+firstLowerCase
+	$name+validName+firstLowerCase
 end
 
 def type(schemaImport) trigger(schemaImport)

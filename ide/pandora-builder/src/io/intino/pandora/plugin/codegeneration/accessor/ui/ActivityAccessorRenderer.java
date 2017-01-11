@@ -5,9 +5,9 @@ import io.intino.pandora.model.Activity;
 import io.intino.pandora.model.Activity.Display;
 import io.intino.pandora.plugin.WidgetNotifierTemplate;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Layer;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.magritte.Layer;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -116,7 +116,7 @@ public class ActivityAccessorRenderer {
 		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name());
 		if (n.asType() != null) {
 			frame.addSlot("parameter", "");
-			frame.addSlot("type", n.to().name());
+			frame.addSlot("to", n.to().name());
 		}
 		return frame;
 	}

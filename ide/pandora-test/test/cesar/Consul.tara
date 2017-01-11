@@ -15,7 +15,7 @@ Service ConsulManager as JMX
 		Response as Object(schema = loggingSchema)
 
 Schema loggingSchema
-	Attribute instant as DateTime
+	Attribute dateInstant as DateTime
 	Attribute memory as Real
 	Attribute cpu as Real
 	Attribute connections as Integer

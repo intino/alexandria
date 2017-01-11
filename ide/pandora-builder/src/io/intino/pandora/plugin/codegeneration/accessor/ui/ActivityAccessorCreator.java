@@ -14,14 +14,14 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import io.intino.pandora.model.Activity;
+import io.intino.tara.magritte.Graph;
 import org.jetbrains.annotations.NotNull;
-import tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
 
-import static tara.intellij.project.configuration.ConfigurationManager.newExternalProvider;
-import static tara.intellij.project.configuration.ConfigurationManager.register;
+import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
+import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 
 public class ActivityAccessorCreator {
 

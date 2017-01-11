@@ -8,11 +8,11 @@ import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.magritte.Graph;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import tara.compiler.shared.Configuration;
-import tara.intellij.lang.psi.impl.TaraUtil;
-import tara.magritte.Graph;
 
 import java.io.File;
 
@@ -45,6 +45,7 @@ public class BoxRenderer {
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
+		tasks(frame, name);
 		channels(frame, name);
 		activities(frame);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
@@ -53,6 +54,11 @@ public class BoxRenderer {
 	private void activities(Frame frame) {
 		for (Activity activity : application.activityList())
 			frame.addSlot("activity", (Frame) activityFrame(activity));
+	}
+
+	private void tasks(Frame frame, String name) {
+		if (!application.taskList().isEmpty())
+			frame.addSlot("task", new Frame().addTypes("task"));
 	}
 
 	private void channels(Frame frame, String name) {
@@ -82,7 +88,7 @@ public class BoxRenderer {
 	}
 
 	private void parent(Frame frame) {
-		if (configuration != null && !configuration.level().equals(Configuration.Level.Platform) && parentExists) {
+		if (parentExists && configuration != null && !Configuration.Level.Platform.equals(configuration.level())) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 			frame.addSlot("hasParent", "");

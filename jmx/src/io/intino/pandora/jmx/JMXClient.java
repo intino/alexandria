@@ -10,10 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class JMXClient {
-
+	private static final Logger logger = Logger.getGlobal();
 	private static final String CONNECTOR_ADDRESS = "com.sun.management.jmxremote.localConnectorAddress";
 	private JMXServiceURL url = null;
 
@@ -22,7 +24,7 @@ public class JMXClient {
 		try {
 			url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + serverDirection + ":" + port + "/jmxrmi");
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -30,7 +32,7 @@ public class JMXClient {
 		try {
 			this.url = new JMXServiceURL(url);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -57,16 +59,11 @@ public class JMXClient {
 		return set;
 	}
 
-	public JMXConnection connect() {
-		if (url == null) return null;
-		try {
-			JMXConnector connector = JMXConnectorFactory.connect(url, null);
-			MBeanServerConnection connection = connector.getMBeanServerConnection();
-			return new JMXConnection(connection, connector);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public JMXConnection connect() throws IOException {
+		if (url == null) throw new IOException("url cannot be null");
+		JMXConnector connector = JMXConnectorFactory.connect(url, null);
+		MBeanServerConnection connection = connector.getMBeanServerConnection();
+		return new JMXConnection(connection, connector);
 	}
 
 
@@ -81,17 +78,23 @@ public class JMXClient {
 			try {
 				this.beans = new ArrayList<>(this.connection.queryNames(null, null));
 			} catch (IOException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 				this.beans = new ArrayList<>();
 			}
 		}
 
 		public <T> T mBean(Class<T> mbClass) {
-			ObjectName objectName = findObjectName(mbClass.getName());
+			return mBean(mbClass, findObjectName(mbClass.getName()));
+		}
+
+		public <T> T mBean(Class<T> mbClass, ObjectName objectName) {
 			if (objectName == null) {
-				System.err.println("MBClass not registered");
+				logger.severe("ObjectName is null");
 				return null;
 			}
-			return JMX.newMBeanProxy(connection, objectName, mbClass, true);
+			return JMX.isMXBeanInterface(mbClass) ?
+					JMX.newMXBeanProxy(connection, objectName, mbClass, true) :
+					JMX.newMBeanProxy(connection, objectName, mbClass, true);
 		}
 
 		private ObjectName findObjectName(String mbClass) {

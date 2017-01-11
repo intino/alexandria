@@ -2,8 +2,8 @@ package io.intino.pandora.plugin.utils;
 
 import com.intellij.openapi.diagnostic.Logger;
 import io.intino.pandora.model.PandoraApplication;
-import tara.io.Stash;
-import tara.magritte.Graph;
+import io.intino.tara.io.Stash;
+import io.intino.tara.magritte.Graph;
 
 public class GraphLoader {
 	private static final Logger LOG = Logger.getInstance("GraphLoader");

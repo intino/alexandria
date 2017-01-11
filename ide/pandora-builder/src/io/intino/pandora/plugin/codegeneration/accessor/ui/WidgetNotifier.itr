@@ -21,9 +21,9 @@ def trigger(parameter)
 	parameters.value
 end
 
-def attribute(Display) trigger(type)
+def attribute(Display) trigger(to)
 	.toSelf()
 end
 
-def trigger(type)
+def trigger(to)
 end
