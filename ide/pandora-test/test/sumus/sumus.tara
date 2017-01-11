@@ -156,7 +156,7 @@ Schema FormatterList
 Schema EventList
 	Schema Event
 		Attribute label as Text
-		Attribute instant as Real
+		Attribute Instant as Real
 		Attribute render as Text
 		Attribute icon as Text
 
@@ -175,7 +175,7 @@ Schema Serie
 
 	Has(DecimalPlaces, multiple=false)
 	Schema data
-		Attribute instant as Real
+		Attribute Instant as Real
 		Attribute value as Real
 
 Schema DecimalPlaces

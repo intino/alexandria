@@ -8,7 +8,7 @@ import io.intino.pandora.model.Schema;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.rest.RESTService.Resource;
 import org.jetbrains.annotations.NotNull;
-import tara.magritte.Layer;
+import io.intino.tara.magritte.Layer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

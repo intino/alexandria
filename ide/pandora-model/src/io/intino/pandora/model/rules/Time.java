@@ -1,6 +1,6 @@
 package io.intino.pandora.model.rules;
 
-import tara.lang.model.Metric;
+import io.intino.tara.lang.model.Metric;
 
 public enum Time implements Metric<Integer> {
 	day(v -> v * 3600 * 24),

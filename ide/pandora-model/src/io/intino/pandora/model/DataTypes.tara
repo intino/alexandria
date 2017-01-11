@@ -9,7 +9,7 @@ Concept:Named Parameter extends Data is component
 Facet Type on Data
 	var string type is reactive private
 	sub Real
-    	var double defaultValue = 0
+		var double defaultValue = 0
 		var string type = "Double" is reactive private
 	sub Integer
 		var integer defaultValue = 0
@@ -18,10 +18,10 @@ Facet Type on Data
 		var integer defaultValue = 0
 		var string type = "Long" is reactive private
 	sub Bool
-    	var boolean defaultValue = true
+		var boolean defaultValue = true
 		var string type = "Boolean" is reactive private
 	sub Text
-    	var string defaultValue = ""
+		var string defaultValue = ""
 		var string type = "String" is reactive private
 	sub Date
 		var string format = "dd/MM/yyyy"

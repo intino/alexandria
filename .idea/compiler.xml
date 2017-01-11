@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />
       <entry name="!?*.form" />
@@ -12,75 +13,89 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile name="Annotation profile for application" enabled="true">
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for application" enabled="true">
         <sourceOutputDir name="../out/build/API/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/API/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="API" />
       </profile>
-      <profile name="Annotation profile for plugin" enabled="true">
+      <profile default="false" name="Annotation profile for plugin" enabled="true">
         <sourceOutputDir name="../../out/build/plugin/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/plugin/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="forrest" />
         <module name="teseo" />
       </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile default="false" name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="slack" />
       </profile>
-      <profile name="Annotation profile for model" enabled="true">
+      <profile default="false" name="Annotation profile for model" enabled="true">
         <sourceOutputDir name="../../out/build/pandora-model/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/pandora-model/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="pandora-model" />
         <module name="pandora-plugin-core" />
       </profile>
-      <profile name="Annotation profile for pandora-core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="core" />
-      </profile>
-      <profile name="Annotation profile for pandora-plugin" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="pandora-builder" />
-      </profile>
-      <profile name="Annotation profile for pandora-rest-accessor-java" enabled="true">
+      <profile default="false" name="Annotation profile for pandora-rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="accessor" />
       </profile>
-      <profile name="Annotation profile for pandora-jms" enabled="true">
+      <profile default="false" name="Annotation profile for pandora-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="server" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-scheduler" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jms" />
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for pandora-builder-test" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-builder-test/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-builder-test/generated-test-sources/test-annotations" />
+      <profile default="false" name="Annotation profile for pandora-plugin" enabled="true">
+        <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="pandora-test" />
+        <processorPath useClasspath="true" />
+        <module name="pandora-builder" />
       </profile>
-      <profile name="Annotation profile for pandora-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="server" />
-      </profile>
-      <profile name="Annotation profile for pandora-jmx" enabled="true">
+      <profile default="false" name="Annotation profile for pandora-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
         <module name="jmx" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="core" />
+      </profile>
+      <profile default="false" name="Annotation profile for pandora-builder-test" enabled="true">
+        <sourceOutputDir name="../../out/build/pandora-builder-test/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/pandora-builder-test/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pandora-test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

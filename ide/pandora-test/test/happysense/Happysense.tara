@@ -9,14 +9,14 @@ Service(description = "Interface for recovering all dashboard inschemaion") rest
 			Response as Object(schema = SummaryResponseSchema)
 
 	Resource(path = "/snapshot")snapshot
-		Get(description = "Summary of opinions at some instant")
+		Get(description = "Summary of opinions at some Instant")
 			Parameter(in = query) scale as Text
 			Parameter(in = body) range as Object(schema = RangeSchema)
 			Parameter(in = body) filters as Object(schema = FilterListSchema)
 			Response as Object(schema = OpinionSnapshotResponseSchema)
 
 	Resource(path = "/snapshot/:id/download") downloadSnapshot
-		Get (description="Download opinions at some instant") DDD
+		Get (description="Download opinions at some Instant") DDD
 			Parameter(in = path, required = true) id as Text
 			Parameter(in = query, required = true) username as Text
 			Parameter(in = query) language as Text
@@ -55,7 +55,7 @@ Schema SummaryResponseSchema
 			Attribute dissatisfied as Real
 
 Schema OpinionSnapshotResponseSchema
-	Attribute instant as DateTime
+	Attribute Instant as DateTime
 	Attribute scale as Text
 	Schema(multiple=false) count
 		Attribute total as Integer
@@ -69,5 +69,5 @@ Schema OpinionSnapshotResponseSchema
 
 	Schema(multiple=false) timeLine
 		Schema point
-			Attribute instant as DateTime
+			Attribute Instant as DateTime
 			Attribute value as Real
