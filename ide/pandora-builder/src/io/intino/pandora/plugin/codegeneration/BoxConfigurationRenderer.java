@@ -8,12 +8,13 @@ import io.intino.pandora.model.Service;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
+import io.intino.pandora.model.slackbot.SlackBotService;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.siani.itrules.Template;
+import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.Collection;
@@ -55,6 +56,7 @@ public class BoxConfigurationRenderer {
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addJMXServices(frame, boxName);
+		addSlackServices(frame, boxName);
 		addChannels(frame, boxName);
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
@@ -100,6 +102,12 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) activityFrame.addSlot("auth", activity.authenticated().by());
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
+		}
+	}
+
+	private void addSlackServices(Frame frame, String boxName) {
+		for (SlackBotService service : application.slackBotServiceList()) {
+			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name()).addSlot("configuration", boxName));
 		}
 	}
 

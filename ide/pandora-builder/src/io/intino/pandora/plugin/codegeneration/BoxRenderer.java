@@ -7,6 +7,7 @@ import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
+import io.intino.pandora.model.slackbot.SlackBotService;
 import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Graph;
@@ -18,6 +19,7 @@ import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.pandora.plugin.helpers.Commons.writeFrame;
+import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxRenderer {
 
@@ -85,10 +87,12 @@ public class BoxRenderer {
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
 		for (JMXService service : application.jMXServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jmx").addSlot("name", service.name()).addSlot("configuration", name));
+		for (SlackBotService service : application.slackBotServiceList())
+			frame.addSlot("service", (Frame) new Frame().addTypes("service", "slack").addSlot("name", service.name()).addSlot("configuration", name));
 	}
 
 	private void parent(Frame frame) {
-		if (parentExists && configuration != null && !Configuration.Level.Platform.equals(configuration.level())) {
+		if (parentExists && configuration != null && !Platform.equals(configuration.level())) {
 			frame.addSlot("parent", configuration.dsl());
 			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
 			frame.addSlot("hasParent", "");
