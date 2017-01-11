@@ -103,7 +103,7 @@ public class FullRenderer {
 	}
 
 	private void slack() {
-		new SlackRenderer(graph, src, packageName, boxName).execute();
+		new SlackRenderer(project, graph, src,gen, packageName, boxName).execute();
 	}
 
 	private void ui() {

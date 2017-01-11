@@ -1,11 +1,14 @@
 package io.intino.pandora.plugin.codegeneration.server.slack;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import io.intino.pandora.model.slackbot.SlackBotService;
 import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -13,54 +16,68 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class SlackRenderer {
-	private final List<SlackBotService> slackServices;
-	private final File destiny;
+	private final Project project;
+	private final List<SlackBotService> services;
+	private final File src;
+	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
-	public SlackRenderer(Graph graph, File destiny, String packageName, String boxName) {
-		slackServices = graph.find(SlackBotService.class);
-		this.destiny = destiny;
+	public SlackRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+		this.project = project;
+		this.services = graph.find(SlackBotService.class);
+		this.src = src;
+		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
 
-
 	public void execute() {
-		slackServices.forEach(this::processService);
+		services.forEach(this::processService);
 	}
 
 	private void processService(SlackBotService service) {
+		String srcName = snakeCaseToCamelCase(service.name()) + "SlackBotActions";
+		Commons.writeFrame(gen, snakeCaseToCamelCase(service.name()) + "SlackBot", template().format(createFrame(service, true)));
+		if (alreadyRendered(src, srcName)) updateBot(service, srcName);
+		else newBotActions(service, srcName);
+	}
+
+	private void updateBot(SlackBotService service, String name) {
+		new BotUpdater(project, Commons.javaFile(src, name), service.requestList(), boxName).update();
+		VirtualFileManager.getInstance().asyncRefresh(null);
+	}
+
+	private void newBotActions(SlackBotService service, String name) {
+		Commons.writeFrame(src, name, template().format(createFrame(service, false)));
+	}
+
+	@NotNull
+	private Frame createFrame(SlackBotService service, boolean gen) {
 		final List<SlackBotService.Request> requests = service.requestList();
-		Frame frame = new Frame().addTypes("slack");
+		Frame frame = new Frame().addTypes("slack", (gen ? "gen" : "actions"));
 		frame.addSlot("package", packageName).
 				addSlot("name", service.name()).
-				addSlot("box", boxName).
-				addSlot("token", service.token());
-		for (SlackBotService.Request request : requests) {
-			final Frame requestFrame = new Frame().addTypes("request");
-			requestFrame.addSlot("name", request.name());
-			requestFrame.addSlot("description", request.description());
-			final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
-			for (int i = 0; i < parameters.size(); i++)
-				requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
-						addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
-			frame.addSlot("request", requestFrame);
-		}
-		String name = snakeCaseToCamelCase(service.name()) + "SlackBot";
-		if (!alreadyRendered(destiny, name))
-			Commons.writeFrame(destiny, name, template().format(frame));
+				addSlot("box", boxName);
+		for (SlackBotService.Request request : requests)
+			frame.addSlot("request", createRequestFrame(service, request));
+		return frame;
+	}
+
+	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
+		final Frame requestFrame = new Frame().addTypes("request").addSlot("bot", service.name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
+		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
+		for (int i = 0; i < parameters.size(); i++)
+			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
+					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
+		return requestFrame;
 	}
 
 	private Template template() {
 		return Formatters.customize(SlackTemplate.create());
 	}
 
-	private boolean alreadyRendered(File destiny, String action) {
-		return Commons.javaFile(destinyPackage(destiny), action + "Action").exists();
-	}
-
-	private File destinyPackage(File destiny) {
-		return new File(destiny, "actions");
+	private boolean alreadyRendered(File destiny, String name) {
+		return Commons.javaFile(destiny, name).exists();
 	}
 }

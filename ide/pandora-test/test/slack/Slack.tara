@@ -1,6 +1,6 @@
 dsl Pandora
 
-Service Happysense as SlackBot(token = "xoxb-13151025091-f3e0t6MeB461Jxt4SB0ySI9s")
+Service Happysense as SlackBot()
 	Notification(channel = "happysense")
 	Request status
 		description = "Show the status of a device. Usage: status %deviceid"

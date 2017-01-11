@@ -41,7 +41,9 @@ public abstract class Bot {
 		if (message.getSender().isBot()) return;
 		String[] content = message.getMessageContent().split(" ");
 		Command command = commands.containsKey(content[0]) ? commands.get(content[0]) : commandNotFound();
-		session.sendMessage(message.getChannel(), command.execute(createMessageProperties(message), Arrays.copyOfRange(content, 1, content.length)));
+		final String execute = command.execute(createMessageProperties(message), Arrays.copyOfRange(content, 1, content.length));
+		if (execute == null || execute.isEmpty()) return;
+		session.sendMessage(message.getChannel(), execute);
 	}
 
 	private Command commandNotFound() {
@@ -57,10 +59,20 @@ public abstract class Bot {
 		helps.put(name, help);
 	}
 
-	protected void send(String notificationChannel, String message) {
-		SlackChannel channel = session.findChannelByName(notificationChannel);
+	public void send(String channelDestination, String message) {
+		SlackChannel channel = slackChannel(channelDestination);
 		if (channel == null) return;
 		session.sendMessage(channel, message);
+	}
+
+	public void sendFile(String channelDestination, String name, byte[] content) {
+		SlackChannel channel = slackChannel(channelDestination);
+		if (channel == null) return;
+		session.sendFile(channel, content, name);
+	}
+
+	private SlackChannel slackChannel(String channel) {
+		return session.getChannels().stream().filter(c -> c.getId().equals(channel)).findFirst().orElse(null);
 	}
 
 	public interface Command {

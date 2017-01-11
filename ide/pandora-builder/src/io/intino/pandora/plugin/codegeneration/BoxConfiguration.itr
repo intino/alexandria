@@ -45,6 +45,12 @@ def type(service & jmx) trigger(confClass)
 	}
 end
 
+def type(service & slack) trigger(confClass)
+	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		public String token;
+	}
+end
+
 def type(service & activity) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		public int port;
@@ -95,6 +101,18 @@ def type(service & jmx)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
+		return this;
+	}
+
+	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
+		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+	}
+end
+
+def type(service & slack)
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String token) {
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.token = token;
 		return this;
 	}
 
