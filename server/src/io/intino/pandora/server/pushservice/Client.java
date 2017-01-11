@@ -6,4 +6,5 @@ public interface Client {
     String language();
     void language(String language);
     void send(String message);
+    void destroy();
 }
