@@ -2,12 +2,13 @@ dsl Proteo
 
 use DataTypes
 
-Concept:Named Channel
-	var string path
-	sub Queue
-	sub Topic
+Concept:Named Bus
+	Concept:Named Channel
+		var string path
+		sub Queue
+		sub Topic
 
-Facet Durable on Channel
+Facet Durable on Bus.Channel
 	var string clientID
 
 Concept:Named Service

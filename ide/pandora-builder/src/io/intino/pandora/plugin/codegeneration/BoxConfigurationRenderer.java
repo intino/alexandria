@@ -2,7 +2,8 @@ package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.pandora.model.Activity;
-import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Bus;
+import io.intino.pandora.model.Bus.Channel;
 import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.Service;
 import io.intino.pandora.model.jms.JMSService;
@@ -57,6 +58,7 @@ public class BoxConfigurationRenderer {
 		addJMSServices(frame, boxName);
 		addJMXServices(frame, boxName);
 		addSlackServices(frame, boxName);
+		addBuses(frame, boxName);
 		addChannels(frame, boxName);
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
@@ -87,12 +89,21 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
+	private void addBuses(Frame frame, String boxName) {
+		for (Bus bus : application.busList()) {
+			Frame busFrame = new Frame().addTypes("service", "bus").addSlot("name", bus.name()).addSlot("configuration", boxName);
+			frame.addSlot("service", busFrame);
+		}
+	}
+
 	private void addChannels(Frame frame, String boxName) {
-		for (Channel channel : application.channelList()) {
-			Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
-			addUserVariables(channel, channelFrame, findCustomParameters(channel));
-			if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
-			frame.addSlot("service", channelFrame);
+		for (Bus bus : application.busList()) {
+			for (Channel channel : bus.channelList()) {
+				Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
+				addUserVariables(channel, channelFrame, findCustomParameters(channel));
+				if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
+				frame.addSlot("service", channelFrame);
+			}
 		}
 	}
 

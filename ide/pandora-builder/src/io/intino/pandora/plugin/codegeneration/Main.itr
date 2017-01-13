@@ -6,7 +6,7 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			Graph graph = Graph.load().wrap([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]);//TODO
+			Graph graph = Graph.use([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]).load();//TODO
 			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
 			run(graph, configuration);
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
@@ -17,7 +17,7 @@ def type(main)
 			return new $name+firstUpperCase~Configuration();//TODO
 		}
 
-		public static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
+		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
 			graph.application().execute();

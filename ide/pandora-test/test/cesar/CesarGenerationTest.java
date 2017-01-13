@@ -19,7 +19,7 @@ public class CesarGenerationTest {
 	@Ignore
 	public void testCesar() throws Exception {
 		File gen = new File("test-gen", CESAR);
-		Graph graph = Graph.load("Cesar").wrap(PandoraApplication.class);
+		Graph graph = Graph.use(PandoraApplication.class, null).load("Cesar");
 		new FullRenderer(null, graph, gen, gen, CESAR).execute();
 //		graph.find(RESTService.class).forEach(a ->
 //				new RESTAccessorRenderer(a, new File("test-gen/" + CESAR), CESAR).execute());
@@ -28,7 +28,7 @@ public class CesarGenerationTest {
 	@Test
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
-		Graph graph = Graph.load("Consul").wrap(PandoraApplication.class);
+		Graph graph = Graph.use(PandoraApplication.class, null).load("Consul");
 //		new FullRenderer(null, graph, gen, gen, CONSUL).execute();
 //		new BoxConfigurationRenderer(graph, gen, CONSUL, null, false).execute();
 		graph.find(JMXService.class).forEach(a -> new JMXAccessorRenderer(a, gen, CONSUL).execute());

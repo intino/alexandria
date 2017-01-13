@@ -2,8 +2,8 @@ package sumus;
 
 import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
-import org.junit.Test;
 import io.intino.tara.magritte.Graph;
+import org.junit.Test;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class Sumus {
 	@Test
 	public void sumus() throws Exception {
 		File gen = new File("test-gen", SUMUS);
-		new FullRenderer(null, Graph.load("Sumus").wrap(PandoraApplication.class), gen, gen, SUMUS).execute();
+		new FullRenderer(null, Graph.use(PandoraApplication.class, null).load("Sumus"), gen, gen, SUMUS).execute();
 
 	}
 }

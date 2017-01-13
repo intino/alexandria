@@ -35,7 +35,6 @@ Activity Platform-Web
 
 		Request addTicket as Text
 		Request removeTicket as Text
-		Request updateScale as Text
 		Request updateRange as Object(RequestRange)
 		Request(Asset) export as Object(RequestRange)
 		Request toggleDrill
