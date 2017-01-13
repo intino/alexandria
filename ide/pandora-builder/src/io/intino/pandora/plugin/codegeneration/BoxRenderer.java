@@ -2,13 +2,12 @@ package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.pandora.model.Activity;
-import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Bus;
 import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.slackbot.SlackBotService;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -48,7 +47,7 @@ public class BoxRenderer {
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);
-		channels(frame, name);
+		bus(frame, name);
 		activities(frame);
 		writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}
@@ -63,22 +62,19 @@ public class BoxRenderer {
 			frame.addSlot("task", new Frame().addTypes("task"));
 	}
 
-	private void channels(Frame frame, String name) {
-		for (Channel channel : application.channelList()) {
-			final Frame channelFrame = new Frame().addTypes("channel").addSlot("name", channel.name());
-			if (channel.isDurable()) channelFrame.addSlot("durable", customizeDurable(channel.asDurable().clientID(), channel.name()));
-			frame.addSlot("channel", (Frame) channelFrame.addSlot("configuration", name));
-		}
+	private void bus(Frame frame, String name) {
+		for (Bus bus : application.busList())
+			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", bus.name()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
-	private Frame customizeDurable(String clientId, String channelName) {
-		Frame frame = new Frame().addTypes("durable");
-		frame.addSlot("channel", channelName);
-		for (String parameter : Commons.extractParameters(clientId)) {
-			frame.addSlot("custom", new Frame().addSlot("value", parameter).addSlot("channel", channelName));
-		}
-		return frame;
-	}
+//	private Frame customizeDurable(String clientId, String channelName) {
+//		Frame frame = new Frame().addTypes("durable");
+//		frame.addSlot("channel", channelName);
+//		for (String parameter : Commons.extractParameters(clientId)) {
+//			frame.addSlot("custom", new Frame().addSlot("value", parameter).addSlot("channel", channelName));
+//		}
+//		return frame;
+//	}
 
 	private void services(Frame frame, String name) {
 		for (RESTService service : application.rESTServiceList())

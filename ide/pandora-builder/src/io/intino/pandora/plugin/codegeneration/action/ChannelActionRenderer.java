@@ -1,7 +1,7 @@
 package io.intino.pandora.plugin.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Bus.Channel;
 import io.intino.pandora.plugin.helpers.Commons;
 import org.siani.itrules.model.Frame;
 

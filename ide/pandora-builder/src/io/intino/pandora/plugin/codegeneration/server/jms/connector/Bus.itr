@@ -1,0 +1,52 @@
+def type(bus)
+	package $package+validPackage.bus;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+firstUpperCase~Configuration;
+
+	import javax.jms.JMSException;
+	import java.util.logging.Level;
+    import java.util.logging.Logger;
+
+	public class $name+firstUppercase~Bus {
+		private static Logger logger = Logger.getGlobal();
+
+		private javax.jms.Session session;
+
+		public $name+firstUppercase~Bus($box~Box box) {
+			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = box.configuration().$name+firstLowerCase~Configuration();
+			try {
+				javax.jms.Connection connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.user, configuration.password, configuration.url).createConnection();
+				if (configuration.clientID != null) connection.setClientID(configuration.clientID);
+				connection.start();
+				this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+            	} catch (JMSException e) {
+            		logger.log(Level.SEVERE, e.getMessage(), e);
+				return;
+			}
+			$channel+channelinit...[$NL]
+		}
+
+		public javax.jms.Session session() {
+			return session;
+		}
+
+		public void closeSession() {
+        		try {
+        			session.close();
+        		} catch (JMSException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+        		}
+        	}
+	}
+end
+
+def trigger(channelinit)
+	$value+SnakeCaseToCamelCase+firstUpperCase~Channel.init(session, box);
+end
+
+
+def trigger(replace)
+	.replace("{$value}", configuration().$channel+firstLowerCase~Configuration.$value+validname+firstLowerCase)
+end
+
