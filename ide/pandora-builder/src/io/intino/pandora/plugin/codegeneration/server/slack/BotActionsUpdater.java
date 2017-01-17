@@ -17,7 +17,7 @@ import static io.intino.pandora.plugin.codegeneration.Formatters.firstLowerCase;
 import static io.intino.pandora.plugin.codegeneration.Formatters.snakeCaseToCamelCase;
 
 
-class BotUpdater {
+class BotActionsUpdater {
 
 	private final Project project;
 	private final List<? extends Request> requests;
@@ -25,7 +25,7 @@ class BotUpdater {
 	private final PsiElementFactory factory;
 	private final String boxName;
 
-	BotUpdater(Project project, File destiny, List<? extends Request> requests, String boxName) {
+	BotActionsUpdater(Project project, File destiny, List<? extends Request> requests, String boxName) {
 		this.project = project;
 		this.requests = requests;
 		this.factory = JavaPsiFacade.getElementFactory(project);
@@ -83,7 +83,7 @@ class BotUpdater {
 		for (Request.Parameter parameter : request.parameterList()) {
 			final PsiParameter psiParameter = parameter(psiMethod, parameter.name());
 			if (psiParameter != null) {
-				if (!psiParameter.getTypeElement().getType().getPresentableText().equals(parameter.type().name()))
+				if (!psiParameter.getTypeElement().getType().getPresentableText().equals(parameter.type().name() + (parameter.multiple() ? "[]" : "")))
 					psiParameter.replace(factory.createParameter(parameter.name(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
 			} else
 				psiMethod.getParameterList().add(factory.createParameter(parameter.name(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
@@ -95,7 +95,8 @@ class BotUpdater {
 	}
 
 	private PsiParameter parameter(PsiMethod method, String name) {
-		for (PsiParameter parameter : method.getParameterList().getParameters()) if (name.equals(parameter.getName())) return parameter;
+		for (PsiParameter parameter : method.getParameterList().getParameters())
+			if (name.equals(parameter.getName())) return parameter;
 		return null;
 	}
 }

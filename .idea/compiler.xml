@@ -25,18 +25,18 @@
         <module name="forrest" />
         <module name="teseo" />
       </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
-      </profile>
       <profile name="Annotation profile for model" enabled="true">
         <sourceOutputDir name="../../out/build/pandora-model/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/pandora-model/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="pandora-model" />
         <module name="pandora-plugin-core" />
+      </profile>
+      <profile name="Annotation profile for pandora-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="slack" />
       </profile>
       <profile name="Annotation profile for pandora-core" enabled="true">
         <sourceOutputDir name="../out/build/core/generated-sources/annotations" />

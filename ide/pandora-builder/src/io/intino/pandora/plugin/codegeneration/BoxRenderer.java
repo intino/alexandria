@@ -67,15 +67,6 @@ public class BoxRenderer {
 			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", bus.name()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
-//	private Frame customizeDurable(String clientId, String channelName) {
-//		Frame frame = new Frame().addTypes("durable");
-//		frame.addSlot("channel", channelName);
-//		for (String parameter : Commons.extractParameters(clientId)) {
-//			frame.addSlot("custom", new Frame().addSlot("value", parameter).addSlot("channel", channelName));
-//		}
-//		return frame;
-//	}
-
 	private void services(Frame frame, String name) {
 		for (RESTService service : application.rESTServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));

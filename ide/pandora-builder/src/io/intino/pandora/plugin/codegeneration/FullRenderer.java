@@ -142,6 +142,6 @@ public class FullRenderer {
 	}
 
 	private void main() {
-		new MainRenderer(graph, gen, packageName, module).execute();
+		new MainRenderer(src, packageName, module).execute();
 	}
 }

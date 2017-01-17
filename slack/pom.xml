@@ -15,6 +15,10 @@
         </repository>
     </distributionManagement>
     <build>
+        <outputDirectory>../out/production/slack</outputDirectory>
+        <testOutputDirectory>../out/test/slack</testOutputDirectory>
+        <directory>../out/build/slack</directory>
+        <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,6 +51,11 @@
             <groupId>com.ullink.slack</groupId>
             <artifactId>simpleslackapi</artifactId>
             <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.pandora</groupId>
+            <artifactId>pandora-core</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>
