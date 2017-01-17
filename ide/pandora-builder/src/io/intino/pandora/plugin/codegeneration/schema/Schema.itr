@@ -28,7 +28,7 @@ def type(multiple) trigger(declaration)
 end
 
 def type(attributeMap) trigger(declaration)
-	private java.util.Map<String, String> attributeMap = new java.util.HashMap<>();
+	private java.util.Map<String, String> $name = new java.util.HashMap<>();
 end
 
 def type(primitive & single) trigger(getter)
@@ -57,11 +57,11 @@ end
 
 def type(attributeMap) trigger(getter)
 	public java.util.List<String> attributeNames() {
-		return new java.util.ArrayList<>(this.attributeMap.keySet());
+		return new java.util.ArrayList<>(this.$name.keySet());
 	}
 
 	public String attributeValue(String key) {
-		return this.attributeMap.get(key);
+		return this.$name.get(key);
 	}
 end
 
@@ -95,7 +95,7 @@ end
 
 def type(attributeMap) trigger(setter)
 	public $element+firstUpperCase addAttribute(String key, String value) {
-		this.attributeMap.put(key, value);
+		this.$name.put(key, value);
 		return this;
 	}
 end

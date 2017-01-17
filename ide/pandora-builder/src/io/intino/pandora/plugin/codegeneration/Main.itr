@@ -6,9 +6,8 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			Graph graph = Graph.use([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]).load();//TODO
-			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
-			run(graph, configuration);
+			Graph graph = Graph.use([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]).load();
+			run(graph, createConfigurationFromArgs(args));
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
 
 		}

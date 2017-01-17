@@ -6,7 +6,8 @@ import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWebSocketSlackSession;
@@ -14,21 +15,28 @@ import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWeb
 public abstract class Bot {
 
 	private final String token;
-	private final Map<String, Command> commands = new HashMap<>();
-	private final Map<String, String> helps = new HashMap<>();
+	private final Map<String, Command> commands = new LinkedHashMap<>();
+	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
 	private SlackSession session;
 
 
 	public Bot(String token) {
 		this.token = token;
-		this.add("help", "Show this help", (messageProperties, args) -> showHelp());
 	}
 
-	private String showHelp() {
+	protected String help() {
 		String help = "";
-		for (String key : helps.keySet())
-			help += key + ": " + helps.get(key) + "\n";
+		for (String key : commandsInfo.keySet())
+			help += key + parameters(commandsInfo.get(key).parameters) + ": " + commandsInfo.get(key).description + "\n";
 		return help;
+	}
+
+	public Map<String, CommandInfo> getCommandsInfo() {
+		return commandsInfo;
+	}
+
+	private String parameters(List<String> parameters) {
+		return parameters.isEmpty() ? "" : " `" + String.join("` `", parameters) + "`";
 	}
 
 	public void execute() throws IOException {
@@ -41,9 +49,13 @@ public abstract class Bot {
 		if (message.getSender().isBot()) return;
 		String[] content = message.getMessageContent().split(" ");
 		Command command = commands.containsKey(content[0]) ? commands.get(content[0]) : commandNotFound();
-		final String execute = command.execute(createMessageProperties(message), Arrays.copyOfRange(content, 1, content.length));
-		if (execute == null || execute.isEmpty()) return;
-		session.sendMessage(message.getChannel(), execute);
+		try {
+			final String response = command.execute(createMessageProperties(message), Arrays.copyOfRange(content, 1, content.length));
+			if (response == null || response.isEmpty()) return;
+			session.sendMessage(message.getChannel(), response);
+		} catch (Throwable e) {
+			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
+		}
 	}
 
 	private Command commandNotFound() {
@@ -54,9 +66,9 @@ public abstract class Bot {
 		return () -> message.getChannel().getName();
 	}
 
-	protected void add(String name, String help, Command command) {
+	protected void add(String name, List<String> parameters, List<String> components, String description, Command command) {
 		commands.put(name, command);
-		helps.put(name, help);
+		commandsInfo.put(name, new CommandInfo(parameters, components, description));
 	}
 
 	public void send(String channelDestination, String message) {
@@ -82,7 +94,29 @@ public abstract class Bot {
 
 	public interface MessageProperties {
 		String channel();
-
 	}
 
+	public class CommandInfo {
+		private final List<String> parameters;
+		private List<String> components;
+		private final String description;
+
+		CommandInfo(List<String> parameters, List<String> components, String description) {
+			this.parameters = parameters;
+			this.components = components;
+			this.description = description;
+		}
+
+		public List<String> parameters() {
+			return parameters;
+		}
+
+		public List<String> components() {
+			return components;
+		}
+
+		public String description() {
+			return description;
+		}
+	}
 }

@@ -13,6 +13,10 @@ def type(slack & gen)
 
 		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+FirstUpperCase~Box box) {
 			super(box.configuration.$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
+			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
+                final String help = $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.help(box, properties, this.getCommandsInfo());
+                return help == null || help.isEmpty() ? help() : help;
+            });
 			$request+add...[$NL]
 			try {
 				execute();
@@ -27,7 +31,6 @@ def type(slack & gen)
 	}
 end
 
-
 def type(slack & actions)
 	package $package+ValidPackage;
 
@@ -36,12 +39,16 @@ def type(slack & actions)
 
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions {
 
+        static String help($box~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
+            return "";
+        }
+
 		$request+method...[$NL$NL]
 	}
 end
 
 def type(request) trigger(add)
-	add("$name", "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
+	add("$name", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
 end
 
 def type(request & newMethod)
@@ -56,7 +63,13 @@ def type(request) trigger(method)
 	}
 end
 
+def trigger(component)
+	"$value"
+end
 
+def type(parameter) trigger(name)
+	"$name"
+end
 
 def type(parameter & Boolean) trigger(cast)
 	Boolean.parseBoolean(args$[~$pos])
@@ -70,6 +83,9 @@ def type(parameter & Integer) trigger(cast)
 	Integer.parseInt(args$[~$pos])
 end
 
+def type(parameter & String & multiple) trigger(cast)
+	args
+end
 
 def type(parameter & String) trigger(cast)
 	args$[~$pos]

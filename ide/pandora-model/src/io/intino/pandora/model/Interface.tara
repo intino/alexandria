@@ -141,3 +141,5 @@ Facet SlackBot on Service
 		var string description
 		Concept:Named Parameter
 			var word:{Boolean String Double Integer} type
+			var boolean multiple = false
+		has Request

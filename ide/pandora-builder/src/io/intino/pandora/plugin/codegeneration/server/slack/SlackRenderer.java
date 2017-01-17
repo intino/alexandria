@@ -44,7 +44,7 @@ public class SlackRenderer {
 	}
 
 	private void updateBot(SlackBotService service, String name) {
-		new BotUpdater(project, Commons.javaFile(src, name), service.requestList(), boxName).update();
+		new BotActionsUpdater(project, Commons.javaFile(src, name), service.requestList(), boxName).update();
 		VirtualFileManager.getInstance().asyncRefresh(null);
 	}
 
@@ -59,17 +59,25 @@ public class SlackRenderer {
 		frame.addSlot("package", packageName).
 				addSlot("name", service.name()).
 				addSlot("box", boxName);
-		for (SlackBotService.Request request : requests)
-			frame.addSlot("request", createRequestFrame(service, request));
+		createRequests(service, requests, frame);
 		return frame;
+	}
+
+	private void createRequests(SlackBotService service, List<SlackBotService.Request> requests, Frame frame) {
+		for (SlackBotService.Request request : requests) {
+			frame.addSlot("request", createRequestFrame(service, request));
+			createRequests(service, request.requestList(), frame);
+		}
 	}
 
 	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
 		final Frame requestFrame = new Frame().addTypes("request").addSlot("bot", service.name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
 		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)
-			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
+			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name(), parameters.get(i).multiple() ? "multiple" : "single").
 					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
+		for (SlackBotService.Request component : request.requestList())
+			requestFrame.addSlot("component", component.name());
 		return requestFrame;
 	}
 

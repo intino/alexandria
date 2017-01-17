@@ -46,9 +46,9 @@ def type(box)
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
 
-		$service+getter...[$NL]
-
-		$task+getter...[$NL]
+		$service+getter...[$NL$NL]
+        $bus+getter...[$NL$NL]
+		$task+getter...[$NL$NL]
 
 		public <T> T get(Class<T> tClass) {
 			return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
@@ -172,6 +172,12 @@ end
 def type(service & jms) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(bus) trigger(getter)
+	public $package.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstlowerCase~Bus() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase~Bus;
 	}
 end
 
