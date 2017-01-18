@@ -1,10 +1,10 @@
 package io.intino.pandora.server.spark;
 
-import org.eclipse.jetty.websocket.api.Session;
 import io.intino.pandora.server.pushservice.Client;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WriteCallback;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
@@ -13,10 +13,13 @@ public class SparkClient implements Client {
 	private final Session session;
 	private final Map<String, String> queryString;
 	private String language = null;
+	private List<String> messagesQueue = new ArrayList<>();
+	private Timer queueTimer;
 
 	public SparkClient(Session session) {
 		this.session = session;
 		this.queryString = parseQueryString(session.getUpgradeRequest().getRequestURI().getQuery());
+		this.runQueueManager();
 	}
 
 	@Override
@@ -41,12 +44,27 @@ public class SparkClient implements Client {
 
 	@Override
 	public void send(String message) {
-		try {
-			if (session.isOpen())
-				session.getRemote().sendString(message);
-		} catch (IOException e) {
-			session.getRemote().sendStringByFuture(message);
-		}
+		if (!session.isOpen()) return;
+
+		session.getRemote().sendString(message, new WriteCallback() {
+			@Override
+			public void writeFailed(Throwable throwable) {
+				if (!messagesQueue.contains(message))
+					messagesQueue.add(message);
+			}
+
+			@Override
+			public void writeSuccess() {
+				if (messagesQueue.contains(message))
+					messagesQueue.remove(message);
+			}
+		});
+	}
+
+	@Override
+	public void destroy() {
+		queueTimer.cancel();
+		messagesQueue.clear();
 	}
 
 	@Override
@@ -63,5 +81,17 @@ public class SparkClient implements Client {
 		return Stream.of(queryString.split("&"))
 				.map(param -> param.split("="))
 				.collect(toMap(p -> p[0], p -> p[1]));
+	}
+
+	private void runQueueManager() {
+		queueTimer = new Timer();
+
+		queueTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if (!session.isOpen()) messagesQueue.clear();
+				messagesQueue.forEach(message -> send(message));
+			}
+		}, 1000, 1000);
 	}
 }

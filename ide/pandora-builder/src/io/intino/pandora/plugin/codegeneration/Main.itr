@@ -2,24 +2,30 @@ def type(main)
 	package $package;
 
     import io.intino.tara.magritte.Graph;
-    import io.intino.pandora.Box;
 
 	public class Main {
 
 		public static void main(String$[] args) {
-			Graph graph = Graph.load("Model").wrap([$dslPackage.]$language~Application.class, null);//TODO
-			$name+firstUpperCase~Configuration configuration = args.length != 0 ? createConfigurationFromArgs(): loadDevelopConfiguration();
-			run(configuration);
+			Graph graph = Graph.use([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]).load();
+			run(graph, createConfigurationFromArgs(args));
+			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
+
 		}
 
-		private static $name+firstUpperCase~Configuration createConfigurationFromArgs() {
+		private static $name+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
 			return new $name+firstUpperCase~Configuration();//TODO
 		}
 
-		public static void run($name+firstUpperCase~Configuration configuration) {
+		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
 			graph.application().execute();
+		}
+
+		private static Runnable exit() {
+			return () -> {
+				[$rest~Spark.stop();]
+			};
 		}
 	}
 end

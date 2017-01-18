@@ -11,11 +11,11 @@ import io.intino.pandora.model.text.TextData;
 import io.intino.pandora.model.type.TypeData;
 import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.Iterator;
@@ -52,7 +52,7 @@ public class SchemaRenderer {
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList()));
-		if (schema.attributeMap() != null) frame.addSlot("attribute", attributeMap());
+		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
 		addReturningValueToAttributes(schema.name(), frame.frames("attribute"));
 		return frame;
 	}
@@ -98,7 +98,7 @@ public class SchemaRenderer {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.as(Schema.Attribute.class).name())
 				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue()+"L");
+				.addSlot("defaultValue", attribute.defaultValue() + "L");
 	}
 
 	private static Frame processAttribute(BoolData attribute) {
@@ -139,8 +139,8 @@ public class SchemaRenderer {
 				.addSlot("type", has.reference().name());
 	}
 
-	private static Frame attributeMap() {
-		return new Frame().addTypes("attributeMap");
+	private static Frame render(Schema.AttributeMap map) {
+		return new Frame().addTypes("attributeMap").addSlot("name", map.name());
 	}
 
 	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {

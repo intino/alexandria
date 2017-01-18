@@ -2,12 +2,13 @@ dsl Proteo
 
 use DataTypes
 
-Concept:Named Channel
-	var string path
-	sub Queue
-	sub Topic
+Concept:Named Bus
+	Concept:Named Channel
+		var string path
+		sub Queue
+		sub Topic
 
-Facet Durable on Channel
+Facet Durable on Bus.Channel
 	var string clientID
 
 Concept:Named Service
@@ -134,10 +135,11 @@ Facet JMS on Service
 			var string certificate
 
 Facet SlackBot on Service
-	var string token
 	Concept Notification
 		var string channel
 	Concept:Named Request
 		var string description
-		Concept Parameter
+		Concept:Named Parameter
 			var word:{Boolean String Double Integer} type
+			var boolean multiple = false
+		has Request

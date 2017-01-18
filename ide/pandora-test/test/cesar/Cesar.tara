@@ -50,8 +50,8 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Parameter(in = body) system as Object(SystemSchema)
 			Response
 
-//Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-//Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
+Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
 
 //Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)
 

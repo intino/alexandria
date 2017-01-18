@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class JMXClientTest {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		JMXClient localhost = new JMXClient("localhost", 9999);
 		JMXClient.JMXConnection connection = localhost.connect();
 		SimpleStandardMBean bean = connection.mBean(SimpleStandardMBean.class);

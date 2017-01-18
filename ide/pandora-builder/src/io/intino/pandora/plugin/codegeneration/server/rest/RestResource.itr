@@ -61,7 +61,15 @@ def type(parameter) trigger(type)
 end
 
 def type(parameter) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType.class);
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase("$name", $parameterType);
+end
+
+def type(list) trigger(parameterType)
+	new java.util.ArrayList<$value>(0).getClass()
+end
+
+def trigger(parameterType)
+	$value.class
 end
 
 def type(schemaImport)

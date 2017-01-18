@@ -12,8 +12,8 @@ import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRen
 import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.channel.ChannelRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.channel.SubscriptionModelRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.connector.ChannelRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.connector.BusRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSRequestRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXOperationsServiceRenderer;
@@ -23,10 +23,10 @@ import io.intino.pandora.plugin.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.slack.SlackRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskRenderer;
 import io.intino.pandora.plugin.codegeneration.server.task.TaskerRenderer;
-import org.jetbrains.annotations.Nullable;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import io.intino.tara.magritte.Graph;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -62,7 +62,7 @@ public class FullRenderer {
 		scheduling();
 		jmx();
 		jms();
-		channels();
+		bus();
 		slack();
 		ui();
 		box();
@@ -97,13 +97,13 @@ public class FullRenderer {
 		new TaskerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
-	private void channels() {
-		new SubscriptionModelRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new ChannelRenderer(graph, gen, packageName, boxName).execute();
+	private void bus() {
+		new BusRenderer(graph, gen, packageName, boxName).execute();
+		new ChannelRenderer(project, graph, src, gen, packageName, boxName).execute();
 	}
 
 	private void slack() {
-		new SlackRenderer(graph, src, packageName, boxName).execute();
+		new SlackRenderer(project, graph, src, gen, packageName, boxName).execute();
 	}
 
 	private void ui() {
@@ -142,6 +142,6 @@ public class FullRenderer {
 	}
 
 	private void main() {
-		new MainRenderer(graph, gen, packageName, module).execute();
+		new MainRenderer(src, packageName, module).execute();
 	}
 }

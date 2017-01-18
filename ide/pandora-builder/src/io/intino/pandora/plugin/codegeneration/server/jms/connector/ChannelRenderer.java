@@ -1,13 +1,15 @@
-package io.intino.pandora.plugin.codegeneration.server.jms.channel;
+package io.intino.pandora.plugin.codegeneration.server.jms.connector;
 
-import io.intino.pandora.model.Channel;
-import io.intino.pandora.model.Queue;
+import com.intellij.openapi.project.Project;
+import io.intino.pandora.model.Bus.Channel;
+import io.intino.pandora.model.Bus.Queue;
 import io.intino.pandora.model.Schema;
 import io.intino.pandora.plugin.codegeneration.Formatters;
+import io.intino.pandora.plugin.codegeneration.action.ChannelActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -15,13 +17,17 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class ChannelRenderer {
+	private final Project project;
 	private final List<Channel> channels;
+	private final File src;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
-	public ChannelRenderer(Graph graph, File gen, String packageName, String boxName) {
+	public ChannelRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+		this.project = project;
 		channels = graph.find(Channel.class);
+		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -36,13 +42,18 @@ public class ChannelRenderer {
 				addSlot("package", packageName).
 				addSlot("name", channel.name()).
 				addSlot("box", boxName).
-				addSlot("subscription", subscriptions(channel));
+				addSlot("subscription", subscription(channel));
 		if (!channel.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(gen, snakeCaseToCamelCase(channel.name()) + "Channel", template().format(frame));
+		Commons.writeFrame(new File(gen, "bus"), snakeCaseToCamelCase(channel.name()) + "Channel", template().format(frame));
+		createCorrespondingAction(channel);
 	}
 
-	private Frame subscriptions(Channel channel) {
+	private void createCorrespondingAction(Channel channel) {
+		new ChannelActionRenderer(project, channel, src, packageName, boxName).execute();
+	}
+
+	private Frame subscription(Channel channel) {
 		final Frame frame = new Frame().addTypes("subscription").
 				addSlot("path", customize(channel.path())).
 				addSlot("type", channel.is(Queue.class) ? "Queue" : "Topic").

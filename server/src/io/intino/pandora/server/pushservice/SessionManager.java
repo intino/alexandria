@@ -46,6 +46,7 @@ public class SessionManager<S extends Session<C>, C extends Client> {
     }
 
     public void unRegister(C client) {
+        client.destroy();
         clientMap.remove(client.id());
         session(client.sessionId()).remove(client);
     }
