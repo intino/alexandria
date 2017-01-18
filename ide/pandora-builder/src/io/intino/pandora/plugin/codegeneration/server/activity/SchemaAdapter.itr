@@ -12,11 +12,11 @@ end
 
 def type(schema)
 
-	public static $name+firstUpperCase $name+firstLowerCase~FromLayer(tara.magritte.Layer layer) {
+	public static $name+firstUpperCase $name+firstLowerCase~FromLayer(io.intino.tara.magritte.Layer layer) {
 		return $name+firstLowerCase~FromNode(layer.node());
 	}
 
-	private static $name+firstUpperCase $name+firstLowerCase~FromNode(tara.magritte.Node node) {
+	private static $name+firstUpperCase $name+firstLowerCase~FromNode(io.intino.tara.magritte.Node node) {
 		$name+firstUpperCase schema = new $name+firstUpperCase();
 		final java.util.Map<String, java.util.List<?>> variables = node.variables();
 		variables.put("name", java.util.Collections.singletonList(node.name()));
@@ -24,7 +24,7 @@ def type(schema)
 		[for (String variable : variables.keySet()) {
 			$attribute+fromLayer...[$NL]
 		}]
-		[for (tara.magritte.Node component : node.componentList()) {
+		[for (io.intino.tara.magritte.Node component : node.componentList()) {
 			$attribute+componentfromLayer...[$NL]
 		}]
 		return schema;
