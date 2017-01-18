@@ -4,11 +4,11 @@ import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;

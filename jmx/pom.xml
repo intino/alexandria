@@ -29,9 +29,9 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>siani-maven</id>
-            <name>siani-maven-releases</name>
-            <url>http://artifactory.siani.es/artifactory/libs-release</url>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
         </repository>
     </repositories>
 

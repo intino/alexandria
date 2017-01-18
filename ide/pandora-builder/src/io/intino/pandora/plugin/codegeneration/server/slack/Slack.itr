@@ -1,32 +1,74 @@
-def type(slack)
+def type(slack & gen)
 	package $package+ValidPackage;
 
-	import io.intino.pandora.Box;
 	import io.intino.pandora.slack.Bot;
 
+	import java.io.IOException;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
+		private static Logger LOG = Logger.getGlobal();
+
 
 		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+FirstUpperCase~Box box) {
-			super("$token");
+			super(box.configuration.$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
+			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
+                final String help = $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.help(box, properties, this.getCommandsInfo());
+                return help == null || help.isEmpty() ? help() : help;
+            });
 			$request+add...[$NL]
+			try {
+				execute();
+			} catch (IOException e) {
+				LOG.log(Level.SEVERE, e.getMessage(), e);
+			}
 		}
 		[
 		public void notify(String message) {
 			send("$channel", message);
 		}]
+	}
+end
 
-		$request...[$NL$NL]
+def type(slack & actions)
+	package $package+ValidPackage;
+
+	import io.intino.pandora.Box;
+	import io.intino.pandora.slack.Bot.MessageProperties;
+
+	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions {
+
+        static String help($box~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
+            return "";
+        }
+
+		$request+method...[$NL$NL]
 	}
 end
 
 def type(request) trigger(add)
-	add("$name", "$description", (properties, args) -> $name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
+	add("$name", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
 end
 
-def type(request)
-	private String $name+snakeCaseToCamelCase+firstLowerCase(Box box, MessageProperties properties[, $parameter...[, ]]) {
+def type(request & newMethod)
+	static String $name+snakeCaseToCamelCase+firstLowerCase($box~Box box, MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
+end
+
+def type(request) trigger(method)
+	static String $name+snakeCaseToCamelCase+firstLowerCase($box~Box box, MessageProperties properties[, $parameter...[, ]]) {
+		return "";
+	}
+end
+
+def trigger(component)
+	"$value"
+end
+
+def type(parameter) trigger(name)
+	"$name"
 end
 
 def type(parameter & Boolean) trigger(cast)
@@ -41,6 +83,9 @@ def type(parameter & Integer) trigger(cast)
 	Integer.parseInt(args$[~$pos])
 end
 
+def type(parameter & String & multiple) trigger(cast)
+	args
+end
 
 def type(parameter & String) trigger(cast)
 	args$[~$pos]

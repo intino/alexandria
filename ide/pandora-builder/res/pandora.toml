@@ -16,6 +16,7 @@ anchor="last"
 id="NewPandoraFile"
 aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
 groupId="NewGroup"
+relativeToAction="NewTaraFile"
 anchor="first"
 
 [[actions]]
@@ -29,7 +30,7 @@ groupId="PandoraToolsGroup"
 [[actions]]
 id="PublishAccesors"
 aClass="io.intino.pandora.plugin.actions.PublishAccessorAction"
-text="Publish Pandora Accessor"
-description="Publish Pandora Accessor in Artifactory"
+text="Distribute Pandora Accessor"
+description="Distribute Pandora Accessor in Artifactory"
 shortcut="control alt A"
 groupId="PandoraToolsGroup"

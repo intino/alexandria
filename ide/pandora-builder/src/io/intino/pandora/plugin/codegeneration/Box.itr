@@ -1,20 +1,20 @@
 def type(box)
 	package $package;
 
-    import java.util.LinkedHashMap;
-    import java.util.logging.Logger;
-    import java.util.Map;
-    import java.util.UUID;
+	import java.util.LinkedHashMap;
+	import java.util.logging.Logger;
+	import java.util.Map;
+	import java.util.UUID;
 	[$hasREST~import io.intino.pandora.server.PandoraSpark;]
-    [import io.intino.tara.magritte.Graph;$tara+import]
+	[import io.intino.tara.magritte.Graph;$tara+import]
 
-    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.pandora.$parent+FirstUpperCase~Box?io.intino.pandora.Box] {
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;]
-    	[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();]
-		[$service+field...[$NL]]
-		[$channel+field...[$NL]]
-		[$process+field...[$NL]]
+		[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();][
+		$service+field...[$NL]][
+		$bus+field...[$NL]][
+		$task+field]
 
 		private String graphID;
 
@@ -26,7 +26,7 @@ def type(box)
 		}
 
 
-		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(tara.magritte.Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
+		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(io.intino.tara.magritte.Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);
 			]map.put(graphID = UUID.randomUUID().toString(), graph);
 			this.configuration = configuration;[
@@ -34,43 +34,46 @@ def type(box)
 			$activity+setup...[$NL]]
 		}
 
-		public tara.magritte.Graph graph() {
-			return (tara.magritte.Graph) map().get(graphID);
+		public io.intino.tara.magritte.Graph graph() {
+			return (io.intino.tara.magritte.Graph) map().get(graphID);
 		}
 
 		protected Map<String, Object> map() {
 			return map;
 		}
 
-    	public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
 
-		$service+getter...[$NL]
+		$service+getter...[$NL$NL]
+        $bus+getter...[$NL$NL]
+		$task+getter...[$NL$NL]
 
-    	public <T> T get(Class<T> tClass) {
-    		return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
-    	}
+		public <T> T get(Class<T> tClass) {
+			return (T) map().values().stream().filter(tClass::isInstance).findFirst().orElse(null);
+		}
 
 
-    	public <T> T get(String object, Class<T> tClass) {
-    		return (T) map().get(object);
-    	}
+		public <T> T get(String object, Class<T> tClass) {
+			return (T) map().get(object);
+		}
 
-    	public $name+SnakeCaseToCamelCase+firstUpperCase~Box put(String name, Object object) {
-    		map().put(name, object);
-    		return this;
-    	}
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box put(String name, Object object) {
+			map().put(name, object);
+			return this;
+		}
 
-    	public void init() {[
-    		$parent+parentInit~super.init();? ]
+		public void init() {[
+			$parent+parentInit~super.init();? ]
 			initActivities();
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
-			initChannels();
-			initProcesses();
-    	}
+			initBuses();
+			initTasks();
+			initSlackBots();
+		}
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -85,30 +88,28 @@ def type(box)
 			$service+jmx...[$NL]
 		}
 
+		private void initSlackBots() {
+			$service+slack...[$NL]
+		}
+
 		private void initActivities() {
 			$activity...[$NL]
 		}
 
-		private void initChannels() {
-			[try {
-				javax.jms.Connection connection;
-				$channel+init...[$NL]
-			} catch (javax.jms.JMSException e) {
-				LOG.severe(e.getMessage());
-			}]
+		private void initBuses() {
+			$bus+init...[$NL]
 		}
 
-		private void initProcesses() {
-			$process+process...[$NL]
+		private void initTasks() {
+			$task+init...[$NL]
 		}
 
 		public void stopJMSServices() {
 
 		}
 
-    }
+	}
 end
-
 
 def type(activity) trigger(setup)
 	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
@@ -118,23 +119,16 @@ def type(service & rest) trigger(setup)
 	io.intino.pandora.server.activity.ActivityPandoraSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
-def type(channel) trigger(init)
-	connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
-	[$durable
-	]connection.start();
-	$name+SnakeCaseToCamelCase+firstUpperCase~Channel.init(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
-end
-
-def trigger(durable)
-	connection.setClientID(configuration().$channel+firstLowerCase~Configuration.clientID[$custom+replace...[]]);
-end
-
-def trigger(replace)
-	.replace("{$value}", configuration().$channel+firstLowerCase~Configuration.$value+validname+firstLowerCase)
+def type(bus) trigger(init)
+	this.$name+SnakeCaseToCamelCase+firstLowerCase~Bus = new $package+lowercase.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus(this);
 end
 
 def type(service & jmx) trigger(jmx)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port, this);
+end
+
+def type(service & slack) trigger(slack)
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(this);
 end
 
 def type(service & rest) trigger(rest)
@@ -159,13 +153,37 @@ def type(service & jmx) trigger(field)
 	private io.intino.pandora.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
+def type(service & slack) trigger(field)
+	private io.intino.pandora.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
 def type(service & jms) trigger(field)
 	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(task) trigger(field)
+	private io.intino.pandora.scheduling.PandoraTasker tasker = new io.intino.pandora.scheduling.PandoraTasker();
+end
+
+def type(bus) trigger(field)
+	private $package.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstLowerCase~Bus;
 end
 
 def type(service & jms) trigger(getter)
 	public $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(bus) trigger(getter)
+	public $package.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstlowerCase~Bus() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase~Bus;
+	}
+end
+
+def type(service & slack) trigger(getter)
+	public $name+SnakeCaseToCamelCase+firstUpperCase~SlackBot $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return ($name+SnakeCaseToCamelCase+firstUpperCase~SlackBot) $name+SnakeCaseToCamelCase+firstlowerCase;
 	}
 end
 
@@ -175,9 +193,14 @@ end
 def type(service)
 end
 
+def type(task) trigger(init)
+	Tasks.init(this.tasker, this);
+end
 
-def type(process) trigger(init)
-	//TODO
+def type(task) trigger(getter)
+	public io.intino.pandora.scheduling.PandoraTasker tasker() {
+		return this.tasker;
+	}
 end
 
 def trigger(import)

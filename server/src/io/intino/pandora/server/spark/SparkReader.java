@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -19,14 +20,13 @@ import static java.time.LocalDateTime.ofInstant;
 class SparkReader {
 
 	static <T> T read(String object, Class<T> type) {
-		if (type == Error.class || type == Collection.class) return adaptFromJSON(object, type);
-		else if (type == byte[].class) readBytes(object);
+		if (type.isAssignableFrom(Error.class) || type.isAssignableFrom(Collection.class)) return adaptFromJSON(object, type);
+		else if (type.isAssignableFrom(byte[].class)) return (T) readBytes(object);
 		return adapt(object, type);
 	}
 
 	static <T> T read(Object object, Class<T> type) {
-		if (type == InputStream.class && object instanceof InputStream) return (T) object;
-		return null;
+		return type.isAssignableFrom(InputStream.class) ? (T) object : null;
 	}
 
 	private static byte[] readBytes(String object) {
@@ -52,6 +52,7 @@ class SparkReader {
 		if (type == Double.class) return (T) Double.valueOf(object);
 		if (type == Integer.class) return (T) Integer.valueOf(object);
 		if (type == Boolean.class) return (T) Boolean.valueOf(object);
+		if (type == Instant.class) return (T) ofEpochMilli(Long.valueOf(object));
 		if (type == LocalDate.class) return (T) LocalDate.ofEpochDay(Long.valueOf(object));
 		if (type == LocalDateTime.class) return (T) ofInstant(ofEpochMilli(Long.valueOf(object)), ZoneId.of("UTC"));
 		return null;

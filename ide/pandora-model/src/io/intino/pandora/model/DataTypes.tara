@@ -25,10 +25,10 @@ Facet Type on Data
 		var string type = "String" is reactive private
 	sub Date
 		var string format = "dd/MM/yyyy"
-		var string type = "java.time.LocalDate" is reactive private
+		var string type = "java.util.Date" is reactive private
 	sub DateTime
 		var string format = "dd/MM/yyyy HH:mm:ss"
-		var string type = "java.time.LocalDateTime" is reactive private
+		var string type = "java.time.Instant" is reactive private
 	sub File
 		var string type = "java.io.InputStream" is reactive private
 		var word:{body path form header query} in = form

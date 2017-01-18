@@ -34,8 +34,25 @@ def type(jmx) type(interface)
     }
 end
 
+
 def type(operation) trigger(signature)
-    [$returnType?void] $name+firstLowerCase($parameter+withType...[, ]);
+    $returnType $name+firstLowerCase($parameter+withType...[, ]);
+end
+
+def type(returnType) trigger(return)
+    return
+end
+
+def type(returnType & list) trigger(returnType)
+    java.util.List<$value>
+end
+
+def type(returnType) trigger(returnType)
+    $value
+end
+
+def type(parameter & list) trigger(withType)
+    java.util.List<$type> $name
 end
 
 def type(parameter) trigger(withType)
@@ -63,7 +80,7 @@ def type(jmx) type(implementation)
 end
 
 def type(operation) trigger(implementation)
-    public [$returnType?void] $name+validName+firstLowerCase($parameter+withType...[, ]) {
+    public $returnType $name+validName+firstLowerCase($parameter+withType...[, ]) {
         $package+ValidPackage.actions.$action+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+firstUpperCase~Action();
         action.box = box;
         [$parameter+assign...[$NL]]
@@ -76,8 +93,4 @@ def type(parameter) trigger(assign)
 end
 
 def attribute(void) trigger(return)
-end
-
-def trigger(return)
-    return
 end

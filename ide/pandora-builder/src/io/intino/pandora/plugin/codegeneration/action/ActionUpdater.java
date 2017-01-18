@@ -4,12 +4,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
-import io.intino.pandora.plugin.helpers.Commons;
 import io.intino.pandora.model.Exception;
 import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Response;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.type.TypeData;
+import io.intino.pandora.plugin.helpers.Commons;
 
 import java.io.File;
 import java.util.List;
@@ -64,10 +64,17 @@ class ActionUpdater {
 
 	private void updateExceptions(PsiMethod psiMethod) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		for (PsiJavaCodeReferenceElement element : psiMethod.getThrowsList().getReferenceElements()) element.delete();
+//		for (PsiJavaCodeReferenceElement element : psiMethod.getThrowsList().getReferenceElements()) element.delete();
 		for (Exception exception : exceptions) {
-			psiMethod.getThrowsList().add(elementFactory.createReferenceFromText(exception.owner().owner() == null ? exceptionReference(exception) : exception.code().name(), psiMethod));
+			if (!hasException(psiMethod.getThrowsList().getReferenceElements(), exception))
+				psiMethod.getThrowsList().add(elementFactory.createReferenceFromText(exception.owner().owner() == null ? exceptionReference(exception) : exception.code().name(), psiMethod));
 		}
+	}
+
+	private boolean hasException(PsiJavaCodeReferenceElement[] referenceElements, Exception exception) {
+		for (PsiJavaCodeReferenceElement referenceElement : referenceElements)
+			if (exception.code().name().equals(referenceElement.getReferenceName())) return true;
+		return false;
 	}
 
 	private String exceptionReference(Exception exception) {

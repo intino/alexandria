@@ -2,18 +2,20 @@ package io.intino.pandora.plugin.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.pandora.model.Activity;
-import io.intino.pandora.model.Channel;
+import io.intino.pandora.model.Bus;
+import io.intino.pandora.model.Bus.Channel;
 import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.Service;
 import io.intino.pandora.model.jms.JMSService;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
+import io.intino.pandora.model.slackbot.SlackBotService;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.siani.itrules.Template;
+import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.Collection;
@@ -55,6 +57,8 @@ public class BoxConfigurationRenderer {
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addJMXServices(frame, boxName);
+		addSlackServices(frame, boxName);
+		addBuses(frame, boxName);
 		addChannels(frame, boxName);
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
@@ -85,12 +89,21 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
+	private void addBuses(Frame frame, String boxName) {
+		for (Bus bus : application.busList()) {
+			Frame busFrame = new Frame().addTypes("service", "bus").addSlot("name", bus.name()).addSlot("configuration", boxName);
+			frame.addSlot("service", busFrame);
+		}
+	}
+
 	private void addChannels(Frame frame, String boxName) {
-		for (Channel channel : application.channelList()) {
-			Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
-			addUserVariables(channel, channelFrame, findCustomParameters(channel));
-			if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
-			frame.addSlot("service", channelFrame);
+		for (Bus bus : application.busList()) {
+			for (Channel channel : bus.channelList()) {
+				Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
+				addUserVariables(channel, channelFrame, findCustomParameters(channel));
+				if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
+				frame.addSlot("service", channelFrame);
+			}
 		}
 	}
 
@@ -100,6 +113,12 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) activityFrame.addSlot("auth", activity.authenticated().by());
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
+		}
+	}
+
+	private void addSlackServices(Frame frame, String boxName) {
+		for (SlackBotService service : application.slackBotServiceList()) {
+			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name()).addSlot("configuration", boxName));
 		}
 	}
 

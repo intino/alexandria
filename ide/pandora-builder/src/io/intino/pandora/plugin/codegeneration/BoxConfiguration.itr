@@ -1,10 +1,10 @@
 def type(boxConfiguration)
 	package $package;
 
-    import java.util.LinkedHashMap;
-    import java.util.Map;
-    import java.util.UUID;
-    [import io.intino.tara.magritte.Graph;$tara+import]
+	import java.util.LinkedHashMap;
+	import java.util.Map;
+	import java.util.UUID;
+	[import io.intino.tara.magritte.Graph;$tara+import]
 
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.pandora.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
 
@@ -12,7 +12,7 @@ def type(boxConfiguration)
 
 		$service...[$NL$NL]
 
-		$service+confClass...[$NL]
+		$service+confClass...[$NL$NL]
 	}
 end
 
@@ -31,17 +31,29 @@ end
 
 def type(service & channel) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		[public String clientID = "$clientID"];
+		$custom+field...[$NL]
+	}
+end
+
+def type(service & bus) trigger(confClass)
+	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		public String url;
 		public String user;
 		public String password;
-		[public String clientID = "$clientID"];
-		$custom+field...[$NL]
+		public String clientID;
 	}
 end
 
 def type(service & jmx) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		public int port;
+	}
+end
+
+def type(service & slack) trigger(confClass)
+	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		public String token;
 	}
 end
 
@@ -103,12 +115,37 @@ def type(service & jmx)
 	}
 end
 
-def type(service & channel)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password[, $custom+signature...[, ]]) {
+def type(service & slack)
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String token) {
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.token = token;
+		return this;
+	}
+
+	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
+		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+	}
+end
+
+
+def type(service & bus)
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password, String clientID[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.url = url;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.user = user;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.password = password;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.clientID = clientID;
+		return this;
+	}
+
+	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
+		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+	}
+end
+
+def type(service & channel)
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+signature...[, ]) {
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		$custom+assign...[$NL]
 		return this;
 	}

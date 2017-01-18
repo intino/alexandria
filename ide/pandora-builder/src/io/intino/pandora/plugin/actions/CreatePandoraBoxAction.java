@@ -36,7 +36,7 @@ import static com.intellij.notification.NotificationType.INFORMATION;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreatePandoraBoxAction extends PandoraAction {
-	private static final Logger LOG = Logger.getInstance("ShellGenerator: ");
+	private static final Logger LOG = Logger.getInstance("CreatePandoraBoxAction: ");
 	private static final String PANDORA = "Pandora";
 	private static final String TEXT = "Create Pandora Box";
 
@@ -125,7 +125,7 @@ public class CreatePandoraBoxAction extends PandoraAction {
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Pandora", "Services cannot be generated.", message, ERROR), module.getProject());
+					new Notification("Pandora", "Services cannot be generated", message, ERROR), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {

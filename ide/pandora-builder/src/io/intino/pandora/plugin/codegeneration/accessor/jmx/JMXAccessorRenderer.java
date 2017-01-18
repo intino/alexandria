@@ -24,8 +24,8 @@ public class JMXAccessorRenderer {
 
 	public JMXAccessorRenderer(JMXService restService, File destination, String packageName) {
 		this.service = restService;
-		this.destination = destination;
-		this.packageName = packageName;
+		this.destination = new File(destination, "pandora");
+		this.packageName = packageName + ".pandora";
 	}
 
 	public void execute() {

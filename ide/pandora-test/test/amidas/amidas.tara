@@ -91,7 +91,7 @@ Schema(multiple=false) Timeline
 
 	Schema(multiple=false) Satisfied
 		Schema Point
-			Attribute instant as DateTime
+			Attribute Instant as DateTime
 			Attribute value as Real
 
 Schema RequirementList
@@ -135,7 +135,7 @@ Schema Signature
 
 Schema MeasureThread
     Attribute id as Text
-    Attribute instant as DateTime
+    Attribute Instant as DateTime
     Attribute contact as Text
     Attribute allowContact as Bool
     Attribute service as Text

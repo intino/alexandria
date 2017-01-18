@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.pandora</groupId>
     <artifactId>pandora-plugin</artifactId>
-    <version>1.2.0</version>
+    <version>2.0.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -34,11 +34,13 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <minimizeJar>false</minimizeJar><!--important-->
                             <artifactSet>
                                 <includes>
                                     <include>tara.dsl:pandora:*</include>
-                                    <include>io.intino.pandora:model:jar:*</include>
+                                    <include>io.intino.pandora:model:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
@@ -50,19 +52,14 @@
 
     <repositories>
         <repository>
-            <id>siani-maven</id>
-            <name>siani-maven-releases</name>
-            <url>http://artifactory.siani.es/artifactory/libs-release</url>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
         </repository>
         <repository>
-            <id>siani-maven-snapshot</id>
-            <name>siani-maven-snapshot</name>
-            <url>http://artifactory.siani.es/artifactory/libs-snapshot</url>
-        </repository>
-        <repository>
-            <id>siani-maven-language</id>
-            <name>siani-maven-language</name>
-            <url>http://artifactory.siani.es/artifactory/languages-release</url>
+            <id>intino-maven-languages</id>
+            <name>intino-maven-languages</name>
+            <url>https://artifactory.intino.io/artifactory/release-languages</url>
         </repository>
     </repositories>
 
@@ -78,6 +75,13 @@
         <dependency>
             <groupId>io.intino.pandora</groupId>
             <artifactId>model</artifactId>
+            <scope>runtime</scope>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>tara.dsl</groupId>
+            <artifactId>pandora</artifactId>
+            <scope>runtime</scope>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -86,11 +90,10 @@
             <version>2.1.2</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.cottons</groupId>
+            <groupId>io.intino.cottons</groupId>
             <artifactId>cotton-utils</artifactId>
-            <version>LATEST</version>
+            <version>1.0.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -104,7 +107,7 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.tara</groupId>
+            <groupId>io.intino.tara</groupId>
             <artifactId>language</artifactId>
             <scope>provided</scope>
             <version>LATEST</version>
@@ -120,11 +123,6 @@
             <artifactId>maven-invoker</artifactId>
             <scope>provided</scope>
             <version>2.0.11</version>
-        </dependency>
-        <dependency>
-            <groupId>tara.dsl</groupId>
-            <artifactId>pandora</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>
