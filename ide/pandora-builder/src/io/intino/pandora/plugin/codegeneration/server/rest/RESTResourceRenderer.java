@@ -2,6 +2,7 @@ package io.intino.pandora.plugin.codegeneration.server.rest;
 
 import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Schema;
+import io.intino.pandora.model.list.ListData;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.rest.RESTService.Resource;
 import io.intino.pandora.model.rest.RESTService.Resource.Operation;
@@ -9,10 +10,10 @@ import io.intino.pandora.model.rest.RESTService.Resource.Parameter;
 import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.codegeneration.action.RESTActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -85,8 +86,14 @@ public class RESTResourceRenderer {
 		if (parameter.isList()) parameterFrame.addTypes("List");
 		return parameterFrame
 				.addSlot("name", parameter.name())
-				.addSlot("parameterType", parameter.asType().type())
+				.addSlot("parameterType", parameterType(parameter))
 				.addSlot("in", parameter.in().name());
+	}
+
+	private Frame parameterType(Parameter parameter) {
+		final Frame frame = new Frame().addSlot("value", parameter.asType().type());
+		if (parameter.is(ListData.class)) frame.addTypes("list");
+		return frame;
 	}
 
 	private Template template() {

@@ -5,14 +5,15 @@ import io.intino.pandora.model.Parameter;
 import io.intino.pandora.model.Schema;
 import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.jmx.JMXService.Operation;
+import io.intino.pandora.model.list.ListData;
 import io.intino.pandora.model.object.ObjectData;
 import io.intino.pandora.model.type.TypeData;
 import io.intino.pandora.plugin.codegeneration.Formatters;
 import io.intino.pandora.plugin.codegeneration.action.JMXActionRenderer;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -72,8 +73,14 @@ public class JMXOperationsServiceRenderer {
 
 	private Frame frameOf(Operation operation) {
 		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", operation.name()).
-				addSlot("package", packageName).addSlot("returnType", operation.response() == null ? "void" : formatType(operation.response().asType()));
+				addSlot("package", packageName).addSlot("returnType", returnType(operation));
 		setupParameters(operation.parameterList(), frame);
+		return frame;
+	}
+
+	private Frame returnType(Operation operation) {
+		final Frame frame = new Frame().addTypes("returnType").addSlot("value", operation.response() == null ? "void" : formatType(operation.response().asType()));
+		if (operation.response().is(ListData.class)) frame.addTypes("list");
 		return frame;
 	}
 
@@ -82,8 +89,11 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void setupParameters(List<Parameter> parameters, Frame frame) {
-		for (Parameter parameter : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+		for (Parameter parameter : parameters) {
+			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType()));
+			if (parameter.is(ListData.class)) parameterFrame.addTypes("list");
+			frame.addSlot("parameter", parameterFrame);
+		}
 	}
 
 	private Template template() {

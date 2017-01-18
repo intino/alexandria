@@ -1,9 +1,7 @@
 package cesar;
 
 import io.intino.pandora.model.PandoraApplication;
-import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.plugin.codegeneration.FullRenderer;
-import io.intino.pandora.plugin.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,9 +27,9 @@ public class CesarGenerationTest {
 	public void testConsul() throws Exception {
 		File gen = new File("test-gen", CONSUL);
 		Graph graph = Graph.use(PandoraApplication.class, null).load("Consul");
-//		new FullRenderer(null, graph, gen, gen, CONSUL).execute();
+		new FullRenderer(null, graph, gen, gen, CONSUL).execute();
 //		new BoxConfigurationRenderer(graph, gen, CONSUL, null, false).execute();
-		graph.find(JMXService.class).forEach(a -> new JMXAccessorRenderer(a, gen, CONSUL).execute());
+//		graph.find(JMXService.class).forEach(a -> new JMXAccessorRenderer(a, gen, CONSUL).execute());
 	}
 
 	@Test

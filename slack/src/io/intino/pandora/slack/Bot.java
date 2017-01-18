@@ -9,10 +9,13 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWebSocketSlackSession;
 
 public abstract class Bot {
+	private static Logger logger = Logger.getGlobal();
 
 	private final String token;
 	private final Map<String, Command> commands = new LinkedHashMap<>();
@@ -47,13 +50,14 @@ public abstract class Bot {
 
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		if (message.getSender().isBot()) return;
-		String[] content = message.getMessageContent().split(" ");
+		String[] content = Arrays.stream(message.getMessageContent().split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 		Command command = commands.containsKey(content[0]) ? commands.get(content[0]) : commandNotFound();
 		try {
-			final String response = command.execute(createMessageProperties(message), Arrays.copyOfRange(content, 1, content.length));
+			final String response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 			if (response == null || response.isEmpty()) return;
 			session.sendMessage(message.getChannel(), response);
 		} catch (Throwable e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
 	}
