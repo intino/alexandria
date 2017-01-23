@@ -1,27 +1,27 @@
 name="Pandora"
 version="1.0.0"
 changeNotes=""
-gulpFileTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Gulpfile_jsTemplate.class"
-packageJsonTemplate="io.intino.pandora.plugin.codegeneration.accessor.ui.gulp.Package_jsonTemplate.class"
+gulpFileTemplate="io.intino.pandora.builder.codegeneration.accessor.ui.gulp.Gulpfile_jsTemplate.class"
+packageJsonTemplate="io.intino.pandora.builder.codegeneration.accessor.ui.gulp.Package_jsonTemplate.class"
 
 [[groups]]
 id="PandoraToolsGroup"
 popup="true"
 text="Pandora"
-aClass="io.intino.pandora.plugin.actions.PandoraActionGroup"
+aClass="io.intino.pandora.builder.actions.PandoraActionGroup"
 groupId="ToolsMenu"
 anchor="last"
 
 [[actions]]
 id="NewPandoraFile"
-aClass="io.intino.pandora.plugin.actions.CreatePandoraFileAction"
+aClass="io.intino.pandora.builder.actions.CreatePandoraFileAction"
 groupId="NewGroup"
 relativeToAction="NewTaraFile"
 anchor="first"
 
 [[actions]]
 id="CreatePandoraAPI"
-aClass="io.intino.pandora.plugin.actions.CreatePandoraBoxAction"
+aClass="io.intino.pandora.builder.actions.CreatePandoraBoxAction"
 text="Create Pandora Shell"
 description="Create Pandora Shell"
 shortcut="control alt S"
@@ -29,7 +29,7 @@ groupId="PandoraToolsGroup"
 
 [[actions]]
 id="PublishAccesors"
-aClass="io.intino.pandora.plugin.actions.PublishAccessorAction"
+aClass="io.intino.pandora.builder.actions.PublishAccessorAction"
 text="Distribute Pandora Accessor"
 description="Distribute Pandora Accessor in Artifactory"
 shortcut="control alt A"
