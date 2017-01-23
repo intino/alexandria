@@ -1,0 +1,51 @@
+def type(display)
+	package $package+validPackage.displays.notifiers;
+
+	import io.intino.pandora.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.pandora.server.activity.displays.DisplayNotifier {
+
+        public $name+FirstUpperCase~DisplayNotifier(io.intino.pandora.server.activity.displays.Display display, io.intino.pandora.server.activity.displays.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		$notification...[$NL$NL]
+    }
+
+end
+
+def type(notification) trigger(notification)
+	public void $name+firstLowercase([$parameter value]) {
+		put[$target]("$name+firstLowercase"[, "value", $parameter+empty~value]);
+	}
+end
+
+def type(parameter) trigger(empty)
+end
+def type(list) trigger(parameter)
+    java.util.List<$value+firstUpperCase>
+end
+
+def trigger(parameter)
+    $value+firstUpperCase
+end
+
+
+
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def attribute(All) trigger(target)
+	ToAll
+end
+
+def attribute(Display) trigger(target)
+	ToDisplay
+end
+
+def attribute(Client) trigger(target)
+end

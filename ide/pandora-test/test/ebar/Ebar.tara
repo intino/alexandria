@@ -1,7 +1,6 @@
 dsl Pandora
 
 Activity UI
-	Authenticated(by="http://localhost:8081")
 
 	Home(application) home as Restricted
 	Page(error, paths="/error") errorPage
