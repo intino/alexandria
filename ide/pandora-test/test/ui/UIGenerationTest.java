@@ -1,13 +1,13 @@
 package ui;
 
+import io.intino.pandora.builder.codegeneration.BoxConfigurationRenderer;
+import io.intino.pandora.builder.codegeneration.BoxRenderer;
+import io.intino.pandora.builder.codegeneration.FullRenderer;
+import io.intino.pandora.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
+import io.intino.pandora.builder.codegeneration.server.activity.display.DisplayRenderer;
+import io.intino.pandora.builder.codegeneration.server.activity.web.ActivityRenderer;
+import io.intino.pandora.builder.codegeneration.server.activity.web.ResourceRenderer;
 import io.intino.pandora.model.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.BoxConfigurationRenderer;
-import io.intino.pandora.plugin.codegeneration.BoxRenderer;
-import io.intino.pandora.plugin.codegeneration.FullRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
-import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 

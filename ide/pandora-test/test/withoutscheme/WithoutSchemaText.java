@@ -1,7 +1,7 @@
 package withoutscheme;
 
 import io.intino.pandora.model.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.FullRenderer;
+import io.intino.pandora.builder.codegeneration.FullRenderer;
 import io.intino.tara.magritte.Graph;
 
 import java.io.File;
