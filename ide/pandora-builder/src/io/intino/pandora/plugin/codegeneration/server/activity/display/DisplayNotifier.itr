@@ -17,13 +17,23 @@ def type(display)
 end
 
 def type(notification) trigger(notification)
-	public void $name+firstLowercase([$parameter+firstUpperCase value]) {
+	public void $name+firstLowercase([$parameter value]) {
 		put[$target]("$name+firstLowercase"[, "value", $parameter+empty~value]);
 	}
 end
 
-def trigger(empty)
+def type(parameter) trigger(empty)
 end
+def type(list) trigger(parameter)
+    java.util.List<$value+firstUpperCase>
+end
+
+def trigger(parameter)
+    $value+firstUpperCase
+end
+
+
+
 
 def type(schemaImport)
 	import $package.schemas.*;

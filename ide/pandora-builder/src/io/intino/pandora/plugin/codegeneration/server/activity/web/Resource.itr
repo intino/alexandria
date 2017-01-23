@@ -20,14 +20,16 @@ def type(page)
 		@Override
 		public void execute() throws PandoraException {
 			super.execute();
+			[$restrict
 			if (isLogged()) render();
-			else authenticate();
+			else authenticate();?render();]
 		}
 
 		private void render() {
 			String clientId = UUID.randomUUID().toString();
 			$name+firstUpperCase~Action $name+firstLowercase~Action = new $name+firstUpperCase~Action();
 			$name+firstLowercase~Action.session = manager.currentSession();
+			$name+firstLowercase~Action.session.whenLogin(b -> authenticate());
 			$name+firstLowercase~Action.session.whenLogout(b -> logout());
 			$name+firstLowercase~Action.box = box;
 			$name+firstLowercase~Action.clientId = clientId;

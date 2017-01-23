@@ -42,6 +42,7 @@ public class ResourceRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", page.name());
 		frame.addSlot("box", boxName);
+		if (page.isRestricted()) frame.addSlot("restrict", "");
 		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name() + "Resource"), template().format(frame));
 		createCorrespondingAction(page);
 	}

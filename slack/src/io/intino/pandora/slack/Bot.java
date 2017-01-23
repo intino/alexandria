@@ -51,7 +51,7 @@ public abstract class Bot {
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		if (message.getSender().isBot()) return;
 		String[] content = Arrays.stream(message.getMessageContent().split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
-		Command command = commands.containsKey(content[0]) ? commands.get(content[0]) : commandNotFound();
+		Command command = commands.containsKey(content[0].toLowerCase()) ? commands.get(content[0].toLowerCase()) : commandNotFound();
 		try {
 			final String response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 			if (response == null || response.isEmpty()) return;

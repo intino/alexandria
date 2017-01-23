@@ -48,7 +48,7 @@ def type(slack & actions)
 end
 
 def type(request) trigger(add)
-	add("$name", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
+	add("$name".toLowerCase(), java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
 end
 
 def type(request & newMethod)

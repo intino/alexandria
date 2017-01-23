@@ -12,8 +12,8 @@ import io.intino.pandora.plugin.codegeneration.server.activity.SchemaAdaptersRen
 import io.intino.pandora.plugin.codegeneration.server.activity.display.DisplayRenderer;
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.pandora.plugin.codegeneration.server.activity.web.ResourceRenderer;
-import io.intino.pandora.plugin.codegeneration.server.jms.connector.ChannelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.connector.BusRenderer;
+import io.intino.pandora.plugin.codegeneration.server.jms.connector.ChannelRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSRequestRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jms.service.JMSServiceRenderer;
 import io.intino.pandora.plugin.codegeneration.server.jmx.JMXOperationsServiceRenderer;
@@ -107,7 +107,7 @@ public class FullRenderer {
 	}
 
 	private void ui() {
-		new DisplayRenderer(graph, src, gen, packageName, boxName).execute();
+		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph).execute();

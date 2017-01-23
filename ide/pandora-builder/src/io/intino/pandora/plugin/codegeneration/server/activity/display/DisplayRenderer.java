@@ -1,13 +1,14 @@
 package io.intino.pandora.plugin.codegeneration.server.activity.display;
 
+import com.intellij.openapi.project.Project;
 import io.intino.pandora.model.Activity;
 import io.intino.pandora.model.Schema;
 import io.intino.pandora.model.date.DateData;
 import io.intino.pandora.model.type.TypeData;
 import io.intino.pandora.plugin.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -16,18 +17,21 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.pandora.model.Activity.Display.Request.ResponseType.Asset;
 
+@SuppressWarnings("Duplicates")
 public class DisplayRenderer {
 
 	private static final String DISPLAYS = "displays";
 	private static final String NOTIFIERS = "notifiers";
 	private static final String REQUESTERS = "requesters";
+	private final Project project;
 	private final File gen;
 	private final File src;
 	private final String packageName;
 	private final List<Activity.Display> displays;
 	private final String boxName;
 
-	public DisplayRenderer(Graph graph, File src, File gen, String packageName, String boxName) {
+	public DisplayRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+		this.project = project;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
@@ -50,9 +54,12 @@ public class DisplayRenderer {
 		frame.addSlot("box", boxName);
 		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
 		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name() + "DisplayRequester"), displayRequesterTemplate().format(frame));
-		if (!Commons.javaFile(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display")).exists())
-			Commons.writeFrame(new File(src, DISPLAYS), snakeCaseToCamelCase(display.name() + "Display"), displayTemplate().format(frame));
+		final String newDisplay = snakeCaseToCamelCase(display.name() + "Display");
+		if (!Commons.javaFile(new File(src, DISPLAYS), newDisplay).exists())
+			Commons.writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
+		else new DisplayUpdater(project, display, new File(src, DISPLAYS + File.separator + newDisplay)).update();
 	}
+
 
 	private Frame[] framesOfNotifications(List<Activity.Display.Notification> notifications) {
 		List<Frame> frames = notifications.stream().map(this::frameOf).collect(Collectors.toList());
@@ -63,20 +70,28 @@ public class DisplayRenderer {
 		final Frame frame = new Frame().addTypes("notification");
 		frame.addSlot("name", notification.name());
 		frame.addSlot("target", notification.to().name());
-		if (notification.asType() != null) frame.addSlot("parameter", notification.asType().type());
+		if (notification.asType() != null) {
+			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", notification.asType().type());
+			if (notification.isList()) parameterFrame.addTypes("list");
+			frame.addSlot("parameter", parameterFrame);
+		}
 		return frame;
 	}
 
 	private Frame[] framesOfRequests(List<Activity.Display.Request> requests) {
-		List<Frame> frames = requests.stream().map(this::frameOf).collect(Collectors.toList());
+		List<Frame> frames = requests.stream().map(DisplayRenderer::frameOf).collect(Collectors.toList());
 		return frames.toArray(new Frame[frames.size()]);
 	}
 
-	private Frame frameOf(Activity.Display.Request request) {
+	static Frame frameOf(Activity.Display.Request request) {
 		final Frame frame = new Frame().addTypes("request");
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name());
-		if (request.asType() != null) frame.addSlot("parameter", type(request));
+		if (request.asType() != null) {
+			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", request.asType().type());
+			if (request.isList()) parameterFrame.addTypes("list");
+			frame.addSlot("parameter", parameterFrame);
+		}
 		return frame;
 	}
 
