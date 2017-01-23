@@ -3,8 +3,8 @@ package swagger;
 
 import io.intino.pandora.model.PandoraApplication;
 import io.intino.pandora.model.rest.RESTService;
-import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.OpenApiDescriptor;
-import io.intino.pandora.plugin.codegeneration.accessor.rest.swagger.SwaggerGenerator;
+import io.intino.pandora.builder.codegeneration.accessor.rest.swagger.OpenApiDescriptor;
+import io.intino.pandora.builder.codegeneration.accessor.rest.swagger.SwaggerGenerator;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
 import org.junit.Test;

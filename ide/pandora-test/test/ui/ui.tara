@@ -18,10 +18,9 @@ Activity Platform-Web
 		Request logout
 
 	Display olap
-		Notification timeline as Object(Timeline)
+		Notification timeline as Object(Timeline) List
 		Notification timeRange as Object(Range)
 		Notification scales as Object(ScaleList)
-		Notification updateScale as Object(Scale)
 		Notification enableDrill
 		Notification disableDrill
 		Notification enableFilter
@@ -37,7 +36,7 @@ Activity Platform-Web
 		Request addTicket as Text
 		Request removeTicket as Text
 		Request updateScale as Text
-		Request updateRange as Object(RequestRange)
+		Request updateRange as Object(RequestRange) List
 		Request(Asset) export as Object(RequestRange)
 		Request toggleDrill
 		Request toggleFilter

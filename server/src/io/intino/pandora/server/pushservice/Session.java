@@ -14,5 +14,6 @@ public interface Session<C extends Client> {
     void remove(C client);
     void send(String message);
 
+    void login();
     void logout();
 }

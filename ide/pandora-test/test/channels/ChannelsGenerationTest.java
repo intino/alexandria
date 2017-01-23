@@ -1,7 +1,7 @@
 package channels;
 
 import io.intino.pandora.model.PandoraApplication;
-import io.intino.pandora.plugin.codegeneration.FullRenderer;
+import io.intino.pandora.builder.codegeneration.FullRenderer;
 import org.junit.Test;
 import io.intino.tara.magritte.Graph;
 
