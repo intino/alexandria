@@ -19,7 +19,10 @@ public class DisplayTemplate extends Template {
 	public Template define() {
 		add(
 			rule().add((condition("type", "display"))).add(literal("package ")).add(mark("package")).add(literal(".displays;\n\nimport io.intino.pandora.exceptions.*;\nimport ")).add(mark("package")).add(literal(".*;\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\n")).add(mark("schemaImport")).add(literal("\nimport ")).add(mark("package", "validPackage")).add(literal(".displays.notifiers.")).add(mark("name", "firstUpperCase")).add(literal("DisplayNotifier;\nimport io.intino.pandora.server.activity.displays.Display;\nimport io.intino.pandora.server.activity.services.push.User;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Display extends Display<")).add(mark("name", "firstUpperCase")).add(literal("DisplayNotifier> {\n    private ")).add(mark("box", "firstUpperCase")).add(literal("Box box;\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("Display(")).add(mark("box", "firstUpperCase")).add(literal("Box box) {\n        super();\n        this.box = box;\n    }\n\n\t")).add(mark("request").multiple("\n\n")).add(literal("\n}")),
+			rule().add((condition("type", "request & asset"))).add(literal("public io.intino.pandora.server.activity.spark.ActivityFile ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter")).add(literal(" value"))).add(literal(") {\n    return null;\n}")),
 			rule().add((condition("type", "request"))).add(literal("public void ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter")).add(literal(" value"))).add(literal(") {\n\n}")),
+			rule().add((condition("type", "list")), (condition("trigger", "parameter"))).add(mark("value", "firstUpperCase")).add(literal("[]")),
+			rule().add((condition("trigger", "parameter"))).add(mark("value", "firstUpperCase")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
 		return this;

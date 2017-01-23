@@ -40,8 +40,16 @@ def type(request) trigger(request)
 	if (operation.equals("$name")) display.$name($parameter);
 end
 
-def	 trigger(parameter)
-	manager.fromQuery("value", $value+FirstUpperCase.class)
+def type(list) trigger(parameter)
+    manager.fromQuery("value", $value+FirstUpperCase$[].class)
+end
+
+def type(parameter) trigger(parameter)
+    manager.fromQuery("value", $value+FirstUpperCase.class)
+end
+
+def	trigger(parameter)
+
 end
 
 

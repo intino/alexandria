@@ -25,12 +25,12 @@ class BotActionsUpdater {
 	private final PsiElementFactory factory;
 	private final String boxName;
 
-	BotActionsUpdater(Project project, File destiny, List<? extends Request> requests, String boxName) {
+	BotActionsUpdater(Project project, File destination, List<? extends Request> requests, String boxName) {
 		this.project = project;
 		this.requests = requests;
 		this.factory = JavaPsiFacade.getElementFactory(project);
 		this.boxName = boxName;
-		file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(destiny, true));
+		file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(destination, true));
 	}
 
 	void update() {

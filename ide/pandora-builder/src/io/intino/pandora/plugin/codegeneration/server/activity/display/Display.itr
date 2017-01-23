@@ -20,11 +20,23 @@ def type(display)
 		$request...[$NL$NL]
     }
 end
-
+def type(request & asset)
+	public io.intino.pandora.server.activity.spark.ActivityFile $name([$parameter value]) {
+        return null;
+	}
+end
 def type(request)
 	public void $name([$parameter value]) {
 
 	}
+end
+
+def type(list) trigger(parameter)
+    $value+firstUpperCase$[]
+end
+
+def trigger(parameter)
+    $value+firstUpperCase
 end
 
 def type(schemaImport)
