@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.File;
 
-public abstract class KonosAction extends Action {
+abstract class KonosAction extends Action {
 
 	public KonosAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
