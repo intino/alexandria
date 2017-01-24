@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.intino.pandora</groupId>
-    <artifactId>pandora-jms</artifactId>
+    <groupId>io.intino.konos</groupId>
+    <artifactId>konos-jms</artifactId>
     <version>1.0.2</version>
 
     <properties>
@@ -65,8 +65,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.intino.pandora</groupId>
-            <artifactId>pandora-core</artifactId>
+            <groupId>io.intino.konos</groupId>
+            <artifactId>konos-core</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

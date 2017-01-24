@@ -9,7 +9,7 @@ plugin/plugin/target/
 test-res/*.stash
 target/
 workspace.xml
-/ide/pandora-plugin/dependency-reduced-pom.xml
+/ide/konos-plugin/dependency-reduced-pom.xml
 slack/target
 workspace.xml
 dependency-reduced-pom.xml

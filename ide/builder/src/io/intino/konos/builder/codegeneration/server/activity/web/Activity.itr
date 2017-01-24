@@ -1,0 +1,71 @@
+def type(activity)
+	package $package+validPackage;
+
+	import $package+validPackage.displays.*;
+    import $package+validPackage.displays.notifiers.*;
+    import $package+validPackage.displays.requesters.*;
+    import $package+validPackage.resources.*;
+
+    import io.intino.konos.server.activity.ActivityKonosSpark;
+    import io.intino.konos.server.activity.displays.DisplayNotifier;
+    import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
+    import io.intino.konos.server.activity.services.push.PushService;
+    import io.intino.konos.server.activity.spark.resources.AfterDisplayRequest;
+    import io.intino.konos.server.activity.spark.resources.AssetResource;
+    import io.intino.konos.server.activity.spark.resources.AuthenticateCallbackResource;
+    import io.intino.konos.server.activity.spark.resources.BeforeDisplayRequest;
+
+    import java.net.MalformedURLException;
+    import java.net.URL;
+
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.server.activity.Activity {
+
+        public static void init(ActivityKonosSpark spark, $box+FirstUpperCase~Box box) {
+            spark.route("/push").push(new PushService());
+            spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
+            spark.route("/asset/:name").get(manager -> new AssetResource(name -> box.graph().loadResource(name), manager, notifierProvider()).execute());
+
+			$resource...[$NL]
+
+			$display...[$NL]
+
+			registerNotifiers();
+        }
+
+		private static void registerNotifiers() {
+			$display+provider...[$NL]
+		}
+    }
+end
+
+
+def type(abstractPage) trigger(resource)
+	$path...[$NL]
+end
+
+def trigger(path)
+	spark.route("$value").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+end
+
+def type(display) trigger(provider)
+	register($name+firstUpperCase~DisplayNotifier.class).forDisplay($name+firstUpperCase~Display.class);
+end
+
+def type(display)
+	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	$asset
+	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+end
+
+def trigger(asset)
+	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+end
+
+def trigger(quoted)
+	"value"
+end
+
+def type(custom) trigger(custom)
+	.replace("{$value}", configuration.$value)
+end
