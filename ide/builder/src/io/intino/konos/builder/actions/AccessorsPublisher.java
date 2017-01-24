@@ -15,15 +15,15 @@ import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer
 import io.intino.konos.model.jms.JMSService;
 import io.intino.konos.model.jmx.JMXService;
 import io.intino.konos.model.rest.RESTService;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.magritte.Graph;
+import io.intino.tara.plugin.actions.utils.FileSystemUtils;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.actions.utils.FileSystemUtils;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import io.intino.tara.magritte.Graph;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -178,6 +178,7 @@ class AccessorsPublisher {
 	private Frame createRepositoryFrame(String url, String id, String type) {
 		return new Frame().addTypes("repository", "release", type).
 				addSlot("name", id).
+				addSlot("random", new Random().nextInt(10)).
 				addSlot("url", url).
 				addSlot("type", new Random().nextInt() % 10);
 	}

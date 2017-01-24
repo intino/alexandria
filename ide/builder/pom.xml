@@ -35,7 +35,7 @@
                         </goals>
                         <configuration>
                             <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
                             <minimizeJar>false</minimizeJar><!--important-->
                             <artifactSet>
                                 <includes>
@@ -75,13 +75,13 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>model</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
             <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>tara.dsl</groupId>
             <artifactId>konos</artifactId>
-            <scope>runtime</scope>
+            <scope>compile</scope>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -104,19 +104,19 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte-lite</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>language</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.itrules</groupId>
             <artifactId>itrules</artifactId>
             <scope>provided</scope>
-            <version>LATEST</version>
+            <version>1.9.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
