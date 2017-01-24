@@ -34,8 +34,6 @@
         <outputDirectory>../out/production/scheduling</outputDirectory>
         <testOutputDirectory>../out/test/scheduling</testOutputDirectory>
         <directory>../out/build/scheduler</directory>
-        <finalName>${project.artifactId}-${project.version}</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

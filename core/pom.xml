@@ -30,6 +30,7 @@
     </repositories>
 
     <build>
+        <finalName>konos-${project.artifactId}-${project.version}</finalName>
         <outputDirectory>../out/production/core</outputDirectory>
         <testOutputDirectory>../out/test/core</testOutputDirectory>
         <directory>../out/build/core</directory>
