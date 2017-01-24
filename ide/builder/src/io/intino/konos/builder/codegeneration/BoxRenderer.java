@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
-import com.intellij.psi.JavaPsiFacade;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.Bus;
@@ -11,7 +10,6 @@ import io.intino.konos.model.jmx.JMXService;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.slackbot.SlackBotService;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
@@ -19,7 +17,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-import static com.intellij.psi.search.GlobalSearchScope.moduleWithDependentsScope;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
@@ -31,14 +28,16 @@ public class BoxRenderer {
 	private final KonosApplication application;
 	private final Configuration configuration;
 	private boolean parentExists;
+	private final boolean isTara;
 
-	public BoxRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists) {
+	public BoxRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists, boolean isTara) {
 		application = graph.application();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.parentExists = parentExists;
+		this.isTara = isTara;
 	}
 
 	public void execute() {
@@ -46,8 +45,7 @@ public class BoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (module != null && JavaPsiFacade.getInstance(module.getProject()).findClass(Proteo.GROUP_ID + "." + Proteo.ARTIFACT_ID + "." + "Graph", moduleWithDependentsScope(module)) != null)
-			frame.addSlot("tara", name);
+		if (module != null && isTara) frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);
@@ -55,6 +53,7 @@ public class BoxRenderer {
 		activities(frame);
 		Commons.writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}
+
 
 	private void activities(Frame frame) {
 		for (Activity activity : application.activityList())

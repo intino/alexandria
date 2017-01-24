@@ -1,7 +1,7 @@
 package cesar;
 
-import io.intino.konos.model.KonosApplication;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.model.KonosApplication;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -51,7 +51,7 @@ public class ActivityAccessorCreator {
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module[] modules = manager.getModules();
 			for (Module m : modules)
-				if (m.getName().equals(activity.name() + "-activity")) {
+				if (m.getName().equals(toSnakeCase(activity.name()) + "-activity")) {
 					addModuleDependency(m);
 					return m;
 				}
@@ -67,9 +67,15 @@ public class ActivityAccessorCreator {
 		});
 	}
 
+	private String toSnakeCase(String name) {
+		String regex = "([a-z])([A-Z]+)";
+		String replacement = "$1-$2";
+		return name.replaceAll(regex, replacement).toLowerCase();
+	}
+
 	@NotNull
 	private String modulePath(Activity activity) {
-		return project.getBasePath() + File.separator + activity.name().toLowerCase() + "-activity" + File.separator + activity.name().toLowerCase() + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION;
+		return project.getBasePath() + File.separator + toSnakeCase(activity.name()) + "-activity" + File.separator + toSnakeCase(activity.name()) + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
 
 	private void addModuleDependency(Module webModule) {

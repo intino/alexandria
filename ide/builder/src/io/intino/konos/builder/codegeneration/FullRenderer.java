@@ -25,11 +25,14 @@ import io.intino.konos.builder.codegeneration.server.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.server.slack.SlackRenderer;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+
+import static com.intellij.psi.search.GlobalSearchScope.moduleWithLibrariesScope;
 
 public class FullRenderer {
 
@@ -43,15 +46,17 @@ public class FullRenderer {
 	private final String packageName;
 	private final String boxName;
 	private final boolean parentExists;
+	private final boolean isTara;
 
 	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
 		this.project = module == null ? null : module.getProject();
-		parentExists = parentExists(module);
 		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+		this.parentExists = parentExists();
+		this.isTara = isTara();
 		this.boxName = boxName();
 	}
 
@@ -117,7 +122,7 @@ public class FullRenderer {
 	}
 
 	private void box() {
-		new BoxRenderer(graph, gen, packageName, module, parentExists).execute();
+		new BoxRenderer(graph, gen, packageName, module, parentExists, isTara).execute();
 		new BoxConfigurationRenderer(graph, gen, packageName, module, parentExists).execute();
 	}
 
@@ -131,7 +136,11 @@ public class FullRenderer {
 		} else return "System";
 	}
 
-	private static boolean parentExists(Module module) {
+	private boolean isTara() {
+		return module != null && JavaPsiFacade.getInstance(module.getProject()).findClass(Proteo.GROUP_ID + "." + Proteo.ARTIFACT_ID + "." + "Graph", moduleWithLibrariesScope(module)) != null;
+	}
+
+	private boolean parentExists() {
 		try {
 			if (module == null) return false;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
