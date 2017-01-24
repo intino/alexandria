@@ -1,6 +1,7 @@
 package io.intino.pandora.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.psi.JavaPsiFacade;
 import io.intino.pandora.builder.helpers.Commons;
 import io.intino.pandora.model.Activity;
 import io.intino.pandora.model.Bus;
@@ -10,6 +11,7 @@ import io.intino.pandora.model.jmx.JMXService;
 import io.intino.pandora.model.rest.RESTService;
 import io.intino.pandora.model.slackbot.SlackBotService;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
@@ -17,6 +19,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static com.intellij.psi.search.GlobalSearchScope.moduleWithDependentsScope;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
@@ -43,7 +46,8 @@ public class BoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", name);
+		if (module != null && JavaPsiFacade.getInstance(module.getProject()).findClass(Proteo.GROUP_ID + "." + Proteo.ARTIFACT_ID + "." + "Graph", moduleWithDependentsScope(module)) != null)
+			frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);

@@ -5,6 +5,9 @@ use DataTypes
 
 Concept Task
 
+Concept Command
+	var string messageType
+
 Facet Scheduled on Task
 
 Facet BootTrigger extends Scheduled

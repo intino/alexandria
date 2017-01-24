@@ -1,4 +1,4 @@
-package io.intino.pandora.builder.codegeneration.server.task;
+package io.intino.pandora.builder.codegeneration.process.task;
 
 import io.intino.pandora.builder.codegeneration.Formatters;
 import io.intino.pandora.model.Task;

@@ -16,26 +16,26 @@ def type(box)
 		$bus+field...[$NL]][
 		$task+field]
 
-		private String graphID;
+		[$tara~private String graphID;]
 
-		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+        public [$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box([$tara~io.intino.tara.magritte.Graph graph, ][$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]Configuration configuration) {
+            [$hasParent~super(configuration);
+            ][$tara~map.put(graphID = UUID.randomUUID().toString(), graph);]
+            this.configuration = configuration;[
+            $service+setup...[$NL]][
+            $activity+setup...[$NL]]
+        }
+
+        public io.intino.tara.magritte.Graph graph() {
+            return (io.intino.tara.magritte.Graph) map().get(graphID);
+        }
+
+
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);
 			]this.configuration = configuration;[
 			$service+setup...[$NL]][
 			$activity+setup...[$NL]]
-		}
-
-
-		public $tara+SnakeCaseToCamelCase+FirstUpperCase~Box(io.intino.tara.magritte.Graph graph, $tara+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
-			[$hasParent~super(configuration);
-			]map.put(graphID = UUID.randomUUID().toString(), graph);
-			this.configuration = configuration;[
-			$service+setup...[$NL]][
-			$activity+setup...[$NL]]
-		}
-
-		public io.intino.tara.magritte.Graph graph() {
-			return (io.intino.tara.magritte.Graph) map().get(graphID);
 		}
 
 		protected Map<String, Object> map() {
