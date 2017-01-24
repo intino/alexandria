@@ -1,0 +1,6 @@
+dsl Konos
+
+Activity Test-Web
+	Home(uses = application) homePage
+
+	Display application

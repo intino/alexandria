@@ -1,0 +1,69 @@
+def type(tasker)
+	package $package+ValidPackage;
+
+	import $package+ValidPackage.$box+FirstUpperCase~Box;
+	import io.intino.konos.scheduling.KonosTasker;
+	import io.intino.konos.scheduling.directory.KonosDirectorySentinel;
+	import $package+ValidPackage.scheduling.*;
+	import org.quartz.*;
+	import java.util.LinkedHashSet;
+	import java.util.Map;
+	import java.util.Set;
+	import java.util.logging.Logger;
+
+	import static org.quartz.JobBuilder.newJob;
+	import static org.quartz.CronScheduleBuilder.*;
+	import static org.quartz.TriggerBuilder.newTrigger;
+
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~Tasks {
+		private static final Logger logger = Logger.getGlobal();
+
+		private $name+firstUpperCase+SnakeCaseToCamelCase~Tasks() {
+
+		}
+
+		public static void init(KonosTasker tasker, $box+FirstUpperCase~Box box) {
+			JobDetail job;
+			try {
+				$task+init...[$NL]
+				tasker.startSchedules();
+			} catch (Exception e) {
+				logger.severe(e.getMessage());
+			}
+		}
+
+		private static Set<Trigger> newSet(Trigger... triggers) {
+			LinkedHashSet<Trigger> set = new LinkedHashSet<>();
+			java.util.Collections.addAll(set, triggers);
+			return set;
+		}
+	}
+end
+
+def type(task) type(DirectorySentinelTask) trigger(init)
+	tasker.watchDirectory("$name", new java.io.File("$file"), (f, e) -> { try {
+			$package.actions.$name+SnakeCaseToCamelCase~Action action = new $package.actions.$name+SnakeCaseToCamelCase~Action();
+			action.box = box;
+			action.directory = f.toURI().toURL();
+			action.event = e;
+			action.execute();
+		} catch(java.io.IOException ignored) {}
+		}, $event+fullPath...[, ]);
+end
+
+def trigger(fullPath)
+	KonosDirectorySentinel.Event.$value
+end
+def type(task) trigger(init)
+	job = newJob($name+SnakeCaseToCamelCase~Task.class).withIdentity("$name").build();
+	job.getJobDataMap().put("box", box);
+	tasker.scheduleJob(job, newSet($job...[, ]), true);
+end
+
+def type(cronTrigger) trigger(job)
+	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")).build()
+end
+
+def type(oneBoot) trigger(job)
+	newTrigger().startNow().build()
+end

@@ -1,0 +1,18 @@
+def type(exception)
+    package $package.exceptions;
+
+	import io.intino.konos.exceptions.*;
+	import java.util.Map;
+	import java.util.LinkedHashMap;
+
+	public class $name+firstUpperCase extends  io.intino.konos.exceptions.$code {
+
+	    public $name+firstUpperCase(String message) {
+	        super(message);
+	    }
+
+	    public $name+firstUpperCase(String message, Map<String, String> parameters) {
+			super(message, parameters);
+		}
+	}
+end

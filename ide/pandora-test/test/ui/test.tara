@@ -1,6 +1,0 @@
-dsl Pandora
-
-Activity Test-Web
-	Home(uses = application) homePage
-
-	Display application

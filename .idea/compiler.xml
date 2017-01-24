@@ -26,37 +26,58 @@
         <module name="teseo" />
       </profile>
       <profile name="Annotation profile for model" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-model/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-model/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="../../out/build/konos-model/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/konos-model/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="pandora-model" />
-        <module name="pandora-plugin-core" />
+        <module name="konos-model" />
+        <module name="konos-plugin-core" />
+        <module name="model" />
       </profile>
-      <profile name="Annotation profile for pandora-slack" enabled="true">
+      <profile name="Annotation profile for builder-test" enabled="true">
+        <sourceOutputDir name="../../out/build/konos-builder-test/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/konos-builder-test/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="konos-test" />
+        <module name="test" />
+      </profile>
+      <profile name="Annotation profile for builder" enabled="true">
+        <sourceOutputDir name="../../out/build/konos-plugin/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/konos-plugin/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="builder" />
+        <module name="konos-builder" />
+      </profile>
+      <profile name="Annotation profile for konos-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jmx" />
+      </profile>
+      <profile name="Annotation profile for konos-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="server" />
+      </profile>
+      <profile name="Annotation profile for konos-slack" enabled="true">
         <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="slack" />
       </profile>
-      <profile name="Annotation profile for pandora-core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="core" />
-      </profile>
-      <profile name="Annotation profile for pandora-plugin" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-plugin/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-plugin/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="pandora-builder" />
-      </profile>
-      <profile name="Annotation profile for pandora-rest-accessor-java" enabled="true">
+      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="accessor" />
       </profile>
-      <profile name="Annotation profile for pandora-jms" enabled="true">
+      <profile name="Annotation profile for konos-core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="core" />
+      </profile>
+      <profile name="Annotation profile for konos-jms" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -64,45 +85,30 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for pandora-builder-test" enabled="true">
-        <sourceOutputDir name="../../out/build/pandora-builder-test/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/pandora-builder-test/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="pandora-test" />
-      </profile>
-      <profile name="Annotation profile for pandora-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="server" />
-      </profile>
-      <profile name="Annotation profile for pandora-jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="jmx" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="accessor" target="1.8" />
       <module name="all" target="1.5" />
       <module name="API" target="1.8" />
       <module name="application" target="1.8" />
+      <module name="builder" target="1.8" />
       <module name="core" target="1.8" />
       <module name="forrest" target="1.8" />
       <module name="jms" target="1.8" />
       <module name="jmx" target="1.8" />
-      <module name="pandora-builder" target="1.8" />
-      <module name="pandora-model" target="1.8" />
-      <module name="pandora-plugin" target="1.8" />
-      <module name="pandora-plugin-core" target="1.8" />
-      <module name="pandora-test" target="1.8" />
+      <module name="konos-builder" target="1.8" />
+      <module name="konos-model" target="1.8" />
+      <module name="konos-plugin" target="1.8" />
+      <module name="konos-plugin-core" target="1.8" />
+      <module name="konos-test" target="1.8" />
+      <module name="model" target="1.8" />
       <module name="plugin" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
       <module name="server" target="1.8" />
       <module name="slack" target="1.8" />
       <module name="teseo" target="1.8" />
+      <module name="test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

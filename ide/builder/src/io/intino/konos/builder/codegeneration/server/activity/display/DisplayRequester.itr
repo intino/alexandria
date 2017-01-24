@@ -1,0 +1,58 @@
+def type(display)
+	package $package+validPackage.displays.requesters;
+
+	import $package+validPackage.displays.$name+firstUpperCase~Display;
+	import io.intino.konos.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+	import io.intino.konos.exceptions.KonosException;
+	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
+	import io.intino.konos.server.activity.spark.ActivitySparkManager;
+	import io.intino.konos.server.activity.spark.resources.DisplayRequester;
+
+	public class $name+firstUpperCase~DisplayRequester extends DisplayRequester {
+
+		public $name+firstUpperCase~DisplayRequester(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+		}
+
+		@Override
+		public void execute() throws KonosException {
+			$name+firstUpperCase~Display display = display();
+			String operation = operation();
+
+			$request...[$NL~else ]
+		}
+	}
+end
+
+def type(request & asset) trigger(request)
+	if (operation.equals("$name")) {
+		io.intino.konos.server.activity.spark.ActivityFile file = display.$name($parameter);
+		manager.write(file.content(), file.label());
+	}
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) display.$name($parameter);
+end
+
+def type(list) trigger(parameter)
+    manager.fromQuery("value", $value+FirstUpperCase$[].class)
+end
+
+def type(parameter) trigger(parameter)
+    manager.fromQuery("value", $value+FirstUpperCase.class)
+end
+
+def	trigger(parameter)
+
+end
+
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

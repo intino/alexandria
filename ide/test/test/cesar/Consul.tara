@@ -1,0 +1,29 @@
+dsl Konos
+
+Service ConsulManager as JMX
+	Operation deploy
+		Parameter system as Object(schema = ConsulSystemSchema)
+		Response as Bool
+	Operation retract
+		Parameter systemID as Text
+		Response as Bool
+	Operation systemLogging
+		Parameter systemID as Text
+		Response as Object(schema = loggingSchema)
+	Operation serverLogging
+		Parameter systemID as Text
+		Response as Object(schema = loggingSchema)
+
+Schema loggingSchema
+	Attribute dateInstant as DateTime
+	Attribute memory as Real
+	Attribute cpu as Real
+	Attribute connections as Integer
+
+Schema ConsulSystemSchema
+	Attribute name as Text
+	Attribute artifact as Text
+	Attribute(multiple = true) parameters as Text List
+	Schema artifactory
+		Attribute id as Text
+		Attribute url as Text
