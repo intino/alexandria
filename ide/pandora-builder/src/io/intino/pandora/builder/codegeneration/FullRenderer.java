@@ -6,23 +6,24 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.pandora.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
-import io.intino.pandora.builder.codegeneration.server.activity.web.ActivityRenderer;
-import io.intino.pandora.builder.codegeneration.server.jms.connector.BusRenderer;
-import io.intino.pandora.builder.codegeneration.server.jmx.JMXOperationsServiceRenderer;
-import io.intino.pandora.builder.codegeneration.server.jmx.JMXServerRenderer;
-import io.intino.pandora.builder.codegeneration.server.task.TaskerRenderer;
 import io.intino.pandora.builder.codegeneration.exception.ExceptionRenderer;
+import io.intino.pandora.builder.codegeneration.process.CommandRenderer;
+import io.intino.pandora.builder.codegeneration.process.task.TaskRenderer;
+import io.intino.pandora.builder.codegeneration.process.task.TaskerRenderer;
 import io.intino.pandora.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.pandora.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
 import io.intino.pandora.builder.codegeneration.server.activity.display.DisplayRenderer;
+import io.intino.pandora.builder.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.pandora.builder.codegeneration.server.activity.web.ResourceRenderer;
+import io.intino.pandora.builder.codegeneration.server.jms.connector.BusRenderer;
 import io.intino.pandora.builder.codegeneration.server.jms.connector.ChannelRenderer;
 import io.intino.pandora.builder.codegeneration.server.jms.service.JMSRequestRenderer;
 import io.intino.pandora.builder.codegeneration.server.jms.service.JMSServiceRenderer;
+import io.intino.pandora.builder.codegeneration.server.jmx.JMXOperationsServiceRenderer;
+import io.intino.pandora.builder.codegeneration.server.jmx.JMXServerRenderer;
 import io.intino.pandora.builder.codegeneration.server.rest.RESTResourceRenderer;
 import io.intino.pandora.builder.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.pandora.builder.codegeneration.server.slack.SlackRenderer;
-import io.intino.pandora.builder.codegeneration.server.task.TaskRenderer;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -59,7 +60,7 @@ public class FullRenderer {
 		schemas();
 		exceptions();
 		rest();
-		scheduling();
+		process();
 		jmx();
 		jms();
 		bus();
@@ -92,7 +93,8 @@ public class FullRenderer {
 		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
-	private void scheduling() {
+	private void process() {
+		new CommandRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new TaskRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new TaskerRenderer(graph, gen, packageName, boxName).execute();
 	}

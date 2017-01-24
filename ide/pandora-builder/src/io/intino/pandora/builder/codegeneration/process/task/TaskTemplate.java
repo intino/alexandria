@@ -1,4 +1,4 @@
-package io.intino.pandora.builder.codegeneration.server.task;
+package io.intino.pandora.builder.codegeneration.process.task;
 
 import org.siani.itrules.LineSeparator;
 import org.siani.itrules.Template;

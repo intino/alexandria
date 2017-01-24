@@ -1,0 +1,4 @@
+dsl Pandora
+
+
+Command(messageType = "sensor.changed") sensorChanged
