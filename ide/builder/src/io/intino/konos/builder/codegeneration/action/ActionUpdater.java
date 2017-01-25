@@ -4,12 +4,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Exception;
 import io.intino.konos.model.Parameter;
 import io.intino.konos.model.Response;
 import io.intino.konos.model.object.ObjectData;
 import io.intino.konos.model.type.TypeData;
-import io.intino.konos.builder.helpers.Commons;
 
 import java.io.File;
 import java.util.List;
@@ -83,7 +83,7 @@ class ActionUpdater {
 
 	private void updateReturnType(PsiMethod psiMethod) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(formatType(response.asType(), response.isList()), psiMethod)));
+		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(response == null ? "void" : formatType(response.asType(), response.isList()), psiMethod)));
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
