@@ -59,7 +59,6 @@
     <repositories>
         <repository>
             <id>intino-maven</id>
-            <name>intino-maven-releases</name>
             <url>https://artifactory.intino.io/artifactory/release-libraries</url>
         </repository>
     </repositories>

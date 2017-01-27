@@ -1,14 +1,20 @@
 def type(boxConfiguration)
 	package $package;
 
-	import java.util.LinkedHashMap;
-	import java.util.Map;
-	import java.util.UUID;
 	[import io.intino.tara.magritte.Graph;$tara+import]
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.konos.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration] {
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.konos.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration ]{
 
 		$service+field...[$NL]
+        private String$[] args;
+
+        public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+            this.args = args;
+        }
+
+        	public String$[] args() {
+        		return args;
+        	}
 
 		$service...[$NL$NL]
 
