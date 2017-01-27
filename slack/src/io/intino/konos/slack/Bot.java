@@ -67,7 +67,22 @@ public abstract class Bot {
 	}
 
 	private MessageProperties createMessageProperties(SlackMessagePosted message) {
-		return () -> message.getChannel().getName();
+		return new MessageProperties() {
+			@Override
+			public String channel() {
+				return message.getChannel().getName();
+			}
+
+			@Override
+			public String username() {
+				return message.getSender().getUserName();
+			}
+
+			@Override
+			public String userRealName() {
+				return message.getSender().getRealName();
+			}
+		};
 	}
 
 	protected void add(String name, List<String> parameters, List<String> components, String description, Command command) {
@@ -98,6 +113,8 @@ public abstract class Bot {
 
 	public interface MessageProperties {
 		String channel();
+		String username();
+		String userRealName();
 	}
 
 	public class CommandInfo {
