@@ -50,11 +50,11 @@ public abstract class Resource implements io.intino.konos.server.Resource {
         return authentication != null && manager.authService().valid(authentication.accessToken());
     }
 
-    protected synchronized URL authenticate() {
+    protected synchronized String authenticate(String baseUrl) {
         String authId = UUID.randomUUID().toString();
         Space space = space();
         space.setAuthId(authId);
-        space.setBaseUrl(manager.baseUrl());
+        space.setBaseUrl(baseUrl);
         saveAuthenticationId(authId);
         Authentication authentication = createAuthentication(authId);
         return authenticate(authentication);
@@ -149,9 +149,9 @@ public abstract class Resource implements io.intino.konos.server.Resource {
         }
     }
 
-    private URL authenticate(Authentication authentication) {
+    private String authenticate(Authentication authentication) {
         try {
-            return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken()));
+            return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString();
         } catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
             return null;
         }

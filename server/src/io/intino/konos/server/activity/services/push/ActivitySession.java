@@ -1,7 +1,7 @@
 package io.intino.konos.server.activity.services.push;
 
-import io.intino.konos.server.spark.SparkSession;
 import io.intino.konos.server.pushservice.Client;
+import io.intino.konos.server.spark.SparkSession;
 
 public class ActivitySession<C extends ActivityClient> extends SparkSession<C> {
     private User user;
