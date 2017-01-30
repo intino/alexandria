@@ -25,14 +25,25 @@ public abstract class Activity {
     protected static DisplayNotifierProvider notifierProvider() {
         return (display, carrier) -> {
             try {
-                Class<? extends DisplayNotifier> clazz = notifiers.getOrDefault(display.getClass(), DisplayNotifier.class);
-                Constructor<? extends DisplayNotifier> constructor = clazz.getConstructor(Display.class, MessageCarrier.class);
-                return constructor.newInstance(display, carrier);
+                return notifierFor(display).newInstance(display, carrier);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException error) {
                 System.err.println(error.getMessage());
                 return null;
             }
         };
+    }
+
+    private static Constructor<? extends DisplayNotifier> notifierFor(Display display) throws NoSuchMethodException {
+        Class<? extends DisplayNotifier> clazz = notifiers.get(display.getClass());;
+
+        if (clazz == null)
+			clazz = notifiers.getOrDefault(displayByInheritance(display.getClass()), DisplayNotifier.class);
+
+        return clazz.getConstructor(Display.class, MessageCarrier.class);
+    }
+
+    private static Class<? extends Display> displayByInheritance(Class<? extends Display> clazz) {
+        return notifiers.keySet().stream().filter(dc -> dc.isAssignableFrom(clazz)).findFirst().orElse(null);
     }
 
     protected interface DisplayNotifierRegistration {

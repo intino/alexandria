@@ -6,7 +6,6 @@ def type(page)
 	import io.intino.konos.exceptions.KonosException;
 	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
 
-	import java.net.URL;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
@@ -31,7 +30,12 @@ def type(page)
 			String clientId = UUID.randomUUID().toString();
 			$name+firstUpperCase~Action $name+firstLowercase~Action = new $name+firstUpperCase~Action();
 			$name+firstLowercase~Action.session = manager.currentSession();
-			$name+firstLowercase~Action.session.whenLogin((Function<Boolean, URL>) b -> authenticate());
+			$name+firstLowercase~Action.session.whenLogin(new Function<String, String>() {
+				@Override
+				public String apply(String baseUrl) {
+					return $name+firstLowercase~Resource.this.authenticate(baseUrl);
+				}
+			});
 			$name+firstLowercase~Action.session.whenLogout(b -> logout());
 			$name+firstLowercase~Action.box = box;
 			$name+firstLowercase~Action.clientId = clientId;
