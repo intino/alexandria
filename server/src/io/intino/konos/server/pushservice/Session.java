@@ -1,5 +1,6 @@
 package io.intino.konos.server.pushservice;
 
+import java.net.URL;
 import java.util.List;
 
 public interface Session<C extends Client> {
@@ -14,6 +15,6 @@ public interface Session<C extends Client> {
     void remove(C client);
     void send(String message);
 
-    void login();
+    URL login();
     void logout();
 }

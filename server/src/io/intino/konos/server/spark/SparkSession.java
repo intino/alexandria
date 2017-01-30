@@ -3,16 +3,18 @@ package io.intino.konos.server.spark;
 import io.intino.konos.server.pushservice.Client;
 import io.intino.konos.server.pushservice.Session;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SparkSession<C extends Client> implements Session<C> {
 	private final Map<String, C> clientsMap = new HashMap<>();
 	private final String id;
 	private String currentClient;
-	private Consumer<Boolean> loginListener;
+	private Function<Boolean, URL> loginListener;
 	private Consumer<Boolean> logoutListener;
 
 	public SparkSession(String id) {
@@ -53,10 +55,10 @@ public class SparkSession<C extends Client> implements Session<C> {
 	}
 
 	public void send(String message) {
-		clientsMap.values().stream().forEach(client -> client.send(message));
+		clientsMap.values().forEach(client -> client.send(message));
 	}
 
-	public void whenLogin(Consumer<Boolean> listener) {
+	public void whenLogin(Function<Boolean, URL> listener) {
 		this.loginListener = listener;
 	}
 
@@ -65,9 +67,10 @@ public class SparkSession<C extends Client> implements Session<C> {
 	}
 
 	@Override
-	public void login() {
+	public URL login() {
 		if (loginListener != null)
-			loginListener.accept(true);
+			return loginListener.apply(true);
+		return null;
 	}
 
 	@Override
