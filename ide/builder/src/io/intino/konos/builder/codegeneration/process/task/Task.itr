@@ -1,0 +1,25 @@
+def type(scheduled)
+	package $package+ValidPackage.scheduling;
+
+	import org.quartz.*;
+	import $package+ValidPackage.$box+FirstUpperCase~Box;
+	import io.intino.konos.scheduling.ScheduledTrigger;
+
+	public class $name+firstUpperCase~Task implements ScheduledTrigger {
+
+		public void execute(JobExecutionContext context) throws JobExecutionException {
+			$box+FirstUpperCase~Box box = ($box+FirstUpperCase~Box) context.getMergedJobDataMap().get("box");
+			$package+ValidPackage.actions.$name+firstUpperCase~Action action = new $package+ValidPackage.actions.$name+firstUpperCase~Action();
+			action.box = box;
+			action.execute();
+		}
+	}
+end
+
+def type(parameter) trigger(assign)
+	action.$name = $name;
+end
+
+def type(parameter) trigger(name)
+	$name
+end

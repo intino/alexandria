@@ -1,0 +1,47 @@
+def type(accessor)
+	package $package+ValidPackage;
+
+    import java.util.List;
+    import java.util.ArrayList;
+	import io.intino.konos.exceptions.*;
+	import $package+ValidPackage.jmx.$name+validName+firstUpperCase~MBean;
+    import io.intino.konos.jmx.JMXClient;
+
+	$schemaImport
+
+	public class $name+validName+firstUpperCase~JMXAccessor {
+
+		private final JMXClient.JMXConnection connection;
+		private $name+validName+firstUpperCase~MBean bean;
+
+		public $name+validName+firstUpperCase~JMXAccessor(String url, int port) throws java.io.IOException {
+			JMXClient server = new JMXClient(url, port);
+			connection = server.connect();
+			bean = connection.mBean($name+validName+firstUpperCase~MBean.class);
+		}
+
+		public void closeJMXConnection() {
+			connection.close();
+		}
+
+		$operation...[$NL$NL]
+	}
+end
+
+def type(operation)
+	public $returnType+firstUpperCase+ReturnTypeFormatter $name+validName+firstLowerCase($parameter+signature...[, ]) {
+		return bean != null ? bean.$name+validName+firstLowerCase($parameter+name...[, ]) : null;
+	}
+end
+
+def type(parameter) trigger(signature)
+	$type $name+validName+firstLowerCase
+end
+
+def type(parameter) trigger(name)
+	$name+validName+firstLowerCase
+end
+
+def type(schemaImport) trigger(schemaImport)
+	import $package.schemas.*;
+end

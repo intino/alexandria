@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.intino.pandora</groupId>
-    <artifactId>pandora-slack</artifactId>
-    <version>1.0.2</version>
+    <groupId>io.intino.konos</groupId>
+    <artifactId>konos-slack</artifactId>
+    <version>1.0.0</version>
 
     <distributionManagement>
         <repository>
@@ -15,6 +15,8 @@
         </repository>
     </distributionManagement>
     <build>
+        <finalName>konos-${project.artifactId}-${project.version}</finalName>
+
         <outputDirectory>../out/production/slack</outputDirectory>
         <testOutputDirectory>../out/test/slack</testOutputDirectory>
         <directory>../out/build/slack</directory>
@@ -53,8 +55,8 @@
             <version>LATEST</version>
         </dependency>
         <dependency>
-            <groupId>io.intino.pandora</groupId>
-            <artifactId>pandora-core</artifactId>
+            <groupId>io.intino.konos</groupId>
+            <artifactId>konos-core</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>

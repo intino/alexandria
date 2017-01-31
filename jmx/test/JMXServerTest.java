@@ -1,4 +1,4 @@
-import io.intino.pandora.jmx.JMXServer;
+import io.intino.konos.jmx.JMXServer;
 
 import java.util.Collections;
 

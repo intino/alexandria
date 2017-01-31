@@ -1,0 +1,11 @@
+dsl Konos
+
+Service Happysense as SlackBot()
+	Notification(channel = "happysense")
+	Request status
+		description = "Show the status of a device. Usage: status %deviceid"
+		Parameter(type = String) device
+	Request devices
+		Parameter(type = Boolean) a
+		Parameter(type = Double) b
+		description = "Show the list of connected devices"

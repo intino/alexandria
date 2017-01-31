@@ -1,0 +1,25 @@
+def type(dispatcher)
+	package $package+validPackage;
+
+    import java.util.LinkedHashMap;
+    import java.util.Map;
+
+	public class KonosProcessDispatcher {
+
+        Map<String, Command> commands = new LinkedHashMap<>();
+
+        public void process(String message) {
+            // TODO save message
+            $commands...[else ]
+        }
+	}
+end
+
+def trigger(commands)
+	if ("$messageType".equals(message)) {
+	    $className command = new $className();
+	    command.box = this;
+	    command.message = message;
+	    command.execute();
+	}
+end
