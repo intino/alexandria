@@ -3,15 +3,15 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/accessor/accessor.iml" filepath="$PROJECT_DIR$/accessor/accessor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="builder" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/jmx/jmx.iml" filepath="$PROJECT_DIR$/jmx/jmx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ide/pandora-builder/pandora-builder.iml" filepath="$PROJECT_DIR$/ide/pandora-builder/pandora-builder.iml" group="builder" />
-      <module fileurl="file://$PROJECT_DIR$/ide/pandora-model/pandora-model.iml" filepath="$PROJECT_DIR$/ide/pandora-model/pandora-model.iml" group="builder" />
-      <module fileurl="file://$PROJECT_DIR$/ide/pandora-test/pandora-test.iml" filepath="$PROJECT_DIR$/ide/pandora-test/pandora-test.iml" group="builder" />
+      <module fileurl="file://$PROJECT_DIR$/ide/model/model.iml" filepath="$PROJECT_DIR$/ide/model/model.iml" group="builder" />
       <module fileurl="file://$PROJECT_DIR$/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/scheduler/scheduler.iml" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
       <module fileurl="file://$PROJECT_DIR$/slack/slack.iml" filepath="$PROJECT_DIR$/slack/slack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="builder" />
     </modules>
   </component>
 </project>

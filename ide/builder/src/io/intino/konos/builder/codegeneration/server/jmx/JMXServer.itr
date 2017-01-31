@@ -1,0 +1,96 @@
+def type(jmxserver)
+	package $package+ValidPackage;
+
+    import io.intino.konos.jmx.JMXServer;
+    import io.intino.konos.Box;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class JMX$name+firstUpperCase {
+
+    	public JMXServer init(int port, Box box) {
+    		JMXServer server = new JMXServer(mbClasses(box));
+    		server.init(port);
+    		return server;
+    	}
+
+    	private Map<String, Object$[]> mbClasses(Box box) {
+            Map<String, Object$[]> map = new HashMap<>();
+            map.put("$package.jmx.$name+firstUpperCase", new Object$[$]{box});
+            return map;
+    	}
+    }
+end
+
+def type(jmx) type(interface)
+	package $package+ValidPackage.jmx;
+
+	import java.util.*;
+    import java.time.*;
+
+    public interface $name+firstUpperCase~MBean {
+
+        $operation+signature...[$NL$NL]
+    }
+end
+
+
+def type(operation) trigger(signature)
+    $returnType $name+firstLowerCase($parameter+withType...[, ]);
+end
+
+def type(returnType) trigger(return)
+    return
+end
+
+def type(returnType & list) trigger(returnType)
+    java.util.List<$value>
+end
+
+def type(returnType) trigger(returnType)
+    $value
+end
+
+def type(parameter & list) trigger(withType)
+    java.util.List<$type> $name
+end
+
+def type(parameter) trigger(withType)
+    $type $name
+end
+
+
+def type(jmx) type(implementation)
+	package $package+ValidPackage.jmx;
+
+    import $package.$box+validName+FirstUpperCase~Box;
+    import java.util.*;
+    import java.time.*;
+
+    public class $name+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
+
+        private final $box+validName+FirstUpperCase~Box box;
+
+        public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) {
+            this.box = box;
+        }
+
+        $operation+implementation...[$NL$NL]
+    }
+end
+
+def type(operation) trigger(implementation)
+    public $returnType $name+validName+firstLowerCase($parameter+withType...[, ]) {
+        $package+ValidPackage.actions.$action+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+firstUpperCase~Action();
+        action.box = box;
+        [$parameter+assign...[$NL]]
+        [$returnType+return ]action.execute();
+    }
+end
+
+def type(parameter) trigger(assign)
+    action.$name = $name;
+end
+
+def attribute(void) trigger(return)
+end

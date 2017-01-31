@@ -1,7 +1,7 @@
 import com.sun.tools.attach.AgentInitializationException;
 import com.sun.tools.attach.AgentLoadException;
-import io.intino.pandora.consul.jmx.ConsulManagerMBean;
-import io.intino.pandora.jmx.JMXClient;
+import io.intino.konos.consul.jmx.ConsulManagerMBean;
+import io.intino.konos.jmx.JMXClient;
 
 import java.io.IOException;
 import java.util.Map;
