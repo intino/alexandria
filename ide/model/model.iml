@@ -8,7 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="IDEA Tara Konos" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte-lite:1.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />
