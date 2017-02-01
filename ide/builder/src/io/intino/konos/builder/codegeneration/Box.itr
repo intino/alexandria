@@ -8,7 +8,7 @@ def type(box)
 	[$hasREST~import io.intino.konos.server.KonosSpark;]
 	[import io.intino.tara.magritte.Graph;$tara+import]
 
-	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parentPackage.konos.$parent+FirstUpperCase~Box?io.intino.konos.Box] {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parent+FirstUpperCase~Box?io.intino.konos.Box] {
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;]
 		[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();][

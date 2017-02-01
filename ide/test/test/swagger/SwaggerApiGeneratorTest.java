@@ -1,7 +1,7 @@
 package swagger;
 
 
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.builder.codegeneration.accessor.rest.swagger.OpenApiDescriptor;
 import io.intino.konos.builder.codegeneration.accessor.rest.swagger.SwaggerGenerator;
@@ -17,7 +17,7 @@ public class SwaggerApiGeneratorTest {
 
 	@Test
 	public void testApiJSON() throws Exception {
-		final Graph petstore = Graph.use(KonosApplication.class, null).load("Petstore");
+		final Graph petstore = Graph.use(Konos.class, null).load("Petstore");
 		OpenApiDescriptor descriptor = new OpenApiDescriptor(petstore.find(RESTService.class).get(0));
 		final String jsonDescriptor = descriptor.createJSONDescriptor();
 //		assertEquals(jsonDescriptor, new String(Files.readAllBytes(new File("test-res", "swagger" + File.separator + "petstore_expected.json").toPath())));
@@ -25,7 +25,7 @@ public class SwaggerApiGeneratorTest {
 
 	@Test
 	public void testApiCreation() throws Exception {
-		final Graph petstore = Graph.use(KonosApplication.class, null).load("Petstore");
+		final Graph petstore = Graph.use(Konos.class, null).load("Petstore");
 		SwaggerGenerator generator = new SwaggerGenerator(petstore.application(), new File("test-gen", "swagger"));
 		generator.execute(Collections.singletonList("java"));
 	}

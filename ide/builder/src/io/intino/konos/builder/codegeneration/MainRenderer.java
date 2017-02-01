@@ -8,6 +8,8 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.System;
 
@@ -31,11 +33,17 @@ public class MainRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", name());
 		if (configuration != null && System.equals(configuration.level())) {
-			if (configuration.dslWorkingPackage() != null)
-				frame.addSlot("dslPackage", configuration.dslWorkingPackage());
-			frame.addSlot("language", configuration.dsl());
+			frame.addSlot("wrapper", dsls());
 			Commons.writeFrame(destination, "Main", template().format(frame));
 		}
+	}
+
+	private String[] dsls() {
+		List<String> dsls = new ArrayList<>();
+		for (Configuration.LanguageLibrary lang : configuration.languages()) {
+			dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
+		}
+		return dsls.toArray(new String[dsls.size()]);
 	}
 
 	private Template template() {
