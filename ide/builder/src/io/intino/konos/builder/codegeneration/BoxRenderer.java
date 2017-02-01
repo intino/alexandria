@@ -4,7 +4,7 @@ import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.Bus;
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.model.jms.JMSService;
 import io.intino.konos.model.jmx.JMXService;
 import io.intino.konos.model.rest.RESTService;
@@ -25,18 +25,18 @@ public class BoxRenderer {
 	private final File gen;
 	private final String packageName;
 	private final Module module;
-	private final KonosApplication application;
+	private final Konos konos;
 	private final Configuration configuration;
-	private boolean parentExists;
+	private String parent;
 	private final boolean isTara;
 
-	public BoxRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists, boolean isTara) {
-		application = graph.application();
+	public BoxRenderer(Graph graph, File gen, String packageName, Module module, String parent, boolean isTara) {
+		konos = graph.wrapper(Konos.class);
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
-		this.parentExists = parentExists;
+		this.parent = parent;
 		this.isTara = isTara;
 	}
 
@@ -56,37 +56,34 @@ public class BoxRenderer {
 
 
 	private void activities(Frame frame) {
-		for (Activity activity : application.activityList())
+		for (Activity activity : konos.activityList())
 			frame.addSlot("activity", (Frame) activityFrame(activity));
 	}
 
 	private void tasks(Frame frame, String name) {
-		if (!application.taskList().isEmpty())
+		if (!konos.taskList().isEmpty())
 			frame.addSlot("task", new Frame().addTypes("task"));
 	}
 
 	private void bus(Frame frame, String name) {
-		for (Bus bus : application.busList())
+		for (Bus bus : konos.busList())
 			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", bus.name()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
 	private void services(Frame frame, String name) {
-		for (RESTService service : application.rESTServiceList())
+		for (RESTService service : konos.rESTServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));
-		for (JMSService service : application.jMSServiceList())
+		for (JMSService service : konos.jMSServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", name));
-		for (JMXService service : application.jMXServiceList())
+		for (JMXService service : konos.jMXServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jmx").addSlot("name", service.name()).addSlot("configuration", name));
-		for (SlackBotService service : application.slackBotServiceList())
+		for (SlackBotService service : konos.slackBotServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "slack").addSlot("name", service.name()).addSlot("configuration", name));
 	}
 
 	private void parent(Frame frame) {
-		if (parentExists && configuration != null && !Platform.equals(configuration.level())) {
-			frame.addSlot("parent", configuration.dsl());
-			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
-			frame.addSlot("hasParent", "");
-		}
+		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
+			frame.addSlot("parent", parent).addSlot("hasParent", "");
 	}
 
 	private Frame activityFrame(Activity activity) {

@@ -84,7 +84,7 @@ class AccessorsPublisher {
 	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, conf.groupId(), file.getName() + ACCESSOR, conf.modelVersion());
+			final File pom = createPom(file, conf.groupId(), file.getName() + ACCESSOR, conf.version());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -209,7 +209,7 @@ class AccessorsPublisher {
 		return "<dependency>\n" +
 				"    <groupId>" + conf.groupId().toLowerCase() + "</groupId>\n" +
 				"    <artifactId>" + app.toLowerCase() + ACCESSOR + "</artifactId>\n" +
-				"    <version>" + conf.modelVersion() + "</version>\n" +
+				"    <version>" + conf.version() + "</version>\n" +
 				"</dependency>";
 	}
 

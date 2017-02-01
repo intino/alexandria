@@ -40,6 +40,9 @@ def type(page)
 			$name+firstLowercase~Action.box = box;
 			$name+firstLowercase~Action.clientId = clientId;
 			manager.pushService().onOpen(client -> {
+				if (client.soul() != null)
+					return;
+
 				io.intino.konos.server.activity.displays.Soul soul = $name+firstLowerCase~Action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier($name+firstLowerCase~Action.session, client, display));
