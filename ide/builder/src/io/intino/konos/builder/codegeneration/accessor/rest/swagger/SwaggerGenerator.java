@@ -1,6 +1,6 @@
 package io.intino.konos.builder.codegeneration.accessor.rest.swagger;
 
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.model.rest.RESTService;
 import io.swagger.codegen.SwaggerCodegen;
 
@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class SwaggerGenerator {
-	private final KonosApplication application;
+	private final Konos application;
 	private final File outDirectory;
 
-	public SwaggerGenerator(KonosApplication application, File outDirectory) {
+	public SwaggerGenerator(Konos application, File outDirectory) {
 		this.application = application;
 		this.outDirectory = outDirectory;
 	}
