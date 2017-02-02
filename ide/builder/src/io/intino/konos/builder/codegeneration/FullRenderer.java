@@ -148,7 +148,7 @@ public class FullRenderer {
 			for (Configuration.LanguageLibrary languageLibrary : configuration.languages()) {
 				String workingPackage = languageLibrary.generationPackage();
 				if (workingPackage != null && facade.findClass(workingPackage + ".konos." + languageLibrary.name() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-					return workingPackage + ".konos." + languageLibrary.name();
+					return workingPackage.toLowerCase() + ".konos." + Formatters.firstUpperCase(languageLibrary.name());
 
 			}
 		} catch (Exception ignored) {
