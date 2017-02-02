@@ -18,7 +18,6 @@ def type(main)
 		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
-			graph.application().execute();
 		}
 
 		private static Runnable exit() {
@@ -28,7 +27,7 @@ def type(main)
 		}
 
 		private static Store store() {
-            return new io.intino.tara.magritte.stores.ResourceStore();
+            return new io.intino.tara.magritte.stores.ResourcesStore();
         }
 	}
 end
