@@ -11,7 +11,7 @@ public class GraphLoader {
 	public static Konos loadGraph(Stash... stash) {
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
-		final Graph graph = Graph.use(Konos.class, null).loadStashes(stash);
+		final Graph graph = Graph.use(Konos.class).loadStashes(stash);
 		Thread.currentThread().setContextClassLoader(currentLoader);
 		return graph.wrapper(Konos.class);
 	}

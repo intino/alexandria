@@ -17,7 +17,7 @@ public class SwaggerApiGeneratorTest {
 
 	@Test
 	public void testApiJSON() throws Exception {
-		final Graph petstore = Graph.use(Konos.class, null).load("Petstore");
+		final Graph petstore = Graph.use(Konos.class).load("Petstore");
 		OpenApiDescriptor descriptor = new OpenApiDescriptor(petstore.find(RESTService.class).get(0));
 		final String jsonDescriptor = descriptor.createJSONDescriptor();
 //		assertEquals(jsonDescriptor, new String(Files.readAllBytes(new File("test-res", "swagger" + File.separator + "petstore_expected.json").toPath())));
@@ -25,8 +25,8 @@ public class SwaggerApiGeneratorTest {
 
 	@Test
 	public void testApiCreation() throws Exception {
-		final Graph petstore = Graph.use(Konos.class, null).load("Petstore");
-		SwaggerGenerator generator = new SwaggerGenerator(petstore.application(), new File("test-gen", "swagger"));
+		final Graph petstore = Graph.use(Konos.class).load("Petstore");
+		SwaggerGenerator generator = new SwaggerGenerator(petstore.wrapper(Konos.class), new File("test-gen", "swagger"));
 		generator.execute(Collections.singletonList("java"));
 	}
 }
