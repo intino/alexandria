@@ -45,7 +45,7 @@ public class FullRenderer {
 	private final File src;
 	private final String packageName;
 	private final String boxName;
-	private final boolean parentExists;
+	private final String parent;
 	private final boolean isTara;
 
 	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
@@ -55,7 +55,7 @@ public class FullRenderer {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
-		this.parentExists = parentExists();
+		this.parent = parent();
 		this.isTara = isTara();
 		this.boxName = boxName();
 	}
@@ -122,8 +122,8 @@ public class FullRenderer {
 	}
 
 	private void box() {
-		new BoxRenderer(graph, gen, packageName, module, parentExists, isTara).execute();
-		new BoxConfigurationRenderer(graph, gen, packageName, module, parentExists).execute();
+		new BoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
+		new BoxConfigurationRenderer(graph, gen, packageName, module, parent).execute();
 	}
 
 	private String boxName() {
@@ -140,16 +140,21 @@ public class FullRenderer {
 		return module != null && JavaPsiFacade.getInstance(module.getProject()).findClass(Proteo.GROUP_ID + "." + Proteo.ARTIFACT_ID + "." + "Graph", moduleWithLibrariesScope(module)) != null;
 	}
 
-	private boolean parentExists() {
+	private String parent() {
 		try {
-			if (module == null) return false;
+			if (module == null) return null;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final Configuration configuration = TaraUtil.configurationOf(module);
-			String workingPackage = configuration.dslWorkingPackage();
-			return workingPackage != null && facade.findClass(workingPackage + ".konos." + configuration.dsl() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null;
-		} catch (Exception e) {
-			return false;
+			for (Configuration.LanguageLibrary languageLibrary : configuration.languages()) {
+				String workingPackage = languageLibrary.generationPackage();
+				if (workingPackage != null && facade.findClass(workingPackage + ".konos." + languageLibrary.name() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+					return workingPackage.toLowerCase() + ".konos." + Formatters.firstUpperCase(languageLibrary.name());
+
+			}
+		} catch (Exception ignored) {
 		}
+		return null;
+
 	}
 
 	private void main() {

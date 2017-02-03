@@ -1,6 +1,6 @@
 package channels;
 
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import org.junit.Test;
 import io.intino.tara.magritte.Graph;
@@ -14,7 +14,7 @@ public class ChannelsGenerationTest {
 	@Test
 	public void testChannelsGeneration() throws Exception {
 		File gen = new File("test-gen", CHANNELS);
-		new FullRenderer(null, Graph.use(KonosApplication.class, null).load("Channels"), gen, gen, CHANNELS).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Channels"), gen, gen, CHANNELS).execute();
 	}
 
 }

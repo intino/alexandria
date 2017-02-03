@@ -6,7 +6,7 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			Graph graph = Graph.use([$dslPackage.]$language~Application.class[, $metadslPackage.][$metalanguage~Platform.class]).load();
+			Graph graph = Graph.use(store(), $wrapper...[, ]).load();
 			run(graph, createConfigurationFromArgs(args));
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
 		}
@@ -18,7 +18,6 @@ def type(main)
 		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
 			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
 			box.init();
-			graph.application().execute();
 		}
 
 		private static Runnable exit() {
@@ -26,5 +25,13 @@ def type(main)
 				[$rest~Spark.stop();]
 			};
 		}
+
+		private static Store store() {
+            return new io.intino.tara.magritte.stores.ResourcesStore();
+        }
 	}
+end
+
+def trigger(wrapper)
+    $value.class
 end
