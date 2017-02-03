@@ -33,7 +33,7 @@ def type(page)
 			$name+firstLowercase~Action.session.whenLogin(new Function<String, String>() {
 				@Override
 				public String apply(String baseUrl) {
-					return $name~Resource.this.authenticate(baseUrl);
+					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
 				}
 			});
 			$name+firstLowercase~Action.session.whenLogout(b -> logout());
