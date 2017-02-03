@@ -37,7 +37,7 @@ public class ActivityAccessorRenderer {
 		frame.addTypes("configuration", "legio");
 		frame.addSlot("groupID", configuration.groupId());
 		frame.addSlot("artifactID", configuration.artifactId());
-		frame.addSlot("version", configuration.modelVersion());
+		frame.addSlot("version", configuration.version());
 		final Map<String, String> releaseRepositories = configuration.releaseRepositories();
 		for (String repository : releaseRepositories.keySet())
 			frame.addSlot("repository", new Frame().addTypes("repository", "release").addSlot("type", "Release").addSlot("url", repository).addSlot("id", releaseRepositories.get(repository)));

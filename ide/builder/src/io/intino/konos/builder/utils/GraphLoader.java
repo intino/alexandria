@@ -1,19 +1,19 @@
 package io.intino.konos.builder.utils;
 
 import com.intellij.openapi.diagnostic.Logger;
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.Graph;
 
 public class GraphLoader {
 	private static final Logger LOG = Logger.getInstance("GraphLoader");
 
-	public static KonosApplication loadGraph(Stash... stash) {
+	public static Konos loadGraph(Stash... stash) {
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
-		final Graph graph = Graph.use(KonosApplication.class, null).loadStashes(stash);
+		final Graph graph = Graph.use(Konos.class).loadStashes(stash);
 		Thread.currentThread().setContextClassLoader(currentLoader);
-		return graph.application();
+		return graph.wrapper(Konos.class);
 	}
 
 }

@@ -1,6 +1,6 @@
 package ebar;
 
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +17,7 @@ public class EbarGenerationTest {
 	@Ignore
 	public void testEbarGeneration() throws Exception {
 		File gen = new File("test-gen", EBAR);
-		new FullRenderer(null, Graph.use(KonosApplication.class, null).load("Ebar"), gen, gen, EBAR).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Ebar"), gen, gen, EBAR).execute();
 	}
 
 }

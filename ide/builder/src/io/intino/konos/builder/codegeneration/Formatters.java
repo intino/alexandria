@@ -24,6 +24,9 @@ public class Formatters {
 		return value.substring(0, 1).toLowerCase() + value.substring(1);
 	}
 
+	public static String firstUpperCase(String value) {
+		return value.substring(0, 1).toUpperCase() + value.substring(1);
+	}
 
 	public static Formatter returnTypeFormatter() {
 		return value -> {

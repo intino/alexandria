@@ -3,7 +3,7 @@ def type(boxConfiguration)
 
 	[import io.intino.tara.magritte.Graph;$tara+import]
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parentPackage.konos.$parent+snakeCaseToCamelCase+firstUpperCase~Configuration ]{
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
 		$service+field...[$NL]
         private String$[] args;

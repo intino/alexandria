@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.exception;
 
-import io.intino.konos.model.KonosApplication;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.Konos;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -18,7 +18,7 @@ public class ExceptionRenderer {
 	private String packageName;
 
 	public ExceptionRenderer(Graph graph, File gen, String packageName) {
-		this.exceptions = ((KonosApplication) graph.application()).exceptionList();
+		this.exceptions = graph.wrapper(Konos.class).exceptionList();
 		this.gen = gen;
 		this.packageName = packageName;
 	}

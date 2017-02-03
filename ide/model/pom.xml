@@ -66,7 +66,13 @@
     <dependencies>
         <dependency>
             <groupId>io.intino.tara</groupId>
-            <artifactId>magritte-lite</artifactId>
+            <artifactId>magritte</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.intino.tara</groupId>
+                    <artifactId>io</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>provided</scope>
             <version>1.0.0</version>
         </dependency>

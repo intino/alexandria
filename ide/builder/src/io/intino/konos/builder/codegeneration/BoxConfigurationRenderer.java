@@ -5,7 +5,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.Bus;
 import io.intino.konos.model.Bus.Channel;
-import io.intino.konos.model.KonosApplication;
+import io.intino.konos.model.Konos;
 import io.intino.konos.model.Service;
 import io.intino.konos.model.jms.JMSService;
 import io.intino.konos.model.jmx.JMXService;
@@ -28,20 +28,20 @@ import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer {
 
-	private final KonosApplication application;
+	private final Konos application;
 	private final File gen;
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
-	private boolean parentExists;
+	private String parent;
 
-	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, boolean parentExists) {
-		this.application = graph.application();
+	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, String parent) {
+		this.application = graph.wrapper(Konos.class);
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
-		this.parentExists = parentExists;
+		this.parent = parent;
 	}
 
 	public void execute() {
@@ -49,10 +49,8 @@ public class BoxConfigurationRenderer {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (parentExists && configuration != null && !Platform.equals(configuration.level())) {
-			frame.addSlot("parent", configuration.dsl());
-			frame.addSlot("parentPackage", configuration.dslWorkingPackage());
-		}
+		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
+			frame.addSlot("parent", parent);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addJMXServices(frame, boxName);
