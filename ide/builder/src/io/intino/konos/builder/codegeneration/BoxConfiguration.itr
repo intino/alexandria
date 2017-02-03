@@ -1,8 +1,6 @@
 def type(boxConfiguration)
 	package $package;
 
-	[import io.intino.tara.magritte.Graph;$tara+import]
-
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
 		$service+field...[$NL]
