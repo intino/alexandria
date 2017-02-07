@@ -1,13 +1,14 @@
 package io.intino.konos.builder.codegeneration.server.activity.web;
 
-import io.intino.konos.model.Activity;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.Activity;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -33,10 +34,10 @@ public class ActivityRenderer {
 
 	private void processActivity(Activity activity) {
 		Frame frame = new Frame().addTypes("activity").
-				addSlot("package", packageName).
-				addSlot("name", activity.name()).
-				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
-				addSlot("display", displaysFrame(activity.displayList()));
+			addSlot("package", packageName).
+			addSlot("name", activity.name()).
+			addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
+			addSlot("display", displaysFrame(activity.displayList()));
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
 		Commons.writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
 	}
@@ -54,8 +55,12 @@ public class ActivityRenderer {
 	private Frame frameOf(Activity.AbstractPage resource) {
 		final Frame frame = new Frame().addTypes("resource", "abstractPage");
 		frame.addSlot("name", resource.name());
-		for (String path : resource.paths())
-			frame.addSlot("path", new Frame().addSlot("value", path).addSlot("name", resource.name()));
+		for (String path : resource.paths()) {
+			Set<String> custom = Commons.extractParameters(path);
+			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name());
+			if (!custom.isEmpty()) pathFrame.addSlot("custom", Commons.extractParameters(path));
+			frame.addSlot("path", pathFrame);
+		}
 		return frame;
 	}
 
