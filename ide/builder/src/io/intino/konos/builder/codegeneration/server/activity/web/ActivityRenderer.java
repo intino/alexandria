@@ -58,7 +58,7 @@ public class ActivityRenderer {
 		for (String path : resource.paths()) {
 			Set<String> custom = Commons.extractParameters(path);
 			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name());
-			if (!custom.isEmpty()) pathFrame.addSlot("custom", Commons.extractParameters(path));
+			if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
 			frame.addSlot("path", pathFrame);
 		}
 		return frame;
