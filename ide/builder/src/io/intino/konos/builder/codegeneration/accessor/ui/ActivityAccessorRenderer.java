@@ -99,7 +99,7 @@ public class ActivityAccessorRenderer {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		Files.write(file.toPath(), Formatters.customize(io.intino.konos.builder.WidgetNotifierTemplate.create()).format(frame).getBytes());
+		Files.write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Request r) {
@@ -113,11 +113,8 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame frameOf(Display.Notification n) {
-		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name());
-		if (n.asType() != null) {
-			frame.addSlot("parameter", "");
-			frame.addSlot("to", n.to().name());
-		}
+		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name()).addSlot("to", n.to().name());
+		if (n.asType() != null) frame.addSlot("parameter", "");
 		return frame;
 	}
 
