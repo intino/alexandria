@@ -44,11 +44,15 @@ def type(abstractPage) trigger(resource)
 end
 
 def trigger(path)
-	spark.route("$value").get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
 def type(display) trigger(provider)
 	register($name+firstUpperCase~DisplayNotifier.class).forDisplay($name+firstUpperCase~Display.class);
+end
+
+def trigger(custom)
+	.replace("{$value}", configuration.$value)
 end
 
 def type(display)
