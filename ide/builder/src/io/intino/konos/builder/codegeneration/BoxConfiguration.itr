@@ -7,6 +7,7 @@ def type(boxConfiguration)
         private String$[] args;
 
         public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+        	[$parent+empty~super(args);]
             this.args = args;
         }
 
@@ -214,4 +215,7 @@ end
 
 def type(custom) trigger(assign)
 	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
+end
+
+def trigger(empty)
 end
