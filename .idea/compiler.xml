@@ -47,17 +47,17 @@
         <module name="builder" />
         <module name="konos-builder" />
       </profile>
+      <profile name="Annotation profile for konos-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jmx" />
+      </profile>
       <profile name="Annotation profile for konos-server" enabled="true">
         <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="server" />
-      </profile>
-      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
-        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="accessor" />
       </profile>
       <profile name="Annotation profile for konos-core" enabled="true">
         <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
@@ -65,11 +65,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
       </profile>
-      <profile name="Annotation profile for konos-jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
+        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jmx" />
+        <module name="accessor" />
+      </profile>
+      <profile name="Annotation profile for konos-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="slack" />
       </profile>
       <profile name="Annotation profile for konos-jms" enabled="true">
         <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
@@ -78,12 +84,6 @@
         <module name="jms" />
         <module name="scheduler" />
         <module name="scheduling" />
-      </profile>
-      <profile name="Annotation profile for konos-slack" enabled="true">
-        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
