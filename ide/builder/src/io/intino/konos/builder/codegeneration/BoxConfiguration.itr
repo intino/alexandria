@@ -52,6 +52,7 @@ end
 
 def type(service & jmx) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		public String localhostIP;
 		public int port;
 	}
 end
@@ -109,8 +110,9 @@ end
 
 
 def type(service & jmx)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String localhostIP, int port) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.localhostIP = localhostIP;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		return this;
 	}
