@@ -149,6 +149,8 @@ public class BoxConfigurationRenderer {
 		Set<String> set = new LinkedHashSet<>();
 		if (activity.authenticated() != null)
 			set.addAll(Commons.extractParameters(activity.authenticated().by()));
+		for (Activity.AbstractPage page : activity.abstractPageList())
+			for (String path : page.paths()) set.addAll(Commons.extractParameters(path));
 		return set;
 	}
 

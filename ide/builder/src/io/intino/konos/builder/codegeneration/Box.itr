@@ -120,7 +120,7 @@ def type(bus) trigger(init)
 end
 
 def type(service & jmx) trigger(jmx)
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port, this);
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.localhostIP, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port, this);
 end
 
 def type(service & slack) trigger(slack)
