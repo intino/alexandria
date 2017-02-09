@@ -27,7 +27,8 @@ public class JMXServer {
 		this.mbClasses = classWithParametersMap;
 	}
 
-	public void init(int port) {
+	public void init(String localhostIP, int port) {
+		System.setProperty("java.rmi.server.hostname", localhostIP);
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
 			registerMBean(server, mbClass, mbClasses.get(mbClass));
