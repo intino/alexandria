@@ -60,7 +60,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>konos-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>
