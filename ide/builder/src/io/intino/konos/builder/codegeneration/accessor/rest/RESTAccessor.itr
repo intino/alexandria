@@ -6,7 +6,7 @@ def type(accessor)
 	import java.net.URL;
 	import io.intino.konos.exceptions.*;
 	import io.intino.konos.restful.core.RestfulAccessor;
-	import io.intino.konos.restful.core.Resource;
+	import io.intino.konos.Resource;
 	import io.intino.konos.restful.exceptions.RestfulFailure;
 	import com.google.gson.Gson;
 	import com.google.gson.reflect.TypeToken;
@@ -131,7 +131,7 @@ def type(invokeSentence & file & list)
 end
 
 def type(invokeSentence & file)
-	return $doInvoke.content();
+	return $doInvoke;
 end
 
 def type(invokeSentence & date & list)

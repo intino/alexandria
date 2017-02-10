@@ -1,4 +1,4 @@
-package io.intino.konos.restful.core;
+package io.intino.konos;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Resource {
+	private String name;
 	private final InputStream content;
 	private final String contentType;
 	private Map<String, String> parameters;
 
-	public Resource(InputStream content, String contentType) {
+	public Resource(String name, String contentType, InputStream content) {
+		this.name = name;
 		this.content = content;
 		this.contentType = contentType;
 		this.parameters = new HashMap<>();
@@ -30,6 +32,10 @@ public class Resource {
 
 	public InputStream content() {
 		return content;
+	}
+
+	public String name() {
+		return name;
 	}
 
 	public String contentType() {
