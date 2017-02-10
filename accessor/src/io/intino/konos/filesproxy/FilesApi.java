@@ -1,7 +1,7 @@
 package io.intino.konos.filesproxy;
 
 import io.intino.konos.filesproxy.exceptions.FilesApiFailure;
-import io.intino.konos.restful.core.Resource;
+import io.intino.konos.Resource;
 
 import java.io.InputStream;
 import java.net.URL;

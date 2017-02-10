@@ -2,7 +2,7 @@ dsl Konos
 
 Activity Platform-Web
 
-	Page(uses = analytics, paths = "/analytics") analyticsPage
+	Page(uses = analytics, paths = "/{analytics}/{sample}") analyticsPage
 	Page(uses = error, paths = "/error") errorPage
 
 	Display analytics
