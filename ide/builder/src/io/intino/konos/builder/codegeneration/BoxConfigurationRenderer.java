@@ -119,9 +119,9 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
-	private void addUserVariables(Layer activity, Frame frame, Collection<String> userVariables) {
+	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
 		for (String custom : userVariables)
-			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", activity.name()).addSlot("name", custom).addSlot("type", "String"));
+			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
 	private Set<String> findCustomParameters(Channel channel) {
