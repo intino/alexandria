@@ -38,14 +38,19 @@
         <sourceTestOutputDir name="../../out/build/konos-builder-test/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="konos-test" />
-        <module name="test" />
       </profile>
       <profile name="Annotation profile for builder" enabled="true">
-        <sourceOutputDir name="../../out/build/konos-plugin/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../out/build/konos-plugin/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="../../out/build/builder/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/builder/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="builder" />
         <module name="konos-builder" />
+      </profile>
+      <profile name="Annotation profile for test" enabled="true">
+        <sourceOutputDir name="../../out/build/builder-test/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/builder-test/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="test" />
       </profile>
       <profile name="Annotation profile for konos-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
@@ -92,6 +97,7 @@
       <module name="API" target="1.8" />
       <module name="application" target="1.8" />
       <module name="builder" target="1.8" />
+      <module name="builder-test" target="1.8" />
       <module name="core" target="1.8" />
       <module name="forrest" target="1.8" />
       <module name="jms" target="1.8" />

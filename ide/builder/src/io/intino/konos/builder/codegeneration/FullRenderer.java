@@ -7,6 +7,8 @@ import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
+import io.intino.konos.builder.codegeneration.main.GraphProviderRenderer;
+import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.process.CommandRenderer;
 import io.intino.konos.builder.codegeneration.process.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.process.task.TaskerRenderer;
@@ -158,6 +160,7 @@ public class FullRenderer {
 	}
 
 	private void main() {
-		new MainRenderer(src, packageName, module).execute();
+		new GraphProviderRenderer(src, packageName, module).execute();
+		new MainRenderer(gen, packageName, module).execute();
 	}
 }

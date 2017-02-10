@@ -3,26 +3,82 @@ def type(boxConfiguration)
 
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
-		$service+field...[$NL]
-        private String$[] args;
+		private java.util.Map<String, String> args;
+		[$parent+empty?protected java.io.File store;]
 
-        public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
-        	[$parent+empty~super(args);]
-            this.args = args;
+		$service+field...[$NL]
+
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+			[$parent+empty~super(args)?this.args = argsToMap(args)];
+			fillWithArgs();
+		}
+
+		private void fillWithArgs() {
+            $service+fill...[$NL]
         }
 
-        	public String$[] args() {
-        		return args;
-        	}
+		public java.util.Map<String, String> args() {
+			return args;
+		}
+
+		[$parent+empty?
+		public java.io.File store() {
+			return this.store;
+		}]
 
 		$service...[$NL$NL]
 
 		$service+confClass...[$NL$NL]
+
+		private java.util.Map<String, String> argsToMap(String$[] args) {
+			java.util.Map<String, String> map = new java.util.LinkedHashMap<>();
+			for (String arg : args) {
+				String$[] keyValue = arg.split("=");
+				map.put(keyValue$[0], keyValue.length > 1 ? keyValue$[1] : keyValue$[0]);
+			}
+			return map;
+		}
 	}
 end
 
 def type(service) trigger(field)
 	$name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+end
+
+def type(service & rest) trigger(fill)
+	$name+firstLowerCase~Configuration(Integer.parseInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]));
+end
+
+def type(service & jms) trigger(fill)
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user", args.get("$name+firstLowerCase.password", [, $custom+parameter...[, ]]));
+end
+
+def type(service & bus) trigger(fill)
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user", args.get("$name+firstLowerCase.password", args.get("$name+firstLowerCase.clientID"[, $custom+parameter...[, ]]));
+end
+
+def type(service & channel) trigger(fill)
+	$name+firstLowerCase~Configuration($custom+parameter...[, ]]));
+end
+
+def type(service & slack) trigger(fill)
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.token"));
+end
+
+def type(service & activity) trigger(fill)
+	$name+firstLowerCase~Configuration(Integer.parseInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]));
+end
+
+def type(service & jmx) trigger(fill)
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.localhostIp"), Integer.parseInt(args.get("$name+firstLowerCase.port")));
+end
+
+def type(service & rest) trigger(confClass)
+	public static class $name+snakeCaseToCamelCase+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		public int port;
+		public String webDirectory;
+		$custom+field...[$NL]
+	}
 end
 
 def type(service & jms) trigger(confClass)
@@ -85,13 +141,6 @@ def type(custom) trigger(replace)
 end
 
 
-def type(service & rest) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public int port;
-		public String webDirectory;
-		$custom+field...[$NL]
-	}
-end
 
 def type(service & jms)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password[, $custom+signature...[, ]]) {
@@ -170,7 +219,7 @@ def type(service & rest)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory== null ? "www/" : webDirectory;
 		$custom+assign...[$NL]
 		return this;
 	}
@@ -218,6 +267,11 @@ end
 def type(custom) trigger(assign)
 	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
 end
+
+def type(custom) trigger(parameter)
+	args.get("$conf+validname+firstLowerCase.$name+validname+firstLowerCase)
+end
+
 
 def trigger(empty)
 end

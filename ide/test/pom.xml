@@ -18,16 +18,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
-        <outputDirectory>../../out/production/konos-builder-test</outputDirectory>
-        <testOutputDirectory>../../out/test/konos-builder-test</testOutputDirectory>
-        <directory>../../out/build/konos-builder-test</directory>
+        <outputDirectory>../../out/production/builder-test</outputDirectory>
+        <testOutputDirectory>../../out/test/builder-test</testOutputDirectory>
+        <directory>../../out/build/builder-test</directory>
     </build>
 
     <dependencies>
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>1.1.2</version>
+            <version>[1.0.0, 2.0.0]</version>
             <scope>test</scope>
         </dependency>
         <dependency>
