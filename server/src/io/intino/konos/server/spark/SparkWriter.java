@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cottons.utils.MimeTypes;
 import io.intino.konos.Error;
+import io.intino.konos.Resource;
 import spark.Response;
 import spark.utils.IOUtils;
 
@@ -31,11 +32,10 @@ class SparkWriter {
 	public void write(Object object, String name) {
 		if (object instanceof Error) writeError((Error) object, adapt(object));
 		else if (object instanceof File) writeFile((File) object);
-		else if (object instanceof InputStream)
-			writeStream((InputStream) object, name);
-		else if (object instanceof byte[]) {
-			writeBytes((byte[]) object, name);
-		} else writeResponse(adapt(object), name);
+		else if (object instanceof Resource) writeResource((Resource) object);
+		else if (object instanceof InputStream) writeStream((InputStream) object, name);
+		else if (object instanceof byte[]) writeBytes((byte[]) object, name);
+		else writeResponse(adapt(object), name);
 	}
 
 	private String adapt(Object object) {
@@ -80,6 +80,10 @@ class SparkWriter {
 
 	private void writeStream(InputStream stream, String filename) {
 		writeResponse(filename, stream, response.raw());
+	}
+
+	private void writeResource(Resource resource) {
+		writeResponse(resource.name(), resource.content(), response.raw());
 	}
 
 	private void writeBytes(byte[] content, String filename) {

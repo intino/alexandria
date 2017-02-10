@@ -37,7 +37,7 @@ Service AgentService as JMS(Topic)
 		Parameter token as Text
 		Parameter workId as Text
 		Parameter dialog as Text
-		Response as Bool
+		Response as File
 		Exception (NotFound) workNotFound
 
 	Notification("{federation}.works.{token}") workReceived

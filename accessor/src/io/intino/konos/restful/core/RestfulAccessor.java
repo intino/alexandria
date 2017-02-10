@@ -1,5 +1,6 @@
 package io.intino.konos.restful.core;
 
+import io.intino.konos.Resource;
 import io.intino.konos.restful.RestfulApi;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;
@@ -201,7 +202,7 @@ public class RestfulAccessor implements RestfulApi {
 				throw new RestfulFailure(String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase()));
 
 			HttpEntity entity = response.getEntity();
-			return new Resource(entity.getContent(), entity.getContentType().getValue());
+			return new Resource(response.getFirstHeader("Content-Disposition").getValue(), entity.getContentType().getValue(), entity.getContent());
 		} catch (URISyntaxException | IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
