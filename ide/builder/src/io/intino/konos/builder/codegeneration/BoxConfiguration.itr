@@ -1,14 +1,13 @@
 def type(boxConfiguration)
 	package $package;
 
-	[import io.intino.tara.magritte.Graph;$tara+import]
-
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
 		$service+field...[$NL]
         private String$[] args;
 
         public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+        	[$parent+empty~super(args);]
             this.args = args;
         }
 
@@ -53,6 +52,7 @@ end
 
 def type(service & jmx) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+		public String localhostIP;
 		public int port;
 	}
 end
@@ -110,8 +110,9 @@ end
 
 
 def type(service & jmx)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String localhostIP, int port) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.localhostIP = localhostIP;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		return this;
 	}
@@ -216,4 +217,7 @@ end
 
 def type(custom) trigger(assign)
 	this.$conf+validname+firstLowerCase~Configuration.$name+validname+firstLowerCase = $name+validname+firstLowerCase;
+end
+
+def trigger(empty)
 end
