@@ -6,7 +6,7 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args)
+			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
 			Graph graph = GraphProvider.get(configuration);
 			run(graph, createConfigurationFromArgs(args));
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));

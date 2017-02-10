@@ -3,19 +3,19 @@ def type(graphprovider)
 
 	import io.intino.tara.magritte.Graph;
 
-		public class GraphProvider {
+		class GraphProvider {
 
-			public static void get($name+firstUpperCase~Configuration configuration) {
-				Graph.use(store(configuration), $wrapper...[, ]).load();
+			static Graph get($name+firstUpperCase~Configuration configuration) {
+				return Graph.use(store(configuration), $wrapper...[, ]).load();
 			}
 
-			private static Store store($name+firstUpperCase~Configuration configuration) {
-			    // return new io.intino.tara.magritte.FileSystemStore(configuration.store());
+			private static io.intino.tara.magritte.Store store($name+firstUpperCase~Configuration configuration) {
+				// return new io.intino.tara.magritte.FileSystemStore(configuration.store());
 				return new io.intino.tara.magritte.stores.ResourcesStore();
 			}
 		}
 end
 
 def trigger(wrapper)
-    $value.class
+	$value.class
 end
