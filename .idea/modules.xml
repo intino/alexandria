@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/accessor/accessor.iml" filepath="$PROJECT_DIR$/accessor/accessor.iml" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="builder" />
-      <module fileurl="file://$PROJECT_DIR$/ide/test/builder-test.iml" filepath="$PROJECT_DIR$/ide/test/builder-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/jmx/jmx.iml" filepath="$PROJECT_DIR$/jmx/jmx.iml" />

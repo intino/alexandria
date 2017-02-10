@@ -37,9 +37,7 @@
         <sourceOutputDir name="../../out/build/konos-builder-test/generated-sources/annotations" />
         <sourceTestOutputDir name="../../out/build/konos-builder-test/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="builder-test" />
         <module name="konos-test" />
-        <module name="test" />
       </profile>
       <profile name="Annotation profile for builder" enabled="true">
         <sourceOutputDir name="../../out/build/builder/generated-sources/annotations" />
@@ -47,6 +45,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="builder" />
         <module name="konos-builder" />
+      </profile>
+      <profile name="Annotation profile for test" enabled="true">
+        <sourceOutputDir name="../../out/build/builder-test/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../out/build/builder-test/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="test" />
       </profile>
       <profile name="Annotation profile for konos-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />

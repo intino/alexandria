@@ -110,14 +110,14 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>language</artifactId>
             <scope>provided</scope>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>builder</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>[1.0.2,2.0.0)</version>
         </dependency>
         <dependency>
             <groupId>org.siani.itrules</groupId>
