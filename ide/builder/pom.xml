@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -13,9 +13,9 @@
     </properties>
 
     <build>
-        <outputDirectory>../../out/production/konos-plugin</outputDirectory>
-        <testOutputDirectory>../../out/test/konos-plugin</testOutputDirectory>
-        <directory>../../out/build/konos-plugin</directory>
+        <outputDirectory>../../out/production/builder</outputDirectory>
+        <testOutputDirectory>../../out/test/builder</testOutputDirectory>
+        <directory>../../out/build/builder</directory>
         <!--<sourceDirectory>src</sourceDirectory>-->
         <!--<testResources>-->
         <!--<testResource>-->
