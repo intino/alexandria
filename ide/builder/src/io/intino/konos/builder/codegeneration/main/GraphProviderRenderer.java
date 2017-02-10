@@ -1,6 +1,7 @@
-package io.intino.konos.builder.codegeneration;
+package io.intino.konos.builder.codegeneration.main;
 
 import com.intellij.openapi.module.Module;
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -13,14 +14,15 @@ import java.util.List;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.System;
 
-public class MainRenderer {
+public class GraphProviderRenderer {
+
 
 	private final File destination;
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
 
-	public MainRenderer(File destination, String packageName, Module module) {
+	public GraphProviderRenderer(File destination, String packageName, Module module) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
@@ -28,14 +30,13 @@ public class MainRenderer {
 	}
 
 	public void execute() {
-		if (Commons.javaFile(destination, "Main").exists()) return;
-		Frame frame = new Frame().addTypes("main");
+		if (configuration == null || !System.equals(configuration.level()) || Commons.javaFile(destination, "GraphProvider").exists())
+			return;
+		Frame frame = new Frame().addTypes("GraphProvider");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", name());
-		if (configuration != null && System.equals(configuration.level())) {
-			frame.addSlot("wrapper", dsls());
-			Commons.writeFrame(destination, "Main", template().format(frame));
-		}
+		frame.addSlot("wrapper", dsls());
+		Commons.writeFrame(destination, "GraphProvider", template().format(frame));
 	}
 
 	private String[] dsls() {
@@ -47,15 +48,13 @@ public class MainRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(MainTemplate.create());
+		return Formatters.customize(GraphProviderTemplate.create());
 	}
 
 	private String name() {
 		if (module != null) {
 			final String dsl = configuration.outDSL();
-			if (dsl == null || dsl.isEmpty()) return module.getName();
-			else return dsl;
+			return dsl == null || dsl.isEmpty() ? module.getName() : dsl;
 		} else return "System";
 	}
-
 }
