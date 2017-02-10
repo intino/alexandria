@@ -1,0 +1,69 @@
+def type(main)
+	package $package;
+
+	import io.intino.tara.magritte.Graph;
+
+	public class Main {
+
+		public static void main(String$[] args) {
+			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args)
+			Graph graph = GraphProvider.get(configuration);
+			run(graph, createConfigurationFromArgs(args));
+			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
+		}
+
+		private static $name+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
+			return new $name+firstUpperCase~Configuration(args)$conf+set;
+		}
+
+		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
+			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
+			box.init();
+		}
+
+		private static Runnable exit() {
+			return () -> {
+				[$rest~Spark.stop();]
+			};
+		}
+		
+		private static class ConfigurationInfo {
+		    $parameter+field...[$NL]
+
+			ConfigurationInfo(String$[] args) {
+				for (String arg : args) {
+					String$[] keyValue = arg.split("=");
+					$parameter+assign...[$NL~else]
+				}
+			}
+		}
+	}
+end
+
+def type(conf) trigger(set)
+    $name+firstlowercase~Configuration($parameter+name...[, ])
+end
+
+def type(parameter) trigger(name)
+    info.$conf+firstlowercase~$name+FirtsUpperCase;
+end
+
+def type(parameter) trigger(field)
+    $type $conf+firstlowercase~$name+FirtsUpperCase;
+end
+
+def type(parameter) trigger(assign)
+    if (keyValue$[0].equalsIgnoreCase("$conf+firstlowercase.$name+FirtsUpperCase"))
+        $conf+firstlowercase~$name+FirtsUpperCase = $type+convert(keyValue$[1]);
+end
+
+def attribute(Integer) trigger(convert)
+    Integer.parseInt
+end
+
+def attribute(Boolean) trigger(convert)
+    Boolean.parseBoolean
+end
+
+def trigger(convert)
+end

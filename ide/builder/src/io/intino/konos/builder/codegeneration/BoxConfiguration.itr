@@ -3,17 +3,25 @@ def type(boxConfiguration)
 
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
-		$service+field...[$NL]
-        private String$[] args;
+		private String$[] args;
+		[$parent+empty?protected java.io.File store;]
 
-        public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
-        	[$parent+empty~super(args);]
-            this.args = args;
+		$service+field...[$NL]
+
+
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
+			[$parent+empty~super(args);]
+			this.args = args;
+		}
+
+        public String$[] args() {
+            return args;
         }
 
-        	public String$[] args() {
-        		return args;
-        	}
+        [$parent+empty?
+        public java.io.File store() {
+            return this.store;
+        }]
 
 		$service...[$NL$NL]
 
