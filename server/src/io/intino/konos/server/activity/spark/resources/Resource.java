@@ -50,6 +50,10 @@ public abstract class Resource implements io.intino.konos.server.Resource {
         return authentication != null && manager.authService().valid(authentication.accessToken());
     }
 
+    protected synchronized void authenticate() {
+        manager.redirect(authenticate(manager.baseUrl()));
+    }
+
     protected synchronized String authenticate(String baseUrl) {
         String authId = UUID.randomUUID().toString();
         Space space = space();
