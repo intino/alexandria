@@ -27,8 +27,7 @@ public class MainRenderer {
 	}
 
 	public void execute() {
-		if (configuration == null || !System.equals(configuration.level()) || Commons.javaFile(destination, "Main").exists())
-			return;
+		if (configuration == null || !System.equals(configuration.level())) return;
 		Frame frame = new Frame().addTypes("main");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", name());

@@ -71,6 +71,7 @@ public class BoxRenderer {
 	}
 
 	private void services(Frame frame, String name) {
+		if (!konos.jMSServiceList().isEmpty()) frame.addSlot("jms", "");
 		for (RESTService service : konos.rESTServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "rest").addSlot("name", service.name()));
 		for (JMSService service : konos.jMSServiceList())
