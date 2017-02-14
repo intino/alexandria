@@ -41,9 +41,9 @@ public class GraphProviderRenderer {
 
 	private String[] dsls() {
 		List<String> dsls = new ArrayList<>();
-		for (Configuration.LanguageLibrary lang : configuration.languages()) {
+		for (Configuration.LanguageLibrary lang : configuration.languages())
 			dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
-		}
+		//TODO add platform language
 		return dsls.toArray(new String[dsls.size()]);
 	}
 

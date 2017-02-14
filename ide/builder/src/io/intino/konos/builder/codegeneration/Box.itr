@@ -41,9 +41,11 @@ def type(box)
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
+    [
+		$service+getter...[$NL$NL]]
 
-		$service+getter...[$NL$NL]
         $bus+getter...[$NL$NL]
+
 		$task+getter...[$NL$NL]
 
 		public <T> T get(Class<T> tClass) {
@@ -76,8 +78,8 @@ def type(box)
 		}
 
 		private void initJMSServices() {
-			[javax.jms.Connection connection;
-			$service+jms...[$NL]]
+			[$jms~javax.jms.Connection connection;]
+			$service+jms...[$NL]
 		}
 
 		private void initJMXServices() {
