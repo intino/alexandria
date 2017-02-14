@@ -3,7 +3,7 @@ def type(boxConfiguration)
 
 	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
 
-		private java.util.Map<String, String> args;
+		[$parent+empty?protected java.util.Map<String, String> args;]
 		[$parent+empty?protected java.io.File store;]
 
 		$service+field...[$NL]
@@ -14,6 +14,7 @@ def type(boxConfiguration)
 		}
 
 		private void fillWithArgs() {
+		    [$tara+empty~store = new java.io.File(args.get("graph.store"));]
             $service+fill...[$NL]
         }
 
@@ -21,14 +22,13 @@ def type(boxConfiguration)
 			return args;
 		}
 
-		[$parent+empty?
-		public java.io.File store() {
+		[$tara+empty~public java.io.File store() {
 			return this.store;
-		}]
+		}][
 
 		$service...[$NL$NL]
 
-		$service+confClass...[$NL$NL]
+		$service+confClass...[$NL$NL]]
 
 		private java.util.Map<String, String> argsToMap(String$[] args) {
 			java.util.Map<String, String> map = new java.util.LinkedHashMap<>();
@@ -38,6 +38,24 @@ def type(boxConfiguration)
 			}
 			return map;
 		}
+
+		private Integer toInt(String value) {
+		    try {
+		        if  (value == null) return null;
+		        return Integer.parseInt(value);
+		    } catch(NumberFormatException e) {
+		        return null;
+		    }
+		}
+
+		private Boolean toBool(String value) {
+            try {
+                if  (value == null) return null;
+                return Boolean.parseBoolean(value);
+            } catch(Exception e) {
+                return null;
+            }
+        }
 	}
 end
 
@@ -46,15 +64,15 @@ def type(service) trigger(field)
 end
 
 def type(service & rest) trigger(fill)
-	$name+firstLowerCase~Configuration(Integer.parseInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]));
+	$name+firstLowerCase~Configuration(toInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory"), null[, $custom+parameter...[, ]]);
 end
 
 def type(service & jms) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user", args.get("$name+firstLowerCase.password", [, $custom+parameter...[, ]]));
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password")[, $custom+parameter...[, ]]);
 end
 
 def type(service & bus) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user", args.get("$name+firstLowerCase.password", args.get("$name+firstLowerCase.clientID"[, $custom+parameter...[, ]]));
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password"), args.get("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]]);
 end
 
 def type(service & channel) trigger(fill)
@@ -66,11 +84,11 @@ def type(service & slack) trigger(fill)
 end
 
 def type(service & activity) trigger(fill)
-	$name+firstLowerCase~Configuration(Integer.parseInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]));
+	$name+firstLowerCase~Configuration(toInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory"), null[, $custom+parameter...[, ]]);
 end
 
 def type(service & jmx) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.localhostIp"), Integer.parseInt(args.get("$name+firstLowerCase.port")));
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.localhostIp"), toInt(args.get("$name+firstLowerCase.port")));
 end
 
 def type(service & rest) trigger(confClass)
@@ -216,10 +234,12 @@ def type(durable) trigger(assign)
 end
 
 def type(service & rest)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory, io.intino.konos.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory== null ? "www/" : webDirectory;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
+        this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = authService;
+
 		$custom+assign...[$NL]
 		return this;
 	}
@@ -238,7 +258,7 @@ def type(service & activity)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory, io.intino.konos.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory;
+        this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = authService;
 		$custom+assign...[$NL]
 		return this;
@@ -269,7 +289,7 @@ def type(custom) trigger(assign)
 end
 
 def type(custom) trigger(parameter)
-	args.get("$conf+validname+firstLowerCase.$name+validname+firstLowerCase)
+	args.get("$conf+validname+firstLowerCase.$name+validname+firstLowerCase")
 end
 
 

@@ -18,7 +18,7 @@ public class GraphProviderTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "graphprovider"))).add(literal("package ")).add(mark("package")).add(literal(";\n\nimport io.intino.tara.magritte.Graph;\n\n\tclass GraphProvider {\n\n\t\tstatic Graph get(")).add(mark("name", "firstUpperCase")).add(literal("Configuration configuration) {\n\t\t\treturn Graph.use(store(configuration), ")).add(mark("wrapper").multiple(", ")).add(literal(").load();\n\t\t}\n\n\t\tprivate static io.intino.tara.magritte.Store store(")).add(mark("name", "firstUpperCase")).add(literal("Configuration configuration) {\n\t\t\t// return new io.intino.tara.magritte.FileSystemStore(configuration.store());\n\t\t\treturn new io.intino.tara.magritte.stores.ResourcesStore();\n\t\t}\n\t}")),
+			rule().add((condition("type", "graphprovider"))).add(literal("package ")).add(mark("package")).add(literal(";\n\nimport io.intino.tara.magritte.Graph;\n\nclass GraphProvider {\n\n    static Graph get(")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Configuration configuration) {\n        return Graph.use(store(configuration), ")).add(mark("wrapper").multiple(", ")).add(literal(").load();\n    }\n\n    private static io.intino.tara.magritte.Store store(")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Configuration configuration) {\n        // return new io.intino.tara.magritte.FileSystemStore(configuration.store());\n        return new io.intino.tara.magritte.stores.ResourcesStore();\n    }\n}")),
 			rule().add((condition("trigger", "wrapper"))).add(mark("value")).add(literal(".class"))
 		);
 		return this;

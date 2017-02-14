@@ -6,18 +6,18 @@ def type(main)
 	public class Main {
 
 		public static void main(String$[] args) {
-			$name+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
+			$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
 			Graph graph = GraphProvider.get(configuration);
 			run(graph, createConfigurationFromArgs(args));
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
 		}
 
-		private static $name+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
-			return new $name+firstUpperCase~Configuration(args)$conf+set;
+		private static $name+SnakeCaseToCamelCase+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
+			return new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args)$conf+set;
 		}
 
-		private static void run(Graph graph, $name+firstUpperCase~Configuration configuration) {
-			$name+firstUpperCase~Box box = new $name+firstUpperCase~Box(graph, configuration);
+		private static void run(Graph graph, $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(graph, configuration);
 			box.init();
 		}
 
