@@ -11,7 +11,7 @@ def type(slack & gen)
 		private static Logger LOG = Logger.getGlobal();
 
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+FirstUpperCase~Box box) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box) {
 			super(box.configuration.$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
 			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
                 final String help = $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.help(box, properties, this.getCommandsInfo());
@@ -39,7 +39,7 @@ def type(slack & actions)
 
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions {
 
-        static String help($box~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
+        static String help($box+validname+FirstUpperCase~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
             return "";
         }
 
@@ -52,13 +52,13 @@ def type(request) trigger(add)
 end
 
 def type(request & newMethod)
-	static String $name+snakeCaseToCamelCase+firstLowerCase($box~Box box, MessageProperties properties[, $parameter...[, ]]) {
+	static String $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end
 
 def type(request) trigger(method)
-	static String $name+snakeCaseToCamelCase+firstLowerCase($box~Box box, MessageProperties properties[, $parameter...[, ]]) {
+	static String $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end
@@ -72,15 +72,15 @@ def type(parameter) trigger(name)
 end
 
 def type(parameter & Boolean) trigger(cast)
-	Boolean.parseBoolean(args$[~$pos])
+	args.length > $pos ? Boolean.parseBoolean(args$[~$pos]) : false
 end
 
 def type(parameter & Double) trigger(cast)
-	Double.parseDouble(args$[~$pos])
+	args.length > $pos ? Double.parseDouble(args$[~$pos]) : 0
 end
 
 def type(parameter & Integer) trigger(cast)
-	Integer.parseInt(args$[~$pos])
+	args.length > $pos ? Integer.parseInt(args$[~$pos]) : 0
 end
 
 def type(parameter & String & multiple) trigger(cast)
@@ -88,7 +88,7 @@ def type(parameter & String & multiple) trigger(cast)
 end
 
 def type(parameter & String) trigger(cast)
-	args$[~$pos]
+	args.length > $pos ? args$[~$pos] : ""
 end
 
 def type(parameter)
