@@ -26,17 +26,6 @@ def type(main)
 				[$rest~Spark.stop();]
 			};
 		}
-		
-		private static class ConfigurationInfo {
-		    $parameter+field...[$NL]
-
-			ConfigurationInfo(String$[] args) {
-				for (String arg : args) {
-					String$[] keyValue = arg.split("=");
-					$parameter+assign...[$NL~else]
-				}
-			}
-		}
 	}
 end
 

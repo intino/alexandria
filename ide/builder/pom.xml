@@ -34,7 +34,8 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
+                            </dependencyReducedPomLocation>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
                             <minimizeJar>false</minimizeJar><!--important-->
                             <artifactSet>
@@ -104,7 +105,7 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>[1.0.0, 2.0.0)</version>
         </dependency>
         <dependency>
             <groupId>io.intino.tara</groupId>

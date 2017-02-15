@@ -149,7 +149,7 @@ public class FullRenderer {
 			final Configuration configuration = TaraUtil.configurationOf(module);
 			for (Configuration.LanguageLibrary languageLibrary : configuration.languages()) {
 				String workingPackage = languageLibrary.generationPackage();
-				if (workingPackage != null && facade.findClass(workingPackage + ".konos." + languageLibrary.name() + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+				if (workingPackage != null && facade.findClass(workingPackage + ".konos." + Formatters.firstUpperCase(languageLibrary.name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 					return workingPackage.toLowerCase() + ".konos." + Formatters.firstUpperCase(languageLibrary.name());
 
 			}

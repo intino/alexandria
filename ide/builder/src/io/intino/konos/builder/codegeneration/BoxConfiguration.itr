@@ -72,7 +72,7 @@ def type(service & jms) trigger(fill)
 end
 
 def type(service & bus) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password"), args.get("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]]);
+	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password"), args.get("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]], args.get("$name+firstLowerCase.productionPaths"));
 end
 
 def type(service & channel) trigger(fill)
@@ -121,6 +121,7 @@ def type(service & bus) trigger(confClass)
 		public String user;
 		public String password;
 		public String clientID;
+		public java.util.List<String> productionPaths;
 	}
 end
 
@@ -203,12 +204,13 @@ end
 
 
 def type(service & bus)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password, String clientID[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password, String clientID[, $custom+signature...[, ]], String... productionPaths) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.url = url;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.user = user;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.password = password;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.clientID = clientID;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.productionPaths = java.util.Arrays.asList(productionPaths);
 		return this;
 	}
 
