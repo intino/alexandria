@@ -1,15 +1,16 @@
 package io.intino.konos.builder.codegeneration.process.task;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Task;
+import io.intino.konos.model.boottrigger.BootTriggerTask;
 import io.intino.konos.model.crontrigger.CronTriggerTask;
 import io.intino.konos.model.directorysentinel.DirectorySentinelTask;
 import io.intino.konos.model.scheduled.ScheduledTask;
-import io.intino.konos.builder.helpers.Commons;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class TaskerRenderer {
 			jobFrame.addTypes("cronTrigger")
 					.addSlot("pattern", cron.pattern())
 					.addSlot("mean", cron.mean());
+		} else if (task.is(BootTriggerTask.class)) {
+			jobFrame.addTypes("onBootTrigger");
 		}
 		schedule.addSlot("job", jobFrame);
 		return schedule;

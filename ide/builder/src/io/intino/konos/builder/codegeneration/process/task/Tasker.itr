@@ -64,6 +64,6 @@ def type(cronTrigger) trigger(job)
 	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")).build()
 end
 
-def type(oneBoot) trigger(job)
+def type(onBootTrigger) trigger(job)
 	newTrigger().startNow().build()
 end
