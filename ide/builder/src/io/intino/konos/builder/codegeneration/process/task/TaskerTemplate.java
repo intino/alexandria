@@ -23,7 +23,7 @@ public class TaskerTemplate extends Template {
 			rule().add((condition("trigger", "fullPath"))).add(literal("KonosDirectorySentinel.Event.")).add(mark("value")),
 			rule().add((condition("type", "task")), (condition("trigger", "init"))).add(literal("job = newJob(")).add(mark("name", "SnakeCaseToCamelCase")).add(literal("Task.class).withIdentity(\"")).add(mark("name")).add(literal("\").build();\njob.getJobDataMap().put(\"box\", box);\ntasker.scheduleJob(job, newSet(")).add(mark("job").multiple(", ")).add(literal("), true);")),
 			rule().add((condition("type", "cronTrigger")), (condition("trigger", "job"))).add(literal("newTrigger().withIdentity(\"")).add(mark("name")).add(literal("\").withSchedule(cronSchedule(\"")).add(mark("pattern")).add(literal("\")).build()")),
-			rule().add((condition("type", "oneBoot")), (condition("trigger", "job"))).add(literal("newTrigger().startNow().build()"))
+			rule().add((condition("type", "onBootTrigger")), (condition("trigger", "job"))).add(literal("newTrigger().startNow().build()"))
 		);
 		return this;
 	}

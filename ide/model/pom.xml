@@ -74,13 +74,13 @@
                 </exclusion>
             </exclusions>
             <scope>provided</scope>
-            <version>1.0.0</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>language</artifactId>
             <scope>provided</scope>
-            <version>1.0</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

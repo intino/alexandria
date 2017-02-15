@@ -10,29 +10,29 @@ def type(channel)
 
 	public class $name+firstUppercase~Channel {
 
-		public static void init(Session session, $box~Box box) {
+		public static void init(Session session, $box+firstUppercase~Box box) {
 			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = box.configuration().$name+firstLowerCase~Configuration();
 			$subscription...[$NL]
 		}
 
 		private static class $name+FirstUpperCase~Subscription implements Consumer {
 
-            	private $box+firstUpperCase~Box box;
+            private $box+firstUpperCase~Box box;
 
-            	public $name+FirstUpperCase~Subscription($box+firstUpperCase~Box box) {
-            		this.box = box;
-            	}
+            public $name+FirstUpperCase~Subscription($box+firstUpperCase~Box box) {
+                this.box = box;
+            }
 
-            	public void consume(Message message) {
-            		actionFor(message).execute();
-            	}
+            public void consume(Message message) {
+                actionFor(message).execute();
+            }
 
-            	private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
-        			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
-        			action.box = this.box;
-        			action.message = textFrom(message);
-        			return action;
-        		}
+            private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
+                final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
+                action.box = this.box;
+                action.message = textFrom(message);
+                return action;
+            }
 		}
 	}
 end
