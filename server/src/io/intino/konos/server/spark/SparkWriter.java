@@ -1,9 +1,6 @@
 package io.intino.konos.server.spark;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import cottons.utils.MimeTypes;
 import io.intino.konos.Error;
 import io.intino.konos.Resource;
@@ -13,7 +10,9 @@ import spark.utils.IOUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.time.Instant;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 @SuppressWarnings("Duplicates")
@@ -54,9 +53,11 @@ class SparkWriter {
 	}
 
 	private JsonElement toJson(Object value) {
-		return new Gson().toJsonTree(value);
+		final GsonBuilder gsonBuilder = new GsonBuilder().
+				registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli())).
+				registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime()));
+		return gsonBuilder.create().toJsonTree(value);
 	}
-
 
 	private void writeResponse(String message, String contentType) {
 		try {
