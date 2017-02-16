@@ -1,14 +1,13 @@
 package io.intino.konos.server.spark;
 
-import io.intino.konos.server.pushservice.Session;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import io.intino.konos.server.pushservice.*;
-import io.intino.konos.server.activity.services.push.DefaultRequestAdapter;
-import io.intino.konos.server.activity.services.push.DefaultResponseAdapter;;
+import io.intino.konos.server.pushservice.Client;
+import io.intino.konos.server.pushservice.Message;
+import io.intino.konos.server.pushservice.Session;
+import io.intino.konos.server.pushservice.SessionManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,13 +18,11 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	protected final Queue<Consumer<C>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
-	protected final AdapterProxy adapterProxy;
 	protected final SessionManager<S, C> sessionManager;
 
 	private static final JsonParser Parser = new JsonParser();
 
 	public PushService() {
-		this.adapterProxy = defaultAdapterProxy();
 		this.sessionManager = new SessionManager<>();
 	}
 
@@ -144,44 +141,24 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	private String serializeMessage(Message message) {
 		JsonObject result = new JsonObject();
 		Map<String, Object> parameters = message.parameters();
-
 		result.addProperty("name", message.name());
 		result.add("parameters", serializeMessageParameters(parameters));
-
 		return result.toString();
 	}
 
 	private JsonElement serializeMessageParameters(Map<String, Object> parameters) {
 		JsonObject result = new JsonObject();
-		parameters.entrySet().stream().forEach(e -> {
-			result.add(e.getKey(), serializeMessageParameter(e.getKey(), e.getValue()));
-		});
+		parameters.entrySet().forEach(p -> result.add(p.getKey(), serializeMessageParameter(p.getValue())));
 		return result;
 	}
 
-	private JsonElement serializeMessageParameter(String key, Object value) {
-		ResponseAdapter adapter = adapterProxy.responseAdapterOf(key);
-		String result = value instanceof List ? adapter.adaptList((List) value) : adapter.adapt(value);
-
+	private JsonElement serializeMessageParameter(Object value) {
+		final String result = ResponseAdapter.adapt(value);
 		try {
 			return Parser.parse(result);
 		} catch (Exception exception) {
 			return new JsonPrimitive(result);
 		}
-	}
-
-	private AdapterProxy defaultAdapterProxy() {
-		return new AdapterProxy() {
-			@Override
-			public RequestAdapter requestAdapterOf(String name, Class clazz) {
-				return new DefaultRequestAdapter(clazz);
-			}
-
-			@Override
-			public ResponseAdapter responseAdapterOf(String name) {
-				return new DefaultResponseAdapter();
-			}
-		};
 	}
 
 	private void registerSession(String sessionId) {
