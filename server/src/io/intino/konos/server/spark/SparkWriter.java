@@ -1,6 +1,5 @@
 package io.intino.konos.server.spark;
 
-import com.google.gson.*;
 import cottons.utils.MimeTypes;
 import io.intino.konos.Error;
 import io.intino.konos.Resource;
@@ -10,12 +9,9 @@ import spark.utils.IOUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
 
-@SuppressWarnings("Duplicates")
+import static io.intino.konos.server.spark.ResponseAdapter.adapt;
+
 class SparkWriter {
 	private final Response response;
 
@@ -23,40 +19,17 @@ class SparkWriter {
 		this.response = response;
 	}
 
-
-	public void write(Object object) {
+	void write(Object object) {
 		write(object, null);
 	}
 
-	public void write(Object object, String name) {
+	void write(Object object, String name) {
 		if (object instanceof Error) writeError((Error) object, adapt(object));
 		else if (object instanceof File) writeFile((File) object);
 		else if (object instanceof Resource) writeResource((Resource) object);
 		else if (object instanceof InputStream) writeStream((InputStream) object, name);
 		else if (object instanceof byte[]) writeBytes((byte[]) object, name);
 		else writeResponse(adapt(object), name);
-	}
-
-	private String adapt(Object object) {
-		if (object instanceof Error) return adaptError((Error) object);
-		if (object instanceof Collection) return jsonArray((Collection<Object>) object);
-		if (object instanceof String) return (String) object;
-		return toJson(object).toString();
-	}
-
-
-	private String jsonArray(Collection<Object> objects) {
-		JsonArray result = new JsonArray();
-		for (Object value : objects)
-			result.add(toJson(value));
-		return result.toString();
-	}
-
-	private JsonElement toJson(Object value) {
-		final GsonBuilder gsonBuilder = new GsonBuilder().
-				registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, context) -> new JsonPrimitive(instant.toEpochMilli())).
-				registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, context) -> new JsonPrimitive(date.getTime()));
-		return gsonBuilder.create().toJsonTree(value);
 	}
 
 	private void writeResponse(String message, String contentType) {
@@ -148,20 +121,6 @@ class SparkWriter {
 		response.setContentType("text/html");
 		response.getWriter().print(error);
 		response.flushBuffer();
-	}
-
-	private String adaptError(Error error) {
-		JsonObject object = new JsonObject();
-		object.addProperty("code", error.code());
-		object.addProperty("label", error.label());
-		adaptParameters(object, error.parameters());
-
-		return object.toString();
-	}
-
-	private void adaptParameters(JsonObject object, Map<String, String> parameters) {
-		for (Map.Entry<String, String> parameter : parameters.entrySet())
-			object.addProperty(parameter.getKey(), parameter.getValue());
 	}
 
 	private byte[] readFile(File file) throws IOException {
