@@ -1,6 +1,8 @@
 package io.intino.konos.builder.codegeneration.main;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
@@ -32,10 +34,10 @@ public class GraphProviderRenderer {
 	public void execute() {
 		if (configuration == null || !System.equals(configuration.level()) || Commons.javaFile(destination, "GraphProvider").exists())
 			return;
-		Frame frame = new Frame().addTypes("GraphProvider");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", name());
-		frame.addSlot("wrapper", dsls());
+		final String name = name();
+		Frame frame = new Frame().addTypes("GraphProvider").addSlot("package", packageName).addSlot("name", name).addSlot("wrapper", dsls());
+		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+			frame.addSlot("rest", name);
 		Commons.writeFrame(destination, "GraphProvider", template().format(frame));
 	}
 

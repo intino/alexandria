@@ -23,7 +23,7 @@ def type(main)
 
 		private static Runnable exit() {
 			return () -> {
-				[$rest~Spark.stop();]
+				[$rest~spark.Spark.stop();]
 			};
 		}
 	}

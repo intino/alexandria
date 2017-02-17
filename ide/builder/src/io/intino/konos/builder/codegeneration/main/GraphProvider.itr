@@ -3,19 +3,28 @@ def type(graphprovider)
 
 	import io.intino.tara.magritte.Graph;
 
-    class GraphProvider {
+	class GraphProvider {
 
-        static Graph get($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-            return Graph.use(store(configuration), $wrapper...[, ]).load();
-        }
+		static Graph get($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			return Graph.use(store(configuration), $wrapper...[, ]).load();
+		}
 
-        private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-            // return new io.intino.tara.magritte.FileSystemStore(configuration.store());
-            return new io.intino.tara.magritte.stores.ResourcesStore();
-        }
-    }
+		private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			// return new io.intino.tara.magritte.FileSystemStore(configuration.store());
+			return new io.intino.tara.magritte.stores.ResourcesStore();
+		}
+
+		$rest
+	}
 end
 
 def trigger(wrapper)
 	$value.class
+end
+
+def trigger(rest)
+	private static io.intino.konos.server.activity.services.AuthService authService($value+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+		//TODO add your authService
+		return null;
+	}	
 end
