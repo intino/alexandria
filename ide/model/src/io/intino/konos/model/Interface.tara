@@ -54,7 +54,7 @@ Concept Response extends Data is component
 
 Facet REST on Service
 	var string swagger = "2.0" is private
-	var string host
+	var string host = "{rest.host}"
 	var string description = ""
 	var string basePath
 	var word[]:{http https ws wss} protocols = https

@@ -124,11 +124,6 @@
             <version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>konos-core</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
@@ -138,7 +133,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>konos-server</artifactId>
-            <version>1.0.2</version>
+            <version>[1.0.2, 2.0.0)</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
