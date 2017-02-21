@@ -7,7 +7,7 @@ def type(main)
 
 		public static void main(String$[] args) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
-			Graph graph = GraphProvider.get(configuration);
+			Graph graph = Setup.initGraph(configuration);
 			run(graph, createConfigurationFromArgs(args));
 			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
 		}
@@ -18,6 +18,7 @@ def type(main)
 
 		private static void run(Graph graph, $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(graph, configuration);
+			Setup.configureBox(box);
 			box.init();
 		}
 

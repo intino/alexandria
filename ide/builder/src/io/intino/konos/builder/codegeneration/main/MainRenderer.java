@@ -12,8 +12,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-import static io.intino.tara.compiler.shared.Configuration.Level.System;
-
 public class MainRenderer {
 
 	private final File destination;
@@ -29,7 +27,7 @@ public class MainRenderer {
 	}
 
 	public void execute() {
-		if (configuration == null || !System.equals(configuration.level())) return;
+		if (configuration == null) return;
 		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name());
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", "");
