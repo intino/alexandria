@@ -66,6 +66,7 @@ public class BoxConfigurationRenderer {
 	private void addRESTServices(Frame frame, String boxName) {
 		for (RESTService service : application.rESTServiceList()) {
 			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", boxName);
+			if (service.authenticated() != null) restFrame.addTypes("auth");
 			addUserVariables(service.as(Service.class), restFrame, findCustomParameters(service));
 			frame.addSlot("service", restFrame);
 		}
@@ -108,7 +109,10 @@ public class BoxConfigurationRenderer {
 		for (Activity activity : application.activityList()) {
 			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name()).addSlot("configuration", boxName);
 			frame.addSlot("service", activityFrame);
-			if (activity.authenticated() != null) activityFrame.addSlot("auth", activity.authenticated().by());
+			if (activity.authenticated() != null) {
+				activityFrame.addTypes("auth");
+				activityFrame.addSlot("auth", activity.authenticated().by());
+			}
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
 		}
 	}

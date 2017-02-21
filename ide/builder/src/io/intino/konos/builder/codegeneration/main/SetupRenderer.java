@@ -1,9 +1,13 @@
 package io.intino.konos.builder.codegeneration.main;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.dsl.Proteo;
+import io.intino.tara.dsl.Verso;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -12,9 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.intino.tara.compiler.shared.Configuration.Level.System;
-
-public class GraphProviderRenderer {
+public class SetupRenderer {
 
 
 	private final File destination;
@@ -22,7 +24,7 @@ public class GraphProviderRenderer {
 	private final Module module;
 	private final Configuration configuration;
 
-	public GraphProviderRenderer(File destination, String packageName, Module module) {
+	public SetupRenderer(File destination, String packageName, Module module) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
@@ -30,25 +32,27 @@ public class GraphProviderRenderer {
 	}
 
 	public void execute() {
-		if (configuration == null || !System.equals(configuration.level()) || Commons.javaFile(destination, "GraphProvider").exists())
+		if (configuration == null || Commons.javaFile(destination, "Setup").exists())
 			return;
-		Frame frame = new Frame().addTypes("GraphProvider");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", name());
-		frame.addSlot("wrapper", dsls());
-		Commons.writeFrame(destination, "GraphProvider", template().format(frame));
+		final String name = name();
+		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name).addSlot("wrapper", dsls());
+		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
+		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+			frame.addSlot("rest", name);
+		Commons.writeFrame(destination, "Setup", template().format(frame));
 	}
 
 	private String[] dsls() {
 		List<String> dsls = new ArrayList<>();
 		for (Configuration.LanguageLibrary lang : configuration.languages())
-			dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
+			if (!lang.name().equals(Verso.class.getSimpleName()) && !lang.name().equals(Proteo.class.getSimpleName()))
+				dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
 		//TODO add platform language
 		return dsls.toArray(new String[dsls.size()]);
 	}
 
 	private Template template() {
-		return Formatters.customize(GraphProviderTemplate.create());
+		return Formatters.customize(SetupTemplate.create());
 	}
 
 	private String name() {

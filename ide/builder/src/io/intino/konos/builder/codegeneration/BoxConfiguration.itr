@@ -1,25 +1,20 @@
 def type(boxConfiguration)
 	package $package;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration [extends $parent~Configuration ]{
-
-		[$parent+empty?protected java.util.Map<String, String> args;]
-		[$parent+empty?protected java.io.File store;]
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.konos.BoxConfiguration] {
 
 		$service+field...[$NL]
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
-			[$parent+empty~super(args)?this.args = argsToMap(args)];
+			super(args);
 			fillWithArgs();
 		}
 
 		private void fillWithArgs() {
-		    [$tara+empty~store = new java.io.File(args.get("graph.store"));]
-            $service+fill...[$NL]
-        }
-
-		public java.util.Map<String, String> args() {
-			return args;
+			[if (this.store == null && args.get("graph.store") != null)
+				$tara+empty~store = new java.io.File(args.remove("graph.store"));]
+			$service+fill...[$NL][
+			$service+auth...[$NL]]
 		}
 
 		[$tara+empty~public java.io.File store() {
@@ -29,33 +24,6 @@ def type(boxConfiguration)
 		$service...[$NL$NL]
 
 		$service+confClass...[$NL$NL]]
-
-		private java.util.Map<String, String> argsToMap(String$[] args) {
-			java.util.Map<String, String> map = new java.util.LinkedHashMap<>();
-			for (String arg : args) {
-				String$[] keyValue = arg.split("=");
-				map.put(keyValue$[0], keyValue.length > 1 ? keyValue$[1] : keyValue$[0]);
-			}
-			return map;
-		}
-
-		private Integer toInt(String value) {
-		    try {
-		        if  (value == null) return null;
-		        return Integer.parseInt(value);
-		    } catch(NumberFormatException e) {
-		        return null;
-		    }
-		}
-
-		private Boolean toBool(String value) {
-            try {
-                if  (value == null) return null;
-                return Boolean.parseBoolean(value);
-            } catch(Exception e) {
-                return null;
-            }
-        }
 	}
 end
 
@@ -64,31 +32,38 @@ def type(service) trigger(field)
 end
 
 def type(service & rest) trigger(fill)
-	$name+firstLowerCase~Configuration(toInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory"), null[, $custom+parameter...[, ]]);
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase.port")), args.remove("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]);
 end
 
 def type(service & jms) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password")[, $custom+parameter...[, ]]);
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password")[, $custom+parameter...[, ]]);
 end
 
 def type(service & bus) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.url"), args.get("$name+firstLowerCase.user"), args.get("$name+firstLowerCase.password"), args.get("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]], args.get("$name+firstLowerCase.productionPaths"));
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password"), args.remove("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]], args.remove("$name+firstLowerCase.productionPaths"));
 end
 
 def type(service & channel) trigger(fill)
-	$name+firstLowerCase~Configuration($custom+parameter...[, ]]));
+	set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+parameter...[, ]);
 end
 
 def type(service & slack) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.token"));
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.token"));
 end
 
 def type(service & activity) trigger(fill)
-	$name+firstLowerCase~Configuration(toInt(args.get("$name+firstLowerCase.port")), args.get("$name+firstLowerCase.webDirectory"), null[, $custom+parameter...[, ]]);
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase.port")), args.remove("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]);
 end
 
 def type(service & jmx) trigger(fill)
-	$name+firstLowerCase~Configuration(args.get("$name+firstLowerCase.localhostIp"), toInt(args.get("$name+firstLowerCase.port")));
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.localhostIp"), toInt(args.remove("$name+firstLowerCase.port")));
+end
+
+def type(service & auth) type(rest | activity) trigger(auth)
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = Setup.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
+end
+
+def type(service) trigger(auth)
 end
 
 def type(service & rest) trigger(confClass)
@@ -236,11 +211,10 @@ def type(durable) trigger(assign)
 end
 
 def type(service & rest)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory, io.intino.konos.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
-        this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = authService;
 
 		$custom+assign...[$NL]
 		return this;
@@ -257,17 +231,16 @@ end
 
 
 def type(service & activity)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory, io.intino.konos.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-        this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = authService;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
 		$custom+assign...[$NL]
 		return this;
 	}
 
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, io.intino.konos.server.activity.services.AuthService authService[, $custom+signature...[, ]]) {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/", authService[, $custom+name...[, ]]);
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
+		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]]);
 	}
 
 	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
@@ -291,7 +264,7 @@ def type(custom) trigger(assign)
 end
 
 def type(custom) trigger(parameter)
-	args.get("$conf+validname+firstLowerCase.$name+validname+firstLowerCase")
+	args.remove("$conf+validname+firstLowerCase.$name+validname+firstLowerCase")
 end
 
 

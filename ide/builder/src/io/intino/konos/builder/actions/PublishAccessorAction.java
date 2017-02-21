@@ -11,18 +11,20 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.KonosIcons;
+import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
-import org.jetbrains.annotations.NotNull;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
-import tara.dsl.Konos;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.Graph;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.jetbrains.annotations.NotNull;
+import tara.dsl.Konos;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PublishAccessorAction extends KonosAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Publish Accessor: publish");
@@ -51,17 +53,22 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 	}
 
 	private void publish(Module module) {
-		ProgressManager.getInstance().run(new Task.Modal(module.getProject(), "Publishing Konos Accessor", false) {
+		ProgressManager.getInstance().run(new Task.Backgroundable(module.getProject(), "Publishing Konos Accessor", false) {
 			@Override
 			public void run(@NotNull ProgressIndicator indicator) {
 				final Configuration configuration = TaraUtil.configurationOf(module);
 				String generationPackage = configuration != null ? configuration.workingPackage() : "konos";
-				final Stash[] stashes = KonosUtils.findKonosFiles(module).stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Konos(), module.getName()).build()).toArray(Stash[]::new);
+				final Stash stashes = new StashBuilder(konosFiles(module), new Konos(), module.getName()).build();
 				final Graph graph = GraphLoader.loadGraph(stashes).graph();
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
 				new AccessorsPublisher(module, graph, generationPackage).publish();
 			}
 		});
+	}
+
+	private List<File> konosFiles(Module module) {
+		return KonosUtils.findKonosFiles(module).stream().
+				map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList());
 	}
 
 	private boolean projectIsNull(AnActionEvent e, Project project) {

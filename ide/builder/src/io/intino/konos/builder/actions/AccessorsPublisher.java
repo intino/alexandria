@@ -46,6 +46,7 @@ class AccessorsPublisher {
 	private final Module module;
 	private final Graph graph;
 	private final String generationPackage;
+	private StringBuilder log;
 	private File root;
 	private Configuration configuration;
 
@@ -108,9 +109,9 @@ class AccessorsPublisher {
 
 	private void log(Invoker invoker) throws IOException {
 		invoker.setErrorHandler(LOG::error);
-		invoker.setOutputHandler(s -> {
-			LOG.info(s);
-			System.out.println(s);
+		invoker.setOutputHandler(line -> {
+			System.out.println(line);
+			if (line.contains("[ERROR]")) log.append(line);
 		});
 	}
 
@@ -214,6 +215,7 @@ class AccessorsPublisher {
 	}
 
 	private void notifyError(String message) {
-		Bus.notify(new Notification("Konos", "Accessor cannot be published. ", message, ERROR), module.getProject());
+		final String result = log.toString();
+		Bus.notify(new Notification("Konos", "Accessor cannot be published. ", message + "\n" + result, ERROR), module.getProject());
 	}
 }

@@ -19,17 +19,16 @@ import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
-import org.jetbrains.jps.model.java.JavaSourceRootType;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
-import tara.dsl.Konos;
 import io.intino.tara.io.Stash;
+import org.jetbrains.jps.model.java.JavaSourceRootType;
+import tara.dsl.Konos;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
@@ -37,7 +36,7 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
-	private static final String PANDORA = "Konos";
+	private static final String KONOS = "Konos";
 	private static final String TEXT = "Create Konos Box";
 
 	public CreateKonosBoxAction() {
@@ -90,7 +89,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? PANDORA.toLowerCase() : configuration.workingPackage() + "." + PANDORA.toLowerCase();
+			String generationPackage = configuration == null ? KONOS.toLowerCase() : configuration.workingPackage() + "." + KONOS.toLowerCase();
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
@@ -99,13 +98,13 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private void generate(String packageName, File gen, File src) {
-			final Stash[] stashes = konosFiles.stream().map(p -> new StashBuilder(new File(p.getVirtualFile().getPath()), new Konos(), module.getName()).build()).toArray(Stash[]::new);
-			if (Arrays.stream(stashes).filter(Objects::isNull).count() > 0) {
+			final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
+			if (stash == null) {
 				notifyError("Models have errors");
 				return;
 			}
 			try {
-				new FullRenderer(module, GraphLoader.loadGraph(stashes).graph(), src, gen, packageName).execute();
+				new FullRenderer(module, GraphLoader.loadGraph(stash).graph(), src, gen, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
