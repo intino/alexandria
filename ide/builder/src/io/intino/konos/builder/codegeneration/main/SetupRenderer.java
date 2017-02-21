@@ -47,7 +47,8 @@ public class SetupRenderer {
 		for (Configuration.LanguageLibrary lang : configuration.languages())
 			if (!lang.name().equals(Verso.class.getSimpleName()) && !lang.name().equals(Proteo.class.getSimpleName()))
 				dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
-		//TODO add platform language
+		if (configuration.level() != Configuration.Level.System)
+			dsls.add(configuration.workingPackage().toLowerCase() + "." + Formatters.firstUpperCase(configuration.outDSL()));
 		return dsls.toArray(new String[dsls.size()]);
 	}
 
