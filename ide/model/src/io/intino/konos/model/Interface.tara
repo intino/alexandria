@@ -18,7 +18,7 @@ Concept:Named Activity
 	var word:{Ajax} type = Ajax
 
 	Concept:{0..1} Authenticated
-		var string:url by
+		var string by
 
 	Concept:Named AbstractPage
 		var Display uses
