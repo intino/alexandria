@@ -1,0 +1,39 @@
+def type(setup)
+	package $package;
+
+	import io.intino.tara.magritte.Graph;
+
+	class Setup {
+
+		static Graph initGraph($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			return Graph.use(store(configuration), $wrapper...[, ]).load($outDSL+quoted);
+		}
+
+		static void configureBox($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
+
+		}
+
+		private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			// return new io.intino.tara.magritte.stores.FileSystemStore(configuration.store());
+			return new io.intino.tara.magritte.stores.ResourcesStore();
+		}
+
+		$rest
+		$activity
+	}
+end
+
+def trigger(wrapper)
+	$value.class
+end
+
+def trigger(quoted)
+	"$value"
+end
+
+def trigger(rest)
+	static io.intino.konos.server.activity.services.AuthService authService(java.net.URL authServiceUrl) {
+		//TODO add your authService
+		return null;
+	}	
+end
