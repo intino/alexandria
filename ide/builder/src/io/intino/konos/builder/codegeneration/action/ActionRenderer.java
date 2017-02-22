@@ -50,7 +50,7 @@ abstract class ActionRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
 		setupParameters(parameters, frame);
-		frame.addSlot("returnType", Commons.returnType(response));
+		frame.addSlot("returnType", Commons.returnType(response, packageName));
 		if (!exceptions.isEmpty())
 			frame.addSlot("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())

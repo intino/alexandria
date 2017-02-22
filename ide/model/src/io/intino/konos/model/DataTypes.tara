@@ -35,6 +35,7 @@ Facet Type on Data
 	sub Object
 		var Schema schema
 		var string type = @schemaName is reactive private
+		var boolean isComponent = @isComponent is reactive private
 
 Facet List on Data
 

@@ -1,13 +1,13 @@
 package io.intino.konos.builder.codegeneration.server.activity;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.Schema;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.Activity;
+import io.intino.konos.model.Schema;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class SchemaAdaptersRenderer {
 
 
 	private Frame processSchema(Schema element) {
-		return SchemaRenderer.createSchemaFrame(element, packageName);
+		return SchemaRenderer.createSchemaFrame(element, packageName, packageName);
 	}
 
 	private Collection<Schema> findActivitySchemas(Graph graph) {

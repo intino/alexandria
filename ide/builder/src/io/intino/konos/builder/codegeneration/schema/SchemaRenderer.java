@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.schema;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Schema;
+import io.intino.konos.model.Service;
 import io.intino.konos.model.bool.BoolData;
 import io.intino.konos.model.date.DateData;
 import io.intino.konos.model.datetime.DateTimeData;
@@ -12,7 +13,6 @@ import io.intino.konos.model.real.RealData;
 import io.intino.konos.model.text.TextData;
 import io.intino.konos.model.type.TypeData;
 import io.intino.tara.magritte.Graph;
-import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -24,12 +24,12 @@ import java.util.List;
 public class SchemaRenderer {
 	private final List<Schema> schemas;
 	private File destination;
-	private String packageName;
+	private String rootPackage;
 
-	public SchemaRenderer(Graph graph, File destination, String packageName) {
+	public SchemaRenderer(Graph graph, File destination, String rootPackage) {
 		schemas = graph.find(Schema.class);
 		this.destination = destination;
-		this.packageName = packageName;
+		this.rootPackage = rootPackage;
 	}
 
 	public void execute() {
@@ -40,13 +40,15 @@ public class SchemaRenderer {
 		format.node().findNode(Schema.class).forEach(this::processSchema);
 	}
 
-	private void processSchema(Schema element) {
-		Commons.writeFrame(new File(destination, "schemas"), element.name(), template().format(createSchemaFrame(element, packageName)));
+	private void processSchema(Schema schema) {
+		final Service service = schema.ownerAs(Service.class);
+		String subPackage = "schemas" + (service != null ? File.separator + service.name().toLowerCase() : "");
+		final File packageFolder = new File(destination, subPackage);
+		Commons.writeFrame(packageFolder, schema.name(), template().format(createSchemaFrame(schema, subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, "."), rootPackage)));
 	}
 
-	@NotNull
-	public static Frame createSchemaFrame(Schema schema, String packageName) {
-		Frame frame = new Frame().addTypes("schema").addSlot("name", schema.name()).addSlot("package", packageName);
+	public static Frame createSchemaFrame(Schema schema, String packageName, String rootPackage) {
+		Frame frame = new Frame().addTypes("schema").addSlot("name", schema.name()).addSlot("package", packageName).addSlot("root", rootPackage);
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList()));
