@@ -27,19 +27,19 @@ public abstract class BoxConfiguration {
 
 	protected Integer toInt(String value) {
 		try {
-			if (value == null) return null;
+			if (value == null) return 0;
 			return Integer.parseInt(value);
 		} catch (NumberFormatException e) {
-			return null;
+			return 0;
 		}
 	}
 
 	protected Boolean toBool(String value) {
 		try {
-			if (value == null) return null;
+			if (value == null) return false;
 			return Boolean.parseBoolean(value);
 		} catch (Exception e) {
-			return null;
+			return false;
 		}
 	}
 }
