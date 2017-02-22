@@ -12,6 +12,7 @@ Facet Durable on Bus.Channel
 	var string clientID
 
 Concept:Named Service
+	has:Named Schema
 	has:Named Exception
 
 Concept:Named Activity

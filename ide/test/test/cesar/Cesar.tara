@@ -20,7 +20,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 		Get(description = "A system of specific version")
 			Parameter(in = path) system as Text
 			Parameter(in = path) version as Text
-			Response as Text
+			Response as Object(schema = SystemSchema)
 			Exception(BadRequest)
 
 	Resource(path = "/servers") servers
@@ -48,26 +48,27 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 	Resource(path = "/deploy") deploySystem
 		Post(description = "Deploy system") deploySystem
 			Parameter(in = body) system as Object(SystemSchema)
-			Response
+			Response as Object(schema = Parameter)
 
-Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
-Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
-
-//Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate)
-
-
-
-Schema SystemSchema
-	Attribute name as Text
-	Attribute artifact as Text
-	Has(reference = Parameter)
-	Schema artifactory
-		Attribute id as Text
-		Attribute url as Text
-		Attribute user as Text
-		Attribute password as Text
+	Schema SystemSchema
+		Attribute name as Text
+		Attribute artifact as Text
+		Has(reference = Parameter)
+		Schema artifactory
+			Attribute id as Text
+			Attribute url as Text
+			Attribute user as Text
+			Attribute password as Text
 
 Schema Parameter
 	Attribute name as Text
 	Attribute type as Text
 	Attribute value as Text
+
+Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
+
+//Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate
+
+
+

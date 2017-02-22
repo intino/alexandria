@@ -19,7 +19,6 @@ def type(setup)
 		}
 
 		$rest
-		$activity
 	}
 end
 
