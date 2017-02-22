@@ -76,13 +76,18 @@ public class Commons {
 		return response.isList() ? "List<" + response.asType().type() + ">" : response.asType().type();
 	}
 
+	public static String returnType(Response response, String rootPackage) {
+		if (response == null || response.asType() == null) return "void";
+		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", rootPackage, "schemas.") : "";
+		String type = innerPackage + response.asType().type();
+		return response.isList() ? "List<" + type + ">" : type;
+	}
+
 	public static int fileParameters(Operation operation) {
 		return (int) operation.parameterList().stream().filter(p -> p.is(FileData.class)).count();
 	}
 
-
 	public static String firstUpperCase(String value) {
 		return value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
-
 }
