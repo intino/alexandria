@@ -37,7 +37,7 @@ public class SetupRenderer {
 		final String name = name();
 		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name).addSlot("wrapper", dsls());
 		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
-		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+		if (JavaPsiFacade.getInstance(module.getProject()).findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
 		Commons.writeFrame(destination, "Setup", template().format(frame));
 	}
