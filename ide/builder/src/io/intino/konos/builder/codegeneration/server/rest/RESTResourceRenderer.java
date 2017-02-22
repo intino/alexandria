@@ -2,14 +2,14 @@ package io.intino.konos.builder.codegeneration.server.rest;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.action.RESTActionRenderer;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.list.ListData;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.rest.RESTService.Resource;
 import io.intino.konos.model.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.rest.RESTService.Resource.Parameter;
-import io.intino.konos.builder.codegeneration.action.RESTActionRenderer;
-import io.intino.konos.builder.helpers.Commons;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
@@ -65,7 +65,7 @@ public class RESTResourceRenderer {
 		frame.addSlot("operation", operation.concept().name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));
-		frame.addSlot("returnType", Commons.returnType(operation.response()));
+		frame.addSlot("returnType", Commons.returnType(operation.response(), packageName));
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
 		if (!resource.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
@@ -91,7 +91,8 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame parameterType(Parameter parameter) {
-		final Frame frame = new Frame().addSlot("value", parameter.asType().type());
+		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
+		final Frame frame = new Frame().addSlot("value", innerPackage + parameter.asType().type());
 		if (parameter.is(ListData.class)) frame.addTypes("list");
 		return frame;
 	}

@@ -1,5 +1,7 @@
 def type(schema)
-	package $package+ValidPackage.schemas;
+	package $package+ValidPackage;
+
+	import $root.schemas.*;
 
 	public class $name+firstUpperCase implements java.io.Serializable {
 
