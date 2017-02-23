@@ -38,7 +38,7 @@ def type(box)
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
-			[
+		[
 		$service+getter...[$NL$NL]]
 
 		$bus+getter...[$NL$NL]
@@ -54,6 +54,12 @@ def type(box)
 			initBuses();
 			initTasks();
 			initSlackBots();
+		}
+
+		void quit() {
+			$service+quit...[$NL]
+			$bus+quit...[$NL]
+			[$tara+hide~graph().saveAll();]
 		}
 
 		private void initRESTServices() {
@@ -105,22 +111,27 @@ def type(bus) trigger(init)
 end
 
 def type(service & jmx) trigger(jmx)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.localhostIP, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port, this);
 end
 
 def type(service & slack) trigger(slack)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(this);
 end
 
 def type(service & rest) trigger(rest)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), this);
 end
 
 def type(activity) trigger(activity)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), this);
 end
 
 def type(service & jms) trigger(jms)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
@@ -169,6 +180,21 @@ def type(service & slack) trigger(getter)
 end
 
 def type(service) trigger(getter)
+end
+
+def type(service) type(rest | activity) trigger(quit)
+	spark.Spark.stop();
+end
+
+def type(service) type(jms) trigger(quit)
+	$name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
+end
+
+def type(bus) trigger(quit)
+	$name+SnakeCaseToCamelCase+firstlowerCase~Bus.closeSession();
+end
+
+def type(service) trigger(quit)
 end
 
 def type(service)

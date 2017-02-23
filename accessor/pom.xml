@@ -94,6 +94,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.intino.konos</groupId>
+            <artifactId>konos-core</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+        </dependency>
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcmail-jdk15</artifactId>
             <version>1.45</version>
@@ -123,6 +128,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
         </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
