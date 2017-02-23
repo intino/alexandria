@@ -123,7 +123,7 @@ def type(invokeSentence & object & list)
 end
 
 def type(invokeSentence & object)
-	return new Gson().fromJson($doInvoke.content(), $returnType+firstUpperCase.class);
+	return new Gson().fromJson($doInvoke.content(), $returnType.class);
 end
 
 def type(invokeSentence & file & list)

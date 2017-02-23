@@ -37,7 +37,7 @@ public class RESTAccessorTemplate extends Template {
 			rule().add((condition("trigger", "exception"))),
 			rule().add((condition("type", "invokeSentence & void"))).add(mark("doInvoke")).add(literal(";")),
 			rule().add((condition("type", "invokeSentence & object & list"))).add(literal("return new Gson().fromJson(")).add(mark("doInvoke")).add(literal(".content(), new TypeToken<ArrayList<")).add(mark("returnType")).add(literal(">>(){}.getType());")),
-			rule().add((condition("type", "invokeSentence & object"))).add(literal("return new Gson().fromJson(")).add(mark("doInvoke")).add(literal(".content(), ")).add(mark("returnType", "firstUpperCase")).add(literal(".class);")),
+			rule().add((condition("type", "invokeSentence & object"))).add(literal("return new Gson().fromJson(")).add(mark("doInvoke")).add(literal(".content(), ")).add(mark("returnType")).add(literal(".class);")),
 			rule().add((condition("type", "invokeSentence & file & list"))).add(literal("return null; //TODO")),
 			rule().add((condition("type", "invokeSentence & file"))).add(literal("return ")).add(mark("doInvoke")).add(literal(";")),
 			rule().add((condition("type", "invokeSentence & date & list"))).add(literal("return null; //TODO")),
