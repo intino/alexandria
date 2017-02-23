@@ -1,19 +1,19 @@
 package io.intino.konos.builder.codegeneration.accessor.rest;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Response;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.date.DateData;
 import io.intino.konos.model.datetime.DateTimeData;
 import io.intino.konos.model.file.FileData;
-import io.intino.konos.model.object.ObjectData;
+import io.intino.konos.model.list.ListData;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.rest.RESTService.Resource;
 import io.intino.konos.model.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.rest.RESTService.Resource.Parameter;
 import io.intino.konos.model.type.TypeData;
-import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -65,7 +65,7 @@ public class RESTAccessorRenderer {
 
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource")
-				.addSlot("returnType", Commons.returnType(operation.response()))
+				.addSlot("returnType", Commons.returnType(operation.response(), packageName))
 				.addSlot("operation", operation.concept().name())
 				.addSlot("name", operation.owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
@@ -80,14 +80,20 @@ public class RESTAccessorRenderer {
 	private Frame parameter(Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.required() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
 				.addSlot("name", parameter.name())
-				.addSlot("parameterType", parameter.asType().type());
+				.addSlot("parameterType", parameterType(parameter));
 	}
+
+	private String parameterType(Parameter parameter) {
+		String value = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "") + parameter.asType().type();
+		return parameter.is(ListData.class) ? "List<" + value + ">" : value;
+	}
+
 
 	private Frame invokeSentence(Operation operation, boolean authenticated, boolean cert) {
 		Response response = operation.response();
 		Frame result;
 		if (response.asType() == null) result = voidInvokeSentence();
-		else if (response.isObject()) result = objectInvokeSentence(response.asObject());
+		else if (response.isObject()) result = objectInvokeSentence(response);
 		else if (response.isFile()) result = fileInvokeSentence(response.asFile());
 		else if (response.isDate()) result = dateInvokeSentence(response.asDate());
 		else if (response.isDateTime()) result = dateTimeInvokeSentence(response.asDateTime());
@@ -102,7 +108,8 @@ public class RESTAccessorRenderer {
 				.addSlot("type", operation.response().isFile() ? "getResource" : operation.concept().name().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
-		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0) frame.addSlot("parameters", "parameters");
+		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
+			frame.addSlot("parameters", "parameters");
 		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
 		return frame;
 
@@ -144,9 +151,9 @@ public class RESTAccessorRenderer {
 		return new Frame().addTypes("invokeSentence", "void");
 	}
 
-	private Frame objectInvokeSentence(ObjectData objectData) {
+	private Frame objectInvokeSentence(Response response) {
 		return new Frame().addTypes("invokeSentence", "object")
-				.addSlot("returnType", objectData.type());
+				.addSlot("returnType", Commons.returnType(response, packageName));
 	}
 
 	private Frame fileInvokeSentence(FileData fileData) {
