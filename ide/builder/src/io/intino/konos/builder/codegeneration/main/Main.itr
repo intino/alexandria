@@ -8,24 +8,19 @@ def type(main)
 		public static void main(String$[] args) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
 			Graph graph = Setup.initGraph(configuration);
-			run(graph, createConfigurationFromArgs(args));
-			Runtime.getRuntime().addShutdownHook(new Thread(exit()));
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = run(graph, createConfigurationFromArgs(args));
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> box.quit()));
 		}
 
 		private static $name+SnakeCaseToCamelCase+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
 			return new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args)$conf+set;
 		}
 
-		private static void run(Graph graph, $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+		private static $name+SnakeCaseToCamelCase+firstUpperCase~Box run(Graph graph, $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(graph, configuration);
 			Setup.configureBox(box);
 			box.init();
-		}
-
-		private static Runnable exit() {
-			return () -> {
-				[$rest~spark.Spark.stop();]
-			};
+			return box;
 		}
 	}
 end
