@@ -28,6 +28,8 @@ public class JMXServer {
 	}
 
 	public void init(String localhostIP, int port) {
+		System.setProperty("java.rmi.server.randomIDs", "false");
+		System.setProperty("com.sun.management.jmxremote.rmi.port", port + "");
 		System.setProperty("java.rmi.server.hostname", localhostIP);
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
@@ -59,7 +61,9 @@ public class JMXServer {
 	private void createService(MBeanServer server, int port) {
 		try {
 			LocateRegistry.createRegistry(port);
-			JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + port + "/jmxrmi");
+			JMXServiceURL url =
+					new JMXServiceURL("service:jmx:rmi://" + System.getProperty("java.rmi.server.hostname") +
+							":" + port + "/jndi/rmi://" + System.getProperty("java.rmi.server.hostname") + ":" + port + "/jmxrmi");
 			connector = JMXConnectorServerFactory.newJMXConnectorServer(url, null, server);
 			connector.start();
 		} catch (IOException e) {
