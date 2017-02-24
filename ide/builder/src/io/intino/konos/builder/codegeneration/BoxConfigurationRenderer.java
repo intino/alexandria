@@ -44,7 +44,7 @@ public class BoxConfigurationRenderer {
 		this.parent = parent;
 	}
 
-	public void execute() {
+	public Frame execute() {
 		Frame frame = new Frame().addTypes("boxconfiguration");
 		final String boxName = name();
 		frame.addSlot("name", boxName);
@@ -60,6 +60,7 @@ public class BoxConfigurationRenderer {
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
+		return frame;
 
 	}
 

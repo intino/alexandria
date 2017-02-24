@@ -30,7 +30,7 @@ public class UIGenerationTest {
 //		new BoxRenderer(graph, gen, UI, null, false).execute();
 //		new BoxConfigurationRenderer(graph, gen, UI, null, false).execute();
 //		new ActivityAccessorCreator(null, graph).execute();
-		new FullRenderer(null, graph, gen, gen, UI).execute();
+		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
 	}
 
 	@Test
