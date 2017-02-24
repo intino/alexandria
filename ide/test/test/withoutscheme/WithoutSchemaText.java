@@ -10,6 +10,6 @@ public class WithoutSchemaText {
 
 	public static void main(String[] args) {
 		File gen = new File("test-gen", "withoutschema");
-		new FullRenderer(null, Graph.use(Konos.class, null).load("WithoutSchema"), gen, gen, gen, "withoutschema").execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("WithoutSchema"), gen, gen, gen, gen, "withoutschema").execute();
 	}
 }
