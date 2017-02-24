@@ -9,6 +9,7 @@ def type(accessor)
 	import io.intino.konos.Resource;
 	import io.intino.konos.restful.exceptions.RestfulFailure;
 	import com.google.gson.Gson;
+	import com.google.gson.GsonBuilder;
 	import com.google.gson.reflect.TypeToken;
 
 	$schemaImport
@@ -16,6 +17,8 @@ def type(accessor)
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
 
 		private URL url;
+		private static Gson gsonReader = gsonReader();
+		private static Gson gsonWriter = gsonWriter();
 		private RestfulAccessor accessor = new RestfulAccessor();[
 		$certificate~private URL certificate;][
 		$user~private String user;][
@@ -38,6 +41,20 @@ def type(accessor)
 				return "";
 			}
 		}
+
+		private static Gson gsonReader() {
+            return new GsonBuilder().
+                registerTypeAdapter(java.time.Instant.class, (com.google.gson.JsonDeserializer<java.time.Instant>) (json, type1, jsonDeserializationContext) -> java.time.Instant.ofEpochMilli(json.getAsJsonPrimitive().getAsLong())).
+                registerTypeAdapter(java.util.Date.class, (com.google.gson.JsonDeserializer<java.util.Date>) (json, type1, jsonDeserializationContext) -> new java.util.Date(json.getAsJsonPrimitive().getAsLong())).
+                create();
+		}
+
+		private static Gson gsonWriter() {
+            return new GsonBuilder().
+                registerTypeAdapter(java.time.Instant.class, (com.google.gson.JsonSerializer<java.time.Instant>) (instant, type, context) -> new com.google.gson.JsonPrimitive(instant.toEpochMilli())).
+                registerTypeAdapter(java.util.Date.class, (com.google.gson.JsonSerializer<java.util.Date>) (date, type, context) -> new com.google.gson.JsonPrimitive(date.getTime())).
+                create();
+        }
 	}
 end
 
@@ -80,7 +97,7 @@ def type(parameter & query & required) type(boolData | integerData | realData) t
 end
 
 def type(parameter & query & required & objectData) trigger(declaration)
-	put("$name", String.valueOf(new Gson().toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
+	put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
 def type(parameter & query) type(dateTimeData | dateData) trigger(declaration)
@@ -96,7 +113,7 @@ def type(parameter & query) type(boolData | integerData | realData) trigger(decl
 end
 
 def type(parameter & objectData) type(query | body) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", encode(String.valueOf(new Gson().toJson($name+SnakeCaseToCamelCase+firstLowerCase))));
+	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", encode(String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase))));
 end
 
 def type(parameter) trigger(declaration)
@@ -119,11 +136,11 @@ def type(invokeSentence & void)
 end
 
 def type(invokeSentence & object & list)
-    return new Gson().fromJson($doInvoke.content(), new TypeToken<ArrayList<$returnType>>(){}.getType());
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<Array$returnType>(){}.getType());
 end
 
 def type(invokeSentence & object)
-	return new Gson().fromJson($doInvoke.content(), $returnType.class);
+	return gsonReader.fromJson($doInvoke.content(), $returnType.class);
 end
 
 def type(invokeSentence & file & list)
@@ -138,8 +155,8 @@ def type(invokeSentence & date & list)
 	return null; //TODO
 end
 
-def type(invokeSentence & date)
-	return null; //TODO
+def type(invokeSentence) type(date | instant)
+	return gsonReader.fromJson($doInvoke.content(), $returnType.class);
 end
 
 def type(invokeSentence & datetime & list)
@@ -151,7 +168,7 @@ def type(invokeSentence & datetime)
 end
 
 def type(invokeSentence & primitive & int & list)
-    return new Gson().fromJson($doInvoke.content(), new TypeToken<ArrayList<Integer>>(){}.getType());
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<Integer>>(){}.getType());
 end
 
 def type(invokeSentence & primitive & int)
@@ -159,7 +176,7 @@ def type(invokeSentence & primitive & int)
 end
 
 def type(invokeSentence & primitive & list)
-    return new Gson().fromJson($doInvoke.content(), new TypeToken<ArrayList<$returnType>>(){}.getType());
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<Array$returnType>(){}.getType());
 end
 
 def type(invokeSentence & primitive)

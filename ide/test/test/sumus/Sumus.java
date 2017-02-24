@@ -14,7 +14,7 @@ public class Sumus {
 	@Test
 	public void sumus() throws Exception {
 		File gen = new File("test-gen", SUMUS);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Sumus"), gen, gen, SUMUS).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Sumus"), gen, gen, gen, SUMUS).execute();
 
 	}
 }
