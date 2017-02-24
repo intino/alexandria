@@ -14,7 +14,7 @@ public class ChannelsGenerationTest {
 	@Test
 	public void testChannelsGeneration() throws Exception {
 		File gen = new File("test-gen", CHANNELS);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Channels"), gen, gen, gen, CHANNELS).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Channels"), gen, gen, gen, gen, CHANNELS).execute();
 	}
 
 }

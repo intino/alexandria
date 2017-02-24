@@ -47,18 +47,20 @@ public class FullRenderer {
 	private final Graph graph;
 	private final File gen;
 	private final File src;
+	private File res;
 	private File test;
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
 	private final boolean isTara;
 
-	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File test, String packageName) {
+	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, File test, String packageName) {
 		this.project = module == null ? null : module.getProject();
 		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
+		this.res = res;
 		this.test = test;
 		this.packageName = packageName;
 		this.parent = parent();
@@ -90,7 +92,7 @@ public class FullRenderer {
 
 	private void rest() {
 		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new RESTServiceRenderer(graph, gen, packageName, boxName).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName).execute();
 	}
 
 	private void jmx() {
