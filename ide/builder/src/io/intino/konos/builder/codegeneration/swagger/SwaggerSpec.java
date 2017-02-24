@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.accessor.rest.swagger;
+package io.intino.konos.builder.codegeneration.swagger;
 
 import java.util.*;
 

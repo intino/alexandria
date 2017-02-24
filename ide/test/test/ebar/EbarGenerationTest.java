@@ -17,7 +17,7 @@ public class EbarGenerationTest {
 	@Ignore
 	public void testEbarGeneration() throws Exception {
 		File gen = new File("test-gen", EBAR);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Ebar"), gen, gen, gen, EBAR).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Ebar"), gen, gen, gen, gen, EBAR).execute();
 	}
 
 }

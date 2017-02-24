@@ -1,8 +1,6 @@
-package io.intino.konos.builder.codegeneration.accessor.rest.swagger;
+package io.intino.konos.builder.codegeneration.swagger;
 
-import io.intino.konos.model.Konos;
 import io.intino.konos.model.rest.RESTService;
-import io.swagger.codegen.SwaggerCodegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,18 +8,22 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class SwaggerGenerator {
-	private final Konos application;
+	private final List<RESTService> services;
 	private final File outDirectory;
 
-	public SwaggerGenerator(Konos application, File outDirectory) {
-		this.application = application;
+	public SwaggerGenerator(List<RESTService> services, File outDirectory) {
+		this.services = services;
 		this.outDirectory = outDirectory;
+		this.outDirectory.mkdirs();
 	}
 
 	public void execute(List<String> targetLanguages) {
-		for (RESTService restService : application.rESTServiceList()) {
+		for (RESTService restService : services) {
 			final String jsonFilePath = writeFile(new OpenApiDescriptor(restService).createJSONDescriptor());
-			SwaggerCodegen.main(new String[]{"generate", "-i", jsonFilePath, "-o", outDirectory.getPath(), "-l", targetLanguages.get(0)});
+			io.swagger.codegen.Codegen.main(new String[]{"generate", "-i", jsonFilePath, "-o", outDirectory.getPath(), "-l", "io.swagger.codegen.languages.StaticDocCodegen"});
+			new File(outDirectory, "main.js").delete();
+			new File(outDirectory, "package.json").delete();
+			new File(jsonFilePath).delete();
 		}
 	}
 
