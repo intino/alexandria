@@ -1,0 +1,72 @@
+def type(boxConfiguration)
+    package $package;
+
+    public class Launcher {
+
+        public static class Pre {
+
+            public static void main(String$[] args) throws Exception {
+                Main.main(new String$[]{
+                        [$tara+empty~"graph.store=",]
+                        $service+fill...[,$NL]
+                });
+            }
+        }
+
+        public static class Pro {
+
+            public static void main(String$[] args) throws Exception {
+                Main.main(new String$[]{
+                        [$tara+empty~"graph.store=",]
+                        $service+fill...[,$NL]
+                });
+            }
+        }
+
+    }
+end
+
+def type(service & rest) trigger(fill)
+    "$name+firstLowerCase.port=",
+    "$name+firstLowerCase.webDirectory="[$custom+parameter...[]]
+end
+
+def type(service & jms) trigger(fill)
+    "$name+firstLowerCase.url",
+    "$name+firstLowerCase.user",
+    "$name+firstLowerCase.password"[$custom+parameter...[]]
+end
+
+def type(service & bus) trigger(fill)
+    "$name+firstLowerCase.url=",
+    "$name+firstLowerCase.user=",
+    "$name+firstLowerCase.password=",
+    "$name+firstLowerCase.clientID=",
+    "$name+firstLowerCase.productionPaths="[$custom+parameter...[]]
+end
+
+def type(service & channel) trigger(fill)
+	[$custom+parameter...[]]
+end
+
+def type(service & slack) trigger(fill)
+    "$name+firstLowerCase.token"
+end
+
+def type(service & activity) trigger(fill)
+    "$name+firstLowerCase.port=",
+    "$name+firstLowerCase.webDirectory="[$custom+parameter...[]]
+end
+
+def type(service & jmx) trigger(fill)
+    "$name+firstLowerCase.port"[$custom+parameter...[]]
+end
+
+def type(custom) trigger(parameter)
+	,$NL"$conf+validname+firstLowerCase.$name+validname+firstLowerCase="
+end
+def trigger(parameter)
+end
+
+def trigger(empty)
+end
