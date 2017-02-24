@@ -22,6 +22,7 @@ import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
+import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.dsl.Konos;
 
@@ -62,8 +63,9 @@ public class CreateKonosBoxAction extends KonosAction {
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
 		List<PsiFile> konosFiles = KonosUtils.findKonosFiles(module);
-		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getTestRoot(module));
+		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module), getTestRoot(module));
 	}
+
 
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {
@@ -83,7 +85,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			this.konosFiles = konosFiles;
 		}
 
-		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile testDirectory) {
+		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory, VirtualFile testDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
 				return;
@@ -95,17 +97,17 @@ public class CreateKonosBoxAction extends KonosAction {
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
 			File test = new File(testDirectory.getPath(), generationPackage.replace(".", File.separator));
 			src.mkdirs();
-			generate(generationPackage, gen, src, test);
+			generate(generationPackage, gen, src, new File(resDirectory.getPath()), test);
 		}
 
-		private void generate(String packageName, File gen, File src, File test) {
+		private void generate(String packageName, File gen, File src, File res, File test) {
 			final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
 			if (stash == null) {
 				notifyError("Models have errors");
 				return;
 			}
 			try {
-				new FullRenderer(module, GraphLoader.loadGraph(stash).graph(), src, gen,test, packageName).execute();
+				new FullRenderer(module, GraphLoader.loadGraph(stash).graph(), src, gen, res, test, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
@@ -114,6 +116,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			refreshDirectory(test);
+			refreshDirectory(res);
 			notifySuccess();
 		}
 
@@ -143,6 +146,14 @@ public class CreateKonosBoxAction extends KonosAction {
 		final VirtualFile genDirectory = createDirectory(module, "gen");
 		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
 		return genDirectory;
+	}
+
+	private VirtualFile getResRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "res".equals(file.getName())) return file;
+		final VirtualFile resDirectory = createDirectory(module, "res");
+		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
+		return resDirectory;
 	}
 
 	private VirtualFile getTestRoot(Module module) {

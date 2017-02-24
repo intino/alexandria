@@ -1,16 +1,18 @@
 package io.intino.konos.builder.codegeneration.server.rest;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.rest.RESTService.Resource;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,18 +21,23 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 public class RESTServiceRenderer {
 	private final List<RESTService> services;
 	private final File gen;
+	private final File res;
 	private String packageName;
 	private final String boxName;
 
-	public RESTServiceRenderer(Graph graph, File gen, String packageName, String boxName) {
+	public RESTServiceRenderer(Graph graph, File gen, File res, String packageName, String boxName) {
 		services = graph.find(RESTService.class);
 		this.gen = gen;
+		this.res = res;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
 
 	public void execute() {
 		services.forEach((service) -> processService(service.as(RESTService.class), gen));
+		final File www = new File(res, "www");
+		SwaggerGenerator generator = new SwaggerGenerator(services, www);
+		generator.execute(Collections.singletonList("dynamic-html"));
 	}
 
 	private void processService(RESTService service, File gen) {

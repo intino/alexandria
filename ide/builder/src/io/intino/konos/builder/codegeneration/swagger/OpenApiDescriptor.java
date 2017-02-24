@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.accessor.rest.swagger;
+package io.intino.konos.builder.codegeneration.swagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,8 +7,8 @@ import io.intino.konos.model.Response;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.rest.RESTService.Resource;
-import org.jetbrains.annotations.NotNull;
 import io.intino.tara.magritte.Layer;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,7 +45,7 @@ public class OpenApiDescriptor {
 	}
 
 	private SwaggerSpec.Info createInfo(RESTService.Info info) {
-		return new SwaggerSpec.Info(info.version(), info.title(), info.description(), info.termsOfService(), info.contact() == null ? null :
+		return info == null ? null : new SwaggerSpec.Info(info.version(), info.title(), info.description(), info.termsOfService(), info.contact() == null ? null :
 				new SwaggerSpec.Info.Contact(info.contact().name(), info.contact().email(), info.contact().url()), info.license() == null ? null :
 				new SwaggerSpec.Info.License(info.license().name(), info.license().url()));
 	}
