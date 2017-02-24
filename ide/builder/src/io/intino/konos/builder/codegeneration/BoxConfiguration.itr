@@ -61,8 +61,8 @@ def type(service & activity) trigger(fill)
 end
 
 def type(service & jmx) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.localhostIp") && args.containsKey("$name+firstLowerCase.port"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.localhostIp"), toInt(args.remove("$name+firstLowerCase.port")));
+	if (args.containsKey("$name+firstLowerCase.port"))
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.get("localhostIp"), toInt(args.remove("$name+firstLowerCase.port")));
 end
 
 def type(service & auth) type(rest | activity) trigger(auth)

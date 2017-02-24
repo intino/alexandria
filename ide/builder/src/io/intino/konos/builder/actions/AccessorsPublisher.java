@@ -41,12 +41,12 @@ import static org.jetbrains.idea.maven.utils.MavenUtil.resolveMavenHomeDirectory
 
 class AccessorsPublisher {
 	private static final Logger LOG = Logger.getInstance("Publishing Accessor:");
-	private static final String PANDORA = "konos";
+	private static final String KONOS = "konos";
 	private static final String ACCESSOR = "-accessor";
 	private final Module module;
 	private final Graph graph;
 	private final String generationPackage;
-	private StringBuilder log;
+	private StringBuilder log = new StringBuilder();
 	private File root;
 	private Configuration configuration;
 
@@ -56,7 +56,7 @@ class AccessorsPublisher {
 		this.graph = graph;
 		this.generationPackage = generationPackage;
 		try {
-			this.root = Files.createTempDirectory(PANDORA).toFile();
+			this.root = Files.createTempDirectory(KONOS).toFile();
 			FileSystemUtils.removeDir(this.root);
 		} catch (IOException e) {
 			root = null;
@@ -68,7 +68,7 @@ class AccessorsPublisher {
 		try {
 			final List<String> apps = createSources();
 			if (apps.isEmpty()) {
-				notify("None rest services are found in module", INFORMATION);
+				notify("No rest services found in module", INFORMATION);
 				return;
 			} else if (configuration.distributionReleaseRepository() == null) {
 				notify("There isn't distribution repository defined", ERROR);

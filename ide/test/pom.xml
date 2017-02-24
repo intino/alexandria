@@ -62,16 +62,9 @@
             <version>1.0.5</version>
         </dependency>
         <dependency>
-            <groupId>io.intino.tara</groupId>
-            <artifactId>io</artifactId>
-            <scope>test</scope>
-            <version>LATEST</version>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.tara</groupId>
-            <artifactId>language</artifactId>
-            <scope>test</scope>
-            <version>LATEST</version>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.itrules</groupId>

@@ -16,7 +16,7 @@ public class AmidasGenerationTest {
 	public void testAmidas() throws Exception {
 		File gen = new File("test-gen", AMIDAS);
 		final Graph graph = Graph.use(Konos.class, null).load("Amidas");
-		new FullRenderer(null, graph, gen, gen, AMIDAS).execute();
+		new FullRenderer(null, graph, gen, gen, gen, AMIDAS).execute();
 	}
 
 	@Test

@@ -12,6 +12,6 @@ public class CommandsTest {
 	@Test
 	public void testModel() throws Exception {
 		File gen = new File("test-gen", COMMANDS);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Command"), gen, gen, COMMANDS).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("Command"), gen, gen, gen, COMMANDS).execute();
 	}
 }

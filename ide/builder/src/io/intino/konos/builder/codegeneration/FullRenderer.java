@@ -7,8 +7,9 @@ import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
-import io.intino.konos.builder.codegeneration.main.SetupRenderer;
+import io.intino.konos.builder.codegeneration.main.LauncherRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
+import io.intino.konos.builder.codegeneration.main.SetupRenderer;
 import io.intino.konos.builder.codegeneration.process.CommandRenderer;
 import io.intino.konos.builder.codegeneration.process.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.process.task.TaskerRenderer;
@@ -31,6 +32,7 @@ import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
+import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -45,17 +47,19 @@ public class FullRenderer {
 	private final Graph graph;
 	private final File gen;
 	private final File src;
+	private File test;
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
 	private final boolean isTara;
 
-	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, String packageName) {
+	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File test, String packageName) {
 		this.project = module == null ? null : module.getProject();
 		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
+		this.test = test;
 		this.packageName = packageName;
 		this.parent = parent();
 		this.isTara = isTara();
@@ -73,8 +77,7 @@ public class FullRenderer {
 		bus();
 		slack();
 		ui();
-		box();
-		main();
+		main(box());
 	}
 
 	private void schemas() {
@@ -123,9 +126,9 @@ public class FullRenderer {
 		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
-	private void box() {
+	private Frame box() {
 		new BoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
-		new BoxConfigurationRenderer(graph, gen, packageName, module, parent).execute();
+		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent).execute();
 	}
 
 	private String boxName() {
@@ -159,8 +162,9 @@ public class FullRenderer {
 
 	}
 
-	private void main() {
+	private void main(Frame frame) {
 		new SetupRenderer(src, packageName, module).execute();
 		new MainRenderer(gen, packageName, module).execute();
+		new LauncherRenderer(test, frame).execute();
 	}
 }
