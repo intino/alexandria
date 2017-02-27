@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Collections;
 
 @Ignore
 public class SwaggerApiGeneratorTest {
@@ -38,6 +37,6 @@ public class SwaggerApiGeneratorTest {
 	public void testApiCreation() throws Exception {
 		final Graph petstore = Graph.use(Konos.class).load("Petstore");
 		SwaggerGenerator generator = new SwaggerGenerator(petstore.wrapper(Konos.class).rESTServiceList(), SWAGGER);
-		generator.execute(Collections.singletonList("dynamic-html"));
+		generator.execute();
 	}
 }

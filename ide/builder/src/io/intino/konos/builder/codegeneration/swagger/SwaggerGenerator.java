@@ -17,12 +17,13 @@ public class SwaggerGenerator {
 		this.outDirectory.mkdirs();
 	}
 
-	public void execute(List<String> targetLanguages) {
-		for (RESTService restService : services) {
-			final String jsonFilePath = writeFile(new OpenApiDescriptor(restService).createJSONDescriptor());
-			io.swagger.codegen.Codegen.main(new String[]{"generate", "-i", jsonFilePath, "-o", outDirectory.getPath(), "-l", "io.swagger.codegen.languages.StaticDocCodegen"});
-			new File(outDirectory, "main.js").delete();
-			new File(outDirectory, "package.json").delete();
+	public void execute() {
+		for (RESTService service : services) {
+			final String jsonFilePath = writeFile(new OpenApiDescriptor(service).createJSONDescriptor());
+			final File serviceDirectory = new File(outDirectory, service.name().toLowerCase());
+			io.swagger.codegen.Codegen.main(new String[]{"generate", "-i", jsonFilePath, "-o", serviceDirectory.getPath(), "-l", "io.swagger.codegen.languages.StaticDocCodegen"});
+			new File(serviceDirectory, "main.js").delete();
+			new File(serviceDirectory, "package.json").delete();
 			new File(jsonFilePath).delete();
 		}
 	}
