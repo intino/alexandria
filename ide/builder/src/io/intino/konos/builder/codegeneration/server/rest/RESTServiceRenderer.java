@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.server.rest;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.swagger.IndexTemplate;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.rest.RESTService;
@@ -11,11 +12,14 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipInputStream;
 
+import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public class RESTServiceRenderer {
@@ -35,9 +39,34 @@ public class RESTServiceRenderer {
 
 	public void execute() {
 		services.forEach((service) -> processService(service.as(RESTService.class), gen));
+		if (!services.isEmpty()) generateDoc();
+	}
+
+	private void generateDoc() {
 		final File www = new File(res, "www");
 		SwaggerGenerator generator = new SwaggerGenerator(services, www);
-		generator.execute(Collections.singletonList("dynamic-html"));
+		generator.execute();
+		createIndex(www);
+		copyAssets(www);
+	}
+
+	private void copyAssets(File www) {
+		try {
+			unzip(null, www, new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), null, null, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void createIndex(File www) {
+		Frame doc = new Frame().addTypes("index");
+		for (RESTService service : services)
+			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name()).addSlot("description", service.description()));
+		try {
+			Files.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc).getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void processService(RESTService service, File gen) {

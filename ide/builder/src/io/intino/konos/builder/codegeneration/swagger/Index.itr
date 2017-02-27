@@ -1,0 +1,77 @@
+def type(index)
+    <!DOCTYPE html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+      <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css" media="screen">
+      <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css" media="screen">
+      <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+      <script src="assets/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+      <script>
+        const Dictionary = {
+          es: {
+            "ServiceList" : "lista de servicios de ::application::"
+          },
+          en: {
+            "ServiceList" : "service list for ::application::"
+          }
+        }
+
+        const Templates = {
+          Service: "<li><div><a href='::name::/docs/index.html'>::label::</a></div><div class='description'>::description::</div></li>"
+        };
+
+        const configuration = {
+          title: "API docs",
+          services : $[
+            $service...[,$NL]
+          ]
+        };
+
+        function render() {
+          loadDictionary(configuration);
+          renderApplication(configuration);
+        }
+
+        function loadDictionary(configuration) {
+          Dictionary.es.ServiceList = Dictionary.es.ServiceList.replace("::application::", configuration.application);
+          Dictionary.en.ServiceList = Dictionary.en.ServiceList.replace("::application::", configuration.application);
+        }
+
+        function renderApplication(configuration) {
+          var services = "";
+
+          for (var i=0; i<configuration.services.length; i++) {
+            var service = configuration.services$[i];
+            var content = Templates.Service;
+            content = content.replace("::name::", service.name);
+            content = content.replace("::label::", service.label);
+            content = content.replace("::description::", service.description);
+            services += content;
+          }
+
+          document.getElementById("content").innerHTML = "<ul class='summary'>" + services + "</ul>";
+          document.getElementById("title").innerHTML = configuration.title;
+        }
+      </script>
+
+      <title>Application title</title>
+    </head>
+    <body onload="render()">
+      <div class="header">
+        <div class="top-bar">
+          <h1 id="logo"><a class="logo" href="/"><span><img src="assets/logo.png"></img></span><span id="title" class="light"></span></a></h1>
+        </div>
+      </div>
+      <div class="model-container"></div>
+      <div id="content" class="content">loading...</div>
+    </body>
+    </html>
+end
+
+def type(service) trigger(service)
+    { name: "$name", label: "$name", description: "" },
+end
+
