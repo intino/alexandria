@@ -59,7 +59,6 @@ def type(box)
 		void quit() {
 			$service+quit...[$NL]
 			$bus+quit...[$NL]
-			[$tara+hide~graph().saveAll();]
 		}
 
 		private void initRESTServices() {

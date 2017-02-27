@@ -49,7 +49,7 @@ public class BoxConfigurationTemplate extends Template {
 			rule().add((condition("type", "custom")), (condition("trigger", "name"))).add(mark("name", "validname", "firstLowerCase")),
 			rule().add((condition("type", "custom")), (condition("trigger", "field"))).add(literal("public ")).add(mark("type")).add(literal(" ")).add(mark("name", "validname", "firstLowerCase")).add(literal(";")),
 			rule().add((condition("type", "custom")), (condition("trigger", "assign"))).add(literal("this.")).add(mark("conf", "validname", "firstLowerCase")).add(literal("Configuration.")).add(mark("name", "validname", "firstLowerCase")).add(literal(" = ")).add(mark("name", "validname", "firstLowerCase")).add(literal(";")),
-			rule().add((condition("type", "custom")), (condition("trigger", "parameter"))).add(literal("args.remove(\"")).add(mark("conf", "validname", "firstLowerCase")).add(literal(".")).add(mark("name", "validname", "firstLowerCase")).add(literal("\")")),
+			rule().add((condition("type", "custom")), (condition("trigger", "parameter"))).add(literal("args.remove(\"")).add(mark("conf", "firstLowerCase")).add(literal(".")).add(mark("name", "validname", "firstLowerCase")).add(literal("\")")),
 			rule().add((condition("trigger", "empty")))
 		);
 		return this;

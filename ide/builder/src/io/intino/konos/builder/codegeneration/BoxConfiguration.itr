@@ -270,7 +270,7 @@ def type(custom) trigger(assign)
 end
 
 def type(custom) trigger(parameter)
-	args.remove("$conf+validname+firstLowerCase.$name+validname+firstLowerCase")
+	args.remove("$conf+firstLowerCase.$name+validname+firstLowerCase")
 end
 
 
