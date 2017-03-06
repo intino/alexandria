@@ -7,18 +7,18 @@ import io.intino.konos.server.activity.spark.ActivitySparkManager;
 
 public abstract class DisplayRequester extends Resource {
 
-    public DisplayRequester(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
-        super(manager, notifierProvider);
-    }
+	public DisplayRequester(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		super(manager, notifierProvider);
+	}
 
-    public <D extends Display> D display() {
-        String displayId = manager.fromPath("displayId", String.class);
-        ActivityClient client = manager.currentClient();
-        return client.soul().get(displayId);
-    }
+	public <D extends Display> D display() {
+		String displayId = manager.fromPath("displayId", String.class);
+		ActivityClient client = manager.currentClient();
+		return client == null ? null : client.soul().get(displayId);
+	}
 
-    public String operation() {
-        return manager.fromQuery("operation", String.class);
-    }
+	public String operation() {
+		return manager.fromQuery("operation", String.class);
+	}
 
 }
