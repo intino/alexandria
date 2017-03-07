@@ -106,7 +106,7 @@ def type(service & rest) trigger(setup)
 end
 
 def type(bus) trigger(init)
-	this.$name+SnakeCaseToCamelCase+firstLowerCase~Bus = new $package+lowercase.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus(this);
+	this.$name+SnakeCaseToCamelCase+firstLowerCase~Bus = new $package+lowercase.$name+SnakeCaseToCamelCase+firstUpperCase~Bus(this);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -157,7 +157,7 @@ def type(task) trigger(field)
 end
 
 def type(bus) trigger(field)
-	private $package.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstLowerCase~Bus;
+	private $package.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstLowerCase~Bus;
 end
 
 def type(service & jms) trigger(getter)
@@ -167,7 +167,7 @@ def type(service & jms) trigger(getter)
 end
 
 def type(bus) trigger(getter)
-	public $package.bus.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstlowerCase~Bus() {
+	public $package.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstlowerCase~Bus() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase~Bus;
 	}
 end

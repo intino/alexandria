@@ -55,3 +55,10 @@ Concept Schema
 		var boolean multiple = true
 	has Schema
 
+Concept Exception extends Data
+	var word:ExceptionCodes code
+	var string description = ""
+
+Concept Response extends Data is component
+	var string code = "200"
+	var string description = ""

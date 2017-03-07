@@ -1,4 +1,4 @@
-package channels.service;
+package bus.service;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 

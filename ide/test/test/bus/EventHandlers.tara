@@ -1,0 +1,7 @@
+dsl Konos
+
+Bus monentia
+	EventHandler("catalogs") opinions
+	EventHandler("{sample}") durableChannel as Durable("{sample-id}")
+	EventHandler("processes") inputProcesses
+

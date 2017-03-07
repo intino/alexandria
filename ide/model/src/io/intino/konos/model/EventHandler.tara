@@ -1,0 +1,6 @@
+dsl Proteo
+
+
+Concept Pipe
+	sub MailPipe
+	sub PostPipe
