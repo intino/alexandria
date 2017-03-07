@@ -6,20 +6,17 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
+import io.intino.konos.builder.codegeneration.eventhandling.BusRenderer;
+import io.intino.konos.builder.codegeneration.eventhandling.EventHandlerRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.LauncherRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.main.SetupRenderer;
-import io.intino.konos.builder.codegeneration.process.CommandRenderer;
-import io.intino.konos.builder.codegeneration.process.task.TaskRenderer;
-import io.intino.konos.builder.codegeneration.process.task.TaskerRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ResourceRenderer;
-import io.intino.konos.builder.codegeneration.server.jms.connector.BusRenderer;
-import io.intino.konos.builder.codegeneration.server.jms.connector.ChannelRenderer;
 import io.intino.konos.builder.codegeneration.server.jms.service.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.server.jms.service.JMSServiceRenderer;
 import io.intino.konos.builder.codegeneration.server.jmx.JMXOperationsServiceRenderer;
@@ -27,6 +24,8 @@ import io.intino.konos.builder.codegeneration.server.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.server.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.server.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.server.slack.SlackRenderer;
+import io.intino.konos.builder.codegeneration.task.TaskRenderer;
+import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
@@ -73,7 +72,7 @@ public class FullRenderer {
 		schemas();
 		exceptions();
 		rest();
-		process();
+		tasks();
 		jmx();
 		jms();
 		bus();
@@ -105,15 +104,14 @@ public class FullRenderer {
 		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
-	private void process() {
-		new CommandRenderer(project, graph, src, gen, packageName, boxName).execute();
+	private void tasks() {
 		new TaskRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new TaskerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void bus() {
 		new BusRenderer(graph, gen, packageName, boxName).execute();
-		new ChannelRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new EventHandlerRenderer(graph, src, packageName, boxName).execute();
 	}
 
 	private void slack() {

@@ -46,7 +46,7 @@ def type(service & bus) trigger(fill)
 		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password"), args.remove("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]], args.remove("$name+firstLowerCase.productionPaths"));
 end
 
-def type(service & channel) trigger(fill)
+def type(service & eventHandler) trigger(fill)
 	set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+parameter...[, ]);
 end
 
@@ -89,7 +89,7 @@ def type(service & jms) trigger(confClass)
 	}
 end
 
-def type(service & channel) trigger(confClass)
+def type(service & eventHandler) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
 		[public String clientID = "$clientID"];
 		$custom+field...[$NL]
@@ -200,7 +200,7 @@ def type(service & bus)
 	}
 end
 
-def type(service & channel)
+def type(service & eventHandler)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+signature...[, ]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		$custom+assign...[$NL]

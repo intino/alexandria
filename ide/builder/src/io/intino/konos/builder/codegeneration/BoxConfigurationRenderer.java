@@ -4,7 +4,6 @@ import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.Bus;
-import io.intino.konos.model.Bus.Channel;
 import io.intino.konos.model.Konos;
 import io.intino.konos.model.Service;
 import io.intino.konos.model.jms.JMSService;
@@ -56,7 +55,7 @@ public class BoxConfigurationRenderer {
 		addJMXServices(frame, boxName);
 		addSlackServices(frame, boxName);
 		addBuses(frame, boxName);
-		addChannels(frame, boxName);
+		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
@@ -95,12 +94,12 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
-	private void addChannels(Frame frame, String boxName) {
+	private void addEventHandlers(Frame frame, String boxName) {
 		for (Bus bus : application.busList()) {
-			for (Channel channel : bus.channelList()) {
-				Frame channelFrame = new Frame().addTypes("service", "channel").addSlot("name", channel.name()).addSlot("configuration", boxName);
-				addUserVariables(channel, channelFrame, findCustomParameters(channel));
-				if (channel.isDurable()) channelFrame.addSlot("clientID", channel.asDurable().clientID());
+			for (Bus.EventHandler handler : bus.eventHandlerList()) {
+				Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
+				addUserVariables(handler, channelFrame, findCustomParameters(handler));
+				if (handler.isDurable()) channelFrame.addSlot("clientID", handler.asDurable().clientID());
 				frame.addSlot("service", channelFrame);
 			}
 		}
@@ -129,9 +128,9 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(Channel channel) {
+	private Set<String> findCustomParameters(Bus.EventHandler channel) {
 		Set<String> set = new LinkedHashSet<>();
-		set.addAll(Commons.extractParameters(channel.path()));
+		set.addAll(Commons.extractParameters(channel.messageType()));
 		if (channel.isDurable()) set.addAll(Commons.extractParameters(channel.asDurable().clientID()));
 		return set;
 	}
