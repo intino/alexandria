@@ -1,0 +1,16 @@
+def type(eventHandler)
+	package $package+validPackage.eventhandlers;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler {
+
+		public $box+validName+firstUpperCase~Box box;
+		public String message;
+
+		public void execute() {
+
+		}
+
+	}
+end

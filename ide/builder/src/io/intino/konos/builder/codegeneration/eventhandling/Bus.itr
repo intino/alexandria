@@ -1,0 +1,118 @@
+def type(bus)
+	package $package+validPackage;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+firstUpperCase~Configuration;
+	import io.intino.konos.jms.TopicConsumer;
+	import io.intino.konos.jms.TopicProducer;
+	import io.intino.konos.jms.Consumer;
+	import $package+validPackage.eventhandlers.*;
+	import javax.jms.JMSException;
+	import javax.jms.Message;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+
+	public class $name+firstUppercase~Bus {
+		private static Logger logger = Logger.getGlobal();
+
+		private javax.jms.Session session;
+		private $box+firstUpperCase~Configuration configuration;
+		private $box+firstUppercase~Box box;
+
+		public $name+firstUppercase~Bus($box+firstUppercase~Box box) {
+			this.box = box;
+			this.configuration = box.configuration();
+			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = this.configuration.$name+firstLowerCase~Configuration();
+			try {
+				javax.jms.Connection connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.user, configuration.password, configuration.url).createConnection();
+				if (configuration.clientID != null) connection.setClientID(configuration.clientID);
+				connection.start();
+				this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+					$eventHandler+subscribe...[$NL]
+			} catch (JMSException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+
+		public javax.jms.Session session() {
+			return session;
+		}
+
+		public TopicProducer newTopicProducer(String path) {
+			try {
+				return new TopicProducer(session(), path);
+			} catch (JMSException e) {
+				logger.severe(e.getMessage());
+				return null;
+			}
+		}
+
+		public void closeSession() {
+			try {
+				session.close();
+			} catch (JMSException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+
+		private static class Subscriptor implements Consumer {
+
+			private $box+firstUpperCase~Box box;
+
+			Subscriptor($box+firstUpperCase~Box box) {
+				this.box = box;
+			}
+
+			public void consume(Message message) {
+				String text = textFrom(message);
+				$eventHandler+select...[$NL]
+			}
+		}
+	}
+end
+
+def type(eventHandler) trigger(field)
+	public static final String $name = $messageType+format;
+end
+
+def type(eventHandler) trigger(subscribe)
+	new TopicConsumer(session, $messageType+format).listen(new Subscriptor(box)[, $durable]);
+end
+
+def type(durable) trigger(durable)
+	configuration.$conf~Configuration().clientID[$custom+replace...[]]
+end
+
+def type(custom) trigger(replace)
+	.replace("{$value}", $value+validname+firstLowerCase)
+end
+
+def trigger(formatMessage)
+	"$name"[$custom+customType...[]]
+end
+
+def trigger(customType)
+	.replace("{$value}", box.configuration.$conf~Configuration().$value+validname+firstLowerCase)
+end
+
+def trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", this.configuration.$conf~Configuration().$value+validname+firstLowerCase)
+end
+
+def trigger(eventHandler) trigger(select)
+	if ($messageType+formatMessage.equals(typeOf(message))) {
+		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
+		eventHandler.box = box;
+		eventHandler.message = text;
+		eventHandler.execute();
+	}
+end
+
+def trigger(replace)
+	.replace("{$value}", configuration().$conf+firstLowerCase~Configuration.$value+validname+firstLowerCase)
+end
+

@@ -5,12 +5,11 @@ use DataTypes
 
 Concept Task
 
-Concept Command
-	var string messageType
 
 Facet Scheduled on Task
 
 Facet BootTrigger extends Scheduled
+	var integer:{ms} delay = 0 ms
 
 Facet TimeoutTrigger extends Scheduled on Task // TODO scheduled render
 	var integer:{ms} delay

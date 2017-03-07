@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.process.task;
+package io.intino.konos.builder.codegeneration.task;
 
 import org.siani.itrules.LineSeparator;
 import org.siani.itrules.Template;
