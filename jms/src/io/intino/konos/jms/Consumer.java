@@ -20,4 +20,9 @@ public interface Consumer {
 			return "";
 		}
 	}
+
+	default String typeOf(Message message) {
+		final String text = textFrom(message);
+		return text.substring(0, text.indexOf("\n")).replace("[", "").replace("]", "");
+	}
 }

@@ -43,7 +43,7 @@ public class RESTServiceRenderer {
 	}
 
 	private void generateDoc() {
-		final File www = new File(res, "www");
+		final File www = new File(res, "www"+ File.separator + "developer");
 		SwaggerGenerator generator = new SwaggerGenerator(services, www);
 		generator.execute();
 		createIndex(www);

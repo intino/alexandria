@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.process.task;
+package io.intino.konos.builder.codegeneration.task;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;

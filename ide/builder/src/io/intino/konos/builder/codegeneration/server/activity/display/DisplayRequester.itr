@@ -22,6 +22,7 @@ def type(display)
 		@Override
 		public void execute() throws KonosException {
 			$name+firstUpperCase~Display display = display();
+			if (display == null) return;
 			String operation = operation();
 
 			$request...[$NL~else ]
@@ -41,11 +42,11 @@ def type(request) trigger(request)
 end
 
 def type(list) trigger(parameter)
-    manager.fromQuery("value", $value+FirstUpperCase$[].class)
+    manager.fromQuery("value", $value~$[].class)
 end
 
 def type(parameter) trigger(parameter)
-    manager.fromQuery("value", $value+FirstUpperCase.class)
+    manager.fromQuery("value", $value.class)
 end
 
 def	trigger(parameter)
