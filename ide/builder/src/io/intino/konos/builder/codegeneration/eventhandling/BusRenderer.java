@@ -40,9 +40,9 @@ public class BusRenderer {
 	}
 
 	private Frame frameOf(Bus.EventHandler handler) {
-		final Frame frame = new Frame().addTypes("eventHandler").addSlot("name", handler.name()).addSlot("messageType", customize(handler.name(), handler.messageType()));
+		final Frame frame = new Frame().addTypes("eventHandler").addSlot("name", handler.name()).addSlot("messageType", customize(handler.name(), handler.topic()));
 		if (handler.isDurable())
-			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().messageType()));
+			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().topic()));
 		return frame;
 	}
 
