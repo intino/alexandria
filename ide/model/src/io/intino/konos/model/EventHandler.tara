@@ -1,6 +1,11 @@
 dsl Proteo
 
+Concept:{0..1}:Named Bus
+	Concept:Named EventHandler
+		var string topic
+	Concept Pipe
+		sub MailPipe
+		sub PostPipe
 
-Concept Pipe
-	sub MailPipe
-	sub PostPipe
+Facet Durable on Bus.EventHandler
+	var string clientID

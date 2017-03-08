@@ -2,13 +2,6 @@ dsl Proteo
 
 use DataTypes
 
-Concept:Named Bus
-	Concept:Named EventHandler
-		var string messageType
-
-Facet Durable on Bus.EventHandler
-	var string clientID
-
 Concept:Named Activity
 	var word:{Ajax} type = Ajax
 
