@@ -8,9 +8,9 @@ def type(jmxserver)
 
     public class JMX$name+firstUpperCase {
 
-    	public JMXServer init(String localhostIP, int port, Box box) {
+    	public JMXServer init(Box box) {
     		JMXServer server = new JMXServer(mbClasses(box));
-    		server.init(localhostIP, port);
+    		server.init();
     		return server;
     	}
 

@@ -68,7 +68,7 @@ class AccessorsPublisher {
 		try {
 			final List<String> apps = createSources();
 			if (apps.isEmpty()) {
-				notify("No rest services found in module", INFORMATION);
+				notify("No accessors found in module", INFORMATION);
 				return;
 			} else if (configuration.distributionReleaseRepository() == null) {
 				notify("There isn't distribution repository defined", ERROR);

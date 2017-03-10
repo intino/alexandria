@@ -52,7 +52,6 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("parent", parent);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
-		addJMXServices(frame, boxName);
 		addSlackServices(frame, boxName);
 		addBuses(frame, boxName);
 		addEventHandlers(frame, boxName);

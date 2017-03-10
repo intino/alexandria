@@ -32,9 +32,9 @@ def type(service & rest) trigger(fill)
 end
 
 def type(service & jms) trigger(fill)
-    "$name+firstLowerCase.url",
-    "$name+firstLowerCase.user",
-    "$name+firstLowerCase.password"[$custom+parameter...[]]
+    "$name+firstLowerCase.url=",
+    "$name+firstLowerCase.user=",
+    "$name+firstLowerCase.password="[$custom+parameter...[]]
 end
 
 def type(service & bus) trigger(fill)
@@ -50,7 +50,7 @@ def type(service & channel) trigger(fill)
 end
 
 def type(service & slack) trigger(fill)
-    "$name+firstLowerCase.token"
+    "$name+firstLowerCase.token="
 end
 
 def type(service & activity) trigger(fill)
@@ -59,7 +59,7 @@ def type(service & activity) trigger(fill)
 end
 
 def type(service & jmx) trigger(fill)
-    "$name+firstLowerCase.port"[$custom+parameter...[]]
+    "$name+firstLowerCase.port="[$custom+parameter...[]]
 end
 
 def type(custom) trigger(parameter)

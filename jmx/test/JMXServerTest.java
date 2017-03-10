@@ -6,6 +6,6 @@ public class JMXServerTest {
 
 	public static void main(String[] args) {
 		JMXServer server = new JMXServer(Collections.singletonMap("SimpleStandard", null));
-		server.init("localhost", 9999);
+		server.init();
 	}
 }
