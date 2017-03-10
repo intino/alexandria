@@ -11,7 +11,7 @@
     </content>
     <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.konos:builder:1.5.0" level="project" />
+    <orderEntry type="module" module-name="builder" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-codegen:2.1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-parser:1.0.15" level="project" />
@@ -119,7 +119,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz:2.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: c3p0:c3p0:0.9.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.konos:konos-jms:1.0.0" level="project" />
+    <orderEntry type="module" module-name="jms" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-all:5.14.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.konos:konos-slack:1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.ullink.slack:simpleslackapi:0.6.0" level="project" />

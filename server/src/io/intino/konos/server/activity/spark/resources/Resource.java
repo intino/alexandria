@@ -19,7 +19,6 @@ import io.intino.konos.server.activity.spark.ActivitySparkManager;
 import io.intino.konos.server.activity.utils.RequestHelper;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -114,11 +113,6 @@ public abstract class Resource implements io.intino.konos.server.Resource {
     private Space space() {
         AuthService authService = manager.authService();
         return authService != null ? authService.space() : null;
-    }
-
-    private URL amidasUrl() {
-        AuthService authService = manager.authService();
-        return authService != null ? authService.url() : null;
     }
 
     private boolean isFederated() {

@@ -36,6 +36,7 @@ public class BusRenderer {
 				addSlot("name", bus.name()).
 				addSlot("box", boxName).
 				addSlot("eventHandler", bus.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!bus.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", "packageName");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(bus.name()) + "Bus", template().format(frame));
 	}
 
