@@ -66,6 +66,10 @@ public class ActivitySparkManager extends io.intino.konos.server.spark.SparkMana
 		return result;
 	}
 
+	public String requestUrl() {
+		return baseUrl() + this.request.raw().getPathInfo();
+	}
+
 	public String languageFromHeader() {
 		String language = request.raw().getHeader("Accept-Language");
 		return language != null ? languageOf(language.split(",")[0]) : null;
