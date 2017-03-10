@@ -52,7 +52,6 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("parent", parent);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
-		addJMXServices(frame, boxName);
 		addSlackServices(frame, boxName);
 		addBuses(frame, boxName);
 		addEventHandlers(frame, boxName);
@@ -88,20 +87,20 @@ public class BoxConfigurationRenderer {
 	}
 
 	private void addBuses(Frame frame, String boxName) {
-		for (Bus bus : application.busList()) {
-			Frame busFrame = new Frame().addTypes("service", "bus").addSlot("name", bus.name()).addSlot("configuration", boxName);
-			frame.addSlot("service", busFrame);
-		}
+		Bus bus = application.bus();
+		if (bus == null) return;
+		Frame busFrame = new Frame().addTypes("service", "bus").addSlot("name", bus.name()).addSlot("configuration", boxName);
+		frame.addSlot("service", busFrame);
 	}
 
 	private void addEventHandlers(Frame frame, String boxName) {
-		for (Bus bus : application.busList()) {
-			for (Bus.EventHandler handler : bus.eventHandlerList()) {
-				Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
-				addUserVariables(handler, channelFrame, findCustomParameters(handler));
-				if (handler.isDurable()) channelFrame.addSlot("clientID", handler.asDurable().clientID());
-				frame.addSlot("service", channelFrame);
-			}
+		Bus bus = application.bus();
+		if (bus == null) return;
+		for (Bus.EventHandler handler : bus.eventHandlerList()) {
+			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
+			addUserVariables(handler, channelFrame, findCustomParameters(handler));
+			if (handler.isDurable()) channelFrame.addSlot("clientID", handler.asDurable().clientID());
+			frame.addSlot("service", channelFrame);
 		}
 	}
 
@@ -130,7 +129,7 @@ public class BoxConfigurationRenderer {
 
 	private Set<String> findCustomParameters(Bus.EventHandler channel) {
 		Set<String> set = new LinkedHashSet<>();
-		set.addAll(Commons.extractParameters(channel.messageType()));
+		set.addAll(Commons.extractParameters(channel.topic()));
 		if (channel.isDurable()) set.addAll(Commons.extractParameters(channel.asDurable().clientID()));
 		return set;
 	}
