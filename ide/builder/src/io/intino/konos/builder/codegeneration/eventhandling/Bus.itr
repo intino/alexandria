@@ -6,7 +6,7 @@ def type(bus)
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
 	import io.intino.konos.jms.Consumer;
-	import $package+validPackage.eventhandlers.*;
+	[$eventHandlerImport]
 	import javax.jms.JMSException;
 	import javax.jms.Message;
 	import java.util.logging.Level;
@@ -116,3 +116,6 @@ def trigger(replace)
 	.replace("{$value}", configuration().$conf+firstLowerCase~Configuration.$value+validname+firstLowerCase)
 end
 
+def trigger(eventHandlerImport)
+	import $value+validPackage.eventhandlers.*;
+end

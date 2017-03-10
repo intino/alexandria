@@ -36,13 +36,14 @@ public class BusRenderer {
 				addSlot("name", bus.name()).
 				addSlot("box", boxName).
 				addSlot("eventHandler", bus.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!bus.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", "packageName");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(bus.name()) + "Bus", template().format(frame));
 	}
 
 	private Frame frameOf(Bus.EventHandler handler) {
-		final Frame frame = new Frame().addTypes("eventHandler").addSlot("name", handler.name()).addSlot("messageType", customize(handler.name(), handler.messageType()));
+		final Frame frame = new Frame().addTypes("eventHandler").addSlot("name", handler.name()).addSlot("messageType", customize(handler.name(), handler.topic()));
 		if (handler.isDurable())
-			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().messageType()));
+			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().topic()));
 		return frame;
 	}
 

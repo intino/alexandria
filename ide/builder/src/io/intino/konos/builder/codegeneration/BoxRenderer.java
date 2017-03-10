@@ -3,7 +3,6 @@ package io.intino.konos.builder.codegeneration;
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
-import io.intino.konos.model.Bus;
 import io.intino.konos.model.Konos;
 import io.intino.konos.model.jms.JMSService;
 import io.intino.konos.model.jmx.JMXService;
@@ -66,8 +65,8 @@ public class BoxRenderer {
 	}
 
 	private void bus(Frame frame, String name) {
-		for (Bus bus : konos.busList())
-			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", bus.name()).addSlot("package", packageName).addSlot("configuration", name));
+		if (konos.bus() != null)
+			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", konos.bus().name()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
 	private void services(Frame frame, String name) {

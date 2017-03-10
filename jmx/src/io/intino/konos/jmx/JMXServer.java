@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class JMXServer {
 
 	private static final Logger logger = Logger.getGlobal();
-
+	private static final String jmxPort = System.getProperty("com.sun.management.jmxremote.rmi.port");
 	private final Map<String, Object[]> mbClasses;
 	private final List<ObjectName> registeredBeans = new ArrayList<>();
 	private JMXConnectorServer connector;
@@ -27,14 +27,12 @@ public class JMXServer {
 		this.mbClasses = classWithParametersMap;
 	}
 
-	public void init(String localhostIP, int port) {
-		System.setProperty("java.rmi.server.randomIDs", "false");
-		System.setProperty("com.sun.management.jmxremote.rmi.port", port + "");
-		System.setProperty("java.rmi.server.hostname", localhostIP);
+	public void init() {
+		if(jmxPort == null) return;
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
 			registerMBean(server, mbClass, mbClasses.get(mbClass));
-		createService(server, port);
+		createService(server);
 	}
 
 	private MBeanServer allocateServer() {
@@ -58,8 +56,9 @@ public class JMXServer {
 		}
 	}
 
-	private void createService(MBeanServer server, int port) {
+	private void createService(MBeanServer server) {
 		try {
+			final int port = Integer.parseInt(jmxPort);
 			LocateRegistry.createRegistry(port);
 			JMXServiceURL url =
 					new JMXServiceURL("service:jmx:rmi://" + System.getProperty("java.rmi.server.hostname") +

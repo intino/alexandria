@@ -22,6 +22,7 @@ import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
+import io.intino.tara.magritte.Graph;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.dsl.Konos;
@@ -100,24 +101,41 @@ public class CreateKonosBoxAction extends KonosAction {
 			generate(generationPackage, gen, src, new File(resDirectory.getPath()), test);
 		}
 
-		private void generate(String packageName, File gen, File src, File res, File test) {
-			final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
-			if (stash == null) {
-				notifyError("Models have errors");
-				return;
-			}
-			try {
-				new FullRenderer(module, GraphLoader.loadGraph(stash).graph(), src, gen, res, test, packageName).execute();
-			} catch (Exception e) {
-				e.printStackTrace();
-				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
-				return;
-			}
+		private boolean generate(String packageName, File gen, File src, File res, File test) {
+			Graph graph = loadGraph();
+			if (!render(packageName, gen, src, res, test, graph)) return false;
+			refreshDirectories(gen, src, res, test);
+			notifySuccess();
+			return true;
+		}
+
+		private Graph loadGraph() {
+			if (!konosFiles.isEmpty()) {
+				final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
+				if (stash == null) {
+					notifyError("Models have errors");
+					return null;
+				} else return GraphLoader.loadGraph(stash).graph();
+			} else return GraphLoader.loadGraph().graph();
+		}
+
+		private void refreshDirectories(File gen, File src, File res, File test) {
 			refreshDirectory(gen);
 			refreshDirectory(src);
 			refreshDirectory(test);
 			refreshDirectory(res);
-			notifySuccess();
+		}
+
+		private boolean render(String packageName, File gen, File src, File res, File test, Graph graph) {
+			try {
+				if (graph == null) throw new Exception("Model have error");
+				new FullRenderer(module, graph, src, gen, res, test, packageName).execute();
+			} catch (Exception e) {
+				e.printStackTrace();
+				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
+				return false;
+			}
+			return true;
 		}
 
 		private void notifySuccess() {
