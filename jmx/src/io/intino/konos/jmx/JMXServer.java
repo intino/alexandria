@@ -28,7 +28,7 @@ public class JMXServer {
 	}
 
 	public void init() {
-		if(jmxPort == null) return;
+		if (jmxPort == null) return;
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
 			registerMBean(server, mbClass, mbClasses.get(mbClass));
@@ -52,21 +52,22 @@ public class JMXServer {
 		try {
 			if (connector != null && connector.isActive()) connector.stop();
 		} catch (IOException e) {
-			logger.severe(e.getMessage());
+			logger.severe("Error stopping service: " + e.getMessage());
 		}
 	}
 
 	private void createService(MBeanServer server) {
+		final String localhost = System.getProperty("java.rmi.server.hostname");
+		final int port = Integer.parseInt(jmxPort);
 		try {
-			final int port = Integer.parseInt(jmxPort);
 			LocateRegistry.createRegistry(port);
 			JMXServiceURL url =
-					new JMXServiceURL("service:jmx:rmi://" + System.getProperty("java.rmi.server.hostname") +
-							":" + port + "/jndi/rmi://" + System.getProperty("java.rmi.server.hostname") + ":" + port + "/jmxrmi");
+					new JMXServiceURL("service:jmx:rmi://" + localhost +
+							":" + port + "/jndi/rmi://" + localhost + ":" + port + "/jmxrmi");
 			connector = JMXConnectorServerFactory.newJMXConnectorServer(url, null, server);
 			connector.start();
 		} catch (IOException e) {
-			logger.severe(e.getMessage());
+			logger.severe("Error creating server in " + localhost + ":" + port + ":" + e.getMessage());
 		}
 	}
 
@@ -76,7 +77,7 @@ public class JMXServer {
 			String objectNameName = "Konos" + ":type=" + mbeanClass.getInterfaces()[0].getName() + ",name=" + mbeanClass.getSimpleName();
 			registeredBeans.add(createSimpleMBean(server, mbeanClassName, objectNameName, parameters));
 		} catch (ClassNotFoundException e) {
-			logger.severe(e.getMessage());
+			logger.severe("Error registering mBean: " + e.getMessage());
 		}
 	}
 
