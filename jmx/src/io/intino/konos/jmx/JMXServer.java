@@ -3,12 +3,7 @@ package io.intino.konos.jmx;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
-import javax.management.remote.JMXConnectorServer;
-import javax.management.remote.JMXConnectorServerFactory;
-import javax.management.remote.JMXServiceURL;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +12,8 @@ import java.util.logging.Logger;
 public class JMXServer {
 
 	private static final Logger logger = Logger.getGlobal();
-	private static final String jmxPort = System.getProperty("com.sun.management.jmxremote.rmi.port");
 	private final Map<String, Object[]> mbClasses;
 	private final List<ObjectName> registeredBeans = new ArrayList<>();
-	private JMXConnectorServer connector;
 	private MBeanServer server;
 
 	public JMXServer(Map<String, Object[]> classWithParametersMap) {
@@ -28,11 +21,9 @@ public class JMXServer {
 	}
 
 	public void init() {
-		if (jmxPort == null) return;
 		server = allocateServer();
 		for (String mbClass : mbClasses.keySet())
 			registerMBean(server, mbClass, mbClasses.get(mbClass));
-		createService(server);
 	}
 
 	private MBeanServer allocateServer() {
@@ -46,29 +37,6 @@ public class JMXServer {
 
 	public MBeanServer getServer() {
 		return server;
-	}
-
-	public void stop() {
-		try {
-			if (connector != null && connector.isActive()) connector.stop();
-		} catch (IOException e) {
-			logger.severe("Error stopping service: " + e.getMessage());
-		}
-	}
-
-	private void createService(MBeanServer server) {
-		final String localhost = System.getProperty("java.rmi.server.hostname");
-		final int port = Integer.parseInt(jmxPort);
-		try {
-			LocateRegistry.createRegistry(port);
-			JMXServiceURL url =
-					new JMXServiceURL("service:jmx:rmi://" + localhost +
-							":" + port + "/jndi/rmi://" + localhost + ":" + port + "/jmxrmi");
-			connector = JMXConnectorServerFactory.newJMXConnectorServer(url, null, server);
-			connector.start();
-		} catch (IOException e) {
-			logger.severe("Error creating server in " + localhost + ":" + port + ":" + e.getMessage());
-		}
 	}
 
 	private void registerMBean(MBeanServer server, String mbeanClassName, Object[] parameters) {

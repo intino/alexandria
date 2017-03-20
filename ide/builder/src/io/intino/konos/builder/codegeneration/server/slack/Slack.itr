@@ -12,7 +12,7 @@ def type(slack & gen)
 
 
 		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box) {
-			super(box.configuration.$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
+			super(box.configuration().$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
 			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
                 final String help = $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.help(box, properties, this.getCommandsInfo());
                 return help == null || help.isEmpty() ? help() : help;

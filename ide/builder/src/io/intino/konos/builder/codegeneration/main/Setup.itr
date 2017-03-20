@@ -1,24 +1,40 @@
 def type(setup)
 	package $package;
 
-	import io.intino.tara.magritte.Graph;
+	[$tara+empty~import io.intino.tara.magritte.Graph;]
+
+	import java.util.logging.ConsoleHandler;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
 
 	class Setup {
 
-		static Graph initGraph($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-			return Graph.use(store(configuration), $wrapper...[, ]).load($outDSL+quoted);
-		}
-
 		static void configureBox($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
-
+			configureLogger("log"); //TODO change path in case
 		}
-
-		private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-			// return new io.intino.tara.magritte.stores.FileSystemStore(configuration.store());
-			return new io.intino.tara.magritte.stores.ResourcesStore();
-		}
+	[
+		$tara][
 
 		$rest
+		]
+		private static void configureLogger(String path) {
+        		final Logger logger = Logger.getGlobal();
+			final ConsoleHandler handler = new ConsoleHandler();
+			handler.setLevel(Level.INFO);
+			handler.setFormatter(new io.intino.konos.LogFormatter(path));
+			logger.addHandler(handler);
+        	}
+	}
+end
+
+def trigger(tara)
+	static Graph initGraph($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+		return Graph.use(store(configuration), $wrapper...[, ]).load($outDSL+quoted);
+	}
+
+	private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+		// return new io.intino.tara.magritte.stores.FileSystemStore(configuration.store());
+		return new io.intino.tara.magritte.stores.ResourcesStore();
 	}
 end
 

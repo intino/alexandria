@@ -18,7 +18,7 @@ public class LauncherRenderer {
 	}
 
 	public void execute() {
-		if (Commons.javaFile(destination, "Setup").exists()) return;
+		if (Commons.javaFile(destination, "Launcher").exists()) return;
 		Commons.writeFrame(destination, "Launcher", template().format(frame));
 	}
 
