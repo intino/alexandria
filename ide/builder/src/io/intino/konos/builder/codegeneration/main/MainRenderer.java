@@ -29,10 +29,20 @@ public class MainRenderer {
 	public void execute() {
 		if (configuration == null) return;
 		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name());
+		if (hasTara()) frame.addSlot("tara", "");
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", "");
 		Commons.writeFrame(destination, "Main", template().format(frame));
 	}
+
+	private boolean hasTara() {
+		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
+	}
+
+	private boolean hasModel(Configuration configuration) {
+		return !configuration.languages().isEmpty();
+	}
+
 
 	private Template template() {
 		return Formatters.customize(MainTemplate.create());
