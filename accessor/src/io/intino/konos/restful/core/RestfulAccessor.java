@@ -198,8 +198,11 @@ public class RestfulAccessor implements RestfulApi {
 			}
 
 			int status = response.getStatusLine().getStatusCode();
-			if (status < 200 || status >= 300)
-				throw new RestfulFailure(String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase()));
+			if (status < 200 || status >= 300) {
+				String errorMessage = response.containsHeader("error-message") ? response.getFirstHeader("error-message").getValue() : "";
+				final String format = String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase() + ". " + errorMessage);
+				throw new RestfulFailure(String.valueOf(status), format);
+			}
 
 			HttpEntity entity = response.getEntity();
 			return new Resource(response.getFirstHeader("Content-Disposition").getValue(), entity.getContentType().getValue(), entity.getContent());
@@ -239,9 +242,11 @@ public class RestfulAccessor implements RestfulApi {
 		}
 
 		int status = response.getStatusLine().getStatusCode();
-		if (status < 200 || status >= 300)
-			throw new RestfulFailure(String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase()));
-
+		if (status < 200 || status >= 300) {
+			String errorMessage = response.containsHeader("error-message") ? response.getFirstHeader("error-message").getValue() : "";
+			final String format = String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase() + ". " + errorMessage);
+			throw new RestfulFailure(String.valueOf(status), format);
+		}
 		return responseOf(response);
 	}
 

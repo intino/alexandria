@@ -35,11 +35,27 @@ public class SetupRenderer {
 		if (configuration == null || Commons.javaFile(destination, "Setup").exists())
 			return;
 		final String name = name();
-		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name).addSlot("wrapper", dsls());
-		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
+		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name);
+		if (hasTara()) frame.addSlot("tara", fillTara());
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
 		Commons.writeFrame(destination, "Setup", template().format(frame));
+	}
+
+	private Frame fillTara() {
+		Frame frame = new Frame();
+		frame.addSlot("name", name());
+		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
+		frame.addSlot("wrapper", dsls());
+		return null;
+	}
+
+	private boolean hasTara() {
+		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
+	}
+
+	private boolean hasModel(Configuration configuration) {
+		return !configuration.languages().isEmpty();
 	}
 
 	private String[] dsls() {

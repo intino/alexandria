@@ -10,8 +10,7 @@ def type(box)
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parent~Box?io.intino.konos.Box] {
 		private static Logger LOG = Logger.getGlobal();
-		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;]
-		[$hasParent?protected Map<String, Object> map = new LinkedHashMap<>();][
+		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
 		$service+field...[$NL]][
 		$bus+field...[$NL]][
 		$task+field]
