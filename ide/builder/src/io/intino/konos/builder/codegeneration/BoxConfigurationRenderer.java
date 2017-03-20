@@ -56,10 +56,17 @@ public class BoxConfigurationRenderer {
 		addBuses(frame, boxName);
 		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
-		if (module != null && TaraUtil.configurationOf(module) != null) frame.addSlot("tara", "");
+		if (hasTara()) frame.addSlot("tara", "");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
 		return frame;
+	}
 
+	private boolean hasTara() {
+		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
+	}
+
+	private boolean hasModel(Configuration configuration) {
+		return !configuration.languages().isEmpty();
 	}
 
 	private void addRESTServices(Frame frame, String boxName) {

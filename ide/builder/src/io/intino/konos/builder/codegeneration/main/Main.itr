@@ -1,14 +1,14 @@
 def type(main)
 	package $package;
 
-	import io.intino.tara.magritte.Graph;
+	[$tara+empty~import io.intino.tara.magritte.Graph;]
 
 	public class Main {
 
 		public static void main(String$[] args) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
-			Graph graph = Setup.initGraph(configuration);
-			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = run(graph, createConfigurationFromArgs(args));
+			[$tara+empty~Graph graph = Setup.initGraph(configuration);]
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = run([$tara+empty~graph, ]configuration);
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> box.quit()));
 		}
 
@@ -16,8 +16,8 @@ def type(main)
 			return new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args)$conf+set;
 		}
 
-		private static $name+SnakeCaseToCamelCase+firstUpperCase~Box run(Graph graph, $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(graph, configuration);
+		private static $name+SnakeCaseToCamelCase+firstUpperCase~Box run([$tara+empty~Graph graph, ]$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box([$tara+empty~graph, ]configuration);
 			Setup.configureBox(box);
 			box.init();
 			return box;
@@ -51,4 +51,6 @@ def attribute(Boolean) trigger(convert)
 end
 
 def trigger(convert)
+end
+def trigger(empty)
 end

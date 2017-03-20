@@ -15,6 +15,7 @@ def type(bus)
 	public class $name+firstUppercase~Bus {
 		private static Logger logger = Logger.getGlobal();
 
+		javax.jms.Connection connection;
 		private javax.jms.Session session;
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
@@ -22,13 +23,13 @@ def type(bus)
 		public $name+firstUppercase~Bus($box+firstUppercase~Box box) {
 			this.box = box;
 			this.configuration = box.configuration();
-			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration = this.configuration.$name+firstLowerCase~Configuration();
+			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration busConfiguration = this.configuration.$name+firstLowerCase~Configuration();
 			try {
-				javax.jms.Connection connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration.user, configuration.password, configuration.url).createConnection();
-				if (configuration.clientID != null) connection.setClientID(configuration.clientID);
+				connection = new org.apache.activemq.ActiveMQConnectionFactory(busConfiguration.user, busConfiguration.password, busConfiguration.url).createConnection();
+				if (busConfiguration.clientID != null) connection.setClientID(busConfiguration.clientID);
 				connection.start();
 				this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
-					$eventHandler+subscribe...[$NL]
+				$eventHandler+subscribe...[$NL]
 			} catch (JMSException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
@@ -36,6 +37,10 @@ def type(bus)
 
 		public javax.jms.Session session() {
 			return session;
+		}
+
+		public javax.jms.Connection connection() {
+			return connection;
 		}
 
 		public TopicProducer newTopicProducer(String path) {
@@ -80,7 +85,7 @@ def type(eventHandler) trigger(subscribe)
 end
 
 def type(durable) trigger(durable)
-	configuration.$conf~Configuration().clientID[$custom+replace...[]]
+	this.configuration.$conf~Configuration().clientID[$custom+replace...[]]
 end
 
 def type(custom) trigger(replace)
@@ -104,7 +109,7 @@ def trigger(custom)
 end
 
 def trigger(eventHandler) trigger(select)
-	if ($messageType+formatMessage.equals(typeOf(message))) {
+	if ($messageType+formatMessage.equalsIgnoreCase(typeOf(text))) {
 		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
 		eventHandler.box = box;
 		eventHandler.message = text;
