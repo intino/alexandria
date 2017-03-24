@@ -85,6 +85,10 @@ public abstract class Bot {
 		};
 	}
 
+	protected SlackSession session() {
+		return session;
+	}
+
 	protected void add(String name, List<String> parameters, List<String> components, String description, Command command) {
 		commands.put(name, command);
 		commandsInfo.put(name, new CommandInfo(parameters, components, description));
