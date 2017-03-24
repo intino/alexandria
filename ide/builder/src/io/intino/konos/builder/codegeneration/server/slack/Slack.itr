@@ -20,6 +20,7 @@ def type(slack & gen)
 			$request+add...[$NL]
 			try {
 				execute();
+				$name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.init(box, session());
 			} catch (IOException e) {
 				LOG.log(Level.SEVERE, e.getMessage(), e);
 			}
@@ -41,6 +42,10 @@ def type(slack & actions)
 
         static String help($box+validname+FirstUpperCase~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
             return "";
+        }
+
+        public static void init($box+validname+FirstUpperCase~Box box, com.ullink.slack.simpleslackapi.SlackSession session) {
+
         }
 
 		$request+method...[$NL$NL]
