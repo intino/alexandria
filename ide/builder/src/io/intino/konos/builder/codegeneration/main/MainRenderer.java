@@ -18,18 +18,20 @@ public class MainRenderer {
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
+	private final boolean isTara;
 
-	public MainRenderer(File destination, String packageName, Module module) {
+	public MainRenderer(File destination, String packageName, Module module, boolean isTara) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
 		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.isTara = isTara;
 	}
 
 	public void execute() {
 		if (configuration == null) return;
 		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name());
-		if (hasTara()) frame.addSlot("tara", "");
+		if (isTara) frame.addSlot("tara", "");
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("spark.Spark", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", "");
 		Commons.writeFrame(destination, "Main", template().format(frame));

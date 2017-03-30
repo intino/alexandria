@@ -44,7 +44,7 @@ public class BoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (module != null && isTara) frame.addSlot("tara", name);
+		if (isTara) frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);

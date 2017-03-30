@@ -6,17 +6,16 @@ def type(bus)
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
 	import io.intino.konos.jms.Consumer;
+	import io.intino.konos.jms.Bus;
 	[$eventHandlerImport]
 	import javax.jms.JMSException;
 	import javax.jms.Message;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
-	public class $name+firstUppercase~Bus {
+	public class $name+firstUppercase~Bus extends Bus {
 		private static Logger logger = Logger.getGlobal();
 
-		javax.jms.Connection connection;
-		private javax.jms.Session session;
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
@@ -26,35 +25,10 @@ def type(bus)
 			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration busConfiguration = this.configuration.$name+firstLowerCase~Configuration();
 			try {
 				connection = new org.apache.activemq.ActiveMQConnectionFactory(busConfiguration.user, busConfiguration.password, busConfiguration.url).createConnection();
-				if (busConfiguration.clientID != null) connection.setClientID(busConfiguration.clientID);
+				if (busConfiguration.clientID != null && !busConfiguration.clientID.isEmpty()) connection.setClientID(busConfiguration.clientID);
 				connection.start();
 				this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 				$eventHandler+subscribe...[$NL]
-			} catch (JMSException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		}
-
-		public javax.jms.Session session() {
-			return session;
-		}
-
-		public javax.jms.Connection connection() {
-			return connection;
-		}
-
-		public TopicProducer newTopicProducer(String path) {
-			try {
-				return new TopicProducer(session(), path);
-			} catch (JMSException e) {
-				logger.severe(e.getMessage());
-				return null;
-			}
-		}
-
-		public void closeSession() {
-			try {
-				session.close();
 			} catch (JMSException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
@@ -70,6 +44,7 @@ def type(bus)
 
 			public void consume(Message message) {
 				String text = textFrom(message);
+				String type = typeOf(text);
 				$eventHandler+select...[$NL]
 			}
 		}
@@ -109,7 +84,7 @@ def trigger(custom)
 end
 
 def trigger(eventHandler) trigger(select)
-	if ($messageType+formatMessage.equalsIgnoreCase(typeOf(text))) {
+	if ($messageType+formatMessage.equalsIgnoreCase(type) || "$simpleMessageType+shortPath".equalsIgnoreCase(type)) {
 		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
 		eventHandler.box = box;
 		eventHandler.message = text;

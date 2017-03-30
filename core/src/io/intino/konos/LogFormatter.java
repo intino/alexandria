@@ -41,7 +41,6 @@ public class LogFormatter extends java.util.logging.Formatter {
 		return map;
 	}
 
-
 	public static class LogRecord implements java.io.Serializable {
 
 		private java.time.Instant created;
