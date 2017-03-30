@@ -27,15 +27,12 @@ import io.intino.konos.builder.codegeneration.server.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.dsl.Proteo;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-
-import static com.intellij.psi.search.GlobalSearchScope.moduleWithLibrariesScope;
 
 public class FullRenderer {
 
@@ -128,7 +125,7 @@ public class FullRenderer {
 
 	private Frame box() {
 		new BoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
-		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent).execute();
+		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent, isTara).execute();
 	}
 
 	private String boxName() {
@@ -139,10 +136,6 @@ public class FullRenderer {
 			if (dsl == null || dsl.isEmpty()) return module.getName();
 			else return dsl;
 		} else return "System";
-	}
-
-	private boolean isTara() {
-		return module != null && JavaPsiFacade.getInstance(module.getProject()).findClass(Proteo.GROUP_ID + "." + Proteo.ARTIFACT_ID + "." + "Graph", moduleWithLibrariesScope(module)) != null;
 	}
 
 	private String parent() {
@@ -162,9 +155,17 @@ public class FullRenderer {
 
 	}
 
+	private boolean isTara() {
+		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
+	}
+
+	private boolean hasModel(Configuration configuration) {
+		return !configuration.languages().isEmpty();
+	}
+
 	private void main(Frame frame) {
-		new SetupRenderer(src, packageName, module).execute();
-		new MainRenderer(gen, packageName, module).execute();
+		new SetupRenderer(src, packageName, module, isTara).execute();
+		new MainRenderer(gen, packageName, module, isTara).execute();
 		new LauncherRenderer(test, frame).execute();
 	}
 }

@@ -24,16 +24,14 @@ end
 
 def type(parameter) trigger(empty)
 end
+
 def type(list) trigger(parameter)
-    java.util.List<$value+firstUpperCase>
+    java.util.List<$value>
 end
 
 def trigger(parameter)
-    $value+firstUpperCase
+    $value
 end
-
-
-
 
 def type(schemaImport)
 	import $package.schemas.*;
