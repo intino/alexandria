@@ -33,14 +33,16 @@ public class BoxConfigurationRenderer {
 	private final Module module;
 	private final Configuration configuration;
 	private String parent;
+	private boolean isTara;
 
-	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, String parent) {
+	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, String parent, boolean isTara) {
 		this.application = graph.wrapper(Konos.class);
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.parent = parent;
+		this.isTara = isTara;
 	}
 
 	public Frame execute() {
@@ -56,18 +58,11 @@ public class BoxConfigurationRenderer {
 		addBuses(frame, boxName);
 		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
-		if (hasTara()) frame.addSlot("tara", "");
+		if (isTara) frame.addSlot("tara", "");
 		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
 		return frame;
 	}
 
-	private boolean hasTara() {
-		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
-	}
-
-	private boolean hasModel(Configuration configuration) {
-		return !configuration.languages().isEmpty();
-	}
 
 	private void addRESTServices(Frame frame, String boxName) {
 		for (RESTService service : application.rESTServiceList()) {

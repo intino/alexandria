@@ -22,6 +22,6 @@ public interface Consumer {
 	}
 
 	default String typeOf(String text) {
-		return text.substring(0, text.indexOf("\n")).replace("[", "").replace("]", "");
+		return text.contains("\n") ? text.substring(0, text.indexOf("\n")).replace("[", "").replace("]", "") : text;
 	}
 }

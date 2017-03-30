@@ -41,16 +41,19 @@ public class BusRenderer {
 	}
 
 	private Frame frameOf(Bus.EventHandler handler) {
-		final Frame frame = new Frame().addTypes("eventHandler").addSlot("name", handler.name()).addSlot("messageType", customize(handler.name(), handler.topic()));
+		final Frame frame = new Frame().addTypes("eventHandler").
+				addSlot("name", handler.name()).
+				addSlot("messageType", customize(handler.name(), handler.topic())).
+				addSlot("simpleMessageType", handler.topic());
 		if (handler.isDurable())
 			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().topic()));
 		return frame;
 	}
 
-	private Frame customize(String name, String path) {
+	private Frame customize(String name, String topic) {
 		Frame frame = new Frame().addTypes("messageType");
-		frame.addSlot("name", path);
-		for (String parameter : Commons.extractParameters(path))
+		frame.addSlot("name", topic);
+		for (String parameter : Commons.extractParameters(topic))
 			frame.addSlot("custom", custom(name, parameter));
 		return frame;
 	}
@@ -67,7 +70,10 @@ public class BusRenderer {
 
 
 	private Template template() {
-		return Formatters.customize(BusTemplate.create());
+		return Formatters.customize(BusTemplate.create()).add("shortPath", value -> {
+			String[] names = value.toString().split("\\.");
+			return names[names.length - 1];
+		});
 	}
 
 }
