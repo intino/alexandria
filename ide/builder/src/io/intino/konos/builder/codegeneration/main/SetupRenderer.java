@@ -23,12 +23,14 @@ public class SetupRenderer {
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
+	private boolean isTara;
 
-	public SetupRenderer(File destination, String packageName, Module module) {
+	public SetupRenderer(File destination, String packageName, Module module, boolean isTara) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.isTara = isTara;
 	}
 
 	public void execute() {
@@ -36,7 +38,7 @@ public class SetupRenderer {
 			return;
 		final String name = name();
 		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name);
-		if (hasTara()) frame.addSlot("tara", fillTara());
+		if (isTara) frame.addSlot("tara", fillTara());
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
 		Commons.writeFrame(destination, "Setup", template().format(frame));
@@ -48,14 +50,6 @@ public class SetupRenderer {
 		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
 		frame.addSlot("wrapper", dsls());
 		return null;
-	}
-
-	private boolean hasTara() {
-		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
-	}
-
-	private boolean hasModel(Configuration configuration) {
-		return !configuration.languages().isEmpty();
 	}
 
 	private String[] dsls() {
