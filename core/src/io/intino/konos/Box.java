@@ -22,6 +22,11 @@ public abstract class Box {
 		return (T) box.get(object);
 	}
 
+	public String get(String key) {
+		return box.get(key).toString();
+	}
+
+
 	public Box put(String name, Object object) {
 		box.put(name, object);
 		return this;

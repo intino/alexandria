@@ -49,7 +49,7 @@ public class SetupRenderer {
 		frame.addSlot("name", name());
 		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
 		frame.addSlot("wrapper", dsls());
-		return null;
+		return frame;
 	}
 
 	private String[] dsls() {

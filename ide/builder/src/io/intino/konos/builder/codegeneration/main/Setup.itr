@@ -27,6 +27,9 @@ def type(setup)
 	}
 end
 
+def trigger(empty)
+end
+
 def trigger(tara)
 	static Graph initGraph($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 		return Graph.use(store(configuration), $wrapper...[, ]).load($outDSL+quoted);

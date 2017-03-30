@@ -1,15 +1,11 @@
 package io.intino.konos;
 
 
-import com.moandjiezana.toml.TomlWriter;
+import io.intino.ness.inl.Inl;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class LogFormatter extends java.util.logging.Formatter {
 	private String path;
@@ -25,7 +21,7 @@ public class LogFormatter extends java.util.logging.Formatter {
 				sourceClass(record.getSourceClassName()).
 				sourceMethod(record.getSourceMethodName());
 		if (record.getThrown() != null) logRecord.stackTrace(stackTrace(record.getThrown()));
-		return new TomlWriter().write(inMap(logRecord))+"\n\n";
+		return Inl.serialize(logRecord) + "\n\n";
 	}
 
 	private String stackTrace(Throwable thrown) {
@@ -33,12 +29,6 @@ public class LogFormatter extends java.util.logging.Formatter {
 		PrintWriter pw = new PrintWriter(sw);
 		thrown.printStackTrace(pw);
 		return sw.toString();
-	}
-
-	private <T> Map<String, List<T>> inMap(T t) {
-		final HashMap<String, List<T>> map = new HashMap<>();
-		map.put(path, Collections.singletonList(t));
-		return map;
 	}
 
 	public static class LogRecord implements java.io.Serializable {
