@@ -1,9 +1,10 @@
 package io.intino.konos.slack;
 
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -28,10 +29,10 @@ public abstract class Bot {
 	}
 
 	protected String help() {
-		String help = "";
+		StringBuilder help = new StringBuilder();
 		for (String key : commandsInfo.keySet())
-			help += key + parameters(commandsInfo.get(key).parameters) + ": " + commandsInfo.get(key).description + "\n";
-		return help;
+			help.append(key).append(parameters(commandsInfo.get(key).parameters)).append(": ").append(commandsInfo.get(key).description).append("\n");
+		return help.toString();
 	}
 
 	public Map<String, CommandInfo> getCommandsInfo() {
@@ -50,7 +51,8 @@ public abstract class Bot {
 
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		if (message.getSender().isBot()) return;
-		String[] content = Arrays.stream(message.getMessageContent().split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
+		final String messageContent = StringEscapeUtils.unescapeHtml4(message.getMessageContent());
+		String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 		Command command = commands.containsKey(content[0].toLowerCase()) ? commands.get(content[0].toLowerCase()) : commandNotFound();
 		try {
 			final String response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
@@ -62,25 +64,30 @@ public abstract class Bot {
 		}
 	}
 
+	private String[] contentFromSlackFile(SlackFile slackFile) {
+		return new String[]{slackFile.getComment().trim(), slackFile.getUrlPrivateDownload()};
+	}
+
 	private Command commandNotFound() {
 		return (messageProperties, args) -> "Command not found";
 	}
 
 	private MessageProperties createMessageProperties(SlackMessagePosted message) {
 		return new MessageProperties() {
-			@Override
 			public String channel() {
 				return message.getChannel().getName();
 			}
 
-			@Override
 			public String username() {
 				return message.getSender().getUserName();
 			}
 
-			@Override
 			public String userRealName() {
 				return message.getSender().getRealName();
+			}
+
+			public String userTimeZone() {
+				return message.getSender().getTimeZone();
 			}
 		};
 	}
@@ -100,6 +107,19 @@ public abstract class Bot {
 		session.sendMessage(channel, message);
 	}
 
+	public void sendToUser(String user, String message) {
+		SlackUser slackUser = session.findUserById(user);
+		if (slackUser == null) slackUser = session.findUserByUserName(user);
+		if (slackUser == null) return;
+		session.sendMessageToUser(slackUser, message, null);
+	}
+
+	public void sendToUser(String userID, String message, File attachment) {
+		final SlackUser user = session.findUserById(userID);
+		if (user == null) return;
+		session.sendMessageToUser(user, message, attachment != null ? new SlackAttachment(attachment.getName(), "", "", "") : null);
+	}
+
 	public void sendFile(String channelDestination, String name, byte[] content) {
 		SlackChannel channel = slackChannel(channelDestination);
 		if (channel == null) return;
@@ -117,8 +137,12 @@ public abstract class Bot {
 
 	public interface MessageProperties {
 		String channel();
+
 		String username();
+
 		String userRealName();
+
+		String userTimeZone();
 	}
 
 	public class CommandInfo {

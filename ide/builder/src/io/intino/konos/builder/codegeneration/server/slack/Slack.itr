@@ -38,6 +38,8 @@ def type(slack & actions)
 	import io.intino.konos.Box;
 	import io.intino.konos.slack.Bot.MessageProperties;
 
+    import java.util.Map;
+
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions {
 
         static String help($box+validname+FirstUpperCase~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
