@@ -20,6 +20,7 @@ def type(main)
 			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box([$tara+empty~graph, ]configuration);
 			Setup.configureBox(box);
 			box.init();
+			Setup.execute(box);
 			return box;
 		}
 	}

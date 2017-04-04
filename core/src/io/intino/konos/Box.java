@@ -23,7 +23,7 @@ public abstract class Box {
 	}
 
 	public String get(String key) {
-		return box.get(key).toString();
+		return box.containsKey(key) ? box.get(key).toString() : null;
 	}
 
 

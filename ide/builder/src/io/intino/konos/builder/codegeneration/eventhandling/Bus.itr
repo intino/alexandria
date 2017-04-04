@@ -1,15 +1,21 @@
 def type(bus)
 	package $package+validPackage;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
-	import $package+validPackage.$box+firstUpperCase~Configuration;
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
 	import io.intino.konos.jms.Consumer;
 	import io.intino.konos.jms.Bus;
+    import org.apache.activemq.ActiveMQConnection;
+    import org.apache.activemq.advisory.DestinationListener;
+	import org.apache.activemq.advisory.DestinationSource;
+	import org.apache.activemq.command.ActiveMQTopic;
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+firstUpperCase~Configuration;
 	[$eventHandlerImport]
 	import javax.jms.JMSException;
 	import javax.jms.Message;
+    import java.util.ArrayList;
+    import java.util.List;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
@@ -31,6 +37,23 @@ def type(bus)
 				$eventHandler+subscribe...[$NL]
 			} catch (JMSException e) {
 				logger.log(Level.SEVERE, e.getMessage(), e);
+			}
+		}
+		
+		public List<String> topics() {
+			List<String> topics = new ArrayList<>();
+			try {
+				for (ActiveMQTopic topic : ((ActiveMQConnection) connection).getDestinationSource().getTopics())
+					topics.add(topic.getTopicName());
+			} catch (JMSException e) {
+			}
+			return topics;
+		}
+		
+		public void setListener(DestinationListener listener) {
+			try {
+				((ActiveMQConnection) connection).getDestinationSource().setDestinationListener(listener);
+			} catch (JMSException e) {
 			}
 		}
 

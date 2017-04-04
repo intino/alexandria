@@ -7,23 +7,28 @@ def type(setup)
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
-	class Setup {
+	class Setup {[
 
-		static void configureBox($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
-			configureLogger("log"); //TODO change path in case
-		}
-	[
 		$tara][
 
 		$rest
 		]
+
+		static void configureBox($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
+			configureLogger("log"); //TODO change path in case
+		}
+
+		static void execute($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
+
+        }
+
 		private static void configureLogger(String path) {
-        		final Logger logger = Logger.getGlobal();
+			final Logger logger = Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
 			handler.setFormatter(new io.intino.konos.LogFormatter(path));
 			logger.addHandler(handler);
-        	}
+		}
 	}
 end
 
