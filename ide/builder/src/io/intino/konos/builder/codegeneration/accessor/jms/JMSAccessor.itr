@@ -8,12 +8,14 @@ def type(accessor)
     import javax.jms.*;
 	$schemaImport
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase~JMSAccessor {
+	public class $name+firstUpperCase+SnakeCaseToCamelCase~Accessor {
 
 		private final Session session;
+		$custom+field...[$NL]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~JMSAccessor(Session session) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(Session session, $custom+signature...[, ]) {
 			this.session = session;
+			$custom+assign...[$NL]
 		}
 
 		$request...[$NL$NL]
@@ -70,12 +72,29 @@ def type(request & reply)
 		message.setJMSReplyTo(temporaryQueue);
 		message.setJMSCorrelationID(createRandomString());
 		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
-		new QueueProducer(session, "$queue").produce(message);
+		new QueueProducer(session, "$queue"[$custom...[]]).produce(message);
 	}
 
 	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
 		$parameter+assign...[$NL]
 	}
+end
+
+def !type(parameter) trigger(field)
+	private String $value+validname;
+end
+
+def !type(parameter) trigger(signature)
+	String $value+validname
+end
+
+
+def !type(parameter) trigger(assign)
+	this.$value+validname = $value+validname;
+end
+
+def !type(parameter) trigger(custom)
+	.replace("{$value}", this.$value+validname)
 end
 
 

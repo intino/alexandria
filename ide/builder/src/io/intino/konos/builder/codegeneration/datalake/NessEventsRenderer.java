@@ -1,8 +1,8 @@
-package io.intino.konos.builder.codegeneration.eventhandling;
+package io.intino.konos.builder.codegeneration.datalake;
 
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Bus;
+import io.intino.konos.model.DataLake;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -10,37 +10,35 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-
-public class BusRenderer {
-	private final List<Bus> bus;
+public class NessEventsRenderer {
+	private final List<DataLake> bus;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
 
-	public BusRenderer(Graph graph, File gen, String packageName, String boxName) {
-		bus = graph.find(Bus.class);
+	public NessEventsRenderer(Graph graph, File gen, String packageName, String boxName) {
+		bus = graph.find(DataLake.class);
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
 
 	public void execute() {
-		bus.forEach(this::processBus);
+		bus.forEach(this::processDataLake);
 	}
 
-	private void processBus(Bus bus) {
+	private void processDataLake(DataLake bus) {
 		Frame frame = new Frame().addTypes("bus").
 				addSlot("package", packageName).
 				addSlot("name", bus.name()).
 				addSlot("box", boxName).
 				addSlot("eventHandler", bus.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!bus.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", packageName);
-		Commons.writeFrame(gen, snakeCaseToCamelCase(bus.name()) + "Bus", template().format(frame));
+		Commons.writeFrame(gen, "NessEvents", template().format(frame));
 	}
 
-	private Frame frameOf(Bus.EventHandler handler) {
+	private Frame frameOf(DataLake.EventHandler handler) {
 		final Frame frame = new Frame().addTypes("eventHandler").
 				addSlot("name", handler.name()).
 				addSlot("messageType", customize(handler.name(), handler.topic())).
@@ -70,7 +68,7 @@ public class BusRenderer {
 
 
 	private Template template() {
-		return Formatters.customize(BusTemplate.create()).add("shortPath", value -> {
+		return Formatters.customize(NessEventsTemplate.create()).add("shortPath", value -> {
 			String[] names = value.toString().split("\\.");
 			return names[names.length - 1];
 		});

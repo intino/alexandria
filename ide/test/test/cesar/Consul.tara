@@ -14,6 +14,43 @@ Service ConsulManager as JMX
 		Parameter systemID as Text
 		Response as Object(schema = loggingSchema)
 
+Service ConsulJMS as JMS(Topic)
+	Request("service.consul.{consulID}.deploy") deploy
+		Parameter system as Object(SystemSchema)
+		Response as Bool
+	Request("service.consul.{consulID}.retract") retract
+		Response as Bool
+	Request("service.consul.{consulID}.upgrade") upgradeConsul
+		Parameter version as Text
+		Parameter artifactory as Object(Artifactory)
+		Response as Bool
+	Request("service.consul.{consulID}.startSystem") startSystem
+		Parameter systemID as Text
+		Response as Bool
+	Request("service.consul.{consulID}.stopSystem") stopSystem
+		Parameter systemID as Text
+		Response as Bool
+	Request("service.consul.{consulID}.debugSystem") debugSystem
+		Parameter systemID as Text
+		Parameter port as Integer
+		Response as Bool
+	Request("service.consul.{consulID}.restartSystem") restartSystem
+		Parameter systemID as Text
+		Response as Bool
+	Request("service.consul.{consulID}.parameter") parameter
+		Parameter systemID as Text
+		Parameter name as Text
+		Parameter value as Text
+		Response as Bool
+	Request("service.consul.{consulID}.systemStatus") systemStatus
+		Parameter systemID as Text
+		Response as Object(SystemStatus)
+	Request("service.consul.{consulID}.systemLog") systemLog
+		Parameter systemID as Text
+		Response as Object(SystemLog)
+	Request("service.consul.{consulID}.serverStatus") serverStatus
+		Response as Object(ServerStatus)
+
 Schema loggingSchema
 	Attribute dateInstant as DateTime
 	Attribute memory as Real
@@ -27,3 +64,48 @@ Schema ConsulSystemSchema
 	Schema artifactory
 		Attribute id as Text
 		Attribute url as Text
+Schema Artifactory
+	Attribute id as Text
+	Attribute url as Text
+	Attribute user as Text
+	Attribute password as Text
+
+Schema ServerStatus
+	Attribute created as DateTime
+	Attribute id as Text
+	Attribute memory as Real
+	Attribute hdd as Real
+	Attribute cpu as Real
+	Attribute inboundConnections as Integer
+	Attribute outboundConnections as Integer
+
+Schema SystemStatus
+	Attribute created as DateTime
+	Attribute started as Bool
+	Attribute id as Text
+	Attribute memory as Real
+	Attribute cpu as Real
+	Attribute threads as Integer
+
+Schema SystemLog
+	Attribute created as DateTime
+	Attribute systemID as Text
+	Attribute value as Text
+
+Schema ServerLog
+	Attribute created as DateTime
+	Attribute level as Text
+	Attribute message as Text
+	Attribute sourceClass as Text
+	Attribute sourceMethod as Text
+	Attribute stackTrace as Text
+
+Schema SystemSchema
+	Attribute name as Text
+	Attribute classpathPrefix as Text
+	Attribute artifact as Text
+	Attribute jmxPort as Integer
+	Schema Parameter
+		Attribute name as Text
+		Attribute value as Text
+	Has(reference = Artifactory)

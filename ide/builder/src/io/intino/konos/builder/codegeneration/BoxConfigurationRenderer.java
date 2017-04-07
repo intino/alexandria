@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
-import io.intino.konos.model.Bus;
+import io.intino.konos.model.DataLake;
 import io.intino.konos.model.Konos;
 import io.intino.konos.model.Service;
 import io.intino.konos.model.jms.JMSService;
@@ -55,7 +55,7 @@ public class BoxConfigurationRenderer {
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
-		addBuses(frame, boxName);
+		addDataLakes(frame, boxName);
 		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (isTara) frame.addSlot("tara", "");
@@ -88,17 +88,17 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
-	private void addBuses(Frame frame, String boxName) {
-		Bus bus = application.bus();
-		if (bus == null) return;
-		Frame busFrame = new Frame().addTypes("service", "bus").addSlot("name", bus.name()).addSlot("configuration", boxName);
-		frame.addSlot("service", busFrame);
+	private void addDataLakes(Frame frame, String boxName) {
+		DataLake dataLake = application.dataLake();
+		if (dataLake == null) return;
+		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name()).addSlot("configuration", boxName);
+		frame.addSlot("service", dataLakeFrame);
 	}
 
 	private void addEventHandlers(Frame frame, String boxName) {
-		Bus bus = application.bus();
-		if (bus == null) return;
-		for (Bus.EventHandler handler : bus.eventHandlerList()) {
+		DataLake dataLake = application.dataLake();
+		if (dataLake == null) return;
+		for (DataLake.EventHandler handler : dataLake.eventHandlerList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			if (handler.isDurable()) channelFrame.addSlot("clientID", handler.asDurable().clientID());
@@ -129,7 +129,7 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(Bus.EventHandler channel) {
+	private Set<String> findCustomParameters(DataLake.EventHandler channel) {
 		Set<String> set = new LinkedHashSet<>();
 		set.addAll(Commons.extractParameters(channel.topic()));
 		if (channel.isDurable()) set.addAll(Commons.extractParameters(channel.asDurable().clientID()));

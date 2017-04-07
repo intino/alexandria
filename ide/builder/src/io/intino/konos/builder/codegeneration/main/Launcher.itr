@@ -37,12 +37,9 @@ def type(service & jms) trigger(fill)
 	"$name+firstLowerCase.password="[$custom+parameter...[]]
 end
 
-def type(service & bus) trigger(fill)
-	"$name+firstLowerCase.url=",
-	"$name+firstLowerCase.user=",
-	"$name+firstLowerCase.password=",
-	"$name+firstLowerCase.clientID=",
-	"$name+firstLowerCase.productionPaths="[$custom+parameter...[]]
+def type(service & datalake) trigger(fill)
+	"$name+firstLowerCase.workingDirectory=",
+	"$name+firstLowerCase.nessieToken="
 end
 
 def type(service & channel) trigger(fill)

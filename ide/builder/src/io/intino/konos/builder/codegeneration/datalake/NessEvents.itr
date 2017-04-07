@@ -19,42 +19,15 @@ def type(bus)
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
-	public class $name+firstUppercase~Bus extends Bus {
+	public class NessEvents {
 		private static Logger logger = Logger.getGlobal();
 
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
-		public $name+firstUppercase~Bus($box+firstUppercase~Box box) {
-			this.box = box;
-			this.configuration = box.configuration();
-			$box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration busConfiguration = this.configuration.$name+firstLowerCase~Configuration();
-			try {
-				connection = new org.apache.activemq.ActiveMQConnectionFactory(busConfiguration.user, busConfiguration.password, busConfiguration.url).createConnection();
-				if (busConfiguration.clientID != null && !busConfiguration.clientID.isEmpty()) connection.setClientID(busConfiguration.clientID);
-				connection.start();
-				this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
-				$eventHandler+subscribe...[$NL]
-			} catch (JMSException e) {
-				logger.log(Level.SEVERE, e.getMessage(), e);
-			}
-		}
-		
-		public List<String> topics() {
-			List<String> topics = new ArrayList<>();
-			try {
-				for (ActiveMQTopic topic : ((ActiveMQConnection) connection).getDestinationSource().getTopics())
-					topics.add(topic.getTopicName());
-			} catch (JMSException e) {
-			}
-			return topics;
-		}
-		
-		public void setListener(DestinationListener listener) {
-			try {
-				((ActiveMQConnection) connection).getDestinationSource().setDestinationListener(listener);
-			} catch (JMSException e) {
-			}
+		public static void addHandlers($box+firstUppercase~Box box) {
+			$eventHandler+subscribe...[$NL]
+
 		}
 
 		private static class Subscriptor implements Consumer {
@@ -79,11 +52,11 @@ def type(eventHandler) trigger(field)
 end
 
 def type(eventHandler) trigger(subscribe)
-	new TopicConsumer(session, $messageType+format).listen(new Subscriptor(box)[, $durable]);
+	new TopicConsumer(box.datalake().session(), $messageType+format).listen(new Subscriptor(box)[, $durable]);
 end
 
 def type(durable) trigger(durable)
-	this.configuration.$conf~Configuration().clientID[$custom+replace...[]]
+	box.configuration.$conf~Configuration().clientID[$custom+replace...[]]
 end
 
 def type(custom) trigger(replace)
@@ -103,7 +76,7 @@ def trigger(format)
 end
 
 def trigger(custom)
-	.replace("{$value}", this.configuration.$conf~Configuration().$value+validname+firstLowerCase)
+	.replace("{$value}", box.configuration.$conf~Configuration().$value+validname+firstLowerCase)
 end
 
 def trigger(eventHandler) trigger(select)

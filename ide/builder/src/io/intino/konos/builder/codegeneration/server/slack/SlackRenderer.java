@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.model.slackbot.SlackBotService.Request.ResponseType.Text;
 
 public class SlackRenderer {
 	private final Project project;
@@ -72,6 +73,7 @@ public class SlackRenderer {
 
 	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
 		final Frame requestFrame = new Frame().addTypes("request").addSlot("bot", service.name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
+		requestFrame.addSlot("responseType", request.responseType().equals(Text) ? "String" : "SlackAttachment");
 		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)
 			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name(), parameters.get(i).multiple() ? "multiple" : "single").
