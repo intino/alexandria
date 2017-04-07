@@ -39,7 +39,7 @@ public class JMSServiceRenderer {
 				addSlot("model", service.subscriptionModel().name()).
 				addSlot("request", (AbstractFrame[]) processRequests(service.requestList(), service.subscriptionModel().name())).
 				addSlot("notification", (AbstractFrame[]) processNotifications(service.notificationList(), service.subscriptionModel().name()));
-		Commons.writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name()).toString() + "JMSService", template().format(frame));
+		Commons.writeFrame(gen, StringFormatter.get().get("firstuppercase").format(service.name()).toString() + "Service", template().format(frame));
 	}
 
 	private Frame[] processRequests(List<JMSService.Request> requests, String subscriptionModel) {

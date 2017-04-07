@@ -1,8 +1,8 @@
-package io.intino.konos.builder.codegeneration.eventhandling;
+package io.intino.konos.builder.codegeneration.datalake;
 
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Bus.EventHandler;
+import io.intino.konos.model.DataLake.EventHandler;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.model.Frame;
 

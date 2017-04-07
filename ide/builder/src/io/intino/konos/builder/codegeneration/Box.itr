@@ -12,7 +12,7 @@ def type(box)
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
 		$service+field...[$NL]][
-		$bus+field...[$NL]][
+		$dataLake+field...[$NL]][
 		$task+field]
 
 		[$tara+hide~private String graphID;]
@@ -40,7 +40,7 @@ def type(box)
 		[
 		$service+getter...[$NL$NL]]
 
-		$bus+getter...[$NL$NL]
+		$dataLake+getter...[$NL$NL]
 
 		$task+getter...[$NL$NL]
 
@@ -57,7 +57,7 @@ def type(box)
 
 		void quit() {
 			$service+quit...[$NL]
-			$bus+quit...[$NL]
+			$dataLake+quit...[$NL]
 		}
 
 		private void initRESTServices() {
@@ -82,7 +82,7 @@ def type(box)
 		}
 
 		private void initBuses() {
-			$bus+init...[$NL]
+			$dataLake+init...[$NL]
 		}
 
 		private void initTasks() {
@@ -104,8 +104,9 @@ def type(service & rest) trigger(setup)
 	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
-def type(bus) trigger(init)
-	this.$name+SnakeCaseToCamelCase+firstLowerCase~Bus = new $package+lowercase.$name+SnakeCaseToCamelCase+firstUpperCase~Bus(this);
+def type(dataLake) trigger(init)
+	this.ness = new io.intino.konos.datalake.Ness(new java.io.File(configuration().nessConfiguration().workingDirectory), configuration().nessConfiguration().nessieToken);
+	NessEvents.addHandlers(this);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -132,7 +133,7 @@ def type(service & jms) trigger(jms)
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
-		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~JMSService(connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE), this);
+		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, this);
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}
@@ -147,26 +148,26 @@ def type(service & slack) trigger(field)
 end
 
 def type(service & jms) trigger(field)
-	private $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase;
+	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(task) trigger(field)
 	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
 end
 
-def type(bus) trigger(field)
-	private $package.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstLowerCase~Bus;
+def type(dataLake) trigger(field)
+	private io.intino.konos.datalake.Ness ness;
 end
 
 def type(service & jms) trigger(getter)
-	public $name+SnakeCaseToCamelCase+firstUpperCase~JMSService $name+SnakeCaseToCamelCase+firstlowerCase() {
+	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
 		return $name+SnakeCaseToCamelCase+firstlowerCase;
 	}
 end
 
-def type(bus) trigger(getter)
-	public $package.$name+SnakeCaseToCamelCase+firstUpperCase~Bus $name+SnakeCaseToCamelCase+firstlowerCase~Bus() {
-		return $name+SnakeCaseToCamelCase+firstlowerCase~Bus;
+def type(dataLake) trigger(getter)
+	public io.intino.konos.datalake.Ness datalake() {
+		return this.ness;
 	}
 end
 
@@ -187,8 +188,8 @@ def type(service) type(jms) trigger(quit)
 	$name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
 end
 
-def type(bus) trigger(quit)
-	$name+SnakeCaseToCamelCase+firstlowerCase~Bus.closeSession();
+def type(dataLake) trigger(quit)
+	ness.closeSession();
 end
 
 def type(service) trigger(quit)

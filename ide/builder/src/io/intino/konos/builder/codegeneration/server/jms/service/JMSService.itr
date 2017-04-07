@@ -8,34 +8,37 @@ def type(jms)
 	import io.intino.konos.jms.$model~Producer;
 
 	import javax.jms.BytesMessage;
-    import javax.jms.JMSException;
-    import javax.jms.Session;
-    import javax.jms.TextMessage;
-    import java.io.ByteArrayOutputStream;
-    import java.io.IOException;
-    import java.io.InputStream;
-    import java.util.logging.Logger;
+	import javax.jms.JMSException;
+	import javax.jms.Session;
+	import javax.jms.Connection;
+	import javax.jms.TextMessage;
+	import java.io.ByteArrayOutputStream;
+	import java.io.IOException;
+	import java.io.InputStream;
+	import java.util.logging.Logger;
 
-	public class $name+firstUpperCase~JMSService {
+	public class $name+firstUpperCase~Service extends io.intino.konos.jms.Bus {
 
-		private Session session;
 		private $box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration;
 
-		public $name+firstUpperCase~JMSService(Session session, $box+firstUpperCase~Box box) {
-			this.session = session;
+		public $name+firstUpperCase~Service(Connection connection, $box+firstUpperCase~Box box) {
 			this.configuration = box.configuration().$name+firstLowerCase~Configuration;
+			this.connection = connection;
+			this.session = createSession(connection);
+			if (session == null) return;
 			$request...[$NL]
 		}
 
-		public void closeSession() {
-        		try {
-        			session.close();
-        		} catch (JMSException e) {
-        			Logger.getGlobal().severe(e.getMessage());
-        		}
-        	}
-
 		$notification...[$NL$NL]
+		
+		private Session createSession(Connection connection) {
+			try {
+				return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			} catch (JMSException e) {
+				Logger.getGlobal().severe(e.getMessage());
+				return null;
+			}
+		}
 
 		private byte$[] toByteArray(InputStream stream) {
 			try {
