@@ -104,6 +104,12 @@
         </dependency>
         <dependency>
             <groupId>io.intino.konos</groupId>
+            <artifactId>konos-datalake</artifactId>
+            <version>[1.0.0, 2.0.0)</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.konos</groupId>
             <artifactId>konos-slack</artifactId>
             <version>[1.0.0, 2.0.0)</version>
             <scope>test</scope>

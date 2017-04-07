@@ -26,7 +26,9 @@ def type(boxConfiguration)
 		$service+confClass...[$NL$NL]]
 	}
 end
-
+def type(service & datalake) trigger(field)
+	NessConfiguration nessConfiguration;
+end
 def type(service) trigger(field)
 	$name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 end
@@ -41,9 +43,9 @@ def type(service & jms) trigger(fill)
 		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password")[, $custom+parameter...[, ]]);
 end
 
-def type(service & bus) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.url"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password"), args.remove("$name+firstLowerCase.clientID")[, $custom+parameter...[, ]], args.remove("$name+firstLowerCase.productionPaths"));
+def type(service & datalake) trigger(fill)
+	if (args.containsKey("ness.workingDirectory"))
+		nessConfiguration(args.remove("ness.workingDirectory"), args.remove("ness.nessieToken"));
 end
 
 def type(service & eventHandler) trigger(fill)
@@ -91,13 +93,10 @@ def type(service & eventHandler) trigger(confClass)
 	}
 end
 
-def type(service & bus) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public String url;
-		public String user;
-		public String password;
-		public String clientID;
-		public java.util.List<String> productionPaths;
+def type(service & datalake) trigger(confClass)
+	public static class NessConfiguration {
+		public String workingDirectory;
+		public String nessieToken;
 	}
 end
 
@@ -158,20 +157,16 @@ def type(service & slack)
 	}
 end
 
-
-def type(service & bus)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password, String clientID[, $custom+signature...[, ]], String... productionPaths) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.url = url;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.user = user;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.password = password;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.clientID = clientID;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.productionPaths = java.util.Arrays.asList(productionPaths);
+def type(service & datalake)
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration nessConfiguration(String workingDirectory, String nessieSlackToken) {
+		this.nessConfiguration = new NessConfiguration();
+		this.nessConfiguration.workingDirectory = workingDirectory;
+		this.nessConfiguration.nessieToken = nessieSlackToken;
 		return this;
 	}
 
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+	public NessConfiguration nessConfiguration() {
+		return this.nessConfiguration;
 	}
 end
 

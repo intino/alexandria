@@ -55,9 +55,11 @@ public abstract class Bot {
 		String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 		Command command = commands.containsKey(content[0].toLowerCase()) ? commands.get(content[0].toLowerCase()) : commandNotFound();
 		try {
-			final String response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
-			if (response == null || response.isEmpty()) return;
-			session.sendMessage(message.getChannel(), response);
+			final Object response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
+			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
+			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
+			else if (response instanceof SlackAttachment)
+				session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
@@ -130,8 +132,17 @@ public abstract class Bot {
 		return session.getChannels().stream().filter(c -> c.getId().equals(channel)).findFirst().orElse(null);
 	}
 
-	public interface Command {
+	public interface TextCommand extends Command {
 		String execute(MessageProperties properties, String... args);
+	}
+
+	public interface Command {
+		Object execute(MessageProperties properties, String... args);
+
+	}
+
+	public interface AttachedCommand extends Command {
+		SlackAttachment execute(MessageProperties properties, String... args);
 	}
 
 
