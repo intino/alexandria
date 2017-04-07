@@ -91,7 +91,6 @@
     <orderEntry type="module" module-name="server" scope="TEST" />
     <orderEntry type="module" module-name="core" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:inl-java8:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.sparkjava:spark-core:2.5.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-server:9.3.6.v20151106" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
@@ -121,6 +120,11 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
     <orderEntry type="module" module-name="jms" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-all:5.14.0" level="project" />
+    <orderEntry type="module" module-name="datalake" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:ness:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.activemq:activemq-jaas:5.14.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:datalake:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="module" module-name="slack" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: com.ullink.slack:simpleslackapi:0.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13" level="project" />

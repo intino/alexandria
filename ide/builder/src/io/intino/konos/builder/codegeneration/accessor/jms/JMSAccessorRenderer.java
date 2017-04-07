@@ -10,7 +10,9 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -38,12 +40,21 @@ public class JMSAccessorRenderer {
 		frame.addSlot("package", packageName);
 		if (!jmsService.graph().find(Schema.class).isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("request", (AbstractFrame[]) jmsService.node().findNode(JMSService.Request.class).stream().
-				map(this::processRequest).toArray(Frame[]::new));
-		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "JMSAccessor", getTemplate().format(frame));
+		final List<JMSService.Request> requests = jmsService.node().findNode(JMSService.Request.class);
+		final Set<String> customParameters = extractCustomParameters(requests);
+		frame.addSlot("request", (AbstractFrame[]) requests.stream().
+				map(request -> processRequest(request, customParameters)).toArray(Frame[]::new));
+		for (String parameter : customParameters) frame.addSlot("custom", parameter);
+		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "Accessor", getTemplate().format(frame));
 	}
 
-	private Frame processRequest(JMSService.Request request) {
+	private Set<String> extractCustomParameters(List<JMSService.Request> requests) {
+		Set<String> set = new HashSet<>();
+		for (JMSService.Request request : requests) set.addAll(Commons.extractParameters(request.path()));
+		return set;
+	}
+
+	private Frame processRequest(JMSService.Request request, Set<String> customParameters) {
 		final Frame frame = new Frame().addTypes("request")
 				.addSlot("name", request.name())
 				.addSlot("queue", request.path())
@@ -53,6 +64,8 @@ public class JMSAccessorRenderer {
 			frame.addTypes("reply");
 			frame.addSlot("reply", new Frame().addTypes("reply", request.response().asType().getClass().getSimpleName()).addSlot("value", request.response().asType().type()));
 		}
+		for (String parameter : customParameters) frame.addSlot("custom", parameter);
+
 		return frame;
 	}
 

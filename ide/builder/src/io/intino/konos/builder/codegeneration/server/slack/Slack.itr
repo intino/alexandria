@@ -2,6 +2,7 @@ def type(slack & gen)
 	package $package+ValidPackage;
 
 	import io.intino.konos.slack.Bot;
+	import com.ullink.slack.simpleslackapi.SlackAttachment;
 
 	import java.io.IOException;
 	import java.util.logging.Level;
@@ -65,7 +66,7 @@ def type(request & newMethod)
 end
 
 def type(request) trigger(method)
-	static String $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
+	static $responseType $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end

@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.eventhandling;
+package io.intino.konos.builder.codegeneration.datalake;
 
 import org.siani.itrules.*;
 

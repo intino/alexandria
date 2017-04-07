@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class ChannelsGenerationTest {
+public class DataLakeGenerationTest {
 
-	private static final String EXAMPLE = "example";
+	private static final String DATALAKE = "datalake";
 
 	@Test
 	public void testChannelsGeneration() throws Exception {
-		File gen = new File("test-gen", EXAMPLE);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("EventHandlers"), gen, gen, gen, gen, EXAMPLE).execute();
+		File gen = new File("test-gen", DATALAKE);
+		new FullRenderer(null, Graph.use(Konos.class, null).load("DataLake"), gen, gen, gen, gen, DATALAKE).execute();
 	}
 
 }

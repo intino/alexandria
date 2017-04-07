@@ -48,7 +48,7 @@ public class BoxRenderer {
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);
-		bus(frame, name);
+		dataLake(frame, name);
 		activities(frame);
 		Commons.writeFrame(gen, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}
@@ -64,9 +64,9 @@ public class BoxRenderer {
 			frame.addSlot("task", new Frame().addTypes("task"));
 	}
 
-	private void bus(Frame frame, String name) {
-		if (konos.bus() != null)
-			frame.addSlot("bus", (Frame) new Frame().addTypes("bus").addSlot("name", konos.bus().name()).addSlot("package", packageName).addSlot("configuration", name));
+	private void dataLake(Frame frame, String name) {
+		if (konos.dataLake() != null)
+			frame.addSlot("dataLake", (Frame) new Frame().addTypes("dataLake").addSlot("name", konos.dataLake().name()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
 	private void services(Frame frame, String name) {
