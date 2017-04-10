@@ -29,7 +29,7 @@ public class NessEventsRenderer {
 	}
 
 	private void processDataLake(DataLake bus) {
-		Frame frame = new Frame().addTypes("bus").
+		Frame frame = new Frame().addTypes("events").
 				addSlot("package", packageName).
 				addSlot("name", bus.name()).
 				addSlot("box", boxName).
