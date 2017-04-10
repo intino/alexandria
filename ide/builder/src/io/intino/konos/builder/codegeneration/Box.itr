@@ -50,7 +50,7 @@ def type(box)
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
-			initBuses();
+			initDataLake();
 			initTasks();
 			initSlackBots();
 		}
@@ -81,7 +81,7 @@ def type(box)
 			$activity...[$NL]
 		}
 
-		private void initBuses() {
+		private void initDataLake() {
 			$dataLake+init...[$NL]
 		}
 
