@@ -18,7 +18,7 @@ public class EventHandlerTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "eventHandler"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".eventhandlers;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\n\npublic class ")).add(mark("name", "snakeCaseToCamelCase", "FirstUpperCase")).add(literal("EventHandler {\n\n\tpublic ")).add(mark("box", "validName", "firstUpperCase")).add(literal("Box box;\n\tpublic String message;\n\n\tpublic void execute() {\n\n\t}\n\n}"))
+			rule().add((condition("type", "eventHandler"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".eventhandlers;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\n\npublic class ")).add(mark("name", "snakeCaseToCamelCase", "FirstUpperCase")).add(literal("EventHandler {\n\n\tpublic ")).add(mark("box", "validName", "firstUpperCase")).add(literal("Box box;\n\tpublic io.intino.ness.inl.Message message;\n\n\tpublic void execute() {\n\n\t}\n\n}"))
 		);
 		return this;
 	}
