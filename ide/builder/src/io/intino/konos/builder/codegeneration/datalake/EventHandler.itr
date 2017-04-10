@@ -6,7 +6,7 @@ def type(eventHandler)
 	public class $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler {
 
 		public $box+validName+firstUpperCase~Box box;
-		public String message;
+		public io.intino.ness.inl.Message message;
 
 		public void execute() {
 

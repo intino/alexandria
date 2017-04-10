@@ -1,4 +1,4 @@
-def type(bus)
+def type(events)
 	package $package+validPackage;
 
 	import io.intino.konos.jms.TopicConsumer;
@@ -27,7 +27,6 @@ def type(bus)
 
 		public static void addHandlers($box+firstUppercase~Box box) {
 			$eventHandler+subscribe...[$NL]
-
 		}
 
 		private static class Subscriptor implements Consumer {
@@ -83,7 +82,7 @@ def trigger(eventHandler) trigger(select)
 	if ($messageType+formatMessage.equalsIgnoreCase(type) || "$simpleMessageType+shortPath".equalsIgnoreCase(type)) {
 		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
 		eventHandler.box = box;
-		eventHandler.message = text;
+		eventHandler.message = io.intino.ness.inl.Inl.messageOf(text);
 		eventHandler.execute();
 	}
 end
