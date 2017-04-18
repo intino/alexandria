@@ -2,6 +2,9 @@ package io.intino.konos.jms;
 
 
 import javax.jms.*;
+import java.util.logging.Level;
+
+import static java.util.logging.Logger.getGlobal;
 
 public abstract class Producer {
 
@@ -10,9 +13,9 @@ public abstract class Producer {
 	private Destination destination;
 
 
-	public Producer(Session session, Destination queue) {
+	public Producer(Session session, Destination destination) {
 		this.session = session;
-		this.destination = queue;
+		this.destination = destination;
 	}
 
 	public void produce(Message message) {
@@ -20,9 +23,9 @@ public abstract class Producer {
 			MessageProducer producer = session.createProducer(destination);
 			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 			producer.send(message);
+			producer.close();
 		} catch (Exception e) {
-			System.out.println("Caught: " + e);
-			e.printStackTrace();
+			getGlobal().log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 }
