@@ -1,7 +1,7 @@
 package io.intino.konos;
 
 
-import io.intino.ness.inl.Inl;
+import io.intino.ness.Inl;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
