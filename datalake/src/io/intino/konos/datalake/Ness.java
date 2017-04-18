@@ -21,20 +21,14 @@ public class Ness {
 	private final String url;
 	private final String user;
 	private final String password;
-	private final int busPort;
 	private Session session;
 	private Connection connection;
 
 
 	public Ness(String url, String user, String password) {
-		this(url, user, password, 61616);
-	}
-
-	public Ness(String url, String user, String password, int busPort) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
-		this.busPort = busPort;
 	}
 
 	public void start() {
