@@ -1,72 +1,114 @@
 def type(slack & gen)
 	package $package+ValidPackage;
 
+	import $package+ValidPackage.slack.*;
+
 	import io.intino.konos.slack.Bot;
 	import com.ullink.slack.simpleslackapi.SlackAttachment;
-
 	import java.io.IOException;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
 		private static Logger LOG = Logger.getGlobal();
-
+		private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
+		$level+field...[$NL]
 
 		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box) {
 			super(box.configuration().$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
+			$name+snakeCaseToCamelCase+firstLowerCase~Slack = new $name+snakeCaseToCamelCase+firstUpperCase~Slack(box);
+			$level+constructor...[$NL]
+
 			add("help", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Show this help", (properties, args) -> {
-                final String help = $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.help(box, properties, this.getCommandsInfo());
-                return help == null || help.isEmpty() ? help() : help;
-            });
+				final java.util.Map<String, CommandInfo> context = this.commandsInfoByContext(contexts().get(properties.username()).command());
+				StringBuilder builder = new StringBuilder();
+				context.keySet().forEach((c) -> builder.append(formatCommand(c, context.get(c))).append("\\n"));
+				return builder.toString();
+			});
+			add("exit", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Exit from current directory", (properties, args) -> {
+				final Context context = this.contexts().get(properties.username());
+				if (context != null) {
+					String command = context.command();
+					this.contexts().get(properties.username()).command("");
+					return command.isEmpty() ? "" : "Exited from " + command + " " + String.join(" ", java.util.Arrays.asList(context.getObjects()));
+				}
+				return "";
+			});
+			add("where", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Shows the current directory", (properties, args) -> {
+				final Context context = this.contexts().get(properties.username());
+				return context != null ? context : "root";
+			});
 			$request+add...[$NL]
 			try {
 				execute();
-				$name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.init(box, session());
+				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session());
+				$level+init...[$NL]
 			} catch (IOException e) {
 				LOG.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
-		[
-		public void notify(String message) {
-			send("$channel", message);
-		}]
+
+		private static String formatCommand(String command, CommandInfo info) {
+			return "`" + command.substring(command.lastIndexOf("$$") + 1) + helpParameters(info.parameters()) + "` " + info.description() + "\\n";
+		}
+
+		private static String helpParameters(java.util.List<String> parameters) {
+			return parameters.isEmpty() ? "" : " <" + String.join("> <", parameters) + ">";
+		}
 	}
 end
 
 def type(slack & actions)
-	package $package+ValidPackage;
+	package $package+ValidPackage.slack;
 
-	import io.intino.konos.Box;
+	import $package+ValidPackage.$box+validname+FirstUpperCase~Box;
+	import $package+ValidPackage.slack.*;
+	import io.intino.konos.slack.Bot;
 	import io.intino.konos.slack.Bot.MessageProperties;
 
-    import java.util.Map;
+	import java.util.Map;
 
-	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBotActions {
+	public class $name+firstUpperCase+snakeCaseToCamelCase~Slack {
 
-        static String help($box+validname+FirstUpperCase~Box box, MessageProperties properties, Map<String, Bot.CommandInfo> info) {
-            return "";
-        }
+		private $box+validname+FirstUpperCase~Box box;
 
-        public static void init($box+validname+FirstUpperCase~Box box, com.ullink.slack.simpleslackapi.SlackSession session) {
+		public $name+firstUpperCase+snakeCaseToCamelCase~Slack($box+validname+FirstUpperCase~Box box) {
+			this.box = box;
+		}
 
-        }
+		public void init(com.ullink.slack.simpleslackapi.SlackSession session) {
+
+		}
 
 		$request+method...[$NL$NL]
 	}
 end
 
+
+def type(level) trigger(field)
+	private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
+end
+
+def type(level) trigger(constructor)
+	$name+snakeCaseToCamelCase+firstLowerCase~Slack = new $name+snakeCaseToCamelCase+firstUpperCase~Slack(box);
+end
+
+def type(level) trigger(init)
+	$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session());
+end
+
 def type(request) trigger(add)
-	add("$name".toLowerCase(), java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $bot+firstUpperCase+snakeCaseToCamelCase~SlackBotActions.$name+snakeCaseToCamelCase+firstLowerCase(box, properties[, $parameter+cast...[, ]]));
+	add("$name".toLowerCase(), "$context", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+snakeCaseToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
 end
 
 def type(request & newMethod)
-	static String $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
+	public String $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end
 
 def type(request) trigger(method)
-	static $responseType $name+snakeCaseToCamelCase+firstLowerCase($box+validname+FirstUpperCase~Box box, MessageProperties properties[, $parameter...[, ]]) {
+	public $responseType $name+snakeCaseToCamelCase+firstLowerCase(MessageProperties properties[, $parameter...[, ]]) {
 		return "";
 	}
 end
@@ -97,6 +139,10 @@ end
 
 def type(parameter & String) trigger(cast)
 	args.length > $pos ? args$[~$pos] : ""
+end
+
+def type(parameter & multiple)
+	$type~$[] $name
 end
 
 def type(parameter)
