@@ -3,7 +3,6 @@ package io.intino.konos.datalake;
 import io.intino.konos.jms.Consumer;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
-import io.intino.ness.konos.Main;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTopic;
@@ -11,49 +10,50 @@ import org.apache.activemq.command.ActiveMQTopic;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getGlobal;
 
 public class Ness {
 
-	private final Thread thread;
+	private final String url;
+	private final String user;
+	private final String password;
+	private final int busPort;
 	private Session session;
 	private Connection connection;
 
 
-	public Ness(File workingDirectory, String nessieToken) {
-		this(workingDirectory, nessieToken, 61616);
+	public Ness(String url, String user, String password) {
+		this(url, user, password, 61616);
 	}
 
-	public Ness(File workingDirectory, String nessieToken, int busPort) {
-		thread = new Thread(() -> Main.main(new String[]{
-				"graph.store=" + new File(workingDirectory, "store"),
-				"nessie.token=" + nessieToken,
-				"ness.rootPath=" + new File(workingDirectory, "ness"),
-				"broker.port=" + busPort,
-				"broker.store=" + new File(workingDirectory, "broker").getAbsolutePath()
-		}));
+	public Ness(String url, String user, String password, int busPort) {
+		this.url = url;
+		this.user = user;
+		this.password = password;
+		this.busPort = busPort;
 	}
 
 	public void start() {
 		try {
-			thread.join();
-			connection = new ActiveMQConnectionFactory("vm://ness").createConnection("ness", "ness");
+			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
 			connection.start();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
 	}
 
 	public void stop() {
-		thread.interrupt();
+		try {
+			session.close();
+			connection.close();
+		} catch (JMSException e) {
+			getGlobal().log(SEVERE, e.getMessage(), e);
+		}
 	}
 
 	public javax.jms.Session session() {
@@ -99,7 +99,7 @@ public class Ness {
 		try {
 			session.close();
 		} catch (JMSException e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
 	}
 }
