@@ -52,6 +52,19 @@
         <outputRelativeToContentRoot value="true" />
         <module name="test" />
       </profile>
+      <profile name="Annotation profile for konos-scheduler" enabled="true">
+        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="scheduler" />
+        <module name="scheduling" />
+      </profile>
+      <profile name="Annotation profile for konos-jms" enabled="true">
+        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jms" />
+      </profile>
       <profile name="Annotation profile for konos-slack" enabled="true">
         <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
@@ -71,13 +84,10 @@
         <module name="core" />
       </profile>
       <profile name="Annotation profile for konos-datalake" enabled="true">
-        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
+        <sourceOutputDir name="../out/build/datalake/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/datalake/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="datalake" />
-        <module name="jms" />
-        <module name="scheduler" />
-        <module name="scheduling" />
       </profile>
       <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />

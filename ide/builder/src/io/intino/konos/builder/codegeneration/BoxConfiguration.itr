@@ -44,8 +44,8 @@ def type(service & jms) trigger(fill)
 end
 
 def type(service & datalake) trigger(fill)
-	if (args.containsKey("ness.workingDirectory"))
-		nessConfiguration(args.remove("ness.workingDirectory"), args.remove("ness.nessieToken"));
+	if (args.containsKey("ness.url"))
+		nessConfiguration(args.remove("ness.url"), args.remove("ness.user"), args.remove("ness.password"));
 end
 
 def type(service & eventHandler) trigger(fill)
@@ -95,8 +95,9 @@ end
 
 def type(service & datalake) trigger(confClass)
 	public static class NessConfiguration {
-		public String workingDirectory;
-		public String nessieToken;
+		public String url;
+		public String user;
+		public String password;
 	}
 end
 
