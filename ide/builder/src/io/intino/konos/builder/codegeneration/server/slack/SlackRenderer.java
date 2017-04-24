@@ -7,13 +7,14 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.slackbot.SlackBotService;
 import io.intino.konos.model.slackbot.SlackBotService.Request;
 import io.intino.tara.magritte.Graph;
-import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -67,9 +68,27 @@ public class SlackRenderer {
 	}
 
 	private Map<String, List<Request>> collectLevels(SlackBotService service) {
-		final Map<String, List<Request>> collect = service.requestList().stream().filter(request -> !request.requestList().isEmpty()).
-				collect(Collectors.toMap(Layer::name, Request::requestList, (a, b) -> b, LinkedHashMap::new));
+		final List<Request> requests = service.requestList();
+		final Map<String, List<Request>> collect = collect(requests);
 		return collect;
+	}
+
+	private LinkedHashMap<String, List<Request>> collect(List<Request> requests) {
+		final LinkedHashMap<String, List<Request>> map = requests.stream().filter(request -> !request.requestList().isEmpty()).
+				collect(Collectors.toMap(this::name, Request::requestList, (a, b) -> b, LinkedHashMap::new));
+		for (Request request : requests) map.putAll(collect(request.requestList()));
+		return map;
+	}
+
+	private String name(Request request) {
+		String name = "";
+		Request r = request;
+		while (r.is(Request.class)) {
+			name = Commons.firstUpperCase(r.name()) + name;
+			if (!r.owner().is(Request.class)) break;
+			r = r.ownerAs(Request.class);
+		}
+		return name;
 	}
 
 	@NotNull
@@ -95,8 +114,8 @@ public class SlackRenderer {
 	}
 
 	private Frame createRequestFrame(Request request) {
-		final Frame requestFrame = new Frame().addTypes("request").addSlot("type", request.owner().name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
-		if (request.owner().is(Request.class)) requestFrame.addSlot("context", request.owner().name());
+		final Frame requestFrame = new Frame().addTypes("request").addSlot("type", request.owner().is(Request.class) ? name(request.ownerAs(Request.class)) : request.owner().name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
+		if (request.owner().is(Request.class)) requestFrame.addSlot("context", name(request.ownerAs(Request.class)));
 		requestFrame.addSlot("responseType", request.responseType().equals(Text) ? "String" : "SlackAttachment");
 		final List<Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)

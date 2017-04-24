@@ -6,9 +6,11 @@ def type(request)
 	import com.google.gson.Gson;
 	import io.intino.konos.Box;
 	import io.intino.konos.jms.RequestConsumer;
-	import java.util.List;
 
 	import javax.jms.*;
+	import java.util.List;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
 	$schemaImport
 
 	public class $name+firstUpperCase~Request implements RequestConsumer {
@@ -31,7 +33,7 @@ def type(request)
 			try {
 				$parameter+assign...[$NL]
 			} catch (JMSException e) {
-				e.printStackTrace();
+				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 			}]
 			return action;
 		}
@@ -43,7 +45,7 @@ def type(request)
 				$returnMessageType+return
 				return message;
 			} catch (JMSException e) {
-				e.printStackTrace();
+				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 				return null;
 			}
 		}]
