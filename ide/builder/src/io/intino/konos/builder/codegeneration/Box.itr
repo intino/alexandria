@@ -105,9 +105,9 @@ def type(service & rest) trigger(setup)
 end
 
 def type(dataLake) trigger(init)
-	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password);
-	NessEvents.addHandlers(this);
+	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
 	this.ness.start();
+	NessEvents.addHandlers(this);
 end
 
 def type(service & jmx) trigger(jmx)

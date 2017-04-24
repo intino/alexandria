@@ -1,11 +1,9 @@
 dsl Proteo
 
 Concept:{0..1} DataLake
+	var string clientID
 	Concept:Named EventHandler
 		var string topic
 	Concept Pipe
 		sub MailPipe
 		sub PostPipe
-
-Facet Durable on DataLake.EventHandler
-	var string clientID

@@ -98,7 +98,7 @@ def type(level) trigger(init)
 end
 
 def type(request) trigger(add)
-	add("$name".toLowerCase(), "$context", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+snakeCaseToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
+	add("$name".toLowerCase(), "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+snakeCaseToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
 end
 
 def type(request & newMethod)

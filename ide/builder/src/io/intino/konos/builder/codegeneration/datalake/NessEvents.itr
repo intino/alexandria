@@ -21,7 +21,7 @@ def type(events)
 
 	public class NessEvents {
 		private static Logger logger = Logger.getGlobal();
-
+		$eventHandler+topic...[$NL]
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
@@ -31,31 +31,28 @@ def type(events)
 
 		private static class Subscriptor implements Consumer {
 
-			private $box+firstUpperCase~Box box;
+			private final $box+firstUpperCase~Box box;
+			private final String topic;
 
-			Subscriptor($box+firstUpperCase~Box box) {
+			Subscriptor($box+firstUpperCase~Box box, String topic) {
 				this.box = box;
+				this.topic = topic;
 			}
 
 			public void consume(Message message) {
 				String text = textFrom(message);
-				String type = typeOf(text);
-				$eventHandler+select...[$NL]
+				$eventHandler+select...[$NL~else ]
 			}
 		}
 	}
 end
 
-def type(eventHandler) trigger(field)
-	public static final String $name = $messageType+format;
+def type(eventHandler) trigger(topic)
+	public static final String $name~Topic = $messageType+format;
 end
 
 def type(eventHandler) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $messageType+format).listen(new Subscriptor(box)[, $durable]);
-end
-
-def type(durable) trigger(durable)
-	box.configuration.$conf~Configuration().clientID[$custom+replace...[]]
+	new TopicConsumer(box.datalake().session(), $name~Topic).listen(new Subscriptor(box, $name~Topic), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -67,7 +64,7 @@ def trigger(formatMessage)
 end
 
 def trigger(customType)
-	.replace("{$value}", box.configuration.$conf~Configuration().$value+validname+firstLowerCase)
+	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
 def trigger(format)
@@ -75,14 +72,14 @@ def trigger(format)
 end
 
 def trigger(custom)
-	.replace("{$value}", box.configuration.$conf~Configuration().$value+validname+firstLowerCase)
+	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
 def trigger(eventHandler) trigger(select)
-	if ($messageType+formatMessage.equalsIgnoreCase(type) || "$simpleMessageType+shortPath".equalsIgnoreCase(type)) {
+	if ($name~Topic.equalsIgnoreCase(topic)) {
 		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
 		eventHandler.box = box;
-		eventHandler.message = io.intino.ness.inl.Inl.messageOf(text);
+		eventHandler.message = io.intino.ness.Inl.load(text).get(0);
 		eventHandler.execute();
 	}
 end

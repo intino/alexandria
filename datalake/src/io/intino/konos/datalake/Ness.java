@@ -21,19 +21,22 @@ public class Ness {
 	private final String url;
 	private final String user;
 	private final String password;
+	private String clientID;
 	private Session session;
 	private Connection connection;
 
 
-	public Ness(String url, String user, String password) {
+	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
+		this.clientID = clientID;
 	}
 
 	public void start() {
 		try {
 			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
+			connection.setClientID(this.clientID);
 			connection.start();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) {
@@ -58,7 +61,7 @@ public class Ness {
 		return connection;
 	}
 
-	public TopicProducer registerProducer(String path) {
+	public TopicProducer newProducer(String path) {
 		try {
 			return new TopicProducer(session(), path);
 		} catch (JMSException e) {
