@@ -1,6 +1,8 @@
 package io.intino.konos.jms;
 
 import javax.jms.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class QueueConsumer {
 
@@ -18,7 +20,7 @@ public class QueueConsumer {
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(message -> listener.consume(session, message));
 		} catch (Exception e) {
-			System.out.println("Caught: " + e);
+			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 
@@ -28,7 +30,7 @@ public class QueueConsumer {
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(listener::consume);
 		} catch (Exception e) {
-			System.out.println("Caught: " + e);
+			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
 		}
 	}
 

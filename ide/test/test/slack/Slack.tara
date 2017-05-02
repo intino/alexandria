@@ -1,107 +1,42 @@
 dsl Konos
 
-Service CesarBot as SlackBot
-	Request("Show the list of all buses") buses
-	Request("Show the list of all devices with its last status") devices
-	Request("Show the list of all devices with its id") devices-id
-	Request("State of systems") systems
-	Request("List of servers") servers
-	Request("Show registered responsibles") responsibles
-
-	Request("Provides a token to develop systems on this infrastructure") develop-token
-	Request("Turn the notifications `on` `off`") notifications
-		Parameter(String) state
-	Request("Show the list of all compromised devices or servers") issues
-
-	Request("Administration cesar actions") manage
-		Request("Add a bus providing `alias`, `url`, `username` and `password`") add-bus
-			Parameter(String) alias
-			Parameter(String) url
-			Parameter(String) username
-			Parameter(String) password
-		Request("Remove a bus providing `alias`") remove-bus
-			Parameter(String) alias
-		Request("Register responsible in the infrastructure. Set `username`, `email` and `fullName`") add-responsible
-			Parameter(String) user
-			Parameter(String) email
-			Parameter(String, true) fullName
-		Request("Remove responsible of device. Include `slackUser` or `email`") remove-responsible
-			Parameter(String) user
-		Request("Add a device list providing `deviceId` a `name` and the `bus` it is connected separated by `;`") add-devices
-			Parameter(String, true) devices
-		Request("Add a device providing `deviceId` a `name` and the `bus` it is connected") add-device
-			Parameter(String) deviceId
+Service Nessie as SlackBot
+	Request("Enter in the management area to add/remove channels or users and other management actions") manage
+		Request("Request all channels nessy is subscribed filtered by tags") add-user
 			Parameter(String) name
-			Parameter(String) bus
-		Request("Remove a device by either its `deviceId` or `name`") remove-device
-			Parameter(String) deviceId
-		Request("Add a server providing `alias` `external server url with port`, `IP` and `bus` it is connected" ) add-server
-			Parameter(String) alias
-			Parameter(String) url
-			Parameter(String) ip
-			Parameter(String) bus
-		Request("Add a server providing `server-name`") remove-server
+			Parameter(String, true) groups
+		Request("Remove user from ness service") remove-user
 			Parameter(String) name
-		Request("Add a server providing `system-name`") remove-system
+		Request("Creates a channel") add-channel
 			Parameter(String) name
-	Request("Rename the alias of a unit -> rename `new_name`") name
-		Parameter(String) newName
+		Request("Select a channel to operate with") remove-channel
+			Parameter(String) name
+	Request("Request all users registered in ness") users
+	Request("Request all channels nessy is subscribed filtering by tags") channels
+		Parameter(String, true) tags
+	Request("Show all functions registered") functions
 
-	Request("Open a connection with a device by either its `deviceId`, `name` or `position`") device
-		Parameter(String) deviceId
-
-		Request("Status of the selected unit") status
-		Request("Shows what is on the device's screen") capture-screen
-		Request("Shows what is on the device's screen including a guide to help the tap") capture-grid
-		Request("Turn the opened device's screen `on` `off`") screen
-			Parameter(String) state
-		Request("Produces a touch event in the given position of grid. Example: tap A5") tap
-			Parameter(String) square
-		Request("Produces a touch event in the given position X and Y") tap-pixel
-			Parameter(String) x
-			Parameter(String) y
-		Request("Set responsibles of this unit from registered") set-responsibles
-			Parameter(String, true) users
-		Request("Kill a task in the opened device by providing the `android package`") kill
-			Parameter(String) packageName
-		Request("Launch a task in the opened device by providing the `android package`") launch
-			Parameter(String) packageName
-		Request("Uninstall an apk in the opened device by providing the `android package`") uninstall
-			Parameter(String) packageName
-		Request("Install an apk in the opened device by providing the `url` to the file") install
-			Parameter(String) url
-		Request("Update an apk in the opened device by providing the `url` to the file") update
-			Parameter(String) url
-
-	//Server Scope
-	Request("Open a connection with a server by either its `name` or `position`") server
+	Request("Select a channel to operate with") channel
 		Parameter(String) name
-
-		Request("Status of the selected unit") status
-		Request("set/get remote connection") remote-connection
-			Parameter(String) url
-			Parameter(Integer) port
-			Parameter(String) user
-		Request("Shutdown the server") shutdown
-		Request("Reboot the server") reboot
-		Request("Log of the server") log
-		Request("Update consul") update-consul
-		Request("Set responsibles of this unit from registered") set-responsibles
-			Parameter(String, true) users
-
-	//System Scope
-	Request("Open a connection with a syste by either its `deviceId`, `name` or `position` to operate with it") system
-		Parameter(String) systemId
-
-		Request("Status of the selected unit") status
-		Request("Log of system") log
-		Request("Add or update value of a parameter") parameter
+		Request("Tags thes channel with `tags`") tag
+			Parameter(String, true) tags
+		Request("Changes name of this channel to new one") rename
 			Parameter(String) name
-			Parameter(String) value
-		Request("Start system") start
-		Request("Start system") debug
-		Request("Stop system") stop
-		Request("Restart system") restart
-		Request("Parameters of running system") parameters
-		Request("Set responsibles of this unit from registered") set-responsibles
-			Parameter(String, true) users
+		Request("Consolidates current events of a channel to reservoir") consolidate
+
+	Request("Create a function associated to an input channel and output channel") add-function
+		Parameter(String) name
+		Parameter(String) code
+	Request("Connect a source and destination channels through a `function`") pump
+		Parameter(String) functionName
+		Parameter(String) input
+		Parameter(String) output
+	Request("Reproduce events of a channel") migrate
+		Parameter(String) channel
+		Parameter(String, true) functions
+	Request("Reproduce events of a channel") reflow
+		Parameter(String) channel
+
+Task toReservoir as CronTrigger("0 0 0 1/1 * ? *", "daily starting at 00:00")
+
+

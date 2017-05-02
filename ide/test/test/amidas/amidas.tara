@@ -31,7 +31,7 @@ Service AgentService as JMS(Topic)
 	Request(path="{federation}.works") requestForSignature
 		Parameter token as Text
 		Parameter requirements as Object(RequirementList)
-		Response workId as Text
+		Response workId as Text List
 
 	Request(path="{federation}.works.{token}") finishWork
 		Parameter token as Text
