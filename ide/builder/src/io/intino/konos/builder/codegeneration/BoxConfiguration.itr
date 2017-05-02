@@ -26,6 +26,7 @@ def type(boxConfiguration)
 		$service+confClass...[$NL$NL]]
 	}
 end
+
 def type(service & datalake) trigger(field)
 	NessConfiguration nessConfiguration;
 end
@@ -45,7 +46,7 @@ end
 
 def type(service & datalake) trigger(fill)
 	if (args.containsKey("ness.url"))
-		nessConfiguration(args.remove("ness.url"), args.remove("ness.user"), args.remove("ness.password"));
+		nessConfiguration(args.remove("ness.url"), args.remove("ness.user"), args.remove("ness.password"), args.remove("ness.clientID"));
 end
 
 def type(service & eventHandler) trigger(fill)
@@ -98,6 +99,7 @@ def type(service & datalake) trigger(confClass)
 		public String url;
 		public String user;
 		public String password;
+		public String clientID;
 	}
 end
 
@@ -159,10 +161,12 @@ def type(service & slack)
 end
 
 def type(service & datalake)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration nessConfiguration(String workingDirectory, String nessieSlackToken) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration nessConfiguration(String url, String user, String password, String clientID) {
 		this.nessConfiguration = new NessConfiguration();
-		this.nessConfiguration.workingDirectory = workingDirectory;
-		this.nessConfiguration.nessieToken = nessieSlackToken;
+		this.nessConfiguration.url = url;
+		this.nessConfiguration.user = user;
+		this.nessConfiguration.password = password;
+		this.nessConfiguration.clientID = clientID;
 		return this;
 	}
 
@@ -181,10 +185,6 @@ def type(service & eventHandler)
 	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
 		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 	}
-end
-
-def type(durable) trigger(assign)
-	[$name+snakeCaseToCamelCase+firstLowerCase~Configuration.clientID ]
 end
 
 def type(service & rest)

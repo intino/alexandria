@@ -7,7 +7,7 @@ def type(action)
 	import java.util.*;
 	$schemaImport
 
-	public class $name+validName+firstUpperCase~Action {
+	public class $name+snakecaseToCamelCase+validName+firstUpperCase~Action {
 
 		public $box+validName+firstUpperCase~Box box;
 		$parameter+type...[$NL]

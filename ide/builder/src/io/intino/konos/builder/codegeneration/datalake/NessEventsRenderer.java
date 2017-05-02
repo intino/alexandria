@@ -3,49 +3,43 @@ package io.intino.konos.builder.codegeneration.datalake;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.DataLake;
+import io.intino.konos.model.Konos;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.List;
 
 public class NessEventsRenderer {
-	private final List<DataLake> bus;
+	private final DataLake dataLake;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
 
 	public NessEventsRenderer(Graph graph, File gen, String packageName, String boxName) {
-		bus = graph.find(DataLake.class);
+		this.dataLake = graph.wrapper(Konos.class).dataLake();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
 
 	public void execute() {
-		bus.forEach(this::processDataLake);
-	}
-
-	private void processDataLake(DataLake bus) {
+		if (dataLake == null) return;
 		Frame frame = new Frame().addTypes("events").
 				addSlot("package", packageName).
-				addSlot("name", bus.name()).
+				addSlot("name", dataLake.name()).
 				addSlot("box", boxName).
-				addSlot("eventHandler", bus.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
-		if (!bus.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", packageName);
+				addSlot("eventHandler", dataLake.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!dataLake.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", packageName);
 		Commons.writeFrame(gen, "NessEvents", template().format(frame));
 	}
 
 	private Frame frameOf(DataLake.EventHandler handler) {
-		final Frame frame = new Frame().addTypes("eventHandler").
+		return new Frame().addTypes("eventHandler").
 				addSlot("name", handler.name()).
 				addSlot("messageType", customize(handler.name(), handler.topic())).
 				addSlot("simpleMessageType", handler.topic());
-		if (handler.isDurable())
-			frame.addSlot("durable", customizeDurable(handler.name(), handler.asDurable().topic()));
-		return frame;
 	}
 
 	private Frame customize(String name, String topic) {
@@ -56,16 +50,9 @@ public class NessEventsRenderer {
 		return frame;
 	}
 
-	private Frame customizeDurable(String name, String clientId) {
-		Frame frame = new Frame().addTypes("durable").addSlot("value", "").addSlot("conf", name);
-		for (String parameter : Commons.extractParameters(clientId)) frame.addSlot("custom", custom(name, parameter));
-		return frame;
-	}
-
 	private Frame custom(String name, String parameter) {
 		return new Frame().addSlot("value", parameter).addSlot("conf", name);
 	}
-
 
 	private Template template() {
 		return Formatters.customize(NessEventsTemplate.create()).add("shortPath", value -> {

@@ -5,6 +5,7 @@ def type(accessor)
 	import io.intino.konos.jms.QueueProducer;
 	import com.google.gson.Gson;
 
+	import java.util.List;
     import javax.jms.*;
 	$schemaImport
 
@@ -53,7 +54,8 @@ def type(request & reply) trigger(interface)
 
 		default void onMessage(Message message) {
 			try {
-				callback($reply);
+				$reply
+
 			} catch (JMSException e) {
 				e.printStackTrace();
 			}
@@ -127,7 +129,7 @@ def type(parameter & objectData) trigger(assign)
 end
 
 def type(parameter & fileData) trigger(assign)
-	message.writeBytes(toByteArray($name));
+	message.writeBytes(toByteArray($name.content()));
 end
 
 def type(parameter & list) trigger(assign)
@@ -146,6 +148,10 @@ def type(reply & fileData) trigger(type)
 	Bytes
 end
 
+def type(reply & list) trigger(return)
+	List<$value>
+end
+
 def type(reply) trigger(return)
 	$value
 end
@@ -155,11 +161,18 @@ def attribute(Integer) trigger(format)
 end
 
 def type(reply & fileData) trigger(reply)
-	((ByteMessage) message).getBytes()
+	byte$[] bytes = new byte$[(int) ((BytesMessage) message).getBodyLength()];
+	((BytesMessage) message).readBytes(bytes);
+	callback(new io.intino.konos.Resource("file","", new java.io.ByteArrayInputStream(bytes)));
+end
+
+def type(reply & list) trigger(reply)
+	java.lang.reflect.Type listType = new com.google.gson.reflect.TypeToken<java.util.ArrayList<$value>>(){}.getType();
+	callback(new Gson().fromJson(((TextMessage) message).getText(), listType));
 end
 
 def type(reply) trigger(reply)
-	new Gson().fromJson(((TextMessage) message).getText(), $value.class)
+	callback(new Gson().fromJson(((TextMessage) message).getText(), $value.class));
 end
 
 def type(schemaImport)

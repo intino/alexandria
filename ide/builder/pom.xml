@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
-    <version>1.8.2</version>
+    <version>1.8.8</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -88,6 +88,16 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-codegen</artifactId>
             <version>2.1.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.intino.cottons</groupId>

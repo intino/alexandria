@@ -80,7 +80,7 @@ public class JMXOperationsServiceRenderer {
 
 	private Frame returnType(Operation operation) {
 		final Frame frame = new Frame().addTypes("returnType").addSlot("value", operation.response() == null ? "void" : formatType(operation.response().asType()));
-		if (operation.response().is(ListData.class)) frame.addTypes("list");
+		if (operation.response() != null && operation.response().is(ListData.class)) frame.addTypes("list");
 		return frame;
 	}
 

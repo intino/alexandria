@@ -101,7 +101,6 @@ public class BoxConfigurationRenderer {
 		for (DataLake.EventHandler handler : dataLake.eventHandlerList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
-			if (handler.isDurable()) channelFrame.addSlot("clientID", handler.asDurable().clientID());
 			frame.addSlot("service", channelFrame);
 		}
 	}
@@ -132,7 +131,6 @@ public class BoxConfigurationRenderer {
 	private Set<String> findCustomParameters(DataLake.EventHandler channel) {
 		Set<String> set = new LinkedHashSet<>();
 		set.addAll(Commons.extractParameters(channel.topic()));
-		if (channel.isDurable()) set.addAll(Commons.extractParameters(channel.asDurable().clientID()));
 		return set;
 	}
 
