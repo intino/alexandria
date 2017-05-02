@@ -65,6 +65,7 @@ Facet REST on Service
 Facet JMX on Service
 	var string path = ""
 	Concept:Named:{1..*} Operation
+		var string description
 		has Parameter
 		has Exception
 		has:{0..1} Response

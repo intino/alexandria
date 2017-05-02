@@ -62,7 +62,9 @@ public class JMSAccessorRenderer {
 				.addSlot("messageType", messageType(request.parameterList()));
 		if (request.response() != null) {
 			frame.addTypes("reply");
-			frame.addSlot("reply", new Frame().addTypes("reply", request.response().asType().getClass().getSimpleName()).addSlot("value", request.response().asType().type()));
+			final Frame reply = new Frame();
+			if (request.response().isList()) reply.addTypes("list");
+			frame.addSlot("reply", reply.addTypes("reply", request.response().asType().getClass().getSimpleName()).addSlot("value", request.response().asType().type()));
 		}
 		for (String parameter : customParameters) frame.addSlot("custom", parameter);
 
