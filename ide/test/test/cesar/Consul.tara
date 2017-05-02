@@ -1,18 +1,46 @@
 dsl Konos
 
-Service ConsulManager as JMX
-	Operation deploy
-		Parameter system as Object(schema = ConsulSystemSchema)
+
+Service SimulationInspector as JMX
+	Operation(description=" ") add-user
+		Parameter name as Text
+		Parameter groups as Text List
 		Response as Bool
-	Operation retract
-		Parameter systemID as Text
+	Operation(description=" ") remove-user
+		Parameter name as Text
 		Response as Bool
-	Operation systemLogging
-		Parameter systemID as Text
-		Response as Object(schema = loggingSchema)
-	Operation serverLogging
-		Parameter systemID as Text
-		Response as Object(schema = loggingSchema)
+	Operation(description=" ") add-tank
+		Parameter name as Text
+		Response as Bool
+	Operation(description=" ") remove-tank
+		Parameter name as Text
+		Response as Bool
+	Operation(description=" ") users
+		Response as Text List
+	Operation(description=" ") tanks
+		Parameter tags as Text List
+		Response as Text List
+	Operation(description=" ") functions
+		Response as Text List
+	Operation(description=" ") topics
+		Response as Text List
+	Operation(description=" ") rename
+		Parameter tank as Text
+		Parameter name as Text
+	Operation(description=" ") seal
+		Parameter tank as Text
+	Operation(description=" ") migrate
+		Parameter tank as Text
+		Parameter functions as Text List
+	Operation(description=" ") reflow
+		Parameter tank as Text
+	Operation(description=" ") add-function
+		Parameter name as Text
+		Parameter code as Text
+	Operation(description=" ") pump
+		Parameter functionName as Text
+		Parameter input as Text
+		Parameter output as Text
 
 Service ConsulJMS as JMS(Topic)
 	Request("service.consul.{consulID}.deploy") deploy

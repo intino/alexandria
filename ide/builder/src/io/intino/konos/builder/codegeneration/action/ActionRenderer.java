@@ -15,6 +15,8 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+
 abstract class ActionRenderer {
 	protected final Project project;
 	protected final File destiny;
@@ -55,7 +57,7 @@ abstract class ActionRenderer {
 			frame.addSlot("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(name) + "Action", template().format(frame));
+		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + "Action", template().format(frame));
 	}
 
 	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {

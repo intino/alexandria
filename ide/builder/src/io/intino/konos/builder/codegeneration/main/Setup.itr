@@ -22,6 +22,10 @@ def type(setup)
 
         }
 
+		static void quit(ConsulBox box) {
+
+		}
+
 		private static void configureLogger(String path) {
 			final Logger logger = Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
