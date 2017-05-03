@@ -74,6 +74,7 @@ public class JMXOperationsServiceRenderer {
 	private Frame frameOf(Operation operation) {
 		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name()).addSlot("action", operation.name()).
 				addSlot("package", packageName).addSlot("returnType", returnType(operation));
+		frame.addSlot("description", operation.description());
 		setupParameters(operation.parameterList(), frame);
 		return frame;
 	}
