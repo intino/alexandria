@@ -30,7 +30,7 @@ public abstract class Bot {
 	}
 
 	protected String help() {
-		StringBuilder help = new StringBuilder();
+		StringBuilder help = new StringBuilder("commands:\n");
 		for (String key : commandsInfo.keySet())
 			help.append(key).append(parameters(commandsInfo.get(key).parameters)).append(": ").append(commandsInfo.get(key).description).append("\n");
 		return help.toString();

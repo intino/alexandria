@@ -143,23 +143,32 @@ public class JMXClient {
 			return attributes;
 		}
 
-		public List<String> operations(ObjectName objectName) {
-			List<String> operations = new ArrayList<>();
+		public Map<String, String> operations(ObjectName objectName) {
+			Map<String, String> map = new LinkedHashMap<>();
 			try {
-				for (MBeanOperationInfo info : connection.getMBeanInfo(objectName).getOperations())
-					operations.add(info.getReturnType() + " " + info.getName() + "(" + String.join(", ", Arrays.stream(info.getSignature()).map(mb -> mb.getType() + " " + mb.getName()).collect(Collectors.toList())) + ")");
+
+				for (MBeanOperationInfo info : connection.getMBeanInfo(objectName).getOperations()) {
+					final Descriptor descriptor = info.getDescriptor();
+					final String parameters = descriptor.getFieldValue(Parameters.class.getSimpleName()).toString();
+					final String description = descriptor.getFieldValue(Description.class.getSimpleName()).toString();
+					map.put(info.getReturnType() + " " + info.getName() + "(" + (parameters != null ? parameters : parameters(info)) + ")", description == null ? "" : description);
+					return map;
+				}
 			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException | InstanceNotFoundException ignored) {
 			}
-			return operations;
+			return Collections.emptyMap();
 		}
 
-		public List<MBeanOperationInfo> operationInfos(ObjectName objectName) {
-			List<MBeanOperationInfo> operations = new ArrayList<>();
+		public Map<MBeanOperationInfo, String> operationInfos(ObjectName objectName) {
 			try {
-				return Arrays.asList(connection.getMBeanInfo(objectName).getOperations());
+				final List<MBeanOperationInfo> operations = Arrays.asList(connection.getMBeanInfo(objectName).getOperations());
+				Map<MBeanOperationInfo, String> map = new LinkedHashMap<>();
+				for (MBeanOperationInfo operation : operations)
+					map.put(operation, operation.getDescriptor().getFieldValue(Description.class.getSimpleName()).toString());
+				return map;
 			} catch (RuntimeException | ReflectionException | IntrospectionException | IOException | InstanceNotFoundException ignored) {
 			}
-			return operations;
+			return Collections.emptyMap();
 		}
 
 		public Object invokeOperation(ObjectName objectName, MBeanOperationInfo info, Object[] parameters) {
@@ -199,5 +208,9 @@ public class JMXClient {
 		}
 
 
+	}
+
+	private String parameters(MBeanOperationInfo info) {
+		return String.join(", ", Arrays.stream(info.getSignature()).map(mb -> mb.getType() + " " + mb.getName()).collect(Collectors.toList()));
 	}
 }

@@ -4,14 +4,6 @@ changeNotes=""
 gulpFileTemplate="io.intino.konos.builder.codegeneration.accessor.ui.gulp.Gulpfile_jsTemplate.class"
 packageJsonTemplate="io.intino.konos.builder.codegeneration.accessor.ui.gulp.Package_jsonTemplate.class"
 
-[[groups]]
-id="KonosToolsGroup"
-popup="true"
-text="Konos"
-aClass="io.intino.konos.builder.actions.KonosActionGroup"
-groupId="ToolsMenu"
-anchor="last"
-
 [[actions]]
 id="NewKonosFile"
 aClass="io.intino.konos.builder.actions.CreateKonosFileAction"
@@ -25,7 +17,8 @@ aClass="io.intino.konos.builder.actions.CreateKonosBoxAction"
 text="Create Konos Shell"
 description="Create Konos Shell"
 shortcut="control alt S"
-groupId="KonosToolsGroup"
+groupId="ToolbarMakeGroup"
+anchor="first"
 
 [[actions]]
 id="PublishAccesors"
@@ -33,4 +26,5 @@ aClass="io.intino.konos.builder.actions.PublishAccessorAction"
 text="Distribute Konos Accessor"
 description="Distribute Konos Accessor in Artifactory"
 shortcut="control alt A"
-groupId="KonosToolsGroup"
+groupId="ToolbarMakeGroup"
+anchor="first"
