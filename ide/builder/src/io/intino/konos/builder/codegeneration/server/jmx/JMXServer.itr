@@ -1,95 +1,110 @@
 def type(jmxserver)
 	package $package+ValidPackage;
 
-    import io.intino.konos.jmx.JMXServer;
-    import io.intino.konos.Box;
-    import java.util.HashMap;
-    import java.util.Map;
+	import io.intino.konos.jmx.JMXServer;
 
-    public class JMX$name+firstUpperCase {
+	import io.intino.konos.Box;
+	import java.util.HashMap;
+	import java.util.Map;
 
-    	public JMXServer init(Box box) {
-    		JMXServer server = new JMXServer(mbClasses(box));
-    		server.init();
-    		return server;
-    	}
+	public class JMX$name+firstUpperCase {
 
-    	private Map<String, Object$[]> mbClasses(Box box) {
-            Map<String, Object$[]> map = new HashMap<>();
-            map.put("$package.jmx.$name+snakecaseToCamelCase+firstUpperCase", new Object$[$]{box});
-            return map;
-    	}
-    }
+		public JMXServer init(Box box) {
+			JMXServer server = new JMXServer(mbClasses(box));
+			server.init();
+			return server;
+		}
+
+		private Map<String, Object$[]> mbClasses(Box box) {
+			Map<String, Object$[]> map = new HashMap<>();
+			map.put("$package.jmx.$name+snakecaseToCamelCase+firstUpperCase", new Object$[$]{box});
+			return map;
+		}
+	}
 end
 
 def type(jmx) type(interface)
 	package $package+ValidPackage.jmx;
 
+	import io.intino.konos.jmx.Description;
+    import io.intino.konos.jmx.Parameters;
+
 	import java.util.*;
-    import java.time.*;
+	import java.time.*;
 
-    public interface $name+snakecaseToCamelCase+firstUpperCase~MBean {
+	public interface $name+snakecaseToCamelCase+firstUpperCase~MBean {
 
-        $operation+signature...[$NL$NL]
-    }
+		$operation+signature...[$NL$NL]
+	}
 end
 
 def type(operation) trigger(signature)
-    $returnType $name+SnakeCaseToCamelCase+firstLowerCase($parameter+withType...[, ]);
+	@Description("$description")
+	@Parameters({$parameter+displayName...[, ]})
+	$returnType $name+SnakeCaseToCamelCase+firstLowerCase($parameter+withType...[, ]);
+end
+
+def type(parameter) trigger(displayName)
+	"$name"
 end
 
 def type(parameter & list) trigger(withType)
-    java.util.List<$type> $name
+	java.util.List<$type> $name
 end
 
 def type(parameter) trigger(withType)
-    $type $name
+	$type $name
 end
 
 
 def type(jmx) type(implementation)
 	package $package+ValidPackage.jmx;
 
-    import $package.$box+validName+FirstUpperCase~Box;
-    import java.util.*;
-    import java.time.*;
+	import $package.$box+validName+FirstUpperCase~Box;
+	import java.util.*;
+	import java.time.*;
 
-    public class $name+SnakeCaseToCamelCase+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
+	public class $name+SnakeCaseToCamelCase+validName+firstUpperCase implements $name+validName+firstUpperCase~MBean {
 
-        private final $box+validName+FirstUpperCase~Box box;
+		private final $box+validName+FirstUpperCase~Box box;
 
-        public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) {
-            this.box = box;
-        }
+		public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) {
+			this.box = box;
+		}
 
-        $operation+implementation...[$NL$NL]
-    }
+		$operation+implementation...[$NL$NL]
+	}
 end
 
 def type(operation) trigger(implementation)
-    public $returnType $name+SnakeCaseToCamelCase+validName+firstLowerCase($parameter+withType...[, ]) {
-        $package+ValidPackage.actions.$action+snakecaseToCamelCase+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+SnakeCaseToCamelCase+firstUpperCase~Action();
-        action.box = box;
-        [$parameter+assign...[$NL]]
-        [$returnType+return ]action.execute();
-    }
+	public $returnType $name+SnakeCaseToCamelCase+validName+firstLowerCase($parameter+withType...[, ]) {
+		$package+ValidPackage.actions.$action+snakecaseToCamelCase+firstUpperCase~Action action = new $package+ValidPackage.actions.$action+SnakeCaseToCamelCase+firstUpperCase~Action();
+		action.box = box;
+		[$parameter+assign...[$NL]]
+		[$returnType+return ]action.execute();
+	}
 end
 
+
 def type(parameter) trigger(assign)
-    action.$name = $name;
+	action.$name = $name;
 end
 
 def type(returnType) attribute(value:void) trigger(return)
 end
 
 def type(returnType) trigger(return)
-    return
+	return
 end
 
 def type(returnType & list) trigger(returnType)
-    java.util.List<$value>
+	java.util.List<$value>
 end
 
 def type(returnType) trigger(returnType)
-    $value
+	$value
+end
+
+def trigger(quoted)
+	"$value"
 end
