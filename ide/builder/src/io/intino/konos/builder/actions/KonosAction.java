@@ -3,7 +3,6 @@ package io.intino.konos.builder.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.module.Module;
-import io.intino.konos.builder.KonosIcons;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +17,8 @@ abstract class KonosAction extends Action {
 		super(text, description, icon);
 	}
 
-	@SuppressWarnings("Duplicates")
 	@Override
 	public void update(AnActionEvent e) {
-		e.getPresentation().setIcon(KonosIcons.ICON_16);
 		final Module module = e.getData(LangDataKeys.MODULE);
 		boolean enabled = module != null && legioFile(module).exists();
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());

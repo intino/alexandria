@@ -14,5 +14,7 @@ public class KonosIcons {
 		return IconUtil.scale(icon, 0.5);
 	}
 
-	public static final Icon ICON_16 = RETINA ? scale(IconLoader.getIcon("/icons/konos/icon_retina.png")) : IconLoader.getIcon("/icons/konos/icon_16.png");
+	public static final Icon ICON_16 = RETINA ? scale(IconLoader.getIcon("/icons/files/konos-32.png")) : IconLoader.getIcon("/icons/files/konos-16.png");
+	public static final Icon GENERATE_16 = RETINA ? scale(IconLoader.getIcon("/icons/operations/generate-32.png")) : IconLoader.getIcon("/icons/operations/generate-16.png");
+	public static final Icon PUBLISH_16 = RETINA ? scale(IconLoader.getIcon("/icons/operations/publish-32.png")) : IconLoader.getIcon("/icons/operations/publish-16.png");
 }
