@@ -1,57 +1,10 @@
 def type(main)
 	package $package;
 
-	[$tara+empty~import io.intino.tara.magritte.Graph;]
-
 	public class Main {
-
 		public static void main(String$[] args) {
-			$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration = createConfigurationFromArgs(args);
-			[$tara+empty~Graph graph = Setup.initGraph(configuration);]
-			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = run([$tara+empty~graph, ]configuration);
-			Runtime.getRuntime().addShutdownHook(new Thread(() -> box.quit()));
-		}
-
-		private static $name+SnakeCaseToCamelCase+firstUpperCase~Configuration createConfigurationFromArgs(String$[] args) {
-			return new $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(args)$conf+set;
-		}
-
-		private static $name+SnakeCaseToCamelCase+firstUpperCase~Box run([$tara+empty~Graph graph, ]$name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box([$tara+empty~graph, ]configuration);
-			Setup.configureBox(box);
-			box.init();
-			Setup.execute(box);
-			return box;
+			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args).open();
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> box.close()));
 		}
 	}
-end
-
-def type(conf) trigger(set)
-    $name+firstlowercase~Configuration($parameter+name...[, ])
-end
-
-def type(parameter) trigger(name)
-    info.$conf+firstlowercase~$name+FirtsUpperCase;
-end
-
-def type(parameter) trigger(field)
-    $type $conf+firstlowercase~$name+FirtsUpperCase;
-end
-
-def type(parameter) trigger(assign)
-    if (keyValue$[0].equalsIgnoreCase("$conf+firstlowercase.$name+FirtsUpperCase"))
-        $conf+firstlowercase~$name+FirtsUpperCase = $type+convert(keyValue$[1]);
-end
-
-def attribute(Integer) trigger(convert)
-    Integer.parseInt
-end
-
-def attribute(Boolean) trigger(convert)
-    Boolean.parseBoolean
-end
-
-def trigger(convert)
-end
-def trigger(empty)
 end
