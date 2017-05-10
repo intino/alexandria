@@ -11,7 +11,7 @@ import io.intino.konos.builder.codegeneration.datalake.EventHandlerRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.LauncherRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
-import io.intino.konos.builder.codegeneration.main.SetupRenderer;
+import io.intino.konos.builder.codegeneration.main.TunerRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
@@ -164,7 +164,7 @@ public class FullRenderer {
 	}
 
 	private void main(Frame frame) {
-		new SetupRenderer(src, packageName, module, isTara).execute();
+		new TunerRenderer(src, packageName, module, isTara).execute();
 		new MainRenderer(gen, packageName, module, isTara).execute();
 		new LauncherRenderer(test, frame).execute();
 	}

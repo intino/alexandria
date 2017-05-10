@@ -21,10 +21,10 @@ groupId="intino"
 anchor="first"
 
 [[actions]]
-id="PublishAccesors"
+id="PublishAccessors"
 aClass="io.intino.konos.builder.actions.PublishAccessorAction"
 text="Distribute Konos Accessors"
 description="Distribute Konos Accessors in Artifactory"
 shortcut="control alt A"
-groupId="intino" "ToolbarMakeGroup"
+groupId="intino"
 anchor="first"
