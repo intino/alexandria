@@ -35,18 +35,18 @@ public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<Tar
 
 
 	public CreateKonosFileAction() {
-		super("Konos File", "Creates a new Konos File", ICON_16, true);
+		super("Box File", "Creates a new Box File", ICON_16, true);
 	}
 
 	@Override
 	protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-		builder.setTitle("Enter name for new Konos File");
+		builder.setTitle("Enter name for new Box File");
 		builder.addKind("Konos", ICON_16, "Konos");
 	}
 
 	@Override
 	protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-		return "Konos File";
+		return "Box File";
 	}
 
 	@Override

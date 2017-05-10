@@ -59,7 +59,7 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
             <scope>test</scope>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware</groupId>
@@ -117,7 +117,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>konos-rest-accessor-java</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

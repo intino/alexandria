@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetupRenderer {
+public class TunerRenderer {
 
 
 	private final File destination;
@@ -25,7 +25,7 @@ public class SetupRenderer {
 	private final Configuration configuration;
 	private boolean isTara;
 
-	public SetupRenderer(File destination, String packageName, Module module, boolean isTara) {
+	public TunerRenderer(File destination, String packageName, Module module, boolean isTara) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
@@ -34,14 +34,14 @@ public class SetupRenderer {
 	}
 
 	public void execute() {
-		if (configuration == null || Commons.javaFile(destination, "Setup").exists())
+		if (configuration == null || Commons.javaFile(destination, "Tuner").exists())
 			return;
 		final String name = name();
-		Frame frame = new Frame().addTypes("Setup").addSlot("package", packageName).addSlot("name", name);
+		Frame frame = new Frame().addTypes("Tuner").addSlot("package", packageName).addSlot("name", name);
 		if (isTara) frame.addSlot("tara", fillTara());
 		if (JavaPsiFacade.getInstance(module.getProject()).findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
-		Commons.writeFrame(destination, "Setup", template().format(frame));
+		Commons.writeFrame(destination, "Tuner", template().format(frame));
 	}
 
 	private Frame fillTara() {
@@ -63,7 +63,7 @@ public class SetupRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(SetupTemplate.create());
+		return Formatters.customize(TunerTemplate.create());
 	}
 
 	private String name() {

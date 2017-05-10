@@ -31,13 +31,14 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 	private static final String TEXT = "Publish Konos Accessor";
 
 	public PublishAccessorAction() {
-		super(TEXT, "Publish Konos Accessor in Artifactory", KonosIcons.ICON_16);
+		super(TEXT, "Publish Konos Accessor in Artifactory", KonosIcons.GENERATE_16);
 		this.setShortcutSet(CustomShortcutSet.fromString("control alt A"));
 	}
 
 	@Override
 	public void update(AnActionEvent e) {
 		super.update(e);
+		e.getPresentation().setIcon(KonosIcons.PUBLISH_16);
 		final Module module = e.getData(LangDataKeys.MODULE);
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;

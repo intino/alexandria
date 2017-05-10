@@ -42,12 +42,13 @@ public class CreateKonosBoxAction extends KonosAction {
 	private static final String TEXT = "Create Konos Box";
 
 	public CreateKonosBoxAction() {
-		super(TEXT, "Creates Konos Box", KonosIcons.ICON_16);
+		super(TEXT, "Creates Konos Box", KonosIcons.GENERATE_16);
 		this.setShortcutSet(CustomShortcutSet.fromString("control alt S"));
 	}
 
 	@Override
 	public void update(AnActionEvent e) {
+		e.getPresentation().setIcon(KonosIcons.GENERATE_16);
 		super.update(e);
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;
