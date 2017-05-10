@@ -1,4 +1,4 @@
-def type(setup)
+def type(tuner)
 	package $package;
 
 	[$tara+empty~import io.intino.tara.magritte.Graph;]
@@ -7,26 +7,28 @@ def type(setup)
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
-	class Setup {[
+	class Tuner {
+
+		private $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration;
+
+		Tuner($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			this.configuration = configuration;
+			initLogger("log"); //TODO change path in case
+		}[
 
 		$tara][
 
 		$rest
 		]
-
-		static void configureBox($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
-			configureLogger("log"); //TODO change path in case
-		}
-
-		static void execute($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
+		void start($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
 
         }
 
-		static void quit(ConsulBox box) {
+		void terminate($name+SnakeCaseToCamelCase+firstUpperCase~Box box) {
 
 		}
 
-		private static void configureLogger(String path) {
+		private static void initLogger(String path) {
 			final Logger logger = Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);

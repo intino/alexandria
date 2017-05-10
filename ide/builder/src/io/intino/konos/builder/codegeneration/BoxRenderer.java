@@ -84,6 +84,7 @@ public class BoxRenderer {
 	private void parent(Frame frame) {
 		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
 			frame.addSlot("parent", parent).addSlot("hasParent", "");
+		else frame.addSlot("hasntParent", "");
 	}
 
 	private Frame activityFrame(Activity activity) {
