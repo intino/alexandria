@@ -42,11 +42,11 @@ def trigger(empty)
 end
 
 def trigger(tara)
-	static Graph initGraph($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-		return Graph.use(store(configuration), $wrapper...[, ]).load($outDSL+quoted);
+	Graph initGraph() {
+		return Graph.use(store(), $wrapper...[, ]).load($outDSL+quoted);
 	}
 
-	private static io.intino.tara.magritte.Store store($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+	private io.intino.tara.magritte.Store store() {
 		// return new io.intino.tara.magritte.stores.FileSystemStore(configuration.store());
 		return new io.intino.tara.magritte.stores.ResourcesStore();
 	}
