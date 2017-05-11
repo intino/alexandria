@@ -63,7 +63,6 @@ public class BoxConfigurationRenderer {
 		return frame;
 	}
 
-
 	private void addRESTServices(Frame frame, String boxName) {
 		for (RESTService service : application.rESTServiceList()) {
 			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", boxName);

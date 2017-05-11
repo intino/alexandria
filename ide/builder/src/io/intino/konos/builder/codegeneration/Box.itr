@@ -8,21 +8,21 @@ def type(box)
 	[$hasREST~import io.intino.konos.server.KonosSpark;]
 	[import io.intino.tara.magritte.Graph;$tara+import]
 
-	public class $name+SnakeBoxToCamelBox+FirstUpperBox~Box extends [$parent~Box?io.intino.konos.Box] {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parent~Box?io.intino.konos.Box] {
 		private static Logger LOG = Logger.getGlobal();
 		private Tuner tuner;
-		[$hasParent?protected $name+SnakeBoxToCamelBox+FirstUpperBox~Configuration configuration;][
+		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field]
 
-		[$hasParent+hide~protected String graphID;]
+		[$hasntParent+hide~protected String graphID;]
 
-		public [$tara+SnakeBoxToCamelBox+FirstUpperBox?$name+SnakeBoxToCamelBox+firstUpperCase]~Box(String$[] args) {
-			this(new $name+SnakeBoxToCamelBox+FirstUpperBox~Configuration(args));
+		public [$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box(String$[] args) {
+			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
 		}
 		
-		public [$tara+SnakeBoxToCamelBox+FirstUpperBox?$name+SnakeBoxToCamelBox+firstUpperCase]~Box($name+SnakeBoxToCamelBox+FirstUpperBox~Configuration configuration) {
+		public [$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);]
 			configuration.args().entrySet().forEach((e) -> box.put(e.getKey(), e.getValue()));
 			[$hasntParent~this.configuration = configuration;][
@@ -38,8 +38,8 @@ def type(box)
 			box().put(graphID, graph);
 		}]
 
-		public $name+SnakeBoxToCamelBox+firstUpperCase~Configuration configuration() {
-			return ($name+SnakeBoxToCamelBox+firstUpperCase~Configuration) configuration;
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
 		[
 		$service+getter...[$NL$NL]]
@@ -48,9 +48,9 @@ def type(box)
 
 		$task+getter...[$NL$NL]
 
-		public $name+SnakeBoxToCamelBox+FirstUpperBox~Box open() {
-			graphID = UUID.randomUUID().toString();
-			[$tara+hide~box.put(graphID, tuner.initGraph());]
+		public $name+SnakeCaseToCamelCase+FirstUpperCase~Box open() {
+			[graphID = UUID.randomUUID().toString();
+			$tara+hide~box.put(graphID, tuner.initGraph());]
 			init();
 			start();
 			return this;
@@ -109,20 +109,15 @@ def type(box)
 		public void stopJMSServices() {
 
 		}
-
-		public $name+SnakeBoxToCamelBox+FirstUpperBox~Box tuner(Tuner tuner) {
-			this.tuner = tuner;
-			return this;
-		}
 	}
 end
 
 def type(activity) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.port[, configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.webDirectory], configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.authService);
+	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.port[, configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.webDirectory], null);
+	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
 def type(dataLake) trigger(init)
