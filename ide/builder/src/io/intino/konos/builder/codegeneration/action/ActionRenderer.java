@@ -41,7 +41,7 @@ abstract class ActionRenderer {
 	protected void execute(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
 		if (!alreadyRendered(destiny, name)) createNewClass(name, response, parameters, exceptions, schemas);
 		else {
-			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(name) + "Action");
+			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(snakeCaseToCamelCase(name)) + "Action");
 			new ActionUpdater(project, destiny, packageName, parameters, exceptions, response).update();
 		}
 	}

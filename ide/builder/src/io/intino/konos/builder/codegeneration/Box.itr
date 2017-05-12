@@ -24,6 +24,7 @@ def type(box)
 		
 		public [$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);]
+			this.tuner = new Tuner(configuration);
 			configuration.args().entrySet().forEach((e) -> box.put(e.getKey(), e.getValue()));
 			[$hasntParent~this.configuration = configuration;][
 			$service+setup...[$NL]][
