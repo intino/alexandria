@@ -4,7 +4,7 @@ def type(main)
 	public class Main {
 		public static void main(String$[] args) {
 			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args).open();
-			Runtime.getRuntime().addShutdownHook(new Thread(() -> box.close()));
+			Runtime.getRuntime().addShutdownHook(new Thread(box::close));
 		}
 	}
 end

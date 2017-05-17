@@ -39,6 +39,7 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String KONOS = "Konos";
+	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
 
 	public CreateKonosBoxAction() {
@@ -93,7 +94,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? KONOS.toLowerCase() : configuration.workingPackage() + "." + KONOS.toLowerCase();
+			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + BOX;
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
@@ -102,12 +103,11 @@ public class CreateKonosBoxAction extends KonosAction {
 			generate(generationPackage, gen, src, new File(resDirectory.getPath()), test);
 		}
 
-		private boolean generate(String packageName, File gen, File src, File res, File test) {
+		private void generate(String packageName, File gen, File src, File res, File test) {
 			Graph graph = loadGraph();
-			if (!render(packageName, gen, src, res, test, graph)) return false;
+			if (!render(packageName, gen, src, res, test, graph)) return;
 			refreshDirectories(gen, src, res, test);
 			notifySuccess();
-			return true;
 		}
 
 		private Graph loadGraph() {
@@ -143,12 +143,12 @@ public class CreateKonosBoxAction extends KonosAction {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Konos", "Services for " + module.getName(), "Generated", INFORMATION), module.getProject());
+						new Notification("Boxing", "Services for " + module.getName(), "Generated", INFORMATION), module.getProject());
 		}
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Konos", "Services cannot be generated", message, ERROR), module.getProject());
+					new Notification("Boxing", "Services cannot be generated", message, ERROR), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
