@@ -1,28 +1,17 @@
 def type(boxConfiguration)
 	package $package;
 
-	public class Launcher {
+	import org.junit.Test;
 
-		public static class Pre {
+	public class IntinoTest {
 
-			public static void main(String$[] args) throws Exception {
-				Main.main(new String$[]{
-						[$tara+empty~"graph.store=",]
-						$service+fill...[,$NL]
-				});
-			}
+		@Test
+		public static void main() throws Exception {
+			Main.main(new String$[]{
+					[$tara+empty~"graph.store=",]
+					$service+fill...[,$NL]
+			});
 		}
-
-		public static class Pro {
-
-			public static void main(String$[] args) throws Exception {
-				Main.main(new String$[]{
-						[$tara+empty~"graph.store=",]
-						$service+fill...[,$NL]
-				});
-			}
-		}
-
 	}
 end
 

@@ -145,8 +145,8 @@ public class FullRenderer {
 			final Configuration configuration = TaraUtil.configurationOf(module);
 			for (Configuration.LanguageLibrary languageLibrary : configuration.languages()) {
 				String workingPackage = languageLibrary.generationPackage();
-				if (workingPackage != null && facade.findClass(workingPackage + ".konos." + Formatters.firstUpperCase(languageLibrary.name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-					return workingPackage.toLowerCase() + ".konos." + Formatters.firstUpperCase(languageLibrary.name());
+				if (workingPackage != null && facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languageLibrary.name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+					return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languageLibrary.name());
 
 			}
 		} catch (Exception ignored) {
@@ -165,7 +165,7 @@ public class FullRenderer {
 
 	private void main(Frame frame) {
 		new TunerRenderer(src, packageName, module, isTara).execute();
-		new MainRenderer(gen, packageName, module, isTara).execute();
+		new MainRenderer(src, packageName, module).execute();
 		new LauncherRenderer(test, frame).execute();
 	}
 }
