@@ -2,6 +2,7 @@ package io.intino.konos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class Box {
 
@@ -29,6 +30,11 @@ public abstract class Box {
 
 	public Box put(String name, Object object) {
 		box.put(name, object);
+		return this;
+	}
+
+	public Box put(Object object) {
+		box.put(UUID.randomUUID().toString(), object);
 		return this;
 	}
 }

@@ -1,7 +1,7 @@
 package ui;
 
 import io.intino.konos.builder.codegeneration.BoxConfigurationRenderer;
-import io.intino.konos.builder.codegeneration.BoxRenderer;
+import io.intino.konos.builder.codegeneration.AbstractBoxRenderer;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
@@ -34,7 +34,7 @@ public class UIGenerationTest {
 		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ActivityRenderer(graph, gen, TEST, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
-		new BoxRenderer(graph, gen, TEST, null, null, false).execute();
+		new AbstractBoxRenderer(graph, gen, TEST, null, null, false).execute();
 		new BoxConfigurationRenderer(graph, gen, TEST, null, null, false).execute();
 //		new ActivityAccessorCreator(null, graph).execute();
 //		new FullRenderer(null, graph, gen, gen, TEST).execute();

@@ -6,10 +6,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -158,7 +155,7 @@ public abstract class Bot {
 	}
 
 	private SlackChannel slackChannel(String channel) {
-		return session.getChannels().stream().filter(c -> c.getId().equals(channel)).findFirst().orElse(null);
+		return session.getChannels().stream().filter(c -> channel.equals(c.getId()) || channel.equals(c.getName())).findFirst().orElse(null);
 	}
 
 	private boolean isInContext(String commandKey, String userName) {
