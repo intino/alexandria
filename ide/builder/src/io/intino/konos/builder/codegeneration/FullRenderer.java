@@ -9,9 +9,8 @@ import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreato
 import io.intino.konos.builder.codegeneration.datalake.NessEventsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.EventHandlerRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
-import io.intino.konos.builder.codegeneration.main.LauncherRenderer;
+import io.intino.konos.builder.codegeneration.main.IntinoTestRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
-import io.intino.konos.builder.codegeneration.main.TunerRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
@@ -124,7 +123,8 @@ public class FullRenderer {
 	}
 
 	private Frame box() {
-		new BoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
+		new AbstractBoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
+		new BoxRenderer(src, packageName, module, isTara).execute();
 		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent, isTara).execute();
 	}
 
@@ -164,8 +164,7 @@ public class FullRenderer {
 	}
 
 	private void main(Frame frame) {
-		new TunerRenderer(src, packageName, module, isTara).execute();
 		new MainRenderer(src, packageName, module).execute();
-		new LauncherRenderer(test, frame).execute();
+		new IntinoTestRenderer(test, frame).execute();
 	}
 }
