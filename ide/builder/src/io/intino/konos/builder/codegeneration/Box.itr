@@ -1,28 +1,20 @@
 def type(box)
 	package $package;
 
-	[$tara+empty~import io.intino.tara.magritte.Graph;]
-
 	class Box extends AbstractBox {
 
 		Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
 			super(configuration);
 		}[
 
-		$tara][
-
 		$rest
 		]
-		void init() {
-			super.init();
+		void open() {
+			super.open();
 		}
 
-		void start() {
-			super.start();
-        }
-
-		void terminate() {
-			super.terminate();
+		void close() {
+			super.close();
 		}
 
 
@@ -30,21 +22,6 @@ def type(box)
 end
 
 def trigger(empty)
-end
-
-def trigger(tara)
-	Graph initGraph() {
-		return Graph.use(store(), $wrapper...[, ]).load($outDSL+quoted);
-	}
-
-	private io.intino.tara.magritte.Store store() {
-		// return new io.intino.tara.magritte.stores.FileSystemStore(configuration.store());
-		return new io.intino.tara.magritte.stores.ResourcesStore();
-	}
-end
-
-def trigger(wrapper)
-	$value.class
 end
 
 def trigger(quoted)

@@ -1,40 +1,11 @@
 package io.intino.konos;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
-
 public abstract class Box {
 
-	protected Map<String, Object> box = new LinkedHashMap<>();
+	protected Box owner;
 
-	public abstract void init();
+	public abstract void open();
 
-	public Map<String, Object> box() {
-		return box;
-	}
+	public abstract Box put(Object object);
 
-	public <T> T get(Class<T> tClass) {
-		return (T) box.values().stream().filter(tClass::isInstance).findFirst().orElse(null);
-	}
-
-
-	public <T> T get(String object, Class<T> tClass) {
-		return (T) box.get(object);
-	}
-
-	public String get(String key) {
-		return box.containsKey(key) ? box.get(key).toString() : null;
-	}
-
-
-	public Box put(String name, Object object) {
-		box.put(name, object);
-		return this;
-	}
-
-	public Box put(Object object) {
-		box.put(UUID.randomUUID().toString(), object);
-		return this;
-	}
 }

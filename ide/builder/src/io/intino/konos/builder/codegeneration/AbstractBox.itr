@@ -10,9 +10,8 @@ def type(box)
 	import java.util.logging.Logger;
 
 	[$hasREST~import io.intino.konos.server.KonosSpark;]
-	[import io.intino.tara.magritte.Graph;$tara+import]
 
-	public class Abstract$name+SnakeCaseToCamelCase+FirstUpperCase~Box extends [$parent~Box?io.intino.konos.Box] {
+	public class Abstract$name+SnakeCaseToCamelCase+FirstUpperCase~Box extends io.intino.konos.Box {
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
 		$service+field...[$NL]][
@@ -21,7 +20,6 @@ def type(box)
 
 		public Abstract[$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
-
 		}
 		
 		public Abstract[$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
@@ -31,11 +29,7 @@ def type(box)
 			[$hasntParent~this.configuration = configuration;][
 			$service+setup...[$NL]][
 			$activity+setup...[$NL]]
-
 		}
-		[$graph+getter]
-
-		[$tara~protected abstract Graph initGraph();]
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
@@ -47,15 +41,8 @@ def type(box)
 
 		$task+getter...[$NL$NL]
 
-		public Abstract$name+SnakeCaseToCamelCase+FirstUpperCase~Box open() {[
-			$tara+hide~box.put(initGraph());]
-			init();
-			start();
-			return this;
-		}
-
-		public void init() {[
-			$parent+parentInit~super.init();? ]
+		void open() {
+			if(owner != null) owner.open();
 			initActivities();
 			initRESTServices();
 			initJMXServices();
@@ -65,14 +52,8 @@ def type(box)
 			initSlackBots();
 		}
 
-		public void start() {
-		}
-
 		void close() {
-			terminate();
-		}
-
-		protected void terminate() {
+			if(owner != null) owner.close();
 			$service+quit...[$NL]
 			$dataLake+quit...[$NL]
 		}
@@ -105,10 +86,6 @@ def type(box)
 			$task+init...[$NL]
 		}
 
-		public void stopJMSServices() {
-
-		}
-
 		private void initLogger() {
 			final Logger logger = Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
@@ -119,11 +96,6 @@ def type(box)
 	}
 end
 
-def type(graph) trigger(getter)
-	public $package.$name~View view() {
-		return ((io.intino.tara.magritte.Graph) box().get(graphID)).view($package.$name~View.class);
-	}
-end
 def type(activity) trigger(setup)
 	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
 end
