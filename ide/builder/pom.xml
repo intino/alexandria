@@ -110,7 +110,18 @@
             <scope>provided</scope>
             <version>2.7</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.intino.tara</groupId>
+            <artifactId>magritte</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.intino.tara</groupId>
+                    <artifactId>io</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+            <version>1.0.6</version>
+        </dependency>
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>builder</artifactId>
@@ -121,7 +132,7 @@
                     <artifactId>io</artifactId>
                 </exclusion>
             </exclusions>
-            <version>[1.2.0,2.0.0)</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.itrules</groupId>

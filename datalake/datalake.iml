@@ -9,16 +9,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="core" />
-    <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: io.intino.ness:ness:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="module" module-name="jms" />
+    <orderEntry type="library" name="Maven: io.intino.konos:konos-core:1.2.5" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.activemq:activemq-client:5.14.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
@@ -29,7 +28,7 @@
     <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: commons-net:commons-net:3.5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.activemq:activemq-jaas:5.14.4" level="project" />
-    <orderEntry type="module" module-name="slack" />
+    <orderEntry type="library" name="Maven: io.intino.konos:konos-slack:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: com.ullink.slack:simpleslackapi:0.6.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
@@ -50,6 +49,7 @@
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP-java6:2.3.13" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz-jobs:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: io.intino.ness:datalake:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: io.intino.tara:magritte:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: io.intino.tara:io:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />

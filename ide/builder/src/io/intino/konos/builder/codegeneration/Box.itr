@@ -1,19 +1,24 @@
 def type(box)
 	package $package;
 
-	class Box extends AbstractBox {
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Box extends AbstractBox {
 
-		Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
-			super(configuration);
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box(String$[] args) {
+			super(args);
+		}
+
+		@Override
+		public io.intino.konos.Box put(Object o) {
+			return this;
 		}[
 
 		$rest
 		]
-		void open() {
-			super.open();
+		public io.intino.konos.Box open() {
+			return super.open();
 		}
 
-		void close() {
+		public void close() {
 			super.close();
 		}
 
