@@ -59,7 +59,7 @@ public class BoxRenderer {
 		for (Configuration.LanguageLibrary lang : configuration.languages())
 			if (!lang.name().equals(Verso.class.getSimpleName()) && !lang.name().equals(Proteo.class.getSimpleName()))
 				dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
-		if (configuration.level() != Configuration.Level.System)
+		if (configuration.level() != Configuration.Level.Solution)
 			dsls.add(configuration.workingPackage().toLowerCase() + "." + Formatters.firstUpperCase(configuration.outDSL()));
 		return dsls.toArray(new String[dsls.size()]);
 	}
@@ -72,6 +72,6 @@ public class BoxRenderer {
 		if (module != null) {
 			final String dsl = configuration.outDSL();
 			return dsl == null || dsl.isEmpty() ? module.getName() : dsl;
-		} else return "System";
+		} else return Configuration.Level.Solution.name();
 	}
 }

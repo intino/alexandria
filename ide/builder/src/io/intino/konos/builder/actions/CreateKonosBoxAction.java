@@ -129,7 +129,7 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private boolean render(String packageName, File gen, File src, File res, File test, Graph graph) {
 			try {
-				if (graph == null) throw new Exception("Model have error");
+				if (graph == null) notifyError("Models have errors");
 				new FullRenderer(module, graph, src, gen, res, test, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();

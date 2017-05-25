@@ -8,24 +8,23 @@ def type(box)
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
+	[
+	$hasREST~import io.intino.konos.server.KonosSpark;]
 
-	[$hasREST~import io.intino.konos.server.KonosSpark;]
-
-	public class Abstract$name+SnakeCaseToCamelCase+FirstUpperCase~Box extends io.intino.konos.Box {
+	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger LOG = Logger.getGlobal();
 		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field]
 
-		public Abstract[$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box(String$[] args) {
+		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
 		}
 		
-		public Abstract[$tara+SnakeCaseToCamelCase+FirstUpperCase?$name+SnakeCaseToCamelCase+firstUpperCase]~Box($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
+		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[$hasParent~super(configuration);]
 			initLogger();
-			configuration.args().entrySet().forEach((e) -> box.put(e.getKey(), e.getValue()));
 			[$hasntParent~this.configuration = configuration;][
 			$service+setup...[$NL]][
 			$activity+setup...[$NL]]
@@ -41,7 +40,7 @@ def type(box)
 
 		$task+getter...[$NL$NL]
 
-		void open() {
+		public io.intino.konos.Box open() {
 			if(owner != null) owner.open();
 			initActivities();
 			initRESTServices();
@@ -50,13 +49,15 @@ def type(box)
 			initDataLake();
 			initTasks();
 			initSlackBots();
+			return this;
 		}
 
-		void close() {
+		public void close() {
 			if(owner != null) owner.close();
 			$service+quit...[$NL]
 			$dataLake+quit...[$NL]
 		}
+
 		private void initRESTServices() {
 			$service+rest...[$NL]
 		}
@@ -107,26 +108,26 @@ end
 def type(dataLake) trigger(init)
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
 	this.ness.start();
-	NessEvents.addHandlers(($configuration~Box) this);
+	NessEvents.addHandlers(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(service & jmx) trigger(jmx)
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration~Box) this));
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
 end
 
 def type(service & slack) trigger(slack)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration~Box) this);
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(service & rest) trigger(rest)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration~Box) this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(activity) trigger(activity)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration~Box) this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(service & jms) trigger(jms)
@@ -134,7 +135,7 @@ def type(service & jms) trigger(jms)
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
-		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration~Box) this);
+		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}
@@ -200,7 +201,7 @@ def type(service)
 end
 
 def type(task) trigger(init)
-	Tasks.init(this.tasker, ($configuration~Box) this);
+	Tasks.init(this.tasker, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(task) trigger(getter)

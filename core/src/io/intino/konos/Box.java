@@ -4,7 +4,9 @@ public abstract class Box {
 
 	protected Box owner;
 
-	public abstract void open();
+	public abstract Box open();
+
+	public abstract void close();
 
 	public abstract Box put(Object object);
 

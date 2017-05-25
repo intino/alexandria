@@ -27,7 +27,8 @@ public class MainRenderer {
 	public void execute() {
 		if (configuration == null) return;
 		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name());
-		Commons.writeFrame(destination, "Main", template().format(frame));
+		if (!Commons.javaFile(destination, "Main").exists())
+			Commons.writeFrame(destination, "Main", template().format(frame));
 	}
 
 	private Template template() {

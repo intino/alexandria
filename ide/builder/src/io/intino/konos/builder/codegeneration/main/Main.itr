@@ -1,9 +1,11 @@
 def type(main)
 	package $package;
 
+	import io.intino.konos.Box;
+
 	public class Main {
 		public static void main(String$[] args) {
-			$name+SnakeCaseToCamelCase+firstUpperCase~Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args).open();
+			Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args).open();
 			Runtime.getRuntime().addShutdownHook(new Thread(box::close));
 		}
 	}

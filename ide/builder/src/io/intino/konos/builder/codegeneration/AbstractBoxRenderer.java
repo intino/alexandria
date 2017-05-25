@@ -16,7 +16,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class AbstractBoxRenderer {
@@ -53,7 +52,7 @@ public class AbstractBoxRenderer {
 		tasks(frame, name);
 		dataLake(frame, name);
 		activities(frame);
-		Commons.writeFrame(gen, "Abstract" + snakeCaseToCamelCase(name) + "Box", template().format(frame));
+		Commons.writeFrame(gen, "AbstractBox", template().format(frame));
 	}
 
 
