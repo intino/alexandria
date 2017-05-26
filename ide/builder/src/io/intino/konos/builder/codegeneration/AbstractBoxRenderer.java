@@ -51,14 +51,14 @@ public class AbstractBoxRenderer {
 		services(frame, name);
 		tasks(frame, name);
 		dataLake(frame, name);
-		activities(frame);
+		activities(frame, name);
 		Commons.writeFrame(gen, "AbstractBox", template().format(frame));
 	}
 
 
-	private void activities(Frame frame) {
+	private void activities(Frame frame, String name) {
 		for (Activity activity : konos.activityList())
-			frame.addSlot("activity", (Frame) activityFrame(activity));
+			frame.addSlot("activity", (Frame) activityFrame(activity, name));
 	}
 
 	private void tasks(Frame frame, String name) {
@@ -89,9 +89,9 @@ public class AbstractBoxRenderer {
 		else frame.addSlot("hasntParent", "");
 	}
 
-	private Frame activityFrame(Activity activity) {
+	private Frame activityFrame(Activity activity, String name) {
 		Frame frame = new Frame();
-		frame.addTypes("activity").addSlot("name", activity.name());
+		frame.addTypes("activity").addSlot("name", activity.name()).addSlot("configuration", name);
 		return frame;
 	}
 
