@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>konos-datalake</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>io.intino.ness</groupId>
             <artifactId>ness</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

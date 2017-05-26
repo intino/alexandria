@@ -7,6 +7,14 @@
     <artifactId>konos-slack</artifactId>
     <version>1.0.6</version>
 
+
+    <repositories>
+        <repository>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/releases</url>
+        </repository>
+    </repositories>
     <distributionManagement>
         <repository>
             <id>intino-maven</id>
