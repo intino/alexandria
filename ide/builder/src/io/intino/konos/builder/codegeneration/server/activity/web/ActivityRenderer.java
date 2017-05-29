@@ -12,21 +12,23 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ActivityRenderer {
 
+	private final File src;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 	private final List<Activity> activities;
 
-	public ActivityRenderer(Graph graph, File gen, String packageName, String boxName) {
+	public ActivityRenderer(Graph graph, File src, File gen, String packageName, String boxName) {
+		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.activities = graph.find(Activity.class);
 	}
-
 
 	public void execute() {
 		activities.forEach(this::processActivity);
@@ -34,12 +36,18 @@ public class ActivityRenderer {
 
 	private void processActivity(Activity activity) {
 		Frame frame = new Frame().addTypes("activity").
-			addSlot("package", packageName).
-			addSlot("name", activity.name()).
-			addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
-			addSlot("display", displaysFrame(activity.displayList()));
+				addSlot("package", packageName).
+				addSlot("name", activity.name()).
+				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
+				addSlot("display", displaysFrame(activity.displayList()));
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
-		Commons.writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
+		if (!Commons.javaFile(src, "AssetResourceLoader").exists())
+			writeFrame(src, "AssetResourceLoader", AssetResourceLoaderTemplate.create().format(resourceLoaderFrame()));
+		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
+	}
+
+	private Frame resourceLoaderFrame() {
+		return new Frame().addTypes("resourceloader").addSlot("package", packageName).addSlot("box", boxName);
 	}
 
 	private Frame[] resourcesFrame(List<Activity.AbstractPage> pages) {

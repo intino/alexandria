@@ -26,16 +26,16 @@ public class AbstractBoxRenderer {
 	private final Konos konos;
 	private final Configuration configuration;
 	private String parent;
-	private final boolean isTara;
+	private final boolean hasModel;
 
-	public AbstractBoxRenderer(Graph graph, File gen, String packageName, Module module, String parent, boolean isTara) {
+	public AbstractBoxRenderer(Graph graph, File gen, String packageName, Module module, String parent, boolean hasModel) {
 		konos = graph.wrapper(Konos.class);
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
 		configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.parent = parent;
-		this.isTara = isTara;
+		this.hasModel = hasModel;
 	}
 
 	public void execute() {
@@ -43,10 +43,7 @@ public class AbstractBoxRenderer {
 		final String name = name();
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
-		if (isTara) {
-			frame.addSlot("tara", name);
-			frame.addSlot("graph", new Frame().addSlot("package", packageName.substring(0, packageName.lastIndexOf(".") - 1)).addSlot("name", name));
-		}
+		if (hasModel) frame.addSlot("tara", name);
 		parent(frame);
 		services(frame, name);
 		tasks(frame, name);

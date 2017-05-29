@@ -1,0 +1,18 @@
+def type(resourceloader)
+	package $package;
+
+	public class AssetResourceLoader {
+
+		private final $box+FirstUpperCase~Box box;
+
+		public AssetResourceLoader($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		public java.net.URL load(String name) {
+			return null;
+		}
+
+	}
+	
+end

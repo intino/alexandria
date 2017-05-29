@@ -64,7 +64,7 @@ def type(service & activity) trigger(fill)
 end
 
 def type(service & auth) type(rest | activity) trigger(auth)
-	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = Setup.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = $configuration+snakeCaseToCamelCase+firstUpperCase~Box.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
 end
 
 def type(service) trigger(auth)
