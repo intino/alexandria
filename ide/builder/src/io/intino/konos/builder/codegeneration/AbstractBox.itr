@@ -13,7 +13,7 @@ def type(box)
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger LOG = Logger.getGlobal();
-		[$hasParent?protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;][
+		$name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field]
@@ -23,9 +23,9 @@ def type(box)
 		}
 		
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
-			[$hasParent~super(configuration);]
-			initLogger();
+			[owner = new $parent~Box(configuration);]
 			[$hasntParent~this.configuration = configuration;][
+			initLogger();
 			$service+setup...[$NL]][
 			$activity+setup...[$NL]]
 		}
@@ -33,12 +33,12 @@ def type(box)
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
 			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
 		}
-		[
-		$service+getter...[$NL$NL]]
 
-		$dataLake+getter...[$NL$NL]
-
-		$task+getter...[$NL$NL]
+		@Override
+		public io.intino.konos.Box put(Object o) {
+			[$hasParent~owner.put(o);]
+			return this;
+		}
 
 		public io.intino.konos.Box open() {
 			if(owner != null) owner.open();
@@ -57,6 +57,13 @@ def type(box)
 			$service+quit...[$NL]
 			$dataLake+quit...[$NL]
 		}
+
+		[$service+getter...[$NL$NL]]
+
+		$dataLake+getter...[$NL$NL]
+
+		$task+getter...[$NL$NL]
+
 
 		private void initRESTServices() {
 			$service+rest...[$NL]

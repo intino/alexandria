@@ -32,7 +32,7 @@ public class UIGenerationTest {
 		final Graph graph = Graph.use(Konos.class, null).load("Ui");
 		new DisplayRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
-		new ActivityRenderer(graph, gen, TEST, "System").execute();
+		new ActivityRenderer(graph, src, gen, TEST, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
 		new AbstractBoxRenderer(graph, gen, TEST, null, null, false).execute();
 		new BoxConfigurationRenderer(graph, gen, TEST, null, null, false).execute();

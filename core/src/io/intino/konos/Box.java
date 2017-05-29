@@ -10,4 +10,8 @@ public abstract class Box {
 
 	public abstract Box put(Object object);
 
+	public Box owner() {
+		return owner;
+	}
+
 }

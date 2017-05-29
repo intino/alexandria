@@ -6,7 +6,7 @@ def type(boxConfiguration)
 	public class IntinoTest {
 
 		@Test
-		public static void main() throws Exception {
+		public void main() throws Exception {
 			Main.main(new String$[]{
 					[$tara+empty~"graph.store=",]
 					$service+fill...[,$NL]

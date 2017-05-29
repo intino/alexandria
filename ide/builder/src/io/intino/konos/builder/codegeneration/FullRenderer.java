@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.List;
 
 public class FullRenderer {
 
@@ -47,7 +48,7 @@ public class FullRenderer {
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
-	private final boolean isTara;
+	private final boolean hasModel;
 
 	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, File test, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -59,7 +60,7 @@ public class FullRenderer {
 		this.test = test;
 		this.packageName = packageName;
 		this.parent = parent();
-		this.isTara = isTara();
+		this.hasModel = hasModel();
 		this.boxName = boxName();
 	}
 
@@ -117,15 +118,15 @@ public class FullRenderer {
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new ActivityRenderer(graph, gen, packageName, boxName).execute();
+		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph).execute();
 		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
 	private Frame box() {
-		new AbstractBoxRenderer(graph, gen, packageName, module, parent, isTara).execute();
-		new BoxRenderer(src, packageName, module, isTara).execute();
-		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent, isTara).execute();
+		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
+		new BoxRenderer(src, packageName, module, hasModel).execute();
+		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 	}
 
 	private String boxName() {
@@ -143,19 +144,19 @@ public class FullRenderer {
 			if (module == null) return null;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 			final Configuration configuration = TaraUtil.configurationOf(module);
-			for (Configuration.LanguageLibrary languageLibrary : configuration.languages()) {
-				String workingPackage = languageLibrary.generationPackage();
-				if (workingPackage != null && facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languageLibrary.name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-					return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languageLibrary.name());
-
-			}
-		} catch (Exception ignored) {
+			final List<? extends Configuration.LanguageLibrary> languages = configuration.languages();
+			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
+			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
+			if (workingPackage != null && facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		return null;
 
 	}
 
-	private boolean isTara() {
+	private boolean hasModel() {
 		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
 	}
 

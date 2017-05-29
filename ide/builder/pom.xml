@@ -16,6 +16,7 @@
         <outputDirectory>../../out/production/builder</outputDirectory>
         <testOutputDirectory>../../out/test/builder</testOutputDirectory>
         <directory>../../out/build/builder</directory>
+        <resources><resource><directory>res</directory></resource></resources>
         <!--<sourceDirectory>src</sourceDirectory>-->
         <!--<testResources>-->
         <!--<testResource>-->
