@@ -3,21 +3,25 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.model.Activity;
-import io.intino.konos.model.Activity.Display;
-import org.siani.itrules.model.Frame;
+import io.intino.konos.model.Component;
+import io.intino.konos.model.Dialog;
+import io.intino.konos.model.Display;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.siani.itrules.model.Frame;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.write;
+import static java.util.stream.Collectors.toList;
 
 public class ActivityAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
@@ -79,13 +83,26 @@ public class ActivityAccessorRenderer {
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Display display : activity.displayList()) {
-			createNotifier(display);
-			createRequester(display);
-			createWidget(display);
-			widgets.addSlot("widget", display.name());
+		for (Component component : displayList()) {
+			if (component.is(Display.class)) createDisplay(component.as(Display.class));
+			if (component.is(Dialog.class)) createDialog(component.as(Dialog.class));
+			widgets.addSlot("widget", component.name());
 		}
 		Files.write(new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
+	}
+
+	private void createDisplay(Display component) throws IOException {
+		createNotifier(component);
+		createRequester(component);
+		createWidget(component);
+	}
+
+	private void createDialog(Dialog component) {
+		//TODO
+	}
+
+	private List<? extends Component> displayList() {
+		return activity.pageList().stream().map(Activity.AbstractPage::uses).collect(toList());
 	}
 
 	private void createRequester(Display display) throws IOException {

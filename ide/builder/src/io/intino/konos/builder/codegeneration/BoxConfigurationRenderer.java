@@ -47,11 +47,16 @@ public class BoxConfigurationRenderer {
 
 	public Frame execute() {
 		Frame frame = new Frame().addTypes("boxconfiguration");
+		final String boxName = fillFrame(frame);
+		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
+		return frame;
+	}
+
+	private String fillFrame(Frame frame) {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
-			frame.addSlot("parent", parent);
+		if (parent != null && configuration != null && !Platform.equals(configuration.level())) frame.addSlot("parent", parent);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
@@ -59,8 +64,7 @@ public class BoxConfigurationRenderer {
 		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (isTara) frame.addSlot("tara", "");
-		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
-		return frame;
+		return boxName;
 	}
 
 	private void addRESTServices(Frame frame, String boxName) {

@@ -1,0 +1,34 @@
+def type(dialog)
+	package $package.dialogs;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.konos.server.activity.dialogs.Dialog;
+	import io.intino.konos.server.activity.dialogs.DialogValidator;
+
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
+
+		public $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog($box~Box box) {
+			super(box);
+		}
+
+		public static class Validators {
+			$validator...[$NL]
+		}
+
+		public static class Sources {
+			$sources...[$NL]
+		}
+	}
+end
+
+def type(validator)
+	public static DialogValidator.Result $name($field value) {
+		return null;
+	}
+end
+
+def type(sources)
+	public static java.util.List<String> $name(Dialog.Tab.OptionBox self) {
+		return java.util.Collections.emptyList();
+	}
+end

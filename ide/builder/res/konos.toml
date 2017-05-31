@@ -9,7 +9,15 @@ id="NewKonosFile"
 aClass="io.intino.konos.builder.actions.CreateKonosFileAction"
 groupId="NewGroup"
 relativeToAction="NewTaraFile"
-anchor="first"
+anchor="after"
+
+[[actions]]
+id="NewKonosTestFile"
+aClass="io.intino.konos.builder.actions.CreateKonosTestFileAction"
+description="Create Box Test File"
+groupId="NewGroup"
+relativeToAction="NewKonosFile"
+anchor="after"
 
 [[actions]]
 id="CreateKonosBox"

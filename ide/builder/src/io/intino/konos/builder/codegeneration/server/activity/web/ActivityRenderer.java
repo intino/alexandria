@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.server.activity.web;
 
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
+import io.intino.konos.model.Display;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -13,9 +14,9 @@ import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static java.util.stream.Collectors.toList;
 
 public class ActivityRenderer {
-
 	private final File src;
 	private final File gen;
 	private final String packageName;
@@ -39,11 +40,15 @@ public class ActivityRenderer {
 				addSlot("package", packageName).
 				addSlot("name", activity.name()).
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList())).
-				addSlot("display", displaysFrame(activity.displayList()));
+				addSlot("display", displaysFrame(displayList(activity)));
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
 		if (!Commons.javaFile(src, "AssetResourceLoader").exists())
 			writeFrame(src, "AssetResourceLoader", AssetResourceLoaderTemplate.create().format(resourceLoaderFrame()));
 		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
+	}
+
+	private List<Display> displayList(Activity activity) {
+		return activity.pageList().stream().filter(page -> page.uses().is(Display.class)).map(page -> page.uses().as(Display.class)).collect(toList());
 	}
 
 	private Frame resourceLoaderFrame() {
@@ -55,7 +60,7 @@ public class ActivityRenderer {
 		return frames.toArray(new Frame[frames.size()]);
 	}
 
-	private Frame[] displaysFrame(List<Activity.Display> displays) {
+	private Frame[] displaysFrame(List<Display> displays) {
 		List<Frame> frames = displays.stream().map(this::frameOf).collect(Collectors.toList());
 		return frames.toArray(new Frame[frames.size()]);
 	}
@@ -72,10 +77,10 @@ public class ActivityRenderer {
 		return frame;
 	}
 
-	private Frame frameOf(Activity.Display display) {
+	private Frame frameOf(Display display) {
 		final Frame frame = new Frame().addTypes("display");
 		frame.addSlot("name", display.name());
-		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Activity.Display.Request.ResponseType.Asset)))
+		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Display.Request.ResponseType.Asset)))
 			frame.addSlot("asset", display.name());
 		return frame;
 	}

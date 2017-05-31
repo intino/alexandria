@@ -2,6 +2,7 @@ package io.intino.konos.builder.actions;
 
 import com.intellij.ide.actions.CreateFileFromTemplateDialog;
 import com.intellij.ide.actions.JavaCreateTemplateInPackageAction;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
@@ -9,21 +10,14 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import io.intino.konos.builder.KonosIcons;
-import io.intino.konos.builder.file.KonosFileType;
+import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import io.intino.tara.plugin.project.module.ModuleProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.actions.utils.TaraTemplates;
-import io.intino.tara.plugin.actions.utils.TaraTemplatesFactory;
-import io.intino.tara.plugin.lang.psi.impl.TaraModelImpl;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import io.intino.tara.plugin.messages.MessageProvider;
 
 import java.io.File;
 import java.util.Map;
@@ -31,22 +25,22 @@ import java.util.Map;
 import static io.intino.konos.builder.KonosIcons.ICON_16;
 
 
-public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<TaraModelImpl> {
+public class CreateKonosTestFileAction extends JavaCreateTemplateInPackageAction<PsiJavaFile> {
 
 
-	public CreateKonosFileAction() {
-		super("Box File", "Creates a new Box File", ICON_16, true);
+	public CreateKonosTestFileAction() {
+		super("Box Test File", "Creates a new Box File", ICON_16, true);
 	}
 
 	@Override
 	protected void buildDialog(Project project, PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-		builder.setTitle("Enter name for new Box File");
+		builder.setTitle("Enter name for new Box Test File");
 		builder.addKind("Konos", ICON_16, "Konos");
 	}
 
 	@Override
 	protected String getActionName(PsiDirectory directory, String newName, String templateName) {
-		return "Box File";
+		return "Box Test File";
 	}
 
 	@Override
@@ -57,26 +51,24 @@ public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<Tar
 
 	@Nullable
 	@Override
-	protected PsiElement getNavigationElement(@NotNull TaraModelImpl createdElement) {
+	protected PsiElement getNavigationElement(@NotNull PsiJavaFile createdElement) {
 		return createdElement;
 	}
 
 	@Nullable
 	@Override
-	protected TaraModelImpl doCreate(PsiDirectory directory, String newName, String dsl) throws IncorrectOperationException {
-		String template = TaraTemplates.getTemplate("FILE");
-		String fileName = newName + "." + KonosFileType.instance().getDefaultExtension();
-		PsiFile file = TaraTemplatesFactory.createFromTemplate(directory, newName, fileName, template, true, "DSL", dsl);
-		return file instanceof TaraModelImpl ? (TaraModelImpl) file : error(file);
-	}
-
-	private TaraModelImpl error(PsiFile file) {
-		final String description = file.getFileType().getDescription();
-		throw new IncorrectOperationException(MessageProvider.message("tara.file.extension.is.not.mapped.to.tara.file.type", description));
+	protected PsiJavaFile doCreate(PsiDirectory directory, String newName, String dsl) throws IncorrectOperationException {
+		String text = new IntinoTestRenderer(ModuleProvider.moduleOf(directory), directory, newName).execute();
+		if (text == null) return null;
+		String fileName = newName + "." + JavaFileType.INSTANCE.getDefaultExtension();
+		final PsiFileFactory factory = PsiFileFactory.getInstance(directory.getProject());
+		PsiFile file = factory.createFileFromText(fileName, JavaFileType.INSTANCE, text);
+		file = (PsiFile) directory.add(file);
+		return file instanceof PsiJavaFile ? (PsiJavaFile) file : null;
 	}
 
 	@Override
-	protected void postProcess(TaraModelImpl createdElement, String templateName, Map<String, String> customProperties) {
+	protected void postProcess(PsiJavaFile createdElement, String templateName, Map<String, String> customProperties) {
 		super.postProcess(createdElement, templateName, customProperties);
 		setCaret(createdElement);
 		createdElement.navigate(true);
@@ -104,5 +96,4 @@ public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<Tar
 		e.getPresentation().setVisible(enabled && version.equals(interfaceVersion));
 		e.getPresentation().setEnabled(enabled && version.equals(interfaceVersion));
 	}
-
 }

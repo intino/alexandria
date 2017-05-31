@@ -1,14 +1,13 @@
-def type(boxConfiguration)
+def type(intinoTest)
 	package $package;
 
 	import org.junit.Test;
 
-	public class IntinoTest {
+	public class $name {
 
 		@Test
 		public void main() throws Exception {
 			Main.main(new String$[]{
-					[$tara+empty~"graph.store=",]
 					$service+fill...[,$NL]
 			});
 		}

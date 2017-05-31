@@ -66,7 +66,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
 		List<PsiFile> konosFiles = KonosUtils.findKonosFiles(module);
-		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module), getTestRoot(module));
+		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
 	}
 
 
@@ -88,7 +88,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			this.konosFiles = konosFiles;
 		}
 
-		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory, VirtualFile testDirectory) {
+		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
 				return;
@@ -98,15 +98,14 @@ public class CreateKonosBoxAction extends KonosAction {
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
-			File test = new File(testDirectory.getPath(), generationPackage.replace(".", File.separator));
 			src.mkdirs();
-			generate(generationPackage, gen, src, new File(resDirectory.getPath()), test);
+			generate(generationPackage, gen, src, new File(resDirectory.getPath()));
 		}
 
-		private void generate(String packageName, File gen, File src, File res, File test) {
+		private void generate(String packageName, File gen, File src, File res) {
 			Graph graph = loadGraph();
-			if (!render(packageName, gen, src, res, test, graph)) return;
-			refreshDirectories(gen, src, res, test);
+			if (!render(packageName, gen, src, res, graph)) return;
+			refreshDirectories(gen, src, res);
 			notifySuccess();
 		}
 
@@ -120,17 +119,16 @@ public class CreateKonosBoxAction extends KonosAction {
 			} else return GraphLoader.loadGraph().graph();
 		}
 
-		private void refreshDirectories(File gen, File src, File res, File test) {
+		private void refreshDirectories(File gen, File src, File res) {
 			refreshDirectory(gen);
 			refreshDirectory(src);
-			refreshDirectory(test);
 			refreshDirectory(res);
 		}
 
-		private boolean render(String packageName, File gen, File src, File res, File test, Graph graph) {
+		private boolean render(String packageName, File gen, File src, File res, Graph graph) {
 			try {
 				if (graph == null) notifyError("Models have errors");
-				new FullRenderer(module, graph, src, gen, res, test, packageName).execute();
+				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
@@ -173,14 +171,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		final VirtualFile resDirectory = createDirectory(module, "res");
 		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
 		return resDirectory;
-	}
-
-	private VirtualFile getTestRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "test".equals(file.getName())) return file;
-		final VirtualFile testDirectory = createDirectory(module, "test");
-		PsiTestUtil.addSourceRoot(module, testDirectory, JavaSourceRootType.TEST_SOURCE);
-		return testDirectory;
 	}
 
 	private VirtualFile createDirectory(Module module, String name) {
