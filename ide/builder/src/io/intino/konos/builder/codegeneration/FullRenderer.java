@@ -6,13 +6,13 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
-import io.intino.konos.builder.codegeneration.datalake.NessEventsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.EventHandlerRenderer;
+import io.intino.konos.builder.codegeneration.datalake.NessEventsRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
-import io.intino.konos.builder.codegeneration.main.IntinoTestRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
+import io.intino.konos.builder.codegeneration.server.activity.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ResourceRenderer;
@@ -29,7 +29,6 @@ import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -44,20 +43,18 @@ public class FullRenderer {
 	private final File gen;
 	private final File src;
 	private File res;
-	private File test;
 	private final String packageName;
 	private final String boxName;
 	private final String parent;
 	private final boolean hasModel;
 
-	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, File test, String packageName) {
+	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
 		this.module = module;
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
 		this.res = res;
-		this.test = test;
 		this.packageName = packageName;
 		this.parent = parent();
 		this.hasModel = hasModel();
@@ -75,7 +72,8 @@ public class FullRenderer {
 		bus();
 		slack();
 		ui();
-		main(box());
+		box();
+		main();
 	}
 
 	private void schemas() {
@@ -117,16 +115,17 @@ public class FullRenderer {
 
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new DialogRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph).execute();
 		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
-	private Frame box() {
+	private void box() {
 		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 		new BoxRenderer(src, packageName, module, hasModel).execute();
-		return new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
+		new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 	}
 
 	private String boxName() {
@@ -164,8 +163,7 @@ public class FullRenderer {
 		return !configuration.languages().isEmpty();
 	}
 
-	private void main(Frame frame) {
+	private void main() {
 		new MainRenderer(src, packageName, module).execute();
-		new IntinoTestRenderer(test, frame).execute();
 	}
 }

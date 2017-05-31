@@ -5,8 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Activity.Display;
-import io.intino.konos.model.Activity.Display.Request;
+import io.intino.konos.model.Display;
+import io.intino.konos.model.Display.Request;
 
 import java.io.File;
 

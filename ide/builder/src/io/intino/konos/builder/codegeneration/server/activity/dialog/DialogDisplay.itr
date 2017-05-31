@@ -1,0 +1,104 @@
+def type(dialog)
+	package $package.dialogs;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.konos.server.activity.dialogs.Dialog;
+	import io.intino.konos.server.activity.dialogs.DialogValidator;
+    import io.intino.konos.server.activity.dialogs.DialogDisplay;
+
+    import java.util.Arrays;
+
+    public class SolicitudDialogDisplay extends DialogDisplay {
+
+        public SolicitudDialogDisplay(KonosDialogsBox box) {
+            super(box, buildDialog());
+        }
+
+        private static Dialog buildDialog() {
+            Dialog dialog = new Dialog();
+            $dialog
+            return dialog;
+        }
+
+    }
+end
+
+def type(dialog)
+	[dialog.label("$label");]
+	[dialog.description("$description");]
+	$tab...[$NL]
+
+	Dialog.Tab tab2 = dialog.createTab("Dirección");
+	tab2.createRadioBox().source((input) -> Arrays.asList("X", "Y")).label("Tipo de vía pública");
+	tab2.createText().label("Nombre de vía pública");
+	tab2.createText().label("Número de vía pública");
+	tab2.createText().label("Portal");
+	tab2.createText().label("Escalera");
+	tab2.createText().label("Piso");
+	tab2.createText().label("Puerta");
+	tab2.createText().label("Código postal");
+	tab2.createComboBox().source((input) -> Arrays.asList("Las Palmas", "Santa Cruz")).label("Provincia").validator((input) -> SolicitudDialog.Validators.validaProvincia((Dialog.Tab.ComboBox)input));
+	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.islas((Dialog.Tab.ComboBox)input)).label("Isla").validator((input) -> SolicitudDialog.Validators.validaIsla((Dialog.Tab.ComboBox)input));
+	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.municipios((Dialog.Tab.ComboBox)input)).label("Municipio").validator((input) -> SolicitudDialog.Validators.validaMunicipio((Dialog.Tab.ComboBox)input));
+	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.localidades((Dialog.Tab.ComboBox)input)).label("Localidad");
+	tab2.createCheckBox().mode(Dialog.CheckBoxMode.Boolean).source((input) -> Arrays.asList("*Sí", "No")).label("Usar esta dirección como dirección de notificación");
+end
+
+def type(tab)
+	Dialog.Tab $name = dialog.createTab("$label");
+	$text...[$NL]
+	$section...[$NL]
+	$memo...[$NL]
+	$radio...[$NL]
+	$check...[$NL]
+	$combo...[$NL]
+	$password...[$NL]
+	$file...[$NL]
+	$picture...[$NL]
+	$date...[$NL]
+	$dateTime...[$NL]
+end
+
+def type(text)
+.createText().label("NIF").defaultValue("43222133F").validator((input) -> SolicitudDialog.Validators.validaNif((Dialog.Tab.Text)input));
+end
+
+def type(section)
+
+end
+
+def type(memo)
+
+end
+
+def type(radio)
+
+end
+
+def type(check)
+
+end
+
+def type(combo)
+
+end
+
+def type(password)
+
+end
+
+def type(file)
+
+end
+
+def type(picture)
+
+end
+
+def type(date)
+
+end
+
+def type(dateTime)
+
+end

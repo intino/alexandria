@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.server.activity.display;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Activity;
+import io.intino.konos.model.Display;
 import io.intino.konos.model.Schema;
 import io.intino.konos.model.date.DateData;
 import io.intino.konos.model.type.TypeData;
@@ -15,11 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.model.Activity.Display.Request.ResponseType.Asset;
+import static io.intino.konos.model.Display.Request.ResponseType.Asset;
 
 @SuppressWarnings("Duplicates")
 public class DisplayRenderer {
-
 	private static final String DISPLAYS = "displays";
 	private static final String NOTIFIERS = "notifiers";
 	private static final String REQUESTERS = "requesters";
@@ -27,7 +26,7 @@ public class DisplayRenderer {
 	private final File gen;
 	private final File src;
 	private final String packageName;
-	private final List<Activity.Display> displays;
+	private final List<Display> displays;
 	private final String boxName;
 
 	public DisplayRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
@@ -35,7 +34,7 @@ public class DisplayRenderer {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
-		this.displays = graph.find(Activity.Display.class);
+		this.displays = graph.find(Display.class);
 		this.boxName = boxName;
 	}
 
@@ -43,7 +42,7 @@ public class DisplayRenderer {
 		displays.forEach(this::processDisplay);
 	}
 
-	private void processDisplay(Activity.Display display) {
+	private void processDisplay(Display display) {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name());
@@ -61,12 +60,12 @@ public class DisplayRenderer {
 	}
 
 
-	private Frame[] framesOfNotifications(List<Activity.Display.Notification> notifications) {
+	private Frame[] framesOfNotifications(List<Display.Notification> notifications) {
 		List<Frame> frames = notifications.stream().map(this::frameOf).collect(Collectors.toList());
 		return frames.toArray(new Frame[frames.size()]);
 	}
 
-	private Frame frameOf(Activity.Display.Notification notification) {
+	private Frame frameOf(Display.Notification notification) {
 		final Frame frame = new Frame().addTypes("notification");
 		frame.addSlot("name", notification.name());
 		frame.addSlot("target", notification.to().name());
@@ -78,12 +77,12 @@ public class DisplayRenderer {
 		return frame;
 	}
 
-	private Frame[] framesOfRequests(List<Activity.Display.Request> requests) {
+	private Frame[] framesOfRequests(List<Display.Request> requests) {
 		List<Frame> frames = requests.stream().map(DisplayRenderer::frameOf).collect(Collectors.toList());
 		return frames.toArray(new Frame[frames.size()]);
 	}
 
-	static Frame frameOf(Activity.Display.Request request) {
+	static Frame frameOf(Display.Request request) {
 		final Frame frame = new Frame().addTypes("request");
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name());
@@ -95,7 +94,7 @@ public class DisplayRenderer {
 		return frame;
 	}
 
-	private String type(Activity.Display.Request request) {
+	private String type(Display.Request request) {
 		final TypeData typeData = request.asType();
 		if (typeData.is(DateData.class)) return "Long";
 		else return typeData.type();

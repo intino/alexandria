@@ -9,7 +9,7 @@ Concept:Named Activity
 		var string by
 
 	Concept:Named AbstractPage
-		var Display uses
+		var Component uses
 		var string[] paths
 
 		sub:{0..1} Home
@@ -17,23 +17,24 @@ Concept:Named Activity
 
 		sub Page
 
-	Concept:Named Display
-		var Display[] displays = empty
-
-		Concept Request extends Data
-			var word:{Asset Void} responseType = Void
-			var Exception[] exceptionRefs = empty
-			has Exception
-
-		Concept Notification extends Data
-			var word:{All Client Display} to = Display
-			var Exception[] exceptionRefs = empty
-			has Exception
-	has Sensor
-
 Facet Restricted on Activity.AbstractPage
 
-Concept Sensor is component
+Concept Component is abstract
+
+Concept:Named Display extends Component
+	var Display[] displays = empty
+
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+Concept Sensor extends Component
     sub Dialog
         var string url
         var string label
@@ -49,7 +50,7 @@ Concept Sensor is component
 				var string placeHolder = ""
 				var string helper = ""
 				var string defaultValue = ""
-
+				var string validator = ""
 				sub Text
 					var word:{Normal Uppercase Lowercase Email Url} edition = Normal
 					Concept:{0..1} Validation
@@ -75,6 +76,8 @@ Concept Sensor is component
 							var integer min
 							var integer max
 				sub OptionBox
+					var string[] options = empty
+					var string source = ""
 					sub RadioBox
 					sub CheckBox
 						var word:{Boolean List} mode
