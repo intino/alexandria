@@ -384,19 +384,62 @@ public class Dialog {
                 }
 
             }
-
         }
 
         public class Section extends Input {
             private List<Input> inputList = new ArrayList<>();
 
-            public List<Input> getInputList() {
+            public List<Input> inputList() {
                 return inputList;
             }
 
-            public Section setInputList(List<Input> inputList) {
-                this.inputList.addAll(inputList);
-                return this;
+            public Text createText() {
+                return add(new Text());
+            }
+
+            public Section createSection() {
+                return add(new Section());
+            }
+
+            public Memo createMemo() {
+                return add(new Memo());
+            }
+
+            public Password createPassword() {
+                return add(new Password());
+            }
+
+            public RadioBox createRadioBox() {
+                return add(new RadioBox());
+            }
+
+            public CheckBox createCheckBox() {
+                return add(new CheckBox());
+            }
+
+            public ComboBox createComboBox() {
+                return add(new ComboBox());
+            }
+
+            public File createFile() {
+                return add(new File());
+            }
+
+            public Picture createPicture() {
+                return add(new Picture());
+            }
+
+            public Date createDate() {
+                return add(new Date());
+            }
+
+            public DateTime createDateTime() {
+                return add(new DateTime());
+            }
+
+            private <I extends Input> I add(I input) {
+                inputList.add(input);
+                return input;
             }
         }
 
@@ -586,11 +629,29 @@ public class Dialog {
         }
 
         public class Date extends Input {
-            public String format() { return "dd/MM/yyyy"; }
+            private String format = "dd/MM/yyyy";
+
+            public String format() {
+                return format;
+            }
+
+            public Date format(String format) {
+                this.format = format;
+                return this;
+            }
         }
 
         public class DateTime extends Input {
-            public String format() { return "dd/MM/yyyy HH:mm:ss"; }
+            private String format;
+
+            public String format() {
+                return format;
+            }
+
+            public DateTime format(String format) {
+                this.format = format;
+                return this;
+            }
         }
     }
 }
