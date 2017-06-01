@@ -16,5 +16,9 @@ public class DialogNotifier extends io.intino.konos.server.activity.displays.Dis
 	public void refresh(Validation value) {
 		putToDisplay("refresh", "value", value);
 	}
+
+	public void upload(io.intino.konos.Resource value) {
+		putToDisplay("upload", "value", value);
+	}
 }
 

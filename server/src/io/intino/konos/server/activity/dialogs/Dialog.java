@@ -95,7 +95,7 @@ public class Dialog {
         private String label;
         private List<Input> inputList = new ArrayList<>();
 
-        public Tab(String º) {
+        public Tab(String label) {
             this.label(label);
         }
 
@@ -223,12 +223,12 @@ public class Dialog {
                 return this;
             }
 
-            public String value() {
-                return valuesLoader != null ? valuesLoader.value(this) : defaultValue;
+            public <T extends Object> T value() {
+                return (T) (valuesLoader != null ? valuesLoader.value(this) : defaultValue());
             }
 
-            public String defaultValue() {
-                return defaultValue;
+            public <T extends Object> T defaultValue() {
+                return (T) defaultValue;
             }
 
             public Input defaultValue(String defaultValue) {
@@ -248,6 +248,15 @@ public class Dialog {
 
             public <I extends Input> I input(String key) {
                 return Dialog.this.input(key);
+            }
+
+            protected DialogValidator.Result validateLength(String value, int min, int max) {
+                int length = value.length();
+
+                if (min > 0 && length < min) return new DialogValidator.Result(false, "Value length is lower than " + min);
+                if (max > 0 && length > max) return new DialogValidator.Result(false, "Value length is greater than " + max);
+
+                return null;
             }
 
             private String clean(String value) {
@@ -278,15 +287,22 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateEmail(String value) {
-                return null;
+                String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+                java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+                java.util.regex.Matcher m = p.matcher(value);
+                return m.matches() ? null : new DialogValidator.Result(false, "Email not valid");
             }
 
             public DialogValidator.Result validateAllowedValues(String value) {
-                return null;
+                if (validation == null) return null;
+                if (validation.allowedValues.size() <= 0 || validation.allowedValues.contains(value)) return null;
+                return new DialogValidator.Result(false, "Value not allowed");
             }
 
             public DialogValidator.Result validateLength(String value) {
-                return null;
+                if (validation == null) return null;
+                if (validation.length() == null) return null;
+                return validateLength(value, validation.length.min(), validation.length.max());
             }
 
             public class Validation {
@@ -420,7 +436,9 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateLength(String value) {
-                return null;
+                if (validation == null) return null;
+                if (validation.length() == null) return null;
+                return validateLength(value, validation.length.min(), validation.length.max());
             }
 
             public class Validation {
@@ -525,12 +543,17 @@ public class Dialog {
                 return this;
             }
 
-            public DialogValidator.Result validateMaxSize(String value) {
-                return null;
+            public DialogValidator.Result validateMaxSize(String filename, byte[] content) {
+                if (validation == null) return null;
+                if (content.length <= validation.maxSize) return null;
+                return new DialogValidator.Result(false, "File is too long. Max size: " + validation.maxSize);
             }
 
             public DialogValidator.Result validateExtension(String value) {
-                return null;
+                if (validation == null) return null;
+                List<String> allowedExtensions = validation.allowedExtensions();
+                if (allowedExtensions.size() <= 0 || allowedExtensions.contains(value)) return null;
+                return new DialogValidator.Result(false, "File extension not allowed. Options: " + String.join(", ", allowedExtensions));
             }
 
             public class Validation {

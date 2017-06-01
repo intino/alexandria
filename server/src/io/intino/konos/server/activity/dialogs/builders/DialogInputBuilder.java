@@ -14,9 +14,9 @@ public class DialogInputBuilder {
         result.addProperty("required", input.required());
         result.addProperty("readonly", input.readonly());
         result.addProperty("helper", input.helper());
-        result.addProperty("defaultValue", input.defaultValue());
+        result.addProperty("defaultValue", value(input.defaultValue()));
         result.addProperty("placeholder", input.placeholder());
-        result.addProperty("value", input.value());
+        result.addProperty("value", value(input));
 
         TextInputAdapter.adapt(result, input);
         MemoInputAdapter.adapt(result, input);
@@ -30,6 +30,10 @@ public class DialogInputBuilder {
         DateTimeInputAdapter.adapt(result, input);
 
         return result;
+    }
+
+    private static String value(Object value) {
+        return value != null && (value instanceof String) ? (String) value : "";
     }
 
 }
