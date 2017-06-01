@@ -16,19 +16,21 @@ def type(dialog)
 		}
 
 		public static class Sources {
-			$sources...[$NL]
+			$source...[$NL]
 		}
 	}
 end
 
 def type(validator)
-	public static DialogValidator.Result $name($field value) {
+	public static DialogValidator.Result $name(Dialog.Tab.$field value) {
 		return null;
 	}
+
 end
 
-def type(sources)
-	public static java.util.List<String> $name(Dialog.Tab.OptionBox self) {
+def type(source)
+	public static java.util.List<String> $name(Dialog.Tab.$field self) {
 		return java.util.Collections.emptyList();
 	}
+
 end

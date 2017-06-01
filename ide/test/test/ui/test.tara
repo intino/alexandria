@@ -1,6 +1,28 @@
 dsl Konos
 
-Activity Test-Web
-	Home(uses = application) homePage
+Activity sample
+	Page(uses=solicitud, paths="/") dialog1
 
-	Display application
+
+Dialog(url = "", label = "Diálogo de ejemplo", description = "Esto es un diálogo de ejemplo para konos") solicitud
+	Tab("Identificación")
+		Text("NIF", defaultValue="43222133F") > validator = "validaNif"
+		Date("Fecha de caducidad del NIF")
+		Text("Apellidos y nombre")
+		Text ("Teléfono")
+		Text ("Correo electrónico", edition=Email) as Array(min=1,max=10)
+
+	Tab("Dirección")
+		RadioBox("Tipo de vía pública") > options = "X" "Y"
+		Text ("Nombre vía pública")
+		Text ("Número vía pública")
+		Text ("Portal")
+		Text ("Escalera")
+		Text ("Piso")
+		Text ("Puerta")
+		Text ("Código postal")
+		ComboBox("Provincia") > options = "Las Palmas" "Santa Cruz"; validator = "validaProvincia"
+		ComboBox("Isla") > source = "islas"; validator = "validaIsla"
+		ComboBox("Municipio") > source = "municipios"; validator = "validaMunicipio"
+		ComboBox("Localidad") > source = "localidades"
+		CheckBox("Usar esta dirección como dirección de notificación", mode=Boolean) > options = "*Sí" "No"
