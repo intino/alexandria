@@ -74,18 +74,18 @@ public class ActivityAccessorRenderer {
 		return new Frame().addTypes("page").addSlot("uses", page.uses().name()).addSlot("name", page.name());
 	}
 
-	private void createWidget(Display display) throws IOException {
+	private void createDisplayWidget(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
-			Files.write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
+			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
 		for (Component component : displayList()) {
 			if (component.is(Display.class)) createDisplay(component.as(Display.class));
-			if (component.is(Dialog.class)) createDialog(component.as(Dialog.class));
+			if (component.is(Dialog.class)) createDialogWidget(component.as(Dialog.class));
 			widgets.addSlot("widget", component.name());
 		}
 		Files.write(new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
@@ -94,11 +94,14 @@ public class ActivityAccessorRenderer {
 	private void createDisplay(Display component) throws IOException {
 		createNotifier(component);
 		createRequester(component);
-		createWidget(component);
+		createDisplayWidget(component);
 	}
 
-	private void createDialog(Dialog component) {
-		//TODO
+	private void createDialogWidget(Dialog dialog) throws IOException {
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", dialog.name());
+		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
+		if (!file.exists())
+			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private List<? extends Component> displayList() {
