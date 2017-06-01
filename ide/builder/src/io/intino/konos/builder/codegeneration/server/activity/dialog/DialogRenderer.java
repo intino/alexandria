@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.server.activity.dialog;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Schema;
+import io.intino.konos.model.Dialog.Tab;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -17,6 +17,7 @@ public class DialogRenderer {
 
 	private static final String DIALOGS = "dialogs";
 	private final Project project;
+	private Graph graph;
 	private final File gen;
 	private final File src;
 	private final String packageName;
@@ -25,6 +26,7 @@ public class DialogRenderer {
 
 	public DialogRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
+		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
@@ -36,16 +38,45 @@ public class DialogRenderer {
 		dialogs.forEach(this::processDialog);
 	}
 
-	private void processDialog(Dialog display) {
-		Frame frame = new Frame().addTypes("display");
+	private void processDialog(Dialog dialog) {
+		renderDialog(dialog);
+		renderDialogDisplay();
+	}
+
+	private void renderDialog(Dialog dialog) {
+		Frame frame = new Frame().addTypes("dialog");
 		frame.addSlot("package", packageName);
-		frame.addSlot("name", display.name());
-		if (!display.graph().find(Schema.class).isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+		frame.addSlot("name", dialog.name());
 		frame.addSlot("box", boxName);
-		final String newDisplay = snakeCaseToCamelCase(display.name() + "Display");
-		if (!Commons.javaFile(new File(src, DIALOGS), newDisplay).exists())
-			Commons.writeFrame(new File(src, DIALOGS), newDisplay, template().format(frame));
+		for (Tab tab : dialog.tabList()) processTab(frame, tab);
+		final String newDialog = snakeCaseToCamelCase(dialog.name() + "Dialog");
+		if (!Commons.javaFile(new File(src, DIALOGS), newDialog).exists())
+			Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
+	}
+
+	private void processTab(Frame frame, Tab tab) {
+		for (Tab.Input input : tab.inputList()) processInput(frame, input);
+	}
+
+	private void processInput(Frame frame, Tab.Input input) {
+		processValidator(frame, input);
+		if (input.is(Tab.OptionBox.class)) processSources(frame, input.as(Tab.OptionBox.class));
+		else if (input.is(Tab.Section.class))
+			for (Tab.Input i : ((Tab.Section) input).inputList()) processInput(frame, i);
+	}
+
+	private void processSources(Frame frame, Tab.OptionBox optionBox) {
+		if (optionBox.source() != null && !optionBox.source().isEmpty())
+			frame.addSlot("source", new Frame().addTypes("source").addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
+	}
+
+	private void processValidator(Frame frame, Tab.Input input) {
+		if (input.validator() != null && !input.validator().isEmpty())
+			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
+	}
+
+	private void renderDialogDisplay() {
+		new DialogDisplayRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private Template template() {

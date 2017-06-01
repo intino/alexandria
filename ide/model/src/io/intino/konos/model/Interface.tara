@@ -86,7 +86,7 @@ Concept Sensor extends Component
 				sub Resource
 					var boolean showPreview = false
 					Concept:{0..1} Validation
-						var word:{kbytes} maxSize
+						var double:{kbytes} maxSize
 						var string[] allowedExtensions = empty
 					sub File
 					sub Picture
@@ -97,5 +97,5 @@ Concept Sensor extends Component
 
 
 Facet Array on Dialog.Tab.Input
-	var integer min=0
-	var integer max=-1
+	var integer min= 0
+	var integer max= -1

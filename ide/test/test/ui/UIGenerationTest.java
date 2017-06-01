@@ -22,8 +22,8 @@ public class UIGenerationTest {
 	@Test
 	public void testUI() throws Exception {
 		File gen = new File("test-gen", UI);
-		final Graph graph = Graph.use(Konos.class, null).load("Ui");
-		new FullRenderer(null, graph, gen, gen, gen, gen, UI).execute();
+		final Graph graph = Graph.use(Konos.class, null).load("test");
+		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class UIGenerationTest {
 		final Graph graph = Graph.use(Konos.class, null).load("Ui");
 		new DisplayRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
-		new ActivityRenderer(graph, src, gen, TEST, "System").execute();
+		new ActivityRenderer(graph, gen, gen, TEST, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
 		new AbstractBoxRenderer(graph, gen, TEST, null, null, false).execute();
 		new BoxConfigurationRenderer(graph, gen, TEST, null, null, false).execute();
