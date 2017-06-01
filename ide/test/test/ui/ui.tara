@@ -5,83 +5,83 @@ Activity Platform-Web
 	Page(uses = analytics, paths = "/{analytics}/{sample}") analyticsPage
 	Page(uses = error, paths = "/error") errorPage
 
-	Display analytics
-		displays = olap dashboard pivotTable
+Display analytics
+	displays = olap dashboard pivotTable
 
-		Notification info as Object(PlatformInfo)
-		Notification boardList as Object(BoardList)
-		Notification user as Object(UserInfo)
-		Notification userLoggedOut
-		Notification(Client) loading
-		Notification(Client) loaded
+	Notification info as Object(PlatformInfo)
+	Notification boardList as Object(BoardList)
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut
+	Notification(Client) loading
+	Notification(Client) loaded
 
-		Request logout
+	Request logout
 
-	Display olap
-		Notification timeline as Object(Timeline) List
-		Notification timeRange as Object(Range)
-		Notification scales as Object(ScaleList)
-		Notification enableDrill
-		Notification disableDrill
-		Notification enableFilter
-		Notification disableFilter
-		Notification filtering
-		Notification notFiltering
-		Notification drilling
-		Notification notDrilling
-		Notification filterList as Object(FilterList)
-		Notification ticketList as Object(NameList)
-		Notification selectedTicketList as Object(NameList)
+Display olap
+	Notification timeline as Object(Timeline) List
+	Notification timeRange as Object(Range)
+	Notification scales as Object(ScaleList)
+	Notification enableDrill
+	Notification disableDrill
+	Notification enableFilter
+	Notification disableFilter
+	Notification filtering
+	Notification notFiltering
+	Notification drilling
+	Notification notDrilling
+	Notification filterList as Object(FilterList)
+	Notification ticketList as Object(NameList)
+	Notification selectedTicketList as Object(NameList)
 
-		Request addTicket as Text
-		Request removeTicket as Text
-		Request updateScale as Text
-		Request updateRange as Object(RequestRange) List
-		Request(Asset) export as Object(RequestRange)
-		Request toggleDrill
-		Request toggleFilter
-		Request removeFilter as Text
+	Request addTicket as Text
+	Request removeTicket as Text
+	Request updateScale as Text
+	Request updateRange as Object(RequestRange) List
+	Request(Asset) export as Object(RequestRange)
+	Request toggleDrill
+	Request toggleFilter
+	Request removeFilter as Text
 
-	Display timeSeries
-		Notification zoomRange as Object(Range)
-		Notification timeRange as Object(Range)
-		Notification timeline as Object(Timeline)
-		Notification formats as Object(FormatterList)
-		Notification updateScale as Object(Scale)
-		Notification(Client) loading
-		Notification(Client) loaded
-		Notification clear
-		Notification eventListCount as Real
-		Notification eventList as Object(EventList)
-		Notification addSeries as Object(SerieList)
-		Notification removeSeries as Object(NameList)
-		Notification addPoints as Object(Points)
+Display timeSeries
+	Notification zoomRange as Object(Range)
+	Notification timeRange as Object(Range)
+	Notification timeline as Object(Timeline)
+	Notification formats as Object(FormatterList)
+	Notification updateScale as Object(Scale)
+	Notification(Client) loading
+	Notification(Client) loaded
+	Notification clear
+	Notification eventListCount as Real
+	Notification eventList as Object(EventList)
+	Notification addSeries as Object(SerieList)
+	Notification removeSeries as Object(NameList)
+	Notification addPoints as Object(Points)
 
-		Request updateRange as Object(RequestRange)
-		Request updateRangeAndScale as Object(RequestRange)
-		Request move as Object(RequestRange)
+	Request updateRange as Object(RequestRange)
+	Request updateRangeAndScale as Object(RequestRange)
+	Request move as Object(RequestRange)
 
-	Display analyze
-		displays = categorization
-		Notification categorizationList as Object(CategorizationViewList)
-		Notification hide
-		Notification show
+Display analyze
+	displays = categorization
+	Notification categorizationList as Object(CategorizationViewList)
+	Notification hide
+	Notification show
 
-	Display categorization
-		Notification categorization as Object(CategorizationView)
-		Notification enableSelection
-		Notification disableSelection
-		Notification(Client) loading
-		Notification(Client) loaded
-		Notification refreshHistogram as Object(Histogram)
-		Notification refreshSelected as Object(CategoryViewList)
+Display categorization
+	Notification categorization as Object(CategorizationView)
+	Notification enableSelection
+	Notification disableSelection
+	Notification(Client) loading
+	Notification(Client) loaded
+	Notification refreshHistogram as Object(Histogram)
+	Notification refreshSelected as Object(CategoryViewList)
 
-		Request toggle as Object(RequestCategory)
-		Request refresh
+	Request toggle as Object(RequestCategory)
+	Request refresh
 
-	Display dashboard
-	Display pivotTable
-	Display error
+Display dashboard
+Display pivotTable
+Display error
 
 Schema PlatformInfo
 	Attribute title as Text

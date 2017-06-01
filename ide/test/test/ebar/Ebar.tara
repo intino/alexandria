@@ -5,45 +5,45 @@ Activity UI
 	Home(application) home as Restricted
 	Page(error, paths="/error") errorPage
 
-	Display application
-		displays = stationCatalog
+Display application
+	displays = stationCatalog
 
-		Notification userRefresh as Object(User)
-		Notification userLoggedOut
+	Notification userRefresh as Object(User)
+	Notification userLoggedOut
 
-		Request logout as Text
+	Request logout as Text
 
-	Display pageDisplay
-		Notification(Client) clear as Text
-		Notification(Client) refreshCount as Integer
+Display pageDisplay
+	Notification(Client) clear as Text
+	Notification(Client) refreshCount as Integer
 
-		Request page as Integer
+	Request page as Integer
 
-	Display stationCatalog
-		displays = episodeCatalog
+Display stationCatalog
+	displays = episodeCatalog
 
-		Notification(Client) refresh as Object(StationList)
-		Notification(Client) refreshSelection as Object(Selection)
+	Notification(Client) refresh as Object(StationList)
+	Notification(Client) refreshSelection as Object(Selection)
 
-		Request state
-		Request location as Object(Bounds)
-		Request selection as Object(Selection)
+	Request state
+	Request location as Object(Bounds)
+	Request selection as Object(Selection)
 
-	Display episodeCatalog
-		displays = episodeCatalogToolbar
+Display episodeCatalog
+	displays = episodeCatalogToolbar
 
-		Notification(Client) refresh as Object(EpisodeList)
+	Notification(Client) refresh as Object(EpisodeList)
 
-		Request(Asset) downloadEpisode as Text
+	Request(Asset) downloadEpisode as Text
 
-	Display episodeCatalogToolbar
-		Notification refresh as Object(ToolbarInfo)
+Display episodeCatalogToolbar
+	Notification refresh as Object(ToolbarInfo)
 
-		Request previousInstant
-		Request nextInstant
-		Request setInstant as Date
+	Request previousInstant
+	Request nextInstant
+	Request setInstant as Date
 
-	Display error
+Display error
 
 
 Schema User

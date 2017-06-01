@@ -1,4 +1,4 @@
-def type(dialog)
+def type(dialogDisplay)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
@@ -27,21 +27,6 @@ def type(dialog)
 	[dialog.label("$label");]
 	[dialog.description("$description");]
 	$tab...[$NL]
-
-	Dialog.Tab tab2 = dialog.createTab("Dirección");
-	tab2.createRadioBox().source((input) -> Arrays.asList("X", "Y")).label("Tipo de vía pública");
-	tab2.createText().label("Nombre de vía pública");
-	tab2.createText().label("Número de vía pública");
-	tab2.createText().label("Portal");
-	tab2.createText().label("Escalera");
-	tab2.createText().label("Piso");
-	tab2.createText().label("Puerta");
-	tab2.createText().label("Código postal");
-	tab2.createComboBox().source((input) -> Arrays.asList("Las Palmas", "Santa Cruz")).label("Provincia").validator((input) -> SolicitudDialog.Validators.validaProvincia((Dialog.Tab.ComboBox)input));
-	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.islas((Dialog.Tab.ComboBox)input)).label("Isla").validator((input) -> SolicitudDialog.Validators.validaIsla((Dialog.Tab.ComboBox)input));
-	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.municipios((Dialog.Tab.ComboBox)input)).label("Municipio").validator((input) -> SolicitudDialog.Validators.validaMunicipio((Dialog.Tab.ComboBox)input));
-	tab2.createComboBox().source((input) -> SolicitudDialog.Sources.localidades((Dialog.Tab.ComboBox)input)).label("Localidad");
-	tab2.createCheckBox().mode(Dialog.CheckBoxMode.Boolean).source((input) -> Arrays.asList("*Sí", "No")).label("Usar esta dirección como dirección de notificación");
 end
 
 def type(tab)
@@ -59,46 +44,82 @@ def type(tab)
 	$dateTime...[$NL]
 end
 
-def type(text)
-.createText().label("NIF").defaultValue("43222133F").validator((input) -> SolicitudDialog.Validators.validaNif((Dialog.Tab.Text)input));
-end
 
 def type(section)
+	Dialog.Section $name = dialog.createSection();
+	$text...[$NL]
+	$section...[$NL]
+	$memo...[$NL]
+	$radio...[$NL]
+	$check...[$NL]
+	$combo...[$NL]
+	$password...[$NL]
+	$file...[$NL]
+	$picture...[$NL]
+	$date...[$NL]
+	$dateTime...[$NL]
+end
 
+def type(text)
+	$owner.createText()[.edition(Dialog.TextEdition.$edition)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(memo)
-
+	$owner.createMemo()[.mode(Dialog.MemoMode.$mode)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(radio)
-
+	$owner.createRadioBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(check)
-
+	$owner.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(combo)
-
+	$owner.createComboBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(password)
-
+	$owner.createPassword()[.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(file)
-
+	$owner.createFile()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(picture)
-
+	$owner.createPicture()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(date)
-
+	$owner.createDate()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(dateTime)
+	$owner.createDateTime()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+end
 
+def type(validation & text)
+	new Dialog.Tab.Text.Validation()[.allowedValues(java.util.Arrays.asList($allowedValues+quoted...[, ]))][.disallowedValues(java.util.Arrays.asList($disallowedValues+quoted...[, ]))][.disallowEmptySpaces(java.util.Arrays.asList($disallowEmptySpaces+quoted...[, ]))][.mask($mask)][.lenght($min,$max)]
+end
+
+def type(validation & password)
+	new Dialog.Tab.Password.Validation()[.allowedValues(java.util.Arrays.asList($allowedValues+quoted...[, ]))][.disallowedValues(java.util.Arrays.asList($disallowedValues+quoted...[, ]))][.disallowEmptySpaces(java.util.Arrays.asList($disallowEmptySpaces+quoted...[, ]))][.mask($mask)][.lenght($min,$max)]
+end
+
+def type(validation & resource)
+	new Dialog.Tab.Resource.Validation()[.maxSize($maxSize)][.allowedExtensions($allowedExtensions)]
+end
+
+def type(validator)
+	.validator(input -> $dialog+FirstUpperCase~Dialog.Validators.$name((Dialog.Tab.$type) input))
+end
+
+def trigger(source)
+	.source(input -> $dialog+FirstUpperCase~Dialog.Sources.$name((Dialog.Tab.$type) input))
+end
+
+def trigger(quoted)
+	"$value"
 end
