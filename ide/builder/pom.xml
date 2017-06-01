@@ -17,12 +17,6 @@
         <testOutputDirectory>../../out/test/builder</testOutputDirectory>
         <directory>../../out/build/builder</directory>
         <resources><resource><directory>res</directory></resource></resources>
-        <!--<sourceDirectory>src</sourceDirectory>-->
-        <!--<testResources>-->
-        <!--<testResource>-->
-        <!--<directory>test-res</directory>-->
-        <!--</testResource>-->
-        <!--</testResources>-->
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -56,12 +50,7 @@
         <repository>
             <id>intino-maven</id>
             <name>intino-maven-releases</name>
-            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
-        </repository>
-        <repository>
-            <id>intino-maven-languages</id>
-            <name>intino-maven-languages</name>
-            <url>https://artifactory.intino.io/artifactory/release-languages</url>
+            <url>https://artifactory.intino.io/artifactory/releases</url>
         </repository>
     </repositories>
 

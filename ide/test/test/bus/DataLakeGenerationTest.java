@@ -14,7 +14,7 @@ public class DataLakeGenerationTest {
 	@Test
 	public void testChannelsGeneration() throws Exception {
 		File gen = new File("test-gen", DATALAKE);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("DataLake"), gen, gen, gen, gen, DATALAKE).execute();
+		new FullRenderer(null, Graph.use(Konos.class, null).load("DataLake"), gen, gen, gen, DATALAKE).execute();
 	}
 
 }
