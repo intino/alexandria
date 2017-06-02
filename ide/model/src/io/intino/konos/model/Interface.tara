@@ -96,6 +96,6 @@ Concept Sensor extends Component
 					var string format = "dd/MM/yyyy HH:mm:ss"
 
 
-Facet Array on Dialog.Tab.Input
-	var integer min= 0
+Facet Multiple on Dialog.Tab.Input
+	var integer min= -1
 	var integer max= -1
