@@ -1,10 +1,9 @@
 def type(configuration & legio)
 	dsl Legio
 
-	Project(groupId = "$groupID", version = "1.0.0") $artifactID~Activity
-		Repositories
-			$repository
-		WebDependencies
+	Artifact(groupId = "$groupID", version = "1.0.0") $artifactID~Activity
+
+		WebImports
 			WebComponent("Polymer/polymer", "^1.4.0") polymer
 			WebComponent(version = "~3.1.0") jquery
 			WebComponent(version = "~2.13.0") moment
@@ -13,12 +12,15 @@ def type(configuration & legio)
 			WebComponent("https://bitbucket.org/cottons/cotton-push.git", "latest") cotton-push
 			WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "latest") cotton-translator
 			WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
+			WebArtifact("io.intino.konos", "konos-server-web", "LATEST") konos-web
+	$repository
 end
 
-def type(repository & distribution) trigger(distribution)
-	$type("$url", "$id")
+def type(repository)
+	Repository("id")
+		$url...[$NL]
 end
 
-def type(repository) !type(distribution)
-	$type("$url", "$id")
+def trigger(url)
+	Release("$value")
 end

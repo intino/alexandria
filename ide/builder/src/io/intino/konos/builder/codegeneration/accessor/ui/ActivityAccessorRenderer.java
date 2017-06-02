@@ -14,6 +14,8 @@ import org.siani.itrules.model.Frame;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ActivityAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
+	private static final String ARTIFACT_LEGIO = "artifact.legio";
 	private final Module appModule;
 	private final Module webModule;
 	private final Activity activity;
@@ -42,15 +45,27 @@ public class ActivityAccessorRenderer {
 		frame.addSlot("groupID", configuration.groupId());
 		frame.addSlot("artifactID", configuration.artifactId());
 		frame.addSlot("version", configuration.version());
-		final Map<String, String> releaseRepositories = configuration.releaseRepositories();
-		for (String repository : releaseRepositories.keySet())
-			frame.addSlot("repository", new Frame().addTypes("repository", "release").addSlot("type", "Release").addSlot("url", repository).addSlot("id", releaseRepositories.get(repository)));
-		File file = new File(rootDirectory(), "configuration.legio");
+		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
+		for (String id : repositories.keySet()) {
+			final Frame repoFrame = new Frame().addTypes("repository", "release").addSlot("id", id);
+			for (String url : repositories.get(id)) repoFrame.addSlot("url", url);
+			frame.addSlot("repository", ((Frame) repoFrame));
+		}
+		File file = new File(rootDirectory(), ARTIFACT_LEGIO);
 		if (!file.exists()) try {
-			return write(file.toPath(), ConfigurationTemplate.create().format(frame).getBytes()).toFile().exists();
+			return write(file.toPath(), ArtifactTemplate.create().format(frame).getBytes()).toFile().exists();
 		} catch (IOException ignored) {
 		}
 		return false;
+	}
+
+	private Map<String, List<String>> reduce(Map<String, String> map) {
+		Map<String, List<String>> reduced = new HashMap<>();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			if (!reduced.containsKey(entry.getValue())) reduced.put(entry.getValue(), new ArrayList<>());
+			reduced.get(entry.getValue()).add(entry.getKey());
+		}
+		return reduced;
 	}
 
 	public void execute() {
