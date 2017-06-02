@@ -5,8 +5,10 @@ import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class Dialog {
@@ -92,17 +94,16 @@ public class Dialog {
     }
 
     private List<Input> inputs() {
-        List<Input> tabInputList = tabList().stream().map(Tab::inputList)
-                                            .flatMap(Collection::stream).collect(toList());
+        return tabList().stream().map(Tab::inputList)
+                        .flatMap(Collection::stream).map(this::inputs)
+                        .flatMap(Collection::stream).collect(toList());
+    }
 
-        List<Input> sectionInputList = tabInputList.stream()
-                                                   .filter(input -> input instanceof Tab.Section)
-                                                   .map(input -> ((Tab.Section) input).inputList())
-                                                   .flatMap(Collection::stream).collect(toList());
-
-        tabInputList.addAll(sectionInputList);
-
-        return tabInputList;
+    private List<Input> inputs(Input input) {
+        if (!(input instanceof Tab.Section)) return singletonList(input);
+        List<Input> result = new ArrayList<>();
+        ((Tab.Section)input).inputList.forEach(child -> result.addAll(inputs(child)));
+        return result;
     }
 
     public class Tab {
@@ -182,7 +183,7 @@ public class Dialog {
             private boolean readonly;
             private String placeholder;
             private String helper;
-            private String defaultValue = "";
+            private String defaultValue = null;
             private Multiple multiple = null;
             private DialogValidator validator = null;
 
@@ -239,7 +240,11 @@ public class Dialog {
             }
 
             public <T extends Object> T value() {
-                return (T) (valuesLoader != null ? valuesLoader.value(this) : defaultValue());
+                return (T) (valuesLoader != null ? valuesLoader.values(this).get(0) : defaultValue());
+            }
+
+            public <T extends Object> List<T> values() {
+                return (List<T>) (valuesLoader != null ? valuesLoader.values(this) : defaultValue());
             }
 
             public <T extends Object> T defaultValue() {
@@ -257,6 +262,11 @@ public class Dialog {
 
             public Multiple multiple() {
                 return multiple;
+            }
+
+            public Input multiple(int min, int max) {
+                this.multiple = new Multiple().min(min).max(max);
+                return this;
             }
 
             public Input validator(DialogValidator validator) {
@@ -300,7 +310,7 @@ public class Dialog {
                 }
 
                 public int max() {
-                    return this.min;
+                    return this.max;
                 }
 
                 public Multiple max(int max) {
@@ -332,6 +342,14 @@ public class Dialog {
                 return this;
             }
 
+            public DialogValidator.Result validateEmail(List<Object> values) {
+                for (Object value : values) {
+                    DialogValidator.Result result = validateEmail((String)value);
+                    if (result != null) return result;
+                }
+                return null;
+            }
+
             public DialogValidator.Result validateEmail(String value) {
                 if (edition != TextEdition.Email) return null;
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
@@ -340,10 +358,26 @@ public class Dialog {
                 return m.matches() ? null : new DialogValidator.Result(false, "Email not valid");
             }
 
+            public DialogValidator.Result validateAllowedValues(List<Object> values) {
+                for (Object value : values) {
+                    DialogValidator.Result result = validateAllowedValues((String)value);
+                    if (result != null) return result;
+                }
+                return null;
+            }
+
             public DialogValidator.Result validateAllowedValues(String value) {
                 if (validation == null) return null;
                 if (validation.allowedValues.size() <= 0 || validation.allowedValues.contains(value)) return null;
                 return new DialogValidator.Result(false, "Value not allowed");
+            }
+
+            public DialogValidator.Result validateLength(List<Object> values) {
+                for (Object value : values) {
+                    DialogValidator.Result result = validateLength((String)value);
+                    if (result != null) return result;
+                }
+                return null;
             }
 
             public DialogValidator.Result validateLength(String value) {
@@ -525,6 +559,14 @@ public class Dialog {
                 return this;
             }
 
+            public DialogValidator.Result validateLength(List<Object> values) {
+                for (Object value : values) {
+                    DialogValidator.Result result = validateLength((String)value);
+                    if (result != null) return result;
+                }
+                return null;
+            }
+
             public DialogValidator.Result validateLength(String value) {
                 if (validation == null) return null;
                 if (validation.length() == null) return null;
@@ -633,10 +675,26 @@ public class Dialog {
                 return this;
             }
 
+            public DialogValidator.Result validateMaxSize(Map<String, byte[]> values) {
+                for (Map.Entry<String, byte[]> value : values.entrySet()) {
+                    DialogValidator.Result result = validateMaxSize(value.getKey(), value.getValue());
+                    if (result != null) return result;
+                }
+                return null;
+            }
+
             public DialogValidator.Result validateMaxSize(String filename, byte[] content) {
                 if (validation == null) return null;
                 if (content.length <= validation.maxSize) return null;
                 return new DialogValidator.Result(false, "File is too long. Max size: " + validation.maxSize);
+            }
+
+            public DialogValidator.Result validateExtension(List<Object> values) {
+                for (Object value : values) {
+                    DialogValidator.Result result = validateExtension((String)value);
+                    if (result != null) return result;
+                }
+                return null;
             }
 
             public DialogValidator.Result validateExtension(String value) {

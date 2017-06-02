@@ -1,6 +1,9 @@
 package io.intino.konos.server.activity.dialogs.builders;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
 import io.intino.konos.server.activity.dialogs.adapters.*;
 
@@ -16,7 +19,7 @@ public class DialogInputBuilder {
         result.addProperty("helper", input.helper());
         result.addProperty("defaultValue", value(input.defaultValue()));
         result.addProperty("placeholder", input.placeholder());
-        result.addProperty("value", value(input));
+        result.add("value", values(input));
 
         if (input.isMultiple())
             result.add("multiple", multiple(input));
@@ -45,6 +48,16 @@ public class DialogInputBuilder {
 
     private static String value(Object value) {
         return value != null && (value instanceof String) ? (String) value : "";
+    }
+
+    private static JsonElement values(Input input) {
+        if (!input.isMultiple())
+            return new JsonPrimitive(value(input.value()));
+
+        JsonArray result = new JsonArray();
+        input.values().forEach(value -> result.add(value(value)));
+
+        return result;
     }
 
 }
