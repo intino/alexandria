@@ -14,9 +14,12 @@ public class DialogInputBuilder {
         result.addProperty("required", input.required());
         result.addProperty("readonly", input.readonly());
         result.addProperty("helper", input.helper());
-        result.addProperty("defaultValue", input.defaultValue());
+        result.addProperty("defaultValue", value(input.defaultValue()));
         result.addProperty("placeholder", input.placeholder());
-        result.addProperty("value", input.value());
+        result.addProperty("value", value(input));
+
+        if (input.isMultiple())
+            result.add("multiple", multiple(input));
 
         TextInputAdapter.adapt(result, input);
         MemoInputAdapter.adapt(result, input);
@@ -28,8 +31,20 @@ public class DialogInputBuilder {
         PictureInputAdapter.adapt(result, input);
         DateInputAdapter.adapt(result, input);
         DateTimeInputAdapter.adapt(result, input);
+        SectionInputAdapter.adapt(result, input);
 
         return result;
+    }
+
+    private static JsonObject multiple(Input input) {
+        JsonObject result = new JsonObject();
+        result.addProperty("min", input.multiple().min());
+        result.addProperty("max", input.multiple().max());
+        return result;
+    }
+
+    private static String value(Object value) {
+        return value != null && (value instanceof String) ? (String) value : "";
     }
 
 }

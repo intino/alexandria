@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>dialogs</title>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
+
+    <!-- dependencies (jquery, handlebars and bootstrap) -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.0/handlebars.min.js"></script>
+    <link type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- alpaca -->
+    <link type="text/css" href="//code.cloudcms.com/alpaca/1.5.17/bootstrap/alpaca.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.17/bootstrap/alpaca.js"></script>
+
+    <!-- date, datetime -->
+    <script src="javascript/moment-with-locales.min.js"></script>
+    <script src="javascript/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="styles/bootstrap-datetimepicker.min.css" />
+
+    <!-- components -->
+    <link rel="import" href="dialog/widget-factory.html" />
+
+</head>
+
+<body>
+    <div class="dialog"></div>
+
+    <style>
+        .widget {
+            margin: 10px 20px;
+        }
+        h3.label {
+            padding: 0 0 4px;
+            margin: 0;
+            display: block;
+            font-size: 13pt;
+            color: black;
+            text-align: left;
+        }
+        .description {
+            font-size: 10pt;
+            color: #727272;
+            margin-bottom: 15px;
+        }
+        div.label { /* document input title */
+            display: inline-block;
+            max-width: 100%;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .toolbar {
+            border-top: 1px solid #ddd;
+            margin: 15px 0;
+            padding-top: 10px;
+        }
+        .tabs .inputs {
+            margin: 10px;
+        }
+        .wizard {
+            padding: 0;
+            margin-bottom: 10px;
+        }
+        .wizard .step-description {
+            margin-bottom: 15px;
+            font-size: 12pt;
+            color: #777;
+        }
+        .input.file button, .input.picture button {
+            margin-bottom: 20px;
+        }
+        .input.file button .title, .input.picture button .title {
+            margin-left: 10px;
+        }
+        .alpaca-field-checkbox > label {
+            padding-left: 0;
+            font-weight: bold;
+        }
+        .widget > .title, .widget .toolbar {
+            padding: 15px 15px 4px 0px;
+            margin: 0;
+            position: fixed;
+            background: white;
+            width: calc(100% - 40px);
+            z-index: 1;
+        }
+        .widget > .title {
+            top: 0;
+        }
+        .widget .toolbar {
+            bottom: 0;
+            padding-bottom: 15px;
+        }
+        .widget .inputs, .widget .tabs {
+            margin-top: 60px;
+            margin-bottom: 90px;
+        }
+        .widget .tabs .inputs, .widget .form.component-editable .inputs {
+            margin: 10px 10px 90px;
+        }
+        .widget .form.component-editable .inputs {
+            background: #efefef;
+            border-radius: 10px;
+            padding: 15px 10px;
+        }
+    </style>
+
+    <script>
+
+        const DialogAlpacaDictionary = {
+            es : {
+                continue : "continuar",
+                complete : "enviar",
+                editDocumentTitle : "editar documento",
+                editDocumentDescription : "asistente de edición de documentos",
+                editDocumentDownload : "descarcar el documento",
+                editDocumentModified : "ya he modificado el documento",
+                editDocumentStep1Title : "descargar",
+                editDocumentStep1Subtitle : "descargar el documento",
+                editDocumentStep1Description : "descarga el documento para poder realizar la edición del documento en su ordenador. Continúa si ya ha descargado el documento.",
+                editDocumentStep2Title : "editar",
+                editDocumentStep2Subtitle : "editar el documento",
+                editDocumentStep2Description : "Abra el documento e introduzca los cambios que desee. Cuando termine deberá subir el documento modificado.",
+                editDocumentStep3Title : "reemplazar",
+                editDocumentStep3Subtitle : "reemplazar el documento",
+                editDocumentStep3Description : "Indique la localización del documento modificado para guardar la última versión en el sistema",
+                inputRequired : "el campo es requerido",
+                download : "descargar"
+            },
+            en : {
+                continue : "continuar",
+                complete : "send",
+                editDocumentTitle : "edit document",
+                editDocumentDescription : "documents edition wizard",
+                editDocumentDownload : "download document",
+                editDocumentModified : "I have just modified the document",
+                editDocumentStep1Title : "download",
+                editDocumentStep1Subtitle : "download document",
+                editDocumentStep1Description : "Download the document to make the edition of the document in your computer. Continue if you have already downloaded the document.",
+                editDocumentStep2Title : "edit",
+                editDocumentStep2Subtitle : "edit document",
+                editDocumentStep2Description : "Open the document and insert the changes that you want. When you finish, you should upload the modified document.",
+                editDocumentStep3Title : "replace",
+                editDocumentStep3Subtitle : "replace document",
+                editDocumentStep3Description : "Select the modified document from your computer in order to save the last version in the system.",
+                inputRequired : "input is required",
+                download : "download"
+            },
+            labelFor: function(name) {
+                return DialogAlpacaDictionary[document.language][name];
+            },
+            words: function() {
+                return DialogAlpacaDictionary[document.language];
+            }
+        };
+
+        document.render = function(dialog, configuration) {
+            var language = configuration.language;
+            document.language = DialogAlpacaDictionary[language] != null ? language : "es";
+            document.resourceManager = configuration.resourceManager;
+
+            var container = document.querySelector(".dialog");
+            var widget = AlpacaWidgetFactory.get("dialog");
+
+            container.innerHTML = "";
+            widget.render(dialog, container);
+        };
+
+        document.refresh = function(inputList) {
+            var widget = AlpacaWidgetFactory.get("dialog");
+            widget.refresh(inputList, document.querySelector(".dialog"));
+        };
+
+        document.sendMessage = function(input, status, message) {
+            var widget = AlpacaWidgetFactory.get("dialog");
+            var inputElement = widget.getInput(input);
+            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type);
+            inputWidget.setMessage(inputElement.input, inputElement, status, message);
+        };
+
+        document.focus = function(input) {
+            var widget = AlpacaWidgetFactory.get("dialog");
+            var inputElement = widget.getInput(input);
+            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type);
+            inputWidget.focus(inputElement.input, inputElement);
+        };
+
+    </script>
+
+</body>
+</html>
