@@ -8,9 +8,9 @@ def type(dialogDisplay)
 
     import java.util.Arrays;
 
-    public class SolicitudDialogDisplay extends DialogDisplay {
+    public class $name+firstUpperCase~DialogDisplay extends DialogDisplay {
 
-        public SolicitudDialogDisplay(KonosDialogsBox box) {
+        public $name+firstUpperCase~DialogDisplay(KonosDialogsBox box) {
             super(box, buildDialog());
         }
 
