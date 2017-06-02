@@ -12,7 +12,9 @@ def type(configuration & legio)
 			WebComponent("https://bitbucket.org/cottons/cotton-push.git", "latest") cotton-push
 			WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "latest") cotton-translator
 			WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
-			WebArtifact("io.intino.konos", "konos-server-web", "LATEST") konos-web
+			WebArtifact("io.intino.konos", "konos-server-web", "LATEST") konos-server-web
+
+			Resolution("jquery", "3.1.0")
 	$repository
 end
 

@@ -1,16 +1,16 @@
 def type(dialogDisplay)
 	package $package.dialogs;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+SnakeCaseToCamelCase+firstUpperCase~Box;
 	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
     import io.intino.konos.server.activity.dialogs.DialogDisplay;
 
     import java.util.Arrays;
 
-    public class $name+firstUpperCase~DialogDisplay extends DialogDisplay {
+    public class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends DialogDisplay {
 
-        public $name+firstUpperCase~DialogDisplay($box+firstUpperCase~Box box) {
+        public $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             super(box, buildDialog());
         }
 
@@ -30,7 +30,7 @@ def type(dialog)
 end
 
 def type(tab)
-	Dialog.Tab $name = dialog.createTab("$label");
+	Dialog.Tab w$name+SnakeCaseToCamelCase = dialog.createTab("$label");
 	$text...[$NL]
 	$section...[$NL]
 	$memo...[$NL]
@@ -46,7 +46,7 @@ end
 
 
 def type(section)
-	Dialog.Section $name = dialog.createSection();
+	Dialog.Section w$name+SnakeCaseToCamelCase = dialog.createSection();
 	$text...[$NL]
 	$section...[$NL]
 	$memo...[$NL]
@@ -61,43 +61,43 @@ def type(section)
 end
 
 def type(text)
-	$owner+SnakeCaseToCamelCase.createText()[.edition(Dialog.TextEdition.$edition)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createText()[.edition(Dialog.TextEdition.$edition)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(memo)
-	$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(radio)
-	$owner+SnakeCaseToCamelCase.createRadioBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createRadioBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(check)
-	$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(combo)
-	$owner+SnakeCaseToCamelCase.createComboBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createComboBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(password)
-	$owner+SnakeCaseToCamelCase.createPassword()[.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createPassword()[.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(file)
-	$owner+SnakeCaseToCamelCase.createFile()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createFile()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(picture)
-	$owner+SnakeCaseToCamelCase.createPicture()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createPicture()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(date)
-	$owner+SnakeCaseToCamelCase.createDate()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createDate()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(dateTime)
-	$owner+SnakeCaseToCamelCase.createDateTime()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createDateTime()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(validation & text)

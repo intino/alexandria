@@ -98,7 +98,7 @@ public class ActivityAccessorRenderer {
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : displayList()) {
+		for (Component component : components()) {
 			if (component.is(Display.class)) createDisplay(component.as(Display.class));
 			if (component.is(Dialog.class)) createDialogWidget(component.as(Dialog.class));
 			widgets.addSlot("widget", component.name());
@@ -113,14 +113,14 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createDialogWidget(Dialog dialog) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", dialog.name());
+		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name());
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
-	private List<? extends Component> displayList() {
-		return activity.pageList().stream().map(Activity.AbstractPage::uses).collect(toList());
+	private List<? extends Component> components() {
+		return activity.abstractPageList().stream().map(Activity.AbstractPage::uses).collect(toList());
 	}
 
 	private void createRequester(Display display) throws IOException {
