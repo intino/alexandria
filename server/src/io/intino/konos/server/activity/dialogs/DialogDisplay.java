@@ -6,8 +6,12 @@ import io.intino.konos.server.activity.dialogs.DialogValidator.Result;
 import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
+import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
 import io.intino.konos.server.activity.displays.Display;
+import org.apache.commons.codec.binary.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +19,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public class DialogDisplay extends Display<DialogNotifier> {
 	protected Dialog dialog;
-	private Map<String, String> fieldsMap = new HashMap<>();
+	private Map<String, Object> fieldsMap = new HashMap<>();
 	private Map<Class<? extends Input>, Function<Input, Result>> validators = new HashMap<>();
 
 	public DialogDisplay(Box box, Dialog dialog) {
@@ -42,7 +47,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 		this.dialog.valuesLoader(input -> {
 			if (fieldsMap.containsKey(input.label()))
 				return fieldsMap.get(input.label());
-			return fieldsMap.containsKey(input.name()) ? fieldsMap.get(input.name()) : "";
+			return fieldsMap.getOrDefault(input.name(), "");
 		});
 		fillDefaultValues();
 	}
@@ -53,24 +58,46 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public void update(DialogInput dialogInput) {
-		register(dialogInput);
-		Result result = validate(dialogInput);
+		Input input = dialog.input(dialogInput.name());
+		fieldsMap.put(input.name(), dialogInput.value());
+		refresh(input);
+	}
 
-		if (result != null)
-			notifier.refresh(ValidationBuilder.build(dialogInput.name(), result));
+	private void refresh(Input input) {
+		Result result = validate(input);
+		if (result == null) return;
+		notifier.refresh(ValidationBuilder.build(input.name(), result));
+	}
+
+	public void uploadResource(DialogInputResource inputResource) {
+		Input input = dialog.input(inputResource.input());
+		fieldsMap.put(input.name(), inputResource.resource());
+		refresh(input);
+	}
+
+	public io.intino.konos.server.activity.spark.ActivityFile downloadResource(String name) {
+		Input input = dialog.input(name);
+		io.intino.konos.server.activity.dialogs.schemas.Resource resource = (io.intino.konos.server.activity.dialogs.schemas.Resource)input.value();
+
+		return new io.intino.konos.server.activity.spark.ActivityFile() {
+			@Override
+			public String label() {
+				return resource.name();
+			}
+
+			@Override
+			public InputStream content() {
+				String value = resource.value();
+				return new ByteArrayInputStream(value == null || value.isEmpty() ? new byte[0] : decodeBase64(value.split(",")[1].replace(" ", "+")));
+			}
+		};
 	}
 
 	public void execute() {
 		System.out.println("--> execute dialog");
 	}
 
-	private void register(DialogInput dialogInput) {
-		fieldsMap.put(dialogInput.name(), dialogInput.value());
-	}
-
-	private Result validate(DialogInput dialogInput) {
-		Input input = dialog.input(dialogInput.name());
-
+	private Result validate(Input input) {
 		Result result = input.validate();
 		if (result != null) return result;
 
@@ -78,7 +105,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validateText(Input input) {
-		String value = fieldsMap.get(input.name());
+		String value = (String) fieldsMap.get(input.name());
 		Text text = (Text)input;
 
 		Result result = text.validateEmail(value);
@@ -99,7 +126,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validatePassword(Input input) {
-		String value = fieldsMap.get(input.name());
+		String value = (String) fieldsMap.get(input.name());
 		Password password = (Password)input;
 		return password.validateLength(value);
 	}
@@ -109,13 +136,14 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validateResource(Input input) {
-		String value = fieldsMap.get(input.name());
 		Resource resource = (Resource)input;
+		io.intino.konos.server.activity.dialogs.schemas.Resource resourceValue = (io.intino.konos.server.activity.dialogs.schemas.Resource) fieldsMap.get(input.name());
+		byte[] resourceContent = Base64.decodeBase64(resourceValue.value());
 
-		Result result = resource.validateMaxSize(value);
+		Result result = resource.validateMaxSize(resourceValue.name(), resourceContent);
 		if (result != null) return result;
 
-		return resource.validateExtension(value);
+		return resource.validateExtension(resourceValue.name());
 	}
 
 	private Result validateDate(Input input) {
@@ -127,7 +155,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private void fillDefaultValues() {
-		inputs(dialog).stream().filter(input -> input.defaultValue() != null && !input.defaultValue().isEmpty())
+		inputs(dialog).stream().filter(input -> input.defaultValue() != null)
 							   .forEach(input -> fieldsMap.put(input.name(), input.defaultValue()));
 	}
 
