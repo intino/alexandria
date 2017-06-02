@@ -18,12 +18,12 @@
     <script type="text/javascript" src="//code.cloudcms.com/alpaca/1.5.17/bootstrap/alpaca.js"></script>
 
     <!-- date, datetime -->
-    <script src="javascript/moment-with-locales.min.js"></script>
-    <script src="javascript/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" href="styles/bootstrap-datetimepicker.min.css" />
+    <script src="../javascript/moment-with-locales.min.js"></script>
+    <script src="../javascript/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="../styles/bootstrap-datetimepicker.min.css" />
 
     <!-- components -->
-    <link rel="import" href="dialog/widget-factory.html" />
+    <link rel="import" href="alpaca/widget-factory.html" />
 
 </head>
 
@@ -47,7 +47,7 @@
             color: #727272;
             margin-bottom: 15px;
         }
-        div.label { /* document input title */
+        div.label { /* document and section input title */
             display: inline-block;
             max-width: 100%;
             margin-bottom: 5px;
@@ -60,6 +60,11 @@
         }
         .tabs .inputs {
             margin: 10px;
+        }
+        .tabs .inputs > .section {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
         }
         .wizard {
             padding: 0;
@@ -110,6 +115,7 @@
     </style>
 
     <script>
+        $.alpaca.setDefaultLocale("es_ES");
 
         const DialogAlpacaDictionary = {
             es : {
@@ -178,14 +184,14 @@
         document.sendMessage = function(input, status, message) {
             var widget = AlpacaWidgetFactory.get("dialog");
             var inputElement = widget.getInput(input);
-            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type);
+            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type, inputElement.input.multiple);
             inputWidget.setMessage(inputElement.input, inputElement, status, message);
         };
 
         document.focus = function(input) {
             var widget = AlpacaWidgetFactory.get("dialog");
             var inputElement = widget.getInput(input);
-            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type);
+            var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type, inputElement.input.multiple);
             inputWidget.focus(inputElement.input, inputElement);
         };
 

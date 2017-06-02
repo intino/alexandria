@@ -1,138 +1,133 @@
 def type(dialog)
 	<link rel="import" href="../../lib/polymer/polymer.html">
-    <link rel="import" href="../../lib/iron-flex-layout/iron-flex-layout.html">
-    <link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
-    <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
-    <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
-    <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+	<link rel="import" href="../../lib/iron-flex-layout/iron-flex-layout.html">
+	<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+	<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+	<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+	<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 
-    <script src="$name+lowercase~widget/requester.js"></script>
-    <script src="$name+lowercase~widget/notifier-listener.js"></script>
+	<script src="../../lib/konos-server-web/dialogs/requester.js"></script>
+	<script src="../../lib/konos-server-web/dialogs/notifier-listener.js"></script>
 
-    <dom-module id="$name+lowercase~-widget">
+	<dom-module id="$name+lowercase~-widget">
 
-        <template>
-            <iframe id="frame" class="dialog" src="$[$[delegateUrl$]$]"></iframe>
-        </template>
+		<template>
+			<iframe id="frame" class="dialog" src="$[$[delegateUrl$]$]"></iframe>
+		</template>
 
-        <style>
-            :host iframe {
-                border: 0;
-                overflow: auto;
-                width: 100%;
-                height: 100%;
-                border-radius: 2px;
-            }
-        </style>
+		<style>
+			:host iframe {
+				border: 0;
+				overflow: auto;
+				width: 100%;
+				height: 100%;
+				border-radius: 2px;
+			}
+		</style>
 
-        <script>
-            const DialogDelegate = "konos/dialog.html";
+		<script>
+			const DialogDelegate = "lib/konos-server-web/dialogs/alpaca.html";
 
-            const $name+firstUpperCase~WidgetDictionary = {
-                es: {
-                },
-                en: {
-                }
-            };
+			const $name+firstUpperCase~WidgetDictionary = {
+				es: {
+				},
+				en: {
+				}
+			};
 
-            Polymer({
-                is: '$name~-widget',
+			Polymer({
+				is: '$name+lowercase~-widget',
 
-                behaviors: $[ CottonBehaviors.CarrierBehavior,
-                    CottonBehaviors.PushBehavior,
-                    CottonBehaviors.TranslatorBehavior,
-                    $name+firstUpperCase~WidgetBehaviors.Requester,
-                    $name+firstUpperCase~WidgetBehaviors.NotifierListener $],
+				behaviors: $[ CottonBehaviors.CarrierBehavior,
+					CottonBehaviors.PushBehavior,
+					CottonBehaviors.TranslatorBehavior,
+					KonosDialogWidgetBehaviors.Requester,
+					KonosDialogWidgetBehaviors.NotifierListener $],
 
-                properties : {
-                    _dialog : Object,
-                    delegateUrl : String
-                },
+				properties : {
+					_dialog : Object,
+					delegateUrl : String
+				},
 
-                attached : function() {
-                    this.translate($name+firstUpperCase~WidgetDictionary);
-                    this.listenToDisplay();
-                    this._initDelegate();
-                },
+				attached : function() {
+					this.translate($name+firstUpperCase~WidgetDictionary);
+					this.listenToDisplay();
+					this._initDelegate();
+				},
 
-                _initDelegate : function() {
-                    this.delegateUrl = this._getUrl() + "/" + DialogDelegate + "?random=" + Math.random();
-                    this.$$.frame.onload = this._loadDelegate.bind(this);
-                },
+				_initDelegate : function() {
+					this.delegateUrl = this._getUrl() + "/" + DialogDelegate + "?random=" + Math.random();
+					this.$$.frame.onload = this._loadDelegate.bind(this);
+				},
 
-                _render : function(dialog) {
-                    this._dialog = dialog;
-                    this._loadDelegate();
-                },
+				_render : function(dialog) {
+					this._dialog = dialog;
+					this._loadDelegate();
+				},
 
-                _refresh: function(validation) {
-                    if (this.delegate == null) return;
-                    var modifiedInputs = JSON.parse(validation.modifiedInputs);
-                    this.delegate.sendMessage(validation.input, validation.status, validation.message);
-                    this.delegate.refresh(modifiedInputs);
-                    if (modifiedInputs.length > 0)
-                        this.delegate.focus(validation.input);
-                },
+				_refresh: function(validation) {
+					if (this.delegate == null) return;
+					var modifiedInputs = JSON.parse(validation.modifiedInputs);
+					this.delegate.sendMessage(validation.input, validation.status, validation.message);
+					this.delegate.refresh(modifiedInputs);
+					if (modifiedInputs.length > 0)
+						this.delegate.focus(validation.input);
+				},
 
-                _configuration : function() {
-                    return {
-                        language: this.getLanguage(),
-                        uploadEndPoint: this._uploadInputFileEndPoint.bind(this),
-                        downloadEndPoint: this._downloadInputFileEndPoint.bind(this)
-                    }
-                },
+				_configuration : function() {
+					return {
+						language: this.getLanguage(),
+						resourceManager: this
+					}
+				},
 
-                _uploadInputFileEndPoint : function(input) {
-                    return this._getUrl() + '/dialog/' + this.name + '/input/' + input.label + "/file";
-                },
+				_inputChanged : function(input, value) {
+					this.update({ name: input.label, value: value });
+				},
 
+				_inputResourceRemoved : function(input, position) {
+					this.removeResource({ input: input.label, position: position });
+				},
 
-                _downloadInputFileEndPoint : function(input) {
-                    return this._getUrl() + '/dialog/' + this.name + '/input/' + input.label + "/file/" + input.value;
-                },
+				_operationExecuted : function(operation, parameters) {
+					this.execute();
+				},
 
-                _inputChanged : function(input, value) {
-                    this.update({ name: input.label, value: value });
-                },
+				_getUrl: function() {
+					var url = this.getProperty("url");
+					if (url.charAt(url.length-1) == "/")
+						url = url.substring(0, url.length-1);
+					return url;
+				},
 
-                _operationExecuted : function(operation, parameters) {
-                    this.execute();
-                },
+				getProperty: function(name) {
+					var widget = this;
 
-                _getUrl: function() {
-                    var url = this.getProperty("url");
-                    if (url.charAt(url.length-1) == "/")
-                        url = url.substring(0, url.length-1);
-                    return url;
-                },
+					while (widget != null && widget.getAttribute(name) == null)
+						widget = widget.parentElement;
 
-                getProperty: function(name) {
-                    var widget = this;
+					if (widget == null)
+						return "";
 
-                    while (widget != null && widget.getAttribute(name) == null)
-                        widget = widget.parentElement;
+					return widget.getAttribute(name);
+				},
 
-                    if (widget == null)
-                        return "";
+				_loadDelegate : function() {
+					if (this._dialog == null) return;
 
-                    return widget.getAttribute(name);
-                },
+					var frame = this.$$.frame;
+					var delegate = (frame.contentWindow || frame.contentDocument).document;
+					if (!delegate.render) return;
 
-                _loadDelegate : function() {
-                    if (this._dialog == null) return;
-
-                    var frame = this.$$.frame;
-                    var delegate = (frame.contentWindow || frame.contentDocument).document;
-                    if (!delegate.render) return;
-
-                    this.delegate = delegate;
-                    this.delegate.render(JSON.parse(this._dialog.definition), this._configuration());
-                    this.delegate.onInputChange = this._inputChanged.bind(this);
-                    this.delegate.onOperation = this._operationExecuted.bind(this);
-                }
+					this.delegate = delegate;
+					this.delegate.render(JSON.parse(this._dialog.definition), this._configuration());
+					this.delegate.onInputChange = this._inputChanged.bind(this);
+					this.delegate.onRemoveResource = this._inputResourceRemoved.bind(this);
+					this.delegate.onOperation = this._operationExecuted.bind(this);
+				}
 
 
-            });
-        </script>
-    </dom-module>
+			});
+		</script>
+	</dom-module>
 end

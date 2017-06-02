@@ -28,7 +28,7 @@
         function _renderInputs(inputList, container, view) {
             for (var i=0; i<inputList.length; i++) {
                 var input = inputList[i];
-                var widget = AlpacaWidgetFactory.get(input.type);
+                var widget = AlpacaWidgetFactory.get(input.type, input.multiple);
                 var inputContainer = _createElementIn(container);
                 inputContainer.id = _idFor(input.label);
                 widget.render(input, inputContainer, view);
@@ -38,7 +38,7 @@
         function _refreshInputList(inputList, container, view) {
             for (var i=0; i<inputList.length; i++) {
                 var input = inputList[i];
-                var widget = AlpacaWidgetFactory.get(input.type);
+                var widget = AlpacaWidgetFactory.get(input.type, input.multiple);
                 widget.refresh(input, container.querySelector("#" + _idFor(input.label)), view);
             }
         }
@@ -48,7 +48,7 @@
                 return;
 
             var input = inputList[0];
-            var widget = AlpacaWidgetFactory.get(input.type);
+            var widget = AlpacaWidgetFactory.get(input.type, input.multiple);
             widget.focus(input, container.querySelector("#" + _idFor(input.label)));
         }
 
