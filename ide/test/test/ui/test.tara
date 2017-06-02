@@ -10,13 +10,15 @@ Dialog(url = "", label = "Diálogo de ejemplo", description = "Esto es un diálo
 		Date("Fecha de caducidad del NIF")
 		Text("Apellidos y nombre")
 		Text ("Teléfono")
-		Text ("Correo electrónico", edition=Email) as Array(min=1,max=10)
+		Text ("Correo electrónico", edition=Email) as Multiple(min=1, max=10)
 
 	Tab("Dirección")
 		RadioBox("Tipo de vía pública") > options = "X" "Y"
 		Text ("Nombre vía pública")
 		Text ("Número vía pública")
-		Text ("Portal")
+		Text ("Portal") as Multiple
+			min = 12
+			max = 15
 		Text ("Escalera")
 		Text ("Piso")
 		Text ("Puerta")

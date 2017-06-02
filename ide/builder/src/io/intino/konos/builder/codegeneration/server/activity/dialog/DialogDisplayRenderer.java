@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.server.activity.dialog;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Dialog;
 import io.intino.konos.model.Dialog.Tab;
+import io.intino.konos.model.multiple.dialog.tab.MultipleInput;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
@@ -200,6 +201,10 @@ public class DialogDisplayRenderer {
 		frame.addSlot("required", input.required());
 		frame.addSlot("placeholder", input.placeHolder());
 		frame.addSlot("defaultValue", input.defaultValue());
+		if(input.is(MultipleInput.class)) {
+			final MultipleInput multiple = input.asMultiple();
+			frame.addSlot("multiple", new Frame().addTypes("multiple").addSlot("min", multiple.min()).addSlot("max", multiple.max()));
+		}
 		if (input.validator() != null && !input.validator().isEmpty()) frame.addSlot("validator", validator(input));
 	}
 
