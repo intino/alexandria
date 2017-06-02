@@ -3,11 +3,12 @@ package io.intino.konos.server.activity.dialogs;
 import io.intino.konos.Box;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.*;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Date;
-import io.intino.konos.server.activity.dialogs.Dialog.Tab.Resource;
 import io.intino.konos.server.activity.dialogs.DialogValidator.Result;
 import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
-import io.intino.konos.server.activity.dialogs.schemas.*;
+import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
+import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
+import io.intino.konos.server.activity.dialogs.schemas.DialogInputResourceIdentifier;
 import io.intino.konos.server.activity.displays.Display;
 import org.apache.commons.codec.binary.Base64;
 
@@ -108,6 +109,8 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public void execute() {
+//		new Inl();
+//		String serialize = Inl.serialize(fieldsMap);
 		System.out.println("--> execute dialog");
 	}
 
@@ -170,7 +173,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private void fillDefaultValues() {
-		inputs(dialog).stream().filter(input -> input.defaultValue() != null)
+		inputs(dialog).stream().filter(input -> input.defaultValue() != null && (input.defaultValue() instanceof String) && !((String) input.defaultValue()).isEmpty())
 							   .forEach(input -> fieldsMap.put(input.name(), singletonList(input.defaultValue())));
 	}
 
