@@ -2,28 +2,28 @@ package io.intino.konos.server.activity.dialogs;
 
 import io.intino.konos.Box;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.*;
+import io.intino.konos.server.activity.dialogs.Dialog.Tab.Date;
+import io.intino.konos.server.activity.dialogs.Dialog.Tab.Resource;
 import io.intino.konos.server.activity.dialogs.DialogValidator.Result;
 import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
+import io.intino.konos.server.activity.dialogs.schemas.*;
 import io.intino.konos.server.activity.displays.Display;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public class DialogDisplay extends Display<DialogNotifier> {
 	protected Dialog dialog;
-	private Map<String, Object> fieldsMap = new HashMap<>();
+	private Map<String, List<Object>> fieldsMap = new HashMap<>();
 	private Map<Class<? extends Input>, Function<Input, Result>> validators = new HashMap<>();
 
 	public DialogDisplay(Box box, Dialog dialog) {
@@ -47,7 +47,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 		this.dialog.valuesLoader(input -> {
 			if (fieldsMap.containsKey(input.label()))
 				return fieldsMap.get(input.label());
-			return fieldsMap.getOrDefault(input.name(), "");
+			return fieldsMap.getOrDefault(input.name(), singletonList(""));
 		});
 		fillDefaultValues();
 	}
@@ -59,8 +59,14 @@ public class DialogDisplay extends Display<DialogNotifier> {
 
 	public void update(DialogInput dialogInput) {
 		Input input = dialog.input(dialogInput.name());
-		fieldsMap.put(input.name(), dialogInput.value());
+		register(input, dialogInput.value());
 		refresh(input);
+	}
+
+	private void register(Input input, Object value) {
+		if (!input.isMultiple()) fieldsMap.remove(input.name());
+		if (!fieldsMap.containsKey(input.name())) fieldsMap.put(input.name(), new ArrayList<>());
+		fieldsMap.get(input.name()).add(value);
 	}
 
 	private void refresh(Input input) {
@@ -71,7 +77,15 @@ public class DialogDisplay extends Display<DialogNotifier> {
 
 	public void uploadResource(DialogInputResource inputResource) {
 		Input input = dialog.input(inputResource.input());
-		fieldsMap.put(input.name(), inputResource.resource());
+		register(input, inputResource.resource());
+		refresh(input);
+	}
+
+	public void removeResource(DialogInputResourceIdentifier identifier) {
+		Input input = dialog.input(identifier.input());
+		if (!fieldsMap.containsKey(input.name())) return;
+		if (identifier.position() >= fieldsMap.get(input.name()).size()) return;
+		fieldsMap.get(input.name()).remove(identifier.position());
 		refresh(input);
 	}
 
@@ -105,16 +119,16 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validateText(Input input) {
-		String value = (String) fieldsMap.get(input.name());
+		List<Object> values = fieldsMap.get(input.name());
 		Text text = (Text)input;
 
-		Result result = text.validateEmail(value);
+		Result result = text.validateEmail(values);
 		if (result != null) return result;
 
-		result = text.validateAllowedValues(value);
+		result = text.validateAllowedValues(values);
 		if (result != null) return result;
 
-		return text.validateLength(value);
+		return text.validateLength(values);
 	}
 
 	private Result validateSection(Input input) {
@@ -126,9 +140,9 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validatePassword(Input input) {
-		String value = (String) fieldsMap.get(input.name());
+		List<Object> values = fieldsMap.get(input.name());
 		Password password = (Password)input;
-		return password.validateLength(value);
+		return password.validateLength(values);
 	}
 
 	private Result validateOptionBox(Input input) {
@@ -137,13 +151,14 @@ public class DialogDisplay extends Display<DialogNotifier> {
 
 	private Result validateResource(Input input) {
 		Resource resource = (Resource)input;
-		io.intino.konos.server.activity.dialogs.schemas.Resource resourceValue = (io.intino.konos.server.activity.dialogs.schemas.Resource) fieldsMap.get(input.name());
-		byte[] resourceContent = Base64.decodeBase64(resourceValue.value());
+		List<Object> resourceValues = fieldsMap.get(input.name());
+		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(o -> ((io.intino.konos.server.activity.dialogs.schemas.Resource) o).name(),
+																			  o -> Base64.decodeBase64(((io.intino.konos.server.activity.dialogs.schemas.Resource) o).value())));
 
-		Result result = resource.validateMaxSize(resourceValue.name(), resourceContent);
+		Result result = resource.validateMaxSize(valuesMap);
 		if (result != null) return result;
 
-		return resource.validateExtension(resourceValue.name());
+		return resource.validateExtension(new ArrayList<>(valuesMap.keySet()));
 	}
 
 	private Result validateDate(Input input) {
@@ -156,7 +171,7 @@ public class DialogDisplay extends Display<DialogNotifier> {
 
 	private void fillDefaultValues() {
 		inputs(dialog).stream().filter(input -> input.defaultValue() != null)
-							   .forEach(input -> fieldsMap.put(input.name(), input.defaultValue()));
+							   .forEach(input -> fieldsMap.put(input.name(), singletonList(input.defaultValue())));
 	}
 
 	private List<Input> inputs(Dialog dialog) {
