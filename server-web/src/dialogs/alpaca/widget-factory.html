@@ -13,6 +13,8 @@
 <link rel="import" href="input-widget/file-input-widget.html" />
 <link rel="import" href="input-widget/picture-input-widget.html" />
 <link rel="import" href="input-widget/document-input-widget.html" />
+<link rel="import" href="input-widget/section-input-widget.html" />
+<link rel="import" href="input-widget/multiple-input-widget.html" />
 
 <script type="text/javascript">
 
@@ -20,8 +22,9 @@
         var factory = {};
         factory.widgets = null;
 
-        factory.get = function(type) {
+        factory.get = function(type, multiple) {
             register(factory);
+            if (multiple != null && multiple !== false) return this.widgets["multiple"];
             return this.widgets[type.toLowerCase()];
         };
 
@@ -43,6 +46,8 @@
             factory.widgets["document"] = new AlpacaDocumentInputWidget();
             factory.widgets["date"] = new AlpacaDateInputWidget();
             factory.widgets["datetime"] = new AlpacaDateTimeInputWidget();
+            factory.widgets["section"] = new AlpacaSectionInputWidget();
+            factory.widgets["multiple"] = new AlpacaMultipleInputWidget();
         }
 
         return factory;

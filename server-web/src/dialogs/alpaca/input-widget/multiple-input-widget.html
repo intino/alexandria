@@ -1,0 +1,61 @@
+<script type="text/javascript">
+
+    var AlpacaMultipleInputWidget = function() {
+        function widget() {}
+
+        widget.prototype = new AlpacaInputWidget();
+        widget.prototype.converter = function() {
+            return new AlpacaMultipleInputConverter();
+        };
+
+        return widget;
+    }();
+
+    var AlpacaMultipleInputConverter = function() {
+
+        function converter() {}
+        converter.prototype = new AlpacaInputConverter();
+
+        converter.prototype.schema = function(input) {
+            var result = AlpacaInputConverter.prototype.schema.call(this, input);
+            result.type = "array";
+            result.items = AlpacaWidgetFactory.get(input.type, false).converter().schema(input);
+            result.items.title = "";
+
+            if (input.multiple.min != -1)
+                result.minItems = input.multiple.min;
+
+            if (input.multiple.max != -1)
+                result.maxItems = input.multiple.max;
+
+            return result;
+        };
+
+        converter.prototype.options = function(input) {
+            var result = AlpacaInputConverter.prototype.options.call(this, input);
+            result.fields = {};
+            result.fields.item = AlpacaWidgetFactory.get(input.type, false).converter().options(input);
+            result.fields.item.label = "";
+            result.events = null;
+            result.actionbar = {
+                "actions" : [{
+                    "action": "add"
+                }, {
+                    "action": "remove",
+                    "click" : function(key, action, itemIndex) {
+                        document.onRemoveResource(input, itemIndex);
+                        this.removeItem(itemIndex);
+                    }
+                }, {
+                    "action": "up"
+                }, {
+                    "action": "down"
+                }]
+            };
+            return result;
+        };
+
+        return converter;
+    }();
+
+</script>
