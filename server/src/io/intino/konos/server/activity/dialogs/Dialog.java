@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 public class Dialog {
     private String url;
@@ -84,11 +85,24 @@ public class Dialog {
     }
 
     public <I extends Input> I input(String key) {
-        Input result = tabList().stream().map(Tab::inputList)
-                .flatMap(Collection::stream)
-                .filter(input -> input.name().equals(key) || input.label().equals(key))
-                .findFirst().orElse(null);
+        Input result = inputs().stream()
+                               .filter(input -> input.name().equals(key) || input.label().equals(key))
+                               .findFirst().orElse(null);
         return result != null ? (I)result : null;
+    }
+
+    private List<Input> inputs() {
+        List<Input> tabInputList = tabList().stream().map(Tab::inputList)
+                                            .flatMap(Collection::stream).collect(toList());
+
+        List<Input> sectionInputList = tabInputList.stream()
+                                                   .filter(input -> input instanceof Tab.Section)
+                                                   .map(input -> ((Tab.Section) input).inputList())
+                                                   .flatMap(Collection::stream).collect(toList());
+
+        tabInputList.addAll(sectionInputList);
+
+        return tabInputList;
     }
 
     public class Tab {
@@ -169,6 +183,7 @@ public class Dialog {
             private String placeholder;
             private String helper;
             private String defaultValue = "";
+            private Multiple multiple = null;
             private DialogValidator validator = null;
 
             private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
@@ -236,6 +251,14 @@ public class Dialog {
                 return this;
             }
 
+            public boolean isMultiple() {
+                return this.multiple != null;
+            }
+
+            public Multiple multiple() {
+                return multiple;
+            }
+
             public Input validator(DialogValidator validator) {
                 this.validator = validator;
                 return this;
@@ -262,6 +285,29 @@ public class Dialog {
             private String clean(String value) {
                 return value.replaceAll(AlphaAndDigits,"");
             }
+
+            public class Multiple {
+                private int min = -1;
+                private int max = -1;
+
+                public int min() {
+                    return this.min;
+                }
+
+                public Multiple min(int min) {
+                    this.min = min;
+                    return this;
+                }
+
+                public int max() {
+                    return this.min;
+                }
+
+                public Multiple max(int max) {
+                    this.max = max;
+                    return this;
+                }
+            }
         }
 
         public class Text extends Input {
@@ -287,6 +333,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateEmail(String value) {
+                if (edition != TextEdition.Email) return null;
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                 java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
                 java.util.regex.Matcher m = p.matcher(value);

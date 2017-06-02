@@ -18,6 +18,9 @@ public class DialogInputBuilder {
         result.addProperty("placeholder", input.placeholder());
         result.addProperty("value", value(input));
 
+        if (input.isMultiple())
+            result.add("multiple", multiple(input));
+
         TextInputAdapter.adapt(result, input);
         MemoInputAdapter.adapt(result, input);
         PasswordInputAdapter.adapt(result, input);
@@ -28,7 +31,15 @@ public class DialogInputBuilder {
         PictureInputAdapter.adapt(result, input);
         DateInputAdapter.adapt(result, input);
         DateTimeInputAdapter.adapt(result, input);
+        SectionInputAdapter.adapt(result, input);
 
+        return result;
+    }
+
+    private static JsonObject multiple(Input input) {
+        JsonObject result = new JsonObject();
+        result.addProperty("min", input.multiple().min());
+        result.addProperty("max", input.multiple().max());
         return result;
     }
 
