@@ -1,13 +1,13 @@
 def type(dialog)
 	package $package.dialogs;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
 
-		public $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog($box~Box box) {
+		public $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog($box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			super(box);
 		}
 
