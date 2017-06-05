@@ -3,9 +3,9 @@ def type(resourceloader)
 
 	public class AssetResourceLoader {
 
-		private final $box+FirstUpperCase~Box box;
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public AssetResourceLoader($box+FirstUpperCase~Box box) {
+		public AssetResourceLoader($box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			this.box = box;
 		}
 

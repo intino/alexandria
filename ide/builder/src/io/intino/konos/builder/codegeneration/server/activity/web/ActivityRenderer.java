@@ -54,11 +54,11 @@ public class ActivityRenderer {
 	}
 
 	private List<Display> displays(Activity activity) {
-		return activity.pageList().stream().filter(page -> page.uses().is(Display.class)).map(page -> page.uses().as(Display.class)).collect(toList());
+		return activity.abstractPageList().stream().filter(page -> page.uses().is(Display.class)).map(page -> page.uses().as(Display.class)).collect(toList());
 	}
 
 	private List<Dialog> dialogs(Activity activity) {
-		return activity.pageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
+		return activity.abstractPageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
 	}
 
 	private Frame resourceLoaderFrame() {

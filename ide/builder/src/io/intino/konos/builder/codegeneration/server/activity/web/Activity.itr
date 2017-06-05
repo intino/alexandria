@@ -20,8 +20,8 @@ def type(activity)
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.server.activity.Activity {
 
-		public static void init(ActivityKonosSpark spark, $box+FirstUpperCase~Box box) {
-			$box+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
+		public static void init(ActivityKonosSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
@@ -36,8 +36,8 @@ def type(activity)
 		}
 
 		private static void registerNotifiers() {
-			$display+provider...[$NL]
-			$dialog+provider...[$NL]
+			$display+notifier...[$NL]
+			$dialog+notifier...[$NL]
 		}
 	}
 end
@@ -51,11 +51,11 @@ def trigger(path)
 	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
-def type(display) trigger(provider)
+def type(display) trigger(notifier)
 	register($name+firstUpperCase~DisplayNotifier.class).forDisplay($name+firstUpperCase~Display.class);
 end
 
-def type(dialog) trigger(provider)
+def type(dialog) trigger(notifier)
 	register(io.intino.konos.server.activity.dialogs.DialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
 end
 
@@ -73,7 +73,7 @@ end
 def type(dialog)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
 	spark.route("/$name+lowercase/:displayId").post(manager -> new io.intino.konos.server.activity.dialogs.DialogRequester(manager, notifierProvider()).execute());
-	$asset
+	spark.route("/$name+lowercase/:displayId").get(manager -> new io.intino.konos.server.activity.dialogs.DialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
