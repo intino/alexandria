@@ -6,6 +6,7 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.WebModuleType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.libraries.LibraryTable;
@@ -60,11 +61,21 @@ public class ActivityAccessorCreator {
 			final File parent = new File(webModule.getModuleFilePath()).getParentFile();
 			parent.mkdirs();
 			final VirtualFile vFile = VfsUtil.findFileByIoFile(parent, true);
-			if (vFile != null) model.addContentEntry(vFile);
-			else model.addContentEntry(parent.getAbsolutePath());
+			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(parent.getAbsolutePath());
+			addExcludeFiles(parent, contentEntry);
 			model.commit();
 			return webModule;
 		});
+	}
+
+	private void addExcludeFiles(File parent, ContentEntry contentEntry)  {
+		final File lib = new File(parent, "lib");
+		lib.mkdirs();
+		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(lib, true));
+		final File dist = new File(parent, "dist");
+		dist.mkdirs();
+		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(dist, true));
+
 	}
 
 	private String toSnakeCase(String name) {

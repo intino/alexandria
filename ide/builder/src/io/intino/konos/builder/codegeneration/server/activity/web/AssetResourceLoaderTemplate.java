@@ -18,7 +18,7 @@ public class AssetResourceLoaderTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "resourceloader"))).add(literal("package ")).add(mark("package")).add(literal(";\n\npublic class AssetResourceLoader {\n\n\tprivate final ")).add(mark("box", "FirstUpperCase")).add(literal("Box box;\n\n\tpublic AssetResourceLoader(")).add(mark("box", "FirstUpperCase")).add(literal("Box box) {\n\t\tthis.box = box;\n\t}\n\n\tpublic java.net.URL load(String name) {\n\t\treturn null;\n\t}\n\n}\n"))
+			rule().add((condition("type", "resourceloader"))).add(literal("package ")).add(mark("package")).add(literal(";\n\npublic class AssetResourceLoader {\n\n\tprivate final ")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box;\n\n\tpublic AssetResourceLoader(")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box) {\n\t\tthis.box = box;\n\t}\n\n\tpublic java.net.URL load(String name) {\n\t\treturn null;\n\t}\n\n}\n"))
 		);
 		return this;
 	}
