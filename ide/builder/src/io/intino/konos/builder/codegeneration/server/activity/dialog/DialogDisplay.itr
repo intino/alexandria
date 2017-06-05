@@ -8,10 +8,15 @@ def type(dialogDisplay)
 
     import java.util.Arrays;
 
-    public class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends DialogDisplay {
+    public abstract class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends DialogDisplay {
 
         public $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             super(box, buildDialog());
+        }
+
+        @Override
+        protected String assertionName() {
+        	return "$name~.assertion";
         }
 
         private static Dialog buildDialog() {
