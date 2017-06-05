@@ -8,7 +8,7 @@ import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInputResourceIdentifier;
+import io.intino.konos.server.activity.dialogs.schemas.DialogInputValueIdentifier;
 import io.intino.konos.server.activity.displays.Display;
 import org.apache.commons.codec.binary.Base64;
 
@@ -58,9 +58,17 @@ public class DialogDisplay extends Display<DialogNotifier> {
     	notifier.render(DialogBuilder.build(dialog));
 	}
 
-	public void update(DialogInput dialogInput) {
+	public void addValue(DialogInput dialogInput) {
 		Input input = dialog.input(dialogInput.name());
 		register(input, dialogInput.value());
+		refresh(input);
+	}
+
+	public void removeValue(DialogInputValueIdentifier identifier) {
+		Input input = dialog.input(identifier.input());
+		if (!fieldsMap.containsKey(input.name())) return;
+		if (identifier.position() >= fieldsMap.get(input.name()).size()) return;
+		fieldsMap.get(input.name()).remove(identifier.position());
 		refresh(input);
 	}
 
@@ -79,14 +87,6 @@ public class DialogDisplay extends Display<DialogNotifier> {
 	public void uploadResource(DialogInputResource inputResource) {
 		Input input = dialog.input(inputResource.input());
 		register(input, inputResource.resource());
-		refresh(input);
-	}
-
-	public void removeResource(DialogInputResourceIdentifier identifier) {
-		Input input = dialog.input(identifier.input());
-		if (!fieldsMap.containsKey(input.name())) return;
-		if (identifier.position() >= fieldsMap.get(input.name()).size()) return;
-		fieldsMap.get(input.name()).remove(identifier.position());
 		refresh(input);
 	}
 

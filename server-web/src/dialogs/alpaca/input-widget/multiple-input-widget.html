@@ -43,13 +43,13 @@
                 }, {
                     "action": "remove",
                     "click" : function(key, action, itemIndex) {
-                        document.onRemoveResource(input, itemIndex);
+                        document.onRemoveValue(input, itemIndex);
                         this.removeItem(itemIndex);
                     }
                 }, {
-                    "action": "up"
+                    "action": "up", enabled: false
                 }, {
-                    "action": "down"
+                    "action": "down", enabled: false
                 }]
             };
             return result;

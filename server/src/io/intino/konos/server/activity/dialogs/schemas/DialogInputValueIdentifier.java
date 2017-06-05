@@ -1,6 +1,6 @@
 package io.intino.konos.server.activity.dialogs.schemas;
 
-public class DialogInputResourceIdentifier implements java.io.Serializable {
+public class DialogInputValueIdentifier implements java.io.Serializable {
 
 	private String input = "";
 	private int position;
@@ -13,12 +13,12 @@ public class DialogInputResourceIdentifier implements java.io.Serializable {
 		return this.position;
 	}
 
-	public DialogInputResourceIdentifier input(String input) {
+	public DialogInputValueIdentifier input(String input) {
 		this.input = input;
 		return this;
 	}
 
-	public DialogInputResourceIdentifier position(int position) {
+	public DialogInputValueIdentifier position(int position) {
 		this.position = position;
 		return this;
 	}
