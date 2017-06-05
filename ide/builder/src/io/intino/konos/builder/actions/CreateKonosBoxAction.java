@@ -104,6 +104,10 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private void generate(String packageName, File gen, File src, File res) {
 			Graph graph = loadGraph();
+			if (graph == null) {
+				notifyError("Models have errors");
+				return;
+			}
 			if (!render(packageName, gen, src, res, graph)) return;
 			refreshDirectories(gen, src, res);
 			notifySuccess();
@@ -127,7 +131,6 @@ public class CreateKonosBoxAction extends KonosAction {
 
 		private boolean render(String packageName, File gen, File src, File res, Graph graph) {
 			try {
-				if (graph == null) notifyError("Models have errors");
 				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -6,7 +6,7 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
-import io.intino.konos.builder.codegeneration.datalake.EventHandlerRenderer;
+import io.intino.konos.builder.codegeneration.datalake.MessageHandlerRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessEventsRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
@@ -106,7 +106,7 @@ public class FullRenderer {
 
 	private void bus() {
 		new NessEventsRenderer(graph, gen, packageName, boxName).execute();
-		new EventHandlerRenderer(graph, src, packageName, boxName).execute();
+		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
 	}
 
 	private void slack() {

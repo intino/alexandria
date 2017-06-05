@@ -30,13 +30,13 @@ public class NessEventsRenderer {
 				addSlot("package", packageName).
 				addSlot("name", dataLake.name()).
 				addSlot("box", boxName).
-				addSlot("eventHandler", dataLake.eventHandlerList().stream().map(this::frameOf).toArray(Frame[]::new));
-		if (!dataLake.eventHandlerList().isEmpty()) frame.addSlot("eventHandlerImport", packageName);
+				addSlot("messageHandler", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!dataLake.tankList().isEmpty()) frame.addSlot("messageHandlerImport", packageName);
 		Commons.writeFrame(gen, "NessEvents", template().format(frame));
 	}
 
-	private Frame frameOf(DataLake.EventHandler handler) {
-		return new Frame().addTypes("eventHandler").
+	private Frame frameOf(DataLake.Tank handler) {
+		return new Frame().addTypes("messageHandler").
 				addSlot("name", handler.name()).
 				addSlot("messageType", customize(handler.name(), handler.topic())).
 				addSlot("simpleMessageType", handler.topic());
