@@ -2,7 +2,7 @@ dsl Proteo
 
 Concept:{0..1} DataLake
 	var string clientID
-	Concept:Named EventHandler
+	Concept:Named Tank
 		var string topic
 	Concept Pipe
 		sub MailPipe

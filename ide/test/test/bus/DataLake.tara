@@ -1,7 +1,7 @@
 dsl Konos
 
 DataLake(clientID = "{sample-id}") monentia
-	EventHandler("catalogs") opinions
-	EventHandler("{sample}") durableChannel
-	EventHandler("processes") inputProcesses
+	MessageHandler("catalogs") opinions
+	MessageHandler("{sample}") durableChannel
+	MessageHandler("processes") inputProcesses
 

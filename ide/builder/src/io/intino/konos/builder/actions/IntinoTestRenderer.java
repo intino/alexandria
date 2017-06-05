@@ -59,7 +59,7 @@ public class IntinoTestRenderer {
 		addJMSServices(frame);
 		addSlackServices(frame);
 		addDataLakes(frame);
-		addEventHandlers(frame);
+		addMessageHandlers(frame);
 		addActivities(frame);
 		return template().format(frame);
 	}
@@ -110,10 +110,10 @@ public class IntinoTestRenderer {
 		frame.addSlot("service", dataLakeFrame);
 	}
 
-	private void addEventHandlers(Frame frame) {
+	private void addMessageHandlers(Frame frame) {
 		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
-		for (DataLake.EventHandler handler : dataLake.eventHandlerList()) {
+		for (DataLake.Tank handler : dataLake.tankList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name());
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			frame.addSlot("service", channelFrame);
@@ -143,7 +143,7 @@ public class IntinoTestRenderer {
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(DataLake.EventHandler channel) {
+	private Set<String> findCustomParameters(DataLake.Tank channel) {
 		Set<String> set = new LinkedHashSet<>();
 		set.addAll(Commons.extractParameters(channel.topic()));
 		return set;

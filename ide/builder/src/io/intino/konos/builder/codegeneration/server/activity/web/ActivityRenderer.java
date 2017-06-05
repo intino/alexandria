@@ -5,12 +5,13 @@ import io.intino.konos.model.Activity;
 import io.intino.konos.model.Dialog;
 import io.intino.konos.model.Display;
 import io.intino.tara.magritte.Graph;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,15 +60,20 @@ public class ActivityRenderer {
 		return activity.abstractPageList().stream()
 				.filter(page -> page.uses().is(Display.class))
 				.map(page -> page.uses().as(Display.class))
-				.map(this::displaysOf).flatMap(Collection::stream).distinct()
+				.map(this::allDisplays).flatMap(Collection::stream).distinct()
 				.collect(toList());
 	}
 
-	private List<Display> displaysOf(Display display) {
-		List<Display> result = new ArrayList<>();
-		result.add(display);
-		display.displays().forEach(child -> result.addAll(displaysOf(child)));
-		return result;
+	@NotNull
+	private HashSet<Display> allDisplays(Display d) {
+		final HashSet<Display> displays = new HashSet<>();
+		displaysOf(d, displays);
+		return displays;
+	}
+
+	private void displaysOf(Display display, Set<Display> collection) {
+		if (collection.add(display))
+			display.displays().forEach(child -> displaysOf(child, collection));
 	}
 
 	private List<Dialog> dialogsOf(Activity activity) {
