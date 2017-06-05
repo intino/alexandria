@@ -24,7 +24,7 @@ def type(box)
 		
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[owner = new $parent~Box(configuration);]
-			[$hasntParent~this.configuration = configuration;][
+			this.configuration = configuration;[
 			initLogger();
 			$service+setup...[$NL]][
 			$activity+setup...[$NL]]
