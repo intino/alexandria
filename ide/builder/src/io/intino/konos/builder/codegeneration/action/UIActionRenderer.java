@@ -21,6 +21,7 @@ public class UIActionRenderer extends ActionRenderer {
 	public void execute() {
 		Frame frame = new Frame().addTypes("action", "page");
 		frame.addSlot("name", page.name());
+		frame.addSlot("activity", page.ownerAs(Activity.class).name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
 		if (page.uses().is(Dialog.class)) frame.addSlot("importDialogs", packageName);
