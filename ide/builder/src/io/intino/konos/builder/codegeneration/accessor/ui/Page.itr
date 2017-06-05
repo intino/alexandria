@@ -18,6 +18,15 @@ def type(page)
             <script src="main.js"></script>
 
             <link rel="import" href="components.html">
+
+			<style>
+				html {
+					height: 100%;
+				}
+				body {
+					height: calc(100% - 16px);
+				}
+			</style>
         </head>
 
         <body unresolved class="fullbleed">
