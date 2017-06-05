@@ -9,6 +9,8 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,8 +39,8 @@ public class ActivityRenderer {
 	}
 
 	private void processActivity(Activity activity) {
-		final List<Dialog> dialogs = dialogs(activity);
-		final List<Display> displays = displays(activity);
+		final List<Dialog> dialogs = dialogsOf(activity);
+		final List<Display> displays = displaysOf(activity);
 		Frame frame = new Frame().addTypes("activity").
 				addSlot("package", packageName).
 				addSlot("name", activity.name()).
@@ -53,11 +55,28 @@ public class ActivityRenderer {
 		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
 	}
 
-	private List<Display> displays(Activity activity) {
-		return activity.abstractPageList().stream().filter(page -> page.uses().is(Display.class)).map(page -> page.uses().as(Display.class)).collect(toList());
+	private List<Display> displaysOf(Activity activity) {
+		return activity.abstractPageList().stream()
+				.filter(page -> page.uses().is(Display.class))
+				.map(page -> page.uses().as(Display.class))
+				.map(this::displaysOf).flatMap(Collection::stream).distinct()
+				.collect(toList());
 	}
 
-	private List<Dialog> dialogs(Activity activity) {
+	private List<Display> displaysOf(Display display) {
+		List<Display> result = new ArrayList<>();
+
+		result.add(display);
+
+		if (display.displays().size() <= 0)
+			return result;
+
+		display.displays().forEach(child -> result.addAll(displaysOf(child)));
+
+		return result;
+	}
+
+	private List<Dialog> dialogsOf(Activity activity) {
 		return activity.abstractPageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
 	}
 
