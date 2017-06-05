@@ -1,7 +1,7 @@
 def type(page)
 	package $package+validPackage.resources;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
 	import io.intino.konos.exceptions.KonosException;
 	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
@@ -11,9 +11,9 @@ def type(page)
 	import java.util.function.Function;
 
 	public class $name+firstUpperCase~Resource extends io.intino.konos.server.activity.spark.resources.Resource {
-		private final $box+firstUpperCase~Box box;
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+firstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
