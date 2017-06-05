@@ -1,9 +1,9 @@
-def type(eventHandler)
-	package $package+validPackage.eventhandlers;
+def type(messageHandler)
+	package $package+validPackage.messagehandlers;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 
-	public class $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler {
+	public class $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler {
 
 		public $box+validName+firstUpperCase~Box box;
 		public io.intino.ness.inl.Message message;
