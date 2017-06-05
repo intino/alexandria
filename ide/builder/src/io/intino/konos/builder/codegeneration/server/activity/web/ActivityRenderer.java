@@ -65,14 +65,8 @@ public class ActivityRenderer {
 
 	private List<Display> displaysOf(Display display) {
 		List<Display> result = new ArrayList<>();
-
 		result.add(display);
-
-		if (display.displays().size() <= 0)
-			return result;
-
 		display.displays().forEach(child -> result.addAll(displaysOf(child)));
-
 		return result;
 	}
 
