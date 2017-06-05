@@ -26,20 +26,35 @@ def type(page & action)
 	import io.intino.konos.server.activity.spark.actions.PageAction;
 	import java.time.*;
 	import java.util.*;
-	$schemaImport
+	[import $importDialogs+validPackage.dialogs.*;]
+	[import $importDisplays+validPackage.displays.*;]
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends PageAction {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		$parameter+type...[$NL]
 
 		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$box+lowerCase"); }
 
-		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
-			$returnType+return
+		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
+			return super.template("$name+lowerCase");
 		}
 
 		$ui
+
+		@Override
+		protected String title() {
+			return "";
+		}
+
+		@Override
+		protected String subtitle() {
+			return "";
+		}
+
+		@Override
+		protected java.net.URL logo() {
+			return null;
+		}
 	}
 end
 
@@ -53,10 +68,6 @@ end
 
 def type(parameter) trigger(type)
 	public $type $name+snakecaseToCamelCase+FirstLowerCase;
-end
-
-def type(page) trigger(return)
-	return super.template("$value+lowerCase");
 end
 
 def attribute(void) trigger(return)
@@ -75,7 +86,7 @@ def trigger(ui)
 	    return new io.intino.konos.server.activity.displays.Soul(session) {
 			@Override
 			public void personify() {
-				$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
+				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);
 				register(display);
 				display.personify();
 			}
