@@ -26,7 +26,7 @@ def type(dialog)
 		</style>
 
 		<script>
-			const DialogDelegate = "lib/konos-server-web/dialogs/alpaca.html";
+			const $name+firstUpperCase~DialogDelegate = "lib/konos-server-web/dialogs/alpaca.html";
 
 			const $name+firstUpperCase~WidgetDictionary = {
 				es: {
@@ -56,7 +56,7 @@ def type(dialog)
 				},
 
 				_initDelegate : function() {
-					this.delegateUrl = this._getUrl() + "/" + DialogDelegate + "?random=" + Math.random();
+					this.delegateUrl = this._getUrl() + "/" + $name+firstUpperCase~DialogDelegate + "?random=" + Math.random();
 					this.$$.frame.onload = this._loadDelegate.bind(this);
 				},
 

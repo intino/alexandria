@@ -86,7 +86,8 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		return new Frame().addTypes("page").addSlot("uses", page.uses().name()).addSlot("name", page.name());
+		String usesDisplay = page.uses().name() + (page.uses().is(Dialog.class) ? Dialog.class.getSimpleName() : "");
+		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", page.uses().name()).addSlot("name", page.name());
 	}
 
 	private void createDisplayWidget(Display display) throws IOException {
