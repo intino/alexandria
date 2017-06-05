@@ -36,7 +36,7 @@ def type(page & action)
 		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$box+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
-			return super.template("$name+lowerCase");
+			return super.template("$activity+lowerCase");
 		}
 
 		$ui
