@@ -31,7 +31,7 @@ abstract class ActionRenderer {
 	}
 
 	boolean alreadyRendered(File destiny, String action) {
-		return Commons.javaFile(destinyPackage(destiny), action + "Action").exists();
+		return Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + "Action").exists();
 	}
 
 	File destinyPackage(File destiny) {
