@@ -65,6 +65,11 @@ def type(dialog)
 					this._loadDelegate();
 				},
 
+				_done : function() {
+					if (this.delegate == null) return;
+					this.delegate.done();
+				},
+
 				_refresh: function(validation) {
 					if (this.delegate == null) return;
 					var modifiedInputs = JSON.parse(validation.modifiedInputs);

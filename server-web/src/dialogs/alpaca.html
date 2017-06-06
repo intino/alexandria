@@ -66,6 +66,10 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
+        .done {
+            color: blue;
+            display: none;
+        }
         .wizard {
             padding: 0;
             margin-bottom: 10px;
@@ -121,6 +125,7 @@
             es : {
                 continue : "continuar",
                 complete : "enviar",
+                done : "información enviada",
                 editDocumentTitle : "editar documento",
                 editDocumentDescription : "asistente de edición de documentos",
                 editDocumentDownload : "descarcar el documento",
@@ -140,6 +145,7 @@
             en : {
                 continue : "continuar",
                 complete : "send",
+                done : "dialog info sent",
                 editDocumentTitle : "edit document",
                 editDocumentDescription : "documents edition wizard",
                 editDocumentDownload : "download document",
@@ -179,6 +185,11 @@
         document.refresh = function(inputList) {
             var widget = AlpacaWidgetFactory.get("dialog");
             widget.refresh(inputList, document.querySelector(".dialog"));
+        };
+
+        document.done = function() {
+            var widget = AlpacaWidgetFactory.get("dialog");
+            widget.done(document.querySelector(".dialog"));
         };
 
         document.sendMessage = function(input, status, message) {
