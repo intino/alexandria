@@ -13,7 +13,7 @@ def type(box)
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger LOG = Logger.getGlobal();
-		$name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
+		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field]
