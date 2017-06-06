@@ -123,15 +123,11 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		User user = user();
 
 		message.ts(Instant.now().toString());
-
-		if (user != null) {
-			message.write("username", user.username());
-			message.write("fullName", user.fullName());
-		}
-
+		if (user != null) message.write("user", user.username());
 		message.write("form", serializedValues());
 
 		send(message);
+		notifier.done();
 	}
 
 	private String serializedValues() {

@@ -10,5 +10,8 @@ KonosDialogWidgetBehaviors.NotifierListener = {
         this.when("refresh").toSelf().execute(function(parameters) {
         	widget._refresh(parameters.value);
         });
+        this.when("done").toSelf().execute(function() {
+            widget._done();
+        });
     }
 };
