@@ -4,7 +4,7 @@
         function widget() {}
 
         widget.prototype = {};
-        widget.prototype.template = function() { return '<h3 class="label"></h3><div class="description"></div><div class="done"></div><div class="tabs"></div><div class="toolbar"></div></div>'; };
+        widget.prototype.template = function() { return '<h3 class="label"></h3><div class="description"></div><div class="done alert-success" role="alert"></div><div class="tabs"></div><div class="toolbar"></div></div>'; };
 
         widget.prototype.render = function(dialog, container) {
             container.innerHTML = this.template();
