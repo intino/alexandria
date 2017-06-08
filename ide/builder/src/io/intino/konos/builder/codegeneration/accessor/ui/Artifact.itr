@@ -1,4 +1,4 @@
-def type(configuration & legio)
+def type(artifact & legio)
 	dsl Legio
 
 	Artifact(groupId = "$groupID", version = "1.0.0") $artifactID~Activity

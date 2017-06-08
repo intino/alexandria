@@ -2,10 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.Component;
-import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Display;
+import io.intino.konos.model.*;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -23,7 +20,6 @@ import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.write;
-import static java.util.stream.Collectors.toList;
 
 public class ActivityAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
@@ -41,7 +37,7 @@ public class ActivityAccessorRenderer {
 	boolean createConfigurationFile() {
 		final Configuration configuration = TaraUtil.configurationOf(appModule);
 		Frame frame = new Frame();
-		frame.addTypes("configuration", "legio");
+		frame.addTypes("artifact", "legio");
 		frame.addSlot("groupID", configuration.groupId());
 		frame.addSlot("artifactID", configuration.artifactId());
 		frame.addSlot("version", configuration.version());
@@ -99,7 +95,7 @@ public class ActivityAccessorRenderer {
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : components()) {
+		for (Component component : Konos.displaysOf(activity)) {
 			if (component.is(Display.class)) createDisplay(component.as(Display.class));
 			if (component.is(Dialog.class)) createDialogWidget(component.as(Dialog.class));
 			widgets.addSlot("widget", component.name());
@@ -118,10 +114,6 @@ public class ActivityAccessorRenderer {
 		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
-	}
-
-	private List<? extends Component> components() {
-		return activity.abstractPageList().stream().map(Activity.AbstractPage::uses).collect(toList());
 	}
 
 	private void createRequester(Display display) throws IOException {
