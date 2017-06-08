@@ -13,7 +13,7 @@ def type(boxConfiguration)
 		private void fillWithArgs() {
 			[if (this.store == null && args.get("graph_store") != null)
 				$tara+empty~store = new java.io.File(args.remove("graph_store"));]
-			$service+fill...[$NL][
+			$service+fill...[$NL]
 		}
 
 		[$tara+empty~public java.io.File store() {
@@ -34,10 +34,9 @@ def type(service) trigger(field)
 end
 
 def type(service & rest) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase~_port")) {
+	if (args.containsKey("$name+firstLowerCase~_port"))
 		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port")), args.remove("$name+firstLowerCase~_webDirectory")[, $custom+parameter...[, ]]);
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = $configuration+snakeCaseToCamelCase+firstUpperCase~Box.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
-	}
+
 end
 
 def type(service & jms) trigger(fill)
