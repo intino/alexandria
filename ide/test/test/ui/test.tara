@@ -1,6 +1,7 @@
 dsl Konos
 
 Activity sample
+	Authenticated(by = "")
 	Page(uses=solicitud, paths="/") dialog1
 
 
