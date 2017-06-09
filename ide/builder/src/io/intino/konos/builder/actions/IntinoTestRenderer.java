@@ -4,35 +4,27 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaDirectoryService;
 import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackage;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
-import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.DataLake;
 import io.intino.konos.model.Konos;
 import io.intino.konos.model.Service;
 import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.jmx.JMXService;
 import io.intino.konos.model.rest.RESTService;
 import io.intino.konos.model.slackbot.SlackBotService;
-import io.intino.tara.StashBuilder;
-import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
-import static java.util.stream.Collectors.toList;
 
 public class IntinoTestRenderer {
 
@@ -46,7 +38,7 @@ public class IntinoTestRenderer {
 		this.module = module;
 		this.directory = directory;
 		this.newName = newName;
-		final Graph graph = loadGraph();
+		final Graph graph = GraphLoader.loadGraph(module);
 		if (graph != null) this.graph = graph.wrapper(Konos.class);
 	}
 
@@ -69,17 +61,6 @@ public class IntinoTestRenderer {
 		return aPackage == null ? "" : aPackage.getQualifiedName();
 	}
 
-	private Graph loadGraph() {
-		final List<PsiFile> konosFiles = KonosUtils.findKonosFiles(module);
-		if (!konosFiles.isEmpty()) {
-			final Stash stash = new StashBuilder(konosFiles.stream().map(pf ->
-					new File(pf.getVirtualFile().getPath())).collect(toList()), new tara.dsl.Konos(), module.getName()).build();
-			if (stash == null) {
-				return null;
-			} else return GraphLoader.loadGraph(stash).graph();
-		} else return GraphLoader.loadGraph().graph();
-	}
-
 	private void addRESTServices(Frame frame) {
 		for (RESTService service : graph.rESTServiceList()) {
 			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name());
@@ -92,13 +73,6 @@ public class IntinoTestRenderer {
 		for (JMSService service : graph.jMSServiceList()) {
 			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name());
 			addUserVariables(service.as(Service.class), jmsFrame, findCustomParameters(service));
-			frame.addSlot("service", jmsFrame);
-		}
-	}
-
-	private void addJMXServices(Frame frame) {
-		for (JMXService service : graph.jMXServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name());
 			frame.addSlot("service", jmsFrame);
 		}
 	}

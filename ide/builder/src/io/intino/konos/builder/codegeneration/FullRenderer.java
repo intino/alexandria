@@ -165,5 +165,6 @@ public class FullRenderer {
 
 	private void main() {
 		new MainRenderer(src, packageName, module).execute();
+//		new PackageParameterUpdater(module).execute();
 	}
 }

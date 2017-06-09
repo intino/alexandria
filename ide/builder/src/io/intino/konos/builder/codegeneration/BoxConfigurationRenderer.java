@@ -114,6 +114,7 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) {
 				activityFrame.addTypes("auth");
+				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name()).addSlot("configuration", boxName));
 				activityFrame.addSlot("auth", activity.authenticated().by());
 			}
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
