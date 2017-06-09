@@ -105,11 +105,13 @@ def type(box)
 end
 
 def type(activity) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port != 0)
+		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port != 0)
+		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
 def type(dataLake) trigger(init)

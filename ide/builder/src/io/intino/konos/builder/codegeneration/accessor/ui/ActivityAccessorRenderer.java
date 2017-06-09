@@ -24,13 +24,18 @@ import static java.nio.file.Files.write;
 public class ActivityAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
 	private static final String ARTIFACT_LEGIO = "artifact.legio";
-	private final Module appModule;
-	private final Module webModule;
+	private Module appModule;
+	private final File genDirectory;
 	private final Activity activity;
 
 	ActivityAccessorRenderer(Module appModule, Module webModule, Activity activity) {
 		this.appModule = appModule;
-		this.webModule = webModule;
+		this.genDirectory = rootDirectory(webModule);
+		this.activity = activity;
+	}
+
+	public ActivityAccessorRenderer(File rootDirectory, Activity activity) {
+		this.genDirectory = rootDirectory;
 		this.activity = activity;
 	}
 
@@ -47,7 +52,7 @@ public class ActivityAccessorRenderer {
 			for (String url : repositories.get(id)) repoFrame.addSlot("url", url);
 			frame.addSlot("repository", ((Frame) repoFrame));
 		}
-		File file = new File(rootDirectory(), ARTIFACT_LEGIO);
+		File file = new File(genDirectory, ARTIFACT_LEGIO);
 		if (!file.exists()) try {
 			return write(file.toPath(), ArtifactTemplate.create().format(frame).getBytes()).toFile().exists();
 		} catch (IOException ignored) {
@@ -76,7 +81,7 @@ public class ActivityAccessorRenderer {
 
 	private void createPages() throws IOException {
 		for (Activity.AbstractPage page : activity.abstractPageList()) {
-			Path pagePath = new File(rootDirectory(), SRC_DIRECTORY + separator + page.name() + ".html").toPath();
+			Path pagePath = new File(genDirectory, SRC_DIRECTORY + separator + page.name() + ".html").toPath();
 			if (!exists(pagePath)) write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
 		}
 	}
@@ -88,19 +93,19 @@ public class ActivityAccessorRenderer {
 
 	private void createDisplayWidget(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
-		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name()).toLowerCase() + "-widget.html");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : Konos.displaysOf(activity)) {
+		for (Component component : Konos.componentsOf(activity)) {
 			if (component.is(Display.class)) createDisplay(component.as(Display.class));
 			if (component.is(Dialog.class)) createDialogWidget(component.as(Dialog.class));
 			widgets.addSlot("widget", component.name());
 		}
-		Files.write(new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
+		Files.write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
 	}
 
 	private void createDisplay(Display component) throws IOException {
@@ -111,21 +116,21 @@ public class ActivityAccessorRenderer {
 
 	private void createDialogWidget(Dialog dialog) throws IOException {
 		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name());
-		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		Files.write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(rootDirectory(), SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
 		Files.write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
@@ -147,18 +152,17 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createStaticFiles() throws IOException {
-		File root = rootDirectory();
-		new File(root, SRC_DIRECTORY + separator + "fonts").mkdirs();
-		new File(root, SRC_DIRECTORY + separator + "images").mkdirs();
-		new File(root, SRC_DIRECTORY + separator + "styles").mkdirs();
-		new File(root, SRC_DIRECTORY + separator + "widgets").mkdirs();
-		File file = new File(root, SRC_DIRECTORY + separator + "components.html");
+		new File(genDirectory, SRC_DIRECTORY + separator + "fonts").mkdirs();
+		new File(genDirectory, SRC_DIRECTORY + separator + "images").mkdirs();
+		new File(genDirectory, SRC_DIRECTORY + separator + "styles").mkdirs();
+		new File(genDirectory, SRC_DIRECTORY + separator + "widgets").mkdirs();
+		File file = new File(genDirectory, SRC_DIRECTORY + separator + "components.html");
 		if (!file.exists()) copyStream(inputFrom("/ui/components.html"), new FileOutputStream(file));
-		file = new File(root, SRC_DIRECTORY + separator + "main.js");
+		file = new File(genDirectory, SRC_DIRECTORY + separator + "main.js");
 		if (!file.exists()) copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
 	}
 
-	private File rootDirectory() {
+	private File rootDirectory(Module webModule) {
 		return new File(webModule.getModuleFilePath()).getParentFile();
 	}
 
