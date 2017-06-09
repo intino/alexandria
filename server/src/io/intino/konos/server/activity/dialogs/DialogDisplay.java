@@ -55,10 +55,18 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	public void dialog(Dialog dialog) {
 		this.dialog = dialog;
-		this.dialog.valuesLoader(input -> {
-			if (inputsMap.containsKey(input.label()))
-				return inputsMap.get(input.label());
-			return inputsMap.getOrDefault(input.name(), singletonList(""));
+		this.dialog.valuesManager(new DialogValuesManager() {
+			@Override
+			public List<Object> values(Input input) {
+				if (inputsMap.containsKey(input.label()))
+					return inputsMap.get(input.label());
+				return inputsMap.getOrDefault(input.name(), singletonList(""));
+			}
+
+			@Override
+			public void values(Input input, List<Object> values) {
+				inputsMap.put(input.name(), values);
+			}
 		});
 		fillDefaultValues();
 	}
