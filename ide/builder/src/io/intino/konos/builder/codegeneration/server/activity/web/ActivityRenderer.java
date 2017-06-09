@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static java.util.stream.Collectors.toList;
 
 public class ActivityRenderer {
 	private final File src;
@@ -38,7 +37,7 @@ public class ActivityRenderer {
 	}
 
 	private void processActivity(Activity activity) {
-		final List<Dialog> dialogs = dialogsOf(activity);
+		final List<Dialog> dialogs = Konos.dialogsOf(activity);
 		final List<Display> displays = Konos.displaysOf(activity);
 		Frame frame = new Frame().addTypes("activity").
 				addSlot("package", packageName).
@@ -52,11 +51,6 @@ public class ActivityRenderer {
 		if (!Commons.javaFile(src, "AssetResourceLoader").exists())
 			writeFrame(src, "AssetResourceLoader", AssetResourceLoaderTemplate.create().format(resourceLoaderFrame()));
 		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
-	}
-
-
-	private List<Dialog> dialogsOf(Activity activity) {
-		return activity.abstractPageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
 	}
 
 	private Frame resourceLoaderFrame() {
