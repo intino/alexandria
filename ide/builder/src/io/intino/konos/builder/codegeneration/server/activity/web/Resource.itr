@@ -28,25 +28,26 @@ def type(page)
 
 		private void render() {
 			String clientId = UUID.randomUUID().toString();
-			$name+firstUpperCase~Action $name+firstLowercase~Action = new $name+firstUpperCase~Action();
-			$name+firstLowercase~Action.session = manager.currentSession();
-			$name+firstLowercase~Action.session.whenLogin(new Function<String, String>() {
+			$name+firstUpperCase~Action action = new $name+firstUpperCase~Action();
+			action.session = manager.currentSession();
+			action.session.whenLogin(new Function<String, String>() {
 				@Override
 				public String apply(String baseUrl) {
 					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
 				}
 			});
-			$name+firstLowercase~Action.session.whenLogout(b -> logout());
-			$name+firstLowercase~Action.box = box;
-			$name+firstLowercase~Action.clientId = clientId;
+			action.session.whenLogout(b -> logout());
+			action.box = box;
+			action.clientId = clientId;
+			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (client.soul() != null)
 					return;
 
-				io.intino.konos.server.activity.displays.Soul soul = $name+firstLowerCase~Action.prepareSoul(client);
+				io.intino.konos.server.activity.displays.Soul soul = action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
-					display.inject(notifier($name+firstLowerCase~Action.session, client, display));
-					display.inject($name+firstLowerCase~Action.session);
+					display.inject(notifier(action.session, client, display));
+					display.inject(action.session);
 					display.inject(soul);
 					display.inject(() -> soul);
 				});
@@ -60,8 +61,12 @@ def type(page)
 				}
 			});
 
-			manager.write($name+firstLowerCase~Action.execute());
+			manager.write(action.execute());
 		}
 
 	}
+end
+
+def type(parameter)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPath("$name", String.class);
 end
