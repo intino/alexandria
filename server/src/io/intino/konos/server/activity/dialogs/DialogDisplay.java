@@ -73,7 +73,8 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	@Override
     public void init() {
-    	notifier.render(DialogBuilder.build(dialog));
+    	prepare();
+		notifier.render(DialogBuilder.build(dialog));
 	}
 
 	public void addValue(DialogInput dialogInput) {
@@ -171,6 +172,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public abstract void send(Message message);
+	public abstract void prepare();
 
 	protected abstract String assertionName();
 

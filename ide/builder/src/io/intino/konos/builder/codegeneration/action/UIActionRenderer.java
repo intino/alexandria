@@ -8,6 +8,10 @@ import io.intino.konos.model.Display;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class UIActionRenderer extends ActionRenderer {
 
@@ -27,9 +31,19 @@ public class UIActionRenderer extends ActionRenderer {
 		if (page.uses().is(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
 		frame.addSlot("ui", page.uses().name() + (page.uses().is(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
+		frame.addSlot("parameter", parameters());
 		if (!alreadyRendered(destiny, page.name()))
 			Commons.writeFrame(destinyPackage(destiny), page.name() + "Action", template().format(frame));
 		//TODO else Update
+	}
+
+	private Frame[] parameters() {
+		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
+									  .map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
+
+		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
+								  .addSlot("type", "String")
+								  .addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
 	}
 
 }
