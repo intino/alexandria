@@ -25,6 +25,17 @@ public class Konos extends io.intino.konos.model.GraphWrapper {
 				.collect(toList());
 	}
 
+	public static List<Dialog> dialogsOf(Activity activity) {
+		return activity.abstractPageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
+	}
+
+	public static List<Component> componentsOf(Activity activity) {
+		List<Component> components = new ArrayList<>();
+		components.addAll(dialogsOf(activity));
+		components.addAll(displaysOf(activity));
+		return components;
+	}
+
 	private static HashSet<Display> allDisplays(Display d) {
 		final HashSet<Display> displays = new HashSet<>();
 		displaysOf(d, displays);
