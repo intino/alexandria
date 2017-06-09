@@ -34,7 +34,7 @@ def type(page & action)
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]
 
-		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+lowerCase"); }
+		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
 			return super.template("$name");

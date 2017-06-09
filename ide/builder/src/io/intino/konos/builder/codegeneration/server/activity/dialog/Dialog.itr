@@ -1,11 +1,9 @@
 def type(dialog)
 	package $package.dialogs;
 
-	import io.intino.konos.server.activity.dialogs.Dialog;
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
-	import io.intino.tara.magritte.Layer;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
 
@@ -14,7 +12,7 @@ def type(dialog)
 		}
 
 		@Override
-		public void prepare(Layer context) {
+		public void prepare() {
 		}
 
 		public static class Validators {
