@@ -18,7 +18,7 @@ public class Dialog {
     private TabsMode mode = TabsMode.Tabs;
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
-    private DialogValuesLoader valuesLoader = null;
+    private DialogValuesManager valuesManager = null;
 
     public enum TabsMode { Tabs, Wizard }
     public enum TextEdition { Normal, Uppercase, Lowercase, Email, Url }
@@ -81,8 +81,8 @@ public class Dialog {
         return tabList;
     }
 
-    public Dialog valuesLoader(DialogValuesLoader loader) {
-        this.valuesLoader = loader;
+    public Dialog valuesManager(DialogValuesManager loader) {
+        this.valuesManager = loader;
         return this;
     }
 
@@ -240,11 +240,21 @@ public class Dialog {
             }
 
             public <T extends Object> T value() {
-                return (T) (valuesLoader != null ? valuesLoader.values(this).get(0) : defaultValue());
+                return (T) values().get(0);
             }
 
             public <T extends Object> List<T> values() {
-                return (List<T>) (valuesLoader != null ? valuesLoader.values(this) : defaultValue());
+                return (List<T>) (valuesManager != null ? valuesManager.values(this) : singletonList(defaultValue()));
+            }
+
+            public Input value(Object value) {
+                return values(singletonList(value));
+            }
+
+            public Input values(List<Object> values) {
+                if (valuesManager == null) return this;
+                valuesManager.values(this, values);
+                return this;
             }
 
             public <T extends Object> T defaultValue() {
