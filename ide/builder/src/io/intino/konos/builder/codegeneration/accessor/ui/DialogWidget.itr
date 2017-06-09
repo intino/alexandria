@@ -68,6 +68,7 @@ def type(dialog)
 				_done : function() {
 					if (this.delegate == null) return;
 					this.delegate.done();
+					if (document.onDialogCompleted) document.onDialogCompleted();
 				},
 
 				_refresh: function(validation) {
