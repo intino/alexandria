@@ -18,6 +18,10 @@ public class DisplayNotifier {
         put("personify", initializationParameters(id, name));
     }
 
+    public void personify(String id, String name, String object) {
+        put("personify", initializationParameters(id, name, object));
+    }
+
     public void personifyOnce(String id, String name) {
         put("personifyOnce", initializationParameters(id, name));
     }
@@ -85,6 +89,12 @@ public class DisplayNotifier {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
         parameters.put("display", name);
+        return parameters;
+    }
+
+    private Map<String, Object> initializationParameters(String id, String name, String object) {
+        Map<String, Object> parameters = initializationParameters(id, name);
+        parameters.put("object", object);
         return parameters;
     }
 
