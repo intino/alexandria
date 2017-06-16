@@ -41,8 +41,11 @@ def type(page)
 			action.clientId = clientId;
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
+				if (!client.id().equals(action.clientId))
+					return false;
+
 				if (client.soul() != null)
-					return;
+					return false;
 
 				io.intino.konos.server.activity.displays.Soul soul = action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
@@ -52,6 +55,8 @@ def type(page)
 					display.inject(() -> soul);
 				});
 				client.soul(soul);
+
+				return true;
 			});
 
 			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.server.activity.services.push.ActivityClient>() {

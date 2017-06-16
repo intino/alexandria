@@ -1,10 +1,11 @@
 package io.intino.konos.server.pushservice;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface PushService<S extends Session<C>, C extends Client> extends SessionProvider<S, C> {
 
-	void onOpen(Consumer<C> client);
+	void onOpen(Function<C, Boolean> client);
 
 	Connection onMessage(String clientId, Consumer<Message> message);
 

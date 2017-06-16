@@ -73,7 +73,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	@Override
     public void init() {
-    	prepare();
+    	prepareDialog();
 		notifier.render(DialogBuilder.build(dialog));
 	}
 
@@ -136,6 +136,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		message.write("form", serializedValues());
 
 		send(message);
+		updateGraph();
 		notifier.done();
 	}
 
@@ -172,7 +173,8 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public abstract void send(Message message);
-	public abstract void prepare();
+	public abstract void prepareDialog();
+	public abstract void updateGraph();
 
 	protected abstract String assertionName();
 
