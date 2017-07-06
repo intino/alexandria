@@ -1,6 +1,7 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.Consumer;
+import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnection;
@@ -10,6 +11,7 @@ import org.apache.activemq.command.ActiveMQTopic;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import static java.util.logging.Logger.getGlobal;
 
 public class Ness {
 
+	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
 	private final String user;
 	private final String password;
@@ -69,6 +72,20 @@ public class Ness {
 		} catch (JMSException e) {
 			getGlobal().severe(e.getMessage());
 			return null;
+		}
+	}
+
+	public void send(String path, io.intino.ness.inl.Message message) {
+		newProducer(path).produce(MessageFactory.createMessageFor(message.toString()));
+	}
+
+	public void register(String path, io.intino.ness.inl.Message message) {
+		try {
+			final TextMessage jmsMessage = (TextMessage) MessageFactory.createMessageFor(message.toString());
+			if (jmsMessage == null) return;
+			jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
+			newProducer(path).produce(jmsMessage);
+		} catch (JMSException ignored) {
 		}
 	}
 
