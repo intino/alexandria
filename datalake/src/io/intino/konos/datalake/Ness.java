@@ -39,7 +39,7 @@ public class Ness {
 	public void start() {
 		try {
 			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
-			connection.setClientID(this.clientID);
+			if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
 			connection.start();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) {
@@ -67,6 +67,10 @@ public class Ness {
 	}
 
 	public TopicProducer newProducer(String path) {
+		if (this.session() == null) {
+			getGlobal().log(SEVERE, "Session is null");
+			return null;
+		}
 		try {
 			return new TopicProducer(session(), path);
 		} catch (JMSException e) {
@@ -90,12 +94,14 @@ public class Ness {
 	}
 
 	public TopicConsumer registerConsumer(String path, Consumer consumer) {
+		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
 		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
 		topicConsumer.listen(consumer);
 		return topicConsumer;
 	}
 
 	public TopicConsumer registerConsumer(String path, Consumer consumer, String subscriberID) {
+		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
 		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
 		topicConsumer.listen(consumer, subscriberID);
 		return topicConsumer;
