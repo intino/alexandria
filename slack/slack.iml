@@ -27,7 +27,7 @@
     <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.0.5" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.security:xml-security-impl:1.0" level="project" />
   </component>
 </module>

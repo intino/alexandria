@@ -40,8 +40,17 @@ def type(events)
 			}
 
 			public void consume(Message message) {
+				if (isRegisterOnly(message)) return;
 				String text = textFrom(message);
 				$messageHandler+select...[$NL~else ]
+			}
+		}
+
+		private static boolean isRegisterOnly(Message message) {
+			try {
+				return message.getBooleanProperty(Ness.REGISTER_ONLY);
+			} catch (JMSException e) {
+				return false;
 			}
 		}
 	}
