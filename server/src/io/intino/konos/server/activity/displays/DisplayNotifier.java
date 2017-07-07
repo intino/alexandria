@@ -26,6 +26,10 @@ public class DisplayNotifier {
         put("personifyOnce", initializationParameters(id, name));
     }
 
+    public void personifyOnce(String id, String name, String object) {
+        put("personifyOnce", initializationParameters(id, name, object));
+    }
+
     public void die(String id) {
         put("die", singletonMap("id", id));
     }
