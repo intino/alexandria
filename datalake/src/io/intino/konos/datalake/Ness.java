@@ -1,6 +1,7 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.Consumer;
+import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnection;
@@ -10,6 +11,7 @@ import org.apache.activemq.command.ActiveMQTopic;
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import static java.util.logging.Logger.getGlobal;
 
 public class Ness {
 
+	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
 	private final String user;
 	private final String password;
@@ -36,7 +39,7 @@ public class Ness {
 	public void start() {
 		try {
 			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
-			connection.setClientID(this.clientID);
+			if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
 			connection.start();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 		} catch (JMSException e) {
@@ -64,6 +67,10 @@ public class Ness {
 	}
 
 	public TopicProducer newProducer(String path) {
+		if (this.session() == null) {
+			getGlobal().log(SEVERE, "Session is null");
+			return null;
+		}
 		try {
 			return new TopicProducer(session(), path);
 		} catch (JMSException e) {
@@ -72,13 +79,29 @@ public class Ness {
 		}
 	}
 
+	public void send(String path, io.intino.ness.inl.Message message) {
+		newProducer(path).produce(MessageFactory.createMessageFor(message.toString()));
+	}
+
+	public void register(String path, io.intino.ness.inl.Message message) {
+		try {
+			final TextMessage jmsMessage = (TextMessage) MessageFactory.createMessageFor(message.toString());
+			if (jmsMessage == null) return;
+			jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
+			newProducer(path).produce(jmsMessage);
+		} catch (JMSException ignored) {
+		}
+	}
+
 	public TopicConsumer registerConsumer(String path, Consumer consumer) {
+		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
 		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
 		topicConsumer.listen(consumer);
 		return topicConsumer;
 	}
 
 	public TopicConsumer registerConsumer(String path, Consumer consumer, String subscriberID) {
+		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
 		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
 		topicConsumer.listen(consumer, subscriberID);
 		return topicConsumer;
