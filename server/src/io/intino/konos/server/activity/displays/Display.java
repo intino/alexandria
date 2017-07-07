@@ -53,6 +53,11 @@ public class Display<N extends DisplayNotifier> {
         init();
     }
 
+    public final void personifyOnce(String object) {
+        notifier.personifyOnce(id, name(), object);
+        init();
+    }
+
     public void setLanguage(String language) {
         propagateLanguageChanged(language);
     }
