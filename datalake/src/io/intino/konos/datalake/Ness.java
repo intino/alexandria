@@ -119,7 +119,7 @@ public class Ness {
 
 	public void closeSession() {
 		try {
-			session.close();
+			if (session != null) session.close();
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
