@@ -71,7 +71,10 @@ public abstract class Bot {
 			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
 			final String context = commandInfo != null ? commandInfo.context : "";
 			final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
-			Command command = commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName) ? commands.get(commandKey) : commandNotFound();
+			Command command = commandNotFound();
+			if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
+				command = commands.get(commandKey);
+			else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
 			final Object response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
