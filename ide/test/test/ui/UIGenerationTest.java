@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.BoxConfigurationRenderer;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.SchemaAdaptersRenderer;
+import io.intino.konos.builder.codegeneration.server.activity.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ActivityRenderer;
 import io.intino.konos.builder.codegeneration.server.activity.web.ResourceRenderer;
@@ -42,7 +43,9 @@ public class UIGenerationTest {
 	public void testTest() throws Exception {
 		File gen = new File("test-gen", TEST);
 		final Graph graph = Graph.use(Konos.class, null).load("test");
+
 		new DisplayRenderer(null, graph, gen, gen, TEST, "System").execute();
+		new DialogRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ResourceRenderer(null, graph, gen, gen, TEST, "System").execute();
 		new ActivityRenderer(graph, gen, gen, TEST, "System").execute();
 		new SchemaAdaptersRenderer(graph, gen, TEST).execute();
