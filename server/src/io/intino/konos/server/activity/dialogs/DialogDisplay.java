@@ -155,8 +155,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		message.write("form", serializedValues());
 
 		send(message);
-		updateGraph();
-		notifier.done();
+		notifier.done(updateGraph().toString());
 	}
 
 	private String serializedValues() {
@@ -193,7 +192,11 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	public abstract void send(Message message);
 	public abstract void prepareDialog();
-	public abstract void updateGraph();
+	public abstract Modification updateGraph();
+
+	public enum Modification {
+		ItemModified, CatalogModified
+	}
 
 	protected abstract String assertionName();
 

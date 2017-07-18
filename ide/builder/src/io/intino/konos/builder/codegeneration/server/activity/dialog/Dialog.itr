@@ -2,8 +2,10 @@ def type(dialog)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import io.intino.ness.inl.Message;
 	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
+	import io.intino.konos.server.activity.dialogs.Modification;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
 
@@ -12,7 +14,16 @@ def type(dialog)
 		}
 
 		@Override
-		public void prepare() {
+		public void send(Message message) {
+		}
+
+		@Override
+		public void prepareDialog() {
+		}
+
+		@Override
+		public Modification updateGraph() {
+			return Modification.ItemModified;
 		}
 
 		public static class Validators {
