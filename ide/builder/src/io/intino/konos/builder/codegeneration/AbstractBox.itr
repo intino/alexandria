@@ -115,6 +115,7 @@ def type(service & rest) trigger(setup)
 end
 
 def type(dataLake) trigger(init)
+	if (configuration().nessConfiguration() == null) return;
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
 	this.ness.start();
 	NessEvents.addHandlers(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
