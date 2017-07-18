@@ -6,6 +6,7 @@ import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.command.ActiveMQTopic;
 
 import javax.jms.Connection;
@@ -36,14 +37,16 @@ public class Ness {
 		this.clientID = clientID;
 	}
 
-	public void start() {
+	public Session start() {
 		try {
 			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
 			if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
 			connection.start();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
+			return this.session;
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
+			return null;
 		}
 	}
 
@@ -59,7 +62,7 @@ public class Ness {
 	}
 
 	public javax.jms.Session session() {
-		return session;
+		return ((ActiveMQSession) session).isClosed() ? start() : session;
 	}
 
 	public javax.jms.Connection connection() {
@@ -119,7 +122,7 @@ public class Ness {
 
 	public void closeSession() {
 		try {
-			session.close();
+			if (session != null) session.close();
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
