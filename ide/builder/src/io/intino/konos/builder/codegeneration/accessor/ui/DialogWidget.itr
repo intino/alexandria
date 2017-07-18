@@ -65,10 +65,10 @@ def type(dialog)
 					this._loadDelegate();
 				},
 
-				_done : function() {
+				_done : function(modification) {
 					if (this.delegate == null) return;
 					this.delegate.done();
-					if (document.onDialogCompleted) document.onDialogCompleted();
+					if (document.onDialogCompleted) document.onDialogCompleted(modification);
 				},
 
 				_refresh: function(validation) {

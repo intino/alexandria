@@ -21,8 +21,8 @@ public class DialogNotifier extends io.intino.konos.server.activity.displays.Dis
 		putToDisplay("upload", "value", value);
 	}
 
-	public void done() {
-		putToDisplay("done");
+	public void done(String modification) {
+		putToDisplay("done", "value", modification);
 	}
 }
 
