@@ -133,7 +133,16 @@
         function _addEvents(alpacaInput, input) {
             return {
                 change : function() {
-                    document.onInputChange(input, this.getValue());
+                    var parent = this.getParent();
+                    var position = 0;
+
+                    if (parent != null) {
+                        for (position=0; position<parent.children.length; position++) {
+                            if (parent.children[position] == this) break;
+                        }
+                    }
+
+                    document.onInputChange(input, this.getValue(), position);
                 }
             }
         }

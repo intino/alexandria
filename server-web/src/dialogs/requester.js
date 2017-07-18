@@ -2,6 +2,9 @@ var KonosDialogWidgetBehaviors = KonosDialogWidgetBehaviors || {};
 
 KonosDialogWidgetBehaviors.Requester = {
 
+    saveValue : function(value) {
+        this.carry("saveValue", { "value" : value });
+    },
     addValue : function(value) {
     	this.carry("addValue", { "value" : value });
     },
