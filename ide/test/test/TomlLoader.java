@@ -25,6 +25,5 @@ public class TomlLoader {
 		System.out.println("CamelCaseToSomethingElse"
 				.replaceAll(regex, replacement)
 				.toLowerCase());
-
 	}
 }

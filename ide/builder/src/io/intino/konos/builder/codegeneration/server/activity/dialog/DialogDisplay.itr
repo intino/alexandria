@@ -36,33 +36,13 @@ end
 
 def type(tab)
 	Dialog.Tab w$name+SnakeCaseToCamelCase = dialog.createTab("$label");
-	$text...[$NL]
-	$section...[$NL]
-	$memo...[$NL]
-	$radio...[$NL]
-	$check...[$NL]
-	$combo...[$NL]
-	$password...[$NL]
-	$file...[$NL]
-	$picture...[$NL]
-	$date...[$NL]
-	$dateTime...[$NL]
+	$input...[$NL]
 end
 
 
 def type(section)
 	Dialog.Section w$name+SnakeCaseToCamelCase = dialog.createSection();
-	$text...[$NL]
-	$section...[$NL]
-	$memo...[$NL]
-	$radio...[$NL]
-	$check...[$NL]
-	$combo...[$NL]
-	$password...[$NL]
-	$file...[$NL]
-	$picture...[$NL]
-	$date...[$NL]
-	$dateTime...[$NL]
+	$input...[$NL]
 end
 
 def type(text)

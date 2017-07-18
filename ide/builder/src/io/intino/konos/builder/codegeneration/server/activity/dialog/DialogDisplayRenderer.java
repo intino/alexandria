@@ -52,17 +52,7 @@ public class DialogDisplayRenderer {
 		final Frame tabFrame = new Frame().addTypes("tab");
 		if (!tab.name().isEmpty()) tabFrame.addSlot("name", tab.name());
 		if (!tab.label().isEmpty()) tabFrame.addSlot("label", tab.label());
-		for (Tab.Text text : tab.textList()) tabFrame.addSlot("text", frameOf(text));
-		for (Tab.Section section : tab.sectionList()) tabFrame.addSlot("section", frameOf(section));
-		for (Tab.Memo memo : tab.memoList()) tabFrame.addSlot("memo", frameOf(memo));
-		for (Tab.RadioBox radio : tab.radioBoxList()) tabFrame.addSlot("radio", frameOf(radio));
-		for (Tab.CheckBox check : tab.checkBoxList()) tabFrame.addSlot("check", frameOf(check));
-		for (Tab.ComboBox combo : tab.comboBoxList()) tabFrame.addSlot("combo", frameOf(combo));
-		for (Tab.Password password : tab.passwordList()) tabFrame.addSlot("password", frameOf(password));
-		for (Tab.File file : tab.fileList()) tabFrame.addSlot("file", frameOf(file));
-		for (Tab.Picture picture : tab.pictureList()) tabFrame.addSlot("picture", frameOf(picture));
-		for (Tab.Date date : tab.dateList()) tabFrame.addSlot("date", frameOf(date));
-		for (Tab.DateTime dateTime : tab.dateTimeList()) tabFrame.addSlot("dateTime", frameOf(dateTime));
+		for (Tab.Input input : tab.inputList()) processInput(tabFrame, input);
 		return tabFrame;
 	}
 
@@ -89,19 +79,23 @@ public class DialogDisplayRenderer {
 		if (!section.name().isEmpty()) sectionFrame.addSlot("name", section.name());
 		if (!section.label().isEmpty()) sectionFrame.addSlot("label", section.label());
 		final List<Tab.Input> inputs = section.inputList();
-		inputs.stream().filter(i -> i.is(Tab.Text.class)).map(i -> i.as(Tab.Text.class)).forEach(i -> sectionFrame.addSlot("text", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.Section.class)).map(i -> i.as(Tab.Section.class)).forEach(i -> sectionFrame.addSlot("section", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.Memo.class)).map(i -> i.as(Tab.Memo.class)).forEach(i -> sectionFrame.addSlot("memo", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.RadioBox.class)).map(i -> i.as(Tab.RadioBox.class)).forEach(i -> sectionFrame.addSlot("radio", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.CheckBox.class)).map(i -> i.as(Tab.CheckBox.class)).forEach(i -> sectionFrame.addSlot("check", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.ComboBox.class)).map(i -> i.as(Tab.ComboBox.class)).forEach(i -> sectionFrame.addSlot("combo", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.Password.class)).map(i -> i.as(Tab.Password.class)).forEach(i -> sectionFrame.addSlot("password", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.File.class)).map(i -> i.as(Tab.File.class)).forEach(i -> sectionFrame.addSlot("file", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.Picture.class)).map(i -> i.as(Tab.Picture.class)).forEach(i -> sectionFrame.addSlot("picture", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.Date.class)).map(i -> i.as(Tab.Date.class)).forEach(i -> sectionFrame.addSlot("date", frameOf(i)));
-		inputs.stream().filter(i -> i.is(Tab.DateTime.class)).map(i -> i.as(Tab.DateTime.class)).forEach(i -> sectionFrame.addSlot("dateTime", frameOf(i)));
+		for (Tab.Input input : inputs) processInput(sectionFrame, input);
 		addCommon(sectionFrame, section);
 		return sectionFrame;
+	}
+
+	private void processInput(Frame sectionFrame, Tab.Input input) {
+		if (input.is(Tab.Text.class)) sectionFrame.addSlot("input", frameOf((Tab.Text) input));
+		else if (input.is(Tab.Section.class)) sectionFrame.addSlot("input", frameOf((Tab.Section) input));
+		else if (input.is(Tab.Memo.class)) sectionFrame.addSlot("input", frameOf((Tab.Memo) input));
+		else if (input.is(Tab.RadioBox.class)) sectionFrame.addSlot("input", frameOf((Tab.RadioBox) input));
+		else if (input.is(Tab.CheckBox.class)) sectionFrame.addSlot("input", frameOf((Tab.CheckBox) input));
+		else if (input.is(Tab.ComboBox.class)) sectionFrame.addSlot("input", frameOf((Tab.ComboBox) input));
+		else if (input.is(Tab.Password.class)) sectionFrame.addSlot("input", frameOf((Tab.Password) input));
+		else if (input.is(Tab.File.class)) sectionFrame.addSlot("input", frameOf((Tab.File) input));
+		else if (input.is(Tab.Picture.class)) sectionFrame.addSlot("input", frameOf((Tab.Picture) input));
+		else if (input.is(Tab.Date.class)) sectionFrame.addSlot("input", frameOf((Tab.Date) input));
+		else if (input.is(Tab.DateTime.class)) sectionFrame.addSlot("input", frameOf((Tab.DateTime) input));
 	}
 
 	private Frame frameOf(Tab.Memo memo) {
@@ -201,7 +195,7 @@ public class DialogDisplayRenderer {
 		frame.addSlot("required", input.required());
 		frame.addSlot("placeholder", input.placeHolder());
 		frame.addSlot("defaultValue", input.defaultValue());
-		if(input.is(MultipleInput.class)) {
+		if (input.is(MultipleInput.class)) {
 			final MultipleInput multiple = input.asMultiple();
 			frame.addSlot("multiple", new Frame().addTypes("multiple").addSlot("min", multiple.min()).addSlot("max", multiple.max()));
 		}
