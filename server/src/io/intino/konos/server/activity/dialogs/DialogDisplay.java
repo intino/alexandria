@@ -102,7 +102,11 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	private void register(Input input, Object value, int position) {
 		if (!input.isMultiple()) inputsMap.remove(input.name());
 		if (!inputsMap.containsKey(input.name())) inputsMap.put(input.name(), new ArrayList<>());
-		inputsMap.get(input.name()).add(position, value);
+		if (position == inputsMap.get(input.name()).size())
+			inputsMap.get(input.name()).add(position, value);
+		else {
+			inputsMap.get(input.name()).set(position, value);
+		}
 	}
 
 	private void register(Input input, Object value) {

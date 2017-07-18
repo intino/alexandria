@@ -87,8 +87,12 @@ def type(dialog)
 					}
 				},
 
-				_inputChanged : function(input, value) {
-					this.addValue({ name: input.label, value: value });
+				_inputChanged : function(input, value, position) {
+					this.saveValue({ name: input.label, value: value, position: position });
+				},
+
+				_inputValueAdded : function(input, position) {
+					this.addValue({ input: input.label, position: position });
 				},
 
 				_inputValueRemoved : function(input, position) {
@@ -128,6 +132,7 @@ def type(dialog)
 					this.delegate = delegate;
 					this.delegate.render(JSON.parse(this._dialog.definition), this._configuration());
 					this.delegate.onInputChange = this._inputChanged.bind(this);
+					this.delegate.onAddValue = this._inputValueAdded.bind(this);
 					this.delegate.onRemoveValue = this._inputValueRemoved.bind(this);
 					this.delegate.onOperation = this._operationExecuted.bind(this);
 				}
