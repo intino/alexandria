@@ -20,7 +20,7 @@ public abstract class Bot {
 	private final Map<String, Command> commands = new LinkedHashMap<>();
 	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
 	private SlackSession session;
-
+	private final Set<String> processedMessages = new LinkedHashSet<>();
 
 	public Bot(String token) {
 		this.token = token;
@@ -64,7 +64,7 @@ public abstract class Bot {
 
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
-			if (message.getSender().isBot()) return;
+			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
 			final String messageContent = StringEscapeUtils.unescapeHtml4(message.getMessageContent());
 			String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 			String userName = message.getSender().getUserName();
@@ -78,12 +78,17 @@ public abstract class Bot {
 			final Object response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
-			else if (response instanceof SlackAttachment)
-				session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
+			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
+	}
+
+	private boolean isAlreadyProcessed(SlackMessagePosted message) {
+		final boolean added = processedMessages.add(message.getTimestamp());
+		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
+		return !added;
 	}
 
 	private String[] contentFromSlackFile(SlackFile slackFile) {
