@@ -77,9 +77,17 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		notifier.render(DialogBuilder.build(dialog));
 	}
 
-	public void addValue(DialogInput dialogInput) {
+	public void saveValue(DialogInput dialogInput) {
 		Input input = dialog.input(dialogInput.name());
-		register(input, dialogInput.value());
+		register(input, dialogInput.value(), dialogInput.position());
+		refresh(input);
+	}
+
+	public void addValue(DialogInputValueIdentifier identifier) {
+		Input input = dialog.input(identifier.input());
+		if (!inputsMap.containsKey(input.name())) return;
+		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
+		inputsMap.get(input.name()).add(identifier.position());
 		refresh(input);
 	}
 
@@ -91,10 +99,17 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		refresh(input);
 	}
 
-	private void register(Input input, Object value) {
+	private void register(Input input, Object value, int position) {
 		if (!input.isMultiple()) inputsMap.remove(input.name());
 		if (!inputsMap.containsKey(input.name())) inputsMap.put(input.name(), new ArrayList<>());
-		inputsMap.get(input.name()).add(value);
+		inputsMap.get(input.name()).add(position, value);
+	}
+
+	private void register(Input input, Object value) {
+		int position = 0;
+		if (input.isMultiple() && inputsMap.containsKey(input.name()))
+			position = inputsMap.get(input.name()).size();
+		register(input, value, position);
 	}
 
 	private void refresh(Input input) {

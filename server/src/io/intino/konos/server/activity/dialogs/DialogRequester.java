@@ -20,7 +20,8 @@ public class DialogRequester extends DisplayRequester {
 		if (display == null) return;
 		String operation = operation();
 
-		if (operation.equals("addValue")) display.addValue(manager.fromQuery("value", DialogInput.class));
+		if (operation.equals("saveValue")) display.saveValue(manager.fromQuery("value", DialogInput.class));
+		else if (operation.equals("addValue")) display.addValue(manager.fromQuery("value", DialogInputValueIdentifier.class));
 		else if (operation.equals("removeValue")) display.removeValue(manager.fromQuery("value", DialogInputValueIdentifier.class));
 		else if (operation.equals("execute")) display.execute();
 		else if (operation.equals("uploadResource")) display.uploadResource(manager.fromQuery("value", DialogInputResource.class));

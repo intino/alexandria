@@ -37,9 +37,13 @@
             result.fields.item = AlpacaWidgetFactory.get(input.type, false).converter().options(input);
             result.fields.item.label = "";
             result.events = null;
-            result.actionbar = {
+            result.toolbar = {
                 "actions" : [{
-                    "action": "add"
+                    "action": "add",
+                    "click" : function(key, action, itemIndex) {
+                        document.onAddValue(input, itemIndex);
+                        this.handleToolBarAddItemClick(null);
+                    }
                 }, {
                     "action": "remove",
                     "click" : function(key, action, itemIndex) {
