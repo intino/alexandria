@@ -48,7 +48,7 @@ def type(events)
 
 		private static boolean isRegisterOnly(Message message) {
 			try {
-				return message.getBooleanProperty(Ness.REGISTER_ONLY);
+				return message.getBooleanProperty(io.intino.konos.datalake.Ness.REGISTER_ONLY);
 			} catch (JMSException e) {
 				return false;
 			}
