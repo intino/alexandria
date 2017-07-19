@@ -1,7 +1,6 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.Consumer;
-import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnection;
@@ -16,6 +15,7 @@ import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getGlobal;
 
@@ -50,6 +50,20 @@ public class Ness {
 		}
 	}
 
+	public List<String> tanks() {
+		List<String> topics = new ArrayList<>();
+		try {
+			for (ActiveMQTopic topic : ((ActiveMQConnection) connection).getDestinationSource().getTopics())
+				topics.add(topic.getTopicName());
+		} catch (JMSException e) {
+		}
+		return topics;
+	}
+
+	public Tank tank(String tank) {
+		return new Tank(tank);
+	}
+
 	public void stop() {
 		try {
 			session.close();
@@ -69,62 +83,66 @@ public class Ness {
 		return connection;
 	}
 
-	public TopicProducer newProducer(String path) {
-		if (this.session() == null) {
-			getGlobal().log(SEVERE, "Session is null");
-			return null;
-		}
-		try {
-			return new TopicProducer(session(), path);
-		} catch (JMSException e) {
-			getGlobal().severe(e.getMessage());
-			return null;
-		}
-	}
-
-	public void send(String path, io.intino.ness.inl.Message message) {
-		newProducer(path).produce(MessageFactory.createMessageFor(message.toString()));
-	}
-
-	public void register(String path, io.intino.ness.inl.Message message) {
-		try {
-			final TextMessage jmsMessage = (TextMessage) MessageFactory.createMessageFor(message.toString());
-			if (jmsMessage == null) return;
-			jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
-			newProducer(path).produce(jmsMessage);
-		} catch (JMSException ignored) {
-		}
-	}
-
-	public TopicConsumer registerConsumer(String path, Consumer consumer) {
-		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
-		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
-		topicConsumer.listen(consumer);
-		return topicConsumer;
-	}
-
-	public TopicConsumer registerConsumer(String path, Consumer consumer, String subscriberID) {
-		if (this.session() == null) getGlobal().log(SEVERE, "Session is null");
-		TopicConsumer topicConsumer = new TopicConsumer(this.session(), path);
-		topicConsumer.listen(consumer, subscriberID);
-		return topicConsumer;
-	}
-
-	public List<String> topics() {
-		List<String> topics = new ArrayList<>();
-		try {
-			for (ActiveMQTopic topic : ((ActiveMQConnection) connection).getDestinationSource().getTopics())
-				topics.add(topic.getTopicName());
-		} catch (JMSException e) {
-		}
-		return topics;
-	}
-
 	public void closeSession() {
 		try {
 			if (session != null) session.close();
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
+	}
+
+	private TopicProducer newProducer(String tank) {
+		if (this.session() == null) {
+			getGlobal().log(SEVERE, "Session is null");
+			return null;
+		}
+		try {
+			return new TopicProducer(session(), tank);
+		} catch (JMSException e) {
+			getGlobal().severe(e.getMessage());
+			return null;
+		}
+	}
+
+	public class Tank {
+		private String tank;
+
+		Tank(String tank) {
+			this.tank = tank;
+		}
+
+		public void feed(io.intino.ness.inl.Message message) {
+			final TopicProducer producer = newProducer(tank);
+			if (producer != null) producer.produce(createMessageFor(message.toString()));
+		}
+
+		public void drop(io.intino.ness.inl.Message message) {
+			try {
+				final TextMessage jmsMessage = (TextMessage) createMessageFor(message.toString());
+				if (jmsMessage == null) return;
+				jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
+				final TopicProducer producer = newProducer(tank);
+				if (producer != null) producer.produce(jmsMessage);
+			} catch (JMSException ignored) {
+			}
+		}
+
+		public TopicConsumer sink(Sink sink) {
+			if (session() == null) getGlobal().log(SEVERE, "Session is null");
+			TopicConsumer topicConsumer = new TopicConsumer(session(), tank);
+			topicConsumer.listen(sink);
+			return topicConsumer;
+		}
+
+		public TopicConsumer sink(Sink sink, String sinkID) {
+			if (session() == null) getGlobal().log(SEVERE, "Session is null");
+			TopicConsumer topicConsumer = new TopicConsumer(session(), tank);
+			topicConsumer.listen(sink, sinkID);
+			return topicConsumer;
+		}
+	}
+
+	public interface Sink extends Consumer {
+
 	}
 }
