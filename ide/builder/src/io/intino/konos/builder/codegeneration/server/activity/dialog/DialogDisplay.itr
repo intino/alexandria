@@ -41,7 +41,8 @@ end
 
 
 def type(section)
-	Dialog.Section w$name+SnakeCaseToCamelCase = dialog.createSection();
+	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = $owner.createSection();
+	w$name+SnakeCaseToCamelCase.label($label);
 	$input...[$NL]
 end
 

@@ -75,13 +75,13 @@ public class DialogDisplayRenderer {
 	}
 
 	private Frame frameOf(Tab.Section section) {
-		final Frame sectionFrame = new Frame().addTypes("section");
-		if (!section.name().isEmpty()) sectionFrame.addSlot("name", section.name());
-		if (!section.label().isEmpty()) sectionFrame.addSlot("label", section.label());
+		final Frame frame = new Frame().addTypes("section");
+		if (!section.name().isEmpty()) frame.addSlot("name", section.name());
+		if (!section.label().isEmpty()) frame.addSlot("label", section.label());
 		final List<Tab.Input> inputs = section.inputList();
-		for (Tab.Input input : inputs) processInput(sectionFrame, input);
-		addCommon(sectionFrame, section);
-		return sectionFrame;
+		for (Tab.Input input : inputs) processInput(frame, input);
+		addCommon(frame, section);
+		return frame;
 	}
 
 	private void processInput(Frame sectionFrame, Tab.Input input) {
