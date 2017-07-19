@@ -39,6 +39,7 @@ public class TopicConsumer {
 
 	public void listen(Consumer reader) {
 		try {
+			if (session == null) return;
 			consumer = session.createConsumer(session.createTopic(topic));
 			consumer.setMessageListener(reader::consume);
 		} catch (Exception e) {
@@ -48,6 +49,7 @@ public class TopicConsumer {
 
 	public void listen(Consumer reader, String clientID) {
 		try {
+			if (session == null) return;
 			consumer = session.createDurableSubscriber(session.createTopic(topic), clientID);
 			consumer.setMessageListener(reader::consume);
 		} catch (Exception e) {

@@ -11,10 +11,9 @@ def type(boxConfiguration)
 		}
 
 		private void fillWithArgs() {
-			[if (this.store == null && args.get("graph.store") != null)
-				$tara+empty~store = new java.io.File(args.remove("graph.store"));]
-			$service+fill...[$NL][
-			$service+auth...[$NL]]
+			[if (this.store == null && args.get("graph_store") != null)
+				$tara+empty~store = new java.io.File(args.remove("graph_store"));]
+			$service+fill...[$NL]
 		}
 
 		[$tara+empty~public java.io.File store() {
@@ -35,18 +34,19 @@ def type(service) trigger(field)
 end
 
 def type(service & rest) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.port"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase.port")), args.remove("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]);
+	if (args.containsKey("$name+firstLowerCase~_port"))
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port")), args.remove("$name+firstLowerCase~_webDirectory")[, $custom+parameter...[, ]]);
+
 end
 
 def type(service & jms) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.url"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.url"), args.remove("$name+firstLowerCase.user"), args.remove("$name+firstLowerCase.password")[, $custom+parameter...[, ]]);
+	if (args.containsKey("$name+firstLowerCase~_url"))
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase~_url"), args.remove("$name+firstLowerCase~_user"), args.remove("$name+firstLowerCase~_password")[, $custom+parameter...[, ]]);
 end
 
 def type(service & datalake) trigger(fill)
-	if (args.containsKey("ness.url"))
-		nessConfiguration(args.remove("ness.url"), args.remove("ness.user"), args.remove("ness.password"), args.remove("ness.clientID"));
+	if (args.containsKey("ness_url"))
+		nessConfiguration(args.remove("ness_url"), args.remove("ness_user"), args.remove("ness_password"), args.remove("ness_clientID"));
 end
 
 def type(service & eventHandler) trigger(fill)
@@ -54,20 +54,19 @@ def type(service & eventHandler) trigger(fill)
 end
 
 def type(service & slack) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.token"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase.token"));
+	if (args.containsKey("$name+firstLowerCase~_token"))
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase~_token"));
 end
 
 def type(service & activity) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase.port"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase.port")), args.remove("$name+firstLowerCase.webDirectory")[, $custom+parameter...[, ]]);
+	if (args.containsKey("$name+firstLowerCase~_port")) {
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port")), args.remove("$name+firstLowerCase~_webDirectory")[, $custom+parameter...[, ]]);
+		$authURL+assign
+	}
 end
 
-def type(service & auth) type(rest | activity) trigger(auth)
-	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = Setup.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
-end
-
-def type(service) trigger(auth)
+def trigger(authURL)
+	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = $configuration+snakeCaseToCamelCase+firstUpperCase~Box.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
 end
 
 def type(service & rest) trigger(confClass)
@@ -241,7 +240,7 @@ def type(custom) trigger(assign)
 end
 
 def type(custom) trigger(parameter)
-	args.remove("$conf+firstLowerCase.$name+validname+firstLowerCase")
+	args.remove("$conf+firstLowerCase~_$name+validname+firstLowerCase")
 end
 
 

@@ -2,16 +2,18 @@ package io.intino.konos.builder.codegeneration.server.activity.web;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.action.UIActionRenderer;
-import io.intino.konos.model.Activity;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.Activity;
+import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static java.util.stream.Collectors.toList;
 
 public class ResourceRenderer {
 
@@ -42,6 +44,7 @@ public class ResourceRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", page.name());
 		frame.addSlot("box", boxName);
+		frame.addSlot("parameter", parameters(page));
 		if (page.isRestricted()) frame.addSlot("restrict", "");
 		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name() + "Resource"), template().format(frame));
 		createCorrespondingAction(page);
@@ -62,4 +65,13 @@ public class ResourceRenderer {
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 	}
+
+	private Frame[] parameters(Activity.AbstractPage page) {
+		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
+				.map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
+
+		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
+				.addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
+	}
+
 }

@@ -1,19 +1,20 @@
 def type(page)
 	package $package+validPackage.resources;
 
-	import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
 	import io.intino.konos.exceptions.KonosException;
 	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
 
+	import java.util.Base64;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
 	public class $name+firstUpperCase~Resource extends io.intino.konos.server.activity.spark.resources.Resource {
-		private final $box+firstUpperCase~Box box;
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+firstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -28,29 +29,35 @@ def type(page)
 
 		private void render() {
 			String clientId = UUID.randomUUID().toString();
-			$name+firstUpperCase~Action $name+firstLowercase~Action = new $name+firstUpperCase~Action();
-			$name+firstLowercase~Action.session = manager.currentSession();
-			$name+firstLowercase~Action.session.whenLogin(new Function<String, String>() {
+			$name+firstUpperCase~Action action = new $name+firstUpperCase~Action();
+			action.session = manager.currentSession();
+			action.session.whenLogin(new Function<String, String>() {
 				@Override
 				public String apply(String baseUrl) {
 					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
 				}
 			});
-			$name+firstLowercase~Action.session.whenLogout(b -> logout());
-			$name+firstLowercase~Action.box = box;
-			$name+firstLowercase~Action.clientId = clientId;
+			action.session.whenLogout(b -> logout());
+			action.box = box;
+			action.clientId = clientId;
+			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
-				if (client.soul() != null)
-					return;
+				if (!client.id().equals(action.clientId))
+					return false;
 
-				io.intino.konos.server.activity.displays.Soul soul = $name+firstLowerCase~Action.prepareSoul(client);
+				if (client.soul() != null)
+					return false;
+
+				io.intino.konos.server.activity.displays.Soul soul = action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
-					display.inject(notifier($name+firstLowerCase~Action.session, client, display));
-					display.inject($name+firstLowerCase~Action.session);
+					display.inject(notifier(action.session, client, display));
+					display.inject(action.session);
 					display.inject(soul);
 					display.inject(() -> soul);
 				});
 				client.soul(soul);
+
+				return true;
 			});
 
 			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.server.activity.services.push.ActivityClient>() {
@@ -60,8 +67,12 @@ def type(page)
 				}
 			});
 
-			manager.write($name+firstLowerCase~Action.execute());
+			manager.write(action.execute());
 		}
 
 	}
+end
+
+def type(parameter)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = new String(Base64.getDecoder().decode(manager.fromPath("$name", String.class)));
 end

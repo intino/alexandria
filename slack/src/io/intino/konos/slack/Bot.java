@@ -6,10 +6,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +20,7 @@ public abstract class Bot {
 	private final Map<String, Command> commands = new LinkedHashMap<>();
 	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
 	private SlackSession session;
-
+	private final Set<String> processedMessages = new LinkedHashSet<>();
 
 	public Bot(String token) {
 		this.token = token;
@@ -67,23 +64,31 @@ public abstract class Bot {
 
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
-			if (message.getSender().isBot()) return;
+			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
 			final String messageContent = StringEscapeUtils.unescapeHtml4(message.getMessageContent());
 			String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 			String userName = message.getSender().getUserName();
 			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
 			final String context = commandInfo != null ? commandInfo.context : "";
 			final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
-			Command command = commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName) ? commands.get(commandKey) : commandNotFound();
+			Command command = commandNotFound();
+			if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
+				command = commands.get(commandKey);
+			else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
 			final Object response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
 			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
-			else if (response instanceof SlackAttachment)
-				session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
+			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
+	}
+
+	private boolean isAlreadyProcessed(SlackMessagePosted message) {
+		final boolean added = processedMessages.add(message.getTimestamp());
+		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
+		return !added;
 	}
 
 	private String[] contentFromSlackFile(SlackFile slackFile) {
@@ -158,7 +163,7 @@ public abstract class Bot {
 	}
 
 	private SlackChannel slackChannel(String channel) {
-		return session.getChannels().stream().filter(c -> c.getId().equals(channel)).findFirst().orElse(null);
+		return session.getChannels().stream().filter(c -> channel.equals(c.getId()) || channel.equals(c.getName())).findFirst().orElse(null);
 	}
 
 	private boolean isInContext(String commandKey, String userName) {

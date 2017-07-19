@@ -31,7 +31,7 @@
         <repository>
             <id>intino-maven</id>
             <name>intino-maven-releases</name>
-            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
+            <url>https://artifactory.intino.io/artifactory/releases</url>
         </repository>
     </repositories>
 
@@ -86,12 +86,13 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>konos-core</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.sun</groupId>
             <artifactId>tools</artifactId>
             <version>1.8.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

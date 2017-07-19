@@ -39,6 +39,7 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
 	private static final String KONOS = "Konos";
+	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
 
 	public CreateKonosBoxAction() {
@@ -65,7 +66,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
 		List<PsiFile> konosFiles = KonosUtils.findKonosFiles(module);
-		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module), getTestRoot(module));
+		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
 	}
 
 
@@ -87,27 +88,29 @@ public class CreateKonosBoxAction extends KonosAction {
 			this.konosFiles = konosFiles;
 		}
 
-		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory, VirtualFile testDirectory) {
+		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? KONOS.toLowerCase() : configuration.workingPackage() + "." + KONOS.toLowerCase();
+			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + BOX;
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
-			File test = new File(testDirectory.getPath(), generationPackage.replace(".", File.separator));
 			src.mkdirs();
-			generate(generationPackage, gen, src, new File(resDirectory.getPath()), test);
+			generate(generationPackage, gen, src, new File(resDirectory.getPath()));
 		}
 
-		private boolean generate(String packageName, File gen, File src, File res, File test) {
+		private void generate(String packageName, File gen, File src, File res) {
 			Graph graph = loadGraph();
-			if (!render(packageName, gen, src, res, test, graph)) return false;
-			refreshDirectories(gen, src, res, test);
+			if (graph == null) {
+				notifyError("Models have errors");
+				return;
+			}
+			if (!render(packageName, gen, src, res, graph)) return;
+			refreshDirectories(gen, src, res);
 			notifySuccess();
-			return true;
 		}
 
 		private Graph loadGraph() {
@@ -120,17 +123,15 @@ public class CreateKonosBoxAction extends KonosAction {
 			} else return GraphLoader.loadGraph().graph();
 		}
 
-		private void refreshDirectories(File gen, File src, File res, File test) {
+		private void refreshDirectories(File gen, File src, File res) {
 			refreshDirectory(gen);
 			refreshDirectory(src);
-			refreshDirectory(test);
 			refreshDirectory(res);
 		}
 
-		private boolean render(String packageName, File gen, File src, File res, File test, Graph graph) {
+		private boolean render(String packageName, File gen, File src, File res, Graph graph) {
 			try {
-				if (graph == null) throw new Exception("Model have error");
-				new FullRenderer(module, graph, src, gen, res, test, packageName).execute();
+				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {
 				e.printStackTrace();
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
@@ -143,12 +144,12 @@ public class CreateKonosBoxAction extends KonosAction {
 			final VirtualFile genRoot = getGenRoot(module);
 			if (genRoot != null)
 				Notifications.Bus.notify(
-						new Notification("Konos", "Services for " + module.getName(), "Generated", INFORMATION), module.getProject());
+						new Notification("Boxing", "Services for " + module.getName(), "Generated", INFORMATION), module.getProject());
 		}
 
 		private void notifyError(String message) {
 			Notifications.Bus.notify(
-					new Notification("Konos", "Services cannot be generated", message, ERROR), module.getProject());
+					new Notification("Boxing", "Services cannot be generated", message, ERROR), module.getProject());
 		}
 
 		private void refreshDirectory(File dir) {
@@ -173,14 +174,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		final VirtualFile resDirectory = createDirectory(module, "res");
 		PsiTestUtil.addSourceRoot(module, resDirectory, JavaResourceRootType.RESOURCE);
 		return resDirectory;
-	}
-
-	private VirtualFile getTestRoot(Module module) {
-		for (VirtualFile file : getSourceRoots(module))
-			if (file.isDirectory() && "test".equals(file.getName())) return file;
-		final VirtualFile testDirectory = createDirectory(module, "test");
-		PsiTestUtil.addSourceRoot(module, testDirectory, JavaSourceRootType.TEST_SOURCE);
-		return testDirectory;
 	}
 
 	private VirtualFile createDirectory(Module module, String name) {

@@ -1,0 +1,231 @@
+def type(box)
+	package $package;
+
+	import java.util.LinkedHashMap;
+	import java.util.logging.Logger;
+	import java.util.Map;
+	import java.util.UUID;
+	import java.util.logging.ConsoleHandler;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+	[
+	$hasREST~import io.intino.konos.server.KonosSpark;]
+
+	public abstract class AbstractBox extends io.intino.konos.Box {
+		private static Logger LOG = Logger.getGlobal();
+		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
+		$service+field...[$NL]][
+		$dataLake+field...[$NL]][
+		$task+field]
+
+		public AbstractBox(String$[] args) {
+			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
+		}
+		
+		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
+			[owner = new $parent~Box(configuration);]
+			this.configuration = configuration;[
+			initLogger();
+			$service+setup...[$NL]][
+			$activity+setup...[$NL]]
+		}
+
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
+		}
+
+		@Override
+		public io.intino.konos.Box put(Object o) {
+			[$hasParent~owner.put(o);]
+			return this;
+		}
+
+		public io.intino.konos.Box open() {
+			if(owner != null) owner.open();
+			initActivities();
+			initRESTServices();
+			initJMXServices();
+			initJMSServices();
+			initDataLake();
+			initTasks();
+			initSlackBots();
+			return this;
+		}
+
+		public void close() {
+			if(owner != null) owner.close();
+			$service+quit...[$NL]
+			$dataLake+quit...[$NL]
+		}
+
+		[$service+getter...[$NL$NL]]
+
+		$dataLake+getter...[$NL$NL]
+
+		$task+getter...[$NL$NL]
+
+
+		private void initRESTServices() {
+			$service+rest...[$NL]
+		}
+
+		private void initJMSServices() {
+			[$jms~javax.jms.Connection connection;]
+			$service+jms...[$NL]
+		}
+
+		private void initJMXServices() {
+			$service+jmx...[$NL]
+		}
+
+		private void initSlackBots() {
+			$service+slack...[$NL]
+		}
+
+		private void initActivities() {
+			$activity...[$NL]
+		}
+
+		private void initDataLake() {
+			$dataLake+init...[$NL]
+		}
+
+		private void initTasks() {
+			$task+init...[$NL]
+		}
+
+		private void initLogger() {
+			final Logger logger = Logger.getGlobal();
+			final ConsoleHandler handler = new ConsoleHandler();
+			handler.setLevel(Level.INFO);
+			handler.setFormatter(new io.intino.konos.LogFormatter("log"));
+			logger.addHandler(handler);
+		}
+	}
+end
+
+def type(activity) trigger(setup)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
+		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
+end
+
+def type(service & rest) trigger(setup)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
+		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
+end
+
+def type(dataLake) trigger(init)
+	if (configuration().nessConfiguration() == null) return;
+	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
+	this.ness.start();
+	NessEvents.addHandlers(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(service & jmx) trigger(jmx)
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
+end
+
+def type(service & slack) trigger(slack)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(service & rest) trigger(rest)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(activity) trigger(activity)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(service & jms) trigger(jms)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	try {
+		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
+		connection.start();
+		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	} catch (javax.jms.JMSException e) {
+		LOG.severe(e.getMessage());
+	}
+end
+
+def type(service & jmx) trigger(field)
+	private io.intino.konos.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & slack) trigger(field)
+	private io.intino.konos.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & jms) trigger(field)
+	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(task) trigger(field)
+	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
+end
+
+def type(dataLake) trigger(field)
+	private io.intino.konos.datalake.Ness ness;
+end
+
+def type(service & jms) trigger(getter)
+	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(dataLake) trigger(getter)
+	public io.intino.konos.datalake.Ness datalake() {
+		return this.ness;
+	}
+end
+
+def type(service & slack) trigger(getter)
+	public $name+SnakeCaseToCamelCase+firstUpperCase~SlackBot $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return ($name+SnakeCaseToCamelCase+firstUpperCase~SlackBot) $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(service) trigger(getter)
+end
+
+def type(service) type(rest | activity) trigger(quit)
+	spark.Spark.stop();
+end
+
+def type(service) type(jms) trigger(quit)
+	$name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
+end
+
+def type(dataLake) trigger(quit)
+	if (ness != null) ness.closeSession();
+end
+
+def type(service) trigger(quit)
+end
+
+def type(service)
+end
+
+def type(task) trigger(init)
+	Tasks.init(this.tasker, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(task) trigger(getter)
+	public io.intino.konos.scheduling.KonosTasker tasker() {
+		return this.tasker;
+	}
+end
+
+def trigger(import)
+end
+
+def trigger(parentInit)
+end
+
+def trigger(hide)
+end
+

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.4</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -16,12 +16,7 @@
         <outputDirectory>../../out/production/builder</outputDirectory>
         <testOutputDirectory>../../out/test/builder</testOutputDirectory>
         <directory>../../out/build/builder</directory>
-        <!--<sourceDirectory>src</sourceDirectory>-->
-        <!--<testResources>-->
-        <!--<testResource>-->
-        <!--<directory>test-res</directory>-->
-        <!--</testResource>-->
-        <!--</testResources>-->
+        <resources><resource><directory>res</directory></resource></resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -55,12 +50,7 @@
         <repository>
             <id>intino-maven</id>
             <name>intino-maven-releases</name>
-            <url>https://artifactory.intino.io/artifactory/release-libraries</url>
-        </repository>
-        <repository>
-            <id>intino-maven-languages</id>
-            <name>intino-maven-languages</name>
-            <url>https://artifactory.intino.io/artifactory/release-languages</url>
+            <url>https://artifactory.intino.io/artifactory/releases</url>
         </repository>
     </repositories>
 
@@ -110,7 +100,18 @@
             <scope>provided</scope>
             <version>2.7</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.intino.tara</groupId>
+            <artifactId>magritte</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.intino.tara</groupId>
+                    <artifactId>io</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+            <version>1.0.6</version>
+        </dependency>
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>builder</artifactId>
@@ -121,7 +122,7 @@
                     <artifactId>io</artifactId>
                 </exclusion>
             </exclusions>
-            <version>[1.2.0,2.0.0)</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.siani.itrules</groupId>
