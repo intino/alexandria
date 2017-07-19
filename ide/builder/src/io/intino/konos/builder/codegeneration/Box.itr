@@ -1,241 +1,44 @@
 def type(box)
 	package $package;
 
-	import java.util.LinkedHashMap;
-	import java.util.logging.Logger;
-	import java.util.Map;
-	import java.util.UUID;
-	[$hasREST~import io.intino.konos.server.KonosSpark;]
-	[import io.intino.tara.magritte.Graph;$tara+import]
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Box extends AbstractBox {
 
-	public class $name+SnakeBoxToCamelBox+FirstUpperBox~Box extends [$parent~Box?io.intino.konos.Box] {
-		private static Logger LOG = Logger.getGlobal();
-		private Tuner tuner;
-		[$hasParent?protected $name+SnakeBoxToCamelBox+FirstUpperBox~Configuration configuration;][
-		$service+field...[$NL]][
-		$dataLake+field...[$NL]][
-		$task+field]
-
-		[$hasParent+hide~protected String graphID;]
-
-		public [$tara+SnakeBoxToCamelBox+FirstUpperBox?$name+SnakeBoxToCamelBox+firstUpperCase]~Box(String$[] args) {
-			this(new $name+SnakeBoxToCamelBox+FirstUpperBox~Configuration(args));
-		}
-		
-		public [$tara+SnakeBoxToCamelBox+FirstUpperBox?$name+SnakeBoxToCamelBox+firstUpperCase]~Box($name+SnakeBoxToCamelBox+FirstUpperBox~Configuration configuration) {
-			[$hasParent~super(configuration);]
-			configuration.args().entrySet().forEach((e) -> box.put(e.getKey(), e.getValue()));
-			[$hasntParent~this.configuration = configuration;][
-			$service+setup...[$NL]][
-			$activity+setup...[$NL]]
-		}
-		[$tara+hide
-		public io.intino.tara.magritte.Graph graph() {
-			return (io.intino.tara.magritte.Graph) box().get(graphID);
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box(String$[] args) {
+			super(args);
 		}
 
-		public void graph(io.intino.tara.magritte.Graph graph) {
-			box().put(graphID, graph);
-		}]
-
-		public $name+SnakeBoxToCamelBox+firstUpperCase~Configuration configuration() {
-			return ($name+SnakeBoxToCamelBox+firstUpperCase~Configuration) configuration;
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Box($name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration) {
+			super(configuration);
 		}
-		[
-		$service+getter...[$NL$NL]]
 
-		$dataLake+getter...[$NL$NL]
-
-		$task+getter...[$NL$NL]
-
-		public $name+SnakeBoxToCamelBox+FirstUpperBox~Box open() {
-			graphID = UUID.randomUUID().toString();
-			[$tara+hide~box.put(graphID, tuner.initGraph());]
-			init();
-			start();
+		@Override
+		public io.intino.konos.Box put(Object o) {
+			super.put(o);
 			return this;
 		}
 
-		private void start() {
-			tuner.start(this);
+		public io.intino.konos.Box open() {
+			return super.open();
 		}
 
-		public void init() {[
-			$parent+parentInit~super.init();? ]
-			initActivities();
-			initRESTServices();
-			initJMXServices();
-			initJMSServices();
-			initDataLake();
-			initTasks();
-			initSlackBots();
-		}
+		public void close() {
+			super.close();
+		}[
 
-		void close() {
-			tuner.terminate(this);
-			$service+quit...[$NL]
-			$dataLake+quit...[$NL]
-		}
-
-		private void initRESTServices() {
-			$service+rest...[$NL]
-		}
-
-		private void initJMSServices() {
-			[$jms~javax.jms.Connection connection;]
-			$service+jms...[$NL]
-		}
-
-		private void initJMXServices() {
-			$service+jmx...[$NL]
-		}
-
-		private void initSlackBots() {
-			$service+slack...[$NL]
-		}
-
-		private void initActivities() {
-			$activity...[$NL]
-		}
-
-		private void initDataLake() {
-			$dataLake+init...[$NL]
-		}
-
-		private void initTasks() {
-			$task+init...[$NL]
-		}
-
-		public void stopJMSServices() {
-
-		}
-
-		public $name+SnakeBoxToCamelBox+FirstUpperBox~Box tuner(Tuner tuner) {
-			this.tuner = tuner;
-			return this;
-		}
+		$rest]
 	}
-end
-
-def type(activity) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.port[, configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.webDirectory], configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.authService);
-end
-
-def type(service & rest) trigger(setup)
-	io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.port[, configuration().$name+SnakeBoxToCamelBox+firstLowerBox~Configuration.webDirectory], null);
-end
-
-def type(dataLake) trigger(init)
-	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
-	this.ness.start();
-	NessEvents.addHandlers(this);
-end
-
-def type(service & jmx) trigger(jmx)
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init(this);
-end
-
-def type(service & slack) trigger(slack)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(this);
-end
-
-def type(service & rest) trigger(rest)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), this);
-end
-
-def type(activity) trigger(activity)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), this);
-end
-
-def type(service & jms) trigger(jms)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	try {
-		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
-		connection.start();
-		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, this);
-	} catch (javax.jms.JMSException e) {
-		LOG.severe(e.getMessage());
-	}
-end
-
-def type(service & jmx) trigger(field)
-	private io.intino.konos.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
-end
-
-def type(service & slack) trigger(field)
-	private io.intino.konos.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
-end
-
-def type(service & jms) trigger(field)
-	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
-end
-
-def type(task) trigger(field)
-	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
-end
-
-def type(dataLake) trigger(field)
-	private io.intino.konos.datalake.Ness ness;
-end
-
-def type(service & jms) trigger(getter)
-	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
-		return $name+SnakeCaseToCamelCase+firstlowerCase;
-	}
-end
-
-def type(dataLake) trigger(getter)
-	public io.intino.konos.datalake.Ness datalake() {
-		return this.ness;
-	}
-end
-
-def type(service & slack) trigger(getter)
-	public $name+SnakeCaseToCamelCase+firstUpperCase~SlackBot $name+SnakeCaseToCamelCase+firstlowerCase() {
-		return ($name+SnakeCaseToCamelCase+firstUpperCase~SlackBot) $name+SnakeCaseToCamelCase+firstlowerCase;
-	}
-end
-
-def type(service) trigger(getter)
-end
-
-def type(service) type(rest | activity) trigger(quit)
-	spark.Spark.stop();
-end
-
-def type(service) type(jms) trigger(quit)
-	$name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
-end
-
-def type(dataLake) trigger(quit)
-	ness.closeSession();
-end
-
-def type(service) trigger(quit)
-end
-
-def type(service)
-end
-
-def type(task) trigger(init)
-	Tasks.init(this.tasker, this);
-end
-
-def type(task) trigger(getter)
-	public io.intino.konos.scheduling.KonosTasker tasker() {
-		return this.tasker;
-	}
-end
-
-def trigger(import)
-end
-
-def trigger(parentInit)
 end
 
 def trigger(hide)
 end
 
+def trigger(quoted)
+	"$value"
+end
+
+def trigger(rest)
+	static io.intino.konos.server.activity.services.AuthService authService(java.net.URL authServiceUrl) {
+		//TODO add your authService
+		return null;
+	}	
+end

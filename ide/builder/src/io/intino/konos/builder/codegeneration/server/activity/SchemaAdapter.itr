@@ -13,7 +13,7 @@ end
 def type(schema)
 
 	public static $name+firstUpperCase $name+firstLowerCase~FromLayer(io.intino.tara.magritte.Layer layer) {
-		return $name+firstLowerCase~FromNode(layer.node());
+		return $name+firstLowerCase~FromNode(layer.core$$());
 	}
 
 	private static $name+firstUpperCase $name+firstLowerCase~FromNode(io.intino.tara.magritte.Node node) {

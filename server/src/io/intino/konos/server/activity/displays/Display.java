@@ -43,8 +43,18 @@ public class Display<N extends DisplayNotifier> {
         init();
     }
 
+    public final void personify(String object) {
+        notifier.personify(id, name(), object);
+        init();
+    }
+
     public final void personifyOnce() {
         notifier.personifyOnce(id, name());
+        init();
+    }
+
+    public final void personifyOnce(String object) {
+        notifier.personifyOnce(id, name(), object);
         init();
     }
 

@@ -10,10 +10,14 @@ import io.intino.konos.model.rest.RESTService.Resource.Parameter.In;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.util.stream.Collectors.toList;
 
 public class Commons {
 
@@ -69,6 +73,10 @@ public class Commons {
 		Matcher matcher = pattern.matcher(text);
 		while (matcher.find()) list.add(matcher.group(1));
 		return list;
+	}
+
+	public static List<String> extractUrlPathParameters(String url) {
+		return Arrays.stream(url.split("/")).filter(s -> s.contains(":")).map(s -> s.replace(":", "")).collect(toList());
 	}
 
 	public static String returnType(Response response) {

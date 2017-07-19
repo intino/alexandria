@@ -1,12 +1,17 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.Activity;
 import io.intino.konos.builder.helpers.Commons;
-import org.siani.itrules.model.AbstractFrame;
+import io.intino.konos.model.Activity;
+import io.intino.konos.model.Dialog;
+import io.intino.konos.model.Display;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class UIActionRenderer extends ActionRenderer {
 
@@ -18,23 +23,27 @@ public class UIActionRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("action");
+		Frame frame = new Frame().addTypes("action", "page");
 		frame.addSlot("name", page.name());
+		frame.addSlot("activity", page.ownerAs(Activity.class).name());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		frame.addSlot("returnType", "String");
-		frame.addSlot("parameter", (AbstractFrame[]) parameters());
-		frame.addSlot("ui", "");
+		if (page.uses().is(Dialog.class)) frame.addSlot("importDialogs", packageName);
+		else frame.addSlot("importDisplays", packageName);
+		frame.addSlot("ui", page.uses().name() + (page.uses().is(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
+		frame.addSlot("parameter", parameters());
 		if (!alreadyRendered(destiny, page.name()))
 			Commons.writeFrame(destinyPackage(destiny), page.name() + "Action", template().format(frame));
 		//TODO else Update
 	}
 
 	private Frame[] parameters() {
-		final Frame[] frames = new Frame[2];
-		frames[0]= new Frame().addTypes("parameter").addSlot("type", "io.intino.konos.server.activity.services.push.ActivitySession").addSlot("name", "session");
-		frames[1]= new Frame().addTypes("parameter").addSlot("type", "String").addSlot("name", "clientId");
-		return frames;
+		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
+									  .map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
+
+		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
+								  .addSlot("type", "String")
+								  .addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
 	}
 
 }

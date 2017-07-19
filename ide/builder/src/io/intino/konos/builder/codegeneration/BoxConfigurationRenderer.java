@@ -47,11 +47,16 @@ public class BoxConfigurationRenderer {
 
 	public Frame execute() {
 		Frame frame = new Frame().addTypes("boxconfiguration");
+		final String boxName = fillFrame(frame);
+		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
+		return frame;
+	}
+
+	private String fillFrame(Frame frame) {
 		final String boxName = name();
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
-		if (parent != null && configuration != null && !Platform.equals(configuration.level()))
-			frame.addSlot("parent", parent);
+		if (parent != null && configuration != null && !Platform.equals(configuration.level())) frame.addSlot("parent", parent);
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
@@ -59,10 +64,8 @@ public class BoxConfigurationRenderer {
 		addEventHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (isTara) frame.addSlot("tara", "");
-		Commons.writeFrame(gen, snakeCaseToCamelCase(boxName) + "Configuration", template().format(frame));
-		return frame;
+		return boxName;
 	}
-
 
 	private void addRESTServices(Frame frame, String boxName) {
 		for (RESTService service : application.rESTServiceList()) {
@@ -98,7 +101,7 @@ public class BoxConfigurationRenderer {
 	private void addEventHandlers(Frame frame, String boxName) {
 		DataLake dataLake = application.dataLake();
 		if (dataLake == null) return;
-		for (DataLake.EventHandler handler : dataLake.eventHandlerList()) {
+		for (DataLake.Tank handler : dataLake.tankList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			frame.addSlot("service", channelFrame);
@@ -111,6 +114,7 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) {
 				activityFrame.addTypes("auth");
+				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name()).addSlot("configuration", boxName));
 				activityFrame.addSlot("auth", activity.authenticated().by());
 			}
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
@@ -128,7 +132,7 @@ public class BoxConfigurationRenderer {
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
-	private Set<String> findCustomParameters(DataLake.EventHandler channel) {
+	private Set<String> findCustomParameters(DataLake.Tank channel) {
 		Set<String> set = new LinkedHashSet<>();
 		set.addAll(Commons.extractParameters(channel.topic()));
 		return set;

@@ -94,7 +94,7 @@ public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<Tar
 	public void update(AnActionEvent e) {
 		e.getPresentation().setIcon(KonosIcons.ICON_16);
 		final Module module = e.getData(LangDataKeys.MODULE);
-		boolean enabled = module != null && legioFile(module).exists();
+		boolean enabled = module != null;
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;
 		String version = file.getParentFile().getName();
@@ -105,9 +105,4 @@ public class CreateKonosFileAction extends JavaCreateTemplateInPackageAction<Tar
 		e.getPresentation().setEnabled(enabled && version.equals(interfaceVersion));
 	}
 
-	@NotNull
-	private File legioFile(Module module) {
-		File moduleRoot = new File(module.getModuleFilePath()).getParentFile();
-		return new File(moduleRoot, "configuration.legio");
-	}
 }

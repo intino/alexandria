@@ -11,7 +11,7 @@ def type(events)
 	import org.apache.activemq.command.ActiveMQTopic;
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.$box+firstUpperCase~Configuration;
-	[$eventHandlerImport]
+	[$messageHandlerImport]
 	import javax.jms.JMSException;
 	import javax.jms.Message;
     import java.util.ArrayList;
@@ -21,38 +21,47 @@ def type(events)
 
 	public class NessEvents {
 		private static Logger logger = Logger.getGlobal();
-		$eventHandler+topic...[$NL]
+		$messageHandler+topic...[$NL]
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
 		public static void addHandlers($box+firstUppercase~Box box) {
-			$eventHandler+subscribe...[$NL]
+			$messageHandler+subscribe...[$NL]
 		}
 
 		private static class Subscriptor implements Consumer {
 
 			private final $box+firstUpperCase~Box box;
-			private final String topic;
+			private final String tank;
 
-			Subscriptor($box+firstUpperCase~Box box, String topic) {
+			Subscriptor($box+firstUpperCase~Box box, String tank) {
 				this.box = box;
-				this.topic = topic;
+				this.tank = tank;
 			}
 
 			public void consume(Message message) {
+				if (isRegisterOnly(message)) return;
 				String text = textFrom(message);
-				$eventHandler+select...[$NL~else ]
+				$messageHandler+select...[$NL~else ]
+			}
+		}
+
+		private static boolean isRegisterOnly(Message message) {
+			try {
+				return message.getBooleanProperty(io.intino.konos.datalake.Ness.REGISTER_ONLY);
+			} catch (JMSException e) {
+				return false;
 			}
 		}
 	}
 end
 
-def type(eventHandler) trigger(topic)
-	public static final String $name~Topic = $messageType+format;
+def type(messageHandler) trigger(topic)
+	public static final String $name~Tank = $messageType+format;
 end
 
-def type(eventHandler) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name~Topic).listen(new Subscriptor(box, $name~Topic), box.configuration().nessConfiguration().clientID + "-$name");
+def type(messageHandler) trigger(subscribe)
+	new TopicConsumer(box.datalake().session(), $name~Tank).listen(new Subscriptor(box, $name~Tank), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -75,12 +84,12 @@ def trigger(custom)
 	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
-def trigger(eventHandler) trigger(select)
-	if ($name~Topic.equalsIgnoreCase(topic)) {
-		$name+snakeCaseToCamelCase+FirstUpperCase~EventHandler eventHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~EventHandler();
-		eventHandler.box = box;
-		eventHandler.message = io.intino.ness.Inl.load(text).get(0);
-		eventHandler.execute();
+def trigger(messageHandler) trigger(select)
+	if ($name~Tank.equalsIgnoreCase(tank)) {
+		$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler messageHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
+		messageHandler.box = box;
+		messageHandler.message = io.intino.ness.Inl.load(text).get(0);
+		messageHandler.execute();
 	}
 end
 
@@ -88,6 +97,6 @@ def trigger(replace)
 	.replace("{$value}", configuration().$conf+firstLowerCase~Configuration.$value+validname+firstLowerCase)
 end
 
-def trigger(eventHandlerImport)
-	import $value+validPackage.eventhandlers.*;
+def trigger(messageHandlerImport)
+	import $value+validPackage.messagehandlers.*;
 end

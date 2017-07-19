@@ -12,10 +12,11 @@ import io.intino.konos.server.pushservice.SessionManager;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public abstract class PushService<S extends Session<C>, C extends Client> implements io.intino.konos.server.pushservice.PushService<S, C> {
 
-	protected final Queue<Consumer<C>> openConnectionListeners = new ConcurrentLinkedQueue<>();
+	protected final Queue<Function<C, Boolean>> openConnectionListeners = new ConcurrentLinkedQueue<>();
 	private final Map<String, List<Consumer<Message>>> messageListeners = new HashMap<>();
 	protected final Map<String, List<Consumer<C>>> closeConnectionListeners = new HashMap<>();
 	protected final SessionManager<S, C> sessionManager;
@@ -27,7 +28,7 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 	}
 
 	@Override
-	public void onOpen(Consumer<C> consumer) {
+	public void onOpen(Function<C, Boolean> consumer) {
 		openConnectionListeners.add(consumer);
 	}
 
@@ -54,12 +55,16 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 
 	public abstract C createClient(org.eclipse.jetty.websocket.api.Session session);
 
-	public void onOpen(C client) {
+	public synchronized void onOpen(C client) {
 		registerClient(client);
 		sessionManager.linkToThread(client);
 
-		openConnectionListeners.forEach(listener -> listener.accept(client));
-		openConnectionListeners.clear();
+		List<Function<C, Boolean>> acceptListeners = new ArrayList<>();
+		openConnectionListeners.forEach(listener -> {
+			Boolean acceptClient = listener.apply(client);
+			if (acceptClient) acceptListeners.add(listener);
+		});
+		acceptListeners.forEach(openConnectionListeners::remove);
 
 		sessionManager.unlinkFromThread();
 	}
