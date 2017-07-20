@@ -73,7 +73,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	@Override
     public void init() {
-    	prepareDialog();
+    	prepare(dialog);
 		notifier.render(DialogBuilder.build(dialog));
 	}
 
@@ -154,8 +154,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		if (user != null) message.write("user", user.username());
 		message.write("form", serializedValues());
 
-		send(message);
-		notifier.done(updateGraph().toString());
+		notifier.done(update(message).toString());
 	}
 
 	private String serializedValues() {
@@ -190,9 +189,8 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		return session().user();
 	}
 
-	public abstract void send(Message message);
-	public abstract void prepareDialog();
-	public abstract Modification updateGraph();
+	public abstract void prepare(Dialog dialog);
+	public abstract Modification update(Message message);
 
 	public enum Modification {
 		ItemModified, CatalogModified
