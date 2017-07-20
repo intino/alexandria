@@ -152,36 +152,19 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 		message.ts(Instant.now().toString());
 		if (user != null) message.write("user", user.username());
+		message.write("context", dialog.context());
 		message.write("form", serializedValues());
 
 		notifier.done(update(message).toString());
 	}
 
 	private String serializedValues() {
-		Map<String, Value> form = inputsMap.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> new Value(inputType(entry.getKey()), entry.getValue())));
-		return new GsonBuilder().setPrettyPrinting().create().toJson(form);
+		Map<String, Form.Input> inputMap = inputsMap.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> new Form.Input(inputType(entry.getKey()), entry.getValue())));
+		return new GsonBuilder().setPrettyPrinting().create().toJson(Form.fromMap(dialog.context(), inputMap));
 	}
 
 	private String inputType(String key) {
 		return dialog.input(key).getClass().getSimpleName().toLowerCase();
-	}
-
-	private class Value {
-		private String type;
-		private List<Object> values;
-
-		public Value(String type, List<Object> values) {
-			this.type = type;
-			this.values = values;
-		}
-
-		public String type() {
-			return type;
-		}
-
-		public List<Object> values() {
-			return values;
-		}
 	}
 
 	private User user() {
