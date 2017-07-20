@@ -32,11 +32,11 @@ def type(events)
 		private static class Subscriptor implements Consumer {
 
 			private final $box+firstUpperCase~Box box;
-			private final String topic;
+			private final String tank;
 
-			Subscriptor($box+firstUpperCase~Box box, String topic) {
+			Subscriptor($box+firstUpperCase~Box box, String tank) {
 				this.box = box;
-				this.topic = topic;
+				this.tank = tank;
 			}
 
 			public void consume(Message message) {
@@ -57,11 +57,11 @@ def type(events)
 end
 
 def type(messageHandler) trigger(topic)
-	public static final String $name~Topic = $messageType+format;
+	public static final String $name~Tank = $messageType+format;
 end
 
 def type(messageHandler) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name~Topic).listen(new Subscriptor(box, $name~Topic), box.configuration().nessConfiguration().clientID + "-$name");
+	new TopicConsumer(box.datalake().session(), $name~Tank).listen(new Subscriptor(box, $name~Tank), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -85,7 +85,7 @@ def trigger(custom)
 end
 
 def trigger(messageHandler) trigger(select)
-	if ($name~Topic.equalsIgnoreCase(topic)) {
+	if ($name~Tank.equalsIgnoreCase(tank)) {
 		$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler messageHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
 		messageHandler.box = box;
 		messageHandler.message = io.intino.ness.Inl.load(text).get(0);
