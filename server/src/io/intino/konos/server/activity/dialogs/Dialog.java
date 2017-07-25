@@ -15,6 +15,7 @@ public class Dialog {
     private String url;
     private String label;
     private String description;
+    private String context;
     private TabsMode mode = TabsMode.Tabs;
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
@@ -50,6 +51,15 @@ public class Dialog {
 
     public Dialog description(String description) {
         this.description = description;
+        return this;
+    }
+
+    public String context() {
+        return context;
+    }
+
+    public Dialog context(String context) {
+        this.context = context;
         return this;
     }
 
