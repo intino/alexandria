@@ -15,6 +15,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.List;
 
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
@@ -54,7 +55,12 @@ public class AbstractBoxRenderer {
 
 
 	private void activities(Frame frame, String name) {
-		for (Activity activity : konos.activityList())
+		List<Activity> activities = konos.activityList();
+
+		if (!activities.isEmpty())
+			frame.addSlot("hasActivity", "");
+
+		for (Activity activity : activities)
 			frame.addSlot("activity", (Frame) activityFrame(activity, name));
 	}
 
