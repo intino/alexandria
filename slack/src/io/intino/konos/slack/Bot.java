@@ -2,7 +2,6 @@ package io.intino.konos.slack;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +11,7 @@ import java.util.logging.Logger;
 
 import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWebSocketSlackSession;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 public abstract class Bot {
 	private static Logger logger = Logger.getGlobal();
@@ -65,7 +65,7 @@ public abstract class Bot {
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
 			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
-			final String messageContent = StringEscapeUtils.unescapeHtml4(message.getMessageContent());
+			final String messageContent = unescapeHtml4(message.getMessageContent());
 			String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 			String userName = message.getSender().getUserName();
 			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
@@ -92,7 +92,9 @@ public abstract class Bot {
 	}
 
 	private String[] contentFromSlackFile(SlackFile slackFile) {
-		return new String[]{slackFile.getComment().trim(), slackFile.getUrlPrivateDownload()};
+		final ArrayList<String> list = new ArrayList<>(Arrays.asList(slackFile.getComment().trim().split(" ")));
+		list.add(unescapeHtml4(slackFile.getUrlPrivateDownload()));
+		return list.toArray(new String[0]);
 	}
 
 	private Command commandNotFound() {
