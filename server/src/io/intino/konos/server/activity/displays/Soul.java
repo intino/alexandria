@@ -5,10 +5,7 @@ import io.intino.konos.server.activity.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class Soul implements DisplayRepository {
@@ -33,6 +30,11 @@ public abstract class Soul implements DisplayRepository {
         } catch (MalformedURLException e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Display> getAll() {
+        return new ArrayList<>(this.displays.values());
     }
 
     @Override

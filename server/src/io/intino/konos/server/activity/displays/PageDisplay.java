@@ -53,7 +53,7 @@ public abstract class PageDisplay<N extends DisplayNotifier> extends Display<N> 
 
     public int countPages() {
         long countItems = countItems();
-        return Math.round(countItems / pageSize) + (countItems % pageSize > 0 ? 1 : 0);
+        return (int) (Math.floor(countItems / pageSize) + (countItems % pageSize > 0 ? 1 : 0));
     }
 
     @Override
@@ -68,11 +68,13 @@ public abstract class PageDisplay<N extends DisplayNotifier> extends Display<N> 
     @Override
     protected void init() {
         super.init();
+        sendPageSize(this.pageSize);
         sendCount(countItems());
     }
 
     protected abstract void sendItems(int start, int limit);
     protected abstract void sendClear();
+    protected abstract void sendPageSize(int pageSize);
     protected abstract void sendCount(int count);
 
     protected void notifySelectListeners(List<String> selection) {
