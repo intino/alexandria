@@ -4,19 +4,23 @@ def type(box)
 	import java.util.LinkedHashMap;
 	import java.util.logging.Logger;
 	import java.util.Map;
-	import java.util.UUID;
-	import java.util.logging.ConsoleHandler;
+	import java.util.UUID;[$hasActivity
+	import java.util.HashSet;
+    import java.util.Set;
+	]import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 	[
-	$hasREST~import io.intino.konos.server.KonosSpark;]
+	$hasREST~import io.intino.konos.server.KonosSpark;][
+    $hasActivity~import io.intino.konos.server.activity.displays.Soul;]
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger LOG = Logger.getGlobal();
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
-		$task+field]
+		$task+field][
+        $hasActivity~protected Set<Soul> activitySouls = new HashSet<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -58,12 +62,16 @@ def type(box)
 			$dataLake+quit...[$NL]
 		}
 
+		[$hasActivity~
+		public void register(Soul soul) {
+			activitySouls.add(soul);
+		}
+		]
 		[$service+getter...[$NL$NL]]
 
 		$dataLake+getter...[$NL$NL]
 
 		$task+getter...[$NL$NL]
-
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
