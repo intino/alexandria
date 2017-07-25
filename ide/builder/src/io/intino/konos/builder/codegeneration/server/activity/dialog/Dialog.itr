@@ -14,15 +14,11 @@ def type(dialog)
 		}
 
 		@Override
-		public void send(Message message) {
+		public void prepare(Dialog dialog) {
 		}
 
 		@Override
-		public void prepareDialog() {
-		}
-
-		@Override
-		public Modification updateGraph() {
+		public Modification update(Message message) {
 			return Modification.ItemModified;
 		}
 

@@ -82,7 +82,7 @@
             },
 
             _valueOf : function(input) {
-                if (input.multiple === null) return input.value;
+                if (input.multiple == null) return input.value;
                 var result = [];
                 for (var i=0;i<input.value.length; i++) {
                     result.push(input.value[i]);
