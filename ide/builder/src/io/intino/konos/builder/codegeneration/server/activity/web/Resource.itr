@@ -64,6 +64,7 @@ def type(page)
 			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.server.activity.services.push.ActivityClient>() {
 				@Override
 				public void accept(io.intino.konos.server.activity.services.push.ActivityClient client) {
+					box.unRegister(client.soul());
 					manager.unRegister(client);
 				}
 			});
