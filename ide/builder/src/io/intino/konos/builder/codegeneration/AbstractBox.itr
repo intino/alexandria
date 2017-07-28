@@ -67,6 +67,11 @@ def type(box)
 			activitySouls.add(soul);
 		}
 		]
+		[$hasActivity~
+		public void unRegister(Soul soul) {
+			activitySouls.remove(soul);
+		}
+		]
 		[$service+getter...[$NL$NL]]
 
 		$dataLake+getter...[$NL$NL]

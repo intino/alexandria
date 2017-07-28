@@ -69,7 +69,6 @@ public abstract class PageDisplay<N extends DisplayNotifier> extends Display<N> 
     protected void init() {
         super.init();
         sendPageSize(this.pageSize);
-        sendCount(countItems());
     }
 
     protected abstract void sendItems(int start, int limit);
