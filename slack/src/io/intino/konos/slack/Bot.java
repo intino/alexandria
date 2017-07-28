@@ -2,9 +2,13 @@ package io.intino.konos.slack;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,8 +69,8 @@ public abstract class Bot {
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
 			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
-			final String messageContent = unescapeHtml4(message.getMessageContent());
-			String[] content = (message.getSlackFile() != null) ? contentFromSlackFile(message.getSlackFile()) : Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
+			final String messageContent = message.getSlackFile() != null ? unescapeHtml4(message.getSlackFile().getComment()) : unescapeHtml4(message.getMessageContent());
+			String[] content = Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 			String userName = message.getSender().getUserName();
 			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
 			final String context = commandInfo != null ? commandInfo.context : "";
@@ -89,12 +93,6 @@ public abstract class Bot {
 		final boolean added = processedMessages.add(message.getTimestamp());
 		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
 		return !added;
-	}
-
-	private String[] contentFromSlackFile(SlackFile slackFile) {
-		final ArrayList<String> list = new ArrayList<>(Arrays.asList(slackFile.getComment().trim().split(" ")));
-		list.add(unescapeHtml4(slackFile.getUrlPrivateDownload()));
-		return list.toArray(new String[0]);
 	}
 
 	private Command commandNotFound() {
@@ -121,6 +119,11 @@ public abstract class Bot {
 
 			public Context context() {
 				return usersContext.get(message.getSender().getUserName());
+			}
+
+			@Override
+			public BotFile file() {
+				return new BotFile(message.getSlackFile());
 			}
 		};
 	}
@@ -200,6 +203,8 @@ public abstract class Bot {
 
 		Context context();
 
+		BotFile file();
+
 	}
 
 	public class CommandInfo {
@@ -254,4 +259,42 @@ public abstract class Bot {
 			this.objects = objects;
 		}
 	}
+
+	public class BotFile {
+		String name;
+		String url;
+
+		public BotFile(SlackFile file) {
+			this.name = file.getName();
+			this.url = unescapeHtml4(file.getUrlPrivateDownload()).replace("<|>", "");
+		}
+
+		public String name() {
+			return name;
+		}
+
+		public String url() {
+			return url;
+		}
+
+		public String textContent() {
+			try {
+				HttpClient client = HttpClientBuilder.create().build();
+				HttpGet request = new HttpGet(url);
+				request.addHeader("Authorization", "Bearer " + token);
+				HttpResponse response = client.execute(request);
+				HttpEntity entity = response.getEntity();
+				if (entity != null) try (InputStream stream = entity.getContent()) {
+					StringBuilder builder = new StringBuilder();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+					String line;
+					while ((line = reader.readLine()) != null) builder.append(line).append("\n");
+					return builder.toString();
+				}
+			} catch (Exception ignored) {
+			}
+			return "";
+		}
+	}
+
 }

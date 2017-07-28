@@ -6,11 +6,14 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -164,6 +167,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		for (VirtualFile file : getSourceRoots(module))
 			if (file.isDirectory() && "gen".equals(file.getName())) return file;
 		final VirtualFile genDirectory = createDirectory(module, "gen");
+		if (genDirectory == null) return null;
 		PsiTestUtil.addSourceRoot(module, genDirectory, JavaSourceRootType.SOURCE);
 		return genDirectory;
 	}
@@ -177,12 +181,18 @@ public class CreateKonosBoxAction extends KonosAction {
 	}
 
 	private VirtualFile createDirectory(Module module, String name) {
-		try {
-			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
-		} catch (IOException e) {
-			return null;
+		final Application a = ApplicationManager.getApplication();
+		if (a.isWriteAccessAllowed()) {
+			return a.runWriteAction((Computable<VirtualFile>) () -> {
+				try {
+					final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+					return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
+				} catch (IOException e) {
+					return null;
+				}
+			});
 		}
+		return null;
 	}
 
 }
