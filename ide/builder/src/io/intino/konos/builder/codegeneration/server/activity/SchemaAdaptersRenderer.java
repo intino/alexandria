@@ -5,12 +5,15 @@ import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Activity;
 import io.intino.konos.model.Schema;
+import io.intino.konos.model.Service;
 import io.intino.tara.magritte.Graph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 public class SchemaAdaptersRenderer {
@@ -40,13 +43,21 @@ public class SchemaAdaptersRenderer {
 		return template;
 	}
 
-
-	private Frame processSchema(Schema element) {
-		return SchemaRenderer.createSchemaFrame(element, packageName, packageName);
+	private Frame processSchema(Schema schema) {
+		final Service service = schema.ownerAs(Service.class);
+		String subPackage = "schemas" + (service != null ? File.separator + service.name().toLowerCase() : "");
+		return SchemaRenderer.createSchemaFrame(schema, subPackage.isEmpty() ? packageName : packageName + "." + subPackage.replace(File.separator, "."), packageName);
 	}
 
 	private Collection<Schema> findActivitySchemas(Graph graph) {
-		return graph.find(Schema.class);
+		List<Schema> schemas = new ArrayList<>();
+		for (Schema schema : graph.find(Schema.class)) if (!isAlreadyAdded(schema, schemas)) schemas.add(schema);
+		return schemas;
+	}
+
+	private boolean isAlreadyAdded(Schema schema, List<Schema> schemas) {
+		for (Schema anSchema : schemas) if (schema.name().equals(anSchema.name())) return true;
+		return false;
 	}
 
 }

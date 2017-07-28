@@ -5,8 +5,8 @@ def type(box)
 	import java.util.logging.Logger;
 	import java.util.Map;
 	import java.util.UUID;[$hasActivity
-	import java.util.HashSet;
-    import java.util.Set;
+	import java.util.HashMap;
+    import java.util.Map;
 	]import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
@@ -20,7 +20,7 @@ def type(box)
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
-        $hasActivity~protected Set<Soul> activitySouls = new HashSet<>();]
+        $hasActivity~protected Map<String, Soul> activitySouls = new HashMap<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -63,8 +63,13 @@ def type(box)
 		}
 
 		[$hasActivity~
-		public void register(Soul soul) {
-			activitySouls.add(soul);
+		public void registerSoul(String clientId, Soul soul) {
+			activitySouls.put(clientId, soul);
+		}
+		]
+		[$hasActivity~
+		public void unRegisterSoul(String clientId) {
+			activitySouls.remove(clientId);
 		}
 		]
 		[$service+getter...[$NL$NL]]

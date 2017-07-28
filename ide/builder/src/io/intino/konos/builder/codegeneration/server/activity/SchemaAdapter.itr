@@ -12,12 +12,12 @@ end
 
 def type(schema)
 
-	public static $name+firstUpperCase $name+firstLowerCase~FromLayer(io.intino.tara.magritte.Layer layer) {
+	public static [$package.]$name+firstUpperCase $name+firstLowerCase~FromLayer(io.intino.tara.magritte.Layer layer) {
 		return $name+firstLowerCase~FromNode(layer.core$$());
 	}
 
-	private static $name+firstUpperCase $name+firstLowerCase~FromNode(io.intino.tara.magritte.Node node) {
-		$name+firstUpperCase schema = new $name+firstUpperCase();
+	private static [$package.]$name+firstUpperCase $name+firstLowerCase~FromNode(io.intino.tara.magritte.Node node) {
+		[$package.]$name+firstUpperCase schema = new [$package.]$name+firstUpperCase();
 		final java.util.Map<String, java.util.List<?>> variables = node.variables();
 		variables.put("name", java.util.Collections.singletonList(node.name()));
 		variables.put("id", java.util.Collections.singletonList(node.id()));
@@ -44,9 +44,9 @@ def type(multiple & string) !type(member) trigger(fromLayer)
 end
 
 def type(single & member) trigger(componentfromLayer)
-	if (component.name().equalsIgnoreCase($type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase(($type+FirstLowerCase~FromNode(component)));
+	if (component.name().equalsIgnoreCase([$package.]$type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase(($type+FirstLowerCase~FromNode(component)));
 end
 
 def type(multiple & member) trigger(componentfromLayer)
-	if (component.name().equalsIgnoreCase($type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase~List().add($type+FirstLowerCase~FromNode(component));
+	if (component.name().equalsIgnoreCase([$package.]$type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase~List().add($type+FirstLowerCase~FromNode(component));
 end

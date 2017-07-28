@@ -8,7 +8,7 @@ import javax.jms.TextMessage;
 public interface Consumer {
 	void consume(Message message);
 
-	default String textFrom(Message message) {
+	static String textFrom(Message message) {
 		try {
 			if (message instanceof BytesMessage) {
 				byte[] data = new byte[(int) ((BytesMessage) message).getBodyLength()];

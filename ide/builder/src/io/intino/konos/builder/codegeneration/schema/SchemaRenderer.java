@@ -50,8 +50,8 @@ public class SchemaRenderer {
 	public static Frame createSchemaFrame(Schema schema, String packageName, String rootPackage) {
 		Frame frame = new Frame().addTypes("schema").addSlot("name", schema.name()).addSlot("package", packageName).addSlot("root", rootPackage);
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
-		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList()));
-		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList()));
+		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList(), rootPackage));
+		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList(), rootPackage));
 		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
 		addReturningValueToAttributes(schema.name(), frame.frames("attribute"));
 		return frame;
@@ -61,12 +61,12 @@ public class SchemaRenderer {
 		return attributes.stream().map(SchemaRenderer::processAttribute).toArray(value -> new Frame[attributes.size()]);
 	}
 
-	private static Frame[] processSchemasAsAttribute(List<Schema> members) {
-		return members.stream().map(SchemaRenderer::processSchemaAsAttribute).toArray(value -> new Frame[members.size()]);
+	private static Frame[] processSchemasAsAttribute(List<Schema> members, String rootPackage) {
+		return members.stream().map(m -> processSchemaAsAttribute(m, rootPackage)).toArray(value -> new Frame[members.size()]);
 	}
 
-	private static Frame[] processHasAsAttribute(List<Schema.Has> members) {
-		return members.stream().map(SchemaRenderer::processHasAsAttribute).toArray(value -> new Frame[members.size()]);
+	private static Frame[] processHasAsAttribute(List<Schema.Has> members, String rootPackage) {
+		return members.stream().map(m -> processHasAsAttribute(m, rootPackage)).toArray(value -> new Frame[members.size()]);
 	}
 
 	private static Frame processAttribute(Schema.Attribute attribute) {
@@ -127,16 +127,24 @@ public class SchemaRenderer {
 				.addSlot("type", attribute.type());
 	}
 
-	private static Frame processSchemaAsAttribute(Schema format) {
-		return new Frame().addTypes(format.multiple() ? "multiple" : "single", "member", format.name())
-				.addSlot("name", format.name())
-				.addSlot("type", format.name());
+	private static Frame processSchemaAsAttribute(Schema schema, String rootPackage) {
+		return new Frame().addTypes(schema.multiple() ? "multiple" : "single", "member", schema.name())
+				.addSlot("name", schema.name())
+				.addSlot("type", schema.name())
+				.addSlot("package", packageOf(schema, rootPackage));
 	}
 
-	private static Frame processHasAsAttribute(Schema.Has has) {
+	private static Frame processHasAsAttribute(Schema.Has has, String rootPackage) {
 		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name())
 				.addSlot("name", has.reference().name())
-				.addSlot("type", has.reference().name());
+				.addSlot("type", has.reference().name())
+				.addSlot("package", packageOf(has.reference(), rootPackage));
+	}
+
+	private static String packageOf(Schema schema, String rootPackage) {
+		final Service service = schema.ownerAs(Service.class);
+		String subPackage = "schemas" + (service != null ? File.separator + service.name().toLowerCase() : "");
+		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 	}
 
 	private static Frame render(Schema.AttributeMap map) {

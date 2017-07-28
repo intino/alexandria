@@ -1,7 +1,6 @@
 package io.intino.konos.jms;
 
 import javax.jms.*;
-
 import java.util.logging.Level;
 
 import static java.util.logging.Level.SEVERE;
@@ -11,6 +10,7 @@ public class TopicConsumer {
 
 	private final Session session;
 	private final String topic;
+	private String subscriberID = null;
 	private MessageConsumer consumer;
 
 	public TopicConsumer(Session session, String topic) {
@@ -32,6 +32,7 @@ public class TopicConsumer {
 		try {
 			if (consumer == null) return;
 			consumer.close();
+			if (subscriberID != null) session.unsubscribe(subscriberID);
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
@@ -47,11 +48,12 @@ public class TopicConsumer {
 		}
 	}
 
-	public void listen(Consumer reader, String clientID) {
+	public void listen(Consumer reader, String subscriberID) {
 		try {
 			if (session == null) return;
-			consumer = session.createDurableSubscriber(session.createTopic(topic), clientID);
+			consumer = session.createDurableSubscriber(session.createTopic(topic), subscriberID);
 			consumer.setMessageListener(reader::consume);
+			this.subscriberID = subscriberID;
 		} catch (Exception e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
