@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.accessor.jmx;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.server.jmx.JMXServerTemplate;
+import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.Parameter;
 import io.intino.konos.model.Schema;
