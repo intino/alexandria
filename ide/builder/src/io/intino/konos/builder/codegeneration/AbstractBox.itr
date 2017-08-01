@@ -2,20 +2,22 @@ def type(box)
 	package $package;
 
 	import java.util.LinkedHashMap;
-	import java.util.logging.Logger;
 	import java.util.Map;
 	import java.util.UUID;[$hasActivity
 	import java.util.HashMap;
     import java.util.Map;
-	]import java.util.logging.ConsoleHandler;
+	]
+	import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
-	import java.util.logging.Logger;
+	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
 	$hasREST~import io.intino.konos.server.KonosSpark;][
     $hasActivity~import io.intino.konos.server.activity.displays.Soul;]
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
-		private static Logger LOG = Logger.getGlobal();
+		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
@@ -108,7 +110,7 @@ def type(box)
 		}
 
 		private void initLogger() {
-			final Logger logger = Logger.getGlobal();
+			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
 			handler.setFormatter(new io.intino.konos.LogFormatter("log"));
@@ -132,25 +134,30 @@ def type(dataLake) trigger(init)
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
 	this.ness.start();
 	NessEvents.addHandlers(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	logger.info("Ness datalake: started!");
 end
 
 def type(service & jmx) trigger(jmx)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
+	logger.info("JMX service $name: started!");
 end
 
 def type(service & slack) trigger(slack)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	logger.info("Slack service $name: started!");
 end
 
 def type(service & rest) trigger(rest)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	logger.info("REST service $name: started!");
 end
 
 def type(activity) trigger(activity)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	logger.info("Activity $name: started!");
 end
 
 def type(service & jms) trigger(jms)
@@ -159,6 +166,7 @@ def type(service & jms) trigger(jms)
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		connection.start();
 		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		logger.info("JMS service $name: started!");
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}
