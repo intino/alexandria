@@ -100,6 +100,14 @@ public class Ness {
 			return name;
 		}
 
+		public String flowChannel() {
+			return "flow." + name;
+		}
+
+		public String feedChannel() {
+			return "feed." + name;
+		}
+
 		public void feed(io.intino.ness.inl.Message message) {
 			final TopicProducer producer = newProducer(name);
 			if (producer != null) producer.produce(createMessageFor(message.toString()));
