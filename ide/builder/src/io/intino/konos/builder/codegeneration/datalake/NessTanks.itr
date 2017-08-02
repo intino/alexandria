@@ -1,4 +1,4 @@
-def type(events)
+def type(tanks)
 	package $package+validPackage;
 
 	import io.intino.konos.jms.TopicConsumer;
@@ -11,7 +11,7 @@ def type(events)
 	import org.apache.activemq.command.ActiveMQTopic;
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.$box+firstUpperCase~Configuration;
-	[$messageHandlerImport]
+	[$tankImport]
 	import javax.jms.JMSException;
 	import javax.jms.Message;
     import java.util.ArrayList;
@@ -19,14 +19,15 @@ def type(events)
 	import java.util.logging.Level;
 	import java.util.logging.Logger;
 
-	public class NessEvents {
+	public class NessTanks {
 		private static Logger logger = Logger.getGlobal();
-		$messageHandler+topic...[$NL]
+		$tank+field...[$NL]
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
-		public static void addHandlers($box+firstUppercase~Box box) {
-			$messageHandler+subscribe...[$NL]
+		public static void registerTanks($box+firstUppercase~Box box) {
+			$tank+subscribe...[$NL]
+			$tank+assign...[$NL]
 		}
 
 		private static class Subscriptor implements Consumer {
@@ -41,10 +42,12 @@ def type(events)
 
 			public void consume(Message message) {
 				if (isRegisterOnly(message)) return;
-				String text = textFrom(message);
-				$messageHandler+select...[$NL~else ]
+				String text = Consumer.textFrom(message);
+				$tank+select...[$NL~else ]
 			}
 		}
+
+		$tank+getter...[$NL$NL]
 
 		private static boolean isRegisterOnly(Message message) {
 			try {
@@ -56,12 +59,22 @@ def type(events)
 	}
 end
 
-def type(messageHandler) trigger(topic)
-	public static final String $name~Tank = $messageType+format;
+def type(tank) trigger(field)
+	private static io.intino.konos.datalake.Ness.Tank $name;
 end
 
-def type(messageHandler) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name~Tank).listen(new Subscriptor(box, $name~Tank), box.configuration().nessConfiguration().clientID + "-$name");
+def type(tank) trigger(assign)
+	$name = box.datalake().tank($messageType+format);
+end
+
+def type(tank) trigger(getter)
+	public static io.intino.konos.datalake.Ness.Tank $name() {
+		return NessTanks.$name;
+	}
+end
+
+def type(tank) trigger(subscribe)
+	new TopicConsumer(box.datalake().session(), $name).listen(new Subscriptor(box, "flow." + $name), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -84,12 +97,12 @@ def trigger(custom)
 	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
-def trigger(messageHandler) trigger(select)
-	if ($name~Tank.equalsIgnoreCase(tank)) {
-		$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler messageHandler = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
-		messageHandler.box = box;
-		messageHandler.message = io.intino.ness.Inl.load(text).get(0);
-		messageHandler.execute();
+def trigger(tank) trigger(select)
+	if ($name.name().equalsIgnoreCase(tank)) {
+		$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
+		tank.box = box;
+		tank.message = io.intino.ness.Inl.load(text).get(0);
+		tank.execute();
 	}
 end
 
@@ -97,6 +110,6 @@ def trigger(replace)
 	.replace("{$value}", configuration().$conf+firstLowerCase~Configuration.$value+validname+firstLowerCase)
 end
 
-def trigger(messageHandlerImport)
+def trigger(tankImport)
 	import $value+validPackage.messagehandlers.*;
 end

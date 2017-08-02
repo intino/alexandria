@@ -66,11 +66,20 @@
         <module name="konos-server-web" />
         <module name="server" />
       </profile>
-      <profile name="Annotation profile for konos-jms" enabled="true">
-        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
+        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jms" />
+        <module name="accessor" />
+        <module name="rest-accessor" />
+      </profile>
+      <profile name="Annotation profile for konos-ness-accessor" enabled="true">
+        <sourceOutputDir name="../out/build/datalake/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/datalake/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="datalake" />
+        <module name="datalake-accessor" />
+        <module name="ness-accessor" />
       </profile>
       <profile name="Annotation profile for konos-server-web" enabled="true">
         <sourceOutputDir name="../out/build/server-web/generated-sources/annotations" />
@@ -78,17 +87,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="server-web" />
       </profile>
-      <profile name="Annotation profile for konos-slack" enabled="true">
-        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
-      </profile>
       <profile name="Annotation profile for konos-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jmx" />
+      </profile>
+      <profile name="Annotation profile for konos-jms" enabled="true">
+        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jms" />
       </profile>
       <profile name="Annotation profile for konos-core" enabled="true">
         <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
@@ -96,17 +105,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
       </profile>
-      <profile name="Annotation profile for konos-datalake" enabled="true">
-        <sourceOutputDir name="../out/build/datalake/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/datalake/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for konos-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="datalake" />
-      </profile>
-      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
-        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="accessor" />
+        <module name="slack" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -118,6 +121,7 @@
       <module name="builder-test" target="1.8" />
       <module name="core" target="1.8" />
       <module name="datalake" target="1.8" />
+      <module name="datalake-accessor" target="1.8" />
       <module name="forrest" target="1.8" />
       <module name="jms" target="1.8" />
       <module name="jmx" target="1.8" />
@@ -128,7 +132,9 @@
       <module name="konos-server-web" target="1.8" />
       <module name="konos-test" target="1.8" />
       <module name="model" target="1.8" />
+      <module name="ness-accessor" target="1.8" />
       <module name="plugin" target="1.8" />
+      <module name="rest-accessor" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
       <module name="server" target="1.8" />

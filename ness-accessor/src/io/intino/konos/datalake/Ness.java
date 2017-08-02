@@ -3,17 +3,13 @@ package io.intino.konos.datalake;
 import io.intino.konos.jms.Consumer;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
-import org.apache.activemq.command.ActiveMQTopic;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static java.util.logging.Level.SEVERE;
@@ -28,7 +24,6 @@ public class Ness {
 	private String clientID;
 	private Session session;
 	private Connection connection;
-
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -48,16 +43,6 @@ public class Ness {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 			return null;
 		}
-	}
-
-	public List<String> tanks() {
-		List<String> topics = new ArrayList<>();
-		try {
-			for (ActiveMQTopic topic : ((ActiveMQConnection) connection).getDestinationSource().getTopics())
-				topics.add(topic.getTopicName());
-		} catch (JMSException e) {
-		}
-		return topics;
 	}
 
 	public Tank tank(String tank) {
@@ -105,14 +90,18 @@ public class Ness {
 	}
 
 	public class Tank {
-		private String tank;
+		private String name;
 
-		Tank(String tank) {
-			this.tank = tank;
+		Tank(String name) {
+			this.name = name;
+		}
+
+		public String name() {
+			return name;
 		}
 
 		public void feed(io.intino.ness.inl.Message message) {
-			final TopicProducer producer = newProducer(tank);
+			final TopicProducer producer = newProducer(name);
 			if (producer != null) producer.produce(createMessageFor(message.toString()));
 		}
 
@@ -121,28 +110,28 @@ public class Ness {
 				final TextMessage jmsMessage = (TextMessage) createMessageFor(message.toString());
 				if (jmsMessage == null) return;
 				jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
-				final TopicProducer producer = newProducer(tank);
+				final TopicProducer producer = newProducer(name);
 				if (producer != null) producer.produce(jmsMessage);
 			} catch (JMSException ignored) {
 			}
 		}
 
-		public TopicConsumer sink(Sink sink) {
+		public TopicConsumer flow(TankFlow flow) {
 			if (session() == null) getGlobal().log(SEVERE, "Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), tank);
-			topicConsumer.listen(sink);
+			TopicConsumer topicConsumer = new TopicConsumer(session(), name);
+			topicConsumer.listen(flow);
 			return topicConsumer;
 		}
 
-		public TopicConsumer sink(Sink sink, String sinkID) {
+		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) getGlobal().log(SEVERE, "Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), tank);
-			topicConsumer.listen(sink, sinkID);
+			TopicConsumer topicConsumer = new TopicConsumer(session(), name);
+			topicConsumer.listen(flow, flowID);
 			return topicConsumer;
 		}
 	}
 
-	public interface Sink extends Consumer {
+	public interface TankFlow extends Consumer {
 
 	}
 }
