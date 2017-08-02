@@ -74,7 +74,7 @@ def type(tank) trigger(getter)
 end
 
 def type(tank) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name).listen(new Subscriptor(box, "flow." + $name), box.configuration().nessConfiguration().clientID + "-$name");
+	new TopicConsumer(box.datalake().session(), $name.flowChannel()).listen(new Subscriptor(box, $name.flowChannel()), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
