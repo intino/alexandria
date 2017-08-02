@@ -117,12 +117,16 @@ def type(service & activity) trigger(confClass)
 
 		[public java.net.URL authServiceUrl() {
 			try {
-				return new java.net.URL("$auth"$custom+replace...[]);
+				return $custom+customname == null ? null : new java.net.URL("$auth"$custom+replace...[]);
 			} catch (java.net.MalformedURLException e) {
 				return null;
 			}
 		}]
 	}
+end
+
+def type(custom) trigger(customname)
+	$name+validname+firstLowerCase
 end
 
 def type(custom) trigger(replace)

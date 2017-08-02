@@ -129,14 +129,6 @@ def type(service & rest) trigger(setup)
 		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
-def type(dataLake) trigger(init)
-	if (configuration().nessConfiguration() == null) return;
-	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
-	this.ness.start();
-	NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	logger.info("Ness datalake: started!");
-end
-
 def type(service & jmx) trigger(jmx)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
 	logger.info("JMX service $name: started!");
@@ -164,12 +156,24 @@ def type(service & jms) trigger(jms)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
-		connection.start();
-		this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-		logger.info("JMS service $name: started!");
+		new java.lang.Thread(() -> {
+			connection.start();
+			this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+			logger.info("JMS service $name: started!");
+		}).start();
 	} catch (javax.jms.JMSException e) {
 		LOG.severe(e.getMessage());
 	}
+end
+
+def type(dataLake) trigger(init)
+	if (configuration().nessConfiguration() == null) return;
+	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
+	new java.lang.Thread(()-> {
+		this.ness.start();
+		NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		logger.info("Ness datalake: started!");
+	}).start();
 end
 
 def type(service & jmx) trigger(field)
