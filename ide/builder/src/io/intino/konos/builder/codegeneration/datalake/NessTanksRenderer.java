@@ -10,14 +10,14 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-public class NessEventsRenderer {
+public class NessTanksRenderer {
 	private final DataLake dataLake;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 
 
-	public NessEventsRenderer(Graph graph, File gen, String packageName, String boxName) {
+	public NessTanksRenderer(Graph graph, File gen, String packageName, String boxName) {
 		this.dataLake = graph.wrapper(Konos.class).dataLake();
 		this.gen = gen;
 		this.packageName = packageName;
@@ -26,17 +26,17 @@ public class NessEventsRenderer {
 
 	public void execute() {
 		if (dataLake == null) return;
-		Frame frame = new Frame().addTypes("events").
+		Frame frame = new Frame().addTypes("tanks").
 				addSlot("package", packageName).
 				addSlot("name", dataLake.name()).
 				addSlot("box", boxName).
-				addSlot("messageHandler", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
-		if (!dataLake.tankList().isEmpty()) frame.addSlot("messageHandlerImport", packageName);
-		Commons.writeFrame(gen, "NessEvents", template().format(frame));
+				addSlot("tank", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!dataLake.tankList().isEmpty()) frame.addSlot("tankImport", packageName);
+		Commons.writeFrame(gen, "NessTanks", template().format(frame));
 	}
 
 	private Frame frameOf(DataLake.Tank handler) {
-		return new Frame().addTypes("messageHandler").
+		return new Frame().addTypes("tank").
 				addSlot("name", handler.name()).
 				addSlot("messageType", customize(handler.name(), handler.topic())).
 				addSlot("simpleMessageType", handler.topic());
@@ -55,7 +55,7 @@ public class NessEventsRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(NessEventsTemplate.create()).add("shortPath", value -> {
+		return Formatters.customize(NessTanksTemplate.create()).add("shortPath", value -> {
 			String[] names = value.toString().split("\\.");
 			return names[names.length - 1];
 		});

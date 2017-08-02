@@ -26,6 +26,8 @@
         <option value="$PROJECT_DIR$/ide/test/pom.xml" />
         <option value="$PROJECT_DIR$/datalake/pom.xml" />
         <option value="$PROJECT_DIR$/server-web/pom.xml" />
+        <option value="$PROJECT_DIR$/datalake-accessor/pom.xml" />
+        <option value="$PROJECT_DIR$/rest-accessor/pom.xml" />
       </list>
     </option>
   </component>

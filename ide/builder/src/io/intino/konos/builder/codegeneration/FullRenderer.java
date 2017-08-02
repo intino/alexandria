@@ -7,7 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.MessageHandlerRenderer;
-import io.intino.konos.builder.codegeneration.datalake.NessEventsRenderer;
+import io.intino.konos.builder.codegeneration.datalake.NessTanksRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
@@ -105,7 +105,7 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		new NessEventsRenderer(graph, gen, packageName, boxName).execute();
+		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
 		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
 	}
 
