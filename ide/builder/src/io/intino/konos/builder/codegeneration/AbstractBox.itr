@@ -162,7 +162,7 @@ def type(service & jms) trigger(jms)
 			logger.info("JMS service $name: started!");
 		}).start();
 	} catch (javax.jms.JMSException e) {
-		LOG.severe(e.getMessage());
+		logger.error(e.getMessage());
 	}
 end
 
