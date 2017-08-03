@@ -157,9 +157,13 @@ def type(service & jms) trigger(jms)
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
 		new java.lang.Thread(() -> {
-			connection.start();
-			this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-			logger.info("JMS service $name: started!");
+			try {
+				connection.start();
+				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+				logger.info("JMS service $name: started!");
+			} catch (javax.jms.JMSException e) {
+				logger.error(e.getMessage());
+			}
 		}).start();
 	} catch (javax.jms.JMSException e) {
 		logger.error(e.getMessage());
