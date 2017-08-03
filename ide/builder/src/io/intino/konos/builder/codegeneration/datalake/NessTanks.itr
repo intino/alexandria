@@ -16,38 +16,20 @@ def type(tanks)
 	import javax.jms.Message;
     import java.util.ArrayList;
     import java.util.List;
-	import java.util.logging.Level;
-	import java.util.logging.Logger;
 
 	public class NessTanks {
-		private static Logger logger = Logger.getGlobal();
 		$tank+field...[$NL]
 		private $box+firstUpperCase~Configuration configuration;
 		private $box+firstUppercase~Box box;
 
 		public static void registerTanks($box+firstUppercase~Box box) {
-			$tank+subscribe...[$NL]
 			$tank+assign...[$NL]
-		}
-
-		private static class Subscriptor implements Consumer {
-
-			private final $box+firstUpperCase~Box box;
-			private final String tank;
-
-			Subscriptor($box+firstUpperCase~Box box, String tank) {
-				this.box = box;
-				this.tank = tank;
-			}
-
-			public void consume(Message message) {
-				if (isRegisterOnly(message)) return;
-				String text = Consumer.textFrom(message);
-				$tank+select...[$NL~else ]
-			}
+			$tank+subscribe...[$NL]
 		}
 
 		$tank+getter...[$NL$NL]
+
+		$tank+class...[$NL$NL]
 
 		private static boolean isRegisterOnly(Message message) {
 			try {
@@ -74,7 +56,7 @@ def type(tank) trigger(getter)
 end
 
 def type(tank) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name.flowChannel()).listen(new Subscriptor(box, $name.flowChannel()), box.configuration().nessConfiguration().clientID + "-$name");
+	new TopicConsumer(box.datalake().session(), $name.flowChannel()).listen(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -97,12 +79,23 @@ def trigger(custom)
 	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
-def trigger(tank) trigger(select)
-	if ($name.name().equalsIgnoreCase(tank)) {
-		$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
-		tank.box = box;
-		tank.message = io.intino.ness.Inl.load(text).get(0);
-		tank.execute();
+def trigger(tank) trigger(class)
+	private static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements Consumer {
+		private final CesarBox box;
+
+		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(CesarBox box) {
+			this.box = box;
+		}
+
+		@Override
+		public void consume(Message message) {
+			if (isRegisterOnly(message)) return;
+			String text = Consumer.textFrom(message);
+			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
+			tank.box = box;
+			tank.message = io.intino.ness.Inl.load(text).get(0);
+			tank.execute();
+		}
 	}
 end
 

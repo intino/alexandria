@@ -109,7 +109,7 @@ public class Ness {
 		}
 
 		public void feed(io.intino.ness.inl.Message message) {
-			final TopicProducer producer = newProducer(name);
+			final TopicProducer producer = newProducer(feedChannel());
 			if (producer != null) producer.produce(createMessageFor(message.toString()));
 		}
 
@@ -126,14 +126,14 @@ public class Ness {
 
 		public TopicConsumer flow(TankFlow flow) {
 			if (session() == null) getGlobal().log(SEVERE, "Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), name);
+			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
 			topicConsumer.listen(flow);
 			return topicConsumer;
 		}
 
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) getGlobal().log(SEVERE, "Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), name);
+			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
 			topicConsumer.listen(flow, flowID);
 			return topicConsumer;
 		}

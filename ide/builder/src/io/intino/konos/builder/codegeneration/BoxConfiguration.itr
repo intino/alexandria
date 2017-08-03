@@ -125,6 +125,10 @@ def type(service & activity) trigger(confClass)
 	}
 end
 
+def type(custom) trigger(customname)
+	$name+validname+firstLowerCase
+end
+
 def type(custom) trigger(replace)
 	.replace("{$name}", $name+validname+firstLowerCase)
 end
@@ -232,7 +236,7 @@ def type(custom) trigger(name)
 end
 
 def type(custom) trigger(field)
-	public $type $name+validname+firstLowerCase;
+	public $type $name+validname+firstLowerCase = "";
 end
 
 def type(custom) trigger(assign)
