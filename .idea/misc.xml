@@ -28,6 +28,7 @@
         <option value="$PROJECT_DIR$/server-web/pom.xml" />
         <option value="$PROJECT_DIR$/datalake-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/rest-accessor/pom.xml" />
+        <option value="$PROJECT_DIR$/ness-accessor/pom.xml" />
       </list>
     </option>
   </component>
