@@ -81,9 +81,9 @@ end
 
 def trigger(tank) trigger(class)
 	private static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements Consumer {
-		private final CesarBox box;
+		private final $box+firstUppercase~Box box;
 
-		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(CesarBox box) {
+		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
