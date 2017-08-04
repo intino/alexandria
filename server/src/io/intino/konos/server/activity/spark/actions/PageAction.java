@@ -1,9 +1,11 @@
 package io.intino.konos.server.activity.spark.actions;
 
 import cottons.utils.StreamHelper;
+import io.intino.konos.server.activity.Asset;
 import io.intino.konos.server.activity.services.push.Browser;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static java.lang.String.format;
@@ -26,6 +28,7 @@ public abstract class PageAction {
 	protected abstract String title();
 	protected abstract String subtitle();
 	protected abstract URL logo();
+	protected abstract URL icon();
 
 	protected String template(String name) {
 		String sessionId = session.id();
@@ -48,6 +51,9 @@ public abstract class PageAction {
 			if (logo() != null)
 				result = result.replace("$logo", encode(logo()));
 
+			if (icon() != null)
+				result = result.replace("$icon", Asset.toResource(baseAssetUrl(), icon()).toUrl().toString());
+
 			return result;
 		} catch (IOException e) {
 			return "";
@@ -59,6 +65,14 @@ public abstract class PageAction {
 			return "data:image/png;base64," + new String(getEncoder().encode(toByteArray(logo.openStream())));
 		} catch (IOException e) {
 			return "";
+		}
+	}
+
+	private URL baseAssetUrl() {
+		try {
+			return new URL(session.browser().baseAssetUrl());
+		} catch (MalformedURLException e) {
+			return null;
 		}
 	}
 
