@@ -38,6 +38,7 @@ public class NessTanksRenderer {
 	private Frame frameOf(DataLake.Tank handler) {
 		return new Frame().addTypes("tank").
 				addSlot("name", handler.name()).
+				addSlot("box", boxName).
 				addSlot("messageType", customize(handler.name(), handler.topic())).
 				addSlot("simpleMessageType", handler.topic());
 	}
