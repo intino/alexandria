@@ -6,8 +6,8 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.slackbot.SlackBotService;
-import io.intino.konos.model.slackbot.SlackBotService.Request;
+import io.intino.konos.model.graph.slackbot.SlackBotService;
+import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -51,7 +51,7 @@ class BotActionsUpdater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(SlackTemplate.create()).format(createRequestFrame(request.owner().as(SlackBotService.class), request));
+		final String methodText = Formatters.customize(SlackTemplate.create()).format(createRequestFrame(request.core$().ownerAs(SlackBotService.class), request));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), anchor(psiClass));
 	}
 
@@ -65,11 +65,11 @@ class BotActionsUpdater {
 	}
 
 	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
-		final Frame requestFrame = new Frame().addTypes("request", "newMethod").addSlot("bot", service.name()).addSlot("box", boxName).addSlot("name", request.name()).addSlot("description", request.description());
+		final Frame requestFrame = new Frame().addTypes("request", "newMethod").addSlot("bot", service.name$()).addSlot("box", boxName).addSlot("name", request.name$()).addSlot("description", request.description());
 		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)
 			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
-					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name()).addSlot("pos", i));
+					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name$()).addSlot("pos", i));
 		return requestFrame;
 	}
 
@@ -81,17 +81,17 @@ class BotActionsUpdater {
 
 	private void updateMethod(PsiMethod psiMethod, Request request) {
 		for (Request.Parameter parameter : request.parameterList()) {
-			final PsiParameter psiParameter = parameter(psiMethod, parameter.name());
+			final PsiParameter psiParameter = parameter(psiMethod, parameter.name$());
 			if (psiParameter != null) {
 				if (!psiParameter.getTypeElement().getType().getPresentableText().equals(parameter.type().name() + (parameter.multiple() ? "[]" : "")))
-					psiParameter.replace(factory.createParameter(parameter.name(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
+					psiParameter.replace(factory.createParameter(parameter.name$(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
 			} else
-				psiMethod.getParameterList().add(factory.createParameter(parameter.name(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
+				psiMethod.getParameterList().add(factory.createParameter(parameter.name$(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
 		}
 	}
 
 	private String nameOf(Request request) {
-		return Formatters.firstLowerCase(Formatters.snakeCaseToCamelCase().format(request.name()).toString());
+		return Formatters.firstLowerCase(Formatters.snakeCaseToCamelCase().format(request.name$()).toString());
 	}
 
 	private PsiParameter parameter(PsiMethod method, String name) {

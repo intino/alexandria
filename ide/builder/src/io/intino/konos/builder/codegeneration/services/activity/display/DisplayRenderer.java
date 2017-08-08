@@ -2,11 +2,10 @@ package io.intino.konos.builder.codegeneration.services.activity.display;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Display;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.date.DateData;
-import io.intino.konos.model.type.TypeData;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.date.DateData;
+import io.intino.konos.model.graph.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.model.Display.Request.ResponseType.Asset;
+import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 
 @SuppressWarnings("Duplicates")
 public class DisplayRenderer {
@@ -29,12 +28,12 @@ public class DisplayRenderer {
 	private final List<Display> displays;
 	private final String boxName;
 
-	public DisplayRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
-		this.displays = graph.find(Display.class);
+		this.displays = graph.displayList();
 		this.boxName = boxName;
 	}
 
@@ -45,15 +44,15 @@ public class DisplayRenderer {
 	private void processDisplay(Display display) {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
-		frame.addSlot("name", display.name());
-		if (!display.graph().find(Schema.class).isEmpty())
+		frame.addSlot("name", display.name$());
+		if (!display.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
 		frame.addSlot("request", framesOfRequests(display.requestList()));
 		frame.addSlot("box", boxName);
-		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
-		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name() + "DisplayRequester"), displayRequesterTemplate().format(frame));
-		final String newDisplay = snakeCaseToCamelCase(display.name() + "Display");
+		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
+		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "DisplayRequester"), displayRequesterTemplate().format(frame));
+		final String newDisplay = snakeCaseToCamelCase(display.name$() + "Display");
 		if (!Commons.javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			Commons.writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
 		else new DisplayUpdater(project, display, Commons.javaFile(new File(src, DISPLAYS), newDisplay)).update();
@@ -67,7 +66,7 @@ public class DisplayRenderer {
 
 	private Frame frameOf(Display.Notification notification) {
 		final Frame frame = new Frame().addTypes("notification");
-		frame.addSlot("name", notification.name());
+		frame.addSlot("name", notification.name$());
 		frame.addSlot("target", notification.to().name());
 		if (notification.asType() != null) {
 			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", notification.asType().type());
@@ -85,7 +84,7 @@ public class DisplayRenderer {
 	static Frame frameOf(Display.Request request) {
 		final Frame frame = new Frame().addTypes("request");
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
-		frame.addSlot("name", request.name());
+		frame.addSlot("name", request.name$());
 		if (request.asType() != null) {
 			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", request.asType().type());
 			if (request.isList()) parameterFrame.addTypes("list");
@@ -96,7 +95,7 @@ public class DisplayRenderer {
 
 	private String type(Display.Request request) {
 		final TypeData typeData = request.asType();
-		if (typeData.is(DateData.class)) return "Long";
+		if (typeData.i$(DateData.class)) return "Long";
 		else return typeData.type();
 	}
 

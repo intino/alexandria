@@ -1,10 +1,9 @@
 package io.intino.konos.builder.codegeneration.accessor.jms;
 
-import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Parameter;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.jms.JMSService;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
+import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.jms.JMSService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -36,16 +35,16 @@ public class JMSAccessorRenderer {
 
 	private void processService(JMSService jmsService) {
 		Frame frame = new Frame().addTypes("accessor");
-		frame.addSlot("name", jmsService.name());
+		frame.addSlot("name", jmsService.name$());
 		frame.addSlot("package", packageName);
-		if (!jmsService.graph().find(Schema.class).isEmpty())
+		if (!jmsService.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		final List<JMSService.Request> requests = jmsService.node().findNode(JMSService.Request.class);
+		final List<JMSService.Request> requests = jmsService.core$().findNode(JMSService.Request.class);
 		final Set<String> customParameters = extractCustomParameters(requests);
 		frame.addSlot("request", (AbstractFrame[]) requests.stream().
 				map(request -> processRequest(request, customParameters)).toArray(Frame[]::new));
 		for (String parameter : customParameters) frame.addSlot("custom", parameter);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name()) + "Accessor", getTemplate().format(frame));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(jmsService.name$()) + "Accessor", getTemplate().format(frame));
 	}
 
 	private Set<String> extractCustomParameters(List<JMSService.Request> requests) {
@@ -56,7 +55,7 @@ public class JMSAccessorRenderer {
 
 	private Frame processRequest(JMSService.Request request, Set<String> customParameters) {
 		final Frame frame = new Frame().addTypes("request")
-				.addSlot("name", request.name())
+				.addSlot("name", request.name$())
 				.addSlot("queue", request.path())
 				.addSlot("parameter", (AbstractFrame[]) parameters(request.parameterList()))
 				.addSlot("messageType", messageType(request.parameterList()));
@@ -82,7 +81,7 @@ public class JMSAccessorRenderer {
 
 	private Frame parameter(Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name())
+				.addSlot("name", parameter.name$())
 				.addSlot("type", parameter.asType().type());
 	}
 

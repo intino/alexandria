@@ -22,6 +22,7 @@ import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
@@ -106,7 +107,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private void generate(String packageName, File gen, File src, File res) {
-			Graph graph = loadGraph();
+			KonosGraph graph = loadGraph();
 			if (graph == null) {
 				notifyError("Models have errors");
 				return;
@@ -116,14 +117,14 @@ public class CreateKonosBoxAction extends KonosAction {
 			notifySuccess();
 		}
 
-		private Graph loadGraph() {
+		private KonosGraph loadGraph() {
 			if (!konosFiles.isEmpty()) {
 				final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
 				if (stash == null) {
 					notifyError("Models have errors");
 					return null;
-				} else return GraphLoader.loadGraph(stash).graph();
-			} else return GraphLoader.loadGraph().graph();
+				} else return GraphLoader.loadGraph(stash);
+			} else return GraphLoader.loadGraph();
 		}
 
 		private void refreshDirectories(File gen, File src, File res) {
@@ -132,7 +133,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			refreshDirectory(res);
 		}
 
-		private boolean render(String packageName, File gen, File src, File res, Graph graph) {
+		private boolean render(String packageName, File gen, File src, File res, KonosGraph graph) {
 			try {
 				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {

@@ -1,7 +1,7 @@
 package sumus;
 
-import io.intino.konos.model.Konos;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 
@@ -14,7 +14,8 @@ public class Sumus {
 	@Test
 	public void sumus() throws Exception {
 		File gen = new File("test-gen", SUMUS);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Sumus"), gen, gen, gen, SUMUS).execute();
+		KonosGraph graph = new Graph().loadStashes("Sumus").as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, SUMUS).execute();
 
 	}
 }

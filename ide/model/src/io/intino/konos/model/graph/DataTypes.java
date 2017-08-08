@@ -1,18 +1,18 @@
-package io.intino.konos.model;
+package io.intino.konos.model.graph;
 
-import io.intino.konos.model.object.ObjectData;
+import io.intino.konos.model.graph.object.ObjectData;
 
 public class DataTypes {
 	public static String schemaName(ObjectData self) {
 		final Schema schema = self.schema();
 		String name = "";
 		if (isInService(schema))
-			name += schema.owner().name().toLowerCase() + ".";
-		return name + firstUpperCase(schema.name());
+			name += schema.core$().owner().name().toLowerCase() + ".";
+		return name + firstUpperCase(schema.name$());
 	}
 
 	private static boolean isInService(Schema schema) {
-		return schema.ownerAs(Service.class) != null;
+		return schema.core$().ownerAs(Service.class) != null;
 	}
 
 

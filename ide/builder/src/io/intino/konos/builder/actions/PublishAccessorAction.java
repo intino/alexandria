@@ -14,10 +14,10 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
-import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 import tara.dsl.Konos;
@@ -60,7 +60,7 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 				final Configuration configuration = TaraUtil.configurationOf(module);
 				String generationPackage = configuration != null ? configuration.workingPackage() : "konos";
 				final Stash stashes = new StashBuilder(konosFiles(module), new Konos(), module.getName()).build();
-				final Graph graph = GraphLoader.loadGraph(stashes).graph();
+				final KonosGraph graph = GraphLoader.loadGraph(stashes);
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
 				new AccessorsPublisher(module, graph, generationPackage).publish();
 			}

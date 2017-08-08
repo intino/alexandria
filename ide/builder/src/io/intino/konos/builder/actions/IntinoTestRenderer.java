@@ -8,14 +8,13 @@ import com.intellij.psi.PsiPackage;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.DataLake;
-import io.intino.konos.model.Konos;
-import io.intino.konos.model.Service;
-import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.slackbot.SlackBotService;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.DataLake;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -29,17 +28,14 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 public class IntinoTestRenderer {
 
 
-	private Konos graph;
-	private Module module;
+	private KonosGraph graph;
 	private PsiDirectory directory;
 	private String newName;
 
 	IntinoTestRenderer(Module module, PsiDirectory directory, String newName) {
-		this.module = module;
 		this.directory = directory;
 		this.newName = newName;
-		final Graph graph = GraphLoader.loadGraph(module);
-		if (graph != null) this.graph = graph.wrapper(Konos.class);
+		this.graph = GraphLoader.loadGraph(module);
 	}
 
 
@@ -63,16 +59,16 @@ public class IntinoTestRenderer {
 
 	private void addRESTServices(Frame frame) {
 		for (RESTService service : graph.rESTServiceList()) {
-			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name());
-			addUserVariables(service.as(Service.class), restFrame, findCustomParameters(service));
+			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name$());
+			addUserVariables(service.a$(Service.class), restFrame, findCustomParameters(service));
 			frame.addSlot("service", restFrame);
 		}
 	}
 
 	private void addJMSServices(Frame frame) {
 		for (JMSService service : graph.jMSServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name());
-			addUserVariables(service.as(Service.class), jmsFrame, findCustomParameters(service));
+			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name$());
+			addUserVariables(service.a$(Service.class), jmsFrame, findCustomParameters(service));
 			frame.addSlot("service", jmsFrame);
 		}
 	}
@@ -80,7 +76,7 @@ public class IntinoTestRenderer {
 	private void addDataLakes(Frame frame) {
 		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
-		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name());
+		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name$());
 		frame.addSlot("service", dataLakeFrame);
 	}
 
@@ -88,7 +84,7 @@ public class IntinoTestRenderer {
 		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
 		for (DataLake.Tank handler : dataLake.tankList()) {
-			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name());
+			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$());
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			frame.addSlot("service", channelFrame);
 		}
@@ -96,7 +92,7 @@ public class IntinoTestRenderer {
 
 	private void addActivities(Frame frame) {
 		for (Activity activity : graph.activityList()) {
-			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name());
+			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name$());
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) {
 				activityFrame.addTypes("auth");
@@ -108,13 +104,13 @@ public class IntinoTestRenderer {
 
 	private void addSlackServices(Frame frame) {
 		for (SlackBotService service : graph.slackBotServiceList()) {
-			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name()));
+			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name$()));
 		}
 	}
 
 	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
 		for (String custom : userVariables)
-			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
+			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name$()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
 	private Set<String> findCustomParameters(DataLake.Tank channel) {

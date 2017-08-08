@@ -61,7 +61,7 @@ public class Ness {
 	}
 
 	public javax.jms.Session session() {
-		return ((ActiveMQSession) session).isClosed() ? start() : session;
+		return session == null || ((ActiveMQSession) session).isClosed() ? start() : session;
 	}
 
 	public javax.jms.Connection connection() {

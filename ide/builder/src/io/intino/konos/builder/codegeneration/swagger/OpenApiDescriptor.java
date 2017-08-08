@@ -2,11 +2,11 @@ package io.intino.konos.builder.codegeneration.swagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.intino.konos.model.Exception;
-import io.intino.konos.model.Response;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.rest.RESTService.Resource;
+import io.intino.konos.model.graph.Exception;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class OpenApiDescriptor {
 
 	public OpenApiDescriptor(RESTService restService) {
 		this.restService = restService;
-		this.schemas = restService.graph().find(Schema.class);
+		this.schemas = restService.graph().schemaList();
 	}
 
 	public String createJSONDescriptor() {
@@ -46,8 +46,8 @@ public class OpenApiDescriptor {
 
 	private SwaggerSpec.Info createInfo(RESTService.Info info) {
 		return info == null ? null : new SwaggerSpec.Info(info.version(), info.title(), info.description(), info.termsOfService(), info.contact() == null ? null :
-				new SwaggerSpec.Info.Contact(info.contact().name(), info.contact().email(), info.contact().url()), info.license() == null ? null :
-				new SwaggerSpec.Info.License(info.license().name(), info.license().url()));
+				new SwaggerSpec.Info.Contact(info.contact().name$(), info.contact().email(), info.contact().url()), info.license() == null ? null :
+				new SwaggerSpec.Info.License(info.license().name$(), info.license().url()));
 	}
 
 	private SwaggerSpec.Path createPath(Resource resource) {
@@ -56,12 +56,12 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Path.Operation operation = new SwaggerSpec.Path.Operation();
 			operation.description = op.description().isEmpty() ? null : op.description();
 			operation.summary = op.summary().isEmpty() ? null : op.summary();
-			operation.operationId = op.name();
+			operation.operationId = op.name$();
 			operation.tags = op.tags().isEmpty() ? null : op.tags();
 			operation.parameters = createParameters(op.parameterList());
 			addResponse(operation.responses, op.response());
 			addResponse(operation.responses, op.exceptionList());
-			addOperationToPath(path, operation, op.concept().name());
+			addOperationToPath(path, operation, op.getClass().getSimpleName());
 		}
 		return path;
 	}
@@ -70,7 +70,7 @@ public class OpenApiDescriptor {
 		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
 		swaggerResponse.description = response.description();
 		if (response.isObject())
-			swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name());
+			swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name$());
 		responses.put(response.code(), swaggerResponse);
 	}
 
@@ -79,7 +79,7 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
 			swaggerResponse.description = exception.description();
 			if (exception.isObject()) {
-				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + exception.asObject().schema().name());
+				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
 			}
 			responses.put(exception.code().value(), swaggerResponse);
 		}
@@ -114,7 +114,7 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Path.Operation.Parameter swaggerParameter = new SwaggerSpec.Path.Operation.Parameter();
 			swaggerParameter.description = parameter.description();
 			swaggerParameter.in = parameter.in().name();
-			swaggerParameter.name = parameter.name();
+			swaggerParameter.name = parameter.name$();
 			swaggerParameter.type = parameter.asType().type().toLowerCase();
 			swaggerParameter.required = parameter.required();
 			list.add(swaggerParameter);
@@ -126,16 +126,16 @@ public class OpenApiDescriptor {
 		Map<String, SwaggerSpec.Definition> map = new LinkedHashMap<>();
 		for (Schema schema : schemas) {
 			SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
-			definition.required = schema.attributeList().stream().filter(Schema.Attribute::required).map(Layer::name).collect(Collectors.toList());
+			definition.required = schema.attributeList().stream().filter(Schema.Attribute::required).map(Layer::name$).collect(Collectors.toList());
 			definition.properties = toMap(schema.attributeList());
-			map.put(schema.name(), definition);
+			map.put(schema.name$(), definition);
 		}
 		return map;
 	}
 
 	private Map<String, SwaggerSpec.Definition.Property> toMap(List<Schema.Attribute> attributes) {
 		Map<String, SwaggerSpec.Definition.Property> map = new LinkedHashMap<>();
-		for (Schema.Attribute attribute : attributes) map.put(attribute.name(), propertyFrom(attribute));
+		for (Schema.Attribute attribute : attributes) map.put(attribute.name$(), propertyFrom(attribute));
 		return map;
 	}
 

@@ -26,9 +26,14 @@ def type(boxConfiguration)
 	}
 end
 
+def type(service & activity) trigger(field)
+	$name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+end
+
 def type(service & datalake) trigger(field)
 	NessConfiguration nessConfiguration;
 end
+
 def type(service) trigger(field)
 	$name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 end
@@ -109,7 +114,7 @@ def type(service & slack) trigger(confClass)
 end
 
 def type(service & activity) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
+	public static class $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration {
 		public int port;
 		public String webDirectory;
 		public io.intino.konos.server.activity.services.AuthService authService;
@@ -209,10 +214,9 @@ def type(service & rest)
 	}
 end
 
-
 def type(service & activity)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
 		$custom+assign...[$NL]
@@ -223,7 +227,7 @@ def type(service & activity)
 		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]]);
 	}
 
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
+	public $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
 		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 	}
 end
@@ -246,7 +250,6 @@ end
 def type(custom) trigger(parameter)
 	args.remove("$conf+firstLowerCase~_$name+validname+firstLowerCase")
 end
-
 
 def trigger(empty)
 end
