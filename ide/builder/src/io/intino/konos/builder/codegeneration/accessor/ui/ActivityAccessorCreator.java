@@ -64,6 +64,7 @@ public class ActivityAccessorCreator {
 			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(parent.getAbsolutePath());
 			addExcludeFiles(parent, contentEntry);
 			model.commit();
+			addModuleDependency(webModule);
 			return webModule;
 		});
 	}
