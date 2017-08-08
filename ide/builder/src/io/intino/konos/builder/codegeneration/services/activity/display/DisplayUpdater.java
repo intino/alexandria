@@ -5,8 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Display;
-import io.intino.konos.model.Display.Request;
+import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.Display.Request;
 
 import java.io.File;
 
@@ -53,6 +53,6 @@ public class DisplayUpdater {
 	}
 
 	private String nameOf(Request request) {
-		return Formatters.firstLowerCase(Formatters.snakeCaseToCamelCase().format(request.name()).toString());
+		return Formatters.firstLowerCase(Formatters.snakeCaseToCamelCase().format(request.name$()).toString());
 	}
 }

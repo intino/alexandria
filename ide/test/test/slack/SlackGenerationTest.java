@@ -1,7 +1,7 @@
 package slack;
 
-import io.intino.konos.model.Konos;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 
@@ -14,7 +14,8 @@ public class SlackGenerationTest {
 	@Test
 	public void testSlack() throws Exception {
 		File gen = new File("test-gen", SLACK);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("Slack"), gen, gen, gen,SLACK).execute();
+		KonosGraph graph = new Graph().loadStashes("Slack").as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen,SLACK).execute();
 	}
 
 }

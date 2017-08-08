@@ -25,8 +25,8 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class FullRenderer {
 	private final Project project;
 	@Nullable
 	private final Module module;
-	private final Graph graph;
+	private final KonosGraph graph;
 	private final File gen;
 	private final File src;
 	private File res;
@@ -48,7 +48,7 @@ public class FullRenderer {
 	private final String parent;
 	private final boolean hasModel;
 
-	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, String packageName) {
+	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
 		this.module = module;
 		this.graph = graph;
@@ -115,7 +115,7 @@ public class FullRenderer {
 
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new DialogRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph).execute();

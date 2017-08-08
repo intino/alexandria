@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.*;
+import io.intino.konos.model.graph.*;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -81,29 +81,29 @@ public class ActivityAccessorRenderer {
 
 	private void createPages() throws IOException {
 		for (Activity.AbstractPage page : activity.abstractPageList()) {
-			Path pagePath = new File(genDirectory, SRC_DIRECTORY + separator + page.name() + ".html").toPath();
+			Path pagePath = new File(genDirectory, SRC_DIRECTORY + separator + page.name$() + ".html").toPath();
 			if (!exists(pagePath)) write(pagePath, PageTemplate.create().format(pageFrame(page)).getBytes());
 		}
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		String usesDisplay = page.uses().name() + (page.uses().is(Dialog.class) ? Dialog.class.getSimpleName() : "");
-		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", page.uses().name()).addSlot("name", page.name());
+		String usesDisplay = page.uses().name$() + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : "");
+		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", page.uses().name$()).addSlot("name", page.name$());
 	}
 
 	private void createDisplayWidget(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("innerDisplay", display.displays().stream().map(Layer::name).toArray(String[]::new));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name()).toLowerCase() + "-widget.html");
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : Konos.componentsOf(activity)) {
-			if (component.is(Display.class)) createDisplay(component.as(Display.class));
-			if (component.is(Dialog.class)) createDialogWidget(component.as(Dialog.class));
-			widgets.addSlot("widget", component.name());
+		for (Component component : KonosGraph.componentsOf(activity)) {
+			if (component.i$(Display.class)) createDisplay(component.a$(Display.class));
+			if (component.i$(Dialog.class)) createDialogWidget(component.a$(Dialog.class));
+			widgets.addSlot("widget", component.name$());
 		}
 		Files.write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
 	}
@@ -115,28 +115,28 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createDialogWidget(Dialog dialog) throws IOException {
-		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name());
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name()).toLowerCase() + "-widget.html");
+		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name$());
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "requester.js");
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "widget" + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		Files.write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name().toLowerCase() + "widget" + separator + "notifier-listener.js");
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "widget" + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
 		Files.write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Request r) {
-		final Frame frame = new Frame().addTypes("requester").addSlot("name", r.name());
+		final Frame frame = new Frame().addTypes("requester").addSlot("name", r.name$());
 		if (r.isType()) {
 			frame.addSlot("parameter", "");
 			frame.addSlot("parameterSignature", "");
@@ -146,7 +146,7 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame frameOf(Display.Notification n) {
-		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name()).addSlot("to", n.to().name());
+		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name$()).addSlot("to", n.to().name());
 		if (n.asType() != null) frame.addSlot("parameter", "");
 		return frame;
 	}

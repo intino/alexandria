@@ -1,7 +1,7 @@
 package bus;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.model.Konos;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 
@@ -14,7 +14,8 @@ public class DataLakeGenerationTest {
 	@Test
 	public void testChannelsGeneration() throws Exception {
 		File gen = new File("test-gen", DATALAKE);
-		new FullRenderer(null, Graph.use(Konos.class, null).load("DataLake"), gen, gen, gen, DATALAKE).execute();
+		KonosGraph graph = new Graph().loadStashes("Datalake").as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, DATALAKE).execute();
 	}
 
 }

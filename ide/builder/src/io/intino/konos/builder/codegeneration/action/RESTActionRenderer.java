@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
 
 import java.io.File;
 import java.util.stream.Collectors;
@@ -17,8 +16,8 @@ public class RESTActionRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		execute(firstUpperCase(operation.concept().name()) + firstUpperCase(operation.owner().name()),
+		execute(firstUpperCase(operation.getClass().getSimpleName()) + firstUpperCase(operation.core$().owner().name()),
 				operation.response(), operation.parameterList(),
-				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().find(Schema.class));
+				Stream.concat(operation.exceptionList().stream(), operation.exceptionRefs().stream()).collect(Collectors.toList()), operation.graph().schemaList());
 	}
 }

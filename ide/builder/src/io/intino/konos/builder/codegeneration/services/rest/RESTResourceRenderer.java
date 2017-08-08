@@ -4,13 +4,12 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.RESTActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.list.ListData;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.rest.RESTService.Resource;
-import io.intino.konos.model.rest.RESTService.Resource.Operation;
-import io.intino.konos.model.rest.RESTService.Resource.Parameter;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.list.ListData;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -29,9 +28,9 @@ public class RESTResourceRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public RESTResourceRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+	public RESTResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
-		services = graph.find(RESTService.class);
+		this.services = graph.rESTServiceList();
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
@@ -43,13 +42,13 @@ public class RESTResourceRenderer {
 	}
 
 	private void processService(RESTService service) {
-		service.node().findNode(Resource.class).forEach(this::processResource);
+		service.core$().findNode(Resource.class).forEach(this::processResource);
 	}
 
 	private void processResource(Resource resource) {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = fillResourceFrame(resource, operation);
-			Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.concept().name() + "_" + resource.name()) + "Resource", template().format(frame));
+			Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource", template().format(frame));
 			createCorrespondingAction(operation);
 		}
 	}
@@ -60,14 +59,14 @@ public class RESTResourceRenderer {
 
 	private Frame fillResourceFrame(Resource resource, Operation operation) {
 		Frame frame = new Frame().addTypes("resource");
-		frame.addSlot("name", resource.name());
+		frame.addSlot("name", resource.name$());
 		frame.addSlot("box", boxName);
-		frame.addSlot("operation", operation.concept().name());
+		frame.addSlot("operation", operation.getClass().getSimpleName());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));
 		frame.addSlot("returnType", Commons.returnType(operation.response(), packageName));
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
-		if (!resource.graph().find(Schema.class).isEmpty())
+		if (!resource.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		return frame;
 	}
@@ -85,7 +84,7 @@ public class RESTResourceRenderer {
 		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.required() ? "required" : "optional"));
 		if (parameter.isList()) parameterFrame.addTypes("List");
 		return parameterFrame
-				.addSlot("name", parameter.name())
+				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter))
 				.addSlot("in", parameter.in().name());
 	}
@@ -93,7 +92,7 @@ public class RESTResourceRenderer {
 	private Frame parameterType(Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
 		final Frame frame = new Frame().addSlot("value", innerPackage + parameter.asType().type());
-		if (parameter.is(ListData.class)) frame.addTypes("list");
+		if (parameter.i$(ListData.class)) frame.addTypes("list");
 		return frame;
 	}
 
