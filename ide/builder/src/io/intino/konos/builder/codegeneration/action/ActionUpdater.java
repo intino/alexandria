@@ -5,11 +5,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Exception;
-import io.intino.konos.model.Parameter;
-import io.intino.konos.model.Response;
-import io.intino.konos.model.object.ObjectData;
-import io.intino.konos.model.type.TypeData;
+import io.intino.konos.model.graph.Exception;
+import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.object.ObjectData;
+import io.intino.konos.model.graph.type.TypeData;
 
 import java.io.File;
 import java.util.List;
@@ -56,7 +56,7 @@ class ActionUpdater {
 	private void updateFields(PsiClass psiClass) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
 		parameters.stream().
-				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> parameter.name().equalsIgnoreCase(f.getName()))).
+				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> parameter.name$().equalsIgnoreCase(f.getName()))).
 				forEach(parameter -> psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling()));
 		if (stream(psiClass.getAllFields()).noneMatch(f -> "box".equalsIgnoreCase(f.getName())))
 			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
@@ -67,7 +67,7 @@ class ActionUpdater {
 //		for (PsiJavaCodeReferenceElement element : psiMethod.getThrowsList().getReferenceElements()) element.delete();
 		for (Exception exception : exceptions) {
 			if (!hasException(psiMethod.getThrowsList().getReferenceElements(), exception))
-				psiMethod.getThrowsList().add(elementFactory.createReferenceFromText(exception.owner().owner() == null ? exceptionReference(exception) : exception.code().name(), psiMethod));
+				psiMethod.getThrowsList().add(elementFactory.createReferenceFromText(exception.core$().owner().owner() == null ? exceptionReference(exception) : exception.code().name(), psiMethod));
 		}
 	}
 
@@ -78,7 +78,7 @@ class ActionUpdater {
 	}
 
 	private String exceptionReference(Exception exception) {
-		return packageName + ".exceptions." + Commons.firstUpperCase(exception.name());
+		return packageName + ".exceptions." + Commons.firstUpperCase(exception.name$());
 	}
 
 	private void updateReturnType(PsiMethod psiMethod) {
@@ -87,7 +87,7 @@ class ActionUpdater {
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
-		PsiField field = elementFactory.createField(parameter.name(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
+		PsiField field = elementFactory.createField(parameter.name$(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
 		if (field.getModifierList() == null) return field;
 		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
 		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
@@ -104,7 +104,7 @@ class ActionUpdater {
 
 	private String formatType(TypeData typeData, boolean list) {
 		if (typeData == null || typeData.type() == null) return "void";
-		final String type = (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+		final String type = (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 		return list ? "List<" + type + ">" : type;
 	}
 }

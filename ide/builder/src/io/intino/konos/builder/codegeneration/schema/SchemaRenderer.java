@@ -2,17 +2,17 @@ package io.intino.konos.builder.codegeneration.schema;
 
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.Service;
-import io.intino.konos.model.bool.BoolData;
-import io.intino.konos.model.date.DateData;
-import io.intino.konos.model.datetime.DateTimeData;
-import io.intino.konos.model.integer.IntegerData;
-import io.intino.konos.model.longinteger.LongIntegerData;
-import io.intino.konos.model.real.RealData;
-import io.intino.konos.model.text.TextData;
-import io.intino.konos.model.type.TypeData;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.bool.BoolData;
+import io.intino.konos.model.graph.date.DateData;
+import io.intino.konos.model.graph.datetime.DateTimeData;
+import io.intino.konos.model.graph.integer.IntegerData;
+import io.intino.konos.model.graph.longinteger.LongIntegerData;
+import io.intino.konos.model.graph.real.RealData;
+import io.intino.konos.model.graph.text.TextData;
+import io.intino.konos.model.graph.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -26,8 +26,8 @@ public class SchemaRenderer {
 	private File destination;
 	private String rootPackage;
 
-	public SchemaRenderer(Graph graph, File destination, String rootPackage) {
-		schemas = graph.find(Schema.class);
+	public SchemaRenderer(KonosGraph graph, File destination, String rootPackage) {
+		schemas = graph.core$().find(Schema.class);
 		this.destination = destination;
 		this.rootPackage = rootPackage;
 	}
@@ -37,23 +37,23 @@ public class SchemaRenderer {
 	}
 
 	private void processSchemas(Schema format) {
-		format.node().findNode(Schema.class).forEach(this::processSchema);
+		format.core$().findNode(Schema.class).forEach(this::processSchema);
 	}
 
 	private void processSchema(Schema schema) {
-		final Service service = schema.ownerAs(Service.class);
-		String subPackage = "schemas" + (service != null ? File.separator + service.name().toLowerCase() : "");
+		final Service service = schema.core$().ownerAs(Service.class);
+		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
 		final File packageFolder = new File(destination, subPackage);
-		Commons.writeFrame(packageFolder, schema.name(), template().format(createSchemaFrame(schema, subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, "."), rootPackage)));
+		Commons.writeFrame(packageFolder, schema.name$(), template().format(createSchemaFrame(schema, subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, "."), rootPackage)));
 	}
 
 	public static Frame createSchemaFrame(Schema schema, String packageName, String rootPackage) {
-		Frame frame = new Frame().addTypes("schema").addSlot("name", schema.name()).addSlot("package", packageName).addSlot("root", rootPackage);
+		Frame frame = new Frame("schema").addSlot("name", schema.name$()).addSlot("package", packageName).addSlot("root", rootPackage);
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList(), rootPackage));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList(), rootPackage));
 		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
-		addReturningValueToAttributes(schema.name(), frame.frames("attribute"));
+		addReturningValueToAttributes(schema.name$(), frame.frames("attribute"));
 		return frame;
 	}
 
@@ -82,73 +82,73 @@ public class SchemaRenderer {
 
 	private static Frame processAttribute(RealData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", "double")
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(IntegerData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(LongIntegerData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue() + "L");
 	}
 
 	private static Frame processAttribute(BoolData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(TextData attribute) {
 		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
 	}
 
 	private static Frame processAttribute(DateTimeData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type());
 	}
 
 	private static Frame processAttribute(DateData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.as(Schema.Attribute.class).name())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type());
 	}
 
 	private static Frame processSchemaAsAttribute(Schema schema, String rootPackage) {
-		return new Frame().addTypes(schema.multiple() ? "multiple" : "single", "member", schema.name())
-				.addSlot("name", schema.name())
-				.addSlot("type", schema.name())
+		return new Frame().addTypes(schema.multiple() ? "multiple" : "single", "member", schema.name$())
+				.addSlot("name", schema.name$())
+				.addSlot("type", schema.name$())
 				.addSlot("package", packageOf(schema, rootPackage));
 	}
 
 	private static Frame processHasAsAttribute(Schema.Has has, String rootPackage) {
-		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name())
-				.addSlot("name", has.reference().name())
-				.addSlot("type", has.reference().name())
+		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name$())
+				.addSlot("name", has.reference().name$())
+				.addSlot("type", has.reference().name$())
 				.addSlot("package", packageOf(has.reference(), rootPackage));
 	}
 
 	private static String packageOf(Schema schema, String rootPackage) {
-		final Service service = schema.ownerAs(Service.class);
-		String subPackage = "schemas" + (service != null ? File.separator + service.name().toLowerCase() : "");
+		final Service service = schema.core$().ownerAs(Service.class);
+		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
 		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 	}
 
 	private static Frame render(Schema.AttributeMap map) {
-		return new Frame().addTypes("attributeMap").addSlot("name", map.name());
+		return new Frame().addTypes("attributeMap").addSlot("name", map.name$());
 	}
 
 	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {
@@ -157,7 +157,7 @@ public class SchemaRenderer {
 	}
 
 	private static boolean multiple(TypeData attribute) {
-		return attribute.as(Schema.Attribute.class).multiple();
+		return attribute.a$(Schema.Attribute.class).multiple();
 	}
 
 	private Template template() {

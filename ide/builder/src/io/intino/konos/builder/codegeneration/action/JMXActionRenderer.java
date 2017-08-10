@@ -1,8 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.jmx.JMXService.Operation;
+import io.intino.konos.model.graph.jmx.JMXService.Operation;
 
 import java.io.File;
 
@@ -15,6 +14,6 @@ public class JMXActionRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		execute(operation.name(), operation.response(), operation.parameterList(), operation.exceptionList(), operation.graph().find(Schema.class));
+		execute(operation.name$(), operation.response(), operation.parameterList(), operation.exceptionList(), operation.graph().schemaList());
 	}
 }

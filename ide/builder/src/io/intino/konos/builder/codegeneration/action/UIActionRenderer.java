@@ -2,9 +2,9 @@ package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Display;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.Display;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -24,16 +24,16 @@ public class UIActionRenderer extends ActionRenderer {
 
 	public void execute() {
 		Frame frame = new Frame().addTypes("action", "page");
-		frame.addSlot("name", page.name());
-		frame.addSlot("activity", page.ownerAs(Activity.class).name());
+		frame.addSlot("name", page.name$());
+		frame.addSlot("activity", page.core$().ownerAs(Activity.class).name$());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		if (page.uses().is(Dialog.class)) frame.addSlot("importDialogs", packageName);
+		if (page.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
-		frame.addSlot("ui", page.uses().name() + (page.uses().is(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
+		frame.addSlot("ui", page.uses().name$() + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
 		frame.addSlot("parameter", parameters());
-		if (!alreadyRendered(destiny, page.name()))
-			Commons.writeFrame(destinyPackage(destiny), page.name() + "Action", template().format(frame));
+		if (!alreadyRendered(destiny, page.name$()))
+			Commons.writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
 		//TODO else Update
 	}
 

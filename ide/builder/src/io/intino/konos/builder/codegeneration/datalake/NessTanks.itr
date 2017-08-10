@@ -1,5 +1,5 @@
 def type(tanks)
-	package $package+validPackage;
+	package $package+validPackage.ness;
 
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
@@ -19,8 +19,6 @@ def type(tanks)
 
 	public class NessTanks {
 		$tank+field...[$NL]
-		private $box+firstUpperCase~Configuration configuration;
-		private $box+firstUppercase~Box box;
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			$tank+assign...[$NL]
@@ -56,7 +54,7 @@ def type(tank) trigger(getter)
 end
 
 def type(tank) trigger(subscribe)
-	new TopicConsumer(box.datalake().session(), $name.flowChannel()).listen(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
+	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
 end
 
 def type(custom) trigger(replace)
@@ -80,15 +78,16 @@ def trigger(custom)
 end
 
 def trigger(tank) trigger(class)
-	private static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements Consumer {
-		private final CesarBox box;
+	private static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements io.intino.konos.datalake.Ness.TankFlow {
+		private final $box+firstUppercase~Box box;
 
-		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(CesarBox box) {
+		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
 		@Override
 		public void consume(Message message) {
+			box.datalake().lastMessage(java.time.Instant.now());
 			if (isRegisterOnly(message)) return;
 			String text = Consumer.textFrom(message);
 			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
@@ -104,5 +103,5 @@ def trigger(replace)
 end
 
 def trigger(tankImport)
-	import $value+validPackage.messagehandlers.*;
+	import $value+validPackage.ness.messagehandlers.*;
 end

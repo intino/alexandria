@@ -7,6 +7,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.MessageHandlerRenderer;
+import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessTanksRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
@@ -25,8 +26,8 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +40,7 @@ public class FullRenderer {
 	private final Project project;
 	@Nullable
 	private final Module module;
-	private final Graph graph;
+	private final KonosGraph graph;
 	private final File gen;
 	private final File src;
 	private File res;
@@ -48,7 +49,7 @@ public class FullRenderer {
 	private final String parent;
 	private final boolean hasModel;
 
-	public FullRenderer(@Nullable Module module, Graph graph, File src, File gen, File res, String packageName) {
+	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
 		this.module = module;
 		this.graph = graph;
@@ -106,6 +107,7 @@ public class FullRenderer {
 
 	private void bus() {
 		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
+		new NessJMXOperationsRenderer(gen,src, packageName, boxName).execute();
 		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
 	}
 
@@ -115,7 +117,7 @@ public class FullRenderer {
 
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new DialogRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph).execute();

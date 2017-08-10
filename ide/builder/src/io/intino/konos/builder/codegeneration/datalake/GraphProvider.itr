@@ -1,0 +1,30 @@
+def type(operations)
+	package $package+validPackage.ness;
+
+	import $package+validPackage.$box+FirstUpperCase~Box;
+	import io.intino.tara.magritte.Graph;
+	import io.intino.tara.magritte.Store;
+
+	public class GraphProvider {
+
+		private final $box+FirstUpperCase~Box box;
+
+		public GraphProvider($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		Graph graph() {
+			return null;
+			//return box.graph();
+		}
+
+		Store store() {
+			return null;
+			//return new SumusStore(new File("store"));
+		}
+
+		void saveGraph(Graph graph) {
+			graph.saveAll("Model");
+		}
+	}
+end

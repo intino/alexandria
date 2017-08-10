@@ -14,8 +14,8 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import io.intino.konos.model.Activity;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.KonosGraph;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -30,10 +30,10 @@ public class ActivityAccessorCreator {
 	private final Module javaModule;
 	private final List<Activity> activities;
 
-	public ActivityAccessorCreator(Module module, Graph graph) {
+	public ActivityAccessorCreator(Module module, KonosGraph graph) {
 		this.project = module == null ? null : module.getProject();
 		this.javaModule = module;
-		activities = graph.find(Activity.class);
+		this.activities = graph.activityList();
 	}
 
 	public void execute() {
@@ -52,7 +52,7 @@ public class ActivityAccessorCreator {
 			final ModuleManager manager = ModuleManager.getInstance(project);
 			Module[] modules = manager.getModules();
 			for (Module m : modules)
-				if (m.getName().equals(toSnakeCase(activity.name()) + "-activity")) {
+				if (m.getName().equals(toSnakeCase(activity.name$()) + "-activity")) {
 					addModuleDependency(m);
 					return m;
 				}
@@ -64,6 +64,7 @@ public class ActivityAccessorCreator {
 			final ContentEntry contentEntry = vFile != null ? model.addContentEntry(vFile) : model.addContentEntry(parent.getAbsolutePath());
 			addExcludeFiles(parent, contentEntry);
 			model.commit();
+			addModuleDependency(webModule);
 			return webModule;
 		});
 	}
@@ -86,7 +87,7 @@ public class ActivityAccessorCreator {
 
 	@NotNull
 	private String modulePath(Activity activity) {
-		return project.getBasePath() + File.separator + toSnakeCase(activity.name()) + "-activity" + File.separator + toSnakeCase(activity.name()) + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION;
+		return project.getBasePath() + File.separator + toSnakeCase(activity.name$()) + "-activity" + File.separator + toSnakeCase(activity.name$()) + "-activity" + ModuleFileType.DOT_DEFAULT_EXTENSION;
 	}
 
 	private void addModuleDependency(Module webModule) {

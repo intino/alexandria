@@ -2,9 +2,8 @@ package io.intino.konos.builder.codegeneration.datalake;
 
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.DataLake;
-import io.intino.konos.model.Konos;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.DataLake;
+import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -17,8 +16,8 @@ public class NessTanksRenderer {
 	private final String boxName;
 
 
-	public NessTanksRenderer(Graph graph, File gen, String packageName, String boxName) {
-		this.dataLake = graph.wrapper(Konos.class).dataLake();
+	public NessTanksRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		this.dataLake = graph.dataLake();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -28,17 +27,18 @@ public class NessTanksRenderer {
 		if (dataLake == null) return;
 		Frame frame = new Frame().addTypes("tanks").
 				addSlot("package", packageName).
-				addSlot("name", dataLake.name()).
+				addSlot("name", dataLake.name$()).
 				addSlot("box", boxName).
 				addSlot("tank", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!dataLake.tankList().isEmpty()) frame.addSlot("tankImport", packageName);
-		Commons.writeFrame(gen, "NessTanks", template().format(frame));
+		Commons.writeFrame(new File(gen, "ness"), "NessTanks", template().format(frame));
 	}
 
 	private Frame frameOf(DataLake.Tank handler) {
 		return new Frame().addTypes("tank").
-				addSlot("name", handler.name()).
-				addSlot("messageType", customize(handler.name(), handler.topic())).
+				addSlot("name", handler.name$()).
+				addSlot("box", boxName).
+				addSlot("messageType", customize(handler.name$(), handler.topic())).
 				addSlot("simpleMessageType", handler.topic());
 	}
 

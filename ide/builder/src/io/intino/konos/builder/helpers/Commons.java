@@ -1,11 +1,11 @@
 package io.intino.konos.builder.helpers;
 
-import io.intino.konos.model.Response;
-import io.intino.konos.model.file.FileData;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.rest.RESTService.Resource;
-import io.intino.konos.model.rest.RESTService.Resource.Operation;
-import io.intino.konos.model.rest.RESTService.Resource.Parameter.In;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.file.FileData;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class Commons {
 
 	public static String[] pathParameters(Operation operation) {
 		return operation.parameterList().stream().filter(p -> p.in() == In.path)
-				.map(Resource.Parameter::name).toArray(String[]::new);
+				.map(Resource.Parameter::name$).toArray(String[]::new);
 	}
 
 	public static long queryParameters(Operation resource) {
@@ -57,7 +57,7 @@ public class Commons {
 	}
 
 	public static String path(Resource resource) {
-		String basePath = cleanPath(resource.ownerAs(RESTService.class).basePath());
+		String basePath = cleanPath(resource.core$().ownerAs(RESTService.class).basePath());
 		String resourcePath = cleanPath(resource.path());
 		return format(basePath) + resourcePath;
 	}
@@ -92,7 +92,7 @@ public class Commons {
 	}
 
 	public static int fileParameters(Operation operation) {
-		return (int) operation.parameterList().stream().filter(p -> p.is(FileData.class)).count();
+		return (int) operation.parameterList().stream().filter(p -> p.i$(FileData.class)).count();
 	}
 
 	public static String firstUpperCase(String value) {

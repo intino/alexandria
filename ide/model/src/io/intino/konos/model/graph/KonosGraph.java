@@ -1,7 +1,7 @@
-package io.intino.konos.model;
+package io.intino.konos.model.graph;
 
-import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.rest.RESTService;
+import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.tara.magritte.Graph;
 
 import java.util.*;
@@ -10,23 +10,26 @@ import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toList;
 
-public class Konos extends io.intino.konos.model.GraphWrapper {
+public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 
-	public Konos(Graph graph) {
+	public KonosGraph(Graph graph) {
 		super(graph);
 	}
 
+	public KonosGraph(io.intino.tara.magritte.Graph graph, KonosGraph wrapper) {
+	    super(graph, wrapper);
+	}
 
 	public static List<Display> displaysOf(Activity activity) {
 		return activity.abstractPageList().stream()
-				.filter(page -> page.uses().is(Display.class))
-				.map(page -> page.uses().as(Display.class))
-				.map(Konos::allDisplays).flatMap(Collection::stream).distinct()
+				.filter(page -> page.uses().i$(Display.class))
+				.map(page -> page.uses().a$(Display.class))
+				.map(KonosGraph::allDisplays).flatMap(Collection::stream).distinct()
 				.collect(toList());
 	}
 
 	public static List<Dialog> dialogsOf(Activity activity) {
-		return activity.abstractPageList().stream().filter(page -> page.uses().is(Dialog.class)).map(page -> page.uses().as(Dialog.class)).collect(toList());
+		return activity.abstractPageList().stream().filter(page -> page.uses().i$(Dialog.class)).map(page -> page.uses().a$(Dialog.class)).collect(toList());
 	}
 
 	public static List<Component> componentsOf(Activity activity) {

@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.services.activity.web;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.action.UIActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Activity;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -26,13 +26,13 @@ public class ResourceRenderer {
 	private final String boxName;
 	private final List<Activity.AbstractPage> pages;
 
-	public ResourceRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+	public ResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
-		this.pages = graph.find(Activity.AbstractPage.class);
+		this.pages = graph.core$().find(Activity.AbstractPage.class);
 	}
 
 	public void execute() {
@@ -42,11 +42,11 @@ public class ResourceRenderer {
 	private void processPage(Activity.AbstractPage page) {
 		Frame frame = new Frame().addTypes("page");
 		frame.addSlot("package", packageName);
-		frame.addSlot("name", page.name());
+		frame.addSlot("name", page.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("parameter", parameters(page));
 		if (page.isRestricted()) frame.addSlot("restrict", "");
-		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name() + "Resource"), template().format(frame));
+		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name$() + "Resource"), template().format(frame));
 		createCorrespondingAction(page);
 	}
 

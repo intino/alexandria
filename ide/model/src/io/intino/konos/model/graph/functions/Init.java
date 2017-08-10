@@ -1,4 +1,4 @@
-package io.intino.konos.model.functions;
+package io.intino.konos.model.graph.functions;
 
 @FunctionalInterface
 public interface Init {
