@@ -26,7 +26,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
-import io.intino.tara.magritte.Graph;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.dsl.Konos;
@@ -62,6 +61,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + version + ")");
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public void actionPerformed(AnActionEvent e) {
 		Project project = e.getData(PlatformDataKeys.PROJECT);

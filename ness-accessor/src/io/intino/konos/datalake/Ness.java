@@ -10,6 +10,7 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import java.time.Instant;
 
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static java.util.logging.Level.SEVERE;
@@ -24,6 +25,8 @@ public class Ness {
 	private String clientID;
 	private Session session;
 	private Connection connection;
+	private Instant lastMessage;
+	private int receivedMessages = 0;
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -87,6 +90,23 @@ public class Ness {
 			getGlobal().severe(e.getMessage());
 			return null;
 		}
+	}
+
+	public Instant lastMessage() {
+		return lastMessage;
+	}
+
+	public void lastMessage(Instant lastMessage) {
+		this.lastMessage = lastMessage;
+		this.receivedMessages++;
+	}
+
+	public int receivedMessages() {
+		return receivedMessages;
+	}
+
+	public void reset() {
+		this.receivedMessages = 0;
 	}
 
 	public class Tank {
