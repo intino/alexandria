@@ -1,73 +1,82 @@
 dsl Konos
 
-Service(description = "Interface for recovering all dashboard inschemaion") rest as REST(host = "", basePath = "/dashboard")
-	Resource(path = "/categorizations") categorizations
-		Get(description="List of categorizations")
-			Response as Object(schema = CategorizationCatalogResponseSchema)
-	Resource(path = "/summary") summary
-		Get(description = "Opinions summary")
-			Response as Object(schema = SummaryResponseSchema)
-
-	Resource(path = "/snapshot")snapshot
-		Get(description = "Summary of opinions at some Instant")
-			Parameter(in = query) scale as Text
-			Parameter(in = body) range as Object(schema = RangeSchema)
-			Parameter(in = body) filters as Object(schema = FilterListSchema)
-			Response as Object(schema = OpinionSnapshotResponseSchema)
-
-	Resource(path = "/snapshot/:id/download") downloadSnapshot
-		Get (description="Download opinions at some Instant") DDD
-			Parameter(in = path, required = true) id as Text
-			Parameter(in = query, required = true) username as Text
-			Parameter(in = query) language as Text
-			Response as File
+Service setupV2 as REST(host = "", basePath = "")
+	Resource(path = "/configuration") configurationV2
+		Get(description="Sensor v2 or v3 configuration")
+			Parameter(in = query, required = true) sensor as Text
+			Response as Object(schema = Configuration)
 			Exception(code = Unauthorized)
 
-Schema RangeSchema
-	Attribute from as DateTime
-	Attribute to as DateTime
+	Schema Configuration
+		Attribute lockPin as Text
 
-Schema FilterListSchema
-	Attribute(multiple=true) filters as Text
+		Schema(multiple=false) Area
+			Attribute logoId as Text
+			Attribute label as Text
+			Attribute key as Text
+			Attribute zoneId as Text
+			Attribute inputMessage as Text
+			Attribute outputMessage as Text
+			Attribute issueMessage as Text
+			Attribute hasChildren as Bool
+			Attribute askAfterContactProvided as Bool
+			Attribute type as Text
+			Attribute issueIds as Text
+				multiple = true
+			Attribute contactPatternIds as Text
+				multiple = true
 
-Schema CategorizationCatalogResponseSchema
-	Attribute name as Text
-	Attribute label as Text
-	Schema category
-		Attribute name as Text
-		Attribute label as Text
+			Attribute contactPatternId as Text
 
-Schema SummaryResponseSchema
-	Schema(multiple=false) today
-		Schema(multiple=false) count
-			Attribute total as Integer
+			Schema Slot
+				Attribute type as Text
+				Attribute from as Text
+				Attribute to as Text
 
-	Schema(multiple=false) total
-		Schema(multiple=false) count
-			Attribute total as Integer
-			Attribute satisfied as Integer
-			Attribute notVerySatisfied as Integer
-			Attribute dissatisfied as Integer
+			Has(Area)
 
-		Schema(multiple=false) difference
-			Attribute satisfied as Real
-			Attribute notVerySatisfied as Real
-			Attribute dissatisfied as Real
+		Schema Issue
+			Attribute key as Text
+			Attribute label as Text
 
-Schema OpinionSnapshotResponseSchema
-	Attribute Instant as DateTime
-	Attribute scale as Text
-	Schema(multiple=false) count
-		Attribute total as Integer
-		Attribute satisfied as Integer
-		Attribute notVerySatisfied as Integer
-		Attribute dissatisfied as Integer
-	Schema(multiple=false) difference
-		Attribute satisfied as Real
-		Attribute notVerySatisfied as Real
-		Attribute dissatisfied as Real
+		Has (Resource)
 
-	Schema(multiple=false) timeLine
-		Schema point
-			Attribute Instant as DateTime
-			Attribute value as Real
+
+
+
+Service setupV4 as REST(host = "", basePath = "v4")
+	Resource(path = "/configuration") configurationV4
+		Get(description="Sensor v4 configuration")
+			Parameter(in = query, required = true) sensor as Text
+			Response as Object(schema = Configuration)
+			Exception(code = Unauthorized)
+
+	Schema Configuration
+		Attribute lockPin as Text
+
+		Schema(multiple=false) Area
+			Attribute logoId as Text
+			Attribute label as Text
+			Attribute key as Text
+			Attribute zoneId as Text
+			Attribute inputMessage as Text
+			Attribute outputMessage as Text
+			Attribute hasChildren as Bool
+			Attribute type as Text
+
+			Schema SurveyItem
+				Attribute type as Text
+				Attribute args as Text
+					multiple = true
+
+			Has(Area)
+
+		Has(Resource)
+
+		Schema Job
+			Attribute command as Text
+			Attribute pattern as Text
+
+Schema Resource
+	Attribute id as Text
+	Attribute value as Text

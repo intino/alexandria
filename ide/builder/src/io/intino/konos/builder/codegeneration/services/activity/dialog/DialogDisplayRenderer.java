@@ -1,10 +1,10 @@
 package io.intino.konos.builder.codegeneration.services.activity.dialog;
 
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Dialog.Tab;
-import io.intino.konos.model.multiple.dialog.tab.MultipleInput;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.Dialog.Tab;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.multiple.dialog.tab.MultipleInput;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -22,10 +22,10 @@ public class DialogDisplayRenderer {
 	private final List<Dialog> dialogs;
 	private final String boxName;
 
-	public DialogDisplayRenderer(Graph graph, File gen, String packageName, String boxName) {
+	public DialogDisplayRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
-		this.dialogs = graph.find(Dialog.class);
+		this.dialogs = graph.dialogList();
 		this.boxName = boxName;
 	}
 
@@ -36,9 +36,9 @@ public class DialogDisplayRenderer {
 	private void processDialog(Dialog dialog) {
 		Frame frame = new Frame().addTypes("dialogDisplay");
 		frame.addSlot("package", packageName);
-		frame.addSlot("name", dialog.name());
+		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
-		final String newDialog = snakeCaseToCamelCase(dialog.name() + "DialogDisplay");
+		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "DialogDisplay");
 		final Frame frameDialog = new Frame().addTypes("dialog");
 		if (!dialog.label().isEmpty()) frameDialog.addSlot("label", dialog.label());
 		if (!dialog.description().isEmpty()) frameDialog.addSlot("description", dialog.description());
@@ -50,7 +50,7 @@ public class DialogDisplayRenderer {
 
 	private Frame frameOf(Tab tab) {
 		final Frame tabFrame = new Frame().addTypes("tab");
-		if (!tab.name().isEmpty()) tabFrame.addSlot("name", tab.name());
+		if (!tab.name$().isEmpty()) tabFrame.addSlot("name", tab.name$());
 		if (!tab.label().isEmpty()) tabFrame.addSlot("label", tab.label());
 		for (Tab.Input input : tab.inputList()) processInput(tabFrame, input);
 		return tabFrame;
@@ -76,7 +76,7 @@ public class DialogDisplayRenderer {
 
 	private Frame frameOf(Tab.Section section) {
 		final Frame frame = new Frame().addTypes("section");
-		if (!section.name().isEmpty()) frame.addSlot("name", section.name());
+		if (!section.name$().isEmpty()) frame.addSlot("name", section.name$());
 		if (!section.label().isEmpty()) frame.addSlot("label", section.label());
 		final List<Tab.Input> inputs = section.inputList();
 		for (Tab.Input input : inputs) processInput(frame, input);
@@ -85,17 +85,17 @@ public class DialogDisplayRenderer {
 	}
 
 	private void processInput(Frame sectionFrame, Tab.Input input) {
-		if (input.is(Tab.Text.class)) sectionFrame.addSlot("input", frameOf((Tab.Text) input));
-		else if (input.is(Tab.Section.class)) sectionFrame.addSlot("input", frameOf((Tab.Section) input));
-		else if (input.is(Tab.Memo.class)) sectionFrame.addSlot("input", frameOf((Tab.Memo) input));
-		else if (input.is(Tab.RadioBox.class)) sectionFrame.addSlot("input", frameOf((Tab.RadioBox) input));
-		else if (input.is(Tab.CheckBox.class)) sectionFrame.addSlot("input", frameOf((Tab.CheckBox) input));
-		else if (input.is(Tab.ComboBox.class)) sectionFrame.addSlot("input", frameOf((Tab.ComboBox) input));
-		else if (input.is(Tab.Password.class)) sectionFrame.addSlot("input", frameOf((Tab.Password) input));
-		else if (input.is(Tab.File.class)) sectionFrame.addSlot("input", frameOf((Tab.File) input));
-		else if (input.is(Tab.Picture.class)) sectionFrame.addSlot("input", frameOf((Tab.Picture) input));
-		else if (input.is(Tab.Date.class)) sectionFrame.addSlot("input", frameOf((Tab.Date) input));
-		else if (input.is(Tab.DateTime.class)) sectionFrame.addSlot("input", frameOf((Tab.DateTime) input));
+		if (input.i$(Tab.Text.class)) sectionFrame.addSlot("input", frameOf((Tab.Text) input));
+		else if (input.i$(Tab.Section.class)) sectionFrame.addSlot("input", frameOf((Tab.Section) input));
+		else if (input.i$(Tab.Memo.class)) sectionFrame.addSlot("input", frameOf((Tab.Memo) input));
+		else if (input.i$(Tab.RadioBox.class)) sectionFrame.addSlot("input", frameOf((Tab.RadioBox) input));
+		else if (input.i$(Tab.CheckBox.class)) sectionFrame.addSlot("input", frameOf((Tab.CheckBox) input));
+		else if (input.i$(Tab.ComboBox.class)) sectionFrame.addSlot("input", frameOf((Tab.ComboBox) input));
+		else if (input.i$(Tab.Password.class)) sectionFrame.addSlot("input", frameOf((Tab.Password) input));
+		else if (input.i$(Tab.File.class)) sectionFrame.addSlot("input", frameOf((Tab.File) input));
+		else if (input.i$(Tab.Picture.class)) sectionFrame.addSlot("input", frameOf((Tab.Picture) input));
+		else if (input.i$(Tab.Date.class)) sectionFrame.addSlot("input", frameOf((Tab.Date) input));
+		else if (input.i$(Tab.DateTime.class)) sectionFrame.addSlot("input", frameOf((Tab.DateTime) input));
 	}
 
 	private Frame frameOf(Tab.Memo memo) {
@@ -149,7 +149,7 @@ public class DialogDisplayRenderer {
 	}
 
 	private Frame sourceOf(Tab.OptionBox optionBox) {
-		return new Frame().addSlot("dialog", optionBox.ownerAs(Dialog.class).name()).addSlot("name", optionBox.source()).addSlot("type", optionBox.getClass().getSimpleName());
+		return new Frame().addSlot("dialog", optionBox.core$().ownerAs(Dialog.class).name$()).addSlot("name", optionBox.source()).addSlot("type", optionBox.getClass().getSimpleName());
 	}
 
 	private Frame frameOf(Tab.File file) {
@@ -189,13 +189,13 @@ public class DialogDisplayRenderer {
 	}
 
 	private void addCommon(Frame frame, Tab.Input input) {
-		frame.addSlot("owner", input.owner().name());
+		frame.addSlot("owner", input.core$().owner().name());
 		frame.addSlot("label", input.label());
 		frame.addSlot("readonly", input.readonly());
 		frame.addSlot("required", input.required());
 		frame.addSlot("placeholder", input.placeHolder());
 		frame.addSlot("defaultValue", input.defaultValue());
-		if (input.is(MultipleInput.class)) {
+		if (input.i$(MultipleInput.class)) {
 			final MultipleInput multiple = input.asMultiple();
 			frame.addSlot("multiple", new Frame().addTypes("multiple").addSlot("min", multiple.min()).addSlot("max", multiple.max()));
 		}
@@ -203,7 +203,7 @@ public class DialogDisplayRenderer {
 	}
 
 	private Frame validator(Tab.Input input) {
-		return new Frame().addTypes("validator").addSlot("dialog", input.ownerAs(Dialog.class).name()).addSlot("name", input.validator()).addSlot("type", input.getClass().getSimpleName());
+		return new Frame().addTypes("validator").addSlot("dialog", input.core$().ownerAs(Dialog.class).name$()).addSlot("name", input.validator()).addSlot("type", input.getClass().getSimpleName());
 	}
 
 	private Template template() {

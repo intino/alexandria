@@ -1,10 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.activity.dialog;
 
-import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Dialog.Tab;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.Dialog.Tab;
+import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -16,21 +15,19 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 public class DialogRenderer {
 
 	private static final String DIALOGS = "dialogs";
-	private final Project project;
-	private Graph graph;
+	private KonosGraph graph;
 	private final File gen;
 	private final File src;
 	private final String packageName;
 	private final List<Dialog> dialogs;
 	private final String boxName;
 
-	public DialogRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
-		this.project = project;
+	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
-		this.dialogs = graph.find(Dialog.class);
+		this.dialogs = graph.dialogList();
 		this.boxName = boxName;
 	}
 
@@ -46,10 +43,10 @@ public class DialogRenderer {
 	private void renderDialog(Dialog dialog) {
 		Frame frame = new Frame().addTypes("dialog");
 		frame.addSlot("package", packageName);
-		frame.addSlot("name", dialog.name());
+		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
 		for (Tab tab : dialog.tabList()) processTab(frame, tab);
-		final String newDialog = snakeCaseToCamelCase(dialog.name() + "Dialog");
+		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "Dialog");
 		if (!Commons.javaFile(new File(src, DIALOGS), newDialog).exists())
 			Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
 	}
@@ -60,8 +57,8 @@ public class DialogRenderer {
 
 	private void processInput(Frame frame, Tab.Input input) {
 		processValidator(frame, input);
-		if (input.is(Tab.OptionBox.class)) processSources(frame, input.as(Tab.OptionBox.class));
-		else if (input.is(Tab.Section.class))
+		if (input.i$(Tab.OptionBox.class)) processSources(frame, input.a$(Tab.OptionBox.class));
+		else if (input.i$(Tab.Section.class))
 			for (Tab.Input i : ((Tab.Section) input).inputList()) processInput(frame, i);
 	}
 

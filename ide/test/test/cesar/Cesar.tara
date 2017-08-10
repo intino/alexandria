@@ -65,6 +65,73 @@ Schema Parameter
 	Attribute type as Text
 	Attribute value as Text
 
+
+Schema Command
+	Attribute operation as Text
+	AttributeMap parameters
+
+Schema CommandExecuted
+	Attribute ts as DateTime
+	Attribute commandName as Text
+	Attribute remarks as Text
+	Attribute deviceId as Text
+	Attribute consulVersion as Text
+
+Schema Status
+	Attribute deviceId as Text
+	Attribute ts as DateTime
+	Attribute consulVersion as Text
+	Attribute temperature as Real
+	Attribute battery as Real
+	Attribute cpuUsage as Real
+	Attribute isPlugged as Bool
+	Attribute isScreenOn as Bool
+
+Schema SystemSchema
+	Attribute id as Text
+	Attribute jmxPort as Integer
+	Attribute publicURL as Text
+	Schema(multiple = false) Packaging
+		Attribute artifact as Text
+		Attribute classpathPrefix as Text
+		Schema Parameter
+			Attribute name as Text
+			Attribute value as Text
+
+	Schema Artifactory
+		Attribute id as Text
+		Attribute url as Text
+		Attribute user as Text
+		Attribute password as Text
+
+	Schema(multiple = false) Runtime
+		Attribute serverName as Text
+		Attribute managementPort as Integer
+		Attribute ip as Text
+		Attribute port as Integer
+
+Schema ServerSchema
+	Attribute name as Text
+	Attribute ip as Text
+	Attribute performance as Text
+	Schema(multiple = false) RemoteConnection
+		Attribute url as Text
+		Attribute port as Integer
+		Attribute user as Text
+
+Schema Boot
+	Attribute ts as DateTime
+	Attribute deviceId as Text
+	Attribute consulVersion as Text
+
+Schema Crash
+	Attribute ts as DateTime
+	Attribute app as Text
+	Attribute appVersion as Text
+	Attribute deviceId as Text
+	Attribute stack as Text
+	Attribute consulVersion as Text
+
 Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
 

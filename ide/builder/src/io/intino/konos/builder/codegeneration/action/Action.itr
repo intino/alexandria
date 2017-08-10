@@ -56,6 +56,11 @@ def type(page & action)
 		protected java.net.URL logo() {
 			return null;
 		}
+
+		@Override
+		protected java.net.URL icon() {
+			return null;
+		}
 	}
 end
 

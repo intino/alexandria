@@ -3,17 +3,16 @@ package io.intino.konos.builder.codegeneration.accessor.rest;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Response;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.date.DateData;
-import io.intino.konos.model.datetime.DateTimeData;
-import io.intino.konos.model.file.FileData;
-import io.intino.konos.model.list.ListData;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.rest.RESTService.Resource;
-import io.intino.konos.model.rest.RESTService.Resource.Operation;
-import io.intino.konos.model.rest.RESTService.Resource.Parameter;
-import io.intino.konos.model.type.TypeData;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.date.DateData;
+import io.intino.konos.model.graph.datetime.DateTimeData;
+import io.intino.konos.model.graph.file.FileData;
+import io.intino.konos.model.graph.list.ListData;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
+import io.intino.konos.model.graph.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -43,18 +42,18 @@ public class RESTAccessorRenderer {
 
 	private void processService(RESTService restService) {
 		Frame frame = new Frame().addTypes("accessor");
-		frame.addSlot("name", restService.name());
+		frame.addSlot("name", restService.name$());
 		frame.addSlot("package", packageName);
 		setupAuthentication(restService, frame);
-		if (!restService.graph().find(Schema.class).isEmpty())
+		if (!restService.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		List<Frame> resourceFrames = new ArrayList<>();
-		for (Resource resource : restService.node().findNode(Resource.class))
+		for (Resource resource : restService.core$().findNode(Resource.class))
 			resourceFrames.addAll(resource.operationList().stream().
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
-		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name()) + "Accessor", template().format(frame));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 
 	private void setupAuthentication(RESTService restService, Frame frame) {
@@ -66,8 +65,8 @@ public class RESTAccessorRenderer {
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
 		return new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response(), packageName))
-				.addSlot("operation", operation.concept().name())
-				.addSlot("name", operation.owner().name())
+				.addSlot("operation", operation.getClass().getSimpleName())
+				.addSlot("name", operation.core$().owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(operation, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(operation));
@@ -79,13 +78,13 @@ public class RESTAccessorRenderer {
 
 	private Frame parameter(Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.required() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name())
+				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter));
 	}
 
 	private String parameterType(Parameter parameter) {
 		String value = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "") + parameter.asType().type();
-		return parameter.is(ListData.class) ? "List<" + value + ">" : value;
+		return parameter.i$(ListData.class) ? "List<" + value + ">" : value;
 	}
 
 
@@ -104,8 +103,8 @@ public class RESTAccessorRenderer {
 
 	private Frame doInvoke(Operation operation, boolean authenticated, boolean cert) {
 		final Frame frame = new Frame().addTypes("doInvoke")
-				.addSlot("relativePath", processPath(Commons.path(operation.owner().as(Resource.class))))
-				.addSlot("type", operation.response().isFile() ? "getResource" : operation.concept().name().toLowerCase());
+				.addSlot("relativePath", processPath(Commons.path(operation.core$().ownerAs(Resource.class))))
+				.addSlot("type", operation.response().isFile() ? "getResource" : operation.getClass().getSimpleName().toLowerCase());
 		if (authenticated) frame.addTypes("auth");
 		if (cert) frame.addTypes("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
@@ -131,17 +130,17 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame exceptionResponses(Operation operation) {
-		List<io.intino.konos.model.Exception> exceptions = operation.exceptionList();
+		List<io.intino.konos.model.graph.Exception> exceptions = operation.exceptionList();
 		if (exceptions.isEmpty()) return new Frame().addTypes("exceptionResponses", "none");
 		return new Frame().addTypes("exceptionResponses")
 				.addSlot("exceptionResponse", (AbstractFrame[]) exceptionResponses(exceptions));
 	}
 
-	private Frame[] exceptionResponses(List<io.intino.konos.model.Exception> responses) {
+	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> responses) {
 		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
 	}
 
-	private Frame exceptionResponse(io.intino.konos.model.Exception response) {
+	private Frame exceptionResponse(io.intino.konos.model.graph.Exception response) {
 		return new Frame().addTypes("exceptionResponse")
 				.addSlot("code", response.code().value())
 				.addSlot("exceptionName", response.code().toString());

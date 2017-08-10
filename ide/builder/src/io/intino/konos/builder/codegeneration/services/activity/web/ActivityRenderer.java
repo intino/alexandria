@@ -1,11 +1,10 @@
 package io.intino.konos.builder.codegeneration.services.activity.web;
 
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.Dialog;
-import io.intino.konos.model.Display;
-import io.intino.konos.model.Konos;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -16,6 +15,8 @@ import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
+import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
 public class ActivityRenderer {
 	private final File src;
@@ -24,12 +25,12 @@ public class ActivityRenderer {
 	private final String boxName;
 	private final List<Activity> activities;
 
-	public ActivityRenderer(Graph graph, File src, File gen, String packageName, String boxName) {
+	public ActivityRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
-		this.activities = graph.find(Activity.class);
+		this.activities = graph.activityList();
 	}
 
 	public void execute() {
@@ -37,11 +38,11 @@ public class ActivityRenderer {
 	}
 
 	private void processActivity(Activity activity) {
-		final List<Dialog> dialogs = Konos.dialogsOf(activity);
-		final List<Display> displays = Konos.displaysOf(activity);
+		final List<Dialog> dialogs = dialogsOf(activity);
+		final List<Display> displays = displaysOf(activity);
 		Frame frame = new Frame().addTypes("activity").
 				addSlot("package", packageName).
-				addSlot("name", activity.name()).
+				addSlot("name", activity.name$()).
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList()));
 		if (!dialogs.isEmpty())
 			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
@@ -50,7 +51,7 @@ public class ActivityRenderer {
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
 		if (!Commons.javaFile(src, "AssetResourceLoader").exists())
 			writeFrame(src, "AssetResourceLoader", AssetResourceLoaderTemplate.create().format(resourceLoaderFrame()));
-		writeFrame(gen, snakeCaseToCamelCase(activity.name() + "Activity"), template().format(frame));
+		writeFrame(gen, snakeCaseToCamelCase(activity.name$() + "Activity"), template().format(frame));
 	}
 
 	private Frame resourceLoaderFrame() {
@@ -74,10 +75,10 @@ public class ActivityRenderer {
 
 	private Frame frameOf(Activity.AbstractPage resource) {
 		final Frame frame = new Frame().addTypes("resource", "abstractPage");
-		frame.addSlot("name", resource.name());
+		frame.addSlot("name", resource.name$());
 		for (String path : resource.paths()) {
 			Set<String> custom = Commons.extractParameters(path);
-			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name());
+			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name$());
 			if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
 			frame.addSlot("path", pathFrame);
 		}
@@ -86,15 +87,15 @@ public class ActivityRenderer {
 
 	private Frame frameOf(Display display) {
 		final Frame frame = new Frame().addTypes("display");
-		frame.addSlot("name", display.name());
+		frame.addSlot("name", display.name$());
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Display.Request.ResponseType.Asset)))
-			frame.addSlot("asset", display.name());
+			frame.addSlot("asset", display.name$());
 		return frame;
 	}
 
 	private Frame frameOf(Dialog dialog) {
 		final Frame frame = new Frame().addTypes("dialog");
-		frame.addSlot("name", dialog.name());
+		frame.addSlot("name", dialog.name$());
 		return frame;
 	}
 

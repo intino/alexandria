@@ -12,11 +12,11 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
-import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.jmx.JMXService;
-import io.intino.konos.model.rest.RESTService;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.magritte.Graph;
 import io.intino.tara.plugin.actions.utils.FileSystemUtils;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.maven.shared.invoker.*;
@@ -44,13 +44,13 @@ class AccessorsPublisher {
 	private static final String KONOS = "konos";
 	private static final String ACCESSOR = "-accessor";
 	private final Module module;
-	private final Graph graph;
+	private final KonosGraph graph;
 	private final String generationPackage;
 	private StringBuilder log = new StringBuilder();
 	private File root;
 	private Configuration configuration;
 
-	AccessorsPublisher(Module module, Graph graph, String generationPackage) {
+	AccessorsPublisher(Module module, KonosGraph graph, String generationPackage) {
 		this.module = module;
 		configuration = TaraUtil.configurationOf(module);
 		this.graph = graph;
@@ -133,33 +133,33 @@ class AccessorsPublisher {
 
 	private List<String> jmx() {
 		List<String> apps = new ArrayList<>();
-		for (JMXService service : graph.find(JMXService.class)) {
-			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+		for (JMXService service : graph.jMXServiceList()) {
+			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
 			new JMXAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name());
+			apps.add(service.name$());
 		}
 		return apps;
 	}
 
 	private List<String> jms() {
 		List<String> apps = new ArrayList<>();
-		for (JMSService service : graph.find(JMSService.class)) {
-			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+		for (JMSService service : graph.jMSServiceList()) {
+			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
 			new JMSAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name());
+			apps.add(service.name$());
 		}
 		return apps;
 	}
 
 	private List<String> rest() {
 		List<String> apps = new ArrayList<>();
-		for (RESTService service : graph.find(RESTService.class)) {
-			File sourcesDestiny = new File(new File(root, service.name() + File.separator + "src"), generationPackage.replace(".", File.separator));
+		for (RESTService service : graph.rESTServiceList()) {
+			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
 			new RESTAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name());
+			apps.add(service.name$());
 		}
 		return apps;
 	}

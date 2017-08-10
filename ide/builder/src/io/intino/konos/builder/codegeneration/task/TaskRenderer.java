@@ -2,15 +2,15 @@ package io.intino.konos.builder.codegeneration.task;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Task;
-import io.intino.konos.model.directorysentinel.DirectorySentinelTask;
-import io.intino.konos.model.scheduled.ScheduledTask;
 import io.intino.konos.builder.codegeneration.action.ActionTemplate;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Task;
+import io.intino.konos.model.graph.directorysentinel.DirectorySentinelTask;
+import io.intino.konos.model.graph.scheduled.ScheduledTask;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.net.URL;
@@ -26,9 +26,9 @@ public class TaskRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public TaskRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
-		scheduledTasks = graph.find(ScheduledTask.class);
-		tasks = graph.find(Task.class).stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
+	public TaskRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+		this.scheduledTasks = graph.scheduledTaskList();
+		this.tasks = graph.taskList().stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
 		this.srcDestination = src;
 		this.genDestination = gen;
 		this.packageName = packageName;
@@ -42,12 +42,12 @@ public class TaskRenderer {
 
 	private void processDirectorySentinel(Task task) {
 		Frame frame = new Frame().addTypes("action");
-		frame.addSlot("name", task.name());
+		frame.addSlot("name", task.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(task.asDirectorySentinel()));
 		if (!alreadyRendered(srcDestination, task))
-			Commons.writeFrame(actionsPackage(srcDestination), task.name() + "Action", actionTemplate().format(frame));
+			Commons.writeFrame(actionsPackage(srcDestination), task.name$() + "Action", actionTemplate().format(frame));
 	}
 
 	private Frame[] parameters(DirectorySentinelTask task) {
@@ -63,20 +63,20 @@ public class TaskRenderer {
 
 	private void processTrigger(ScheduledTask task) {
 		Frame frame = new Frame().addTypes("scheduled");
-		frame.addSlot("name", task.name());
+		frame.addSlot("name", task.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
-		Commons.writeFrame(destinyPackage(), task.name() + "Task", template().format(frame));
+		Commons.writeFrame(destinyPackage(), task.name$() + "Task", template().format(frame));
 		createCorrespondingAction(task);
 	}
 
 	private void createCorrespondingAction(ScheduledTask task) {
 		Frame frame = new Frame().addTypes("action");
-		frame.addSlot("name", task.name());
+		frame.addSlot("name", task.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
-		if (!alreadyRendered(srcDestination, task.as(Task.class)))
-			Commons.writeFrame(actionsPackage(srcDestination), task.name() + "Action", actionTemplate().format(frame));
+		if (!alreadyRendered(srcDestination, task.a$(Task.class)))
+			Commons.writeFrame(actionsPackage(srcDestination), task.name$() + "Action", actionTemplate().format(frame));
 	}
 
 	private Template actionTemplate() {
@@ -88,7 +88,7 @@ public class TaskRenderer {
 	}
 
 	private boolean alreadyRendered(File destiny, Task task) {
-		return Commons.javaFile(actionsPackage(destiny), task.name() + "Action").exists();
+		return Commons.javaFile(actionsPackage(destiny), task.name$() + "Action").exists();
 	}
 
 	private File actionsPackage(File destiny) {

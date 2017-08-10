@@ -1,5 +1,5 @@
 def type(messageHandler)
-	package $package+validPackage.messagehandlers;
+	package $package+validPackage.ness.messagehandlers;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 

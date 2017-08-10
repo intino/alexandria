@@ -1,0 +1,97 @@
+def type(operations)
+	package $package+validPackage.ness;
+
+	import $package+validPackage.$box+FirstUpperCase~Box;
+    import io.intino.konos.jmx.JMXServer;
+    import io.intino.tara.magritte.Graph;
+    import io.intino.tara.magritte.Store;
+    import io.intino.tara.magritte.stores.FileSystemStore;
+    import org.apache.commons.io.FileUtils;
+
+	import java.io.IOException;
+    import java.time.Instant;
+    import java.util.Collections;
+    import java.util.TimerTask;
+    import java.util.Timer;
+
+    import static java.time.temporal.ChronoUnit.SECONDS;
+
+	public class NessOperations implements io.intino.konos.datalake.NessOperationsMBean {
+
+    	private final $box+FirstUpperCase~Box box;
+    	private final GraphProvider provider;
+
+    	public NessOperations($box+FirstUpperCase~Box box) {
+    		this.box = box;
+    		this.provider = new $package+validPackage.ness.GraphProvider(box);
+    	}
+
+    	public boolean reflow() {
+			box.close();
+			final Graph graph = provider.graph();
+			final Store oldStore = graph.store();
+			try {
+				if (oldStore instanceof FileSystemStore) FileUtils.deleteDirectory(((FileSystemStore) oldStore).directory());
+				final RemounterGraph original = (RemounterGraph) new RemounterGraph(provider.store()).loadStashes(graph.openedStashes());
+				allowWriting(original, false);
+				Graph clone = original.realClone();
+				box.put(clone);
+				box.open();
+				new Timer(true).schedule(timerTask(original, clone), 0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+
+		private TimerTask timerTask(RemounterGraph original, Graph clone) {
+			return new TimerTask() {
+				@Override
+				public void run() {
+					Graph newClone = write(original, clone);
+					if (finished()) {
+						doWrite(original, clone);
+						onFinish(original);
+					} else new Timer(true).schedule(timerTask(original, newClone), 0);
+				}
+			};
+		}
+
+		private Graph write(RemounterGraph original, Graph clone) {
+			if (box.datalake().receivedMessages() < 1E6) return clone;
+			box.datalake().reset();
+			return doWrite(original, clone);
+		}
+
+		private Graph doWrite(RemounterGraph original, Graph clone) {
+			box.close();
+			allowWriting(original, true);
+			provider.saveGraph(clone);
+			final Graph newClone = original.realClone();
+			allowWriting(newClone, false);
+			box.put(newClone);
+			box.open();
+			return newClone;
+		}
+
+		private void allowWriting(Graph original, boolean flag) {
+			if (original.store() instanceof FileSystemStore) ((FileSystemStore) original.store()).allowWriting(flag);
+		}
+
+		private void onFinish(Graph remounterGraph) {
+			box.close();
+			box.put(new Graph(provider.store()).loadStashes(remounterGraph.openedStashes()));
+			box.open();
+		}
+
+		private boolean finished() {
+			return box.datalake().lastMessage().until(Instant.now(), SECONDS) > 5000;
+		}
+
+		public static JMXServer init($box+FirstUpperCase~Box box) {
+			JMXServer server = new JMXServer(Collections.singletonMap("io.intino.konos.datalake.NessOperations", new Object$[]{box}));
+			server.init();
+			return server;
+		}
+	}
+end

@@ -4,9 +4,9 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.swagger.IndexTemplate;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.rest.RESTService.Resource;
-import io.intino.tara.magritte.Graph;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Resource;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -29,8 +29,8 @@ public class RESTServiceRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public RESTServiceRenderer(Graph graph, File gen, File res, String packageName, String boxName) {
-		services = graph.find(RESTService.class);
+	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName) {
+		services = graph.rESTServiceList();
 		this.gen = gen;
 		this.res = res;
 		this.packageName = packageName;
@@ -38,7 +38,7 @@ public class RESTServiceRenderer {
 	}
 
 	public void execute() {
-		services.forEach((service) -> processService(service.as(RESTService.class), gen));
+		services.forEach((service) -> processService(service.a$(RESTService.class), gen));
 		if (!services.isEmpty()) generateDoc();
 	}
 
@@ -61,7 +61,7 @@ public class RESTServiceRenderer {
 	private void createIndex(File www) {
 		Frame doc = new Frame().addTypes("index");
 		for (RESTService service : services)
-			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name()).addSlot("description", service.description()));
+			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name$()).addSlot("description", service.description()));
 		try {
 			Files.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc).getBytes());
 		} catch (IOException e) {
@@ -72,14 +72,14 @@ public class RESTServiceRenderer {
 	private void processService(RESTService service, File gen) {
 		if (service.resourceList().isEmpty()) return;
 		Frame frame = new Frame().addTypes("server").
-				addSlot("name", service.name()).
+				addSlot("name", service.name$()).
 				addSlot("box", boxName).
 				addSlot("package", packageName).
 				addSlot("resource", (AbstractFrame[]) processResources(service.resourceList()));
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store().getPath()).addSlot("password", secure.storePassword()));
-		Commons.writeFrame(gen, snakeCaseToCamelCase(service.name()) + "Resources", template().format(frame));
+		Commons.writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "Resources", template().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {
@@ -91,11 +91,11 @@ public class RESTServiceRenderer {
 	}
 
 	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
-		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.concept().name())
-				.addSlot("name", resource.name())
-				.addSlot("operation", operation.concept().name())
+		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.getClass().getSimpleName())
+				.addSlot("name", resource.name$())
+				.addSlot("operation", operation.getClass().getSimpleName())
 				.addSlot("path", customize(Commons.path(resource)))
-				.addSlot("method", operation.concept().name())).collect(Collectors.toList());
+				.addSlot("method", operation.getClass().getSimpleName())).collect(Collectors.toList());
 	}
 
 	private Frame customize(String path) {

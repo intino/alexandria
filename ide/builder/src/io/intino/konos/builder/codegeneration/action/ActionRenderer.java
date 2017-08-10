@@ -3,12 +3,12 @@ package io.intino.konos.builder.codegeneration.action;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Exception;
-import io.intino.konos.model.Parameter;
-import io.intino.konos.model.Response;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.object.ObjectData;
-import io.intino.konos.model.type.TypeData;
+import io.intino.konos.model.graph.Exception;
+import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.object.ObjectData;
+import io.intino.konos.model.graph.type.TypeData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -64,12 +64,12 @@ abstract class ActionRenderer {
 		for (Parameter parameter : parameters) {
 			final Frame parameterFrame = new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName());
 			if (parameter.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame.addSlot("name", parameter.name()).addSlot("type", formatType(parameter.asType())));
+			frame.addSlot("parameter", parameterFrame.addSlot("name", parameter.name$()).addSlot("type", formatType(parameter.asType())));
 		}
 	}
 
 	private String formatType(TypeData typeData) {
-		return (typeData.is(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
+		return (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
 	protected String firstUpperCase(String value) {

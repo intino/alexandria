@@ -2,16 +2,15 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.Activity;
-import io.intino.konos.model.DataLake;
-import io.intino.konos.model.Konos;
-import io.intino.konos.model.Service;
-import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.jmx.JMXService;
-import io.intino.konos.model.rest.RESTService;
-import io.intino.konos.model.slackbot.SlackBotService;
+import io.intino.konos.model.graph.Activity;
+import io.intino.konos.model.graph.DataLake;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.siani.itrules.Template;
@@ -27,7 +26,7 @@ import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class BoxConfigurationRenderer {
 
-	private final Konos application;
+	private final KonosGraph graph;
 	private final File gen;
 	private final String packageName;
 	private final Module module;
@@ -35,8 +34,8 @@ public class BoxConfigurationRenderer {
 	private String parent;
 	private boolean isTara;
 
-	public BoxConfigurationRenderer(Graph graph, File gen, String packageName, Module module, String parent, boolean isTara) {
-		this.application = graph.wrapper(Konos.class);
+	public BoxConfigurationRenderer(KonosGraph graph, File gen, String packageName, Module module, String parent, boolean isTara) {
+		this.graph = graph;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
@@ -68,53 +67,53 @@ public class BoxConfigurationRenderer {
 	}
 
 	private void addRESTServices(Frame frame, String boxName) {
-		for (RESTService service : application.rESTServiceList()) {
-			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name()).addSlot("configuration", boxName);
+		for (RESTService service : graph.rESTServiceList()) {
+			Frame restFrame = new Frame().addTypes("service", "rest").addSlot("name", service.name$()).addSlot("configuration", boxName);
 			if (service.authenticated() != null) restFrame.addTypes("auth");
-			addUserVariables(service.as(Service.class), restFrame, findCustomParameters(service));
+			addUserVariables(service.a$(Service.class), restFrame, findCustomParameters(service));
 			frame.addSlot("service", restFrame);
 		}
 	}
 
 	private void addJMSServices(Frame frame, String boxName) {
-		for (JMSService service : application.jMSServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name()).addSlot("configuration", boxName);
-			addUserVariables(service.as(Service.class), jmsFrame, findCustomParameters(service));
+		for (JMSService service : graph.jMSServiceList()) {
+			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name$()).addSlot("configuration", boxName);
+			addUserVariables(service.a$(Service.class), jmsFrame, findCustomParameters(service));
 			frame.addSlot("service", jmsFrame);
 		}
 	}
 
 	private void addJMXServices(Frame frame, String boxName) {
-		for (JMXService service : application.jMXServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name()).addSlot("configuration", boxName);
+		for (JMXService service : graph.jMXServiceList()) {
+			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", jmsFrame);
 		}
 	}
 
 	private void addDataLakes(Frame frame, String boxName) {
-		DataLake dataLake = application.dataLake();
+		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
-		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name()).addSlot("configuration", boxName);
+		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name$()).addSlot("configuration", boxName);
 		frame.addSlot("service", dataLakeFrame);
 	}
 
 	private void addEventHandlers(Frame frame, String boxName) {
-		DataLake dataLake = application.dataLake();
+		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
 		for (DataLake.Tank handler : dataLake.tankList()) {
-			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name()).addSlot("configuration", boxName);
+			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$()).addSlot("configuration", boxName);
 			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			frame.addSlot("service", channelFrame);
 		}
 	}
 
 	private void addActivities(Frame frame, String boxName) {
-		for (Activity activity : application.activityList()) {
-			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name()).addSlot("configuration", boxName);
+		for (Activity activity : graph.activityList()) {
+			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", activityFrame);
 			if (activity.authenticated() != null) {
 				activityFrame.addTypes("auth");
-				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name()).addSlot("configuration", boxName));
+				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name$()).addSlot("configuration", boxName));
 				activityFrame.addSlot("auth", activity.authenticated().by());
 			}
 			addUserVariables(activity, activityFrame, findCustomParameters(activity));
@@ -122,14 +121,14 @@ public class BoxConfigurationRenderer {
 	}
 
 	private void addSlackServices(Frame frame, String boxName) {
-		for (SlackBotService service : application.slackBotServiceList()) {
-			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name()).addSlot("configuration", boxName));
+		for (SlackBotService service : graph.slackBotServiceList()) {
+			frame.addSlot("service", new Frame().addTypes("service", "slack").addSlot("name", service.name$()).addSlot("configuration", boxName));
 		}
 	}
 
 	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
 		for (String custom : userVariables)
-			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name()).addSlot("name", custom).addSlot("type", "String"));
+			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name$()).addSlot("name", custom).addSlot("type", "String"));
 	}
 
 	private Set<String> findCustomParameters(DataLake.Tank channel) {

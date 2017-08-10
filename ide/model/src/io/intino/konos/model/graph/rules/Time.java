@@ -1,4 +1,4 @@
-package io.intino.konos.model.rules;
+package io.intino.konos.model.graph.rules;
 
 import io.intino.tara.lang.model.Metric;
 

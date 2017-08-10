@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.jmx;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.jmx.JMXService;
-import io.intino.konos.model.jmx.JMXService.Operation;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.jmx.JMXService.Operation;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -19,13 +19,12 @@ public class JMXServerRenderer {
 	private final String packageName;
 	private final String boxName;
 
-	public JMXServerRenderer(Graph graph, File destination, String packageName, String boxName) {
-		jmxServices = graph.find(JMXService.class);
+	public JMXServerRenderer(KonosGraph graph, File destination, String packageName, String boxName) {
+		jmxServices = graph.jMXServiceList();
 		this.destination = destination;
 		this.packageName = packageName;
 		this.boxName = boxName;
 	}
-
 
 	public void execute() {
 		jmxServices.forEach(this::processService);
@@ -35,15 +34,13 @@ public class JMXServerRenderer {
 		final List<Operation> operations = service.operationList();
 		if (operations.isEmpty()) return;
 		Frame frame = new Frame().addTypes("jmxserver");
-		frame.addSlot("name", service.name());
+		frame.addSlot("name", service.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("package", packageName);
-		Commons.writeFrame(destination, "JMX" + snakeCaseToCamelCase(service.name()), template().format(frame));
+		Commons.writeFrame(destination, "JMX" + snakeCaseToCamelCase(service.name$()), template().format(frame));
 	}
-
 
 	private Template template() {
 		return Formatters.customize(JMXServerTemplate.create());
 	}
-
 }

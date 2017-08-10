@@ -2,17 +2,16 @@ package io.intino.konos.builder.codegeneration.services.jms;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.model.Parameter;
-import io.intino.konos.model.Response;
-import io.intino.konos.model.Schema;
-import io.intino.konos.model.jms.JMSService;
-import io.intino.konos.model.jms.JMSService.Request;
 import io.intino.konos.builder.codegeneration.action.JMSRequestActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Parameter;
+import io.intino.konos.model.graph.Response;
+import io.intino.konos.model.graph.jms.JMSService;
+import io.intino.konos.model.graph.jms.JMSService.Request;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
-import io.intino.tara.magritte.Graph;
 
 import java.io.File;
 import java.util.List;
@@ -28,9 +27,9 @@ public class JMSRequestRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public JMSRequestRenderer(Project project, Graph graph, File src, File gen, String packageName, String boxName) {
+	public JMSRequestRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.project = project;
-		services = graph.find(JMSService.class);
+		this.services = graph.jMSServiceList();
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
@@ -42,12 +41,12 @@ public class JMSRequestRenderer {
 	}
 
 	private void processService(JMSService service) {
-		service.node().findNode(Request.class).forEach(this::processRequest);
+		service.core$().findNode(Request.class).forEach(this::processRequest);
 	}
 
 	private void processRequest(Request resource) {
 		Frame frame = fillRequestFrame(resource);
-		Commons.writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name()) + "Request", template().format(frame));
+		Commons.writeFrame(new File(gen, REQUESTS), snakeCaseToCamelCase(resource.name$()) + "Request", template().format(frame));
 		createCorrespondingAction(resource);
 	}
 
@@ -58,7 +57,7 @@ public class JMSRequestRenderer {
 	private Frame fillRequestFrame(Request request) {
 		final String returnType = Commons.returnType(request.response());
 		Frame frame = new Frame().addTypes("request").
-				addSlot("name", request.name()).
+				addSlot("name", request.name$()).
 				addSlot("box", boxName).
 				addSlot("package", packageName).
 				addSlot("call", new Frame().addTypes(returnType)).
@@ -67,7 +66,7 @@ public class JMSRequestRenderer {
 			frame.addSlot("returnType", returnType).addSlot("returnMessageType", messageType(request.response()));
 		if (!request.exceptionList().isEmpty() || !request.exceptionRefs().isEmpty())
 			frame.addSlot("exception", "");
-		if (!request.graph().find(Schema.class).isEmpty())
+		if (!request.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		return frame;
 	}
@@ -84,7 +83,7 @@ public class JMSRequestRenderer {
 		final Frame frame = new Frame();
 		if (parameter.isList()) frame.addTypes("List");
 		return frame.addTypes("parameter", parameter.asType().getClass().getSimpleName())
-				.addSlot("name", parameter.name())
+				.addSlot("name", parameter.name$())
 				.addSlot("type", parameter.asType().type());
 	}
 
