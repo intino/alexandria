@@ -31,7 +31,7 @@ public class NessTanksRenderer {
 				addSlot("box", boxName).
 				addSlot("tank", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!dataLake.tankList().isEmpty()) frame.addSlot("tankImport", packageName);
-		Commons.writeFrame(gen, "NessTanks", template().format(frame));
+		Commons.writeFrame(new File(gen, "ness"), "NessTanks", template().format(frame));
 	}
 
 	private Frame frameOf(DataLake.Tank handler) {

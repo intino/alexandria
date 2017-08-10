@@ -30,7 +30,7 @@ public class MessageHandlerRenderer {
 					addSlot("box", boxName).
 					addSlot("package", packageName).
 					addSlot("name", eventHandler.name$());
-			final File destination = new File(src, "messagehandlers");
+			final File destination = new File(src, "ness/messagehandlers");
 			final String name = Formatters.firstUpperCase(eventHandler.name$()) + "MessageHandler";
 			if (!alreadyRendered(destination, name)) Commons.writeFrame(destination, name,
 					Formatters.customize(MessageHandlerTemplate.create()).format(frame));
