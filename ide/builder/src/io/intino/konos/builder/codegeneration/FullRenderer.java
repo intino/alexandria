@@ -106,8 +106,9 @@ public class FullRenderer {
 	}
 
 	private void bus() {
+		if (graph.dataLake() == null) return;
 		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen,src, packageName, boxName).execute();
+		new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
 	}
 

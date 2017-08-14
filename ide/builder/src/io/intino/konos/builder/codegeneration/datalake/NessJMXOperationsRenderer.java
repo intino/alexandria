@@ -22,12 +22,12 @@ public class NessJMXOperationsRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("operations").
+		Frame frame = new Frame("operations").
 				addSlot("package", packageName).
 				addSlot("box", boxName);
 		Commons.writeFrame(new File(gen, "ness"), "NessOperations", operationsTemplate().format(frame));
+		Commons.writeFrame(new File(gen, "ness"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
 		Commons.writeFrame(new File(src, "ness"), "GraphProvider", providerTemplate().format(frame));
-
 	}
 
 	private Template operationsTemplate() {
