@@ -40,6 +40,4 @@ public class MessageHandlerRenderer {
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
 	}
-
-
 }

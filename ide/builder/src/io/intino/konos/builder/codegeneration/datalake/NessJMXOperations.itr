@@ -1,9 +1,17 @@
-def type(operations)
+def type(interface)
+	package $package+validPackage.ness;
+	public interface NessOperationsMBean {
+    	boolean reflow();
+    }
+end
+
+def type(operations) !type(interface)
 	package $package+validPackage.ness;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
     import io.intino.konos.jmx.JMXServer;
     import io.intino.tara.magritte.Graph;
+    import io.intino.tara.magritte.RemounterGraph;
     import io.intino.tara.magritte.Store;
     import io.intino.tara.magritte.stores.FileSystemStore;
     import org.apache.commons.io.FileUtils;
@@ -16,7 +24,7 @@ def type(operations)
 
     import static java.time.temporal.ChronoUnit.SECONDS;
 
-	public class NessOperations implements io.intino.konos.datalake.NessOperationsMBean {
+	public class NessOperations implements NessOperationsMBean {
 
     	private final $box+FirstUpperCase~Box box;
     	private final GraphProvider provider;
@@ -89,7 +97,7 @@ def type(operations)
 		}
 
 		public static JMXServer init($box+FirstUpperCase~Box box) {
-			JMXServer server = new JMXServer(Collections.singletonMap("io.intino.konos.datalake.NessOperations", new Object$[]{box}));
+			JMXServer server = new JMXServer(Collections.singletonMap("$package.ness.NessOperations", new Object$[]{box}));
 			server.init();
 			return server;
 		}
