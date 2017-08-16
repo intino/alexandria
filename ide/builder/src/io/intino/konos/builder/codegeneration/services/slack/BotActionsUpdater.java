@@ -15,7 +15,6 @@ import java.util.List;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 
-
 class BotActionsUpdater {
 
 	private final Project project;
@@ -67,9 +66,12 @@ class BotActionsUpdater {
 	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
 		final Frame requestFrame = new Frame().addTypes("request", "newMethod").addSlot("bot", service.name$()).addSlot("box", boxName).addSlot("name", request.name$()).addSlot("description", request.description());
 		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
-		for (int i = 0; i < parameters.size(); i++)
-			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name()).
-					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name$()).addSlot("pos", i));
+		for (int i = 0; i < parameters.size(); i++) {
+			final Frame frame = new Frame().addTypes("parameter", parameters.get(i).type().name()).
+					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name$()).addSlot("pos", i);
+			if (parameters.get(i).multiple()) frame.addTypes("multiple");
+			requestFrame.addSlot("parameter", frame);
+		}
 		return requestFrame;
 	}
 
@@ -83,7 +85,8 @@ class BotActionsUpdater {
 		for (Request.Parameter parameter : request.parameterList()) {
 			final PsiParameter psiParameter = parameter(psiMethod, parameter.name$());
 			if (psiParameter != null) {
-				if (!psiParameter.getTypeElement().getType().getPresentableText().equals(parameter.type().name() + (parameter.multiple() ? "[]" : "")))
+				final String presentableText = psiParameter.getTypeElement().getType().getPresentableText();
+				if (!presentableText.equals(parameter.type().name() + (parameter.multiple() ? "[]" : "")) && !presentableText.equals(parameter.type().name() + (parameter.multiple() ? "..." : "")))
 					psiParameter.replace(factory.createParameter(parameter.name$(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));
 			} else
 				psiMethod.getParameterList().add(factory.createParameter(parameter.name$(), factory.createTypeFromText("java.lang." + parameter.type().name(), psiMethod)));

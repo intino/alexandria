@@ -34,6 +34,10 @@ def type(jmx) type(interface)
 
 	public interface $name+snakecaseToCamelCase+firstUpperCase~MBean {
 
+		@Description("Shows information about the available operations")
+		@Parameters({})
+		java.util.List<String> help();
+
 		$operation+signature...[$NL$NL]
 	}
 end
@@ -68,6 +72,12 @@ def type(jmx) type(implementation)
 
 		private final $box+validName+FirstUpperCase~Box box;
 
+		public java.util.List<String> help() {
+			List<String> operations = new ArrayList<>();
+			operations.addAll(java.util.Arrays.asList(new String$[]{$operation+help...[, ]}));
+			return operations;
+		}
+
 		public $name+validName+firstUpperCase($box+validName+FirstUpperCase~Box box) {
 			this.box = box;
 		}
@@ -83,6 +93,10 @@ def type(operation) trigger(implementation)
 		[$parameter+assign...[$NL]]
 		[$returnType+return ]action.execute();
 	}
+end
+
+def type(operation) trigger(help)
+	"$returnType $name+SnakeCaseToCamelCase+validName+firstLowerCase($parameter+withType...[, ])[: $description]"
 end
 
 

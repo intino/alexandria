@@ -15,7 +15,6 @@ public class NessTanksRenderer {
 	private final String packageName;
 	private final String boxName;
 
-
 	public NessTanksRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.dataLake = graph.dataLake();
 		this.gen = gen;
@@ -24,7 +23,6 @@ public class NessTanksRenderer {
 	}
 
 	public void execute() {
-		if (dataLake == null) return;
 		Frame frame = new Frame().addTypes("tanks").
 				addSlot("package", packageName).
 				addSlot("name", dataLake.name$()).
@@ -60,5 +58,4 @@ public class NessTanksRenderer {
 			return names[names.length - 1];
 		});
 	}
-
 }
