@@ -2,11 +2,11 @@ dsl Konos
 
 
 Service SimulationInspector as JMX
-	Operation(description=" ") add-user
+	Operation(description=" asdasdasd") add-user
 		Parameter name as Text
 		Parameter groups as Text List
 		Response as Bool
-	Operation(description=" ") remove-user
+	Operation(description="") remove-user
 		Parameter name as Text
 		Response as Bool
 	Operation(description=" ") add-tank
