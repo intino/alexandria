@@ -15,7 +15,11 @@ def type(operations)
 
 		Graph graph() {
 			return null;
-			//return box.graph().core$();
+			//return box.graph().core$$();
+		}
+
+		String$[] coreStashes() {
+			return new String$[]{"Model"};
 		}
 
 		Store store() {

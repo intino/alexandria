@@ -38,7 +38,7 @@ public class AbstractBoxTemplate extends Template {
 			rule().add((condition("type", "service")), (condition("trigger", "getter"))),
 			rule().add((condition("type", "service")), (condition("type", "rest | activity")), (condition("trigger", "quit"))).add(literal("spark.Spark.stop();")),
 			rule().add((condition("type", "service")), (condition("type", "jms")), (condition("trigger", "quit"))).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(".closeSession();")),
-			rule().add((condition("type", "dataLake")), (condition("trigger", "quit"))).add(literal("if (ness != null) ness.closeSession();")),
+			rule().add((condition("type", "dataLake")), (condition("trigger", "quit"))).add(literal("if (ness != null) ness.stop();")),
 			rule().add((condition("type", "service")), (condition("trigger", "quit"))),
 			rule().add((condition("type", "service"))),
 			rule().add((condition("type", "task")), (condition("trigger", "init"))).add(literal("Tasks.init(this.tasker, (")).add(mark("configuration", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box) this);")),

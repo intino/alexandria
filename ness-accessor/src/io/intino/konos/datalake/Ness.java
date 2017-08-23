@@ -98,7 +98,7 @@ public class Ness {
 
 	public void lastMessage(Instant lastMessage) {
 		this.lastMessage = lastMessage;
-		this.receivedMessages++;
+		if (lastMessage != null) this.receivedMessages++;
 	}
 
 	public int receivedMessages() {

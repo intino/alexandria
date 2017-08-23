@@ -231,7 +231,7 @@ def type(service) type(jms) trigger(quit)
 end
 
 def type(dataLake) trigger(quit)
-	if (ness != null) ness.closeSession();
+	if (ness != null) ness.stop();
 end
 
 def type(service) trigger(quit)
