@@ -156,7 +156,7 @@ def type(service & jms) trigger(jms)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
-		new java.lang.Thread(() -> {
+		java.lang.Thread thread = new java.lang.Thread(() -> {
 			try {
 				connection.start();
 				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
@@ -164,8 +164,10 @@ def type(service & jms) trigger(jms)
 			} catch (javax.jms.JMSException e) {
 				logger.error(e.getMessage());
 			}
-		}).start();
-	} catch (javax.jms.JMSException e) {
+		}, "jms init");
+		thread.start();
+		thread.join(10000);
+	} catch (javax.jms.JMSException | InterruptedException e) {
 		logger.error(e.getMessage());
 	}
 end
@@ -173,12 +175,18 @@ end
 def type(dataLake) trigger(init)
 	if (configuration().nessConfiguration() == null) return;
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
-	new java.lang.Thread(()-> {
+	java.lang.Thread thread = new java.lang.Thread(()-> {
 		this.ness.start();
 		$package.ness.NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		logger.info("Ness datalake: started!");
-	}).start();
+	}, "ness init");
+	try {
+		thread.start();
+		thread.join(10000);
+	} catch (InterruptedException e) {
+		logger.error(e.getMessage());
+	}
 end
 
 def type(service & jmx) trigger(field)

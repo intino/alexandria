@@ -54,10 +54,14 @@ public class Ness {
 
 	public void stop() {
 		try {
-			session.close();
-			session = null;
-			connection.close();
-			connection = null;
+			if (session != null) {
+				session.close();
+				session = null;
+			}
+			if (connection != null) {
+				connection.close();
+				connection = null;
+			}
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}

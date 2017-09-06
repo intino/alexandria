@@ -98,7 +98,7 @@ public class FilesAccessor implements FilesApi {
 			}
 
 			private Resource resourceOf(InputStream content, String contentType, Map<String, String> parameters) {
-				Resource resource = new Resource("resource." + MimeTypes.getExtension(contentType), contentType, content);
+				Resource resource = new Resource("content", "resource." + MimeTypes.getExtension(contentType), contentType, content);
 				parameters.entrySet().forEach(entry -> resource.addParameter(entry.getKey(), entry.getValue()));
 				return resource;
 			}
