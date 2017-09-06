@@ -5,12 +5,16 @@ def type(operations)
 	import io.intino.tara.magritte.Graph;
 	import io.intino.tara.magritte.Store;
 
-	class GraphProvider {
+	class ReflowAssistant {
 
 		private final $box+FirstUpperCase~Box box;
 
-		GraphProvider($box+FirstUpperCase~Box box) {
+		ReflowAssistant($box+FirstUpperCase~Box box) {
 			this.box = box;
+		}
+
+		void before() {
+
 		}
 
 		Graph graph() {
@@ -22,13 +26,12 @@ def type(operations)
 			return new String$[]{"Model"};
 		}
 
-		Store store() {
-			return null;
-			//return new FileSystemStore(new File("store"));
-		}
-
 		void saveGraph(Graph graph) {
 			graph.saveAll("Model");
+		}
+
+		void after() {
+
 		}
 	}
 end

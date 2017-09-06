@@ -77,7 +77,6 @@ public class DialogDisplayRenderer {
 	private Frame frameOf(Tab.Section section) {
 		final Frame frame = new Frame().addTypes("section");
 		if (!section.name$().isEmpty()) frame.addSlot("name", section.name$());
-		if (!section.label().isEmpty()) frame.addSlot("label", section.label());
 		final List<Tab.Input> inputs = section.inputList();
 		for (Tab.Input input : inputs) processInput(frame, input);
 		addCommon(frame, section);
@@ -155,7 +154,6 @@ public class DialogDisplayRenderer {
 	private Frame frameOf(Tab.File file) {
 		final Frame frame = new Frame().addTypes("file");
 		if (file.validation() != null) frame.addSlot("validation", frameOf(file.validation()));
-
 		addCommon(frame, file);
 		return frame;
 	}

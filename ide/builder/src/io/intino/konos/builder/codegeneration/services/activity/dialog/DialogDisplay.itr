@@ -41,8 +41,8 @@ end
 
 
 def type(section)
-	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = $owner.createSection();
-	w$name+SnakeCaseToCamelCase.label($label);
+	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = w$owner+SnakeCaseToCamelCase.createSection();
+	w$name+SnakeCaseToCamelCase.label("$label");
 	$input...[$NL]
 end
 
@@ -51,7 +51,7 @@ def type(text)
 end
 
 def type(memo)
-	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode+firstUpperCase)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(radio)
@@ -59,7 +59,7 @@ def type(radio)
 end
 
 def type(check)
-	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode+firstUpperCase)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(combo)

@@ -29,8 +29,8 @@ public class NessJMXOperationsRenderer {
 				addSlot("box", boxName);
 		writeFrame(new File(gen, "ness"), "NessOperations", operationsTemplate().format(frame));
 		writeFrame(new File(gen, "ness"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
-		if (!Commons.javaFile(new File(src, "ness"), "GraphProvider").exists())
-			writeFrame(new File(src, "ness"), "GraphProvider", providerTemplate().format(frame));
+		if (!Commons.javaFile(new File(src, "ness"), "ReflowAssistant").exists())
+			writeFrame(new File(src, "ness"), "ReflowAssistant", providerTemplate().format(frame));
 	}
 
 	private Template operationsTemplate() {
@@ -38,6 +38,6 @@ public class NessJMXOperationsRenderer {
 	}
 
 	private Template providerTemplate() {
-		return Formatters.customize(GraphProviderTemplate.create());
+		return Formatters.customize(ReflowAssistantTemplate.create());
 	}
 }

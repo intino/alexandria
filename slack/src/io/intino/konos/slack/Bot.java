@@ -123,7 +123,7 @@ public abstract class Bot {
 
 			@Override
 			public BotFile file() {
-				return new BotFile(message.getSlackFile());
+				return message.getSlackFile() == null ? null : new BotFile(message.getSlackFile());
 			}
 		};
 	}

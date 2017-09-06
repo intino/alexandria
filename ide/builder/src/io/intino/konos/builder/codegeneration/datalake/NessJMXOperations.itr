@@ -38,11 +38,12 @@ def type(operations) !type(interface)
 
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
     	private final $box+FirstUpperCase~Box box;
-    	private final GraphProvider provider;
+    	private final ReflowAssistant assistant;
+    	private int processed = 0;
 
     	public NessOperations($box+FirstUpperCase~Box box) {
     		this.box = box;
-    		this.provider = new $package+validPackage.ness.GraphProvider(box);
+    		this.assistant = new $package+validPackage.ness.ReflowAssistant(box);
     	}
 
     	public java.util.List<String> help() {
@@ -51,15 +52,15 @@ def type(operations) !type(interface)
 			return operations;
 		}
 
-    	public boolean reflow() {
+		public boolean reflow() {
 			logger.info("Starting Reflow...");
+			assistant.before();
 			box.close();
 			box.datalake().lastMessage(null);
-			final Graph graph = provider.graph();
-			final Store oldStore = graph.store();
+			final Graph graph = assistant.graph();
 			try {
-				if (oldStore instanceof FileSystemStore) FileUtils.deleteDirectory(((FileSystemStore) oldStore).directory());
-				final RemounterGraph original = (RemounterGraph) new RemounterGraph(provider.store()).loadStashes(provider.coreStashes());
+				if (graph.store() instanceof FileSystemStore) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
+				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
 				allowWriting(original, false);
 				Graph clone = original.realClone();
 				box.put(clone);
@@ -79,8 +80,8 @@ def type(operations) !type(interface)
 					Graph newClone = write(clone);
 					if (finished()) {
 						doWrite(clone);
-						onFinish();
-					} else new Timer(true).schedule(timerTask(newClone), 5000);
+						onFinish(clone);
+					} else new Timer("Reflow task",true).schedule(timerTask(newClone), 5000);
 				}
 			};
 		}
@@ -88,15 +89,15 @@ def type(operations) !type(interface)
 		private Graph write(Graph clone) {
 			if (box.datalake().receivedMessages() < 1E4) return clone;
 			box.datalake().reset();
-			logger.info("Processed " + (processed += 1E4));
+			logger.info("processed " + (processed += 1E4));
 			return doWrite(clone);
 		}
 
 		private Graph doWrite(Graph clone) {
 			box.close();
 			allowWriting(clone, true);
-			provider.saveGraph(clone);
-			final Graph newClone = new RemounterGraph(provider.store()).loadStashes(provider.coreStashes());
+			assistant.saveGraph(clone);
+			final Graph newClone = new RemounterGraph(clone.store()).loadStashes(assistant.coreStashes());
 			allowWriting(newClone, false);
 			box.put(newClone);
 			box.open();
@@ -107,11 +108,12 @@ def type(operations) !type(interface)
 			if (original.store() instanceof FileSystemStore) ((FileSystemStore) original.store()).allowWriting(flag);
 		}
 
-		private void onFinish() {
+		private void onFinish(Graph clone) {
 			box.close();
-			box.put(new Graph(provider.store()).loadStashes(provider.coreStashes()));
+			box.put(new Graph(clone.store()).loadStashes(assistant.coreStashes()));
+			assistant.after();
 			box.open();
-			logger.info("Reflow Finished successfully...");
+			logger.info("Reflow finished successfully!");
 		}
 
 		private boolean finished() {
