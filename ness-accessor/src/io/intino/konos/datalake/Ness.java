@@ -5,6 +5,8 @@ import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -13,10 +15,9 @@ import javax.jms.TextMessage;
 import java.time.Instant;
 
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Logger.getGlobal;
 
 public class Ness {
+	protected static Logger logger = LoggerFactory.getLogger(Ness.class);
 
 	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
@@ -43,7 +44,7 @@ public class Ness {
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 			return this.session;
 		} catch (JMSException e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -63,7 +64,7 @@ public class Ness {
 				connection = null;
 			}
 		} catch (JMSException e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -79,19 +80,19 @@ public class Ness {
 		try {
 			if (session != null) session.close();
 		} catch (JMSException e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 
 	private TopicProducer newProducer(String tank) {
 		if (this.session() == null) {
-			getGlobal().log(SEVERE, "Session is null");
+			logger.error("Session is null");
 			return null;
 		}
 		try {
 			return new TopicProducer(session(), tank);
 		} catch (JMSException e) {
-			getGlobal().severe(e.getMessage());
+			logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -128,6 +129,10 @@ public class Ness {
 			return "flow." + name;
 		}
 
+		public String dropChannel() {
+			return "drop." + name;
+		}
+
 		public String feedChannel() {
 			return "feed." + name;
 		}
@@ -142,21 +147,22 @@ public class Ness {
 				final TextMessage jmsMessage = (TextMessage) createMessageFor(message.toString());
 				if (jmsMessage == null) return;
 				jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
-				final TopicProducer producer = newProducer(name);
+				final TopicProducer producer = newProducer(dropChannel());
 				if (producer != null) producer.produce(jmsMessage);
-			} catch (JMSException ignored) {
+			} catch (JMSException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 
 		public TopicConsumer flow(TankFlow flow) {
-			if (session() == null) getGlobal().log(SEVERE, "Session is null");
+			if (session() == null) logger.error("Session is null");
 			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
 			topicConsumer.listen(flow);
 			return topicConsumer;
 		}
 
 		public TopicConsumer flow(TankFlow flow, String flowID) {
-			if (session() == null) getGlobal().log(SEVERE, "Session is null");
+			if (session() == null) logger.error("Session is null");
 			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
 			topicConsumer.listen(flow, flowID);
 			return topicConsumer;
