@@ -81,12 +81,6 @@
         <module name="datalake-accessor" />
         <module name="ness-accessor" />
       </profile>
-      <profile name="Annotation profile for konos-slack" enabled="true">
-        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
-      </profile>
       <profile name="Annotation profile for konos-server-web" enabled="true">
         <sourceOutputDir name="../out/build/server-web/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/server-web/generated-test-sources/test-annotations" />
@@ -110,6 +104,12 @@
         <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
+      </profile>
+      <profile name="Annotation profile for konos-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="slack" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
