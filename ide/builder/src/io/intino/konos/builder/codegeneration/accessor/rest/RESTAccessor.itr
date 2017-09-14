@@ -84,15 +84,19 @@ def type(parameter & required & fileData) trigger(fileDeclaration)
 	Resource resource = new Resource(new java.io.FileInputStream($name), Resource.resolveContentType($name));
 end
 
-def type(parameter & query & required) type(dateTimeData | dateData)  trigger(declaration)
-	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()));
+def type(parameter & query & required) type(dateData)  trigger(declaration)
+	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
+end
+
+def type(parameter & query & required) type(dateTimeData)  trigger(declaration)
+	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
 end
 
 def type(parameter & query & required & textData) trigger(declaration)
 	put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
 end
 
-def type(parameter & query & required) type(boolData | integerData | realData) trigger(declaration)
+def type(parameter & query & required) type(boolData | integerData | realData | longIntegerData) trigger(declaration)
 	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
@@ -100,15 +104,19 @@ def type(parameter & query & required & objectData) trigger(declaration)
 	put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
 end
 
+def type(parameter & query) type(dateData) trigger(declaration)
+	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
+end
+
 def type(parameter & query) type(dateTimeData | dateData) trigger(declaration)
-	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant(java.time.ZoneOffset.UTC).toEpochMilli()));
+	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toEpochMilli()));
 end
 
 def type(parameter & query) type(textData) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", $name+SnakeCaseToCamelCase+firstLowerCase);
 end
 
-def type(parameter & query) type(boolData | integerData | realData) trigger(declaration)
+def type(parameter & query) type(boolData | integerData | realData | longIntegerData) trigger(declaration)
 	if ($name+SnakeCaseToCamelCase+firstLowerCase != null) put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase));
 end
 
@@ -160,11 +168,11 @@ def type(invokeSentence) type(date | instant)
 end
 
 def type(invokeSentence & datetime & list)
-	return null; //TODO
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<Instant>>(){}.getType());
 end
 
 def type(invokeSentence & datetime)
-	return null; //TODO
+	return java.time.Instant.ofEpochMilli(Long.valueOf($doInvoke.content()));
 end
 
 def type(invokeSentence & primitive & int & list)
