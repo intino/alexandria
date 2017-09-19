@@ -1,10 +1,18 @@
 def type(widget)
+	<link rel="import" href="../../lib/polymer/polymer.html">
+    <link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+    <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+    <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+    <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+	[$parent+import
+	]
 	<script src="$name+lowercase~widget/requester.js"></script>
     <script src="$name+lowercase~widget/notifier-listener.js"></script>
 
     <dom-module id="$name+camelCaseToSnakeCase~-widget">
 
         <template>
+        	$parent
             $innerDisplay...[$NL]
         </template>
 
@@ -42,6 +50,14 @@ def type(widget)
     </dom-module>
 end
 
+def trigger(import)
+	<link rel="import" href="../../lib/$dsl+lowercase/$value+lowercase~-widget.html">
+end
+
 def trigger(innerDisplay)
+	<div><cotton-zombie display="$value~Display" widget="$value~Widget"></cotton-zombie></div>
+end
+
+def trigger(parent)
 	<div><cotton-zombie display="$value~Display" widget="$value~Widget"></cotton-zombie></div>
 end

@@ -29,18 +29,20 @@ public class ActivityAccessorCreator {
 	private final Project project;
 	private final Module javaModule;
 	private final List<Activity> activities;
+	private String parent;
 
-	public ActivityAccessorCreator(Module module, KonosGraph graph) {
+	public ActivityAccessorCreator(Module module, KonosGraph graph, String parent) {
 		this.project = module == null ? null : module.getProject();
 		this.javaModule = module;
 		this.activities = graph.activityList();
+		this.parent = parent;
 	}
 
 	public void execute() {
 		if (javaModule == null) return;
 		for (Activity activity : activities) {
 			Module webModule = getOrCreateModule(activity);
-			final ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(javaModule, webModule, activity);
+			final ActivityAccessorRenderer renderer = new ActivityAccessorRenderer(javaModule, webModule, activity, parent);
 			renderer.execute();
 			final boolean created = renderer.createConfigurationFile();
 			if (created) register(webModule, newExternalProvider(webModule));
