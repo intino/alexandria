@@ -33,7 +33,7 @@ public class AbstractBoxRenderer {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
-		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.parent = parent;
 		this.hasModel = hasModel;
 	}
