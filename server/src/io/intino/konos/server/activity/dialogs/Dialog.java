@@ -304,6 +304,7 @@ public class Dialog {
             }
 
             protected DialogValidator.Result validateLength(String value, int min, int max) {
+                if (value == null) return null;
                 int length = value.length();
 
                 if (min > 0 && length < min) return new DialogValidator.Result(false, "Value length is lower than " + min);
@@ -364,6 +365,7 @@ public class Dialog {
 
             public DialogValidator.Result validateEmail(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateEmail((String)value);
                     if (result != null) return result;
                 }
@@ -371,6 +373,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateEmail(String value) {
+                if (value == null) return null;
                 if (edition != TextEdition.Email) return null;
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                 java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
@@ -380,6 +383,7 @@ public class Dialog {
 
             public DialogValidator.Result validateAllowedValues(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateAllowedValues((String)value);
                     if (result != null) return result;
                 }
@@ -387,6 +391,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateAllowedValues(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.allowedValues.size() <= 0 || validation.allowedValues.contains(value)) return null;
                 return new DialogValidator.Result(false, "Value not allowed");
@@ -394,6 +399,7 @@ public class Dialog {
 
             public DialogValidator.Result validateLength(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateLength((String)value);
                     if (result != null) return result;
                 }
@@ -401,6 +407,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateLength(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.length() == null) return null;
                 return validateLength(value, validation.length.min(), validation.length.max());
@@ -581,6 +588,7 @@ public class Dialog {
 
             public DialogValidator.Result validateLength(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateLength((String)value);
                     if (result != null) return result;
                 }
@@ -588,6 +596,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateLength(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.length() == null) return null;
                 return validateLength(value, validation.length.min(), validation.length.max());
@@ -697,6 +706,7 @@ public class Dialog {
 
             public DialogValidator.Result validateMaxSize(Map<String, byte[]> values) {
                 for (Map.Entry<String, byte[]> value : values.entrySet()) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateMaxSize(value.getKey(), value.getValue());
                     if (result != null) return result;
                 }
@@ -704,6 +714,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateMaxSize(String filename, byte[] content) {
+                if (filename == null || content == null) return null;
                 if (validation == null) return null;
                 if (content.length <= validation.maxSize) return null;
                 return new DialogValidator.Result(false, "File is too long. Max size: " + validation.maxSize);
@@ -711,6 +722,7 @@ public class Dialog {
 
             public DialogValidator.Result validateExtension(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateExtension((String)value);
                     if (result != null) return result;
                 }
@@ -718,6 +730,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateExtension(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 List<String> allowedExtensions = validation.allowedExtensions();
                 if (allowedExtensions.size() <= 0 || allowedExtensions.contains(value)) return null;

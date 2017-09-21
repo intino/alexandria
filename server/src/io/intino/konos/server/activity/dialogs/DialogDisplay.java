@@ -87,7 +87,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		Input input = dialog.input(identifier.input());
 		if (!inputsMap.containsKey(input.name())) return;
 		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
-		inputsMap.get(input.name()).add(identifier.position());
+		inputsMap.get(input.name()).add(null);
 		refresh(input);
 	}
 
