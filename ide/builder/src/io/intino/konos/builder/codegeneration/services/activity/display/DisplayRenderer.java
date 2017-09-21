@@ -6,6 +6,7 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.date.DateData;
 import io.intino.konos.model.graph.type.TypeData;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -27,12 +28,14 @@ public class DisplayRenderer {
 	private final String packageName;
 	private final List<Display> displays;
 	private final String boxName;
+	private final String parent;
 
-	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String parent, String boxName) {
 		this.project = project;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
+		this.parent = parent;
 		this.displays = graph.displayList();
 		this.boxName = boxName;
 	}
@@ -45,6 +48,8 @@ public class DisplayRenderer {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name$());
+		frame.addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.parentDisplay() != null) addParent(display, frame);
 		if (!display.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
@@ -58,6 +63,10 @@ public class DisplayRenderer {
 		else new DisplayUpdater(project, display, Commons.javaFile(new File(src, DISPLAYS), newDisplay)).update();
 	}
 
+	private void addParent(Display display, Frame frame) {
+		final Frame parent = new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent).addSlot("package", this.parent.substring(0, this.parent.lastIndexOf(".")));
+		frame.addSlot("parent", parent);
+	}
 
 	private Frame[] framesOfNotifications(List<Display.Notification> notifications) {
 		List<Frame> frames = notifications.stream().map(this::frameOf).collect(Collectors.toList());
