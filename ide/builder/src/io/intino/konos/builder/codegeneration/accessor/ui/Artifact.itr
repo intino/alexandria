@@ -2,7 +2,6 @@ def type(artifact & legio)
 	dsl Legio
 
 	Artifact(groupId = "$groupID", version = "1.0.0") $artifactID~Activity
-
 		WebImports
 			WebComponent("Polymer/polymer", "^1.4.0") polymer
 			WebComponent(version = "~3.1.0") jquery
@@ -12,6 +11,7 @@ def type(artifact & legio)
 			WebComponent("https://bitbucket.org/cottons/cotton-push.git", "latest") cotton-push
 			WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "latest") cotton-translator
 			WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
+
 			WebArtifact("io.intino.konos", "konos-server-web", "LATEST") konos-server-web
 
 			Resolution("jquery", "3.1.0")
@@ -19,7 +19,7 @@ def type(artifact & legio)
 end
 
 def type(repository)
-	Repository("id")
+	Repository("$id")
 		$url...[$NL]
 end
 

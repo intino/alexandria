@@ -23,7 +23,7 @@ Concept Component is abstract
 
 Concept:Named Display extends Component
 	var Display[] displays = empty
-
+	var string parentDisplay = empty
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty

@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.helpers.Commons;
@@ -41,8 +42,11 @@ public class BoxRenderer {
 		}
 		Frame frame = new Frame().addTypes("Box").addSlot("package", packageName).addSlot("name", name);
 		if (isTara) frame.addSlot("tara", fillTara());
-		if (JavaPsiFacade.getInstance(module.getProject()).findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(true);
+		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
+		if (facade.findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
+		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(false);
 		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().format(frame));
 	}
 
