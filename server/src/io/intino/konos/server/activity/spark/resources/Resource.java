@@ -106,8 +106,12 @@ public abstract class Resource implements io.intino.konos.server.Resource {
     }
 
     String home() {
+        return manager.homeUrl();
+    }
+
+    String userHome() {
         String authId = authenticationId();
-        return manager.baseUrl() + (authId != null ? "/?authId=" + authId : "");
+        return manager.userHomeUrl() + (authId != null ? "?authId=" + authId : "");
     }
 
     private Space space() {
@@ -166,6 +170,8 @@ public abstract class Resource implements io.intino.konos.server.Resource {
     private void fillBrowser(ActivitySparkManager manager) {
         Browser browser = manager.currentSession().browser();
         browser.baseUrl(manager.baseUrl());
+        browser.homeUrl(manager.homeUrl());
+        browser.userHomeUrl(manager.userHomeUrl());
         browser.language(manager.languageFromUrl());
         browser.metadataLanguage(manager.languageFromHeader());
     }
