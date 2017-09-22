@@ -103,6 +103,7 @@
                 result.helper = input.helper ? input.helper : false;
                 result.placeholder = input.placeholder ? input.placeholder : false;
                 result.disabled = input.readonly ? input.readonly : false;
+                result.hidden = !input.visible;
                 result.events = _addEvents(result, input);
                 result.validator = _receiveValidationAlgorithmAndRegisterItToInput.bind(input);
                 return result;
