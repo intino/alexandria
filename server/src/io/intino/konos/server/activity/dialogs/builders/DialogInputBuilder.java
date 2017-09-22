@@ -16,6 +16,7 @@ public class DialogInputBuilder {
         result.addProperty("type", input.getClass().getSimpleName().toLowerCase());
         result.addProperty("required", input.required());
         result.addProperty("readonly", input.readonly());
+        result.addProperty("visible", input.visible());
         result.addProperty("helper", input.helper());
         result.addProperty("defaultValue", value(input.defaultValue()));
         result.addProperty("placeholder", input.placeholder());

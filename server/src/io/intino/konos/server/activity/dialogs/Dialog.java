@@ -191,6 +191,7 @@ public class Dialog {
             private String label;
             private boolean required;
             private boolean readonly;
+            private boolean visible = true;
             private String placeholder;
             private String helper;
             private String defaultValue = null;
@@ -228,6 +229,15 @@ public class Dialog {
 
             public Input readonly(boolean readonly) {
                 this.readonly = readonly;
+                return this;
+            }
+
+            public boolean visible() {
+                return visible;
+            }
+
+            public Input visible(boolean visible) {
+                this.visible = visible;
                 return this;
             }
 
