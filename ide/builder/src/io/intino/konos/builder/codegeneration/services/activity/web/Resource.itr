@@ -14,8 +14,13 @@ def type(page)
 	public class $name+firstUpperCase~Resource extends io.intino.konos.server.activity.spark.resources.Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider, String userHomePath) {
+			super(manager, notifierProvider, userHomePath);
+			this.box = box;
+		}
+
 		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
-			super(manager, notifierProvider);
+			super(manager, notifierProvider, "");
 			this.box = box;
 		}
 

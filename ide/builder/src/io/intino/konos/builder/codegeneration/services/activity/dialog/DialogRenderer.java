@@ -64,12 +64,12 @@ public class DialogRenderer {
 
 	private void processSources(Frame frame, Tab.OptionBox optionBox) {
 		if (optionBox.source() != null && !optionBox.source().isEmpty())
-			frame.addSlot("source", new Frame().addTypes("source").addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
+			frame.addSlot("source", new Frame().addTypes("source").addSlot("box", boxName).addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
 	}
 
 	private void processValidator(Frame frame, Tab.Input input) {
 		if (input.validator() != null && !input.validator().isEmpty())
-			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
+			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("box", boxName).addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
 	}
 
 	private void renderDialogDisplay() {
