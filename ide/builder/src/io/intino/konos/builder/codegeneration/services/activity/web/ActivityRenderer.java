@@ -11,10 +11,10 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
@@ -44,6 +44,7 @@ public class ActivityRenderer {
 				addSlot("package", packageName).
 				addSlot("name", activity.name$()).
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList()));
+		if (activity.userHome() != null) frame.addSlot("userHome", activity.userHome().paths().get(0));
 		if (!dialogs.isEmpty())
 			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
 		if (!displays.isEmpty())
@@ -59,26 +60,25 @@ public class ActivityRenderer {
 	}
 
 	private Frame[] resourcesFrame(List<Activity.AbstractPage> pages) {
-		List<Frame> frames = pages.stream().map(this::frameOf).collect(Collectors.toList());
-		return frames.toArray(new Frame[frames.size()]);
+		return pages.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	private Frame[] displaysFrame(List<Display> displays) {
-		List<Frame> frames = displays.stream().map(this::frameOf).collect(Collectors.toList());
-		return frames.toArray(new Frame[frames.size()]);
+		return displays.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	private Frame[] dialogsFrame(List<Dialog> dialogs) {
-		List<Frame> frames = dialogs.stream().map(this::frameOf).collect(Collectors.toList());
-		return frames.toArray(new Frame[frames.size()]);
+		return dialogs.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	private Frame frameOf(Activity.AbstractPage resource) {
 		final Frame frame = new Frame().addTypes("resource", "abstractPage");
 		frame.addSlot("name", resource.name$());
+		final Activity activity = resource.core$().ownerAs(Activity.class);
 		for (String path : resource.paths()) {
 			Set<String> custom = Commons.extractParameters(path);
 			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name$());
+			if (activity.userHome() != null) pathFrame.addSlot("userHome", activity.userHome().paths().get(0));
 			if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
 			frame.addSlot("path", pathFrame);
 		}
@@ -88,7 +88,7 @@ public class ActivityRenderer {
 	private Frame frameOf(Display display) {
 		final Frame frame = new Frame().addTypes("display");
 		frame.addSlot("name", display.name$());
-		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Display.Request.ResponseType.Asset)))
+		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
 		return frame;
 	}

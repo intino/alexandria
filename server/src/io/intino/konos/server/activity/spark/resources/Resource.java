@@ -25,156 +25,160 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class Resource implements io.intino.konos.server.Resource {
-    private final DisplayNotifierProvider notifierProvider;
-    protected final ActivitySparkManager manager;
+	private final DisplayNotifierProvider notifierProvider;
+	private final String userHomePath;
+	protected final ActivitySparkManager manager;
 
-    static final Map<String, String> authenticationIdMap = new HashMap<>();
-    static final Map<String, Authentication> authenticationMap = new HashMap<>();
+	static final Map<String, String> authenticationIdMap = new HashMap<>();
+	static final Map<String, Authentication> authenticationMap = new HashMap<>();
 
-    public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
-        this.manager = manager;
-        this.notifierProvider = notifierProvider;
-    }
+	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider, String userHomePath) {
+		this.manager = manager;
+		this.notifierProvider = notifierProvider;
+		this.userHomePath = userHomePath;
+	}
 
-    @Override
-    public void execute() throws KonosException {
-        fillBrowser(manager);
-    }
+	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		this(manager, notifierProvider, "");
+	}
 
-    protected boolean isLogged() {
-        if (!isFederated()) return true;
+	@Override
+	public void execute() throws KonosException {
+		fillBrowser(manager);
+	}
 
-        String authId = manager.fromQuery("authId", String.class);
-        Authentication authentication = authenticationOf(authId).orElse(null);
-        return authentication != null && manager.authService().valid(authentication.accessToken());
-    }
+	protected boolean isLogged() {
+		if (!isFederated()) return true;
 
-    protected synchronized void authenticate() {
-        manager.redirect(authenticate(manager.baseUrl()));
-    }
+		String authId = manager.fromQuery("authId", String.class);
+		Authentication authentication = authenticationOf(authId).orElse(null);
+		return authentication != null && manager.authService().valid(authentication.accessToken());
+	}
 
-    protected synchronized String authenticate(String baseUrl) {
-        String authId = UUID.randomUUID().toString();
-        Space space = space();
-        space.setAuthId(authId);
-        space.setBaseUrl(baseUrl);
-        saveAuthenticationId(authId);
-        Authentication authentication = createAuthentication(authId);
-        return authenticate(authentication);
-    }
+	protected synchronized void authenticate() {
+		manager.redirect(authenticate(manager.baseUrl()));
+	}
 
-    protected void logout() {
-        Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
+	protected synchronized String authenticate(String baseUrl) {
+		String authId = UUID.randomUUID().toString();
+		Space space = space();
+		space.setAuthId(authId);
+		space.setBaseUrl(baseUrl);
+		saveAuthenticationId(authId);
+		Authentication authentication = createAuthentication(authId);
+		return authenticate(authentication);
+	}
 
-        if (!authentication.isPresent())
-            return;
+	protected void logout() {
+		Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
 
-        try {
-            authentication.get().invalidate();
-            removeAuthentication(manager.currentSession().id());
-        } catch (CouldNotInvalidateAccessToken error) {
-            error.printStackTrace();
-        }
-    }
+		if (!authentication.isPresent())
+			return;
 
-    protected DisplayNotifier notifier(ActivitySession session, ActivityClient client, Display display) {
-        return notifierProvider.agent(display, carrier(session, client));
-    }
+		try {
+			authentication.get().invalidate();
+			removeAuthentication(manager.currentSession().id());
+		} catch (CouldNotInvalidateAccessToken error) {
+			error.printStackTrace();
+		}
+	}
 
-    Optional<Authentication> authentication() {
-        return authenticationOf(manager.fromQuery("authId", String.class));
-    }
+	protected DisplayNotifier notifier(ActivitySession session, ActivityClient client, Display display) {
+		return notifierProvider.agent(display, carrier(session, client));
+	}
 
-    Optional<Authentication> authentication(String sessionId) {
-        String authenticationId = authenticationIdMap.get(sessionId);
-        return Optional.ofNullable(authenticationMap.get(authenticationId));
-    }
+	Optional<Authentication> authentication() {
+		return authenticationOf(manager.fromQuery("authId", String.class));
+	}
 
-    Optional<Authentication> authenticationOf(String authenticationId) {
-        return Optional.ofNullable(authenticationMap.get(locateAuthenticationId(authenticationId)));
-    }
+	Optional<Authentication> authentication(String sessionId) {
+		String authenticationId = authenticationIdMap.get(sessionId);
+		return Optional.ofNullable(authenticationMap.get(authenticationId));
+	}
 
-    void removeAuthentication(String sessionId) {
-        String authenticationId = authenticationIdMap.get(sessionId);
-        authenticationIdMap.remove(sessionId);
-        authenticationMap.remove(authenticationId);
-    }
+	Optional<Authentication> authenticationOf(String authenticationId) {
+		return Optional.ofNullable(authenticationMap.get(locateAuthenticationId(authenticationId)));
+	}
 
-    String authenticationId() {
-        String sessionId = manager.currentSession().id();
-        return authenticationIdMap.containsKey(sessionId) ? authenticationIdMap.get(sessionId) : null;
-    }
+	void removeAuthentication(String sessionId) {
+		String authenticationId = authenticationIdMap.get(sessionId);
+		authenticationIdMap.remove(sessionId);
+		authenticationMap.remove(authenticationId);
+	}
 
-    String home() {
-        return manager.homeUrl();
-    }
+	String authenticationId() {
+		String sessionId = manager.currentSession().id();
+		return authenticationIdMap.containsKey(sessionId) ? authenticationIdMap.get(sessionId) : null;
+	}
 
-    String userHome() {
-        String authId = authenticationId();
-        return manager.userHomeUrl() + (authId != null ? "?authId=" + authId : "");
-    }
+	String home() {
+		return manager.baseUrl();
+	}
 
-    private Space space() {
-        AuthService authService = manager.authService();
-        return authService != null ? authService.space() : null;
-    }
+	private Space space() {
+		AuthService authService = manager.authService();
+		return authService != null ? authService.space() : null;
+	}
 
-    private boolean isFederated() {
-        return manager.authService() != null;
-    }
+	private boolean isFederated() {
+		return manager.authService() != null;
+	}
 
-    private void registerAuthentication(String authenticationId, Authentication authentication) {
-        authenticationMap.put(authenticationId, authentication);
-    }
+	private void registerAuthentication(String authenticationId, Authentication authentication) {
+		authenticationMap.put(authenticationId, authentication);
+	}
 
-    private String locateAuthenticationId(String authenticationId) {
+	private String locateAuthenticationId(String authenticationId) {
 
-        if (authenticationId != null && !authenticationId.isEmpty()) {
-            saveAuthenticationId(authenticationId);
-            return authenticationId;
-        }
+		if (authenticationId != null && !authenticationId.isEmpty()) {
+			saveAuthenticationId(authenticationId);
+			return authenticationId;
+		}
 
-        return authenticationIdMap.get(manager.currentSession().id());
-    }
+		return authenticationIdMap.get(manager.currentSession().id());
+	}
 
-    private void saveAuthenticationId(String authenticationId) {
-        authenticationIdMap.put(manager.currentSession().id(), authenticationId);
-    }
+	private void saveAuthenticationId(String authenticationId) {
+		authenticationIdMap.put(manager.currentSession().id(), authenticationId);
+	}
 
-    private Authentication createAuthentication(String authenticationId) {
-        try {
-            registerAuthentication(authenticationId, manager.authService().authenticate());
-            return authenticationOf(authenticationId).get();
-        } catch (SpaceAuthCallbackUrlIsNull spaceAuthCallbackUrlIsNull) {
-            spaceAuthCallbackUrlIsNull.printStackTrace();
-            return null;
-        }
-    }
+	private Authentication createAuthentication(String authenticationId) {
+		try {
+			registerAuthentication(authenticationId, manager.authService().authenticate());
+			return authenticationOf(authenticationId).get();
+		} catch (SpaceAuthCallbackUrlIsNull spaceAuthCallbackUrlIsNull) {
+			spaceAuthCallbackUrlIsNull.printStackTrace();
+			return null;
+		}
+	}
 
-    private String authenticate(Authentication authentication) {
-        try {
-            return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString();
-        } catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
-            return null;
-        }
-    }
+	private String authenticate(Authentication authentication) {
+		try {
+			return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString();
+		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
+			return null;
+		}
+	}
 
-    private String errorPageUrl() {
-        return manager.baseUrl() + "/error";
-    }
+	private String errorPageUrl() {
+		return manager.baseUrl() + "/error";
+	}
 
-    private MessageCarrier carrier(ActivitySession session, ActivityClient client) {
-        return new MessageCarrier(manager.pushService(), session, client);
-    }
+	private MessageCarrier carrier(ActivitySession session, ActivityClient client) {
+		return new MessageCarrier(manager.pushService(), session, client);
+	}
 
-    private void fillBrowser(ActivitySparkManager manager) {
-        Browser browser = manager.currentSession().browser();
-        browser.baseUrl(manager.baseUrl());
-        browser.homeUrl(manager.homeUrl());
-        browser.userHomeUrl(manager.userHomeUrl());
-        browser.language(manager.languageFromUrl());
-        browser.metadataLanguage(manager.languageFromHeader());
-    }
+	private void fillBrowser(ActivitySparkManager manager) {
+		Browser browser = manager.currentSession().browser();
+		browser.baseUrl(manager.baseUrl());
+		browser.homeUrl(manager.baseUrl());
+		browser.userHomeUrl(manager.baseUrl() + userHomePath);
+		browser.language(manager.languageFromUrl());
+		browser.metadataLanguage(manager.languageFromHeader());
+	}
 
+	public String userHomePath() {
+		return userHomePath;
+	}
 }
 

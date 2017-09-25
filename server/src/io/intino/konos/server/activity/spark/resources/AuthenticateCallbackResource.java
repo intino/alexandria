@@ -17,8 +17,8 @@ import java.util.Optional;
 
 public class AuthenticateCallbackResource extends Resource {
 
-    public AuthenticateCallbackResource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
-        super(manager, notifierProvider);
+    public AuthenticateCallbackResource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider, String userHomePath) {
+        super(manager, notifierProvider, userHomePath);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class AuthenticateCallbackResource extends Resource {
             listenForLogOut(action);
             action.whenLoggedIn(userOf(userInfo()));
 
-            manager.redirect(userHome());
+            manager.redirect(manager.baseUrl() + userHomePath());
         } catch (CouldNotObtainAccessToken error) {
             manager.write(error);
         }
