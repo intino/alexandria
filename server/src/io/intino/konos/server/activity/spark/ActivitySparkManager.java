@@ -66,14 +66,6 @@ public class ActivitySparkManager extends io.intino.konos.server.spark.SparkMana
 		return result;
 	}
 
-	public String homeUrl() {
-		return baseUrl();
-	}
-
-	public String userHomeUrl() {
-		return baseUrl() + "/user"; // TODO Octavio. Poder definir en el activity el user home url y el home url
-	}
-
 	public String requestUrl() {
 		return baseUrl() + this.request.raw().getPathInfo();
 	}
