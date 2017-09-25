@@ -1,10 +1,22 @@
 dsl Konos
 
 
-Dialog(url = "", label = "Diálogo de ejemplo", description = "Esto es un diálogo de ejemplo para konos") solicitud
-	Tab("") tab
+Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
+	Tab("Opinión") tab
+		Text(label = "Tipo") tipo > readonly = true
 		Text(label = "Área") area > readonly = true
-		Memo(label = "Observaciones") obs
-		Section(label = "asuntos") section as Multiple
-			ComboBox("asunto") asunto > source = "issues"
-			ComboBox("medida") medida > source = "measures"
+		Text(label = "Habitación") room > readonly = true
+		Text(label = "Teléfono") phone > readonly = true
+		Text(label = "Email") mail > readonly = true
+		Text(label = "Asunto") issue > readonly = true
+
+	Tab(label = "Datos cliente")
+		Text(label = "Cliente") client
+		ComboBox(label = "Nacionalidad") nationality > source = "nationalities"
+		Date(label = "Check In") checkIn
+		Date(label = "Check Out") checkOut
+		Memo(label = "Observaciones") comments
+
+		Section(label = "asuntos") issues as Multiple(min = 0, max = 2)
+			ComboBox("asunto") issue > source = "issues"
+			ComboBox("satisfaccion") measureType > source = "measures"
