@@ -27,6 +27,9 @@ public class Dialog {
     public enum PasswordRequired { Letter, Number, Symbol }
     public enum CheckBoxMode { Boolean, List }
 
+    public static final String PathSeparatorRegExp = "\\.";
+    public static final String PathSeparator = ".";
+
     public String url() {
         return url;
     }
@@ -138,47 +141,47 @@ public class Dialog {
         }
 
         public Text createText() {
-            return add(new Text());
+            return add(new Text(""));
         }
 
         public Section createSection() {
-            return add(new Section());
+            return add(new Section(""));
         }
 
         public Memo createMemo() {
-            return add(new Memo());
+            return add(new Memo(""));
         }
 
         public Password createPassword() {
-            return add(new Password());
+            return add(new Password(""));
         }
 
         public RadioBox createRadioBox() {
-            return add(new RadioBox());
+            return add(new RadioBox(""));
         }
 
         public CheckBox createCheckBox() {
-            return add(new CheckBox());
+            return add(new CheckBox(""));
         }
 
         public ComboBox createComboBox() {
-            return add(new ComboBox());
+            return add(new ComboBox(""));
         }
 
         public File createFile() {
-            return add(new File());
+            return add(new File(""));
         }
 
         public Picture createPicture() {
-            return add(new Picture());
+            return add(new Picture(""));
         }
 
         public Date createDate() {
-            return add(new Date());
+            return add(new Date(""));
         }
 
         public DateTime createDateTime() {
-            return add(new DateTime());
+            return add(new DateTime(""));
         }
 
         private <I extends Input> I add(I input) {
@@ -187,6 +190,7 @@ public class Dialog {
         }
 
         public class Input {
+            private String path;
             private String name;
             private String label;
             private boolean required;
@@ -198,9 +202,17 @@ public class Dialog {
             private Multiple multiple = null;
             private DialogValidator validator = null;
 
+            public Input(String path) {
+                this.path = path;
+            }
+
             private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
             public String name() {
+                return name;
+            }
+
+            public String path() {
                 return name;
             }
 
@@ -355,6 +367,10 @@ public class Dialog {
             private TextEdition edition = TextEdition.Normal;
             private Validation validation;
 
+            public Text(String path) {
+                super(path);
+            }
+
             public TextEdition edition() {
                 return edition;
             }
@@ -373,7 +389,7 @@ public class Dialog {
                 return this;
             }
 
-            public DialogValidator.Result validateEmail(List<Object> values) {
+            public DialogValidator.Result validateEmail(List<String> values) {
                 for (Object value : values) {
                     if (value == null) continue;
                     DialogValidator.Result result = validateEmail((String)value);
@@ -391,10 +407,10 @@ public class Dialog {
                 return m.matches() ? null : new DialogValidator.Result(false, "Email not valid");
             }
 
-            public DialogValidator.Result validateAllowedValues(List<Object> values) {
-                for (Object value : values) {
+            public DialogValidator.Result validateAllowedValues(List<String> values) {
+                for (String value : values) {
                     if (value == null) continue;
-                    DialogValidator.Result result = validateAllowedValues((String)value);
+                    DialogValidator.Result result = validateAllowedValues(value);
                     if (result != null) return result;
                 }
                 return null;
@@ -407,10 +423,10 @@ public class Dialog {
                 return new DialogValidator.Result(false, "Value not allowed");
             }
 
-            public DialogValidator.Result validateLength(List<Object> values) {
-                for (Object value : values) {
+            public DialogValidator.Result validateLength(List<String> values) {
+                for (String value : values) {
                     if (value == null) continue;
-                    DialogValidator.Result result = validateLength((String)value);
+                    DialogValidator.Result result = validateLength(value);
                     if (result != null) return result;
                 }
                 return null;
@@ -507,63 +523,75 @@ public class Dialog {
         public class Section extends Input {
             private List<Input> inputList = new ArrayList<>();
 
+            public Section(String path) {
+                super(path);
+            }
+
             public List<Input> inputList() {
                 return inputList;
             }
 
             public Text createText() {
-                return add(new Text());
+                return add(new Text(inputPath()));
             }
 
             public Section createSection() {
-                return add(new Section());
+                return add(new Section(inputPath()));
             }
 
             public Memo createMemo() {
-                return add(new Memo());
+                return add(new Memo(inputPath()));
             }
 
             public Password createPassword() {
-                return add(new Password());
+                return add(new Password(inputPath()));
             }
 
             public RadioBox createRadioBox() {
-                return add(new RadioBox());
+                return add(new RadioBox(inputPath()));
             }
 
             public CheckBox createCheckBox() {
-                return add(new CheckBox());
+                return add(new CheckBox(inputPath()));
             }
 
             public ComboBox createComboBox() {
-                return add(new ComboBox());
+                return add(new ComboBox(inputPath()));
             }
 
             public File createFile() {
-                return add(new File());
+                return add(new File(inputPath()));
             }
 
             public Picture createPicture() {
-                return add(new Picture());
+                return add(new Picture(inputPath()));
             }
 
             public Date createDate() {
-                return add(new Date());
+                return add(new Date(inputPath()));
             }
 
             public DateTime createDateTime() {
-                return add(new DateTime());
+                return add(new DateTime(inputPath()));
             }
 
             private <I extends Input> I add(I input) {
                 inputList.add(input);
                 return input;
             }
+
+            private String inputPath() {
+                return path().isEmpty() ? name() : path() + PathSeparator + name();
+            }
         }
 
         public class Memo extends Input {
             private MemoMode mode = MemoMode.Raw;
             private int height;
+
+            public Memo(String path) {
+                super(path);
+            }
 
             public MemoMode mode() {
                 return mode;
@@ -587,6 +615,10 @@ public class Dialog {
         public class Password extends Input {
             private Validation validation;
 
+            public Password(String path) {
+                super(path);
+            }
+
             public Validation validation() {
                 return validation;
             }
@@ -596,10 +628,10 @@ public class Dialog {
                 return this;
             }
 
-            public DialogValidator.Result validateLength(List<Object> values) {
-                for (Object value : values) {
+            public DialogValidator.Result validateLength(List<String> values) {
+                for (String value : values) {
                     if (value == null) continue;
-                    DialogValidator.Result result = validateLength((String)value);
+                    DialogValidator.Result result = validateLength(value);
                     if (result != null) return result;
                 }
                 return null;
@@ -662,6 +694,10 @@ public class Dialog {
         public class OptionBox extends Input {
             private DialogSource source = null;
 
+            public OptionBox(String path) {
+                super(path);
+            }
+
             public List<String> options() {
                 if (source == null) return emptyList();
                 return source.options(this);
@@ -674,10 +710,17 @@ public class Dialog {
         }
 
         public class RadioBox extends OptionBox {
+            public RadioBox(String path) {
+                super(path);
+            }
         }
 
         public class CheckBox extends OptionBox {
             private CheckBoxMode mode = CheckBoxMode.Boolean;
+
+            public CheckBox(String path) {
+                super(path);
+            }
 
             public CheckBoxMode mode() {
                 return mode;
@@ -690,11 +733,18 @@ public class Dialog {
         }
 
         public class ComboBox extends OptionBox {
+            public ComboBox(String path) {
+                super(path);
+            }
         }
 
         public class Resource extends Input {
             private boolean showPreview;
             private Validation validation;
+
+            public Resource(String path) {
+                super(path);
+            }
 
             public boolean showPreview() {
                 return showPreview;
@@ -771,13 +821,23 @@ public class Dialog {
         }
 
         public class File extends Resource {
+            public File(String path) {
+                super(path);
+            }
         }
 
         public class Picture extends Resource {
+            public Picture(String path) {
+                super(path);
+            }
         }
 
         public class Date extends Input {
             private String format = "dd/MM/yyyy";
+
+            public Date(String path) {
+                super(path);
+            }
 
             public String format() {
                 return format;
@@ -791,6 +851,10 @@ public class Dialog {
 
         public class DateTime extends Input {
             private String format;
+
+            public DateTime(String path) {
+                super(path);
+            }
 
             public String format() {
                 return format;

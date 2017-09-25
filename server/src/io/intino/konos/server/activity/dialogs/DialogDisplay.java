@@ -4,12 +4,11 @@ import com.google.gson.GsonBuilder;
 import io.intino.konos.Box;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.*;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Date;
+import io.intino.konos.server.activity.dialogs.Dialog.Tab.Resource;
 import io.intino.konos.server.activity.dialogs.DialogValidator.Result;
 import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInputValueIdentifier;
+import io.intino.konos.server.activity.dialogs.schemas.*;
 import io.intino.konos.server.activity.displays.Display;
 import io.intino.konos.server.activity.services.push.User;
 import io.intino.ness.inl.Message;
@@ -28,13 +27,14 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public abstract class DialogDisplay extends Display<DialogNotifier> {
 	private Box box;
-	private Map<String, List<Object>> inputsMap = new HashMap<>();
+	private Form form;
 	private Map<Class<? extends Input>, Function<Input, Result>> validators = new HashMap<>();
 	protected Dialog dialog;
 
 	public DialogDisplay(Box box, Dialog dialog) {
         super();
         this.box = box;
+        this.form = new Form(dialog.context(), input -> dialog.input(input.name()).getClass().getSimpleName().toLowerCase());
         this.dialog(dialog);
         validators.put(Text.class, this::validateText);
         validators.put(Section.class, this::validateSection);
@@ -58,14 +58,13 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		this.dialog.valuesManager(new DialogValuesManager() {
 			@Override
 			public List<Object> values(Input input) {
-				if (inputsMap.containsKey(input.label()))
-					return inputsMap.get(input.label());
-				return inputsMap.getOrDefault(input.name(), singletonList(""));
+				Form.Input formInput = form.input(input.name());
+				return formInput != null ? formInput.values().asObject() : singletonList("");
 			}
 
 			@Override
 			public void values(Input input, List<Object> values) {
-				inputsMap.put(input.name(), values);
+				form.input(input.name()).register(values);
 			}
 		});
 		fillDefaultValues();
@@ -78,42 +77,18 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public void saveValue(DialogInput dialogInput) {
-		Input input = dialog.input(dialogInput.name());
-		register(input, dialogInput.value(), dialogInput.position());
-		refresh(input);
+		form.register(dialogInput.path(), dialogInput.value());
+		refresh(dialog.input(dialogInput.path()));
 	}
 
-	public void addValue(DialogInputValueIdentifier identifier) {
-		Input input = dialog.input(identifier.input());
-		if (!inputsMap.containsKey(input.name())) return;
-		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
-		inputsMap.get(input.name()).add(null);
-		refresh(input);
+	public void addValue(String path) {
+		form.register(path, null);
+		refresh(dialog.input(path));
 	}
 
-	public void removeValue(DialogInputValueIdentifier identifier) {
-		Input input = dialog.input(identifier.input());
-		if (!inputsMap.containsKey(input.name())) return;
-		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
-		inputsMap.get(input.name()).remove(identifier.position());
-		refresh(input);
-	}
-
-	private void register(Input input, Object value, int position) {
-		if (!input.isMultiple()) inputsMap.remove(input.name());
-		if (!inputsMap.containsKey(input.name())) inputsMap.put(input.name(), new ArrayList<>());
-		if (position == inputsMap.get(input.name()).size())
-			inputsMap.get(input.name()).add(position, value);
-		else {
-			inputsMap.get(input.name()).set(position, value);
-		}
-	}
-
-	private void register(Input input, Object value) {
-		int position = 0;
-		if (input.isMultiple() && inputsMap.containsKey(input.name()))
-			position = inputsMap.get(input.name()).size();
-		register(input, value, position);
+	public void removeValue(String path) {
+		form.unRegister(path);
+		refresh(dialog.input(path));
 	}
 
 	private void refresh(Input input) {
@@ -122,10 +97,9 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		notifier.refresh(ValidationBuilder.build(input.name(), result));
 	}
 
-	public void uploadResource(DialogInputResource inputResource) {
-		Input input = dialog.input(inputResource.input());
-		register(input, inputResource.resource());
-		refresh(input);
+	public void uploadResource(DialogInputResource dialogInput) {
+		form.register(dialogInput.path(), dialogInput.resource());
+		refresh(dialog.input(dialogInput.path()));
 	}
 
 	public io.intino.konos.server.activity.spark.ActivityFile downloadResource(String name) {
@@ -153,18 +127,9 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		message.ts(Instant.now().toString());
 		if (user != null) message.write("user", user.username());
 		message.write("context", dialog.context());
-		message.write("form", serializedValues());
+		message.write("form", new GsonBuilder().setPrettyPrinting().create().toJson(form));
 
 		notifier.done(update(message).toString());
-	}
-
-	private String serializedValues() {
-		Map<String, Form.Input> inputMap = inputsMap.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> new Form.Input(inputType(entry.getKey()), entry.getValue())));
-		return new GsonBuilder().setPrettyPrinting().create().toJson(Form.fromMap(dialog.context(), inputMap));
-	}
-
-	private String inputType(String key) {
-		return dialog.input(key).getClass().getSimpleName().toLowerCase();
 	}
 
 	private User user() {
@@ -189,7 +154,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validateText(Input input) {
-		List<Object> values = inputsMap.get(input.name());
+		List<String> values = form.input(input.name()).values().asString();
 		Text text = (Text)input;
 
 		Result result = text.validateEmail(values);
@@ -210,7 +175,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	private Result validatePassword(Input input) {
-		List<Object> values = inputsMap.get(input.name());
+		List<String> values = form.input(input.name()).values().asString();
 		Password password = (Password)input;
 		return password.validateLength(values);
 	}
@@ -221,9 +186,8 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	private Result validateResource(Input input) {
 		Resource resource = (Resource)input;
-		List<Object> resourceValues = inputsMap.get(input.name());
-		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(o -> ((io.intino.konos.server.activity.dialogs.schemas.Resource) o).name(),
-																			  o -> Base64.decodeBase64(((io.intino.konos.server.activity.dialogs.schemas.Resource) o).value())));
+		List<io.intino.konos.server.activity.dialogs.schemas.Resource> resourceValues = form.input(input.name()).values().asResource();
+		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(io.intino.konos.server.activity.dialogs.schemas.Resource::name, o -> Base64.decodeBase64(o.value())));
 
 		Result result = resource.validateMaxSize(valuesMap);
 		if (result != null) return result;
@@ -241,7 +205,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	private void fillDefaultValues() {
 		inputs(dialog).stream().filter(input -> input.defaultValue() != null && (input.defaultValue() instanceof String) && !((String) input.defaultValue()).isEmpty())
-							   .forEach(input -> inputsMap.put(input.name(), singletonList(input.defaultValue())));
+							   .forEach(input -> form.register(input.name(), singletonList(input.defaultValue())));
 	}
 
 	private List<Input> inputs(Dialog dialog) {
