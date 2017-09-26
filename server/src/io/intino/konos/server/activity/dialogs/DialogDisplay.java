@@ -59,13 +59,13 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		this.dialog.valuesManager(new DialogValuesManager() {
 			@Override
 			public List<Object> values(Input input) {
-				Form.Input formInput = form.input(input.name());
+				Form.Input formInput = form.input(input.path());
 				return formInput != null ? formInput.values().asObject() : singletonList("");
 			}
 
 			@Override
 			public void values(Input input, List<Object> values) {
-				form.input(input.name()).register(values);
+				form.input(input.path()).register(values);
 			}
 		});
 		fillDefaultValues();
@@ -77,9 +77,9 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		notifier.render(DialogBuilder.build(dialog));
 	}
 
-	public Form.Input input(String path) {
-		Form.Input input = form.input(path);
-		if (input == null) input = form.register(path, null);
+	public Input input(String path) {
+		Input input = dialog.input(path);
+		input.path(path);
 		return input;
 	}
 
@@ -143,7 +143,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		message.write("context", dialog.context());
 		message.write("form", serialize());
 
-		notifier.done(update(message).toString());
+		notifier.done(update(message, form).toString());
 	}
 
 	private String serialize() {
@@ -159,7 +159,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public abstract void prepare();
-	public abstract Modification update(Message message);
+	public abstract Modification update(Message message, Form form);
 
 	public enum Modification {
 		ItemModified, CatalogModified
