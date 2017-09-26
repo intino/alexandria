@@ -84,6 +84,11 @@ public class Dialog {
         return this;
     }
 
+    public Dialog valuesManager(DialogValuesManager loader) {
+        this.valuesManager = loader;
+        return this;
+    }
+
     public Tab createTab(String label) {
         Tab tab = new Tab(label);
         this.tabList().add(tab);
@@ -94,16 +99,18 @@ public class Dialog {
         return tabList;
     }
 
-    public Dialog valuesManager(DialogValuesManager loader) {
-        this.valuesManager = loader;
-        return this;
-    }
-
-    public <I extends Input> I input(String key) {
+    public <I extends Input> I input(String path) {
+        String key = nameOf(path);
         Input result = inputs().stream()
                                .filter(input -> input.name().equals(key) || input.label().equals(key))
                                .findFirst().orElse(null);
         return result != null ? (I)result : null;
+    }
+
+    private String nameOf(String key) {
+        String[] path = key.split(PathSeparatorRegExp);
+        if (path.length == 0) return key;
+        return path[path.length-1];
     }
 
     private List<Input> inputs() {
@@ -115,6 +122,7 @@ public class Dialog {
     private List<Input> inputs(Input input) {
         if (!(input instanceof Tab.Section)) return singletonList(input);
         List<Input> result = new ArrayList<>();
+        result.add(input);
         ((Tab.Section)input).inputList.forEach(child -> result.addAll(inputs(child)));
         return result;
     }
@@ -213,7 +221,7 @@ public class Dialog {
             }
 
             public String path() {
-                return name;
+                return !path.isEmpty() ? path + PathSeparator + name() : name();
             }
 
             public String label() {
@@ -271,24 +279,6 @@ public class Dialog {
                 return this;
             }
 
-            public <T extends Object> T value() {
-                return (T) values().get(0);
-            }
-
-            public <T extends Object> List<T> values() {
-                return (List<T>) (valuesManager != null ? valuesManager.values(this) : singletonList(defaultValue()));
-            }
-
-            public Input value(Object value) {
-                return values(singletonList(value));
-            }
-
-            public Input values(List<Object> values) {
-                if (valuesManager == null) return this;
-                valuesManager.values(this, values);
-                return this;
-            }
-
             public <T extends Object> T defaultValue() {
                 return (T) defaultValue;
             }
@@ -319,6 +309,24 @@ public class Dialog {
             public DialogValidator.Result validate() {
                 if (validator == null) return null;
                 return validator.validate(this);
+            }
+
+            public <T extends Object> T value() {
+                return (T) values().get(0);
+            }
+
+            public <T extends Object> List<T> values() {
+                return (List<T>) (valuesManager != null ? valuesManager.values(this) : singletonList(defaultValue()));
+            }
+
+            public Input value(Object value) {
+                return values(singletonList(value));
+            }
+
+            public Input values(List<Object> values) {
+                if (valuesManager == null) return this;
+                valuesManager.values(this, values);
+                return this;
             }
 
             public <I extends Input> I input(String key) {

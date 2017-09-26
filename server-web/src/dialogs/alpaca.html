@@ -99,11 +99,17 @@
             font-size: 11pt;
             font-weight: bold;
         }
+        .alpaca-field-array .alpaca-field label, .alpaca-field-array .alpaca-field-object legend {
+            display: none;
+        }
         .input.section {
             border: 0 !important;
         }
         .alpaca-field-object {
             padding: 0;
+        }
+        .alpaca-field-object .alpaca-container {
+            padding: 10px;
         }
         .alpaca-field-object .alpaca-container-item .alpaca-field {
             border: 0;
@@ -231,6 +237,28 @@
             var inputWidget = AlpacaWidgetFactory.get(inputElement.input.type, inputElement.input.multiple);
             inputWidget.focus(inputElement.input, inputElement);
         };
+
+        document.pathOf = function(input) {
+            var parent = input.getParent();
+            var path = parent == null ? input.schema.title : "";
+
+            if (parent != null)
+                path = (isSection(parent) || isMultiple(parent) ? parent.schema.title + input.getPath() : input.getPath()) + (path != "" ? "." + path : "");
+
+            path = path.replace(/\//g, ".");
+            path = path.replace("[", "");
+            path = path.replace("]", "");
+
+            return path[0] == "." ? path.substring(1) : path;
+        };
+
+        function isSection(input) {
+            return input.schema.inputType == "section";
+        }
+
+        function isMultiple(input) {
+            return input.schema.type == "array";
+        }
 
     </script>
 

@@ -1,6 +1,5 @@
 package io.intino.konos.server.activity.dialogs;
 
-import com.google.gson.Gson;
 import io.intino.konos.server.activity.dialogs.schemas.Resource;
 
 import java.util.*;
@@ -14,9 +13,9 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class Form {
-    final TypeResolver typeResolver;
-    String context = null;
-    Map<String, List<Input>> inputsMap = new HashMap<>();
+    private transient final TypeResolver typeResolver;
+    private transient String context = null;
+    private Map<String, List<Input>> inputsMap = new HashMap<>();
 
     private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
@@ -27,6 +26,10 @@ public class Form {
 
     public String context() {
         return context;
+    }
+
+    public Map<String, List<Input>> inputs() {
+        return inputsMap;
     }
 
     public Input input(String path) {
@@ -59,15 +62,16 @@ public class Form {
         return input != null ? input.find(Arrays.copyOfRange(names, isMultiple(names) ? 2 : 1, names.length)) : null;
     }
 
-    public void register(String path, Object value) {
+    public Input register(String path, Object value) {
         String[] names = path.split(PathSeparatorRegExp);
-        if (names.length == 0) return;
+        if (names.length == 0) return null;
 
         int position = position(path);
         if (!exists(names[0], position)) register(names[0], position, Input.create(path, typeResolver));
 
         Input input = input(names[0], position);
-        input.register(Arrays.copyOfRange(names, isMultiple(names) ? 2 : 1, names.length), value);
+        if (!isMultiple(path)) input.clear();
+        return input.register(Arrays.copyOfRange(names, isMultiple(names) ? 2 : 1, names.length), value);
     }
 
     public void unRegister(String path) {
@@ -96,10 +100,6 @@ public class Form {
         inputsMap.get(name).set(pos, input);
     }
 
-    public static Form fromJson(String json) {
-        return new Gson().fromJson(json, Form.class);
-    }
-
     public static Form fromMap(String context, Map<String, Object> paths, TypeResolver resolver) {
         Form form = new Form(context, resolver);
         paths.entrySet().forEach(entry -> form.register(entry.getKey(), entry.getValue()));
@@ -107,17 +107,23 @@ public class Form {
     }
 
     public static class Input {
-        private String name;
+        private transient String name;
         private List<Object> values = new ArrayList<>();
-        TypeResolver typeResolver;
+        protected transient TypeResolver typeResolver;
 
         public Input(String name, TypeResolver typeResolver) {
             this.name = name;
             this.typeResolver = typeResolver;
         }
 
-        public void register(String[] path, Object value) {
+        public Input clear() {
+            this.values.clear();
+            return this;
+        }
+
+        public Input register(String[] path, Object value) {
             this.values.add(value);
+            return this;
         }
 
         protected void register(List<Object> values) {
@@ -170,6 +176,12 @@ public class Form {
             };
         }
 
+        public Input value(Object value) {
+            this.values.clear();
+            this.values.add(value);
+            return this;
+        }
+
         public Values values() {
             return new Values() {
                 @Override
@@ -202,6 +214,12 @@ public class Form {
                     return values;
                 }
             };
+        }
+
+        public Input values(List<Object> values) {
+            this.values.clear();
+            this.values.addAll(values);
+            return this;
         }
 
         private static Input create(String path, TypeResolver resolver) {
@@ -252,6 +270,10 @@ public class Form {
             return inputsMap.containsKey(name) && inputsMap.get(name).size() > pos && inputsMap.get(name).get(pos) != null;
         }
 
+        public Map<String, List<Input>> inputs() {
+            return inputsMap;
+        }
+
         public List<Input> inputs(String name) {
             name = normalizeName(name);
             return inputsMap.get(name);
@@ -275,14 +297,15 @@ public class Form {
         }
 
         @Override
-        public void register(String[] path, Object value) {
-            if (path.length == 0) return;
+        public Input register(String[] path, Object value) {
+            if (path.length == 0) return null;
 
             int position = position(path);
             if (!exists(path[0], position)) register(path[0], position, Input.create(path, typeResolver));
 
             Input input = input(path[0], position);
-            input.register(Arrays.copyOfRange(path, isMultiple(path) ? 2 : 1, path.length), value);
+            if (!isMultiple(path)) input.clear();
+            return input.register(Arrays.copyOfRange(path, isMultiple(path) ? 2 : 1, path.length), value);
         }
 
         @Override
