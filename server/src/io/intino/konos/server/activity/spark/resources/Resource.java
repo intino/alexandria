@@ -26,20 +26,14 @@ import java.util.UUID;
 
 public abstract class Resource implements io.intino.konos.server.Resource {
 	private final DisplayNotifierProvider notifierProvider;
-	private final String userHomePath;
 	protected final ActivitySparkManager manager;
 
 	static final Map<String, String> authenticationIdMap = new HashMap<>();
 	static final Map<String, Authentication> authenticationMap = new HashMap<>();
 
-	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider, String userHomePath) {
+	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
 		this.manager = manager;
 		this.notifierProvider = notifierProvider;
-		this.userHomePath = userHomePath;
-	}
-
-	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
-		this(manager, notifierProvider, "");
 	}
 
 	@Override
@@ -172,13 +166,13 @@ public abstract class Resource implements io.intino.konos.server.Resource {
 		Browser browser = manager.currentSession().browser();
 		browser.baseUrl(manager.baseUrl());
 		browser.homeUrl(manager.baseUrl());
-		browser.userHomeUrl(manager.baseUrl() + userHomePath);
+		browser.userHomeUrl(manager.baseUrl() + userHomePath());
 		browser.language(manager.languageFromUrl());
 		browser.metadataLanguage(manager.languageFromHeader());
 	}
 
 	public String userHomePath() {
-		return userHomePath;
+		return "/user";
 	}
 }
 
