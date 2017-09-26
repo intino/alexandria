@@ -23,7 +23,7 @@ def type(activity)
 		public static void init(ActivityKonosSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~ActivityConfiguration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
 			spark.route("/push").push(new PushService());
-			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider(), [$userHome+quoted?""]).execute());
+			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
 
 			$resource...[$NL]
@@ -48,7 +48,7 @@ def type(abstractPage) trigger(resource)
 end
 
 def trigger(path)
-	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()[, $userHome+quoted]).execute());
+	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
 def type(display) trigger(notifier)
