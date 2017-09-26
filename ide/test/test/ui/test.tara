@@ -9,14 +9,4 @@ Dialog(url = "", label = "Información adicional", description = "Complementar i
 		Text(label = "Teléfono") phone > readonly = true
 		Text(label = "Email") mail > readonly = true
 		Text(label = "Asunto") issue > readonly = true
-
-	Tab(label = "Datos cliente")
-		Text(label = "Cliente") client
-		ComboBox(label = "Nacionalidad") nationality > source = "nationalities"
-		Date(label = "Check In") checkIn
-		Date(label = "Check Out") checkOut
-		Memo(label = "Observaciones") comments
-
-		Section(label = "asuntos") issues as Multiple(min = 0, max = 2)
-			ComboBox("asunto") issue > source = "issues"
-			ComboBox("satisfaccion") measureType > source = "measures"
+		CheckBox(label = "Finalizado", mode = Boolean) finished
