@@ -87,16 +87,16 @@ def type(dialog)
 					}
 				},
 
-				_inputChanged : function(input, value, position) {
-					this.saveValue({ name: input.label, value: value, position: position });
+				_inputChanged : function(path, value) {
+					this.saveValue({ path: path, value: value });
 				},
 
-				_inputValueAdded : function(input, position) {
-					this.addValue({ input: input.label, position: position });
+				_inputValueAdded : function(path) {
+					this.addValue(path);
 				},
 
-				_inputValueRemoved : function(input, position) {
-					this.removeValue({ input: input.label, position: position });
+				_inputValueRemoved : function(path) {
+					this.removeValue(path);
 				},
 
 				_operationExecuted : function(operation, parameters) {

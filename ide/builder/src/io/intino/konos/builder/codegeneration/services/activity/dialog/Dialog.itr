@@ -3,7 +3,6 @@ def type(dialog)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import io.intino.ness.inl.Message;
-	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
 	import io.intino.konos.server.activity.dialogs.Modification;
 
@@ -14,7 +13,7 @@ def type(dialog)
 		}
 
 		@Override
-		public void prepare(Dialog dialog) {
+		public void prepare() {
 		}
 
 		@Override

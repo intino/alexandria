@@ -1,5 +1,7 @@
 package io.intino.konos.server.activity.dialogs;
 
+import com.google.gson.GsonBuilder;
+import io.intino.konos.server.activity.dialogs.adapters.gson.FormAdapter;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -122,6 +124,16 @@ public class Form_ {
         form.unRegister("Campo 1.0.Campo 2");
         assertNotNull(form.input("Campo 1.0"));
         assertNull(form.input("Campo 1.0.Campo 2"));
+    }
+
+    @Test
+    public void should_serialize_to_gson() throws Exception {
+        Map<String, Object> paths = new HashMap() {{ put("Campo 1.0.Campo 2", "2"); put("Campo 1.1.Campo 2.0", "3"); put("Campo 1.1.Campo 2.1", "4"); }};
+        Form form = Form.fromMap(null, paths, input -> "text");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Form.class, new FormAdapter());
+        gsonBuilder.setPrettyPrinting();
+        System.out.println(gsonBuilder.create().toJson(form));
     }
 
 }
