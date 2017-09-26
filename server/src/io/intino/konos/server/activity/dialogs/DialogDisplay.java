@@ -54,6 +54,10 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		return (B) box;
 	}
 
+	public Dialog dialog() {
+		return dialog;
+	}
+
 	public void dialog(Dialog dialog) {
 		this.dialog = dialog;
 		this.dialog.valuesManager(new DialogValuesManager() {
@@ -75,12 +79,6 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
     public void init() {
     	prepare();
 		notifier.render(DialogBuilder.build(dialog));
-	}
-
-	public Input input(String path) {
-		Input input = dialog.input(path);
-		input.path(path);
-		return input;
 	}
 
 	public void saveValue(DialogInput dialogInput) {
@@ -143,7 +141,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		message.write("context", dialog.context());
 		message.write("form", serialize());
 
-		notifier.done(update(message, form).toString());
+		notifier.done(update(message).toString());
 	}
 
 	private String serialize() {
@@ -159,7 +157,7 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 	}
 
 	public abstract void prepare();
-	public abstract Modification update(Message message, Form form);
+	public abstract Modification update(Message message);
 
 	public enum Modification {
 		ItemModified, CatalogModified

@@ -166,13 +166,10 @@ public abstract class Resource implements io.intino.konos.server.Resource {
 		Browser browser = manager.currentSession().browser();
 		browser.baseUrl(manager.baseUrl());
 		browser.homeUrl(manager.baseUrl());
-		browser.userHomeUrl(manager.baseUrl() + userHomePath());
+		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
 		browser.language(manager.languageFromUrl());
 		browser.metadataLanguage(manager.languageFromHeader());
 	}
 
-	public String userHomePath() {
-		return "/user";
-	}
 }
 
