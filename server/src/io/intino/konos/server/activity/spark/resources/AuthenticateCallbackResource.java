@@ -33,7 +33,7 @@ public class AuthenticateCallbackResource extends Resource {
             listenForLogOut(action);
             action.whenLoggedIn(userOf(userInfo()));
 
-            manager.redirect(manager.baseUrl() + userHomePath());
+            manager.redirect(manager.baseUrl() + manager.userHomePath());
         } catch (CouldNotObtainAccessToken error) {
             manager.write(error);
         }

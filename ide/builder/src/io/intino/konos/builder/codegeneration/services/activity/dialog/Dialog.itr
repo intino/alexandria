@@ -18,7 +18,7 @@ def type(dialog)
 		}
 
 		@Override
-		public Modification update(Message message, Form form) {
+		public Modification update(Message message) {
 			return Modification.ItemModified;
 		}
 

@@ -14,15 +14,19 @@ import java.util.Locale;
 public class ActivitySparkManager extends io.intino.konos.server.spark.SparkManager {
 	private final PushService pushService;
 	private final AuthService authService;
+	private final boolean hasUserHome;
+
+	public static final String KonosUserHomePath = "/konos/user";
 
 	private static final String XForwardedProto = "X-Forwarded-Proto";
 	private static final String XForwardedPath = "X-Forwarded-Path";
 	private static final String XForwardedPort = "X-Forwarded-Port";
 
-	public ActivitySparkManager(Request request, Response response, PushService pushService, AuthService authService) {
+	public ActivitySparkManager(Request request, Response response, PushService pushService, AuthService authService, boolean hasUserHome) {
 		super(request, response);
 		this.pushService = pushService;
 		this.authService = authService;
+		this.hasUserHome = hasUserHome;
 	}
 
 	public PushService pushService() {
@@ -64,6 +68,10 @@ public class ActivitySparkManager extends io.intino.konos.server.spark.SparkMana
 		result = addHeaderPath(result);
 
 		return result;
+	}
+
+	public String userHomePath() {
+		return hasUserHome ? KonosUserHomePath : "";
 	}
 
 	public String requestUrl() {

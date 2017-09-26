@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -20,6 +21,7 @@ public class Dialog {
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
     private DialogValuesManager valuesManager = null;
+    private Consumer<String> loadInputListener = null;
 
     public enum TabsMode { Tabs, Wizard }
     public enum TextEdition { Normal, Uppercase, Lowercase, Email, Url }
@@ -104,7 +106,9 @@ public class Dialog {
         Input result = inputs().stream()
                                .filter(input -> input.name().equals(key) || input.label().equals(key))
                                .findFirst().orElse(null);
-        return result != null ? (I)result : null;
+        if (result == null) return null;
+        result.path(path);
+        return (I)result;
     }
 
     private String nameOf(String key) {
@@ -330,8 +334,8 @@ public class Dialog {
                 return this;
             }
 
-            public <I extends Input> I input(String key) {
-                return Dialog.this.input(key);
+            public <I extends Input> I input(String path) {
+                return Dialog.this.input(path);
             }
 
             protected DialogValidator.Result validateLength(String value, int min, int max) {
