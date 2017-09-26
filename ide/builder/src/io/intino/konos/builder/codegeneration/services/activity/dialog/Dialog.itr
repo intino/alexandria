@@ -3,6 +3,7 @@ def type(dialog)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import io.intino.ness.inl.Message;
+	import io.intino.konos.server.activity.dialogs.Form;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
 	import io.intino.konos.server.activity.dialogs.Modification;
 
@@ -17,7 +18,7 @@ def type(dialog)
 		}
 
 		@Override
-		public Modification update(Message message) {
+		public Modification update(Message message, Form form) {
 			return Modification.ItemModified;
 		}
 
