@@ -17,8 +17,8 @@ import java.util.Optional;
 
 public class AuthenticateCallbackResource extends Resource {
 
-    public AuthenticateCallbackResource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider, String userHomePath) {
-        super(manager, notifierProvider, userHomePath);
+    public AuthenticateCallbackResource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+        super(manager, notifierProvider);
     }
 
     @Override
