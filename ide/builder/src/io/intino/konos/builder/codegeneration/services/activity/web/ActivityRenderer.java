@@ -44,7 +44,7 @@ public class ActivityRenderer {
 				addSlot("package", packageName).
 				addSlot("name", activity.name$()).
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(activity.abstractPageList()));
-		if (activity.userHome() != null) frame.addSlot("userHome", activity.userHome().paths().get(0));
+		if (activity.userHome() != null) frame.addSlot("userHome", activity.userHome().name$());
 		if (!dialogs.isEmpty())
 			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
 		if (!displays.isEmpty())
@@ -78,7 +78,7 @@ public class ActivityRenderer {
 		for (String path : resource.paths()) {
 			Set<String> custom = Commons.extractParameters(path);
 			Frame pathFrame = new Frame().addSlot("value", path).addSlot("name", resource.name$());
-			if (activity.userHome() != null) pathFrame.addSlot("userHome", activity.userHome().paths().get(0));
+			if (activity.userHome() != null) pathFrame.addSlot("userHome", activity.userHome().name$());
 			if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
 			frame.addSlot("path", pathFrame);
 		}
