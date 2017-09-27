@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
+import io.intino.konos.server.activity.dialogs.Value;
 import io.intino.konos.server.activity.dialogs.adapters.*;
 
 public class DialogInputBuilder {
@@ -48,7 +49,11 @@ public class DialogInputBuilder {
     }
 
     private static String value(Object value) {
-        return value != null && (value instanceof String) ? (String) value : "";
+        if (value instanceof Value)
+            return ((Value) value).asString();
+        if (value instanceof String)
+            return (String) value;
+        return "";
     }
 
     private static JsonElement values(Input input) {
