@@ -50,7 +50,7 @@ public class DialogInputBuilder {
 
     private static String value(Object value) {
         if (value instanceof Value)
-            return ((Value) value).asString();
+            return value.toString();
         if (value instanceof String)
             return (String) value;
         return "";
