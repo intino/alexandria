@@ -22,7 +22,7 @@ public class Dialog {
     private List<Tab> tabList = new ArrayList<>();
     private final Form form;
 
-    public Dialog(Form form) {
+    public Dialog() {
         this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
     }
 
@@ -115,7 +115,7 @@ public class Dialog {
     }
 
     public <I extends Input> I input(String path) {
-        String name = form.input(path).name();
+        String name = formInput(path).name();
         Input result = inputs().stream()
                                .filter(input -> input.name().equals(name))
                                .findFirst().orElse(null);
@@ -136,6 +136,12 @@ public class Dialog {
         result.add(input);
         ((Tab.Section)input).inputList.forEach(child -> result.addAll(inputs(child)));
         return result;
+    }
+
+    private Form.Input formInput(String path) {
+        Form.Input input = form.input(path);
+        if (input == null) input = form.register(path, null);
+        return input;
     }
 
     public class Tab {
@@ -228,7 +234,7 @@ public class Dialog {
             }
 
             public String path() {
-                return path;
+                return path != null ? path : name();
             }
 
             public Input path(String path) {
