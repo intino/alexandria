@@ -1,7 +1,5 @@
 package io.intino.konos.server.activity.dialogs;
 
-import io.intino.konos.server.activity.dialogs.schemas.Resource;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +8,6 @@ import java.util.stream.IntStream;
 import static io.intino.konos.server.activity.dialogs.Dialog.PathSeparator;
 import static io.intino.konos.server.activity.dialogs.Dialog.PathSeparatorRegExp;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 
 public class Form {
     private transient final TypeResolver typeResolver;
@@ -19,13 +16,17 @@ public class Form {
 
     private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
-    public Form(String context, TypeResolver typeResolver) {
-        this.context = context;
+    public Form(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
     }
 
     public String context() {
         return context;
+    }
+
+    public Form context(String context) {
+        this.context = context;
+        return this;
     }
 
     public Map<String, List<Input>> inputs() {
@@ -101,14 +102,15 @@ public class Form {
     }
 
     public static Form fromMap(String context, Map<String, Object> paths, TypeResolver resolver) {
-        Form form = new Form(context, resolver);
+        Form form = new Form(resolver);
+        form.context(context);
         paths.entrySet().forEach(entry -> form.register(entry.getKey(), entry.getValue()));
         return form;
     }
 
     public static class Input {
         private transient String name;
-        private List<Object> values = new ArrayList<>();
+        private Values values = new Values();
         protected transient TypeResolver typeResolver;
 
         public Input(String name, TypeResolver typeResolver) {
@@ -122,13 +124,13 @@ public class Form {
         }
 
         public Input register(String[] path, Object value) {
-            this.values.add(value);
+            this.values.add(new Value(value));
             return this;
         }
 
         protected void register(List<Object> values) {
             this.values.clear();
-            this.values.addAll(values);
+            values.forEach(v -> values.add(new Value(v)));
         }
 
         public String name() {
@@ -140,85 +142,21 @@ public class Form {
         }
 
         public Value value() {
-            Object value = values.size() > 0 ? values.get(0) : null;
-            if (value == null) return null;
+            return values.size() > 0 ? values.get(0) : null;
+        }
 
-            return new Value() {
-                @Override
-                public String asString() {
-                    return (String) value;
-                }
-
-                @Override
-                public boolean asBoolean() {
-                    return Boolean.valueOf((String) value);
-                }
-
-                @Override
-                public int asInteger() {
-                    return Integer.valueOf((String) value);
-                }
-
-                @Override
-                public double asDouble() {
-                    return Double.valueOf((String) value);
-                }
-
-                @Override
-                public Resource asResource() {
-                    return (Resource) value;
-                }
-
-                @Override
-                public Object asObject() {
-                    return value;
-                }
-            };
+        public Values values() {
+            return values;
         }
 
         public Input value(Object value) {
             this.values.clear();
-            this.values.add(value);
+            this.values.add(new Value(value));
             return this;
         }
 
-        public Values values() {
-            return new Values() {
-                @Override
-                public List<String> asString() {
-                    return values.stream().map(v -> (String) v).collect(toList());
-                }
-
-                @Override
-                public List<Boolean> asBoolean() {
-                    return values.stream().map(v -> Boolean.valueOf((String) v)).collect(toList());
-                }
-
-                @Override
-                public List<Integer> asInteger() {
-                    return values.stream().map(v -> Integer.valueOf((String) v)).collect(toList());
-                }
-
-                @Override
-                public List<Double> asDouble() {
-                    return values.stream().map(v -> Double.valueOf((String) v)).collect(toList());
-                }
-
-                @Override
-                public List<Resource> asResource() {
-                    return values.stream().map(v -> (Resource) v).collect(toList());
-                }
-
-                @Override
-                public List<Object> asObject() {
-                    return values;
-                }
-            };
-        }
-
         public Input values(List<Object> values) {
-            this.values.clear();
-            this.values.addAll(values);
+            register(values);
             return this;
         }
 
@@ -237,24 +175,6 @@ public class Form {
 
         public void remove(String name, int pos) {
             values.remove(pos);
-        }
-
-        public interface Value {
-            String asString();
-            boolean asBoolean();
-            int asInteger();
-            double asDouble();
-            Resource asResource();
-            Object asObject();
-        }
-
-        public interface Values {
-            List<String> asString();
-            List<Boolean> asBoolean();
-            List<Integer> asInteger();
-            List<Double> asDouble();
-            List<Resource> asResource();
-            List<Object> asObject();
         }
     }
 

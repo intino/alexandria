@@ -1,12 +1,13 @@
 package io.intino.konos.server.activity.dialogs;
 
+import com.google.gson.GsonBuilder;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
+import io.intino.konos.server.activity.dialogs.adapters.gson.FormAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -16,12 +17,29 @@ public class Dialog {
     private String url;
     private String label;
     private String description;
-    private String context;
     private TabsMode mode = TabsMode.Tabs;
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
-    private DialogValuesManager valuesManager = null;
-    private Consumer<String> loadInputListener = null;
+    private final Form form;
+
+    public Dialog(Form form) {
+        this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
+    }
+
+    public void register(String path, Object value) {
+        form.register(path, value);
+    }
+
+    public void unRegister(String path) {
+        form.unRegister(path);
+    }
+
+    public String serialize() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Form.class, new FormAdapter());
+        gsonBuilder.setPrettyPrinting();
+        return gsonBuilder.create().toJson(form);
+    }
 
     public enum TabsMode { Tabs, Wizard }
     public enum TextEdition { Normal, Uppercase, Lowercase, Email, Url }
@@ -60,11 +78,11 @@ public class Dialog {
     }
 
     public String context() {
-        return context;
+        return this.form.context();
     }
 
     public Dialog context(String context) {
-        this.context = context;
+        this.form.context(context);
         return this;
     }
 
@@ -86,11 +104,6 @@ public class Dialog {
         return this;
     }
 
-    public Dialog valuesManager(DialogValuesManager loader) {
-        this.valuesManager = loader;
-        return this;
-    }
-
     public Tab createTab(String label) {
         Tab tab = new Tab(label);
         this.tabList().add(tab);
@@ -102,19 +115,13 @@ public class Dialog {
     }
 
     public <I extends Input> I input(String path) {
-        String key = nameOf(path);
+        String name = form.input(path).name();
         Input result = inputs().stream()
-                               .filter(input -> input.name().equals(key) || input.label().equals(key))
+                               .filter(input -> input.name().equals(name))
                                .findFirst().orElse(null);
         if (result == null) return null;
         result.path(path);
         return (I)result;
-    }
-
-    private String nameOf(String key) {
-        String[] path = key.split(PathSeparatorRegExp);
-        if (path.length == 0) return key;
-        return path[path.length-1];
     }
 
     private List<Input> inputs() {
@@ -316,12 +323,13 @@ public class Dialog {
                 return validator.validate(this);
             }
 
-            public <T extends Object> T value() {
-                return (T) values().get(0);
+            public Value value() {
+                return values().get(0);
             }
 
-            public <T extends Object> List<T> values() {
-                return (List<T>) (valuesManager != null ? valuesManager.values(this) : singletonList(defaultValue()));
+            public Values values() {
+                Form.Input formInput = form.input(path());
+                return formInput != null ? formInput.values() : new Values() {{ add(new Value(defaultValue())); }};
             }
 
             public Input value(Object value) {
@@ -329,8 +337,7 @@ public class Dialog {
             }
 
             public Input values(List<Object> values) {
-                if (valuesManager == null) return this;
-                valuesManager.values(this, values);
+                values.forEach(value -> form.register(path(), value));
                 return this;
             }
 
@@ -827,4 +834,5 @@ public class Dialog {
             }
         }
     }
+
 }
