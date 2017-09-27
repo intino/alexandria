@@ -4,10 +4,13 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.intino.konos.server.activity.dialogs.Form;
+import io.intino.konos.server.activity.dialogs.Value;
 import io.intino.konos.server.activity.dialogs.schemas.Resource;
 
 import java.io.IOException;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 public class FormAdapter extends TypeAdapter<Form> {
 
@@ -73,7 +76,7 @@ public class FormAdapter extends TypeAdapter<Form> {
     }
 
     private void writeValues(JsonWriter out, Form.Input input) throws IOException {
-        List<Object> values = input.values().asObject();
+        List<Object> values = input.values().stream().map(Value::asObject).collect(toList());
         if (values.size() <= 0) return;
 
         if (values.size() == 1) {
