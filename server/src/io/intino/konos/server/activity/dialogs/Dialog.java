@@ -115,9 +115,9 @@ public class Dialog {
     }
 
     public <I extends Input> I input(String path) {
-        String name = formInput(path).name();
+        String key = formInput(path).name();
         Input result = inputs().stream()
-                               .filter(input -> input.name().equals(name))
+                               .filter(input -> input.name().equals(key) || input.label().equals(key))
                                .findFirst().orElse(null);
         if (result == null) return null;
         result.path(path);
