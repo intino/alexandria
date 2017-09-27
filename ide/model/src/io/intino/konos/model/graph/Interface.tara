@@ -16,7 +16,7 @@ Concept:Named Activity
 			var string[] paths = "" "/" "/index" "/home"
 
 		sub:{0..1} UserHome
-			var string[] paths = "/user"
+			var string[] paths = "/konos/user"
 		sub Page
 
 Facet Restricted on Activity.AbstractPage
