@@ -14,7 +14,7 @@ def type(box)
 	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
 	$hasREST~import io.intino.konos.server.KonosSpark;][
-    $hasActivity~import io.intino.konos.server.activity.displays.Soul;]
+    $hasActivity+hide~import io.intino.konos.server.activity.displays.Soul;]
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
@@ -22,7 +22,7 @@ def type(box)
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
-        $hasActivity~protected Map<String, Soul> activitySouls = new HashMap<>();]
+        $hasActivity+hide~protected Map<String, Soul> activitySouls = new HashMap<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -66,11 +66,13 @@ def type(box)
 
 		[$hasActivity~
 		public void registerSoul(String clientId, Soul soul) {
+			if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);
 			activitySouls.put(clientId, soul);
 		}
 		]
 		[$hasActivity~
 		public void unRegisterSoul(String clientId) {
+			if(owner != null) (($parent~Box) owner).unRegisterSoul(clientId);
 			activitySouls.remove(clientId);
 		}
 		]

@@ -57,7 +57,7 @@ public class AbstractBoxRenderer {
 		List<Activity> activities = konos.activityList();
 
 		if (!activities.isEmpty())
-			frame.addSlot("hasActivity", "");
+			frame.addSlot("hasActivity", new Frame().addSlot("parent", parent));
 
 		for (Activity activity : activities)
 			frame.addSlot("activity", (Frame) activityFrame(activity, name));
