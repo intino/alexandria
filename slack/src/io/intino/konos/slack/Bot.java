@@ -69,7 +69,7 @@ public abstract class Bot {
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
 			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
-			final String messageContent = message.getSlackFile() != null ? unescapeHtml4(message.getSlackFile().getComment()) : unescapeHtml4(message.getMessageContent());
+			final String messageContent = message.getSlackFile() != null ? messageContent(message) : unescapeHtml4(message.getMessageContent());
 			String[] content = Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
 			String userName = message.getSender().getUserName();
 			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
@@ -87,6 +87,12 @@ public abstract class Bot {
 			logger.log(Level.SEVERE, e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
+	}
+
+	private String messageContent(SlackMessagePosted message) {
+		String comment = message.getSlackFile().getComment();
+		String str = "ha comentado: ";
+		return comment != null ? unescapeHtml4(comment) : message.getMessageContent().substring(message.getMessageContent().indexOf(str) + str.length());
 	}
 
 	private boolean isAlreadyProcessed(SlackMessagePosted message) {
