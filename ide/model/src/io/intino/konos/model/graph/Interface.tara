@@ -44,7 +44,7 @@ Concept Sensor extends Component
         var word:{Tabs Wizard} mode = Tabs
         var boolean readonly = false
 
-        Concept Toolbar
+        Concept:{0..1} Toolbar
         	Concept Operation
         		var string label
 
