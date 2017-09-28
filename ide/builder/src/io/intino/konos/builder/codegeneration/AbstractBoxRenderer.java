@@ -33,7 +33,7 @@ public class AbstractBoxRenderer {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.module = module;
-		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.parent = parent;
 		this.hasModel = hasModel;
 	}
@@ -55,9 +55,11 @@ public class AbstractBoxRenderer {
 
 	private void activities(Frame frame, String name) {
 		List<Activity> activities = konos.activityList();
-
-		if (!activities.isEmpty())
-			frame.addSlot("hasActivity", "");
+		if (!activities.isEmpty()) {
+			final Frame activityFrame = new Frame();
+			if (parent != null) activityFrame.addSlot("parent", parent);
+			frame.addSlot("hasActivity", activityFrame);
+		}
 
 		for (Activity activity : activities)
 			frame.addSlot("activity", (Frame) activityFrame(activity, name));

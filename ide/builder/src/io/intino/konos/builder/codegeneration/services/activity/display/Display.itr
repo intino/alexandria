@@ -8,6 +8,7 @@ def type(display)
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
     import io.intino.konos.server.activity.displays.Display;
     import io.intino.konos.server.activity.services.push.User;
+    $parent+import
 
     public class $name+firstUpperCase~Display extends Display<$name+firstUpperCase~DisplayNotifier> {
         private $box+firstUpperCase~Box box;
@@ -16,7 +17,14 @@ def type(display)
             super();
             this.box = box;
         }
-
+		[
+        @Override
+		protected void init() {
+			super.init();
+			$parent
+			$innerDisplay...[$NL]
+		}
+	]
 		$request...[$NL$NL]
     }
 end
@@ -41,4 +49,16 @@ end
 
 def type(schemaImport)
 	import $package.schemas.*;
+end
+
+def trigger(import)
+	import $package.displays.*;
+end
+
+def trigger(parent)
+	addAndPersonify(new $value~Display(($dsl~Box) box.owner()));
+end
+
+def trigger(innerDisplay)
+	addAndPersonify(new $value+firstUpperCase~Display((box)));
 end

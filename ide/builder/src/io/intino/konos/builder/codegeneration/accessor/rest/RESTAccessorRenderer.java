@@ -161,12 +161,12 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame dateInvokeSentence(DateData dateData) {
-		return new Frame().addTypes("invokeSentence", "file");
+		return new Frame().addTypes("invokeSentence", "date");
 		//TODO
 	}
 
 	private Frame dateTimeInvokeSentence(DateTimeData dateTimeData) {
-		return new Frame().addTypes("invokeSentence", "file");
+		return new Frame().addTypes("invokeSentence", "datetime");
 		//TODO
 	}
 

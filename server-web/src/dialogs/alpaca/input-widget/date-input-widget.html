@@ -9,7 +9,7 @@
         };
         widget.prototype.addEvents = function(input, alpacaInput, container) {
             alpacaInput.onChange = function(event) {
-                document.onInputChange(input, this.getValue());
+                document.onInputChange(document.pathOf(alpacaInput), this.getValue());
             }
         };
 

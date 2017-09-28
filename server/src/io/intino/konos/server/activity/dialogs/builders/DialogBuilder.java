@@ -22,7 +22,26 @@ public class DialogBuilder {
         result.add("label", new JsonPrimitive(dialog.label()));
         result.add("description", new JsonPrimitive(dialog.description()));
         result.addProperty("readonly", dialog.readonly());
+        result.add("toolbar", jsonToolbar(dialog.toolbar()));
         result.add("tabList", jsonTabListOf(dialog.tabList()));
+        return result;
+    }
+
+    public static JsonObject jsonToolbar(io.intino.konos.server.activity.dialogs.Dialog.Toolbar toolbar) {
+        JsonObject result = new JsonObject();
+        result.add("operationList", jsonOperationList(toolbar.operationList()));
+        return result;
+    }
+
+    public static JsonArray jsonOperationList(List<io.intino.konos.server.activity.dialogs.Dialog.Toolbar.Operation> operationList) {
+        JsonArray result = new JsonArray();
+        operationList.forEach(operation -> result.add(jsonOperationOf(operation)));
+        return result;
+    }
+
+    public static JsonObject jsonOperationOf(io.intino.konos.server.activity.dialogs.Dialog.Toolbar.Operation operation) {
+        JsonObject result = new JsonObject();
+        result.addProperty("label", operation.label());
         return result;
     }
 

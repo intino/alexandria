@@ -14,7 +14,7 @@ def type(box)
 	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
 	$hasREST~import io.intino.konos.server.KonosSpark;][
-    $hasActivity~import io.intino.konos.server.activity.displays.Soul;]
+    $hasActivity+hide~import io.intino.konos.server.activity.displays.Soul;]
 
 	public abstract class AbstractBox extends io.intino.konos.Box {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
@@ -22,7 +22,7 @@ def type(box)
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
-        $hasActivity~protected Map<String, Soul> activitySouls = new HashMap<>();]
+        $hasActivity+hide~protected Map<String, Soul> activitySouls = new java.util.HashMap<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -64,17 +64,8 @@ def type(box)
 			$dataLake+quit...[$NL]
 		}
 
-		[$hasActivity~
-		public void registerSoul(String clientId, Soul soul) {
-			activitySouls.put(clientId, soul);
-		}
-		]
-		[$hasActivity~
-		public void unRegisterSoul(String clientId) {
-			activitySouls.remove(clientId);
-		}
-		]
-		[$service+getter...[$NL$NL]]
+		[$hasActivity+registerSoul~
+		][$service+getter...[$NL$NL]]
 
 		$dataLake+getter...[$NL$NL]
 
@@ -156,7 +147,7 @@ def type(service & jms) trigger(jms)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
-		new java.lang.Thread(() -> {
+		java.lang.Thread thread = new java.lang.Thread(() -> {
 			try {
 				connection.start();
 				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
@@ -164,8 +155,10 @@ def type(service & jms) trigger(jms)
 			} catch (javax.jms.JMSException e) {
 				logger.error(e.getMessage());
 			}
-		}).start();
-	} catch (javax.jms.JMSException e) {
+		}, "jms init");
+		thread.start();
+		thread.join(10000);
+	} catch (javax.jms.JMSException | InterruptedException e) {
 		logger.error(e.getMessage());
 	}
 end
@@ -173,12 +166,18 @@ end
 def type(dataLake) trigger(init)
 	if (configuration().nessConfiguration() == null) return;
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
-	new java.lang.Thread(()-> {
+	java.lang.Thread thread = new java.lang.Thread(()-> {
 		this.ness.start();
 		$package.ness.NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		logger.info("Ness datalake: started!");
-	}).start();
+	}, "ness init");
+	try {
+		thread.start();
+		thread.join(10000);
+	} catch (InterruptedException e) {
+		logger.error(e.getMessage());
+	}
 end
 
 def type(service & jmx) trigger(field)
@@ -231,7 +230,7 @@ def type(service) type(jms) trigger(quit)
 end
 
 def type(dataLake) trigger(quit)
-	if (ness != null) ness.closeSession();
+	if (ness != null) ness.stop();
 end
 
 def type(service) trigger(quit)
@@ -248,6 +247,19 @@ def type(task) trigger(getter)
 	public io.intino.konos.scheduling.KonosTasker tasker() {
 		return this.tasker;
 	}
+end
+
+def trigger(registerSoul)
+	public void registerSoul(String clientId, Soul soul) {
+		[if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		activitySouls.put(clientId, soul);
+	}
+
+	public void unRegisterSoul(String clientId) {
+		[if(owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		activitySouls.remove(clientId);
+	}
+
 end
 
 def trigger(import)

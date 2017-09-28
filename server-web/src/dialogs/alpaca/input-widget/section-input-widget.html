@@ -19,6 +19,7 @@
         converter.prototype.schema = function(input) {
             var result = AlpacaInputConverter.prototype.schema.call(this, input);
             result.type = "object";
+            result.section = true;
             result.properties = {};
 
             for (var i=0; i<input.inputList.length; i++) {

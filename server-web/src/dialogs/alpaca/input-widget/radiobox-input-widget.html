@@ -45,7 +45,7 @@
         }
 
         function _atInputChange(alpacaInput, input, value) {
-            document.onInputChange(input, value);
+            document.onInputChange(document.pathOf(alpacaInput), value);
         }
 
         return converter;

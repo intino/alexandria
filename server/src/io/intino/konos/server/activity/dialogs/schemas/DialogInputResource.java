@@ -2,20 +2,20 @@ package io.intino.konos.server.activity.dialogs.schemas;
 
 public class DialogInputResource implements java.io.Serializable {
 
-	private String input = "";
+	private String path = "";
 	private Resource resource;
 
-	public String input() {
-		return this.input;
+	public String path() {
+		return this.path;
+	}
+
+	public DialogInputResource path(String path) {
+		this.path = path;
+		return this;
 	}
 
 	public Resource resource() {
 		return this.resource;
-	}
-
-	public DialogInputResource input(String input) {
-		this.input = input;
-		return this;
 	}
 
 	public DialogInputResource resource(Resource resource) {

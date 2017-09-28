@@ -22,14 +22,24 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Parameter(in = path) version as Text
 			Response as Object(schema = SystemSchema)
 			Exception(BadRequest)
-
+	Resource(path = "/snapshot/:id/opinions/download") downloadSnapshotOpinions
+		Get (description="Download opinions at some instant") DDD
+			Parameter(in = path, required = true) id as Text
+			Parameter(in = query, required = true) username as Text
+			Parameter(in = query) date2 as Date
+			Parameter(in = query) date as DateTime
+			Parameter(in = query) language as Text
+			Parameter(in = query) from as LongInteger
+			Parameter(in = query) to as LongInteger
+			Response as File
+			Exception(code = Unauthorized)
 	Resource(path = "/servers") servers
 		Get(description = "List of servers")
 			Response as Text
 			Exception(BadRequest)
 		Post(description = "Create server")
 			Parameter(in = query) url as Text
-			Response
+			Response as DateTime
 			Exception (BadRequest)
 
 	Resource(path = "/servers/:server") server

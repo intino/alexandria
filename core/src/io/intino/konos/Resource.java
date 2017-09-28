@@ -8,12 +8,14 @@ import java.util.Map;
 
 public class Resource {
 	private String name;
+	private String fileName;
 	private final InputStream content;
 	private final String contentType;
 	private Map<String, String> parameters;
 
-	public Resource(String name, String contentType, InputStream content) {
+	public Resource(String name, String fileName, String contentType, InputStream content) {
 		this.name = name;
+		this.fileName = fileName;
 		this.content = content;
 		this.contentType = contentType;
 		this.parameters = new HashMap<>();
@@ -36,6 +38,10 @@ public class Resource {
 
 	public String name() {
 		return name;
+	}
+
+	public String fileName() {
+		return fileName;
 	}
 
 	public String contentType() {

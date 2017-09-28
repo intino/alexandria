@@ -205,7 +205,7 @@ public class RestfulAccessor implements RestfulApi {
 			}
 
 			HttpEntity entity = response.getEntity();
-			return new Resource(response.getFirstHeader("Content-Disposition").getValue(), entity.getContentType().getValue(), entity.getContent());
+			return new Resource(response.getFirstHeader("Content-Disposition").getValue(), response.getFirstHeader("Content-Disposition").getValue(), entity.getContentType().getValue(), entity.getContent());
 		} catch (URISyntaxException | IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
@@ -293,11 +293,11 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	private void addContent(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
-		builder.addPart("content", new InputStreamBody(resource.content(), resource.contentType()));
+		builder.addPart(resource.name(), new InputStreamBody(resource.content(), ContentType.create(resource.contentType()), resource.fileName()));
 	}
 
 	private void addParameters(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
-		resource.parameters().entrySet().forEach(param -> builder.addPart(param.getKey(), new StringBody(param.getValue(), ContentType.APPLICATION_JSON)));
+		resource.parameters().forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
 	}
 
 	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
@@ -317,7 +317,7 @@ public class RestfulAccessor implements RestfulApi {
 	private Map<String, String> parametersOf(Resource resource) {
 		return new HashMap<String, String>() {{
 			put("contentType", resource.contentType());
-			resource.parameters().entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
+			resource.parameters().forEach(this::put);
 		}};
 	}
 
