@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.activity.dialog;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Dialog.Tab;
+import io.intino.konos.model.graph.Dialog.Toolbar.Operation;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.multiple.dialog.tab.MultipleInput;
 import org.siani.itrules.Template;
@@ -43,22 +44,34 @@ public class DialogDisplayRenderer {
 		if (!dialog.label().isEmpty()) frameDialog.addSlot("label", dialog.label());
 		if (!dialog.description().isEmpty()) frameDialog.addSlot("description", dialog.description());
 		frame.addSlot("dialog", frameDialog);
-		for (Operation operation : dialog.toolbar().operationList())
-			frameDialog.addSlot("operation", frameOf(operation));
-		for (Tab tab : dialog.tabList())
-			frameDialog.addSlot("tab", frameOf(tab));
+		createToolbar(frame, dialog.name$(), dialog.toolbar());
+		for (Tab tab : dialog.tabList()) frameDialog.addSlot("tab", frameOf(tab));
 		Commons.writeFrame(new File(gen, DIALOGS), newDialog, template().format(frame));
 	}
 
-	private Frame frameOf(Operation operation) {
+	private void createToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+		if (toolbar != null) customToolbar(frame, dialog, toolbar);
+		else defaultToolbar(frame, dialog);
+	}
+
+	private void defaultToolbar(Frame frame, String dialog) {
+		frame.addSlot("operation", frameOf(dialog, "send"));
+	}
+
+	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+		for (Operation operation : toolbar.operationList())
+			frame.addSlot("operation", frameOf(dialog, operation.label()));
+	}
+
+	private Frame frameOf(String dialog, String operation) {
 		final Frame operationFrame = new Frame().addTypes("operation");
-		if (!operation.label().isEmpty()) operationFrame.addSlot("label", operation.label());
-		operationFrame.addSlot("execution", executionOf(operation));
+		if (!operation.isEmpty()) operationFrame.addSlot("label", operation);
+		operationFrame.addSlot("execution", executionOf(dialog, operation));
 		return operationFrame;
 	}
 
-	private Frame executionOf(Operation operation) {
-		return new Frame().addSlot("dialog", operation.core$().ownerAs(Dialog.Toolbar.class).core$().ownerAs(Dialog.class).name$()).addSlot("label", operation.label());
+	private Frame executionOf(String dialog, String operation) {
+		return new Frame().addSlot("dialog", dialog).addSlot("label", operation);
 	}
 
 	private Frame frameOf(Tab tab) {

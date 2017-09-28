@@ -22,7 +22,7 @@ def type(box)
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
-        $hasActivity+hide~protected Map<String, Soul> activitySouls = new HashMap<>();]
+        $hasActivity+hide~protected Map<String, Soul> activitySouls = new java.util.HashMap<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
