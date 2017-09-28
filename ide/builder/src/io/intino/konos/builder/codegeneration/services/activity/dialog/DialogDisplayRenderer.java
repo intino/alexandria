@@ -40,12 +40,12 @@ public class DialogDisplayRenderer {
 		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
 		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "DialogDisplay");
-		final Frame frameDialog = new Frame().addTypes("dialog");
-		if (!dialog.label().isEmpty()) frameDialog.addSlot("label", dialog.label());
-		if (!dialog.description().isEmpty()) frameDialog.addSlot("description", dialog.description());
-		frame.addSlot("dialog", frameDialog);
-		createToolbar(frame, dialog.name$(), dialog.toolbar());
-		for (Tab tab : dialog.tabList()) frameDialog.addSlot("tab", frameOf(tab));
+		final Frame dialogFrame = new Frame().addTypes("dialog");
+		if (!dialog.label().isEmpty()) dialogFrame.addSlot("label", dialog.label());
+		if (!dialog.description().isEmpty()) dialogFrame.addSlot("description", dialog.description());
+		frame.addSlot("dialog", dialogFrame);
+		createToolbar(dialogFrame, dialog.name$(), dialog.toolbar());
+		for (Tab tab : dialog.tabList()) dialogFrame.addSlot("tab", frameOf(tab));
 		Commons.writeFrame(new File(gen, DIALOGS), newDialog, template().format(frame));
 	}
 
@@ -60,18 +60,13 @@ public class DialogDisplayRenderer {
 
 	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
 		for (Operation operation : toolbar.operationList())
-			frame.addSlot("operation", frameOf(dialog, operation.label()));
+			frame.addSlot("operation", frameOf(dialog, operation.name$()));
 	}
 
 	private Frame frameOf(String dialog, String operation) {
-		final Frame operationFrame = new Frame().addTypes("operation");
+		final Frame operationFrame = new Frame().addTypes("operation").addSlot("dialog", dialog).addSlot("execution", operation);
 		if (!operation.isEmpty()) operationFrame.addSlot("label", operation);
-		operationFrame.addSlot("execution", executionOf(dialog, operation));
 		return operationFrame;
-	}
-
-	private Frame executionOf(String dialog, String operation) {
-		return new Frame().addSlot("dialog", dialog).addSlot("label", operation);
 	}
 
 	private Frame frameOf(Tab tab) {

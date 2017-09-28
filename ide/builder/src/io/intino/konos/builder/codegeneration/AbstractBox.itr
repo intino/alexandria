@@ -64,19 +64,8 @@ def type(box)
 			$dataLake+quit...[$NL]
 		}
 
-		[$hasActivity~
-		public void registerSoul(String clientId, Soul soul) {
-			if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);
-			activitySouls.put(clientId, soul);
-		}
-		]
-		[$hasActivity~
-		public void unRegisterSoul(String clientId) {
-			if(owner != null) (($parent~Box) owner).unRegisterSoul(clientId);
-			activitySouls.remove(clientId);
-		}
-		]
-		[$service+getter...[$NL$NL]]
+		[$hasActivity+registerSoul~
+		][$service+getter...[$NL$NL]]
 
 		$dataLake+getter...[$NL$NL]
 
@@ -258,6 +247,19 @@ def type(task) trigger(getter)
 	public io.intino.konos.scheduling.KonosTasker tasker() {
 		return this.tasker;
 	}
+end
+
+def trigger(registerSoul)
+	public void registerSoul(String clientId, Soul soul) {
+		[if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		activitySouls.put(clientId, soul);
+	}
+
+	public void unRegisterSoul(String clientId) {
+		[if(owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		activitySouls.remove(clientId);
+	}
+
 end
 
 def trigger(import)

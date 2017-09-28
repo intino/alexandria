@@ -41,15 +41,15 @@ public class DialogRenderer {
 	}
 
 	private void renderDialog(Dialog dialog) {
+		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "Dialog");
+		if (Commons.javaFile(new File(src, DIALOGS), newDialog).exists()) return;
 		Frame frame = new Frame().addTypes("dialog");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
 		processToolbar(frame, dialog.toolbar());
 		for (Tab tab : dialog.tabList()) processTab(frame, tab);
-		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "Dialog");
-		if (!Commons.javaFile(new File(src, DIALOGS), newDialog).exists())
-			Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
+		Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
 	}
 
 	private void processToolbar(Frame frame, Dialog.Toolbar toolbar) {
@@ -70,7 +70,7 @@ public class DialogRenderer {
 	}
 
 	private void processExecution(Frame frame, Dialog.Toolbar.Operation operation) {
-		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", boxName).addSlot("name", operation.label()));
+		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", boxName).addSlot("name", operation.name$()));
 	}
 
 	private void processTab(Frame frame, Tab tab) {
