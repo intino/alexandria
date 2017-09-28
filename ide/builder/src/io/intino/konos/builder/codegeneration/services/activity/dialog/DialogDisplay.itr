@@ -14,11 +14,6 @@ def type(dialogDisplay)
             super(box, buildDialog(box));
         }
 
-        @Override
-        protected String assertionName() {
-        	return "$name~.assertion";
-        }
-
         private static Dialog buildDialog($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             Dialog dialog = new Dialog();
             $dialog
@@ -31,6 +26,7 @@ end
 def type(dialog)
 	[dialog.label("$label");]
 	[dialog.description("$description");]
+	$operation...[$NL]
 	$tab...[$NL]
 end
 
@@ -39,6 +35,10 @@ def type(tab)
 	$input...[$NL]
 end
 
+
+def type(operation)
+	dialog.toolbar().createOperation()[.label("$label")][$execution];
+end
 
 def type(section)
 	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = (Dialog.Tab.Section) w$owner+SnakeCaseToCamelCase.createSection()[$multiple];
@@ -96,6 +96,10 @@ end
 
 def type(validation & resource)
 	new Dialog.Tab.Resource.Validation()[.maxSize($maxSize)][.allowedExtensions($allowedExtensions)]
+end
+
+def type(execution)
+	.execute(operation -> $dialog+FirstUpperCase~Dialog.Toolbar.$name(box, dialog, Dialog.Toolbar.Operation input))
 end
 
 def type(validator)

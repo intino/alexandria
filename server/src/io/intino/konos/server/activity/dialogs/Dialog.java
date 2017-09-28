@@ -2,6 +2,7 @@ package io.intino.konos.server.activity.dialogs;
 
 import com.google.gson.GsonBuilder;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
+import io.intino.konos.server.activity.dialogs.DialogExecution.Modification;
 import io.intino.konos.server.activity.dialogs.adapters.gson.FormAdapter;
 
 import java.util.ArrayList;
@@ -20,25 +21,12 @@ public class Dialog {
     private TabsMode mode = TabsMode.Tabs;
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
+    private Toolbar toolbar = new Toolbar();
+    private Object target = null;
     private final Form form;
 
     public Dialog() {
         this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
-    }
-
-    public void register(String path, Object value) {
-        form.register(path, value);
-    }
-
-    public void unRegister(String path) {
-        form.unRegister(path);
-    }
-
-    public String serialize() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Form.class, new FormAdapter());
-        gsonBuilder.setPrettyPrinting();
-        return gsonBuilder.create().toJson(form);
     }
 
     public enum TabsMode { Tabs, Wizard }
@@ -77,15 +65,6 @@ public class Dialog {
         return this;
     }
 
-    public String context() {
-        return this.form.context();
-    }
-
-    public Dialog context(String context) {
-        this.form.context(context);
-        return this;
-    }
-
     public TabsMode mode() {
         return this.mode;
     }
@@ -104,10 +83,27 @@ public class Dialog {
         return this;
     }
 
+    public <T extends Object> T target() {
+        return (T) this.target;
+    }
+
+    public Dialog target(Object target) {
+        this.target = target;
+        return this;
+    }
+
+    public Toolbar toolbar() {
+        return this.toolbar;
+    }
+
     public Tab createTab(String label) {
         Tab tab = new Tab(label);
         this.tabList().add(tab);
         return tab;
+    }
+
+    public Toolbar.Operation operation(String label) {
+        return toolbar.operation(label);
     }
 
     public List<Tab> tabList() {
@@ -142,6 +138,66 @@ public class Dialog {
         Form.Input input = form.input(path);
         if (input == null) input = form.register(path, null);
         return input;
+    }
+
+    public void register(String path, Object value) {
+        form.register(path, value);
+    }
+
+    public void unRegister(String path) {
+        form.unRegister(path);
+    }
+
+    public String serialize() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Form.class, new FormAdapter());
+        gsonBuilder.setPrettyPrinting();
+        return gsonBuilder.create().toJson(form);
+    }
+
+    public class Toolbar {
+        private List<Operation> operationList = new ArrayList<>();
+
+        public List<Operation> operationList() {
+            return operationList;
+        }
+
+        public Operation createOperation() {
+            return add(new Operation());
+        }
+
+        public Operation operation(String label) {
+            return operationList.stream().filter(o -> o.label().equals(label)).findFirst().orElse(null);
+        }
+
+        public class Operation {
+            private String label;
+            private DialogExecution launcher = null;
+
+            public String label() {
+                return label;
+            }
+
+            public Operation label(String label) {
+                this.label = label;
+                return this;
+            }
+
+            public Operation execute(DialogExecution launcher) {
+                this.launcher = launcher;
+                return this;
+            }
+
+            public Modification execute() {
+                if (launcher == null) return Modification.ItemModified;
+                return launcher.execute(this);
+            }
+        }
+
+        private Operation add(Operation input) {
+            operationList.add(input);
+            return input;
+        }
     }
 
     public class Tab {

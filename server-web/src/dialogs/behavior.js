@@ -53,7 +53,7 @@ KonosDialogWidgetBehaviors.DialogBehavior = {
     },
 
     _operationExecuted : function(operation, parameters) {
-        this.execute(operation.name);
+        this.execute(operation);
     },
 
     _getUrl: function() {

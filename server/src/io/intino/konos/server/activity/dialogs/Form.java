@@ -11,22 +11,12 @@ import static java.util.Collections.emptyList;
 
 public class Form {
     private transient final TypeResolver typeResolver;
-    private transient String context = null;
     private Map<String, List<Input>> inputsMap = new HashMap<>();
 
     private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
     public Form(TypeResolver typeResolver) {
         this.typeResolver = typeResolver;
-    }
-
-    public String context() {
-        return context;
-    }
-
-    public Form context(String context) {
-        this.context = context;
-        return this;
     }
 
     public Map<String, List<Input>> inputs() {
@@ -101,9 +91,8 @@ public class Form {
         inputsMap.get(name).set(pos, input);
     }
 
-    public static Form fromMap(String context, Map<String, Object> paths, TypeResolver resolver) {
+    public static Form fromMap(Map<String, Object> paths, TypeResolver resolver) {
         Form form = new Form(resolver);
-        form.context(context);
         paths.entrySet().forEach(entry -> form.register(entry.getKey(), entry.getValue()));
         return form;
     }
