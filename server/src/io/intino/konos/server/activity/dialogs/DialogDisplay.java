@@ -1,6 +1,5 @@
 package io.intino.konos.server.activity.dialogs;
 
-import com.google.gson.GsonBuilder;
 import io.intino.konos.Box;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.*;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Date;
@@ -9,15 +8,11 @@ import io.intino.konos.server.activity.dialogs.builders.DialogBuilder;
 import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
-import io.intino.konos.server.activity.dialogs.schemas.DialogInputValueIdentifier;
 import io.intino.konos.server.activity.displays.Display;
-import io.intino.konos.server.activity.services.push.User;
-import io.intino.ness.inl.Message;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 
@@ -28,9 +23,8 @@ import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public abstract class DialogDisplay extends Display<DialogNotifier> {
 	private Box box;
-	private Map<String, List<Object>> inputsMap = new HashMap<>();
-	private Map<Class<? extends Input>, Function<Input, Result>> validators = new HashMap<>();
-	protected Dialog dialog;
+	private Map<Class<? extends Input>, Function<FormInput, Result>> validators = new HashMap<>();
+	private Dialog dialog;
 
 	public DialogDisplay(Box box, Dialog dialog) {
         super();
@@ -53,84 +47,57 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		return (B) box;
 	}
 
+	public Dialog dialog() {
+		return dialog;
+	}
+
 	public void dialog(Dialog dialog) {
 		this.dialog = dialog;
-		this.dialog.valuesManager(new DialogValuesManager() {
-			@Override
-			public List<Object> values(Input input) {
-				if (inputsMap.containsKey(input.label()))
-					return inputsMap.get(input.label());
-				return inputsMap.getOrDefault(input.name(), singletonList(""));
-			}
-
-			@Override
-			public void values(Input input, List<Object> values) {
-				inputsMap.put(input.name(), values);
-			}
-		});
 		fillDefaultValues();
 	}
 
 	@Override
     public void init() {
-    	prepare(dialog);
+    	prepare();
 		notifier.render(DialogBuilder.build(dialog));
 	}
 
 	public void saveValue(DialogInput dialogInput) {
-		Input input = dialog.input(dialogInput.name());
-		register(input, dialogInput.value(), dialogInput.position());
-		refresh(input);
+		dialog.register(dialogInput.path(), dialogInput.value());
+		refresh(dialog.input(dialogInput.path()), dialogInput.path());
 	}
 
-	public void addValue(DialogInputValueIdentifier identifier) {
-		Input input = dialog.input(identifier.input());
-		if (!inputsMap.containsKey(input.name())) return;
-		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
-		inputsMap.get(input.name()).add(identifier.position());
-		refresh(input);
+	public void addValue(String path) {
 	}
 
-	public void removeValue(DialogInputValueIdentifier identifier) {
-		Input input = dialog.input(identifier.input());
-		if (!inputsMap.containsKey(input.name())) return;
-		if (identifier.position() >= inputsMap.get(input.name()).size()) return;
-		inputsMap.get(input.name()).remove(identifier.position());
-		refresh(input);
+	public void removeValue(String path) {
+		dialog.unRegister(path);
+		refresh(dialog.input(path), path);
 	}
 
-	private void register(Input input, Object value, int position) {
-		if (!input.isMultiple()) inputsMap.remove(input.name());
-		if (!inputsMap.containsKey(input.name())) inputsMap.put(input.name(), new ArrayList<>());
-		if (position == inputsMap.get(input.name()).size())
-			inputsMap.get(input.name()).add(position, value);
-		else {
-			inputsMap.get(input.name()).set(position, value);
-		}
-	}
+	private void refresh(Input input, String path) {
+		Result result = validate(new FormInput() {
+			@Override
+			public Input input() {
+				return input;
+			}
 
-	private void register(Input input, Object value) {
-		int position = 0;
-		if (input.isMultiple() && inputsMap.containsKey(input.name()))
-			position = inputsMap.get(input.name()).size();
-		register(input, value, position);
-	}
-
-	private void refresh(Input input) {
-		Result result = validate(input);
+			@Override
+			public String path() {
+				return path;
+			}
+		});
 		if (result == null) return;
 		notifier.refresh(ValidationBuilder.build(input.name(), result));
 	}
 
-	public void uploadResource(DialogInputResource inputResource) {
-		Input input = dialog.input(inputResource.input());
-		register(input, inputResource.resource());
-		refresh(input);
+	public void uploadResource(DialogInputResource dialogInput) {
+		dialog.register(dialogInput.path(), dialogInput.resource());
+		refresh(dialog.input(dialogInput.path()), dialogInput.path());
 	}
 
-	public io.intino.konos.server.activity.spark.ActivityFile downloadResource(String name) {
-		Input input = dialog.input(name);
-		io.intino.konos.server.activity.dialogs.schemas.Resource resource = (io.intino.konos.server.activity.dialogs.schemas.Resource)input.value();
+	public io.intino.konos.server.activity.spark.ActivityFile downloadResource(String path) {
+		io.intino.konos.server.activity.dialogs.schemas.Resource resource = dialog.input(path).value().asResource();
 
 		return new io.intino.konos.server.activity.spark.ActivityFile() {
 			@Override
@@ -146,51 +113,23 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		};
 	}
 
-	public void execute() {
-		Message message = new Message(assertionName());
-		User user = user();
-
-		message.ts(Instant.now().toString());
-		if (user != null) message.write("user", user.username());
-		message.write("context", dialog.context());
-		message.write("form", serializedValues());
-
-		notifier.done(update(message).toString());
+	public void execute(String name) {
+		Dialog.Toolbar.Operation operation = dialog.operation(name);
+		notifier.done(operation.execute().toString());
 	}
 
-	private String serializedValues() {
-		Map<String, Form.Input> inputMap = inputsMap.entrySet().stream().collect(toMap(Map.Entry::getKey, entry -> new Form.Input(inputType(entry.getKey()), entry.getValue())));
-		return new GsonBuilder().setPrettyPrinting().create().toJson(Form.fromMap(dialog.context(), inputMap));
-	}
+	public abstract void prepare();
 
-	private String inputType(String key) {
-		return dialog.input(key).getClass().getSimpleName().toLowerCase();
-	}
-
-	private User user() {
-		if (session() == null) return null;
-		return session().user();
-	}
-
-	public abstract void prepare(Dialog dialog);
-	public abstract Modification update(Message message);
-
-	public enum Modification {
-		ItemModified, CatalogModified
-	}
-
-	protected abstract String assertionName();
-
-	private Result validate(Input input) {
-		Result result = input.validate();
+	private Result validate(FormInput formInput) {
+		Result result = formInput.input().validate();
 		if (result != null) return result;
 
-		return validators.get(input.getClass()).apply(input);
+		return validators.get(formInput.input().getClass()).apply(formInput);
 	}
 
-	private Result validateText(Input input) {
-		List<Object> values = inputsMap.get(input.name());
-		Text text = (Text)input;
+	private Result validateText(FormInput formInput) {
+		List<String> values = dialog.input(formInput.path()).values().asString();
+		Text text = (Text)formInput.input();
 
 		Result result = text.validateEmail(values);
 		if (result != null) return result;
@@ -201,29 +140,28 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		return text.validateLength(values);
 	}
 
-	private Result validateSection(Input input) {
+	private Result validateSection(FormInput formInput) {
 		return null;
 	}
 
-	private Result validateMemo(Input input) {
+	private Result validateMemo(FormInput formInput) {
 		return null;
 	}
 
-	private Result validatePassword(Input input) {
-		List<Object> values = inputsMap.get(input.name());
-		Password password = (Password)input;
+	private Result validatePassword(FormInput formInput) {
+		List<String> values = dialog.input(formInput.path()).values().asString();
+		Password password = (Password)formInput.input();
 		return password.validateLength(values);
 	}
 
-	private Result validateOptionBox(Input input) {
+	private Result validateOptionBox(FormInput formInput) {
 		return null;
 	}
 
-	private Result validateResource(Input input) {
-		Resource resource = (Resource)input;
-		List<Object> resourceValues = inputsMap.get(input.name());
-		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(o -> ((io.intino.konos.server.activity.dialogs.schemas.Resource) o).name(),
-																			  o -> Base64.decodeBase64(((io.intino.konos.server.activity.dialogs.schemas.Resource) o).value())));
+	private Result validateResource(FormInput formInput) {
+		Resource resource = (Resource)formInput.input();
+		List<io.intino.konos.server.activity.dialogs.schemas.Resource> resourceValues = dialog.input(formInput.path()).values().asResource();
+		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(io.intino.konos.server.activity.dialogs.schemas.Resource::name, o -> Base64.decodeBase64(o.value())));
 
 		Result result = resource.validateMaxSize(valuesMap);
 		if (result != null) return result;
@@ -231,21 +169,25 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		return resource.validateExtension(new ArrayList<>(valuesMap.keySet()));
 	}
 
-	private Result validateDate(Input input) {
+	private Result validateDate(FormInput formInput) {
 		return null;
 	}
 
-	private Result validateDateTime(Input input) {
+	private Result validateDateTime(FormInput formInput) {
 		return null;
 	}
 
 	private void fillDefaultValues() {
 		inputs(dialog).stream().filter(input -> input.defaultValue() != null && (input.defaultValue() instanceof String) && !((String) input.defaultValue()).isEmpty())
-							   .forEach(input -> inputsMap.put(input.name(), singletonList(input.defaultValue())));
+							   .forEach(input -> dialog.register(input.name(), singletonList(input.defaultValue())));
 	}
 
 	private List<Input> inputs(Dialog dialog) {
 		return dialog.tabList().stream().map(Dialog.Tab::inputList).flatMap(Collection::stream).collect(toList());
 	}
 
+	interface FormInput {
+		Input input();
+		String path();
+	}
 }

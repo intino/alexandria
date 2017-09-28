@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.activity.dialog;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Dialog.Tab;
+import io.intino.konos.model.graph.Dialog.Toolbar.Operation;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.multiple.dialog.tab.MultipleInput;
 import org.siani.itrules.Template;
@@ -39,13 +40,33 @@ public class DialogDisplayRenderer {
 		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
 		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "DialogDisplay");
-		final Frame frameDialog = new Frame().addTypes("dialog");
-		if (!dialog.label().isEmpty()) frameDialog.addSlot("label", dialog.label());
-		if (!dialog.description().isEmpty()) frameDialog.addSlot("description", dialog.description());
-		frame.addSlot("dialog", frameDialog);
-		for (Tab tab : dialog.tabList())
-			frameDialog.addSlot("tab", frameOf(tab));
+		final Frame dialogFrame = new Frame().addTypes("dialog");
+		if (!dialog.label().isEmpty()) dialogFrame.addSlot("label", dialog.label());
+		if (!dialog.description().isEmpty()) dialogFrame.addSlot("description", dialog.description());
+		frame.addSlot("dialog", dialogFrame);
+		createToolbar(dialogFrame, dialog.name$(), dialog.toolbar());
+		for (Tab tab : dialog.tabList()) dialogFrame.addSlot("tab", frameOf(tab));
 		Commons.writeFrame(new File(gen, DIALOGS), newDialog, template().format(frame));
+	}
+
+	private void createToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+		if (toolbar != null) customToolbar(frame, dialog, toolbar);
+		else defaultToolbar(frame, dialog);
+	}
+
+	private void defaultToolbar(Frame frame, String dialog) {
+		frame.addSlot("operation", frameOf(dialog, "send"));
+	}
+
+	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+		for (Operation operation : toolbar.operationList())
+			frame.addSlot("operation", frameOf(dialog, operation.name$()));
+	}
+
+	private Frame frameOf(String dialog, String operation) {
+		final Frame operationFrame = new Frame().addTypes("operation").addSlot("dialog", dialog).addSlot("execution", operation);
+		if (!operation.isEmpty()) operationFrame.addSlot("label", operation);
+		return operationFrame;
 	}
 
 	private Frame frameOf(Tab tab) {
@@ -77,7 +98,6 @@ public class DialogDisplayRenderer {
 	private Frame frameOf(Tab.Section section) {
 		final Frame frame = new Frame().addTypes("section");
 		if (!section.name$().isEmpty()) frame.addSlot("name", section.name$());
-		if (!section.label().isEmpty()) frame.addSlot("label", section.label());
 		final List<Tab.Input> inputs = section.inputList();
 		for (Tab.Input input : inputs) processInput(frame, input);
 		addCommon(frame, section);
@@ -155,7 +175,6 @@ public class DialogDisplayRenderer {
 	private Frame frameOf(Tab.File file) {
 		final Frame frame = new Frame().addTypes("file");
 		if (file.validation() != null) frame.addSlot("validation", frameOf(file.validation()));
-
 		addCommon(frame, file);
 		return frame;
 	}

@@ -117,11 +117,11 @@ public class FullRenderer {
 	}
 
 	private void ui() {
-		new DisplayRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
-		new ActivityAccessorCreator(module, graph).execute();
+		new ActivityAccessorCreator(module, graph, parent).execute();
 		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 

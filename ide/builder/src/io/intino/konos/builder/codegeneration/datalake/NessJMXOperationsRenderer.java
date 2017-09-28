@@ -7,6 +7,8 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
+
 public class NessJMXOperationsRenderer {
 	private final File gen;
 	private File src;
@@ -25,9 +27,10 @@ public class NessJMXOperationsRenderer {
 		Frame frame = new Frame("operations").
 				addSlot("package", packageName).
 				addSlot("box", boxName);
-		Commons.writeFrame(new File(gen, "ness"), "NessOperations", operationsTemplate().format(frame));
-		Commons.writeFrame(new File(gen, "ness"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
-		Commons.writeFrame(new File(src, "ness"), "GraphProvider", providerTemplate().format(frame));
+		writeFrame(new File(gen, "ness"), "NessOperations", operationsTemplate().format(frame));
+		writeFrame(new File(gen, "ness"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
+		if (!Commons.javaFile(new File(src, "ness"), "ReflowAssistant").exists())
+			writeFrame(new File(src, "ness"), "ReflowAssistant", providerTemplate().format(frame));
 	}
 
 	private Template operationsTemplate() {
@@ -35,6 +38,6 @@ public class NessJMXOperationsRenderer {
 	}
 
 	private Template providerTemplate() {
-		return Formatters.customize(GraphProviderTemplate.create());
+		return Formatters.customize(ReflowAssistantTemplate.create());
 	}
 }

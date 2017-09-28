@@ -1,20 +1,29 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.util.io.ZipUtil;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.model.graph.*;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.siani.itrules.model.Frame;
+import sun.net.www.protocol.file.FileURLConnection;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.Exception;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static java.io.File.separator;
@@ -27,11 +36,13 @@ public class ActivityAccessorRenderer {
 	private Module appModule;
 	private final File genDirectory;
 	private final Activity activity;
+	private String parent;
 
-	ActivityAccessorRenderer(Module appModule, Module webModule, Activity activity) {
+	ActivityAccessorRenderer(Module appModule, Module webModule, Activity activity, String parent) {
 		this.appModule = appModule;
 		this.genDirectory = rootDirectory(webModule);
 		this.activity = activity;
+		this.parent = parent;
 	}
 
 	public ActivityAccessorRenderer(File rootDirectory, Activity activity) {
@@ -92,7 +103,10 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createDisplayWidget(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		final Frame frame = new Frame().addTypes("widget").
+				addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.parentDisplay() != null)
+			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-widget.html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
@@ -152,27 +166,42 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createStaticFiles() throws IOException {
-		new File(genDirectory, SRC_DIRECTORY + separator + "fonts").mkdirs();
-		new File(genDirectory, SRC_DIRECTORY + separator + "images").mkdirs();
-		new File(genDirectory, SRC_DIRECTORY + separator + "styles").mkdirs();
-		new File(genDirectory, SRC_DIRECTORY + separator + "widgets").mkdirs();
-		File file = new File(genDirectory, SRC_DIRECTORY + separator + "components.html");
-		if (!file.exists()) copyStream(inputFrom("/ui/components.html"), new FileOutputStream(file));
-		file = new File(genDirectory, SRC_DIRECTORY + separator + "main.js");
-		if (!file.exists()) copyStream(inputFrom("/ui/main.js"), new FileOutputStream(file));
+		final File src = new File(genDirectory, SRC_DIRECTORY);
+		src.mkdirs();
+		final File file = new File(src, "ui.zip");
+		copyResourcesRecursively(this.getClass().getResource("/ui/ui.zip"), file);
+		ZipUtil.extract(file, src, null, false);
+		file.delete();
+		new File(src, "images").mkdirs();
+		new File(src, "widgets").mkdirs();
 	}
 
 	private File rootDirectory(Module webModule) {
 		return new File(webModule.getModuleFilePath()).getParentFile();
 	}
 
-	private InputStream inputFrom(String path) {
-		return this.getClass().getResourceAsStream(path);
+	private void copyResourcesRecursively(URL originUrl, File destination) {
+		try {
+			URLConnection urlConnection = originUrl.openConnection();
+			if (urlConnection instanceof JarURLConnection) copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
+			else if (urlConnection instanceof FileURLConnection) FileUtils.copyDirectory(new File(originUrl.getPath()), destination);
+			else
+				throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() + "] is not a recognized/implemented connection type.");
+		} catch (Exception ignored) {
+		}
 	}
 
-	private static void copyStream(InputStream input, OutputStream output) throws IOException {
-		byte[] buffer = new byte[1024];
-		int bytesRead;
-		while ((bytesRead = input.read(buffer)) != -1) output.write(buffer, 0, bytesRead);
+	private void copyJarResourcesRecursively(File destination, JarURLConnection jarConnection) throws IOException {
+		JarFile jarFile = jarConnection.getJarFile();
+		for (Enumeration list = jarFile.entries(); list.hasMoreElements(); ) {
+			JarEntry entry = (JarEntry) list.nextElement();
+			if (entry.getName().startsWith(jarConnection.getEntryName())) {
+				String fileName = StringUtils.removeStart(entry.getName(), jarConnection.getEntryName());
+				if (!entry.isDirectory()) try (InputStream entryInputStream = jarFile.getInputStream(entry)) {
+					FileUtils.copyInputStreamToFile(entryInputStream, new File(destination, fileName));
+				}
+				else new File(destination, fileName).exists();
+			}
+		}
 	}
 }

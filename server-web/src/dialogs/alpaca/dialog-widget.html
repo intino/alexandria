@@ -89,7 +89,10 @@
                 return;
 
             var toolbarContainer = container.querySelector(".toolbar");
-            _renderButton({ name: "complete", label: DialogAlpacaDictionary.labelFor("complete") }, toolbarContainer);
+            var operations = dialog.toolbar.operationList;
+
+            for (var i=0; i<operations.length; i++)
+                _renderButton({ name: operations[i].label, label: DialogAlpacaDictionary.labelFor(operations[i].label) }, toolbarContainer);
         }
 
         function _renderButton(button, container, action) {

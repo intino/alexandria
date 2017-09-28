@@ -1,6 +1,9 @@
 package io.intino.konos.server.activity.dialogs;
 
+import com.google.gson.GsonBuilder;
 import io.intino.konos.server.activity.dialogs.Dialog.Tab.Input;
+import io.intino.konos.server.activity.dialogs.DialogExecution.Modification;
+import io.intino.konos.server.activity.dialogs.adapters.gson.FormAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,17 +18,25 @@ public class Dialog {
     private String url;
     private String label;
     private String description;
-    private String context;
     private TabsMode mode = TabsMode.Tabs;
     private boolean readonly;
     private List<Tab> tabList = new ArrayList<>();
-    private DialogValuesManager valuesManager = null;
+    private Toolbar toolbar = new Toolbar();
+    private Object target = null;
+    private final Form form;
+
+    public Dialog() {
+        this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
+    }
 
     public enum TabsMode { Tabs, Wizard }
     public enum TextEdition { Normal, Uppercase, Lowercase, Email, Url }
     public enum MemoMode { Raw, Rich }
     public enum PasswordRequired { Letter, Number, Symbol }
     public enum CheckBoxMode { Boolean, List }
+
+    public static final String PathSeparatorRegExp = "\\.";
+    public static final String PathSeparator = ".";
 
     public String url() {
         return url;
@@ -54,15 +65,6 @@ public class Dialog {
         return this;
     }
 
-    public String context() {
-        return context;
-    }
-
-    public Dialog context(String context) {
-        this.context = context;
-        return this;
-    }
-
     public TabsMode mode() {
         return this.mode;
     }
@@ -81,26 +83,41 @@ public class Dialog {
         return this;
     }
 
+    public <T extends Object> T target() {
+        return (T) this.target;
+    }
+
+    public Dialog target(Object target) {
+        this.target = target;
+        return this;
+    }
+
+    public Toolbar toolbar() {
+        return this.toolbar;
+    }
+
     public Tab createTab(String label) {
         Tab tab = new Tab(label);
         this.tabList().add(tab);
         return tab;
     }
 
+    public Toolbar.Operation operation(String label) {
+        return toolbar.operation(label);
+    }
+
     public List<Tab> tabList() {
         return tabList;
     }
 
-    public Dialog valuesManager(DialogValuesManager loader) {
-        this.valuesManager = loader;
-        return this;
-    }
-
-    public <I extends Input> I input(String key) {
+    public <I extends Input> I input(String path) {
+        String key = formInput(path).name();
         Input result = inputs().stream()
                                .filter(input -> input.name().equals(key) || input.label().equals(key))
                                .findFirst().orElse(null);
-        return result != null ? (I)result : null;
+        if (result == null) return null;
+        result.path(path);
+        return (I)result;
     }
 
     private List<Input> inputs() {
@@ -112,8 +129,75 @@ public class Dialog {
     private List<Input> inputs(Input input) {
         if (!(input instanceof Tab.Section)) return singletonList(input);
         List<Input> result = new ArrayList<>();
+        result.add(input);
         ((Tab.Section)input).inputList.forEach(child -> result.addAll(inputs(child)));
         return result;
+    }
+
+    private Form.Input formInput(String path) {
+        Form.Input input = form.input(path);
+        if (input == null) input = form.register(path, null);
+        return input;
+    }
+
+    public void register(String path, Object value) {
+        form.register(path, value);
+    }
+
+    public void unRegister(String path) {
+        form.unRegister(path);
+    }
+
+    public String serialize() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Form.class, new FormAdapter());
+        gsonBuilder.setPrettyPrinting();
+        return gsonBuilder.create().toJson(form);
+    }
+
+    public class Toolbar {
+        private List<Operation> operationList = new ArrayList<>();
+
+        public List<Operation> operationList() {
+            return operationList;
+        }
+
+        public Operation createOperation() {
+            return add(new Operation());
+        }
+
+        public Operation operation(String label) {
+            return operationList.stream().filter(o -> o.label().equals(label)).findFirst().orElse(null);
+        }
+
+        public class Operation {
+            private String label;
+            private DialogExecution launcher = null;
+
+            public String label() {
+                return label;
+            }
+
+            public Operation label(String label) {
+                this.label = label;
+                return this;
+            }
+
+            public Operation execute(DialogExecution launcher) {
+                this.launcher = launcher;
+                return this;
+            }
+
+            public Modification execute() {
+                if (launcher == null) return Modification.ItemModified;
+                return launcher.execute(this);
+            }
+        }
+
+        private Operation add(Operation input) {
+            operationList.add(input);
+            return input;
+        }
     }
 
     public class Tab {
@@ -187,10 +271,12 @@ public class Dialog {
         }
 
         public class Input {
+            private String path;
             private String name;
             private String label;
             private boolean required;
             private boolean readonly;
+            private boolean visible = true;
             private String placeholder;
             private String helper;
             private String defaultValue = null;
@@ -201,6 +287,15 @@ public class Dialog {
 
             public String name() {
                 return name;
+            }
+
+            public String path() {
+                return path != null ? path : name();
+            }
+
+            public Input path(String path) {
+                this.path = path;
+                return this;
             }
 
             public String label() {
@@ -231,6 +326,15 @@ public class Dialog {
                 return this;
             }
 
+            public boolean visible() {
+                return visible;
+            }
+
+            public Input visible(boolean visible) {
+                this.visible = visible;
+                return this;
+            }
+
             public String placeholder() {
                 return placeholder;
             }
@@ -246,24 +350,6 @@ public class Dialog {
 
             public Input helper(String helper) {
                 this.helper = helper;
-                return this;
-            }
-
-            public <T extends Object> T value() {
-                return (T) values().get(0);
-            }
-
-            public <T extends Object> List<T> values() {
-                return (List<T>) (valuesManager != null ? valuesManager.values(this) : singletonList(defaultValue()));
-            }
-
-            public Input value(Object value) {
-                return values(singletonList(value));
-            }
-
-            public Input values(List<Object> values) {
-                if (valuesManager == null) return this;
-                valuesManager.values(this, values);
                 return this;
             }
 
@@ -299,11 +385,30 @@ public class Dialog {
                 return validator.validate(this);
             }
 
-            public <I extends Input> I input(String key) {
-                return Dialog.this.input(key);
+            public Value value() {
+                return values().get(0);
+            }
+
+            public Values values() {
+                Form.Input formInput = form.input(path());
+                return formInput != null ? formInput.values() : new Values() {{ add(new Value(defaultValue())); }};
+            }
+
+            public Input value(Object value) {
+                return values(singletonList(value));
+            }
+
+            public Input values(List<Object> values) {
+                values.forEach(value -> form.register(path(), value));
+                return this;
+            }
+
+            public <I extends Input> I input(String path) {
+                return Dialog.this.input(path);
             }
 
             protected DialogValidator.Result validateLength(String value, int min, int max) {
+                if (value == null) return null;
                 int length = value.length();
 
                 if (min > 0 && length < min) return new DialogValidator.Result(false, "Value length is lower than " + min);
@@ -362,8 +467,9 @@ public class Dialog {
                 return this;
             }
 
-            public DialogValidator.Result validateEmail(List<Object> values) {
+            public DialogValidator.Result validateEmail(List<String> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateEmail((String)value);
                     if (result != null) return result;
                 }
@@ -371,6 +477,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateEmail(String value) {
+                if (value == null) return null;
                 if (edition != TextEdition.Email) return null;
                 String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
                 java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
@@ -378,29 +485,33 @@ public class Dialog {
                 return m.matches() ? null : new DialogValidator.Result(false, "Email not valid");
             }
 
-            public DialogValidator.Result validateAllowedValues(List<Object> values) {
-                for (Object value : values) {
-                    DialogValidator.Result result = validateAllowedValues((String)value);
+            public DialogValidator.Result validateAllowedValues(List<String> values) {
+                for (String value : values) {
+                    if (value == null) continue;
+                    DialogValidator.Result result = validateAllowedValues(value);
                     if (result != null) return result;
                 }
                 return null;
             }
 
             public DialogValidator.Result validateAllowedValues(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.allowedValues.size() <= 0 || validation.allowedValues.contains(value)) return null;
                 return new DialogValidator.Result(false, "Value not allowed");
             }
 
-            public DialogValidator.Result validateLength(List<Object> values) {
-                for (Object value : values) {
-                    DialogValidator.Result result = validateLength((String)value);
+            public DialogValidator.Result validateLength(List<String> values) {
+                for (String value : values) {
+                    if (value == null) continue;
+                    DialogValidator.Result result = validateLength(value);
                     if (result != null) return result;
                 }
                 return null;
             }
 
             public DialogValidator.Result validateLength(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.length() == null) return null;
                 return validateLength(value, validation.length.min(), validation.length.max());
@@ -579,15 +690,17 @@ public class Dialog {
                 return this;
             }
 
-            public DialogValidator.Result validateLength(List<Object> values) {
-                for (Object value : values) {
-                    DialogValidator.Result result = validateLength((String)value);
+            public DialogValidator.Result validateLength(List<String> values) {
+                for (String value : values) {
+                    if (value == null) continue;
+                    DialogValidator.Result result = validateLength(value);
                     if (result != null) return result;
                 }
                 return null;
             }
 
             public DialogValidator.Result validateLength(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 if (validation.length() == null) return null;
                 return validateLength(value, validation.length.min(), validation.length.max());
@@ -697,6 +810,7 @@ public class Dialog {
 
             public DialogValidator.Result validateMaxSize(Map<String, byte[]> values) {
                 for (Map.Entry<String, byte[]> value : values.entrySet()) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateMaxSize(value.getKey(), value.getValue());
                     if (result != null) return result;
                 }
@@ -704,6 +818,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateMaxSize(String filename, byte[] content) {
+                if (filename == null || content == null) return null;
                 if (validation == null) return null;
                 if (content.length <= validation.maxSize) return null;
                 return new DialogValidator.Result(false, "File is too long. Max size: " + validation.maxSize);
@@ -711,6 +826,7 @@ public class Dialog {
 
             public DialogValidator.Result validateExtension(List<Object> values) {
                 for (Object value : values) {
+                    if (value == null) continue;
                     DialogValidator.Result result = validateExtension((String)value);
                     if (result != null) return result;
                 }
@@ -718,6 +834,7 @@ public class Dialog {
             }
 
             public DialogValidator.Result validateExtension(String value) {
+                if (value == null) return null;
                 if (validation == null) return null;
                 List<String> allowedExtensions = validation.allowedExtensions();
                 if (allowedExtensions.size() <= 0 || allowedExtensions.contains(value)) return null;
@@ -779,4 +896,5 @@ public class Dialog {
             }
         }
     }
+
 }

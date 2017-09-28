@@ -11,26 +11,21 @@ def type(dialogDisplay)
     public abstract class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends DialogDisplay {
 
         public $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
-            super(box, buildDialog());
+            super(box, buildDialog(box));
         }
 
-        @Override
-        protected String assertionName() {
-        	return "$name~.assertion";
-        }
-
-        private static Dialog buildDialog() {
+        private static Dialog buildDialog($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             Dialog dialog = new Dialog();
             $dialog
             return dialog;
         }
-
     }
 end
 
 def type(dialog)
 	[dialog.label("$label");]
-	[dialog.description("$description");]
+	[dialog.description("$description");][
+	$operation...[$NL]]
 	$tab...[$NL]
 end
 
@@ -40,9 +35,13 @@ def type(tab)
 end
 
 
+def trigger(operation)
+	dialog.toolbar().createOperation()[.label("$label")].execute(operation -> $dialog+FirstUpperCase~Dialog.Toolbar.$execution(box, dialog, operation));
+end
+
 def type(section)
-	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = $owner.createSection();
-	w$name+SnakeCaseToCamelCase.label($label);
+	Dialog.Tab.Section w$name+SnakeCaseToCamelCase = (Dialog.Tab.Section) w$owner+SnakeCaseToCamelCase.createSection()[$multiple];
+	w$name+SnakeCaseToCamelCase.label("$label");
 	$input...[$NL]
 end
 
@@ -51,7 +50,7 @@ def type(text)
 end
 
 def type(memo)
-	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode+firstUpperCase)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(radio)
@@ -59,7 +58,7 @@ def type(radio)
 end
 
 def type(check)
-	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode+firstUpperCase)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(combo)
@@ -99,11 +98,11 @@ def type(validation & resource)
 end
 
 def type(validator)
-	.validator(input -> $dialog+FirstUpperCase~Dialog.Validators.$name((Dialog.Tab.$type) input))
+	.validator(input -> $dialog+FirstUpperCase~Dialog.Validators.$name(box, (Dialog.Tab.$type) input))
 end
 
 def trigger(source)
-	.source(input -> $dialog+FirstUpperCase~Dialog.Sources.$name((Dialog.Tab.$type) input))
+	.source(input -> $dialog+FirstUpperCase~Dialog.Sources.$name(box, (Dialog.Tab.$type) input))
 end
 
 def trigger(quoted)

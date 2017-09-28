@@ -20,7 +20,6 @@
             var result = AlpacaInputConverter.prototype.schema.call(this, input);
             result.type = "array";
             result.items = AlpacaWidgetFactory.get(input.type, false).converter().schema(input);
-            result.items.title = "";
 
             if (input.multiple.min != -1)
                 result.minItems = input.multiple.min;
@@ -35,19 +34,27 @@
             var result = AlpacaInputConverter.prototype.options.call(this, input);
             result.fields = {};
             result.fields.item = AlpacaWidgetFactory.get(input.type, false).converter().options(input);
-            result.fields.item.label = "";
             result.events = null;
+            result.toolbar = {
+                "actions" : [{
+                    "action": "add",
+                    "click" : function(key, action) {
+                        document.onAddValue(document.pathOf(this) + "." + 0);
+                        this.handleToolBarAddItemClick(null);
+                    }
+                }]
+            };
             result.actionbar = {
                 "actions" : [{
                     "action": "add",
                     "click" : function(key, action, itemIndex) {
-                        document.onAddValue(input, itemIndex);
+                        document.onAddValue(document.pathOf(this) + "." + itemIndex);
                         this.handleToolBarAddItemClick(null);
                     }
                 }, {
                     "action": "remove",
                     "click" : function(key, action, itemIndex) {
-                        document.onRemoveValue(input, itemIndex);
+                        document.onRemoveValue(document.pathOf(this) + "." + itemIndex);
                         this.removeItem(itemIndex);
                     }
                 }, {

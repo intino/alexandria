@@ -2,6 +2,8 @@ package io.intino.konos.server.activity.services.push;
 
 public class Browser {
     private String baseUrl;
+    private String homeUrl;
+    private String userHomeUrl;
     private String language;
     private String metadataLanguage;
 
@@ -13,6 +15,22 @@ public class Browser {
 
     public void baseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public String homeUrl() {
+        return homeUrl;
+    }
+
+    public void homeUrl(String homeUrl) {
+        this.homeUrl = homeUrl;
+    }
+
+    public String userHomeUrl() {
+        return userHomeUrl;
+    }
+
+    public void userHomeUrl(String userHomeUrl) {
+        this.userHomeUrl = userHomeUrl;
     }
 
     public String baseAssetUrl() {
