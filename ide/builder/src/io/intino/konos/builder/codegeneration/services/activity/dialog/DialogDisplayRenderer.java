@@ -43,9 +43,22 @@ public class DialogDisplayRenderer {
 		if (!dialog.label().isEmpty()) frameDialog.addSlot("label", dialog.label());
 		if (!dialog.description().isEmpty()) frameDialog.addSlot("description", dialog.description());
 		frame.addSlot("dialog", frameDialog);
+		for (Operation operation : dialog.toolbar().operationList())
+			frameDialog.addSlot("operation", frameOf(operation));
 		for (Tab tab : dialog.tabList())
 			frameDialog.addSlot("tab", frameOf(tab));
 		Commons.writeFrame(new File(gen, DIALOGS), newDialog, template().format(frame));
+	}
+
+	private Frame frameOf(Operation operation) {
+		final Frame operationFrame = new Frame().addTypes("operation");
+		if (!operation.label().isEmpty()) operationFrame.addSlot("label", operation.label());
+		operationFrame.addSlot("execution", executionOf(operation));
+		return operationFrame;
+	}
+
+	private Frame executionOf(Operation operation) {
+		return new Frame().addSlot("dialog", operation.core$().ownerAs(Dialog.Toolbar.class).core$().ownerAs(Dialog.class).name$()).addSlot("label", operation.label());
 	}
 
 	private Frame frameOf(Tab tab) {

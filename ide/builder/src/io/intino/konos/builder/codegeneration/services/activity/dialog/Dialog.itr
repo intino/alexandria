@@ -2,10 +2,10 @@ def type(dialog)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
-	import io.intino.ness.inl.Message;
-	import io.intino.konos.server.activity.dialogs.Form;
+	import io.intino.konos.server.activity.dialogs.Dialog;
 	import io.intino.konos.server.activity.dialogs.DialogValidator;
-	import io.intino.konos.server.activity.dialogs.Modification;
+
+	import static io.intino.konos.server.activity.dialogs.DialogExecution.Modification;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
 
@@ -17,9 +17,8 @@ def type(dialog)
 		public void prepare() {
 		}
 
-		@Override
-		public Modification update(Message message) {
-			return Modification.ItemModified;
+		public static class Toolbar {
+			$execution...[$NL]
 		}
 
 		public static class Validators {
@@ -30,6 +29,13 @@ def type(dialog)
 			$source...[$NL]
 		}
 	}
+end
+
+def type(execution)
+	public static Modification $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog.Toolbar.Operation self) {
+		return Modification.None;
+	}
+
 end
 
 def type(validator)

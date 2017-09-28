@@ -9,13 +9,10 @@ import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
 import io.intino.konos.server.activity.displays.Display;
-import io.intino.konos.server.activity.services.push.User;
-import io.intino.ness.inl.Message;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 
@@ -116,31 +113,12 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 		};
 	}
 
-	public void execute() {
-		Message message = new Message(assertionName());
-		User user = user();
-
-		message.ts(Instant.now().toString());
-		if (user != null) message.write("user", user.username());
-		message.write("context", dialog.context());
-		message.write("form", dialog.serialize());
-
-		notifier.done(update(message).toString());
-	}
-
-	private User user() {
-		if (session() == null) return null;
-		return session().user();
+	public void execute(String name) {
+		Dialog.Toolbar.Operation operation = dialog.operation(name);
+		notifier.done(operation.execute().toString());
 	}
 
 	public abstract void prepare();
-	public abstract Modification update(Message message);
-
-	public enum Modification {
-		ItemModified, CatalogModified
-	}
-
-	protected abstract String assertionName();
 
 	private Result validate(FormInput formInput) {
 		Result result = formInput.input().validate();
