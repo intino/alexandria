@@ -99,7 +99,7 @@ def type(validation & resource)
 end
 
 def type(execution)
-	.execute(operation -> $dialog+FirstUpperCase~Dialog.Toolbar.$name(box, dialog, Dialog.Toolbar.Operation input))
+	.execute(operation -> $dialog+FirstUpperCase~Dialog.Toolbar.$name(box, dialog, operation, username))
 end
 
 def type(validator)
