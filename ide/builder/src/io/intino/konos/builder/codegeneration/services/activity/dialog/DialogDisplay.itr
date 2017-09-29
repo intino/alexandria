@@ -19,14 +19,13 @@ def type(dialogDisplay)
             $dialog
             return dialog;
         }
-
     }
 end
 
 def type(dialog)
 	[dialog.label("$label");]
-	[dialog.description("$description");]
-	$operation...[$NL]
+	[dialog.description("$description");][
+	$operation...[$NL]]
 	$tab...[$NL]
 end
 
@@ -36,8 +35,8 @@ def type(tab)
 end
 
 
-def type(operation)
-	dialog.toolbar().createOperation()[.label("$label")][$execution];
+def trigger(operation)
+	dialog.toolbar().createOperation()[.label("$label")].execute((operation, username) -> $dialog+FirstUpperCase~Dialog.Toolbar.$execution(box, dialog, operation, username));
 end
 
 def type(section)
@@ -96,10 +95,6 @@ end
 
 def type(validation & resource)
 	new Dialog.Tab.Resource.Validation()[.maxSize($maxSize)][.allowedExtensions($allowedExtensions)]
-end
-
-def type(execution)
-	.execute(operation -> $dialog+FirstUpperCase~Dialog.Toolbar.$name(box, dialog, operation, username))
 end
 
 def type(validator)
