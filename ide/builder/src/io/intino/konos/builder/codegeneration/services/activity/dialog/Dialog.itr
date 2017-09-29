@@ -32,7 +32,7 @@ def type(dialog)
 end
 
 def type(execution)
-	public static Modification $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog.Toolbar.Operation self, String username) {
+	public static Modification $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, String username) {
 		return Modification.None;
 	}
 
