@@ -188,9 +188,9 @@ public class Dialog {
                 return this;
             }
 
-            public Modification execute() {
+            public Modification execute(String username) {
                 if (launcher == null) return Modification.ItemModified;
-                return launcher.execute(this);
+                return launcher.execute(this, username);
             }
         }
 

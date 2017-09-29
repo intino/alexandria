@@ -6,6 +6,7 @@ public class Browser {
     private String userHomeUrl;
     private String language;
     private String metadataLanguage;
+    private int timezoneOffset = 0;
 
     private static final String PushPath = "/push?id=%s&currentSession=%s&language=%s";
 
@@ -59,4 +60,11 @@ public class Browser {
         this.metadataLanguage = language;
     }
 
+    public int timezoneOffset() {
+        return timezoneOffset;
+    }
+
+    public void timezoneOffset(int timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
+    }
 }
