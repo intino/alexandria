@@ -52,6 +52,7 @@ public class JMXServer {
 	private static ObjectName createSimpleMBean(MBeanServer server, String mbeanClassName, String objectNameName, Object[] parameters) {
 		try {
 			ObjectName mbeanObjectName = ObjectName.getInstance(objectNameName);
+			if (server.isRegistered(mbeanObjectName)) return mbeanObjectName;
 			server.registerMBean(newInstance(mbeanClassName, parameters), mbeanObjectName);
 			return mbeanObjectName;
 		} catch (Exception e) {

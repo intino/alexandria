@@ -60,6 +60,7 @@ def type(box)
 
 		public void close() {
 			if(owner != null) owner.close();
+			$spark...[$NL]
 			$service+quit...[$NL]
 			$dataLake+quit...[$NL]
 		}
@@ -221,7 +222,7 @@ end
 def type(service) trigger(getter)
 end
 
-def type(service) type(rest | activity) trigger(quit)
+def trigger(spark)
 	spark.Spark.stop();
 end
 

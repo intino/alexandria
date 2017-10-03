@@ -39,6 +39,14 @@ def type(request)
 	}
 end
 
+def type(dateTime | date) type(list) trigger(parameter)
+    $value
+end
+
+def type(dateTime | date) trigger(parameter)
+    $value
+end
+
 def type(list) trigger(parameter)
     $value+firstUpperCase$[]
 end
