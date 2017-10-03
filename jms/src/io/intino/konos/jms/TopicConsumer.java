@@ -20,7 +20,7 @@ public class TopicConsumer {
 
 	public void listen(RequestConsumer listener) {
 		try {
-			Destination destination = session.createQueue(topic);
+			Destination destination = session.createTopic(topic);
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(message -> listener.consume(session, message));
 		} catch (Exception e) {

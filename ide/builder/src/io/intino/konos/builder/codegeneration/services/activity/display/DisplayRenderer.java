@@ -78,7 +78,7 @@ public class DisplayRenderer {
 		frame.addSlot("name", notification.name$());
 		frame.addSlot("target", notification.to().name());
 		if (notification.asType() != null) {
-			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", notification.asType().type());
+			final Frame parameterFrame = new Frame().addTypes("parameter", notification.asType().type(), notification.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", notification.asType().type());
 			if (notification.isList()) parameterFrame.addTypes("list");
 			frame.addSlot("parameter", parameterFrame);
 		}
@@ -95,7 +95,7 @@ public class DisplayRenderer {
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name$());
 		if (request.asType() != null) {
-			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("value", request.asType().type());
+			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data","")).addSlot("value", request.asType().type());
 			if (request.isList()) parameterFrame.addTypes("list");
 			frame.addSlot("parameter", parameterFrame);
 		}

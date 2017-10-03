@@ -85,6 +85,7 @@ public class AbstractBoxRenderer {
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "jmx").addSlot("name", service.name$()).addSlot("configuration", name));
 		for (SlackBotService service : konos.slackBotServiceList())
 			frame.addSlot("service", (Frame) new Frame().addTypes("service", "slack").addSlot("name", service.name$()).addSlot("configuration", name));
+		if (!konos.rESTServiceList().isEmpty() || !konos.activityList().isEmpty()) frame.addSlot("spark", "stop");
 	}
 
 	private void parent(Frame frame) {

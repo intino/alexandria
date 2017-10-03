@@ -42,6 +42,7 @@ Display olap
 	Request toggleDrill
 	Request toggleFilter
 	Request removeFilter as Text
+	Request asdasd as Date
 
 Display timeSeries
 	Notification zoomRange as Object(Range)
