@@ -55,17 +55,17 @@ public class DialogDisplayRenderer {
 	}
 
 	private void defaultToolbar(Frame frame, String dialog) {
-		frame.addSlot("operation", frameOf(dialog, "send"));
+		frame.addSlot("operation", frameOf(dialog, "send", "send"));
 	}
 
 	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
 		for (Operation operation : toolbar.operationList())
-			frame.addSlot("operation", frameOf(dialog, operation.name$()));
+			frame.addSlot("operation", frameOf(dialog, operation.name$(), operation.label()));
 	}
 
-	private Frame frameOf(String dialog, String operation) {
+	private Frame frameOf(String dialog, String operation, String operationLabel) {
 		final Frame operationFrame = new Frame().addTypes("operation").addSlot("dialog", dialog).addSlot("execution", operation);
-		if (!operation.isEmpty()) operationFrame.addSlot("label", operation);
+		if (!operation.isEmpty()) operationFrame.addSlot("name", operation).addSlot("label", operationLabel);
 		return operationFrame;
 	}
 

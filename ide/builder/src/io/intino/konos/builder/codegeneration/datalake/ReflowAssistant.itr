@@ -3,6 +3,7 @@ def type(operations)
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.tara.magritte.Graph;
+	import io.intino.konos.datalake.Ness;
 	import io.intino.tara.magritte.Store;
 
 	class ReflowAssistant {
@@ -15,6 +16,14 @@ def type(operations)
 
 		void before() {
 
+		}
+
+		int blockSize() {
+			return Integer.MAX_VALUE;
+		}
+
+		List<Ness.Tank> tanks() {
+		 	return java.util.Collections.emptyList(); //TODO
 		}
 
 		Graph graph() {
