@@ -20,7 +20,7 @@ def type(activity)
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.server.activity.Activity {
 
-		public static void init(ActivityKonosSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+		public static ActivityKonosSpark init(ActivityKonosSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~ActivityConfiguration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
@@ -31,8 +31,8 @@ def type(activity)
 			$display...[$NL]
 
 			$dialog...[$NL]
-
 			registerNotifiers();
+			return spark;
 		}
 
 		private static void registerNotifiers() {

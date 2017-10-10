@@ -41,6 +41,7 @@ public class DialogBuilder {
 
     public static JsonObject jsonOperationOf(io.intino.konos.server.activity.dialogs.Dialog.Toolbar.Operation operation) {
         JsonObject result = new JsonObject();
+        result.addProperty("name", operation.name());
         result.addProperty("label", operation.label());
         return result;
     }

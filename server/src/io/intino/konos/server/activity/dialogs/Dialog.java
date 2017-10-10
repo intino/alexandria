@@ -171,8 +171,18 @@ public class Dialog {
         }
 
         public class Operation {
+            private String name;
             private String label;
             private DialogExecution launcher = null;
+
+            public String name() {
+                return name;
+            }
+
+            public Operation name(String name) {
+                this.name = name;
+                return this;
+            }
 
             public String label() {
                 return label;
@@ -188,9 +198,9 @@ public class Dialog {
                 return this;
             }
 
-            public Modification execute() {
+            public Modification execute(String username) {
                 if (launcher == null) return Modification.ItemModified;
-                return launcher.execute(this);
+                return launcher.execute(this, username);
             }
         }
 

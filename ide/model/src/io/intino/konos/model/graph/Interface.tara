@@ -46,6 +46,7 @@ Concept Sensor extends Component
 
         Concept:{0..1} Toolbar
         	Concept:Named Operation
+        		var string label
 
         Concept Tab
             var string label

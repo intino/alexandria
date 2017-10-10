@@ -60,6 +60,7 @@ def type(box)
 
 		public void close() {
 			if(owner != null) owner.close();
+			$spark...[$NL]
 			$service+quit...[$NL]
 			$dataLake+quit...[$NL]
 		}
@@ -133,13 +134,13 @@ end
 
 def type(service & rest) trigger(rest)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("REST service $name: started!");
 end
 
 def type(activity) trigger(activity)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("Activity $name: started!");
 end
 
@@ -221,8 +222,8 @@ end
 def type(service) trigger(getter)
 end
 
-def type(service) type(rest | activity) trigger(quit)
-	spark.Spark.stop();
+def trigger(spark)
+	io.intino.konos.server.activity.ActivityKonosSpark.instance().stop();
 end
 
 def type(service) type(jms) trigger(quit)

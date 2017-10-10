@@ -5,13 +5,10 @@ import io.intino.konos.server.KonosSpark;
 import io.intino.konos.server.pushservice.PushService;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
+import spark.Service;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static spark.Spark.webSocket;
-import static spark.Spark.webSocketIdleTimeoutMillis;
 
 public class SparkRouter<SM extends SparkManager> {
 	private Function<SparkManager, Boolean> validator = null;
@@ -20,42 +17,44 @@ public class SparkRouter<SM extends SparkManager> {
 
 	private static final int OneDay = 24 * 60 * 60 * 1000;
 
+	private Service service;
 	private final String path;
 
-	public SparkRouter(String path) {
+	public SparkRouter(Service service, String path) {
+		this.service = service;
 		this.path = path;
 	}
 
 	public void before(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.before(path, (rq, rs) -> before(caller, manager(rq, rs)));
+		service.before(path, (rq, rs) -> before(caller, manager(rq, rs)));
 	}
 
 	public void get(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.get(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		service.get(path, (rq, rs) -> execute(caller, manager(rq, rs)));
 	}
 
 	public void post(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.post(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		service.post(path, (rq, rs) -> execute(caller, manager(rq, rs)));
 	}
 
 	public void put(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.put(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		service.put(path, (rq, rs) -> execute(caller, manager(rq, rs)));
 	}
 
 	public void delete(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.delete(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		service.delete(path, (rq, rs) -> execute(caller, manager(rq, rs)));
 	}
 
 	public void after(KonosSpark.ResourceCaller<SM> caller) {
-		Spark.after(path, (rq, rs) -> after(caller, manager(rq, rs)));
+		service.after(path, (rq, rs) -> after(caller, manager(rq, rs)));
 	}
 
 	public void push(PushService service) {
 		if (this.pushService != null) return;
 		if (this.pushServiceConsumer != null) this.pushServiceConsumer.accept(service);
 		PushServiceHandler.inject(service);
-		webSocketIdleTimeoutMillis(OneDay);
-		webSocket(path, PushServiceHandler.class);
+		this.service.webSocketIdleTimeoutMillis(OneDay);
+		this.service.webSocket(path, PushServiceHandler.class);
 	}
 
 	public void inject(PushService pushService) {

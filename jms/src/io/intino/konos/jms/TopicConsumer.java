@@ -20,7 +20,7 @@ public class TopicConsumer {
 
 	public void listen(RequestConsumer listener) {
 		try {
-			Destination destination = session.createQueue(topic);
+			Destination destination = session.createTopic(topic);
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(message -> listener.consume(session, message));
 		} catch (Exception e) {
@@ -33,6 +33,7 @@ public class TopicConsumer {
 			if (consumer == null) return;
 			consumer.close();
 			if (subscriberID != null) session.unsubscribe(subscriberID);
+		} catch (InvalidDestinationException e) {
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
