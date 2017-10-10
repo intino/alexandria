@@ -15,8 +15,10 @@ public abstract class BoxConfiguration {
 	private Map<String, String> argsToMap(String[] args) {
 		Map<String, String> map = new java.util.LinkedHashMap<>();
 		for (String arg : args) {
-			String[] keyValue = arg.split("=");
-			map.put(keyValue[0], keyValue.length > 1 ? keyValue[1] : "");
+			if (!arg.contains("=")) continue;
+			String key = arg.substring(0, arg.indexOf("="));
+			String value = arg.substring(arg.indexOf("=") + 1);
+			map.put(key, value);
 		}
 		return map;
 	}

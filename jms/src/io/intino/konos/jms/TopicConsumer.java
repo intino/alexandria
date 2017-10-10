@@ -33,6 +33,7 @@ public class TopicConsumer {
 			if (consumer == null) return;
 			consumer.close();
 			if (subscriberID != null) session.unsubscribe(subscriberID);
+		} catch (InvalidDestinationException e) {
 		} catch (JMSException e) {
 			getGlobal().log(SEVERE, e.getMessage(), e);
 		}
