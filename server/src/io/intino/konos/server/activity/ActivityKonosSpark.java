@@ -10,11 +10,11 @@ public class ActivityKonosSpark extends KonosSpark<ActivityRouter> {
 	private static Setup setup;
 	private static ActivityKonosSpark instance;
 
-	private ActivityKonosSpark(int port, AuthService authService) {
+	public ActivityKonosSpark(int port, AuthService authService) {
 		this(port, WebDirectory, authService);
 	}
 
-	private ActivityKonosSpark(int port, String webDirectory, AuthService authService) {
+	public ActivityKonosSpark(int port, String webDirectory, AuthService authService) {
 		super(port, webDirectory);
 		this.authService = authService;
 	}
@@ -29,9 +29,19 @@ public class ActivityKonosSpark extends KonosSpark<ActivityRouter> {
 		return instance;
 	}
 
+	public ActivityKonosSpark start() {
+		return (ActivityKonosSpark) super.start();
+	}
+
+	public void stop() {
+		if (service != null) service.stop();
+		service = null;
+		instance = null;
+	}
+
 	@Override
 	protected ActivityRouter createRouter(String path) {
-		return new ActivityRouter(path, authService);
+		return new ActivityRouter(service, path, authService);
 	}
 
 	private static class Setup {

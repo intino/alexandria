@@ -17,6 +17,8 @@ import io.intino.konos.server.activity.services.push.ActivitySession;
 import io.intino.konos.server.activity.services.push.Browser;
 import io.intino.konos.server.activity.spark.ActivitySparkManager;
 import io.intino.konos.server.activity.utils.RequestHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -150,6 +152,7 @@ public abstract class Resource implements io.intino.konos.server.Resource {
 		try {
 			return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
+			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			return null;
 		}
 	}

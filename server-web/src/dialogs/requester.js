@@ -11,7 +11,7 @@ KonosDialogWidgetBehaviors.Requester = {
     removeValue : function(value) {
         this.carry("removeValue", { "value": value });
     },
-    execute : function() {
+    execute : function(value) {
     	this.carry("execute", { "value": value });
     },
     uploadResource : function(value) {

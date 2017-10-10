@@ -8,4 +8,8 @@ public class TopicProducer extends Producer {
 	public TopicProducer(Session session, String path) throws JMSException {
 		super(session, session.createTopic(path));
 	}
+
+	public TopicProducer(Session session, String path, int messageExpirationSeconds) throws JMSException {
+		super(session, session.createTopic(path), messageExpirationSeconds);
+	}
 }

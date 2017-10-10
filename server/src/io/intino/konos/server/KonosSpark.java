@@ -2,30 +2,43 @@ package io.intino.konos.server;
 
 import io.intino.konos.exceptions.KonosException;
 import io.intino.konos.server.pushservice.PushService;
-import io.intino.konos.server.security.NullSecurityManager;
 import io.intino.konos.server.security.KonosSecurityManager;
+import io.intino.konos.server.security.NullSecurityManager;
 import io.intino.konos.server.spark.SparkManager;
 import io.intino.konos.server.spark.SparkRouter;
-import spark.Spark;
+import spark.Service;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class KonosSpark<R extends SparkRouter> {
 	private KonosSecurityManager securityManager = new NullSecurityManager();
-	private final String webDirectory;
+	protected final String webDirectory;
 	protected PushService pushService;
-
-	protected static final String WebDirectory = "/web";
+	protected static final String WebDirectory = "/www";
+	protected Service service;
+	protected int port;
 
 	public KonosSpark(int port) {
 		this(port, WebDirectory);
 	}
 
 	public KonosSpark(int port, String webDirectory) {
-		Spark.port(port);
-		configureStaticFiles(webDirectory);
+		this.port = port;
 		this.webDirectory = webDirectory;
+		this.service = Service.ignite();
+		configureStaticFiles();
+		service.port(this.port);
+	}
+
+	public KonosSpark start() {
+		service.init();
+		return this;
+	}
+
+	public void stop() {
+		if (service != null) service.stop();
+		service = null;
 	}
 
 	public String webDirectory() {
@@ -58,18 +71,17 @@ public class KonosSpark<R extends SparkRouter> {
 	}
 
 	protected R createRouter(String path) {
-		return (R) new SparkRouter(path);
+		return (R) new SparkRouter(service, path);
 	}
 
 	public interface ResourceCaller<SM extends SparkManager> {
 		void call(SM manager) throws KonosException;
+
 	}
 
-	public void configureStaticFiles(String path) {
-		if (isInClasspath(path))
-			Spark.staticFileLocation(path);
-		else
-			Spark.externalStaticFileLocation(path);
+	protected void configureStaticFiles() {
+		if (isInClasspath(webDirectory)) service.staticFileLocation(webDirectory);
+		else service.externalStaticFileLocation(webDirectory);
 	}
 
 	private boolean isInClasspath(String path) {

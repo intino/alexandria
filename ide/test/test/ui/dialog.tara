@@ -3,7 +3,7 @@ dsl Konos
 
 Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
 	Toolbar
-		Operation(label = "enviar")
+		Operation(label = "enviar")a
 	Tab("Opinión") tab
 		Text(label = "Tipo") tipo > readonly = true
 		Text(label = "Área") area > readonly = true

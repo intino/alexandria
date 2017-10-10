@@ -9,6 +9,7 @@ import io.intino.konos.server.activity.dialogs.builders.ValidationBuilder;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInput;
 import io.intino.konos.server.activity.dialogs.schemas.DialogInputResource;
 import io.intino.konos.server.activity.displays.Display;
+import io.intino.konos.server.activity.services.push.User;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
@@ -115,7 +116,12 @@ public abstract class DialogDisplay extends Display<DialogNotifier> {
 
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
-		notifier.done(operation.execute().toString());
+		notifier.done(operation.execute(username()).toString());
+	}
+
+	protected String username() {
+		User user = session().user();
+		return user != null ? user.username() : null;
 	}
 
 	public abstract void prepare();
