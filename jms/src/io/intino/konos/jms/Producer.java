@@ -1,6 +1,7 @@
 package io.intino.konos.jms;
 
 
+import org.apache.activemq.ActiveMQSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,6 @@ public abstract class Producer {
 
 
 	public boolean isClosed() {
-		return producer == null;
+		return session == null || ((ActiveMQSession) session).isClosed() || producer == null;
 	}
 }

@@ -29,6 +29,10 @@ def type(tanks)
 
 		$tank+class...[$NL$NL]
 
+		public static void unregister() {
+			$tank+unregister...[$NL]
+		}
+
 		private static boolean isRegisterOnly(Message message) {
 			try {
 				return message.getBooleanProperty(io.intino.konos.datalake.Ness.REGISTER_ONLY);
@@ -37,6 +41,10 @@ def type(tanks)
 			}
 		}
 	}
+end
+
+def type(tank) trigger(unregister)
+	$name.unregister();
 end
 
 def type(tank) trigger(field)
