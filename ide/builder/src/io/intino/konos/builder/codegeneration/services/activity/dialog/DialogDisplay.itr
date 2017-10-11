@@ -36,7 +36,7 @@ end
 
 
 def trigger(operation)
-	dialog.toolbar().createOperation()[.label("$label")].execute((operation, username) -> $dialog+FirstUpperCase~Dialog.Toolbar.$execution(box, dialog, operation, username));
+	dialog.toolbar().createOperation().name("$name")[.label("$label")].execute((operation, username) -> $dialog+FirstUpperCase~Dialog.Toolbar.$execution(box, dialog, operation, username));
 end
 
 def type(section)
