@@ -20,6 +20,7 @@ def type(operations) !type(interface)
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
     import io.intino.konos.jmx.JMXServer;
+	import io.intino.konos.datalake.Ness;
     import io.intino.tara.magritte.Graph;
     import io.intino.tara.magritte.RemounterGraph;
     import io.intino.tara.magritte.Store;
@@ -40,6 +41,7 @@ def type(operations) !type(interface)
     	private final $box+FirstUpperCase~Box box;
     	private final ReflowAssistant assistant;
     	private int processed = 0;
+		private Ness.ReflowSession session;
 
     	public NessOperations($box+FirstUpperCase~Box box) {
     		this.box = box;
@@ -55,7 +57,7 @@ def type(operations) !type(interface)
 		public boolean reflow() {
 			logger.info("Starting Reflow...");
 			assistant.before();
-			box.close();
+			this.session = box.datalake().reflow(assistant.blockSize(), assistant.tanks().toArray(new Ness.Tank$[0]));
 			box.datalake().lastMessage(null);
 			final Graph graph = assistant.graph();
 			try {
@@ -64,10 +66,10 @@ def type(operations) !type(interface)
 				allowWriting(original, false);
 				Graph clone = original.realClone();
 				box.put(clone);
-				box.open();
+				next();
 				timerTask(clone).run();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 				return false;
 			}
 			return true;
@@ -81,27 +83,35 @@ def type(operations) !type(interface)
 					if (finished()) {
 						doWrite(clone);
 						onFinish(clone);
-					} else new Timer("Reflow task",true).schedule(timerTask(newClone), 5000);
+					} else new Timer("Reflow task", true).schedule(timerTask(newClone), 5000);
 				}
 			};
 		}
 
 		private Graph write(Graph clone) {
-			if (box.datalake().receivedMessages() < 1E4) return clone;
+			if (box.datalake().receivedMessages() < assistant.blockSize()) return clone;
+			Graph result = doWrite(clone);
 			box.datalake().reset();
-			logger.info("processed " + (processed += 1E4));
-			return doWrite(clone);
+			next();
+			return result;
 		}
 
 		private Graph doWrite(Graph clone) {
-			box.close();
+			logger.info("processed " + (processed += box.datalake().receivedMessages()));
 			allowWriting(clone, true);
 			assistant.saveGraph(clone);
 			final Graph newClone = new RemounterGraph(clone.store()).loadStashes(assistant.coreStashes());
 			allowWriting(newClone, false);
 			box.put(newClone);
-			box.open();
 			return newClone;
+		}
+
+		private void next() {
+			try {
+				session.next();
+			} catch (javax.jms.JMSException e) {
+				e.printStackTrace();
+			}
 		}
 
 		private void allowWriting(Graph original, boolean flag) {
@@ -117,7 +127,7 @@ def type(operations) !type(interface)
 		}
 
 		private boolean finished() {
-			return box.datalake().lastMessage() != null && box.datalake().lastMessage().until(Instant.now(), SECONDS) > 5;
+			return box.datalake().lastMessage() != null && box.datalake().lastMessage().until(Instant.now(), SECONDS) > 120;
 		}
 
 		public static JMXServer init($box+FirstUpperCase~Box box) {
