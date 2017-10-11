@@ -57,7 +57,9 @@ def type(operations) !type(interface)
 		public boolean reflow() {
 			logger.info("Starting Reflow...");
 			assistant.before();
+			$package+validPackage.ness.NessTanks.unregister();
 			this.session = box.datalake().reflow(assistant.blockSize(), assistant.tanks().toArray(new Ness.Tank$[0]));
+			$package+validPackage.ness.NessTanks.registerTanks(box);
 			box.datalake().lastMessage(null);
 			final Graph graph = assistant.graph();
 			try {
@@ -110,7 +112,7 @@ def type(operations) !type(interface)
 			try {
 				session.next();
 			} catch (javax.jms.JMSException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(), e);
 			}
 		}
 

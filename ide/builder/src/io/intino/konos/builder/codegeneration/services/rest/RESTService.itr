@@ -8,10 +8,11 @@ def type(server)
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
-		public static void setup(KonosSpark server, $box+FirstUpperCase~Box box) {
+		public static KonosSpark setup(KonosSpark server, $box+FirstUpperCase~Box box) {
 			$box+firstUpperCase~Configuration.$name+firstUpperCase+SnakeCaseToCamelCase~Configuration configuration = box.configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration;
 			$secure
 			$resource...[$NL]
+			return server;
 		}
 	}
 end

@@ -33,6 +33,7 @@ public class Ness {
 	private Connection connection;
 	private Instant lastMessage;
 	private int receivedMessages = 0;
+	private TopicConsumer topicConsumer;
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -67,7 +68,15 @@ public class Ness {
 			TopicProducer producer = new TopicProducer(session, REFLOW_PATH);
 			producer.produce(MessageFactory.createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
-			return () -> new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("next"));
+			return new ReflowSession() {
+				public void next() throws JMSException {
+					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("next"));
+				}
+
+				public void finish() throws JMSException {
+					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("finish"));
+				}
+			};
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return null;
@@ -77,7 +86,7 @@ public class Ness {
 	private void waitUntilReflowSession() {
 		try {
 			stop();
-			sleep(20000);
+			sleep(40000);
 			start();
 		} catch (InterruptedException e) {
 		}
@@ -146,6 +155,7 @@ public class Ness {
 
 	public class Tank {
 		private String name;
+		private TopicConsumer flow;
 
 		Tank(String name) {
 			this.name = name;
@@ -178,7 +188,10 @@ public class Ness {
 				if (jmsMessage == null) return;
 				jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
 				final TopicProducer producer = newProducer(dropChannel());
-				if (producer != null) producer.produce(jmsMessage);
+				if (producer != null) {
+					producer.produce(jmsMessage);
+					producer.close();
+				}
 			} catch (JMSException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -186,16 +199,21 @@ public class Ness {
 
 		public TopicConsumer flow(TankFlow flow) {
 			if (session() == null) logger.error("Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
-			topicConsumer.listen(flow);
-			return topicConsumer;
+			this.flow = new TopicConsumer(session(), flowChannel());
+			this.flow.listen(flow);
+			return this.flow;
 		}
 
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) logger.error("Session is null");
-			TopicConsumer topicConsumer = new TopicConsumer(session(), flowChannel());
+			topicConsumer = new TopicConsumer(session(), flowChannel());
 			topicConsumer.listen(flow, flowID);
 			return topicConsumer;
+		}
+
+		public void unregister() {
+			if (topicConsumer != null) topicConsumer.stop();
+			topicConsumer = null;
 		}
 	}
 
@@ -206,6 +224,8 @@ public class Ness {
 	public interface ReflowSession {
 
 		void next() throws JMSException;
+
+		void finish() throws JMSException;
 	}
 
 }
