@@ -1,10 +1,9 @@
 package io.intino.konos.jms;
 
 import javax.jms.*;
-import java.util.logging.Level;
 
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Logger.getGlobal;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class TopicConsumer {
 
@@ -18,13 +17,15 @@ public class TopicConsumer {
 		this.topic = topic;
 	}
 
-	public void listen(RequestConsumer listener) {
+	public TopicConsumer listen(RequestConsumer listener) {
 		try {
-			Destination destination = session.createTopic(topic);
+			Destination destination = session.createQueue(topic);
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(message -> listener.consume(session, message));
+			return this;
 		} catch (Exception e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			return null;
 		}
 	}
 
@@ -35,7 +36,7 @@ public class TopicConsumer {
 			if (subscriberID != null) session.unsubscribe(subscriberID);
 		} catch (InvalidDestinationException e) {
 		} catch (JMSException e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -45,7 +46,7 @@ public class TopicConsumer {
 			consumer = session.createConsumer(session.createTopic(topic));
 			consumer.setMessageListener(reader::consume);
 		} catch (Exception e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class TopicConsumer {
 			consumer.setMessageListener(reader::consume);
 			this.subscriberID = subscriberID;
 		} catch (Exception e) {
-			getGlobal().log(SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -68,7 +69,7 @@ public class TopicConsumer {
 			if (message != null) messageConsumer.consume(message);
 			consumer.close();
 		} catch (JMSException e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 }

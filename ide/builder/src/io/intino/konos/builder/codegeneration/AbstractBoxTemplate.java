@@ -37,7 +37,7 @@ public class AbstractBoxTemplate extends Template {
 			rule().add((condition("type", "service & slack")), (condition("trigger", "getter"))).add(literal("public ")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("SlackBot ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal("() {\n\treturn (")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("SlackBot) ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(";\n}")),
 			rule().add((condition("type", "service")), (condition("trigger", "getter"))),
 			rule().add((condition("trigger", "spark"))).add(literal("io.intino.konos.server.activity.ActivityKonosSpark.instance().stop();")),
-			rule().add((condition("type", "service")), (condition("type", "jms")), (condition("trigger", "quit"))).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(".closeSession();")),
+			rule().add((condition("type", "service")), (condition("type", "jms")), (condition("trigger", "quit"))).add(literal("if (")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(" != null) ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(".closeSession();")),
 			rule().add((condition("type", "dataLake")), (condition("trigger", "quit"))).add(literal("if (ness != null) ness.stop();")),
 			rule().add((condition("type", "service")), (condition("trigger", "quit"))),
 			rule().add((condition("type", "service"))),
