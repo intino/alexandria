@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
-import java.util.logging.Level;
 
-import static java.util.logging.Logger.getGlobal;
 import static javax.jms.DeliveryMode.NON_PERSISTENT;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -38,7 +36,7 @@ public abstract class Producer {
 		try {
 			producer.send(message);
 		} catch (Exception e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -46,7 +44,7 @@ public abstract class Producer {
 		try {
 			producer.send(message, NON_PERSISTENT, 4, messageExpirationSeconds * 1000);
 		} catch (Exception e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -55,7 +53,7 @@ public abstract class Producer {
 			producer.close();
 			producer = null;
 		} catch (JMSException e) {
-			getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 

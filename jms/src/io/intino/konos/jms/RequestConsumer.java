@@ -9,6 +9,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+import static org.slf4j.LoggerFactory.getLogger;
+
 public interface RequestConsumer {
 
 	void consume(Session session, Message message);
@@ -18,7 +21,7 @@ public interface RequestConsumer {
 		try {
 			return request.getJMSReplyTo();
 		} catch (JMSException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -27,7 +30,7 @@ public interface RequestConsumer {
 		try {
 			return message.getJMSCorrelationID();
 		} catch (JMSException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			return "";
 		}
 	}
@@ -37,7 +40,7 @@ public interface RequestConsumer {
 		try {
 			new QueueProducer(session, destination).produce(message);
 		} catch (JMSException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -56,7 +59,7 @@ public interface RequestConsumer {
 			buffer.flush();
 			return buffer.toByteArray();
 		} catch (IOException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 		return new byte[0];
 	}
@@ -69,7 +72,7 @@ public interface RequestConsumer {
 			message.setText(new Gson().toJson(response));
 			return message;
 		} catch (JMSException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			return null;
 		}
 	}

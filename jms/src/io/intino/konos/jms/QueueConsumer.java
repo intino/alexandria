@@ -1,8 +1,9 @@
 package io.intino.konos.jms;
 
 import javax.jms.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class QueueConsumer {
 
@@ -20,7 +21,7 @@ public class QueueConsumer {
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(message -> listener.consume(session, message));
 		} catch (Exception e) {
-			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -30,7 +31,7 @@ public class QueueConsumer {
 			MessageConsumer consumer = session.createConsumer(destination);
 			consumer.setMessageListener(listener::consume);
 		} catch (Exception e) {
-			Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 
@@ -41,7 +42,7 @@ public class QueueConsumer {
 			Message message = consumer.receive(timeout);
 			if (message != null) messageConsumer.consume(message);
 		} catch (JMSException e) {
-			e.printStackTrace();
+			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 }

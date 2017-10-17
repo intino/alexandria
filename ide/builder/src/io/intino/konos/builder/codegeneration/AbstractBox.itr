@@ -227,7 +227,7 @@ def trigger(spark)
 end
 
 def type(service) type(jms) trigger(quit)
-	$name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
+	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
 end
 
 def type(dataLake) trigger(quit)
