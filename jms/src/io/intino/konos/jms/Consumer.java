@@ -1,11 +1,18 @@
 package io.intino.konos.jms;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+
 public interface Consumer {
+	Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+
 	void consume(Message message);
 
 	static String textFrom(Message message) {
@@ -16,7 +23,7 @@ public interface Consumer {
 				return new String(data);
 			} else return ((TextMessage) message).getText();
 		} catch (JMSException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 			return "";
 		}
 	}
