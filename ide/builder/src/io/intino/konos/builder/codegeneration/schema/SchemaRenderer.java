@@ -8,6 +8,7 @@ import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.bool.BoolData;
 import io.intino.konos.model.graph.date.DateData;
 import io.intino.konos.model.graph.datetime.DateTimeData;
+import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.integer.IntegerData;
 import io.intino.konos.model.graph.longinteger.LongIntegerData;
 import io.intino.konos.model.graph.real.RealData;
@@ -76,6 +77,7 @@ public class SchemaRenderer {
 		else if (attribute.isText()) return processAttribute(attribute.asText());
 		else if (attribute.isDateTime()) return processAttribute(attribute.asDateTime());
 		else if (attribute.isDate()) return processAttribute(attribute.asDate());
+		else if (attribute.isFile()) return processAttribute(attribute.asFile());
 		else if (attribute.isLongInteger()) return processAttribute(attribute.asLongInteger());
 		return null;
 	}
@@ -99,6 +101,13 @@ public class SchemaRenderer {
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue() + "L");
+	}
+
+
+	private static Frame processAttribute(FileData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
+				.addSlot("type", attribute.type());
 	}
 
 	private static Frame processAttribute(BoolData attribute) {
