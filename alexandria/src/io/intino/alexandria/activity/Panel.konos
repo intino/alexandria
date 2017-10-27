@@ -1,0 +1,26 @@
+dsl Konos
+
+use Catalog
+use Schemas
+
+Display panel
+	displays = panelCustomView panelCatalogView panelDisplayView
+
+	Notification refreshTarget as Text
+	Notification refreshViewList as List Object(Reference)
+	Notification refreshBreadcrumbs as Text
+	Notification createPanel as Text
+	Notification showPanel
+	Notification hidePanel
+	Notification showDialog
+
+	Request selectView as Text
+	Request navigate as Text
+
+Display panelCustomView
+	displays = item
+
+Display panelCatalogView
+	displays = catalog temporalRangeCatalog temporalTimeCatalog
+
+Display panelDisplayView
