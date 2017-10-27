@@ -1,0 +1,39 @@
+dsl Konos
+
+use Panel
+use Schemas
+use Catalog
+
+Display desktop
+	displays = tabLayout menuLayout
+
+	Notification(Client) loading as Bool
+	Notification(Client) loaded
+
+Display tabLayout
+	displays = panel catalog temporalRangeCatalog temporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshSelected as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request logout
+	Request selectItem as Text
+
+Display menuLayout
+	displays = panel catalog temporalRangeCatalog temporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshSelected as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request logout
+	Request selectItem as Text

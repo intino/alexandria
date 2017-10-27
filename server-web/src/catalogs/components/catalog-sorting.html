@@ -1,0 +1,102 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="group-chart.html">
+
+<dom-module id="catalog-sorting">
+
+    <template>
+        <ul class="layout horizontal sortings">
+            <template is="dom-repeat" items="[[sortingList]]" as="sorting">
+                <li name$="[[sorting.name]]" mode$="[[sorting.mode]]" class$="layout horizontal sorting [[sorting.name]]">
+                    <a class="label" on-tap="_selectSorting">[[sorting.label]]</a>
+                    <iron-icon class="Ascendant" icon="arrow-drop-up"></iron-icon>
+                    <iron-icon class="Descendant" icon="arrow-drop-down"></iron-icon>
+                </li>
+            </template>
+        </ul>
+    </template>
+
+    <style>
+        :host .sortings {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        :host .sorting {
+            background: white;
+            color: black;
+            margin-right: 10px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        :host .sorting[active] {
+            background: var(--accent-color);
+            color: white;
+        }
+        :host .sorting iron-icon {
+            display: none;
+        }
+        :host .sorting[active][mode=Ascendant] iron-icon.Ascendant, :host .sorting[active][mode=Descendant] iron-icon.Descendant {
+            display: block;
+        }
+        :host .sorting[active][mode=Ascendant] iron-icon.Descendant, :host .sorting[active][mode=Descendant] iron-icon.Ascendant {
+            display: none;
+        }
+        :host .sorting a {
+            font-size: 10pt;
+            cursor: pointer;
+            padding: 4px 10px;
+        }
+        :host .sorting[mode=Ascendant] a, :host .sorting[mode=Descendant] a {
+            padding: 4px 0 4px 10px;
+        }
+    </style>
+
+    <script>
+        const CatalogSortingDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'catalog-sorting',
+
+            properties: {
+                sortingList: { type: Array, observer: '_refreshSelected' },
+                selectedSorting: { type: Object, observer: '_refreshSelected' }
+            },
+
+            behaviors: [CottonBehaviors.TranslatorBehavior],
+
+            attached: function () {
+                this.translate(CatalogSortingDictionary);
+            },
+
+            _refreshSelected : function() {
+                window.setTimeout(() => {
+                    this.querySelectorAll(".sorting").forEach(sorting => sorting.removeAttribute("active"));
+                    if (this.selectedSorting == null) return;
+                    var selected = this.querySelector(".sorting." + this.selectedSorting.name);
+                    if (selected != null) selected.setAttribute("active", "true");
+                }, 100);
+            },
+
+            _selectSorting : function(event) {
+                var element = $(event.target).parent(".sorting").get(0);
+                var name = element.getAttribute("name");
+                var mode = element.getAttribute("mode");
+                if (mode == "Ascendant" || mode == "") mode = "Descendant";
+                else mode = "Ascendant";
+                element.setAttribute("mode", mode);
+                this.fire("select-sorting", { name: name, mode: mode });
+            }
+
+        });
+    </script>
+
+</dom-module>

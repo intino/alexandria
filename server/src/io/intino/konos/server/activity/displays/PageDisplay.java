@@ -1,18 +1,20 @@
 package io.intino.konos.server.activity.displays;
 
+import io.intino.konos.Box;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class PageDisplay<N extends DisplayNotifier> extends Display<N> {
+public abstract class PageDisplay<N extends DisplayNotifier> extends ActivityDisplay<N> {
     private int page;
     private int pageSize;
     private List<Consumer<List<String>>> selectListeners = new ArrayList<>();
 
     private static final int PageSize = 20;
 
-    public PageDisplay() {
-        super();
+    public PageDisplay(Box box) {
+        super(box);
         this.page = 0;
         this.pageSize = PageSize;
     }

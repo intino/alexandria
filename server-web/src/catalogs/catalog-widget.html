@@ -1,0 +1,210 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="_common/catalog/catalog-grouping-list.html">
+<link rel="import" href="catalog-view-list-widget.html">
+<link rel="import" href="dialog-container-widget.html">
+<link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="_common/breadcrumbs-behavior.html">
+<link rel="import" href="_common/element-behavior.html">
+
+<script src="catalogwidget/requester.js"></script>
+<script src="catalogwidget/notifier-listener.js"></script>
+
+<dom-module id="catalog-widget">
+
+    <template>
+        <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
+        <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
+        <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
+            <a id="showGroupingsButton" class="layout vertical center center-justified" hidden="[[_hideGroupings]]" on-tap="_showGroupingsDialog"><div>[[ShowGroupings]]</div></a>
+            <catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                   grouping-list="[[_catalog.groupingList]]"
+                                   on-grouping-selection-change="_handleGroupingChange"
+                                   on-delete-grouping-group="_handleDeleteGroupingGroup"></catalog-grouping-list>
+            <div class="main flex">
+                <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
+                <cotton-zombie display="CatalogViewListDisplay" widget="CatalogViewListWidget"></cotton-zombie>
+            </div>
+        </div>
+        <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
+        <cotton-zombie display="DialogContainerDisplay" widget="DialogContainerWidget"></cotton-zombie>
+        <paper-dialog id="groupingsDialog" no-overlap>
+            <h2>[[ShowGroupings]]</h2>
+            <catalog-grouping-list hidden="[[_hideGroupings]]"
+                                   grouping-list="[[_catalog.groupingList]]"
+                                   on-grouping-selection-change="_handleGroupingChange"
+                                   on-delete-grouping-group="_handleDeleteGroupingGroup"></catalog-grouping-list>
+            <div class="buttons">
+                <paper-button dialog-dismiss>[[Close]]</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host > h3 {
+            margin: 0 0 0 22px;
+        }
+        :host > div {
+            width: 100%;
+            height: 100%;
+        }
+        :host .main {
+            border: 0 solid #ddd;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        :host .embedded_true .main {
+            border-right-width: 0;
+        }
+        :host .filtered_true .main catalog-view-list-widget {
+            height: calc(100% - 24px);
+        }
+        :host .clear {
+            position: static;
+            right: 0;
+            background: wheat;
+            padding: 8px 10px;
+            z-index: 1;
+            cursor: pointer;
+            width: calc(100% - 20px);
+            display: block;
+            text-align: right;
+            font-size: 10pt;
+            color: var(--default-primary-color);
+        }
+        :host #showGroupingsButton {
+            display: none;
+            background: var(--default-primary-color);
+            cursor: pointer;
+            width: 39px;
+            border-right: 1px solid white;
+        }
+        :host #showGroupingsButton div {
+            transform: rotate(90deg);
+            background: transparent;
+            color: white;
+            width: 110px;
+        }
+        :host paper-dialog {
+            background: white;
+            padding: 10px;
+        }
+        :host paper-dialog paper-button {
+            margin: 0 10px;
+            min-width: 80px;
+        }
+        :host paper-dialog catalog-grouping-list {
+            display: block;
+            margin: 0;
+            max-height: 300px;
+            border: 0;
+            overflow: auto;
+        }
+        :host #panel {
+            display: block;
+            margin: 0px 6px;
+            width: calc(100% - 12px);
+        }
+        :host #main.hidden, :host #panel.hidden {
+            position: absolute;
+            left: -10000px;
+        }
+        :host cotton-breadcrumbs {
+            display: block;
+            padding: 10px;
+            --cotton-breadcrumbs-item-color: var(--default-primary-color);
+            --cotton-breadcrumbs-item-border-color: var(--footer-background-color);
+            --cotton-breadcrumbs-item-size: 12pt;
+            --cotton-breadcrumbs-item-brothers-size: 12pt;
+            --cotton-breadcrumbs-item-parents-size: 12pt;
+        }
+        @media screen and (max-width: 736px) {
+            :host #showGroupingsButton {
+                display: flex;
+            }
+            :host #embeddedGroupings {
+                display: none;
+            }
+            :host cotton-breadcrumbs {
+                margin-left: 30px;
+                margin-top: 5px;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+            :host #main > .main {
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+
+    <script>
+
+        const EntityCatalogWidgetDictionary = {
+            es: {
+                ClearFilter : "ver todos",
+                ShowGroupings : "filtrar catálogo",
+                Close : "cerrar"
+            },
+            en: {
+                ClearFilter : "view all",
+                ShowGroupings : "filter catalog",
+                Close : "close"
+            }
+        };
+
+        Polymer({
+            is: 'catalog-widget',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         SumusBehaviors.BreadcrumbsBehavior,
+                         SumusBehaviors.ElementBehavior,
+                         EntityCatalogWidgetBehaviors.Requester,
+                         EntityCatalogWidgetBehaviors.NotifierListener ],
+
+            properties : {
+                embedded: { type: Boolean, value: function() { return false; } },
+                _catalog: Object,
+                _filtered : { type: Boolean, value: function() { return false; }},
+                _hideGroupings: { type: Boolean, value: function() { return true; }}
+            },
+
+            attached : function() {
+                this.translate(EntityCatalogWidgetDictionary);
+                this.listenToDisplay();
+            },
+
+            _refreshCatalog : function(catalog) {
+                this._catalog = catalog;
+                this._hideGroupings = this._catalog.hideGroupings;
+                this._showLabel = catalog.embedded && catalog.label !== "";
+            },
+
+            _refreshFiltered : function(value) {
+                this._filtered = value;
+            },
+
+            _selectGrouping : function(event) {
+            },
+
+            _handleGroupingChange : function(event) {
+                this.selectGrouping(event.detail);
+            },
+
+            _handleDeleteGroupingGroup : function(event) {
+                this.deleteGroupingGroup(event.detail);
+            },
+
+            _showGroupingsDialog : function () {
+                this.$.groupingsDialog.open();
+            }
+
+        });
+
+    </script>
+</dom-module>

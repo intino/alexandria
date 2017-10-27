@@ -1,0 +1,239 @@
+<link rel="import" href="../../../polymer/polymer.html">
+<link rel="import" href="../../../cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../cotton-checkbox/cotton-checkbox.html">
+<link rel="import" href="../../../paper-input/paper-input.html">
+<link rel="import" href="../../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../iron-icons/iron-icons.html">
+<link rel="import" href="../../../iron-icons/av-icons.html">
+<link rel="import" href="../../../iron-icon/iron-icon.html">
+<link rel="import" href="group-chart.html">
+
+<dom-module id="catalog-grouping">
+
+    <template>
+        <!--<div class="label layout horizontal end-justified"><cotton-checkbox checked id="groupsCheckbox" disabled$="[[_groupsDisabled]]" icon="av:stop" on-change="_toggleGroups">[[grouping.label]]</cotton-checkbox></div>-->
+        <div class="label layout horizontal">[[grouping.label]]</div>
+        <div class="toolbar" hidden="[[!_enoughGroups]]">
+            <paper-input id="filterInput" noLabelFloat placeholder="[[Filter]]" on-keyup="_filter"><iron-icon icon="search" suffix></iron-icon></paper-input>
+            <div class="layout horizontal end-justified info"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[grouping.groupList.length]]</div></div>
+        </div>
+        <ul class="groups">
+            <template is="dom-if" if="[[!grouping.groupList.length]]">
+                <li class="message">[[NoGroups]]</li>
+            </template>
+            <template is="dom-if" if="[[!someGroupsVisible]]">
+                <li class="message">[[NoGroups]]</li>
+            </template>
+            <template is="dom-repeat" items="[[grouping.groupList]]" as="group">
+                <li class$="layout horizontal group _[[_groupIdx(group.label)]]">
+                    <div class="chart"><group-chart group="[[group]]" percentage="[[_isPercentage()]]" count="[[grouping.countItems]]" color="[[_colorOf(group)]]"></group-chart></div>
+                    <div class="layout horizontal flex">
+                        <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="false" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
+                        <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden$="[[!_isCluster()]]"></paper-icon-button>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </template>
+
+    <style>
+        :host .label {
+            font-weight: bold;
+            font-size: 11pt;
+        }
+        :host .label, :host .toolbar {
+            margin-left: 92px;
+        }
+        :host.no-charts .label, :host.no-charts .toolbar {
+            margin-left: 22px;
+        }
+        :host.no-charts .chart {
+            display: none;
+        }
+        :host paper-input {
+            --paper-input-container : {
+                padding: 5px 0;
+            };
+            --paper-input-container-input : {
+                font-size: 10pt;
+            };
+            --paper-input-container-label : {
+                display: none;
+            }
+        }
+        :host paper-input ::content .floated-label-placeholder {
+            display: none;
+        }
+        :host paper-input iron-icon {
+            height: 16px;
+        }
+        :host .info {
+            font-size: 8pt;
+            color: var(--secondary-text-color);
+        }
+        :host .chart {
+            width: 65px;
+            margin-right: 5px;
+        }
+        :host .groups {
+            margin: 5px 0 0;
+            padding: 0;
+            list-style: none;
+            font-size: 10pt;
+            max-height: 230px;
+            overflow: auto;
+        }
+        :host .groups li {
+            margin-bottom: 3px;
+        }
+        :host .message {
+            text-align: center;
+        }
+        :host cotton-checkbox {
+            --cotton-checkbox-size : 14px;
+        }
+        :host paper-icon-button {
+            height: 15px;
+            width: 15px;
+            padding: 0;
+            display: none;
+        }
+        :host .group:hover paper-icon-button {
+            display: block;
+        }
+    </style>
+
+    <script>
+        const CatalogGroupingDictionary = {
+            es: {
+                Filter : "filtrar",
+                NoGroups : "no hay opciones"
+            },
+            en: {
+                Filter : "filter",
+                NoGroups : "no options"
+            }
+        };
+
+        const CatalogGroupingGroupColorEnabled = "#499A00";
+        const CatalogGroupingGroupColorDisabled = "#ddd";
+
+        Polymer({
+            is: 'catalog-grouping',
+
+            properties: {
+                grouping: { type: Object, observer: '_refreshGrouping' },
+                someGroupsVisible: Boolean,
+                _selectedCount: Number,
+                _enoughGroups: Boolean,
+                _groupsDisabled: Boolean,
+                _chartsVisible : Boolean
+            },
+
+            behaviors: [CottonBehaviors.TranslatorBehavior],
+
+            attached: function () {
+                this.translate(CatalogGroupingDictionary);
+            },
+
+            getSelectedGroups : function() {
+                var result = [];
+                this.querySelectorAll(".groups cotton-checkbox").forEach((checkbox) => {
+                    if (checkbox.checked) result.push(checkbox.getAttribute("name"));
+                });
+                return result;
+            },
+
+            showCharts : function() {
+                $(this).removeClass("no-charts");
+            },
+
+            hideCharts : function() {
+                $(this).addClass("no-charts");
+            },
+
+            _colorOf : function(group) {
+                return group.selected ? CatalogGroupingGroupColorEnabled : CatalogGroupingGroupColorDisabled;
+            },
+
+            _refreshGrouping : function() {
+                let count = this.grouping.groupList.length;
+                this._groupsDisabled = count == 1 && !this._isCluster();
+                this._enoughGroups = count > 10;
+                this._selectedCount = count;
+            },
+
+            _refreshGroupsCheckbox : function() {
+                var allSelected = true;
+                let checkboxes = this.querySelectorAll(".groups cotton-checkbox");
+                for (var i=0;i<checkboxes.length; i++) {
+                    if (!checkboxes[i].checked) {
+                        allSelected = false;
+                        break;
+                    }
+                }
+                //this.$.groupsCheckbox.checked = allSelected;
+            },
+
+            _toggleGroups : function(event) {
+                return;
+//                let value = this.$.groupsCheckbox.checked;
+//                this.querySelectorAll(".groups cotton-checkbox").forEach((checkbox) => {
+//                    checkbox.checked = value;
+//                });
+//                this.fire("selection-change");
+            },
+
+            _toggleGroup : function(event) {
+                if (this.timer) window.clearTimeout(this.timer);
+                this.timer = window.setTimeout(() => this.fire("selection-change"), 600);
+                this._refreshColor(event);
+                this._selectedCount = this.getSelectedGroups().length;
+                this._refreshGroupsCheckbox();
+            },
+
+            _refreshColor : function(event) {
+                var container = $(event.target).parents("li").get(0);
+                var groupChart = container.querySelector("group-chart");
+                var checked = container.querySelector("cotton-checkbox").checked;
+                groupChart.color = checked ? CatalogGroupingGroupColorEnabled : CatalogGroupingGroupColorDisabled;
+            },
+
+            _isPercentage : function() {
+                return this.grouping.histogram.toLowerCase() === "percentage";
+            },
+
+            _groupIdx : function(label) {
+                return label.replace(/[\W_]+/g,"");
+            },
+
+            _filter : function() {
+                var value = this._groupIdx(this.$.filterInput.value).toLowerCase();
+                var someGroupsVisible = false;
+                this.querySelectorAll(".group").forEach(function(group) {
+                    var className = group.className;
+                    let visible = value === "" || className.toLowerCase().indexOf(value) !== -1;
+                    if (visible) someGroupsVisible = true;
+                    group.style.display = visible ? "flex" : "none";
+                });
+                this.someGroupsVisible = someGroupsVisible;
+            },
+
+            _isCluster : function() {
+                return this.grouping.type.toLowerCase() === "clustergrouping";
+            },
+
+            _isDisabled : function() {
+                return this.grouping.groupList.length <= 1;
+            },
+
+            _deleteGroup : function(e) {
+                var target = e.target;
+                var group = target.getAttribute("group") != null ? target.getAttribute("group") : $(target).parent("paper-icon-button").get(0).getAttribute("group");
+                this.fire("delete-grouping-group", { grouping: this.grouping.name, name: group });
+            }
+
+        });
+    </script>
+
+</dom-module>

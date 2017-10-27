@@ -2,9 +2,9 @@ def type(dialogDisplay)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+firstUpperCase~Box;
-	import io.intino.konos.server.activity.dialogs.Dialog;
-	import io.intino.konos.server.activity.dialogs.DialogValidator;
-    import io.intino.konos.server.activity.dialogs.DialogDisplay;
+	import io.intino.konos.server.activity.displays.dialogs.model.Dialog;
+	import io.intino.konos.server.activity.displays.dialogs.DialogValidator;
+    import io.intino.konos.server.activity.displays.dialogs.DialogDisplay;
 
     import java.util.Arrays;
 

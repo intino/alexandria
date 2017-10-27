@@ -89,7 +89,7 @@ var AlpacaDialogWidget = function() {
         var toolbarContainer = container.querySelector(".toolbar");
         var operations = dialog.toolbar.operationList;
 
-        for (var i=0; i<operations.length; i++) {
+        for (var i=operations.length-1; i>=0; i--) {
             var label = DialogAlpacaDictionary.labelFor(operations[i].name);
             _renderButton({ name: operations[i].name, label: label != null ? label : operations[i].label }, toolbarContainer);
         }
