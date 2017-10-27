@@ -67,14 +67,16 @@ def type(request) trigger(interface)
 end
 
 def type(request & reply)
-	public void $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
+	public javax.jms.MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
 		Destination temporaryQueue = session.createTemporaryQueue();
-		session.createConsumer(temporaryQueue).setMessageListener(callback);
+		javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+		consumer.setMessageListener(callback);
 		final $messageType~Message message = session.create$messageType~Message();
 		message.setJMSReplyTo(temporaryQueue);
 		message.setJMSCorrelationID(createRandomString());
 		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
 		new QueueProducer(session, "$queue"[$custom...[]]).produce(message);
+		return consumer;
 	}
 
 	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {
