@@ -23,6 +23,7 @@ import static java.util.Arrays.asList;
 public class Ness {
 	private static Logger logger = LoggerFactory.getLogger(Ness.class);
 	private static final String REFLOW_PATH = "service.ness.reflow";
+	private static final String REFLOW_ACK = "service.ness.reflow.ack";
 
 	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
@@ -85,11 +86,25 @@ public class Ness {
 
 	private void waitUntilReflowSession() {
 		try {
-			stop();
-			sleep(40000);
-			start();
+			while (!ack()) {
+				stop();
+				sleep(10 * 1000);
+				start();
+			}
 		} catch (InterruptedException e) {
 		}
+	}
+
+	private boolean ack() {
+		boolean[] answer = {false};
+		new TopicConsumer(session, REFLOW_ACK).listen(m -> answer[0] = true);
+		try {
+			new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("ready?"));
+			sleep(3 * 1000);
+		} catch (JMSException | InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return answer[0];
 	}
 
 	public void stop() {
