@@ -1,7 +1,7 @@
 var AlexandriaDialogBehaviors = AlexandriaDialogBehaviors || {};
 
 AlexandriaDialogBehaviors.DialogBehavior = {
-    DialogDelegate : "lib/alexandria-framework/dialogs/alpaca.html",
+    DialogDelegate : "lib/alexandria-framework-activity/dialogs/alpaca.html",
 
     properties : {
         _dialog : Object,

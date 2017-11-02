@@ -1,0 +1,20 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/neon-animation/neon-animation-behavior.html">
+
+<script>
+    Polymer({
+        is: 'alexandria-expand-animation',
+        behaviors: [ Polymer.NeonAnimationBehavior ],
+
+        configure: function(config) {
+            const node = config.node;
+            const height = node.getBoundingClientRect().height;
+            this._effect = new KeyframeEffect(node, [{
+                height: (height / 2) + 'px'
+            }, {
+                height: height + 'px'
+            }], this.timingFromConfig(config));
+            return this._effect;
+        }
+    });
+</script>
