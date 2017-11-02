@@ -2,16 +2,16 @@ def type(display)
 	package $package+validPackage.displays.requesters;
 
 	import $package+validPackage.displays.$name+firstUpperCase~Display;
-	import io.intino.alexandria.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
 
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
-	import io.intino.alexandria.exceptions.AlexandriaException;
-	import io.intino.alexandria.foundation.activity.displays.DisplayNotifierProvider;
-	import io.intino.alexandria.foundation.activity.spark.ActivitySparkManager;
-	import io.intino.alexandria.foundation.activity.spark.resources.DisplayRequester;
+	import io.intino.konos.alexandria.exceptions.AlexandriaException;
+	import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+	import io.intino.konos.alexandria.foundation.activity.spark.ActivitySparkManager;
+	import io.intino.konos.alexandria.foundation.activity.spark.resources.DisplayRequester;
 
 	public class $name+firstUpperCase~DisplayRequester extends DisplayRequester {
 
@@ -32,7 +32,7 @@ end
 
 def type(request & asset) trigger(request)
 	if (operation.equals("$name")) {
-		io.intino.alexandria.foundation.activity.spark.ActivityFile file = display.$name($parameter);
+		io.intino.konos.alexandria.foundation.activity.spark.ActivityFile file = display.$name($parameter);
 		manager.write(file.content(), file.label());
 	}
 end
