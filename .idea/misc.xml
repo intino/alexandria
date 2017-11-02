@@ -29,6 +29,9 @@
         <option value="$PROJECT_DIR$/datalake-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/rest-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/ness-accessor/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-core/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-foundation/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-framework/pom.xml" />
       </list>
     </option>
   </component>

@@ -1,7 +1,7 @@
 package io.intino.konos.server.activity.displays.elements.builders;
 
 import io.intino.konos.server.activity.displays.catalogs.model.views.MapView;
-import io.intino.konos.server.activity.displays.elements.AbstractView;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.model.toolbar.*;
 import io.intino.konos.server.activity.displays.elements.model.toolbar.GroupingSelection;
 import io.intino.konos.server.activity.displays.schemas.*;

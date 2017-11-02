@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/alexandria/alexandria.iml" filepath="$PROJECT_DIR$/alexandria/alexandria.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria-core/alexandria-core.iml" filepath="$PROJECT_DIR$/alexandria-core/alexandria-core.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria-foundation/alexandria-foundation.iml" filepath="$PROJECT_DIR$/alexandria-foundation/alexandria-foundation.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria-framework/alexandria-framework.iml" filepath="$PROJECT_DIR$/alexandria-framework/alexandria-framework.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria-framework-activity/alexandria-framework-activity.iml" filepath="$PROJECT_DIR$/alexandria-framework-activity/alexandria-framework-activity.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="builder" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" />

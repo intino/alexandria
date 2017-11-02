@@ -23,7 +23,7 @@ def type(page & action)
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.konos.exceptions.*;
-	import io.intino.konos.server.activity.spark.actions.PageAction;
+	import io.intino.alexandria.foundation.activity.spark.actions.PageAction;
 	import java.time.*;
 	import java.util.*;
 	[import $importDialogs+validPackage.dialogs.*;]
@@ -88,8 +88,8 @@ def type(schemaImport) trigger(schemaImport)
 end
 
 def trigger(ui)
-	public io.intino.konos.server.activity.displays.Soul prepareSoul(io.intino.konos.server.activity.services.push.ActivityClient client) {
-	    return new io.intino.konos.server.activity.displays.Soul(session) {
+	public io.intino.alexandria.foundation.activity.displays.Soul prepareSoul(io.intino.alexandria.foundation.activity.services.push.ActivityClient client) {
+	    return new io.intino.alexandria.foundation.activity.displays.Soul(session) {
 			@Override
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);

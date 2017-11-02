@@ -1,0 +1,420 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/l2t-paper-slider/l2t-paper-slider.html">
+<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/av-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/device-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/editor-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/hardware-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/image-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/maps-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/notification-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/social-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/places-icons.html">
+<link rel="import" href="../../../../lib/iron-icons/communication-icons.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../lib/paper-rating/paper-rating.html">
+<link rel="import" href="../../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../alexandria-page-container.html">
+<link rel="import" href="alexandria-mold-hyperlink.html">
+<link rel="import" href="alexandria-mold-hyperlinks.html">
+<link rel="import" href="alexandria-mold-download-operation.html">
+<link rel="import" href="alexandria-mold-export-operation.html">
+<link rel="import" href="alexandria-mold-catalog.html">
+<link rel="import" href="alexandria-mold-editor.html">
+
+<dom-module id="alexandria-mold-block">
+
+    <template>
+        <template is="dom-repeat" items="[[block.blocks]]" as="block">
+            <alexandria-mold-block item="[[item]]" block="[[block]]" mode="[[mode]]"></alexandria-mold-block>
+        </template>
+        <template id="stampsTemplate" is="dom-repeat" items="[[block.stampList]]" as="stamp">
+            <template is="dom-if" if="[[stamp.isPicture]]">
+                <div class="picture layout vertical center-justified" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" hidden$="[[!stamp.value.length]]">
+                    <div hidden$="[[!stamp.isSingleValue]]">
+                        <img class$="single [[stamp.classes]] picture_img_[[stamp.name]]" src="[[stamp.value]]" class="icon" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" />
+                    </div>
+                    <div hidden$="[[stamp.isSingleValue]]">
+                        <l2t-paper-slider class$="[[stamp.classes]]" total-slides$="[[stamp.countValues]]" tabIndex="-1">
+                            <template is="dom-repeat" items="[[stamp.values]]" as="picture">
+                                <paper-slide><img src="[[picture]]"/></paper-slide>
+                            </template>
+                        </l2t-paper-slider>
+                        <paper-icon-button class="slide-button previous" icon="image:navigate-before" on-tap="_previousSlide"></paper-icon-button>
+                        <paper-icon-button class="slide-button next" icon="image:navigate-next" on-tap="_nextSlide"></paper-icon-button>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[stamp.isTitle]]">
+                <div name$="[[stamp.name]]" on-tap="_edit" class$="title [[stamp.classes]] editable_[[stamp.isEditable]]" title$="[[stamp.value]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]">[[stamp.value]]</div>
+                <alexandria-mold-editor class$="title [[stamp.classes]]" label$="[[stamp.label]]" name$="[[stamp.name]]" value$="{{stamp.value}}" hidden$="[[!stamp.isEditable]]" style="display:none;" on-save="_save" on-close="_close"></alexandria-mold-editor>
+            </template>
+            <template is="dom-if" if="[[stamp.isDescription]]">
+                <div class$="description [[stamp.classes]] layout horizontal" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" hidden$="[[!stamp.value.length]]">
+                    <template is="dom-if" if="[[stamp.label.length]]"><div>[[stamp.label]]:</div></template>
+                    <div>[[stamp.value]]</div>
+                    <div class="suffix">[[stamp.properties.suffix]]</div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[stamp.isIcon]]">
+                <iron-icon class$="[[stamp.classes]]" icon$="[[stamp.properties.icon]]"
+                           src$="[[stamp.value]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"
+                           title="[[stamp.properties.title]]" hidden$="[[!stamp.value.length]]"></iron-icon>
+            </template>
+            <template is="dom-if" if="[[stamp.isRating]]">
+                <paper-rating class$="rating [[stamp.classes]]" icon$="[[stamp.properties.icon]]"
+                              rating$="[[stamp.value]]" disabled style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"
+                              hidden$="[[!stamp.value.length]]"></paper-rating>
+            </template>
+            <template is="dom-if" if="[[stamp.isHighlight]]">
+                <div hidden$="[[!stamp.value.length]]">
+                    <div class$="highlight [[stamp.classes]]" style$="background-color:[[stamp.properties.color]];[[stamp.properties.defaultStyle]];[[stamp.properties.style]]">
+                        <span>[[stamp.value]]</span>
+                        <span class="suffix">[[stamp.properties.suffix]]</span>
+                    </div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[stamp.isOpenDialogOperation]]">
+                <paper-button raised stamp$="[[stamp.name]]" on-tap="_openDialog" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]">[[stamp.label]]</paper-button>
+            </template>
+            <template class="page-template" is="dom-if" if="[[stamp.isPage]]">
+                <div class="page-layer" style$="height:[[stamp.height]];[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
+            <template is="dom-if" if="[[stamp.isDisplay]]">
+                <div class="display-layer" name$="[[stamp.name]]" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
+            <template is="dom-if" if="[[stamp.isBreadcrumbs]]">
+                <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
+            </template>
+            <template is="dom-if" if="[[stamp.isItemLinks]]">
+                <alexandria-mold-hyperlinks title="[[stamp.properties.title]]" items="[[stamp.properties.links]]" on-item-tap="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-hyperlinks>
+            </template>
+            <template is="dom-if" if="[[stamp.isCatalogLink]]">
+                <div hidden$="[[!stamp.properties.title]]">
+                    <alexandria-mold-hyperlink name="[[stamp.name]]" label="[[stamp.properties.title]]" on-item-tap="_navigateCatalog" styles="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-hyperlink>
+                </div>
+            </template>
+            <template is="dom-if" if="[[stamp.isDownloadOperation]]">
+                <alexandria-mold-download-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" on-download-option="_download" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-download-operation>
+            </template>
+            <template is="dom-if" if="[[stamp.isExportOperation]]">
+                <alexandria-mold-export-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" from="[[stamp.properties.from]]" to="[[stamp.properties.to]]" on-export-option="_export" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-export-operation>
+            </template>
+            <template is="dom-if" if="[[stamp.isTaskOperation]]">
+                <paper-button raised stamp$="[[stamp.name]]" on-tap="_executeTask" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]">[[stamp.label]]</paper-button>
+            </template>
+            <template is="dom-if" if="[[stamp.isSnippet]]">
+                <div hidden$="[[!stamp.value.length]]" style$="display:none;[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" class="snippet-layer">
+                    <div class="text" hidden>[[stamp.value]]</div>
+                </div>
+            </template>
+            <template is="dom-if" if="[[stamp.isEmbeddedCatalog]]">
+                <alexandria-mold-catalog style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" catalog="[[stamp.properties.catalog]]" item$="[[item]][[stamp.name]]"></alexandria-mold-catalog>
+            </template>
+        </template>
+    </template>
+
+    <style>
+        :host {
+            font-size: 10pt;
+            height: auto;
+        }
+        :host cotton-breadcrumbs {
+            display: block;
+            --cotton-breadcrumbs-item-color: var(--default-primary-color);
+            --cotton-breadcrumbs-item-border-color: var(--footer-background-color);
+            --cotton-breadcrumbs-item-size: 13pt;
+            --cotton-breadcrumbs-item-brothers-size: 12pt;
+            --cotton-breadcrumbs-item-parents-size: 12pt;
+        }
+        :host > * {
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+        :host .editable_true {
+            margin-top: -1px;
+            padding: 2px 0;
+            border: 1px solid transparent;
+            cursor: text;
+        }
+        :host .editable_true:hover {
+            border-color: #ddd;
+            background: #efefef;
+        }
+        :host .title {
+            font-size: 11pt !important;
+        }
+        :host.grid .title {
+            max-width: 210px;
+            text-overflow: ellipsis;
+            display: inline-block;
+            overflow: hidden;
+        }
+        :host .highlight {
+            color: white;
+            margin: 4px 5px 2px 0;
+            display: inline-block;
+            padding: 1px 10px;
+            border-radius: 5px;
+        }
+        :host .description {
+            color: var(--secondary-text-color);
+        }
+        :host .description div {
+            margin-right: 3px;
+        }
+        :host paper-button {
+            color: black;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 5px;
+            background: none;
+        }
+        :host .picture {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        :host.grid .picture {
+            height: 259px;
+        }
+        :host .picture l2t-paper-slider {
+            margin-bottom: 10px;
+            --paper-slider-styles : {
+                height: 250px !important;
+            };
+            --paper-slide-width: 300px;
+            --paper-slide-height: 300px;
+        }
+        :host .picture l2t-paper-slider:focus {
+            outline: none !important;
+        }
+        :host .picture l2t-paper-slider paper-slide img {
+            width: 100%;
+        }
+        :host .picture .slide-button {
+            position: absolute;
+            height: 35px;
+            width: 35px;
+            padding: 0;
+            color: #999;
+            top: 100px;
+            display: none;
+        }
+        :host .picture:hover .slide-button {
+            display: block;
+        }
+        :host .slide-button.next {
+            right: 0;
+        }
+        :host.grid img.single, :host.map img.single {
+            width: 300px;
+            max-height: 240px;
+        }
+        @media screen and (max-width: 980px) {
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 90%;
+            }
+        }
+        @media screen and (max-width: 736px) {
+            :host.not-mobile {
+                display: none;
+            }
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 100%;
+            }
+        }
+        @media screen and (max-width: 540px) {
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 90%;
+            }
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldBlockDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-block',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                item: String,
+                block: { type: Object, observer: '_refresh' },
+                mode: { type: String, observer: '_refresh' },
+                _style: String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldBlockDictionary);
+            },
+
+            ready : function() {
+                var widget = this;
+                this.$.stampsTemplate.addEventListener("dom-change", function(e) {
+                    window.setTimeout(function() { widget._createZombieLayers(); }, 50);
+                });
+            },
+
+            _previousSlide : function(event) {
+                this._slider(event).movePrev();
+            },
+
+            _nextSlide : function(event) {
+                this._slider(event).moveNext();
+            },
+
+            _slider : function(event) {
+                var parent = $(event.target).parents("alexandria-mold-block").get(0);
+                return parent.querySelector("l2t-paper-slider");
+            },
+
+            _openDialog : function(event) {
+                var stamp = event.target.getAttribute("stamp");
+                this.fire("open-dialog", { stamp: stamp, item: this.item });
+            },
+
+            _refresh : function() {
+                if (this.block == null || this.mode == null) return;
+                $(this).addClass(this.block.layout);
+                $(this).addClass(this.mode);
+                if (this.block.style != "") this.style.cssText += ";" + this.block.style;
+                if (this.block.hiddenIfMobile) $(this).addClass("not-mobile");
+                if (this.block.layout.indexOf("flex") !== -1)
+                    this.style.width = "100%";
+                if (this.block.width !== "100%")
+                    this.style.width = this.block.width;
+                if (this.block.height !== "100%") {
+                    this.style.height = this.block.height;
+                    if (this.block.layout.indexOf("horizontal") == -1)
+                        this.style.display = "block";
+                }
+                if (this.block.hidden) this.style.display = "none";
+            },
+
+            _createZombieLayers : function () {
+                if (this.creatingZombies) return;
+                this.creatingZombies = true;
+                this._createZombiePageLayers();
+                this._createZombieDisplayLayers();
+                this._addSnippets();
+                this.fire("stamps-ready");
+                this.creatingZombies = false;
+            },
+
+            _createZombiePageLayers : function() {
+                this.querySelectorAll(".page-layer").forEach((layer) => {
+                    if (layer.querySelectorAll("cotton-zombie").length > 0) return;
+                    this._addZombieLayer(layer, "PageContainer").style.height = "100%";
+                });
+            },
+
+            _createZombieDisplayLayers : function() {
+                this.querySelectorAll(".display-layer").forEach((layer) => {
+                    if (layer.querySelectorAll("cotton-zombie").length > 0) return;
+                    this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
+                });
+            },
+
+            _addSnippets : function() {
+                this.querySelectorAll(".snippet-layer").forEach((layer) => {
+                    var content = $(layer.querySelector(".text")).text();
+                    var contentLayer = layer.querySelector(".snippet-content");
+                    if (contentLayer == null) {
+                        contentLayer = document.createElement("div");
+                        layer.appendChild(contentLayer);
+                    }
+                    contentLayer.className = "snippet-content";
+                    contentLayer.innerHTML = content;
+                    layer.style.display = "block";
+                });
+            },
+
+            _addZombieLayer : function(layer, name, object) {
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", name + "Display");
+                zombie.setAttribute("widget", name + "Widget");
+                if (object != null) zombie.setAttribute("object", object);
+                layer.appendChild(zombie);
+                return zombie;
+            },
+
+            _navigateItem : function(e) {
+                this.fire("navigate-item", e.detail.item);
+            },
+
+            _navigateCatalog : function(e) {
+                this.fire("navigate-catalog", e.detail.item);
+            },
+
+            _download : function(e) {
+                var name = e.target.getAttribute("name");
+                this.fire("download-item", { stamp: name, option: e.detail });
+            },
+
+            _export : function(e) {
+                var name = e.target.getAttribute("name");
+                this.fire("export-item", { stamp: name, from: e.detail.from, to: e.detail.to, option: e.detail.option });
+            },
+
+            _executeTask : function(event) {
+                var stamp = event.target.getAttribute("stamp");
+                this.fire("execute-task-item", { stamp: stamp, item: this.item });
+            },
+
+            _edit : function(e) {
+                var target = $(e.target);
+                var name = e.target.getAttribute("name");
+                if (!target.hasClass("editable_true")) return;
+                e.target.style.display = "none";
+                this._showEditor(name);
+            },
+
+            _editorOf : function(name) {
+                return this.querySelector("alexandria-mold-editor[name='" + name + "']");
+            },
+
+            _save : function(e) {
+                var name = e.target.getAttribute("name");
+                this.fire("save-item", { stamp: name, item: this.item, value: e.detail });
+                this._hideEditor(name);
+            },
+
+            _close : function(e) {
+                this._hideEditor(e.target.getAttribute("name"));
+            },
+
+            _showEditor : function(name) {
+                var editor = this._editorOf(name);
+                editor.style.display = "block";
+                editor.focus();
+                $(editor).prev().get(0).style.display = "none";
+            },
+
+            _hideEditor : function(name) {
+                var editor = this._editorOf(name);
+                editor.style.display = "none";
+                $(editor).prev().get(0).style.display = "block";
+            }
+
+        });
+    </script>
+
+</dom-module>

@@ -1,7 +1,7 @@
 def type(widget)
-	var $name+FirstUpperCase~WidgetBehaviors = $name+FirstUpperCase~WidgetBehaviors || {};
+	var $name+FirstUpperCase~Behaviors = $name+FirstUpperCase~Behaviors || {};
 
-    $name+FirstUpperCase~WidgetBehaviors.Requester = {
+    $name+FirstUpperCase~Behaviors.Requester = {
 
         $requester...[,$NL]
 

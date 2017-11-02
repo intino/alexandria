@@ -3,24 +3,24 @@ def type(page)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
-	import io.intino.konos.exceptions.KonosException;
-	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.foundation.activity.displays.DisplayNotifierProvider;
 
 	import java.util.Base64;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.konos.server.activity.spark.resources.Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.foundation.activity.spark.resources.Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.server.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.foundation.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
 
 		@Override
-		public void execute() throws KonosException {
+		public void execute() throws AlexandriaException {
 			super.execute();
 			[$restrict
 			if (isLogged()) render();
@@ -48,7 +48,7 @@ def type(page)
 				if (client.soul() != null)
 					return false;
 
-				io.intino.konos.server.activity.displays.Soul soul = action.prepareSoul(client);
+				io.intino.alexandria.foundation.activity.displays.Soul soul = action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier(action.session, client, display));
 					display.inject(action.session);
@@ -61,9 +61,9 @@ def type(page)
 				return true;
 			});
 
-			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.server.activity.services.push.ActivityClient>() {
+			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.alexandria.foundation.activity.services.push.ActivityClient>() {
 				@Override
-				public void accept(io.intino.konos.server.activity.services.push.ActivityClient client) {
+				public void accept(io.intino.alexandria.foundation.activity.services.push.ActivityClient client) {
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);
 				}

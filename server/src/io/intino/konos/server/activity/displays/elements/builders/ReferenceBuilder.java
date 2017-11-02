@@ -1,7 +1,7 @@
 package io.intino.konos.server.activity.displays.elements.builders;
 
 import io.intino.konos.server.activity.displays.catalogs.model.Catalog;
-import io.intino.konos.server.activity.displays.elements.AbstractView;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.model.Element;
 import io.intino.konos.server.activity.displays.elements.model.ElementRender;
 import io.intino.konos.server.activity.displays.elements.ElementView;

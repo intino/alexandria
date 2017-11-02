@@ -1,16 +1,15 @@
 def type(dialog)
 	<link rel="import" href="../../lib/polymer/polymer.html">
-	<link rel="import" href="../../lib/iron-flex-layout/iron-flex-layout.html">
 	<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
 	<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
 	<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 	<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 
-	<script src="../../lib/konos-server-web/dialogs/requester.js"></script>
-	<script src="../../lib/konos-server-web/dialogs/notifier-listener.js"></script>
-	<script src="../../lib/konos-server-web/dialogs/behavior.js"></script>
+	<script src="../../lib/alexandria-framework/dialogs/requester.js"></script>
+	<script src="../../lib/alexandria-framework/dialogs/notifier-listener.js"></script>
+	<script src="../../lib/alexandria-framework/dialogs/behavior.js"></script>
 
-	<dom-module id="$name+camelCaseToSnakeCase+lowercase~-widget">
+	<dom-module id="$name+camelCaseToSnakeCase+lowercase">
 
 		<template>
 			<iframe id="frame" class="dialog" src="$[$[delegateUrl$]$]"></iframe>
@@ -27,7 +26,7 @@ def type(dialog)
 		</style>
 
 		<script>
-			const $name+firstUpperCase~WidgetDictionary = {
+			const $name+firstUpperCase~Dictionary = {
 				es: {
 				},
 				en: {
@@ -35,17 +34,17 @@ def type(dialog)
 			};
 
 			Polymer({
-				is: '$name+camelCaseToSnakeCase+lowercase~-widget',
+				is: '$name+camelCaseToSnakeCase+lowercase',
 
 				behaviors: $[ CottonBehaviors.CarrierBehavior,
 					CottonBehaviors.PushBehavior,
 					CottonBehaviors.TranslatorBehavior,
-					KonosDialogWidgetBehaviors.Requester,
-					KonosDialogWidgetBehaviors.NotifierListener,
-					KonosDialogWidgetBehaviors.DialogBehavior $],
+					AlexandriaDialogBehaviors.Requester,
+					AlexandriaDialogBehaviors.NotifierListener,
+					AlexandriaDialogBehaviors.DialogBehavior $],
 
 				attached : function() {
-					this.translate($name+firstUpperCase~WidgetDictionary);
+					this.translate($name+firstUpperCase~Dictionary);
 					this.listenToDisplay();
 					this._initDelegate();
 				}

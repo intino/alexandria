@@ -1,0 +1,55 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<script src="alexandriapaneldisplayview/requester.js"></script>
+<script src="alexandriapaneldisplayview/notifier-listener.js"></script>
+
+<dom-module id="alexandria-panel-display-view">
+
+    <template>
+        <div id="container"></div>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const AlexandriaPanelDisplayViewDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-panel-display-view',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaPanelDisplayViewBehaviors.Requester,
+                AlexandriaPanelDisplayViewBehaviors.NotifierListener ],
+
+            properties : {
+            },
+
+            attached : function() {
+                this.translate(AlexandriaPanelDisplayViewDictionary);
+                this.listenToDisplay();
+            },
+
+            _displayType : function(type) {
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", type + "Display");
+                zombie.setAttribute("widget", type);
+                zombie.setAttribute("object", this.display.id);
+                this.$.container.appendChild(zombie);
+            }
+
+        });
+    </script>
+</dom-module>

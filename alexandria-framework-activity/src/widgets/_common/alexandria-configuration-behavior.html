@@ -1,0 +1,28 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.ConfigurationBehavior = {
+
+        getBaseUrl: function() {
+            var url = this._getProperty("base-url");
+            if (url == null || url == "") url = this._getProperty("url"); // compatibility mode
+            if (url.charAt(url.length - 1) == "/") url = url.substring(0, url.length - 1);
+            return url;
+        },
+
+        _getProperty: function(name) {
+            var widget = this;
+
+            while (widget != null && widget.getAttribute(name) == null)
+                widget = widget.parentElement;
+
+            if (widget == null)
+                return "";
+
+            return widget.getAttribute(name);
+        }
+    };
+
+</script>

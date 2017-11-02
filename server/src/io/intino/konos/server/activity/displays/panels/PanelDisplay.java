@@ -2,7 +2,7 @@ package io.intino.konos.server.activity.displays.panels;
 
 import io.intino.konos.Box;
 import io.intino.konos.server.activity.displays.catalogs.model.events.OnClickRecord;
-import io.intino.konos.server.activity.displays.elements.AbstractView;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.ElementDisplay;
 import io.intino.konos.server.activity.displays.elements.ElementView;
 import io.intino.konos.server.activity.displays.elements.builders.ReferenceBuilder;

@@ -1,0 +1,6 @@
+dsl Konos
+
+use Displays
+
+Activity AlexandriaFramework
+	Home(uses=desktop, paths="") homePage

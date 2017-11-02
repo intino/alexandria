@@ -1,0 +1,50 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<script src="temporaltimecatalogwidget/requester.js"></script>
+<script src="temporaltimecatalogwidget/notifier-listener.js"></script>
+
+<dom-module id="temporal-time-catalog-widget">
+
+    <template>
+
+        <div><cotton-zombie display="catalogViewListDisplay" widget="catalogViewListWidget"></cotton-zombie></div>
+        <div><cotton-zombie display="dialogContainerDisplay" widget="dialogContainerWidget"></cotton-zombie></div>
+        <div><cotton-zombie display="itemDisplay" widget="itemWidget"></cotton-zombie></div>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const TemporalTimeCatalogWidgetDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'temporal-time-catalog-widget',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         TemporalTimeCatalogWidgetBehaviors.Requester,
+                         TemporalTimeCatalogWidgetBehaviors.NotifierListener ],
+
+            properties : {
+            },
+
+            attached : function() {
+                this.translate(TemporalTimeCatalogWidgetDictionary);
+                this.listenToDisplay();
+            }
+
+        });
+    </script>
+</dom-module>

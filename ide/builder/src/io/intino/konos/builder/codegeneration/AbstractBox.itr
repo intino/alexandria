@@ -13,10 +13,10 @@ def type(box)
 	import java.util.logging.Level;
 	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
-	$hasREST~import io.intino.konos.server.KonosSpark;][
-    $hasActivity+hide~import io.intino.konos.server.activity.displays.Soul;]
+	$hasREST~import io.intino.alexandria.foundation.AlexandriaSpark;][
+    $hasActivity+hide~import io.intino.alexandria.foundation.activity.displays.Soul;]
 
-	public abstract class AbstractBox extends io.intino.konos.Box {
+	public abstract class AbstractBox extends io.intino.alexandria.Box {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
@@ -41,12 +41,12 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.konos.Box put(Object o) {
+		public io.intino.alexandria.Box put(Object o) {
 			[$hasParent~owner.put(o);]
 			return this;
 		}
 
-		public io.intino.konos.Box open() {
+		public io.intino.alexandria.Box open() {
 			if(owner != null) owner.open();
 			initActivities();
 			initRESTServices();
@@ -105,7 +105,7 @@ def type(box)
 			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
-			handler.setFormatter(new io.intino.konos.LogFormatter("log"));
+			handler.setFormatter(new io.intino.alexandria.LogFormatter("log"));
 			logger.addHandler(handler);
 		}
 	}
@@ -113,12 +113,12 @@ end
 
 def type(activity) trigger(setup)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
-		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
+		io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
 end
 
 def type(service & rest) trigger(setup)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
-		io.intino.konos.server.activity.ActivityKonosSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
+		io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -134,13 +134,13 @@ end
 
 def type(service & rest) trigger(rest)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("REST service $name: started!");
 end
 
 def type(activity) trigger(activity)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.server.activity.ActivityKonosSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("Activity $name: started!");
 end
 
@@ -223,7 +223,7 @@ def type(service) trigger(getter)
 end
 
 def trigger(spark)
-	io.intino.konos.server.activity.ActivityKonosSpark.instance().stop();
+	io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark.instance().stop();
 end
 
 def type(service) type(jms) trigger(quit)

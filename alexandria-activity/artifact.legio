@@ -1,0 +1,18 @@
+dsl Legio
+
+Artifact(groupId = "io.intino", version = "1.0.0") alexandriaActivity
+	WebImports
+		WebComponent("Polymer/polymer", "^1.4.0") polymer
+		WebComponent(version = "3.1.0") jquery
+		WebComponent(version = "2.13.0") moment
+		WebComponent("numeraljs", "^1.5.3") numeral
+		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "latest") cotton-carrier
+		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "latest") cotton-push
+		WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "latest") cotton-translator
+		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "latest") cotton-zombie
+
+		WebArtifact("io.intino.konos", "konos-server-web", "LATEST") konos-server-web
+
+		Resolution("jquery", "3.1.0")
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

@@ -1,7 +1,7 @@
 def type(boxConfiguration)
 	package $package;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.konos.BoxConfiguration] {
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.alexandria.BoxConfiguration] {
 
 		$service+field...[$NL]
 
@@ -117,7 +117,7 @@ def type(service & activity) trigger(confClass)
 	public static class $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration {
 		public int port;
 		public String webDirectory;
-		public io.intino.konos.server.activity.services.AuthService authService;
+		public io.intino.alexandria.foundation.activity.services.AuthService authService;
 		$custom+field...[$NL]
 
 		[public java.net.URL authServiceUrl() {

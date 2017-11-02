@@ -1,6 +1,7 @@
 package io.intino.konos.server.activity.displays.elements;
 
 import io.intino.konos.server.activity.displays.catalogs.model.events.OnClickRecord;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.model.Element;
 import io.intino.konos.server.activity.displays.elements.model.Item;
 import io.intino.konos.server.activity.displays.elements.model.Toolbar;
