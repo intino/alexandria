@@ -107,7 +107,7 @@ public class ActivityAccessorRenderer {
 				addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
 		if (display.parentDisplay() != null)
 			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-widget.html");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
 	}
@@ -130,7 +130,7 @@ public class ActivityAccessorRenderer {
 
 	private void createDialogWidget(Dialog dialog) throws IOException {
 		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name$());
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + "-widget.html");
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + ".html");
 		if (!file.exists())
 			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}

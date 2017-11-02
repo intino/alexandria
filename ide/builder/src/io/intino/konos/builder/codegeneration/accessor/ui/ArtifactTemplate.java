@@ -18,7 +18,7 @@ public class ArtifactTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "artifact & legio"))).add(literal("dsl Legio\n\nArtifact(groupId = \"")).add(mark("groupID")).add(literal("\", version = \"1.0.0\") ")).add(mark("artifactID")).add(literal("Activity\n\tWebImports\n\t\tWebArtifact(\"io.intino.alexandria\", \"alexandria-framework\", \"LATEST\") alexandria-framework\n\n\t\tResolution(\"jquery\", \"3.1.0\")\n")).add(mark("repository")),
+			rule().add((condition("type", "artifact & legio"))).add(literal("dsl Legio\n\nArtifact(groupId = \"")).add(mark("groupID")).add(literal("\", version = \"1.0.0\") ")).add(mark("artifactID")).add(literal("Activity\n\tWebImports\n\t\tWebArtifact(\"io.intino.konos\", \"alexandria-framework\", \"LATEST\") alexandria-framework\n\n\t\tResolution(\"jquery\", \"3.1.0\")\n")).add(mark("repository")),
 			rule().add((condition("type", "repository"))).add(literal("Repository(\"")).add(mark("id")).add(literal("\")\n\t")).add(mark("url").multiple("\n")),
 			rule().add((condition("trigger", "url"))).add(literal("Release(\"")).add(mark("value")).add(literal("\")"))
 		);

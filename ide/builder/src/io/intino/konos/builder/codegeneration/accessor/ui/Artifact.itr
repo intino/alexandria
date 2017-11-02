@@ -3,7 +3,7 @@ def type(artifact & legio)
 
 	Artifact(groupId = "$groupID", version = "1.0.0") $artifactID~Activity
 		WebImports
-			WebArtifact("io.intino.alexandria", "alexandria-framework", "LATEST") alexandria-framework
+			WebArtifact("io.intino.konos", "alexandria-framework", "LATEST") alexandria-framework
 
 			Resolution("jquery", "3.1.0")
 	$repository

@@ -1,13 +1,13 @@
 def type(display)
 	package $package+validPackage.displays.notifiers;
 
-	import io.intino.alexandria.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.alexandria.foundation.activity.displays.DisplayNotifier {
+    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifier {
 
-        public $name+FirstUpperCase~DisplayNotifier(io.intino.alexandria.foundation.activity.displays.Display display, io.intino.alexandria.foundation.activity.displays.MessageCarrier carrier) {
+        public $name+FirstUpperCase~DisplayNotifier(io.intino.konos.alexandria.foundation.activity.displays.Display display, io.intino.konos.alexandria.foundation.activity.displays.MessageCarrier carrier) {
             super(display, carrier);
         }
 

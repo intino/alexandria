@@ -2,11 +2,11 @@ def type(resource)
 	package $package.resources;
 
 	import java.util.List;
-	import io.intino.konos.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import $package.*;
-	import io.intino.konos.Box;
-	import io.intino.konos.server.Resource;
-	import io.intino.konos.server.spark.SparkManager;
+	import io.intino.konos.alexandria.Box;
+	import io.intino.konos.alexandria.Resource;
+	import io.intino.konos.alexandria.foundation.spark.SparkManager;
 	$schemaImport
 
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {

@@ -4,10 +4,10 @@ Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandriaFramework
 
 	Box(language = "Konos", version = "2.2.5", sdk = "2.2.5")
 
-	Code ("io.intino.alexandria.framework")
+	Code ("io.intino.konos.alexandria.framework")
 
 	Imports
-		Compile(groupId = "io.intino.alexandria", artifactId = "alexandria-foundation", version = "1.0.0")
+		Compile(groupId = "io.intino.konos", artifactId = "alexandria-foundation", version = "1.0.0")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
