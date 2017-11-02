@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino", version = "1.0.0") alexandriaFrameworkActivity
+Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-framework-activity
 
 	WebImports
 		WebComponent("Polymer/polymer", "1.9 - 2") polymer
@@ -31,6 +31,7 @@ Artifact(groupId = "io.intino", version = "1.0.0") alexandriaFrameworkActivity
 		WebComponent("PolymerElements/paper-item", "1.2.1") paper-item
 		WebComponent("PolymerElements/paper-button", "1.0.14") paper-button
 		WebComponent("PolymerElements/paper-menu", "1.2.2") paper-menu
+		WebComponent("PolymerElements/paper-menu-button", "1.5.2") paper-menu-button
 		WebComponent("PolymerElements/paper-tabs", "1.8.0") paper-tabs
 		WebComponent("PolymerElements/paper-spinner", "1.2.1") paper-spinner
 		WebComponent("PolymerElements/iron-image", "2.1.1") iron-image
@@ -67,5 +68,11 @@ Artifact(groupId = "io.intino", version = "1.0.0") alexandriaFrameworkActivity
 		Resolution("paper-styles", "1.1.5")
 		Resolution("iron-image", "2.1.1")
 
+	Package(LibrariesLinkedByManifest)
+	Distribution(release = intino.release, language = empty)
+
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")
+
+Repository("intino-maven") intino
+	Release(url = "https://artifactory.intino.io/artifactory/release-frameworks") release
