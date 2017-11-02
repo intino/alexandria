@@ -1,6 +1,0 @@
-dsl Konos
-
-use Displays
-
-Activity Alexandria
-	Home(uses=desktop, paths="") homePage

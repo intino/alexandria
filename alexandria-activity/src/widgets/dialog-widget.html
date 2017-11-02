@@ -1,0 +1,48 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<script src="dialogwidget/requester.js"></script>
+<script src="dialogwidget/notifier-listener.js"></script>
+
+<dom-module id="dialog-widget">
+
+    <template>
+
+
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const DialogWidgetDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'dialog-widget',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         DialogWidgetBehaviors.Requester,
+                         DialogWidgetBehaviors.NotifierListener ],
+
+            properties : {
+            },
+
+            attached : function() {
+                this.translate(DialogWidgetDictionary);
+                this.listenToDisplay();
+            }
+
+        });
+    </script>
+</dom-module>

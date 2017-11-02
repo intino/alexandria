@@ -16,7 +16,7 @@ import io.intino.konos.server.activity.displays.catalogs.model.views.MagazineVie
 import io.intino.konos.server.activity.displays.catalogs.model.views.MoldView;
 import io.intino.konos.server.activity.displays.catalogs.providers.CatalogViewDisplayProvider;
 import io.intino.konos.server.activity.displays.catalogs.views.CatalogViewListDisplay;
-import io.intino.konos.server.activity.displays.elements.AbstractView;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.ElementDisplay;
 import io.intino.konos.server.activity.displays.elements.ElementView;
 import io.intino.konos.server.activity.displays.elements.ElementViewDisplay;

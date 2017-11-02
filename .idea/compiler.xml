@@ -59,13 +59,6 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for konos-server" enabled="true">
-        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="konos-server-web" />
-        <module name="server" />
-      </profile>
       <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
         <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
@@ -81,23 +74,37 @@
         <module name="datalake-accessor" />
         <module name="ness-accessor" />
       </profile>
-      <profile name="Annotation profile for konos-core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for konos-server" enabled="true">
+        <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="core" />
+        <module name="alexandria-server" />
+        <module name="konos-server-web" />
+        <module name="server" />
+      </profile>
+      <profile name="Annotation profile for alexandria-core" enabled="true">
+        <sourceOutputDir name="../out/build/alexandria-core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/alexandria-core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="alexandria-core" />
+      </profile>
+      <profile name="Annotation profile for alexandria-foundation" enabled="true">
+        <sourceOutputDir name="../out/build/alexandria-foundation/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/alexandria-foundation/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="alexandria-foundation" />
+      </profile>
+      <profile name="Annotation profile for alexandria-framework" enabled="true">
+        <sourceOutputDir name="../out/build/alexandria-framework/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/alexandria-framework/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="alexandria-framework" />
       </profile>
       <profile name="Annotation profile for konos-server-web" enabled="true">
         <sourceOutputDir name="../out/build/server-web/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/server-web/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="server-web" />
-      </profile>
-      <profile name="Annotation profile for konos-slack" enabled="true">
-        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
       </profile>
       <profile name="Annotation profile for konos-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
@@ -111,9 +118,25 @@
         <outputRelativeToContentRoot value="true" />
         <module name="jms" />
       </profile>
+      <profile name="Annotation profile for konos-core" enabled="true">
+        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="core" />
+      </profile>
+      <profile name="Annotation profile for konos-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="slack" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="accessor" target="1.8" />
+      <module name="alexandria-core" target="1.8" />
+      <module name="alexandria-foundation" target="1.8" />
+      <module name="alexandria-framework" target="1.8" />
+      <module name="alexandria-server" target="1.8" />
       <module name="all" target="1.5" />
       <module name="API" target="1.8" />
       <module name="application" target="1.8" />

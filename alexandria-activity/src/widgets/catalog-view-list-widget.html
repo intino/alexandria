@@ -1,0 +1,51 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<script src="catalogviewlistwidget/requester.js"></script>
+<script src="catalogviewlistwidget/notifier-listener.js"></script>
+
+<dom-module id="catalog-view-list-widget">
+
+    <template>
+
+        <div><cotton-zombie display="catalogMagazineViewDisplay" widget="catalogMagazineViewWidget"></cotton-zombie></div>
+        <div><cotton-zombie display="catalogListViewDisplay" widget="catalogListViewWidget"></cotton-zombie></div>
+        <div><cotton-zombie display="catalogMapViewDisplay" widget="catalogMapViewWidget"></cotton-zombie></div>
+        <div><cotton-zombie display="catalogDisplayViewDisplay" widget="catalogDisplayViewWidget"></cotton-zombie></div>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const CatalogViewListWidgetDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'catalog-view-list-widget',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         CatalogViewListWidgetBehaviors.Requester,
+                         CatalogViewListWidgetBehaviors.NotifierListener ],
+
+            properties : {
+            },
+
+            attached : function() {
+                this.translate(CatalogViewListWidgetDictionary);
+                this.listenToDisplay();
+            }
+
+        });
+    </script>
+</dom-module>

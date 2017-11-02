@@ -1,0 +1,48 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<script src="cataloglistviewwidget/requester.js"></script>
+<script src="cataloglistviewwidget/notifier-listener.js"></script>
+
+<dom-module id="catalog-list-view-widget">
+
+    <template>
+
+
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const CatalogListViewWidgetDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'catalog-list-view-widget',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         CatalogListViewWidgetBehaviors.Requester,
+                         CatalogListViewWidgetBehaviors.NotifierListener ],
+
+            properties : {
+            },
+
+            attached : function() {
+                this.translate(CatalogListViewWidgetDictionary);
+                this.listenToDisplay();
+            }
+
+        });
+    </script>
+</dom-module>

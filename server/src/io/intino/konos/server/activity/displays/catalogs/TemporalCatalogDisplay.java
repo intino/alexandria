@@ -6,7 +6,7 @@ import io.intino.konos.server.activity.displays.catalogs.model.views.DisplayView
 import io.intino.konos.server.activity.displays.catalogs.navigators.NavigatorDisplay;
 import io.intino.konos.server.activity.displays.catalogs.views.CatalogViewDisplay;
 import io.intino.konos.server.activity.displays.catalogs.views.CatalogViewListDisplay;
-import io.intino.konos.server.activity.displays.elements.AbstractView;
+import io.intino.konos.server.activity.displays.elements.model.AbstractView;
 import io.intino.konos.server.activity.displays.elements.model.Item;
 import io.intino.konos.server.activity.displays.elements.model.ItemList;
 import io.intino.konos.server.activity.displays.elements.model.TimeRange;

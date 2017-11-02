@@ -1,0 +1,123 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/cotton-layout/cotton-layout.html">
+<link rel="import" href="_common/layout/alexandria-layout-behavior.html">
+<link rel="import" href="_common/alexandria-item-selector-combo.html">
+<link rel="import" href="alexandria-panel.html">
+<link rel="import" href="alexandria-catalog.html">
+<link rel="import" href="alexandria-temporal-range-catalog.html">
+<link rel="import" href="alexandria-temporal-time-catalog.html">
+
+<script src="alexandriatablayout/requester.js"></script>
+<script src="alexandriatablayout/notifier-listener.js"></script>
+<script src="../../lib/cotton-delay-executor/DelayExecutor.js"></script>
+
+<dom-module id="alexandria-tab-layout">
+
+    <template>
+        <cotton-layout id="layout" title="[[_title]]" subtitle="[[_subtitle]]" logo="[[_logo]]"
+                       tabs="[[_itemTabList]]" selected-tab="{{_selectedItem}}"
+                       on-select-tab="_selectItem" on-logout="_logout" on-edit-profile="_editProfile">
+
+            <div id="user-content">
+                <content select="#header-content"></content>
+            </div>
+
+            <template is="dom-repeat" items="[[_itemList]]" as="item">
+                <div class="item" name$="[[item.label]]">
+                    <template is="dom-if" if="[[_isPanel(item)]]">
+                        <cotton-zombie display="AlexandriaPanelDisplay" widget="AlexandriaPanel" object$="[[item.label]]"></cotton-zombie>
+                    </template>
+                    <template is="dom-if" if="[[_isCatalog(item)]]">
+                        <cotton-zombie display="AlexandriaCatalogDisplay" widget="AlexandriaCatalog" object$="[[item.label]]"></cotton-zombie>
+                    </template>
+                    <template is="dom-if" if="[[_isTemporalRangeCatalog(item)]]">
+                        <cotton-zombie display="AlexandriaTemporalRangeCatalogDisplay" widget="AlexandriaTemporalRangeCatalog" object$="[[item.label]]"></cotton-zombie>
+                    </template>
+                    <template is="dom-if" if="[[_isTemporalTimeCatalog(item)]]">
+                        <cotton-zombie display="AlexandriaTemporalTimeCatalogDisplay" widget="AlexandriaTemporalTimeCatalog" object$="[[item.label]]"></cotton-zombie>
+                    </template>
+                </div>
+            </template>
+            <div name="noItems" class="message layout horizontal center"><span>[[NoItemsMessage]]</span></div>
+        </cotton-layout>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            height: 100%;
+        }
+        :host cotton-layout {
+            --header-background-color : white;
+            --header-title : {
+                font-size: 16pt;
+            };
+            --header-subtitle : {
+                font-size: 11pt;
+            };
+        }
+        :host cotton-layout:not(.fullscreen) ::content > iron-pages {
+            height: calc(100% - 107px);
+        }
+        :host cotton-layout ::content paper-progress {
+            z-index: 1;
+        }
+        :host .message {
+            height: 100%;
+        }
+        :host .message span {
+            margin: 0 auto;
+            background: var(--default-primary-color);
+            color: white;
+            padding: 3px 20px;
+            border-radius: 5px;
+            font-size: 14pt;
+        }
+        :host .item {
+            height: calc(100% - 1px);
+        }
+        @media screen and (max-width: 736px) {
+            :host cotton-layout:not(.fullscreen) ::content > iron-pages {
+                height: calc(100% - 98px);
+            }
+            :host cotton-layout.fullscreen ::content > iron-pages {
+                height: calc(100% - 57px);
+            }
+        }
+    </style>
+
+    <script>
+        const AlexandriaTabLayoutDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-tab-layout',
+            _resizing: false,
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTabLayoutBehaviors.Requester,
+                AlexandriaTabLayoutBehaviors.NotifierListener,
+                AlexandriaBehaviors.LayoutBehavior ],
+
+            attached : function() {
+                this.translate(AlexandriaTabLayoutDictionary);
+                this.translate(AlexandriaBehaviors.LayoutBehavior.Dictionary);
+                this.listenToDisplay();
+            },
+
+            _itemsLoaded : function() {
+            }
+
+        });
+    </script>
+</dom-module>

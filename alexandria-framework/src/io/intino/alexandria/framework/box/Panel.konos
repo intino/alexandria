@@ -1,0 +1,27 @@
+dsl Konos
+
+use Mold
+use Catalog
+use Schemas
+
+Display alexandriaPanel
+	displays = alexandriaPanelCustomView alexandriaPanelCatalogView alexandriaPanelDisplayView alexandriaMold
+
+	Notification refreshTarget as Text
+	Notification refreshViewList as List Object(Reference)
+	Notification refreshBreadcrumbs as Text
+	Notification createPanel as Text
+	Notification showPanel
+	Notification hidePanel
+	Notification showDialog
+
+	Request selectView as Text
+	Request navigate as Text
+
+Display alexandriaPanelCustomView
+	displays = alexandriaItem
+
+Display alexandriaPanelCatalogView
+	displays = alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+
+Display alexandriaPanelDisplayView

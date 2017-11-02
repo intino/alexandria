@@ -1,7 +1,5 @@
 package io.intino.konos.server.activity.displays.elements.model;
 
-import io.intino.konos.server.activity.displays.elements.AbstractView;
-
 import java.util.ArrayList;
 import java.util.List;
 

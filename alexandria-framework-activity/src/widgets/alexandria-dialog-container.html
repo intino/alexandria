@@ -1,0 +1,181 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../lib/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../lib/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../lib/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="_common/alexandria-configuration-behavior.html">
+
+<script src="alexandriadialogcontainer/requester.js"></script>
+<script src="alexandriadialogcontainer/notifier-listener.js"></script>
+
+<dom-module id="alexandria-dialog-container">
+
+    <template>
+        <paper-dialog id="dialog" entry-animation="scale-up-animation"
+                      exit-animation="fade-out-animation"
+                      on-iron-overlay-opened="_overlayOpened"
+                      on-iron-overlay-closed="_overlayClosed"
+                      with-backdrop>
+            <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
+            <paper-spinner active id="loading" class="green layout fit horizontal center center-justified" title="[[Loading]]"></paper-spinner>
+            <iframe id="frame" class="dialog" src="[[_dialogLocation]]"></iframe>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+        :host paper-dialog {
+            margin: 50px;
+            padding: 0;
+            background: white;
+            top: 0 !important;
+            left: 0 !important;
+            position: fixed !important;
+            border-radius: 10px;
+        }
+        :host paper-dialog paper-icon-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 6px;
+            background: white;
+            border-radius: 50px;
+            margin: -15px -15px 0 0;
+            -webkit-box-shadow: -1px 1px 10px #888888;
+            -moz-box-shadow: -1px 1px 10px #888888;
+            box-shadow: -1px 1px 10px #888888;
+        }
+        :host paper-dialog iframe {
+            border: 0;
+            overflow: auto;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            border-radius: 2px;
+            padding: 0;
+            margin: 10px;
+        }
+        :host paper-dialog paper-spinner {
+            height: 50px;
+            width: 50px;
+            margin: auto;
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaDialogContainerDictionary = {
+            es: {
+                Loading: "cargando diálogo..."
+            },
+            en: {
+                Loading: "loading dialog..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-dialog-container',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaDialogContainerBehaviors.Requester,
+                AlexandriaDialogContainerBehaviors.NotifierListener,
+                AlexandriaBehaviors.ConfigurationBehavior,
+                Polymer.IronResizableBehavior ],
+
+            properties : {
+                _width : { type: Number, value: function() { return 100; } },
+                _height : { type: Number, value: function() { return 100; } },
+                _dialogLocation : String
+            },
+
+            listeners: { 'iron-resize': '_fitDialog' },
+
+            attached : function() {
+                this.translate(AlexandriaDialogContainerDictionary);
+                this.listenToDisplay();
+                this.$.frame.onload = this._frameLoaded.bind(this);
+            },
+
+            open : function() {
+                this._fitDialog();
+                this.$.dialog.open();
+            },
+
+            _fitDialog : function() {
+                var style = "";
+
+                if (this._width != 100) {
+                    var width = $(window).width();
+                    style += ";width:" + this._width + "%;margin-left:" + ((width-(width*(this._width / 100)))/2) + "px;";
+                }
+                else style += ";width:calc(100% - 100px)";
+
+                if (this._height != 100) {
+                    var height = $(window).height();
+                    style += ";height:" + this._height + "%;margin-top:" + ((height - (height * (this._height / 100))) / 2) + "px;";
+                }
+                else style += ";height:calc(100% - 100px)";
+
+                this.$.dialog.style.cssText += style;
+            },
+
+            close : function() {
+                this.$.dialog.close();
+            },
+
+            _frameLoaded : function() {
+                this.$.loading.active = false;
+
+                var frame = this.$.frame;
+                var delegate = (frame.contentWindow || frame.contentDocument).document;
+                delegate.onDialogCompleted = (modification) => this._dialogCompleted(modification);
+            },
+
+            _dialogCompleted : function(modification) {
+                this.close();
+                this.dialogAssertionMade(modification);
+            },
+
+            _refreshDialog : function(dialog) {
+                this._width = dialog.width;
+                this._height = dialog.height;
+                this._refreshLocation(dialog.location);
+            },
+
+            _refreshLocation : function(location) {
+                if (location == null || location === "") return;
+                var startsWithSlash = location[0] === "/";
+                this.$.loading.active = true;
+                this._dialogLocation = this.getBaseUrl() + (startsWithSlash ? "": "/") + location + "?random=" + Math.random();
+            },
+
+            _overlayOpened : function(e) {
+                var dialog = e.target;
+                var overlay = dialog.backdropElement;
+
+                if (overlay.previousSibling !== dialog && !this._overlayFixed) {
+                    dialog.parentNode.insertBefore(overlay, null);
+                    this._overlayFixed = true;
+                }
+            },
+
+            _overlayClosed : function(e) {
+                this._overlayFixed = false;
+            }
+
+        });
+
+    </script>
+</dom-module>

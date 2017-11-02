@@ -1,0 +1,40 @@
+dsl Konos
+
+use Dialog
+use Panel
+use Schemas
+use Catalog
+
+Display desktop
+	displays = alexandriaTabLayout alexandriaMenuLayout
+
+	Notification(Client) loading as Bool
+	Notification(Client) loaded
+
+Display alexandriaTabLayout
+	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshSelected as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request logout
+	Request selectItem as Text
+
+Display alexandriaMenuLayout
+	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshSelected as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request logout
+	Request selectItem as Text

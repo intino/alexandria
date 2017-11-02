@@ -2,10 +2,10 @@ def type(dialog)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
-	import io.intino.konos.server.activity.displays.dialogs.model.Dialog;
-	import io.intino.konos.server.activity.displays.dialogs.DialogValidator;
+	import io.intino.alexandria.foundation.activity.model.Dialog;
+	import io.intino.alexandria.foundation.activity.dialogs.DialogValidator;
 
-	import static io.intino.konos.server.activity.displays.dialogs.DialogExecution.Modification;
+	import static io.intino.alexandria.foundation.activity.dialogs.DialogExecution.Modification;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog extends $name+SnakeCaseToCamelCase+FirstUpperCase~DialogDisplay {
 

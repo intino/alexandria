@@ -6,21 +6,21 @@ def type(activity)
 	[import $displaysImport+validPackage.displays.requesters.*;]
 	import $package+validPackage.resources.*;
 
-	import io.intino.konos.server.activity.ActivityKonosSpark;
-	import io.intino.konos.server.activity.displays.DisplayNotifier;
-	import io.intino.konos.server.activity.displays.DisplayNotifierProvider;
-	import io.intino.konos.server.activity.services.push.PushService;
-	import io.intino.konos.server.activity.spark.resources.AfterDisplayRequest;
-	import io.intino.konos.server.activity.spark.resources.AssetResource;
-	import io.intino.konos.server.activity.spark.resources.AuthenticateCallbackResource;
-	import io.intino.konos.server.activity.spark.resources.BeforeDisplayRequest;
+	import io.intino.alexandria.foundation.activity.ActivityAlexandriaSpark;
+	import io.intino.alexandria.foundation.activity.displays.DisplayNotifier;
+	import io.intino.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+	import io.intino.alexandria.foundation.activity.services.push.PushService;
+	import io.intino.alexandria.foundation.activity.spark.resources.AfterDisplayRequest;
+	import io.intino.alexandria.foundation.activity.spark.resources.AssetResource;
+	import io.intino.alexandria.foundation.activity.spark.resources.AuthenticateCallbackResource;
+	import io.intino.alexandria.foundation.activity.spark.resources.BeforeDisplayRequest;
 
 	import java.net.MalformedURLException;
 	import java.net.URL;
 
-	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.server.activity.Activity {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.alexandria.foundation.activity.Activity {
 
-		public static ActivityKonosSpark init(ActivityKonosSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+		public static ActivityAlexandriaSpark init(ActivityAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~ActivityConfiguration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
@@ -48,7 +48,7 @@ def type(abstractPage) trigger(resource)
 end
 
 def trigger(userHome)
-	spark.route("/konos/user").get(manager -> new $value+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	spark.route("/alexandria/user").get(manager -> new $value+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
 def trigger(path)
@@ -60,7 +60,7 @@ def type(display) trigger(notifier)
 end
 
 def type(dialog) trigger(notifier)
-	register(io.intino.konos.server.activity.displays.dialogs.DialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
+	register(io.intino.alexandria.foundation.activity.displays.dialogs.DialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
 end
 
 def trigger(custom)
@@ -76,8 +76,8 @@ end
 
 def type(dialog)
 	spark.route("/$name+lowercase~dialog/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.server.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.server.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.alexandria.foundation.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.alexandria.foundation.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~dialog/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 

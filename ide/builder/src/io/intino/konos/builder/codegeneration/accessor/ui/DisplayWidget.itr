@@ -6,10 +6,10 @@ def type(widget)
     <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 	[$parent+import
 	]
-	<script src="$name+lowercase~widget/requester.js"></script>
-    <script src="$name+lowercase~widget/notifier-listener.js"></script>
+	<script src="$name+lowercase/requester.js"></script>
+    <script src="$name+lowercase/notifier-listener.js"></script>
 
-    <dom-module id="$name+camelCaseToSnakeCase~-widget">
+    <dom-module id="$name+camelCaseToSnakeCase">
 
         <template>
         	$parent
@@ -21,7 +21,7 @@ def type(widget)
 
         <script>
 
-            const $name+firstuppercase~WidgetDictionary = {
+            const $name+firstuppercase~Dictionary = {
                 es: {
                 },
                 en: {
@@ -29,19 +29,19 @@ def type(widget)
             };
 
             Polymer({
-                is: '$name+camelCaseToSnakeCase~-widget',
+                is: '$name+camelCaseToSnakeCase',
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
                              CottonBehaviors.TranslatorBehavior,
-                             $name+firstuppercase~WidgetBehaviors.Requester,
-                             $name+firstuppercase~WidgetBehaviors.NotifierListener $],
+                             $name+firstuppercase~Behaviors.Requester,
+                             $name+firstuppercase~Behaviors.NotifierListener $],
 
                 properties : {
                 },
 
                 attached : function() {
-                    this.translate($name+firstuppercase~WidgetDictionary);
+                    this.translate($name+firstuppercase~Dictionary);
                     this.listenToDisplay();
                 }
 
@@ -51,13 +51,13 @@ def type(widget)
 end
 
 def trigger(import)
-	<link rel="import" href="../../lib/$dsl+lowercase/$value+lowercase~-widget.html">
+	<link rel="import" href="../../lib/$dsl+lowercase/$value+lowercase~.html">
 end
 
 def trigger(innerDisplay)
-	<div><cotton-zombie display="$value~Display" widget="$value~Widget"></cotton-zombie></div>
+	<div><cotton-zombie display="$value~Display" widget="$value"></cotton-zombie></div>
 end
 
 def trigger(parent)
-	<div><cotton-zombie display="$value~Display" widget="$value~Widget"></cotton-zombie></div>
+	<div><cotton-zombie display="$value~Display" widget="$value"></cotton-zombie></div>
 end

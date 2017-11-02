@@ -21,23 +21,23 @@
         },
 
         _isMagazineView : function(view) {
-            return view.itemPropertyList[0].value.toLowerCase() === "magazineview";
+            return view.referencePropertyList[0].value.toLowerCase() === "magazineview";
         },
 
         _isListView : function(view) {
-            return view.itemPropertyList[0].value.toLowerCase() === "listview";
+            return view.referencePropertyList[0].value.toLowerCase() === "listview";
         },
 
         _isGridView : function(view) {
-            return view.itemPropertyList[0].value.toLowerCase() === "gridview";
+            return view.referencePropertyList[0].value.toLowerCase() === "gridview";
         },
 
         _isMapView : function(view) {
-            return view.itemPropertyList[0].value.toLowerCase() === "mapview";
+            return view.referencePropertyList[0].value.toLowerCase() === "mapview";
         },
 
         _isOlapView : function(view) {
-            return view.itemPropertyList[0].value.toLowerCase() === "olapview";
+            return view.referencePropertyList[0].value.toLowerCase() === "olapview";
         },
 
         _viewLabelOf : function(view) {

@@ -1,13 +1,13 @@
 def type(display)
 	package $package.displays;
 
-	import io.intino.konos.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import $package.*;
 	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
-    import io.intino.konos.server.activity.displays.Display;
-    import io.intino.konos.server.activity.services.push.User;
+    import io.intino.alexandria.foundation.activity.displays.Display;
+    import io.intino.alexandria.foundation.activity.services.push.User;
     $parent+import
 
     public class $name+firstUpperCase~Display extends Display<$name+firstUpperCase~DisplayNotifier> {
@@ -29,7 +29,7 @@ def type(display)
     }
 end
 def type(request & asset)
-	public io.intino.konos.server.activity.spark.ActivityFile $name([$parameter value]) {
+	public io.intino.alexandria.foundation.activity.spark.ActivityFile $name([$parameter value]) {
         return null;
 	}
 end

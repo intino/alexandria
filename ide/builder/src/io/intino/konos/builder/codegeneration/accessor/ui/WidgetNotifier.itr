@@ -1,7 +1,7 @@
 def type(widget)
-	var $name+FirstUpperCase~WidgetBehaviors = $name+FirstUpperCase~WidgetBehaviors || {};
+	var $name+FirstUpperCase~Behaviors = $name+FirstUpperCase~Behaviors || {};
 
-    $name+FirstUpperCase~WidgetBehaviors.NotifierListener = {
+    $name+FirstUpperCase~Behaviors.NotifierListener = {
 
         listenToDisplay : function() {
             var widget = this;
