@@ -1,4 +1,4 @@
-package ui;
+package ui2;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorRenderer;
