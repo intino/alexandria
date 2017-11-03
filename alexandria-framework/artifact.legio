@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandriaFramework
 
-	Box(language = "Konos", version = "2.2.5", sdk = "2.2.5")
+	Box(language = "Konos", version = "3.0.0", sdk = "3.0.0")
 
 	Code ("io.intino.konos.alexandria.framework")
 

@@ -14,7 +14,7 @@
 <script src="notifier-listener.js"></script>
 <script src="../../../lib/cotton-delay-executor/DelayExecutor.js"></script>
 
-<dom-module id="alexandria-menu-layout-drawer">
+<dom-module id="alexandria-menu-layout-mobile">
 
     <template>
         <cotton-header id="layout" title="[[_title]]" subtitle="[[_subtitle]]" logo="[[_logo]]" on-logout="_logout" on-edit-profile="_editProfile">
@@ -72,7 +72,7 @@
     </style>
 
     <script>
-        const AlexandriaMenuLayoutDrawerDictionary = {
+        const AlexandriaMenuLayoutMobileDictionary = {
             es: {
             },
             en: {
@@ -80,7 +80,7 @@
         };
 
         Polymer({
-            is: 'alexandria-menu-layout-drawer',
+            is: 'alexandria-menu-layout-mobile',
             _resizing: false,
             _itemsPositions : [],
 
@@ -97,7 +97,7 @@
             },
 
             attached : function() {
-                this.translate(AlexandriaMenuLayoutDrawerDictionary);
+                this.translate(AlexandriaMenuLayoutMobileDictionary);
                 this.translate(AlexandriaBehaviors.LayoutBehavior.Dictionary);
                 this.listenToDisplay();
                 this._layoutTabList = ["home"];

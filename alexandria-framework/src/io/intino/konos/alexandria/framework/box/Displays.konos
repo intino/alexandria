@@ -1,11 +1,10 @@
 dsl Konos
 
-use Dialog
 use Panel
 use Schemas
 use Catalog
 
-Display desktop
+Display alexandriaDesktop
 	displays = alexandriaTabLayout alexandriaMenuLayout
 
 	Notification(Client) loading as Bool
