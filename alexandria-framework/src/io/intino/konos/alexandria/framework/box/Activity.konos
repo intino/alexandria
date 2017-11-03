@@ -3,4 +3,4 @@ dsl Konos
 use Displays
 
 Activity AlexandriaFramework
-	Home(uses=desktop, paths="") homePage
+	Home(uses=alexandriaDesktop, paths="") homePage
