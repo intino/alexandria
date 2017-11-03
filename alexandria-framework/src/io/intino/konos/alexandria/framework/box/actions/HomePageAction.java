@@ -2,7 +2,7 @@ package io.intino.konos.alexandria.framework.box.actions;
 
 import io.intino.konos.alexandria.foundation.activity.spark.actions.PageAction;
 import io.intino.konos.alexandria.framework.box.AlexandriaFrameworkBox;
-import io.intino.konos.alexandria.framework.box.displays.DesktopDisplay;
+import io.intino.konos.alexandria.framework.box.displays.AlexandriaDesktopDisplay;
 
 public class HomePageAction extends PageAction {
 
@@ -19,7 +19,7 @@ public class HomePageAction extends PageAction {
 	    return new io.intino.konos.alexandria.foundation.activity.displays.Soul(session) {
 			@Override
 			public void personify() {
-				DesktopDisplay display = new DesktopDisplay(box);
+				AlexandriaDesktopDisplay display = new AlexandriaDesktopDisplay(box);
 				register(display);
 				display.personify();
 			}
