@@ -10,10 +10,10 @@ Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-framework-ac
 		WebComponent("numeraljs", "1.5.6") numeral
 		WebComponent("sortable.js", "1.4.2") Sortable
 
-		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.1.10") cotton-carrier
+		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.1.11") cotton-carrier
 		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.0.0") cotton-push
 		WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "1.0.5") cotton-translator
-		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "1.1.0") cotton-zombie
+		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "1.1.2") cotton-zombie
 		WebComponent("https://bitbucket.org/cottons/cotton-checkbox.git", "1.0.6") cotton-checkbox
 		WebComponent("https://bitbucket.org/cottons/cotton-cookies.git", "2.0.2") cotton-cookies
 		WebComponent("https://bitbucket.org/cottons/cotton-list.git", "1.0.15") cotton-list
@@ -39,7 +39,6 @@ Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-framework-ac
 		WebComponent("PolymerElements/iron-flex-layout", "1.3.2") iron-flex-layout
 		WebComponent("PolymerElements/iron-fit-behavior", "1.2.6") iron-fit-behavior
 		WebComponent("PolymerElements/paper-slider", "1.0.13") paper-slider
-		WebComponent("PolymerElements/paper-item", "1.2.1") paper-item
 		WebComponent("PolymerElements/paper-ripple", "1.0.9") paper-ripple
 		WebComponent("PolymerElements/iron-selector", "1.5.2") iron-selector
 

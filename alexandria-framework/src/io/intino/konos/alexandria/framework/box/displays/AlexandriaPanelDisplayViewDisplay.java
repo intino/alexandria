@@ -22,8 +22,13 @@ public class AlexandriaPanelDisplayViewDisplay extends AlexandriaPanelViewDispla
         View rawView = view().raw();
         RenderDisplay render = rawView.render();
         Display display = render.display(loadingListener(), instantListener());
+        sendDisplayType(display);
         add(display);
         display.personifyOnce(id());
+    }
+
+    private void sendDisplayType(Display display) {
+        notifier.displayType(display.name());
     }
 
     private Consumer<Boolean> loadingListener() {

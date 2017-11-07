@@ -10,13 +10,13 @@
                 MagazineView : "revista",
                 ListView : "lista",
                 MapView : "mapa",
-                OlapView : "olap"
+                DisplayView : "display"
             },
             en: {
                 MagazineView : "magazine",
                 ListView : "list",
                 MapView : "map",
-                OlapView : "olap"
+                DisplayView : "display"
             }
         },
 
@@ -45,7 +45,7 @@
             if (this._isListView(view)) return this.ListView;
             else if (this._isMagazineView(view)) return this.MagazineView;
             else if (this._isMapView(view)) return this.MapView;
-            else if (this._isOlapView(view)) return this.OlapView;
+            else if (this._isDisplayView(view)) return this.DisplayView;
             return "";
         }
 

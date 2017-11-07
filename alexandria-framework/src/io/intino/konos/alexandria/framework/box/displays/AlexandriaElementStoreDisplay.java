@@ -4,22 +4,16 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifier;
 import io.intino.konos.alexandria.framework.box.model.Element;
 import io.intino.konos.alexandria.framework.box.model.Item;
-import io.intino.konos.alexandria.framework.box.model.Catalog;
-import io.intino.konos.alexandria.framework.box.model.TemporalCatalog;
 import io.intino.konos.alexandria.framework.box.model.Layout;
-import io.intino.konos.alexandria.framework.box.model.Panel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public abstract class AlexandriaElementStoreDisplay<DN extends DisplayNotifier> extends AlexandriaElementDisplay<Layout, DN> implements ElementDisplayManager {
-    private Map<Class<? extends Element>, Function<Element, AlexandriaElementDisplay>> builders = new HashMap<>();
     private Map<String, AlexandriaElementDisplay> displayMap = new HashMap<>();
 
     public AlexandriaElementStoreDisplay(Box box) {
         super(box);
-        registerBuilders();
     }
 
     public <E extends AlexandriaElementDisplay> E openElement(String label) {
@@ -57,34 +51,10 @@ public abstract class AlexandriaElementStoreDisplay<DN extends DisplayNotifier> 
     protected abstract void refreshLoaded();
     protected abstract Element elementWithLabel(String label);
     protected abstract Item targetWithLabel(String label);
+    protected abstract AlexandriaElementDisplay newDisplay(Element element, Item item);
 
     protected Class classFor(Element element) {
         return element.getClass();
-    }
-
-    private void registerBuilders() {
-        builders.put(Panel.class, this::buildPanelDisplay);
-        builders.put(Catalog.class, this::buildCatalogDisplay);
-        builders.put(TemporalCatalog.class, this::buildTemporalCatalogDisplay);
-    }
-
-    private AlexandriaPanelDisplay buildPanelDisplay(Element component) {
-        AlexandriaPanelDisplay display = new AlexandriaPanelDisplay(box);
-        display.element((Panel) component);
-        return display;
-    }
-
-    private AlexandriaCatalogDisplay buildCatalogDisplay(Element component) {
-        AlexandriaCatalogDisplay display = new AlexandriaCatalogDisplay(box);
-        display.element(component);
-        return display;
-    }
-
-    private AlexandriaTemporalCatalogDisplay buildTemporalCatalogDisplay(Element component) {
-        TemporalCatalog catalog = (TemporalCatalog)component;
-        AlexandriaTemporalCatalogDisplay display = (catalog.type() == TemporalCatalog.Type.Time) ? new AlexandriaTemporalTimeCatalogDisplay(box) : new AlexandriaTemporalRangeCatalogDisplay(box);
-        display.element(component);
-        return display;
     }
 
     private <E extends AlexandriaElementDisplay> E addAndBuildDisplay(Element element, Item target, String label) {
@@ -109,7 +79,7 @@ public abstract class AlexandriaElementStoreDisplay<DN extends DisplayNotifier> 
     private <E extends AlexandriaElementDisplay> E buildDisplayFor(Element element, Item target, String label) {
         Class clazz = classFor(element);
 
-        AlexandriaElementDisplay display = builders.get(clazz).apply(element);
+        AlexandriaElementDisplay display = newDisplay(element, target);
         display.label(label);
         display.element(element);
         display.target(target);

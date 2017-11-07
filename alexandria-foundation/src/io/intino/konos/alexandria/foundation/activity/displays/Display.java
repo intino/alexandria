@@ -135,7 +135,9 @@ public class Display<N extends DisplayNotifier> {
     }
 
     public static String nameOf(Class<? extends Display> clazz) {
-        return clazz.getSimpleName().replace("Display", "").toLowerCase();
+        String name = clazz.getSimpleName();
+        int index = name.lastIndexOf("Display");
+        return name.substring(0, index);
     }
 
 }

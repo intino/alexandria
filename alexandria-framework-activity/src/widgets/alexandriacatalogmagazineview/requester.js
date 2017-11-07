@@ -1,6 +1,6 @@
-var AlexandriaCatalogMagazineViewWidgetBehaviors = AlexandriaCatalogMagazineViewWidgetBehaviors || {};
+var AlexandriaCatalogMagazineViewBehaviors = AlexandriaCatalogMagazineViewBehaviors || {};
 
-AlexandriaCatalogMagazineViewWidgetBehaviors.Requester = {
+AlexandriaCatalogMagazineViewBehaviors.Requester = {
 
 
 

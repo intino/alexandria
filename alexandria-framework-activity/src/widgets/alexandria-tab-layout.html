@@ -28,18 +28,7 @@
 
             <template is="dom-repeat" items="[[_itemList]]" as="item">
                 <div class="item" name$="[[item.label]]">
-                    <template is="dom-if" if="[[_isPanel(item)]]">
-                        <cotton-zombie display="AlexandriaPanelDisplay" widget="AlexandriaPanel" object$="[[item.label]]"></cotton-zombie>
-                    </template>
-                    <template is="dom-if" if="[[_isCatalog(item)]]">
-                        <cotton-zombie display="AlexandriaCatalogDisplay" widget="AlexandriaCatalog" object$="[[item.label]]"></cotton-zombie>
-                    </template>
-                    <template is="dom-if" if="[[_isTemporalRangeCatalog(item)]]">
-                        <cotton-zombie display="AlexandriaTemporalRangeCatalogDisplay" widget="AlexandriaTemporalRangeCatalog" object$="[[item.label]]"></cotton-zombie>
-                    </template>
-                    <template is="dom-if" if="[[_isTemporalTimeCatalog(item)]]">
-                        <cotton-zombie display="AlexandriaTemporalTimeCatalogDisplay" widget="AlexandriaTemporalTimeCatalog" object$="[[item.label]]"></cotton-zombie>
-                    </template>
+                    <cotton-zombie display$="[[item.type]]Display" widget$="[[item.type]]" object$="[[item.label]]"></cotton-zombie>
                 </div>
             </template>
             <div name="noItems" class="message layout horizontal center"><span>[[NoItemsMessage]]</span></div>

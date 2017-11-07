@@ -7,6 +7,7 @@ use Catalog
 Display alexandriaDesktop
 	displays = alexandriaTabLayout alexandriaMenuLayout
 
+	Notification displayType as Text
 	Notification(Client) loading as Bool
 	Notification(Client) loaded
 

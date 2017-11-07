@@ -62,7 +62,9 @@
         Polymer({
             is: 'alexandria-mold',
 
-            behaviors: [ CottonBehaviors.TranslatorBehavior, SumusBehaviors.AlexandriaMoldBehavior, SumusBehaviors.BreadcrumbsBehavior ],
+            behaviors: [ CottonBehaviors.TranslatorBehavior,
+                         AlexandriaBehaviors.MoldBehavior,
+                         AlexandriaBehaviors.BreadcrumbsBehavior ],
 
             attached: function () {
                 this.translate(AlexandriaMoldDictionary);

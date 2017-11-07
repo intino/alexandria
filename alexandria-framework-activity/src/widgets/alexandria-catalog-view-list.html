@@ -38,8 +38,8 @@
                 <template is="dom-if" if="[[_isMapView(view)]]">
                     <div><cotton-zombie display="AlexandriaCatalogMapViewDisplay" widget="AlexandriaCatalogMapView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
-                <template is="dom-if" if="[[_isOlapView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogOlapViewDisplay" widget="AlexandriaCatalogOlapView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isDisplayView(view)]]">
+                    <div><cotton-zombie display="AlexandriaCatalogDisplayViewDisplay" widget="AlexandriaCatalogDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
             </template>
         </iron-pages>
@@ -128,7 +128,7 @@
                     this.magazine = this._isMagazineView(view);
                     this.list = this._isListView(view);
                     this.map = this._isMapView(view);
-                    this.olap = this._isOlapView(view);
+                    this.display = this._isDisplayView(view);
                 }
             },
 
