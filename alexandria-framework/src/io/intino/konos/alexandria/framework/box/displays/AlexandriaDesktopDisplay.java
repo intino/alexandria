@@ -3,18 +3,11 @@ package io.intino.konos.alexandria.framework.box.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.framework.box.displays.notifiers.AlexandriaDesktopDisplayNotifier;
 import io.intino.konos.alexandria.framework.box.model.Desktop;
-import io.intino.konos.alexandria.framework.box.model.Desktop.Layout;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-public class AlexandriaDesktopDisplay extends AlexandriaElementDisplay<Desktop, AlexandriaDesktopDisplayNotifier> {
-	private Map<Layout, Function<Layout, AlexandriaLayoutDisplay>> builders = new HashMap<>();
+public class AlexandriaDesktopDisplay<DN extends AlexandriaDesktopDisplayNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
 
 	public AlexandriaDesktopDisplay(Box box) {
 		super(box);
-		registerBuilders();
 	}
 
 	@Override
@@ -24,8 +17,11 @@ public class AlexandriaDesktopDisplay extends AlexandriaElementDisplay<Desktop, 
 	@Override
 	protected void init() {
 		super.init();
-		Layout layout = element().layout();
-		add(builders.get(layout).apply(layout));
+		AlexandriaLayoutDisplay display = element().layoutDisplay();
+		display.onLoading((value) -> AlexandriaDesktopDisplay.this.refreshLoading((Boolean) value));
+		display.onLoaded((value) -> AlexandriaDesktopDisplay.this.refreshLoaded());
+		notifier.displayType(display.name());
+		addAndPersonify(display);
 	}
 
 	@Override
@@ -79,8 +75,4 @@ public class AlexandriaDesktopDisplay extends AlexandriaElementDisplay<Desktop, 
 		notifier.loaded();
 	}
 
-	private void registerBuilders() {
-		builders.put(Layout.Menu, layout -> new AlexandriaMenuLayoutDisplay(box));
-		builders.put(Layout.Tab, layout -> new AlexandriaTabLayoutDisplay(box));
-	}
 }

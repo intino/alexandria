@@ -4,14 +4,16 @@ import io.intino.konos.alexandria.foundation.activity.Resource;
 import io.intino.konos.alexandria.framework.box.model.Element;
 import io.intino.konos.alexandria.framework.box.model.Item;
 
+import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 public class ExportSelection extends Operation {
-	protected Instant from;
-	protected Instant to;
+	private Instant from = Instant.now(Clock.systemUTC());
+	private Instant to = Instant.now(Clock.systemUTC()).plus(1, ChronoUnit.DAYS);;
 	private Execution execution;
 
 	public ExportSelection() {

@@ -58,7 +58,7 @@
             behaviors: [ CottonBehaviors.CarrierBehavior,
                          CottonBehaviors.PushBehavior,
                          CottonBehaviors.TranslatorBehavior,
-                         SumusBehaviors.CatalogViewBehavior,
+                         AlexandriaBehaviors.CatalogViewBehavior,
                          CatalogListViewWidgetBehaviors.Requester,
                          CatalogListViewWidgetBehaviors.NotifierListener ],
 
@@ -72,7 +72,7 @@
 
             attached : function() {
                 this.translate(CatalogListViewWidgetDictionary);
-                this.translate(SumusBehaviors.CatalogViewBehavior.Dictionary);
+                this.translate(AlexandriaBehaviors.CatalogViewBehavior.Dictionary);
                 this.listenToDisplay();
             },
 

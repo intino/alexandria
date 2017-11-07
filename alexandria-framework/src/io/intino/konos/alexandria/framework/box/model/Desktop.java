@@ -1,19 +1,20 @@
 package io.intino.konos.alexandria.framework.box.model;
 
+import io.intino.konos.alexandria.framework.box.displays.AlexandriaLayoutDisplay;
+
 public class Desktop extends Element {
-    private Layout layout;
+    private LayoutDisplayProvider layoutDisplayProvider;
 
-    public enum Layout {
-        Tab, Menu
+    public AlexandriaLayoutDisplay layoutDisplay() {
+        return layoutDisplayProvider != null ? layoutDisplayProvider.display() : null;
     }
 
-    public Layout layout() {
-        return layout;
-    }
-
-    public Desktop layout(Layout layout) {
-        this.layout = layout;
+    public Desktop layoutDisplayProvider(LayoutDisplayProvider provider) {
+        this.layoutDisplayProvider = provider;
         return this;
     }
 
+    public interface LayoutDisplayProvider {
+        AlexandriaLayoutDisplay display();
+    }
 }

@@ -34,6 +34,7 @@
 
         _refreshItemList : function(itemList) {
             const countItems = itemList.length;
+            itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
             this._itemList = itemList;
             this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
             this._selectedItem = 0;
@@ -104,22 +105,6 @@
 
         _userLoggedOut : function(homeUrl) {
             window.location.href = homeUrl;
-        },
-
-        _isPanel : function(element) {
-            return element.referencePropertyList[0].value == "panel";
-        },
-
-        _isCatalog : function(element) {
-            return element.referencePropertyList[0].value == "catalog";
-        },
-
-        _isTemporalRangeCatalog : function(element) {
-            return element.referencePropertyList[0].value == "temporal-range-catalog";
-        },
-
-        _isTemporalTimeCatalog : function(element) {
-            return element.referencePropertyList[0].value == "temporal-time-catalog";
         }
 
     };

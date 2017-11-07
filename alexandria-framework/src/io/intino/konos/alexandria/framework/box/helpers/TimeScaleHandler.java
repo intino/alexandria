@@ -307,11 +307,14 @@ public class TimeScaleHandler {
 	}
 
 	private TimeRange initialTimeRange(TimeScale scale) {
-		long halfRangeSize = (long) bounds.zooms().get(scale).max() / 2;
-		if (bounds.mode() == io.intino.konos.alexandria.framework.box.helpers.Bounds.Mode.ToTheLast) {
-			Instant to = scale.normalise(bounds.range().to());
-			Instant from = scale.addTo(to, - halfRangeSize);
-			return timeRangeOf(checkWithFrom(from), to, scale);
+		long halfRangeSize = 1;
+		if (bounds.zooms().size() > 0) {
+			halfRangeSize = (long) bounds.zooms().get(scale).max() / 2;
+			if (bounds.mode() == io.intino.konos.alexandria.framework.box.helpers.Bounds.Mode.ToTheLast) {
+				Instant to = scale.normalise(bounds.range().to());
+				Instant from = scale.addTo(to, -halfRangeSize);
+				return timeRangeOf(checkWithFrom(from), to, scale);
+			}
 		}
 		Instant from = scale.normalise(bounds.range().from());
 		Instant to = scale.addTo(from, halfRangeSize);

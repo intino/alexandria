@@ -68,7 +68,7 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 		builders.put(ListView.class.getSimpleName(), this::buildListViewDisplay);
 		builders.put(GridView.class.getSimpleName(), this::buildListViewDisplay);
 		builders.put(MapView.class.getSimpleName(), this::buildMapViewDisplay);
-		builders.put(DisplayView.class.getSimpleName(), this::buildOlapViewDisplay);
+		builders.put(DisplayView.class.getSimpleName(), this::buildDisplayViewDisplay);
 	}
 
 	public void selectView(String name) {
@@ -134,7 +134,7 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 		return display;
 	}
 
-	private AlexandriaCatalogDisplayViewDisplay buildOlapViewDisplay(ElementView view) {
+	private AlexandriaCatalogDisplayViewDisplay buildDisplayViewDisplay(ElementView view) {
 		AlexandriaCatalogDisplayViewDisplay display = new AlexandriaCatalogDisplayViewDisplay(box);
 		registerViewDisplay(display, view);
 		add(display);

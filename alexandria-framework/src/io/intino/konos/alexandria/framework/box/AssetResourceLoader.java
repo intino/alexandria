@@ -1,10 +1,12 @@
 package io.intino.konos.alexandria.framework.box;
 
+import io.intino.konos.alexandria.Box;
+
 public class AssetResourceLoader {
 
-	private final AlexandriaFrameworkBox box;
+	private final Box box;
 
-	public AssetResourceLoader(AlexandriaFrameworkBox box) {
+	public AssetResourceLoader(Box box) {
 		this.box = box;
 	}
 

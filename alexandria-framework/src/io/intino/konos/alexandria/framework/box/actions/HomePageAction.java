@@ -1,12 +1,13 @@
 package io.intino.konos.alexandria.framework.box.actions;
 
+import io.intino.konos.alexandria.foundation.activity.ActivityBox;
 import io.intino.konos.alexandria.foundation.activity.spark.actions.PageAction;
-import io.intino.konos.alexandria.framework.box.AlexandriaFrameworkBox;
 import io.intino.konos.alexandria.framework.box.displays.AlexandriaDesktopDisplay;
 
 public class HomePageAction extends PageAction {
 
-	public AlexandriaFrameworkBox box;
+	// TODO Octavio -> ActivityBox en vez de AlexandriaBox
+	public ActivityBox box;
 
 
 	public HomePageAction() { super("alexandria"); }

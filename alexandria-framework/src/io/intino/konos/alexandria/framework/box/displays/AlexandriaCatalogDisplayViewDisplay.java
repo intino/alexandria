@@ -75,7 +75,7 @@ public class AlexandriaCatalogDisplayViewDisplay extends ActivityDisplay<Alexand
     }
 
     private void sendDisplayType(Display display) {
-        notifier.displayType(display.getClass().getSimpleName());
+        notifier.displayType(display.name());
     }
 
     private Consumer<Boolean> loadingListener() {

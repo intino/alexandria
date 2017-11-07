@@ -19,16 +19,10 @@
     <template>
         <app-drawer-layout force-narrow>
             <app-drawer slot="drawer" align="left">
-                <div id="drawer" slot="drawer" style="height:100%;">
-                    <!--<cotton-zombie display="TabLayoutDisplay" widget="TabLayoutWidget"></cotton-zombie>-->
-                    <cotton-zombie display="AlexandriaMenuLayoutDisplay" widget="AlexandriaMenuLayoutMobile"></cotton-zombie>
-                </div>
+                <div id="drawer" slot="drawer" style="height:100%;"></div>
             </app-drawer>
-            <div class="content main" slot="main">
+            <div id="main" class="content main" slot="main">
                 <paper-icon-button hidden$="[[menuButtonHidden]]" class="toggle" icon="menu" drawer-toggle></paper-icon-button>
-
-                <cotton-zombie id="tabLayoutZombie" display="AlexandriaTabLayoutDisplay" widget="AlexandriaTabLayout"></cotton-zombie>
-                <cotton-zombie display="AlexandriaMenuLayoutDisplay" widget="AlexandriaMenuLayout"></cotton-zombie>
             </div>
         </app-drawer-layout>
         <div id="loadingLayer" class="loading message layout horizontal center" hidden="[[!_catalogList.length]]"><span>[[loading]]</span></div>
@@ -112,7 +106,20 @@
             attached : function() {
                 this.translate(AlexandriaDesktopDictionary);
                 this.listenToDisplay();
-                this.$.tabLayoutZombie.whenPersonified().execute(() => this.menuButtonHidden = true);
+                this.$.layoutZombie.whenPersonified().execute(() => this.menuButtonHidden = true);
+            },
+
+            _displayType : function(type) {
+                this._createZombie(this.$.drawer, type, null, "Mobile");
+                this._createZombie(this.$.main, type, "layoutZombie", "");
+            },
+
+            _createZombie : function(container, type, id, layout) {
+                var zombie = document.createElement("cotton-zombie");
+                if (id != null) zombie.setAttribute("id", id);
+                zombie.setAttribute("display", type + "Display");
+                zombie.setAttribute("widget", type + layout);
+                container.appendChild(zombie);
             },
 
             _loading : function(withMessage) {

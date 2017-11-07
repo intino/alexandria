@@ -1,20 +1,16 @@
 package io.intino.konos.alexandria.framework.box.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.foundation.activity.displays.Display;
 import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifier;
 import io.intino.konos.alexandria.foundation.activity.services.push.User;
 import io.intino.konos.alexandria.framework.box.displays.builders.PlatformInfoBuilder;
 import io.intino.konos.alexandria.framework.box.displays.builders.ReferenceBuilder;
-import io.intino.konos.alexandria.framework.box.model.Element;
-import io.intino.konos.alexandria.framework.box.model.ElementRender;
-import io.intino.konos.alexandria.framework.box.model.ItemList;
-import io.intino.konos.alexandria.framework.box.model.Catalog;
-import io.intino.konos.alexandria.framework.box.model.TemporalCatalog;
+import io.intino.konos.alexandria.framework.box.model.*;
 import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 import io.intino.konos.alexandria.framework.box.model.layout.options.Group;
 import io.intino.konos.alexandria.framework.box.model.layout.options.Option;
 import io.intino.konos.alexandria.framework.box.model.layout.options.Options;
-import io.intino.konos.alexandria.framework.box.model.Panel;
 import io.intino.konos.alexandria.framework.box.model.renders.*;
 import io.intino.konos.alexandria.framework.box.schemas.PlatformInfo;
 import io.intino.konos.alexandria.framework.box.schemas.Reference;
@@ -87,6 +83,11 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
         return item != null ? item.target() : null;
     }
 
+    @Override
+    protected AlexandriaElementDisplay newDisplay(Element element, io.intino.konos.alexandria.framework.box.model.Item item) {
+        return element().displayFor(element, item);
+    }
+
     protected Item itemWithLabel(String label) {
         return items.stream().filter(i -> i.label().equals(label)).findFirst().orElse(null);
     }
@@ -98,7 +99,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
     protected Reference schemaItemOf(Item item) {
         Reference result = ReferenceBuilder.build(item.name(), item.label());
         List<ReferenceProperty> referenceProperties = result.referencePropertyList();
-        referenceProperties.add(new ReferenceProperty().name("type").value(typeOf(item.element())));
+        referenceProperties.add(new ReferenceProperty().name("type").value(item.type()));
         referenceProperties.add(new ReferenceProperty().name("group").value(item.group() != null ? item.group().label() : null));
         referenceProperties.add(new ReferenceProperty().name("group_opened").value(item.group() != null ? String.valueOf(item.group().mode() == Group.Mode.Expanded) : null));
         return result;
@@ -143,15 +144,6 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
             if (v instanceof Group) return ((Group)v).options();
             return singletonList(v);
         }).flatMap(Collection::stream);
-    }
-
-    private static String typeOf(Element element) {
-        if (element == null) return "";
-        if (element instanceof Panel) return "panel";
-        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Range) return "temporal-range-catalog";
-        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Time) return "temporal-time-catalog";
-        if (element instanceof Catalog) return "catalog";
-        return "";
     }
 
     private void sendItems() {
@@ -234,8 +226,14 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
             }
 
             @Override
+            public String type() {
+                return Display.nameOf(AlexandriaLayoutDisplay.this.element().displayTypeFor(element, target));
+            }
+
+            @Override
             public Group group() {
-                return (Group)render.option();
+                ElementOption option = render.option();
+                return option instanceof Group ? (Group) option : null;
             }
 
             @Override
@@ -253,6 +251,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
     protected interface Item {
         String name();
         String label();
+        String type();
         Group group();
         Element element();
         io.intino.konos.alexandria.framework.box.model.Item target();
