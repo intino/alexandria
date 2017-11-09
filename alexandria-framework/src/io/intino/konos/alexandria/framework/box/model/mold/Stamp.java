@@ -33,10 +33,10 @@ public abstract class Stamp<O> {
 
 	public O value(Item item, String username) {
 		if (item == null) return null;
-		return value(item.object(), username);
+		return objectValue(item.object(), username);
 	}
 
-	public abstract O value(Object object, String username);
+	public abstract O objectValue(Object object, String username);
 
 	public Stamp value(Value<O> value) {
 		this.value = value;

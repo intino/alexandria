@@ -11,10 +11,10 @@ public class CatalogLink extends Stamp<String> {
 
 	public String title(Item item, String username) {
 		if (item == null) return null;
-		return title(item.object(), username);
+		return objectTitle(item.object(), username);
 	}
 
-	public String title(Object object, String username) {
+	public String objectTitle(Object object, String username) {
 		return title != null ? title.value(object, username) : null;
 	}
 
@@ -45,7 +45,7 @@ public class CatalogLink extends Stamp<String> {
 	}
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return null;
 	}
 

@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.framework.box.model.mold.Stamp;
 
 public abstract class Operation<O> extends Stamp<O> {
 	@Override
-	public O value(Object object, String username) {
+	public O objectValue(Object object, String username) {
 		return null;
 	}
 }

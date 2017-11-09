@@ -3,7 +3,6 @@ package io.intino.konos.alexandria.framework.box.model.renders;
 import io.intino.konos.alexandria.framework.box.model.ElementRender;
 import io.intino.konos.alexandria.framework.box.model.Item;
 import io.intino.konos.alexandria.framework.box.model.ItemList;
-import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 import io.intino.konos.alexandria.framework.box.model.Panel;
 
 import java.util.List;
@@ -13,10 +12,6 @@ import static java.util.stream.Collectors.toList;
 public class RenderObjects extends ElementRender {
 	private Panel panel;
 	private Source source = null;
-
-	public RenderObjects(ElementOption option) {
-		super(option);
-	}
 
 	public Panel panel() {
 		return panel;

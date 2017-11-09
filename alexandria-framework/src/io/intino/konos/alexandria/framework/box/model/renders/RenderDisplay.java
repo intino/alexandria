@@ -3,17 +3,12 @@ package io.intino.konos.alexandria.framework.box.model.renders;
 import io.intino.konos.alexandria.foundation.activity.displays.Display;
 import io.intino.konos.alexandria.framework.box.displays.CatalogInstantBlock;
 import io.intino.konos.alexandria.framework.box.model.ElementRender;
-import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 
 import java.util.function.Consumer;
 
 public class RenderDisplay extends ElementRender {
 	public boolean hideNavigator = true;
 	private DisplayLoader displayLoader;
-
-	public RenderDisplay(ElementOption option) {
-		super(option);
-	}
 
 	public boolean hideNavigator() {
 		return hideNavigator;

@@ -3,6 +3,9 @@ package io.intino.konos.alexandria.framework.box.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.framework.box.displays.notifiers.AlexandriaDesktopDisplayNotifier;
 import io.intino.konos.alexandria.framework.box.model.Desktop;
+import io.intino.konos.alexandria.framework.box.model.Settings;
+
+import java.net.URL;
 
 public class AlexandriaDesktopDisplay<DN extends AlexandriaDesktopDisplayNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
 
@@ -18,8 +21,34 @@ public class AlexandriaDesktopDisplay<DN extends AlexandriaDesktopDisplayNotifie
 	protected void init() {
 		super.init();
 		AlexandriaLayoutDisplay display = element().layoutDisplay();
-		display.onLoading((value) -> AlexandriaDesktopDisplay.this.refreshLoading((Boolean) value));
-		display.onLoaded((value) -> AlexandriaDesktopDisplay.this.refreshLoaded());
+		display.onLoading((withMessage) -> refreshLoading((Boolean) withMessage));
+		display.onLoaded((value) -> refreshLoaded());
+		display.settings(new Settings() {
+			@Override
+			public String title() {
+				return element().title();
+			}
+
+			@Override
+			public String subtitle() {
+				return element().subtitle();
+			}
+
+			@Override
+			public URL logo() {
+				return element().logo();
+			}
+
+			@Override
+			public URL favicon() {
+				return element().favicon();
+			}
+
+			@Override
+			public URL authServiceUrl() {
+				return element().authServiceUrl();
+			}
+		});
 		notifier.displayType(display.name());
 		addAndPersonify(display);
 	}
@@ -55,16 +84,6 @@ public class AlexandriaDesktopDisplay<DN extends AlexandriaDesktopDisplayNotifie
 
 	@Override
 	protected void hidePanel() {
-	}
-
-	private void add(AlexandriaLayoutDisplay display) {
-		addListeners(display);
-		addAndPersonify(display);
-	}
-
-	private void addListeners(AlexandriaLayoutDisplay display) {
-		display.onLoading(withMessage -> refreshLoading((Boolean) withMessage));
-		display.onLoaded(value -> refreshLoaded());
 	}
 
 	private void refreshLoading(boolean withMessage) {

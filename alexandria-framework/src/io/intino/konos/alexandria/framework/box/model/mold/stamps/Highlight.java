@@ -8,10 +8,10 @@ public class Highlight extends Stamp<String> {
 
 	public String color(Item item, String username) {
 		if (item == null) return "";
-		return color(item.object(), username);
+		return objectColor(item.object(), username);
 	}
 
-	public String color(Object object, String username) {
+	public String objectColor(Object object, String username) {
 		return color != null ? color.value(object, username) : "";
 	}
 
@@ -21,7 +21,7 @@ public class Highlight extends Stamp<String> {
 	}
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

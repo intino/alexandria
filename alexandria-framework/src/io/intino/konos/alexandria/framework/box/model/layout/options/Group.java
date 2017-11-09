@@ -34,6 +34,7 @@ public class Group extends ElementOption {
 
     public Group add(ElementOption option) {
         this.optionList.add(option);
+        option.owner(this);
         return this;
     }
 

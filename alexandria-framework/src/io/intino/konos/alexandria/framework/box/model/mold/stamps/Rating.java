@@ -15,7 +15,7 @@ public class Rating extends Stamp<Double> {
 	}
 
 	@Override
-	public Double value(Object object, String username) {
+	public Double objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

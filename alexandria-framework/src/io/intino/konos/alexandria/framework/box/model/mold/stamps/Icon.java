@@ -8,10 +8,10 @@ public abstract class Icon<O> extends Stamp<O> {
 
 	public String title(Item item, String username) {
 		if (item == null) return "";
-		return title(item.object(), username);
+		return objectTitle(item.object(), username);
 	}
 
-	public String title(Object object, String username) {
+	public String objectTitle(Object object, String username) {
 		return title != null ? title.value(object, username) : "";
 	}
 

@@ -18,7 +18,7 @@ public class Picture extends Stamp<List<URL>> {
 	}
 
 	@Override
-	public List<URL> value(Object object, String username) {
+	public List<URL> objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

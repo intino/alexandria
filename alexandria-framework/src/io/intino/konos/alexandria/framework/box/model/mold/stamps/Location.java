@@ -10,10 +10,10 @@ public class Location extends Stamp<String> {
 
 	public URL icon(Item item, String username) {
 		if (item == null) return null;
-		return icon(item.object(), username);
+		return objectIcon(item.object(), username);
 	}
 
-	public URL icon(Object object, String username) {
+	public URL objectIcon(Object object, String username) {
 		return this.icon != null ? this.icon.value(object, username) : null;
 	}
 
@@ -23,7 +23,7 @@ public class Location extends Stamp<String> {
 	}
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 
