@@ -106,19 +106,19 @@
             attached : function() {
                 this.translate(AlexandriaDesktopDictionary);
                 this.listenToDisplay();
-                this.$.layoutZombie.whenPersonified().execute(() => this.menuButtonHidden = true);
             },
 
             _displayType : function(type) {
-                this._createZombie(this.$.drawer, type, null, "Mobile");
-                this._createZombie(this.$.main, type, "layoutZombie", "");
+                this._createZombie(this.$.drawer, type, null, "AlexandriaMenuLayoutMobile");
+                this._createZombie(this.$.main, type, "layoutZombie", type);
+                this.querySelector("#layoutZombie").whenPersonified().execute(() => this.menuButtonHidden = true);
             },
 
-            _createZombie : function(container, type, id, layout) {
+            _createZombie : function(container, type, id, widget) {
                 var zombie = document.createElement("cotton-zombie");
                 if (id != null) zombie.setAttribute("id", id);
                 zombie.setAttribute("display", type + "Display");
-                zombie.setAttribute("widget", type + layout);
+                zombie.setAttribute("widget", widget);
                 container.appendChild(zombie);
             },
 

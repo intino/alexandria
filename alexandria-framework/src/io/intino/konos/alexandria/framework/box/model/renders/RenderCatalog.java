@@ -1,18 +1,13 @@
 package io.intino.konos.alexandria.framework.box.model.renders;
 
+import io.intino.konos.alexandria.framework.box.model.Catalog;
 import io.intino.konos.alexandria.framework.box.model.Element;
 import io.intino.konos.alexandria.framework.box.model.ElementRender;
 import io.intino.konos.alexandria.framework.box.model.Item;
-import io.intino.konos.alexandria.framework.box.model.Catalog;
-import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 
 public class RenderCatalog extends ElementRender {
 	private Catalog catalog;
 	private Filter filter = null;
-
-	public RenderCatalog(ElementOption option) {
-		super(option);
-	}
 
 	public Catalog catalog() {
 		return catalog;

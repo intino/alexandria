@@ -98,6 +98,7 @@ public class TimeScaleHandler {
 
 	public ZoomRange zoomRange() {
 		Map<TimeScale, io.intino.konos.alexandria.framework.box.helpers.Bounds.Zoom> zooms = bounds.zooms();
+		if (zooms.size() <= 0) return new ZoomRange(0, 0);
 		long max = scales.get(0).toMillis(zooms.get(scales.get(0)).max());
 		long min = scales.get(scales.size() - 1).toMillis(zooms.get(scales.get(scales.size() - 1)).min());
 		return new ZoomRange(max, min);

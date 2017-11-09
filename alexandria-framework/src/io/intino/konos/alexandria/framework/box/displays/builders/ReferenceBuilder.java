@@ -52,7 +52,7 @@ public class ReferenceBuilder {
         ElementRender render = ((View) view).render();
         if (render instanceof RenderMold) return "custom-view";
         if (render instanceof RenderCatalog) return "catalog-view";
-        if (render instanceof RenderDisplay) return "olap-view";
+        if (render instanceof RenderDisplay) return "display-view";
 
         return "";
     }

@@ -42,7 +42,7 @@ public class EmbeddedCatalog extends Stamp<String> {
 	}
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return null;
 	}
 

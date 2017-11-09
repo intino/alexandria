@@ -21,7 +21,7 @@ public class Highlight extends Stamp<String> {
 	}
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

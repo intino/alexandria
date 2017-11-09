@@ -179,6 +179,7 @@ Schema PlatformInfo
 	Attribute title as Text
 	Attribute subtitle as Text
 	Attribute logo as Text
+	Attribute favicon as Text
 	Attribute authServiceUrl as Text
 
 Schema Property

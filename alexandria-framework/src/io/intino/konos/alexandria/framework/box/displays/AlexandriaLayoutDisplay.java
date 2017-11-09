@@ -31,10 +31,16 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
     private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
     private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
     protected Map<Class<? extends ElementRender>, Function<ElementRender, List<Item>>> itemsProviders = new HashMap<>();
+    private Settings settings;
 
     public AlexandriaLayoutDisplay(Box box) {
         super(box);
         buildElementProviders();
+    }
+
+    public AlexandriaLayoutDisplay settings(Settings settings) {
+        this.settings = settings;
+        return this;
     }
 
     public void onLoading(Consumer<Boolean> listener) {
@@ -188,7 +194,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
     }
 
     private PlatformInfo info() {
-        return PlatformInfoBuilder.build(element().settings());
+        return PlatformInfoBuilder.build(settings);
     }
 
     private UserInfo userOf(User user) {
@@ -232,8 +238,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends DisplayNotifier> extend
 
             @Override
             public Group group() {
-                ElementOption option = render.option();
-                return option instanceof Group ? (Group) option : null;
+                return render.option().owner();
             }
 
             @Override

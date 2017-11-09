@@ -2,7 +2,6 @@ package io.intino.konos.alexandria.framework.box.model.renders;
 
 import io.intino.konos.alexandria.framework.box.model.ElementRender;
 import io.intino.konos.alexandria.framework.box.model.Item;
-import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 import io.intino.konos.alexandria.framework.box.model.Panel;
 
 public class RenderObject extends ElementRender {
@@ -10,10 +9,6 @@ public class RenderObject extends ElementRender {
 	private Object object = null;
 	private Loader idLoader;
 	private Loader nameLoader;
-
-	public RenderObject(ElementOption option) {
-		super(option);
-	}
 
 	public Panel panel() {
 		return panel;

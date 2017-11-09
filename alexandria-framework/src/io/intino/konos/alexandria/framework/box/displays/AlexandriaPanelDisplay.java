@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public class AlexandriaPanelDisplay extends AlexandriaElementDisplay<Panel, AlexandriaPanelDisplayNotifier> implements ElementViewDisplayProvider {
+public class AlexandriaPanelDisplay<DN extends AlexandriaPanelDisplayNotifier> extends AlexandriaElementDisplay<Panel, DN> implements ElementViewDisplayProvider {
 	protected Map<Class<? extends ElementRender>, Function<ElementRender, AlexandriaPanelViewDisplay>> displayBuilders = new HashMap<>();
 	private Map<String, AlexandriaPanelViewDisplay> viewDisplayMap = new HashMap<>();
 	private static final String ViewId = "%s%s";

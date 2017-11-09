@@ -21,7 +21,7 @@ public class ItemLinks extends Stamp<Links> {
 	}
 
 	@Override
-	public Links value(Object object, String username) {
+	public Links objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

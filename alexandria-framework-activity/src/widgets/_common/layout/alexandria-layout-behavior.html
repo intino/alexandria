@@ -14,6 +14,8 @@
             }
         },
 
+        _layoutLoadedTimer: null,
+
         properties : {
             _itemList: { type: Array, observer: '_itemsLoaded' },
             _itemTabList: Array,
@@ -26,10 +28,11 @@
 
         _loading : function() {
             this.$.layout.loading = true;
+            if (this._layoutLoadedTimer != null) window.clearTimeout(this._loadedTimer);
         },
 
         _loaded : function() {
-            this.$.layout.loading = false;
+            this._layoutLoadedTimer = window.setTimeout(() => this.$.layout.loading = false, 800);
         },
 
         _refreshItemList : function(itemList) {

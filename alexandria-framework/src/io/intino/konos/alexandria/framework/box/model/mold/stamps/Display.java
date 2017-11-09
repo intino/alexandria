@@ -7,7 +7,7 @@ public class Display extends Stamp<String> {
 	private DisplayBuilder displayBuilder;
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return null;
 	}
 

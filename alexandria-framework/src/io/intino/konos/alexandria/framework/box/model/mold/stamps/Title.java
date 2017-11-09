@@ -5,7 +5,7 @@ import io.intino.konos.alexandria.framework.box.model.mold.Stamp;
 public class Title extends Stamp<String> {
 
 	@Override
-	public String value(Object object, String username) {
+	public String objectValue(Object object, String username) {
 		return value() != null ? value().value(object, username) : null;
 	}
 

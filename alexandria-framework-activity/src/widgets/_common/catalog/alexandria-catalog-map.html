@@ -30,7 +30,6 @@
     <style>
         :host alexandria-catalog-toolbar {
             position: absolute;
-            top: 0;
             right: 0;
             margin-top: 10px;
             margin-right: 10px;
@@ -100,7 +99,10 @@
                 if (this._refreshTimeout != null)
                     window.clearTimeout(this._refreshTimeout);
 
-                var map = this.querySelector("google-map").map;
+                var mapContainer = this.querySelector("google-map");
+                var map = mapContainer.map;
+
+                this.querySelector("alexandria-catalog-toolbar").style.top = ($(mapContainer).position().top + 35) + "px";
 
                 if (map != null)
                     map.closeInfoWindows = () => this.closeInfoWindows();

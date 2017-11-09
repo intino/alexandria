@@ -3,14 +3,12 @@ package io.intino.konos.alexandria.framework.box.model;
 import io.intino.konos.alexandria.framework.box.displays.AlexandriaElementDisplay;
 import io.intino.konos.alexandria.framework.box.model.layout.ElementOption;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Layout extends Element {
     private Mode mode;
     private List<ElementOption> optionList = new ArrayList<>();
-    private SettingsLoader settingsLoader;
     private ElementDisplayBuilder displayBuilder;
 
     public Mode mode() {
@@ -31,15 +29,6 @@ public class Layout extends Element {
         return this;
     }
 
-    public Settings settings() {
-        return settingsLoader != null ? settingsLoader.load() : null;
-    }
-
-    public Layout settings(SettingsLoader loader) {
-        this.settingsLoader = loader;
-        return this;
-    }
-
     public AlexandriaElementDisplay displayFor(Element element, Item item) {
         return displayBuilder != null ? displayBuilder.displayFor(element, item != null ? item.object() : null) : null;
     }
@@ -57,19 +46,9 @@ public class Layout extends Element {
         Menu, Tab;
     }
 
-    public interface SettingsLoader {
-        Settings load();
-    }
-
     public interface ElementDisplayBuilder {
         AlexandriaElementDisplay displayFor(Element element, Object object);
         Class<? extends AlexandriaElementDisplay> displayTypeFor(Element element, Object object);
     }
 
-    public interface Settings {
-        String title();
-        String subtitle();
-        URL logo();
-        URL authServiceUrl();
-    }
 }
