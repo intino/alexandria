@@ -30,11 +30,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private Item target;
 	private ElementDisplayManager elementDisplayManager = null;
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
-	private ElementViewDisplay currentView = null;
+	private AlexandriaElementViewDisplay currentView = null;
 	private Function<Item, Boolean> itemListFilter = null;
 	private Boolean dirty = null;
 	private boolean embedded = false;
-	private ElementViewDisplay.OpenItemEvent openedItem = null;
+	private AlexandriaElementViewDisplay.OpenItemEvent openedItem = null;
 	private TimeRange range;
 
 	public AlexandriaElementDisplay(Box box) {
@@ -184,7 +184,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		});
 	}
 
-	public Optional<ElementViewDisplay> currentView() {
+	public Optional<AlexandriaElementViewDisplay> currentView() {
 		return Optional.ofNullable(currentView);
 	}
 
@@ -200,7 +200,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public void refreshView() {
-		currentView().ifPresent(ElementViewDisplay::refresh);
+		currentView().ifPresent(AlexandriaElementViewDisplay::refresh);
 	}
 
 	public void refresh(Item... objects) {
@@ -252,7 +252,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return views().stream().filter(v -> (v instanceof MoldView)).map(v -> ((MoldView)v).mold()).collect(toList());
 	}
 
-	protected void updateCurrentView(ElementViewDisplay display) {
+	protected void updateCurrentView(AlexandriaElementViewDisplay display) {
 		this.currentView = display;
 		refreshView();
 	}
@@ -268,7 +268,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		display.personifyOnce();
 	}
 
-	protected void openItem(ElementViewDisplay.OpenItemEvent event) {
+	protected void openItem(AlexandriaElementViewDisplay.OpenItemEvent event) {
 		openedItem = event;
 		createPanel(event.itemId());
 		AlexandriaPanelDisplay display = createPanelDisplay(event);
@@ -278,7 +278,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		refreshBreadcrumbs(breadcrumbs(event));
 	}
 
-	protected void openItemDialog(ElementViewDisplay.OpenItemDialogEvent event) {
+	protected void openItemDialog(AlexandriaElementViewDisplay.OpenItemDialogEvent event) {
 		currentItem(new String(Base64.getDecoder().decode(event.item())));
 
 		AlexandriaDialogContainerDisplay display = child(AlexandriaDialogContainerDisplay.class);
@@ -289,7 +289,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		showDialog();
 	}
 
-	protected void executeItemTask(ElementViewDisplay.ExecuteItemTaskEvent event) {
+	protected void executeItemTask(AlexandriaElementViewDisplay.ExecuteItemTaskEvent event) {
 		currentItem(new String(Base64.getDecoder().decode(event.item())));
 		Item item = this.currentItem();
 		((TaskOperation)event.stamp()).execute(item, username());
@@ -301,7 +301,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return elementDisplayManager.openElement(label);
 	}
 
-	public AlexandriaPanelDisplay createPanelDisplay(ElementViewDisplay.OpenItemEvent event) {
+	public AlexandriaPanelDisplay createPanelDisplay(AlexandriaElementViewDisplay.OpenItemEvent event) {
 		AlexandriaPanelDisplay display = elementDisplayManager.createElement(event.panel(), event.item());
 		display.range(event.range());
 		return display;
@@ -394,7 +394,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return null;
 	}
 
-	private String breadcrumbs(ElementViewDisplay.OpenItemEvent event) {
+	private String breadcrumbs(AlexandriaElementViewDisplay.OpenItemEvent event) {
 		Tree tree = event.breadcrumbs();
 
 		if (tree == null) {

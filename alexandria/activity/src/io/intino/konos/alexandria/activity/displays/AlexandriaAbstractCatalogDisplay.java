@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.displays.ElementViewDisplay.OpenItemEvent;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementViewDisplay.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.AbstractView;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -87,7 +87,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 
 	public void refresh(Grouping grouping) {
 		sendCatalog();
-		currentView().ifPresent(ElementViewDisplay::refresh);
+		currentView().ifPresent(AlexandriaElementViewDisplay::refresh);
 	}
 
 	public void refreshViews() {

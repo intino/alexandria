@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
 import io.intino.konos.alexandria.activity.displays.AlexandriaStampDisplay;
 import io.intino.konos.alexandria.activity.displays.ElementView;
-import io.intino.konos.alexandria.activity.displays.ElementViewDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementViewDisplay;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -115,8 +115,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static ElementViewDisplay.OpenItemDialogEvent openItemDialogEvent(String item, Stamp stamp, String username) {
-		return new ElementViewDisplay.OpenItemDialogEvent() {
+	public static AlexandriaElementViewDisplay.OpenItemDialogEvent openItemDialogEvent(String item, Stamp stamp, String username) {
+		return new AlexandriaElementViewDisplay.OpenItemDialogEvent() {
 			@Override
 			public String item() {
 				return item;
@@ -139,8 +139,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static ElementViewDisplay.ExecuteItemTaskEvent executeItemTaskEvent(String item, Stamp stamp) {
-		return new ElementViewDisplay.ExecuteItemTaskEvent() {
+	public static AlexandriaElementViewDisplay.ExecuteItemTaskEvent executeItemTaskEvent(String item, Stamp stamp) {
+		return new AlexandriaElementViewDisplay.ExecuteItemTaskEvent() {
 			@Override
 			public String item() {
 				return item;

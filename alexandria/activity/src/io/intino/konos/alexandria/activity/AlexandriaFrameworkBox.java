@@ -6,7 +6,7 @@ public class AlexandriaFrameworkBox extends AbstractBox {
 		super(args);
 	}
 
-	public AlexandriaFrameworkBox(AlexandriaFrameworkConfiguration configuration) {
+	public AlexandriaFrameworkBox(AlexandriaActivityConfiguration configuration) {
 		super(configuration);
 	}
 

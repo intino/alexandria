@@ -142,9 +142,9 @@ public class AlexandriaPanelDisplay<DN extends AlexandriaPanelDisplayNotifier> e
 		display.context(element());
 		display.target(target());
 		display.onLoading(v -> notifyLoading((Boolean) v));
-		display.onOpenItem(params -> openItem((ElementViewDisplay.OpenItemEvent) params));
-		display.onOpenItemDialog(params -> openItemDialog((ElementViewDisplay.OpenItemDialogEvent) params));
-		display.onExecuteItemTask(params -> executeItemTask((ElementViewDisplay.ExecuteItemTaskEvent) params));
+		display.onOpenItem(params -> openItem((AlexandriaElementViewDisplay.OpenItemEvent) params));
+		display.onOpenItemDialog(params -> openItemDialog((AlexandriaElementViewDisplay.OpenItemDialogEvent) params));
+		display.onExecuteItemTask(params -> executeItemTask((AlexandriaElementViewDisplay.ExecuteItemTaskEvent) params));
 		add(display);
 		display.personifyOnce(viewId(view));
 		return display;

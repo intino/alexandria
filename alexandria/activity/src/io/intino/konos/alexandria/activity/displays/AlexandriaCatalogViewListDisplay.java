@@ -5,7 +5,6 @@ import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogViewListDisplayNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.catalog.views.*;
-import io.intino.konos.alexandria.activity.model.catalog.views.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,9 +19,9 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 	private List<ElementView> viewList;
 	private CatalogViewDisplayProvider provider;
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
-	private List<Consumer<ElementViewDisplay.OpenItemEvent>> openItemListeners = new ArrayList<>();
-	private List<Consumer<ElementViewDisplay.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<ElementViewDisplay.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.OpenItemEvent>> openItemListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private Map<String, AlexandriaCatalogViewDisplay> viewDisplayMap = new HashMap<>();
 
 	public AlexandriaCatalogViewListDisplay(Box box) {
@@ -46,15 +45,15 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 		loadingListeners.add(listener);
 	}
 
-	public void onOpenItem(Consumer<ElementViewDisplay.OpenItemEvent> listener) {
+	public void onOpenItem(Consumer<AlexandriaElementViewDisplay.OpenItemEvent> listener) {
 		openItemListeners.add(listener);
 	}
 
-	public void onOpenItemDialog(Consumer<ElementViewDisplay.OpenItemDialogEvent> listener) {
+	public void onOpenItemDialog(Consumer<AlexandriaElementViewDisplay.OpenItemDialogEvent> listener) {
 		openItemDialogListeners.add(listener);
 	}
 
-	public void onExecuteItemTask(Consumer<ElementViewDisplay.ExecuteItemTaskEvent> listener) {
+	public void onExecuteItemTask(Consumer<AlexandriaElementViewDisplay.ExecuteItemTaskEvent> listener) {
 		executeItemTaskListeners.add(listener);
 	}
 
@@ -77,7 +76,7 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 	}
 
 	public void refresh() {
-		viewDisplayMap.values().forEach(ElementViewDisplay::refresh);
+		viewDisplayMap.values().forEach(AlexandriaElementViewDisplay::refresh);
 	}
 
 	@Override
@@ -151,15 +150,15 @@ public class AlexandriaCatalogViewListDisplay extends ActivityDisplay<Alexandria
 		viewDisplayMap.put(view.name(), display);
 	}
 
-	private void openItem(ElementViewDisplay.OpenItemEvent parameters) {
+	private void openItem(AlexandriaElementViewDisplay.OpenItemEvent parameters) {
 		openItemListeners.forEach(l -> l.accept(parameters));
 	}
 
-	private void openItemDialog(ElementViewDisplay.OpenItemDialogEvent event) {
+	private void openItemDialog(AlexandriaElementViewDisplay.OpenItemDialogEvent event) {
 		openItemDialogListeners.forEach(l -> l.accept(event));
 	}
 
-	private void executeTask(ElementViewDisplay.ExecuteItemTaskEvent event) {
+	private void executeTask(AlexandriaElementViewDisplay.ExecuteItemTaskEvent event) {
 		executeItemTaskListeners.forEach(l -> l.accept(event));
 	}
 
