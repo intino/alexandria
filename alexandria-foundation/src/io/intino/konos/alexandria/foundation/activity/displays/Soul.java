@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public abstract class Soul implements DisplayRepository {
-    private final Map<String, Display> displays = new HashMap();
-    private final List<Consumer<Display>> registerListeners = new ArrayList<>();
+    private final Map<String, AlexandriaDisplay> displays = new HashMap();
+    private final List<Consumer<AlexandriaDisplay>> registerListeners = new ArrayList<>();
     protected final ActivitySession session;
     protected User user;
 
@@ -36,23 +36,23 @@ public abstract class Soul implements DisplayRepository {
     }
 
     @Override
-    public List<Display> getAll() {
+    public List<AlexandriaDisplay> getAll() {
         return new ArrayList<>(this.displays.values());
     }
 
     @Override
-    public <T extends Display> T get(String id) {
+    public <T extends AlexandriaDisplay> T get(String id) {
         return (T) this.displays.get(id);
     }
 
     @Override
-    public <T extends Display> void register(T display) {
+    public <T extends AlexandriaDisplay> void register(T display) {
         this.displays.put(display.id(), display);
         registerListeners.forEach(listener -> listener.accept(display));
     }
 
     @Override
-    public void addRegisterDisplayListener(Consumer<Display> consumer) {
+    public void addRegisterDisplayListener(Consumer<AlexandriaDisplay> consumer) {
         registerListeners.add(consumer);
     }
 

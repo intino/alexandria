@@ -6,7 +6,7 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
-    import io.intino.konos.alexandria.foundation.activity.displays.Display;
+    import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.foundation.activity.services.push.User;
     $parent+import
 

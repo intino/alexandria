@@ -7,8 +7,8 @@ def type(activity)
 	import $package+validPackage.resources.*;
 
 	import io.intino.konos.alexandria.foundation.activity.ActivityAlexandriaSpark;
-	import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifier;
-	import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifier;
+	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 	import io.intino.konos.alexandria.foundation.activity.services.push.PushService;
 	import io.intino.konos.alexandria.foundation.activity.spark.resources.AfterDisplayRequest;
 	import io.intino.konos.alexandria.foundation.activity.spark.resources.AssetResource;

@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.foundation.activity.spark.resources;
 
 import io.intino.konos.alexandria.exceptions.AlexandriaException;
-import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.foundation.activity.spark.ActivitySparkManager;
 import io.intino.konos.alexandria.foundation.activity.spark.AssetLoader;
 import io.intino.konos.alexandria.foundation.activity.spark.resources.exceptions.AssetNotFoundException;
@@ -15,7 +15,7 @@ import java.util.Base64;
 public class AssetResource extends Resource {
     private final AssetLoader loader;
 
-    public AssetResource(AssetLoader loader, ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+    public AssetResource(AssetLoader loader, ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
         super(manager, notifierProvider);
         this.loader = loader;
     }
