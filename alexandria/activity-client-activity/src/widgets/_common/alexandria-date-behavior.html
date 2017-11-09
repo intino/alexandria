@@ -1,0 +1,96 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.DateBehavior = {
+        Dictionary : {
+            es : {
+                MonthFormat: 'MMMM',
+                DayFormat: 'dddd DD',
+                NumericDayFormat: 'L',
+                FullDayFormat: 'LL',
+                First: '1er',
+                Second: '2do',
+                Third: '3er',
+                Fourth: '4to'
+            },
+            en : {
+                MonthFormat: 'MMMM',
+                DayFormat: 'dddd DD',
+                NumericDayFormat: 'L',
+                FullDayFormat: 'LL',
+                First: '1st',
+                Second: '2nd',
+                Third: '3th',
+                Fourth: '4th'
+            }
+        },
+
+        fullDate : function(date, scale, language) {
+            if (scale == 'Year') return this.yearOf(date, language);
+            if (scale == 'QuarterOfYear') return this.quarterOf(date, language);
+            if (scale == 'Month') return this.monthOf(date, language);
+            if (scale == 'Week') return this.weekOf(date, language);
+            if (scale == 'Day') return this.dayOf(date, language);
+            if (scale == 'SixHours' || scale == 'Hour' || scale == 'FifteenMinutes' || scale == 'Minute') return this.minuteOf(date, language);
+            if (scale == 'Second') return this.secondOf(date);
+        },
+
+        numericDate : function(date, scale, language) {
+            moment.locale(language);
+            return this.numericDayOf(date, language);
+        },
+
+        yearOf : function(date, language) {
+            moment.locale(language);
+            return moment(date).format('YYYY');
+        },
+
+        quarterOf: function(date, language) {
+            moment.locale(language);
+            var quarter = moment(date).format('Q');
+            if (quarter == 1) return AlexandriaBehaviors.DateBehavior.Dictionary[language].First;
+            if (quarter == 2) return AlexandriaBehaviors.DateBehavior.Dictionary[language].Second;
+            if (quarter == 3) return AlexandriaBehaviors.DateBehavior.Dictionary[language].Third;
+            if (quarter == 4) return AlexandriaBehaviors.DateBehavior.Dictionary[language].Fourth;
+        },
+
+        monthOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].MonthFormat);
+        },
+
+        weekOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format('W');
+        },
+
+        dayOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].DayFormat);
+        },
+
+        fullDayOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].FullDayFormat);
+        },
+
+        numericDayOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].NumericDayFormat);
+        },
+
+        minuteOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format('LT');
+        },
+
+        secondOf: function(date, language) {
+            moment.locale(language);
+            return moment(date).format('LTS');
+        }
+
+    };
+
+</script>
