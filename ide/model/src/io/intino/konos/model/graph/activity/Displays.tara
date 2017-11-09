@@ -1,0 +1,80 @@
+dsl Proteo
+
+
+use DataTypes
+use Activity
+
+Concept:Named Display extends Component
+	var Display[] displays = empty
+	var string parentDisplay = empty
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+
+Concept Desktop
+	var Layout layout
+
+Concept Layout
+	var word:{menu tabs} mode
+	Concept Group
+		Concept Option
+
+Desktop testHome
+   layout = menu
+Layout testMenu
+	mode = Menu
+	Group("ddd")
+		Option(catalog=infrastructure)
+	Notification refreshNameSpaces
+	Request selectNameSpace
+Catalog("Infraestructura") testInfrastructure
+	Toolbar
+		GroupingSelection("crear grupo", sumusIcon = "content-copy")
+		TaskSelection("remove elements", sumusIcon = "remove-circle-outline")
+			execute = @removeAssets
+			refresh = Catalog
+		Download("download", sumusIcon = "file-download")
+			execute = @download
+		DownloadSelection("download assets info", sumusIcon = "file-download")
+			execute = @downloadAssets
+		Export("export", sumusIcon = "archive")
+			execute = @export
+		ExportSelection("export selection", sumusIcon = "archive")
+			execute = @exportarSelection
+	Events
+		OnClickRecord
+			OpenDialog(path = 'return ""')
+	Views
+		ListView("List", infrastructureMold, width = 90 Percent)
+		GridView("Grid", infrastructureMold, width = 90 Percent)
+		OlapView("Charts", olap=cesarOlap)
+		MapView(mold = infrastructureMold) as Tab("mapa")
+			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+			Zoom(14,min=1,max=18)
+	Analysis
+		Grouping("units")
+		Grouping("status")
+		Sorting(label="date")
+Mold(station) testInfrastructureMold
+    Block
+        Block
+            Location("coordinates")
+        Block as Expanded
+            Block
+                Title("label")
+                Description("description")
+            Block(layout = Horizontal)
+                Picture("chart")
+                    defaultStyle = "margin-top:6px;"
+                Snippet("sequencia")
+                    layout = Flexible
+                    defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+            Block
+                Snippet("")
