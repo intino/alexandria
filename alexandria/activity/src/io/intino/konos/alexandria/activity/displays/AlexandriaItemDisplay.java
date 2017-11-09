@@ -38,9 +38,9 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 	private Item item;
 	private String mode;
 	private ItemDisplayProvider provider;
-	private List<Consumer<ElementViewDisplay.OpenItemEvent>> openItemListeners = new ArrayList<>();
-	private List<Consumer<ElementViewDisplay.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<ElementViewDisplay.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.OpenItemEvent>> openItemListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementViewDisplay.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private boolean recordDisplaysCreated = false;
 	private String emptyMessage = null;
 
@@ -68,15 +68,15 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 		this.provider = provider;
 	}
 
-	public void onOpenItem(Consumer<ElementViewDisplay.OpenItemEvent> listener) {
+	public void onOpenItem(Consumer<AlexandriaElementViewDisplay.OpenItemEvent> listener) {
 		openItemListeners.add(listener);
 	}
 
-	public void onOpenItemDialog(Consumer<ElementViewDisplay.OpenItemDialogEvent> parameters) {
+	public void onOpenItemDialog(Consumer<AlexandriaElementViewDisplay.OpenItemDialogEvent> parameters) {
 		openItemDialogListeners.add(parameters);
 	}
 
-	public void onExecuteItemTask(Consumer<ElementViewDisplay.ExecuteItemTaskEvent> parameters) {
+	public void onExecuteItemTask(Consumer<AlexandriaElementViewDisplay.ExecuteItemTaskEvent> parameters) {
 		executeItemTaskListeners.add(parameters);
 	}
 
@@ -103,7 +103,7 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 		sendInfo();
 	}
 
-	public void refresh(Item item) {
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item item) {
 		sendInfo(item);
 	}
 
@@ -123,7 +123,7 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 		embeddedCatalogs().forEach((key, display) -> {
 			display.filter(item -> key.filter(context, AlexandriaItemDisplay.this.item, (Item) item));
 			display.label(key.label());
-			display.onOpenItem(params -> notifyOpenItem((ElementViewDisplay.OpenItemEvent) params));
+			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementViewDisplay.OpenItemEvent) params));
 			display.embedded(true);
 			add(display);
 			display.personifyOnce(id + key.name());
@@ -131,7 +131,7 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 		recordDisplaysCreated = true;
 	}
 
-	public void notifyOpenItem(ElementViewDisplay.OpenItemEvent params) {
+	public void notifyOpenItem(AlexandriaElementViewDisplay.OpenItemEvent params) {
 		openItemListeners.forEach(l -> l.accept(params));
 	}
 
@@ -210,7 +210,7 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 		};
 	}
 
-	private void sendInfo(Item item) {
+	private void sendInfo(io.intino.konos.alexandria.activity.schemas.Item item) {
 		notifier.refresh(new ItemRefreshInfo().mold(MoldBuilder.build(mold)).item(item));
 	}
 
@@ -281,7 +281,7 @@ public class AlexandriaItemDisplay extends ActivityDisplay<AlexandriaItemDisplay
 	}
 
 	public void selectItem(Reference reference) {
-		openItemListeners.forEach(l -> l.accept(new ElementViewDisplay.OpenItemEvent() {
+		openItemListeners.forEach(l -> l.accept(new AlexandriaElementViewDisplay.OpenItemEvent() {
 			@Override
 			public String itemId() {
 				return reference.name();

@@ -4,8 +4,8 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMagazineViewDisplayNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.activity.schemas.Item;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.io.InputStream;
@@ -70,7 +70,7 @@ public class AlexandriaCatalogMagazineViewDisplay extends ActivityDisplay<Alexan
 	}
 
 	@Override
-	public void refresh(Item... items) {
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
 		if (items.length <= 0) return;
 		child(AlexandriaItemDisplay.class).refresh(items[0]);
 	}

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AlexandriaPanelViewDisplay<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements ElementViewDisplay<ElementViewDisplayProvider> {
+public class AlexandriaPanelViewDisplay<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements AlexandriaElementViewDisplay<ElementViewDisplayProvider> {
 	private Panel context;
 	private Item target;
 	private ElementView<Panel> view;
@@ -49,7 +49,7 @@ public class AlexandriaPanelViewDisplay<DN extends AlexandriaDisplayNotifier> ex
 	}
 
 	@Override
-	public void refresh(Item... items) {
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
 		refresh();
 	}
 

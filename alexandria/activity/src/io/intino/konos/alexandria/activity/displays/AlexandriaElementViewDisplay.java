@@ -9,13 +9,13 @@ import io.intino.konos.alexandria.activity.model.Panel;
 
 import java.util.function.Consumer;
 
-public interface ElementViewDisplay<P extends ElementViewDisplayProvider> {
+public interface AlexandriaElementViewDisplay<P extends ElementViewDisplayProvider> {
 	void provider(P provider);
 	void onLoading(Consumer<Boolean> listener);
 	ElementView view();
 	void view(ElementView view);
 	void refresh();
-	void refresh(Item... items);
+	void refresh(io.intino.konos.alexandria.activity.schemas.Item... items);
 
 	void onOpenItem(Consumer<OpenItemEvent> listener);
 	void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener);
