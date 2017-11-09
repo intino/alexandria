@@ -5,9 +5,9 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.konos.alexandria.activity.box.displays.AlexandriaDisplayNotifier {
+    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifier {
 
-        public $name+FirstUpperCase~DisplayNotifier(io.intino.konos.alexandria.activity.box.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.box.displays.MessageCarrier carrier) {
+        public $name+FirstUpperCase~DisplayNotifier(io.intino.konos.alexandria.activity.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.displays.MessageCarrier carrier) {
             super(display, carrier);
         }
 
