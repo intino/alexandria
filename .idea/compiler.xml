@@ -52,28 +52,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="test" />
       </profile>
-      <profile name="Annotation profile for konos-scheduler" enabled="true">
-        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="scheduler" />
-        <module name="scheduling" />
-      </profile>
-      <profile name="Annotation profile for konos-rest-accessor-java" enabled="true">
-        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="accessor" />
-        <module name="rest-accessor" />
-      </profile>
-      <profile name="Annotation profile for konos-ness-accessor" enabled="true">
-        <sourceOutputDir name="../out/build/datalake/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/datalake/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="datalake" />
-        <module name="datalake-accessor" />
-        <module name="ness-accessor" />
-      </profile>
       <profile name="Annotation profile for konos-server" enabled="true">
         <sourceOutputDir name="../out/build/server/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/server/generated-test-sources/test-annotations" />
@@ -108,23 +86,45 @@
         <outputRelativeToContentRoot value="true" />
         <module name="activity" />
       </profile>
-      <profile name="Annotation profile for konos-slack" enabled="true">
+      <profile name="Annotation profile for alexandria-ness-accessor" enabled="true">
+        <sourceOutputDir name="../out/build/datalake/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/datalake/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="datalake" />
+        <module name="datalake-accessor" />
+        <module name="ness-accessor" />
+      </profile>
+      <profile name="Annotation profile for alexandria-rest-accessor-java" enabled="true">
+        <sourceOutputDir name="../out/build/accessor/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/accessor/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="accessor" />
+        <module name="rest-accessor" />
+      </profile>
+      <profile name="Annotation profile for alexandria-scheduler" enabled="true">
+        <sourceOutputDir name="../out/build/scheduler/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/scheduler/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="scheduler" />
+        <module name="scheduling" />
+      </profile>
+      <profile name="Annotation profile for alexandria-jms" enabled="true">
+        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jms" />
+      </profile>
+      <profile name="Annotation profile for alexandria-slack" enabled="true">
         <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="slack" />
       </profile>
-      <profile name="Annotation profile for konos-jmx" enabled="true">
+      <profile name="Annotation profile for alexandria-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jmx" />
-      </profile>
-      <profile name="Annotation profile for konos-jms" enabled="true">
-        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="jms" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

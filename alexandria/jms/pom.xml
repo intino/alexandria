@@ -3,10 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>io.intino.konos</groupId>
-    <artifactId>konos-scheduler</artifactId>
-    <version>1.0.4</version>
+    <artifactId>alexandria-jms</artifactId>
+    <version>1.0.11</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -31,13 +30,28 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <outputDirectory>../out/production/scheduling</outputDirectory>
-        <testOutputDirectory>../out/test/scheduling</testOutputDirectory>
-        <directory>../out/build/scheduler</directory>
+        <outputDirectory>../out/production/jms</outputDirectory>
+        <testOutputDirectory>../out/test/jms</testOutputDirectory>
+        <directory>../out/build/jms</directory>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -52,25 +66,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.intino.konos</groupId>
+            <artifactId>konos-core</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.14.4</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz-jobs</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>konos-core</artifactId>
-            <version>2.0.2</version>
         </dependency>
     </dependencies>
 
