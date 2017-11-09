@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface DisplayRepository {
-    List<Display> getAll();
-    <T extends Display> T get(String id);
-    <T extends Display> void register(T display);
-    void addRegisterDisplayListener(Consumer<Display> consumer);
+    List<AlexandriaDisplay> getAll();
+    <T extends AlexandriaDisplay> T get(String id);
+    <T extends AlexandriaDisplay> void register(T display);
+    void addRegisterDisplayListener(Consumer<AlexandriaDisplay> consumer);
     void remove(String id);
 }

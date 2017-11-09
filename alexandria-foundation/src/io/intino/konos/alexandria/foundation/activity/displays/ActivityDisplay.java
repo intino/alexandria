@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
-public abstract class ActivityDisplay<DN extends DisplayNotifier> extends Display<DN> {
+public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<DN> {
     protected Box box;
 
     public ActivityDisplay(Box box) {

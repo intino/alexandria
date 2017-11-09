@@ -4,7 +4,7 @@ def type(page)
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
-	import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 
 	import java.util.Base64;
 	import java.util.UUID;

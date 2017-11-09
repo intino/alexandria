@@ -4,11 +4,11 @@ def type(dialogDisplay)
 	import $package+validPackage.$box+SnakeCaseToCamelCase+firstUpperCase~Box;
 	import io.intino.konos.alexandria.foundation.activity.model.Dialog;
 	import io.intino.konos.alexandria.foundation.activity.dialogs.DialogValidator;
-    import io.intino.konos.alexandria.foundation.activity.dialogs.DialogDisplay;
+    import io.intino.konos.alexandria.foundation.activity.dialogs.AlexandriaDialogDisplay;
 
     import java.util.Arrays;
 
-    public abstract class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends DialogDisplay {
+    public abstract class $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay extends AlexandriaDialogDisplay {
 
         public $name+SnakeCaseToCamelCase+firstUpperCase~DialogDisplay($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             super(box, buildDialog(box));

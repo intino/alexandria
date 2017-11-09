@@ -1,9 +1,9 @@
 package io.intino.konos.alexandria.foundation.activity.spark.resources;
 
 import io.intino.konos.alexandria.exceptions.AlexandriaException;
-import io.intino.konos.alexandria.foundation.activity.displays.Display;
-import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifier;
-import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplay;
+import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifier;
+import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.foundation.activity.displays.MessageCarrier;
 import io.intino.konos.alexandria.foundation.activity.services.AuthService;
 import io.intino.konos.alexandria.foundation.activity.services.AuthService.Authentication;
@@ -27,13 +27,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public abstract class Resource implements io.intino.konos.alexandria.foundation.Resource {
-	private final DisplayNotifierProvider notifierProvider;
+	private final AlexandriaDisplayNotifierProvider notifierProvider;
 	protected final ActivitySparkManager manager;
 
 	static final Map<String, String> authenticationIdMap = new HashMap<>();
 	static final Map<String, Authentication> authenticationMap = new HashMap<>();
 
-	public Resource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+	public Resource(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 		this.manager = manager;
 		this.notifierProvider = notifierProvider;
 	}
@@ -79,7 +79,7 @@ public abstract class Resource implements io.intino.konos.alexandria.foundation.
 		}
 	}
 
-	protected DisplayNotifier notifier(ActivitySession session, ActivityClient client, Display display) {
+	protected AlexandriaDisplayNotifier notifier(ActivitySession session, ActivityClient client, AlexandriaDisplay display) {
 		return notifierProvider.agent(display, carrier(session, client));
 	}
 

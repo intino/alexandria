@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class PageDisplay<N extends DisplayNotifier> extends ActivityDisplay<N> {
+public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends ActivityDisplay<N> {
     private int page;
     private int pageSize;
     private List<Consumer<List<String>>> selectListeners = new ArrayList<>();

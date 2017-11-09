@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.foundation.activity.spark.resources;
 
 import io.intino.konos.alexandria.exceptions.AlexandriaException;
-import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.foundation.activity.services.AuthService;
 import io.intino.konos.alexandria.foundation.activity.services.AuthService.Authentication;
 import io.intino.konos.alexandria.foundation.activity.services.auth.Token;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class AuthenticateCallbackResource extends Resource {
 
-    public AuthenticateCallbackResource(ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+    public AuthenticateCallbackResource(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
         super(manager, notifierProvider);
     }
 

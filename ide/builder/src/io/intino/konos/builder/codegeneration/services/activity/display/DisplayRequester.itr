@@ -9,7 +9,7 @@ def type(display)
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
-	import io.intino.konos.alexandria.foundation.activity.displays.DisplayNotifierProvider;
+	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
 	import io.intino.konos.alexandria.foundation.activity.spark.ActivitySparkManager;
 	import io.intino.konos.alexandria.foundation.activity.spark.resources.DisplayRequester;
 
