@@ -122,7 +122,7 @@ public class FullRenderer {
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph, parent).execute();
-		new SchemaAdaptersRenderer(graph, gen, packageName).execute();
+		if (hasModel) new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
 	private void box() {

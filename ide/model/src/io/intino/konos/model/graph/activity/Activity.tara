@@ -1,0 +1,24 @@
+dsl Proteo
+
+use DataTypes
+
+Concept:Named Activity
+	var word:{Ajax} type = Ajax
+
+	Concept:{0..1} Authenticated
+		var string by
+
+	Concept:Named AbstractPage
+		var Component uses
+		var string[] paths
+
+		sub:{0..1} Home
+			var string[] paths = "" "/" "/index" "/home"
+
+		sub:{0..1} UserHome
+			var string[] paths = "/konos/user"
+		sub Page
+
+Facet Restricted on Activity.AbstractPage
+
+Concept Component is abstract
