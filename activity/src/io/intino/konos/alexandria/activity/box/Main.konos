@@ -1,0 +1,6 @@
+dsl Konos
+
+use Displays
+
+Activity ActivityClient
+	Home(uses=alexandriaDesktop, paths="") homePage

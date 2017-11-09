@@ -80,49 +80,33 @@
         <outputRelativeToContentRoot value="true" />
         <module name="alexandria-server" />
         <module name="konos-server-web" />
-        <module name="server" />
       </profile>
       <profile name="Annotation profile for alexandria-core" enabled="true">
         <sourceOutputDir name="../out/build/alexandria-core/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/alexandria-core/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="alexandria-core" />
+        <module name="core" />
       </profile>
-      <profile name="Annotation profile for alexandria-foundation" enabled="true">
+      <profile name="Annotation profile for alexandria-activity" enabled="true">
+        <sourceOutputDir name="../out/build/alexandria-framework/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/alexandria-framework/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="activity-server" />
+        <module name="alexandria-framework" />
+      </profile>
+      <profile name="Annotation profile for alexandria-rest" enabled="true">
         <sourceOutputDir name="../out/build/alexandria-foundation/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/alexandria-foundation/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="alexandria-foundation" />
+        <module name="rest" />
       </profile>
-      <profile name="Annotation profile for alexandria-framework" enabled="true">
-        <sourceOutputDir name="../out/build/alexandria-framework/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/alexandria-framework/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for activity" enabled="true">
+        <sourceOutputDir name="../out/build/alexandria-activity/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/alexandria-activity/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="alexandria-framework" />
-      </profile>
-      <profile name="Annotation profile for konos-jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="jmx" />
-      </profile>
-      <profile name="Annotation profile for konos-core" enabled="true">
-        <sourceOutputDir name="../out/build/core/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/core/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="core" />
-      </profile>
-      <profile name="Annotation profile for konos-jms" enabled="true">
-        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="jms" />
-      </profile>
-      <profile name="Annotation profile for konos-server-web" enabled="true">
-        <sourceOutputDir name="../out/build/server-web/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/server-web/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="server-web" />
+        <module name="activity" />
       </profile>
       <profile name="Annotation profile for konos-slack" enabled="true">
         <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
@@ -130,9 +114,24 @@
         <outputRelativeToContentRoot value="true" />
         <module name="slack" />
       </profile>
+      <profile name="Annotation profile for konos-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jmx" />
+      </profile>
+      <profile name="Annotation profile for konos-jms" enabled="true">
+        <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jms" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="accessor" target="1.8" />
+      <module name="activity" target="1.8" />
+      <module name="activity-core" target="1.8" />
+      <module name="activity-server" target="1.8" />
       <module name="alexandria-core" target="1.8" />
       <module name="alexandria-foundation" target="1.8" />
       <module name="alexandria-framework" target="1.8" />
@@ -158,6 +157,7 @@
       <module name="model" target="1.8" />
       <module name="ness-accessor" target="1.8" />
       <module name="plugin" target="1.8" />
+      <module name="rest" target="1.8" />
       <module name="rest-accessor" target="1.8" />
       <module name="scheduler" target="1.8" />
       <module name="scheduling" target="1.8" />
