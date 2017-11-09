@@ -1,0 +1,167 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="_common/alexandria-scale-selector-slider.html"/>
+<link rel="import" href="_common/alexandria-date-selector.html"/>
+
+<link href="../../lib/vis/dist/vis.css" rel="stylesheet" type="text/css" />
+
+<script src="alexandriatimerangenavigator/requester.js"></script>
+<script src="alexandriatimerangenavigator/notifier-listener.js"></script>
+<script src="../../lib/vis/dist/vis.js"></script>
+
+<dom-module id="alexandria-time-range-navigator">
+
+    <template>
+        <div class="layout vertical">
+            <div id="visualization"></div>
+            <alexandria-date-selector id="dateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateRangeLimit"></alexandria-date-selector>
+        </div>
+        <alexandria-scale-selector-slider scales="[[_scaleList]]" selected-scale="[[_selectedScale]]" on-scale-selected="_notifyScaleSelected"></alexandria-scale-selector-slider>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            width: 100%;
+        }
+
+        :host #visualization {
+            cursor: move;
+        }
+
+        :host ::content .vis-timeline.vis-bottom {
+            border: none;
+        }
+
+        :host ::content .vis-timeline.vis-bottom .vis-panel.vis-center {
+            height: 1px !important;
+            border: 1px #e7e7e7;
+        }
+
+        :host ::content .vis-timeline.vis-bottom .vis-time-axis .vis-grid.vis-vertical {
+            border-color: #e7e7e7;
+        }
+
+        :host ::content .vis-text {
+            font-size: 8pt;
+        }
+
+        :host alexandria-date-selector {
+            position: absolute;
+            left: -1000px;
+        }
+
+        :host alexandria-scale-selector-slider {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-top: -65px;
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaTimeRangeNavigatorDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-time-range-navigator',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeRangeNavigatorBehaviors.Requester,
+                AlexandriaTimeRangeNavigatorBehaviors.NotifierListener ],
+
+            properties : {
+                _zoomRange: Object,
+                _widget: Object,
+                _range : { type : Object, value: function() { return null; } },
+                _scaleList : Array,
+                _selectedScale : String
+            },
+
+            attached : function() {
+                this.translate(AlexandriaTimeRangeNavigatorDictionary);
+                this.listenToDisplay();
+            },
+
+            _createNavigator: function(range) {
+                const options = {
+                    width: '100%',
+                    height: '40px',
+                    zoomMax: this._zoomRange.max,
+                    zoomMin: this._zoomRange.min,
+                    min: range.min,
+                    max: range.max,
+                    autoResize: true
+                };
+
+                this._widget = new vis.Timeline(this.$.visualization, new vis.DataSet([]), options);
+                this._widget.on('rangechanged', e => {
+                    if (e.byUser) {
+                    this.move({from: e.start.getTime(), to: e.end.getTime()});
+                }
+            });
+                this._widget.on('doubleClick', e => {
+                    this._showDateSelector();
+            });
+            },
+
+            _refreshScales : function(scaleList) {
+                this._scaleList = scaleList;
+            },
+
+            _refreshRange : function(range) {
+                this._range = range;
+                this._selectedScale = range.scale;
+                this._refreshWidgetWindow();
+            },
+
+            _refreshOlapRange : function(range) {
+                this._createNavigator(range);
+                this._refreshWidgetWindow();
+            },
+
+            _refreshWidgetWindow : function() {
+                if (this._range == null) return;
+                if (this._widget == null) return;
+
+                var element = this;
+                window.setTimeout(function () {
+                    element._widget.setWindow(element._range.min, element._range.max);
+                }, 10);
+            },
+
+            _refreshZoomRange : function(range) {
+                this._zoomRange = range;
+            },
+
+            _updateRangeLimit : function(event) {
+                var date = event.detail.date;
+                if (date > this._range.max)
+                    this.selectTo(date);
+                else
+                    this.selectFrom(date);
+            },
+
+            _showDateSelector : function() {
+                this.$.dateSelector.open();
+            },
+
+            _notifyScaleSelected : function(e) {
+                this.selectScale(e.detail);
+            }
+
+        });
+    </script>
+</dom-module>

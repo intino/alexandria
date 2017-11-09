@@ -32,6 +32,13 @@
         <option value="$PROJECT_DIR$/core/pom.xml" />
         <option value="$PROJECT_DIR$/activity/pom.xml" />
         <option value="$PROJECT_DIR$/rest/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/activity/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/core/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/jms/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/jmx/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/rest/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/scheduler/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/slack/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

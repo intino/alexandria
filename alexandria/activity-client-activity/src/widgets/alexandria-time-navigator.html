@@ -1,0 +1,248 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../lib/paper-slider/paper-slider.html">
+<link rel="import" href="../../lib/iron-icons/av-icons.html">
+<link rel="import" href="_common/alexandria-date-selector.html">
+<link rel="import" href="_common/alexandria-item-selector-combo.html">
+<link rel="import" href="_common/alexandria-scale-selector-slider.html">
+
+<script src="alexandriatimenavigator/requester.js"></script>
+<script src="alexandriatimenavigator/notifier-listener.js"></script>
+
+<dom-module id="alexandria-time-navigator">
+
+    <template>
+        <div class="layout vertical flex">
+            <paper-slider snaps min="{{_slider.min}}" max="{{_slider.max}}" step="{{_slider.step}}" value="{{_slider.value}}" on-change="_selectDateFromSlider" on-immediate-value-change="_refreshDateFromSlider"></paper-slider>
+            <div class$="layout horizontal mode_{{mode}}" style="margin-top: -15px;">
+                <div><paper-icon-button id="previousDateButton" icon="icons:chevron-left" on-tap="_previousDate"></paper-icon-button></div>
+                <div>
+                    <paper-icon-button id="playButton" class="big" icon="av:play-circle-outline" on-tap="_play"></paper-icon-button>
+                    <paper-icon-button id="pauseButton" class="big" icon="av:pause-circle-outline" on-tap="_pause" hidden></paper-icon-button>
+                </div>
+                <alexandria-scale-selector-slider scales="[[_scaleList]]" selected-scale="[[_selectedScale]]" on-scale-selected="_notifyScaleSelected" horizontal></alexandria-scale-selector-slider>
+                <div><paper-icon-button id="nextDateButton" icon="icons:chevron-right" on-tap="_nextDate"></paper-icon-button></div>
+                <div class="layout horizontal center center-justified"><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" vertical-align="top" boxed></alexandria-item-selector-combo></div>
+                <div class="layout horizontal center center-justified"><alexandria-date-selector id="dateSelector" date="[[_date]]" scale="[[_selectedScale]]" label="" on-change="_selectDate"></alexandria-date-selector></div>
+            </div>
+        </div>
+    </template>
+
+    <style>
+        :host > div {
+            position: relative;
+            padding: 0 10px;
+        }
+        :host .big {
+            padding: 4px;
+        }
+        :host paper-slider {
+            width: 100%;
+            --paper-slider-active-color : #bdbdbd;
+            --paper-slider-knob-color : var(--accent-color);
+        }
+        :host paper-slider ::content .snaps .slider-knob {
+            z-index: 1;
+        }
+        :host alexandria-scale-selector-slider {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-right: 17px;
+            top: 0;
+            margin-top: -60px;
+        }
+        :host alexandria-item-selector-combo {
+            margin-right: 10px;
+            display: block;
+            width: 100%;
+            --text-size: 10pt;
+            --option-style : {
+                min-height: 20px !important;
+            }
+        }
+        @media screen and (max-width: 736px) {
+            :host {
+                font-size: 10pt;
+            }
+            :host #date {
+                padding-top: 7px;
+            }
+            :host alexandria-scale-selector-slider {
+                display: block;
+            }
+            :host alexandria-item-selector-combo {
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaTimeNavigatorDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        const Second = 1*1000;
+        const Minute = 60*Second;
+        const FifteenMinutes = 15*Minute;
+        const Hour = 60*Minute;
+        const SixHours = 6*Hour;
+        const Day = 24*Hour;
+        const Week = 7*Day;
+        const Month = 31*Day;
+        const QuarterOfYear = 3*Month;
+        const Year = 12*Month;
+
+        const DateWidgetMode = { Normal: 'normal', Menu: 'menu' };
+
+        Polymer({
+            is: 'alexandria-time-navigator',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeNavigatorBehaviors.Requester,
+                AlexandriaTimeNavigatorBehaviors.NotifierListener ],
+
+            properties : {
+                _olapRange : Object,
+                mode : { type: String, value: function() { return DateWidgetMode.Normal; } },
+                _internalDate : { type: Object, value: function() { return new Date(); } },
+                _slider : { type: Object },
+                _maxDate : Object,
+                _selectedScale : String,
+                _selectedScaleEntity : Object
+            },
+
+            attached : function() {
+                this.translate(AlexandriaTimeNavigatorDictionary);
+                this.listenToDisplay();
+            },
+
+            getDate : function() {
+                return this._dateObject;
+            },
+
+            _refreshScales : function(scaleList) {
+                this._scaleList = scaleList;
+            },
+
+            _refreshScale : function(scale) {
+                this._selectedScale = scale;
+                this._selectedScaleEntity = { name: scale };
+                this._resetSlider();
+                this._refresh();
+            },
+
+            _refreshOlapRange : function(range) {
+                this._olapRange = range;
+                this._resetSlider();
+                this._refresh();
+            },
+
+            _refreshDate : function(date) {
+                this._date = date;
+                this._dateObject = new Date(date);
+                this._refresh();
+            },
+
+            _refreshDateFromSlider : function(event) {
+                var value = this.querySelector("paper-slider").immediateValue;
+                this._refreshDate(this._dateFromSliderValue(value));
+            },
+
+            _selectDateFromSlider : function(event) {
+                var value = this.querySelector("paper-slider").value;
+                this.selectDate(this._dateFromSliderValue(value));
+            },
+
+            _refreshState : function(state) {
+                this.$.previousDateButton.disabled = !state.canPrevious;
+                this.$.nextDateButton.disabled = !state.canNext;
+                this.$.playButton.disabled = !state.canPlay;
+                this.$.playButton.hidden = state.playing;
+                this.$.pauseButton.hidden = !state.playing;
+            },
+
+            _refresh : function() {
+                this._refreshSlider();
+            },
+
+            _refreshSlider : function() {
+                var value = this._sliderValueFromDate(this._date);
+                if (value == null || this._slider == null) return;
+                this.querySelector("paper-slider").disabled = (this._slider.max == this._slider.min);
+                this._slider.value = value;
+                this.notifyPath("_slider.value", value);
+            },
+
+            _previousDate : function(event) {
+                this.previousDate();
+            },
+
+            _nextDate : function(event) {
+                this.nextDate();
+            },
+
+            _selectDate : function(event) {
+                this.selectDate(event.detail.date);
+            },
+
+            _notifyScaleSelected : function(e) {
+                this.selectScale(e.detail);
+            },
+
+            _calculateStep : function(scale) {
+                if (scale == 'Year') return Year;
+                if (scale == 'QuarterOfYear') return QuarterOfYear;
+                if (scale == 'Month') return Month;
+                if (scale == 'Week') return Week;
+                if (scale == 'Day') return Day;
+                if (scale == 'SixHours') return SixHours;
+                if (scale == 'Hour') return Hour;
+                if (scale == 'FifteenMinutes') return FifteenMinutes;
+                if (scale == 'Minute') return Minute;
+                if (scale == 'Second') return Second;
+            },
+
+            _resetSlider : function () {
+                var range = this._olapRange;
+                if (range == null) return null;
+                this._slider = {
+                    min : 0,
+                    max : Math.floor((range.max - range.min) / this._calculateStep(this._selectedScale)),
+                    step : 1
+                };
+            },
+
+            _dateFromSliderValue : function(value) {
+                if (this._olapRange == null) return 0;
+                return this._olapRange.min + (value * this._calculateStep(this._selectedScale));
+            },
+
+            _sliderValueFromDate : function(date) {
+                if (this._olapRange == null) return 0;
+                return Math.round((date - this._olapRange.min) / this._calculateStep(this._selectedScale));
+            },
+
+            _play : function() {
+                this.play();
+            },
+
+            _pause : function() {
+                this.pause();
+            }
+        });
+    </script>
+</dom-module>
