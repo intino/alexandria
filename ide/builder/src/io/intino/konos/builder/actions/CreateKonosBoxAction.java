@@ -98,7 +98,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + BOX;
+			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + configuration.boxPackage();
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
