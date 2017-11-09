@@ -41,7 +41,6 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
-	private static final String KONOS = "Konos";
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
 
@@ -98,7 +97,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + configuration.boxPackage();
+			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));

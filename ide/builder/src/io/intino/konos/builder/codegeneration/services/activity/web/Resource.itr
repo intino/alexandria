@@ -4,17 +4,17 @@ def type(page)
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
-	import io.intino.konos.alexandria.activity.box.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierProvider;
 
 	import java.util.Base64;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.konos.alexandria.activity.box.spark.resources.Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.konos.alexandria.activity.spark.resources.Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.activity.box.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.activity.spark.ActivitySparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -48,7 +48,7 @@ def type(page)
 				if (client.soul() != null)
 					return false;
 
-				io.intino.konos.alexandria.activity.box.displays.Soul soul = action.prepareSoul(client);
+				io.intino.konos.alexandria.activity.displays.Soul soul = action.prepareSoul(client);
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier(action.session, client, display));
 					display.inject(action.session);
@@ -61,9 +61,9 @@ def type(page)
 				return true;
 			});
 
-			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.alexandria.activity.box.services.push.ActivityClient>() {
+			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.alexandria.activity.services.push.ActivityClient>() {
 				@Override
-				public void accept(io.intino.konos.alexandria.activity.box.services.push.ActivityClient client) {
+				public void accept(io.intino.konos.alexandria.activity.services.push.ActivityClient client) {
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);
 				}
