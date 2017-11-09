@@ -5,9 +5,9 @@ def type(dialog)
 	<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 	<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 
-	<script src="../../lib/alexandria-framework-activity/dialogs/alexandria-dialog-requester.js"></script>
-	<script src="../../lib/alexandria-framework-activity/dialogs/alexandria-dialog-notifier-listener.js"></script>
-	<script src="../../lib/alexandria-framework-activity/dialogs/alexandria-dialog-behavior.js"></script>
+	<script src="../../lib/alexandria-activity-elements/dialogs/alexandria-dialog-requester.js"></script>
+	<script src="../../lib/alexandria-activity-elements/dialogs/alexandria-dialog-notifier-listener.js"></script>
+	<script src="../../lib/alexandria-activity-elements/dialogs/alexandria-dialog-behavior.js"></script>
 
 	<dom-module id="$name+camelCaseToSnakeCase+lowercase">
 

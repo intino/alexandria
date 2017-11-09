@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.intino.konos</groupId>
-    <artifactId>konos-core</artifactId>
-    <version>2.0.2</version>
+    <artifactId>alexandria-core</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -30,10 +30,10 @@
     </repositories>
 
     <build>
-        <finalName>konos-${project.artifactId}-${project.version}</finalName>
-        <outputDirectory>../out/production/core</outputDirectory>
-        <testOutputDirectory>../out/test/core</testOutputDirectory>
-        <directory>../out/build/core</directory>
+        <finalName>alexandria-${project.artifactId}-${project.version}</finalName>
+        <outputDirectory>../out/production/alexandria-core</outputDirectory>
+        <testOutputDirectory>../out/test/alexandria-core</testOutputDirectory>
+        <directory>../out/build/alexandria-core</directory>
         <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>

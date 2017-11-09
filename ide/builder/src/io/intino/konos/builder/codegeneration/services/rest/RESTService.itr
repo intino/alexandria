@@ -1,10 +1,10 @@
 def type(server)
 	package $package+ValidPackage;
 
-	import io.intino.konos.alexandria.foundation.AlexandriaSpark;
+	import io.intino.konos.alexandria.rest.AlexandriaSpark;
 	import $package+ValidPackage.resources.*;
 	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.alexandria.foundation.security.DefaultSecurityManager;
+	import io.intino.konos.alexandria.rest.security.DefaultSecurityManager;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 

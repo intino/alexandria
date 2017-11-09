@@ -6,19 +6,19 @@ def type(activity)
 	[import $displaysImport+validPackage.displays.requesters.*;]
 	import $package+validPackage.resources.*;
 
-	import io.intino.konos.alexandria.foundation.activity.ActivityAlexandriaSpark;
-	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifier;
-	import io.intino.konos.alexandria.foundation.activity.displays.AlexandriaDisplayNotifierProvider;
-	import io.intino.konos.alexandria.foundation.activity.services.push.PushService;
-	import io.intino.konos.alexandria.foundation.activity.spark.resources.AfterDisplayRequest;
-	import io.intino.konos.alexandria.foundation.activity.spark.resources.AssetResource;
-	import io.intino.konos.alexandria.foundation.activity.spark.resources.AuthenticateCallbackResource;
-	import io.intino.konos.alexandria.foundation.activity.spark.resources.BeforeDisplayRequest;
+	import io.intino.konos.alexandria.activity.box.ActivityAlexandriaSpark;
+	import io.intino.konos.alexandria.activity.box.displays.AlexandriaDisplayNotifier;
+	import io.intino.konos.alexandria.activity.box.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.konos.alexandria.activity.box.services.push.PushService;
+	import io.intino.konos.alexandria.activity.box.spark.resources.AfterDisplayRequest;
+	import io.intino.konos.alexandria.activity.box.spark.resources.AssetResource;
+	import io.intino.konos.alexandria.activity.box.spark.resources.AuthenticateCallbackResource;
+	import io.intino.konos.alexandria.activity.box.spark.resources.BeforeDisplayRequest;
 
 	import java.net.MalformedURLException;
 	import java.net.URL;
 
-	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.alexandria.foundation.activity.Activity {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Activity extends io.intino.konos.alexandria.activity.box.Activity {
 
 		public static ActivityAlexandriaSpark init(ActivityAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~ActivityConfiguration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
@@ -60,7 +60,7 @@ def type(display) trigger(notifier)
 end
 
 def type(dialog) trigger(notifier)
-	register(io.intino.konos.alexandria.foundation.activity.displays.dialogs.DialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
+	register(io.intino.konos.alexandria.activity.box.displays.dialogs.DialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
 end
 
 def trigger(custom)
@@ -76,8 +76,8 @@ end
 
 def type(dialog)
 	spark.route("/$name+lowercase~dialog/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.alexandria.foundation.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.alexandria.foundation.activity.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.alexandria.activity.box.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.alexandria.activity.box.displays.dialogs.DialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~dialog/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
