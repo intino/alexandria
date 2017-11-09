@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/activity/activity.iml" filepath="$PROJECT_DIR$/activity/activity.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/activity-client-activity/activity-client-activity.iml" filepath="$PROJECT_DIR$/activity-client-activity/activity-client-activity.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/activity-elements-activity/activity-elements-activity.iml" filepath="$PROJECT_DIR$/activity-elements-activity/activity-elements-activity.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/jms/jms.iml" filepath="$PROJECT_DIR$/jms/jms.iml" group="alexandria" />

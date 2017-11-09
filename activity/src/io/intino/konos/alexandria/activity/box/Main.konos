@@ -2,5 +2,5 @@ dsl Konos
 
 use Displays
 
-Activity ActivityClient
+Activity ActivityElements
 	Home(uses=alexandriaDesktop, paths="") homePage
