@@ -108,12 +108,6 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for alexandria-slack" enabled="true">
-        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="slack" />
-      </profile>
       <profile name="Annotation profile for alexandria-jmx" enabled="true">
         <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
@@ -125,6 +119,12 @@
         <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jms" />
+      </profile>
+      <profile name="Annotation profile for alexandria-slack" enabled="true">
+        <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/slack/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="slack" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -163,7 +163,7 @@
       <module name="scheduling" target="1.8" />
       <module name="server" target="1.8" />
       <module name="server-web" target="1.8" />
-      <module name="slack" target="1.5" />
+      <module name="slack" target="1.8" />
       <module name="teseo" target="1.8" />
       <module name="test" target="1.8" />
     </bytecodeTargetLevel>
