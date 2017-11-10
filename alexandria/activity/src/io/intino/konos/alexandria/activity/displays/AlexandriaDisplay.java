@@ -137,7 +137,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     public static String nameOf(Class<? extends AlexandriaDisplay> clazz) {
         String name = clazz.getSimpleName();
         int index = name.lastIndexOf("Display");
-        return name.substring(0, index);
+        return index != -1 ? name.substring(0, index) : name;
     }
 
 }

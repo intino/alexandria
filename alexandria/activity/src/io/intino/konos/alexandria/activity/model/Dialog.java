@@ -410,7 +410,9 @@ public class Dialog {
 
             public Values values() {
                 Form.Input formInput = form.input(path());
-                return formInput != null ? formInput.values() : new Values() {{ add(new Value(defaultValue())); }};
+                return formInput != null ? formInput.values() : new Values() {{
+                    if (defaultValue() != null) add(new Value(defaultValue()));
+                }};
             }
 
             public Input value(Object value) {
