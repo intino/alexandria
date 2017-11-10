@@ -34,12 +34,16 @@ public class Value {
 
     public Resource asResource() {
         if (value == null) return null;
-        if (value instanceof Resource) return (Resource) value;
         return (Resource) value;
     }
 
     public Object asObject() {
         return value;
+    }
+
+    public Structure asStructure() {
+        if (value == null) return null;
+        return (Structure) value;
     }
 
     public String toString() {
@@ -48,4 +52,5 @@ public class Value {
         if (value instanceof Resource) return ((Resource) value).value();
         return String.valueOf(value);
     }
+
 }

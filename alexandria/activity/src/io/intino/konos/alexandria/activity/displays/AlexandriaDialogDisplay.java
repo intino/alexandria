@@ -132,7 +132,7 @@ public abstract class AlexandriaDialogDisplay extends AlexandriaDisplay<Alexandr
 	}
 
 	private DialogValidator.Result validateText(FormInput formInput) {
-		List<String> values = dialog.input(formInput.path()).values().asString();
+		List<String> values = formInput.input().values().asString();
 		Dialog.Tab.Text text = (Dialog.Tab.Text)formInput.input();
 
 		DialogValidator.Result result = text.validateEmail(values);
@@ -153,7 +153,7 @@ public abstract class AlexandriaDialogDisplay extends AlexandriaDisplay<Alexandr
 	}
 
 	private DialogValidator.Result validatePassword(FormInput formInput) {
-		List<String> values = dialog.input(formInput.path()).values().asString();
+		List<String> values = formInput.input().values().asString();
 		Dialog.Tab.Password password = (Dialog.Tab.Password)formInput.input();
 		return password.validateLength(values);
 	}
@@ -164,7 +164,7 @@ public abstract class AlexandriaDialogDisplay extends AlexandriaDisplay<Alexandr
 
 	private DialogValidator.Result validateResource(FormInput formInput) {
 		Dialog.Tab.Resource resource = (Dialog.Tab.Resource)formInput.input();
-		List<io.intino.konos.alexandria.activity.schemas.Resource> resourceValues = dialog.input(formInput.path()).values().asResource();
+		List<io.intino.konos.alexandria.activity.schemas.Resource> resourceValues = formInput.input().values().asResource();
 		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(io.intino.konos.alexandria.activity.schemas.Resource::name, o -> Base64.decodeBase64(o.value())));
 
 		DialogValidator.Result result = resource.validateMaxSize(valuesMap);

@@ -410,9 +410,18 @@ public class Dialog {
 
             public Values values() {
                 Form.Input formInput = form.input(path());
-                return formInput != null ? formInput.values() : new Values() {{
-                    if (defaultValue() != null) add(new Value(defaultValue()));
-                }};
+                return formInput != null ? formInput.values() : new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
+//                List<Form.Input> formInputs = form.values(path());
+//
+//                if (formInputs.size() == 0)
+//                    return new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
+//
+//                if (formInputs.size() == 1)
+//                    return formInputs.get(0).values();
+//
+//                Values values = new Values();
+//                formInputs.forEach(formInput -> values.add(formInput.value()));
+//                return values;
             }
 
             public Input value(Object value) {
@@ -676,6 +685,19 @@ public class Dialog {
                 inputList.add(input);
                 return input;
             }
+
+            @Override
+            public Values values() {
+                List<Form.Input> formInputs = form.inputs(path());
+
+                if (formInputs == null || formInputs.size() == 0)
+                    return new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
+
+                Values values = new Values();
+                formInputs.forEach(formInput -> values.add(formInput.value()));
+                return values;
+            }
+
         }
 
         public class Memo extends Input {

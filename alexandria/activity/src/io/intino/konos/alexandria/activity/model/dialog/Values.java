@@ -32,4 +32,8 @@ public class Values extends ArrayList<Value> {
     public List<Object> asObject() {
         return stream().map(Value::asObject).collect(toList());
     }
+
+    public List<Structure> asStructure() {
+        return stream().map(Value::asStructure).collect(toList());
+    }
 }
