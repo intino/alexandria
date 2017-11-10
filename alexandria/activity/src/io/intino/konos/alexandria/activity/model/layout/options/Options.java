@@ -9,7 +9,6 @@ public class Options extends ElementOption {
     private Loader<String> icon;
     private Loader<Integer> bubble;
     private ElementRender render;
-    private Source source;
 
     public String label(Element element, Object object) {
         return label != null ? label.value(element, object) : element.label();
@@ -47,20 +46,8 @@ public class Options extends ElementOption {
         return this;
     }
 
-    public Source source() {
-        return source;
-    }
-
-    public Options source(Source source) {
-        this.source = source;
-        return this;
-    }
-
     public interface Loader<O> {
         O value(Element element, Object object);
     }
 
-    public enum Source {
-        Catalogs, Objects
-    }
 }
