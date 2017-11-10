@@ -10,7 +10,7 @@ def type(display)
     import io.intino.konos.alexandria.activity.services.push.User;
     $parent+import
 
-    public class $name+firstUpperCase~Display extends Display<$name+firstUpperCase~DisplayNotifier> {
+    public class $name+firstUpperCase~Display extends AlexandriaDisplay<$name+firstUpperCase~DisplayNotifier> {
         private $box+firstUpperCase~Box box;
 
         public $name+firstUpperCase~Display($box+firstUpperCase~Box box) {
