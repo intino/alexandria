@@ -43,7 +43,7 @@ public class Layout extends Element {
     }
 
     public enum Mode {
-        Menu, Tab;
+        Menu, Tab
     }
 
     public interface ElementDisplayBuilder {
