@@ -1,7 +1,7 @@
 def type(main)
 	package $package;
 
-	import io.intino.konos.Box;
+	import io.intino.konos.alexandria.Box;
 
 	public class Main {
 		public static void main(String$[] args) {
