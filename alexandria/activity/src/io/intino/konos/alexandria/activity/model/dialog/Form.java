@@ -23,6 +23,13 @@ public class Form {
         return inputsMap;
     }
 
+    public List<Input> inputs(String path) {
+        String[] names = path.split(Dialog.PathSeparatorRegExp);
+        Input parent = find(String.join(Dialog.PathSeparator, Arrays.copyOfRange(names, 0, names.length-1)));
+        if (parent == null) return inputsMap.get(path);
+        return parent instanceof Section ? ((Section)parent).inputs(names[names.length-1]) : emptyList();
+    }
+
     public Input input(String path) {
         return find(path);
     }
@@ -30,11 +37,6 @@ public class Form {
     public Input input(String name, int pos) {
         name = normalizeName(name);
         return inputsMap.containsKey(name) ? inputsMap.get(name).get(pos) : null;
-    }
-
-    public List<Input> inputs(String name) {
-        name = normalizeName(name);
-        return inputsMap.containsKey(name) ? inputsMap.get(name) : emptyList();
     }
 
     private boolean exists(String name) {
@@ -195,6 +197,17 @@ public class Form {
         public Input input(String name, int pos) {
             name = normalizeName(name);
             return inputsMap.containsKey(name) ? inputsMap.get(name).get(pos) : null;
+        }
+
+        @Override
+        public Value value() {
+            return new Value(structure());
+        }
+
+        private Structure structure() {
+            Structure result = new Structure();
+            inputsMap.values().forEach(inputs -> result.put(inputs.get(0).name(), inputs.get(0).value()));
+            return result;
         }
 
         @Override
