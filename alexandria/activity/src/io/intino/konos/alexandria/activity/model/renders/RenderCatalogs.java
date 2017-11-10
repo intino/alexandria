@@ -5,21 +5,16 @@ import io.intino.konos.alexandria.activity.model.ElementRender;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 public class RenderCatalogs extends ElementRender {
-	private CatalogProvider provider;
+	private List<Catalog> catalogs;
 
 	public List<Catalog> catalogs() {
-		return provider != null ? provider.catalogs() : emptyList();
+		return catalogs;
 	}
 
-	public RenderCatalogs filter(CatalogProvider provider) {
-		this.provider = provider;
+	public RenderCatalogs catalogs(List<Catalog> catalogs) {
+		this.catalogs = catalogs;
 		return this;
 	}
 
-    public interface CatalogProvider {
-		List<Catalog> catalogs();
-	}
 }
