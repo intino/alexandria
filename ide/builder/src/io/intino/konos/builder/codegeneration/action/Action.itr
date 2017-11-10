@@ -29,7 +29,7 @@ def type(page & action)
 	[import $importDialogs+validPackage.dialogs.*;]
 	[import $importDisplays+validPackage.displays.*;]
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends PageAction {
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaPageAction {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]

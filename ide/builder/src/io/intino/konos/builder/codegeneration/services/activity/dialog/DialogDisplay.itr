@@ -5,6 +5,7 @@ def type(dialogDisplay)
 	import io.intino.konos.alexandria.activity.model.Dialog;
 	import io.intino.konos.alexandria.activity.displays.DialogValidator;
     import io.intino.konos.alexandria.activity.displays.AlexandriaDialogDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDialogDisplayNotifier;
 
     import java.util.Arrays;
 

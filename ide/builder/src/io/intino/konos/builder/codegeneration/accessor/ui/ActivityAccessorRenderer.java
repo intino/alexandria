@@ -98,7 +98,7 @@ public class ActivityAccessorRenderer {
 	}
 
 	private Frame pageFrame(Activity.AbstractPage page) {
-		String usesDisplay = page.uses().name$() + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : "");
+		String usesDisplay = Formatters.firstUpperCase(page.uses().name$()) + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName());
 		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", page.uses().name$()).addSlot("name", page.name$());
 	}
 
