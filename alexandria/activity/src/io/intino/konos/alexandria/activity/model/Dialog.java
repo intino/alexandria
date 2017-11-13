@@ -302,7 +302,7 @@ public class Dialog {
             private boolean required;
             private boolean readonly;
             private boolean visible = true;
-            private String placeholder;
+            private String placeholder = null;
             private String helper;
             private String defaultValue = null;
             private Multiple multiple = null;
@@ -795,7 +795,6 @@ public class Dialog {
 
         public class OptionBox extends Input {
             private DialogSource source = null;
-            private String emptyMessage = null;
 
             public List<String> options() {
                 if (source == null) return emptyList();
@@ -804,15 +803,6 @@ public class Dialog {
 
             public OptionBox source(DialogSource source) {
                 this.source = source;
-                return this;
-            }
-
-            public String emptyMessage() {
-                return emptyMessage;
-            }
-
-            public OptionBox emptyMessage(String value) {
-                this.emptyMessage = value;
                 return this;
             }
         }

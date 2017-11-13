@@ -13,8 +13,6 @@ public class OptionBoxInputAdapter {
         Dialog.Tab.OptionBox optionBox = (Dialog.Tab.OptionBox)input;
         List<String> options = optionBox.options();
         result.add("options", new Gson().toJsonTree(options));
-        if (optionBox.emptyMessage() != null)
-            result.addProperty("emptyMessage", optionBox.emptyMessage());
     }
 
 }
