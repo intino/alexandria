@@ -3,8 +3,8 @@ def type(display)
 
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package.*;
-	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
+	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.activity.services.push.User;

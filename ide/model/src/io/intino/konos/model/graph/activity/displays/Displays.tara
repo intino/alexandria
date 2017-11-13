@@ -1,0 +1,102 @@
+dsl Proteo
+
+use Catalog
+use DataTypes
+use Activity
+
+Concept:Named Display extends Component
+	var string label = empty
+	var Display[] displays = empty
+	var string parentDisplay = empty
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+Concept Panel extends Display
+	Concept:{1..1} Views
+		has:{1..*} DisplayView
+
+Concept Desktop extends Display
+	var Layout layout
+	var string title
+	var string subTitle
+	var resource logo
+	var resource favicon
+
+Concept Layout extends Display
+	var word:{Menu Tab} mode
+	Concept Group
+		var string label
+		var word:{Expanded Collapsed} mode
+		Concept Option extends ElementOption
+			var string label;
+			var resource alexandriaIcon = empty
+			var integer bubble = -1
+		Concept Options extends ElementOption
+
+Concept Operation
+	var string label
+	var resource alexandriaIcon = empty
+
+Concept Mold extends Display
+	var string modelClass
+	Concept Block
+		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
+        var integer width = -1
+        var integer height = -1
+        var boolean hidden = false
+        var boolean hiddenIfMobile = false
+        var string style = ""
+        var boolean expanded = false
+		has Block
+		Concept Stamp
+			var string label = ""
+			var word:{Fixed Flexible} layout = Fixed
+			var integer height = -1
+			var string suffix = ""
+			var string defaultStyle = ""
+			var boolean editable = false
+			sub CatalogLink > var Catalog catalog
+			sub Description
+			sub Display
+			sub EmbeddedCatalog
+			sub Highlight
+			sub Icon
+			sub ItemLinks
+			sub Links
+			sub Location
+			sub Operation
+			sub Page
+			sub Picture
+			sub Rating
+			sub Snippet
+			sub Title
+			sub Tree
+				Concept:{0..1} Root extends TreeItem
+				Concept TreeItem
+					var string label
+					has TreeItem
+				sub Breadcrumbs
+
+Concept ElementOption
+	Concept:{1..1} ElementRenderer
+		sub RenderCatalog
+			var Catalog catalog
+			var boolean filtered = false
+		sub RenderCatalogs
+			var Catalog[] catalogs
+		sub RenderMold
+			var Mold mold
+		sub RenderPanel
+			var Panel panel
+		sub RenderPanels
+			var Panel[] panel
+
+Concept DisplayView is component
+	var string label
+	var string display

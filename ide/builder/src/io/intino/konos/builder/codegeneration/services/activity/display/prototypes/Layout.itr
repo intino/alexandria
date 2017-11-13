@@ -1,0 +1,79 @@
+def type(layout & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaMenuLayoutDisplay;
+    import io.intino.konos.alexandria.activity.model.Catalog;
+    import io.intino.konos.alexandria.activity.model.Element;
+    import io.intino.konos.alexandria.activity.model.Layout;
+    import io.intino.konos.alexandria.activity.model.Panel;
+    import io.intino.konos.alexandria.activity.model.layout.ElementOption;
+    import io.intino.konos.alexandria.activity.model.layout.options.Group;
+    import io.intino.konos.alexandria.activity.model.layout.options.Option;
+    import io.intino.konos.alexandria.activity.model.renders.*;
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public abstract class Abstract$name+FirstUpperCase~Layout extends AlexandriaMenuLayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
+
+    	public Abstract$name+FirstUpperCase~Layout($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildLayout(box));
+    	}
+
+    	private static Layout buildLayout($box+firstUpperCase~Box box) {
+    		Layout layout = new Layout();
+    		[layout.mode(Layout.Mode.$mode);]
+    		layout.elementDisplayBuilder(new Layout.ElementDisplayBuilder() {
+    			@Override
+    			public AlexandriaElementDisplay displayFor(Element element, Object o) {
+    				return ElementDisplays.displayFor(box, element);
+    			}
+
+    			@Override
+    			public Class<? extends AlexandriaElementDisplay> displayTypeFor(Element element, Object o) {
+    				return ElementDisplays.displayTypeFor(box, element);
+    			}
+    		});
+    		buildOptions(box).forEach(o -> layout.add(o));
+    		return layout;
+    	}
+
+    	private static List<ElementOption> buildOptions($box+firstUpperCase~Box box) {
+    		List<ElementOption> result = new ArrayList<>();
+    		result.add(new Group().label("ddd").mode(Group.Mode.Expanded)
+    					$option...[$NL];
+    		return result;
+    	}
+    }
+end
+
+def	type(renderCatalog) trigger(option)
+	.add(new Option().render(new RenderCatalog().catalog((Catalog) ElementDisplays.displayFor(box, "$catalog").element())).label("$label"))
+end
+
+def	type(renderPanel) trigger(option)
+	.add(new Option().render(new RenderPanel().panel((Panel) ElementDisplays.displayFor(box, "$panel").element())).label("$label")))
+end
+
+
+def type(layout & src)
+	package $package.displays;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase~Display extends Abstract$name+FirstUpperCase~Layout {
+
+		public $name+FirstUpperCase~Display($box+firstUpperCase~Box box) {
+			super(box);
+		}
+
+		@Override
+		protected void init() {
+			super.init();
+		}
+	}
+end
