@@ -72,7 +72,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
 	}
 
-
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {
 			LOG.error("actionPerformed: no project for " + e);

@@ -16,7 +16,7 @@ public class Task extends Operation {
 	}
 
 	public enum Refresh {
-		None, Catalog;
+		None, Catalog
 	}
 
 	public interface Execution {

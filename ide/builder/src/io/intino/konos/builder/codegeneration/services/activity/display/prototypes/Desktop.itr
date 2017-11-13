@@ -1,0 +1,51 @@
+def type(desktop & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopHome;
+    import io.intino.konos.alexandria.activity.model.Desktop;
+	import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+    import java.net.MalformedURLException;
+    import java.net.URL;
+
+	public abstract class Abstract$name+firstUpperCase~Desktop extends AlexandriaDesktopDisplay<$name+firstUpperCase~DisplayNotifier> {
+
+    	public Abstract$name+firstUpperCase~Display($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildDesktop(box));
+    	}
+
+    	private static Desktop buildDesktop($box+firstUpperCase~Box box) {
+    		Desktop desktop = new Desktop();
+    		[desktop.title("$title");]
+    		[desktop.subtitle("$subtitle");]
+    		desktop.authServiceUrl(null);
+    		[desktop.logo(new URL("$logo"));]
+    		[desktop.favicon(new URL("$favicon"));]
+    		//desktop.authServiceUrl(new URL("http://localhost"));
+    		desktop.layoutDisplayProvider(() -> $name+firstUpperCase~Display.Layout.layoutDisplay(box));
+    		return desktop;
+    	}
+    }
+end
+
+def type(desktop & src)
+	package $package.displays;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
+
+	public class TestHomeHome extends AbstractTestHomeHome {
+
+        public TestHomeHome(TestKonosBox box) {
+            super(box);
+        }
+
+        public static class Layout {
+            public static AlexandriaLayoutDesktop layoutHome(TestKonosBox box) {
+                return new $name+FirstUpperCase~Menu(box);
+            }
+        }
+    }
+end

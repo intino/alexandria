@@ -1,0 +1,57 @@
+dsl Proteo
+
+use Displays
+
+Concept Catalog extends Display
+	var string modelClass
+	Concept:{0..1} Toolbar
+		var boolean canSearch = true
+		Concept:{0..1} GroupingSelection extends Operation
+		Concept:{0..1} OpenDialog extends Operation
+
+		Concept:{0..1} Task extends Operation
+		Concept:{0..1} TaskSelection extends Operation
+			var word:{None Catalog Selection} refresh = None
+		Concept:{0..1} Download extends Operation
+		Concept:{0..1} DownloadSelection extends Operation
+
+		Concept:{0..1} Export extends Operation
+		Concept:{0..1} ExportSelection extends Operation
+	Concept:{0..1} Events
+		Concept:{0..1} OnClickRecord
+			Concept:{0..1} CatalogEvent
+				sub OpenDialog
+					var integer:{%} width = 100%
+					var integer:{%} height = 100%
+				sub OpenPanel
+					var Panel panel
+					var boolean hasBreadcrumbs = false
+
+	Concept:{1..1} Views
+		has CatalogView
+		has:{0..1} DisplayView
+	Concept:{0..1} Arrangement
+		Concept Grouping
+			var string label
+		Concept Sorting
+			var string label
+
+Concept CatalogView
+	var string label
+	var integer:{%} width = 100%
+	var string noRecordMessage = empty
+	var Mold mold
+	sub ListView
+	sub GridView
+	sub MapView
+		Concept Center
+			var double latitude
+			var double longitude
+		Concept Zoom
+			var integer defaultZoom
+            var integer min
+            var integer max
+
+
+
+

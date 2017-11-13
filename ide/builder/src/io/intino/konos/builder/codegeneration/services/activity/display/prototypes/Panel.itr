@@ -1,0 +1,97 @@
+def type(panel & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaPanelDisplay;
+    import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.activity.model.AbstractView;
+    import io.intino.konos.alexandria.activity.model.Panel;
+    import io.intino.konos.alexandria.activity.model.Toolbar;
+    import io.intino.konos.alexandria.activity.model.panel.View;
+    import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    public abstract class Abstract$name+firstUpperCase~Panel extends AlexandriaPanelDisplay<$name+firstUpperCase~DisplayNotifier> {
+
+    	public Abstract$name+firstUpperCase~Panel($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildPanel(box));
+    	}
+
+    	private static Panel buildPanel($box+firstUpperCase~Box box) {
+    		Panel panel = new Panel();
+    		[panel.name("$name");]
+    		[panel.label("$label");]
+    		[$toolbar+empty~panel.toolbar(buildToolbar(box));]
+    		buildViews(box).forEach(v -> panel.add(v));
+    		return panel;
+    	}
+		[
+		$toolbar
+		]
+    	private static List<AbstractView> buildViews($box+firstUpperCase~Box box) {
+    		List<AbstractView> result = new ArrayList<>();
+    		result.add(new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
+    			@Override
+    			public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+    				return $name+firstUpperCase~Panel.Views.olapDisplay(box, loadingListener, instantListener);
+    			}
+    		})).name("v1").label("Charts"));
+    		return result;
+    	}
+
+    }
+end
+
+def type(panel & src)
+	package $package.displays;
+
+	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+	import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
+	import io.intino.sumus.box.SumusBox;
+	import io.intino.sumus.box.displays.SumusOlapDisplay;
+	import io.intino.test.DisplayHelper;
+	import io.intino.test.konos.box.TestKonosBox;
+
+	import java.util.function.Consumer;
+
+	public class $name+firstUpperCase~Panel extends Abstract$name+firstUpperCase~Panel {
+
+		public $name+firstUpperCase~Panel($box+firstUpperCase~Box box) {
+			super(box);
+		}
+
+		public static class Views {
+			public static AlexandriaDisplay olapDisplay($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+				SumusOlapDisplay display = new SumusOlapDisplay(sumusBox(box));
+				display.nameSpaceHandler(DisplayHelper.nameSpaceHandler(sumusBox(box)));
+				display.olap(box.graph().sampleOlap());
+				display.onLoading(loadingListener);
+				display.onSelect(instantListener::accept);
+				return display;
+			}
+		}
+
+		private static SumusBox sumusBox($box+firstUpperCase~Box box) {
+			return (SumusBox) box.owner();
+		}
+
+	}
+end
+
+def trigger(empty)
+end
+
+def trigger(toolbar)
+	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
+		Toolbar toolbar = new Toolbar();
+		[toolbar.canSearch($canSearch);]
+		return toolbar;
+	}
+end
