@@ -12,3 +12,8 @@ Dialog(url = "", label = "Información adicional", description = "Complementar i
 		Text(label = "Email") mail > readonly = true
 		Text(label = "Asunto") issue > readonly = true
 		CheckBox(label = "Finalizado", mode = Boolean) finished
+
+	Tab("Jobs pantalla") screenJobs
+		Section("Jobs") jobs as Multiple
+			ComboBox("Tipo") type > options = "Screen on" "Screen off"
+			Text("Patrón") pattern

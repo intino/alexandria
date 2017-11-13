@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 public class Operation {
 	private String name;
 	private String title;
-	private String sumusIcon;
+	private String alexandriaIcon;
 
 	public String name() {
 		return name;
@@ -23,12 +23,12 @@ public class Operation {
 		return this;
 	}
 
-	public String sumusIcon() {
-		return sumusIcon;
+	public String alexandriaIcon() {
+		return alexandriaIcon;
 	}
 
-	public Operation sumusIcon(String sumusIcon) {
-		this.sumusIcon = sumusIcon;
+	public Operation alexandriaIcon(String icon) {
+		this.alexandriaIcon = icon;
 		return this;
 	}
 }

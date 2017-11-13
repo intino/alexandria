@@ -14,7 +14,7 @@ public class DownloadSelection extends Operation {
 	private Execution execution;
 
 	public DownloadSelection() {
-		this.sumusIcon("file-download");
+		this.alexandriaIcon("file-download");
 	}
 
 	public List<String> options() {

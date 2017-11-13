@@ -7,7 +7,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import static io.intino.konos.alexandria.activity.utils.NumberUtil.isNumber;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 public class Form {
     private transient final TypeResolver typeResolver;
@@ -25,8 +27,13 @@ public class Form {
 
     public List<Input> inputs(String path) {
         String[] names = path.split(Dialog.PathSeparatorRegExp);
+        String name = names[names.length-1];
+
+        if (isNumber(name))
+            return singletonList(input(path));
+
         Input parent = find(String.join(Dialog.PathSeparator, Arrays.copyOfRange(names, 0, names.length-1)));
-        if (parent == null) return inputsMap.get(path);
+        if (parent == null) return inputsMap.get(normalizeName(path));
         return parent instanceof Section ? ((Section)parent).inputs(names[names.length-1]) : emptyList();
     }
 
@@ -36,7 +43,9 @@ public class Form {
 
     public Input input(String name, int pos) {
         name = normalizeName(name);
-        return inputsMap.containsKey(name) ? inputsMap.get(name).get(pos) : null;
+        if (!inputsMap.containsKey(name)) return null;
+        if (inputsMap.get(name).size() <= pos) return null;
+        return inputsMap.get(name).get(pos);
     }
 
     private boolean exists(String name) {
@@ -196,7 +205,9 @@ public class Form {
 
         public Input input(String name, int pos) {
             name = normalizeName(name);
-            return inputsMap.containsKey(name) ? inputsMap.get(name).get(pos) : null;
+            if (!inputsMap.containsKey(name)) return null;
+            if (inputsMap.get(name).size() <= pos) return null;
+            return inputsMap.get(name).get(pos);
         }
 
         @Override
