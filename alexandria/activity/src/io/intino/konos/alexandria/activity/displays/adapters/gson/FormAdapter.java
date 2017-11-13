@@ -5,7 +5,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.intino.konos.alexandria.activity.model.dialog.Form;
 import io.intino.konos.alexandria.activity.model.dialog.Value;
-import io.intino.konos.alexandria.activity.schemas.Resource;
 
 import java.io.IOException;
 import java.util.List;
@@ -80,7 +79,7 @@ public class FormAdapter extends TypeAdapter<Form> {
         if (values.size() <= 0) return;
 
         if (values.size() == 1) {
-            out.name("value").value(valueOf(values.get(0)));
+            out.name("value").value(ValueAdapter.value(values.get(0)));
             return;
         }
 
@@ -88,17 +87,11 @@ public class FormAdapter extends TypeAdapter<Form> {
         out.beginArray();
         values.forEach(v -> {
             try {
-                out.value(valueOf(v));
+                out.value(ValueAdapter.value(v));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         out.endArray();
-    }
-
-    private String valueOf(Object value) {
-        if (value instanceof String) return (String) value;
-        if (value instanceof Resource) return ((Resource)value).value();
-        return String.valueOf(value);
     }
 }

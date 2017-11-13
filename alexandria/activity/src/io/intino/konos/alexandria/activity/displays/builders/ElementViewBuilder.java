@@ -44,7 +44,7 @@ public class ElementViewBuilder {
         Operation result = new Operation().title(operation.title()).name(operation.name());
 
         result.type(type(operation));
-        result.icon(operation.sumusIcon());
+        result.icon(operation.alexandriaIcon());
         result.when(when(operation));
         result.propertyList(propertiesOf(operation));
 
