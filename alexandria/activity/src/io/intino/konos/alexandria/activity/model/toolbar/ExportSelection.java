@@ -17,7 +17,7 @@ public class ExportSelection extends Operation {
 	private Execution execution;
 
 	public ExportSelection() {
-		sumusIcon("archive");
+		alexandriaIcon("archive");
 	}
 
 	public Instant from() {

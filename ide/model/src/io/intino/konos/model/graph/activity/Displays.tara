@@ -79,17 +79,17 @@ Concept Breadcrumbs extends Display
 
 //Catalog("Infraestructura") testInfrastructure
 //	Toolbar
-//		GroupingSelection("crear grupo", sumusIcon = "content-copy")
-//		TaskSelection("remove elements", sumusIcon = "remove-circle-outline")
+//		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
+//		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
 //			execute = @removeAssets
 //			refresh = Catalog
-//		Download("download", sumusIcon = "file-download")
+//		Download("download", alexandriaIcon = "file-download")
 //			execute = @download
-//		DownloadSelection("download assets info", sumusIcon = "file-download")
+//		DownloadSelection("download assets info", alexandriaIcon = "file-download")
 //			execute = @downloadAssets
-//		Export("export", sumusIcon = "archive")
+//		Export("export", alexandriaIcon = "archive")
 //			execute = @export
-//		ExportSelection("export selection", sumusIcon = "archive")
+//		ExportSelection("export selection", alexandriaIcon = "archive")
 //			execute = @exportarSelection
 //	Events
 //		OnClickRecord

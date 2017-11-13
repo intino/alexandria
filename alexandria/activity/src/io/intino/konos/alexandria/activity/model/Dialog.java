@@ -35,6 +35,12 @@ public class Dialog {
         this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
     }
 
+    protected Dialog(Form form) {
+        this.label = "";
+        this.description = "";
+        this.form = form;
+    }
+
     public enum TabsMode { Tabs, Wizard }
     public enum TextEdition { Normal, Uppercase, Lowercase, Email, Url }
     public enum MemoMode { Raw, Rich }
@@ -411,17 +417,6 @@ public class Dialog {
             public Values values() {
                 Form.Input formInput = form.input(path());
                 return formInput != null ? formInput.values() : new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
-//                List<Form.Input> formInputs = form.values(path());
-//
-//                if (formInputs.size() == 0)
-//                    return new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
-//
-//                if (formInputs.size() == 1)
-//                    return formInputs.get(0).values();
-//
-//                Values values = new Values();
-//                formInputs.forEach(formInput -> values.add(formInput.value()));
-//                return values;
             }
 
             public Input value(Object value) {
@@ -800,6 +795,7 @@ public class Dialog {
 
         public class OptionBox extends Input {
             private DialogSource source = null;
+            private String emptyMessage = null;
 
             public List<String> options() {
                 if (source == null) return emptyList();
@@ -808,6 +804,15 @@ public class Dialog {
 
             public OptionBox source(DialogSource source) {
                 this.source = source;
+                return this;
+            }
+
+            public String emptyMessage() {
+                return emptyMessage;
+            }
+
+            public OptionBox emptyMessage(String value) {
+                this.emptyMessage = value;
                 return this;
             }
         }
