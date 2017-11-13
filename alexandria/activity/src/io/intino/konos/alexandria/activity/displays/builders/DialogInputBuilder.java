@@ -21,7 +21,10 @@ public class DialogInputBuilder {
         result.addProperty("visible", input.visible());
         result.addProperty("helper", input.helper());
         result.addProperty("defaultValue", value(input.defaultValue()));
-        result.addProperty("placeholder", input.placeholder());
+
+        if (input.placeholder() != null)
+            result.addProperty("placeholder", input.placeholder());
+
         result.add("value", values(input));
 
         if (input.isMultiple())

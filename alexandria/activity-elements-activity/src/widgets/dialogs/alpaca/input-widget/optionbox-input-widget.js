@@ -24,12 +24,8 @@ var AlpacaOptionBoxInputConverter = function() {
 		var result = AlpacaInputConverter.prototype.options.call(this, input);
 		result.label = input.label;
 		result.optionLabels = this.arrayOf(input.options);
-
-        if (input.emptyMessage != null)
-            result.noneLabel = input.emptyMessage;
-
-        result.removeDefaultNone = input.emptyMessage == null;
-
+        result.removeDefaultNone = false;
+        result.noneLabel = input.placeholder;
 		return result;
 	};
 
