@@ -1,0 +1,123 @@
+dsl Proteo
+
+use DataTypes
+use Activity
+
+Concept:Named Display extends Component
+	var Display[] displays = empty
+	var string parentDisplay = empty
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+Concept ElementRenderer
+	sub RenderCatalog
+		var Catalog catalog
+		var boolean filtered
+	sub RenderCatalogs
+		var Catalog[] catalogs
+	sub RenderMold
+		var Mold mold
+	sub RenderPanel
+		var Panel panel
+	sub RenderPanels
+		var Panel[] panel
+
+Concept Mold extends Display
+
+Concept Panel  extends Display
+
+Concept Desktop extends Display
+	var Layout layout
+
+Concept ElementOption extends Display
+	var ElementRenderer renderer
+
+Concept Layout extends Display
+	var word:{Menu Tab} mode
+	Concept Group extends Display
+		var string label
+		var word:{Expanded Collapsed} mode
+		Concept Option extends ElementOption
+			var string label;
+			var resource icon = empty
+			var integer bubble = -1
+		Concept Options extends ElementOption
+
+
+Concept Catalog extends Display
+	var string label
+	Concept Toolbar
+		Concept GroupingSelection extends Operation
+		Concept TaskSelection extends Operation
+		Concept DownloadSelection extends Operation
+		Concept ExportSelection extends Operation
+		Concept Download extends Operation
+		Concept Export extends Operation
+	Concept Events
+		Concept OnClickRecord > Concept OpenEvent
+
+Concept Operation
+	var string label
+	var resource icon = empty
+
+Concept OpenEvent
+	sub OpenDialog
+		var integer width
+		var integer height
+		var string path //TODO preguntar mario
+	sub OpenPanel
+		var Panel panel
+		var Breadcrumbs breadcrumbs
+Concept Breadcrumbs extends Display
+
+//Catalog("Infraestructura") testInfrastructure
+//	Toolbar
+//		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
+//		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
+//			execute = @removeAssets
+//			refresh = Catalog
+//		Download("download", alexandriaIcon = "file-download")
+//			execute = @download
+//		DownloadSelection("download assets info", alexandriaIcon = "file-download")
+//			execute = @downloadAssets
+//		Export("export", alexandriaIcon = "archive")
+//			execute = @export
+//		ExportSelection("export selection", alexandriaIcon = "archive")
+//			execute = @exportarSelection
+//	Events
+//		OnClickRecord
+//			OpenDialog(path = 'return ""')
+//	Views
+//		ListView("List", infrastructureMold, width = 90 Percent)
+//		GridView("Grid", infrastructureMold, width = 90 Percent)
+//		OlapView("Charts", olap=cesarOlap)
+//		MapView(mold = infrastructureMold) as Tab("mapa")
+//			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+//			Zoom(14,min=1,max=18)
+//	Analysis
+//		Grouping("units")
+//		Grouping("status")
+//		Sorting(label="date")
+//Mold(station) testInfrastructureMold
+//    Block
+//        Block
+//            Location("coordinates")
+//        Block as Expanded
+//            Block
+//                Title("label")
+//                Description("description")
+//            Block(layout = Horizontal)
+//                Picture("chart")
+//                    defaultStyle = "margin-top:6px;"
+//                Snippet("sequencia")
+//                    layout = Flexible
+//                    defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+//            Block
+//                Snippet("")

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.konos.alexandria.activity.displays.adapters.*;
+import io.intino.konos.alexandria.activity.displays.adapters.gson.ValueAdapter;
 import io.intino.konos.alexandria.activity.model.Dialog;
 import io.intino.konos.alexandria.activity.model.dialog.Value;
 
@@ -50,7 +51,7 @@ public class DialogInputBuilder {
 
     private static String value(Object value) {
         if (value instanceof Value)
-            return value.toString();
+            return ValueAdapter.value(((Value) value).asObject());
         if (value instanceof String)
             return (String) value;
         return "";
@@ -61,7 +62,7 @@ public class DialogInputBuilder {
             return new JsonPrimitive(value(input.value()));
 
         JsonArray result = new JsonArray();
-        input.values().forEach(value -> result.add(value(value)));
+        input.values().forEach(value -> result.add(new JsonPrimitive(value(value))));
 
         return result;
     }

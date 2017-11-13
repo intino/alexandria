@@ -13,7 +13,7 @@ public class Export extends Operation {
 	private Execution execution;
 
 	public Export() {
-		sumusIcon("archive");
+		alexandriaIcon("archive");
 	}
 
 	public Instant from() {

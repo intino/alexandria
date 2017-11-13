@@ -2,7 +2,7 @@ package io.intino.konos.alexandria.activity.displays.builders;
 
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
-import io.intino.konos.alexandria.activity.model.mold.stamps.icons.SumusIcon;
+import io.intino.konos.alexandria.activity.model.mold.stamps.icons.AlexandriaIcon;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.ExportOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
@@ -91,7 +91,7 @@ public class MoldBuilder {
 
     private static void addIconProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof Icon)) return;
-        propertyList.add(shapeProperty("icon-type", stamp instanceof SumusIcon ? "sumus" : ""));
+        propertyList.add(shapeProperty("icon-type", stamp instanceof AlexandriaIcon ? "alexandria" : ""));
     }
 
     private static void addDownloadOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
