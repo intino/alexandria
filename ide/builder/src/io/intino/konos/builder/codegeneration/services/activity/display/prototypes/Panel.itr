@@ -37,16 +37,20 @@ def type(panel & gen)
 		]
     	private static List<AbstractView> buildViews($box+firstUpperCase~Box box) {
     		List<AbstractView> result = new ArrayList<>();
-    		result.add(new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
-    			@Override
-    			public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-    				return $name+firstUpperCase~Panel.Views.olapDisplay(box, loadingListener, instantListener);
-    			}
-    		})).name("v1").label("Charts"));
+    		result.add($display);
     		return result;
     	}
 
     }
+end
+
+def trigger(display & gen)
+	new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
+		@Override
+		public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+			return $owner+firstUpperCase~Panel.Views.$name+firstLowerCase(box, loadingListener, instantListener);
+		}
+	})).name("$name").label("$label")
 end
 
 def type(panel & src)
@@ -54,10 +58,8 @@ def type(panel & src)
 
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 	import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
-	import io.intino.sumus.box.SumusBox;
-	import io.intino.sumus.box.displays.SumusOlapDisplay;
-	import io.intino.test.DisplayHelper;
-	import io.intino.test.konos.box.TestKonosBox;
+	import $package+validPackage.$box+firstUpperCase~Box;
+
 
 	import java.util.function.Consumer;
 
@@ -68,20 +70,14 @@ def type(panel & src)
 		}
 
 		public static class Views {
-			public static AlexandriaDisplay olapDisplay($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-				SumusOlapDisplay display = new SumusOlapDisplay(sumusBox(box));
-				display.nameSpaceHandler(DisplayHelper.nameSpaceHandler(sumusBox(box)));
-				display.olap(box.graph().sampleOlap());
-				display.onLoading(loadingListener);
-				display.onSelect(instantListener::accept);
-				return display;
-			}
+			$display...[$NL]
 		}
+	}
+end
 
-		private static SumusBox sumusBox($box+firstUpperCase~Box box) {
-			return (SumusBox) box.owner();
-		}
-
+def trigger(display & src)
+	public static AlexandriaDisplay $display~Display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		return null;
 	}
 end
 
