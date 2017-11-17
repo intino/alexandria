@@ -1,0 +1,82 @@
+def type()
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.*;
+    import io.intino.konos.alexandria.activity.model.*;
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.lang.reflect.Constructor;
+    import java.lang.reflect.InvocationTargetException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+	public class ElementDisplays {
+		private static Map<String, ComponentCreator> elementMap = new HashMap<>();
+
+		static {
+			{
+				$display...[$NL]
+			}
+		}
+
+		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, String name) {
+			if (!elementMap.containsKey(name)) return null;
+			return elementMap.get(name).build(box);
+		}
+
+		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, Element element) {
+			if (!elementMap.containsKey(element.name())) return defaultElementDisplay(box, element);
+			return elementMap.get(element.name()).build(box);
+		}
+
+		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, Element element) {
+			if (!elementMap.containsKey(element.name())) return defaultElementType(box, element);
+			return elementMap.get(element.name()).build(box).getClass();
+		}
+
+		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, Element element) {
+			if (element instanceof Panel) return AlexandriaPanelDisplay.class;
+
+			if (element instanceof TemporalCatalog)
+				return ((TemporalCatalog) element).type() == TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalogDisplay.class : AlexandriaTemporalTimeCatalogDisplay.class;
+
+			if (element instanceof Catalog)
+				return AlexandriaCatalogDisplay.class;
+
+			if (element instanceof Layout)
+				return ((Layout) element).mode() == Layout.Mode.Menu ? AlexandriaMenuLayoutDisplay.class : AlexandriaTabLayoutDisplay.class;
+
+			if (element instanceof Desktop)
+				return AlexandriaDesktopDisplay.class;
+
+			return null;
+		}
+
+		private static AlexandriaElementDisplay defaultElementDisplay($box+firstUpperCase~Box box, Element element) {
+			if (element instanceof Panel) return new AlexandriaPanelDisplay(box);
+
+			if (element instanceof TemporalCatalog)
+				return ((TemporalCatalog) element).type() == TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalogDisplay(box) : new AlexandriaTemporalTimeCatalogDisplay(box);
+
+			if (element instanceof Catalog)
+				return new AlexandriaCatalogDisplay(box);
+
+			if (element instanceof Layout)
+				return ((Layout) element).mode() == Layout.Mode.Menu ? new AlexandriaMenuLayoutDisplay(box) : new AlexandriaTabLayoutDisplay(box);
+
+			if (element instanceof Desktop)
+				return new AlexandriaDesktopDisplay(box);
+
+			return null;
+		}
+
+		private interface ComponentCreator {
+			AlexandriaElementDisplay build($box+firstUpperCase~Box box);
+		}
+	}
+end
+
+def trigger(display)
+	elementMap.put("$name", (box) -> new $name+FirstUpperCase$type+FirstUpperCase(box));
+end

@@ -36,14 +36,14 @@ def type(desktop & src)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
 
-	public class TestHomeHome extends AbstractTestHomeHome {
+	public class $name+FirstUpperCase~Home extends Abstract$name+FirstUpperCase~Home {
 
-        public TestHomeHome(TestKonosBox box) {
+        public $name+FirstUpperCase~Home($box+FisrtUpperCase~Box box) {
             super(box);
         }
 
         public static class Layout {
-            public static AlexandriaLayoutDesktop layoutHome(TestKonosBox box) {
+            public static AlexandriaLayoutDesktop layoutHome($box+FisrtUpperCase~Box box) {
                 return new $name+FirstUpperCase~Menu(box);
             }
         }

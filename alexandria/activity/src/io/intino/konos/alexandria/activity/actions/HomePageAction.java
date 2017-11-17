@@ -1,15 +1,15 @@
 package io.intino.konos.alexandria.activity.actions;
 
-import io.intino.konos.alexandria.activity.ActivityBox;
+import io.intino.konos.alexandria.activity.AlexandriaActivityBox;
+import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopDisplay;
 import io.intino.konos.alexandria.activity.displays.Soul;
 import io.intino.konos.alexandria.activity.services.push.ActivityClient;
 import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
-import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopDisplay;
 
 public class HomePageAction extends AlexandriaPageAction {
 
 	// TODO Octavio -> ActivityBox en vez de AlexandriaBox
-	public ActivityBox box;
+	public AlexandriaActivityBox box;
 
 
 	public HomePageAction() { super("alexandria"); }
