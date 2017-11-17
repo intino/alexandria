@@ -32,33 +32,37 @@ public abstract class AlexandriaPageAction {
 	protected abstract URL icon();
 
 	protected String template(String name) {
-		String sessionId = session.id();
-		String language = session.discoverLanguage();
-		Browser browser = session.browser();
-
 		try {
 			byte[] templateBytes = StreamHelper.readBytes(AlexandriaPageAction.class.getResourceAsStream(format(TemplateName, activityName, name)));
 			String result = new String(templateBytes);
-
-			result = result.replace("$title", title());
-			result = result.replace("$subtitle", subtitle());
-			result = result.replace("$language", language);
-			result = result.replace("$currentSession", sessionId);
-			result = result.replace("$client", clientId);
-			result = result.replace("$baseUrl", browser.baseUrl().toString());
-			result = result.replace("$url", browser.baseUrl().toString() + "/" + activityName);
-			result = result.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language).toString());
-
-			if (logo() != null)
-				result = result.replace("$logo", encode(logo()));
-
-			if (icon() != null)
-				result = result.replace("$icon", Asset.toResource(baseAssetUrl(), icon()).toUrl().toString());
-
+			result = addTemplateVariables(result);
 			return result;
 		} catch (IOException e) {
 			return "";
 		}
+	}
+
+	protected String addTemplateVariables(String template) {
+		String sessionId = session.id();
+		String language = session.discoverLanguage();
+		Browser browser = session.browser();
+
+		template = template.replace("$title", title());
+		template = template.replace("$subtitle", subtitle());
+		template = template.replace("$language", language);
+		template = template.replace("$currentSession", sessionId);
+		template = template.replace("$client", clientId);
+		template = template.replace("$baseUrl", browser.baseUrl());
+		template = template.replace("$url", browser.baseUrl() + "/" + activityName);
+		template = template.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language));
+
+		if (logo() != null)
+			template = template.replace("$logo", encode(logo()));
+
+		if (icon() != null)
+			template = template.replace("$icon", Asset.toResource(baseAssetUrl(), icon()).toUrl().toString());
+
+		return template;
 	}
 
 	private String encode(URL logo) {
