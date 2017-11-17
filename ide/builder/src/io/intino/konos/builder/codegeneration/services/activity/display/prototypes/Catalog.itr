@@ -1,4 +1,226 @@
-def type()
+def type(desktop & gen)
+	package io.intino.test.konos.box.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaCatalogDisplay;
+    import io.intino.konos.alexandria.activity.model.AbstractView;
+    import io.intino.konos.alexandria.activity.model.Catalog;
+    import io.intino.konos.alexandria.activity.model.Mold;
+    import io.intino.konos.alexandria.activity.model.Toolbar;
+    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
+    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
+    import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
+    import io.intino.konos.alexandria.activity.model.catalog.views.GridView;
+    import io.intino.konos.alexandria.activity.model.catalog.views.ListView;
+    import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
+    import io.intino.konos.alexandria.activity.model.toolbar.*;
+    import io.intino.tara.magritte.Concept;
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import io.intino.test.konos.graph.Station;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public abstract class Abstract$name~Catalog extends AlexandriaCatalogDisplay<$name~DisplayNotifier> {
+
+    	public Abstract$name~Catalog($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildCatalog(box));
+    	}
+
+    	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
+    		Catalog catalog = new Catalog();
+    		catalog.name("testInfrastructure");
+    		catalog.label("Infraestructura");
+    		catalog.concept(box.graph().core$().concept("Station"));
+    		catalog.onScopeChange(scope -> $name~Catalog.Events.scopeChange(box, scope));
+    		catalog.objectsLoader((condition, username) -> (List<Object>)(Object) $name~Catalog.Source.stations(box, condition, username));
+    		catalog.objectLoader((id, username) -> $name~Catalog.Source.station(box, id, username));
+    		catalog.objectIdLoader((object) -> $name~Catalog.Source.stationId(box, (Station)object));
+    		catalog.objectNameLoader((object) -> $name~Catalog.Source.stationName(box, (Station)object));
+    		catalog.rootObjectLoader((objectList, username) -> $name~Catalog.Source.rootStation(box, (List<Station>)(Object)objectList, username));
+    		catalog.defaultObjectLoader((id, username) -> $name~Catalog.Source.defaultStation(box, id, username));
+    		catalog.clusterManager((element, grouping, group, username) -> $name~Catalog.Arrangements.createGroup(box, element, grouping, group, username));
+    		catalog.toolbar(buildToolbar(box));
+    		buildViews(box).forEach(v -> catalog.add(v));
+    		buildArrangements(box).forEach(a -> catalog.add(a));
+    		return catalog;
+    	}
+
+    	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
+    		Toolbar toolbar = new Toolbar();
+    		toolbar.add(new GroupingSelection().name("creargrupo").title("crear grupo").sumusIcon("content-copy"));
+    		toolbar.add(new TaskSelection().execute((element, option, selection, username) -> $name~Catalog.Toolbar.removeElements(box, element, option, (List<Station>)(Object)selection, username)).name("removeelements").title("remove elements").sumusIcon("remove-circle-outline"));
+    		toolbar.add(new Download().execute((element, option, username) -> $name~Catalog.Toolbar.download(box, element, option, username)).name("download").title("download").sumusIcon("file-download"));
+    		toolbar.add(new DownloadSelection().execute((element, option, selection, username) -> $name~Catalog.Toolbar.downloadAssetsInfo(box, element, option, (List<Station>)(Object)selection, username)).name("downloadassetsinfo").title("download assets info").sumusIcon("file-download"));
+    		toolbar.add(new Export().execute((element, from, to, username) -> $name~Catalog.Toolbar.export(box, element, from, to, username)).name("export").title("export").sumusIcon("archive"));
+    		toolbar.add(new ExportSelection().execute((element, from, to, selection, username) -> $name~Catalog.Toolbar.exportSelection(box, element, from, to, (List<Station>)(Object)selection, username)).name("exportselection").title("export selection").sumusIcon("archive"));
+    		return toolbar;
+    	}
+
+    	private static List<AbstractView> buildViews($box+firstUpperCase~Box box) {
+    		List<AbstractView> result = new ArrayList<>();
+    		result.add(new ListView().width(90).mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v1").label("List"));
+    		result.add(new GridView().width(90).mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v2").label("Grid"));
+    		result.add(new DisplayView().hideNavigator(true).displayLoader((context, loadingListener, instantListener) -> $name~Catalog.Views.olapDisplay(box, (Concept)context, loadingListener, instantListener)).name("v3").label("Charts"));
+    		result.add(new MapView().center(new MapView.Center().latitude(28.146773457066104).longitude(-15.418557420532238)).zoom(new MapView.Zoom().defaultZoom(14).min(1).max(18)).mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v4").label("Mapa"));
+    		return result;
+    	}
+
+    	private static List<Arrangement> buildArrangements($box+firstUpperCase~Box box) {
+    		List<Arrangement> arrangements = new ArrayList<>();
+    		arrangements.add(new Grouping().histogram(Grouping.Histogram.Percentage).groups((objects) -> $name~Catalog.Arrangements.units(box, (List<Station>)(Object)objects)).name("units").label("units"));
+    		arrangements.add(new Grouping().histogram(Grouping.Histogram.Percentage).groups((objects) -> $name~Catalog.Arrangements.status(box, (List<Station>)(Object)objects)).name("status").label("status"));
+    		arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $name~Catalog.Arrangements.dateComparator((Station)object1, (Station)object2)).name("date").label("date"));
+    		return arrangements;
+    	}
+
+    }
+
 	
 	
+end
+
+def type(desktop & src)
+	package io.intino.test.konos.box.displays;
+
+    import io.intino.konos.alexandria.activity.Resource;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.activity.model.Catalog;
+    import io.intino.konos.alexandria.activity.model.Element;
+    import io.intino.konos.alexandria.activity.model.catalog.Scope;
+    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
+    import io.intino.konos.alexandria.activity.model.toolbar.TaskSelection;
+    import io.intino.sumus.box.SumusBox;
+    import io.intino.sumus.box.displays.SumusOlapDisplay;
+    import io.intino.sumus.graph.Entity;
+    import io.intino.sumus.helpers.ClusterHelper;
+    import io.intino.tara.magritte.Concept;
+    import io.intino.tara.magritte.Layer;
+    import io.intino.test.DisplayHelper;
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import io.intino.test.konos.graph.Station;
+
+    import java.io.ByteArrayInputStream;
+    import java.io.InputStream;
+    import java.time.Instant;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    import static java.util.Collections.emptyList;
+    import static java.util.stream.Collectors.toList;
+
+    public class $name~Catalog extends Abstract$name~Catalog {
+
+    	public $name~Catalog($box+firstUpperCase~Box box) {
+    		super(box);
+    	}
+
+    	public static class Toolbar {
+    		public static TaskSelection.Refresh removeElements($box+firstUpperCase~Box box, Element element, String option, List<Station> selection, String username) {
+    			return null;
+    		}
+
+    		public static Resource download($box+firstUpperCase~Box box, Element element, String option, String username) {
+    			return emptyResource("download.pdf");
+    		}
+
+    		public static Resource downloadAssetsInfo($box+firstUpperCase~Box box, Element element, String option, List<Station> selection, String username) {
+    			return emptyResource("assets-info.pdf");
+    		}
+
+    		public static Resource export($box+firstUpperCase~Box box, Element element, Instant from, Instant to, String username) {
+    			return emptyResource("export.pdf");
+    		}
+
+    		public static Resource exportSelection($box+firstUpperCase~Box box, Element element, Instant from, Instant to, List<Station> selection, String username) {
+    			return emptyResource("export-selection.pdf");
+    		}
+    	}
+
+    	public static class Source {
+    		public static List<Station> stations($box+firstUpperCase~Box box, String condition, String username) {
+    			return box.graph().stationList();
+    		}
+
+    		public static Station station($box+firstUpperCase~Box box, String id, String username) {
+    			return box.graph().stationList().get(0);
+    		}
+
+    		public static Station rootStation($box+firstUpperCase~Box box, List<Station> stationList, String username) {
+    			return null;
+    		}
+
+    		public static Station defaultStation($box+firstUpperCase~Box box, String id, String username) {
+    			return null;
+    		}
+
+    		public static String stationId($box+firstUpperCase~Box box, Station station) {
+    			return station.core$().id();
+    		}
+
+    		public static String stationName($box+firstUpperCase~Box box, Station station) {
+    			return station.name$();
+    		}
+    	}
+
+    	public static class Events {
+    		public static void scopeChange($box+firstUpperCase~Box box, Scope scope) {
+    			DisplayHelper.queryEngine(sumusBox(box)).filter(DisplayHelper.scopeOf(scope));
+    		}
+    	}
+
+    	public static class Views {
+    		public static AlexandriaDisplay olapDisplay($box+firstUpperCase~Box box, Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+    			SumusOlapDisplay display = new SumusOlapDisplay(sumusBox(box));
+    			display.nameSpaceHandler(DisplayHelper.nameSpaceHandler(sumusBox(box)));
+    			display.olap(box.graph().sampleOlap());
+    			display.onLoading(loadingListener);
+    			display.onSelect(instantListener::accept);
+    			display.context(context);
+    			return display;
+    		}
+    	}
+
+    	public static class Arrangements {
+    		public static List<Group> units($box+firstUpperCase~Box box, List<Station> items) {
+    			return emptyList();
+    		}
+
+    		public static List<Group> status($box+firstUpperCase~Box box, List<Station> items) {
+    			return emptyList();
+    		}
+
+    		public static int dateComparator(Station item1, Station item2) {
+    			return 0;
+    		}
+
+    		public static void createGroup($box+firstUpperCase~Box box, Catalog infrastructure, String grouping, Group group, String username) {
+    			SumusBox sumusBox = sumusBox(box);
+    			List<Entity> entities = group.objects().stream().map(s -> ((Layer)s).a$(Entity.class)).collect(toList());
+    			ClusterHelper.registerClusterGroup(sumusBox, infrastructure, grouping, group.label(), entities, username);
+    		}
+    	}
+
+    	private static SumusBox sumusBox($box+firstUpperCase~Box box) {
+    		return (SumusBox)box.owner();
+    	}
+
+    	private static Resource emptyResource(String label) {
+    		return new Resource() {
+    			@Override
+    			public String label() {
+    				return label;
+    			}
+
+    			@Override
+    			public InputStream content() {
+    				return new ByteArrayInputStream(new byte[0]);
+    			}
+    		};
+    	}
+    }
+
+
 end

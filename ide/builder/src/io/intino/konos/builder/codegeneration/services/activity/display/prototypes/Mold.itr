@@ -1,4 +1,130 @@
-def type()
-	
-	
+def type(mold & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaMoldDisplay;
+    import io.intino.konos.alexandria.activity.model.Mold;
+    import io.intino.konos.alexandria.activity.model.mold.Block;
+    import io.intino.konos.alexandria.activity.model.mold.Stamp;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.Location;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.Picture;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.Snippet;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
+    import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+    public abstract class Abstract$mold+FirstUpperCase~Mold extends AlexandriaMoldDisplay<$mold+FirstUpperCase~MoldNotifier> {
+
+    	public Abstract$mold+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    		super(box);
+    		element(buildMold(box));
+    	}
+
+    	public Mold buildMold($box+FirstUpperCase~Box box) {
+    		Mold mold = new Mold()$block+definition...[;$NL];
+			$block+add...[$NL]
+			return mold;
+    	}
+    }
 end
+
+def type(block) trigger(definition)
+	.add(new Block()$expanded[$layout...[]][$NL$TAB.$stamp...[$NL$TAB$TAB]]
+	[$block...[$NL]])
+
+end
+
+def type(block) trigger(add)
+	mold.add(b$name);
+end
+
+
+def trigger(layout)
+	.add(Block.Layout.$value+FirstUpperCase);
+end
+
+def type(stamp & location)
+	new Location().$common[.$icon].name("s1").label("coordinates").value((object, username) -> TestInfrastructureMold.Stamps.coordinates(($moldType) object, username)))
+end
+
+def trigger(icon)
+	icon((object, username) -> $mold~Mold.Stamps.$stamp+FirstUpperCase.icon(($moldType) object, username))
+end
+
+def type(stamp & title)
+	new Title().$common.value((object, username) -> $mold~Mold.Stamps.description(($moldType) object, username)))
+end
+
+def type(stamp & picture)
+	new Picture().$common.defaultPicture($defaultPicture).value((object, username) -> $mold~Mold.Stamps.$name+FirstUpperCase.value(($moldType) object, username))
+end
+
+def type(stamp & snippet)
+	new Snippet().$common.value((object, username) -> $mold~Mold.Stamps.$name+firstUpperCase.value((($moldType) object, username)))
+end
+
+def trigger(common)
+	[name("$name")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)][.label("$label")][(object, username) -> $mold~Mold.Stamps.$name+firstLoweCase.style(($moldType) object, username))))]
+end
+
+def trigger(expanded)
+	.expanded($value)
+end
+
+def trigger()
+
+def type(mold & src)
+	package $package.displays;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.net.URL;
+    import java.util.List;
+
+    public class $mold+FirstUpperCase~Mold extends Abstract$mold+FirstUpperCase~Mold {
+
+    	public $mold+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    		super(box);
+    	}
+
+    	public static class Stamps {
+
+    		$stamp+class
+    		public static URL coordinatesIcon($moldType station, String username) {
+    			return station.icon();
+    		}
+
+    		public static String coordinates($moldType station, String username) {
+    			return station.coordinates();
+    		}
+
+    		public static String label($moldType station, String username) {
+    			return station.label();
+    		}
+
+    		public static String description($moldType station, String username) {
+    			return null;
+    		}
+
+    		public static List<URL> chart($moldType station, String username) {
+    			return null;
+    		}
+
+    		public static String sequence($moldType station, String username) {
+    			return null;
+    		}
+
+    		public static String stats($moldType station, String username) {
+    			return null;
+    		}
+    	}
+
+    }
+end
+
+def type(stamp) trigger(class)
+	public static class $name+FirstUpperCase {
+		$property...[$NL]
+	}
+end
+
+def type(stamp) trigger(class)
