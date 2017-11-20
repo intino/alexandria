@@ -11,7 +11,7 @@ public class TemporalCatalog extends Catalog {
 	private RootObjectLoader rootObjectLoader;
 	private DefaultObjectLoader defaultObjectLoader;
 	private RangeLoader rangeLoader;
-	private ObjectCreatedCalculator objectCreatedCalculator;
+	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
 	private List<TimeScale> localizedScales = new ArrayList<>();
 	private int maxZoom = 0;
@@ -68,11 +68,11 @@ public class TemporalCatalog extends Catalog {
 	}
 
 	public Instant created(Object item) {
-		return objectCreatedCalculator != null ? objectCreatedCalculator.created(item) : null;
+		return objectCreatedLoader != null ? objectCreatedLoader.created(item) : null;
 	}
 
-	public TemporalCatalog created(ObjectCreatedCalculator calculator) {
-		this.objectCreatedCalculator = calculator;
+	public TemporalCatalog objectCreatedLoader(ObjectCreatedLoader calculator) {
+		this.objectCreatedLoader = calculator;
 		return this;
 	}
 
@@ -115,7 +115,7 @@ public class TemporalCatalog extends Catalog {
 		Object load(String id, TimeRange range, String username);
 	}
 
-	public interface ObjectCreatedCalculator {
+	public interface ObjectCreatedLoader {
 		Instant created(Object item);
 	}
 
