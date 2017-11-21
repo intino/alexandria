@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.services.push.PushService;
 import spark.Request;
 import spark.Response;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
@@ -81,6 +82,19 @@ public class ActivitySparkManager extends io.intino.konos.alexandria.rest.spark.
 	public String languageFromHeader() {
 		String language = request.raw().getHeader("Accept-Language");
 		return language != null ? languageOf(language.split(",")[0]) : null;
+	}
+
+	public String ipAddressFromHeader() {
+		HttpServletRequest raw = request.raw();
+
+		String ipAddress = raw.getHeader("Remote_Addr");
+		if (ipAddress == null || ipAddress.isEmpty())
+			ipAddress = raw.getHeader("HTTP_X_FORWARDED_FOR");
+
+		if (ipAddress != null && !ipAddress.isEmpty())
+			return ipAddress;
+
+		return raw.getRemoteAddr();
 	}
 
 	public String languageFromUrl() {

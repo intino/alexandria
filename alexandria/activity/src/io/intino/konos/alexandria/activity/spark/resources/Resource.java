@@ -172,6 +172,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
 		browser.language(manager.languageFromUrl());
 		browser.metadataLanguage(manager.languageFromHeader());
+		browser.metadataIpAddress(manager.ipAddressFromHeader());
 	}
 
 }
