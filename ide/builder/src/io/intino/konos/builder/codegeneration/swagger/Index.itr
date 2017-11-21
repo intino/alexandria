@@ -8,6 +8,7 @@ def type(index)
       <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css" media="screen">
       <link rel="stylesheet" type="text/css" href="assets/css/style.css">
       <script src="assets/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+      <script src="assets/js/parameters.js" type="text/javascript"></script>
 
       <script>
         const Dictionary = {
@@ -42,6 +43,11 @@ def type(index)
 
         function renderApplication(configuration) {
           var services = "";
+
+		  document.getElementById("header").style.display = findGetParameter("embedded") != null ? "none" : "block";
+
+		  if (configuration.services.length == 1)
+			  window.location.href = configuration.services$[0].name + "/docs/index.html";
 
           for (var i=0; i<configuration.services.length; i++) {
             var service = configuration.services$[i];
