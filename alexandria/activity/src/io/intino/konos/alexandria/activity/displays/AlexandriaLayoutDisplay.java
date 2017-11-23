@@ -1,9 +1,6 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.model.*;
-import io.intino.konos.alexandria.activity.model.renders.*;
-import io.intino.konos.alexandria.activity.services.push.User;
 import io.intino.konos.alexandria.activity.displays.builders.PlatformInfoBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.activity.model.*;
@@ -16,6 +13,7 @@ import io.intino.konos.alexandria.activity.schemas.PlatformInfo;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
 import io.intino.konos.alexandria.activity.schemas.UserInfo;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -136,7 +134,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends AlexandriaDisplayNotifi
 
         if (owner instanceof Option) return ((Option)owner).label();
         else if (owner instanceof Group) return ((Group)owner).label();
-        else if (owner instanceof Options) return ((Options)owner).label(element, item.object());
+        else if (owner instanceof Options) return ((Options)owner).label(element, item != null ? item.object() : null);
 
         return "no label";
     }

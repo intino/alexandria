@@ -43,6 +43,7 @@ public class Options extends ElementOption {
 
     public Options render(ElementRender render) {
         this.render = render;
+        this.render.option(this);
         return this;
     }
 
