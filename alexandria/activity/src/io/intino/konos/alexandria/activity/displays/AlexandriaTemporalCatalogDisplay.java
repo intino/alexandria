@@ -4,7 +4,6 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.helpers.Bounds;
 import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
-import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Display;
 
@@ -94,7 +93,7 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 		if (!equalsRange()) resetGrouping();
 		ItemList itemList = element().items(condition, queryRange(), username());
 		applyFilter(itemList);
-		if (!equalsRange()) reloadGroupings();
+		if (groupingManager != null && !equalsRange()) reloadGroupings();
 		range(timeScaleHandler().range());
 		filterTimezone(itemList, range());
 		return itemList;

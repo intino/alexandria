@@ -87,6 +87,7 @@ public class Catalog extends Element {
 	}
 
 	public void scope(Scope scope) {
+		if (scope == null) return;
 		this.scopeChangeEvent.onChange(scope);
 	}
 
