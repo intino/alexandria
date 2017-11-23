@@ -37,21 +37,48 @@ def type(panel & gen)
 		]
     	private static List<AbstractView> buildViews($box+firstUpperCase~Box box) {
     		List<AbstractView> result = new ArrayList<>();
-    		result.add($display);
+    		$view+genview...[$NL]
     		return result;
     	}
 
     }
 end
 
-def trigger(display & gen)
-	new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
+def trigger(toolbar)
+	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
+		Toolbar toolbar = new Toolbar();
+		toolbar.canSearch($canSearch);
+		$operation...[$NL]
+		return toolbar;
+	}
+end
+
+def type(operation & download) trigger(operation)
+	toolbar.add(new $name+validName+firstUpperCase().execute((element, option, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+end
+
+def type(operation & export) trigger(operation)
+	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+end
+
+def type(operation & openDialog) trigger(operation)
+	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+end
+
+
+def type(operation & openDialog) trigger(operation)
+	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+end
+
+def trigger(genview)
+	result.add(new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
 		@Override
 		public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-			return $owner+firstUpperCase~Panel.Views.$name+firstLowerCase(box, loadingListener, instantListener);
+			return $owner+firstUpperCase~Panel.Views.$name+firstLowerCase~Display(box, loadingListener, instantListener);
 		}
-	})).name("$name").label("$label")
+	})).name("$name")[.label("$label")]);
 end
+
 
 def type(panel & src)
 	package $package.displays;
@@ -69,25 +96,28 @@ def type(panel & src)
 			super(box);
 		}
 
+		public static class Toolbar {
+			$operation+src...[$NL]
+		}
+
 		public static class Views {
-			$display...[$NL]
+			$view+src...[$NL]
 		}
 	}
 end
 
-def trigger(display & src)
-	public static AlexandriaDisplay $display~Display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-		return null;
+
+def type(operation) trigger(src)
+	public static AlexandriaDisplay $name($box+firstUpperCase~Box box) {
+		return null;//TODO
+	}
+end
+
+def type(view) trigger(src)
+	public static AlexandriaDisplay $name~Display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		return null;//TODO
 	}
 end
 
 def trigger(empty)
-end
-
-def trigger(toolbar)
-	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
-		Toolbar toolbar = new Toolbar();
-		[toolbar.canSearch($canSearch);]
-		return toolbar;
-	}
 end

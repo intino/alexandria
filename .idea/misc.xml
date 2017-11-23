@@ -20,8 +20,6 @@
         <option value="$PROJECT_DIR$/ide/konos-builder/pom.xml" />
         <option value="$PROJECT_DIR$/ide/konos-test/pom.xml" />
         <option value="$PROJECT_DIR$/ide/builder/pom.xml" />
-        <option value="$PROJECT_DIR$/ide/model/pom.xml" />
-        <option value="$PROJECT_DIR$/ide/test/pom.xml" />
         <option value="$PROJECT_DIR$/datalake/pom.xml" />
         <option value="$PROJECT_DIR$/datalake-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/rest-accessor/pom.xml" />
@@ -39,6 +37,7 @@
         <option value="$PROJECT_DIR$/alexandria/rest/pom.xml" />
         <option value="$PROJECT_DIR$/alexandria/scheduler/pom.xml" />
         <option value="$PROJECT_DIR$/alexandria/slack/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/model/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

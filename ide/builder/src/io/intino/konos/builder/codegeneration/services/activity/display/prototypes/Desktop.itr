@@ -30,7 +30,7 @@ def type(desktop & gen)
     }
 end
 
-def type(desktop & src)
+def type(desktop)
 	package $package.displays;
 
 	import $package+validPackage.$box+firstUpperCase~Box;

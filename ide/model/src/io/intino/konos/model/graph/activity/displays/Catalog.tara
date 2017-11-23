@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Mold
 use Displays
 
 Concept Catalog extends Display
@@ -35,6 +36,8 @@ Concept Catalog extends Display
 			var string label
 		Concept Sorting
 			var string label
+
+
 
 Concept CatalogView
 	var string label
