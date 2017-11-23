@@ -1,0 +1,48 @@
+dsl Proteo
+
+use Catalog
+use Displays
+
+Concept Mold extends Display
+	var string modelClass
+	Concept Block
+		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
+        var integer width = -1
+        var integer height = -1
+        var boolean hidden = false
+        var boolean hiddenIfMobile = false
+        var string style = ""
+        var boolean expanded = false
+		has Block
+		Concept Stamp
+			var string label = ""
+			var word:{Fixed Flexible} layout = Fixed
+			var integer height = -1
+			var string suffix = ""
+			var string defaultStyle = ""
+			var boolean editable = false
+			sub CatalogLink > var Catalog catalog
+			sub Description
+			sub Display
+			sub EmbeddedCatalog
+			sub Highlight
+			sub Icon
+			sub ItemLinks
+			sub Links
+			sub Location
+			sub Operation
+			sub Page
+			sub Picture
+			sub Rating
+			sub Snippet
+			sub Title
+			sub Tree
+				Concept:{0..1} Root extends TreeItem
+				Concept TreeItem
+					var string label
+					has TreeItem
+				sub Breadcrumbs
+
+
+
+

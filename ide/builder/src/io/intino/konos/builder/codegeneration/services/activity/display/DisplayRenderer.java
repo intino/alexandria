@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.activity.display;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.*;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.date.DateData;
 import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -15,7 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
+import static java.io.File.separator;
 
 @SuppressWarnings("Duplicates")
 public class DisplayRenderer {
@@ -45,6 +48,38 @@ public class DisplayRenderer {
 	}
 
 	private void processDisplay(Display display) {
+		Frame frame = creteFrame(display);
+		writeNotifier(display, frame);
+		writeRequester(display, frame);
+		if (display.getClass().getSimpleName().equals(Display.class.getSimpleName())) writeDisplay(display, frame);
+		else processPrototype(display);
+	}
+
+	private void processPrototype(Display display) {
+		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), gen, src, packageName, boxName).render();
+		else if (display.i$(Layout.class)) new LayoutRenderer(project, display.a$(Layout.class), gen, src, packageName, boxName).render();
+		else if (display.i$(Desktop.class)) new DesktopRenderer(project, display.a$(Desktop.class), gen, src, packageName, boxName).render();
+		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), gen, src, packageName, boxName).render();
+		else if (display.i$(Panel.class)) new PanelRenderer(project, display.a$(Panel.class), gen, src, packageName, boxName).render();
+	}
+
+	private void writeDisplay(Display display, Frame frame) {
+		final String newDisplay = snakeCaseToCamelCase(display.name$() + "Display");
+		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
+			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
+		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay)).update();
+	}
+
+	private void writeRequester(Display display, Frame frame) {
+		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "DisplayRequester"), displayRequesterTemplate().format(frame));
+	}
+
+	private void writeNotifier(Display display, Frame frame) {
+		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
+	}
+
+	@NotNull
+	private Frame creteFrame(Display display) {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name$());
@@ -55,12 +90,7 @@ public class DisplayRenderer {
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
 		frame.addSlot("request", framesOfRequests(display.requestList()));
 		frame.addSlot("box", boxName);
-		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
-		Commons.writeFrame(new File(gen, DISPLAYS + File.separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "DisplayRequester"), displayRequesterTemplate().format(frame));
-		final String newDisplay = snakeCaseToCamelCase(display.name$() + "Display");
-		if (!Commons.javaFile(new File(src, DISPLAYS), newDisplay).exists())
-			Commons.writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
-		else new DisplayUpdater(project, display, Commons.javaFile(new File(src, DISPLAYS), newDisplay)).update();
+		return frame;
 	}
 
 	private void addParent(Display display, Frame frame) {
@@ -95,7 +125,7 @@ public class DisplayRenderer {
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name$());
 		if (request.asType() != null) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data","")).addSlot("value", request.asType().type());
+			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", request.asType().type());
 			if (request.isList()) parameterFrame.addTypes("list");
 			frame.addSlot("parameter", parameterFrame);
 		}
