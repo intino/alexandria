@@ -80,7 +80,12 @@ public abstract class Stamp<O> {
 	}
 
 	public String style(Item item, String username) {
-		return style != null ? style.value(item, username) : empty().value(item, username);
+		if (item == null) return null;
+		return objectStyle(item.object(), username);
+	}
+
+	public String objectStyle(Object object, String username) {
+		return style != null ? style.value(object, username) : empty().value(object, username);
 	}
 
 	public Stamp style(Value style) {
@@ -122,6 +127,6 @@ public abstract class Stamp<O> {
 	}
 
 	private static Value<String> empty() {
-		return (item, username) -> "";
+		return (object, username) -> "";
 	}
 }

@@ -39,9 +39,9 @@ public class Grouping extends Arrangement {
 		return groupManager != null ? groupManager.remove(group) : null;
 	}
 
-	public GroupMap groups(List<Item> items) {
+	public GroupMap groups(List<Item> items, String username) {
 		List<Object> objects = items.stream().map(Item::object).collect(toList());
-		return groupLoader != null ? new GroupMap().putAll(groupLoader.load(objects)) : new GroupMap();
+		return groupLoader != null ? new GroupMap().putAll(groupLoader.load(objects, username)) : new GroupMap();
 	}
 
 	public Grouping groups(GroupLoader loader) {
@@ -55,7 +55,7 @@ public class Grouping extends Arrangement {
 	}
 
 	public interface GroupLoader {
-		List<Group> load(List<Object> items);
+		List<Group> load(List<Object> items, String username);
 	}
 
 	public enum Histogram {

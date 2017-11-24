@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.toList;
 public class ScaleBuilder {
 
     public static Scale build(TimeScale timeScale, String language) {
-        return new Scale().label(timeScale.label())
+        return new Scale().label(timeScale.label(language))
                 .name(timeScale.name())
                 .symbol(timeScale.symbol(language));
     }

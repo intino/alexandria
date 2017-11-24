@@ -18,7 +18,7 @@ public class Catalog extends Element {
 	private DefaultObjectLoader defaultObjectLoader;
 	private ScopeChangeEvent scopeChangeEvent;
 	private List<Arrangement> arrangementList = new ArrayList<>();
-	private ArrangementFilter arrangementsFilter;
+	private ArrangementFiltererLoader arrangementFiltererLoader;
 	private ClusterManager clusterManager;
 	private Events events;
 
@@ -63,12 +63,12 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public ArrangementFilter arrangementFilter() {
-		return this.arrangementsFilter;
+	public ArrangementFilterer arrangementFilterer(String username) {
+		return this.arrangementFiltererLoader != null ? arrangementFiltererLoader.load(username) : null;
 	}
 
-	public Catalog arrangementFilter(ArrangementFilter filter) {
-		this.arrangementsFilter = filter;
+	public Catalog arrangementFiltererLoader(ArrangementFiltererLoader loader) {
+		this.arrangementFiltererLoader = loader;
 		return this;
 	}
 
@@ -87,13 +87,12 @@ public class Catalog extends Element {
 	}
 
 	public void scope(Scope scope) {
-		if (scope == null) return;
 		this.scopeChangeEvent.onChange(scope);
 	}
 
-	public void addGroupingGroup(String grouping, String groupKey, List<Item> itemList, String username) {
+	public void addGroupingGroup(String grouping, String label, List<Item> itemList, String username) {
 		if (clusterManager == null) return;
-		Group group = new Group().name(groupKey).label(groupKey).objects(objects(itemList));
+		Group group = new Group().label(label).objects(objects(itemList));
 		clusterManager.createClusterGroup(this, grouping, group, username);
 	}
 
@@ -118,9 +117,16 @@ public class Catalog extends Element {
 		void onChange(Scope scope);
 	}
 
-	public interface ArrangementFilter {
+	public interface ArrangementFiltererLoader {
+		ArrangementFilterer load(String username);
+	}
+
+	public interface ArrangementFilterer {
+		String username();
 		void add(Group... groups);
 		boolean contains(String id);
+		void clear();
+		boolean isEmpty();
 	}
 
 	public interface ClusterManager {

@@ -179,7 +179,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(itemList(null).items(), groupings(), element().arrangementFilter());
+		groupingManager = new GroupingManager(itemList(null).items(), groupings(), element().arrangementFilterer(username()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
@@ -357,8 +357,12 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 				})
 				.forEach(selection -> {
 					Grouping grouping = groupingOf(selection);
-					if (grouping != null) groupingManager.filter(grouping.name(), selection.groups());
+					if (grouping != null) groupingManager.filter(grouping.name(), groupsNames(selection.groups()));
 				});
+	}
+
+	private List<String> groupsNames(List<String> labels) {
+		return labels.stream().map(Group::name).collect(toList());
 	}
 
 	private Grouping groupingOf(GroupingSelection selection) {
@@ -368,11 +372,11 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 
 	private List<Group> groups(GroupingSelection selection) {
 		GroupMap groupMap = groupingManager.groups(groupingOf(selection));
-		return groupMap != null ? selection.groups().stream().map(groupMap::get).collect(toList()) : emptyList();
+		return groupMap != null ? groupsNames(selection.groups()).stream().map(groupMap::get).collect(toList()) : emptyList();
 	}
 
 	private List<Object> objects(GroupingSelection selection) {
-		return selection.groups().stream().map(group -> objects(selection.name(), group)).flatMap(Collection::stream).collect(toList());
+		return groupsNames(selection.groups()).stream().map(group -> objects(selection.name(), group)).flatMap(Collection::stream).collect(toList());
 	}
 
 	private List<Object> objects(String groupingName, String groupName) {
