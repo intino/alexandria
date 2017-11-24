@@ -1,4 +1,4 @@
-package ui2;
+package ui;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorRenderer;
@@ -13,6 +13,7 @@ public class UIGenerationTest {
 
 	private static final String UI = "ui";
 	private static final String DIALOG = "dialog";
+	private static final String ACTIVITY = "activity";
 
 
 	@Test
@@ -25,7 +26,7 @@ public class UIGenerationTest {
 	@Test
 	public void testUI2() throws Exception {
 		File gen = new File("test-gen", UI + "2");
-		KonosGraph graph = new Graph().loadStashes("ui2").as(KonosGraph.class);
+		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		for (Activity activity : graph.activityList()) {
 			new ActivityAccessorRenderer(gen, activity).execute();
 		}
@@ -42,5 +43,15 @@ public class UIGenerationTest {
 
 	@Test
 	public void swaggerAccessorsCreator() throws Exception {
+	}
+
+
+
+	@Test
+	public void sumus() throws Exception {
+		File gen = new File("test-gen", ACTIVITY);
+		KonosGraph graph = new Graph().loadStashes("Activity").as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, ACTIVITY).execute();
+
 	}
 }

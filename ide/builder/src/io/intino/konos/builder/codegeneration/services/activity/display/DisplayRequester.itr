@@ -13,7 +13,7 @@ def type(display)
 	import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
 	import io.intino.konos.alexandria.activity.spark.resources.DisplayRequester;
 
-	public class $name+firstUpperCase~DisplayRequester extends DisplayRequester {
+	public class $name+firstUpperCase~DisplayRequester extends [Alexandria$type]~DisplayRequester {
 
 		public $name+firstUpperCase~DisplayRequester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
@@ -26,6 +26,7 @@ def type(display)
 			String operation = operation();
 
 			$request...[$NL~else ]
+			super.execute();
 		}
 	}
 end
@@ -34,6 +35,7 @@ def type(request & asset) trigger(request)
 	if (operation.equals("$name")) {
 		io.intino.konos.alexandria.activity.spark.ActivityFile file = display.$name($parameter);
 		manager.write(file.content(), file.label());
+		return;
 	}
 end
 
@@ -52,7 +54,6 @@ end
 def	trigger(parameter)
 
 end
-
 
 def type(schemaImport)
 	import $package.schemas.*;

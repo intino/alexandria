@@ -44,18 +44,22 @@ def type(layout & gen)
 
     	private static List<ElementOption> buildOptions($box+firstUpperCase~Box box) {
     		List<ElementOption> result = new ArrayList<>();
-    		result.add(new Group().label("ddd").mode(Group.Mode.Expanded)
-    					$option...[$NL];
+    		$group...[$NL]
     		return result;
     	}
     }
 end
 
-def	type(renderCatalog) trigger(option)
+def trigger(group)
+	result.add(new Group().[label("$label")].mode(Group.Mode.$mode)[
+			$option...[$NL]];
+end
+
+def	type(catalog) trigger(option)
 	.add(new Option().render(new RenderCatalog().catalog((Catalog) ElementDisplays.displayFor(box, "$catalog").element())).label("$label"))
 end
 
-def	type(renderPanel) trigger(option)
+def	type(panel) trigger(option)
 	.add(new Option().render(new RenderPanel().panel((Panel) ElementDisplays.displayFor(box, "$panel").element())).label("$label")))
 end
 
