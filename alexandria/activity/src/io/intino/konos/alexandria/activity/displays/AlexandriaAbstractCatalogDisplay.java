@@ -94,12 +94,6 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		child(AlexandriaCatalogViewListDisplay.class).refresh();
 	}
 
-	@Override
-	public Object concept() {
-		return element().concept();
-	}
-
-	@Override
 	public int countItems(String condition) {
 		this.updateCondition(condition);
 		loadItemList();
