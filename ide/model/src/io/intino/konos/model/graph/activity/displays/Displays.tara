@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Mold
 use Catalog
 use DataTypes
 use Activity
@@ -18,6 +19,12 @@ Concept:Named Display extends Component
 		has Exception
 
 Concept Panel extends Display
+	Concept:{0..1} Toolbar
+    	var boolean canSearch = true
+    	Concept:{0..1} OpenDialog extends Operation
+    	Concept:{0..1} Export extends Operation
+    	Concept:{0..1} Task extends Operation
+    	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
 		has:{1..*} DisplayView
 
@@ -40,48 +47,8 @@ Concept Layout extends Display
 		Concept Options extends ElementOption
 
 Concept Operation
-	var string label
+	var string title
 	var resource alexandriaIcon = empty
-
-Concept Mold extends Display
-	var string modelClass
-	Concept Block
-		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
-        var integer width = -1
-        var integer height = -1
-        var boolean hidden = false
-        var boolean hiddenIfMobile = false
-        var string style = ""
-        var boolean expanded = false
-		has Block
-		Concept Stamp
-			var string label = ""
-			var word:{Fixed Flexible} layout = Fixed
-			var integer height = -1
-			var string suffix = ""
-			var string defaultStyle = ""
-			var boolean editable = false
-			sub CatalogLink > var Catalog catalog
-			sub Description
-			sub Display
-			sub EmbeddedCatalog
-			sub Highlight
-			sub Icon
-			sub ItemLinks
-			sub Links
-			sub Location
-			sub Operation
-			sub Page
-			sub Picture
-			sub Rating
-			sub Snippet
-			sub Title
-			sub Tree
-				Concept:{0..1} Root extends TreeItem
-				Concept TreeItem
-					var string label
-					has TreeItem
-				sub Breadcrumbs
 
 Concept ElementOption
 	Concept:{1..1} ElementRenderer

@@ -1,4 +1,4 @@
-def type(desktop & gen)
+def type(catalog & gen)
 	package io.intino.test.konos.box.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaCatalogDisplay;
@@ -29,19 +29,19 @@ def type(desktop & gen)
     	}
 
     	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
-    		Catalog catalog = new Catalog();
-    		catalog.name("testInfrastructure");
-    		catalog.label("Infraestructura");
-    		catalog.concept(box.graph().core$().concept("Station"));
-    		catalog.onScopeChange(scope -> $name~Catalog.Events.scopeChange(box, scope));
-    		catalog.objectsLoader((condition, username) -> (List<Object>)(Object) $name~Catalog.Source.stations(box, condition, username));
-    		catalog.objectLoader((id, username) -> $name~Catalog.Source.station(box, id, username));
-    		catalog.objectIdLoader((object) -> $name~Catalog.Source.stationId(box, (Station)object));
-    		catalog.objectNameLoader((object) -> $name~Catalog.Source.stationName(box, (Station)object));
-    		catalog.rootObjectLoader((objectList, username) -> $name~Catalog.Source.rootStation(box, (List<Station>)(Object)objectList, username));
-    		catalog.defaultObjectLoader((id, username) -> $name~Catalog.Source.defaultStation(box, id, username));
-    		catalog.clusterManager((element, grouping, group, username) -> $name~Catalog.Arrangements.createGroup(box, element, grouping, group, username));
-    		catalog.toolbar(buildToolbar(box));
+    		Catalog catalog = new Catalog()
+    			[.name("$name")]
+    			[.label("$label")]
+    			[.concept(box.graph().core$().concept("$concept"))]
+    			.onScopeChange(scope -> $name~Catalog.Events.scopeChange(box, scope))
+    			.objectsLoader((condition, username) -> (List<Object>)(Object) $name~Catalog.Source.stations(box, condition, username))
+    			.objectLoader((id, username) -> $name~Catalog.Source.station(box, id, username))
+    			.objectIdLoader((object) -> $name~Catalog.Source.stationId(box, (Station)object))
+    			.objectNameLoader((object) -> $name~Catalog.Source.stationName(box, (Station)object))
+    			.rootObjectLoader((objectList, username) -> $name~Catalog.Source.rootStation(box, (List<Station>)(Object)objectList, username))
+    			.defaultObjectLoader((id, username) -> $name~Catalog.Source.defaultStation(box, id, username))
+    			[$arrangement+empty.clusterManager((element, grouping, group, username) -> $name~Catalog.Arrangements.createGroup(box, element, grouping, group, username))]
+    			[$toolbar+empty.toolbar(buildToolbar(box))];
     		buildViews(box).forEach(v -> catalog.add(v));
     		buildArrangements(box).forEach(a -> catalog.add(a));
     		return catalog;
@@ -81,7 +81,7 @@ def type(desktop & gen)
 	
 end
 
-def type(desktop & src)
+def type(catalog)
 	package io.intino.test.konos.box.displays;
 
     import io.intino.konos.alexandria.activity.Resource;

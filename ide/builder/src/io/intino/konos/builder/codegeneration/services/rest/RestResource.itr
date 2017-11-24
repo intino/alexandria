@@ -5,7 +5,7 @@ def type(resource)
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package.*;
 	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.alexandria.Resource;
+	import io.intino.konos.alexandria.rest.Resource;
 	import io.intino.konos.alexandria.rest.spark.SparkManager;
 	$schemaImport
 
