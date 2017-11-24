@@ -33,15 +33,6 @@ public abstract class Element {
 		return this;
 	}
 
-	public Object concept() {
-		return type;
-	}
-
-	public Element concept(Object type) {
-		this.type = type;
-		return this;
-	}
-
 	public Toolbar toolbar() {
 		return this.toolbar;
 	}

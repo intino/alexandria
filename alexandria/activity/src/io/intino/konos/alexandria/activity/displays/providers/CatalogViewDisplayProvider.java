@@ -6,7 +6,6 @@ import io.intino.konos.alexandria.activity.schemas.ClusterGroup;
 import java.util.List;
 
 public interface CatalogViewDisplayProvider extends ElementViewDisplayProvider {
-    Object concept();
     Item target();
 
     int countItems(String condition);
