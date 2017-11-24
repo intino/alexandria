@@ -15,10 +15,6 @@ import java.util.Map;
 public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigatorDisplay> extends AlexandriaAbstractCatalogDisplay<TemporalCatalog, DN> {
 	private N navigatorDisplay = null;
 
-	public AlexandriaTemporalCatalogDisplay(Box box) {
-		super(box);
-	}
-
 	public AlexandriaTemporalCatalogDisplay(Box box, N navigatorDisplay) {
 		super(box);
 		this.navigatorDisplay = navigatorDisplay;
@@ -139,7 +135,7 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 		bounds.zooms(zoomMap);
 
 		TimeScaleHandler timeScaleHandler = new TimeScaleHandler(bounds, scales, scales.get(0));
-		timeScaleHandler.availableScales(element().localizedScales());
+		timeScaleHandler.availableScales(scales);
 		configureTimeScaleHandler(timeScaleHandler, range, scales);
 
 		return timeScaleHandler;

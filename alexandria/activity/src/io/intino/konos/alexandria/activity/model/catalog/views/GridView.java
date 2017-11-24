@@ -2,7 +2,7 @@ package io.intino.konos.alexandria.activity.model.catalog.views;
 
 public class GridView extends MoldView {
 	private String noRecordsMessage;
-	private int width;
+	private int width = 100;
 
 	public String noRecordsMessage() {
 		return noRecordsMessage;

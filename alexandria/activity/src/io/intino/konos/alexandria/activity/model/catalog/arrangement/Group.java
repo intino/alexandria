@@ -3,17 +3,13 @@ package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 import java.util.List;
 
 public class Group {
-	private String name;
 	private String label;
 	private List<Object> objects;
 
-	public String name() {
-		return name;
-	}
+	private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
-	public Group name(String name) {
-		this.name = name;
-		return this;
+	public String name() {
+		return label.replaceAll(AlphaAndDigits,"");
 	}
 
 	public String label() {
@@ -36,5 +32,9 @@ public class Group {
 
 	public int countItems() {
 		return objects != null ? objects.size() : 0;
+	}
+
+	public static String name(String name) {
+		return name.replaceAll(AlphaAndDigits,"");
 	}
 }

@@ -7,6 +7,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.WeekFields;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.time.LocalDateTime.of;
 import static java.time.LocalDateTime.ofInstant;
@@ -16,6 +18,17 @@ import static java.time.temporal.ChronoUnit.*;
 public enum TimeScale {
 
 	Year(YEARS) {
+
+		@Override
+		public String label(String language) {
+			return labels.get(Year).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Year).get(language);
+		}
+
 		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(of(yearOf(instant), 1, 1, 0, 0, 0));
@@ -27,12 +40,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return language.equals("es") ? "A" : "Y";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			return String.valueOf(yearOf(instant));
 		}
 
@@ -49,6 +57,16 @@ public enum TimeScale {
 
 	QuarterOfYear(MONTHS) {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+
+		@Override
+		public String label(String language) {
+			return labels.get(QuarterOfYear).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(QuarterOfYear).get(language);
+		}
 
 		@Override
 		public long instantsBetween(Instant start, Instant end) {
@@ -71,14 +89,9 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return language.equals("es") ? "C" : "Q";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			int quarter = quarterNumber(instant);
-			String category = translator.translate("TemporalCategorization.Category.Quarter" + quarter);
+			String category = words.get("Category.Quarter" + quarter).get(language);
 
 			if (format.equalsIgnoreCase("QuarterOfYear"))
 				category += " " + yearOf(instant);
@@ -113,6 +126,16 @@ public enum TimeScale {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("MM/yyyy");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Month).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Month).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(dateTimeOf(instant).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0));
 		}
@@ -123,14 +146,9 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "M";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			int month = dateTimeOf(instant).getMonthValue();
-			String category = translator.translate("TemporalCategorization.Category.Month" + month);
+			String category = words.get("Category.Month" + month).get(language);
 
 			if (format.equalsIgnoreCase("MonthOfYear"))
 				category += " " + yearOf(instant);
@@ -153,6 +171,16 @@ public enum TimeScale {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Week).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Week).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(dateTimeOf(instant).with(WeekFields.ISO.dayOfWeek(), 1).withHour(0).withMinute(0).withSecond(0).withNano(0));
 		}
@@ -163,15 +191,10 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return language.equals("es") ? "S" : "W";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			LocalDateTime dateTime = dateTimeOf(instant);
 			int week = dateTime.get(ALIGNED_WEEK_OF_YEAR);
-			String category = translator.translate("TemporalCategorization.Category.Week") + " " + format(week, 2);
+			String category = words.get("Category.Week").get(language) + " " + format(week, 2);
 
 			if (format.equalsIgnoreCase("WeekOfYear"))
 				category += " " + yearOf(instant);
@@ -201,6 +224,16 @@ public enum TimeScale {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Day).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Day).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(dateTimeOf(instant).withHour(0).withMinute(0).withSecond(0).withNano(0));
 		}
@@ -211,21 +244,16 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "D";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			LocalDateTime dateTime = dateTimeOf(instant);
 
 			if (format.equalsIgnoreCase("DayOfYear"))
-				return translator.translate("TemporalCategorization.Category.Day") + " " + dateTime.getDayOfYear();
+				return words.get("Category.Day").get(language) + " " + dateTime.getDayOfYear();
 
 			if (format.equalsIgnoreCase("DayOfMonth"))
-				return translator.translate("TemporalCategorization.Category.Day") + " " + dateTime.getDayOfMonth();
+				return words.get("Category.Day").get(language) + " " + dateTime.getDayOfMonth();
 
-			return translator.translate("TemporalCategorization.Category.Day" + dateTime.getDayOfWeek().ordinal());
+			return words.get("Category.Day" + dateTime.getDayOfWeek().ordinal()).get(language);
 		}
 
 		@Override
@@ -244,6 +272,16 @@ public enum TimeScale {
 
 	SixHours(HOURS) {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+		@Override
+		public String label(String language) {
+			return labels.get(SixHours).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(SixHours).get(language);
+		}
 
 		@Override
 		public long instantsBetween(Instant start, Instant end) {
@@ -271,12 +309,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "6h";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			int hourBefore = hourOf(addTo(instant, -1));
 			return format(hourBefore, 2) + " - " + format(hourOf(instant), 2);
 		}
@@ -297,6 +330,16 @@ public enum TimeScale {
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("HH");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Hour).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Hour).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(dateTimeOf(instant).withMinute(0).withSecond(0).withNano(0));
 		}
@@ -307,12 +350,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "h";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			return CategoryFormatter.format(dateTimeOf(instant));
 		}
 
@@ -329,6 +367,16 @@ public enum TimeScale {
 
 	FifteenMinutes(MINUTES) {
 		private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH");
+
+		@Override
+		public String label(String language) {
+			return labels.get(FifteenMinutes).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(FifteenMinutes).get(language);
+		}
 
 		@Override
 		public Instant normalise(Instant instant) {
@@ -352,12 +400,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "15'";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			int beforeMinute = minuteOf(addTo(instant, -1));
 			return format(beforeMinute, 2) + " - " + format(minuteOf(instant), 2);
 		}
@@ -382,6 +425,16 @@ public enum TimeScale {
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("mm");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Minute).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Minute).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instantOf(dateTimeOf(instant).withSecond(0).withNano(0));
 		}
@@ -392,12 +445,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "m";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			return CategoryFormatter.format(dateTimeOf(instant));
 		}
 
@@ -417,6 +465,16 @@ public enum TimeScale {
 		private final DateTimeFormatter CategoryFormatter = DateTimeFormatter.ofPattern("ss");
 
 		@Override
+		public String label(String language) {
+			return labels.get(Second).get(language);
+		}
+
+		@Override
+		public String symbol(String language) {
+			return symbols.get(Second).get(language);
+		}
+
+		@Override
 		public Instant normalise(Instant instant) {
 			return instant;
 		}
@@ -427,12 +485,7 @@ public enum TimeScale {
 		}
 
 		@Override
-		public String symbol(String language) {
-			return "s";
-		}
-
-		@Override
-		public String category(Instant instant, String format, Translator translator) {
+		public String category(Instant instant, String format, String language) {
 			return CategoryFormatter.format(dateTimeOf(instant));
 		}
 
@@ -448,27 +501,67 @@ public enum TimeScale {
 	};
 
 	private final ChronoUnit unit;
-	private String label;
 
 	TimeScale(ChronoUnit unit) {
-		this(unit, "");
+		this.unit = unit;
 	}
 
-	TimeScale(ChronoUnit unit, String label) {
-		this.unit = unit;
-		this.label = label;
-	}
+	private static Map<TimeScale, Map<String, String>> labels = new HashMap<TimeScale, Map<String, String>>() {{
+		put(Year, new HashMap<String, String>() {{ put("es", "año"); put("en", "year"); }});
+		put(QuarterOfYear, new HashMap<String, String>() {{ put("es", "trimestre"); put("en", "quarter of year"); }});
+		put(Month, new HashMap<String, String>() {{ put("es", "mes"); put("en", "month"); }});
+		put(Week, new HashMap<String, String>() {{ put("es", "semana"); put("en", "week"); }});
+		put(Day, new HashMap<String, String>() {{ put("es", "día"); put("en", "day"); }});
+		put(SixHours, new HashMap<String, String>() {{ put("es", "seis horas"); put("en", "six hours"); }});
+		put(Hour, new HashMap<String, String>() {{ put("es", "hora"); put("en", "hour"); }});
+		put(FifteenMinutes, new HashMap<String, String>() {{ put("es", "quince minutos"); put("en", "fifteen minutes"); }});
+		put(Minute, new HashMap<String, String>() {{ put("es", "minuto"); put("en", "minute"); }});
+		put(Second, new HashMap<String, String>() {{ put("es", "segundo"); put("en", "second"); }});
+	}};
+
+	private static Map<TimeScale, Map<String, String>> symbols = new HashMap<TimeScale, Map<String, String>>() {{
+		put(Year, new HashMap<String, String>() {{ put("es", "A"); put("en", "Y"); }});
+		put(QuarterOfYear, new HashMap<String, String>() {{ put("es", "C"); put("en", "Q"); }});
+		put(Month, new HashMap<String, String>() {{ put("es", "M"); put("en", "M"); }});
+		put(Week, new HashMap<String, String>() {{ put("es", "S"); put("en", "W"); }});
+		put(Day, new HashMap<String, String>() {{ put("es", "D"); put("en", "D"); }});
+		put(SixHours, new HashMap<String, String>() {{ put("es", "6h"); put("en", "6h"); }});
+		put(Hour, new HashMap<String, String>() {{ put("es", "h"); put("en", "h"); }});
+		put(FifteenMinutes, new HashMap<String, String>() {{ put("es", "15'"); put("en", "15'"); }});
+		put(Minute, new HashMap<String, String>() {{ put("es", "m"); put("en", "m"); }});
+		put(Second, new HashMap<String, String>() {{ put("es", "s"); put("en", "s"); }});
+	}};
+
+	private static Map<String, Map<String, String>> words = new HashMap<String, Map<String, String>>() {{
+		put("Category.Quarter1", new HashMap<String, String>() {{ put("es", "1er trimestre"); put("en", "1st quarter"); }});
+		put("Category.Quarter2", new HashMap<String, String>() {{ put("es", "2do trimestre"); put("en", "2nd quarter"); }});
+		put("Category.Quarter3", new HashMap<String, String>() {{ put("es", "3er trimestre"); put("en", "3th quarter"); }});
+		put("Category.Quarter4", new HashMap<String, String>() {{ put("es", "4to trimestre"); put("en", "4th quarter"); }});
+		put("Category.Month1", new HashMap<String, String>() {{ put("es", "Enero"); put("en", "January"); }});
+		put("Category.Month2", new HashMap<String, String>() {{ put("es", "Febrero"); put("en", "February"); }});
+		put("Category.Month3", new HashMap<String, String>() {{ put("es", "Marzo"); put("en", "March"); }});
+		put("Category.Month4", new HashMap<String, String>() {{ put("es", "Abril"); put("en", "April"); }});
+		put("Category.Month5", new HashMap<String, String>() {{ put("es", "Mayo"); put("en", "May"); }});
+		put("Category.Month6", new HashMap<String, String>() {{ put("es", "Junio"); put("en", "June"); }});
+		put("Category.Month7", new HashMap<String, String>() {{ put("es", "Julio"); put("en", "July"); }});
+		put("Category.Month8", new HashMap<String, String>() {{ put("es", "Agosto"); put("en", "August"); }});
+		put("Category.Month9", new HashMap<String, String>() {{ put("es", "Septiembre"); put("en", "September"); }});
+		put("Category.Month10", new HashMap<String, String>() {{ put("es", "Octubre"); put("en", "October"); }});
+		put("Category.Month11", new HashMap<String, String>() {{ put("es", "Noviembre"); put("en", "November"); }});
+		put("Category.Month12", new HashMap<String, String>() {{ put("es", "Diciembre"); put("en", "December"); }});
+		put("Category.Week", new HashMap<String, String>() {{ put("es", "Semana"); put("en", "Week"); }});
+		put("Category.Day", new HashMap<String, String>() {{ put("es", "Día"); put("en", "Day"); }});
+		put("Category.Day0", new HashMap<String, String>() {{ put("es", "Lunes"); put("en", "Monday"); }});
+		put("Category.Day1", new HashMap<String, String>() {{ put("es", "Martes"); put("en", "Tuesday"); }});
+		put("Category.Day2", new HashMap<String, String>() {{ put("es", "Miércoles"); put("en", "Wednesday"); }});
+		put("Category.Day3", new HashMap<String, String>() {{ put("es", "Jueves"); put("en", "Thursday"); }});
+		put("Category.Day4", new HashMap<String, String>() {{ put("es", "Viernes"); put("en", "Friday"); }});
+		put("Category.Day5", new HashMap<String, String>() {{ put("es", "Sábado"); put("en", "Saturday"); }});
+		put("Category.Day6", new HashMap<String, String>() {{ put("es", "Domingo"); put("en", "Sunday"); }});
+	}};
 
 	private static String format(int number, int withDecimals) {
 		return String.format("%0" + withDecimals + "d", number);
-	}
-
-	public String label() {
-		return this.label;
-	}
-
-	public void label(String label) {
-		this.label = label;
 	}
 
 	public abstract Instant normalise(Instant instant);
@@ -497,9 +590,11 @@ public enum TimeScale {
 		return value instanceof TimeScale;
 	}
 
+	public abstract String label(String language);
+
 	public abstract String symbol(String language);
 
-	public abstract String category(Instant instant, String format, Translator translator);
+	public abstract String category(Instant instant, String format, String language);
 
 	public abstract int sortingWeight(Instant instant, String format);
 
@@ -508,10 +603,6 @@ public enum TimeScale {
 		ordinal++;
 		if (ordinal > SECONDS.ordinal()) return TimeScale.Second;
 		return TimeScale.values()[ordinal];
-	}
-
-	public interface Translator {
-		String translate(String word);
 	}
 
 	protected int yearOf(Instant instant) {

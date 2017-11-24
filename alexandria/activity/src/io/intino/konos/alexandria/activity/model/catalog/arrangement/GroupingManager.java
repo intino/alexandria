@@ -16,9 +16,9 @@ public class GroupingManager {
 	private final Map<String, Grouping> groupings;
 	private final Map<Grouping, GroupMap> groups;
 	private Map<String, List<String>> filteredGroupings = new HashMap<>();
-	private Catalog.ArrangementFilter filter;
+	private Catalog.ArrangementFilterer filter;
 
-	public GroupingManager(List<Item> items, List<Grouping> groupings, Catalog.ArrangementFilter filter) {
+	public GroupingManager(List<Item> items, List<Grouping> groupings, Catalog.ArrangementFilterer filter) {
 		this.items = items;
 		this.filter = filter;
 		this.groupings = groupings.stream().collect(toMap(Grouping::name, g -> g));
@@ -26,28 +26,30 @@ public class GroupingManager {
 	}
 
 	private Map<Grouping, GroupMap> calculateGroupings(List<Item> items) {
+		String username = filter != null ? filter.username() : null;
 		List<Item> groupingManagerItems = this.items;
-		return this.groupings.values().stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems) : g.groups(items)));
+		return this.groupings.values().stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems, username) : g.groups(items, username)));
 	}
 
 	public void filter(String groupingName, List<String> groups) {
 		Grouping grouping = groupings.get(groupingName);
-		filter.add(collect(groups, grouping));
-		filteredGroupings.put(groupingName, groups);
+		List<String> groupNames = groups.stream().map(Group::name).collect(toList());
+		filter.add(collect(groupNames, grouping));
+		filteredGroupings.put(groupingName, groupNames);
 	}
 
 	public void clearFilter() {
-		filter = null;
+		filter.clear();
 		filteredGroupings.clear();
 	}
 
 	public List<Item> items() {
-		if (filter == null) return items;
+		if (filter.isEmpty()) return items;
 		return items.stream().filter(item -> filter.contains(item.id())).collect(toList());
 	}
 
 	public Map<Grouping, GroupMap> groups() {
-		if (filter == null) return groups;
+		if (filter.isEmpty()) return groups;
 		return calculateGroupings(items());
 	}
 

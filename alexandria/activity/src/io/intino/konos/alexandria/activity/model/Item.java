@@ -9,7 +9,7 @@ public class Item {
 	private Instant created;
 
 	public String id() {
-		return name;
+		return id;
 	}
 
 	public Item id(String id) {

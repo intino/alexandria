@@ -13,8 +13,7 @@ public class TemporalCatalog extends Catalog {
 	private RangeLoader rangeLoader;
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
-	private List<TimeScale> localizedScales = new ArrayList<>();
-	private int maxZoom = 0;
+	private int maxZoom = 100;
 	private Type type = Type.Time;
 
 	public enum Type {
@@ -67,8 +66,8 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public Instant created(Object item) {
-		return objectCreatedLoader != null ? objectCreatedLoader.created(item) : null;
+	public Instant created(Item item) {
+		return objectCreatedLoader != null ? objectCreatedLoader.created(item != null ? item.object() : null) : null;
 	}
 
 	public TemporalCatalog objectCreatedLoader(ObjectCreatedLoader calculator) {
@@ -82,15 +81,6 @@ public class TemporalCatalog extends Catalog {
 
 	public TemporalCatalog scales(List<TimeScale> scales) {
 		this.scales = scales;
-		return this;
-	}
-
-	public List<TimeScale> localizedScales() {
-		return localizedScales;
-	}
-
-	public TemporalCatalog localizedScales(List<TimeScale> localizedScales) {
-		this.localizedScales = localizedScales;
 		return this;
 	}
 
