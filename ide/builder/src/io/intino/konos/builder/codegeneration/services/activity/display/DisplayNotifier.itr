@@ -35,8 +35,12 @@ def attribute(mold) trigger(type)
 	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldDisplayNotifier
 end
 
-def attribute(layout) trigger(type)
-	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaLayoutDisplayNotifier
+def attribute(MenuLayout) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMenuLayoutDisplayNotifier
+end
+
+def attribute(TabLayout) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTabLayoutDisplayNotifier
 end
 
 def type(notification) trigger(notification)

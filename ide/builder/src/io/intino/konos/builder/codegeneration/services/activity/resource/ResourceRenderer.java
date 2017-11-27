@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.services.activity.web;
+package io.intino.konos.builder.codegeneration.services.activity.resource;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.action.UIActionRenderer;

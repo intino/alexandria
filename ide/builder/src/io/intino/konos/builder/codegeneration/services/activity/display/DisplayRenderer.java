@@ -84,7 +84,8 @@ public class DisplayRenderer {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name$());
-		frame.addSlot("type", display.getClass().getSimpleName().toLowerCase());
+		String type = display.getClass().getSimpleName().toLowerCase();
+		frame.addSlot("type", type.equalsIgnoreCase("layout") ? layoutType(display) : type);
 		frame.addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
 		if (display.parentDisplay() != null) addParent(display, frame);
 		if (!display.graph().schemaList().isEmpty())
@@ -93,6 +94,11 @@ public class DisplayRenderer {
 		frame.addSlot("request", framesOfRequests(display.requestList()));
 		frame.addSlot("box", boxName);
 		return frame;
+	}
+
+	@NotNull
+	private String layoutType(Display display) {
+		return display.a$(Layout.class).mode().name() + "Layout";
 	}
 
 	private void addParent(Display display, Frame frame) {

@@ -1,5 +1,6 @@
-package io.intino.konos.builder.codegeneration.services.activity.web;
+package io.intino.konos.builder.codegeneration.services.activity;
 
+import io.intino.konos.builder.codegeneration.services.activity.resource.AssetResourceLoaderTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Dialog;
