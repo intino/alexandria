@@ -29,7 +29,7 @@ public class ElementViewBuilder {
         result.canSearch(view.canSearch());
         result.canCreateClusters(view.canCreateClusters());
         result.clusters(view.clusters());
-        result.emptyMessage(view.emptyMessage());
+        result.emptyMessage(view.emptyMessage() != null ? view.emptyMessage() : "");
         addMapViewProperties(result, view);
         return result;
     }

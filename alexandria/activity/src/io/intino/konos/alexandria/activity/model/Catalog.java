@@ -86,8 +86,8 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public void scope(Scope scope) {
-		this.scopeChangeEvent.onChange(scope);
+	public void scope(Scope scope, String username) {
+		this.scopeChangeEvent.onChange(scope, username);
 	}
 
 	public void addGroupingGroup(String grouping, String label, List<Item> itemList, String username) {
@@ -114,7 +114,7 @@ public class Catalog extends Element {
 	}
 
 	public interface ScopeChangeEvent {
-		void onChange(Scope scope);
+		void onChange(Scope scope, String username);
 	}
 
 	public interface ArrangementFiltererLoader {

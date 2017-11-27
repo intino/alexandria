@@ -19,8 +19,8 @@ public class DisplayView extends View {
 		return this;
 	}
 
-	public AlexandriaDisplay display(Object context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-		return displayLoader != null ? displayLoader.load(context, loadingListener, instantListener) : null;
+	public AlexandriaDisplay display(Object context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
+		return displayLoader != null ? displayLoader.load(context, loadingListener, instantListener, username) : null;
 	}
 
 	public DisplayView displayLoader(DisplayLoader loader) {
@@ -29,6 +29,6 @@ public class DisplayView extends View {
 	}
 
 	public interface DisplayLoader {
-		AlexandriaDisplay load(Object context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener);
+		AlexandriaDisplay load(Object context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username);
 	}
 }

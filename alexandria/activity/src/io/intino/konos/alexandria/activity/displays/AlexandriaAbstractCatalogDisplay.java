@@ -30,11 +30,11 @@ import static java.util.stream.Collectors.toMap;
 
 public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN extends AlexandriaDisplayNotifier> extends AlexandriaElementDisplay<E, DN> implements CatalogViewDisplayProvider {
 	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
+	private String condition = null;
+	private String currentItem = null;
 	protected Map<String, GroupingSelection> groupingSelectionMap = new HashMap<>();
 	protected Scope scope = null;
-	private String condition = null;
-	private ItemList itemList = null;
-	private String currentItem = null;
+	protected ItemList itemList = null;
 	protected GroupingManager groupingManager;
 
 	public AlexandriaAbstractCatalogDisplay(Box box) {
@@ -96,7 +96,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 
 	public int countItems(String condition) {
 		this.updateCondition(condition);
-		loadItemList();
+		loadItemList(condition);
 		return itemList.count();
 	}
 
@@ -107,7 +107,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 
 	public List<Item> items(int start, int limit, String condition, Sorting sorting) {
 		this.updateCondition(condition);
-		loadItemList();
+		loadItemList(condition);
 		return itemList.items(start, limit, sorting);
 	}
 
@@ -158,12 +158,12 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	protected void resetGrouping() {
 		groupingSelectionMap.clear();
 		scope = null;
-		element().scope(scope);
+		element().scope(scope, username());
 	}
 
 	protected void refreshGrouping() {
 		refreshScope();
-		element().scope(scope);
+		element().scope(scope, username());
 		refreshView();
 		sendCatalog();
 	}
@@ -179,7 +179,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(itemList(null).items(), groupings(), element().arrangementFilterer(username()));
+		groupingManager = new GroupingManager(filteredItemList(null).items(), groupings(), element().arrangementFilterer(username()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
@@ -270,7 +270,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	}
 
 	protected abstract void sendCatalog();
-	protected abstract ItemList itemList(String condition);
+	protected abstract ItemList filteredItemList(String condition);
 
 	protected boolean canCreateClusters() {
 		return element().groupings().size() > 0;
@@ -299,9 +299,9 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		this.condition = condition;
 	}
 
-	private void loadItemList() {
+	protected void loadItemList(String condition) {
 		if (!dirty() && itemList != null) return;
-		itemList = AlexandriaAbstractCatalogDisplay.this.itemList(condition);
+		itemList = AlexandriaAbstractCatalogDisplay.this.filteredItemList(condition);
 		dirty(false);
 	}
 

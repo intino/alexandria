@@ -69,8 +69,9 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 
 	@Override
 	public void refresh() {
-		resetGrouping();
-		createGroupingManager();
+		//resetGrouping();
+		groupingManager.items(filteredItemList(null).items());
+		//createGroupingManager();
 		refreshView();
 	}
 
@@ -85,13 +86,26 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 	}
 
 	@Override
-	protected ItemList itemList(String condition) {
-		if (!equalsRange()) resetGrouping();
-		ItemList itemList = element().items(condition, queryRange(), username());
-		applyFilter(itemList);
-		if (groupingManager != null && !equalsRange()) reloadGroupings();
+	protected void loadItemList(String condition) {
+		if (!dirty() && itemList != null) return;
+		boolean equalsRange = equalsRange();
+
+		itemList = filteredItemList(condition);
+		if (groupingManager != null && !equalsRange) {
+			groupingManager.items(filteredItemList(null).items());
+			reloadGroupings();
+		}
+
 		range(timeScaleHandler().range());
-		filterTimezone(itemList, range());
+		dirty(false);
+	}
+
+	@Override
+	protected ItemList filteredItemList(String condition) {
+		TimeRange range = queryRange();
+		ItemList itemList = element().items(condition, range, username());
+		applyFilter(itemList);
+		filterTimezone(itemList, range);
 		return itemList;
 	}
 
