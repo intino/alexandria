@@ -12,9 +12,9 @@ def type(mold & gen)
     import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
-    public abstract class Abstract$mold+FirstUpperCase~Mold extends AlexandriaMoldDisplay<$mold+FirstUpperCase~MoldNotifier> {
+    public abstract class Abstract$name+FirstUpperCase~Mold extends AlexandriaMoldDisplay<$name+FirstUpperCase~DisplayNotifier> {
 
-    	public Abstract$mold+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    	public Abstract$name+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
     		super(box);
     		element(buildMold(box));
     	}
@@ -43,7 +43,7 @@ def trigger(layout)
 end
 
 def type(stamp & location)
-	new Location().$common[.$icon].name("s1").label("coordinates").value((object, username) -> TestInfrastructureMold.Stamps.coordinates(($moldType) object, username)))
+	new Location().$common[.$icon].name("s1").label("coordinates").value((object, username) -> TestInfrastructureMold.Stamps.coordinates(($nameType) object, username)))
 end
 
 def trigger(icon)
@@ -70,9 +70,8 @@ def trigger(expanded)
 	.expanded($value)
 end
 
-def trigger()
 
-def type(mold & src)
+def type(mold)
 	package $package.displays;
 
     import $package+validPackage.$box+firstUpperCase~Box;
@@ -80,9 +79,9 @@ def type(mold & src)
     import java.net.URL;
     import java.util.List;
 
-    public class $mold+FirstUpperCase~Mold extends Abstract$mold+FirstUpperCase~Mold {
+    public class $name+FirstUpperCase~Mold extends Abstract$name+FirstUpperCase~Mold {
 
-    	public $mold+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    	public $name+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
     		super(box);
     	}
 
@@ -127,4 +126,6 @@ def type(stamp) trigger(class)
 	}
 end
 
-def type(stamp) trigger(class)
+def trigger(property)
+
+end

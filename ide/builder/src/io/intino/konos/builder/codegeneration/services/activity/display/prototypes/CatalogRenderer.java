@@ -2,7 +2,10 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.model.graph.Catalog;
+import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
+import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
 import io.intino.konos.model.graph.CatalogView;
+import io.intino.konos.model.graph.DisplayView;
 import io.intino.konos.model.graph.Operation;
 import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
@@ -10,15 +13,20 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
+
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
+	private final String modelClass;
 
 	public CatalogRenderer(Project project, Catalog catalog, File src, File gen, String packageName, String box) {
 		super(catalog, box, packageName, src, gen);
 		this.project = project;
+		this.modelClass = catalog.modelClass();
 	}
-
 
 	public void render() {
 		Frame frame = createFrame();
@@ -28,25 +36,72 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	protected Frame createFrame() {
 		final Catalog catalog = this.display.a$(Catalog.class);
-		final Frame frame = super.createFrame();
-		frame.addSlot("label", catalog.label());
-		if (catalog.toolbar() != null) frame.addSlot("toolbar", frameOf(catalog.toolbar()));
-		for (CatalogView view : catalog.views().catalogViewList()) frame.addSlot("view", frameOf(view, catalog));
+		final Frame frame = super.createFrame().addSlot("label", catalog.label()).addSlot("type", this.modelClass);
+		toolbar(catalog, frame);
+		views(catalog, frame);
+		arrangements(catalog, frame);
 		return frame;
 	}
 
-	private Frame frameOf(CatalogView view, Catalog panel) {
-		final Frame frame = new Frame("view")
-				.addSlot("owner", panel.name$())
+	private void toolbar(Catalog catalog, Frame frame) {
+		if (catalog.toolbar() != null) {
+			frame.addSlot("toolbar", frameOf(catalog.toolbar()));
+			if (catalog.toolbar().groupingSelection() != null) frame.addSlot("groupingselection", "");
+		}
+	}
+
+	private void views(Catalog catalog, Frame frame) {
+		for (CatalogView view : catalog.views().catalogViewList()) frame.addSlot("view", frameOf(view, catalog));
+		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog));
+	}
+
+	private void arrangements(Catalog catalog, Frame frame) {
+		for (Grouping grouping : catalog.arrangement().groupingList())
+			frame.addSlot("arrangement", frameOf(grouping, catalog));
+		for (Sorting sorting : catalog.arrangement().sortingList())
+			frame.addSlot("arrangement", frameOf(sorting, catalog));
+	}
+
+	private Frame frameOf(Sorting sorting, Catalog catalog) {
+		return new Frame("arrangement", sorting.getClass().getSimpleName().toLowerCase())
+				.addSlot("box", box)
+				.addSlot("name", sorting.name$())
+				.addSlot("label", sorting.label())
+				.addSlot("catalog", catalog.name$())
+				.addSlot("type", this.modelClass);
+	}
+
+	private Frame frameOf(Grouping grouping, Catalog catalog) {
+		return new Frame("arrangement", grouping.getClass().getSimpleName().toLowerCase())
+				.addSlot("box", box)
+				.addSlot("name", (String) grouping.name$())
+				.addSlot("label", ((String) grouping.label()))
+				.addSlot("catalog", catalog.name$())
+				.addSlot("type", this.modelClass)
+				.addSlot("histogram", grouping.histogram());
+	}
+
+	private Frame frameOf(CatalogView view, Catalog catalog) {
+		return new Frame("view", view.getClass().getSimpleName())
+				.addSlot("label", view.label())
+				.addSlot("catalog", catalog.name$())
+				.addSlot("package", this.packageName)
 				.addSlot("name", view.name$());
-		if (view.label() != null) frame.addSlot("label", view.label());
-		return frame;
+	}
+
+	private Frame frameOf(DisplayView view, Catalog catalog) {
+		return new Frame("view", view.getClass().getSimpleName())
+				.addSlot("box", box)
+				.addSlot("catalog", catalog.name$())
+				.addSlot("name", view.name$())
+				.addSlot("package", this.packageName)
+				.addSlot("display", view.display());
 	}
 
 	private Frame frameOf(Catalog.Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		final Node owner = toolbar.core$().owner();
-		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
+		frame.addSlot("box", box).addSlot("type", this.modelClass).addSlot("canSearch", toolbar.canSearch());
 		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), owner));
 		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), owner));
 		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), owner));
@@ -63,17 +118,27 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(Operation operation, Node catalog) {
-		Frame frame = new Frame("operation", operation.getClass().getSimpleName())
+		Frame frame = new Frame("operation", operation.getClass().getSimpleName().toLowerCase())
 				.addSlot("name", operation.name$())
+				.addSlot("box", box)
+				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name());
-		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon().getPath());
+		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon());
 		return frame;
 	}
 
-
-	@Override
 	protected Template template() {
 		return customize(CatalogTemplate.create());
+	}
+
+	protected Template srcTemplate() {
+		return customize(CatalogSrcTemplate.create());
+	}
+
+	void writeSrc(Frame frame) {
+		final String newDisplay = snakeCaseToCamelCase(display.name$() + display.getClass().getSimpleName());
+		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
+			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
 	}
 }

@@ -1,6 +1,18 @@
 dsl Konos
 
 
+Activity TestWeb
+    Home(uses = application) applicationPage
+    Page(opinion, "/opinion") opinionsPage
+
+Display application
+
+Dialog(url = "", label = "Añadir opinión", description = "añadir una nueva opinión") opinion2
+    Tab("")
+        ComboBox(label = "felicidad") > options = "A" "B" "C" "D"
+
+
+
 Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
 	Toolbar
 		Operation(label = "enviar")a

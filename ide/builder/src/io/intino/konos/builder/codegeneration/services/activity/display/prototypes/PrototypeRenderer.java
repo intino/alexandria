@@ -10,11 +10,11 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public abstract class PrototypeRenderer {
-	private static final String DISPLAYS = "displays";
+	protected static final String DISPLAYS = "displays";
 	protected final Display display;
 	protected final String box;
-	private final String packageName;
-	private final File src;
+	protected final String packageName;
+	protected final File src;
 	private final File gen;
 
 	PrototypeRenderer(Display display, String box, String packageName, File src, File gen) {
@@ -47,7 +47,7 @@ public abstract class PrototypeRenderer {
 	}
 
 	protected Frame createFrame() {
-		return new Frame(display.getClass().getSimpleName())
+		return new Frame(display.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
 				.addSlot("package", packageName)
 				.addSlot("name", display.name$());
