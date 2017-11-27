@@ -20,10 +20,12 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
+	private final String modelClass;
 
 	public CatalogRenderer(Project project, Catalog catalog, File src, File gen, String packageName, String box) {
 		super(catalog, box, packageName, src, gen);
 		this.project = project;
+		this.modelClass = catalog.modelClass();
 	}
 
 	public void render() {
@@ -34,7 +36,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	protected Frame createFrame() {
 		final Catalog catalog = this.display.a$(Catalog.class);
-		final Frame frame = super.createFrame().addSlot("label", catalog.label()).addSlot("type", catalog.modelClass());
+		final Frame frame = super.createFrame().addSlot("label", catalog.label()).addSlot("type", this.modelClass);
 		toolbar(catalog, frame);
 		views(catalog, frame);
 		arrangements(catalog, frame);
@@ -66,16 +68,16 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("name", sorting.name$())
 				.addSlot("label", sorting.label())
 				.addSlot("catalog", catalog.name$())
-				.addSlot("type", catalog.modelClass());
+				.addSlot("type", this.modelClass);
 	}
 
 	private Frame frameOf(Grouping grouping, Catalog catalog) {
 		return new Frame("arrangement", grouping.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
-				.addSlot("name", grouping.name$())
-				.addSlot("label", grouping.label())
+				.addSlot("name", (String) grouping.name$())
+				.addSlot("label", ((String) grouping.label()))
 				.addSlot("catalog", catalog.name$())
-				.addSlot("type", catalog.modelClass())
+				.addSlot("type", this.modelClass)
 				.addSlot("histogram", grouping.histogram());
 	}
 
@@ -99,7 +101,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private Frame frameOf(Catalog.Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		final Node owner = toolbar.core$().owner();
-		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
+		frame.addSlot("box", box).addSlot("type", this.modelClass).addSlot("canSearch", toolbar.canSearch());
 		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), owner));
 		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), owner));
 		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), owner));
@@ -118,6 +120,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private Frame frameOf(Operation operation, Node catalog) {
 		Frame frame = new Frame("operation", operation.getClass().getSimpleName().toLowerCase())
 				.addSlot("name", operation.name$())
+				.addSlot("box", box)
+				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name());
 		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon());

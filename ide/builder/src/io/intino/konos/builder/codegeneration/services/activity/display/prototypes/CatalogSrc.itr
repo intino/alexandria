@@ -25,15 +25,9 @@ def type(catalog)
     	public $name+FirstUpperCase~Catalog($box+firstUpperCase~Box box) {
     		super(box);
     	}
-
-    	public static class Toolbar {
-    		public static TaskSelection.Refresh removeElements($box+firstUpperCase~Box box, Element element, String option, java.util.List<$type> selection, String username) {
-    			return null;
-    		}
-
-    		$operation+method
-    	}
-
+		[
+		$toolbar
+    	]
     	public static class Source {
     		public static java.util.List<$type> objects($box+firstUpperCase~Box box, String condition, String username) {
     			return java.util.Collections.emptyList();//TODO
@@ -93,6 +87,17 @@ def type(catalog)
     }
 end
 
+def trigger(toolbar)
+	public static class Toolbar {
+		public static TaskSelection.Refresh removeElements($box+firstUpperCase~Box box, Element element, String option, java.util.List<$type> selection, String username) {
+			return null;
+		}
+
+		$operation...[$NL$NL]
+	}
+
+end
+
 def type(view & displayView) trigger(method)
 	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.tara.magritte.Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
 		return null;//TODO
@@ -112,38 +117,38 @@ def type(arrangement & sorting) trigger(method)
 	}
 end
 
-def type(operation & download) trigger(method)
+def type(operation & download) trigger(operation)
 	public static Resource download($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, String username) {
 		return emptyResource("");
 	}
 end
 
-def type(operation & export) trigger(method)
+def type(operation & export) trigger(operation)
 	public static Resource export($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
 		return emptyResource("");
 	}
 end
 
-def type(operation & task) trigger(method)
+def type(operation & task) trigger(operation)
 	public static Resource task($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
 		return emptyResource("");
 	}
 end
 
-def type(operation & downloadselection) trigger(method)
+def type(operation & downloadselection) trigger(operation)
 	public static Resource downloadSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
 		return emptyResource("");
 	}
 end
 
-def type(operation & exportselection) trigger(method)
-	public static Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$tpye> selection, String username) {
+def type(operation & exportselection) trigger(operation)
+	public static Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$type> selection, String username) {
 		return emptyResource("");
 	}
 end
 
-def type(operation & taskselection) trigger(method)
-	public static Resource taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$tpye> selection, String username) {
+def type(operation & taskselection) trigger(operation)
+	public static Resource taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
 		return emptyResource("");
 	}
 end
