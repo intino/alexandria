@@ -38,6 +38,7 @@
         <option value="$PROJECT_DIR$/alexandria/scheduler/pom.xml" />
         <option value="$PROJECT_DIR$/alexandria/slack/pom.xml" />
         <option value="$PROJECT_DIR$/ide/model/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/test/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

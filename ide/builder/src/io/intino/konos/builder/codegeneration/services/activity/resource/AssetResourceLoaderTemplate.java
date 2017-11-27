@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.services.activity.web;
+package io.intino.konos.builder.codegeneration.services.activity.resource;
 
 import org.siani.itrules.*;
 

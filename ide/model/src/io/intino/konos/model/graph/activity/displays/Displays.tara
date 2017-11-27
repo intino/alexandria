@@ -21,7 +21,7 @@ Concept:Named Display extends Component
 Concept Panel extends Display
 	Concept:{0..1} Toolbar
     	var boolean canSearch = true
-    	Concept:{0..1} OpenDialog extends Operation
+    	Concept:{0..1}:Named OpenDialog extends Operation
     	Concept:{0..1} Export extends Operation
     	Concept:{0..1} Task extends Operation
     	Concept:{0..1} Download extends Operation
@@ -42,13 +42,13 @@ Concept Layout extends Display
 		var word:{Expanded Collapsed} mode
 		Concept Option extends ElementOption
 			var string label;
-			var resource alexandriaIcon = empty
+			var string alexandriaIcon = empty
 			var integer bubble = -1
 		Concept Options extends ElementOption
 
 Concept Operation
 	var string title
-	var resource alexandriaIcon = empty
+	var string alexandriaIcon = empty
 
 Concept ElementOption
 	Concept:{1..1} ElementRenderer

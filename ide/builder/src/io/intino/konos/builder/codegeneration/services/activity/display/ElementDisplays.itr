@@ -1,4 +1,4 @@
-def type()
+def type(elementDisplays)
 	package $package.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
