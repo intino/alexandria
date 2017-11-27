@@ -64,14 +64,14 @@ def	type(panel) trigger(option)
 end
 
 
-def type(layout & src)
+def type(layout)
 	package $package.displays;
 
     import $package+validPackage.$box+firstUpperCase~Box;
 
-	public class $name+FirstUpperCase~Display extends Abstract$name+FirstUpperCase~Layout {
+	public class $name+FirstUpperCase~Layout extends Abstract$name+FirstUpperCase~Layout {
 
-		public $name+FirstUpperCase~Display($box+firstUpperCase~Box box) {
+		public $name+FirstUpperCase~Layout($box+firstUpperCase~Box box) {
 			super(box);
 		}
 

@@ -36,7 +36,9 @@ public class PanelRenderer extends PrototypeRenderer {
 	private Frame frameOf(DisplayView view, Panel panel) {
 		final Frame frame = new Frame("view")
 				.addSlot("owner", panel.name$())
-				.addSlot("name", view.name$());
+				.addSlot("name", view.name$())
+				.addSlot("display", view.display())
+				.addSlot("box", box);
 		if (view.label() != null) frame.addSlot("label", view.label());
 		return frame;
 	}
@@ -56,7 +58,7 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("name", operation.name$())
 				.addSlot("title", operation.title())
 				.addSlot("panel", panel.name());
-		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon().getPath());
+		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon());
 		return frame;
 	}
 

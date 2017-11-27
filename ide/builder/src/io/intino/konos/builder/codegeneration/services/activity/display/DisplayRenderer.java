@@ -58,7 +58,8 @@ public class DisplayRenderer {
 	private void processPrototype(Display display) {
 		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), gen, src, packageName, boxName).render();
 		else if (display.i$(Layout.class)) new LayoutRenderer(project, display.a$(Layout.class), gen, src, packageName, boxName).render();
-		else if (display.i$(Desktop.class)) new DesktopRenderer(project, display.a$(Desktop.class), gen, src, packageName, boxName).render();
+		else if (display.i$(Desktop.class))
+			new DesktopRenderer(project, display.a$(Desktop.class), gen, src, packageName, boxName).render();
 		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), gen, src, packageName, boxName).render();
 		else if (display.i$(Panel.class)) new PanelRenderer(project, display.a$(Panel.class), gen, src, packageName, boxName).render();
 	}
@@ -83,6 +84,7 @@ public class DisplayRenderer {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name$());
+		frame.addSlot("type", display.getClass().getSimpleName().toLowerCase());
 		frame.addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
 		if (display.parentDisplay() != null) addParent(display, frame);
 		if (!display.graph().schemaList().isEmpty())

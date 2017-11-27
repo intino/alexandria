@@ -12,9 +12,9 @@ Desktop testHome
 
 Layout testMenu
 	mode = Menu
-	Group(label = "ddd", mode = Expanded)
-		Option(label="infrastructure")
-			RenderCatalog(catalog=testInfrastructure)
+
+	Group("ddd", Expanded)
+		Option(label="infrastructure") > RenderCatalog(catalog=testInfrastructure)
 		Option(label="análisis") > RenderPanel(panel=testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
@@ -30,33 +30,40 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 		DownloadSelection("download assets info", alexandriaIcon = "file-download")
 		Export("export", alexandriaIcon = "archive")
 		ExportSelection("export selection", alexandriaIcon = "archive")
-	Events
-		OnClickRecord > OpenDialog
-	Views
-		ListView(label = "List", mold = infrastructureMold, width = 90%)
-		GridView(label = "Grid", mold = infrastructureMold, width = 90%)
-		DisplayView("Charts", display="olapDisplay")
-		MapView(label = "Map", mold = infrastructureMold)
-			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-			Zoom(14, min=1, max=18)
-	Arrangement
-		Grouping("units")
-		Grouping("status")
-		Sorting(label="date")
 
-Mold(modelClass = "io.intino.Station") infrastructureMold
+	Events
+		OnClickRecord
+			OpenDialog openDialog
+
+	Views
+		ListView("List", mold=testInfrastructureMold, width = 90%)
+		GridView("Grid", mold=testInfrastructureMold, width = 90%)
+		DisplayView("Charts", display="olapDisplay")
+		MapView("mapa", mold = testInfrastructureMold)
+			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+			Zoom(14,min=1,max=18)
+
+	Arrangement
+		Grouping(label="units") units
+		Grouping(label="status") status
+		Sorting(label="date") date
+
+
+Mold(modelClass = "station") testInfrastructureMold
     Block
         Block
             Location("coordinates")
-        Block(expanded = true)
-            Block
-                Title("label")
-                Description("description")
-            Block(layout = Horizontal)
-                Picture("chart")
-                    defaultStyle = "margin-top:6px;"
-                Snippet("sequencia")
-                    layout = Flexible
-                    defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-            Block
-                Snippet("")
+		Block(mode = Expanded)
+			Block
+				Title("label")
+				Description("description")
+			Block(layout = Horizontal)
+				Picture("chart")
+					defaultStyle = "margin-top:6px;"
+				Snippet("sequencia")
+					layout = Flexible
+					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+			Block
+				Snippet("")
+
+Schema Station
