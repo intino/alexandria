@@ -1,19 +1,18 @@
 def type(display)
 	package $package+validPackage.displays.requesters;
 
-	import $package+validPackage.displays.$name+firstUpperCase~Display;
+	import $package+validPackage.displays.$name+firstUpperCase~$type+format+FirstUpperCase;
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
 
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
-
+	import io.intino.konos.alexandria.activity.displays.requesters.Alexandria[$type+FirstUpperCase]DisplayRequester;
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierProvider;
 	import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
-	import io.intino.konos.alexandria.activity.spark.resources.DisplayRequester;
 
-	public class $name+firstUpperCase~DisplayRequester extends [Alexandria$type]~DisplayRequester {
+	public class $name+firstUpperCase~DisplayRequester extends [Alexandria$type+FirstUpperCase]~DisplayRequester {
 
 		public $name+firstUpperCase~DisplayRequester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
@@ -21,7 +20,7 @@ def type(display)
 
 		@Override
 		public void execute() throws AlexandriaException {
-			$name+firstUpperCase~Display display = display();
+			$name+firstUpperCase~$type+format+FirstUpperCase display = display();
 			if (display == null) return;
 			String operation = operation();
 
@@ -30,7 +29,16 @@ def type(display)
 		}
 	}
 end
+def attribute(Display) trigger(type)
+end
 
+def attribute(MenuLayout) trigger(format)
+	Layout
+end
+
+def attribute(TabLayout) trigger(format)
+	Layout
+end
 def type(request & asset) trigger(request)
 	if (operation.equals("$name")) {
 		io.intino.konos.alexandria.activity.spark.ActivityFile file = display.$name($parameter);
