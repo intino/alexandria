@@ -13,6 +13,10 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
+
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
@@ -56,17 +60,20 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("arrangement", frameOf(sorting, catalog));
 	}
 
-	private Object frameOf(Sorting sorting, Catalog catalog) {
-		return new Frame("arrangement", sorting.getClass().getSimpleName())
+	private Frame frameOf(Sorting sorting, Catalog catalog) {
+		return new Frame("arrangement", sorting.getClass().getSimpleName().toLowerCase())
+				.addSlot("box", box)
 				.addSlot("name", sorting.name$())
+				.addSlot("label", sorting.label())
 				.addSlot("catalog", catalog.name$())
 				.addSlot("type", catalog.modelClass());
 	}
 
 	private Frame frameOf(Grouping grouping, Catalog catalog) {
-		return new Frame("arrangement", grouping.getClass().getSimpleName())
+		return new Frame("arrangement", grouping.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
 				.addSlot("name", grouping.name$())
+				.addSlot("label", grouping.label())
 				.addSlot("catalog", catalog.name$())
 				.addSlot("type", catalog.modelClass())
 				.addSlot("histogram", grouping.histogram());
@@ -74,7 +81,9 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(CatalogView view, Catalog catalog) {
 		return new Frame("view", view.getClass().getSimpleName())
+				.addSlot("label", view.label())
 				.addSlot("catalog", catalog.name$())
+				.addSlot("package", this.packageName)
 				.addSlot("name", view.name$());
 	}
 
@@ -83,6 +92,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("box", box)
 				.addSlot("catalog", catalog.name$())
 				.addSlot("name", view.name$())
+				.addSlot("package", this.packageName)
 				.addSlot("display", view.display());
 	}
 
@@ -106,7 +116,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(Operation operation, Node catalog) {
-		Frame frame = new Frame("operation", operation.getClass().getSimpleName())
+		Frame frame = new Frame("operation", operation.getClass().getSimpleName().toLowerCase())
 				.addSlot("name", operation.name$())
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name());
@@ -116,5 +126,15 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	protected Template template() {
 		return customize(CatalogTemplate.create());
+	}
+
+	protected Template srcTemplate() {
+		return customize(CatalogSrcTemplate.create());
+	}
+
+	void writeSrc(Frame frame) {
+		final String newDisplay = snakeCaseToCamelCase(display.name$() + display.getClass().getSimpleName());
+		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
+			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
 	}
 }

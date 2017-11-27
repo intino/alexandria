@@ -49,7 +49,7 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 		Sorting(label="date") date
 
 
-Mold(modelClass = "station") testInfrastructureMold
+Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
     Block
         Block
             Location("coordinates")

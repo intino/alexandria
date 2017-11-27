@@ -17,7 +17,7 @@ def type(layout & gen)
     import java.util.ArrayList;
     import java.util.List;
 
-    public abstract class Abstract$name+FirstUpperCase~Layout extends AlexandriaMenuLayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+FirstUpperCase~Layout extends Alexandria$mode+FirstUpperCase~LayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
 
     	public Abstract$name+FirstUpperCase~Layout($box+firstUpperCase~Box box) {
     		super(box);
