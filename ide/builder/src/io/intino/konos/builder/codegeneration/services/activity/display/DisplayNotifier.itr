@@ -5,7 +5,7 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifier {
+    public class $name+FirstUpperCase~DisplayNotifier extends $type {
 
         public $name+FirstUpperCase~DisplayNotifier(io.intino.konos.alexandria.activity.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.displays.MessageCarrier carrier) {
             super(display, carrier);
@@ -13,7 +13,30 @@ def type(display)
 
 		$notification...[$NL$NL]
     }
+end
 
+def attribute(display) trigger(type)
+	io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifier
+end
+
+def attribute(desktop) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaDesktopDisplayNotifier
+end
+
+def attribute(panel) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelDisplayNotifier
+end
+
+def attribute(catalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogDisplayNotifier
+end
+
+def attribute(mold) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldDisplayNotifier
+end
+
+def attribute(layout) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaLayoutDisplayNotifier
 end
 
 def type(notification) trigger(notification)

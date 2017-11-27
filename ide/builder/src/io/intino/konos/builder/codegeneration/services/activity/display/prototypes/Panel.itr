@@ -54,33 +54,32 @@ def trigger(toolbar)
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new $name+validName+firstUpperCase().execute((element, option, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
-
-def type(operation & openDialog) trigger(operation)
-	toolbar.add(new $name+validName+firstUpperCase().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+def type(operation & task) trigger(operation)
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def trigger(genview)
 	result.add(new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
 		@Override
 		public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-			return $owner+firstUpperCase~Panel.Views.$name+firstLowerCase~Display(box, loadingListener, instantListener);
+			return $owner+firstUpperCase~Panel.Views.$display+firstLowerCase(box, loadingListener, instantListener);
 		}
 	})).name("$name")[.label("$label")]);
 end
 
 
-def type(panel & src)
+def type(panel)
 	package $package.displays;
 
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
@@ -114,7 +113,7 @@ def type(operation) trigger(src)
 end
 
 def type(view) trigger(src)
-	public static AlexandriaDisplay $name~Display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+	public static AlexandriaDisplay $display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
 		return null;//TODO
 	}
 end

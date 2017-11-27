@@ -28,10 +28,11 @@ public class DesktopRenderer extends PrototypeRenderer {
 		frame.addSlot("subtitle", desktop.subTitle());
 		if (desktop.logo() != null) frame.addSlot("logo", desktop.logo());
 		if (desktop.favicon() != null) frame.addSlot("favicon", desktop.favicon());
+		if (desktop.layout() != null) frame.addSlot("layout", desktop.layout().name$());
 		return frame;
 	}
 
 	protected Template template() {
-		return customize(LayoutTemplate.create());
+		return customize(DesktopTemplate.create());
 	}
 }

@@ -47,7 +47,7 @@ public abstract class PrototypeRenderer {
 	}
 
 	protected Frame createFrame() {
-		return new Frame(display.getClass().getSimpleName())
+		return new Frame(display.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
 				.addSlot("package", packageName)
 				.addSlot("name", display.name$());

@@ -1,7 +1,7 @@
 def type(desktop & gen)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopHome;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopDisplay;
     import io.intino.konos.alexandria.activity.model.Desktop;
 	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
@@ -11,7 +11,7 @@ def type(desktop & gen)
 
 	public abstract class Abstract$name+firstUpperCase~Desktop extends AlexandriaDesktopDisplay<$name+firstUpperCase~DisplayNotifier> {
 
-    	public Abstract$name+firstUpperCase~Display($box+firstUpperCase~Box box) {
+    	public Abstract$name+firstUpperCase~Desktop($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildDesktop(box));
     	}
@@ -20,11 +20,9 @@ def type(desktop & gen)
     		Desktop desktop = new Desktop();
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
-    		desktop.authServiceUrl(null);
-    		[desktop.logo(new URL("$logo"));]
-    		[desktop.favicon(new URL("$favicon"));]
-    		//desktop.authServiceUrl(new URL("http://localhost"));
-    		desktop.layoutDisplayProvider(() -> $name+firstUpperCase~Display.Layout.layoutDisplay(box));
+    		[try { desktop.logo(new URL("$logo"));} catch (MalformedURLException e) {}]
+    		[try { desktop.favicon(new URL("$favicon"));} catch (MalformedURLException e) {}]
+    		desktop.layoutDisplayProvider(() -> $name+firstUpperCase~Desktop.layout(box));
     		return desktop;
     	}
     }
@@ -36,16 +34,14 @@ def type(desktop)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
 
-	public class $name+FirstUpperCase~Home extends Abstract$name+FirstUpperCase~Home {
+	public class $name+FirstUpperCase~Desktop extends Abstract$name+FirstUpperCase~Desktop {
 
-        public $name+FirstUpperCase~Home($box+FisrtUpperCase~Box box) {
+        public $name+FirstUpperCase~Desktop($box+FisrtUpperCase~Box box) {
             super(box);
         }
 
-        public static class Layout {
-            public static AlexandriaLayoutDesktop layoutHome($box+FisrtUpperCase~Box box) {
-                return new $name+FirstUpperCase~Menu(box);
-            }
-        }
+		public static AlexandriaLayoutDisplay layout($box+FisrtUpperCase~Box box) {
+			return new $layout+FirstUpperCase~Layout(box);
+		}
     }
 end
