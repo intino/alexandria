@@ -14,7 +14,7 @@ public class AlexandriaCatalogDisplay<DN extends io.intino.konos.alexandria.acti
 	}
 
 	@Override
-	protected ItemList itemList(String condition) {
+	protected ItemList filteredItemList(String condition) {
 		ItemList itemList = element().items(condition, username());
 		applyFilter(itemList);
 		return itemList;

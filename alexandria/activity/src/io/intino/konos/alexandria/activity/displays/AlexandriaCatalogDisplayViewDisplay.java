@@ -66,7 +66,7 @@ public class AlexandriaCatalogDisplayViewDisplay extends ActivityDisplay<Alexand
     @Override
     protected void init() {
         super.init();
-        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener());
+        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), username());
         sendDisplayType(display);
         add(display);
         display.personifyOnce();

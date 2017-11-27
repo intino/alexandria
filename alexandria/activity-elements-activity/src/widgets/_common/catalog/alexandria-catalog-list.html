@@ -26,13 +26,15 @@
                     <alexandria-catalog-sorting selected-sorting$="[[selectedSorting]]"
                                                 sorting-list="[[sortingList]]"></alexandria-catalog-sorting>
                 </div>
-                <alexandria-catalog-toolbar operations="[[_alwaysOperations(toolbar)]]"
-                                            on-execute="_executeOperation"
-                                            on-download="_downloadOperation"></alexandria-catalog-toolbar>
-                <div class="search-box flex layout vertical center-justified" hidden$="[[!canSearch]]">
-                    <paper-input id="filter" label="[[Search]]" type="text" no-label-float on-keyup="_filter">
-                        <iron-icon icon="search" suffix></iron-icon>
-                    </paper-input>
+                <div class="flex layout horizontal end-justified">
+                    <alexandria-catalog-toolbar operations="[[_alwaysOperations(toolbar)]]"
+                                                on-execute="_executeOperation"
+                                                on-download="_downloadOperation"></alexandria-catalog-toolbar>
+                    <div class="search-box flex layout vertical center-justified" hidden$="[[!canSearch]]">
+                        <paper-input id="filter" label="[[Search]]" type="text" no-label-float on-keyup="_filter">
+                            <iron-icon icon="search" suffix></iron-icon>
+                        </paper-input>
+                    </div>
                 </div>
             </div>
             <div class="box selected" hidden$="[[!_clusterPanelVisible]]">
@@ -131,9 +133,6 @@
             font-size: 9pt;
             margin-right: 10px;
             margin-top: 3px;
-        }
-        :host .toolbar alexandria-catalog-toolbar {
-            margin-right: 10px;
         }
         :host .group-header {
             margin: 10px 13px;
@@ -271,7 +270,7 @@
             properties: {
                 grid: { type: Boolean, observer: '_refreshClasses' },
                 width: { type: Number, observer: '_refreshWidth' },
-                emptyMessage : { type: String, observer: '_refreshEmptyMessage' },
+                emptyMessage : { type: String, notify: true, observer: '_refreshEmptyMessage' },
                 _emptyMessage : String,
                 _offsetWidth: Number,
                 embedded: Boolean,
@@ -314,7 +313,7 @@
             },
 
             _refreshEmptyMessage : function() {
-                this._emptyMessage = this.emptyMessage != null ? this.emptyMessage : this.NoItems;
+                this._emptyMessage = this.emptyMessage != null && this.emptyMessage != "" ? this.emptyMessage : this.NoItems;
             },
 
             _resize : function() {
