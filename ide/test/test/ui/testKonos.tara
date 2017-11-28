@@ -50,20 +50,19 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 
 
 Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
-    Block
-        Block
-            Location("coordinates")
-		Block(mode = Expanded)
-			Block
-				Title("label")
-				Description("description")
-			Block(layout = Horizontal)
-				Picture("chart")
-					defaultStyle = "margin-top:6px;"
-				Snippet("sequencia")
-					layout = Flexible
-					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-			Block
-				Snippet("")
+	Block a1
+		Location("coordinates")coordinates
+	Block(mode = Expanded) a2
+		Block b1
+			Title("label") label
+			Description("description") description
+		Block(layout = Horizontal)b2
+			Picture("chart") chart
+				defaultStyle = "margin-top:6px;"
+			Snippet("sequencia") secuencia
+				layout = Flexible
+				defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+//		Block b3
+//			Snippet() snipet2
 
 Schema Station

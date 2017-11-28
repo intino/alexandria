@@ -14,7 +14,7 @@ Concept Mold extends Display
         var boolean hiddenIfMobile = false
         var string style = ""
 		has Block
-		Concept Stamp
+		Concept:Named Stamp
 			var string label = ""
 			var word:{Fixed Flexible} layout = Fixed
 			var integer height = -1
