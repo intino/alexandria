@@ -48,7 +48,7 @@ public class CatalogBuilder {
     private static List<Group> buildGroupList(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping grouping, GroupingManager manager) {
         List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> groups = manager.groups(grouping).toList();
         List selected = manager.filteredGroups(grouping);
-        return groups.stream().map(g -> buildGroup(g, selected.contains(g.label()))).collect(toList());
+        return groups.stream().map(g -> buildGroup(g, selected.contains(io.intino.konos.alexandria.activity.model.catalog.arrangement.Group.name(g.label())))).collect(toList());
     }
 
     private static Group buildGroup(io.intino.konos.alexandria.activity.model.catalog.arrangement.Group group, boolean selected) {

@@ -31,4 +31,5 @@ public class RenderDisplay extends ElementRender {
 	public interface DisplayLoader {
 		AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener);
 	}
+
 }

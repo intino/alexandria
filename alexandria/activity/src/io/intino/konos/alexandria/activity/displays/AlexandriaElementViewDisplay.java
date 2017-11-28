@@ -2,10 +2,10 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.Panel;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
-import io.intino.konos.alexandria.activity.model.Panel;
 
 import java.util.function.Consumer;
 

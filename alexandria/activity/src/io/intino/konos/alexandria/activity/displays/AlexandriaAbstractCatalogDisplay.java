@@ -33,9 +33,9 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	private String condition = null;
 	private String currentItem = null;
 	protected Map<String, GroupingSelection> groupingSelectionMap = new HashMap<>();
-	protected Scope scope = null;
 	protected ItemList itemList = null;
 	protected GroupingManager groupingManager;
+	private String attachedGrouping = null;
 
 	public AlexandriaAbstractCatalogDisplay(Box box) {
 		super(box);
@@ -61,12 +61,25 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		Grouping abstractGrouping = groupingOf(selection.name());
 
 		if (selection.groups().size() <= 0 ||
-				(abstractGrouping.histogram() == Grouping.Histogram.Absolute && selection.groups().size() <= 0))
+				(abstractGrouping.histogram() == Grouping.Histogram.Absolute && selection.groups().size() <= 0)) {
 			groupingSelectionMap.remove(selection.name());
+			refreshGroupingsSelection();
+		}
 		else
 			groupingSelectionMap.put(selection.name(), selection);
 
 		dirty(true);
+		filterGroupingManager();
+		attachGrouping(selection.name());
+	}
+
+	public void attachGrouping(String grouping) {
+		attachedGrouping = grouping;
+		refreshGrouping();
+	}
+
+	public void detachGrouping(String grouping) {
+		attachedGrouping = grouping;
 		refreshGrouping();
 	}
 
@@ -155,17 +168,17 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		openItemListeners.add(listener);
 	}
 
-	protected void resetGrouping() {
-		groupingSelectionMap.clear();
-		scope = null;
-		element().scope(scope, username());
+	protected void refreshGrouping() {
+		refreshView();
+		refreshScope();
+		sendCatalog();
 	}
 
-	protected void refreshGrouping() {
-		refreshScope();
-		element().scope(scope, username());
-		refreshView();
-		sendCatalog();
+	protected void refreshScope() {
+		currentView().ifPresent(v -> {
+			if (v instanceof AlexandriaCatalogDisplayViewDisplay)
+				((AlexandriaCatalogDisplayViewDisplay) v).refresh(scopeWithAttachedGrouping());
+		});
 	}
 
 	@Override
@@ -179,7 +192,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(filteredItemList(null).items(), groupings(), element().arrangementFilterer(username()));
+		groupingManager = new GroupingManager(filteredItemList(null,null).items(), groupings(), element().arrangementFilterer(username()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
@@ -270,7 +283,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 	}
 
 	protected abstract void sendCatalog();
-	protected abstract ItemList filteredItemList(String condition);
+	protected abstract ItemList filteredItemList(Scope scope, String condition);
 
 	protected boolean canCreateClusters() {
 		return element().groupings().size() > 0;
@@ -301,8 +314,28 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 
 	protected void loadItemList(String condition) {
 		if (!dirty() && itemList != null) return;
-		itemList = AlexandriaAbstractCatalogDisplay.this.filteredItemList(condition);
+		itemList = filteredItemList(scopeWithAttachedGrouping(), condition);
 		dirty(false);
+	}
+
+	protected void refreshGroupingsSelection() {
+
+		groupingSelectionMap.forEach((key, value) -> {
+			List<String> newGroups = new ArrayList<>();
+			GroupMap groupMap = groupingManager.groups(groupingOf(key));
+			value.groups().forEach(groupLabel -> {
+				String name = Group.name(groupLabel);
+				if (groupMap.containsKey(name))
+					newGroups.add(groupLabel);
+			});
+			value.groups(newGroups);
+		});
+
+		groupingSelectionMap = groupingSelectionMap.entrySet().stream().filter(e -> e.getValue().groups().size() > 0).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	protected Scope scopeWithAttachedGrouping() {
+		return calculateScope(true);
 	}
 
 	private void buildViewList() {
@@ -338,27 +371,44 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		sendCatalog();
 	}
 
-	private void refreshScope() {
-		if (groupingSelectionMap.size() <= 0) {
-			scope = null;
-			return;
-		}
+	private Scope calculateScope(boolean addAttachedGrouping) {
 
-		if (scope == null) scope = new Scope();
-		groupingManager.clearFilter();
+		if (groupingSelectionMap.size() <= 0)
+			return null;
+
+		Scope scope = new Scope();
 		scope.clear();
-		scope.groups(groupingSelectionMap.entrySet().stream().filter(this::isGrouping).collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));
-		scope.objects(groupingSelectionMap.entrySet().stream().filter(this::isCluster).collect(toMap(Map.Entry::getKey, e -> objects(e.getValue()))));
+
+		scope.groups(groupingSelectionMap.entrySet().stream().filter(this::isGrouping)
+										 .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
+										 .collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));
+
+		scope.objects(groupingSelectionMap.entrySet().stream().filter(this::isCluster)
+										  .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
+										  .collect(toMap(Map.Entry::getKey, e -> objects(e.getValue()))));
+
+		return scope;
+	}
+
+	protected void filterGroupingManager() {
+		groupingManager.clearFilter();
 
 		groupingSelectionMap.values().stream()
-				.filter(g -> {
-					Grouping grouping = groupingOf(g.name());
-					return grouping != null && !grouping.cluster();
-				})
-				.forEach(selection -> {
-					Grouping grouping = groupingOf(selection);
-					if (grouping != null) groupingManager.filter(grouping.name(), groupsNames(selection.groups()));
-				});
+			.filter(g -> {
+				Grouping grouping = groupingOf(g.name());
+				return grouping != null && !grouping.cluster();
+			})
+			.forEach(selection -> {
+				Grouping grouping = groupingOf(selection);
+				if (grouping != null) groupingManager.filter(grouping.name(), groupsNames(selection.groups()));
+			});
+
+		sendCatalog();
+	}
+
+	private boolean attachedGroupingFilter(GroupingSelection groupingSelection, boolean addAttachedGrouping) {
+		if (addAttachedGrouping) return true;
+		return !groupingSelection.name().equals(attachedGrouping);
 	}
 
 	private List<String> groupsNames(List<String> labels) {
@@ -403,4 +453,7 @@ public abstract class AlexandriaAbstractCatalogDisplay<E extends Catalog, DN ext
 		display.personifyOnce();
 	}
 
+	protected void reloadGroupings() {
+		sendCatalog();
+	}
 }

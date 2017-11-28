@@ -2,12 +2,12 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
-import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMapViewDisplayNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.schemas.*;
+import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;

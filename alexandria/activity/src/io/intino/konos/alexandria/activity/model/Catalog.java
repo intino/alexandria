@@ -40,9 +40,9 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public ItemList items(String condition, String username) {
+	public ItemList items(Scope scope, String condition, String username) {
 		if (objectsLoader == null) return new ItemList();
-		return new ItemList(objectsLoader.load(condition, username).stream().map(this::item).collect(toList()));
+		return new ItemList(objectsLoader.load(scope, condition, username).stream().map(this::item).collect(toList()));
 	}
 
 	public Catalog objectsLoader(ObjectsLoader loader) {
@@ -81,14 +81,14 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public Catalog onScopeChange(ScopeChangeEvent event) {
-		this.scopeChangeEvent = event;
-		return this;
-	}
-
-	public void scope(Scope scope, String username) {
-		this.scopeChangeEvent.onChange(scope, username);
-	}
+//	public Catalog onScopeChange(ScopeChangeEvent event) {
+//		this.scopeChangeEvent = event;
+//		return this;
+//	}
+//
+//	public void scope(Scope scope, String username) {
+//		this.scopeChangeEvent.onChange(scope, username);
+//	}
 
 	public void addGroupingGroup(String grouping, String label, List<Item> itemList, String username) {
 		if (clusterManager == null) return;
@@ -102,7 +102,7 @@ public class Catalog extends Element {
 	}
 
 	public interface ObjectsLoader {
-		List<Object> load(String condition, String username);
+		List<Object> load(Scope scope, String condition, String username);
 	}
 
 	public interface RootObjectLoader {

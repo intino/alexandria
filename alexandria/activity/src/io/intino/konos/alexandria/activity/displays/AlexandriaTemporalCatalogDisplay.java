@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.helpers.Bounds;
 import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
+import io.intino.konos.alexandria.activity.model.catalog.Scope;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Display;
 
@@ -69,9 +70,13 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 
 	@Override
 	public void refresh() {
-		//resetGrouping();
-		groupingManager.items(filteredItemList(null).items());
-		//createGroupingManager();
+
+		if (!equalsRange()) {
+			groupingManager.items(filteredItemList(null, null).items());
+			refreshGroupingsSelection();
+			filterGroupingManager();
+		}
+
 		refreshView();
 	}
 
@@ -88,22 +93,15 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 	@Override
 	protected void loadItemList(String condition) {
 		if (!dirty() && itemList != null) return;
-		boolean equalsRange = equalsRange();
-
-		itemList = filteredItemList(condition);
-		if (groupingManager != null && !equalsRange) {
-			groupingManager.items(filteredItemList(null).items());
-			reloadGroupings();
-		}
-
+		itemList = filteredItemList(scopeWithAttachedGrouping(), condition);
 		range(timeScaleHandler().range());
 		dirty(false);
 	}
 
 	@Override
-	protected ItemList filteredItemList(String condition) {
+	protected ItemList filteredItemList(Scope scope, String condition) {
 		TimeRange range = queryRange();
-		ItemList itemList = element().items(condition, range, username());
+		ItemList itemList = element().items(scope, condition, range, username());
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
 		return itemList;
@@ -174,7 +172,4 @@ public abstract class AlexandriaTemporalCatalogDisplay<DN extends AlexandriaDisp
 	protected abstract void showNavigator();
 	protected abstract void hideNavigator();
 
-	private void reloadGroupings() {
-		sendCatalog();
-	}
 }
