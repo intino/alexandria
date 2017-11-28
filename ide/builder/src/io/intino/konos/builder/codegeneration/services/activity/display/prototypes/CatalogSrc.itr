@@ -55,7 +55,7 @@ def type(catalog)
     	}
 
     	public static class Events {
-    		public static void scopeChange($box+firstUpperCase~Box box, Scope scope) {
+    		public static void scopeChange($box+firstUpperCase~Box box, Scope scope, String username) {
     		}
     	}
 
@@ -99,14 +99,14 @@ def trigger(toolbar)
 end
 
 def type(view & displayView) trigger(method)
-	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.tara.magritte.Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.tara.magritte.Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
 		return null;//TODO
 	}
 end
 
 
 def type(arrangement & grouping) trigger(method)
-	public static java.util.List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items) {
+	public static java.util.List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, String username) {
 		return emptyList(); //TODO
 	}
 end

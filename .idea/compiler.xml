@@ -108,17 +108,17 @@
         <module name="scheduler" />
         <module name="scheduling" />
       </profile>
-      <profile name="Annotation profile for alexandria-jmx" enabled="true">
-        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
-        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="jmx" />
-      </profile>
       <profile name="Annotation profile for alexandria-jms" enabled="true">
         <sourceOutputDir name="../out/build/jms/generated-sources/annotations" />
         <sourceTestOutputDir name="../out/build/jms/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="jms" />
+      </profile>
+      <profile name="Annotation profile for alexandria-jmx" enabled="true">
+        <sourceOutputDir name="../out/build/jmx/generated-sources/annotations" />
+        <sourceTestOutputDir name="../out/build/jmx/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="jmx" />
       </profile>
       <profile name="Annotation profile for alexandria-slack" enabled="true">
         <sourceOutputDir name="../out/build/slack/generated-sources/annotations" />
