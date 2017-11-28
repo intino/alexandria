@@ -10,7 +10,7 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public abstract class PrototypeRenderer {
-	protected static final String DISPLAYS = "displays";
+	static final String DISPLAYS = "displays";
 	protected final Display display;
 	protected final String box;
 	protected final String packageName;

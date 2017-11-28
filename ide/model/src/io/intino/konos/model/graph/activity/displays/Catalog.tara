@@ -38,6 +38,8 @@ Concept Catalog extends Display
 		Concept:Named Sorting
 			var string label
 
+Concept TemporalCatalog extends Catalog
+	var word:{Time Range} type
 
 
 Concept CatalogView
