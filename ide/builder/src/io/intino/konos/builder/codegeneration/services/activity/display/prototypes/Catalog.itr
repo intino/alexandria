@@ -29,7 +29,7 @@ def type(catalog & gen)
 
     	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
     		Catalog catalog = (Catalog) new Catalog()
-    			.onScopeChange(scope -> $name+firstUpperCase~Catalog.Events.scopeChange(box, scope))
+    			.onScopeChange((scope, username) -> $name+firstUpperCase~Catalog.Events.scopeChange(box, scope, username))
     			.objectsLoader((condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase~Catalog.Source.objects(box, condition, username))
     			.rootObjectLoader((objectList, username) -> $name+firstUpperCase~Catalog.Source.rootObject(box, (java.util.List<$type>)(Object)objectList, username))
     			.defaultObjectLoader((id, username) -> $name+firstUpperCase~Catalog.Source.defaultObject(box, id, username))[
@@ -114,7 +114,7 @@ def type(gridview) trigger(add)
 end
 
 def type(displayview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.DisplayView()[.hideNavigator($hideNavigator)].displayLoader((context, loadingListener, instantListener) -> $catalog+FirstUpperCase~Catalog.Views.$display+firstLowerCase(box, (io.intino.tara.magritte.Concept)context, loadingListener, instantListener)).name("$name").label("$label"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.DisplayView()[.hideNavigator($hideNavigator)].displayLoader((context, loadingListener, instantListener, username) -> $catalog+FirstUpperCase~Catalog.Views.$display+firstLowerCase(box, (io.intino.tara.magritte.Concept)context, loadingListener, instantListener, username)).name("$name").label("$label"));
 end
 
 def type(mapview) trigger(add)
@@ -126,7 +126,7 @@ def type(sorting) trigger(add)
 end
 
 def type(grouping) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects) -> $catalog+FirstUpperCase~Catalog.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects)).name("$name")[.label("$label")]);
+	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, username) -> $catalog+FirstUpperCase~Catalog.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, username)).name("$name")[.label("$label")]);
 end
 
 

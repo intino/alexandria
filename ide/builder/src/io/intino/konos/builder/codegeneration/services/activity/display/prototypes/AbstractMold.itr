@@ -1,0 +1,74 @@
+def type(mold)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaMoldDisplay;
+    import io.intino.konos.alexandria.activity.model.Mold;
+    import io.intino.konos.alexandria.activity.model.mold.Block;
+    import io.intino.konos.alexandria.activity.model.mold.Stamp;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+    import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+
+    public abstract class Abstract$name+FirstUpperCase~Mold extends AlexandriaMoldDisplay<$name+FirstUpperCase~DisplayNotifier> {
+
+    	public Abstract$name+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    		super(box);
+    		element(buildMold(box));
+    	}
+
+    	public Mold buildMold($box+FirstUpperCase~Box box) {
+    		Mold mold = new Mold()$block+definition...[$NL];
+			return mold;
+    	}
+
+		private java.net.URL urlOf(String url)  {
+			try {
+				return new java.net.URL(url);
+			} catch (java.net.MalformedURLException e) {
+				return null;
+			}
+		}
+    }
+end
+
+def type(block) trigger(definition)
+	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$style][$NL$TAB$stamp...[$NL$TAB$TAB]][
+		$block+definition...[$NL]])
+
+end
+
+def trigger(height)
+	.height("$value")
+end
+
+def trigger(layout)
+	.add(Block.Layout.$value+FirstUpperCase)
+end
+
+def type(stamp & location)
+	.add(new Location()[$icon]$common)
+end
+
+def type(stamp & picture)
+	.add(new Picture().defaultPicture(urlOf("$defaultPicture"))$common)
+end
+
+def type(stamp)
+	.add(new $type+FirstUpperCase()$common)
+end
+
+def trigger(common)
+	[.name("$name")][.label("$label")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)][$style].value((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.value(($moldType) object, username))
+end
+
+def trigger(style)
+	.style((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+firstUpperCase.style(($moldType) object, username))
+end
+
+def trigger(icon)
+	.icon((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.icon(($moldType) object, username))
+end
+
+def trigger(expanded)
+	.expanded($value)
+end

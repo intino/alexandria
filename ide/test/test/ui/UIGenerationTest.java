@@ -35,7 +35,7 @@ public class UIGenerationTest {
 	@Test
 	public void testKonos() throws Exception {
 		File gen = new File("test-gen", testKonos);
-		cottons.utils.Files.removeDir(gen);
+//		cottons.utils.Files.removeDir(gen);
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(testKonos).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, testKonos).execute();
