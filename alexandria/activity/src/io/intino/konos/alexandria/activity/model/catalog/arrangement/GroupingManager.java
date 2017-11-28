@@ -21,9 +21,13 @@ public class GroupingManager {
 	private String fixedGrouping = null;
 
 	public GroupingManager(List<Item> items, List<Grouping> groupings, Catalog.ArrangementFilterer filter) {
-		this.items = items;
 		this.filter = filter;
 		this.groupings = groupings;
+		this.items(items);
+	}
+
+	public void items(List<Item> items) {
+		this.items = items;
 		this.groups = calculateGroupings(items);
 	}
 
@@ -47,10 +51,6 @@ public class GroupingManager {
 		fixedGrouping = null;
 	}
 
-	public void items(List<Item> items) {
-		this.items = items;
-	}
-
 	public List<String> filteredGroups(Grouping grouping) {
 		String key = grouping.name();
 		return filteredGroupings.containsKey(key) ? filteredGroupings.get(key) : emptyList();
@@ -61,11 +61,11 @@ public class GroupingManager {
 	}
 
 	public GroupMap groups(String grouping) {
-		List<Item> items = this.items;
+//		List<Item> items = this.items;
 
-		if ((fixedGrouping == null && !groupings.get(0).name().equals(grouping))
-			|| (fixedGrouping != null && !fixedGrouping.equals(grouping)))
-			items = filteredItems();
+//		if ((fixedGrouping == null && !groupings.get(0).name().equals(grouping))
+//			|| (fixedGrouping != null && !fixedGrouping.equals(grouping)))
+		List<Item> items = filteredItems();
 
 		return groups(items).entrySet().stream()
 				.filter(e -> e.getKey().name().equals(grouping) || e.getKey().label().equals(grouping))

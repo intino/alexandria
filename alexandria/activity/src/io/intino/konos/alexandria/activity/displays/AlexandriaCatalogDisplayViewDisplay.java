@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogDisplayViewDisplayNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Catalog;
+import io.intino.konos.alexandria.activity.model.catalog.Scope;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.schemas.Item;
 
@@ -64,6 +65,15 @@ public class AlexandriaCatalogDisplayViewDisplay extends ActivityDisplay<Alexand
     }
 
     @Override
+    public void refresh(Item... items) {
+    }
+
+    public void refresh(Scope scope) {
+        DisplayView displayView = view.raw();
+        displayView.update(display, scope);
+    }
+
+    @Override
     protected void init() {
         super.init();
         this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), username());
@@ -92,7 +102,4 @@ public class AlexandriaCatalogDisplayViewDisplay extends ActivityDisplay<Alexand
         loadingListeners.forEach(l -> l.accept(loading));
     }
 
-    @Override
-    public void refresh(Item... items) {
-    }
 }

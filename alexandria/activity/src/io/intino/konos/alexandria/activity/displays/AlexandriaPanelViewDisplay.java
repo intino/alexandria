@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AlexandriaPanelViewDisplay<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements AlexandriaElementViewDisplay<ElementViewDisplayProvider> {
+public abstract class AlexandriaPanelViewDisplay<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements AlexandriaElementViewDisplay<ElementViewDisplayProvider> {
 	private Panel context;
 	private Item target;
 	private ElementView<Panel> view;

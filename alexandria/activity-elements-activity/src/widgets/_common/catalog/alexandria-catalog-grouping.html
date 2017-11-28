@@ -11,25 +11,23 @@
 <dom-module id="alexandria-catalog-grouping">
 
     <template>
-        <!--<div class="label layout horizontal end-justified"><cotton-checkbox checked id="groupsCheckbox" disabled$="[[_groupsDisabled]]" icon="av:stop" on-change="_toggleGroups">[[grouping.label]]</cotton-checkbox></div>-->
-        <div class="label layout horizontal">[[grouping.label]]</div>
+        <!--<div class="label layout horizontal end-justified"><cotton-checkbox checked id="groupsCheckbox" disabled$="[[_groupsDisabled]]" icon="av:stop" on-change="_toggleGroups">[[_grouping.label]]</cotton-checkbox></div>-->
+        <div class="label layout horizontal">[[_grouping.label]]</div>
         <div class="toolbar" hidden="[[!_enoughGroups]]">
             <paper-input id="filterInput" noLabelFloat placeholder="[[Filter]]" on-keyup="_filter"><iron-icon icon="search" suffix></iron-icon></paper-input>
-            <div class="layout horizontal end-justified info"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[grouping.groupList.length]]</div></div>
+            <div class="layout horizontal end-justified info"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[_grouping.groupList.length]]</div></div>
         </div>
         <ul class="groups">
-            <template is="dom-if" if="[[!grouping.groupList.length]]">
-                <li class="message">[[NoGroups]]</li>
-            </template>
+            <li class="message" hidden$="[[_grouping.groupList.length]]">[[NoGroups]]</li>
             <template is="dom-if" if="[[!someGroupsVisible]]">
                 <li class="message">[[NoGroups]]</li>
             </template>
-            <template is="dom-repeat" items="[[grouping.groupList]]" as="group">
-                <li class$="layout horizontal group _[[_groupIdx(group.label)]]">
-                    <div class="chart"><alexandria-group-chart group="[[group]]" percentage="[[_isPercentage()]]" count="[[grouping.countItems]]" color="[[_colorOf(group)]]"></alexandria-group-chart></div>
+            <template is="dom-repeat" items="[[_grouping.groupList]]" as="group">
+                <li class$="layout horizontal group _[[group.idx]]">
+                    <div class="chart"><alexandria-group-chart group="[[group]]" percentage="[[_grouping.isPercentage]]" count="[[_grouping.countItems]]" color="[[group.color]]"></alexandria-group-chart></div>
                     <div class="layout horizontal flex">
-                        <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="false" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
-                        <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden$="[[!_isCluster()]]"></paper-icon-button>
+                        <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="{{group.selected}}" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
+                        <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden$="[[!_grouping.isCluster]]"></paper-icon-button>
                     </div>
                 </li>
             </template>
@@ -123,6 +121,7 @@
 
             properties: {
                 grouping: { type: Object, observer: '_refreshGrouping' },
+                _grouping: Object,
                 someGroupsVisible: Boolean,
                 _selectedCount: Number,
                 _enoughGroups: Boolean,
@@ -140,7 +139,7 @@
                 var result = [];
                 this.querySelectorAll(".groups cotton-checkbox").forEach((checkbox) => {
                     if (checkbox.checked) result.push(checkbox.getAttribute("name"));
-                });
+            });
                 return result;
             },
 
@@ -158,9 +157,27 @@
 
             _refreshGrouping : function() {
                 let count = this.grouping.groupList.length;
+                this._refreshInternalGrouping();
                 this._groupsDisabled = count == 1 && !this._isCluster();
                 this._enoughGroups = count > 10;
                 this._selectedCount = count;
+            },
+
+            _refreshInternalGrouping : function() {
+                this.notifyPath("_grouping", { name: this.grouping.name,
+                    label: this.grouping.label,
+                    isPercentage: this._isPercentage(),
+                    isCluster: this._isCluster(),
+                    groupList: [] });
+                window.setTimeout(() => {
+                    var groups = this.grouping.groupList;
+                for (var i=0; i<groups.length; i++) {
+                    var group = groups[i];
+                    group.idx = this._groupIdx(group.label);
+                    group.color = this._colorOf(group);
+                }
+                this.notifyPath("_grouping.groupList", groups);
+            }, 50);
             },
 
             _refreshGroupsCheckbox : function() {

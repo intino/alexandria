@@ -1,5 +1,7 @@
 package io.intino.konos.alexandria.activity.model;
 
+import io.intino.konos.alexandria.activity.model.catalog.Scope;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +49,9 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public ItemList items(String condition, TimeRange range, String username) {
+	public ItemList items(Scope scope, String condition, TimeRange range, String username) {
 		if (objectsLoader == null) return new ItemList();
-		return new ItemList(objectsLoader.load(condition, range, username).stream().map(this::item).collect(toList()));
+		return new ItemList(objectsLoader.load(scope, condition, range, username).stream().map(this::item).collect(toList()));
 	}
 
 	public TemporalCatalog objectsLoader(ObjectsLoader loader) {
@@ -94,7 +96,7 @@ public class TemporalCatalog extends Catalog {
 	}
 
 	public interface ObjectsLoader {
-		List<Object> load(String condition, TimeRange range, String username);
+		List<Object> load(Scope scope, String condition, TimeRange range, String username);
 	}
 
 	public interface RootObjectLoader {

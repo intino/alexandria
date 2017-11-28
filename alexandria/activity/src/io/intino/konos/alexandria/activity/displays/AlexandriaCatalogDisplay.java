@@ -2,8 +2,9 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.CatalogBuilder;
-import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.Catalog;
+import io.intino.konos.alexandria.activity.model.ItemList;
+import io.intino.konos.alexandria.activity.model.catalog.Scope;
 import io.intino.konos.alexandria.activity.schemas.GroupingGroup;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
 
@@ -14,8 +15,8 @@ public class AlexandriaCatalogDisplay<DN extends io.intino.konos.alexandria.acti
 	}
 
 	@Override
-	protected ItemList filteredItemList(String condition) {
-		ItemList itemList = element().items(condition, username());
+	protected ItemList filteredItemList(Scope scope, String condition) {
+		ItemList itemList = element().items(scope, condition, username());
 		applyFilter(itemList);
 		return itemList;
 	}
