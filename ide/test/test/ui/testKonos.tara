@@ -3,6 +3,8 @@ dsl Konos
 Activity testKonos
 	Home(uses=testHome) homePage
 
+Display Drillwise
+
 Desktop testHome
 	layout = testMenu
 	title = "Ejemplo"
@@ -15,11 +17,11 @@ Layout testMenu
 
 	Group("ddd", Expanded)
 		Option(label="infrastructure") > RenderCatalog(catalog=testInfrastructure)
-		Option(label="análisis") > RenderPanel(panel=testAnalisis)
+//		Option(label="análisis") > RenderPanel(panel=testAnalisis)
 
-Panel(label = "Análisis") testAnalisis
-	Views
-		DisplayView("Charts", display="olapDisplay")
+//Panel(label = "Análisis") testAnalisis
+//	Views
+//		DisplayView("Charts", display="olapDisplay")
 
 Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") testInfrastructure
 	Toolbar

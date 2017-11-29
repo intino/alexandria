@@ -10,6 +10,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static java.util.stream.Collectors.toList;
 
 public class ElementDisplaysRenderer {
 	private static final String DISPLAYS = "displays";
@@ -22,7 +23,7 @@ public class ElementDisplaysRenderer {
 	public ElementDisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
-		this.displays = graph.displayList();
+		this.displays = graph.displayList().stream().filter(d -> !d.getClass().equals(Display.class)).collect(toList());
 		this.boxName = boxName;
 	}
 

@@ -59,5 +59,7 @@ Concept CatalogView
             var integer max
 
 
-
+Concept DisplayView is component
+	var string label
+	var string display
 
