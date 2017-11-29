@@ -5,9 +5,9 @@ import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.activity.services.push.ActivityClient;
 import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
 
-public abstract class DisplayRequester extends Resource {
+public abstract class AlexandriaDisplayRequester extends Resource {
 
-	public DisplayRequester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public AlexandriaDisplayRequester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 
