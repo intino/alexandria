@@ -1,84 +1,84 @@
 dsl Konos
 
 
-
-Schema dummy
-
-Activity testEbar
-	Home(uses=testEbarHome) testEbarHomePage
-
-//Display testEbarHome
-
-Desktop(title = "", subTitle = "", logo = "", favicon = "") testEbarHome
-	layout = testEbarTab
-
-Layout(mode = Tab) testEbarTab
-	Group(label = "", mode = Expanded) > Options > RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
-
-Catalog("Infrastructure", modelClass="com.monentia.ebar.Asset") testEbarInfrastructure
-	Views
-		MapView("mapa", mold = testEbarInfrastructureMold)
-			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-			Zoom(14,min=1,max=18)
-
-Mold(Asset) testEbarInfrastructureMold
-	Block
-		Block
-			Location("coordinates") coordinates
-		Block as Expanded
-			Block
-				Title("label") title
-				Description("Estado") lastEpisode
-			Block(layout = Horizontal)
-				Picture("chart", defaultPicture = empty) chart
-					defaultStyle = "margin-top:6px;"
-				Snippet("sequencia") sequence
-					layout = Flexible
-					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-			Block
-				Snippet("") stats
-
-TemporalRangeCatalog("Episodios EBAR", modelClass="com.monentia.ebar.graph.StationSequence") testEbarSequence
-	scales = Day
-
-	Toolbar
-		Export(title = "Descarga los episodios del último mes", alexandriaIcon = "archive") export
-
-	ListView("listado", mold = testEbarSequenceMold)
-
-	Arrangement
-		Sorting(label = "fecha") date
-		Grouping(label = "Estación") sequenceStations
-		Grouping(label = "Estado del episodio") stationSequenceStates
-		Grouping(label = "Tipo de episodio") stationSequenceTypes
-
-Mold(StationSequence) testEbarSequenceMold
-	Block(layout = Horizontal)
-		ResourceIcon("icon") icon
-		Title("label") label
-	Block(layout = Horizontal Wrap) as Expanded
-		Picture("sequencia", defaultPicture = empty) chart
-			defaultStyle = "margin-top:6px;"
-		Snippet("sequencia") sequence
-			layout = Flexible
-			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-
-Catalog("Análisis", modelClass="com.monentia.ebar.graph.Asset") testEbarAnalysis
-	Views > DisplayView("análisis", display="ebarOlap")
-
-Catalog("Configuración", modelClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
-	Views > ListView("alertas", mold=testEbarConfigurationMold)
-
-Mold(Alerts.Alert) testEbarConfigurationMold
-	Block(Horizontal)
-		Block
-			AlexandriaIcon("icono") icono
-		Block(Flexible)
-			Title("estación") title
-			Description("direcciones de correo") emails
-			Highlight("estado") estado
-	Block(Horizontal Wrap) as Expanded
-		Block
-			AlexandriaIcon("icono") dummy
-		Block(Flexible)
-			OpenDialogOperation("editar...") editAlert
+//
+//Schema dummy
+//
+//Activity testEbar
+//	Home(uses=testEbarHome) testEbarHomePage
+//
+////Display testEbarHome
+//
+//Desktop(title = "", subTitle = "", logo = "", favicon = "") testEbarHome
+//	layout = testEbarTab
+//
+//Layout(mode = Tab) testEbarTab
+//	Group(label = "", mode = Expanded) > Options > RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
+//
+//Catalog("Infrastructure", modelClass="com.monentia.ebar.Asset") testEbarInfrastructure
+//	Views
+//		MapView("mapa", mold = testEbarInfrastructureMold)
+//			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+//			Zoom(14,min=1,max=18)
+//
+//Mold(Asset) testEbarInfrastructureMold
+//	Block
+//		Block
+//			Location("coordinates") coordinates
+//		Block as Expanded
+//			Block
+//				Title("label") title
+//				Description("Estado") lastEpisode
+//			Block(layout = Horizontal)
+//				Picture("chart", defaultPicture = empty) chart
+//					defaultStyle = "margin-top:6px;"
+//				Snippet("sequencia") sequence
+//					layout = Flexible
+//					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+//			Block
+//				Snippet("") stats
+//
+//TemporalRangeCatalog("Episodios EBAR", modelClass="com.monentia.ebar.graph.StationSequence") testEbarSequence
+//	scales = Day
+//
+//	Toolbar
+//		Export(title = "Descarga los episodios del último mes", alexandriaIcon = "archive") export
+//
+//	ListView("listado", mold = testEbarSequenceMold)
+//
+//	Arrangement
+//		Sorting(label = "fecha") date
+//		Grouping(label = "Estación") sequenceStations
+//		Grouping(label = "Estado del episodio") stationSequenceStates
+//		Grouping(label = "Tipo de episodio") stationSequenceTypes
+//
+//Mold(StationSequence) testEbarSequenceMold
+//	Block(layout = Horizontal)
+//		ResourceIcon("icon") icon
+//		Title("label") label
+//	Block(layout = Horizontal Wrap) as Expanded
+//		Picture("sequencia", defaultPicture = empty) chart
+//			defaultStyle = "margin-top:6px;"
+//		Snippet("sequencia") sequence
+//			layout = Flexible
+//			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+//
+//Catalog("Análisis", modelClass="com.monentia.ebar.graph.Asset") testEbarAnalysis
+//	Views > DisplayView("análisis", display="ebarOlap")
+//
+//Catalog("Configuración", modelClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
+//	Views > ListView("alertas", mold=testEbarConfigurationMold)
+//
+//Mold(Alerts.Alert) testEbarConfigurationMold
+//	Block(Horizontal)
+//		Block
+//			AlexandriaIcon("icono") icono
+//		Block(Flexible)
+//			Title("estación") title
+//			Description("direcciones de correo") emails
+//			Highlight("estado") estado
+//	Block(Horizontal Wrap) as Expanded
+//		Block
+//			AlexandriaIcon("icono") dummy
+//		Block(Flexible)
+//			OpenDialogOperation("editar...") editAlert

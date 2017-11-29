@@ -2,6 +2,9 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.model.graph.Layout;
+import io.intino.konos.model.graph.Option;
+import io.intino.konos.model.graph.RenderCatalog;
+import io.intino.konos.model.graph.RenderPanel;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -42,14 +45,15 @@ public class LayoutRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
-	private Frame[] optionFramesOf(List<Layout.Group.Option> options) {
+	private Frame[] optionFramesOf(List<Option> options) {
 		return options.stream().map(this::framesOf).toArray(Frame[]::new);
 	}
 
-	private Frame framesOf(Layout.Group.Option option) {
-		final Frame frame = new Frame("option", option.renderCatalog() != null ? "catalog" : "panel").addSlot("label", option.label());
-		if (option.renderCatalog() != null) frame.addSlot("catalog", option.renderCatalog().catalog().name$());
-		else frame.addSlot("panel", option.renderPanel().panel().name$());
+	private Frame framesOf(Option option) {
+		final Frame frame = new Frame("option", option.elementRenderer() instanceof RenderCatalog ? "catalog" : "panel").addSlot("label", option.label());
+		if (option.elementRenderer() instanceof RenderCatalog)
+			frame.addSlot("catalog", option.elementRenderer().a$(RenderCatalog.class).catalog().name$());
+		else frame.addSlot("panel", option.elementRenderer().a$(RenderPanel.class).panel().name$());
 		return frame;
 	}
 

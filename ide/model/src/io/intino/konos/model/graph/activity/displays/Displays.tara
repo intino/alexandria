@@ -26,7 +26,8 @@ Concept Panel extends Display
     	Concept:{0..1} Task extends Operation
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
-		has:{1..*} DisplayView
+		Concept View
+			has SingleRenderer
 
 Concept Desktop extends Display
 	var Layout layout
@@ -37,33 +38,44 @@ Concept Desktop extends Display
 
 Concept Layout extends Display
 	var word:{Menu Tab} mode
+	has Option
+	has Options
 	Concept Group
 		var string label
 		var word:{Expanded Collapsed} mode
-		Concept Option extends ElementOption
-			var string label;
-			var string alexandriaIcon = empty
-			var integer bubble = -1
-		Concept Options extends ElementOption
+		has Option
+		has Options
+
+Concept Option extends ElementOption is component
+	var string label
+	var string alexandriaIcon = empty
+	var integer bubble = -1
+
+Concept:Named Options extends ElementOption is component
 
 Concept Operation
 	var string title
 	var string alexandriaIcon = empty
 
 Concept ElementOption
-	Concept:{1..1} ElementRenderer
+	has:{1..1} ElementRenderer
+
+Concept ElementRenderer is component
+	sub SingleRenderer
 		sub RenderCatalog
 			var Catalog catalog
 			var boolean filtered = false
-		sub RenderCatalogs
-			var Catalog[] catalogs
+		sub RenderObject
+			var Panel panel
 		sub RenderMold
 			var Mold mold
 		sub RenderPanel
 			var Panel panel
+	sub MultipleRenderer
+		sub RenderCatalogs
+			var Catalog[] catalogs
 		sub RenderPanels
 			var Panel[] panel
+		sub RenderObjects
+			var Panel[] panel
 
-Concept DisplayView is component
-	var string label
-	var string display

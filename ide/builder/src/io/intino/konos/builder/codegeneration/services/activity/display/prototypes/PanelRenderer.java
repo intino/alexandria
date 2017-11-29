@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.graph.DisplayView;
 import io.intino.konos.model.graph.Operation;
 import io.intino.konos.model.graph.Panel;
 import io.intino.tara.magritte.Node;
@@ -29,17 +28,17 @@ public class PanelRenderer extends PrototypeRenderer {
 		final Frame frame = super.createFrame();
 		frame.addSlot("label", panel.label());
 		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));
-		for (DisplayView view : panel.views().displayViewList()) frame.addSlot("view", frameOf(view, panel));
+		for (Panel.Views.View view : panel.views().viewList()) frame.addSlot("view", frameOf(view, panel));
 		return frame;
 	}
 
-	private Frame frameOf(DisplayView view, Panel panel) {
+	private Frame frameOf(Panel.Views.View view, Panel panel) {
 		final Frame frame = new Frame("view")
 				.addSlot("owner", panel.name$())
 				.addSlot("name", view.name$())
-				.addSlot("display", view.display())
+//				.addSlot("display", view.display())
 				.addSlot("box", box);
-		if (view.label() != null) frame.addSlot("label", view.label());
+//		if (view.label() != nulel) frame.addSlot("label", view.label());TODO
 		return frame;
 	}
 

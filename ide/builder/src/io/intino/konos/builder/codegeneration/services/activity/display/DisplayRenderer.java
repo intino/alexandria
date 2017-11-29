@@ -3,8 +3,6 @@ package io.intino.konos.builder.codegeneration.services.activity.display;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.*;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.date.DateData;
-import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
@@ -56,12 +54,12 @@ public class DisplayRenderer {
 	}
 
 	private void processPrototype(Display display) {
-		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), gen, src, packageName, boxName).render();
-		else if (display.i$(Layout.class)) new LayoutRenderer(project, display.a$(Layout.class), gen, src, packageName, boxName).render();
+		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), src, gen, packageName, boxName).render();
+		else if (display.i$(Layout.class)) new LayoutRenderer(project, display.a$(Layout.class), src, gen, packageName, boxName).render();
 		else if (display.i$(Desktop.class))
-			new DesktopRenderer(project, display.a$(Desktop.class), gen, src, packageName, boxName).render();
-		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), gen, src, packageName, boxName).render();
-		else if (display.i$(Panel.class)) new PanelRenderer(project, display.a$(Panel.class), gen, src, packageName, boxName).render();
+			new DesktopRenderer(project, display.a$(Desktop.class), src, gen, packageName, boxName).render();
+		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), src, gen, packageName, boxName).render();
+		else if (display.i$(Panel.class)) new PanelRenderer(project, display.a$(Panel.class), src, gen, packageName, boxName).render();
 	}
 
 	private void writeDisplay(Display display, Frame frame) {
@@ -138,12 +136,6 @@ public class DisplayRenderer {
 			frame.addSlot("parameter", parameterFrame);
 		}
 		return frame;
-	}
-
-	private String type(Display.Request request) {
-		final TypeData typeData = request.asType();
-		if (typeData.i$(DateData.class)) return "Long";
-		else return typeData.type();
 	}
 
 	private Template displayNotifierTemplate() {
