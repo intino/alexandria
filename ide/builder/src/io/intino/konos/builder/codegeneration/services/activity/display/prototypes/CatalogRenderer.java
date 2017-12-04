@@ -56,6 +56,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void arrangements(Catalog catalog, Frame frame) {
+		if (catalog.arrangement()== null) return;
 		for (Grouping grouping : catalog.arrangement().groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog));
 		for (Sorting sorting : catalog.arrangement().sortingList())
@@ -129,11 +130,11 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	protected Template template() {
-		return customize(CatalogTemplate.create());
+		return customize(AbstractCatalogTemplate.create());
 	}
 
 	protected Template srcTemplate() {
-		return customize(CatalogSrcTemplate.create());
+		return customize(CatalogTemplate.create());
 	}
 
 	void writeSrc(Frame frame) {
