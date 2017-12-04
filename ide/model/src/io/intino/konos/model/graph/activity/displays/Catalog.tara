@@ -41,7 +41,6 @@ Concept Catalog extends Display
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
 
-
 Concept CatalogView
 	var string label
 	var integer:{%} width = 100%

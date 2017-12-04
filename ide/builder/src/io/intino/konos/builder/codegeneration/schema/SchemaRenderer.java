@@ -145,7 +145,7 @@ public class SchemaRenderer {
 
 	private static Frame processHasAsAttribute(Schema.Has has, String rootPackage) {
 		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name$())
-				.addSlot("name", has.reference().name$())
+				.addSlot("name", has.name$().contains("-") ? has.reference().name$() : has.name$())
 				.addSlot("type", has.reference().name$())
 				.addSlot("package", packageOf(has.reference(), rootPackage));
 	}

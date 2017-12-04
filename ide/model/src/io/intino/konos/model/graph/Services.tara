@@ -11,6 +11,7 @@ Facet REST on Service
 	var string host = "{rest.host}"
 	var string description = ""
 	var string basePath
+	var resource logo = empty
 	var word[]:{http https ws wss} protocols = https
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
