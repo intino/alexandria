@@ -22,7 +22,7 @@ def !type(primitive) type(single) trigger(declaration)
 end
 
 def type(multiple & member) trigger(declaration)
-	private java.util.List<$type+firstUpperCase> $name+firstLowerCase~List = new java.util.ArrayList<>();
+	private java.util.List<$type+firstUpperCase> $name+firstLowerCase$list = new java.util.ArrayList<>();
 end
 
 def type(multiple) trigger(declaration)
@@ -46,8 +46,8 @@ def !type(primitive) type(single) trigger(getter)
 end
 
 def type(multiple & member) trigger(getter)
-	public java.util.List<$type+firstUpperCase> $name+firstLowerCase~List() {
-		return this.$name+firstLowerCase~List;
+	public java.util.List<$type+firstUpperCase> $name+firstLowerCase$list() {
+		return this.$name+firstLowerCase$list;
 	}
 end
 
@@ -82,8 +82,8 @@ def !type(primitive) type(single) trigger(setter)
 end
 
 def type(multiple & member) trigger(setter)
-	public $element+firstUpperCase $name+firstLowerCase~List(java.util.List<$type+firstUpperCase> $name+firstLowerCase~List) {
-		this.$name+firstLowerCase~List = $name+firstLowerCase~List;
+	public $element+firstUpperCase $name+firstLowerCase$list(java.util.List<$type+firstUpperCase> $name+firstLowerCase$list) {
+		this.$name+firstLowerCase$list = $name+firstLowerCase$list;
 		return this;
 	}
 end
