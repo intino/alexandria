@@ -13,7 +13,7 @@ public class ExportOperation extends Operation<String> {
 	private String title;
 	private List<String> options = new java.util.ArrayList<>();
 	private Instant from = Instant.now(Clock.systemUTC());
-	private Instant to = Instant.now(Clock.systemUTC()).plus(1, ChronoUnit.DAYS);;
+	private Instant to = Instant.now(Clock.systemUTC()).plus(1, ChronoUnit.DAYS);
 	private Execution execution;
 
 	public String title() {

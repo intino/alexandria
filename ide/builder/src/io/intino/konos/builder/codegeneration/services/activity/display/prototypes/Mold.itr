@@ -23,6 +23,24 @@ def type(block) trigger(class)
 	$block+class...[$NL]
 end
 
+def type(stamp & operation & openDialog) trigger(class)
+	public static class $name+FirstUpperCase {
+
+		public static String path($moldType object, String username) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & operation & download) trigger(class)
+	public static class $name+FirstUpperCase {
+
+		public static Execution execution($moldType object, String username) {
+			return null;//TODO
+		}
+	}
+end
+
 def type(stamp & location) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
@@ -65,16 +83,6 @@ def type(stamp & itemeLinks) trigger(class)
 end
 
 
-def type(stamp & opendialogoperation) trigger(class)
-	public static class $name+FirstUpperCase {
-		$common
-
-		public static String path($moldType object, String username) {
-			return "";//TODO
-		}
-	}
-end
-
 def type(stamp) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
@@ -88,17 +96,18 @@ def type(stamp) trigger(class)
 end
 
 def trigger(common)
-	public static $valueType value($moldType station, String username) {
+
+	public static $valueType value($moldType object, String username) {
 		return null;//TODO
 	}
 
-	public static String style($moldType station, String username) {
+	public static String style($moldType object, String username) {
 		return "";//TODO
 	}
 end
 
 def trigger(property)
-	public static $returnType $name($moldType station, String username) {
+	public static $returnType $name($moldType object, String username) {
 		return null;//TODO
 	}
 end

@@ -2,7 +2,7 @@ def type(layout & gen)
 	package $package.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
-    import io.intino.konos.alexandria.activity.displays.AlexandriaMenuLayoutDisplay;
+    import io.intino.konos.alexandria.activity.displays.Alexandria$mode+FisrtUpperCase~LayoutDisplay;
     import io.intino.konos.alexandria.activity.model.Catalog;
     import io.intino.konos.alexandria.activity.model.Element;
     import io.intino.konos.alexandria.activity.model.Layout;
@@ -38,7 +38,7 @@ def type(layout & gen)
     				return ElementDisplays.displayTypeFor(box, element);
     			}
     		});
-    		buildOptions(box).forEach(o -> layout.add(o));
+    		buildOptions(box).forEach(layout::add);
     		return layout;
     	}
 
@@ -52,7 +52,7 @@ end
 
 def trigger(group)
 	result.add(new Group().[label("$label")].mode(Group.Mode.$mode)[
-			$option...[$NL]];
+			$option...[$NL]]);
 end
 
 def	type(catalog) trigger(option)

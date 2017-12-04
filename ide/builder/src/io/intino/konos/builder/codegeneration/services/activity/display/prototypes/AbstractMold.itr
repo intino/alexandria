@@ -49,6 +49,22 @@ def type(stamp & location)
 	.add(new Location()[$icon]$common)
 end
 
+def type(stamp & highlight)
+	.add(new Highlight().color((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.color(($moldType) object, username))$common)
+end
+
+def type(stamp & icon)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.AlexandriaIcon()$common)
+end
+
+def type(stamp & customicon)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.ResourceIcon()$common)
+end
+
+def type(stamp & operation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.$operationType~Operation().path((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.path(($moldType) object, username)))
+end
+
 def type(stamp & picture)
 	.add(new Picture().defaultPicture(urlOf("$defaultPicture"))$common)
 end
@@ -58,11 +74,7 @@ def type(stamp)
 end
 
 def trigger(common)
-	[.name("$name")][.label("$label")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)][$style].value((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.value(($moldType) object, username))
-end
-
-def trigger(style)
-	.style((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+firstUpperCase.style(($moldType) object, username))
+	[.name("$name")][.label("$label")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)].style((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+firstUpperCase.style(($moldType) object, username)).value((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.value(($moldType) object, username))
 end
 
 def trigger(icon)

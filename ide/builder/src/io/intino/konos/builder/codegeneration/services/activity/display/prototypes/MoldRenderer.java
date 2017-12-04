@@ -57,6 +57,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (stamp.i$(Picture.class)) frameOf(frame, stamp.a$(Picture.class));
 		if (stamp.i$(Tree.class)) frameOf(frame, stamp.a$(Tree.class));
 		if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
+		if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
 		return frame;
 	}
 
@@ -64,7 +65,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	private Frame common(Stamp stamp) {
 		final Frame frame = baseFrame(stamp).addTypes("common");
 		if (!stamp.defaultStyle().isEmpty())
-			frame.addSlot("style", baseFrame(stamp));
+			frame.addSlot("defaultStyle", baseFrame(stamp));
 		frame.addSlot("editable", stamp.editable());
 		frame.addSlot("valueType", "String");
 		if (stamp.height() >= 0) frame.addSlot("height", stamp.height());
@@ -82,9 +83,20 @@ public class MoldRenderer extends PrototypeRenderer {
 		frameOf(frame, stamp.treeItemList());
 	}
 
-
 	private void frameOf(Frame frame, Location stamp) {
 		frame.addSlot("icon", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Operation operation) {
+		frame.addSlot("operationType", operation.getClass().getSimpleName()).addTypes("operation");
+		if (operation.i$(OpenDialog.class)) frame.addSlot("width", operation.a$(OpenDialog.class).width());
+		if (operation.i$(Download.class)) frame.addSlot("options", operation.a$(Download.class).options());
+		if (operation.i$(Export.class)) {
+			final Export export = operation.a$(Export.class);
+			frame.addSlot("options", export.options());
+			if (export.from() != null) frame.addSlot("from", export.from().toEpochMilli());
+			if (export.to() != null) frame.addSlot("to", export.to());
+		}
 	}
 
 	private void frameOf(Frame frame, List<TreeItem> treeItems) {
@@ -96,7 +108,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private Frame baseFrame(Stamp stamp) {
-		return new Frame().addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldType", mold.modelClass());
+		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldType", mold.modelClass());
 	}
 
 	@Override
