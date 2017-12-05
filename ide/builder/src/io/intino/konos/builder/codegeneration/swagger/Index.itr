@@ -78,6 +78,6 @@ def type(index)
 end
 
 def type(service) trigger(service)
-    { name: "$name", label: "$name", description: "" },
+    { name: "$name", label: "$name", description: "$description" }
 end
 
