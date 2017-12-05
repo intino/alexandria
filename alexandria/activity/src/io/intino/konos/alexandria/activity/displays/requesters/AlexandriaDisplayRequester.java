@@ -1,9 +1,10 @@
-package io.intino.konos.alexandria.activity.spark.resources;
+package io.intino.konos.alexandria.activity.displays.requesters;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.activity.services.push.ActivityClient;
 import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
+import io.intino.konos.alexandria.activity.spark.resources.Resource;
 
 public abstract class AlexandriaDisplayRequester extends Resource {
 

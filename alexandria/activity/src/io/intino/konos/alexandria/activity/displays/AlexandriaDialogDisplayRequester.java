@@ -5,7 +5,7 @@ import io.intino.konos.alexandria.exceptions.AlexandriaException;
 import io.intino.konos.alexandria.activity.schemas.DialogInput;
 import io.intino.konos.alexandria.activity.schemas.DialogInputResource;
 import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
-import io.intino.konos.alexandria.activity.spark.resources.AlexandriaDisplayRequester;
+import io.intino.konos.alexandria.activity.displays.requesters.AlexandriaDisplayRequester;
 
 public class AlexandriaDialogDisplayRequester extends AlexandriaDisplayRequester {
 
