@@ -4,9 +4,7 @@ Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-activity
 
 	Box(language = "Konos", version = "3.0.0", sdk = "3.0.0")
 		targetPackage = ""
-
 	Code ("io.intino.konos.alexandria.activity")
-
 	Imports
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-rest", version = "1.0.0")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
