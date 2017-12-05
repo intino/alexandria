@@ -3,6 +3,8 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 import com.intellij.openapi.project.Project;
 import io.intino.konos.model.graph.Operation;
 import io.intino.konos.model.graph.Panel;
+import io.intino.konos.model.graph.RenderDisplay;
+import io.intino.konos.model.graph.SingleRenderer;
 import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -36,9 +38,9 @@ public class PanelRenderer extends PrototypeRenderer {
 		final Frame frame = new Frame("view")
 				.addSlot("owner", panel.name$())
 				.addSlot("name", view.name$())
-//				.addSlot("display", view.display())
 				.addSlot("box", box);
-//		if (view.label() != nulel) frame.addSlot("label", view.label());TODO
+		final SingleRenderer renderer = view.singleRenderer();
+		if (renderer.i$(RenderDisplay.class)) frame.addSlot("display", renderer.a$(RenderDisplay.class).display());
 		return frame;
 	}
 

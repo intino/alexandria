@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.List;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+
 public class FullRenderer {
 
 	@Nullable
@@ -60,7 +62,7 @@ public class FullRenderer {
 		this.packageName = packageName;
 		this.parent = parent();
 		this.hasModel = hasModel();
-		this.boxName = boxName();
+		this.boxName = snakeCaseToCamelCase(boxName());
 	}
 
 	public void execute() {

@@ -10,6 +10,8 @@ import io.intino.konos.model.graph.rest.RESTService.Resource;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +23,11 @@ import java.util.zip.ZipInputStream;
 
 import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer {
+	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+
 	private final List<RESTService> services;
 	private final File gen;
 	private final File res;
@@ -43,29 +48,32 @@ public class RESTServiceRenderer {
 	}
 
 	private void generateDoc() {
-		final File www = new File(res, "www"+ File.separator + "developer");
-		SwaggerGenerator generator = new SwaggerGenerator(services, www);
-		generator.execute();
+		final File www = new File(res, "www" + File.separator + "developer");
+		new SwaggerGenerator(services, www).execute();
 		createIndex(www);
 		copyAssets(www);
-	}
-
-	private void copyAssets(File www) {
-		try {
-			unzip(null, www, new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), null, null, false);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void createIndex(File www) {
 		Frame doc = new Frame().addTypes("index");
 		for (RESTService service : services)
 			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name$()).addSlot("description", service.description()));
+		writeIndex(www, doc);
+	}
+
+	private void writeIndex(File www, Frame doc) {
 		try {
 			Files.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc).getBytes());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private void copyAssets(File www) {
+		try {
+			unzip(null, www, new ZipInputStream(this.getClass().getResourceAsStream("/swagger/assets.zip")), null, null, false);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 

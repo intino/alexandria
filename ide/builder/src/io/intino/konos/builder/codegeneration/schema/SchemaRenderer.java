@@ -140,13 +140,16 @@ public class SchemaRenderer {
 		return new Frame().addTypes(schema.multiple() ? "multiple" : "single", "member", schema.name$())
 				.addSlot("name", schema.name$())
 				.addSlot("type", schema.name$())
+				.addSlot("list", "List")
 				.addSlot("package", packageOf(schema, rootPackage));
 	}
 
 	private static Frame processHasAsAttribute(Schema.Has has, String rootPackage) {
+		final boolean anonymous = has.name$().contains("-");
 		return new Frame().addTypes(has.multiple() ? "multiple" : "single", "member", has.reference().name$())
-				.addSlot("name", has.reference().name$())
+				.addSlot("name", anonymous ? has.reference().name$() : has.name$())
 				.addSlot("type", has.reference().name$())
+				.addSlot("list", anonymous ? "List" : "")
 				.addSlot("package", packageOf(has.reference(), rootPackage));
 	}
 

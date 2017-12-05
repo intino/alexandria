@@ -30,7 +30,7 @@ Facet Type on Data
 		var string format = "dd/MM/yyyy HH:mm:ss"
 		var string type = "java.time.Instant" is reactive private
 	sub File
-		var string type = "io.intino.konos.Resource" is reactive private
+		var string type = "io.intino.konos.alexandria.Resource" is reactive private
 		var word:{body path form header query} in = form
 	sub Object
 		var Schema schema
