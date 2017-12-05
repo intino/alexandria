@@ -63,7 +63,7 @@ def type(index)
         }
       </script>
 
-      <title>Application title</title>
+      <title>$application</title>
     </head>
     <body onload="render()">
       <div id="header" class="header">

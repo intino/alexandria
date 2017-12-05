@@ -14,6 +14,7 @@ public class UIGenerationTest {
 	private static final String UI = "ui";
 	private static final String DIALOG = "dialog";
 	private static final String testKonos = "testKonos";
+	private static String testEbar = "testebar";
 
 
 	@Test
@@ -39,5 +40,15 @@ public class UIGenerationTest {
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(testKonos).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, testKonos).execute();
+	}
+
+
+	@Test
+	public void testEbar() throws Exception {
+		File gen = new File("test-gen", testEbar);
+		cottons.utils.Files.removeDir(gen);
+		gen.mkdirs();
+		KonosGraph graph = new Graph().loadStashes(testEbar).as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, testEbar.toLowerCase()).execute();
 	}
 }

@@ -27,7 +27,7 @@ Concept Panel extends Display
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
 		Concept View
-			has SingleRenderer
+			has:{1..1} SingleRenderer
 
 Concept Desktop extends Display
 	var Layout layout
@@ -71,6 +71,9 @@ Concept ElementRenderer is component
 			var Mold mold
 		sub RenderPanel
 			var Panel panel
+		sub RenderDisplay
+			var boolean hideNavigator = true
+			var string display
 	sub MultipleRenderer
 		sub RenderCatalogs
 			var Catalog[] catalogs

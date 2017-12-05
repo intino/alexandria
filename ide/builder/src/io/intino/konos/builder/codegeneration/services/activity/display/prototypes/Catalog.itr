@@ -1,135 +1,154 @@
-def type(catalog & gen)
+def type(catalog)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.activity.displays.AlexandriaCatalogDisplay;
-    import io.intino.konos.alexandria.activity.model.AbstractView;
+    import io.intino.konos.alexandria.activity.Resource;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
     import io.intino.konos.alexandria.activity.model.Catalog;
-    import io.intino.konos.alexandria.activity.model.Mold;
-    import io.intino.konos.alexandria.activity.model.Toolbar;
-    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
-    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
-    import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
-    import io.intino.konos.alexandria.activity.model.catalog.views.GridView;
-    import io.intino.konos.alexandria.activity.model.catalog.views.ListView;
-    import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
-    import io.intino.konos.alexandria.activity.model.toolbar.*;
-    import io.intino.tara.magritte.Concept;
+    import io.intino.konos.alexandria.activity.model.Element;
+    import io.intino.konos.alexandria.activity.model.catalog.Scope;
+    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
+    import io.intino.konos.alexandria.activity.model.toolbar.TaskSelection;
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
-    import java.util.ArrayList;
+    import java.io.ByteArrayInputStream;
+    import java.io.InputStream;
+    import java.time.Instant;
     import java.util.List;
+    import java.util.function.Consumer;
 
-    public abstract class Abstract$name+FirstUpperCase~Catalog extends AlexandriaCatalogDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    import static java.util.Collections.emptyList;
+    import static java.util.stream.Collectors.toList;
 
-    	public Abstract$name+FirstUpperCase~Catalog($box+firstUpperCase~Box box) {
+    public class $name+FirstUpperCase~Catalog extends Abstract$name+FirstUpperCase~Catalog {
+
+    	public $name+FirstUpperCase~Catalog($box+firstUpperCase~Box box) {
     		super(box);
-    		element(buildCatalog(box));
     	}
-
-    	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
-    		Catalog catalog = (Catalog) new Catalog()
-    			.onScopeChange((scope, username) -> $name+firstUpperCase~Catalog.Events.scopeChange(box, scope, username))
-    			.objectsLoader((condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase~Catalog.Source.objects(box, condition, username))
-    			.rootObjectLoader((objectList, username) -> $name+firstUpperCase~Catalog.Source.rootObject(box, (java.util.List<$type>)(Object)objectList, username))
-    			.defaultObjectLoader((id, username) -> $name+firstUpperCase~Catalog.Source.defaultObject(box, id, username))[
-    			$groupingselection+empty.clusterManager((element, grouping, group, username) -> $name+firstUpperCase~Catalog.Arrangements.createGroup(box, element, grouping, group, username))][
-    			$toolbar+empty.toolbar(buildToolbar(box))][
-    			.name("$name")][
-				.label("$label")]
-				.objectLoader((id, username) -> $name+firstUpperCase~Catalog.Source.object(box, id, username))
-				.objectIdLoader((object) -> $name+firstUpperCase~Catalog.Source.objectId(box, ($type)object))
-				.objectNameLoader((object) -> $name+firstUpperCase~Catalog.Source.objectName(box, ($type) object));
-    		buildViews(box).forEach(v -> catalog.add(v));
-    		buildArrangements(box).forEach(a -> catalog.add(a));
-    		return catalog;
-    	}
-    	[
+		[
 		$toolbar
-		]
-		private static java.util.List<AbstractView> buildViews($box+firstUpperCase~Box box) {
-			List<AbstractView> result = new ArrayList<>();
-			$view+add...[$NL]
-			return result;
-		}
+    	]
+    	public static class Source {
+    		public static java.util.List<$type> objects($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition, String username) {
+    			return java.util.Collections.emptyList();//TODO
+    		}
 
-    	private static java.util.List<Arrangement> buildArrangements($box+firstUpperCase~Box box) {
-    		List<Arrangement> arrangements = new ArrayList<>();
-    		$arrangement+add...[$NL]
-    		return arrangements;
+    		public static $type object($box+firstUpperCase~Box box, String id, String username) {
+    			return null;//TODO
+    		}
+
+    		public static $type rootObject($box+firstUpperCase~Box box, java.util.List<$type> objects, String username) {
+    			return null;
+    		}
+
+    		public static $type defaultObject($box+firstUpperCase~Box box, String id, String username) {
+    			return null;
+    		}
+
+    		public static String objectId($box+firstUpperCase~Box box, $type object) {
+    			return object.core$$().id();
+    		}
+
+    		public static String objectName($box+firstUpperCase~Box box, $type object) {
+    			return object.name$$();
+    		}
+    	}
+
+    	public static class Events {
+    		public static void scopeChange($box+firstUpperCase~Box box, Scope scope, String username) {
+    		}
+    	}
+
+    	public static class Views {
+    		$view+method...[$NL]
+    	}
+
+    	public static class Arrangements {
+    		$arrangement+method...[$NL$NL]
+
+			public static void createGroup($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog infrastructure, String grouping, io.intino.konos.alexandria.activity.model.catalog.arrangement.Group group, String username) {
+
+			}
+    	}
+
+    	private static io.intino.konos.alexandria.activity.Resource emptyResource(String label) {
+    		return new io.intino.konos.alexandria.activity.Resource() {
+    			@Override
+    			public String label() {
+    				return label;
+    			}
+
+    			@Override
+    			public java.io.InputStream content() {
+    				return new java.io.ByteArrayInputStream(new byte$[0$]);
+    			}
+    		};
     	}
     }
 end
 
-def trigger(empty)
+def trigger(toolbar)
+	public static class Toolbar {
+		public static TaskSelection.Refresh removeElements($box+firstUpperCase~Box box, Element element, String option, java.util.List<$type> selection, String username) {
+			return null;
+		}
+
+		$operation...[$NL$NL]
+	}
+
 end
 
-def trigger(toolbar)
-	private static io.intino.konos.alexandria.activity.model.Toolbar buildToolbar($box+firstUpperCase~Box box) {
-		io.intino.konos.alexandria.activity.model.Toolbar toolbar = new Toolbar();
-		toolbar.canSearch($canSearch);
-		$operation...[$NL]
-		return toolbar;
+def type(view & displayView) trigger(method)
+	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.tara.magritte.Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
+		return null;//TODO
+	}
+end
+
+
+def type(arrangement & grouping) trigger(method)
+	public static java.util.List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, String username) {
+		return emptyList(); //TODO
+	}
+end
+
+def type(arrangement & sorting) trigger(method)
+	public static int $name+firstLowerCase~Comparator($type item1, $type item2) {
+		return 0; //TODO
 	}
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, username) -> $catalog+FirstUpperCase~Catalog.Toolbar.download(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	public static Resource download($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, String username) {
+		return emptyResource("");
+	}
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, username) -> $catalog+FirstUpperCase~Catalog.Toolbar.export(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
-end
-
-def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $catalog+FirstUpperCase~Catalog.Toolbar.openDialog(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	public static Resource export($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
+		return emptyResource("");
+	}
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, username) -> $catalog+FirstUpperCase~Catalog.Toolbar.task(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	public static Resource task($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
+		return emptyResource("");
+	}
 end
 
 def type(operation & downloadselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.DownloadSelection().execute((element, option, selection, username) -> $catalog+firstUpperCase~Catalog.Toolbar.downloadSelection(box, element, option, (java.util.List<$type>)(Object)selection, username)).name("$name").title("$title").alexandriaIcon("$icon"));
+	public static Resource downloadSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
+		return emptyResource("");
+	}
 end
 
 def type(operation & exportselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.ExportSelection().execute((element, from, to, selection, username) -> $catalog+firstUpperCase~Catalog.Toolbar.exportSelection(box, element, from, to, (java.util.List<$type>)(Object)selection, username)).name("$name").title("$title").alexandriaIcon("$icon"));
-end
-
-def type(operation & groupingselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.GroupingSelection()[.name("$name")][.title("$title")][.alexandriaIcon("$icon"))];
+	public static Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$type> selection, String username) {
+		return emptyResource("");
+	}
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, username) -> $catalog+firstUpperCase~Catalog.Toolbar.removeElements(box, element, option, (java.util.List<$type>)(Object)selection, username)).name("$name").title("$title").alexandriaIcon("$icon"));
-end
-
-def type(listview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.ListView()[.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
-end
-
-def type(gridview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.GridView()[.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
-end
-
-def type(displayview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.DisplayView()[.hideNavigator($hideNavigator)].displayLoader((context, loadingListener, instantListener, username) -> $catalog+FirstUpperCase~Catalog.Views.$display+firstLowerCase(box, (io.intino.tara.magritte.Concept)context, loadingListener, instantListener, username)).name("$name").label("$label"));
-end
-
-def type(mapview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView().center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center()[.latitude($latitude)][.longitude($longitude)])[.$zoom].mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v4").label("Mapa"));
-end
-
-def type(sorting) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase~Catalog.Arrangements.$name+FirstLowerCase~Comparator(($type)object1, ($type)object2)).name("$name").label("$label"));
-end
-
-def type(grouping) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, username) -> $catalog+FirstUpperCase~Catalog.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, username)).name("$name")[.label("$label")]);
-end
-
-
-def trigger(zoom)
-	zoom(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Zoom()[.defaultZoom($default)][.min($min)][.max($max)])
+	public static Resource taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
+		return emptyResource("");
+	}
 end
