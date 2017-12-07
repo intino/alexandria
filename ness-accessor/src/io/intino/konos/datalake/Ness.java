@@ -1,7 +1,6 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.Consumer;
-import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -9,10 +8,7 @@ import org.apache.activemq.ActiveMQSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import java.time.Instant;
 import java.util.Arrays;
 
@@ -23,7 +19,7 @@ import static java.util.Arrays.asList;
 public class Ness {
 	private static Logger logger = LoggerFactory.getLogger(Ness.class);
 	private static final String REFLOW_PATH = "service.ness.reflow";
-	private static final String REFLOW_ACK = "service.ness.reflow.ack";
+	private static final String REFLOW_READY = "service.ness.reflow.ready";
 
 	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
@@ -35,6 +31,7 @@ public class Ness {
 	private Instant lastMessage;
 	private int receivedMessages = 0;
 	private TopicConsumer topicConsumer;
+	private MessageConsumer ackConsumer;
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -67,15 +64,15 @@ public class Ness {
 	public Ness.ReflowSession reflow(int blockSize, String... tanks) {
 		try {
 			TopicProducer producer = new TopicProducer(session, REFLOW_PATH);
-			producer.produce(MessageFactory.createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
+			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
 			return new ReflowSession() {
 				public void next() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("next"));
+					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("next"));
 				}
 
 				public void finish() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("finish"));
+					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("finish"));
 				}
 			};
 		} catch (JMSException e) {
@@ -86,29 +83,49 @@ public class Ness {
 
 	private void waitUntilReflowSession() {
 		try {
-			while (!ack()) {
+			boolean ack = false;
+			while (!ack) {
 				stop();
-				sleep(10 * 1000);
+				sleep(30 * 1000);
 				start();
+				ack = ack();
 			}
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
+			try {
+				ackConsumer.close();
+			} catch (JMSException e) {
+			}
 		}
 	}
 
 	private boolean ack() {
-		boolean[] answer = {false};
-		new TopicConsumer(session, REFLOW_ACK).listen(m -> answer[0] = true);
 		try {
-			new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("ready?"));
-			sleep(3 * 1000);
-		} catch (JMSException | InterruptedException e) {
+			Thread thread = Thread.currentThread();
+			final Queue responseQueue = session.createQueue(REFLOW_READY);
+			ackConsumer = session.createConsumer(responseQueue);
+			ackConsumer.setMessageListener(message -> {
+				logger.info("Application ready to reflow");
+				thread.interrupt();
+			});
+
+			final MessageProducer producer = session.createProducer(session.createTopic(REFLOW_PATH));
+			final Message messageFor = createMessageFor("ready?");
+			messageFor.setJMSReplyTo(responseQueue);
+			producer.send(messageFor);
+			producer.close();
+			sleep(5 * 1000);
+			ackConsumer.close();
+		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
+		} catch (InterruptedException e) {
+			return true;
 		}
-		return answer[0];
+		return false;
 	}
 
 	public void stop() {
 		try {
+			ackConsumer = null;
 			if (session != null) {
 				session.close();
 				session = null;
