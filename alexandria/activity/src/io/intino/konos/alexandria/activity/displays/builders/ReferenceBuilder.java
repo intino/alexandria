@@ -2,11 +2,11 @@ package io.intino.konos.alexandria.activity.displays.builders;
 
 import io.intino.konos.alexandria.activity.displays.ElementView;
 import io.intino.konos.alexandria.activity.model.AbstractView;
+import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.ElementRender;
-import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.panel.View;
-import io.intino.konos.alexandria.activity.model.renders.RenderCatalog;
+import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
 import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 import io.intino.konos.alexandria.activity.model.renders.RenderMold;
 import io.intino.konos.alexandria.activity.schemas.Reference;
@@ -51,7 +51,7 @@ public class ReferenceBuilder {
 
         ElementRender render = ((View) view).render();
         if (render instanceof RenderMold) return "custom-view";
-        if (render instanceof RenderCatalog) return "catalog-view";
+        if (render instanceof RenderCatalogs) return "catalog-view";
         if (render instanceof RenderDisplay) return "display-view";
 
         return "";

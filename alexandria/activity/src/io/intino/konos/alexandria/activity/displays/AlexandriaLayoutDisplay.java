@@ -155,30 +155,15 @@ public abstract class AlexandriaLayoutDisplay<DN extends AlexandriaDisplayNotifi
         sendItems(items);
     }
 
-    private List<Item> panelItem(ElementRender r) {
-        Panel panel = ((RenderPanel)r).panel();
-        return singletonList(itemOf(r, panel));
-    }
-
     private List<Item> panelItems(ElementRender r) {
         List<Panel> panelList = ((RenderPanels)r).source();
         return panelList.stream().map(c -> itemOf(r, c)).collect(toList());
-    }
-
-    private List<Item> objectItem(ElementRender r) {
-        RenderObject render = (RenderObject)r;
-        return singletonList(itemOf(r, render.panel(), render.item()));
     }
 
     private List<Item> objectItems(ElementRender r) {
         RenderObjects render = (RenderObjects)r;
         ItemList itemList = render.source();
         return itemList.items().stream().map(record -> itemOf(r, render.panel(), record)).collect(toList());
-    }
-
-    private List<Item> catalogItem(ElementRender r) {
-        Catalog catalog = ((RenderCatalog)r).catalog();
-        return singletonList(itemOf(r, catalog));
     }
 
     private List<Item> catalogItems(ElementRender r) {
@@ -204,11 +189,8 @@ public abstract class AlexandriaLayoutDisplay<DN extends AlexandriaDisplayNotifi
     }
 
     private void buildElementProviders() {
-        itemsProviders.put(RenderPanel.class, this::panelItem);
         itemsProviders.put(RenderPanels.class, this::panelItems);
-        itemsProviders.put(RenderObject.class, this::objectItem);
         itemsProviders.put(RenderObjects.class, this::objectItems);
-        itemsProviders.put(RenderCatalog.class, this::catalogItem);
         itemsProviders.put(RenderCatalogs.class, this::catalogItems);
         itemsProviders.put(RenderMold.class, this::moldItems);
     }
