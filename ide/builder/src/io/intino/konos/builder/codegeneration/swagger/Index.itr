@@ -71,7 +71,7 @@ def type(index)
 				var source = service.name + '/docs/index.html';
 
 				tabsContent += '<div id="' + service.name + '" class="tab-pane fade' + clazz + '">';
-				tabsContent += '<iframe id="frame_' + service.name + '" src="' + source + '" onload="removeHeadersIfEmbedded(\'frame_' + service.name + '\')"></iframe>';
+				tabsContent += '<iframe id="frame_' + service.name + '" src="' + source + '" onload="removeHeadersIfEmbedded(\\'frame_' + service.name + '\\')"></iframe>';
 				tabsContent += '</div>';
 			}
 

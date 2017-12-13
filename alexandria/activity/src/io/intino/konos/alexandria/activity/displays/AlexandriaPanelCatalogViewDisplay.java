@@ -6,7 +6,7 @@ import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.TemporalCatalog;
 import io.intino.konos.alexandria.activity.model.panel.View;
-import io.intino.konos.alexandria.activity.model.renders.RenderCatalog;
+import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
 
 import java.util.Optional;
 
@@ -24,10 +24,10 @@ public class AlexandriaPanelCatalogViewDisplay extends AlexandriaPanelViewDispla
 
 	private void createCatalogDisplay() {
 		View rawView = view().raw();
-		RenderCatalog render = rawView.render();
-		Catalog catalog = render.catalog();
+		RenderCatalogs render = rawView.render();
+		Catalog catalog = render.catalogs().get(0);
 		buildDisplay(catalog).ifPresent(display -> {
-			display.filter(item -> render.filter(context(), target(), (Item) item));
+			display.filter(item -> render.filter(catalog, context(), target(), (Item) item));
 			display.target(target());
 			display.elementDisplayManager(provider().elementDisplayManager());
 			display.catalog(catalog);

@@ -4,15 +4,10 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelDisplayNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
-import io.intino.konos.alexandria.activity.model.AbstractView;
-import io.intino.konos.alexandria.activity.model.ElementRender;
-import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.Toolbar;
+import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
-import io.intino.konos.alexandria.activity.model.Mold;
-import io.intino.konos.alexandria.activity.model.Panel;
 import io.intino.konos.alexandria.activity.model.panel.View;
-import io.intino.konos.alexandria.activity.model.renders.RenderCatalog;
+import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
 import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 import io.intino.konos.alexandria.activity.model.renders.RenderMold;
 import io.intino.konos.alexandria.activity.schemas.Reference;
@@ -102,7 +97,7 @@ public class AlexandriaPanelDisplay<DN extends AlexandriaPanelDisplayNotifier> e
 
 	private void registerBuilders() {
 		displayBuilders.put(RenderMold.class, this::buildCustomViewDisplay);
-		displayBuilders.put(RenderCatalog.class, this::buildCatalogViewDisplay);
+		displayBuilders.put(RenderCatalogs.class, this::buildCatalogViewDisplay);
 		displayBuilders.put(RenderDisplay.class, this::buildOlapViewDisplay);
 	}
 
