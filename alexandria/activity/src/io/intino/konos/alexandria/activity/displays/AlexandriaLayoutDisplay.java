@@ -156,7 +156,7 @@ public abstract class AlexandriaLayoutDisplay<DN extends AlexandriaDisplayNotifi
     }
 
     private List<Item> panelItems(ElementRender r) {
-        List<Panel> panelList = ((RenderPanels)r).source();
+        List<Panel> panelList = ((RenderPanels)r).panels();
         return panelList.stream().map(c -> itemOf(r, c)).collect(toList());
     }
 

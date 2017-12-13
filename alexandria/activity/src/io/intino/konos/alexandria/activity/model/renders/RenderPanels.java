@@ -5,23 +5,17 @@ import io.intino.konos.alexandria.activity.model.Panel;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-
 public class RenderPanels extends ElementRender {
-	private Source source;
+	private List<Panel> panels;
 	private Object object = null;
 
-	public List<Panel> source() {
-		return source != null ? source.panels() : emptyList();
+	public List<Panel> panels() {
+		return panels;
 	}
 
-	public RenderPanels source(Source source) {
-		this.source = source;
+	public RenderPanels panels(List<Panel> panels) {
+		this.panels = panels;
 		return this;
-	}
-
-	public interface Source {
-		List<Panel> panels();
 	}
 
 	public Object item() {
