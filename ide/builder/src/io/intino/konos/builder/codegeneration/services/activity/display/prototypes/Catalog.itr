@@ -20,9 +20,9 @@ def type(catalog)
     import static java.util.Collections.emptyList;
     import static java.util.stream.Collectors.toList;
 
-    public class $name+FirstUpperCase~Catalog extends Abstract$name+FirstUpperCase~Catalog {
+    public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-    	public $name+FirstUpperCase~Catalog($box+firstUpperCase~Box box) {
+    	public $name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     	}
 		[
@@ -46,11 +46,13 @@ def type(catalog)
     		}
 
     		public static String objectId($box+firstUpperCase~Box box, $type object) {
-    			return object.core$$().id();
+    			//return object.core$$().id();
+    			return null;
     		}
 
     		public static String objectName($box+firstUpperCase~Box box, $type object) {
-    			return object.name$$();
+    			//return object.name$$();
+    			return null;
     		}
     	}
 

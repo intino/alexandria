@@ -17,9 +17,9 @@ def type(panel & gen)
     import java.util.List;
     import java.util.function.Consumer;
 
-    public abstract class Abstract$name+firstUpperCase~Panel extends AlexandriaPanelDisplay<$name+firstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanelDisplay<$name+firstUpperCase~DisplayNotifier> {
 
-    	public Abstract$name+firstUpperCase~Panel($box+firstUpperCase~Box box) {
+    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildPanel(box));
     	}
@@ -54,28 +54,38 @@ def trigger(toolbar)
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, username) -> $panel~Panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
-def trigger(genview)
-	result.add(new View().render(new RenderDisplay().displayLoader(new RenderDisplay.DisplayLoader() {
+def type(display) trigger(genview)
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay.DisplayLoader() {
 		@Override
 		public AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-			return $owner+firstUpperCase~Panel.Views.$display+firstLowerCase(box, loadingListener, instantListener);
+			return $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener);
 		}
 	})).name("$name")[.label("$label")]);
+end
+
+
+def type(mold) trigger(genview)
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$name").element())).name("$name")[.label("$label")]);
+end
+
+
+def type(catalogs) trigger(genview)
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).name("$name")[.label("$label")]);
 end
 
 
@@ -89,9 +99,9 @@ def type(panel)
 
 	import java.util.function.Consumer;
 
-	public class $name+firstUpperCase~Panel extends Abstract$name+firstUpperCase~Panel {
+	public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
-		public $name+firstUpperCase~Panel($box+firstUpperCase~Box box) {
+		public $name+firstUpperCase($box+firstUpperCase~Box box) {
 			super(box);
 		}
 
@@ -119,4 +129,8 @@ def type(view) trigger(src)
 end
 
 def trigger(empty)
+end
+
+def trigger(quoted)
+	"$value"
 end

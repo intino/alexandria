@@ -1,7 +1,7 @@
 def type(display)
 	package $package+validPackage.displays.requesters;
 
-	import $package+validPackage.displays.$name+firstUpperCase~$type+format+FirstUpperCase;
+	import $package+validPackage.displays.$name+FirstUpperCase;
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
@@ -20,7 +20,7 @@ def type(display)
 
 		@Override
 		public void execute() throws AlexandriaException {
-			$name+firstUpperCase~$type+format+FirstUpperCase display = display();
+			$name+firstUpperCase display = display();
 			if (display == null) return;
 			String operation = operation();
 
@@ -30,18 +30,6 @@ def type(display)
 	}
 end
 def attribute(Display) trigger(class)
-end
-
-def attribute(MenuLayout) trigger(format)
-	Layout
-end
-
-def attribute(TabLayout) trigger(format)
-	Layout
-end
-
-def attribute(Display) trigger(format)
-	Display
 end
 
 def type(request & asset) trigger(request)

@@ -3,7 +3,6 @@ def type(elementDisplays)
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.activity.displays.*;
-    import io.intino.konos.alexandria.activity.model.*;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
     import java.lang.reflect.Constructor;
@@ -25,47 +24,54 @@ def type(elementDisplays)
 			return elementMap.get(name).build(box);
 		}
 
-		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, Element element) {
+		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
 			if (!elementMap.containsKey(element.name())) return defaultElementDisplay(box, element);
 			return elementMap.get(element.name()).build(box);
 		}
 
-		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, Element element) {
+		public static <T extends io.intino.konos.alexandria.activity.model.Element> java.util.List<T> elementsFor($box+firstUpperCase~Box box, Class<T> tClass, String... elements) {
+			java.util.List<T> list = new java.util.ArrayList<>();
+			for (String element : elements)
+				list.add((T) elementMap.get(element).build(box).element());
+			return list;
+		}
+
+		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
 			if (!elementMap.containsKey(element.name())) return defaultElementType(box, element);
 			return elementMap.get(element.name()).build(box).getClass();
 		}
 
-		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, Element element) {
-			if (element instanceof Panel) return AlexandriaPanelDisplay.class;
+		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
+			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return AlexandriaPanelDisplay.class;
 
-			if (element instanceof TemporalCatalog)
-				return ((TemporalCatalog) element).type() == TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalogDisplay.class : AlexandriaTemporalTimeCatalogDisplay.class;
+			if (element instanceof io.intino.konos.alexandria.activity.model.TemporalCatalog)
+				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalogDisplay.class : AlexandriaTemporalTimeCatalogDisplay.class;
 
-			if (element instanceof Catalog)
+			if (element instanceof io.intino.konos.alexandria.activity.model.Catalog)
 				return AlexandriaCatalogDisplay.class;
 
-			if (element instanceof Layout)
-				return ((Layout) element).mode() == Layout.Mode.Menu ? AlexandriaMenuLayoutDisplay.class : AlexandriaTabLayoutDisplay.class;
+			if (element instanceof io.intino.konos.alexandria.activity.model.Layout)
+				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? AlexandriaMenuLayoutDisplay.class : AlexandriaTabLayoutDisplay.class;
 
-			if (element instanceof Desktop)
+			if (element instanceof io.intino.konos.alexandria.activity.model.Desktop)
 				return AlexandriaDesktopDisplay.class;
 
 			return null;
 		}
 
-		private static AlexandriaElementDisplay defaultElementDisplay($box+firstUpperCase~Box box, Element element) {
-			if (element instanceof Panel) return new AlexandriaPanelDisplay(box);
+		private static AlexandriaElementDisplay defaultElementDisplay($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
+			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return new AlexandriaPanelDisplay(box);
 
-			if (element instanceof TemporalCatalog)
-				return ((TemporalCatalog) element).type() == TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalogDisplay(box) : new AlexandriaTemporalTimeCatalogDisplay(box);
+			if (element instanceof io.intino.konos.alexandria.activity.model.TemporalCatalog)
+				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalogDisplay(box) : new AlexandriaTemporalTimeCatalogDisplay(box);
 
-			if (element instanceof Catalog)
+			if (element instanceof io.intino.konos.alexandria.activity.model.Catalog)
 				return new AlexandriaCatalogDisplay(box);
 
-			if (element instanceof Layout)
-				return ((Layout) element).mode() == Layout.Mode.Menu ? new AlexandriaMenuLayoutDisplay(box) : new AlexandriaTabLayoutDisplay(box);
+			if (element instanceof io.intino.konos.alexandria.activity.model.Layout)
+				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? new AlexandriaMenuLayoutDisplay(box) : new AlexandriaTabLayoutDisplay(box);
 
-			if (element instanceof Desktop)
+			if (element instanceof io.intino.konos.alexandria.activity.model.Desktop)
 				return new AlexandriaDesktopDisplay(box);
 
 			return null;
@@ -78,5 +84,5 @@ def type(elementDisplays)
 end
 
 def trigger(display)
-	elementMap.put("$name", (box) -> new $name+FirstUpperCase$type+FirstUpperCase(box));
+	elementMap.put("$name", (box) -> new $name+FirstUpperCase(box));
 end
