@@ -9,9 +9,9 @@ def type(mold)
     import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
 
-    public abstract class Abstract$name+FirstUpperCase~Mold extends AlexandriaMoldDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+FirstUpperCase extends AlexandriaMoldDisplay<$name+FirstUpperCase~DisplayNotifier> {
 
-    	public Abstract$name+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    	public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
     		super(box);
     		element(buildMold(box));
     	}
@@ -32,13 +32,28 @@ def type(mold)
 end
 
 def type(block) trigger(definition)
-	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$style][$NL$TAB$stamp...[$NL$TAB$TAB]][
+	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][$style][$NL$TAB$stamp...[$NL$TAB$TAB]][
 		$block+definition...[$NL]])
 
 end
 
 def trigger(height)
-	.height("$value")
+	.height($value)
+end
+
+def trigger(width)
+	.width($value)
+end
+
+def attribute(hiddenEnabled) trigger(hidden)
+	.hidden((object) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.hidden(($moldClass) object))
+end
+
+def trigger(hidden)
+end
+
+def trigger(hiddenIfMobile)
+	.hiddenIfMobile($value)
 end
 
 def trigger(layout)
@@ -50,7 +65,7 @@ def type(stamp & location)
 end
 
 def type(stamp & highlight)
-	.add(new Highlight().color((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.color(($moldType) object, username))$common)
+	.add(new Highlight().color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(($moldClass) object, username))$common)
 end
 
 def type(stamp & icon)
@@ -62,7 +77,7 @@ def type(stamp & customicon)
 end
 
 def type(stamp & operation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.$operationType~Operation().path((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.path(($moldType) object, username)))
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.$operationType~Operation().path((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(($moldClass) object, username)))
 end
 
 def type(stamp & picture)
@@ -74,11 +89,11 @@ def type(stamp)
 end
 
 def trigger(common)
-	[.name("$name")][.label("$label")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)].style((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+firstUpperCase.style(($moldType) object, username)).value((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.value(($moldType) object, username))
+	[.name("$name")][.label("$label")][.defaultStyle("$defaultStyle")][.layout(Stamp.Layout.$layout)].style((object, username) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(($moldClass) object, username)).value((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(($moldClass) object, username))
 end
 
 def trigger(icon)
-	.icon((object, username) -> $mold+FirstUpperCase~Mold.Stamps.$name+FirstUpperCase.icon(($moldType) object, username))
+	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(($moldClass) object, username))
 end
 
 def trigger(expanded)

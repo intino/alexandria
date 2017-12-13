@@ -27,12 +27,12 @@ public abstract class PrototypeRenderer {
 
 
 	void writeAbstract(Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(display.name$()) + display.getClass().getSimpleName());
+		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(display.name$()));
 		writeFrame(new File(gen, DISPLAYS), newDisplay, template().format(frame));
 	}
 
 	void writeSrc(Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase(display.name$() + display.getClass().getSimpleName());
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, template().format(frame));
 	}

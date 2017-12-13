@@ -63,7 +63,7 @@ public class DisplayRenderer {
 	}
 
 	private void writeDisplay(Display display, Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase(display.name$() + "Display");
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
 		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay)).update();

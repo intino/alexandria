@@ -1,10 +1,8 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.graph.Operation;
-import io.intino.konos.model.graph.Panel;
-import io.intino.konos.model.graph.RenderDisplay;
-import io.intino.konos.model.graph.SingleRenderer;
+import io.intino.konos.model.graph.*;
+import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -38,9 +36,22 @@ public class PanelRenderer extends PrototypeRenderer {
 		final Frame frame = new Frame("view")
 				.addSlot("owner", panel.name$())
 				.addSlot("name", view.name$())
+				.addSlot("label", view.label())
 				.addSlot("box", box);
-		final SingleRenderer renderer = view.singleRenderer();
-		if (renderer.i$(RenderDisplay.class)) frame.addSlot("display", renderer.a$(RenderDisplay.class).display());
+		final ElementRenderer renderer = view.elementRenderer();
+		if (renderer.i$(RenderDisplay.class)) {
+			frame.addTypes("display");
+			frame.addSlot("display", renderer.a$(RenderDisplay.class).display());
+		}
+		if (renderer.i$(RenderMold.class)) {
+			frame.addTypes("mold");
+			final Mold mold = renderer.a$(RenderMold.class).mold();
+			frame.addSlot("mold", mold.name$());
+		}
+		if (renderer.i$(RenderCatalogs.class)) {
+			frame.addTypes("catalogs");
+			frame.addSlot("catalog", renderer.a$(RenderCatalogs.class).catalogs().stream().map(Layer::name$).toArray(String[]::new));
+		}
 		return frame;
 	}
 
