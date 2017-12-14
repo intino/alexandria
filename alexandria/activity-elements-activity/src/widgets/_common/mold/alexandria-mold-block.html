@@ -349,8 +349,8 @@
 
             _addZombieLayer : function(layer, name, object) {
                 var zombie = document.createElement("cotton-zombie");
-                zombie.setAttribute("display", name + "Display");
-                zombie.setAttribute("widget", name + "Widget");
+                zombie.setAttribute("display", name);
+                zombie.setAttribute("widget", name);
                 if (object != null) zombie.setAttribute("object", object);
                 layer.appendChild(zombie);
                 return zombie;

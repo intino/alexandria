@@ -5,7 +5,7 @@ import io.intino.konos.alexandria.activity.services.push.User;
 import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
 import io.intino.konos.alexandria.activity.displays.ElementDisplayManager;
-import io.intino.konos.alexandria.activity.displays.AlexandriaStampDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.TimeRange;
@@ -38,7 +38,7 @@ public interface ElementViewDisplayProvider {
     List<Stamp> expandedStamps(Mold mold);
     Stamp stamp(Mold mold, String name);
 
-    AlexandriaStampDisplay display(String stamp);
+    AlexandriaStamp display(String stamp);
 
     void executeOperation(ElementOperationParameters params, List<Item> selection);
     Resource downloadOperation(ElementOperationParameters params, List<Item> selection);

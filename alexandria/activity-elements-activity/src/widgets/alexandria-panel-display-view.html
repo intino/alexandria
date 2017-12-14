@@ -47,7 +47,7 @@
 
             _displayType : function(type) {
                 var zombie = document.createElement("cotton-zombie");
-                zombie.setAttribute("display", type + "Display");
+                zombie.setAttribute("display", type);
                 zombie.setAttribute("widget", type);
                 zombie.setAttribute("object", this.display.id);
                 this.$.container.appendChild(zombie);

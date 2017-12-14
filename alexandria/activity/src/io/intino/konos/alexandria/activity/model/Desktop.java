@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.model;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaLayout;
 
 import java.net.URL;
 
@@ -12,7 +12,7 @@ public class Desktop extends Element {
     private URL favicon;
     private URL authServiceUrl;
 
-    public AlexandriaLayoutDisplay layoutDisplay() {
+    public AlexandriaLayout layoutDisplay() {
         return layoutDisplayProvider != null ? layoutDisplayProvider.display() : null;
     }
 
@@ -67,6 +67,6 @@ public class Desktop extends Element {
     }
 
     public interface LayoutDisplayProvider {
-        AlexandriaLayoutDisplay display();
+        AlexandriaLayout display();
     }
 }

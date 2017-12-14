@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaStampDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 
 public class Display extends Stamp<String> {
@@ -11,7 +11,7 @@ public class Display extends Stamp<String> {
 		return null;
 	}
 
-	public <SD extends AlexandriaStampDisplay> SD instance() {
+	public <SD extends AlexandriaStamp> SD instance() {
 		return displayBuilder != null ? displayBuilder.display(name()) : null;
 	}
 
@@ -21,6 +21,6 @@ public class Display extends Stamp<String> {
 	}
 
 	public interface DisplayBuilder {
-		<SD extends AlexandriaStampDisplay> SD display(String name);
+		<SD extends AlexandriaStamp> SD display(String name);
 	}
 }

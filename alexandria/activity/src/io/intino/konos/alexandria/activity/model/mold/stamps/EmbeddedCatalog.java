@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaCatalogDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaCatalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Catalog;
@@ -32,7 +32,7 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
-	public AlexandriaCatalogDisplay display() {
+	public AlexandriaCatalog display() {
 		return displayBuilder != null ? displayBuilder.display(catalog) : null;
 	}
 
@@ -51,6 +51,6 @@ public class EmbeddedCatalog extends Stamp<String> {
 	}
 
 	public interface CatalogDisplayBuilder {
-		<CD extends AlexandriaCatalogDisplay> CD display(Catalog catalog);
+		<CD extends AlexandriaCatalog> CD display(Catalog catalog);
 	}
 }

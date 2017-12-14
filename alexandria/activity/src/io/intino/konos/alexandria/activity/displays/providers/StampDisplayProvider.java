@@ -1,9 +1,9 @@
 package io.intino.konos.alexandria.activity.displays.providers;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaStampDisplay;
-import io.intino.konos.alexandria.activity.displays.AlexandriaTemporalStampDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
+import io.intino.konos.alexandria.activity.displays.AlexandriaTemporalStamp;
 
 public interface StampDisplayProvider {
-	AlexandriaStampDisplay display(String stamp);
-	AlexandriaTemporalStampDisplay temporalDisplay(String stamp);
+	AlexandriaStamp display(String stamp);
+	AlexandriaTemporalStamp temporalDisplay(String stamp);
 }

@@ -117,7 +117,7 @@
             _createZombie : function(container, type, id, widget) {
                 var zombie = document.createElement("cotton-zombie");
                 if (id != null) zombie.setAttribute("id", id);
-                zombie.setAttribute("display", type + "Display");
+                zombie.setAttribute("display", type);
                 zombie.setAttribute("widget", widget);
                 container.appendChild(zombie);
             },
