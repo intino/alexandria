@@ -50,10 +50,10 @@ Concept CatalogView
 	sub GridView
 	sub MagazineView
 	sub MapView
-		Concept Center
+		Concept:{0..1} Center
 			var double latitude
 			var double longitude
-		Concept Zoom
+		Concept:{1..1} Zoom
 			var integer defaultZoom
             var integer min
             var integer max

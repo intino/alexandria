@@ -25,7 +25,7 @@ def type(elementDisplays)
 		}
 
 		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
-			if (!elementMap.containsKey(element.name())) return defaultElementDisplay(box, element);
+			if (!elementMap.containsKey(element.name())) return defaultElement(box, element);
 			return elementMap.get(element.name()).build(box);
 		}
 
@@ -42,37 +42,37 @@ def type(elementDisplays)
 		}
 
 		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
-			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return AlexandriaPanelDisplay.class;
+			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return AlexandriaPanel.class;
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.TemporalCatalog)
-				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalogDisplay.class : AlexandriaTemporalTimeCatalogDisplay.class;
+				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalog.class : AlexandriaTemporalTimeCatalog.class;
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Catalog)
-				return AlexandriaCatalogDisplay.class;
+				return AlexandriaCatalog.class;
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Layout)
-				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? AlexandriaMenuLayoutDisplay.class : AlexandriaTabLayoutDisplay.class;
+				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? AlexandriaMenuLayout.class : AlexandriaTabLayout.class;
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Desktop)
-				return AlexandriaDesktopDisplay.class;
+				return AlexandriaDesktop.class;
 
 			return null;
 		}
 
-		private static AlexandriaElementDisplay defaultElementDisplay($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
-			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return new AlexandriaPanelDisplay(box);
+		private static AlexandriaElementDisplay defaultElement($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
+			if (element instanceof io.intino.konos.alexandria.activity.model.Panel) return new AlexandriaPanel(box);
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.TemporalCatalog)
-				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalogDisplay(box) : new AlexandriaTemporalTimeCatalogDisplay(box);
+				return ((io.intino.konos.alexandria.activity.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.activity.model.TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalog(box) : new AlexandriaTemporalTimeCatalog(box);
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Catalog)
-				return new AlexandriaCatalogDisplay(box);
+				return new AlexandriaCatalog(box);
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Layout)
-				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? new AlexandriaMenuLayoutDisplay(box) : new AlexandriaTabLayoutDisplay(box);
+				return ((io.intino.konos.alexandria.activity.model.Layout) element).mode() == io.intino.konos.alexandria.activity.model.Layout.Mode.Menu ? new AlexandriaMenuLayout(box) : new AlexandriaTabLayout(box);
 
 			if (element instanceof io.intino.konos.alexandria.activity.model.Desktop)
-				return new AlexandriaDesktopDisplay(box);
+				return new AlexandriaDesktop(box);
 
 			return null;
 		}

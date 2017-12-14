@@ -44,8 +44,8 @@ Concept Layout extends Display
 Concept Group extends ElementOption
 	var string label
 	var word:{Expanded Collapsed} mode
-	has Option
-	has Options
+	has:Named Option
+	has:Named Options
 
 Concept Option extends ElementOption is component
 	var string label

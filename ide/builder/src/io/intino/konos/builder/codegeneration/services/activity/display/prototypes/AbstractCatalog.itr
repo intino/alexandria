@@ -118,7 +118,7 @@ def type(displayview) trigger(add)
 end
 
 def type(mapview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView().center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center()[.latitude($latitude)][.longitude($longitude)])[.$zoom].mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v4").label("Mapa"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude)].longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v4").label("Mapa"));
 end
 
 def type(sorting) trigger(add)
