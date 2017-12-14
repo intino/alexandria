@@ -135,7 +135,6 @@
             <scope>test</scope>
             <version>4.12</version>
         </dependency>
-
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>konos-server</artifactId>

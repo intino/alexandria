@@ -12,3 +12,6 @@ workspace.xml
 slack/target
 workspace.xml
 dependency-reduced-pom.xml
+.idea/compiler.xml
+alexandria/activity-elements-activity/gulpFile.js
+alexandria/activity-elements-activity/package.json
