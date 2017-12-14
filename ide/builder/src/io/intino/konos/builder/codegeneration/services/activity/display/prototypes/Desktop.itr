@@ -9,9 +9,9 @@ def type(desktop & gen)
     import java.net.MalformedURLException;
     import java.net.URL;
 
-	public abstract class Abstract$name+firstUpperCase~Desktop extends AlexandriaDesktopDisplay<$name+firstUpperCase~DisplayNotifier> {
+	public abstract class Abstract$name+firstUpperCase extends AlexandriaDesktopDisplay<$name+firstUpperCase~DisplayNotifier> {
 
-    	public Abstract$name+firstUpperCase~Desktop($box+firstUpperCase~Box box) {
+    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildDesktop(box));
     	}
@@ -22,7 +22,7 @@ def type(desktop & gen)
     		[desktop.subtitle("$subtitle");]
     		[try { desktop.logo(new URL("$logo"));} catch (MalformedURLException e) {}]
     		[try { desktop.favicon(new URL("$favicon"));} catch (MalformedURLException e) {}]
-    		desktop.layoutDisplayProvider(() -> $name+firstUpperCase~Desktop.layout(box));
+    		desktop.layoutDisplayProvider(() -> $package+validPackage.displays.$name+firstUpperCase.layout(box));
     		return desktop;
     	}
     }
@@ -34,14 +34,14 @@ def type(desktop)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
 
-	public class $name+FirstUpperCase~Desktop extends Abstract$name+FirstUpperCase~Desktop {
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-        public $name+FirstUpperCase~Desktop($box+FisrtUpperCase~Box box) {
+        public $name+FirstUpperCase($box+FisrtUpperCase~Box box) {
             super(box);
         }
 
 		public static AlexandriaLayoutDisplay layout($box+FisrtUpperCase~Box box) {
-			return new $layout+FirstUpperCase~Layout(box);
+			return new $layout+FirstUpperCase(box);
 		}
     }
 end

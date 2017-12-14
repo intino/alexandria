@@ -17,15 +17,15 @@ def type(layout & gen)
     import java.util.ArrayList;
     import java.util.List;
 
-    public abstract class Abstract$name+FirstUpperCase~Layout extends Alexandria$mode+FirstUpperCase~LayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+FirstUpperCase extends Alexandria$mode+FirstUpperCase~LayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
 
-    	public Abstract$name+FirstUpperCase~Layout($box+firstUpperCase~Box box) {
+    	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildLayout(box));
     	}
 
     	private static Layout buildLayout($box+firstUpperCase~Box box) {
-    		Layout layout = new Layout();
+    		io.intino.konos.alexandria.activity.model.Layout layout = new io.intino.konos.alexandria.activity.model.Layout();
     		[layout.mode(Layout.Mode.$mode);]
     		layout.elementDisplayBuilder(new Layout.ElementDisplayBuilder() {
     			@Override
@@ -42,36 +42,72 @@ def type(layout & gen)
     		return layout;
     	}
 
-    	private static List<ElementOption> buildOptions($box+firstUpperCase~Box box) {
+    	private static List<io.intino.konos.alexandria.activity.model.ElementOption> buildOptions($box+firstUpperCase~Box box) {
     		List<ElementOption> result = new ArrayList<>();
-    		$group...[$NL]
+    		$elementOption...[$NL]
     		return result;
     	}
-    }
+	}
 end
 
-def trigger(group)
+def type(options) trigger(elementOption)
+	result.add(new io.intino.konos.alexandria.activity.model.Options().
+		label((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.label(box, element, object))
+		.icon((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))
+		.bubble((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.bubble(box, element, object))[
+		.render());
+end
+
+def type(option) trigger(elementOption)
+	result.add(new io.intino.konos.alexandria.activity.model.Option()[.label("$label")]);
+end
+
+def type(options) trigger(add)
+	.add(new io.intino.konos.alexandria.activity.model.Options().
+		label((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.label(box, element, object))
+		[.icon((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))]
+		[.bubble((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))]
+		.render($render));
+end
+
+def type(group) trigger(elementOption)
 	result.add(new Group().[label("$label")].mode(Group.Mode.$mode)[
-			$option...[$NL]]);
+			$elementOption+add...[$NL]]);
 end
 
-def	type(catalog) trigger(option)
-	.add(new Option().render(new RenderCatalog().catalog((Catalog) ElementDisplays.displayFor(box, "$catalog").element())).label("$label"))
+def type(catalogs) trigger(render)
+	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ])[.filter((context, target, object) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, context, target, object))]
 end
 
-def	type(panel) trigger(option)
-	.add(new Option().render(new RenderPanel().panel((Panel) ElementDisplays.displayFor(box, "$panel").element())).label("$label")))
+def type(panels) trigger(render)
+	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Catalog.class, $panels+quoted...[, ]))[.object((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object)))]
 end
 
+def type(objects) trigger(render)
+	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().source((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.source(box, element, object)).objects((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object))
+end
+
+def	type(catalog) trigger(add)
+	.add(new io.intino.konos.alexandria.activity.model.Option().render($render)).label("$label"))
+end
+
+
+def	type(panels) trigger(add)
+	.add(new io.intino.konos.alexandria.activity.model.Option().render($render).label("$label")))
+end
+
+def	type(objects) trigger(add)
+	.add($render);
+end
 
 def type(layout)
 	package $package.displays;
 
     import $package+validPackage.$box+firstUpperCase~Box;
 
-	public class $name+FirstUpperCase~Layout extends Abstract$name+FirstUpperCase~Layout {
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-		public $name+FirstUpperCase~Layout($box+firstUpperCase~Box box) {
+		public $name+FirstUpperCase($box+firstUpperCase~Box box) {
 			super(box);
 		}
 
@@ -80,4 +116,8 @@ def type(layout)
 			super.init();
 		}
 	}
+end
+
+def trigger(quoted)
+	"$value"
 end

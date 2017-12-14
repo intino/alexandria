@@ -29,7 +29,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	public void render() {
 		Frame frame = createFrame();
-		frame.addSlot("moldType", mold.modelClass());
+		frame.addSlot("moldClass", moldClass());
 		for (Block block : mold.blockList()) frame.addSlot("block", frameOf(block));
 		writeSrc(frame);
 		writeAbstract(frame);
@@ -39,9 +39,12 @@ public class MoldRenderer extends PrototypeRenderer {
 		Frame frame = new Frame("block")
 				.addSlot("name", clean(block.name$()))
 				.addSlot("expanded", block.mode().equals(Mode.Expanded))
+				.addSlot("hidden", block.hidden())
+				.addSlot("hiddenIfMobile", block.hiddenIfMobile())
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
 		if (!block.style().isEmpty()) frame.addSlot("style", block.style());
 		if (block.height() >= 0) frame.addSlot("height", block.height());
+		if (block.width() >= 0) frame.addSlot("width", block.width());
 		for (Stamp stamp : block.stampList()) frame.addSlot("stamp", frameOf(stamp));
 		for (Block inner : block.blockList()) frame.addSlot("block", frameOf(inner));
 		return frame;
@@ -53,12 +56,16 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addSlot("type", stamp.getClass().getSimpleName());
 		frame.addSlot("common", common(stamp));
 		frame.addSlot("mold", mold.name$());
-		frame.addSlot("moldType", mold.modelClass());
+		frame.addSlot("moldClass", moldClass());
 		if (stamp.i$(Picture.class)) frameOf(frame, stamp.a$(Picture.class));
 		if (stamp.i$(Tree.class)) frameOf(frame, stamp.a$(Tree.class));
 		if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
 		if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
 		return frame;
+	}
+
+	private String moldClass() {
+		return mold.modelClass().isEmpty() ? "java.lang.Object" : mold.modelClass();
 	}
 
 	@NotNull
@@ -108,7 +115,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private Frame baseFrame(Stamp stamp) {
-		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldType", mold.modelClass());
+		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldClass", moldClass());
 	}
 
 	@Override
@@ -117,7 +124,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	void writeSrc(Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase(display.name$() + display.getClass().getSimpleName());
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
 	}

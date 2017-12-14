@@ -6,9 +6,9 @@ def type(mold)
     import java.net.URL;
     import java.util.List;
 
-    public class $name+FirstUpperCase~Mold extends Abstract$name+FirstUpperCase~Mold {
+    public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
-    	public $name+FirstUpperCase~Mold($box+FirstUpperCase~Box box) {
+    	public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
     		super(box);
     	}
     	public static class Stamps {
@@ -26,7 +26,7 @@ end
 def type(stamp & operation & openDialog) trigger(class)
 	public static class $name+FirstUpperCase {
 
-		public static String path($moldType object, String username) {
+		public static String path($moldClass object, String username) {
 			return null;//TODO
 		}
 	}
@@ -35,7 +35,7 @@ end
 def type(stamp & operation & download) trigger(class)
 	public static class $name+FirstUpperCase {
 
-		public static Execution execution($moldType object, String username) {
+		public static Execution execution($moldClass object, String username) {
 			return null;//TODO
 		}
 	}
@@ -45,7 +45,7 @@ def type(stamp & location) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static java.net.URL icon($moldType object, String username) {
+		public static java.net.URL icon($moldClass object, String username) {
 			return null;//TODO
 		}
 	}
@@ -55,7 +55,7 @@ def type(stamp & catalogLink) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($moldType object, String username) {
+		public static String title($moldClass object, String username) {
 			return "";//TODO
 		}
 	}
@@ -65,7 +65,7 @@ def type(stamp & highlight) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String color($moldType object, String username) {
+		public static String color($moldClass object, String username) {
 			return "";//TODO
 		}
 	}
@@ -76,7 +76,7 @@ def type(stamp & itemeLinks) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($moldType object, String username) {
+		public static String title($moldClass object, String username) {
 			return "";//TODO
 		}
 	}
@@ -97,17 +97,17 @@ end
 
 def trigger(common)
 
-	public static $valueType value($moldType object, String username) {
+	public static $valueType value($moldClass object, String username) {
 		return null;//TODO
 	}
 
-	public static String style($moldType object, String username) {
+	public static String style($moldClass object, String username) {
 		return "";//TODO
 	}
 end
 
 def trigger(property)
-	public static $returnType $name($moldType object, String username) {
+	public static $returnType $name($moldClass object, String username) {
 		return null;//TODO
 	}
 end
