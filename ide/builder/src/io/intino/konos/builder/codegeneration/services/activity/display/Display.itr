@@ -5,12 +5,12 @@ def type(display)
 	import $package.*;
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.activity.services.push.User;
     $parent+import
 
-    public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~DisplayNotifier> {
+    public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~Notifier> {
         private $box+firstUpperCase~Box box;
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {

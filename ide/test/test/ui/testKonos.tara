@@ -14,9 +14,9 @@ Desktop testHome
 
 Layout testMenu
 	mode = Menu
-	Group("ddd", Expanded)
-		Option(label="infrastructure") > RenderCatalogs(catalogs=testInfrastructure)
-		Option(label="análisis") > RenderPanels(testAnalisis)
+	Group("ddd", Expanded) ddd
+		Option(label="infrastructure") infrastructure> RenderCatalogs(catalogs=testInfrastructure)
+		Option(label="análisis") analisis > RenderPanels(testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views

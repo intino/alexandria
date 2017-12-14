@@ -6,15 +6,15 @@ def type(display)
 	import $package+validPackage.*;
 	$schemaImport
 
-	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
-	import io.intino.konos.alexandria.activity.displays.requesters.Alexandria[$type+class+FirstUpperCase]DisplayRequester;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+	import io.intino.konos.alexandria.activity.displays.requesters.Alexandria[$type+class+FirstUpperCase]Requester;
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierProvider;
 	import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
 
-	public class $name+firstUpperCase~DisplayRequester extends [Alexandria$type+class+FirstUpperCase]~DisplayRequester {
+	public class $name+firstUpperCase~Requester extends [Alexandria$type+class+FirstUpperCase]~Requester {
 
-		public $name+firstUpperCase~DisplayRequester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Requester(ActivitySparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 		}
 
@@ -30,6 +30,7 @@ def type(display)
 	}
 end
 def attribute(Display) trigger(class)
+	Display
 end
 
 def type(request & asset) trigger(request)

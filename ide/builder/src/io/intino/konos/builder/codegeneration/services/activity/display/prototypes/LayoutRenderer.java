@@ -3,7 +3,9 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 import com.intellij.openapi.project.Project;
 import io.intino.konos.model.graph.*;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
+import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -58,7 +60,10 @@ public class LayoutRenderer extends PrototypeRenderer {
 		final Frame frame = new Frame("elementOption", "group")
 				.addSlot("label", group.label())
 				.addSlot("mode", group.mode());
-		if (!group.optionList().isEmpty()) frame.addSlot("option", group.optionList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!group.optionList().isEmpty())
+			frame.addSlot("elementOption", group.optionList().stream().map(this::frameOf).toArray(Frame[]::new));
+		if (!group.optionsList().isEmpty())
+			frame.addSlot("elementOption", group.optionsList().stream().map(this::frameOf).toArray(Frame[]::new));
 		return frame;
 	}
 
@@ -71,26 +76,39 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private void render(ElementRenderer renderer, Frame frame) {
-		if (renderer instanceof RenderCatalogs) frame.addSlot("render", renderCatalogs(renderer.a$(RenderCatalogs.class));
-		else if (renderer instanceof RenderPanels) frame.addSlot("render", renderPanels(renderer.a$(RenderPanels.class));
-		else if (renderer instanceof RenderObjects) frame.addSlot("render", renderObjects(renderer.a$(RenderObjects.class));
+		if (renderer instanceof RenderCatalogs) frame.addSlot("render", renderCatalogs(renderer.a$(RenderCatalogs.class)));
+		else if (renderer instanceof RenderPanels) frame.addSlot("render", renderPanels(renderer.a$(RenderPanels.class)));
+		else if (renderer instanceof RenderObjects) frame.addSlot("render", renderObjects(renderer.a$(RenderObjects.class)));
 	}
 
 	private Frame renderCatalogs(RenderCatalogs render) {
 		final Frame renderFrame = new Frame("render", "catalogs").addSlot("catalog", render.catalogs().stream().map(Layer::name$).toArray(String[]::new));
-		if (render.filtered()) renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", "a-resolver");
+		if (render.filtered()) renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return renderFrame;
 	}
 
 	private Frame renderPanels(RenderPanels render) {
-		final Frame renderFrame = new Frame("render", "panels").addSlot("panel", render.panels().stream().map(Layer::name$).toArray(String[]::new));
+		final Frame renderFrame = new Frame("render", "panels")
+				.addSlot("panel", render.panels().stream().map(Layer::name$).toArray(String[]::new));
 		if (render.withObject().equals(withObject))
-			renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", "a-resolver");
+			renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return renderFrame;
 	}
 
 	private Frame renderObjects(RenderObjects render) {
-		return new Frame("render", "objects").addSlot("render", new Frame().addSlot("name", render.name$()));
+		Frame frame = new Frame("render", "objects");
+		frame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
+		return frame;
+	}
+
+	private String pathOf(Node node) {
+		String qn = "";
+		Node parent = node;
+		while (!parent.equals(display.core$())) {
+			qn = StringFormatter.firstUpperCase().format(parent.name()).toString() + (qn.isEmpty() ? "" : ".") + qn;
+			parent = parent.owner();
+		}
+		return qn;
 	}
 
 	protected Template template() {

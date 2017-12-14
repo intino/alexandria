@@ -1,12 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.graph.Catalog;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
 import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
-import io.intino.konos.model.graph.CatalogView;
-import io.intino.konos.model.graph.DisplayView;
-import io.intino.konos.model.graph.Operation;
 import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -56,7 +53,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void arrangements(Catalog catalog, Frame frame) {
-		if (catalog.arrangement()== null) return;
+		if (catalog.arrangement() == null) return;
 		for (Grouping grouping : catalog.arrangement().groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog));
 		for (Sorting sorting : catalog.arrangement().sortingList())
@@ -91,12 +88,22 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(DisplayView view, Catalog catalog) {
-		return new Frame("view", view.getClass().getSimpleName())
+		Frame frame = new Frame("view", view.getClass().getSimpleName())
 				.addSlot("box", box)
 				.addSlot("catalog", catalog.name$())
 				.addSlot("name", view.name$())
 				.addSlot("package", this.packageName)
 				.addSlot("display", view.display());
+		if (view.i$(MapView.class)) {
+			MapView mapView = view.a$(MapView.class);
+			if (mapView.center() != null)
+				frame.addSlot("latitude", mapView.center().latitude()).addSlot("longitude", mapView.center().longitude());
+			frame.addSlot("zoom", new Frame("zoom")
+					.addSlot("default", mapView.zoom().defaultZoom())
+					.addSlot("min", mapView.zoom().min()))
+					.addSlot("max", mapView.zoom().max());
+		}
+		return frame;
 	}
 
 	private Frame frameOf(Catalog.Toolbar toolbar) {

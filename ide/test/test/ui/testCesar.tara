@@ -14,12 +14,12 @@ Desktop(title = "test cesar", subTitle = "test using cesar layout", logo = empty
 	layout = testCesarMenu
 
 Layout(mode = Menu) testCesarMenu
-	Option("overview") > RenderPanels(testCesarOverviewPanel)
-	Group("projects")
+	Option("overview") overview > RenderPanels(testCesarOverviewPanel)
+	Group("projects") projects
 		mode = Expanded
 //		Options(label=@projectLabel) projectOptions > RenderObjects(@projectsCollection, panel=projectPanel)
-		Options > RenderObjects(testCesarProjectPanel)
-	Option("administration") > RenderPanels(testCesarAdminPanel)
+		Options projectOptions > RenderObjects(testCesarProjectPanel)
+	Option("administration") administration> RenderPanels(testCesarAdminPanel)
 
 // Octavio. Código generado incorrecto.
 // Octavio. En código generado, todas las vistas se crean de tipo RenderDisplay y el método no tiene nombre

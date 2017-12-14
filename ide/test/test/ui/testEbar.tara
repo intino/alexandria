@@ -9,7 +9,7 @@ Desktop(title = "", subTitle = "", logo = "", favicon = "") testEbarHome
 	layout = testEbarTab
 
 Layout(mode = Tab) testEbarTab
-	Group(label = "", mode = Expanded) > Options > RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
+	Group(label = "", mode = Expanded)analysis > Options analysisOptions > RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
 
 Catalog("Infrastructure", modelClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
 	Views
