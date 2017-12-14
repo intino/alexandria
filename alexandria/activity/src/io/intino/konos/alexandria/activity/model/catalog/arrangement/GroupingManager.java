@@ -40,13 +40,13 @@ public class GroupingManager {
 	public void filter(String groupingName, List<String> groups) {
 		Grouping grouping = grouping(groupingName);
 		List<String> groupNames = groups.stream().map(Group::name).collect(toList());
-		filter.add(collect(groupNames, grouping));
+		if (filter != null) filter.add(collect(groupNames, grouping));
 		filteredGroupings.put(groupingName, groupNames);
 		fixedGrouping = groupingName;
 	}
 
 	public void clearFilter() {
-		filter.clear();
+		if (filter != null) filter.clear();
 		filteredGroupings.clear();
 		fixedGrouping = null;
 	}
@@ -77,7 +77,7 @@ public class GroupingManager {
 	}
 
 	private Map<Grouping, GroupMap> groups(List<Item> items) {
-		if (filter.isEmpty()) return groups;
+		if (filter == null || filter.isEmpty()) return groups;
 		return calculateGroupings(items);
 	}
 
@@ -86,7 +86,7 @@ public class GroupingManager {
 	}
 
 	private List<Item> filteredItems() {
-		if (filter.isEmpty()) return items;
+		if (filter == null || filter.isEmpty()) return items;
 		return items.stream().filter(item -> filter.contains(item.id())).collect(toList());
 	}
 
