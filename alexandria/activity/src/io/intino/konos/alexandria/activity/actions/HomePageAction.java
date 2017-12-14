@@ -8,9 +8,7 @@ import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
 
 public class HomePageAction extends AlexandriaPageAction {
 
-	// TODO Octavio -> ActivityBox en vez de AlexandriaBox
 	public ActivityBox box;
-
 
 	public HomePageAction() { super("alexandria"); }
 

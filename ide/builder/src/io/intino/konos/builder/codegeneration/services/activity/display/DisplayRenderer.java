@@ -70,11 +70,11 @@ public class DisplayRenderer {
 	}
 
 	private void writeRequester(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "DisplayRequester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "Requester"), displayRequesterTemplate().format(frame));
 	}
 
 	private void writeNotifier(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "DisplayNotifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "Notifier"), displayNotifierTemplate().format(frame));
 	}
 
 	@NotNull

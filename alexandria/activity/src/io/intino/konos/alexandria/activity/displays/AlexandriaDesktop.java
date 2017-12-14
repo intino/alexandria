@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.displays;
 
-import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.ActivityBox;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaDesktopNotifier;
 import io.intino.konos.alexandria.activity.model.Desktop;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -10,7 +10,7 @@ import java.net.URL;
 
 public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
 
-	public AlexandriaDesktop(Box box) {
+	public AlexandriaDesktop(ActivityBox box) {
 		super(box);
 	}
 
