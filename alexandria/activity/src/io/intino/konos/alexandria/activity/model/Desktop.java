@@ -8,8 +8,8 @@ public class Desktop extends Element {
     private LayoutDisplayProvider layoutDisplayProvider;
     private String title;
     private String subtitle;
-    private URL logo;
-    private URL favicon;
+    private String logo;
+    private String favicon;
     private URL authServiceUrl;
 
     public AlexandriaLayout layoutDisplay() {
@@ -39,20 +39,20 @@ public class Desktop extends Element {
         return this;
     }
 
-    public URL logo() {
+    public String logo() {
         return logo;
     }
 
-    public Desktop logo(URL logo) {
+    public Desktop logo(String logo) {
         this.logo = logo;
         return this;
     }
 
-    public URL favicon() {
+    public String favicon() {
         return favicon;
     }
 
-    public Desktop favicon(URL favicon) {
+    public Desktop favicon(String favicon) {
         this.favicon = favicon;
         return this;
     }

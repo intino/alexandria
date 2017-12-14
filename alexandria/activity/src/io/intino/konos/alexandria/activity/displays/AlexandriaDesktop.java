@@ -36,12 +36,12 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 			}
 
 			@Override
-			public URL logo() {
+			public String logo() {
 				return element().logo();
 			}
 
 			@Override
-			public URL favicon() {
+			public String favicon() {
 				return element().favicon();
 			}
 
