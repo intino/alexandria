@@ -56,7 +56,7 @@ def trigger(path)
 end
 
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~DisplayNotifier.class).forDisplay($name+firstUpperCase~Display.class);
+	register($name+firstUpperCase~Notifier.class).forDisplay($name+firstUpperCase.class);
 end
 
 def type(dialog) trigger(notifier)
@@ -69,7 +69,7 @@ end
 
 def type(display)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~Requester(manager, notifierProvider()).execute());
 	$asset
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
@@ -82,7 +82,7 @@ def type(dialog)
 end
 
 def trigger(asset)
-	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~DisplayRequester(manager, notifierProvider()).execute());
+	spark.route("/$value+lowercase/:displayId").get(manager -> new $value+firstUppercase~Requester(manager, notifierProvider()).execute());
 end
 
 def trigger(quoted)

@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelViewDisplayNotifier;
+import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelDisplayViewNotifier;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.panel.View;
 import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPanelViewDisplayNotifier> {
+public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPanelDisplayViewNotifier> {
 
     public AlexandriaPanelDisplayView(Box box) {
         super(box);

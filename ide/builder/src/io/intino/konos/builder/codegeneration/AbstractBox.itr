@@ -16,7 +16,7 @@ def type(box)
 	$hasREST~import io.intino.konos.alexandria.rest.AlexandriaSpark;][
     $hasActivity+hide~import io.intino.konos.alexandria.activity.displays.Soul;]
 
-	public abstract class AbstractBox extends io.intino.konos.alexandria.Box {
+	public abstract class AbstractBox extends [$hasActivity+activityBox?io.intino.konos.alexandria.Box] {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
@@ -109,6 +109,10 @@ def type(box)
 			logger.addHandler(handler);
 		}
 	}
+end
+
+def trigger(activityBox)
+	io.intino.konos.alexandria.activity.ActivityBox
 end
 
 def type(activity) trigger(setup)
