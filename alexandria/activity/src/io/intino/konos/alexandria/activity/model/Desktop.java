@@ -8,8 +8,8 @@ public class Desktop extends Element {
     private LayoutDisplayProvider layoutDisplayProvider;
     private String title;
     private String subtitle;
-    private String logo;
-    private String favicon;
+    private String logo = "";
+    private String favicon = "";
     private URL authServiceUrl;
 
     public AlexandriaLayout layoutDisplay() {
