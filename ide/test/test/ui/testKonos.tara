@@ -15,12 +15,12 @@ Desktop testHome
 Layout testMenu
 	mode = Menu
 	Group("ddd", Expanded)
-		Option(label="infrastructure") > RenderCatalog(catalog=testInfrastructure)
-		Option(label="análisis") > RenderPanel(panel=testAnalisis)
+		Option(label="infrastructure") > RenderCatalogs(catalogs=testInfrastructure)
+		Option(label="análisis") > RenderPanels(testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views
-		View > RenderDisplay(display = "olapDisplay")
+		View(label = "olap") > RenderDisplay(display = "olapDisplay")
 
 Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") testInfrastructure
 	Toolbar

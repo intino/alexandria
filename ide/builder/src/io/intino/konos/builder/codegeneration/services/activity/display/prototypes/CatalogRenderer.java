@@ -138,7 +138,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	void writeSrc(Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase(display.name$() + display.getClass().getSimpleName());
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
 	}

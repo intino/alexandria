@@ -27,7 +27,8 @@ Concept Panel extends Display
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
 		Concept View
-			has:{1..1} SingleRenderer
+			var string label
+			has:{1..1} ElementRenderer //TODO no permitir ni renderPanels ni renderObjects
 
 Concept Desktop extends Display
 	var Layout layout
@@ -38,13 +39,13 @@ Concept Desktop extends Display
 
 Concept Layout extends Display
 	var word:{Menu Tab} mode
+	has:Named ElementOption
+
+Concept Group extends ElementOption
+	var string label
+	var word:{Expanded Collapsed} mode
 	has Option
 	has Options
-	Concept Group
-		var string label
-		var word:{Expanded Collapsed} mode
-		has Option
-		has Options
 
 Concept Option extends ElementOption is component
 	var string label
@@ -61,24 +62,17 @@ Concept ElementOption
 	has:{1..1} ElementRenderer
 
 Concept ElementRenderer is component
-	sub SingleRenderer
-		sub RenderCatalog
-			var Catalog catalog
-			var boolean filtered = false
-		sub RenderObject
-			var Panel panel
-		sub RenderMold
-			var Mold mold
-		sub RenderPanel
-			var Panel panel
-		sub RenderDisplay
-			var boolean hideNavigator = true
-			var string display
-	sub MultipleRenderer
-		sub RenderCatalogs
-			var Catalog[] catalogs
-		sub RenderPanels
-			var Panel[] panel
-		sub RenderObjects
-			var Panel[] panel
+	sub RenderMold
+		var Mold mold
+	sub RenderDisplay
+		var boolean hideNavigator = true
+		var string display
+	sub RenderCatalogs
+		var Catalog[] catalogs
+		var boolean filtered = false
+	sub RenderPanels
+		var Panel[] panels
+		var word:{withObject withoutObject} withObject = withoutObject
+	sub RenderObjects
+		var Panel panel
 

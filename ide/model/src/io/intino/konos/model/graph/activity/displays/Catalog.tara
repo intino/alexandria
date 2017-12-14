@@ -20,7 +20,7 @@ Concept Catalog extends Display
 		Concept:{0..1} ExportSelection extends Operation
 	Concept:{0..1} Events
 		Concept:{0..1} OnClickRecord
-			Concept:{0..1}:Named CatalogEvent
+			Concept:{0..1} CatalogEvent
 				sub OpenDialog
 					var integer:{%} width = 100%
 					var integer:{%} height = 100%
@@ -48,6 +48,7 @@ Concept CatalogView
 	var Mold mold
 	sub ListView
 	sub GridView
+	sub MagazineView
 	sub MapView
 		Concept Center
 			var double latitude
