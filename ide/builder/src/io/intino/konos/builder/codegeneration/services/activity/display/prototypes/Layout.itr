@@ -80,11 +80,11 @@ def type(group) trigger(elementOption)
 end
 
 def type(catalogs) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ])[.filter((context, target, object) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, context, target, object))]
+	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ]))[.filter((catalog, context, target, object) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, catalog, context, target, object))]
 end
 
 def type(panels) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Catalog.class, $panels+quoted...[, ]))[.object((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object)))]
+	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Panel.class, $panel+quoted...[, ]))[.object((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object)))]
 end
 
 def type(objects) trigger(render)
