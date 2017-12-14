@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.actions;
 
 import io.intino.konos.alexandria.activity.ActivityBox;
-import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaDesktop;
 import io.intino.konos.alexandria.activity.displays.Soul;
 import io.intino.konos.alexandria.activity.services.push.ActivityClient;
 import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
@@ -22,7 +22,7 @@ public class HomePageAction extends AlexandriaPageAction {
 	    return new Soul(session) {
 			@Override
 			public void personify() {
-				AlexandriaDesktopDisplay display = new AlexandriaDesktopDisplay(box);
+				AlexandriaDesktop display = new AlexandriaDesktop(box);
 				register(display);
 				display.personify();
 			}

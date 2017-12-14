@@ -2,9 +2,9 @@ package io.intino.konos.alexandria.activity.helpers;
 
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
-import io.intino.konos.alexandria.activity.displays.AlexandriaStampDisplay;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementView;
+import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.displays.ElementView;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementViewDisplay;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -65,7 +65,7 @@ public class ElementHelper {
 			}
 
 			@Override
-			public AlexandriaStampDisplay display(String name) {
+			public AlexandriaStamp display(String name) {
 				return provider.display(name);
 			}
 
@@ -115,8 +115,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementViewDisplay.OpenItemDialogEvent openItemDialogEvent(String item, Stamp stamp, String username) {
-		return new AlexandriaElementViewDisplay.OpenItemDialogEvent() {
+	public static AlexandriaElementView.OpenItemDialogEvent openItemDialogEvent(String item, Stamp stamp, String username) {
+		return new AlexandriaElementView.OpenItemDialogEvent() {
 			@Override
 			public String item() {
 				return item;
@@ -139,8 +139,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementViewDisplay.ExecuteItemTaskEvent executeItemTaskEvent(String item, Stamp stamp) {
-		return new AlexandriaElementViewDisplay.ExecuteItemTaskEvent() {
+	public static AlexandriaElementView.ExecuteItemTaskEvent executeItemTaskEvent(String item, Stamp stamp) {
+		return new AlexandriaElementView.ExecuteItemTaskEvent() {
 			@Override
 			public String item() {
 				return item;

@@ -26,11 +26,11 @@
                                               on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
             <div class="main flex">
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
-                <cotton-zombie display="AlexandriaCatalogViewListDisplay" widget="AlexandriaCatalogViewList"></cotton-zombie>
+                <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
-        <cotton-zombie display="AlexandriaDialogContainerDisplay" widget="AlexandriaDialogContainer"></cotton-zombie>
+        <cotton-zombie display="AlexandriaDialogContainer" widget="AlexandriaDialogContainer"></cotton-zombie>
         <paper-dialog id="groupingsDialog" no-overlap>
             <h2>[[ShowGroupings]]</h2>
             <alexandria-catalog-grouping-list hidden="[[_hideGroupings]]"

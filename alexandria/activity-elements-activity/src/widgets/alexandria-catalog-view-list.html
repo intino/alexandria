@@ -27,19 +27,19 @@
         <iron-pages id="scrollingRegion" selected="{{_selectedView}}" class$="fullSize_[[_viewListHidden]]">
             <template is="dom-repeat" items="[[_viewList]]" as="view">
                 <template is="dom-if" if="[[_isMagazineView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogMagazineViewDisplay" widget="AlexandriaCatalogMagazineView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                    <div><cotton-zombie display="AlexandriaCatalogMagazineView" widget="AlexandriaCatalogMagazineView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
                 <template is="dom-if" if="[[_isListView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogListViewDisplay" widget="AlexandriaCatalogListView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                    <div><cotton-zombie display="AlexandriaCatalogListView" widget="AlexandriaCatalogListView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
                 <template is="dom-if" if="[[_isGridView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogListViewDisplay" widget="AlexandriaCatalogListView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                    <div><cotton-zombie display="AlexandriaCatalogListView" widget="AlexandriaCatalogListView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
                 <template is="dom-if" if="[[_isMapView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogMapViewDisplay" widget="AlexandriaCatalogMapView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                    <div><cotton-zombie display="AlexandriaCatalogMapView" widget="AlexandriaCatalogMapView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
                 <template is="dom-if" if="[[_isDisplayView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogDisplayViewDisplay" widget="AlexandriaCatalogDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                    <div><cotton-zombie display="AlexandriaCatalogDisplayView" widget="AlexandriaCatalogDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
                 </template>
             </template>
         </iron-pages>
