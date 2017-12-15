@@ -27,7 +27,7 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 		RenderCatalogs render = rawView.render();
 		Catalog catalog = render.catalogs().get(0);
 		buildDisplay(catalog).ifPresent(display -> {
-			display.filter(item -> render.filter(catalog, context(), target(), (Item) item));
+			display.filter(item -> render.filter(catalog, context(), target(), (Item) item, username()));
 			display.target(target());
 			display.elementDisplayManager(provider().elementDisplayManager());
 			display.catalog(catalog);

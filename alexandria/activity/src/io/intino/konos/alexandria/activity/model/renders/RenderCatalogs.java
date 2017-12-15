@@ -20,8 +20,8 @@ public class RenderCatalogs extends ElementRender {
 		return this;
 	}
 
-	public boolean filter(Catalog catalog, Element context, Item target, Item item) {
-		return filter == null || filter.filter(catalog, context, target, item.object());
+	public boolean filter(Catalog catalog, Element context, Item target, Item item, String username) {
+		return filter == null || filter.filter(catalog, context, target, item.object(), username);
 	}
 
 	public RenderCatalogs filter(Filter filter) {
@@ -30,6 +30,6 @@ public class RenderCatalogs extends ElementRender {
 	}
 
 	public interface Filter {
-		boolean filter(Catalog catalog, Element context, Object target, Object object);
+		boolean filter(Catalog catalog, Element context, Object target, Object object, String username);
 	}
 }
