@@ -158,7 +158,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public AlexandriaStamp display(String stampKey) {
-		return ((Display)stamp(stampKey)).instance();
+		return ((Display)stamp(stampKey)).instance(username());
 	}
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
