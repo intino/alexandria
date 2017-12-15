@@ -11,7 +11,7 @@ public class Display extends Stamp<String> {
 		return null;
 	}
 
-	public <SD extends AlexandriaStamp> SD instance(String username) {
+	public AlexandriaStamp instance(String username) {
 		return displayBuilder != null ? displayBuilder.display(name(), username) : null;
 	}
 
@@ -21,6 +21,6 @@ public class Display extends Stamp<String> {
 	}
 
 	public interface DisplayBuilder {
-		<SD extends AlexandriaStamp> SD display(String name, String username);
+		AlexandriaStamp display(String name, String username);
 	}
 }
