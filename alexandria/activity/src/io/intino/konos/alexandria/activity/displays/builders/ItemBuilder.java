@@ -120,7 +120,7 @@ public class ItemBuilder {
             result.add(propertyOf("title", ((ItemLinks)stamp).title(item, username)));
 
         if (stamp instanceof CatalogLink)
-            result.add(propertyOf("title", ((CatalogLink)stamp).title(item, username)));
+            result.add(propertyOf("title", ((CatalogLink)stamp).value(item, username)));
 
         if (stamp instanceof Location) {
             URL icon = ((Location)stamp).icon(item, username);

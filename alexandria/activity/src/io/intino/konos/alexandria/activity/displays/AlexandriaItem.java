@@ -142,7 +142,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
 		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
 
-		display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item));
+		display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, username()));
 		if (display instanceof AlexandriaTemporalCatalog)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
@@ -276,7 +276,6 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 		AlexandriaAbstractCatalog result = stamp.display();
 		if (result == null) return null;
 		result.target(item);
-		result.catalog(stamp.catalog());
 		return result;
 	}
 
