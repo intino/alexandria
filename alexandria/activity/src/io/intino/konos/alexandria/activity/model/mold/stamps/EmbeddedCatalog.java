@@ -36,8 +36,9 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return display;
 	}
 
-	public void display(AlexandriaCatalog display) {
+	public EmbeddedCatalog display(AlexandriaCatalog display) {
 		this.display = display;
+		return this;
 	}
 
 	@Override
