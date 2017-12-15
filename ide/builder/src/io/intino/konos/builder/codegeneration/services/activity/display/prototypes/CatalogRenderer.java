@@ -48,7 +48,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void views(Catalog catalog, Frame frame) {
-		for (CatalogView view : catalog.views().catalogViewList()) frame.addSlot("view", frameOf(view, catalog));
+		for (CatalogView view : catalog.views().catalogViewList())
+			frame.addSlot("view", frameOf(view, catalog));
 		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog));
 	}
 
@@ -80,20 +81,11 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(CatalogView view, Catalog catalog) {
-		return new Frame("view", view.getClass().getSimpleName())
+		final Frame frame = new Frame("view", view.getClass().getSimpleName())
 				.addSlot("label", view.label())
 				.addSlot("catalog", catalog.name$())
 				.addSlot("package", this.packageName)
 				.addSlot("name", view.name$());
-	}
-
-	private Frame frameOf(DisplayView view, Catalog catalog) {
-		Frame frame = new Frame("view", view.getClass().getSimpleName())
-				.addSlot("box", box)
-				.addSlot("catalog", catalog.name$())
-				.addSlot("name", view.name$())
-				.addSlot("package", this.packageName)
-				.addSlot("display", view.display());
 		if (view.i$(MapView.class)) {
 			MapView mapView = view.a$(MapView.class);
 			if (mapView.center() != null)
@@ -104,6 +96,15 @@ public class CatalogRenderer extends PrototypeRenderer {
 					.addSlot("max", mapView.zoom().max());
 		}
 		return frame;
+	}
+
+	private Frame frameOf(DisplayView view, Catalog catalog) {
+		return new Frame("view", view.getClass().getSimpleName())
+				.addSlot("box", box)
+				.addSlot("catalog", catalog.name$())
+				.addSlot("name", view.name$())
+				.addSlot("package", this.packageName)
+				.addSlot("display", view.display());
 	}
 
 	private Frame frameOf(Catalog.Toolbar toolbar) {

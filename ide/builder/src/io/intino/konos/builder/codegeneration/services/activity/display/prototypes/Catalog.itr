@@ -29,29 +29,29 @@ def type(catalog)
 		$toolbar
     	]
     	public static class Source {
-    		public static java.util.List<$type> objects($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition, String username) {
+    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition, String username) {
     			return java.util.Collections.emptyList();//TODO
     		}
 
-    		public static $type object($box+firstUpperCase~Box box, String id, String username) {
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, String username) {
     			return null;//TODO
     		}
 
-    		public static $type rootObject($box+firstUpperCase~Box box, java.util.List<$type> objects, String username) {
+    		public static $type root$type+shortType+firstUpperCase($box+firstUpperCase~Box box, java.util.List<$type> objects, String username) {
     			return null;
     		}
 
-    		public static $type defaultObject($box+firstUpperCase~Box box, String id, String username) {
+    		public static $type default$type+shortType+firstUpperCase($box+firstUpperCase~Box box, String id, String username) {
     			return null;
     		}
 
-    		public static String objectId($box+firstUpperCase~Box box, $type object) {
-    			//return object.core$$().id();
+    		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase~.core$$().id();
     			return null;
     		}
 
-    		public static String objectName($box+firstUpperCase~Box box, $type object) {
-    			//return object.name$$();
+    		public static String $type+shortType+firstLowerCase~Name($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase.name$$();
     			return null;
     		}
     	}

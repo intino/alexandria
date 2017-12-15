@@ -1,15 +1,15 @@
 def type(desktop & gen)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.activity.displays.AlexandriaDesktopDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDesktop;
     import io.intino.konos.alexandria.activity.model.Desktop;
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.net.MalformedURLException;
     import java.net.URL;
 
-	public abstract class Abstract$name+firstUpperCase extends AlexandriaDesktopDisplay<$name+firstUpperCase~DisplayNotifier> {
+	public abstract class Abstract$name+firstUpperCase extends AlexandriaDesktop<$name+firstUpperCase~Notifier> {
 
     	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
@@ -20,8 +20,8 @@ def type(desktop & gen)
     		Desktop desktop = new Desktop();
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
-    		[try { desktop.logo(new URL("$logo"));} catch (MalformedURLException e) {}]
-    		[try { desktop.favicon(new URL("$favicon"));} catch (MalformedURLException e) {}]
+    		[desktop.logo("$logo");]
+    		[desktop.favicon("$favicon");]
     		desktop.layoutDisplayProvider(() -> $package+validPackage.displays.$name+firstUpperCase.layout(box));
     		return desktop;
     	}
@@ -32,7 +32,7 @@ def type(desktop)
 	package $package.displays;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-	import io.intino.konos.alexandria.activity.displays.AlexandriaLayoutDisplay;
+	import io.intino.konos.alexandria.activity.displays.AlexandriaLayout;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 
@@ -40,7 +40,7 @@ def type(desktop)
             super(box);
         }
 
-		public static AlexandriaLayoutDisplay layout($box+FisrtUpperCase~Box box) {
+		public static AlexandriaLayout layout($box+FisrtUpperCase~Box box) {
 			return new $layout+FirstUpperCase(box);
 		}
     }

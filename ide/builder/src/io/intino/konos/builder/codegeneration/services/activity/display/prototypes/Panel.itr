@@ -2,7 +2,7 @@ def type(panel & gen)
 	package $package.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.activity.displays.AlexandriaPanelDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaPanel;
     import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
     import io.intino.konos.alexandria.activity.model.AbstractView;
     import io.intino.konos.alexandria.activity.model.Panel;
@@ -11,13 +11,13 @@ def type(panel & gen)
     import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.util.ArrayList;
     import java.util.List;
     import java.util.function.Consumer;
 
-    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanelDisplay<$name+firstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanel<$name+firstUpperCase~Notifier> {
 
     	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
