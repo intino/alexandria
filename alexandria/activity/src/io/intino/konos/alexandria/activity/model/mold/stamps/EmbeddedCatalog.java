@@ -11,11 +11,11 @@ public class EmbeddedCatalog extends Stamp<String> {
 	private AlexandriaCatalog display;
 	private Filter filter;
 
-	public boolean filter(Element context, Item target, Item item) {
+	public boolean filter(Element context, Item target, Item item, String username) {
 		if (filter == null) return true;
 		if (target == null && item == null) return true;
 		if (target == null || item == null) return false;
-		return filter.filter(context, target.object(), item.object());
+		return filter.filter(context, target.object(), item.object(), username);
 	}
 
 	public EmbeddedCatalog filter(Filter filter) {
@@ -45,7 +45,7 @@ public class EmbeddedCatalog extends Stamp<String> {
 	}
 
 	public interface Filter {
-		boolean filter(Element context, Object target, Object object);
+		boolean filter(Element context, Object target, Object object, String username);
 	}
 
 }

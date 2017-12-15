@@ -121,7 +121,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 			display.refresh();
 		});
 		embeddedCatalogs().forEach((key, display) -> {
-			display.filter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item));
+			display.filter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
 			display.label(key.label());
 			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
 			display.embedded(true);
