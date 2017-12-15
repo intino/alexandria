@@ -2,7 +2,7 @@ def type(layout & gen)
 	package $package.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
-    import io.intino.konos.alexandria.activity.displays.Alexandria$mode+FisrtUpperCase~LayoutDisplay;
+    import io.intino.konos.alexandria.activity.displays.Alexandria$mode+FisrtUpperCase~Layout;
     import io.intino.konos.alexandria.activity.model.Catalog;
     import io.intino.konos.alexandria.activity.model.Element;
     import io.intino.konos.alexandria.activity.model.Layout;
@@ -12,12 +12,12 @@ def type(layout & gen)
     import io.intino.konos.alexandria.activity.model.layout.options.Option;
     import io.intino.konos.alexandria.activity.model.renders.*;
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.util.ArrayList;
     import java.util.List;
 
-    public abstract class Abstract$name+FirstUpperCase extends Alexandria$mode+FirstUpperCase~LayoutDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+FirstUpperCase extends Alexandria$mode+FirstUpperCase~Layout<$name+FirstUpperCase~Notifier> {
 
     	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
@@ -55,11 +55,11 @@ def type(options) trigger(add)
 		label((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.label(box, element, object))
 		[.icon((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))]
 		[.bubble((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.bubble(box, element, object))]
-		.render($render));
+		.render($render))
 end
 
 def	type(option & elementOption) trigger(add)
-	.add(new io.intino.konos.alexandria.activity.model.layout.options.Option().render($render)).label("$label"))
+	.add(new io.intino.konos.alexandria.activity.model.layout.options.Option().label("$label").render($render))
 end
 
 def type(options) trigger(elementOption)

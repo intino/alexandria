@@ -13,9 +13,9 @@ public class UIGenerationTest {
 
 	private static final String UI = "ui";
 	private static final String DIALOG = "dialog";
-	private static final String testKonos = "testKonos";
+	private static final String testKonos = "testkonos";
 	private static String testEbar = "testebar";
-	private static String testCesar = "io.intino.cesar.box";
+	private static String testCesarPackage = "io.intino.cesar.box";
 
 
 	@Test
@@ -36,25 +36,25 @@ public class UIGenerationTest {
 
 	@Test
 	public void testKonos() throws Exception {
-		execute(new File("test-gen", testKonos), testKonos);
+		execute(new File("test-gen", testKonos), testKonos, testKonos);
 	}
 
 
 	@Test
 	public void testEbar() throws Exception {
-		execute(new File("test-gen", testEbar), testEbar);
+		execute(new File("test-gen", testEbar), testEbar, testEbar);
 	}
 
 	@Test
 	public void testCesar() throws Exception {
-		execute(new File("test-gen", testCesar), testCesar);
+		execute(new File("test-gen", testCesarPackage), "testCesar", testCesarPackage);
 	}
 
-	private void execute(File gen, String test) {
+	private void execute(File gen, String stash, String workingPackage) {
 		cottons.utils.Files.removeDir(gen);
 		gen.mkdirs();
-		KonosGraph graph = new Graph().loadStashes("testcesar").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, test.toLowerCase()).execute();
+		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
 	}
 
 }

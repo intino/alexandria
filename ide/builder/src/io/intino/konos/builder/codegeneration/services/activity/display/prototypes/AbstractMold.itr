@@ -1,15 +1,15 @@
 def type(mold)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.activity.displays.AlexandriaMoldDisplay;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaMold;
     import io.intino.konos.alexandria.activity.model.Mold;
     import io.intino.konos.alexandria.activity.model.mold.Block;
     import io.intino.konos.alexandria.activity.model.mold.Stamp;
     import io.intino.konos.alexandria.activity.model.mold.stamps.*;
     import $package+validPackage.$box+firstUpperCase~Box;
-	import $package+validPackage.displays.notifiers.$name+firstUpperCase~DisplayNotifier;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
-    public abstract class Abstract$name+FirstUpperCase extends AlexandriaMoldDisplay<$name+FirstUpperCase~DisplayNotifier> {
+    public abstract class Abstract$name+FirstUpperCase extends AlexandriaMold<$name+FirstUpperCase~Notifier> {
 
     	public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
     		super(box);
