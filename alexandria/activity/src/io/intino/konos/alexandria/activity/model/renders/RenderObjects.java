@@ -23,23 +23,7 @@ public class RenderObjects extends ElementRender {
 	}
 
 	public ItemList source() {
-		return source != null ? items(source.objects()) : new ItemList();
-	}
-
-	private ItemList items(List<Object> objects) {
-		return new ItemList(objects.stream().map(this::item).collect(toList()));
-	}
-
-	private Item item(Object object) {
-		return new Item().id(id(object)).name(name(object)).object(object);
-	}
-
-	private String id(Object object) {
-		return source != null ? source.id(object) : null;
-	}
-
-	private String name(Object object) {
-		return source != null ? source.name(object) : null;
+		return source != null ? items(source.entries()) : new ItemList();
 	}
 
 	public RenderObjects source(Source source) {
@@ -47,10 +31,22 @@ public class RenderObjects extends ElementRender {
 		return this;
 	}
 
+	private ItemList items(List<Source.Entry> objects) {
+		return new ItemList(objects.stream().map(this::item).collect(toList()));
+	}
+
+	private Item item(Source.Entry entry) {
+		return new Item().id(entry.id()).name(entry.name()).object(entry.object());
+	}
+
 	public interface Source {
-		List<Object> objects();
-		String id(Object object);
-		String name(Object object);
+		List<Entry> entries();
+
+		interface Entry {
+			String id();
+			String name();
+			Object object();
+		}
 	}
 
 }
