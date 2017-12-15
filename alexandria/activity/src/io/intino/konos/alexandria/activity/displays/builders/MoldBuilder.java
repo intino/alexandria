@@ -97,14 +97,14 @@ public class MoldBuilder {
     private static void addDownloadOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof DownloadOperation)) return;
         DownloadOperation downloadStamp = (DownloadOperation)stamp;
-        propertyList.add(shapeProperty("title", downloadStamp.title()));
+        propertyList.add(shapeProperty("title", downloadStamp.label()));
         propertyList.add(shapeProperty("options", String.join(",", downloadStamp.options())));
     }
 
     private static void addExportOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof ExportOperation)) return;
         ExportOperation exportStamp = (ExportOperation)stamp;
-        propertyList.add(shapeProperty("title", exportStamp.title()));
+        propertyList.add(shapeProperty("title", exportStamp.label()));
         propertyList.add(shapeProperty("options", String.join(",", exportStamp.options())));
         propertyList.add(shapeProperty("from", String.valueOf(exportStamp.from().toEpochMilli())));
         propertyList.add(shapeProperty("to", String.valueOf(exportStamp.to().toEpochMilli())));

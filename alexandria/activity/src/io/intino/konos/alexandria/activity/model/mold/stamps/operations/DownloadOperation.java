@@ -7,18 +7,8 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 import java.util.List;
 
 public class DownloadOperation extends Operation<String> {
-	private String title;
 	private List<String> options = new java.util.ArrayList<>();
 	private Execution execution;
-
-	public String title() {
-		return this.title;
-	}
-
-	public DownloadOperation title(String title) {
-		this.title = title;
-		return this;
-	}
 
 	public List<String> options() {
 		return this.options;
