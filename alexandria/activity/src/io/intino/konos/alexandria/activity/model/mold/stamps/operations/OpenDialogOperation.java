@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 
 public class OpenDialogOperation extends Operation<String> {
-	private int width;
+	private int width = 100;
 	private Stamp.Value<String> path;
 
 	public int width() {
