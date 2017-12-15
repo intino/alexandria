@@ -27,8 +27,9 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return catalog;
 	}
 
-	public void catalog(Catalog catalog) {
+	public EmbeddedCatalog catalog(Catalog catalog) {
 		this.catalog = catalog;
+		return this;
 	}
 
 	public AlexandriaCatalog display() {
