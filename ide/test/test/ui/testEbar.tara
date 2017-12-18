@@ -51,6 +51,7 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMo
 Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
 	Block(layout = Horizontal)
 		Icon(label = "icon") icon
+			source = Polymer
 		Title("label") label
 	Block(layout = Horizontal Wrap, mode = Expanded)
 		Picture("sequencia") chart
@@ -69,6 +70,7 @@ Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationM
 	Block(layout = Horizontal)
 		Block
 			Icon(label = "icono") icono
+				source = Polymer
 		Block(layout = Flexible)
 			Title("estación") title
 			Description("direcciones de correo") emails
@@ -76,7 +78,7 @@ Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationM
 	Block(layout = Horizontal Wrap)
 		mode = Expanded
 		Block
-			Icon(label = "icono") dummy
+			Icon(label = "icono", source = Polymer) dummy
 		Block(layout = Flexible)
-			OpenDialog editAlert
+			OpenDialogOperation editAlert
 			 	label = "editar..."

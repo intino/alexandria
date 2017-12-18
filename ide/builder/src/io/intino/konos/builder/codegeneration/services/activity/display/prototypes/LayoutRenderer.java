@@ -49,16 +49,18 @@ public class LayoutRenderer extends PrototypeRenderer {
 
 
 	private Frame frameOf(Options options) {
-		Frame frame = new Frame("elementOption", "options")
+		Frame frame = new Frame("elementOption", "options").addSlot("box", box)
 				.addSlot("layout", this.display.a$(Layout.class).name$())
-				.addSlot("name", options.name$());
+				.addSlot("name", options.name$())
+				.addSlot("path", pathOf(options.core$()));
 		render(options.elementRenderer(), frame);
 		return frame;
 	}
 
 	private Frame frameOf(Group group) {
-		final Frame frame = new Frame("elementOption", "group")
+		final Frame frame = new Frame("elementOption", "group").addSlot("box", box)
 				.addSlot("label", group.label())
+				.addSlot("name", group.name$())
 				.addSlot("mode", group.mode());
 		if (!group.optionList().isEmpty())
 			frame.addSlot("elementOption", group.optionList().stream().map(this::frameOf).toArray(Frame[]::new));
@@ -68,7 +70,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(Option option) {
-		final Frame frame = new Frame("option", "elementOption");
+		final Frame frame = new Frame("option", "elementOption").addSlot("name", option.name$()).addSlot("box", box);
 		final ElementRenderer renderer = option.elementRenderer();
 		frame.addTypes(renderer instanceof RenderCatalogs ? "catalog" : "panel").addSlot("label", option.label());
 		render(renderer, frame);
@@ -82,13 +84,16 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame renderCatalogs(RenderCatalogs render) {
-		final Frame renderFrame = new Frame("render", "catalogs").addSlot("catalog", render.catalogs().stream().map(Layer::name$).toArray(String[]::new));
-		if (render.filtered()) renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
+		final Frame renderFrame = new Frame("render", "catalogs")
+				.addSlot("box", box)
+				.addSlot("catalog", render.catalogs().stream().map(Layer::name$).toArray(String[]::new));
+		if (render.filtered())
+			renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return renderFrame;
 	}
 
 	private Frame renderPanels(RenderPanels render) {
-		final Frame renderFrame = new Frame("render", "panels")
+		final Frame renderFrame = new Frame("render", "panels").addSlot("box", box)
 				.addSlot("panel", render.panels().stream().map(Layer::name$).toArray(String[]::new));
 		if (render.withObject().equals(withObject))
 			renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
@@ -96,7 +101,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame renderObjects(RenderObjects render) {
-		Frame frame = new Frame("render", "objects");
+		Frame frame = new Frame("render", "objects").addSlot("box", box);
 		frame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return frame;
 	}

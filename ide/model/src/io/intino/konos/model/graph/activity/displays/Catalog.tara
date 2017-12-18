@@ -5,19 +5,7 @@ use Displays
 
 Concept Catalog extends Display
 	var string modelClass
-	Concept:{0..1} Toolbar
-		var boolean canSearch = true
-		Concept:{0..1} GroupingSelection extends Operation
-		Concept:{0..1} OpenDialog extends Operation
-
-		Concept:{0..1} Task extends Operation
-		Concept:{0..1} TaskSelection extends Operation
-			var word:{None Catalog Selection} refresh = None
-		Concept:{0..1} Download extends Operation
-		Concept:{0..1} DownloadSelection extends Operation
-
-		Concept:{0..1} Export extends Operation
-		Concept:{0..1} ExportSelection extends Operation
+	has:{0..1} Toolbar
 	Concept:{0..1} Events
 		Concept:{0..1} OnClickRecord
 			Concept:{0..1} CatalogEvent
@@ -37,6 +25,20 @@ Concept Catalog extends Display
 			var word:{Percentage Absolute} histogram = Percentage
 		Concept:Named Sorting
 			var string label
+
+Concept Toolbar is decorable
+	var boolean canSearch = true
+	Concept:{0..1} GroupingSelection extends Operation
+	Concept:{0..1} OpenDialog extends Operation
+
+	Concept:{0..1} Task extends Operation
+	Concept:{0..1} TaskSelection extends Operation
+
+	Concept:{0..1} Download extends Operation
+	Concept:{0..1} DownloadSelection extends Operation
+
+	Concept:{0..1} Export extends Operation
+	Concept:{0..1} ExportSelection extends Operation
 
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
@@ -62,4 +64,5 @@ Concept CatalogView
 Concept DisplayView is component
 	var string label
 	var string display
+	var boolean hideNavigator = true
 

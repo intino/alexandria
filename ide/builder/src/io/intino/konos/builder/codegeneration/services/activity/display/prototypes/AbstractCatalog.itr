@@ -9,11 +9,11 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
     import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
     import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
+    import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
     import io.intino.konos.alexandria.activity.model.catalog.views.GridView;
     import io.intino.konos.alexandria.activity.model.catalog.views.ListView;
     import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
     import io.intino.konos.alexandria.activity.model.toolbar.*;
-    import io.intino.tara.magritte.Concept;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -28,18 +28,18 @@ def type(catalog & gen)
     	}
 
     	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
-    		Catalog catalog = (Catalog) new Catalog()
-    			//.onScopeChange((scope, username) -> $name+firstUpperCase.Events.scopeChange(box, scope, username))
-    			.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username))
-    			.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username))
-    			.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username))[
-    			$groupingselection+empty.clusterManager((element, grouping, group, username) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, username))][
+    		io.intino.konos.alexandria.activity.model.Catalog catalog = new io.intino.konos.alexandria.activity.model.Catalog();
+			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));
+			catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
+			catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username));[
+			catalog.events().onClickRecord(new OnClickRecord().$event);][
+			$groupingselection+empty~catalog.clusterManager((element, grouping, group, username) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, username))][
     			$toolbar+empty.toolbar(buildToolbar(box))][
     			.name("$name")][
 				.label("$label")]
 				.objectLoader((id, username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, username))
-				.objectIdLoader((object) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
-				.objectNameLoader((object) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
+				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
+				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));
     		buildArrangements(box).forEach(a -> catalog.add(a));
     		return catalog;
@@ -71,6 +71,20 @@ def trigger(toolbar)
 		$operation...[$NL]
 		return toolbar;
 	}
+end
+
+def type(openDialog) trigger(event)
+	openDialog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenDialog()[.height($height)][.width($width)].path(record -> $catalog+FirstUpperCase.Events.onOpenDialogPath(box, record)))
+end
+
+def type(openPanel) trigger(event)
+	openPanel(new io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel()
+		[.breadcrumbs($breadCrumbs)]
+		.panel((io.intino.konos.alexandria.activity.model.Panel) ElementDisplays.displayFor(box, "$panel").element()))
+end
+
+def trigger(breadCrumbs)
+	(record, username) -> $catalog+FirstUpperCase.Events.onOpenPanelBreadcrumbs(box, ($type) record, username)
 end
 
 def type(operation & download) trigger(operation)
@@ -106,19 +120,27 @@ def type(operation & taskselection) trigger(operation)
 end
 
 def type(listview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.ListView()[.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.ListView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
 end
 
 def type(gridview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.GridView()[.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
-end
-
-def type(displayview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.DisplayView()[.hideNavigator($hideNavigator)].displayLoader((context, loadingListener, instantListener, username) -> $catalog+FirstUpperCase.Views.$display+firstLowerCase(box, (io.intino.konos.alexandria.activity.model.Element)context, loadingListener, instantListener, username)).name("$name").label("$label"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.GridView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
 end
 
 def type(mapview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "testInfrastructureMold").element()).name("v4").label("Mapa"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+end
+
+def type(magazineview) trigger(add)
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MagazineView()[.noRecordMessage("$noRecordMessage")][.width($width)].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+end
+
+def type(displayview) trigger(add)
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.DisplayView()
+		.scopeManager((display, scope) -> $catalog+FirstUpperCase.Views.$display+firstLowerCase~Scope(box, display, scope))[
+		.hideNavigator($hideNavigator)]
+		.displayLoader((context, loadingListener, instantListener, username) -> $catalog+FirstUpperCase.Views.$display+firstLowerCase(box, (io.intino.konos.alexandria.activity.model.Element)context, loadingListener, instantListener, username))
+		.name("$name").label("$label"));
 end
 
 def type(sorting) trigger(add)
@@ -129,7 +151,6 @@ def type(grouping) trigger(add)
 	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, username) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, username)).name("$name")[.label("$label")]);
 end
 
-
 def trigger(zoom)
-	zoom(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Zoom()[.defaultZoom($default)][.min($min)][.max($max)])
+	zoom(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Zoom()[.defaultZoom($default)][.max($max)][.min($min)])
 end

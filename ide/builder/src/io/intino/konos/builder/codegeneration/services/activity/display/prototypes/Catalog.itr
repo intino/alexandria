@@ -59,6 +59,8 @@ def type(catalog)
     	public static class Events {
     		public static void scopeChange($box+firstUpperCase~Box box, Scope scope, String username) {
     		}
+
+    		$event
     	}
 
     	public static class Views {
@@ -89,6 +91,22 @@ def type(catalog)
     }
 end
 
+def type(openDialog) trigger(event)
+	public static String onOpenDialogPath($box+firstUpperCase~Box box, String record) {
+		return null; //return dialog path
+	}
+end
+
+def type(openPanel) trigger(event)
+	$breadcrumbs
+end
+
+def trigger(breadcrumbs)
+	public static io.intino.konos.alexandria.activity.model.mold.stamps.Tree onOpenPanelBreadcrumbs($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase, String username) {
+		return null; //return breadcrumbs
+	}
+end
+
 def trigger(toolbar)
 	public static class Toolbar {
 		public static TaskSelection.Refresh removeElements($box+firstUpperCase~Box box, Element element, String option, java.util.List<$type> selection, String username) {
@@ -101,7 +119,11 @@ def trigger(toolbar)
 end
 
 def type(view & displayView) trigger(method)
-	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.tara.magritte.Concept context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
+	public static AlexandriaDisplay $display+firstLowerCase~Scope($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.model.catalog.Scope scope) {
+		return null;//TODO
+	}
+
+	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
 		return null;//TODO
 	}
 end

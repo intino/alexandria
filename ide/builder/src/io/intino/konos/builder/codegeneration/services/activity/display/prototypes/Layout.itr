@@ -50,11 +50,69 @@ def type(layout & gen)
 	}
 end
 
+def type(elementOption & options) trigger(class)
+	public static class $name+FirstUpperCase {
+
+		public static String label($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.lang.Object object) {
+			return null;
+		}
+
+		public static String icon($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.lang.Object object) {
+			return null;
+		}
+
+		public static Integer bubble($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.lang.Object object) {
+			return null;
+		}
+
+		$render+method
+
+		$elementOption+class...[$NL]
+	}
+end
+
+def type(elementOption & group) trigger(class)
+	public static class $name+FirstUpperCase {
+		$elementOption+class...[$NL]
+	}
+end
+
+def type(elementOption & option) trigger(class)
+	public static class $name+FirstUpperCase {
+		$elementOption+class...[$NL]
+	}
+end
+
+
+def type(catalogs) trigger(method)
+	public static boolean filter(Catalog catalog, Element context, Object target, Object object) {
+		return true;
+	}
+end
+
+def type(panels) trigger(method)
+	public static void object($box+firstUpperCase~Box box, Object element, Object object) {
+
+	}
+end
+
+def type(objects) trigger(method)
+	public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects($box+firstUpperCase~Box box) {
+		return java.util.Collections.emptyList();
+	}
+end
+
+def type(elementOption & options) trigger(class)
+	public static class $name+FirstUpperCase {
+		$elementOption+class...[$NL]
+	}
+end
+
 def type(options) trigger(add)
 	.add(new io.intino.konos.alexandria.activity.model.layout.options.Options().
-		label((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.label(box, element, object))
-		[.icon((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))]
-		[.bubble((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.bubble(box, element, object))]
+		label((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.label(box, element, object))
+		[.icon((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.icon(box, element, object))]
+		[.bubble((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.bubble(box, element, object))]
 		.render($render))
 end
 
@@ -64,9 +122,9 @@ end
 
 def type(options) trigger(elementOption)
 	result.add(new io.intino.konos.alexandria.activity.model.layout.options.Options().
-		label((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.label(box, element, object))
-		.icon((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.icon(box, element, object))
-		.bubble((element, object) -> $layout+FirstUpperCase.$name+FirstUppercase.bubble(box, element, object))
+		label((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.label(box, element, object))
+		.icon((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.icon(box, element, object))
+		.bubble((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.bubble(box, element, object))
 		.render($render));
 end
 
@@ -84,11 +142,11 @@ def type(catalogs) trigger(render)
 end
 
 def type(panels) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Panel.class, $panel+quoted...[, ]))[.object((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object)))]
+	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Panel.class, $panel+quoted...[, ]))[.object((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.object(box, element, object)))]
 end
 
 def type(objects) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().source((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.source(box, element, object)).objects((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, element, object))
+	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().source(() -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box))
 end
 
 def type(layout)
@@ -102,10 +160,7 @@ def type(layout)
 			super(box);
 		}
 
-		@Override
-		protected void init() {
-			super.init();
-		}
+		$elementOption+class...[$NL]
 	}
 end
 

@@ -26,7 +26,6 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 	Toolbar
 		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
 		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
-			refresh = Catalog
 		Download("download", alexandriaIcon = "file-download")
 		DownloadSelection("download assets info", alexandriaIcon = "file-download")
 		Export("export", alexandriaIcon = "archive")
@@ -34,7 +33,8 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 
 	Events
 		OnClickRecord
-			OpenDialog openDialog
+			OpenPanel(panel = testAnalisis) openDialog
+				hasBreadcrumbs =true
 
 	Views
 		ListView("List", mold=testInfrastructureMold, width = 90%)
@@ -42,7 +42,7 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 		DisplayView("Charts", display="olapDisplay")
 		MapView("mapa", mold = testInfrastructureMold)
 			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-			Zoom(14,min=1,max=18)
+			Zoom(14, min=1, max=18)
 
 	Arrangement
 		Grouping(label="units") units
@@ -53,17 +53,51 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
 	Block a1
 		Location("coordinates")coordinates
+			hasCustomStyle =true
+			defaultStyle = "laallala"
+			height = 10
+			editable = true
+			suffix = "suffix"
+			layout = Fixed
+//		Breadcrumbs breadcrumbs
+//		CatalogLink(catalog = testInfrastructure) catalogLink
+//			filtered =true
+//		Description description
+//		Display display
+//		EmbeddedCatalog(catalog = testInfrastructure) embeddedCatalog
+//			filtered = true
+//		Highlight highlight
+//		Icon icon1
+//			source = Resource
+//		Icon icon2
+//			source = Base64
+//		Icon icon3
+//			source = Polymer
+//		ItemLinks itemLinks
+
 	Block(mode = Expanded) a2
 		Block b1
-			Title("label") label
-			Description("description") description
-		Block(layout = Horizontal)b2
+			DownloadOperation download
+				options = "a" "b"
+			OpenDialogOperation open
+				width =100%
+			ExportOperation export
+				from = "2011-12-03T10:15:30Z"
+				to = "2011-12-03T10:15:31Z"
+				options = "a" "b"
+			TaskOperation task
+//			Title("label") label
+//			Description("description") description
+//		Block(layout = Horizontal)b2
 			Picture("chart") chart
 				defaultStyle = "margin-top:6px;"
-			Snippet("sequencia") secuencia
-				layout = Flexible
-				defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-//		Block b3
+				defaultPicture ="/logo.png"
+			Rating rating
+				polymerIcon = "stars"
+//			Snippet("sequencia") secuencia
+//				layout = Flexible
+//				defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+////		Block b3
 //			Snippet() snipet2
 
 Schema Station
