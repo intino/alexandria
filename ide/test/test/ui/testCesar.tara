@@ -68,7 +68,6 @@ Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCat
 		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
 		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
 //			execute = @removeAssets
-			refresh = Catalog
 		Download("descargar", alexandriaIcon = "file-download")
 //			execute = @download
 		DownloadSelection("download assets info", alexandriaIcon = "file-download")
@@ -220,6 +219,7 @@ Mold(modelClass = "") testCesarAdministrationMold
 //				color = 'return record.core$().as(Configuration.class).notifications() ? "#388e3c" : "#9d9d9d";'
 //			Icon("icono", icon = @alertIcon) icono
 			Icon("icono") icono
+				source = Polymer
 		Block(layout = Flexible)
 			Description("Device Temperature Threshold") deviceTemperatureThreshold
 			Description("Device Battery Threshold") deviceBatteryThreshold
@@ -228,6 +228,7 @@ Mold(modelClass = "") testCesarAdministrationMold
 	Block(layout = Horizontal, mode = Expanded)
 		Block
 			Icon("icono") dummy
+				source = Polymer
 		Block(layout = Flexible)
 //			OpenDialogOperation("editar...", path = @configurationDialogPath) editAlert
 

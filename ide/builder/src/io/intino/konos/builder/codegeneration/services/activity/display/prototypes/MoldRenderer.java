@@ -51,38 +51,72 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private <T extends Layer> Frame frameOf(Stamp stamp) {
-		final Frame frame = new Frame("stamp", stamp.getClass().getSimpleName());
-		frame.addSlot("name", stamp.name$());
-		frame.addSlot("type", stamp.getClass().getSimpleName());
-		frame.addSlot("common", common(stamp));
-		frame.addSlot("mold", mold.name$());
-		frame.addSlot("moldClass", moldClass());
+		final Frame frame = baseFrame(stamp).addTypes("stamp")
+				.addSlot("type", stamp.getClass().getSimpleName())
+				.addSlot("common", common(stamp));
 		if (stamp.i$(Picture.class)) frameOf(frame, stamp.a$(Picture.class));
-		if (stamp.i$(Tree.class)) frameOf(frame, stamp.a$(Tree.class));
-		if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
-		if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
+		else if (stamp.i$(Rating.class)) frameOf(frame, stamp.a$(Rating.class));
+		else if (stamp.i$(Tree.class)) frameOf(frame, stamp.a$(Tree.class));
+		else if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
+		else if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
+		else if (stamp.i$(CatalogLink.class)) frameOf(frame, stamp.a$(CatalogLink.class));
+		else if (stamp.i$(Display.class)) frameOf(frame, stamp.a$(Display.class));
+		else if (stamp.i$(EmbeddedCatalog.class)) frameOf(frame, stamp.a$(EmbeddedCatalog.class));
+		else if (stamp.i$(Icon.class)) frameOf(frame, stamp.a$(Icon.class));
+		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
 		return frame;
-	}
-
-	private String moldClass() {
-		return mold.modelClass().isEmpty() ? "java.lang.Object" : mold.modelClass();
 	}
 
 	@NotNull
 	private Frame common(Stamp stamp) {
 		final Frame frame = baseFrame(stamp).addTypes("common");
-		if (!stamp.defaultStyle().isEmpty())
-			frame.addSlot("defaultStyle", baseFrame(stamp));
-		frame.addSlot("editable", stamp.editable());
-		frame.addSlot("valueType", "String");
+		if (!stamp.defaultStyle().isEmpty()) frame.addSlot("defaultStyle", stamp.defaultStyle());
+		if (stamp.hasCustomStyle()) frame.addSlot("style", baseFrame(stamp));
+		if (stamp.editable()) frame.addSlot("editable", baseFrame(stamp));
 		if (stamp.height() >= 0) frame.addSlot("height", stamp.height());
 		if (!stamp.label().isEmpty()) frame.addSlot("label", stamp.label());
 		if (!stamp.suffix().isEmpty()) frame.addSlot("suffix", stamp.suffix());
+		addValueMethod(stamp, frame);
 		return frame;
+	}
+
+
+	private void addValueMethod(Stamp stamp, Frame frame) {
+		if (stamp.i$(Display.class) || stamp.i$(EmbeddedCatalog.class) || stamp.i$(Operation.class) || stamp.i$(Page.class))
+			return;
+		frame.addSlot("valueMethod", baseFrame(stamp).addTypes("valueMethod")
+				.addSlot("valueType", (stamp.i$(Icon.class) && stamp.a$(Icon.class).source().equals(Icon.Source.Resource)) ?
+						Icon.Source.Resource.name().toLowerCase() :
+						stamp.getClass().getSimpleName()));
 	}
 
 	private void frameOf(Frame frame, Picture stamp) {
 		if (stamp.defaultPicture() != null) frame.addSlot("defaultPicture", stamp.defaultPicture().getPath());
+	}
+
+	private void frameOf(Frame frame, Rating stamp) {
+		frame.addSlot("ratingIcon", stamp.polymerIcon());
+	}
+
+	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
+		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Display stamp) {
+		frame.addSlot("displayBuilder", baseFrame(stamp).addTypes("displayBuilder"));
+	}
+
+	private void frameOf(Frame frame, CatalogLink stamp) {
+		if (stamp.filtered()) frame.addSlot("filter", baseFrame(stamp).addTypes("filter"));
+	}
+
+	private void frameOf(Frame frame, ItemLinks stamp) {
+		frame.addSlot("title", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Icon stamp) {
+		frame.addTypes(stamp.source().name() + "Icon");
+		frame.addSlot("title", baseFrame(stamp));
 	}
 
 	private void frameOf(Frame frame, Tree stamp) {
@@ -95,14 +129,20 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, Operation operation) {
-		frame.addSlot("operationType", operation.getClass().getSimpleName()).addTypes("operation");
-		if (operation.i$(OpenDialog.class)) frame.addSlot("width", operation.a$(OpenDialog.class).width());
-		if (operation.i$(Download.class)) frame.addSlot("options", operation.a$(Download.class).options());
-		if (operation.i$(Export.class)) {
-			final Export export = operation.a$(Export.class);
-			frame.addSlot("options", export.options());
+		frame.addTypes(operation.getClass().getSimpleName());
+		if (operation.i$(OpenDialogOperation.class)) {
+			frame.addSlot("width", operation.a$(OpenDialogOperation.class).width()).addSlot("dialogPath", baseFrame(operation));
+		} else if (operation.i$(DownloadOperation.class)) {
+			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
+			frame.addSlot("downloadExecution", baseFrame(operation));
+		} else if (operation.i$(ExportOperation.class)) {
+			final ExportOperation export = operation.a$(ExportOperation.class);
+			if (!export.options().isEmpty()) frame.addSlot("options", export.options().toArray(new String[0]));
+			frame.addSlot("exportExecution", baseFrame(operation));
 			if (export.from() != null) frame.addSlot("from", export.from().toEpochMilli());
-			if (export.to() != null) frame.addSlot("to", export.to());
+			if (export.to() != null) frame.addSlot("to", export.to().toEpochMilli());
+		} else if (operation.i$(TaskOperation.class)) {
+			frame.addSlot("taskExecution", baseFrame(operation));
 		}
 	}
 
@@ -115,7 +155,11 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private Frame baseFrame(Stamp stamp) {
-		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldClass", moldClass());
+		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldClass", moldClass()).addSlot("box", box);
+	}
+
+	private String moldClass() {
+		return mold.modelClass().isEmpty() ? "java.lang.Object" : mold.modelClass();
 	}
 
 	@Override

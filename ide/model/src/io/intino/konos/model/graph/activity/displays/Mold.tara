@@ -20,32 +20,36 @@ Concept Mold extends Display
 			var integer height = -1
 			var string suffix = ""
 			var string defaultStyle = ""
+			var boolean hasCustomStyle = false
 			var boolean editable = false
-			sub CatalogLink > var Catalog catalog
+			sub CatalogLink
+				var Catalog catalog
+				var boolean filtered = false
 			sub Description
 			sub Display
 			sub EmbeddedCatalog
 				var Catalog catalog
+				var boolean filtered = false
 			sub Highlight
 			sub Icon
+				var word:{Polymer Resource Base64} source
 			sub CustomIcon
 			sub ItemLinks
 			sub Links
 			sub Location
 			sub Operation
-				sub OpenDialog
+				sub OpenDialogOperation
 					var integer:{%} width = 100%
-				sub Export
-					var string[] options
+				sub ExportOperation
+					var string[] options = empty
 					var instant from  = empty
 					var instant to = empty
-				sub Download
-					var string[] options
-				sub Task
+				sub DownloadOperation
+					var string[] options = empty
+				sub TaskOperation
 			sub Page
-			sub Picture
-				var resource defaultPicture = empty
-			sub Rating
+			sub Picture > var resource defaultPicture = empty
+			sub Rating > var string polymerIcon
 			sub Snippet
 			sub Title
 			sub Tree

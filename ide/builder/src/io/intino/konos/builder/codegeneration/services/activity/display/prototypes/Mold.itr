@@ -23,19 +23,42 @@ def type(block) trigger(class)
 	$block+class...[$NL]
 end
 
-def type(stamp & operation & openDialog) trigger(class)
+def type(stamp & openDialogOperation) trigger(class)
 	public static class $name+FirstUpperCase {
+		$common
 
-		public static String path($moldClass object, String username) {
+		public static String path($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return null;//TODO
 		}
 	}
 end
 
-def type(stamp & operation & download) trigger(class)
+def type(stamp & downloadOperation) trigger(class)
 	public static class $name+FirstUpperCase {
+		$common
 
-		public static Execution execution($moldClass object, String username) {
+		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, String username) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & exportOperation) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, String username) {
+			return null;//TODO
+		}
+	}
+end
+
+
+def type(stamp & taskOperation) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return null;//TODO
 		}
 	}
@@ -45,9 +68,17 @@ def type(stamp & location) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static java.net.URL icon($moldClass object, String username) {
+		public static java.net.URL icon($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return null;//TODO
 		}
+	}
+end
+
+def type(stamp & display) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		$displayBuilder
 	}
 end
 
@@ -55,9 +86,7 @@ def type(stamp & catalogLink) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($moldClass object, String username) {
-			return "";//TODO
-		}
+		[$filter]
 	}
 end
 
@@ -65,18 +94,36 @@ def type(stamp & highlight) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String color($moldClass object, String username) {
+		public static String color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return "";//TODO
 		}
 	}
 end
 
-
-def type(stamp & itemeLinks) trigger(class)
+def type(stamp & embeddedCatalog) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($moldClass object, String username) {
+		[$embeddedCatalogFilter]
+	}
+end
+
+
+def type(stamp & icon) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+			return "";//TODO
+		}
+	}
+end
+
+def type(stamp & itemLinks) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return "";//TODO
 		}
 	}
@@ -97,17 +144,77 @@ end
 
 def trigger(common)
 
-	public static $valueType value($moldClass object, String username) {
-		return null;//TODO
-	}
+	$valueMethod[
 
-	public static String style($moldClass object, String username) {
+	$editable][
+
+	$style
+	]
+end
+
+def trigger(style)
+	public static String style($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 		return "";//TODO
 	}
 end
 
-def trigger(property)
-	public static $returnType $name($moldClass object, String username) {
+def trigger(embeddedCatalogFilter)
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, Object source, Object target, String username) {
+		return true;//TODO
+	}
+end
+
+def trigger(filter)
+	public static boolean filter($box~Box box, Object source, Object target, String username) {
+		return true;//TODO
+	}
+end
+
+
+def trigger(displayBuilder)
+	public static io.intino.konos.alexandria.activity.displays.AlexandriaStamp buildDisplay($box~Box box, String name, String username) {
 		return null;//TODO
 	}
+end
+
+def trigger(property)
+	public static $returnType $name($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		return null;//TODO
+	}
+end
+
+def trigger(editable)
+	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Editable.Refresh onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, String username) {
+		return null;
+	}
+end
+
+def trigger(valueMethod)
+	public static $valueType value($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		return null;//TODO
+	}
+end
+
+def attribute(resource) trigger(valueType)
+	java.net.URL
+end
+
+def attribute(breadcrumbs) trigger(valueType)
+	io.intino.konos.alexandria.activity.model.mold.stamps.Tree
+end
+
+def attribute(itemlLinks) trigger(valueType)
+	io.intino.konos.alexandria.activity.model.mold.stamps.Links
+end
+
+def attribute(Picture) trigger(valueType)
+	java.util.List<java.net.URL>
+end
+
+def attribute(Rating) trigger(valueType)
+	java.lang.Double
+end
+
+def  trigger(valueType)
+	java.lang.String
 end
