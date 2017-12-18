@@ -157,7 +157,7 @@ def trigger(title)
 end
 
 def trigger(dialogPath)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(box, ($moldClass) object, username)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(box, object, username)
 end
 
 def trigger(exportExecution)

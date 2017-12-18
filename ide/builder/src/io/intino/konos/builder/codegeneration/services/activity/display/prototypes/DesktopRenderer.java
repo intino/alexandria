@@ -32,7 +32,7 @@ public class DesktopRenderer extends PrototypeRenderer {
 		final Frame frame = super.createFrame();
 		frame.addSlot("title", desktop.title());
 		frame.addSlot("subtitle", desktop.subTitle());
-		if (desktop.logo() != null) frame.addSlot("logo", desktop.logo());
+		if (desktop.logo() != null) frame.addSlot("logo", toBase64(desktop.logo()));
 		if (desktop.favicon() != null) frame.addSlot("favicon", toBase64(desktop.favicon()));
 		if (desktop.layout() != null) frame.addSlot("layout", desktop.layout().name$());
 		return frame;

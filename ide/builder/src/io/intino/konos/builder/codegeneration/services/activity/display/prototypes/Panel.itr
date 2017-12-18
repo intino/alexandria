@@ -82,11 +82,11 @@ end
 
 
 def type(catalogs) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[$filter].catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).name("$name")[.label("$label")]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().filter([$filter]).catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).name("$name")[.label("$label")]);
 end
 
 def trigger(filter)
-	(catalog, context, target, objcet, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, catalog, context, target, objcet, username)
+	(catalog, context, target, objcet, username) -> $panel+firstUpperCase.Toolbar.Views.filter(box, catalog, context, target, objcet, username)
 end
 
 
@@ -130,7 +130,7 @@ def type(view & display) trigger(src)
 end
 
 def type(view & catalogs) trigger(src)
-	public static boolean filter($box~Box box, Catalog catalog, Element context, Object target, Object object, String username) {
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;//TODO
 	}
 end

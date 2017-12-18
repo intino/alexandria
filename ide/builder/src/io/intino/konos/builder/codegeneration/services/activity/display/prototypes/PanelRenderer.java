@@ -50,7 +50,10 @@ public class PanelRenderer extends PrototypeRenderer {
 		}
 		if (renderer.i$(RenderCatalogs.class)) {
 			frame.addTypes("catalogs");
-			frame.addSlot("catalog", renderer.a$(RenderCatalogs.class).catalogs().stream().map(Layer::name$).toArray(String[]::new));
+			RenderCatalogs renderCatalogs = renderer.a$(RenderCatalogs.class);
+			frame.addSlot("catalog", renderCatalogs.catalogs().stream().map(Layer::name$).toArray(String[]::new));
+			if (renderCatalogs.filtered())
+				frame.addSlot("filter", new Frame().addSlot("panel", panel.name$()).addSlot("name", view.name$()));
 		}
 		return frame;
 	}
@@ -70,7 +73,7 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("name", operation.name$())
 				.addSlot("title", operation.title())
 				.addSlot("panel", panel.name());
-		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon());
+		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		return frame;
 	}
 

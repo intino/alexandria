@@ -33,6 +33,7 @@ def type(catalog & gen)
 			catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
 			catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username));[
 			catalog.events().onClickRecord(new OnClickRecord().$event);][
+			$hasArrangements~catalog.arrangementFiltererLoader((username) -> $name+firstUpperCase.Arrangements.filterer(box, username));][
 			$groupingselection+empty~catalog.clusterManager((element, grouping, group, username) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, username))][
     			$toolbar+empty.toolbar(buildToolbar(box))][
     			.name("$name")][
@@ -41,6 +42,7 @@ def type(catalog & gen)
 				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
 				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));
+
     		buildArrangements(box).forEach(a -> catalog.add(a));
     		return catalog;
     	}

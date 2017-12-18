@@ -74,18 +74,23 @@ end
 def type(elementOption & group) trigger(class)
 	public static class $name+FirstUpperCase {
 		$elementOption+class...[$NL]
+
+		$render+method
 	}
 end
 
 def type(elementOption & option) trigger(class)
 	public static class $name+FirstUpperCase {
 		$elementOption+class...[$NL]
+
+		$render+method
 	}
 end
 
 
+
 def type(catalogs) trigger(method)
-	public static boolean filter(Catalog catalog, Element context, Object target, Object object) {
+	public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object) {
 		return true;
 	}
 end
@@ -99,12 +104,6 @@ end
 def type(objects) trigger(method)
 	public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects($box+firstUpperCase~Box box) {
 		return java.util.Collections.emptyList();
-	}
-end
-
-def type(elementOption & options) trigger(class)
-	public static class $name+FirstUpperCase {
-		$elementOption+class...[$NL]
 	}
 end
 

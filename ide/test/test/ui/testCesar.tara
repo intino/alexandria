@@ -65,16 +65,16 @@ Mold(modelClass="") testCesarOverviewMold
 
 Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCatalog
 	Toolbar
-		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
-		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
+		GroupingSelection("crear grupo", polymerIcon = "content-copy")
+		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 //			execute = @removeAssets
-		Download("descargar", alexandriaIcon = "file-download")
+		Download("descargar", polymerIcon = "file-download")
 //			execute = @download
-		DownloadSelection("download assets info", alexandriaIcon = "file-download")
+		DownloadSelection("download assets info", polymerIcon = "file-download")
 //			execute = @downloadAssets
-		Export("export", alexandriaIcon = "archive")
+		Export("export", polymerIcon = "archive")
 //			execute = @export
-		ExportSelection("export selection", alexandriaIcon = "archive")
+		ExportSelection("export selection", polymerIcon = "archive")
 //			execute = @exportarSelection
 
 	Events
@@ -248,17 +248,17 @@ Catalog("Systems", modelClass = "io.intino.cesar.graph.System") testCesarSimpleS
 
 Catalog("Assets", modelClass = "io.intino.cesar.graph.Asset") testCesarAssetCatalog
 	Toolbar
-		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
-		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
+		GroupingSelection("crear grupo", polymerIcon = "content-copy")
+		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 //			execute = @removeAssets
 //			refresh = Catalog
-		Download("descargar", alexandriaIcon = "file-download")
+		Download("descargar", polymerIcon = "file-download")
 //			execute = @download
-		DownloadSelection("download assets info", alexandriaIcon = "file-download")
+		DownloadSelection("download assets info", polymerIcon = "file-download")
 //			execute = @downloadAssets
-		Export("export", alexandriaIcon = "archive")
+		Export("export", polymerIcon = "archive")
 //			execute = @export
-		ExportSelection("export selection", alexandriaIcon = "archive")
+		ExportSelection("export selection", polymerIcon = "archive")
 //			execute = @exportarSelection
 
 	Views

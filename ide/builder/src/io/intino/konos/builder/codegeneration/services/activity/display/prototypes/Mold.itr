@@ -27,7 +27,7 @@ def type(stamp & openDialogOperation) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String path($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static String path($box~Box box, String $moldClass+shortType+firstLowerCase~Id, String username) {
 			return null;//TODO
 		}
 	}
