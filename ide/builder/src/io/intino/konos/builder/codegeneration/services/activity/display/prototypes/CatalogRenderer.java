@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.CatalogUpdater;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.AbstractToolbar.*;
 import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
@@ -85,6 +86,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private void arrangements(Catalog catalog, Frame frame) {
 		if (catalog.arrangement() == null) return;
+		frame.addSlot("hasArrangements", "");
 		for (Grouping grouping : catalog.arrangement().groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog));
 		for (Sorting sorting : catalog.arrangement().sortingList())
@@ -165,7 +167,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name());
-		if (operation.alexandriaIcon() != null) frame.addSlot("icon", operation.alexandriaIcon());
+		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		return frame;
 	}
 
@@ -179,7 +181,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	void writeSrc(Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
-		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
+		if (!sourceFile.exists()) writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		else new CatalogUpdater(sourceFile, display.a$(Catalog.class), project, packageName, box).update();
 	}
 }

@@ -91,7 +91,8 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, Picture stamp) {
-		if (stamp.defaultPicture() != null) frame.addSlot("defaultPicture", stamp.defaultPicture().getPath());
+		if (stamp.defaultPicture() != null)
+			frame.addSlot("defaultPicture", stamp.graph().core$().store().relativePathOf(stamp.defaultPicture()));
 	}
 
 	private void frameOf(Frame frame, Rating stamp) {

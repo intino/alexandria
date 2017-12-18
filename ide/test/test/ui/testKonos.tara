@@ -15,21 +15,28 @@ Desktop testHome
 Layout testMenu
 	mode = Menu
 	Group("ddd", Expanded) ddd
-		Option(label="infrastructure") infrastructure> RenderCatalogs(catalogs=testInfrastructure)
+		Option(label="infrastructure") infrastructure
+			polymerIcon = "logo.png"
+			bubble = 1
+			RenderCatalogs(catalogs=testInfrastructure)
 		Option(label="análisis") analisis > RenderPanels(testAnalisis)
+		Option(label="análisis") analisis2 > RenderObjects(panel = testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views
-		View(label = "olap") > RenderDisplay(display = "olapDisplay")
+		View(label = "olap")
+//			RenderDisplay(display = "olapDisplay")
+			RenderCatalogs(catalogs = testInfrastructure)
+				filtered = true
 
 Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") testInfrastructure
 	Toolbar
-		GroupingSelection("crear grupo", alexandriaIcon = "content-copy")
-		TaskSelection("remove elements", alexandriaIcon = "remove-circle-outline")
-		Download("download", alexandriaIcon = "file-download")
-		DownloadSelection("download assets info", alexandriaIcon = "file-download")
-		Export("export", alexandriaIcon = "archive")
-		ExportSelection("export selection", alexandriaIcon = "archive")
+		GroupingSelection("crear grupo", polymerIcon = "content-copy")
+		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
+		Download("download", polymerIcon = "file-download")
+		DownloadSelection("download assets info", polymerIcon = "file-download")
+		Export("export", polymerIcon = "archive")
+		ExportSelection("export selection", polymerIcon = "archive")
 
 	Events
 		OnClickRecord
