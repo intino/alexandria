@@ -61,8 +61,8 @@ public class UIGenerationTest {
 		cottons.utils.Files.removeDir(gen);
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
-//		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
+		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
+//		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
 	}
 
 }
