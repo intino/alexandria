@@ -101,7 +101,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame renderObjects(RenderObjects render) {
-		Frame frame = new Frame("render", "objects").addSlot("box", box);
+		Frame frame = new Frame("render", "objects").addSlot("box", box).addSlot("panel", render.panel().name$());
 		frame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return frame;
 	}

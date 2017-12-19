@@ -145,7 +145,7 @@ def type(panels) trigger(render)
 end
 
 def type(objects) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().panel(ElementDisplays.displayFor(box, $panel+quoted).element()).source(() -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box))
+	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().panel((io.intino.konos.alexandria.activity.model.Panel) ElementDisplays.displayFor(box, $panel+quoted).element()).source(() -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box))
 end
 
 def type(layout)
