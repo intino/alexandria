@@ -38,7 +38,7 @@ def type(page)
             <dom-module id="page-body">
 
                 <template>
-                    <cotton-zombie display="$usesDisplay" widget="$uses" title="$$title" language="$$language"></cotton-zombie>
+                    <cotton-zombie display="$uses" widget="$uses" title="$$title" language="$$language"></cotton-zombie>
                 </template>
 
                 <style>

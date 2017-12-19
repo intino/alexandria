@@ -128,12 +128,14 @@ public class ActivityAccessorRenderer {
 		final String type = (display.i$(Layout.class) ? display.a$(Layout.class).mode().name() : "") + display.getClass().getSimpleName();
 		frame.addSlot("attached", new Frame(prototype ? "prototype" : "display").addSlot("widget", display.name$()).addSlot("type", type));
 		if (prototype) {
-			frame.addSlot("behaviors", new Frame().addSlot("widget", display.name$()));
+			frame.addSlot("imports", new Frame().addSlot("type", type));
 			frame.addSlot("type", type);
-
+		} else {
+			frame.addSlot("includes", new Frame().addSlot("widget", display.name$()));
 		}
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
-		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
+		if (!file.exists())
+			write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private boolean isPrototype(Display display) {
@@ -195,7 +197,8 @@ public class ActivityAccessorRenderer {
 	private void copyResourcesRecursively(URL originUrl, File destination) {
 		try {
 			URLConnection urlConnection = originUrl.openConnection();
-			if (urlConnection instanceof JarURLConnection) copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
+			if (urlConnection instanceof JarURLConnection)
+				copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
 			else if (urlConnection instanceof FileURLConnection) {
 				FileUtils.copyFile(new File(originUrl.getPath()), destination);
 			} else throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() +

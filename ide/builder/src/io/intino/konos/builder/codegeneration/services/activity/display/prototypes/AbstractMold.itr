@@ -73,7 +73,7 @@ def type(stamp & cataloglink)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$name")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$name").element())[.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($embeddedCatalogFilter)]$common)
 end
 
 def type(stamp & display)
@@ -157,7 +157,7 @@ def trigger(title)
 end
 
 def trigger(dialogPath)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(box, object, username)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(box, (String) object, username)
 end
 
 def trigger(exportExecution)

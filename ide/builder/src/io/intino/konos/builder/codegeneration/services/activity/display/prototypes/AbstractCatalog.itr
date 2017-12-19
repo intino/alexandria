@@ -31,7 +31,7 @@ def type(catalog & gen)
     		io.intino.konos.alexandria.activity.model.Catalog catalog = new io.intino.konos.alexandria.activity.model.Catalog();
 			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));[
 			$hasMagazineView][
-			catalog.events().onClickRecord(new OnClickRecord().$event);][
+			catalog.events(new io.intino.konos.alexandria.activity.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
 			$hasArrangements][
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][

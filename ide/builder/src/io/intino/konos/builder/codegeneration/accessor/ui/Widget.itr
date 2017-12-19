@@ -8,6 +8,8 @@ def type(widget)
 
 	[$parent+import
 	]
+	[$imports
+	]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
 
@@ -35,8 +37,8 @@ def type(widget)
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
-                             CottonBehaviors.TranslatorBehavior,
-                             $behaviors
+                             CottonBehaviors.TranslatorBehavior[,
+                             $includes]
                              $],
 
                 properties : {
@@ -48,7 +50,12 @@ def type(widget)
     </dom-module>
 end
 
-def trigger(behaviors)
+def trigger(imports)
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/requester.js"></script>
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/notifier-listener.js"></script>
+end
+
+def trigger(includes)
 	$widget+firstuppercase~Behaviors.Requester,
 	$widget+firstuppercase~Behaviors.NotifierListener
 end
@@ -64,6 +71,8 @@ def type(prototype) trigger(attached)
 		element.display = this.display;
 		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
 		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
+		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.Requester);
+		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.NotifierListener);
 		this.appendChild(element);
 	}
 end
