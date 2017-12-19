@@ -75,7 +75,7 @@ end
 
 
 def type(mold) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$name").element())).name("$name")[.label("$label")]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$mold").element())).name("$name")[.label("$label")]);
 end
 
 
