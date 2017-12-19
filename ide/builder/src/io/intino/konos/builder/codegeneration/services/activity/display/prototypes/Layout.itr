@@ -128,7 +128,7 @@ def type(options) trigger(elementOption)
 end
 
 def type(option) trigger(elementOption)
-	result.add(new io.intino.konos.alexandria.activity.model.layout.options.Option()[.label("$label")]);
+	result.add(new io.intino.konos.alexandria.activity.model.layout.options.Option()[.label("$label")].render($render));
 end
 
 def type(group) trigger(elementOption)

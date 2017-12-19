@@ -71,12 +71,12 @@ public class LayoutRenderer extends PrototypeRenderer {
 	private Frame frameOf(Option option) {
 		final Frame frame = new Frame("option", "elementOption").addSlot("name", option.name$()).addSlot("box", box);
 		final ElementRenderer renderer = option.elementRenderer();
-		frame.addTypes(renderer instanceof RenderCatalogs ? "catalog" : "panel").addSlot("label", option.label());
+		frame.addTypes(renderer instanceof RenderCatalogs ? "catalogs" : "panels").addSlot("label", option.label());
 		render(renderer, frame);
 		return frame;
 	}
 
-	private void render(ElementRenderer renderer, Frame frame) {
+	private void rend er(ElementRenderer renderer, Frame frame) {
 		if (renderer instanceof RenderCatalogs) frame.addSlot("render", renderCatalogs(renderer.a$(RenderCatalogs.class)));
 		else if (renderer instanceof RenderPanels) frame.addSlot("render", renderPanels(renderer.a$(RenderPanels.class)));
 		else if (renderer instanceof RenderObjects) frame.addSlot("render", renderObjects(renderer.a$(RenderObjects.class)));
