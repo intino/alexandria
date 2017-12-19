@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.io.ZipUtil;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.accessor.ui.widget.*;
 import io.intino.konos.model.graph.*;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
@@ -24,6 +25,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static io.intino.konos.model.graph.KonosGraph.componentsOf;
@@ -130,12 +132,32 @@ public class ActivityAccessorRenderer {
 		if (prototype) {
 			frame.addSlot("imports", new Frame().addSlot("type", type));
 			frame.addSlot("type", type);
-		} else {
-			frame.addSlot("includes", new Frame().addSlot("widget", display.name$()));
+		} else frame.addSlot("includes", new Frame().addSlot("widget", display.name$()));
+		final List<Display.Request> requests = display.requestList().stream().filter(r -> r.registerPath() != null).collect(Collectors.toList());
+		if (!requests.isEmpty()) {
+			frame.addSlot("path", new Frame("path").addSlot("name", display.name$()));
+			writeWidgetPaths(display, requests);
 		}
+		writeWidget(display, frame);
+	}
+
+	private void writeWidgetPaths(Display display, List<Display.Request> requests) throws IOException {
+		final Frame frame = new Frame("paths").addSlot("name", display.name$());
+		for (Display.Request request : requests) frame.addSlot("path", pathFrame(request));
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-paths.html");
+		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetPathsTemplate.create()).format(frame).getBytes());
+	}
+
+	private Frame pathFrame(Display.Request r) {
+		final Frame frame = new Frame().addTypes("path").addSlot("request", r.name$());
+		if (r.isType()) frame.addTypes("parameter");
+		frame.addSlot("path", r.registerPath().page().paths().get(0));
+		return frame;
+	}
+
+	private void writeWidget(Display display, Frame frame) throws IOException {
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
-		if (!file.exists())
-			write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private boolean isPrototype(Display display) {
@@ -150,7 +172,7 @@ public class ActivityAccessorRenderer {
 	}
 
 	private void createRequester(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("request", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
@@ -163,19 +185,17 @@ public class ActivityAccessorRenderer {
 		write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
-	private Frame frameOf(Display.Request r) {
-		final Frame frame = new Frame().addTypes("requester").addSlot("name", r.name$());
-		if (r.isType()) {
-			frame.addSlot("parameter", "");
-			frame.addSlot("parameterSignature", "");
-		}
-		frame.addSlot("method", r.responseType().name());
-		return frame;
-	}
-
 	private Frame frameOf(Display.Notification n) {
 		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name$()).addSlot("to", n.to().name());
 		if (n.asType() != null) frame.addSlot("parameter", "");
+		return frame;
+	}
+
+	private Frame frameOf(Display.Request r) {
+		final Frame frame = new Frame().addTypes("request").addSlot("name", r.name$()).addSlot("widget", r.core$().owner().name());
+		if (r.isType()) frame.addTypes("parameter");
+		if(r.registerPath()!= null) frame.addTypes("registerPath");
+		frame.addSlot("method", r.responseType().name());
 		return frame;
 	}
 

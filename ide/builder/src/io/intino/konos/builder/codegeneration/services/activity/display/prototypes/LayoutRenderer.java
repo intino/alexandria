@@ -47,7 +47,6 @@ public class LayoutRenderer extends PrototypeRenderer {
 		return frames.toArray(new Frame[0]);
 	}
 
-
 	private Frame frameOf(Options options) {
 		Frame frame = new Frame("elementOption", "options").addSlot("box", box)
 				.addSlot("layout", this.display.a$(Layout.class).name$())
