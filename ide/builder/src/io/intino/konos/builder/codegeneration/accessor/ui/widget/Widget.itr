@@ -9,6 +9,8 @@ def type(widget)
 	[$parent+import
 	]
 	[$imports
+	][
+	$path+pahtimport
 	]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
@@ -16,6 +18,7 @@ def type(widget)
     <dom-module id="$name+camelCaseToSnakeCase">
 
         <template>
+        	$path
         	$parent
             $innerDisplay...[$NL]
         </template>
@@ -50,6 +53,12 @@ def type(widget)
     </dom-module>
 end
 
+def trigger(pathImport)
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-paths.html">
+end
+def trigger(path)
+	<$name+camelCaseToSnakeCase-paths></$name+camelCaseToSnakeCase-paths>
+end
 def trigger(imports)
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/requester.js"></script>
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/notifier-listener.js"></script>
