@@ -136,12 +136,6 @@ def type(stamp) trigger(class)
 	}
 end
 
-def type(stamp) trigger(class)
-	public static class $name+FirstUpperCase {
-		$property...[$NL]
-	}
-end
-
 def trigger(common)
 
 	$valueMethod[
@@ -173,12 +167,6 @@ end
 
 def trigger(displayBuilder)
 	public static io.intino.konos.alexandria.activity.displays.AlexandriaStamp buildDisplay($box~Box box, String name, String username) {
-		return null;//TODO
-	}
-end
-
-def trigger(property)
-	public static $returnType $name($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 		return null;//TODO
 	}
 end

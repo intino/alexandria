@@ -26,7 +26,7 @@ public class PanelRenderer extends PrototypeRenderer {
 	protected Frame createFrame() {
 		final Panel panel = this.display.a$(Panel.class);
 		final Frame frame = super.createFrame();
-		frame.addSlot("label", panel.label());
+		if (panel.label() != null) frame.addSlot("label", panel.label());
 		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));
 		for (Panel.Views.View view : panel.views().viewList()) frame.addSlot("view", frameOf(view, panel));
 		return frame;
@@ -52,8 +52,7 @@ public class PanelRenderer extends PrototypeRenderer {
 			frame.addTypes("catalogs");
 			RenderCatalogs renderCatalogs = renderer.a$(RenderCatalogs.class);
 			frame.addSlot("catalog", renderCatalogs.catalogs().stream().map(Layer::name$).toArray(String[]::new));
-			if (renderCatalogs.filtered())
-				frame.addSlot("filter", new Frame().addSlot("panel", panel.name$()).addSlot("name", view.name$()));
+			if (renderCatalogs.filtered()) frame.addSlot("filter", filterFrame(view, panel));
 		}
 		return frame;
 	}
@@ -75,6 +74,10 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("panel", panel.name());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		return frame;
+	}
+
+	private Frame filterFrame(Panel.Views.View view, Panel panel) {
+		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("name", view.name$()).addSlot("box", box);
 	}
 
 	@Override

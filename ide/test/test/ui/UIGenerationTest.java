@@ -13,9 +13,10 @@ public class UIGenerationTest {
 
 	private static final String UI = "ui";
 	private static final String DIALOG = "dialog";
-	private static final String testKonos = "testkonos";
-	private static String testEbar = "testebar";
-	private static String testCesarPackage = "io.intino.cesar.box";
+	private static final String konos = "testkonos";
+	private static final String ebar = "testebar";
+	private static final String octana = "octana";
+	private static final String cesarPackage = "io.intino.cesar.box";
 
 
 	@Test
@@ -31,30 +32,37 @@ public class UIGenerationTest {
 		File gen = new File("test-gen", DIALOG);
 		KonosGraph graph = new Graph().loadStashes(DIALOG).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, DIALOG).execute();
-//		new ActivityAccessorCreator(null, graph).execute();
 	}
 
 	@Test
 	public void testKonos() throws Exception {
-		execute(new File("test-gen", testKonos), testKonos, testKonos);
+		execute(new File("test-gen", konos), konos, konos);
 	}
 
 
 	@Test
 	public void testEbar() throws Exception {
-		execute(new File("test-gen", testEbar), testEbar, testEbar);
+		execute(new File("test-gen", ebar), ebar, ebar);
 	}
+
+
+	@Test
+	public void testOctana() throws Exception {
+		execute(new File("test-gen", octana), octana, octana);
+	}
+
 
 	@Test
 	public void testCesar() throws Exception {
-		execute(new File("test-gen", testCesarPackage), "testCesar", testCesarPackage);
+		execute(new File("test-gen", cesarPackage.replace(".", File.separator)), "testCesar", cesarPackage);
 	}
 
 	private void execute(File gen, String stash, String workingPackage) {
 		cottons.utils.Files.removeDir(gen);
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
+//		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
+		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
 	}
 
 }

@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.util.stream.Collectors.toList;
-
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 
 	public KonosGraph(Graph graph) {
@@ -17,19 +15,15 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	}
 
 	public KonosGraph(io.intino.tara.magritte.Graph graph, KonosGraph wrapper) {
-	    super(graph, wrapper);
+		super(graph, wrapper);
 	}
 
 	public static List<Display> displaysOf(Activity activity) {
-		return activity.abstractPageList().stream()
-				.filter(page -> page.uses().i$(Display.class))
-				.map(page -> page.uses().a$(Display.class))
-				.map(KonosGraph::allDisplays).flatMap(Collection::stream).distinct()
-				.collect(toList());
+		return activity.graph().core$().find(Display.class);
 	}
 
 	public static List<Dialog> dialogsOf(Activity activity) {
-		return activity.abstractPageList().stream().filter(page -> page.uses().i$(Dialog.class)).map(page -> page.uses().a$(Dialog.class)).collect(toList());
+		return activity.graph().core$().find(Dialog.class);
 	}
 
 	public static List<Component> componentsOf(Activity activity) {
@@ -37,17 +31,6 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		components.addAll(dialogsOf(activity));
 		components.addAll(displaysOf(activity));
 		return components;
-	}
-
-	private static HashSet<Display> allDisplays(Display d) {
-		final HashSet<Display> displays = new HashSet<>();
-		displaysOf(d, displays);
-		return displays;
-	}
-
-	private static void displaysOf(Display display, Set<Display> collection) {
-		if (collection.add(display))
-			display.displays().forEach(child -> displaysOf(child, collection));
 	}
 
 	public Set<String> findCustomParameters(DataLake.Tank channel) {

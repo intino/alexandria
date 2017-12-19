@@ -144,7 +144,10 @@ end
 
 def type(activity) trigger(activity)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(io.intino.konos.alexandria.activity.ActivityAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	io.intino.konos.alexandria.activity.ActivityAlexandriaSpark sparkInstance = io.intino.konos.alexandria.activity.ActivityAlexandriaSpark.instance();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Activity.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	io.intino.konos.alexandria.activity.ActivityElementsActivity.initDisplays(sparkInstance);
+	sparkInstance.start();
 	logger.info("Activity $name: started!");
 end
 
