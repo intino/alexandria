@@ -5,6 +5,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Display;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -30,20 +31,25 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("box", boxName);
 		if (page.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
-		frame.addSlot("ui", page.uses().name$() + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
+		frame.addSlot("ui", page.uses().name$() + suffix());
 		frame.addSlot("parameter", parameters());
 		if (!alreadyRendered(destiny, page.name$()))
 			Commons.writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
 		//TODO else Update
 	}
 
+	@NotNull
+	private String suffix() {
+		if (page.uses().i$(Dialog.class)) return Dialog.class.getSimpleName();
+		else return page.uses().getClass().getSimpleName().equals(Display.class.getSimpleName()) ? Display.class.getSimpleName() : "";
+	}
+
 	private Frame[] parameters() {
 		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
-									  .map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
-
+				.map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
 		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-								  .addSlot("type", "String")
-								  .addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
+				.addSlot("type", "String")
+				.addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
 	}
 
 }
