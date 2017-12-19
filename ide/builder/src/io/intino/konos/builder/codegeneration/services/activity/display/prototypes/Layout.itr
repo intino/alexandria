@@ -90,7 +90,7 @@ end
 
 
 def type(catalogs) trigger(method)
-	public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object) {
+	public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;
 	}
 end
@@ -137,7 +137,7 @@ def type(group) trigger(elementOption)
 end
 
 def type(catalogs) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ]))[.filter((catalog, context, target, object) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, catalog, context, target, object))]
+	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ]))[.filter((catalog, context, target, object, username) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, catalog, context, target, object, username))]
 end
 
 def type(panels) trigger(render)

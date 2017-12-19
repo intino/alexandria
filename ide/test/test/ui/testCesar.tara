@@ -206,7 +206,9 @@ Mold(modelClass = "io.intino.cesar.graph.Feeder") testCesarFeederMold
 Catalog("Systems", modelClass = "io.intino.cesar.graph.System") testCesarSystemCatalog
 	Toolbar > canSearch = false
 	Events > OnClickRecord > OpenPanel(testCesarSystemPanel)
-	Views > ListView("List", mold = testCesarSystemMold, width = 100%)
+	Views
+		ListView("List", mold = testCesarSystemMold, width = 100%)
+		MagazineView(label = "", mold = testCesarAdministrationMold)
 
 Panel("Administration") testCesarAdminPanel
 	Views > View("Administration") > RenderMold(testCesarAdministrationMold)

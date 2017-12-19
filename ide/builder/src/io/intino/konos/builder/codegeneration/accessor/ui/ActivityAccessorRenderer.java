@@ -10,6 +10,7 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.siani.itrules.model.Frame;
+import org.slf4j.LoggerFactory;
 import sun.net.www.protocol.file.FileURLConnection;
 
 import java.io.File;
@@ -19,16 +20,17 @@ import java.lang.Exception;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
+import static io.intino.konos.model.graph.KonosGraph.componentsOf;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
 import static java.nio.file.Files.write;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class ActivityAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
@@ -102,51 +104,61 @@ public class ActivityAccessorRenderer {
 		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", page.uses().name$()).addSlot("name", page.name$());
 	}
 
-	private void createDisplayWidget(Display display) throws IOException {
-		final Frame frame = new Frame().addTypes("widget").
-				addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
-		if (display.parentDisplay() != null)
-			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
-		if (!file.exists())
-			Files.write(file.toPath(), Formatters.customize(DisplayWidgetTemplate.create()).format(frame).getBytes());
-	}
-
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : KonosGraph.componentsOf(activity)) {
-			if (component.i$(Display.class)) createDisplay(component.a$(Display.class));
+		for (Component component : componentsOf(activity)) {
+			if (component.i$(Display.class)) createDisplayComponents(component.a$(Display.class));
 			if (component.i$(Dialog.class)) createDialogWidget(component.a$(Dialog.class));
 			widgets.addSlot("widget", component.name$());
 		}
-		Files.write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
+		write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
 	}
 
-	private void createDisplay(Display component) throws IOException {
+	private void createDisplayComponents(Display component) throws IOException {
 		createNotifier(component);
 		createRequester(component);
 		createDisplayWidget(component);
+	}
+
+	private void createDisplayWidget(Display display) throws IOException {
+		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.parentDisplay() != null)
+			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
+		final boolean prototype = isPrototype(display);
+		final String type = (display.i$(Layout.class) ? display.a$(Layout.class).mode().name() : "") + display.getClass().getSimpleName();
+		frame.addSlot("attached", new Frame(prototype ? "prototype" : "display").addSlot("widget", display.name$()).addSlot("type", type));
+		if (prototype) {
+			frame.addSlot("behaviors", new Frame().addSlot("widget", display.name$()));
+			frame.addSlot("type", type);
+
+		}
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
+		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
+	}
+
+	private boolean isPrototype(Display display) {
+		return !display.getClass().getSimpleName().equals(Display.class.getSimpleName());
 	}
 
 	private void createDialogWidget(Dialog dialog) throws IOException {
 		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name$());
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + ".html");
 		if (!file.exists())
-			Files.write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
+			write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("requester", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
-		Files.write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
+		write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		Files.write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
+		write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Request r) {
@@ -184,10 +196,12 @@ public class ActivityAccessorRenderer {
 		try {
 			URLConnection urlConnection = originUrl.openConnection();
 			if (urlConnection instanceof JarURLConnection) copyJarResourcesRecursively(destination, (JarURLConnection) urlConnection);
-			else if (urlConnection instanceof FileURLConnection) FileUtils.copyDirectory(new File(originUrl.getPath()), destination);
-			else
-				throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() + "] is not a recognized/implemented connection type.");
-		} catch (Exception ignored) {
+			else if (urlConnection instanceof FileURLConnection) {
+				FileUtils.copyFile(new File(originUrl.getPath()), destination);
+			} else throw new Exception("URLConnection[" + urlConnection.getClass().getSimpleName() +
+					"] is not a recognized/implemented connection type.");
+		} catch (Exception e) {
+			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
 	}
 

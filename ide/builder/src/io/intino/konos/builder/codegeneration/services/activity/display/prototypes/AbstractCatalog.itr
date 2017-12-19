@@ -29,16 +29,14 @@ def type(catalog & gen)
 
     	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
     		io.intino.konos.alexandria.activity.model.Catalog catalog = new io.intino.konos.alexandria.activity.model.Catalog();
-			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));
-			catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
-			catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username));[
+			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));[
+			$hasMagazineView][
 			catalog.events().onClickRecord(new OnClickRecord().$event);][
-			$hasArrangements~catalog.arrangementFiltererLoader((username) -> $name+firstUpperCase.Arrangements.filterer(box, username));][
-			$groupingselection+empty~catalog.clusterManager((element, grouping, group, username) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, username))][
-    			$toolbar+empty.toolbar(buildToolbar(box))][
-    			.name("$name")][
-				.label("$label")]
-				.objectLoader((id, username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, username))
+			$hasArrangements][
+			$groupingselection][
+			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
+			catalog.name("$name")][.label("$label")];
+			catalog.objectLoader((id, username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, username))
 				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
 				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));
@@ -64,6 +62,18 @@ def type(catalog & gen)
 end
 
 def trigger(empty)
+end
+
+def trigger(groupingSelection)
+	catalog.clusterManager((element, grouping, group, username) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, username));
+end
+
+def trigger(hasMagazineView)
+	catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
+	catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username));
+end
+def trigger(hasArrangements)
+	catalog.arrangementFiltererLoader((username) -> $name+firstUpperCase.Arrangements.filterer(box, username));
 end
 
 def trigger(toolbar)
@@ -118,7 +128,7 @@ def type(operation & groupingselection) trigger(operation)
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, username) -> $catalog+firstUpperCase.Toolbar.removeElements(box, element, option, (java.util.List<$type>)(Object)selection, username)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, username) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, element, option, (java.util.List<$type>)(Object)selection, username)).name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(listview) trigger(add)

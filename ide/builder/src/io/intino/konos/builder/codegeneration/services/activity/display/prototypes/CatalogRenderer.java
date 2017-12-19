@@ -36,7 +36,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	protected Frame createFrame() {
 		final Catalog catalog = this.display.a$(Catalog.class);
-		final Frame frame = super.createFrame().addSlot("label", catalog.label()).addSlot("type", modelClass);
+		final Frame frame = super.createFrame().addSlot("type", modelClass);
+		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);
 		toolbar(catalog, frame);
 		views(catalog, frame);
@@ -74,11 +75,14 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private void toolbar(Catalog catalog, Frame frame) {
 		if (catalog.toolbar() != null) {
 			frame.addSlot("toolbar", frameOf(catalog.toolbar()));
-			if (catalog.toolbar().groupingSelection() != null) frame.addSlot("groupingselection", "");
+			if (catalog.toolbar().groupingSelection() != null)
+				frame.addSlot("groupingselection", baseFrame());
 		}
 	}
 
 	private void views(Catalog catalog, Frame frame) {
+		if (catalog.views().catalogViewList().stream().anyMatch(v -> v.i$(MagazineView.class)))
+			frame.addSlot("hasMagazineView", baseFrame().addSlot("type", catalog.modelClass()));
 		for (CatalogView view : catalog.views().catalogViewList())
 			frame.addSlot("view", frameOf(view, catalog));
 		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog));
@@ -86,11 +90,16 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private void arrangements(Catalog catalog, Frame frame) {
 		if (catalog.arrangement() == null) return;
-		frame.addSlot("hasArrangements", "");
-		for (Grouping grouping : catalog.arrangement().groupingList())
+		frame.addSlot("hasArrangements", baseFrame());
+		for (Grouping grouping : catalog.arrangement().groupingList()) {
 			frame.addSlot("arrangement", frameOf(grouping, catalog));
+		}
 		for (Sorting sorting : catalog.arrangement().sortingList())
 			frame.addSlot("arrangement", frameOf(sorting, catalog));
+	}
+
+	private Frame baseFrame() {
+		return new Frame().addSlot("box", box).addSlot("name", display.name$());
 	}
 
 	private Frame frameOf(Sorting sorting, Catalog catalog) {

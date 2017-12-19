@@ -70,9 +70,7 @@ def type(operation & task) trigger(operation)
 end
 
 def type(display) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener)));
-		}
-	})).name("$name")[.label("$label")]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener))).name("$name")[.label("$label")]);
 end
 
 
@@ -82,11 +80,11 @@ end
 
 
 def type(catalogs) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().filter([$filter]).catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).name("$name")[.label("$label")]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).name("$name")[.label("$label")]);
 end
 
-def trigger(filter)
-	(catalog, context, target, objcet, username) -> $panel+firstUpperCase.Toolbar.Views.filter(box, catalog, context, target, objcet, username)
+def trigger(filtercall)
+	(catalog, context, target, objcet, username) -> $panel+firstUpperCase.Views.filter(box, catalog, context, target, objcet, username)
 end
 
 
@@ -96,7 +94,6 @@ def type(panel)
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 	import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
 	import $package+validPackage.$box+firstUpperCase~Box;
-
 
 	import java.util.function.Consumer;
 
@@ -130,6 +127,10 @@ def type(view & display) trigger(src)
 end
 
 def type(view & catalogs) trigger(src)
+	$filter+method
+end
+
+def type(filter) trigger(method)
 	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;//TODO
 	}

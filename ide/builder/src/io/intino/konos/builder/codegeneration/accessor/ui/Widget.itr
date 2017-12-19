@@ -4,6 +4,8 @@ def type(widget)
     <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
     <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
     <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+    [<link rel="import" href="../../lib/alexandria-activity-elements/alexandria-$type+camelCaseToSnakeCase.html">]
+
 	[$parent+import
 	]
 	<script src="$name+lowercase/requester.js"></script>
@@ -34,20 +36,43 @@ def type(widget)
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
                              CottonBehaviors.TranslatorBehavior,
-                             $name+firstuppercase~Behaviors.Requester,
-                             $name+firstuppercase~Behaviors.NotifierListener $],
+                             $behaviors
+                             $],
 
                 properties : {
                 },
-
-                attached : function() {
-                    this.translate($name+firstuppercase~Dictionary);
-                    this.listenToDisplay();
-                }
+				$attached
 
             });
         </script>
     </dom-module>
+end
+
+def trigger(behaviors)
+	$widget+firstuppercase~Behaviors.Requester,
+	$widget+firstuppercase~Behaviors.NotifierListener
+end
+
+def type(prototype) trigger(attached)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this._linkWithAlexandriaElement();
+	},
+
+	_linkWithAlexandriaElement : function() {
+		var element = document.createElement("alexandria-$type+camelCaseToSnakeCase");
+		element.display = this.display;
+		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
+		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
+		this.appendChild(element);
+	}
+end
+
+def trigger(attached)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this.listenToDisplay();
+	}
 end
 
 def trigger(import)

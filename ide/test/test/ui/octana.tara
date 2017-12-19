@@ -1,0 +1,36 @@
+dsl Konos
+
+Activity octana
+	Home(uses=octanaDesktop) home
+
+Desktop(title = "Octana", subTitle = "Octana", logo = "logo.png", favicon = "favicon.png") octanaDesktop
+	layout = octanaLayout
+
+Layout(mode = Menu) octanaLayout
+	Option("dashboard") dashboard
+		RenderPanels(octanaDashboardPanel)
+	Option("centros") centers > RenderCatalogs(octanaCenterCatalog)
+	Option("personas") persons > RenderCatalogs(octanaPersonCatalog)
+	Option("análisis") analysis > RenderPanels(octanaAnalysisPanel)
+
+Panel octanaDashboardPanel
+	Views > View("overview") overview > RenderMold(octanaDashboardMold)
+
+Mold(modelClass="") octanaDashboardMold
+
+Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
+	Views
+		ListView("lista", mold = octanaCenterMold)
+
+Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
+
+Catalog(modelClass = "io.intino.octana.graph.Person") octanaPersonCatalog
+	Views
+		ListView("lista", mold = octanaPersonMold)
+
+Mold(modelClass="io.intino.octana.graph.Person") octanaPersonMold
+
+Panel octanaAnalysisPanel
+	Views
+		View("análisis")
+			RenderDisplay(display = "olap")
