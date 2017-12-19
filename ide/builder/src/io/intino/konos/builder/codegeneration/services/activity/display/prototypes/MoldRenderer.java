@@ -101,6 +101,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
 		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
+		frame.addSlot("catalog", stamp.catalog().name$());
 	}
 
 	private void frameOf(Frame frame, Display stamp) {
