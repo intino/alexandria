@@ -76,7 +76,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
-	private void rend er(ElementRenderer renderer, Frame frame) {
+	private void render(ElementRenderer renderer, Frame frame) {
 		if (renderer instanceof RenderCatalogs) frame.addSlot("render", renderCatalogs(renderer.a$(RenderCatalogs.class)));
 		else if (renderer instanceof RenderPanels) frame.addSlot("render", renderPanels(renderer.a$(RenderPanels.class)));
 		else if (renderer instanceof RenderObjects) frame.addSlot("render", renderObjects(renderer.a$(RenderObjects.class)));
