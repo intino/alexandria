@@ -47,7 +47,6 @@ public class LayoutRenderer extends PrototypeRenderer {
 		return frames.toArray(new Frame[0]);
 	}
 
-
 	private Frame frameOf(Options options) {
 		Frame frame = new Frame("elementOption", "options").addSlot("box", box)
 				.addSlot("layout", this.display.a$(Layout.class).name$())
@@ -72,7 +71,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 	private Frame frameOf(Option option) {
 		final Frame frame = new Frame("option", "elementOption").addSlot("name", option.name$()).addSlot("box", box);
 		final ElementRenderer renderer = option.elementRenderer();
-		frame.addTypes(renderer instanceof RenderCatalogs ? "catalog" : "panel").addSlot("label", option.label());
+		frame.addTypes(renderer instanceof RenderCatalogs ? "catalogs" : "panels").addSlot("label", option.label());
 		render(renderer, frame);
 		return frame;
 	}
