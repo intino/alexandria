@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaDesktopN
 import io.intino.konos.alexandria.activity.model.Desktop;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Settings;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 
 import java.net.URL;
 
@@ -76,7 +77,7 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 	}
 
 	@Override
-	protected void createPanel(String item) {
+	protected void createPanel(CreatePanelParameters params) {
 	}
 
 	@Override

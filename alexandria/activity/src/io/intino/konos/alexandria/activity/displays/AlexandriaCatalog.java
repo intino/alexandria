@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogN
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.GroupingGroup;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
 
@@ -33,8 +34,8 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	}
 
 	@Override
-	protected void createPanel(String item) {
-		notifier.createPanel(item);
+	protected void createPanel(CreatePanelParameters params) {
+		notifier.createPanel(params);
 	}
 
 	@Override

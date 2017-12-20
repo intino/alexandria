@@ -15,6 +15,7 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.Display;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
 
@@ -270,8 +271,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
 		openedItem = event;
-		createPanel(event.itemId());
 		AlexandriaPanel display = createPanelDisplay(event);
+		createPanel(new CreatePanelParameters().displayType(display.getClass().getSimpleName()).item(event.itemId()));
 		add(display);
 		display.personifyOnce(event.itemId());
 		showPanel();
@@ -316,7 +317,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract Item currentItem();
 	protected abstract void notifyFiltered(boolean value);
 	protected abstract void refreshBreadcrumbs(String breadcrumbs);
-	protected abstract void createPanel(String item);
+	protected abstract void createPanel(CreatePanelParameters params);
 	protected abstract void showPanel();
 	protected abstract void hidePanel();
 

@@ -10,7 +10,7 @@ Display alexandriaPanel
 	Notification refreshTarget as Text
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshBreadcrumbs as Text
-	Notification createPanel as Text
+	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
 	Notification showDialog

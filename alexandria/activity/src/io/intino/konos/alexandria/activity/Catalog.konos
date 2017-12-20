@@ -10,7 +10,7 @@ Display alexandriaCatalog
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
 	Notification showDialog
-	Notification createPanel as Text
+	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
 
@@ -28,7 +28,7 @@ Display alexandriaTemporalRangeCatalog
 	Notification showDialog
 	Notification showTimeRangeNavigator
 	Notification hideTimeRangeNavigator
-	Notification createPanel as Text
+	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
 
@@ -46,7 +46,7 @@ Display alexandriaTemporalTimeCatalog
 	Notification showDialog
 	Notification showTimeNavigator
 	Notification hideTimeNavigator
-	Notification createPanel as Text
+	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
 
