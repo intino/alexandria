@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.accessor.ui;
+package io.intino.konos.builder.codegeneration.accessor.ui.widget;
 
 import org.siani.itrules.*;
 

@@ -28,6 +28,7 @@ public class ElementDisplaysRenderer {
 	}
 
 	public void execute() {
+		if (displays.isEmpty()) return;
 		Frame frame = createFrame();
 		for (Display display : displays) frame.addSlot("display", displayFrame(display));
 		write(frame);
