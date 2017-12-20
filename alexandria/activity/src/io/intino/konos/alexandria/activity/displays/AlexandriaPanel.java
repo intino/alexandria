@@ -10,6 +10,7 @@ import io.intino.konos.alexandria.activity.model.panel.View;
 import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
 import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 import io.intino.konos.alexandria.activity.model.renders.RenderMold;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 
 import java.util.Collections;
@@ -40,8 +41,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
-	protected void createPanel(String item) {
-		notifier.createPanel(item);
+	protected void createPanel(CreatePanelParameters params) {
+		notifier.createPanel(params);
 	}
 
 	@Override

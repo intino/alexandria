@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMenuLayoutNotifier;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.PlatformInfo;
 import io.intino.konos.alexandria.activity.schemas.UserInfo;
 
@@ -76,7 +77,7 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 	}
 
 	@Override
-	protected void createPanel(String item) {
+	protected void createPanel(CreatePanelParameters params) {
 	}
 
 	@Override

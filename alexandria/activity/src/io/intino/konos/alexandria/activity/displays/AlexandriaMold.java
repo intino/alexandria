@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldNotifier;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Mold;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 
 public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends AlexandriaElementDisplay<Mold, DN> {
 
@@ -37,7 +38,7 @@ public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends 
     }
 
     @Override
-    protected void createPanel(String item) {
+    protected void createPanel(CreatePanelParameters params) {
     }
 
     @Override

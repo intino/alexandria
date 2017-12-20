@@ -231,3 +231,7 @@ Schema Validation
 	Attribute status as Bool
 	Attribute message as Text
 	Attribute modifiedInputs as Text
+
+Schema CreatePanelParameters
+	Attribute displayType as Text
+	Attribute item as Text

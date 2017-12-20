@@ -13,11 +13,11 @@
             this._breadcrumbs = tree != null && tree !== "" ? this.treeToBreadcrumbs(tree) : [];
         },
 
-        _createPanel : function(name) {
+        _createPanel : function(params) {
             var zombie = document.createElement("cotton-zombie");
-            zombie.setAttribute("display", "AlexandriaPanel");
-            zombie.setAttribute("widget", "AlexandriaPanel");
-            zombie.setAttribute("object", name);
+            zombie.setAttribute("display", params.displayType);
+            zombie.setAttribute("widget", params.displayType);
+            zombie.setAttribute("object", params.item);
             this.$.panel.innerHTML = "";
             this.$.panel.appendChild(zombie);
         },

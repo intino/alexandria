@@ -45,7 +45,7 @@ public class Block {
 	}
 
 	public int height() {
-		return width;
+		return height;
 	}
 
 	public Block height(int height) {

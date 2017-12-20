@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.TimeScale;
+import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
 
 import java.util.List;
@@ -38,8 +39,8 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
-	protected void createPanel(String item) {
-		notifier.createPanel(item);
+	protected void createPanel(CreatePanelParameters params) {
+		notifier.createPanel(params);
 	}
 
 	@Override

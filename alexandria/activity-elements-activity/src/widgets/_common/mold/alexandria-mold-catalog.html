@@ -9,11 +9,7 @@
 <dom-module id="alexandria-mold-catalog">
 
     <template>
-        <div style$="height:100%;min-height:100px;overflow:auto;" class="layout flex">
-            <cotton-zombie id="entityZombie" display="AlexandriaCatalog" widget="AlexandriaCatalog" object="[[item]]"></cotton-zombie>
-            <cotton-zombie id="eventZombie" display="AlexandriaTemporalRangeCatalog" widget="AlexandriaTemporalRangeCatalog" object="[[item]]"></cotton-zombie>
-            <cotton-zombie id="reportZombie" display="AlexandriaTemporalTimeCatalog" widget="AlexandriaTemporalReportCatalog" object="[[item]]"></cotton-zombie>
-        </div>
+        <div id="container" class="layout flex"></div>
     </template>
 
     <style>
@@ -21,6 +17,11 @@
             display: block;
             min-height: 100px;
             @apply(--layout-vertical);
+        }
+        :host #container {
+            height:100%;
+            min-height:100px;
+            overflow:auto;
         }
     </style>
 
@@ -38,7 +39,8 @@
             behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
 
             properties : {
-                item: String
+                item: { type: String, observer: '_createZombie', value: function() { return null; } },
+                catalog: { type: String, observer: '_createZombie', value: function() { return null; } }
             },
 
             listeners: {
@@ -47,24 +49,10 @@
 
             attached: function () {
                 this.translate(AlexandriaMoldCatalogDictionary);
-                this.$.entityZombie.whenPersonified().execute((widget) => {
-                    this.$.eventZombie.remove();
-                    this.$.reportZombie.remove();
-                });
-                this.$.eventZombie.whenPersonified().execute((widget) => {
-                    this.$.entityZombie.remove();
-                    this.$.reportZombie.remove();
-                });
-                this.$.reportZombie.whenPersonified().execute((widget) => {
-                    this.$.entityZombie.remove();
-                    this.$.eventZombie.remove();
-                });
             },
 
             _resize : function() {
-                this._addStyle(this._catalog("alexandria-catalog"));
-                this._addStyle(this._catalog("alexandria-temporal-range-catalog"));
-                this._addStyle(this._catalog("alexandria-temporal-time-catalog"));
+                this._addStyle(this._catalog());
             },
 
             _addStyle : function(catalog) {
@@ -73,10 +61,19 @@
                 catalog.style.display = "block";
             },
 
-            _catalog : function(name) {
-                var result = this.querySelector(name);
+            _createZombie : function() {
+                if (this.item == null || this.catalog == null) return;
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", this.catalog);
+                zombie.setAttribute("widget", this.catalog);
+                zombie.setAttribute("object", this.item);
+                this.$.container.appendChild(zombie);
+            },
+
+            _catalog : function() {
+                var result = this.querySelector("#container > *");
                 return result != null ? result : { style: {} };
-            }
+            },
 
         });
     </script>
