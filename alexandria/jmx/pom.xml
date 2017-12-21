@@ -85,8 +85,8 @@
     <dependencies>
         <dependency>
             <groupId>io.intino.konos</groupId>
-            <artifactId>konos-core</artifactId>
-            <version>2.0.2</version>
+            <artifactId>alexandria-core</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun</groupId>
