@@ -48,9 +48,16 @@ class ActionUpdater {
 	private void update(PsiClass psiClass) {
 		updateFields(psiClass);
 		if (psiClass.getMethods().length > 0) {
-			updateExceptions(psiClass.getMethods()[0]);
-			updateReturnType(psiClass.getMethods()[0]);
+			PsiMethod method = findExecuteMethod(psiClass);
+			updateExceptions(method);
+			updateReturnType(method);
 		}
+	}
+
+	private PsiMethod findExecuteMethod(PsiClass psiClass) {
+		for (PsiMethod method : psiClass.findMethodsByName("execute", false))
+			if (!method.hasTypeParameters()) return method;
+		return psiClass.getMethods()[0];
 	}
 
 	private void updateFields(PsiClass psiClass) {
