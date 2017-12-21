@@ -54,7 +54,7 @@ public class Block {
 	}
 
 	public boolean hidden(Item item) {
-		return hidden != null && hidden.hidden(item.object());
+		return hidden != null && hidden.hidden(item != null ? item.object() : null);
 	}
 
 	public Block hidden(Hidden hidden) {

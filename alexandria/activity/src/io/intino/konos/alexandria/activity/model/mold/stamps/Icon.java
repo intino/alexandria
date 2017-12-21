@@ -7,8 +7,7 @@ public abstract class Icon<O> extends Stamp<O> {
 	private Value<String> title;
 
 	public String title(Item item, String username) {
-		if (item == null) return "";
-		return objectTitle(item.object(), username);
+		return objectTitle(item != null ? item.object() : null, username);
 	}
 
 	public String objectTitle(Object object, String username) {

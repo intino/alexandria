@@ -32,8 +32,7 @@ public abstract class Stamp<O> {
 	}
 
 	public O value(Item item, String username) {
-		if (item == null) return null;
-		return objectValue(item.object(), username);
+		return objectValue(item != null ? item.object() : null, username);
 	}
 
 	public abstract O objectValue(Object object, String username);
@@ -80,8 +79,7 @@ public abstract class Stamp<O> {
 	}
 
 	public String style(Item item, String username) {
-		if (item == null) return null;
-		return objectStyle(item.object(), username);
+		return objectStyle(item != null ? item.object() : null, username);
 	}
 
 	public String objectStyle(Object object, String username) {

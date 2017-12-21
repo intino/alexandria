@@ -7,8 +7,7 @@ public class TaskOperation extends Operation<String> {
 	private Execution execution;
 
 	public void execute(Item item, String username) {
-		if (item == null || execution == null) return;
-		execution.task(item.object(), username);
+		execution.task(item != null ? item.object() : null, username);
 	}
 
 	public TaskOperation execution(Execution execution) {
