@@ -7,8 +7,7 @@ public class Highlight extends Stamp<String> {
 	private Value<String> color;
 
 	public String color(Item item, String username) {
-		if (item == null) return "";
-		return objectColor(item.object(), username);
+		return objectColor(item != null ? item.object() : null, username);
 	}
 
 	public String objectColor(Object object, String username) {

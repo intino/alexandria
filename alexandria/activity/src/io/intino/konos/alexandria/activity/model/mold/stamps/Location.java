@@ -9,8 +9,7 @@ public class Location extends Stamp<String> {
 	private Value<URL> icon;
 
 	public URL icon(Item item, String username) {
-		if (item == null) return null;
-		return objectIcon(item.object(), username);
+		return objectIcon(item != null ? item.object() : null, username);
 	}
 
 	public URL objectIcon(Object object, String username) {

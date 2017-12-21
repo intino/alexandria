@@ -7,8 +7,7 @@ public class ItemLinks extends Stamp<Links> {
 	private Value<String> title;
 
 	public String title(Item item, String username) {
-		if (item == null) return null;
-		return objectTitle(item.object(), username);
+		return objectTitle(item != null ? item.object() : null, username);
 	}
 
 	public String objectTitle(Object object, String username) {
