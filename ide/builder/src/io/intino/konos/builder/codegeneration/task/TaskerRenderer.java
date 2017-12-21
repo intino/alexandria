@@ -66,7 +66,7 @@ public class TaskerRenderer {
 	private Frame processDirectorySentinel(DirectorySentinelTask task) {
 		final Frame sentinel = new Frame().addTypes("task").addTypes(task.getClass().getSimpleName());
 		sentinel.addSlot("event", task.events().stream().map(Enum::name).toArray(String[]::new));
-		sentinel.addSlot("file", task.directory() == null ? "" : task.directory().getPath());
+		sentinel.addSlot("file", task.directory() == null ? "" : task.directory());
 		sentinel.addSlot("name", task.name$());
 		sentinel.addSlot("package", packageName);
 		return sentinel;

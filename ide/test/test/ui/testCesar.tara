@@ -10,7 +10,7 @@ Display testCesarHome
 
 
 // Mario. Está pendiente el logo y favicon
-Desktop(title = "test cesar", subTitle = "test using cesar layout", logo = "favicon.png", favicon = "favicon.png") testCesarDesktop
+Desktop(title = "test cesar", subTitle = "test using cesar layout", logoPath = "favicon.png", faviconPath = "favicon.png") testCesarDesktop
 	layout = testCesarMenu
 
 Layout(mode = Menu) testCesarMenu

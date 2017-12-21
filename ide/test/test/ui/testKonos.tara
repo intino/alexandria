@@ -9,8 +9,8 @@ Desktop testHome
 	layout = testMenu
 	title = "Ejemplo"
 	subTitle = "Ejemplo de proyecto hecho con Konos"
-	logo = "logo.png"
-	favicon = "icon.png"
+	logoPath = "logo.png"
+	faviconPath = "icon.png"
 
 Layout testMenu
 	mode = Menu

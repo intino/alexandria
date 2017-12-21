@@ -26,7 +26,7 @@ Facet CronTrigger extends Scheduled on Task
 Facet ShutdownTrigger extends Scheduled on Task
 
 Facet DirectorySentinel on Task
-	var resource directory
+	var string directory
 	var word[]:{OnCreate OnDelete OnModify} events
 
 Facet ProcessSentinel on Task

@@ -11,14 +11,14 @@ Facet REST on Service
 	var string host = "{rest.host}"
 	var string description = ""
 	var string basePath
-	var resource logo = empty
+	var string logo = empty
 	var word[]:{http https ws wss} protocols = https
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
-			var resource store
+			var string store
 			var string storePassword
 			Concept AllowedUsers
-				var resource[] certificate
+				var string[] certificate
 		sub AuthenticatedWithPassword
 			Concept:{1..*} AllowedUsers
 				var string user
@@ -49,7 +49,7 @@ Facet REST on Service
 			var string[] tags = empty
 			var string summary = ""
 			var string description = ""
-			var resource externalDocumentation = empty
+			var string externalDocumentationPath = empty
 			var boolean deprecated = false
 			sub Get
 			sub Post
