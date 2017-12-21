@@ -35,8 +35,8 @@ Concept Desktop extends Display
 	var Layout layout
 	var string title
 	var string subTitle
-	var resource logo
-	var resource favicon
+	var string logoPath
+	var string faviconPath
 
 Concept Layout extends Display
 	var word:{Menu Tab} mode

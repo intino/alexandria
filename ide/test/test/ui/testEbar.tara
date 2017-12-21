@@ -5,7 +5,7 @@ Schema dummy
 Activity testEbar
 	Home(uses=testEbarHome) testEbarHomePage
 
-Desktop(title = "", subTitle = "", logo = "", favicon = "") testEbarHome
+Desktop(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome
 	layout = testEbarTab
 
 Layout(mode = Tab) testEbarTab

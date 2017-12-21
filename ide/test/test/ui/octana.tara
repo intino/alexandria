@@ -3,7 +3,7 @@ dsl Konos
 Activity octana
 	Home(uses=octanaDesktop) home
 
-Desktop(title = "Octana", subTitle = "Octana", logo = "logo.png", favicon = "favicon.png") octanaDesktop
+Desktop(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath = "favicon.png") octanaDesktop
 	layout = octanaLayout
 
 Layout(mode = Menu) octanaLayout
