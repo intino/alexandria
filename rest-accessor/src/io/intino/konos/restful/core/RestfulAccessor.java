@@ -1,6 +1,6 @@
 package io.intino.konos.restful.core;
 
-import io.intino.konos.Resource;
+import io.intino.konos.alexandria.Resource;
 import io.intino.konos.restful.RestfulApi;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;

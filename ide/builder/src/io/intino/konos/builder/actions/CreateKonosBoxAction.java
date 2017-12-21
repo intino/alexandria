@@ -135,7 +135,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			try {
 				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
 				return false;
 			}
