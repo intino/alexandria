@@ -3,7 +3,6 @@ package io.intino.konos.alexandria.activity.helpers;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementView;
-import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.displays.ElementView;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
@@ -62,11 +61,6 @@ public class ElementHelper {
 			@Override
 			public Stamp stamp(Mold mold, String stampName) {
 				return provider.stamp(mold, stampName);
-			}
-
-			@Override
-			public AlexandriaStamp display(String name) {
-				return provider.display(name);
 			}
 
 			@Override

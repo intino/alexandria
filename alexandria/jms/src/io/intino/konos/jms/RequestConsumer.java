@@ -1,7 +1,7 @@
 package io.intino.konos.jms;
 
 import com.google.gson.Gson;
-import io.intino.konos.exceptions.KonosException;
+import io.intino.konos.alexandria.exceptions.AlexandriaException;
 
 import javax.jms.*;
 import java.io.ByteArrayInputStream;
@@ -65,7 +65,7 @@ public interface RequestConsumer {
 	}
 
 
-	default Message exceptionMessage(Session session, String responseId, KonosException response) {
+	default Message exceptionMessage(Session session, String responseId, AlexandriaException response) {
 		try {
 			TextMessage message = session.createTextMessage();
 			message.setJMSCorrelationID(responseId);

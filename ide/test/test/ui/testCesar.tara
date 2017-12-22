@@ -38,6 +38,7 @@ Panel(label = "Project") testCesarProjectPanel
 Mold(modelClass = "") testCesarProjectDashboard
 	Block
 		Block
+			EmbeddedDisplay(display=sampleDisplay) embedded
 			height = 30 Percent
 			Picture(label = "overview", defaultPicture = "images/dashboard.png") overviewPicture
 				defaultStyle = "height:200px;width:100%;"
@@ -52,6 +53,8 @@ Mold(modelClass = "") testCesarProjectDashboard
 		Block
 			height = 30 Percent
 //			EmbeddedCatalog(catalog=testCesarSimpleDeviceCatalog) deviceStampCatalog
+
+Display sampleDisplay
 
 Panel(label = "Overview") testCesarOverviewPanel
 	Views

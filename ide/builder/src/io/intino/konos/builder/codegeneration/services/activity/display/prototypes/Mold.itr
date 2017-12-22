@@ -74,14 +74,6 @@ def type(stamp & location) trigger(class)
 	}
 end
 
-def type(stamp & display) trigger(class)
-	public static class $name+FirstUpperCase {
-		$common
-
-		$displayBuilder
-	}
-end
-
 def type(stamp & catalogLink) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
@@ -100,6 +92,14 @@ def type(stamp & highlight) trigger(class)
 	}
 end
 
+def type(stamp & embeddedDisplay) trigger(class)
+	public static class $name+FirstUpperCase {
+		$common
+
+		$displayBuilder
+	}
+end
+
 def type(stamp & embeddedCatalog) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
@@ -107,7 +107,6 @@ def type(stamp & embeddedCatalog) trigger(class)
 		[$embeddedCatalogFilter]
 	}
 end
-
 
 def type(stamp & icon) trigger(class)
 	public static class $name+FirstUpperCase {

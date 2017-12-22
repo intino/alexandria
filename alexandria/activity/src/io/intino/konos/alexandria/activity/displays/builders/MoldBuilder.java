@@ -43,6 +43,7 @@ public class MoldBuilder {
         List<Property> propertyList = new ArrayList<>();
         addCommonProperties(propertyList, stamp);
         addRatingProperties(propertyList, stamp);
+        addEmbeddedDisplayProperties(propertyList, stamp);
         addEmbeddedCatalogProperties(propertyList, stamp);
         addIconProperties(propertyList, stamp);
         addDownloadOperationProperties(propertyList, stamp);
@@ -64,12 +65,12 @@ public class MoldBuilder {
         if (stamp instanceof ExportOperation) return "export-operation";
         if (stamp instanceof TaskOperation) return "task-operation";
         if (stamp instanceof Page) return "page";
-        if (stamp instanceof Display) return "display";
         if (stamp instanceof Location) return "location";
         if (stamp instanceof Breadcrumbs) return "breadcrumbs";
         if (stamp instanceof ItemLinks) return "item-links";
         if (stamp instanceof CatalogLink) return "catalog-link";
         if (stamp instanceof Snippet) return "snippet";
+        if (stamp instanceof EmbeddedDisplay) return "embedded-display";
         if (stamp instanceof EmbeddedCatalog) return "embedded-catalog";
         return "";
     }
@@ -82,6 +83,11 @@ public class MoldBuilder {
     private static void addRatingProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof Rating)) return;
         propertyList.add(shapeProperty("icon", ((Rating)stamp).ratingIcon()));
+    }
+
+    private static void addEmbeddedDisplayProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof EmbeddedDisplay)) return;
+        propertyList.add(shapeProperty("displayType", ((EmbeddedDisplay)stamp).displayType()));
     }
 
     private static void addEmbeddedCatalogProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {

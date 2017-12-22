@@ -26,7 +26,8 @@ Concept Mold extends Display
 				var Catalog catalog
 				var boolean filtered = false
 			sub Description
-			sub Display
+			sub EmbeddedDisplay
+				var Display display
 			sub EmbeddedCatalog
 				var Catalog catalog
 				var boolean filtered = false

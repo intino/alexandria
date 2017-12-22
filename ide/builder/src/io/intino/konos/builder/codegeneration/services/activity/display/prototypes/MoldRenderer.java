@@ -60,7 +60,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		else if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
 		else if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
 		else if (stamp.i$(CatalogLink.class)) frameOf(frame, stamp.a$(CatalogLink.class));
-		else if (stamp.i$(Display.class)) frameOf(frame, stamp.a$(Display.class));
+		else if (stamp.i$(EmbeddedDisplay.class)) frameOf(frame, stamp.a$(EmbeddedDisplay.class));
 		else if (stamp.i$(EmbeddedCatalog.class)) frameOf(frame, stamp.a$(EmbeddedCatalog.class));
 		else if (stamp.i$(Icon.class)) frameOf(frame, stamp.a$(Icon.class));
 		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
@@ -82,7 +82,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 
 	private void addValueMethod(Stamp stamp, Frame frame) {
-		if (stamp.i$(Display.class) || stamp.i$(EmbeddedCatalog.class) || stamp.i$(Operation.class) || stamp.i$(Page.class))
+		if (stamp.i$(EmbeddedDisplay.class) || stamp.i$(EmbeddedCatalog.class) || stamp.i$(Operation.class) || stamp.i$(Page.class))
 			return;
 		frame.addSlot("valueMethod", baseFrame(stamp).addTypes("valueMethod")
 				.addSlot("valueType", (stamp.i$(Icon.class) && stamp.a$(Icon.class).source().equals(Icon.Source.Resource)) ?
@@ -104,8 +104,9 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addSlot("catalog", stamp.catalog().name$());
 	}
 
-	private void frameOf(Frame frame, Display stamp) {
+	private void frameOf(Frame frame, EmbeddedDisplay stamp) {
 		frame.addSlot("displayBuilder", baseFrame(stamp).addTypes("displayBuilder"));
+		frame.addSlot("type", stamp.display().getClass().getSimpleName());
 	}
 
 	private void frameOf(Frame frame, CatalogLink stamp) {

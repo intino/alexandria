@@ -11,7 +11,7 @@ import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MoldView;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Display;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
@@ -159,7 +159,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public AlexandriaStamp display(String stampKey) {
-		return ((Display)stamp(stampKey)).instance(username());
+		return ((EmbeddedDisplay)stamp(stampKey)).instance(username());
 	}
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
