@@ -76,8 +76,8 @@ def type(stamp & embeddedCatalog)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($embeddedCatalogFilter)]$common)
 end
 
-def type(stamp & display)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType($type).displayBuilder($displayBuilder)$common)
+def type(stamp & embeddedDisplay)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType($displayType).displayBuilder($displayBuilder)$common)
 end
 
 def type(stamp & highlight)

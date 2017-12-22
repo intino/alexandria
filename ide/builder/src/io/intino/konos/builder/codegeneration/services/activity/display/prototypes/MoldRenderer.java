@@ -106,7 +106,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, EmbeddedDisplay stamp) {
 		frame.addSlot("displayBuilder", baseFrame(stamp).addTypes("displayBuilder"));
-		frame.addSlot("type", stamp.display().getClass().getSimpleName());
+		frame.addSlot("displayType", stamp.display().name$());
 	}
 
 	private void frameOf(Frame frame, CatalogLink stamp) {
