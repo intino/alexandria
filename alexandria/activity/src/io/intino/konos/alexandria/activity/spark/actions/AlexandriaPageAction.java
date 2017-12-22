@@ -10,8 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static java.lang.String.format;
-import static java.util.Base64.getEncoder;
-import static spark.utils.IOUtils.toByteArray;
 
 
 public abstract class AlexandriaPageAction {
@@ -27,9 +25,7 @@ public abstract class AlexandriaPageAction {
 	}
 
 	protected abstract String title();
-	protected abstract String subtitle();
-	protected abstract URL logo();
-	protected abstract URL icon();
+	protected abstract URL favicon();
 
 	protected String template(String name) {
 		try {
@@ -48,7 +44,6 @@ public abstract class AlexandriaPageAction {
 		Browser browser = session.browser();
 
 		template = template.replace("$title", title());
-		template = template.replace("$subtitle", subtitle());
 		template = template.replace("$language", language);
 		template = template.replace("$currentSession", sessionId);
 		template = template.replace("$client", clientId);
@@ -56,21 +51,10 @@ public abstract class AlexandriaPageAction {
 		template = template.replace("$url", browser.baseUrl() + "/" + activityName);
 		template = template.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language));
 
-		if (logo() != null)
-			template = template.replace("$logo", encode(logo()));
-
-		if (icon() != null)
-			template = template.replace("$icon", Asset.toResource(baseAssetUrl(), icon()).toUrl().toString());
+		if (favicon() != null)
+			template = template.replace("$favicon", Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString());
 
 		return template;
-	}
-
-	private String encode(URL logo) {
-		try {
-			return "data:image/png;base64," + new String(getEncoder().encode(toByteArray(logo.openStream())));
-		} catch (IOException e) {
-			return "";
-		}
 	}
 
 	private URL baseAssetUrl() {
