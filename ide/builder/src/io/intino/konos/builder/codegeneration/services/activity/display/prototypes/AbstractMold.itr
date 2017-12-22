@@ -77,7 +77,7 @@ def type(stamp & embeddedCatalog)
 end
 
 def type(stamp & embeddedDisplay)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType($displayType).displayBuilder($displayBuilder)$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType("$displayType").displayBuilder($displayBuilder)$common)
 end
 
 def type(stamp & highlight)
