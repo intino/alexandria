@@ -16,7 +16,7 @@ import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
 import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Display;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Picture;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
@@ -207,10 +207,10 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private void renderDisplays(String item) {
-		Map<Display, AlexandriaStamp> displays = displays(item);
+		Map<EmbeddedDisplay, AlexandriaStamp> displays = displays(item);
 		displays.forEach((stamp, display) -> {
 			add(display);
-			display.personify(item + stamp.name());
+			display.personify(item + stamp.displayType());
 			display.refresh();
 		});
 		recordDisplaysMap.put(item, new ArrayList<>(displays.values()));
@@ -297,10 +297,10 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		notifier.refreshSelectedSorting(CatalogSortingBuilder.build(sorting));
 	}
 
-	private Map<Display, AlexandriaStamp> displays(String record) {
-		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Display)).collect(toList());
-		Map<Display, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (Display)s, stamp -> provider.display(stamp.name())));
-		Map<Display, AlexandriaStamp> result = nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	private Map<EmbeddedDisplay, AlexandriaStamp> displays(String record) {
+		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
+		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).instance(username())));
+		Map<EmbeddedDisplay, AlexandriaStamp> result = nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 		result.forEach((key, value) -> value.item(provider.item(record)));
 		return result;
 	}

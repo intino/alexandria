@@ -1,19 +1,18 @@
 package io.intino.konos.alexandria.activity.displays.providers;
 
 import io.intino.konos.alexandria.activity.Resource;
-import io.intino.konos.alexandria.activity.services.push.User;
-import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
+import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
 import io.intino.konos.alexandria.activity.displays.ElementDisplayManager;
-import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Block;
-import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.URL;
 import java.util.List;
@@ -37,8 +36,6 @@ public interface ElementViewDisplayProvider {
     List<Stamp> stamps(Mold mold);
     List<Stamp> expandedStamps(Mold mold);
     Stamp stamp(Mold mold, String name);
-
-    AlexandriaStamp display(String stamp);
 
     void executeOperation(ElementOperationParameters params, List<Item> selection);
     Resource downloadOperation(ElementOperationParameters params, List<Item> selection);

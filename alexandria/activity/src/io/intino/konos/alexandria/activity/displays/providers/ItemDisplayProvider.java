@@ -2,11 +2,10 @@ package io.intino.konos.alexandria.activity.displays.providers;
 
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
-import io.intino.konos.alexandria.activity.displays.AlexandriaStamp;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Block;
-import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
@@ -22,7 +21,6 @@ public interface ItemDisplayProvider {
 	List<Stamp> stamps(Mold mold);
 	Stamp stamp(Mold mold, String stampName);
 
-	AlexandriaStamp display(String name);
 	AlexandriaElementDisplay openElement(String label);
 
 	void executeOperation(ElementOperationParameters params, List<Item> items);

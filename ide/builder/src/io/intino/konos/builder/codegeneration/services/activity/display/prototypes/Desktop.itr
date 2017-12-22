@@ -31,6 +31,7 @@ def type(desktop & gen)
 
     	private static String toBase64(java.io.InputStream resource) {
 			try {
+				if (resource == null) return "";
 				return "data:image/png;base64," + Base64.encode(toByteArray(resource));
 			} catch (java.io.IOException e) {
 				return "";

@@ -41,7 +41,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
-	private boolean recordDisplaysCreated = false;
+	private boolean embeddedDisplaysCreated = false;
 	private String emptyMessage = null;
 
 	public AlexandriaItem(Box box) {
@@ -108,11 +108,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 	}
 
 	public void itemStampsReady(String id) {
-		if (!recordDisplaysCreated)
-			displays(item).forEach((key, display) -> {
+		if (!embeddedDisplaysCreated)
+			embeddedDisplays(item).forEach((key, display) -> {
 				add(display);
 				display.item(item);
-				display.personifyOnce(id + key.name());
+				display.personifyOnce(id + key.displayType());
 				display.refresh();
 			});
 		pages(item).forEach(display -> {
@@ -128,7 +128,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 			add(display);
 			display.personifyOnce(id + key.name());
 		});
-		recordDisplaysCreated = true;
+		embeddedDisplaysCreated = true;
 	}
 
 	public void notifyOpenItem(AlexandriaElementView.OpenItemEvent params) {
@@ -247,10 +247,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 		notifier.refreshMode(mode);
 	}
 
-	private Map<Display, AlexandriaStamp> displays(Item item) {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof Display).collect(toList());
-		Map<Display, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((Display)stamp, provider.display(stamp.name())), HashMap::putAll);
-		Map<Display, AlexandriaStamp> result = mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays(Item item) {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
+		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).instance(username())), HashMap::putAll);
+		Map<EmbeddedDisplay, AlexandriaStamp> result = mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 		result.forEach((key, value) -> value.item(item));
 		return result;
 	}

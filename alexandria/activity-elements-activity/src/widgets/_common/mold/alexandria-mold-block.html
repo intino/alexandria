@@ -83,8 +83,8 @@
             <template class="page-template" is="dom-if" if="[[stamp.isPage]]">
                 <div class="page-layer" style$="height:[[stamp.height]];[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
-            <template is="dom-if" if="[[stamp.isDisplay]]">
-                <div class="display-layer" name$="[[stamp.name]]" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            <template is="dom-if" if="[[stamp.isEmbeddedDisplay]]">
+                <div class="display-layer" name$="[[stamp.properties.displayType]]" id$="[[item]][[stamp.properties.displayType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isBreadcrumbs]]">
                 <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
