@@ -24,7 +24,7 @@ def type(desktop & gen)
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
     		[desktop.logo(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$logo")));]
-    		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon"));]
+    		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon")));]
     		desktop.layoutDisplayProvider(() -> $package+validPackage.displays.$name+firstUpperCase.layout(box));
     		return desktop;
     	}
