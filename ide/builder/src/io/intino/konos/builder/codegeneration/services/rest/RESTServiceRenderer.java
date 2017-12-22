@@ -86,7 +86,7 @@ public class RESTServiceRenderer {
 				addSlot("resource", (AbstractFrame[]) processResources(service.resourceList()));
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
-			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store().getPath()).addSlot("password", secure.storePassword()));
+			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store()).addSlot("password", secure.storePassword()));
 		Commons.writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "Resources", template().format(frame));
 	}
 

@@ -3,6 +3,9 @@ def type(desktop & gen)
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaDesktop;
     import io.intino.konos.alexandria.activity.model.Desktop;
+	import io.intino.konos.alexandria.activity.utils.Base64;
+	import io.intino.konos.alexandria.activity.utils.IOUtils;
+
 	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -20,11 +23,25 @@ def type(desktop & gen)
     		Desktop desktop = new Desktop();
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
-    		[desktop.logo("$logo");]
-    		[desktop.favicon("$favicon");]
+    		[desktop.logo(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$logo")));]
+    		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon"));]
     		desktop.layoutDisplayProvider(() -> $package+validPackage.displays.$name+firstUpperCase.layout(box));
     		return desktop;
     	}
+
+    	private static String toBase64(java.io.InputStream resource) {
+			try {
+				return "data:image/png;base64," + Base64.encode(toByteArray(resource));
+			} catch (java.io.IOException e) {
+				return "";
+			}
+		}
+
+		private static byte$[] toByteArray(java.io.InputStream input) throws java.io.IOException {
+			java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+			IOUtils.copy(input, output);
+			return output.toByteArray();
+		}
     }
 end
 
