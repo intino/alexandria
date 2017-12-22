@@ -33,17 +33,7 @@ public class HomePageAction extends AlexandriaPageAction {
 	}
 
 	@Override
-	protected String subtitle() {
-		return "";
-	}
-
-	@Override
-	protected java.net.URL logo() {
-		return null;
-	}
-
-	@Override
-	protected java.net.URL icon() {
+	protected java.net.URL favicon() {
 		return null;
 	}
 }

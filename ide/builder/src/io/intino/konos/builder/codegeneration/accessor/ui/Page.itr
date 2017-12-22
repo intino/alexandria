@@ -8,7 +8,7 @@ def type(page)
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
             <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
 
-	        <link rel="icon" href-absolute="$$icon">
+	        <link rel="icon" href-absolute="$$favicon">
 
             <script src="lib/jquery/dist/jquery.min.js"></script>
             <script src="lib/cotton-push/PushService.js"></script>
