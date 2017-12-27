@@ -62,12 +62,18 @@
             },
 
             _createZombie : function() {
-                if (this.item == null || this.catalog == null) return;
-                var zombie = document.createElement("cotton-zombie");
-                zombie.setAttribute("display", this.catalog);
-                zombie.setAttribute("widget", this.catalog);
-                zombie.setAttribute("object", this.item);
-                this.$.container.appendChild(zombie);
+                if (this.item == null || this.catalog == null || this._zombieAdded) return;
+
+                if (this.timeout != null)
+                    window.clearTimeout(this.timeout);
+
+                this.timeout = window.setTimeout(() => {
+                    var zombie = document.createElement("cotton-zombie");
+                    zombie.setAttribute("display", this.catalog);
+                    zombie.setAttribute("widget", this.catalog);
+                    zombie.setAttribute("object", this.item);
+                    this.$.container.appendChild(zombie);
+                }, 100);
             },
 
             _catalog : function() {
