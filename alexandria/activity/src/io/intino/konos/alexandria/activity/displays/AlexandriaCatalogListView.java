@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.PictureDataBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogListViewNotifier;
+import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Catalog;
@@ -16,10 +17,7 @@ import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
 import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Picture;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
+import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import spark.utils.IOUtils;
@@ -38,7 +36,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogListViewNotifier> implements AlexandriaCatalogView {
+public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogListViewNotifier> implements AlexandriaCatalogView, AlexandriaStampProvider {
 	private ElementViewDisplayProvider.Sorting sorting;
 	private ElementView<Catalog> view;
 	private CatalogViewDisplayProvider provider;
@@ -284,6 +282,20 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		notifyLoading(false);
 	}
 
+	@Override
+	public AlexandriaStamp embeddedDisplay(String name) {
+		Stamp stamp = provider.stamp(view.mold(), name);
+		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
+		return ((EmbeddedDisplay)stamp).createDisplay(username());
+	}
+
+	@Override
+	public AlexandriaCatalog embeddedCatalog(String name) {
+		Stamp stamp = provider.stamp(view.mold(), name);
+		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
+		return ((EmbeddedCatalog)stamp).display();
+	}
+
 	private void sendView() {
 		notifier.refreshView(ElementViewBuilder.build(view));
 	}
@@ -299,9 +311,12 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> displays(String record) {
 		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
-		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).instance(username())));
+		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).createDisplay(username())));
 		Map<EmbeddedDisplay, AlexandriaStamp> result = nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-		result.forEach((key, value) -> value.item(provider.item(record)));
+		result.forEach((key, value) -> {
+			value.item(provider.item(record));
+			value.provider(AlexandriaCatalogListView.this);
+		});
 		return result;
 	}
 

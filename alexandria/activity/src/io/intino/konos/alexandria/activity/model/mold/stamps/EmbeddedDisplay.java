@@ -12,7 +12,7 @@ public class EmbeddedDisplay extends Stamp<String> {
 		return null;
 	}
 
-	public AlexandriaStamp instance(String username) {
+	public AlexandriaStamp createDisplay(String username) {
 		return displayBuilder != null ? displayBuilder.display(name(), username) : null;
 	}
 

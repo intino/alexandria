@@ -345,6 +345,7 @@
 
         _parseFunctions : function(value) {
             value = this._parseDates(value);
+            value = this._parsePercentages(value);
             return value;
         },
 
@@ -362,8 +363,21 @@
             }
 
             return value;
-        }
+        },
 
+        _parsePercentages : function(value) {
+            var regExp = new RegExp(/percentage\('([^']*)',([^\)]*)\)/);
+            var match = regExp.exec(value);
+            if (match == null) return value;
+
+            while (match != null) {
+                var formatted = numeral(parseFloat(match[1])).format(match[2]);
+                value = value.replace(match[0], formatted);
+                match = regExp.exec(value);
+            }
+
+            return value;
+        }
     };
 
 </script>

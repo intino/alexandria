@@ -39,10 +39,10 @@ public class MoldRenderer extends PrototypeRenderer {
 		Frame frame = new Frame("block")
 				.addSlot("name", clean(block.name$()))
 				.addSlot("expanded", block.mode().equals(Mode.Expanded))
-				.addSlot("hidden", block.hidden())
+				.addSlot("hidden", baseFrame(block))
 				.addSlot("hiddenIfMobile", block.hiddenIfMobile())
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
-		if (!block.style().isEmpty()) frame.addSlot("style", block.style());
+		if (!block.style().isEmpty()) frame.addSlot("blockStyle", block.style());
 		if (block.height() >= 0) frame.addSlot("height", block.height());
 		if (block.width() >= 0) frame.addSlot("width", block.width());
 		for (Stamp stamp : block.stampList()) frame.addSlot("stamp", frameOf(stamp));
@@ -159,6 +159,12 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private Frame baseFrame(Stamp stamp) {
 		return new Frame(stamp.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", stamp.name$()).addSlot("moldClass", moldClass()).addSlot("box", box);
+	}
+
+	private Frame baseFrame(Block block) {
+		Frame frame = new Frame(block.getClass().getSimpleName()).addSlot("mold", mold.name$()).addSlot("name", block.name$()).addSlot("moldClass", moldClass()).addSlot("box", box);
+		if (block.hidden() == Hidden.HiddenEnabled) frame.addSlot("HiddenEnabled", "HiddenEnabled");
+		return frame;
 	}
 
 	private String moldClass() {

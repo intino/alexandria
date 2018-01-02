@@ -30,6 +30,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
     private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
     protected Map<Class<? extends ElementRender>, Function<ElementRender, List<Item>>> itemsProviders = new HashMap<>();
     private Settings settings;
+    private String openingElement;
 
     public AlexandriaLayout(Box box) {
         super(box);
@@ -97,7 +98,10 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
     }
 
     public void selectItem(String label) {
+        if (label.equals(openingElement)) return;
+        openingElement = label;
         openElement(label);
+        openingElement = null;
     }
 
     protected Reference schemaItemOf(Item item) {

@@ -112,13 +112,13 @@ public class Block {
 	}
 
 	public interface Hidden {
-		<T> boolean hidden(T item);
+		boolean hidden(Object object);
 	}
 
 	private static Hidden defaultHidden() {
 		return new Hidden() {
 			@Override
-			public <T> boolean hidden(T item) {
+			public boolean hidden(Object object) {
 				return false;
 			}
 		};

@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.MoldBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaItemNotifier;
+import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
@@ -32,7 +33,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
+public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> implements AlexandriaStampProvider {
 	private Mold mold;
 	private Element context;
 	private Item item;
@@ -92,6 +93,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 		super.refresh();
 		children(AlexandriaStamp.class).forEach(display -> {
 			display.item(item);
+			display.provider(AlexandriaItem.this);
 			if (display instanceof AlexandriaTemporalStamp) {
 				AlexandriaTemporalStamp temporalDisplay = (AlexandriaTemporalStamp) display;
 				temporalDisplay.range(provider.range());
@@ -112,6 +114,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 			embeddedDisplays(item).forEach((key, display) -> {
 				add(display);
 				display.item(item);
+				display.provider(AlexandriaItem.this);
 				display.personifyOnce(id + key.displayType());
 				display.refresh();
 			});
@@ -210,6 +213,20 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 		};
 	}
 
+	@Override
+	public AlexandriaStamp embeddedDisplay(String name) {
+		Stamp stamp = provider.stamp(mold, name);
+		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
+		return ((EmbeddedDisplay)stamp).createDisplay(username());
+	}
+
+	@Override
+	public AlexandriaCatalog embeddedCatalog(String name) {
+		Stamp stamp = provider.stamp(mold, name);
+		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
+		return ((EmbeddedCatalog)stamp).display();
+	}
+
 	private void sendInfo(io.intino.konos.alexandria.activity.schemas.Item item) {
 		notifier.refresh(new ItemRefreshInfo().mold(MoldBuilder.build(mold)).item(item));
 	}
@@ -249,9 +266,12 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> {
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays(Item item) {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
-		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).instance(username())), HashMap::putAll);
+		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(username())), HashMap::putAll);
 		Map<EmbeddedDisplay, AlexandriaStamp> result = mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-		result.forEach((key, value) -> value.item(item));
+		result.forEach((key, value) -> {
+			value.item(item);
+			value.provider(AlexandriaItem.this);
+		});
 		return result;
 	}
 

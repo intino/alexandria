@@ -44,7 +44,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public AlexandriaStamp display(String stampName) {
 		EmbeddedDisplay stamp = (EmbeddedDisplay) stamp(stampName);
 
-		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.instance(username());
+		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.createDisplay(username());
 		display.range(timeScaleHandler().range());
 
 		return display;
