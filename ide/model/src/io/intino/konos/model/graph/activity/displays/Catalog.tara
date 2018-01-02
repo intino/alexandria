@@ -42,6 +42,7 @@ Concept Toolbar is decorable
 
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
+	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
 
 Concept CatalogView
 	var string label

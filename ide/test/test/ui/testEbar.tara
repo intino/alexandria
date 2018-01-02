@@ -33,20 +33,22 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMo
 					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
 			Block
 				Snippet("") stats
-//
-//TemporalRangeCatalog("Episodios EBAR", modelClass="com.monentia.ebar.graph.StationSequence") testEbarSequence
-//	scales = Day
-//
-//	Toolbar
-//		Export(title = "Descarga los episodios del último mes", alexandriaIcon = "archive") export
-//
-//	ListView("listado", mold = testEbarSequenceMold)
-//
-//	Arrangement
-//		Sorting(label = "fecha") date
-//		Grouping(label = "Estación") sequenceStations
-//		Grouping(label = "Estado del episodio") stationSequenceStates
-//		Grouping(label = "Tipo de episodio") stationSequenceTypes
+
+
+TemporalCatalog(label = "Episodios EBAR", modelClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
+	type = Range
+	scales = Day
+	Toolbar
+		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
+
+	Views
+		ListView("listado", mold = testEbarSequenceMold)
+
+	Arrangement
+		Sorting(label = "fecha") date
+		Grouping(label = "Estación") sequenceStations
+		Grouping(label = "Estado del episodio") stationSequenceStates
+		Grouping(label = "Tipo de episodio") stationSequenceTypes
 
 Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
 	Block(layout = Horizontal)
