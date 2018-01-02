@@ -28,8 +28,6 @@ def type(layout & gen)
     		io.intino.konos.alexandria.activity.model.Layout layout = new io.intino.konos.alexandria.activity.model.Layout();
     		[layout.mode(Layout.Mode.$mode);]
     		layout.elementDisplayBuilder(new Layout.ElementDisplayBuilder() {
-    			AlexandriaElementDisplay display = null;
-
     			@Override
     			public AlexandriaElementDisplay displayFor(Element element, Object o) {
     				return get(element, o);
@@ -41,8 +39,7 @@ def type(layout & gen)
     			}
 
     			private AlexandriaElementDisplay get(Element element, Object o) {
-					if (display == null) display = ElementDisplays.displayFor(box, element);
-					return display;
+					return ElementDisplays.displayFor(box, element);
 				}
     		});
     		buildOptions(box).forEach(layout::add);

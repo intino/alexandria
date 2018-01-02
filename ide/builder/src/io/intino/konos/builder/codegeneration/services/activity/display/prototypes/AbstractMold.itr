@@ -32,7 +32,7 @@ def type(mold)
 end
 
 def type(block) trigger(definition)
-	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][$style][$NL$TAB$stamp...[$NL$TAB$TAB]][
+	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][.style("$blockStyle")][$NL$TAB$stamp...[$NL$TAB$TAB]][
 		$block+definition...[$NL]])
 
 end
@@ -45,8 +45,8 @@ def trigger(width)
 	.width($value)
 end
 
-def attribute(hiddenEnabled) trigger(hidden)
-	.hidden((object) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.hidden(($moldClass) object))
+def attribute(HiddenEnabled) trigger(hidden)
+	.hidden((object) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(($moldClass) object))
 end
 
 def trigger(hidden)

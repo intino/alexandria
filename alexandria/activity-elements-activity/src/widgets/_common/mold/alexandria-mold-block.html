@@ -25,6 +25,8 @@
 <link rel="import" href="alexandria-mold-catalog.html">
 <link rel="import" href="alexandria-mold-editor.html">
 
+<script src="../../../../lib/numeral/numeral.js"></script>
+
 <dom-module id="alexandria-mold-block">
 
     <template>
@@ -54,7 +56,7 @@
             </template>
             <template is="dom-if" if="[[stamp.isDescription]]">
                 <div class$="description [[stamp.classes]] layout horizontal" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" hidden$="[[!stamp.value.length]]">
-                    <template is="dom-if" if="[[stamp.label.length]]"><div>[[stamp.label]]:</div></template>
+                    <template is="dom-if" if="[[stamp.label.length]]"><div class="tag">[[stamp.label]]</div></template>
                     <div>[[stamp.value]]</div>
                     <div class="suffix">[[stamp.properties.suffix]]</div>
                 </div>
@@ -121,6 +123,7 @@
         :host {
             font-size: 10pt;
             height: auto;
+            position: relative;
         }
         :host cotton-breadcrumbs {
             display: block;
@@ -163,6 +166,10 @@
         :host .description {
             color: var(--secondary-text-color);
         }
+        :host .description .tag {
+            color: black;
+            margin-right: 7px;
+        }
         :host .description div {
             margin-right: 3px;
         }
@@ -171,14 +178,14 @@
             margin-top: 10px;
             margin-bottom: 10px;
             padding: 5px;
-            background: none;
+            background: none;1
         }
         :host .picture {
             position: relative;
-            margin-bottom: 10px;
         }
         :host.grid .picture {
             height: 259px;
+            margin-bottom: 10px;
         }
         :host .picture l2t-paper-slider {
             margin-bottom: 10px;

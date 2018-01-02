@@ -37,7 +37,7 @@ Panel(label = "Project") testCesarProjectPanel
 // Octavio. En código generado, el atributo width no se está pasando
 Mold(modelClass = "") testCesarProjectDashboard
 	Block
-		Block
+		Block(hidden=HiddenEnabled)
 			EmbeddedDisplay(display=sampleDisplay) embedded
 			height = 30 Percent
 			Picture(label = "overview", defaultPicture = "images/dashboard.png") overviewPicture
