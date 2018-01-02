@@ -26,8 +26,8 @@ public class DesktopRenderer extends PrototypeRenderer {
 		final Frame frame = super.createFrame();
 		frame.addSlot("title", desktop.title());
 		frame.addSlot("subtitle", desktop.subTitle());
-		if (desktop.logoPath() != null) frame.addSlot("logo", desktop.logoPath());
-		if (desktop.faviconPath() != null) frame.addSlot("favicon", desktop.faviconPath());
+		if (desktop.logoPath() != null && !desktop.logoPath().isEmpty()) frame.addSlot("logo", desktop.logoPath());
+		if (desktop.faviconPath() != null && !desktop.faviconPath().isEmpty()) frame.addSlot("favicon", desktop.faviconPath());
 		if (desktop.layout() != null) frame.addSlot("layout", desktop.layout().name$());
 		return frame;
 	}

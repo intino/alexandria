@@ -36,7 +36,12 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	protected Frame createFrame() {
 		final Catalog catalog = this.display.a$(Catalog.class);
-		final Frame frame = super.createFrame().addSlot("type", modelClass);
+		final Frame frame = super.createFrame().addTypes("catalog").addSlot("type", modelClass);
+		if (catalog.i$(TemporalCatalog.class)) {
+			final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);
+			frame.addSlot("mode", temporalCatalog.type().name());
+			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
+		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);
 		toolbar(catalog, frame);
