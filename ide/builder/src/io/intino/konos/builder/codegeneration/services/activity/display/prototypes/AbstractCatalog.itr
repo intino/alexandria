@@ -4,6 +4,7 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.activity.displays.AlexandriaCatalog;
     import io.intino.konos.alexandria.activity.model.AbstractView;
     import io.intino.konos.alexandria.activity.model.Catalog;
+    import io.intino.konos.alexandria.activity.model.TemporalCatalog;
     import io.intino.konos.alexandria.activity.model.Mold;
     import io.intino.konos.alexandria.activity.model.Toolbar;
     import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
@@ -13,6 +14,7 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.activity.model.catalog.views.GridView;
     import io.intino.konos.alexandria.activity.model.catalog.views.ListView;
     import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
+    import io.intino.konos.alexandria.activity.model.TimeScale;
     import io.intino.konos.alexandria.activity.model.toolbar.*;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
@@ -20,16 +22,18 @@ def type(catalog & gen)
     import java.util.ArrayList;
     import java.util.List;
 
-    public abstract class Abstract$name+FirstUpperCase extends AlexandriaCatalog<$name+FirstUpperCase~Notifier> {
+    public abstract class Abstract$name+FirstUpperCase extends io.intino.konos.alexandria.activity.displays.Alexandria[Temporal$mode]Catalog<$name+FirstUpperCase~Notifier> {
 
     	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildCatalog(box));
     	}
 
-    	private static Catalog buildCatalog($box+firstUpperCase~Box box) {
-    		io.intino.konos.alexandria.activity.model.Catalog catalog = new io.intino.konos.alexandria.activity.model.Catalog();
+    	private static [io.intino.konos.alexandria.activity.model.Temporal$mode+empty]Catalog buildCatalog($box+firstUpperCase~Box box) {
+    		io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog();
 			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));[
+			$mode+setMode][
+			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
 			catalog.events(new io.intino.konos.alexandria.activity.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
 			$hasArrangements][
@@ -62,6 +66,14 @@ def type(catalog & gen)
 end
 
 def trigger(empty)
+end
+
+def trigger(setMode)
+	catalog.type(TemporalCatalog.Type.$value+firstUpperCase);
+end
+
+def trigger(scaleAdd)
+	add(TimeScale.$value+FirstUpperCase);
 end
 
 def trigger(groupingSelection)
