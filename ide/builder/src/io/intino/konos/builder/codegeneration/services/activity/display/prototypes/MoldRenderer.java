@@ -168,7 +168,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private String moldClass() {
-		return mold.modelClass().isEmpty() ? "java.lang.Object" : mold.modelClass();
+		return mold.modelClass() == null || mold.modelClass().isEmpty() ? "java.lang.Object" : mold.modelClass();
 	}
 
 	@Override

@@ -58,8 +58,8 @@ def type(stamp & taskOperation) trigger(class)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
-			return null;//TODO
+		public static void execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+
 		}
 	}
 end
