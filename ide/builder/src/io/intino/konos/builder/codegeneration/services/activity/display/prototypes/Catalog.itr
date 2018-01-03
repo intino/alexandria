@@ -29,11 +29,11 @@ def type(catalog)
 		$toolbar
     	]
     	public static class Source {
-    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition, String username) {
+    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition[, $mode+timerange], String username) {
     			return java.util.Collections.emptyList();//TODO
     		}
 
-    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, String username) {
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id[, $mode+timerange], String username) {
     			return null;//TODO
     		}[
 
@@ -66,6 +66,10 @@ def type(catalog)
 			$hasArrangements
     	]}
     }
+end
+
+def trigger(timerange)
+	io.intino.konos.alexandria.activity.model.TimeRange
 end
 
 def trigger(hasMagazineView)

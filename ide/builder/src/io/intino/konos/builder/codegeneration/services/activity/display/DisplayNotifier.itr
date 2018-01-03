@@ -31,6 +31,14 @@ def attribute(catalog) trigger(type)
 	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogNotifier
 end
 
+def attribute(temporalTimeCatalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier
+end
+
+def attribute(temporalRangeCatalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier
+end
+
 def attribute(mold) trigger(type)
 	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldNotifier
 end
