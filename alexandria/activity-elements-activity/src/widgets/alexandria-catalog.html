@@ -108,6 +108,7 @@
             display: block;
             margin: 0px 6px;
             width: calc(100% - 12px);
+            @apply(--alexandria-catalog-panels);
         }
         :host #main.hidden, :host #panel.hidden {
             position: absolute;
@@ -121,6 +122,7 @@
             --cotton-breadcrumbs-item-size: 12pt;
             --cotton-breadcrumbs-item-brothers-size: 12pt;
             --cotton-breadcrumbs-item-parents-size: 12pt;
+            @apply(--alexandria-catalog-breadcrumbs);
         }
         @media screen and (max-width: 736px) {
             :host #showGroupingsButton {

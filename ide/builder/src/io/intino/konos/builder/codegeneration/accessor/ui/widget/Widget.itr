@@ -21,6 +21,7 @@ def type(widget)
         	$path
         	$parent
             $innerDisplay...[$NL]
+            $attached+prototype
         </template>
 
         <style>
@@ -69,6 +70,10 @@ def trigger(includes)
 	$widget+firstuppercase~Behaviors.NotifierListener
 end
 
+def type(prototype) trigger(prototype)
+	<alexandria-$type+camelCaseToSnakeCase id="alexandria-$type+camelCaseToSnakeCase"></alexandria-$type+camelCaseToSnakeCase>
+end
+
 def type(prototype) trigger(attached)
 	attached : function() {
 		this.translate($widget+firstuppercase~Dictionary);
@@ -76,14 +81,12 @@ def type(prototype) trigger(attached)
 	},
 
 	_linkWithAlexandriaElement : function() {
-		var element = document.createElement("alexandria-$type+camelCaseToSnakeCase");
+		var element = document.getElementById("alexandria-$type+camelCaseToSnakeCase");
 		element.display = this.display;
-		$$(element).addClass("$widget+camelCaseToSnakeCase");
 		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
 		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
 		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.Requester);
 		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.NotifierListener);
-		this.appendChild(element);
 	}
 end
 

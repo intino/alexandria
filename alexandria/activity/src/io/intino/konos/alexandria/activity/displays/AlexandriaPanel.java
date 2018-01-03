@@ -79,8 +79,17 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		sendTarget();
 		sendViewList();
 		createDialogContainer();
-		if (views().size() > 0)
-			selectView(views().get(0).name());
+		buildFixedViews();
+		selectFirstTabView();
+	}
+
+	private void selectFirstTabView() {
+		for (AbstractView view : views()) {
+			if (((View)view).layout() == View.Layout.Tab) {
+				selectView(view.name());
+				break;
+			}
+		}
 	}
 
 	private void sendTarget() {
@@ -112,6 +121,13 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private AlexandriaPanelDisplayView buildOlapViewDisplay(ElementRender render) {
 		return new AlexandriaPanelDisplayView(box);
+	}
+
+	public void buildFixedViews() {
+		views().stream().filter(v -> {
+			View view = (View) v;
+			return view.layout() == View.Layout.LeftFixed || view.layout() == View.Layout.RightFixed;
+		}).forEach(v -> buildView(v.name()).refresh());
 	}
 
 	public void selectView(String name) {
