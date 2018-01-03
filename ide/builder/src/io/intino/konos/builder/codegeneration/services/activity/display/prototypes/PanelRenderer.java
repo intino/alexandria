@@ -37,7 +37,8 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("owner", panel.name$())
 				.addSlot("name", view.name$())
 				.addSlot("label", view.label())
-				.addSlot("box", box);
+				.addSlot("box", box)
+				.addSlot("layout", view.layout().name());
 		final ElementRenderer renderer = view.elementRenderer();
 		if (renderer.i$(RenderDisplay.class)) {
 			frame.addTypes("display");

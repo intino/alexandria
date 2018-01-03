@@ -25,8 +25,10 @@ public class ReferenceBuilder {
 
     public static Reference build(AbstractView view) {
         String type = typeOf(view);
+        String layout = layoutOf(view);
         Reference result = new Reference().name(view.name()).label(view.label());
         result.referencePropertyList().add(new ReferenceProperty().name("type").value(type));
+        result.referencePropertyList().add(new ReferenceProperty().name("layout").value(layout));
         return result;
     }
 
@@ -57,4 +59,14 @@ public class ReferenceBuilder {
         return "";
     }
 
+    private static String layoutOf(AbstractView view) {
+        if (! (view instanceof View)) return "";
+
+        View.Layout layout = ((View) view).layout();
+        if (layout == View.Layout.Tab) return "tab";
+        if (layout == View.Layout.LeftFixed) return "left-fixed";
+        if (layout == View.Layout.RightFixed) return "right-fixed";
+
+        return "";
+    }
 }
