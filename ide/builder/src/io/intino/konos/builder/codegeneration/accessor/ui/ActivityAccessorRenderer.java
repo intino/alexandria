@@ -10,6 +10,7 @@ import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 import org.slf4j.LoggerFactory;
 import sun.net.www.protocol.file.FileURLConnection;
@@ -127,7 +128,7 @@ public class ActivityAccessorRenderer {
 		if (display.parentDisplay() != null)
 			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
 		final boolean prototype = isPrototype(display);
-		final String type = (display.i$(Layout.class) ? display.a$(Layout.class).mode().name() : "") + display.getClass().getSimpleName();
+		final String type = typeOf(display);
 		frame.addSlot("attached", new Frame(prototype ? "prototype" : "display").addSlot("widget", display.name$()).addSlot("type", type));
 		if (prototype) {
 			frame.addSlot("imports", new Frame().addSlot("type", type));
@@ -139,6 +140,19 @@ public class ActivityAccessorRenderer {
 			writeWidgetPaths(display, requests);
 		}
 		writeWidget(display, frame);
+	}
+
+	private String typeOf(Display display) {
+		String type = display.getClass().getSimpleName();
+		if (type.equalsIgnoreCase("layout")) return layoutType(display);
+		if (type.equalsIgnoreCase("temporalCatalog")) return "temporal" + display.a$(TemporalCatalog.class).type().name() + "Catalog";
+		else return type;
+	}
+
+
+	@NotNull
+	private String layoutType(Display display) {
+		return display.a$(Layout.class).mode().name();
 	}
 
 	private void writeWidgetPaths(Display display, List<Display.Request> requests) throws IOException {

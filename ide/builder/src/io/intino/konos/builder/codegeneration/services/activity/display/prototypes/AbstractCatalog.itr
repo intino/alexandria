@@ -31,7 +31,7 @@ def type(catalog & gen)
 
     	private static [io.intino.konos.alexandria.activity.model.Temporal$mode+empty]Catalog buildCatalog($box+firstUpperCase~Box box) {
     		io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog();
-			catalog.objectsLoader((scope, condition, username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition, username));[
+			catalog.objectsLoader((scope, condition[, $mode+timerange], username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], username));[
 			$mode+setMode][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
@@ -40,11 +40,10 @@ def type(catalog & gen)
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
-			catalog.objectLoader((id, username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, username))
+			catalog.objectLoader((id[, $mode+timerange], username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id[, $mode+timerange], username))
 				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
 				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));
-
     		buildArrangements(box).forEach(a -> catalog.add(a));
     		return catalog;
     	}
@@ -72,6 +71,10 @@ def trigger(setMode)
 	catalog.type(TemporalCatalog.Type.$value+firstUpperCase);
 end
 
+def trigger(timeRange)
+	tr
+end
+
 def trigger(scaleAdd)
 	add(TimeScale.$value+FirstUpperCase);
 end
@@ -82,8 +85,9 @@ end
 
 def trigger(hasMagazineView)
 	catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
-	catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id, username));
+	catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], username));
 end
+
 def trigger(hasArrangements)
 	catalog.arrangementFiltererLoader((username) -> $name+firstUpperCase.Arrangements.filterer(box, username));
 end

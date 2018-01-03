@@ -86,10 +86,16 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void views(Catalog catalog, Frame frame) {
-		if (catalog.views().catalogViewList().stream().anyMatch(v -> v.i$(MagazineView.class)))
-			frame.addSlot("hasMagazineView", baseFrame().addSlot("type", catalog.modelClass()));
-		for (CatalogView view : catalog.views().catalogViewList())
-			frame.addSlot("view", frameOf(view, catalog));
+		if (catalog.views().catalogViewList().stream().anyMatch(v -> v.i$(MagazineView.class))) {
+			final Frame hasMagazineFrame = baseFrame().addSlot("type", catalog.modelClass());
+			if (catalog.i$(TemporalCatalog.class)) {
+				final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);
+				hasMagazineFrame.addSlot("mode", temporalCatalog.type().name());
+				hasMagazineFrame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
+			}
+			frame.addSlot("hasMagazineView", hasMagazineFrame);
+		}
+		for (CatalogView view : catalog.views().catalogViewList()) frame.addSlot("view", frameOf(view, catalog));
 		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog));
 	}
 

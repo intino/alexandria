@@ -23,6 +23,8 @@ public class DisplayNotifierTemplate extends Template {
 			rule().add((condition("attribute", "desktop")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaDesktopNotifier")),
 			rule().add((condition("attribute", "panel")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelNotifier")),
 			rule().add((condition("attribute", "catalog")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogNotifier")),
+			rule().add((condition("attribute", "temporalTimeCatalog")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier")),
+			rule().add((condition("attribute", "temporalRangeCatalog")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier")),
 			rule().add((condition("attribute", "mold")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldNotifier")),
 			rule().add((condition("attribute", "MenuLayout")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMenuLayoutNotifier")),
 			rule().add((condition("attribute", "TabLayout")), (condition("trigger", "type"))).add(literal("io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTabLayoutNotifier")),
