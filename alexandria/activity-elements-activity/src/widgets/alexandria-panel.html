@@ -4,6 +4,7 @@
 <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../lib/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../lib/paper-tabs/paper-tabs-icons.html">
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="alexandria-panel-custom-view.html">
 <link rel="import" href="alexandria-panel-catalog-view.html">
@@ -21,58 +22,58 @@
         <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class="layout vertical flex" style="height:100%;">
             <div class$="tabs tabs_[[_showTabs]]">
-                <paper-tabs selected="{{_selectedView}}" no-bar scrollable hidden="[[!_showTabs]]">
+                <paper-tabs selected="{{_selectedView}}" no-bar hidden="[[!_showTabs]]">
                     <template is="dom-repeat" items="[[_viewList]]" as="view">
-                        <paper-tab view="[[view]]">[[view.label]]</paper-tab>
+                        <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                            <paper-tab view="[[view]]">[[view.label]]</paper-tab>
+                        </template>
                     </template>
                 </paper-tabs>
             </div>
-            <div class="layout horizontal">
-                <div class="left-justified">
-                    <template is="dom-repeat" items="[[_viewList]]" as="view">
-                        <template is="dom-if" if="[[_isLeftFixedLayoutView(view)">
-                            <template is="dom-if" if="[[_isLeftFixedCustomView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isLeftFixedCatalogView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isLeftFixedDisplayView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
+            <div class="fixed left">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
                         </template>
                     </template>
-                </div>
-                <iron-pages id="tabs-content" class="flex" selected="{{_selectedView}}">
-                    <template is="dom-if" if="[[_isMainLayoutView(view)">
-                        <template is="dom-repeat" items="[[_viewList]]" as="view">
-                            <template is="dom-if" if="[[_isCustomView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isCatalogView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isDisplayView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
+                </template>
+            </div>
+            <iron-pages id="tabs-content" class$="flex left_fixed_[[_hasLeftFixedViews]] right_fixed_[[_hasRightFixedViews]]" selected="{{_selectedView}}">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
                         </template>
                     </template>
-                </iron-pages>
-                <div class="right-justified">
-                    <template is="dom-if" if="[[_isRightFixedLayoutView(view)">
-                        <template is="dom-repeat" items="[[_viewList]]" as="view">
-                            <template is="dom-if" if="[[_isCustomView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isCatalogView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
-                            <template is="dom-if" if="[[_isDisplayView(view)]]">
-                                <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
-                            </template>
+                </template>
+            </iron-pages>
+            <div class="fixed right">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
                         </template>
                     </template>
-                </div>
+                </template>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
@@ -80,6 +81,9 @@
     </template>
 
     <style>
+        :host {
+            position: relative;
+        }
         :host paper-tabs {
             background: var(--default-primary-color);
             color: white;
@@ -120,6 +124,27 @@
             --cotton-breadcrumbs-item-size: 12pt;
             --cotton-breadcrumbs-item-brothers-size: 12pt;
             --cotton-breadcrumbs-item-parents-size: 12pt;
+        }
+        :host .fixed {
+            position: fixed;
+            margin-top: 35px;
+            @apply(--alexandria-panel-view-fixed);
+        }
+        :host .fixed.left {
+            width: var(--layout-panel-view-fixed-width, 150px);
+            @apply(--alexandria-panel-view-fixed-left);
+        }
+        :host .fixed.right {
+            right: 0;
+            width: var(--layout-panel-view-fixed-width, 150px);
+            @apply(--alexandria-panel-view-fixed-right);
+        }
+        :host iron-pages.left_fixed_true {
+            margin-left: var(--alexandria-panel-view-fixed-width, 150px);
+            padding-left: 10px;
+        }
+        :host iron-pages.right_fixed_true {
+            width: var(--alexandria-panel-view-fixed-width, calc(100% - 150px));
         }
         @media screen and (max-width: 736px) {
             :host cotton-breadcrumbs {
@@ -171,7 +196,9 @@
                 _viewList : Array,
                 _showTabs : Boolean,
                 _selectedView : { type: Number, value: function() { return 0; }, observer: '_selectView' },
-                _selectedPage : { type: Number, value: function () { return 0; } }
+                _selectedPage : { type: Number, value: function () { return 0; } },
+                _hasLeftFixedViews : { type: Boolean, value: function() { return false; }},
+                _hasRightFixedViews : { type: Boolean, value: function() { return false; }}
             },
 
             attached : function() {
@@ -186,6 +213,22 @@
             _refreshViewList : function(viewList) {
                 this._viewList = viewList;
                 this._showTabs = viewList.length > 1;
+                this._hasLeftFixedViews = this._countLeftFixedViews() > 0;
+                this._hasRightFixedViews = this._countRightFixedViews() > 0;
+            },
+
+            _countLeftFixedViews : function() {
+                var count = 0;
+                for (var i=0; i<this._viewList.length; i++)
+                    if (this._isLeftFixedLayoutView(this._viewList[i])) count++;
+                return count;
+            },
+
+            _countRightFixedViews : function() {
+                var count = 0;
+                for (var i=0; i<this._viewList.length; i++)
+                    if (this._isRightFixedLayoutView(this._viewList[i])) count++;
+                return count;
             },
 
             _isCustomView : function(view) {
@@ -204,8 +247,8 @@
                 return view.referencePropertyList[1].value == "left-fixed";
             },
 
-            _isMainLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "main";
+            _isTabLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "tab";
             },
 
             _isRightFixedLayoutView : function(view) {
