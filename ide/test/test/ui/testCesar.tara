@@ -25,7 +25,7 @@ Layout(mode = Menu) testCesarMenu
 // Octavio. En código generado, todas las vistas se crean de tipo RenderDisplay y el método no tiene nombre
 Panel(label = "Project") testCesarProjectPanel
 	Views
-		View("dashboard") > RenderMold(testCesarProjectDashboard)
+		View("dashboard", layout = RightFixed) > RenderMold(testCesarProjectDashboard)
 		View("devices") > RenderCatalogs(testCesarDeviceCatalog)
 		View("servers") > RenderCatalogs(testCesarServerCatalog)
 		View("feeders") > RenderCatalogs(testCesarFeederCatalog)

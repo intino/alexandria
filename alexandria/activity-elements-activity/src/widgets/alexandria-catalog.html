@@ -17,7 +17,10 @@
 
     <template>
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
-        <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
+        <div class="breadcrumbs layout horizontal" hidden$="[[!_breadcrumbs.length]]">
+            <paper-button on-tap="_navigateMain">[[Back]]</paper-button>
+            <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate"></cotton-breadcrumbs>
+        </div>
         <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
             <a id="showGroupingsButton" class="layout vertical center center-justified" hidden="[[_hideGroupings]]" on-tap="_showGroupingsDialog"><div>[[ShowGroupings]]</div></a>
             <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
@@ -114,21 +117,41 @@
             position: absolute;
             left: -10000px;
         }
+        :host .breadcrumbs {
+            height: auto;
+            @apply(--alexandria-catalog-breadcrumbs);
+        }
+        :host .breadcrumbs paper-button {
+            background: white;
+            color: black;
+            border: 1px solid #388e3b;
+            padding: 0 25px;
+            border-radius: 30px;
+            height: 31px;
+            margin-top: 7px;
+        }
+        :host .breadcrumbs paper-button:hover {
+            background: #388e3b;
+            opacity: 0.9;
+            color: white;
+        }
         :host cotton-breadcrumbs {
             display: block;
             padding: 10px;
             --cotton-breadcrumbs-item-color: var(--default-primary-color);
             --cotton-breadcrumbs-item-border-color: var(--footer-background-color);
-            --cotton-breadcrumbs-item-size: 12pt;
-            --cotton-breadcrumbs-item-brothers-size: 12pt;
-            --cotton-breadcrumbs-item-parents-size: 12pt;
-            @apply(--alexandria-catalog-breadcrumbs);
+            --cotton-breadcrumbs-item-size: 10pt;
+            --cotton-breadcrumbs-item-brothers-size: 10pt;
+            --cotton-breadcrumbs-item-parents-size: 10pt;
         }
         @media screen and (max-width: 736px) {
             :host #showGroupingsButton {
                 display: flex;
             }
             :host #embeddedGroupings {
+                display: none;
+            }
+            :host .breadcrumbs paper-button {
                 display: none;
             }
             :host cotton-breadcrumbs {
@@ -149,12 +172,14 @@
             es: {
                 ClearFilter : "ver todos",
                 ShowGroupings : "filtrar catálogo",
-                Close : "cerrar"
+                Close : "cerrar",
+                Back : "< volver al catálogo"
             },
             en: {
                 ClearFilter : "view all",
                 ShowGroupings : "filter catalog",
-                Close : "close"
+                Close : "close",
+                Back : "< back to catalog"
             }
         };
 
@@ -204,6 +229,10 @@
 
             _showGroupingsDialog : function () {
                 this.$.groupingsDialog.open();
+            },
+
+            _navigateMain : function() {
+                this.navigate("main");
             }
 
         });
