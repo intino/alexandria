@@ -8,7 +8,10 @@ import io.intino.konos.alexandria.activity.model.layout.ElementOption;
 import io.intino.konos.alexandria.activity.model.layout.options.Group;
 import io.intino.konos.alexandria.activity.model.layout.options.Option;
 import io.intino.konos.alexandria.activity.model.layout.options.Options;
-import io.intino.konos.alexandria.activity.model.renders.*;
+import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
+import io.intino.konos.alexandria.activity.model.renders.RenderMold;
+import io.intino.konos.alexandria.activity.model.renders.RenderObjects;
+import io.intino.konos.alexandria.activity.model.renders.RenderPanels;
 import io.intino.konos.alexandria.activity.schemas.PlatformInfo;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
@@ -25,225 +28,236 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> extends AlexandriaElementStore<DN> {
-    private List<Item> items = new ArrayList<>();
-    private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
-    private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
-    protected Map<Class<? extends ElementRender>, Function<ElementRender, List<Item>>> itemsProviders = new HashMap<>();
-    private Settings settings;
-    private String openingElement;
+	private List<Item> items = new ArrayList<>();
+	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
+	private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
+	protected Map<Class<? extends ElementRender>, Function<ElementRender, List<Item>>> itemsProviders = new HashMap<>();
+	private Settings settings;
+	private String openingElement;
 
-    public AlexandriaLayout(Box box) {
-        super(box);
-        buildElementProviders();
-    }
+	public AlexandriaLayout(Box box) {
+		super(box);
+		buildElementProviders();
+	}
 
-    public AlexandriaLayout settings(Settings settings) {
-        this.settings = settings;
-        return this;
-    }
+	public AlexandriaLayout settings(Settings settings) {
+		this.settings = settings;
+		return this;
+	}
 
-    public void onLoading(Consumer<Boolean> listener) {
-        loadingListeners.add(listener);
-    }
+	public void onLoading(Consumer<Boolean> listener) {
+		loadingListeners.add(listener);
+	}
 
-    public void onLoaded(Consumer<Boolean> listener) {
-        loadedListeners.add(listener);
-    }
+	public void onLoaded(Consumer<Boolean> listener) {
+		loadedListeners.add(listener);
+	}
 
-    @Override
-    protected void refreshLoading(boolean withMessage) {
-        sendLoading();
-        loadingListeners.forEach(l -> l.accept(withMessage));
-    }
+	@Override
+	protected void refreshLoading(boolean withMessage) {
+		sendLoading();
+		loadingListeners.forEach(l -> l.accept(withMessage));
+	}
 
-    @Override
-    protected void refreshLoaded() {
-        sendLoaded();
-        loadedListeners.forEach(l -> l.accept(true));
-    }
+	@Override
+	protected void refreshLoaded() {
+		sendLoaded();
+		loadedListeners.forEach(l -> l.accept(true));
+	}
 
-    public void logout() {
-        session().logout();
-        notifyLoggedOut();
-    }
+	public void logout() {
+		session().logout();
+		notifyLoggedOut();
+	}
 
-    @Override
-    protected void init() {
-        super.init();
-        sendInfo(info());
-        user().ifPresent(user -> sendUser(userOf(user)));
-        sendItems();
-        notifyLoaded();
-    }
+	@Override
+	protected void init() {
+		super.init();
+		sendInfo(info());
+		user().ifPresent(user -> sendUser(userOf(user)));
+		sendItems();
+		notifyLoaded();
+	}
 
-    @Override
-    protected Element elementWithLabel(String label) {
-        Item item = itemWithLabel(label);
-        return item != null ? item.element() : null;
-    }
+	@Override
+	protected Element elementWithLabel(String label) {
+		Item item = itemWithLabel(label);
+		return item != null ? item.element() : null;
+	}
 
-    @Override
-    protected io.intino.konos.alexandria.activity.model.Item targetWithLabel(String label) {
-        Item item = itemWithLabel(label);
-        return item != null ? item.target() : null;
-    }
+	@Override
+	protected io.intino.konos.alexandria.activity.model.Item targetWithLabel(String label) {
+		Item item = itemWithLabel(label);
+		return item != null ? item.target() : null;
+	}
 
-    @Override
-    protected AlexandriaElementDisplay newDisplay(Element element, io.intino.konos.alexandria.activity.model.Item item) {
-        return element().displayFor(element, item);
-    }
+	@Override
+	protected AlexandriaElementDisplay newDisplay(Element element, io.intino.konos.alexandria.activity.model.Item item) {
+		return element().displayFor(element, item);
+	}
 
-    protected Item itemWithLabel(String label) {
-        return items.stream().filter(i -> i.label().equals(label)).findFirst().orElse(null);
-    }
+	protected Item itemWithLabel(String label) {
+		return items.stream().filter(i -> i.label().equals(label)).findFirst().orElse(null);
+	}
 
-    public void selectItem(String label) {
-        if (label.equals(openingElement)) return;
-        openingElement = label;
-        openElement(label);
-        openingElement = null;
-    }
+	public void selectItem(String label) {
+		if (label.equals(openingElement)) return;
+		openingElement = label;
+		openElement(label);
+		openingElement = null;
+	}
 
-    protected Reference schemaItemOf(Item item) {
-        Reference result = ReferenceBuilder.build(item.name(), item.label());
-        List<ReferenceProperty> referenceProperties = result.referencePropertyList();
-        referenceProperties.add(new ReferenceProperty().name("type").value(item.type()));
-        referenceProperties.add(new ReferenceProperty().name("group").value(item.group() != null ? item.group().label() : null));
-        referenceProperties.add(new ReferenceProperty().name("group_opened").value(item.group() != null ? String.valueOf(item.group().mode() == Group.Mode.Expanded) : null));
-        return result;
-    }
+	protected Reference schemaItemOf(Item item) {
+		Reference result = ReferenceBuilder.build(item.name(), item.label());
+		List<ReferenceProperty> referenceProperties = result.referencePropertyList();
+		referenceProperties.add(new ReferenceProperty().name("type").value(item.type()));
+		referenceProperties.add(new ReferenceProperty().name("group").value(item.group() != null ? item.group().label() : null));
+		referenceProperties.add(new ReferenceProperty().name("group_opened").value(item.group() != null ? String.valueOf(item.group().mode() == Group.Mode.Expanded) : null));
+		return result;
+	}
 
-    protected abstract void sendLoading();
-    protected abstract void sendLoaded();
-    protected abstract void refreshSelected(String value);
-    protected abstract void sendInfo(PlatformInfo value);
-    protected abstract void sendItems(List<Item> value);
-    protected abstract void sendUser(UserInfo value);
-    protected abstract void notifyLoggedOut();
+	protected abstract void sendLoading();
 
-    private List<Item> itemOf(ElementOption option) {
-        ElementRender render = renderOf(option);
-        if (render == null) return emptyList();
-        return itemsProviders.get(render.getClass()).apply(render);
-    }
+	protected abstract void sendLoaded();
 
-    private ElementRender renderOf(ElementOption option) {
-        if (option instanceof Option) return ((Option)option).render();
-        else if (option instanceof Options) return ((Options)option).render();
-        return null;
-    }
+	protected abstract void refreshSelected(String value);
 
-    private String labelOf(ElementRender render, Element element, io.intino.konos.alexandria.activity.model.Item item) {
-        ElementOption owner = render.option();
+	protected abstract void sendInfo(PlatformInfo value);
 
-        if (owner instanceof Option) return ((Option)owner).label();
-        else if (owner instanceof Group) return ((Group)owner).label();
-        else if (owner instanceof Options) return ((Options)owner).label(element, item != null ? item.object() : null);
+	protected abstract void sendItems(List<Item> value);
 
-        return "no label";
-    }
+	protected abstract void sendUser(UserInfo value);
 
-    private List<Item> items() {
-        return optionList().map(this::itemOf).flatMap(Collection::stream).collect(toList());
-    }
+	protected abstract void notifyLoggedOut();
 
-    private Stream<ElementOption> optionList() {
-        return element().options().stream().map(v -> {
-            if (v instanceof Group) return ((Group)v).options();
-            return singletonList(v);
-        }).flatMap(Collection::stream);
-    }
+	private List<Item> itemOf(ElementOption option) {
+		ElementRender render = renderOf(option);
+		if (render == null) return emptyList();
+		return itemsProviders.get(render.getClass()).apply(render);
+	}
 
-    private void sendItems() {
-        this.items = items();
-        sendItems(items);
-    }
+	private ElementRender renderOf(ElementOption option) {
+		if (option instanceof Option) return ((Option) option).render();
+		else if (option instanceof Options) return ((Options) option).render();
+		return null;
+	}
 
-    private List<Item> panelItems(ElementRender r) {
-        List<Panel> panelList = ((RenderPanels)r).panels();
-        return panelList.stream().map(c -> itemOf(r, c)).collect(toList());
-    }
+	private String labelOf(ElementRender render, Element element, io.intino.konos.alexandria.activity.model.Item item) {
+		ElementOption owner = render.option();
 
-    private List<Item> objectItems(ElementRender r) {
-        RenderObjects render = (RenderObjects)r;
-        ItemList itemList = render.source();
-        return itemList.items().stream().map(record -> itemOf(r, render.panel(), record)).collect(toList());
-    }
+		if (owner instanceof Option) return ((Option) owner).label();
+		else if (owner instanceof Group) return ((Group) owner).label();
+		else if (owner instanceof Options) return ((Options) owner).label(element, item != null ? item.object() : null);
 
-    private List<Item> catalogItems(ElementRender r) {
-        RenderCatalogs render = (RenderCatalogs)r;
-        return render.catalogs().stream().map(c -> itemOf(r, c)).collect(toList());
-    }
+		return "no label";
+	}
 
-    private List<Item> moldItems(ElementRender r) {
-        RenderMold render = (RenderMold)r;
-        return singletonList(itemOf(r, render.mold()));
-    }
+	private List<Item> items() {
+		return optionList().map(this::itemOf).flatMap(Collection::stream).collect(toList());
+	}
 
-    private PlatformInfo info() {
-        return PlatformInfoBuilder.build(settings);
-    }
+	private Stream<ElementOption> optionList() {
+		return element().options().stream().map(v -> {
+			if (v instanceof Group) return ((Group) v).options();
+			return singletonList(v);
+		}).flatMap(Collection::stream);
+	}
 
-    private UserInfo userOf(User user) {
-        return new UserInfo().fullName(user.fullName()).photo(user.photo().toString());
-    }
+	private void sendItems() {
+		this.items = items();
+		sendItems(items);
+	}
 
-    private void notifyLoaded() {
-        loadedListeners.forEach(l -> l.accept(true));
-    }
+	private List<Item> panelItems(ElementRender r) {
+		List<Panel> panelList = ((RenderPanels) r).panels();
+		return panelList.stream().map(c -> itemOf(r, c)).collect(toList());
+	}
 
-    private void buildElementProviders() {
-        itemsProviders.put(RenderPanels.class, this::panelItems);
-        itemsProviders.put(RenderObjects.class, this::objectItems);
-        itemsProviders.put(RenderCatalogs.class, this::catalogItems);
-        itemsProviders.put(RenderMold.class, this::moldItems);
-    }
+	private List<Item> objectItems(ElementRender r) {
+		RenderObjects render = (RenderObjects) r;
+		ItemList itemList = render.source(username());
+		return itemList.items().stream().map(record -> itemOf(r, render.panel(), record)).collect(toList());
+	}
 
-    private Item itemOf(ElementRender render, Element element) {
-        return itemOf(render, element, null);
-    }
+	private List<Item> catalogItems(ElementRender r) {
+		RenderCatalogs render = (RenderCatalogs) r;
+		return render.catalogs().stream().map(c -> itemOf(r, c)).collect(toList());
+	}
 
-    private Item itemOf(ElementRender render, Element element, io.intino.konos.alexandria.activity.model.Item target) {
-        return new Item() {
-            @Override
-            public String name() {
-                return target != null ? target.name() : element.name();
-            }
+	private List<Item> moldItems(ElementRender r) {
+		RenderMold render = (RenderMold) r;
+		return singletonList(itemOf(r, render.mold()));
+	}
 
-            @Override
-            public String label() {
-                return labelOf(render, element, target);
-            }
+	private PlatformInfo info() {
+		return PlatformInfoBuilder.build(settings);
+	}
 
-            @Override
-            public String type() {
-                return nameOf(AlexandriaLayout.this.element().displayTypeFor(element, target));
-            }
+	private UserInfo userOf(User user) {
+		return new UserInfo().fullName(user.fullName()).photo(user.photo().toString());
+	}
 
-            @Override
-            public Group group() {
-                return render.option().owner();
-            }
+	private void notifyLoaded() {
+		loadedListeners.forEach(l -> l.accept(true));
+	}
 
-            @Override
-            public Element element() {
-                return element;
-            }
+	private void buildElementProviders() {
+		itemsProviders.put(RenderPanels.class, this::panelItems);
+		itemsProviders.put(RenderObjects.class, this::objectItems);
+		itemsProviders.put(RenderCatalogs.class, this::catalogItems);
+		itemsProviders.put(RenderMold.class, this::moldItems);
+	}
 
-            @Override
-            public io.intino.konos.alexandria.activity.model.Item target() {
-                return target;
-            }
-        };
-    }
+	private Item itemOf(ElementRender render, Element element) {
+		return itemOf(render, element, null);
+	}
 
-    protected interface Item {
-        String name();
-        String label();
-        String type();
-        Group group();
-        Element element();
-        io.intino.konos.alexandria.activity.model.Item target();
-    }
+	private Item itemOf(ElementRender render, Element element, io.intino.konos.alexandria.activity.model.Item target) {
+		return new Item() {
+			@Override
+			public String name() {
+				return target != null ? target.name() : element.name();
+			}
+
+			@Override
+			public String label() {
+				return labelOf(render, element, target);
+			}
+
+			@Override
+			public String type() {
+				return nameOf(AlexandriaLayout.this.element().displayTypeFor(element, target));
+			}
+
+			@Override
+			public Group group() {
+				return render.option().owner();
+			}
+
+			@Override
+			public Element element() {
+				return element;
+			}
+
+			@Override
+			public io.intino.konos.alexandria.activity.model.Item target() {
+				return target;
+			}
+		};
+	}
+
+	protected interface Item {
+		String name();
+
+		String label();
+
+		String type();
+
+		Group group();
+
+		Element element();
+
+		io.intino.konos.alexandria.activity.model.Item target();
+	}
 
 }

@@ -152,13 +152,13 @@ def trigger(style)
 end
 
 def trigger(embeddedCatalogFilter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, Object source, Object target, String username) {
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase source, Object target, String username) {
 		return true;//TODO
 	}
 end
 
 def trigger(filter)
-	public static boolean filter($box~Box box, Object source, Object target, String username) {
+	public static boolean filter($box~Box box, $moldClass $moldClass+shortType+firstLowerCase source, Object target, String username) {
 		return true;//TODO
 	}
 end
