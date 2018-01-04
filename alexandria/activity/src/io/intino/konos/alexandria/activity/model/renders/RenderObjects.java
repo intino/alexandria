@@ -22,8 +22,8 @@ public class RenderObjects extends ElementRender {
 		return this;
 	}
 
-	public ItemList source() {
-		return source != null ? items(source.entries()) : new ItemList();
+	public ItemList source(String username) {
+		return source != null ? items(source.entries(username)) : new ItemList();
 	}
 
 	public RenderObjects source(Source source) {
@@ -40,12 +40,39 @@ public class RenderObjects extends ElementRender {
 	}
 
 	public interface Source {
-		List<Entry> entries();
+		List<Entry> entries(String username);
 
-		interface Entry {
-			String id();
-			String name();
-			Object object();
+		class Entry {
+			private String id;
+			private String name;
+			private Object object;
+
+			public String id() {
+				return id;
+			}
+
+			public Entry id(String id) {
+				this.id = id;
+				return this;
+			}
+
+			public String name() {
+				return name;
+			}
+
+			public Entry name(String name) {
+				this.name = name;
+				return this;
+			}
+
+			public Object object() {
+				return object;
+			}
+
+			public Entry object(Object object) {
+				this.object = object;
+				return this;
+			}
 		}
 	}
 

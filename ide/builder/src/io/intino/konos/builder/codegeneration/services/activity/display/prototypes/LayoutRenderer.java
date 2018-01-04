@@ -51,7 +51,8 @@ public class LayoutRenderer extends PrototypeRenderer {
 		Frame frame = new Frame("elementOption", "options").addSlot("box", box)
 				.addSlot("layout", this.display.a$(Layout.class).name$())
 				.addSlot("name", options.name$())
-				.addSlot("path", pathOf(options.core$()));
+				.addSlot("path", pathOf(options.core$()))
+				.addSlot("modelClass", options.modelClass());
 		render(options.elementRenderer(), frame);
 		return frame;
 	}
