@@ -8,8 +8,8 @@ Concept Mold extends Display
 	Concept Block
 		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
         var word:{Expanded Simple} mode = Simple
-        var integer width = -1
-        var integer height = -1
+        var integer:{%} width = -1%
+        var integer:{%} height = -1%
         var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
         var boolean hiddenIfMobile = false
         var string style = ""
@@ -17,7 +17,7 @@ Concept Mold extends Display
 		Concept:Named Stamp
 			var string label = ""
 			var word:{Fixed Flexible} layout = Fixed
-			var integer height = -1
+			var integer:{%} height = -1%
 			var string suffix = ""
 			var string defaultStyle = ""
 			var boolean hasCustomStyle = false

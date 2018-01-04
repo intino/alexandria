@@ -39,19 +39,19 @@ Mold(modelClass = "") testCesarProjectDashboard
 	Block
 		Block(hidden=HiddenEnabled)
 			EmbeddedDisplay(display=sampleDisplay) embedded
-			height = 30 Percent
+			height = 30 %
 			Picture(label = "overview", defaultPicture = "images/dashboard.png") overviewPicture
 				defaultStyle = "height:200px;width:100%;"
 		Block(layout=Horizontal Flexible)
-			height = 30 Percent
-			Block(width = 50 Percent)
+			height = 30 %
+			Block(width = 50 %)
 				EmbeddedCatalog(label = "systems", catalog=testCesarSimpleSystemCatalog) systemsStampCatalog
-					height = 300 Percent
-			Block(width = 50 Percent)
+					height = 300 %
+			Block(width = 50 %)
 //				EmbeddedCatalog(label = "server", catalog=testCesarSimpleServerCatalog) serversStampCatalog
-//					height = 300 Percent
+//					height = 300 %
 		Block
-			height = 30 Percent
+			height = 30 %
 //			EmbeddedCatalog(catalog=testCesarSimpleDeviceCatalog) deviceStampCatalog
 
 Display sampleDisplay
