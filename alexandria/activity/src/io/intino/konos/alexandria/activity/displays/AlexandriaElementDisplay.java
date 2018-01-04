@@ -37,6 +37,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private boolean embedded = false;
 	private AlexandriaElementView.OpenItemEvent openedItem = null;
 	private TimeRange range;
+	private List<String> enabledViews = null;
 
 	public AlexandriaElementDisplay(Box box) {
 		super(box);
@@ -229,6 +230,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		display.refreshViews();
 	}
 
+	public void enabledViews(List<String> views) {
+		this.enabledViews = views;
+	}
+
 	private AlexandriaAbstractCatalog catalogDisplayOf(CatalogInstantBlock block) {
 		if (!this.element.name().equals(block.catalog()) && !this.element.label().equals(block.catalog()))
 			return openElement(block.catalog());
@@ -246,7 +251,9 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected List<? extends AbstractView> views() {
-		return element().views();
+		List<AbstractView> elementViews = element().views();
+		if (enabledViews == null) return elementViews;
+		return elementViews.stream().filter(v -> enabledViews.contains(v.name())).collect(toList());
 	}
 
 	protected List<Mold> molds() {

@@ -6,8 +6,12 @@ import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EmbeddedCatalog extends Stamp<String> {
 	private Catalog catalog;
+	private List<String> views = new ArrayList<>();
 	private AlexandriaCatalog display;
 	private Filter filter;
 
@@ -32,7 +36,17 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
+	public List<String> views() {
+		return views;
+	}
+
+	public EmbeddedCatalog views(List<String> views) {
+		this.views = views;
+		return this;
+	}
+
 	public AlexandriaCatalog display() {
+		display.enabledViews(views);
 		return display;
 	}
 
