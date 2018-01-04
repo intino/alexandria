@@ -55,6 +55,7 @@ Concept Option extends ElementOption is component
 	var integer bubble = -1
 
 Concept:Named Options extends ElementOption is component
+	var string modelClass
 
 Concept Operation
 	var string title
