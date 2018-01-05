@@ -21,7 +21,9 @@ public class RenderCatalogs extends ElementRender {
 	}
 
 	public boolean filter(Catalog catalog, Element context, Item target, Item item, String username) {
-		return filter == null || filter.filter(catalog, context, target, item.object(), username);
+		if (target == null && item == null) return true;
+		if (target == null || item == null) return false;
+		return filter == null || filter.filter(catalog, context, target.object(), item.object(), username);
 	}
 
 	public RenderCatalogs filter(Filter filter) {
