@@ -41,6 +41,12 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
     }
 
     @Override
+    public void removeElement(Item item) {
+        if (!displayMap.containsKey(item.name())) return;
+        displayMap.remove(item.name());
+    }
+
+    @Override
     public <E extends AlexandriaElementDisplay> E displayWithLabel(String label) {
         return (E) displayMap.getOrDefault(label, null);
     }

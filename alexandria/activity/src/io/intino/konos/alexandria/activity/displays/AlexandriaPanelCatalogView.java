@@ -11,6 +11,7 @@ import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
 import java.util.Optional;
 
 public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPanelCatalogViewNotifier> {
+	private AlexandriaAbstractCatalog catalogDisplay = null;
 
 	public AlexandriaPanelCatalogView(Box box) {
 		super(box);
@@ -27,6 +28,7 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 		RenderCatalogs render = rawView.render();
 		Catalog catalog = render.catalogs().get(0);
 		buildDisplay(catalog).ifPresent(display -> {
+			catalogDisplay = display;
 			display.filter(item -> render.filter(catalog, context(), target(), (Item) item, username()));
 			display.target(target());
 			display.elementDisplayManager(provider().elementDisplayManager());
@@ -44,4 +46,7 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 		return Optional.of(new AlexandriaCatalog(box));
 	}
 
+	public <E extends AlexandriaElementDisplay> E catalogDisplay() {
+		return (E) catalogDisplay;
+	}
 }
