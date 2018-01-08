@@ -50,7 +50,7 @@ Concept Mold extends Display
 					var string[] options = empty
 				sub TaskOperation
 			sub Page
-			sub Picture > var resource defaultPicture = empty
+			sub Picture > var string defaultPicture = empty
 			sub Rating > var string polymerIcon
 			sub Snippet
 			sub Title

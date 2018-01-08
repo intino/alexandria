@@ -61,7 +61,7 @@ def type(display) trigger(notifier)
 end
 
 def type(dialog) trigger(notifier)
-	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
+	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogNotifier.class).forDisplay($name+firstUpperCase.class);
 end
 
 def trigger(custom)
