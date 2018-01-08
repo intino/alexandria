@@ -46,7 +46,7 @@ def trigger(width)
 end
 
 def attribute(HiddenEnabled) trigger(hidden)
-	.hidden((object) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(($moldClass) $moldClass+shortType+firstLowerCase))
+	.hidden((object) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(($moldClass) object))
 end
 
 def trigger(hidden)
@@ -69,11 +69,11 @@ def type(stamp & breadcrumbs)
 end
 
 def type(stamp & cataloglink)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink()[.filter($filter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
 end
 
 def type(stamp & embeddedDisplay)
@@ -81,7 +81,7 @@ def type(stamp & embeddedDisplay)
 end
 
 def type(stamp & highlight)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) $moldClass+shortType+firstLowerCase, username))$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, username))$common)
 end
 
 def type(stamp & itemLinks)
@@ -99,7 +99,6 @@ end
 def type(stamp & base64Icon)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.Base64Icon().title($title)$common)
 end
-
 
 def type(stamp & rating)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Rating()[.ratingIcon($ratingIcon+quoted)]$common)
@@ -142,10 +141,10 @@ def trigger(common)
 end
 
 def trigger(style)
-	.style((object, username) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) $moldClass+shortType+firstLowerCase, username))
+	.style((object, username) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, username))
 end
 def trigger(embeddedCatalogFilter)
-	(element, source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) $moldClass+shortType+firstLowerCase, target, username)
+	(element, source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) source, target, username)
 end
 
 def trigger(displayBuilder)
@@ -153,7 +152,7 @@ def trigger(displayBuilder)
 end
 
 def trigger(title)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) $moldClass+shortType+firstLowerCase, username)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) object, username)
 end
 
 def trigger(dialogPath)
@@ -161,15 +160,15 @@ def trigger(dialogPath)
 end
 
 def trigger(exportExecution)
-	(object, from, to, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) $moldClass+shortType+firstLowerCase, from, to, option, username)
+	(object, from, to, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, from, to, option, username)
 end
 
 def trigger(downloadExecution)
-	(object, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) $moldClass+shortType+firstLowerCase, option, username)
+	(object, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, option, username)
 end
 
 def trigger(taskExecution)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) $moldClass+shortType+firstLowerCase, username)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, username)
 end
 
 def trigger(filter)
@@ -177,15 +176,15 @@ def trigger(filter)
 end
 
 def trigger(editable)
-	(object, value, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) $moldClass+shortType+firstLowerCase, value, username)
+	(object, value, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, username)
 end
 
 def trigger(valueMethod)
-	.value((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(box, ($moldClass) $moldClass+shortType+firstLowerCase, username))
+	.value((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(box, ($moldClass) object, username))
 end
 
 def trigger(icon)
-	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) $moldClass+shortType+firstLowerCase, username))
+	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, username))
 end
 
 def trigger(expanded)

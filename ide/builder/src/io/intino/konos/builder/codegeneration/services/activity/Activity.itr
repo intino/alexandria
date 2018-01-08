@@ -61,7 +61,7 @@ def type(display) trigger(notifier)
 end
 
 def type(dialog) trigger(notifier)
-	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogDisplayNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
+	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogNotifier.class).forDisplay($name+firstUpperCase~Dialog.class);
 end
 
 def trigger(custom)
@@ -77,8 +77,8 @@ end
 
 def type(dialog)
 	spark.route("/$name+lowercase~dialog/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogDisplayRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogDisplayRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~dialog/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
