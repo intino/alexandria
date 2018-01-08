@@ -15,7 +15,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class DialogDisplayRenderer {
+public class AbstractDialogRenderer {
 
 	private static final String DIALOGS = "dialogs";
 	private final File gen;
@@ -23,7 +23,7 @@ public class DialogDisplayRenderer {
 	private final List<Dialog> dialogs;
 	private final String boxName;
 
-	public DialogDisplayRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public AbstractDialogRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
@@ -39,14 +39,13 @@ public class DialogDisplayRenderer {
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", dialog.name$());
 		frame.addSlot("box", boxName);
-		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "DialogDisplay");
 		final Frame dialogFrame = new Frame().addTypes("dialog");
 		if (!dialog.label().isEmpty()) dialogFrame.addSlot("label", dialog.label());
 		if (!dialog.description().isEmpty()) dialogFrame.addSlot("description", dialog.description());
 		frame.addSlot("dialog", dialogFrame);
 		createToolbar(dialogFrame, dialog.name$(), dialog.toolbar());
 		for (Tab tab : dialog.tabList()) dialogFrame.addSlot("tab", frameOf(tab));
-		Commons.writeFrame(new File(gen, DIALOGS), newDialog, template().format(frame));
+		Commons.writeFrame(new File(gen, DIALOGS), "Abstract" + snakeCaseToCamelCase(dialog.name$()), template().format(frame));
 	}
 
 	private void createToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
@@ -226,7 +225,7 @@ public class DialogDisplayRenderer {
 	}
 
 	private Template template() {
-		Template template = DialogDisplayTemplate.create();
+		Template template = AbstractDialogTemplate.create();
 		addFormats(template);
 		return template;
 	}

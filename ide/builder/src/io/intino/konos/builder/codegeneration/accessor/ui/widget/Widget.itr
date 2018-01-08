@@ -60,6 +60,7 @@ end
 def trigger(path)
 	<$name+camelCaseToSnakeCase-paths></$name+camelCaseToSnakeCase-paths>
 end
+
 def trigger(imports)
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/requester.js"></script>
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/notifier-listener.js"></script>
@@ -102,9 +103,9 @@ def trigger(import)
 end
 
 def trigger(innerDisplay)
-	<div><cotton-zombie display="$value~Display" widget="$value"></cotton-zombie></div>
+	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
 end
 
 def trigger(parent)
-	<div><cotton-zombie display="$value~Display" widget="$value"></cotton-zombie></div>
+	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
 end

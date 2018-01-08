@@ -62,7 +62,7 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
 		Location("coordinates")coordinates
 			hasCustomStyle =true
 			defaultStyle = "laallala"
-			height = 10
+			height = 10%
 			editable = true
 			suffix = "suffix"
 			layout = Fixed
