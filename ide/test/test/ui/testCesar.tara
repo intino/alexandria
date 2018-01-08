@@ -18,7 +18,7 @@ Layout(mode = Menu) testCesarMenu
 	Group("projects") projects
 		mode = Expanded
 //		Options(label=@projectLabel) projectOptions > RenderObjects(@projectsCollection, panel=projectPanel)
-		Options projectOptions > RenderObjects(testCesarProjectPanel)
+		Options(modelClass = "") projectOptions > RenderObjects(testCesarProjectPanel)
 	Option("administration") administration> RenderPanels(testCesarAdminPanel)
 
 // Octavio. Código generado incorrecto.
@@ -36,8 +36,8 @@ Panel(label = "Project") testCesarProjectPanel
 // Octavio. En código generado, el atributo height se están pasando como String cuando son int
 // Octavio. En código generado, el atributo width no se está pasando
 Mold(modelClass = "") testCesarProjectDashboard
-	Block
-		Block(hidden=HiddenEnabled)
+	Block a
+		Block(hidden=HiddenEnabled) b
 			EmbeddedDisplay(display=sampleDisplay) embedded
 			height = 30 %
 			Picture(label = "overview", defaultPicture = "images/dashboard.png") overviewPicture
@@ -45,9 +45,10 @@ Mold(modelClass = "") testCesarProjectDashboard
 		Block(layout=Horizontal Flexible)
 			height = 30 %
 			Block(width = 50 %)
-				EmbeddedCatalog(label = "systems", catalog=testCesarSimpleSystemCatalog) systemsStampCatalog
+				EmbeddedCatalog(label = "systems", catalog=testCesarSimpleSystemCatalog, views = empty) systemsStampCatalog
 					height = 300 %
 			Block(width = 50 %)
+				CatalogLink(catalog = testCesarAssetCatalog) link
 //				EmbeddedCatalog(label = "server", catalog=testCesarSimpleServerCatalog) serversStampCatalog
 //					height = 300 %
 		Block
@@ -63,7 +64,7 @@ Panel(label = "Overview") testCesarOverviewPanel
 
 Mold(modelClass="") testCesarOverviewMold
 	Block
-		Picture("vista", defaultPicture = "images/overview.png") overviewPicture
+		Picture("vista", defaultPicture = "/images/overview.png") overviewPicture
 			defaultStyle = "width:100%;"
 
 Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCatalog

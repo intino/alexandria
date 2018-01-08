@@ -41,7 +41,7 @@ public class DialogRenderer {
 	}
 
 	private void renderDialog(Dialog dialog) {
-		final String newDialog = snakeCaseToCamelCase(dialog.name$() + "Dialog");
+		final String newDialog = snakeCaseToCamelCase(dialog.name$());
 		if (Commons.javaFile(new File(src, DIALOGS), newDialog).exists()) return;
 		Frame frame = new Frame().addTypes("dialog");
 		frame.addSlot("package", packageName);
@@ -95,7 +95,7 @@ public class DialogRenderer {
 	}
 
 	private void renderDialogDisplay() {
-		new DialogDisplayRenderer(graph, gen, packageName, boxName).execute();
+		new AbstractDialogRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private Template template() {
