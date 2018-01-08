@@ -20,21 +20,12 @@ def type(mold)
     		Mold mold = new Mold()$block+definition...[$NL];
 			return mold;
     	}
-
-		private java.net.URL urlOf(String url)  {
-			try {
-				return new java.net.URL(url);
-			} catch (java.net.MalformedURLException e) {
-				return null;
-			}
-		}
     }
 end
 
 def type(block) trigger(definition)
 	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][.style("$blockStyle")][$NL$TAB$stamp...[$NL$TAB$TAB]][
 		$block+definition...[$NL]])
-
 end
 
 def trigger(height)
@@ -105,7 +96,7 @@ def type(stamp & rating)
 end
 
 def type(stamp & picture)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Picture()[.defaultPicture(urlOf("$defaultPicture"))]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Picture()[.defaultPicture("$defaultPicture")]$common)
 end
 
 def type(stamp & openDialogOperation)
