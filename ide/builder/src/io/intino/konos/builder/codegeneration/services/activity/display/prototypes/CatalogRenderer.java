@@ -41,6 +41,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 			final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);
 			frame.addSlot("mode", temporalCatalog.type().name());
 			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
+			frame.addSlot("range", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);

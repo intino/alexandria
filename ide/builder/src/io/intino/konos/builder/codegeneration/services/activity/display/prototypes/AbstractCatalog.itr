@@ -33,6 +33,7 @@ def type(catalog & gen)
     		io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog();
 			catalog.objectsLoader((scope, condition[, $mode+timerange], username) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], username));[
 			$mode+setMode][
+			$range][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
 			catalog.events(new io.intino.konos.alexandria.activity.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
@@ -40,7 +41,7 @@ def type(catalog & gen)
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
-			catalog.objectLoader((id[, $mode+timerange], username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id[, $mode+timerange], username))
+			catalog.objectLoader((id, username) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, username))
 				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
 				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));
@@ -69,6 +70,11 @@ end
 
 def trigger(setMode)
 	catalog.type(TemporalCatalog.Type.$value+firstUpperCase);
+end
+
+def trigger(range)
+	catalog.rangeLoader(username -> $catalog+FirstUpperCase.Temporal.range(box, username));
+	catalog.objectCreatedLoader(object -> $catalog+FirstUpperCase.Source.$type+shortType+firstLowerCase~Created(box, ($type) object));
 end
 
 def trigger(timeRange)
