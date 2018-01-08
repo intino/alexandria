@@ -66,17 +66,17 @@ def type(pom)
 	<dependencies>
 		<dependency>
 			<groupId>io.intino.konos</groupId>
-			<artifactId>konos-rest-accessor-java</artifactId>
+			<artifactId>alexandria-rest-accessor-java</artifactId>
 			<version>$[1.0.0, 2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.konos</groupId>
-			<artifactId>konos-jmx</artifactId>
+			<artifactId>alexandria-jmx</artifactId>
 			<version>$[1.0.0, 2.0.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>io.intino.konos</groupId>
-			<artifactId>konos-jms</artifactId>
+			<artifactId>alexandria-jms</artifactId>
 			<version>$[1.0.0, 2.0.0)</version>
 		</dependency>
 	</dependencies>

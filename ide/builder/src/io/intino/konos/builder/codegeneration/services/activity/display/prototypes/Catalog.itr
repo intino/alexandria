@@ -21,11 +21,12 @@ def type(catalog)
     import static java.util.stream.Collectors.toList;
 
     public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
-
     	public $name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     	}
-		[
+    	[
+    	$range
+    	][
 		$toolbar
     	]
     	public static class Source {
@@ -33,11 +34,13 @@ def type(catalog)
     			return java.util.Collections.emptyList();//TODO
     		}
 
-    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id[, $mode+timerange], String username) {
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, String username) {
     			return null;//TODO
-    		}[
-
+    		}
+    		[
 			$hasMagazineView
+			][
+			$range+created
 			]
     		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
     			//return $type+shortType+firstLowerCase~.core$$().id();
@@ -66,6 +69,21 @@ def type(catalog)
 			$hasArrangements
     	]}
     }
+end
+
+def trigger(created)
+	public static java.time.Instant $type+shortType+FirstLowerCase~Created($box~Box box, $type object) {
+		//return $type+shortType+firstLowerCase.created();
+		return null;//TODO
+	}
+end
+
+def trigger(range)
+	public static class Temporal {
+		public static io.intino.konos.alexandria.activity.model.TimeRange range($box+firstUpperCase~Box box, String username) {
+			return null;
+		}
+	}
 end
 
 def trigger(timerange)

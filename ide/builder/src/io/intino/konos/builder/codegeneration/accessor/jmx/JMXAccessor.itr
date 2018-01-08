@@ -3,7 +3,7 @@ def type(accessor)
 
     import java.util.List;
     import java.util.ArrayList;
-	import io.intino.konos.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import $package+ValidPackage.jmx.$name+validName+firstUpperCase~MBean;
     import io.intino.konos.jmx.JMXClient;
 

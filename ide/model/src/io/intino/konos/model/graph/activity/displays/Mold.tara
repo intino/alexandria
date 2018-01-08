@@ -30,6 +30,7 @@ Concept Mold extends Display
 				var Display display
 			sub EmbeddedCatalog
 				var Catalog catalog
+				var CatalogView[] views
 				var boolean filtered = false
 			sub Highlight
 			sub Icon
