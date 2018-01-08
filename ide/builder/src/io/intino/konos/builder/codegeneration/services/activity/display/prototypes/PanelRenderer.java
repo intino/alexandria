@@ -78,7 +78,8 @@ public class PanelRenderer extends PrototypeRenderer {
 	}
 
 	private Frame filterFrame(Panel.Views.View view, Panel panel) {
-		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("name", view.name$()).addSlot("box", box);
+		final String modelClass = view.elementRenderer().a$(RenderCatalogs.class).catalogs().get(0).modelClass();
+		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("name", view.name$()).addSlot("box", box).addSlot("modelClass", modelClass);
 	}
 
 	@Override

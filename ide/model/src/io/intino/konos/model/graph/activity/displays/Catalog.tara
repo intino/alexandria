@@ -15,7 +15,6 @@ Concept Catalog extends Display
 				sub OpenPanel
 					var Panel panel
 					var boolean hasBreadcrumbs = false
-
 	Concept:{1..1} Views
 		has CatalogView
 		has:{0..1} DisplayView

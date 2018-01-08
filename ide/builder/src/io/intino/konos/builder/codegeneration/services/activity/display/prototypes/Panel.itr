@@ -73,18 +73,16 @@ def type(display) trigger(genview)
 	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
 end
 
-
 def type(mold) trigger(genview)
 	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$mold").element())).layout(View.Layout.$layout).name("$name")[.label("$label")]);
 end
-
 
 def type(catalogs) trigger(genview)
 	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
 end
 
 def trigger(filtercall)
-	(catalog, context, target, objcet, username) -> $panel+firstUpperCase.Views.filter(box, catalog, context, target, objcet, username)
+	(catalog, context, target, object, username) -> $panel+firstUpperCase.Views.$name+firstUpperCase.filter(box, catalog, context, target, ($modelClass)object, username)
 end
 
 
@@ -121,13 +119,17 @@ def type(operation) trigger(src)
 end
 
 def type(view & display) trigger(src)
-	public static AlexandriaDisplay $display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-		return null;//TODO
+	public static class $name {
+		public static AlexandriaDisplay $display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+			return null;//TODO
+		}
 	}
 end
 
 def type(view & catalogs) trigger(src)
-	$filter+method
+	public static class $name {
+		$filter+method
+	}
 end
 
 def type(filter) trigger(method)
