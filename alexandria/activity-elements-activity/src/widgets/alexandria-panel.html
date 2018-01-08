@@ -136,8 +136,10 @@
         }
         :host .fixed.right {
             right: 0;
-            width: var(--layout-panel-view-fixed-width, 150px);
             @apply(--alexandria-panel-view-fixed-right);
+        }
+        :host iron-pages > div {
+            height: 100%;
         }
         :host iron-pages.left_fixed_true {
             margin-left: var(--alexandria-panel-view-fixed-width, 150px);
@@ -261,7 +263,7 @@
             },
 
             _selectView : function(name) {
-                var element = this.querySelector("paper-tab[name=" + name + "]");
+                var element = this.querySelector("paper-tab[name='" + name + "']");
                 if (element == null) return;
                 if (this.lastView == name) return;
                 this.lastView = name;
