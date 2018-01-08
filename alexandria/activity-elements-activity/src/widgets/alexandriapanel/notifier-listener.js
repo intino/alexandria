@@ -10,6 +10,9 @@ AlexandriaPanelBehaviors.NotifierListener = {
         this.when("refreshViewList").toSelf().execute(function(parameters) {
         	widget._refreshViewList(parameters.value);
         });
+        this.when("refreshSelectedView").toSelf().execute(function(parameters) {
+        	widget._refreshSelectedView(parameters.value);
+        });
         this.when("refreshBreadcrumbs").toSelf().execute(function(parameters) {
         	widget._refreshBreadcrumbs(parameters.value);
         });

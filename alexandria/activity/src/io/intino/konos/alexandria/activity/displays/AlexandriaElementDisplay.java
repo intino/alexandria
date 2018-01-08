@@ -38,6 +38,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private AlexandriaElementView.OpenItemEvent openedItem = null;
 	private TimeRange range;
 	private List<String> enabledViews = null;
+	private AlexandriaPanel openedItemDisplay = null;
 
 	public AlexandriaElementDisplay(Box box) {
 		super(box);
@@ -277,6 +278,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
+		removePanelDisplay();
 		openedItem = event;
 		AlexandriaPanel display = createPanelDisplay(event);
 		createPanel(new CreatePanelParameters().displayType(display.getClass().getSimpleName()).item(event.itemId()));
@@ -284,6 +286,12 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		display.personifyOnce(event.itemId());
 		showPanel();
 		refreshBreadcrumbs(breadcrumbs(event));
+	}
+
+	protected void removePanelDisplay() {
+		if (openedItem == null) return;
+		elementDisplayManager.removeElement(openedItem.item());
+		remove(AlexandriaPanel.class);
 	}
 
 	protected void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {

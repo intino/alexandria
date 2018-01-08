@@ -74,6 +74,25 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
+	public <E extends AlexandriaElementDisplay> E openElement(String label) {
+		View view = views().stream().filter(v -> {
+			ElementRender render = ((View) v).render();
+			return render instanceof RenderCatalogs && renderContainsCatalogWithLabel((RenderCatalogs) render, label);
+		}).map(v -> (View)v).findFirst().orElse(null);
+
+		if (view != null) {
+			AlexandriaPanelCatalogView viewDisplay = (AlexandriaPanelCatalogView) selectView(view.name());
+			return viewDisplay.catalogDisplay();
+		}
+
+		return super.openElement(label);
+	}
+
+	private boolean renderContainsCatalogWithLabel(RenderCatalogs render, String label) {
+		return render.catalogs().stream().anyMatch(c -> c.label() != null && c.label().equals(label));
+	}
+
+	@Override
 	protected void init() {
 		super.init();
 		sendTarget();
@@ -130,14 +149,17 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		}).forEach(v -> buildView(v.name()).refresh());
 	}
 
-	public void selectView(String name) {
+	public AlexandriaPanelView selectView(String name) {
 		AlexandriaPanelView viewDisplay = buildView(name);
 		viewDisplay.refresh();
 		updateCurrentView(viewDisplay);
+		notifier.refreshSelectedView(name);
+		return viewDisplay;
 	}
 
 	private AlexandriaPanelView buildView(String name) {
-		if (viewDisplayMap.containsKey(name)) viewDisplayMap.get(name);
+		if (viewDisplayMap.containsKey(name))
+			return viewDisplayMap.get(name);
 		notifyLoading(true);
 		AlexandriaPanelView display = buildView(views().stream().filter(v -> v.name().equals(name)).findFirst().orElse(null));
 		viewDisplayMap.put(name, display);

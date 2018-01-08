@@ -74,7 +74,7 @@ public class ItemBuilder {
 
         if (value instanceof List) {
             List<Object> values = (List<Object>) value;
-            if (values.isEmpty() && (stamp instanceof Picture)) values = singletonList(((Picture)stamp).defaultPicture());
+            if (values.isEmpty() && (stamp instanceof Picture)) values = singletonList(toResource(baseAssetUrl, ((Picture)stamp).defaultPicture()));
             return values.stream().map(v -> valueOf(stamp, v, baseAssetUrl)).collect(toList());
         }
 
@@ -94,9 +94,11 @@ public class ItemBuilder {
         }
 
         if (stamp instanceof Picture) {
-            if (value == null)
-                value = ((Picture)stamp).defaultPicture();
-            return value != null ? toResource(baseAssetUrl, (URL)value).toUrl().toString() : "";
+            if (value == null) {
+                String defaultPicture = ((Picture) stamp).defaultPicture();
+                return defaultPicture != null ? toResource(baseAssetUrl, defaultPicture).toUrl().toString() : "";
+            }
+            return toResource(baseAssetUrl, (URL)value).toUrl().toString();
         }
 
         if (stamp instanceof ResourceIcon)

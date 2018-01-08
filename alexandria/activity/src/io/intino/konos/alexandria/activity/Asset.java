@@ -22,9 +22,9 @@ public class Asset {
         return directory.charAt(directory.length() - 1) == 47?directory.substring(0, directory.length() - 1):directory;
     }
 
-    public static Asset.Resource toResource(final URL baseRoute, final URL resource) {
+    public static Asset.Resource toResource(final URL baseRoute, final String resource) {
         return new Asset.Resource() {
-            private String result = baseRoute.toString() + "/" + Asset.encode(resource.toString());
+            private String result = baseRoute.toString() + "/" + Asset.encode(resource);
 
             public Asset.Resource setContentType(String contentType) {
                 if(contentType == null) {
@@ -52,6 +52,10 @@ public class Asset {
                 }
             }
         };
+    }
+
+    public static Asset.Resource toResource(final URL baseRoute, final URL resource) {
+        return toResource(baseRoute, resource.toString());
     }
 
     private static String concatEncoded(String url, String name, String value) {

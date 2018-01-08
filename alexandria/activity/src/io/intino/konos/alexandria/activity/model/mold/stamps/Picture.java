@@ -6,13 +6,13 @@ import java.net.URL;
 import java.util.List;
 
 public class Picture extends Stamp<List<URL>> {
-	private URL defaultPicture;
+	private String defaultPicture;
 
-	public URL defaultPicture() {
+	public String defaultPicture() {
 		return this.defaultPicture;
 	}
 
-	public Picture defaultPicture(URL defaultPicture) {
+	public Picture defaultPicture(String defaultPicture) {
 		this.defaultPicture = defaultPicture;
 		return this;
 	}
