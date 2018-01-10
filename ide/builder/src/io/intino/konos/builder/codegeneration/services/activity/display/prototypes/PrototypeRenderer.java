@@ -43,11 +43,13 @@ public abstract class PrototypeRenderer {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-		template.add("shortType", value -> {
-			final String[] s = value.toString().split("\\.");
-			return s[s.length - 1];
-		});
+		template.add("shortType", value -> shortType(value.toString()));
 		return template;
+	}
+
+	public static String shortType(String value) {
+		final String[] s = value.split("\\.");
+		return s[s.length - 1];
 	}
 
 	protected Frame createFrame() {

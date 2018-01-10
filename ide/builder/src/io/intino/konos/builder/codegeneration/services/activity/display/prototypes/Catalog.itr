@@ -157,13 +157,13 @@ def type(arrangement & sorting) trigger(method)
 end
 
 def type(operation & download) trigger(operation)
-	public static Resource download($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, String username) {
+	public static io.intino.konos.alexandria.activity.Resource download($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, String username) {
 		return null;
 	}
 end
 
 def type(operation & export) trigger(operation)
-	public static Resource export($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
+	public static io.intino.konos.alexandria.activity.Resource export($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
 		return null;
 	}
 end
@@ -175,13 +175,13 @@ def type(operation & task) trigger(operation)
 end
 
 def type(operation & downloadselection) trigger(operation)
-	public static Resource downloadSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
+	public static io.intino.konos.alexandria.activity.Resource downloadSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
 		return null;
 	}
 end
 
 def type(operation & exportselection) trigger(operation)
-	public static Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$type> selection, String username) {
+	public static io.intino.konos.alexandria.activity.Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$type> selection, String username) {
 		return null;
 	}
 end

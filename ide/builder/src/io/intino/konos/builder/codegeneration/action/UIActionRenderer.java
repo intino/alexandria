@@ -12,15 +12,20 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
 public class UIActionRenderer extends ActionRenderer {
 
 	private final Activity.AbstractPage page;
+	private final File gen;
+	private final Activity activity;
 
-	public UIActionRenderer(Project project, Activity.AbstractPage page, File src, String packageName, String boxName) {
+	public UIActionRenderer(Project project, Activity.AbstractPage page, File src, File gen, String packageName, String boxName) {
 		super(project, src, packageName, boxName);
+		this.gen = gen;
 		this.page = page;
+		this.activity = page.core$().ownerAs(Activity.class);
 	}
 
 	public void execute() {
@@ -33,9 +38,11 @@ public class UIActionRenderer extends ActionRenderer {
 		else frame.addSlot("importDisplays", packageName);
 		frame.addSlot("ui", page.uses().name$() + suffix());
 		frame.addSlot("parameter", parameters());
-		if (!alreadyRendered(destiny, page.name$()))
-			Commons.writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
-		//TODO else Update
+		if (activity.favicon() != null) frame.addSlot("favicon", activity.favicon());
+		else
+		if (activity.title() != null) frame.addSlot("title", activity.title());
+		if (!alreadyRendered(destiny, page.name$())) writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
+		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(page.name$()) + "Action", template().format(frame.addTypes("gen")));
 	}
 
 	@NotNull
