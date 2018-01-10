@@ -37,8 +37,6 @@ public class AssetResource extends Resource {
             }
             else
                 manager.write(new URL(name).openStream(), manager.fromQuery("label", String.class));
-        } catch (MalformedURLException e) {
-            manager.write(new AssetNotFoundException());
         } catch (IOException e) {
             manager.write(new AssetNotFoundException());
         }

@@ -4,7 +4,8 @@ use DataTypes
 
 Concept:Named Activity
 	var word:{Ajax} type = Ajax
-
+	var string title
+	var string favicon
 	Concept:{0..1} Authenticated
 		var string by
 

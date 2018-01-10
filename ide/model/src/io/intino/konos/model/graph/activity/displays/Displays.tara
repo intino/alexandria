@@ -27,10 +27,10 @@ Concept Panel extends Display
     	Concept:{0..1} Task extends Operation
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
-		Concept View //TODO named si tiene un renderCatalog con filtered
+		Concept:ViewRule View
 			var string label
 			var word:{Tab LeftFixed RightFixed} layout = Tab
-			has:{1..1} ElementRenderer //TODO no permitir ni renderPanels ni renderObjects TODO cardinalidad no está funcionando
+			has:{1..1} ElementRenderer
 
 Concept Desktop extends Display
 	var Layout layout

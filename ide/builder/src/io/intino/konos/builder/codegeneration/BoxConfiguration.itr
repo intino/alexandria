@@ -40,7 +40,7 @@ end
 
 def type(service & rest) trigger(fill)
 	if (args.containsKey("$name+firstLowerCase~_port"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port")), args.remove("$name+firstLowerCase~_webDirectory")[, $custom+parameter...[, ]]);
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port"))[, $custom+parameter...[, ]]);
 
 end
 
@@ -196,17 +196,13 @@ def type(service & eventHandler)
 end
 
 def type(service & rest)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = "www/";
 
 		$custom+assign...[$NL]
 		return this;
-	}
-
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]]);
 	}
 
 	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
@@ -215,16 +211,12 @@ def type(service & rest)
 end
 
 def type(service & activity)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port, String webDirectory[, $custom+signature...[, ]]) {
+	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = webDirectory == null ? "www/" : webDirectory;
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = "www/";
 		$custom+assign...[$NL]
 		return this;
-	}
-
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration(port, "www/"[, $custom+name...[, ]]);
 	}
 
 	public $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {

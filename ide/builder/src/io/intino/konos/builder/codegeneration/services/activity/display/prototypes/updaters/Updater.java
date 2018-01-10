@@ -1,29 +1,51 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.graph.Catalog;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.psi.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Arrays;
 
-/**
- * Created by oroncal on 18/12/17.
- */
 public abstract class Updater {
 
-	private final File sourceFile;
-	private final Catalog catalog;
-	private final Project project;
-	private final String packageName;
-	private final String box;
+	protected final PsiFile file;
+	protected final Project project;
+	protected final PsiElementFactory factory;
+	protected final String packageName;
+	protected final String box;
 
-	public Updater(File sourceFile, Catalog catalog, Project project, String packageName, String box) {
 
-		this.sourceFile = sourceFile;
-		this.catalog = catalog;
+	public Updater(File file, Project project, String packageName, String box) {
+		this.file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));
 		this.project = project;
 		this.packageName = packageName;
 		this.box = box;
+		this.factory = JavaPsiFacade.getElementFactory(project);
+
 	}
 
 	public abstract void update();
+
+	@NotNull
+	protected PsiMethod createMethod(String name, String returnType) {
+		final PsiMethod method = factory.createMethod(name, factory.createTypeFromText(returnType, null));
+		method.getModifierList().setModifierProperty("static", true);
+		return method;
+	}
+
+	@NotNull
+	protected PsiMethod createClass(String text) {
+		return (PsiMethod) factory.createClassFromText(text, null);
+	}
+
+	@NotNull
+	protected PsiMethod createMethodFromText(String text) {
+		return factory.createMethodFromText(text, null);
+	}
+
+	protected PsiClass innerClass(PsiClass psiClass, String name) {
+		return Arrays.stream(psiClass.getInnerClasses()).filter(c -> name.equals(c.getName())).findFirst().orElse(null);
+	}
 }
