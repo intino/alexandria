@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.MoldUpdater;
 import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
 import io.intino.konos.model.graph.Mold.Block.*;
@@ -50,7 +51,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
-	private Frame frameOf(Stamp stamp) {
+	public Frame frameOf(Stamp stamp) {
 		final Frame frame = baseFrame(stamp).addTypes("stamp")
 				.addSlot("type", stamp.getClass().getSimpleName())
 				.addSlot("common", common(stamp));
@@ -178,8 +179,9 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	void writeSrc(Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
-		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
+		if (!sourceFile.exists()) writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		else new MoldUpdater(sourceFile, display.a$(Mold.class), project, packageName, box).update();
 	}
 
 	private Template srcTemplate() {

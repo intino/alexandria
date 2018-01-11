@@ -84,3 +84,13 @@ end
 def trigger(filtercall)
 	(catalog, context, target, object, username) -> $panel+firstUpperCase.Views.$name+firstUpperCase.filter(box, catalog, context, target, ($modelClass)object, username)
 end
+
+def type(view & mold)
+end
+
+def trigger(empty)
+end
+
+def trigger(quoted)
+	"$value"
+end

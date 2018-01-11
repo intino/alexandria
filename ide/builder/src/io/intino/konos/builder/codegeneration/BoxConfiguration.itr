@@ -65,7 +65,7 @@ end
 
 def type(service & activity) trigger(fill)
 	if (args.containsKey("$name+firstLowerCase~_port")) {
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port")), args.remove("$name+firstLowerCase~_webDirectory")[, $custom+parameter...[, ]]);
+		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port"))[, $custom+parameter...[, ]]);
 		$authURL+assign
 	}
 end

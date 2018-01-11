@@ -98,7 +98,7 @@ public class CatalogUpdater extends Updater {
 
 	private void updateSortings(PsiClass arrangements) {
 		for (Sorting sorting : catalog.arrangement().sortingList()) {
-			final PsiMethod[] methods = arrangements.findMethodsByName(firstLowerCase(sorting.name$()), false);
+			final PsiMethod[] methods = arrangements.findMethodsByName(firstLowerCase(sorting.name$()) + "Comparator", false);
 			if (methods.length == 0) {
 				String text = sortingMethodText(sorting);
 				if (text != null && !text.isEmpty()) arrangements.add(createMethodFromText(text));

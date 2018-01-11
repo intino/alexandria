@@ -40,6 +40,12 @@ public abstract class Updater {
 		return factory.createClassFromText(text, context).getInnerClasses()[0];
 	}
 
+
+	@NotNull
+	protected PsiClass createInnerClass(String name) {
+		return factory.createClass(name);
+	}
+
 	@NotNull
 	protected PsiMethod createMethodFromText(String text) {
 
