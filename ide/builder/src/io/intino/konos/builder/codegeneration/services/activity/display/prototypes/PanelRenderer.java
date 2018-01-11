@@ -1,13 +1,18 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.PanelUpdater;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Panel.Views.View;
 import io.intino.tara.magritte.Layer;
-import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class PanelRenderer extends PrototypeRenderer {
 	private final Project project;
@@ -28,11 +33,11 @@ public class PanelRenderer extends PrototypeRenderer {
 		final Frame frame = super.createFrame();
 		if (panel.label() != null) frame.addSlot("label", panel.label());
 		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));
-		for (Panel.Views.View view : panel.views().viewList()) frame.addSlot("view", frameOf(view, panel));
+		for (View view : panel.views().viewList()) frame.addSlot("view", frameOf(view, panel, box));
 		return frame;
 	}
 
-	private Frame frameOf(Panel.Views.View view, Panel panel) {
+	public static Frame frameOf(View view, Panel panel, String box) {
 		final Frame frame = new Frame("view")
 				.addSlot("owner", panel.name$())
 				.addSlot("name", view.name$())
@@ -53,7 +58,7 @@ public class PanelRenderer extends PrototypeRenderer {
 			frame.addTypes("catalogs");
 			RenderCatalogs renderCatalogs = renderer.a$(RenderCatalogs.class);
 			frame.addSlot("catalog", renderCatalogs.catalogs().stream().map(Layer::name$).toArray(String[]::new));
-			if (renderCatalogs.filtered()) frame.addSlot("filter", filterFrame(view, panel));
+			if (renderCatalogs.filtered()) frame.addSlot("filter", filterFrame(view, panel, box));
 		}
 		return frame;
 	}
@@ -61,29 +66,40 @@ public class PanelRenderer extends PrototypeRenderer {
 	private Frame frameOf(Panel.Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
-		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), toolbar.core$().owner()));
-		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), toolbar.core$().owner()));
-		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), toolbar.core$().owner()));
-		if (toolbar.task() != null) frame.addSlot("operation", frameOf(toolbar.task(), toolbar.core$().owner()));
+		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), display.a$(Panel.class)));
+		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), display.a$(Panel.class)));
+		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), display.a$(Panel.class)));
+		if (toolbar.task() != null) frame.addSlot("operation", frameOf(toolbar.task(), display.a$(Panel.class)));
 		return frame;
 	}
 
-	private Frame frameOf(Operation operation, Node panel) {
+	public static Frame frameOf(Operation operation, Panel panel) {
 		Frame frame = new Frame("operation", operation.getClass().getSimpleName())
 				.addSlot("name", operation.name$())
 				.addSlot("title", operation.title())
-				.addSlot("panel", panel.name());
+				.addSlot("panel", panel.name$());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		return frame;
 	}
 
-	private Frame filterFrame(Panel.Views.View view, Panel panel) {
+	private static Frame filterFrame(View view, Panel panel, String box) {
 		final String modelClass = view.elementRenderer().a$(RenderCatalogs.class).catalogs().get(0).modelClass();
 		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("name", view.name$()).addSlot("box", box).addSlot("modelClass", modelClass);
 	}
 
 	@Override
 	protected Template template() {
+		return customize(AbstractPanelTemplate.create());
+	}
+
+	private Template srcTemplate() {
 		return customize(PanelTemplate.create());
+	}
+
+	void writeSrc(Frame frame) {
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
+		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
+		if (!sourceFile.exists()) writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		else new PanelUpdater(sourceFile, display.a$(Panel.class), project, packageName, box).update();
 	}
 }

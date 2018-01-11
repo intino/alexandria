@@ -39,7 +39,7 @@ public abstract class PrototypeRenderer {
 
 	protected abstract Template template();
 
-	protected Template customize(Template template) {
+	public static Template customize(Template template) {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());

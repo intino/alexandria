@@ -6,8 +6,9 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.AbstractToolbar.*;
 import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
 import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.CatalogEvent;
-import io.intino.tara.magritte.Node;
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenPanel;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -55,26 +56,26 @@ public class CatalogRenderer extends PrototypeRenderer {
 		if (catalog.events() != null) frame.addSlot("event", frameOf(catalog.events().onClickRecord()));
 	}
 
-	private Frame frameOf(Catalog.Events.OnClickRecord onClickRecord) {
+	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
-		if (catalogEvent.i$(Catalog.Events.OnClickRecord.OpenDialog.class))
-			return frameFor(catalogEvent.a$(Catalog.Events.OnClickRecord.OpenDialog.class)).addSlot("box", box);
-		return frameFor(catalogEvent.a$(Catalog.Events.OnClickRecord.OpenPanel.class));
+		if (catalogEvent.i$(OnClickRecord.OpenDialog.class))
+			return frameOf(catalogEvent.a$(OnClickRecord.OpenDialog.class), this.display).addSlot("box", box);
+		return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
 	}
 
-	private Frame frameFor(Catalog.Events.OnClickRecord.OpenDialog openDialog) {
+	public static Frame frameOf(OnClickRecord.OpenDialog openDialog, Display catalog) {
 		final Frame frame = new Frame("event", openDialog.getClass().getSimpleName());
 		if (openDialog.height() >= 0) frame.addSlot("height", openDialog.height());
 		if (openDialog.width() >= 0) frame.addSlot("width", openDialog.width());
-		frame.addSlot("catalog", display.name$());
+		frame.addSlot("catalog", catalog.name$());
 		return frame;
 	}
 
-	private Frame frameFor(Catalog.Events.OnClickRecord.OpenPanel openPanel) {
+	public static Frame frameOf(OpenPanel openPanel, Catalog catalog, String box, String modelClass) {
 		final Frame frame = new Frame("event", openPanel.getClass().getSimpleName());
 		frame.addSlot("panel", openPanel.panel().name$());
 		if (openPanel.hasBreadcrumbs())
-			frame.addSlot("breadcrumbs", new Frame("breadCrumbs").addSlot("catalog", display.name$()).addSlot("box", box).addSlot("type", modelClass));
+			frame.addSlot("breadcrumbs", new Frame("breadCrumbs").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 		return frame;
 	}
 
@@ -97,39 +98,39 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("hasMagazineView", hasMagazineFrame);
 		}
 		for (CatalogView view : catalog.views().catalogViewList()) frame.addSlot("view", frameOf(view, catalog));
-		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog));
+		if (catalog.views().displayView() != null) frame.addSlot("view", frameOf(catalog.views().displayView(), catalog, box, packageName));
 	}
 
 	private void arrangements(Catalog catalog, Frame frame) {
 		if (catalog.arrangement() == null) return;
 		frame.addSlot("hasArrangements", baseFrame());
 		for (Grouping grouping : catalog.arrangement().groupingList()) {
-			frame.addSlot("arrangement", frameOf(grouping, catalog));
+			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
 		}
 		for (Sorting sorting : catalog.arrangement().sortingList())
-			frame.addSlot("arrangement", frameOf(sorting, catalog));
+			frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass));
 	}
 
 	private Frame baseFrame() {
 		return new Frame().addSlot("box", box).addSlot("name", display.name$());
 	}
 
-	private Frame frameOf(Sorting sorting, Catalog catalog) {
+	public static Frame frameOf(Sorting sorting, Catalog catalog, String box, String modelClass) {
 		return new Frame("arrangement", sorting.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
 				.addSlot("name", sorting.name$())
 				.addSlot("label", sorting.label())
 				.addSlot("catalog", catalog.name$())
-				.addSlot("type", this.modelClass);
+				.addSlot("type", modelClass);
 	}
 
-	private Frame frameOf(Grouping grouping, Catalog catalog) {
+	public static Frame frameOf(Grouping grouping, Catalog catalog, String box, String modelClass) {
 		return new Frame("arrangement", grouping.getClass().getSimpleName().toLowerCase())
 				.addSlot("box", box)
 				.addSlot("name", (String) grouping.name$())
 				.addSlot("label", ((String) grouping.label()))
 				.addSlot("catalog", catalog.name$())
-				.addSlot("type", this.modelClass)
+				.addSlot("type", modelClass)
 				.addSlot("histogram", grouping.histogram());
 	}
 
@@ -154,40 +155,43 @@ public class CatalogRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
-	private Frame frameOf(DisplayView view, Catalog catalog) {
+	public static Frame frameOf(DisplayView view, Catalog catalog, String box, String packageName) {
 		return new Frame("view", view.getClass().getSimpleName())
 				.addSlot("box", box)
 				.addSlot("catalog", catalog.name$())
 				.addSlot("name", view.name$())
-				.addSlot("package", this.packageName)
+				.addSlot("package", packageName)
 				.addSlot("hideNavigator", view.hideNavigator())
 				.addSlot("display", view.display());
 	}
 
 	private Frame frameOf(Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
-		final Node owner = toolbar.core$().owner();
+		final Catalog owner = toolbar.core$().ownerAs(Catalog.class);
 		frame.addSlot("box", box).addSlot("type", this.modelClass).addSlot("canSearch", toolbar.canSearch());
 		for (Operation operation : toolbar.operations()) {
-			if (operation.i$(Download.class)) frame.addSlot("operation", frameOf(toolbar.download(), owner));
-			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner));
-			if (operation.i$(AbstractToolbar.OpenDialog.class)) frame.addSlot("operation", frameOf(toolbar.openDialog(), owner));
-			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner));
-			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner));
-			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner));
-			if (operation.i$(DownloadSelection.class)) frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner));
-			if (operation.i$(GroupingSelection.class)) frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner));
+			if (operation.i$(Download.class)) frame.addSlot("operation", frameOf(toolbar.download(), owner, box, modelClass));
+			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner, box, modelClass));
+			if (operation.i$(AbstractToolbar.OpenDialog.class))
+				frame.addSlot("operation", frameOf(toolbar.openDialog(), owner, box, modelClass));
+			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass));
+			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass));
+			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass));
+			if (operation.i$(DownloadSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass));
+			if (operation.i$(GroupingSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass));
 		}
 		return frame;
 	}
 
-	private Frame frameOf(Operation operation, Node catalog) {
+	public static Frame frameOf(Operation operation, Catalog catalog, String box, String modelClass) {
 		Frame frame = new Frame("operation", operation.getClass().getSimpleName().toLowerCase())
 				.addSlot("name", operation.name$())
 				.addSlot("box", box)
 				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
-				.addSlot("catalog", catalog.name());
+				.addSlot("catalog", catalog.name$());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		return frame;
 	}

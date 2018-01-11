@@ -21,7 +21,7 @@ public class ViewRule implements NodeRule {
 			error(SIZE);
 			return false;
 		}
-		return components.stream().noneMatch(component -> hasForbiddenTypes(component) || node.isAnonymous() && hasFilteredCatalog(component));
+		return components.stream().noneMatch(component -> hasForbiddenTypes(component) || (node.isAnonymous() && (hasFilteredCatalog(component) || isRenderDisplay(component))));
 	}
 
 	private boolean hasForbiddenTypes(Node component) {
@@ -33,6 +33,10 @@ public class ViewRule implements NodeRule {
 		return component.types().contains("RenderCatalogs") &&
 				component.parameters().stream().anyMatch(p -> p.name().equals("filtered") &&
 						p.values().get(0).toString().equals("true")) && error(NAME);
+	}
+
+	private boolean isRenderDisplay(Node component) {
+		return component.types().contains("RenderDisplay") && error(NAME);
 	}
 
 	@Override
