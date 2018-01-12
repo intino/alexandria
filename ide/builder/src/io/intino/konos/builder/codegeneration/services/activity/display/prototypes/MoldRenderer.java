@@ -184,7 +184,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		else new MoldUpdater(sourceFile, display.a$(Mold.class), project, packageName, box).update();
 	}
 
-	private Template srcTemplate() {
+	protected Template srcTemplate() {
 		return customize(MoldTemplate.create());
 	}
 

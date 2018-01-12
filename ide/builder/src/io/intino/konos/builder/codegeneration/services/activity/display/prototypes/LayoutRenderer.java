@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.LayoutUpdater;
 import io.intino.konos.model.graph.*;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
@@ -9,9 +10,11 @@ import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.RenderPanels.WithObject.withObject;
 
 
@@ -38,13 +41,13 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame[] frameOf(List<ElementOption> elementOptions) {
-		List<Frame> frames = new ArrayList<>();
-		for (ElementOption element : elementOptions) {
-			if (element.i$(Group.class)) frames.add(frameOf(element.a$(Group.class)));
-			else if (element.i$(Options.class)) frames.add(frameOf(element.a$(Options.class)));
-			else frames.add(frameOf(element.a$(Option.class)));
-		}
-		return frames.toArray(new Frame[0]);
+		return elementOptions.stream().map(this::frameOf).toArray(Frame[]::new);
+	}
+
+	public Frame frameOf(ElementOption element) {
+		if (element.i$(Group.class)) return frameOf(element.a$(Group.class));
+		else if (element.i$(Options.class)) return frameOf(element.a$(Options.class));
+		else return frameOf(element.a$(Option.class));
 	}
 
 	private Frame frameOf(Options options) {
@@ -117,6 +120,17 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	protected Template template() {
+		return customize(AbstractLayoutTemplate.create());
+	}
+
+	protected Template srcTemplate() {
 		return customize(LayoutTemplate.create());
+	}
+
+	void writeSrc(Frame frame) {
+		final String newDisplay = snakeCaseToCamelCase(display.name$());
+		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
+		if (!sourceFile.exists()) writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+		else new LayoutUpdater(sourceFile, display.a$(Layout.class), project, packageName, box).update();
 	}
 }

@@ -34,10 +34,12 @@ public abstract class PrototypeRenderer {
 	void writeSrc(Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, template().format(frame));
+			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
 	}
 
 	protected abstract Template template();
+
+	protected abstract Template srcTemplate();
 
 	public static Template customize(Template template) {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
