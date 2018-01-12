@@ -36,4 +36,9 @@ public class DesktopRenderer extends PrototypeRenderer {
 		return customize(DesktopTemplate.create());
 	}
 
+	@Override
+	protected Template srcTemplate() {
+		return template();
+	}
+
 }

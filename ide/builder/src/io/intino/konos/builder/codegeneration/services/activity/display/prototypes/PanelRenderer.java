@@ -92,7 +92,7 @@ public class PanelRenderer extends PrototypeRenderer {
 		return customize(AbstractPanelTemplate.create());
 	}
 
-	private Template srcTemplate() {
+	protected Template srcTemplate() {
 		return customize(PanelTemplate.create());
 	}
 
