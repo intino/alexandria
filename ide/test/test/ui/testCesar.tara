@@ -1,6 +1,6 @@
 dsl Konos
 
-Activity testCesar
+Activity(title = "", favicon = "") testCesar
 	Home(uses=testCesarDesktop) testCesarHomePage
 
 Display testCesarHome
@@ -26,7 +26,7 @@ Layout(mode = Menu) testCesarMenu
 Panel(label = "Project") testCesarProjectPanel
 	Views
 		View("dashboard", layout = RightFixed) > RenderMold(testCesarProjectDashboard)
-		View("devices") > RenderCatalogs(testCesarDeviceCatalog)
+		View("devices") view > RenderCatalogs(testCesarDeviceCatalog, filtered = true)
 		View("servers") > RenderCatalogs(testCesarServerCatalog)
 		View("feeders") > RenderCatalogs(testCesarFeederCatalog)
 		View("systems") > RenderCatalogs(testCesarSystemCatalog)

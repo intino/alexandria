@@ -51,7 +51,7 @@ public class ResourceRenderer {
 	}
 
 	private void createCorrespondingAction(Activity.AbstractPage page) {
-		new UIActionRenderer(project, page, src, packageName, boxName).execute();
+		new UIActionRenderer(project, page, src, gen, packageName, boxName).execute();
 	}
 
 	private Template template() {

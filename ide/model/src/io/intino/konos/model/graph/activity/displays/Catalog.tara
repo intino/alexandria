@@ -7,8 +7,8 @@ Concept Catalog extends Display
 	var string modelClass
 	has:{0..1} Toolbar
 	Concept:{0..1} Events
-		Concept:{0..1} OnClickRecord
-			Concept:{0..1} CatalogEvent
+		Concept:{1..1} OnClickRecord
+			Concept:{1..1} CatalogEvent
 				sub OpenDialog
 					var integer:{%} width = 100%
 					var integer:{%} height = 100%

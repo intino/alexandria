@@ -13,17 +13,17 @@ def type(mold)
     	}
     	public static class Stamps {
 
-			$block+class...[$NL$NL]
+			$block...[$NL$NL]
     	}
     }
 end
 
-def type(block) trigger(class)
-	$stamp+class...[$NL]
-	$block+class...[$NL]
+def type(block)
+	$stamp...[$NL]
+	$block...[$NL]
 end
 
-def type(stamp & openDialogOperation) trigger(class)
+def type(stamp & openDialogOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -33,7 +33,7 @@ def type(stamp & openDialogOperation) trigger(class)
 	}
 end
 
-def type(stamp & downloadOperation) trigger(class)
+def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -43,7 +43,7 @@ def type(stamp & downloadOperation) trigger(class)
 	}
 end
 
-def type(stamp & exportOperation) trigger(class)
+def type(stamp & exportOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -54,7 +54,7 @@ def type(stamp & exportOperation) trigger(class)
 end
 
 
-def type(stamp & taskOperation) trigger(class)
+def type(stamp & taskOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -64,7 +64,7 @@ def type(stamp & taskOperation) trigger(class)
 	}
 end
 
-def type(stamp & location) trigger(class)
+def type(stamp & location)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -74,7 +74,7 @@ def type(stamp & location) trigger(class)
 	}
 end
 
-def type(stamp & catalogLink) trigger(class)
+def type(stamp & catalogLink)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -82,7 +82,7 @@ def type(stamp & catalogLink) trigger(class)
 	}
 end
 
-def type(stamp & highlight) trigger(class)
+def type(stamp & highlight)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -92,7 +92,7 @@ def type(stamp & highlight) trigger(class)
 	}
 end
 
-def type(stamp & embeddedDisplay) trigger(class)
+def type(stamp & embeddedDisplay)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -100,7 +100,7 @@ def type(stamp & embeddedDisplay) trigger(class)
 	}
 end
 
-def type(stamp & embeddedCatalog) trigger(class)
+def type(stamp & embeddedCatalog)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -108,7 +108,7 @@ def type(stamp & embeddedCatalog) trigger(class)
 	}
 end
 
-def type(stamp & icon) trigger(class)
+def type(stamp & icon)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -118,7 +118,7 @@ def type(stamp & icon) trigger(class)
 	}
 end
 
-def type(stamp & itemLinks) trigger(class)
+def type(stamp & itemLinks)
 	public static class $name+FirstUpperCase {
 		$common
 
@@ -129,7 +129,7 @@ def type(stamp & itemLinks) trigger(class)
 end
 
 
-def type(stamp) trigger(class)
+def type(stamp)
 	public static class $name+FirstUpperCase {
 		$common
 	}

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class RESTAccessorRenderer {
 	private final RESTService service;
@@ -53,7 +54,7 @@ public class RESTAccessorRenderer {
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
-		Commons.writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
+		writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 
 	private void setupAuthentication(RESTService restService, Frame frame) {
