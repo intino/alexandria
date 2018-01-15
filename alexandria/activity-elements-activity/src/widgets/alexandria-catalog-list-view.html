@@ -30,6 +30,7 @@
                       on-stamps-ready="_renderExpandedPictures"
                       on-open-stamp-dialog="_openStampDialog"
                       on-execute-stamp-task="_executeStampTask"
+                      on-navigate-catalog="_navigateCatalog"
                       on-open-item="_openItem"
                       on-save-item="_saveItem"
                       on-select-items="_selectItems"
@@ -103,6 +104,10 @@
 
             _refreshCount : function(count) {
                 this._countItemList = count;
+            },
+
+            _navigateCatalog : function(e) {
+                this.openElement(e.detail);
             },
 
             _openItem : function(e) {

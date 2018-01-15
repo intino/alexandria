@@ -235,3 +235,7 @@ Schema Validation
 Schema CreatePanelParameters
 	Attribute displayType as Text
 	Attribute item as Text
+
+Schema OpenElementParameters
+	Attribute item as Text
+	Has(Reference, multiple=false) stamp

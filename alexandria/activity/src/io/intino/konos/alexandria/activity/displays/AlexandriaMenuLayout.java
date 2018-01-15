@@ -95,4 +95,8 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 	public void selectItem(String value) {
 		super.selectItem(value);
 	}
+
+	public void showHome() {
+		super.showHome();
+	}
 }

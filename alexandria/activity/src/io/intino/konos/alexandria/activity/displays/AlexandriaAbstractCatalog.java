@@ -1,22 +1,21 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenElementEvent;
 import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
-import io.intino.konos.alexandria.activity.model.AbstractView;
-import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.ItemList;
-import io.intino.konos.alexandria.activity.model.Toolbar;
-import io.intino.konos.alexandria.activity.model.Catalog;
+import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.*;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.GroupMap;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.GroupingManager;
 import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
 import io.intino.konos.alexandria.activity.model.catalog.views.GridView;
 import io.intino.konos.alexandria.activity.model.catalog.views.ListView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MagazineView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MoldView;
-import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.schemas.ClusterGroup;
 import io.intino.konos.alexandria.activity.schemas.GroupingGroup;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
@@ -30,6 +29,7 @@ import static java.util.stream.Collectors.toMap;
 
 public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends AlexandriaDisplayNotifier> extends AlexandriaElementDisplay<E, DN> implements CatalogViewDisplayProvider {
 	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
+	private List<Consumer<OpenElementEvent>> openElementListeners = new ArrayList<>();
 	private String condition = null;
 	private String currentItem = null;
 	protected Map<String, GroupingSelection> groupingSelectionMap = new HashMap<>();
@@ -166,6 +166,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	public void onOpenItem(Consumer<OpenItemEvent> listener) {
 		openItemListeners.add(listener);
+	}
+
+	public void onOpenElement(Consumer<OpenElementEvent> listener) {
+		openElementListeners.add(listener);
 	}
 
 	protected void refreshGrouping() {

@@ -95,4 +95,8 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	public void selectItem(String value) {
 		super.selectItem(value);
 	}
+
+	public void showHome() {
+		super.showHome();
+	}
 }

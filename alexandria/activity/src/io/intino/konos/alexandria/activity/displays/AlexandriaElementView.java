@@ -30,6 +30,10 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 		Tree breadcrumbs();
 	}
 
+	interface OpenElementEvent {
+		String label();
+	}
+
 	interface OpenItemDialogEvent {
 		String item();
 		String path();

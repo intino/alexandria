@@ -7,6 +7,9 @@ AlexandriaMenuLayoutBehaviors.Requester = {
     },
     selectItem : function(value) {
     	this.carry("selectItem", { "value" : value });
+    },
+    showHome : function() {
+    	this.carry("showHome");
     }
 
 };

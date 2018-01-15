@@ -124,7 +124,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 			display.refresh();
 		});
 		embeddedCatalogs().forEach((key, display) -> {
-			display.filter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
+			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
 			display.label(key.label());
 			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
 			display.embedded(true);
@@ -138,8 +138,8 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		openItemListeners.forEach(l -> l.accept(params));
 	}
 
-	public void selectElement(Reference reference) {
-		Stamp stamp = provider.stamp(mold, reference.name());
+	public void openElement(OpenElementParameters params) {
+		Stamp stamp = provider.stamp(mold, params.stamp().name());
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
@@ -299,7 +299,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		return result;
 	}
 
-	public void selectItem(Reference reference) {
+	public void openItem(Reference reference) {
 		openItemListeners.forEach(l -> l.accept(new AlexandriaElementView.OpenItemEvent() {
 			@Override
 			public String itemId() {
@@ -340,4 +340,5 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 	public void emptyMessage(String message) {
 		this.emptyMessage = message;
 	}
+
 }

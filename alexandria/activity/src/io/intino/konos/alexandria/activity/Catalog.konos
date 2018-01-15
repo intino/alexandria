@@ -61,8 +61,8 @@ Display alexandriaItem
 	Notification refreshEmptyMessage as Text
 
 	Request itemStampsReady as Text
-	Request selectItem as Object(Reference)
-	Request selectElement as Object(Reference)
+	Request openItem as Object(Reference)
+	Request openElement as Object(OpenElementParameters)
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
@@ -96,6 +96,7 @@ Display alexandriaCatalogListView
 	Notification refreshPicture as Object(PictureData)
 
 	Request openItem as Text
+	Request openElement as Object(OpenElementParameters)
 	Request selectItems as List Text
 	Request renderExpandedPictures
 	Request itemRefreshed as Text
@@ -122,6 +123,7 @@ Display alexandriaCatalogMapView
 
 	Request location as Object(Bounds)
 	Request page as Integer
+	Request openElement as Object(OpenElementParameters)
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)

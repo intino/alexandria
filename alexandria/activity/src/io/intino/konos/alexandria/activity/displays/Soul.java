@@ -35,6 +35,10 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
+    public <T extends AlexandriaDesktop> T desktop() {
+        return (T) displays.values().stream().filter(d -> d instanceof AlexandriaDesktop).findFirst().orElse(null);
+    }
+
     @Override
     public List<AlexandriaDisplay> getAll() {
         return new ArrayList<>(this.displays.values());

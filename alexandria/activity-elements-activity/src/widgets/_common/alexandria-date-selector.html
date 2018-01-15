@@ -78,62 +78,10 @@
     <script>
         const AlexandriaDateSelectorDictionary = {
             es: {
-                YearFormat: '::year::',
-                YearFormatShort: '::year::',
-                QuarterOfYearFormat: '::date:: trimestre de ::year::',
-                QuarterOfYearFormatShort: '::date:: trim. ::year::',
-                MonthFormat: '::date:: de ::year::',
-                MonthFormatShort: '::month:: ::year::',
-                WeekFormat: 'semana ::date:: de ::year::',
-                WeekFormatShort: 'sem. ::date:: ::year::',
-                DayFormat: '::date:: de ::month:: de ::year::',
-                DayFormatShort: '::numericDay::',
-                SixHoursFormat: '::date:: horas del ::numericDay::',
-                SixHoursFormatShort: '::date:: ::numericDay::',
-                HourFormat: '::date:: horas del ::numericDay::',
-                HourFormatShort: '::date:: ::numericDay::',
-                FifteenMinutesFormat: '::date:: minutos del ::numericDay::',
-                FifteenMinutesFormatShort: '::date:: ::numericDay::',
-                MinuteFormat: '::date:: minutos del ::numericDay::',
-                MinuteFormatShort: '::date:: ::numericDay::',
-                SecondFormat: 'segundo ::date:: de ::numericDay::',
-                SecondFormatShort: '::date:: ::numericDay::',
-                NumericDayFormat: 'L',
-                FullDayFormat: 'LL',
-                First: '1er',
-                Second: '2do',
-                Third: '3er',
-                Fourth: '4to',
                 Accept: "aceptar",
                 Cancel: "cancelar"
             },
             en: {
-                YearFormat: '::year::',
-                YearFormatShort: '::year::',
-                QuarterOfYearFormat: '::date:: quarter of ::year::',
-                QuarterOfYearFormatShort: '::date:: quarter ::year::',
-                MonthFormat: '::date:: of ::year::',
-                MonthFormatShort: '::month:: ::year::',
-                WeekFormat: 'week ::date:: of ::year::',
-                WeekFormatShort: 'week ::date:: ::year::',
-                DayFormat: '::date:: of ::month:: of ::year::',
-                DayFormatShort: '::numericDay::',
-                SixHoursFormat: '::date:: hours of ::numericDay::',
-                SixHoursFormatShort: '::numericDay:: ::date::',
-                HourFormat: '::date:: hours of ::numericDay::',
-                HourFormatShort: '::numericDay:: ::date::',
-                FifteenMinutesFormat: '::date:: minutes of ::numericDay::',
-                FifteenMinutesFormatShort: '::numericDay:: ::date::',
-                MinuteFormat: '::date:: minutes of ::numericDay::',
-                MinuteFormatShort: '::numericDay:: ::date::',
-                SecondFormat: 'second ::date:: of ::numericDay::',
-                SecondFormatShort: '::numericDay:: ::date::',
-                NumericDayFormat: 'L',
-                FullDayFormat: 'LL',
-                First: '1st',
-                Second: '2nd',
-                Third: '3th',
-                Fourth: '4th',
                 Accept: "accept",
                 Cancel: "cancel"
             }
@@ -163,6 +111,7 @@
 
             attached : function () {
                 this.translate(AlexandriaDateSelectorDictionary);
+                this.translate(AlexandriaBehaviors.DateBehavior.Dictionary);
                 this._locale = this.getLanguage();
             },
 
@@ -176,7 +125,7 @@
                 this._dateObject = new Date(this.date);
                 this._hour = this._dateObject.getHours();
                 this._minute = this._dateObject.getMinutes();
-                this._formattedDateTime = this._getFormattedDateTime(this._dateTime());
+                this._formattedDateTime = this.fullDate(this._dateTime(), this.scale, this.getLanguage(), this.short);
                 this._refresh();
             },
 
@@ -204,23 +153,6 @@
                 return scale == 'SixHours' || scale == 'Hour' || scale == 'FifteenMinutes' || scale == 'Minute' || scale == 'Second';
             },
 
-            _getFormattedDateTime : function(dateTime) {
-                var formattedDate = this._formatter();
-                var language = this.getLanguage();
-
-                if (formattedDate == null) return "";
-                moment.locale(language);
-
-                formattedDate = formattedDate.replace('::date::', this.fullDate(dateTime, this.scale, language));
-                formattedDate = formattedDate.replace('::year::', this.yearOf(dateTime, language));
-                formattedDate = formattedDate.replace('::month::', this.monthOf(dateTime, language));
-                formattedDate = formattedDate.replace('::day::', this.dayOf(dateTime, language));
-                formattedDate = formattedDate.replace('::fullDay::', this.fullDayOf(dateTime, language));
-                formattedDate = formattedDate.replace('::numericDay::', this.numericDayOf(dateTime, language));
-
-                return formattedDate;
-            },
-
             _openDialog : function() {
 
                 if (this._isTimeScale())
@@ -241,10 +173,6 @@
                 newDate.setHours(this._hour);
                 newDate.setMinutes(this._minute);
                 return newDate;
-            },
-
-            _formatter : function() {
-                return this[this.scale + "Format" + (this.short ? "Short" : "")];
             },
 
             _showDatePicker : function() {

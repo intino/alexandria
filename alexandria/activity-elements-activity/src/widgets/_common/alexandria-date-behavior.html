@@ -6,8 +6,26 @@
     AlexandriaBehaviors.DateBehavior = {
         Dictionary : {
             es : {
-                MonthFormat: 'MMMM',
-                DayFormat: 'dddd DD',
+                YearFormat: '::year::',
+                YearFormatShort: '::year::',
+                QuarterOfYearFormat: '::date:: trimestre de ::year::',
+                QuarterOfYearFormatShort: '::date:: trim. ::year::',
+                MonthFormat: '::date:: de ::year::',
+                MonthFormatShort: '::month:: ::year::',
+                WeekFormat: 'semana ::date:: de ::year::',
+                WeekFormatShort: 'sem. ::date:: ::year::',
+                DayFormat: '::date:: de ::month:: de ::year::',
+                DayFormatShort: '::numericDay::',
+                SixHoursFormat: '::date:: horas del ::numericDay::',
+                SixHoursFormatShort: '::date:: ::numericDay::',
+                HourFormat: '::date:: horas del ::numericDay::',
+                HourFormatShort: '::date:: ::numericDay::',
+                FifteenMinutesFormat: '::date:: minutos del ::numericDay::',
+                FifteenMinutesFormatShort: '::date:: ::numericDay::',
+                MinuteFormat: '::date:: minutos del ::numericDay::',
+                MinuteFormatShort: '::date:: ::numericDay::',
+                SecondFormat: 'segundo ::date:: de ::numericDay::',
+                SecondFormatShort: '::date:: ::numericDay::',
                 NumericDayFormat: 'L',
                 FullDayFormat: 'LL',
                 First: '1er',
@@ -16,8 +34,26 @@
                 Fourth: '4to'
             },
             en : {
-                MonthFormat: 'MMMM',
-                DayFormat: 'dddd DD',
+                YearFormat: '::year::',
+                YearFormatShort: '::year::',
+                QuarterOfYearFormat: '::date:: quarter of ::year::',
+                QuarterOfYearFormatShort: '::date:: quarter ::year::',
+                MonthFormat: '::date:: of ::year::',
+                MonthFormatShort: '::month:: ::year::',
+                WeekFormat: 'week ::date:: of ::year::',
+                WeekFormatShort: 'week ::date:: ::year::',
+                DayFormat: '::date:: of ::month:: of ::year::',
+                DayFormatShort: '::numericDay::',
+                SixHoursFormat: '::date:: hours of ::numericDay::',
+                SixHoursFormatShort: '::numericDay:: ::date::',
+                HourFormat: '::date:: hours of ::numericDay::',
+                HourFormatShort: '::numericDay:: ::date::',
+                FifteenMinutesFormat: '::date:: minutes of ::numericDay::',
+                FifteenMinutesFormatShort: '::numericDay:: ::date::',
+                MinuteFormat: '::date:: minutes of ::numericDay::',
+                MinuteFormatShort: '::numericDay:: ::date::',
+                SecondFormat: 'second ::date:: of ::numericDay::',
+                SecondFormatShort: '::numericDay:: ::date::',
                 NumericDayFormat: 'L',
                 FullDayFormat: 'LL',
                 First: '1st',
@@ -27,14 +63,24 @@
             }
         },
 
-        fullDate : function(date, scale, language) {
-            if (scale == 'Year') return this.yearOf(date, language);
-            if (scale == 'QuarterOfYear') return this.quarterOf(date, language);
-            if (scale == 'Month') return this.monthOf(date, language);
-            if (scale == 'Week') return this.weekOf(date, language);
-            if (scale == 'Day') return this.dayOf(date, language);
-            if (scale == 'SixHours' || scale == 'Hour' || scale == 'FifteenMinutes' || scale == 'Minute') return this.minuteOf(date, language);
-            if (scale == 'Second') return this.secondOf(date);
+        fullDate : function(date, scale, language, short) {
+            var formattedDate = this._formatter(scale, short != null ? short : false);
+
+            if (formattedDate == null) return "";
+            moment.locale(language);
+
+            formattedDate = formattedDate.replace('::date::', this._fullDate(date, scale, language));
+            formattedDate = formattedDate.replace('::year::', this.yearOf(date, language));
+            formattedDate = formattedDate.replace('::month::', this.monthOf(date, language));
+            formattedDate = formattedDate.replace('::day::', this.dayOf(date, language));
+            formattedDate = formattedDate.replace('::fullDay::', this.fullDayOf(date, language));
+            formattedDate = formattedDate.replace('::numericDay::', this.numericDayOf(date, language));
+
+            return formattedDate;
+        },
+
+        shortFullDate : function(date, scale, language) {
+            return this.fullDate(date, scale, language, true);
         },
 
         numericDate : function(date, scale, language) {
@@ -58,7 +104,7 @@
 
         monthOf: function(date, language) {
             moment.locale(language);
-            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].MonthFormat);
+            return moment(date).format("MMMM");
         },
 
         weekOf: function(date, language) {
@@ -68,7 +114,7 @@
 
         dayOf: function(date, language) {
             moment.locale(language);
-            return moment(date).format(AlexandriaBehaviors.DateBehavior.Dictionary[language].DayFormat);
+            return moment(date).format("dddd DD");
         },
 
         fullDayOf: function(date, language) {
@@ -89,6 +135,20 @@
         secondOf: function(date, language) {
             moment.locale(language);
             return moment(date).format('LTS');
+        },
+
+        _fullDate : function(date, scale, language) {
+            if (scale == 'Year') return this.yearOf(date, language);
+            if (scale == 'QuarterOfYear') return this.quarterOf(date, language);
+            if (scale == 'Month') return this.monthOf(date, language);
+            if (scale == 'Week') return this.weekOf(date, language);
+            if (scale == 'Day') return this.dayOf(date, language);
+            if (scale == 'SixHours' || scale == 'Hour' || scale == 'FifteenMinutes' || scale == 'Minute') return this.minuteOf(date, language);
+            if (scale == 'Second') return this.secondOf(date);
+        },
+
+        _formatter : function(scale, short) {
+            return this[scale + "Format" + (short ? "Short" : "")];
         }
 
     };

@@ -1,7 +1,6 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMapViewNotifier;
@@ -94,6 +93,45 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 		notifyLoading(false);
 	}
 
+	public void openItemDialogOperation(OpenItemDialogParameters params) {
+		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(params.item(), provider.stamp(view.mold(), params.stamp()), username())));
+	}
+
+	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
+		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(params.item(), provider.stamp(view.mold(), params.stamp()))));
+	}
+
+	@Override
+	public void refresh(Item... items) {
+		Stream.of(items).forEach(item -> notifier.refreshItem(item));
+	}
+
+	public ActivityFile downloadItemOperation(DownloadItemParameters value) {
+		return null;
+	}
+
+	public void executeOperation(ElementOperationParameters value) {
+		provider.executeOperation(value, emptyList());
+	}
+
+	public ActivityFile downloadOperation(ElementOperationParameters value) {
+		io.intino.konos.alexandria.activity.Resource resource = provider.downloadOperation(value, emptyList());
+		return new ActivityFile() {
+			@Override
+			public String label() {
+				return resource.label();
+			}
+
+			@Override
+			public InputStream content() {
+				return resource.content();
+			}
+		};
+	}
+
+	public void openElement(OpenElementParameters params) {
+	}
+
 	@Override
 	protected void sendItems(int start, int limit) {
 		notifier.refresh(ItemBuilder.buildList(provider.items(start, limit, null), itemBuilderProvider(provider, view), provider.baseAssetUrl()));
@@ -118,44 +156,8 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 		notifier.refreshView(ElementViewBuilder.build(view));
 	}
 
-	public void openItemDialogOperation(OpenItemDialogParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(params.item(), provider.stamp(view.mold(), params.stamp()), username())));
-	}
-
-	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(params.item(), provider.stamp(view.mold(), params.stamp()))));
-	}
-
-	@Override
-	public void refresh(Item... items) {
-		Stream.of(items).forEach(item -> notifier.refreshItem(item));
-	}
-
 	private void notifyLoading(boolean value) {
 		loadingListeners.forEach(l -> l.accept(value));
-	}
-
-	public ActivityFile downloadItemOperation(DownloadItemParameters value) {
-		return null;
-	}
-
-	public void executeOperation(ElementOperationParameters value) {
-		provider.executeOperation(value, emptyList());
-	}
-
-	public ActivityFile downloadOperation(ElementOperationParameters value) {
-		Resource resource = provider.downloadOperation(value, emptyList());
-		return new ActivityFile() {
-			@Override
-			public String label() {
-				return resource.label();
-			}
-
-			@Override
-			public InputStream content() {
-				return resource.content();
-			}
-		};
 	}
 
 }

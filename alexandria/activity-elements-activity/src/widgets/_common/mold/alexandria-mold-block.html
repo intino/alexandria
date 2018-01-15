@@ -178,7 +178,7 @@
             margin-top: 10px;
             margin-bottom: 10px;
             padding: 5px;
-            background: none;1
+            background: none;
         }
         :host .picture {
             position: relative;
@@ -329,29 +329,29 @@
             _createZombiePageLayers : function() {
                 this.querySelectorAll(".page-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                    this._addZombieLayer(layer, "PageContainer").style.height = "100%";
-                });
+                this._addZombieLayer(layer, "PageContainer").style.height = "100%";
+            });
             },
 
             _createZombieDisplayLayers : function() {
                 this.querySelectorAll(".display-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                    this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
-                });
+                this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
+            });
             },
 
             _addSnippets : function() {
                 this.querySelectorAll(".snippet-layer").forEach((layer) => {
                     var content = $(layer.querySelector(".text")).text();
-                    var contentLayer = layer.querySelector(".snippet-content");
-                    if (contentLayer == null) {
-                        contentLayer = document.createElement("div");
-                        layer.appendChild(contentLayer);
-                    }
-                    contentLayer.className = "snippet-content";
-                    contentLayer.innerHTML = content;
-                    layer.style.display = "block";
-                });
+                var contentLayer = layer.querySelector(".snippet-content");
+                if (contentLayer == null) {
+                    contentLayer = document.createElement("div");
+                    layer.appendChild(contentLayer);
+                }
+                contentLayer.className = "snippet-content";
+                contentLayer.innerHTML = content;
+                layer.style.display = "block";
+            });
             },
 
             _addZombieLayer : function(layer, name, object) {
@@ -368,7 +368,7 @@
             },
 
             _navigateCatalog : function(e) {
-                this.fire("navigate-catalog", e.detail.item);
+                this.fire("navigate-catalog", { item: this.item, stamp: e.detail.item });
             },
 
             _download : function(e) {
