@@ -10,6 +10,7 @@ import java.util.Map;
 
 public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifier> extends AlexandriaElementDisplay<Layout, DN> implements ElementDisplayManager {
     private Map<String, AlexandriaElementDisplay> displayMap = new HashMap<>();
+    private String selected = null;
 
     public AlexandriaElementStore(Box box) {
         super(box);
@@ -19,6 +20,9 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         Element element = elementWithLabel(label);
         Item target = targetWithLabel(label);
         E display = displayWithLabel(label);
+
+        if (label.equals(selected)) return display;
+        selected = label;
 
         if (display != null) {
             display.clearFilter();

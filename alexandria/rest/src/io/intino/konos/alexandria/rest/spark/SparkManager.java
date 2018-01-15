@@ -24,7 +24,11 @@ public class SparkManager {
 	}
 
 	public void write(Object object, String name) {
-		new SparkWriter(response).write(object, name);
+		write(object, name, false);
+	}
+
+	public void write(Object object, String name, boolean embedded) {
+		new SparkWriter(response).write(object, name, embedded);
 	}
 
 	public <T> T fromHeader(String name, Class<T> type) {

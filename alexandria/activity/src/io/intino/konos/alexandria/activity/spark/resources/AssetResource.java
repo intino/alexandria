@@ -36,7 +36,7 @@ public class AssetResource extends Resource {
                 manager.write(new String(content, "UTF-8"), contentType);
             }
             else
-                manager.write(new URL(name).openStream(), manager.fromQuery("label", String.class));
+                manager.write(new URL(name).openStream(), manager.fromQuery("label", String.class), manager.fromQuery("embedded", Boolean.class));
         } catch (MalformedURLException e) {
             manager.write(new AssetNotFoundException());
         } catch (IOException e) {

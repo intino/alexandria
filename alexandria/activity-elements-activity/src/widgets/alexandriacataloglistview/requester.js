@@ -5,6 +5,9 @@ AlexandriaCatalogListViewBehaviors.Requester = {
     openItem : function(value) {
     	this.carry("openItem", { "value" : value });
     },
+    openElement : function(value) {
+    	this.carry("openElement", { "value" : value });
+    },
     selectItems : function(value) {
     	this.carry("selectItems", { "value" : value });
     },

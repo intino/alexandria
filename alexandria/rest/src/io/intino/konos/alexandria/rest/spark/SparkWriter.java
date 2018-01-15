@@ -23,11 +23,15 @@ class SparkWriter {
 	}
 
 	void write(Object object, String name) {
+		write(object, name, false);
+	}
+
+	void write(Object object, String name, boolean embedded) {
 		if (object instanceof Error) writeError((io.intino.konos.alexandria.Error) object, adapt(object));
-		else if (object instanceof File) writeFile((File) object);
-		else if (object instanceof Resource) writeResource((Resource) object);
-		else if (object instanceof InputStream) writeStream((InputStream) object, name);
-		else if (object instanceof byte[]) writeBytes((byte[]) object, name);
+		else if (object instanceof File) writeFile((File) object, embedded);
+		else if (object instanceof Resource) writeResource((Resource) object, embedded);
+		else if (object instanceof InputStream) writeStream((InputStream) object, name, embedded);
+		else if (object instanceof byte[]) writeBytes((byte[]) object, name, embedded);
 		else writeResponse(adapt(object), name);
 	}
 
@@ -47,21 +51,21 @@ class SparkWriter {
 		}
 	}
 
-	private void writeFile(File file) {
-		writeResponse(file, response.raw());
+	private void writeFile(File file, boolean embedded) {
+		writeResponse(file, embedded, response.raw());
 	}
 
-	private void writeStream(InputStream stream, String filename) {
-		writeResponse(filename, stream, response.raw());
+	private void writeStream(InputStream stream, String filename, boolean embedded) {
+		writeResponse(filename, stream, embedded, response.raw());
 	}
 
-	private void writeResource(Resource resource) {
-		writeResponse(resource.name(), resource.content(), response.raw());
+	private void writeResource(Resource resource, boolean embedded) {
+		writeResponse(resource.name(), resource.content(), embedded, response.raw());
 	}
 
-	private void writeBytes(byte[] content, String filename) {
+	private void writeBytes(byte[] content, String filename, boolean embedded) {
 		if (filename == null) filename = "default.bin";
-		writeResponse(filename, content, response.raw());
+		writeResponse(filename, content, embedded, response.raw());
 	}
 
 	private void writeResponse(String content, String contentType, HttpServletResponse response) throws IOException {
@@ -76,31 +80,31 @@ class SparkWriter {
 		writer.close();
 	}
 
-	private void writeResponse(File file, HttpServletResponse response) {
+	private void writeResponse(File file, boolean embedded, HttpServletResponse response) {
 		try {
 			response.setContentType(MimeTypes.getFromFile(file));
-			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + file.getName());
 			writeResponse(readFile(file), response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void writeResponse(String filename, InputStream stream, HttpServletResponse response) {
+	private void writeResponse(String filename, InputStream stream, boolean embedded, HttpServletResponse response) {
 		try {
 			byte[] content = IOUtils.toByteArray(stream);
 			String contentType = filename != null ? MimeTypes.getFromFilename(filename) : MimeTypes.getFromStream(new ByteArrayInputStream(content));
 			response.setContentType(contentType);
-			response.setHeader("Content-Disposition", "attachment; filename=" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))));
+			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + (filename != null ? filename : ("resource." + MimeTypes.getExtension(contentType))));
 			writeResponse(content, response);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void writeResponse(String filename, byte[] content, HttpServletResponse response) {
+	private void writeResponse(String filename, byte[] content, boolean embedded, HttpServletResponse response) {
 		response.setContentType(MimeTypes.getFromFilename(filename));
-		response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+		response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + "attachment; filename=" + filename);
 		this.writeResponse(content, response);
 	}
 

@@ -55,6 +55,10 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 		addAndPersonify(display);
 	}
 
+	public <T extends AlexandriaLayout> T layout() {
+		return (T) child(AlexandriaLayout.class);
+	}
+
 	@Override
 	protected void showDialog() {
 	}

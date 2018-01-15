@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.model.panel.View;
 import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPanelDisplayViewNotifier> {
@@ -25,6 +26,12 @@ public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPa
         sendDisplayType(display);
         add(display);
         display.personifyOnce(id());
+    }
+
+    @Override
+    public void refresh() {
+        super.refresh();
+        Optional.ofNullable(child(AlexandriaDisplay.class)).ifPresent(AlexandriaDisplay::refresh);
     }
 
     private void sendDisplayType(AlexandriaDisplay display) {

@@ -29,12 +29,13 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 		Catalog catalog = render.catalogs().get(0);
 		buildDisplay(catalog).ifPresent(display -> {
 			catalogDisplay = display;
-			display.filter(item -> render.filter(catalog, context(), target(), (Item) item, username()));
+			display.staticFilter(item -> render.filter(catalog, context(), target(), (Item) item, username()));
 			display.target(target());
 			display.elementDisplayManager(provider().elementDisplayManager());
 			display.catalog(catalog);
 			display.onLoading(value -> notifyLoading((Boolean) value));
 			display.onOpenItem(params -> notifyOpenItem((OpenItemEvent) params));
+			display.onOpenElement(params -> notifyOpenItem((OpenItemEvent) params));
 			add(display);
 			display.personifyOnce(id());
 		});

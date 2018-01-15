@@ -32,7 +32,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private ElementDisplayManager elementDisplayManager = null;
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private AlexandriaElementView currentView = null;
-	private Function<Item, Boolean> itemListFilter = null;
+	private Function<Item, Boolean> staticFilter = null;
+	private Function<Item, Boolean> dynamicFilter = null;
 	private Boolean dirty = null;
 	private boolean embedded = false;
 	private AlexandriaElementView.OpenItemEvent openedItem = null;
@@ -96,18 +97,23 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		loadingListeners.add(listener);
 	}
 
-	public void filter(Function<Item, Boolean> filter) {
-		this.itemListFilter = filter;
+	public void staticFilter(Function<Item, Boolean> filter) {
+		this.staticFilter = filter;
+		dirty(true);
+	}
+
+	public void dynamicFilter(Function<Item, Boolean> filter) {
+		this.dynamicFilter = filter;
 		dirty(true);
 	}
 
 	public void filterAndNotify(Function<Item, Boolean> filter) {
-		filter(filter);
+		dynamicFilter(filter);
 		notifyFiltered(filter != null);
 	}
 
 	public void clearFilter() {
-		boolean refresh = itemListFilter != null;
+		boolean refresh = dynamicFilter != null;
 		filterAndNotify(null);
 		if (refresh) refresh();
 	}
@@ -235,6 +241,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		this.enabledViews = views;
 	}
 
+	public <E extends AlexandriaElementDisplay> E openElement(String label) {
+		return elementDisplayManager.openElement(label);
+	}
+
 	private AlexandriaAbstractCatalog catalogDisplayOf(CatalogInstantBlock block) {
 		if (!this.element.name().equals(block.catalog()) && !this.element.label().equals(block.catalog()))
 			return openElement(block.catalog());
@@ -313,10 +323,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		refresh(this.currentItem());
 	}
 
-	public <E extends AlexandriaElementDisplay> E openElement(String label) {
-		return elementDisplayManager.openElement(label);
-	}
-
 	public AlexandriaPanel createPanelDisplay(AlexandriaElementView.OpenItemEvent event) {
 		AlexandriaPanel display = elementDisplayManager.createElement(event.panel(), event.item());
 		display.range(event.range());
@@ -341,8 +347,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void applyFilter(ItemList itemList) {
-		if (itemListFilter == null) return;
-		itemList.filter(itemListFilter);
+		if (staticFilter != null) itemList.filter(staticFilter);
+		if (dynamicFilter != null) itemList.filter(dynamicFilter);
 	}
 
 	private io.intino.konos.alexandria.activity.schemas.Item currentItem_() {

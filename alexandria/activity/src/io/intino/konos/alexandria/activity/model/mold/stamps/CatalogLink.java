@@ -19,9 +19,7 @@ public class CatalogLink extends Stamp<String> {
 
 	public boolean filter(Item source, Item target, String username) {
 		if (filter == null) return true;
-		if (source == null && target == null) return true;
-		if (source == null || target == null) return false;
-		return filter.filter(source.object(), target.object(), username);
+		return filter.filter(source != null ? source.object() : null, target != null ? target.object() : null, username);
 	}
 
 	public CatalogLink filter(Filter filter) {

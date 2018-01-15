@@ -13,14 +13,14 @@
 
     <template>
         <alexandria-mold mold="[[_mold]]" item="[[_item]]" mode="[[_mode]]"
-                        on-stamps-ready="_itemStampsReady"
-                        on-navigate-item="_navigateItem"
-                        on-navigate-catalog="_navigateCatalog"
-                        on-open-dialog="_openStampDialog"
-                        on-execute-task-item="_executeTask"
-                        on-download-item="_download"
-                        on-save-item="_save"
-                        on-export-item="_export"></alexandria-mold>
+                         on-stamps-ready="_itemStampsReady"
+                         on-navigate-item="_navigateItem"
+                         on-navigate-catalog="_navigateCatalog"
+                         on-open-dialog="_openStampDialog"
+                         on-execute-task-item="_executeTask"
+                         on-download-item="_download"
+                         on-save-item="_save"
+                         on-export-item="_export"></alexandria-mold>
         <template is="dom-if" if="[[!_item]]">
             <div class="message layout horizontal center center-justified">[[_emptyMessage]]</div>
         </template>
@@ -96,11 +96,11 @@
             },
 
             _navigateItem : function(e) {
-                this.selectItem(e.detail);
+                this.openItem(e.detail);
             },
 
             _navigateCatalog : function(e) {
-                this.selectElement(e.detail);
+                this.openElement(e.detail);
             },
 
             _openStampDialog : function(e) {

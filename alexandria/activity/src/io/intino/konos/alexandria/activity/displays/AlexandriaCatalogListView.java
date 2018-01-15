@@ -140,6 +140,23 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			notifyOpenDialog(value);
 	}
 
+	public void openElement(OpenElementParameters params) {
+		Stamp stamp = provider.stamp(view.mold(), params.stamp().name());
+		if (!(stamp instanceof CatalogLink)) return;
+
+		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
+		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+
+		Item source = provider.item(new String(Base64.getDecoder().decode(params.item())));
+		display.filterAndNotify(item -> {
+			return catalogLinkStamp.filter(source, (Item) item, username());
+		});
+		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
+			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
+
+		display.refresh();
+	}
+
 	private void notifyOpenItem(String item) {
 		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
 			@Override

@@ -24,6 +24,7 @@ Display alexandriaTabLayout
 
 	Request logout
 	Request selectItem as Text
+	Request showHome
 
 Display alexandriaMenuLayout
 	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
@@ -38,3 +39,4 @@ Display alexandriaMenuLayout
 
 	Request logout
 	Request selectItem as Text
+	Request showHome
