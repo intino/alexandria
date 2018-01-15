@@ -2,7 +2,7 @@ dsl Konos
 
 Schema dummy
 
-Activity testEbar
+Activity(title = "", favicon = "") testEbar
 	Home(uses=testEbarHome) testEbarHomePage
 
 Desktop(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome

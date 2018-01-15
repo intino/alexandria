@@ -38,8 +38,7 @@ class ActionUpdater {
 
 	void update() {
 		if (file == null || !(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
-		PsiJavaFile javaFile = (PsiJavaFile) file;
-		final PsiClass psiClass = javaFile.getClasses()[0];
+		final PsiClass psiClass = ((PsiJavaFile) file).getClasses()[0];
 		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
 			runWriteCommandAction(project, () -> update(psiClass));
 		else update(psiClass);

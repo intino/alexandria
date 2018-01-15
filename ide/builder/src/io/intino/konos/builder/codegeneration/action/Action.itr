@@ -9,8 +9,8 @@ def type(action) !type(page)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		$parameter+type...[$NL]
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;[
+		$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
 			$returnType+return
@@ -18,7 +18,38 @@ def type(action) !type(page)
 	}
 end
 
-def type(page & action)
+def type(page & action & gen)
+	package $package+validPackage.actions;
+
+	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
+	import java.util.*;
+
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaPageAction {
+
+		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
+
+		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
+			return super.template("$name");
+		}
+
+		@Override
+		protected String title() {
+			return "$title";
+		}
+
+		@Override
+		protected java.net.URL favicon() {
+			return [$favicon?null;]
+		}
+	}
+end
+
+def trigger(favicon)
+	this.getClass().getResource("$value");
+end
+
+def type(page & action) !type(gen)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
@@ -29,38 +60,12 @@ def type(page & action)
 	[import $importDialogs+validPackage.dialogs.*;]
 	[import $importDisplays+validPackage.displays.*;]
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaPageAction {
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Action {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]
 
-		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
-
-		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
-			return super.template("$name");
-		}
-
 		$ui
-
-		@Override
-		protected String title() {
-			return "";
-		}
-
-		@Override
-		protected String subtitle() {
-			return "";
-		}
-
-		@Override
-		protected java.net.URL logo() {
-			return null;
-		}
-
-		@Override
-		protected java.net.URL icon() {
-			return null;
-		}
 	}
 end
 

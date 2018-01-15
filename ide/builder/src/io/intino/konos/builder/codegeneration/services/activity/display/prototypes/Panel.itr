@@ -1,91 +1,3 @@
-def type(panel & gen)
-	package $package.displays;
-
-    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.activity.displays.AlexandriaPanel;
-    import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
-    import io.intino.konos.alexandria.activity.model.AbstractView;
-    import io.intino.konos.alexandria.activity.model.Panel;
-    import io.intino.konos.alexandria.activity.model.Toolbar;
-    import io.intino.konos.alexandria.activity.model.panel.View;
-    import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
-
-    import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
-
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.function.Consumer;
-
-    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanel<$name+firstUpperCase~Notifier> {
-
-    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
-    		super(box);
-    		element(buildPanel(box));
-    	}
-
-    	private static Panel buildPanel($box+firstUpperCase~Box box) {
-    		Panel panel = new Panel();
-    		[panel.name("$name");]
-    		[panel.label("$label");]
-    		[$toolbar+empty~panel.toolbar(buildToolbar(box));]
-    		buildViews(box).forEach(v -> panel.add(v));
-    		return panel;
-    	}
-		[
-		$toolbar
-		]
-    	private static List<AbstractView> buildViews($box+firstUpperCase~Box box) {
-    		List<AbstractView> result = new ArrayList<>();
-    		$view+genview...[$NL]
-    		return result;
-    	}
-
-    }
-end
-
-def trigger(toolbar)
-	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
-		Toolbar toolbar = new Toolbar();
-		toolbar.canSearch($canSearch);
-		$operation...[$NL]
-		return toolbar;
-	}
-end
-
-def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, option, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
-end
-
-def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
-end
-
-def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
-end
-
-def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
-end
-
-def type(display) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
-end
-
-def type(mold) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$mold").element())).layout(View.Layout.$layout).name("$name")[.label("$label")]);
-end
-
-def type(catalogs) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
-end
-
-def trigger(filtercall)
-	(catalog, context, target, object, username) -> $panel+firstUpperCase.Views.$name+firstUpperCase.filter(box, catalog, context, target, ($modelClass)object, username)
-end
-
-
 def type(panel)
 	package $package.displays;
 
@@ -102,43 +14,42 @@ def type(panel)
 		}
 
 		public static class Toolbar {
-			$operation+src...[$NL]
+			$operation...[$NL]
 		}
 
 		public static class Views {
-			$view+src...[$NL]
+			$view...[$NL]
 		}
 	}
 end
 
-
-def type(operation) trigger(src)
-	public static AlexandriaDisplay $name($box+firstUpperCase~Box box) {
+def type(operation)
+	public static AlexandriaDisplay $name+firstUpperCase($box+firstUpperCase~Box box) {
 		return null;//TODO
 	}
 end
 
-def type(view & display) trigger(src)
-	public static class $name {
-		public static AlexandriaDisplay $display($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+def type(view & display)
+	public static class $name+firstUpperCase {
+		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
 			return null;//TODO
 		}
 	}
 end
 
-def type(view & catalogs) trigger(src)
-	public static class $name {
-		$filter+method
+def type(view & catalogs)
+	public static class $name+firstUpperCase {
+		$filter
 	}
 end
 
-def type(filter) trigger(method)
+def type(filter)
 	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;//TODO
 	}
 end
 
-def type(view & mold) trigger(src)
+def type(view & mold)
 end
 
 def trigger(empty)
