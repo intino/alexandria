@@ -51,7 +51,6 @@ public class UIGenerationTest {
 		execute(new File(DIR, octana), octana, octana);
 	}
 
-
 	@Test
 	public void testCesar() throws Exception {
 		execute(new File(DIR, cesarPackage.replace(".", File.separator)), "testCesar", cesarPackage);

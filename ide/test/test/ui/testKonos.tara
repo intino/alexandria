@@ -1,6 +1,6 @@
 dsl Konos
 
-Activity testKonos
+Activity(title = "", favicon = "") testKonos
 	Home(uses=testHome) homePage
 
 Display Drillwise
@@ -24,7 +24,7 @@ Layout testMenu
 
 Panel(label = "Análisis") testAnalisis
 	Views
-		View(label = "olap")
+		View(label = "olap") olap
 //			RenderDisplay(display = "olapDisplay")
 			RenderCatalogs(catalogs = testInfrastructure)
 				filtered = true

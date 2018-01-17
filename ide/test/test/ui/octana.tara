@@ -1,6 +1,6 @@
 dsl Konos
 
-Activity octana
+Activity(title = "", favicon = "") octana
 	Home(uses=octanaDesktop) home
 
 Desktop(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath = "favicon.png") octanaDesktop
@@ -32,5 +32,8 @@ Mold(modelClass="io.intino.octana.graph.Person") octanaPersonMold
 
 Panel octanaAnalysisPanel
 	Views
-		View("análisis")
+		View("análisis") analisis
 			RenderDisplay(display = "olap")
+			hidden = HiddenEnabled
+
+

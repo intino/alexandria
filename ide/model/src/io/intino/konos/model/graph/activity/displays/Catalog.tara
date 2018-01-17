@@ -25,7 +25,7 @@ Concept Catalog extends Display
 		Concept:Named Sorting
 			var string label
 
-Concept Toolbar is decorable
+Concept Toolbar is decorable component
 	var boolean canSearch = true
 	Concept:{0..1} GroupingSelection extends Operation
 	Concept:{0..1} OpenDialog extends Operation
@@ -43,7 +43,7 @@ Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
 	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
 
-Concept CatalogView
+Concept CatalogView is component
 	var string label
 	var integer:{%} width = 100%
 	var string noRecordMessage = empty

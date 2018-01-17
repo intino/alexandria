@@ -34,18 +34,28 @@ def type(view & display)
 		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Object object, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
 			return null;//TODO
 		}
+
+		$hidden
 	}
 end
 
 def type(view & catalogs)
 	public static class $name+firstUpperCase {
 		$filter
+
+		$hidden
 	}
 end
 
 def type(filter)
 	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;//TODO
+	}
+end
+
+def trigger(hidden)
+	public static boolean hidden($box~Box box, Object object, String username) {
+		return false;//TODO
 	}
 end
 

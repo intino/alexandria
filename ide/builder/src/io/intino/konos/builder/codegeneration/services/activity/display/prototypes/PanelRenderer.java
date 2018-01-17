@@ -45,7 +45,7 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("label", view.label())
 				.addSlot("box", box)
 				.addSlot("layout", view.layout().name());
-		if (view.hidden() == HiddenEnabled) baseFrame(panel, view, box);
+		if (view.hidden() == HiddenEnabled) frame.addSlot("hidden", hidden(panel, view, box));
 		final ElementRenderer renderer = view.elementRenderer();
 		if (renderer.i$(RenderDisplay.class)) {
 			frame.addTypes("display");
@@ -65,7 +65,7 @@ public class PanelRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
-	private static Frame baseFrame(Panel panel, View view, String box) {
+	private static Frame hidden(Panel panel, View view, String box) {
 		return new Frame().addSlot("panel", panel.name$()).addSlot("view", view.name$()).addSlot("box", box);
 
 	}

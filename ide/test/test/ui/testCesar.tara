@@ -59,8 +59,8 @@ Display sampleDisplay
 
 Panel(label = "Overview") testCesarOverviewPanel
 	Views
-		View(label = "overview") > RenderMold(testCesarOverviewMold)
-		View(label = "análisis") > RenderDisplay(display="cesarOlap")
+		View(label = "overview") overview> RenderMold(testCesarOverviewMold)
+		View(label = "análisis") analisis > RenderDisplay(display="cesarOlap")
 
 Mold(modelClass="") testCesarOverviewMold
 	Block
