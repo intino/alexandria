@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.model.renders;
 import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
 import io.intino.konos.alexandria.activity.model.ElementRender;
+import io.intino.konos.alexandria.activity.model.Item;
 
 import java.util.function.Consumer;
 
@@ -19,8 +20,8 @@ public class RenderDisplay extends ElementRender {
 		return this;
 	}
 
-	public AlexandriaDisplay display(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
-		return displayLoader != null ? displayLoader.load(loadingListener, instantListener) : null;
+	public AlexandriaDisplay display(Item target, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		return displayLoader != null ? displayLoader.load(target != null ? target.object() : null, loadingListener, instantListener) : null;
 	}
 
 	public RenderDisplay displayLoader(DisplayLoader loader) {
@@ -29,7 +30,7 @@ public class RenderDisplay extends ElementRender {
 	}
 
 	public interface DisplayLoader {
-		AlexandriaDisplay load(Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener);
+		AlexandriaDisplay load(Object target, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener);
 	}
 
 }
