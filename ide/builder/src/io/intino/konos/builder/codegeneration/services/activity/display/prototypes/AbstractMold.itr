@@ -52,7 +52,7 @@ def trigger(layout)
 end
 
 def type(stamp & location)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$icon][$color]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$icon][$drawingColor]$common)
 end
 
 def type(stamp & breadcrumbs)
@@ -178,8 +178,8 @@ def trigger(icon)
 	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, username))
 end
 
-def trigger(color)
-	.color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, username))
+def trigger(drawingColor)
+	.drawingColor((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.drawingColor(box, ($moldClass) object, username))
 end
 
 def trigger(expanded)
