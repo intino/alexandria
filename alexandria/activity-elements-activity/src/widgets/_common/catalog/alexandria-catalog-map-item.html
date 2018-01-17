@@ -121,22 +121,33 @@
             },
 
             _addLocation : function(locationStamp) {
-                var wkt = new Wkt.Wkt();
+                if (locationStamp == null || locationStamp.value == "") return;
 
+                var wkt = new Wkt.Wkt();
                 try {
                     wkt.read(locationStamp.value);
-                    this.locationItem = this._fixWkt(wkt).toObject(this.map.defaults);
+                    this.locationItem = wkt.toObject(this._configuration(locationStamp));
                     this._addIcon(locationStamp.properties.icon);
                     this._addListeners(this.locationItem);
 //                    this._updateCentroid(this.locationItem);
 //                    if (this._isMarker(this.locationItem)) return;
                     this._setMapToItem(this.map);
-
                 } catch (e1) {
                     if (e1.name === 'WKTError') {
                         return;
                     }
                 }
+            },
+
+            _configuration : function(stamp) {
+                var config = this.map.defaults != null ? this.map.defaults : {};
+                var color = stamp.properties.color;
+                config.editable = stamp.isEditable != null ? stamp.isEditable : false;
+                if (color != "") {
+                    config.strokeColor = color;
+                    config.fillColor = color;
+                }
+                return config;
             },
 
             _setMapToItem : function(map) {
@@ -149,39 +160,20 @@
                 }
             },
 
-            _fixWkt : function(wkt) {
-                for (var i=0; i<wkt.components.length; i++)
-                    this._fixWktComponent(wkt.components[i]);
-                return wkt;
-            },
-
-            _fixWktComponent : function(component) {
-                if (component instanceof Array) {
-                    for(var i=0; i<component.length; i++) {
-                        this._fixWktComponent(component[i]);
-                    }
-                }
-                else {
-                    var x = component.x;
-                    component.x = component.y;
-                    component.y = x;
-                }
-            },
-
             _isMarker : function(obj) {
                 return (obj instanceof google.maps.Marker);
             },
 
             _addIcon : function(icon) {
-                if (icon == null) return;
+                if (icon == null || icon == "") return;
                 this.locationItem.setIcon(icon);
             },
 
             _addListeners : function() {
                 this.locationItem.addListener('click', () => {
                     if (this._isInfoWindowOpened()) this.closeInfoWindow();
-                    else this.openInfoWindow();
-                });
+            else this.openInfoWindow();
+            });
             },
 
             _isInfoWindowOpened : function() {

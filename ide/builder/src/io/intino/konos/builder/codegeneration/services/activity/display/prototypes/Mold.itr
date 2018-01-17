@@ -71,6 +71,10 @@ def type(stamp & location)
 		public static java.net.URL icon($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
 			return null;//TODO
 		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+			return null;//TODO
+		}
 	}
 end
 
