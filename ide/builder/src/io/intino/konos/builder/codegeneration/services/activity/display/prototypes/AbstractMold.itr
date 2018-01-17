@@ -52,7 +52,7 @@ def trigger(layout)
 end
 
 def type(stamp & location)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$icon][$drawingColor]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$drawingColor][$icon]$common)
 end
 
 def type(stamp & breadcrumbs)

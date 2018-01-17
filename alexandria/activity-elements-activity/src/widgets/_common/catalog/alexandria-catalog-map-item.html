@@ -141,11 +141,11 @@
 
             _configuration : function(stamp) {
                 var config = this.map.defaults != null ? this.map.defaults : {};
-                var color = stamp.properties.color;
+                var drawingColor = stamp.properties.drawingColor;
                 config.editable = stamp.isEditable != null ? stamp.isEditable : false;
-                if (color != "") {
-                    config.strokeColor = color;
-                    config.fillColor = color;
+                if (drawingColor != "") {
+                    config.strokeColor = drawingColor;
+                    config.fillColor = drawingColor;
                 }
                 return config;
             },
