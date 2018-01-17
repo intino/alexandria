@@ -129,9 +129,9 @@ public class ItemBuilder {
             URL icon = location.icon(item, username);
             if (icon != null)
                 result.add(propertyOf("icon", toResource(baseAssetUrl, icon).toUrl().toString()));
-            String color = location.color(item, username);
-            if (color != null)
-                result.add(propertyOf("color", color));
+            String drawingColor = location.drawingColor(item, username);
+            if (drawingColor != null)
+                result.add(propertyOf("drawingColor", drawingColor));
         }
 
         if (stamp instanceof Icon)
