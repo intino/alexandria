@@ -125,9 +125,13 @@ public class ItemBuilder {
             result.add(propertyOf("title", ((CatalogLink)stamp).value(item, username)));
 
         if (stamp instanceof Location) {
-            URL icon = ((Location)stamp).icon(item, username);
+            Location location = (Location) stamp;
+            URL icon = location.icon(item, username);
             if (icon != null)
                 result.add(propertyOf("icon", toResource(baseAssetUrl, icon).toUrl().toString()));
+            String color = location.color(item, username);
+            if (color != null)
+                result.add(propertyOf("color", color));
         }
 
         if (stamp instanceof Icon)

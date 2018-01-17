@@ -182,6 +182,7 @@
         _addStampLocationProperties : function(stamp, moldStamp) {
             if (!stamp.isLocation) return;
             stamp.properties.icon = this._propertyValueOf(moldStamp,'icon');
+            stamp.properties.color = this._propertyValueOf(moldStamp,'color');
         },
 
         _addStampEmbeddedDisplayProperties : function(stamp, moldStamp) {

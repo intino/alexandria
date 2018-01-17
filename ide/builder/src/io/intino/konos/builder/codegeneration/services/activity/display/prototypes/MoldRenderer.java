@@ -132,6 +132,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Location stamp) {
 		frame.addSlot("icon", baseFrame(stamp));
+		frame.addSlot("color", baseFrame(stamp));
 	}
 
 	private void frameOf(Frame frame, Operation operation) {
