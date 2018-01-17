@@ -28,9 +28,9 @@ Concept Panel extends Display
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
 		Concept:ViewRule View
-			var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
 			var string label
 			var word:{Tab LeftFixed RightFixed} layout = Tab
+			var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
 			has:{1..1} ElementRenderer
 
 Concept Desktop extends Display
@@ -44,7 +44,7 @@ Concept Layout extends Display
 	var word:{Menu Tab} mode
 	has:Named ElementOption
 
-Concept Group extends ElementOption
+Concept Group extends ElementOption is component
 	var string label
 	var word:{Expanded Collapsed} mode
 	has:Named Option
@@ -58,7 +58,7 @@ Concept Option extends ElementOption is component
 Concept:Named Options extends ElementOption is component
 	var string modelClass
 
-Concept Operation
+Concept Operation is component
 	var string title
 	var string polymerIcon = empty
 
