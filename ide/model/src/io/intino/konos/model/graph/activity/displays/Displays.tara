@@ -28,6 +28,7 @@ Concept Panel extends Display
     	Concept:{0..1} Download extends Operation
 	Concept:{1..1} Views
 		Concept:ViewRule View
+			var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
 			var string label
 			var word:{Tab LeftFixed RightFixed} layout = Tab
 			has:{1..1} ElementRenderer
