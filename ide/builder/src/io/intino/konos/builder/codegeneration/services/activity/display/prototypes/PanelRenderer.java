@@ -13,6 +13,7 @@ import java.io.File;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.Panel.Views.View.Hidden.HiddenEnabled;
 
 public class PanelRenderer extends PrototypeRenderer {
 	private final Project project;
@@ -44,6 +45,7 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("label", view.label())
 				.addSlot("box", box)
 				.addSlot("layout", view.layout().name());
+		if (view.hidden() == HiddenEnabled) baseFrame(panel, view, box);
 		final ElementRenderer renderer = view.elementRenderer();
 		if (renderer.i$(RenderDisplay.class)) {
 			frame.addTypes("display");
@@ -61,6 +63,11 @@ public class PanelRenderer extends PrototypeRenderer {
 			if (renderCatalogs.filtered()) frame.addSlot("filter", filterFrame(view, panel, box));
 		}
 		return frame;
+	}
+
+	private static Frame baseFrame(Panel panel, View view, String box) {
+		return new Frame().addSlot("panel", panel.name$()).addSlot("view", view.name$()).addSlot("box", box);
+
 	}
 
 	private Frame frameOf(Panel.Toolbar toolbar) {
@@ -84,7 +91,7 @@ public class PanelRenderer extends PrototypeRenderer {
 
 	private static Frame filterFrame(View view, Panel panel, String box) {
 		final String modelClass = view.elementRenderer().a$(RenderCatalogs.class).catalogs().get(0).modelClass();
-		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("name", view.name$()).addSlot("box", box).addSlot("modelClass", modelClass);
+		return new Frame("filter").addSlot("panel", panel.name$()).addSlot("view", view.name$()).addSlot("box", box).addSlot("modelClass", modelClass);
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.dsl.Konos;
@@ -181,17 +182,18 @@ public class CreateKonosBoxAction extends KonosAction {
 
 	private VirtualFile createDirectory(Module module, String name) {
 		final Application a = ApplicationManager.getApplication();
-		if (a.isWriteAccessAllowed()) {
-			return a.runWriteAction((Computable<VirtualFile>) () -> {
-				try {
-					final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-					return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
-				} catch (IOException e) {
-					return null;
-				}
-			});
+		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
+		return create(module, name);
+	}
+
+	@Nullable
+	private VirtualFile create(Module module, String name) {
+		try {
+			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
+		} catch (IOException e) {
+			return null;
 		}
-		return null;
 	}
 
 }

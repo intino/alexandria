@@ -8,6 +8,7 @@ import io.intino.konos.builder.codegeneration.services.activity.display.prototyp
 import io.intino.konos.model.graph.ElementOption;
 import io.intino.konos.model.graph.Group;
 import io.intino.konos.model.graph.Layout;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.Stack;
 
 import static com.intellij.openapi.application.ApplicationManager.getApplication;
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.codegeneration.services.activity.display.prototypes.PrototypeRenderer.customize;
 
 public class LayoutUpdater extends Updater {
@@ -47,21 +49,19 @@ public class LayoutUpdater extends Updater {
 		for (ElementOption option : elementOptions) {
 			if (classOf(option) == null) update(option);
 			if (option.i$(Group.class)) update(option.a$(Group.class).optionsList());
-
 		}
-
 	}
 
 	private void update(ElementOption option) {
 		String text = classFor(option);
-		if (!text.isEmpty()) psiClass.addAfter(createClass(text, psiClass), psiClass.getConstructors()[0].getNextSibling());
+		PsiClass parentClass = parentClass(option);
+		if (!text.isEmpty())
+			parentClass.addAfter(createClass(text, parentClass), parentClass == psiClass ? psiClass.getConstructors()[0].getNextSibling() : parentClass.getLBrace());
 	}
 
 	private PsiClass classOf(ElementOption elementOption) {
-		Stack<String> identifiers = new Stack<>();
-		ElementOption option = elementOption;
 		PsiClass parent = psiClass;
-		while (option.core$().owner().is(ElementOption.class)) identifiers.push(option.name$());
+		Stack<String> identifiers = qn(elementOption);
 		while (!identifiers.empty()) {
 			PsiClass child = innerClass(parent, identifiers.pop());
 			if (child == null) return null;
@@ -70,9 +70,29 @@ public class LayoutUpdater extends Updater {
 		return parent;
 	}
 
+	private PsiClass parentClass(ElementOption elementOption) {
+		PsiClass parent = psiClass;
+		Stack<String> identifiers = qn(elementOption);
+		while (!identifiers.empty()) {
+			final String id = identifiers.pop();
+			if (identifiers.isEmpty()) return parent;
+			else parent = innerClass(parent, id);
+		}
+		return parent;
+	}
+
+	@NotNull
+	private Stack<String> qn(ElementOption option) {
+		Stack<String> identifiers = new Stack<>();
+		identifiers.push(firstUpperCase(option.name$()));
+		while (option.core$().owner().is(ElementOption.class)) {
+			identifiers.push(firstUpperCase(option.core$().owner().name()));
+			option = option.core$().ownerAs(ElementOption.class);
+		}
+		return identifiers;
+	}
 
 	private String classFor(ElementOption elementOption) {
 		return template.format(layoutRenderer.frameOf(elementOption));
 	}
-
 }
