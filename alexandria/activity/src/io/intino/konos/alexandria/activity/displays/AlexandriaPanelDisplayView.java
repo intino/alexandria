@@ -21,7 +21,7 @@ public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPa
         super.init();
         View rawView = view().raw();
         RenderDisplay render = rawView.render();
-        AlexandriaDisplay display = render.display(loadingListener(), instantListener());
+        AlexandriaDisplay display = render.display(target(), loadingListener(), instantListener());
         if (display == null) return;
         sendDisplayType(display);
         add(display);
