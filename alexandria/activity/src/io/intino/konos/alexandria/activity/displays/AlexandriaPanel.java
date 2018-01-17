@@ -12,6 +12,7 @@ import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 import io.intino.konos.alexandria.activity.model.renders.RenderMold;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.Reference;
+import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -121,7 +122,9 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	private Reference referenceOf(AbstractView view) {
-		return ReferenceBuilder.build(view);
+		Reference reference = ReferenceBuilder.build(view);
+		reference.referencePropertyList().add(new ReferenceProperty().name("hidden").value(String.valueOf(view.hidden(target(), username()))));
+		return reference;
 	}
 
 	private void registerBuilders() {

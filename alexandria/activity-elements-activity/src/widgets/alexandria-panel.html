@@ -25,7 +25,7 @@
                 <paper-tabs selected="{{_selectedView}}" no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
                     <template is="dom-repeat" items="[[_viewList]]" as="view">
                         <template is="dom-if" if="[[_isTabLayoutView(view)]]">
-                            <paper-tab name$="[[view.name]]" view="[[view]]">[[view.label]]</paper-tab>
+                            <paper-tab name$="[[view.name]]" view="[[view]]" hidden$="[[view.hidden]]">[[view.label]]</paper-tab>
                         </template>
                     </template>
                 </paper-tabs>
