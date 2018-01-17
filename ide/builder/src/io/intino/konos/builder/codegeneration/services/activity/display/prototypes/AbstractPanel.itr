@@ -70,7 +70,7 @@ def type(operation & task) trigger(operation)
 end
 
 def type(display) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, loadingListener, instantListener))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((object, loadingListener, instantListener) -> $owner+firstUpperCase.Views.$display+firstLowerCase(box, object, loadingListener, instantListener))).layout(View.Layout.$layout).name("$name")[.label("$label")]);
 end
 
 def type(mold) trigger(genview)

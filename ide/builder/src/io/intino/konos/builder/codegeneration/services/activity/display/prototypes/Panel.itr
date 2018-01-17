@@ -31,7 +31,7 @@ end
 
 def type(view & display)
 	public static class $name+firstUpperCase {
-		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Object object, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
 			return null;//TODO
 		}
 	}
