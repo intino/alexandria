@@ -146,7 +146,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 		if (view.i$(MapView.class)) {
 			MapView mapView = view.a$(MapView.class);
 			if (mapView.center() != null)
-				frame.addSlot("latitude", mapView.center().latitude()).addSlot("longitude", mapView.center().longitude());
+				frame.addSlot("googleApiKey", mapView.googleApiKey()).addSlot("latitude", mapView.center().latitude()).addSlot("longitude", mapView.center().longitude());
 			frame.addSlot("zoom", new Frame("zoom")
 					.addSlot("default", mapView.zoom().defaultZoom())
 					.addSlot("min", mapView.zoom().min())
