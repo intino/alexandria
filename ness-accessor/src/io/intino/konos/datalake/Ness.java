@@ -4,6 +4,7 @@ import io.intino.konos.jms.Consumer;
 import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
+import io.intino.ness.inl.Message;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import static java.util.Arrays.asList;
 public class Ness {
 	private static Logger logger = LoggerFactory.getLogger(Ness.class);
 	private static final String REFLOW_PATH = "service.ness.reflow";
+	private static final String FLOW_PATH = "flow.ness.reflow";
 
 	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
@@ -59,13 +61,17 @@ public class Ness {
 		return new Tank(tank);
 	}
 
-	public ReflowSession reflow(int blockSize, Tank... tanks) {
-		return reflow(blockSize, Arrays.stream(tanks).map(t -> t.name).toArray(String[]::new));
+	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Tank... tanks) {
+		return reflow(blockSize, dispatcher, Arrays.stream(tanks).map(t -> t.name).toArray(String[]::new));
 	}
 
-	public Ness.ReflowSession reflow(int blockSize, String... tanks) {
+	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, String... tanks) {
 		try {
 			TopicProducer producer = new TopicProducer(session, REFLOW_PATH);
+			new TopicConsumer(session, FLOW_PATH).listen((m) -> {
+				Message message = Message.load(Consumer.textFrom(m));
+				dispatcher.dispatch(message);
+			});
 			producer.produce(MessageFactory.createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
 			return new ReflowSession() {
@@ -218,7 +224,7 @@ public class Ness {
 	}
 
 	public interface TankFlow extends Consumer {
-
+		void consume(Message message);
 	}
 
 	public interface ReflowSession {
