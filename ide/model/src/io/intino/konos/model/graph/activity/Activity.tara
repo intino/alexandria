@@ -6,6 +6,8 @@ Concept:Named Activity
 	var word:{Ajax} type = Ajax
 	var string title
 	var string favicon
+	var string googleApiKey = empty
+
 	Concept:{0..1} Authenticated
 		var string by
 

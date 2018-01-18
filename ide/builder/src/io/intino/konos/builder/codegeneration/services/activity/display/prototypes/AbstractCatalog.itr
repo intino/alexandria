@@ -162,7 +162,7 @@ def type(gridview) trigger(add)
 end
 
 def type(mapview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView().googleApiKey($googleApiKey)[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
 end
 
 def type(magazineview) trigger(add)
