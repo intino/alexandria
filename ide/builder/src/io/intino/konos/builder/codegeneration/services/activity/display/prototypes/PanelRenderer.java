@@ -67,7 +67,6 @@ public class PanelRenderer extends PrototypeRenderer {
 
 	private static Frame hidden(Panel panel, View view, String box) {
 		return new Frame().addSlot("panel", panel.name$()).addSlot("view", view.name$()).addSlot("box", box);
-
 	}
 
 	private Frame frameOf(Panel.Toolbar toolbar) {
