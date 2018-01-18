@@ -44,7 +44,9 @@
         Polymer({
             is: 'alexandria-catalog-map-item',
 
-            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldBehavior ],
+            behaviors: [
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.MoldBehavior ],
 
             properties : {
                 map : Object,
@@ -73,6 +75,10 @@
 
                 this._createInfoWindow();
                 this._onRefresh();
+            },
+
+            marker : function() {
+                return this.locationItem;
             },
 
             openInfoWindow : function() {
