@@ -1,8 +1,10 @@
 def type(tanks)
 	package $package+validPackage.ness;
 
+	import io.intino.konos.datalake.MessageDispatcher;
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
+	import io.intino.konos.datalake.Ness;
 	import io.intino.konos.jms.Consumer;
 	import io.intino.konos.jms.Bus;
     import org.apache.activemq.ActiveMQConnection;
@@ -22,7 +24,7 @@ def type(tanks)
 	public class NessTanks implements MessageDispatcher {
 		$tank+field...[$NL]
 
-		private static Map<String, TankFlow> handlersMap = new HashMap<>();
+		private static Map<String, Ness.TankFlow> handlersMap = new HashMap<>();
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			$tank+assign...[$NL]
@@ -31,7 +33,7 @@ def type(tanks)
 
 		@Override
 		public void dispatch(io.intino.ness.inl.Message message) {
-			hashMap.get(message.type()).consume(message);
+			handlersMap.get(message.type()).consume(message);
 		}
 
 		$tank+getter...[$NL$NL]
