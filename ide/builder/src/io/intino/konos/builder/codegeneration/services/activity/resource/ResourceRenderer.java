@@ -45,7 +45,8 @@ public class ResourceRenderer {
 		frame.addSlot("name", page.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("parameter", parameters(page));
-		frame.addSlot("googleApiKey", page.core$().ownerAs(Activity.class).googleApiKey());
+		if (page.core$().ownerAs(Activity.class).googleApiKey() != null)
+			frame.addSlot("googleApiKey", page.core$().ownerAs(Activity.class).googleApiKey());
 		if (page.isRestricted()) frame.addSlot("restrict", "");
 		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(page.name$() + "Resource"), template().format(frame));
 		createCorrespondingAction(page);
