@@ -33,7 +33,7 @@ def type(tanks)
 
 		@Override
 		public void dispatch(io.intino.ness.inl.Message message) {
-			handlersMap.get(message.type()).consume(message);
+			handlersMap.get(message.type().toLowerCase()).consume(message);
 		}
 
 		$tank+getter...[$NL$NL]
@@ -64,7 +64,7 @@ end
 
 def type(tank) trigger(assign)
 	$name = box.datalake().tank($messageType+format);
-	handlersMap.put($messageType+format, new $name+FirstUpperCase~Subscriptor(box));
+	handlersMap.put($simpleMessageType+shortPath+quoted, new $name+FirstUpperCase~Subscriptor(box));
 end
 
 def type(tank) trigger(getter)
@@ -94,6 +94,10 @@ end
 
 def trigger(format)
 	"$name"[$custom...[]]
+end
+
+def trigger(quoted)
+	"$value"
 end
 
 def trigger(custom)
