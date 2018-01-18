@@ -58,6 +58,7 @@ def type(page)
 
             <script>
                 var configuration = {};
+                configuration.googleApiKey = "$$googleApiKey";
                 configuration.pushServiceUrl = "$$pushUrl";
 
                 launchApplication(configuration);

@@ -40,6 +40,7 @@ def type(page)
 			action.session.whenLogout(b -> logout());
 			action.box = box;
 			action.clientId = clientId;
+			action.googleApiKey = "$googleApiKey";
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(action.clientId))

@@ -8,7 +8,6 @@
 <dom-module id="alexandria-catalog-map">
 
     <template>
-        <!--<google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>-->
         <google-map map="{{map}}"
                     additional-map-options="[[_options]]"
                     latitude="[[center.latitude]]"
@@ -16,7 +15,7 @@
                     min-zoom="[[zoom.min]]"
                     zoom="[[zoom.defaultValue]]"
                     max-zoom="[[zoom.max]]"
-                    api-key="[[googleApiKey]]"
+                    api-key="[[_googleApiKey]]"
                     fit-to-markers="true"
                     disable-street-view-control="true"></google-map>
 
@@ -61,11 +60,12 @@
                 zoom: Object,
                 mold: Object,
                 itemList: { type: Array, observer: '_refresh', value: function() { return []; } },
-                _itemList: { type: Array, value: function() { return []; } },
                 countItemList: Number,
                 toolbar: Object,
                 _options : { type: Object, value: function() { return {}; } },
-                _mapReady : { type: Boolean, value: function() { return false; } }
+                _mapReady : { type: Boolean, value: function() { return false; } },
+                _itemList: { type: Array, value: function() { return []; } },
+                _googleApiKey: { type: String, value: function() { return window.Application.configuration.googleApiKey; } },
             },
 
             behaviors: [ CottonBehaviors.TranslatorBehavior ],
@@ -93,11 +93,11 @@
                 var element = this.querySelector("google-map");
                 element.addEventListener('google-map-idle', () => {
                     var bounds = element.map.getBounds();
-                this.fire("location-change", { northEast : bounds.getNorthEast(), southWest : bounds.getSouthWest() });
-            });
+                    this.fire("location-change", { northEast : bounds.getNorthEast(), southWest : bounds.getSouthWest() });
+                });
                 element.addEventListener('google-map-ready', (e) => {
                     this._notifyMapReady();
-            });
+                });
             },
 
             _refresh : function() {
@@ -119,13 +119,13 @@
 
                 this._refreshTimeout = window.setTimeout(() => {
                     var markers = [];
-                this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
-                    item.setMap(map);
-                var marker = item.marker();
-                if (marker != null) markers.push(marker);
-            });
-                this._updateClusterer(markers);
-            }, 100);
+                    this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
+                        item.setMap(map);
+                        var marker = item.marker();
+                        if (marker != null) markers.push(marker);
+                    });
+                    this._updateClusterer(markers);
+                }, 100);
             },
 
             _updateClusterer : function(markers) {

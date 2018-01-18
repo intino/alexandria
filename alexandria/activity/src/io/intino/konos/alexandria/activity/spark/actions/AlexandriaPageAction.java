@@ -17,6 +17,7 @@ public abstract class AlexandriaPageAction {
 
 	public ActivitySession session;
 	public String clientId;
+	public String googleApiKey;
 
 	private static final String TemplateName = "/www/%s/%s.html";
 
@@ -50,6 +51,7 @@ public abstract class AlexandriaPageAction {
 		template = template.replace("$baseUrl", browser.baseUrl());
 		template = template.replace("$url", browser.baseUrl() + "/" + activityName);
 		template = template.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language));
+		template = template.replace("$googleApiKey", googleApiKey);
 
 		if (favicon() != null)
 			template = template.replace("$favicon", Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString());

@@ -52,7 +52,6 @@ Concept CatalogView is component
 	sub GridView
 	sub MagazineView
 	sub MapView
-		var string googleApiKey
 		Concept:{0..1} Center
 			var double latitude
 			var double longitude
