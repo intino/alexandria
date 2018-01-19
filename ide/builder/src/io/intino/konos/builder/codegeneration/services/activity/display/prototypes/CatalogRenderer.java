@@ -43,6 +43,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("mode", temporalCatalog.type().name());
 			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
 			frame.addSlot("range", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+			if (temporalCatalog.showAll()) frame.addSlot("showAll", new Frame().addSlot("value", temporalCatalog.showAll()));
 		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);

@@ -16,6 +16,7 @@ public class TemporalCatalog extends Catalog {
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
 	private int maxZoom = 100;
+	private boolean showAll = false;
 	private Type type = Type.Time;
 
 	public enum Type {
@@ -92,6 +93,15 @@ public class TemporalCatalog extends Catalog {
 
 	public TemporalCatalog maxZoom(int maxZoom) {
 		this.maxZoom = maxZoom;
+		return this;
+	}
+
+	public boolean isshowAll() {
+		return showAll;
+	}
+
+	public TemporalCatalog showAll(boolean showAll) {
+		this.showAll = showAll;
 		return this;
 	}
 
