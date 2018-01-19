@@ -50,6 +50,13 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
+	@Override
+	public Item item(Object object) {
+		Item item = super.item(object);
+		item.created(created(object));
+		return item;
+	}
+
 	public ItemList items(Scope scope, String condition, TimeRange range, String username) {
 		if (objectsLoader == null) return new ItemList();
 		return new ItemList(objectsLoader.load(scope, condition, range, username).stream().map(this::item).collect(toList()));
@@ -123,5 +130,9 @@ public class TemporalCatalog extends Catalog {
 
 	public interface RangeLoader {
 		TimeRange load(String username);
+	}
+
+	private Instant created(Object object) {
+		return objectCreatedLoader != null ? objectCreatedLoader.created(object) : null;
 	}
 }
