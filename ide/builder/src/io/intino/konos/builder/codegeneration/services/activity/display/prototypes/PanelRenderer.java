@@ -60,6 +60,7 @@ public class PanelRenderer extends PrototypeRenderer {
 			frame.addTypes("catalogs");
 			RenderCatalogs renderCatalogs = renderer.a$(RenderCatalogs.class);
 			frame.addSlot("catalog", renderCatalogs.catalogs().stream().map(Layer::name$).toArray(String[]::new));
+			frame.addSlot("displayLoader", "");
 			if (renderCatalogs.filtered()) frame.addSlot("filter", filterFrame(view, panel, box));
 		}
 		return frame;

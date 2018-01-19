@@ -3,9 +3,6 @@
 <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
 <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="alexandria-catalog.html">
-<link rel="import" href="alexandria-temporal-range-catalog.html">
-<link rel="import" href="alexandria-temporal-time-catalog.html">
 
 <script src="alexandriapanelcatalogview/requester.js"></script>
 <script src="alexandriapanelcatalogview/notifier-listener.js"></script>
@@ -13,16 +10,17 @@
 <dom-module id="alexandria-panel-catalog-view">
 
     <template>
-        <cotton-zombie id="catalogZombie" display="AlexandriaCatalog" widget="AlexandriaCatalog"></cotton-zombie>
-        <cotton-zombie id="temporalRangeCatalogZombie" display="AlexandriaTemporalRangeCatalog" widget="AlexandriaTemporalRangeCatalog"></cotton-zombie>
-        <cotton-zombie id="temporalTimeCatalogZombie" display="AlexandriaTemporalTimeCatalog" widget="AlexandriaTemporalTimeCatalog"></cotton-zombie>
+        <div id="container"></div>
     </template>
 
     <style>
+        :host #container {
+            padding-top: 8px;
+            height: calc(100% - 8px);
+        }
         :host ::content alexandria-catalog ::content .main,
         :host ::content alexandria-temporal-range-catalog ::content .main,
         :host ::content alexandria-temporal-time-catalog ::content .main {
-            padding-top: 8px;
             border: 0 !important;
         }
     </style>
@@ -51,13 +49,14 @@
             attached : function() {
                 this.translate(AlexandriaPanelCatalogViewDictionary);
                 this.listenToDisplay();
-                window.setTimeout(() => this._addZombieObjects(), 100);
             },
 
-            _addZombieObjects : function () {
-                this.$.catalogZombie.setAttribute("object", this.display.id);
-                this.$.temporalRangeCatalogZombie.setAttribute("object", this.display.id);
-                this.$.temporalTimeCatalogZombie.setAttribute("object", this.display.id);
+            _displayType : function(type) {
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", type);
+                zombie.setAttribute("widget", type);
+                zombie.setAttribute("object", this.display.id);
+                this.$.container.appendChild(zombie);
             }
 
         });

@@ -88,6 +88,7 @@ def type(prototype) trigger(attached)
 		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
 		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.Requester);
 		element.behaviors.push(Alexandria~$type+firstuppercase~Behaviors.NotifierListener);
+		element.listenToDisplay();
 	}
 end
 

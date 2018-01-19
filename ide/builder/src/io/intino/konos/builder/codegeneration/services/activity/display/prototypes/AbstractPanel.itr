@@ -78,7 +78,15 @@ def type(mold) trigger(genview)
 end
 
 def type(catalogs) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].displayLoader($displayLoader).catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
+end
+
+def trigger(displayLoader)
+	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs.Loader() {
+		public io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog load(io.intino.konos.alexandria.activity.model.Catalog catalog, String username) {
+			return (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) ElementDisplays.displayFor(box, catalog);
+		}
+	}
 end
 
 def trigger(hidden)

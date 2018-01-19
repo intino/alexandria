@@ -185,7 +185,6 @@
             attached : function() {
                 this.translate(AlexandriaTemporalTimeCatalogDictionary);
                 this.listenToDisplay();
-                this.timezoneOffset(new Date().getTimezoneOffset()*-1);
             },
 
             _refreshCatalog : function(catalog) {
@@ -195,6 +194,10 @@
 
             _refreshFiltered : function(value) {
                 this._filtered = value;
+            },
+
+            _loadTimezoneOffset : function() {
+                this.timezoneOffset(new Date().getTimezoneOffset()*-1);
             },
 
             _selectGrouping : function(event) {

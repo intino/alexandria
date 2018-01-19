@@ -31,5 +31,8 @@ AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
         this.when("hidePanel").toSelf().execute(function(parameters) {
         	widget._hidePanel();
         });
+        this.when("loadTimezoneOffset").toSelf().execute(function(parameters) {
+        	widget._loadTimezoneOffset();
+        });
     }
 };

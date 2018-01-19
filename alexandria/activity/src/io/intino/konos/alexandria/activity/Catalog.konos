@@ -31,6 +31,7 @@ Display alexandriaTemporalRangeCatalog
 	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
+	Notification loadTimezoneOffset
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter
@@ -49,6 +50,7 @@ Display alexandriaTemporalTimeCatalog
 	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
+	Notification loadTimezoneOffset
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter

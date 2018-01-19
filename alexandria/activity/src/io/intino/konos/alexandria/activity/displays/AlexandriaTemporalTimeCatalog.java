@@ -79,6 +79,11 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
+	protected void loadTimezoneOffset() {
+		notifier.loadTimezoneOffset();
+	}
+
+	@Override
 	protected void filterTimezone(ItemList itemList, TimeRange range) {
 	}
 
