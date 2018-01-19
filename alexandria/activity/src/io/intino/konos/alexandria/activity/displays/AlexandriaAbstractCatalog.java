@@ -196,7 +196,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(filteredItemList(null,null).items(), groupings(), element().arrangementFilterer(username()));
+		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(username()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
@@ -338,6 +338,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		groupingSelectionMap = groupingSelectionMap.entrySet().stream().filter(e -> e.getValue().groups().size() > 0).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
+	protected Scope defaultScope() {
+		return new Scope().target(target());
+	}
+
 	protected Scope scopeWithAttachedGrouping() {
 		return calculateScope(true);
 	}
@@ -383,6 +387,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		Scope scope = new Scope();
 		scope.clear();
 
+		scope.target(target());
 		scope.groups(groupingSelectionMap.entrySet().stream().filter(this::isGrouping)
 										 .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
 										 .collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));

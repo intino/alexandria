@@ -72,7 +72,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public void refresh() {
 
 		if (!equalsRange()) {
-			groupingManager.items(filteredItemList(null, null).items());
+			groupingManager.items(filteredItemList(defaultScope(), null).items());
 			refreshGroupingsSelection();
 			filterGroupingManager();
 		}
