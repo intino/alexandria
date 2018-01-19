@@ -189,6 +189,9 @@
             attached : function() {
                 this.translate(AlexandriaTemporalRangeCatalogDictionary);
                 this.listenToDisplay();
+            },
+
+            _loadTimezoneOffset : function() {
                 this.timezoneOffset(new Date().getTimezoneOffset()*-1);
             },
 

@@ -84,6 +84,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	protected void loadTimezoneOffset() {
+		notifier.loadTimezoneOffset();
+	}
+
+	@Override
 	protected TimeRange queryRange() {
 		int offset = timezoneOffset();
 		TimeRange range = timeScaleHandler().range();

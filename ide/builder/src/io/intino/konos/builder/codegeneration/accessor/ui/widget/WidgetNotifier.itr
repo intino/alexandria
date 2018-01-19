@@ -4,6 +4,7 @@ def type(widget)
     $name+FirstUpperCase~Behaviors.NotifierListener = {
 
         listenToDisplay : function() {
+			if (this.display == null) return;
             var widget = this;
             $notification...[$NL]
         }

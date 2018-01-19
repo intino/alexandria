@@ -24,6 +24,7 @@ Display alexandriaPanelCustomView
 
 Display alexandriaPanelCatalogView
 	displays = alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+	Notification displayType as Text
 
 Display alexandriaPanelDisplayView
 	Notification displayType as Text

@@ -114,6 +114,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	protected void init() {
+		loadTimezoneOffset();
+	}
+
+	@Override
+	public void timezoneOffset(int value) {
+		super.timezoneOffset(value);
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
@@ -171,5 +177,6 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract TimeScaleHandler timeScaleHandler();
 	protected abstract void showNavigator();
 	protected abstract void hideNavigator();
+	protected abstract void loadTimezoneOffset();
 
 }
