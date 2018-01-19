@@ -66,7 +66,7 @@ public class CatalogUpdater extends Updater {
 		if (catalog.toolbar() == null) return;
 		PsiClass toolbar = innerClass(psiClass, "Toolbar");
 		if (toolbar == null)
-			toolbar = (PsiClass) psiClass.addBefore(createClass(temporalClass(), psiClass), innerClass(psiClass, "Source").getPrevSibling());
+			toolbar = (PsiClass) psiClass.addBefore(createInnerClass("Toolbar"), innerClass(psiClass, "Source").getPrevSibling());
 		for (Operation operation : catalog.toolbar().operations()) {
 			final String operationType = operation.getClass().getSimpleName();
 			final PsiMethod[] methods = toolbar.findMethodsByName(firstLowerCase(operationType), false);
@@ -81,7 +81,7 @@ public class CatalogUpdater extends Updater {
 		if (catalog.arrangement() == null) return;
 		PsiClass arrangements = innerClass(psiClass, "Arrangements");
 		if (arrangements == null)
-			arrangements = (PsiClass) psiClass.addAfter(createClass(temporalClass(), psiClass), innerClass(psiClass, "Source").getNextSibling());
+			arrangements = (PsiClass) psiClass.addAfter(createInnerClass("Arrangements"), innerClass(psiClass, "Source").getNextSibling());
 		updateGroupings(arrangements);
 		updateSortings(arrangements);
 	}
@@ -111,7 +111,7 @@ public class CatalogUpdater extends Updater {
 		Catalog.Events.OnClickRecord.CatalogEvent event = catalog.events().onClickRecord().catalogEvent();
 		PsiClass events = innerClass(psiClass, "Events");
 		if (events == null)
-			events = (PsiClass) psiClass.addAfter(createClass(temporalClass(), psiClass), innerClass(psiClass, "Source").getNextSibling());
+			events = (PsiClass) psiClass.addAfter(createInnerClass("Events"), innerClass(psiClass, "Source").getNextSibling());
 		if (event.i$(OpenPanel.class)) processPanel(event, events);
 		else processDialog(event, events);
 	}
