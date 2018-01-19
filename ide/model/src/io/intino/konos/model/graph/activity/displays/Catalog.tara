@@ -8,7 +8,7 @@ Concept Catalog extends Display
 	has:{0..1} Toolbar
 	Concept:{0..1} Events
 		Concept:{1..1} OnClickRecord
-			Concept:{1..1} CatalogEvent
+			Concept:{1..1} CatalogEvent // TODO Octavio. Revisar la cardinalidad (no lo pide como obligatorio)
 				sub OpenDialog
 					var integer:{%} width = 100%
 					var integer:{%} height = 100%

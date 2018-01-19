@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.mold.stamps;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 
-public class ItemLinks extends Stamp<Links> {
+public class ºItemLinks extends Stamp<Links> {
 	private Value<String> title;
 
 	public String title(Item item, String username) {

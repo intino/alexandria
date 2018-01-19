@@ -380,14 +380,11 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	private Scope calculateScope(boolean addAttachedGrouping) {
+		Scope scope = defaultScope();
 
 		if (groupingSelectionMap.size() <= 0)
-			return null;
+			return scope;
 
-		Scope scope = new Scope();
-		scope.clear();
-
-		scope.target(target());
 		scope.groups(groupingSelectionMap.entrySet().stream().filter(this::isGrouping)
 										 .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
 										 .collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));
