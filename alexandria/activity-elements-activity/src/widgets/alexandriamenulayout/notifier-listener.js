@@ -3,6 +3,7 @@ var AlexandriaMenuLayoutBehaviors = AlexandriaMenuLayoutBehaviors || {};
 AlexandriaMenuLayoutBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
         this.when("info").toSelf().execute(function(parameters) {
         	widget._info(parameters.value);

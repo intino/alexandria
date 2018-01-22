@@ -3,6 +3,7 @@ var AlexandriaCatalogDisplayViewBehaviors = AlexandriaCatalogDisplayViewBehavior
 AlexandriaCatalogDisplayViewBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
         this.when("refreshView").toSelf().execute(function(parameters) {
         	widget._refreshView(parameters.value);

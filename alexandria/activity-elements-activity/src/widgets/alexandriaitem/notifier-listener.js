@@ -3,6 +3,7 @@ var AlexandriaItemBehaviors = AlexandriaItemBehaviors || {};
 AlexandriaItemBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
         this.when("refresh").toSelf().execute(function(parameters) {
         	widget._refresh(parameters.value);

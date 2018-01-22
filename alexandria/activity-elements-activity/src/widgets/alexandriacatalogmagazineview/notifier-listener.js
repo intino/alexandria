@@ -3,6 +3,7 @@ var AlexandriaCatalogMagazineViewBehaviors = AlexandriaCatalogMagazineViewBehavi
 AlexandriaCatalogMagazineViewBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
 
     }

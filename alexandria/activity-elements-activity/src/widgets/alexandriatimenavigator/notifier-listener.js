@@ -3,6 +3,7 @@ var AlexandriaTimeNavigatorBehaviors = AlexandriaTimeNavigatorBehaviors || {};
 AlexandriaTimeNavigatorBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
         this.when("refreshScales").toSelf().execute(function(parameters) {
         	widget._refreshScales(parameters.value);

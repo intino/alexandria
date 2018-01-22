@@ -103,7 +103,7 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public boolean isshowAll() {
+	public boolean showAll() {
 		return showAll;
 	}
 
