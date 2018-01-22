@@ -3,6 +3,7 @@ var AlexandriaCatalogBehaviors = AlexandriaCatalogBehaviors || {};
 AlexandriaCatalogBehaviors.NotifierListener = {
 
     listenToDisplay : function() {
+		if (this.display == null) return;
         var widget = this;
         this.when("refreshCatalog").toSelf().execute(function(parameters) {
         	widget._refreshCatalog(parameters.value);
