@@ -83,7 +83,7 @@ def trigger(range)
 end
 
 def trigger(timeRange)
-	tr
+	range
 end
 
 def trigger(scaleAdd)
@@ -95,8 +95,8 @@ def trigger(groupingSelection)
 end
 
 def trigger(hasMagazineView)
-	catalog.rootObjectLoader((objectList, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList, username));
-	catalog.defaultObjectLoader((id, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], username));
+	catalog.rootObjectLoader((objectList, range, username) -> $name+firstUpperCase.Source.root$type+shortType+firstUpperCase(box, (java.util.List<$type>)(Object)objectList[, $mode+timerange], username));
+	catalog.defaultObjectLoader((id, range, username) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], username));
 end
 
 def trigger(hasArrangements)
