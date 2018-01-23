@@ -87,23 +87,19 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private void updateGroupings(PsiClass arrangements) {
-		for (Grouping grouping : catalog.arrangement().groupingList()) {
-			final PsiMethod[] methods = arrangements.findMethodsByName(firstLowerCase(grouping.name$()), false);
-			if (methods.length == 0) {
+		for (Grouping grouping : catalog.arrangement().groupingList())
+			if (arrangements.findMethodsByName(firstLowerCase(grouping.name$()), false).length == 0) {
 				String text = groupingMethodText(grouping);
 				if (text != null && !text.isEmpty()) arrangements.add(createMethodFromText(text));
 			}
-		}
 	}
 
 	private void updateSortings(PsiClass arrangements) {
-		for (Sorting sorting : catalog.arrangement().sortingList()) {
-			final PsiMethod[] methods = arrangements.findMethodsByName(firstLowerCase(sorting.name$()) + "Comparator", false);
-			if (methods.length == 0) {
+		for (Sorting sorting : catalog.arrangement().sortingList())
+			if (arrangements.findMethodsByName(firstLowerCase(sorting.name$()) + "Comparator", false).length == 0) {
 				String text = sortingMethodText(sorting);
 				if (text != null && !text.isEmpty()) arrangements.add(createMethodFromText(text));
 			}
-		}
 	}
 
 	private void updateEventMethods(PsiClass psiClass) {
