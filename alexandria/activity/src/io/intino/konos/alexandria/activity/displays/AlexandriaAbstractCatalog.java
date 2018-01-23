@@ -311,7 +311,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	private void updateCondition(String condition) {
-		if (this.condition != null && !this.condition.equals(condition))
+		if ((this.condition == null && condition != null && !condition.isEmpty()) || (this.condition != null && !this.condition.equals(condition)))
 			dirty(true);
 		this.condition = condition;
 	}

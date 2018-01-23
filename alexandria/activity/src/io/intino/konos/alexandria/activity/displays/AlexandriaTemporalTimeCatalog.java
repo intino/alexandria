@@ -113,4 +113,8 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 		super.navigate(value);
 	}
 
+	public void navigateMain() {
+		super.navigateMain();
+	}
+
 }

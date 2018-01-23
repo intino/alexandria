@@ -161,7 +161,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
 			@Override
 			public String itemId() {
-				return item;
+				return new String(Base64.getDecoder().decode(item));
 			}
 
 			@Override
@@ -172,7 +172,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 			@Override
 			public Item item() {
-				return provider.item(new String(Base64.getDecoder().decode(item)));
+				return provider.item(itemId());
 			}
 
 			@Override

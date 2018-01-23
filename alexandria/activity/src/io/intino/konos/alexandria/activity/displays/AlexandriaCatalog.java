@@ -74,4 +74,8 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 		super.navigate(value);
 	}
 
+	public void navigateMain() {
+		super.navigateMain();
+	}
+
 }

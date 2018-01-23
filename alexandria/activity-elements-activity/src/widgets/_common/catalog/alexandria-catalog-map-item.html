@@ -11,11 +11,7 @@
     <template>
         <div class="info-template">
             <div class="alexandria-catalog-map-item-0">
-                <template id="infoWindowTemplate" is="dom-repeat" items="[[_blocks]]" as="block">
-                    <div class="alexandria-mold-block-0">
-                        <alexandria-mold-block mode="map" item="[[item.name]]" block="[[block]]" on-stamps-ready="_stampsReady"></alexandria-mold-block>
-                    </div>
-                </template>
+                <div id="infoWindowTemplate">[[Loading]]</div>
             </div>
         </div>
     </template>
@@ -36,8 +32,10 @@
     <script>
         const AlexandriaCatalogMapItemDictionary = {
             es: {
+                Loading: "cargando..."
             },
             en: {
+                Loading: "loading..."
             }
         };
 
@@ -53,12 +51,37 @@
                 centroid : { type: Object, value: function() { return { latitude: 0, longitude: 0 }; } },
                 infoWindow : { type: Object, value: function() { return null; }},
                 locationItem : { type: Object, value: function() { return null; }},
-                countReadyBlocks : { type: Number, value: function() { return 0; }}
+                countReadyBlocks : { type: Number, value: function() { return 0; }},
+                loaded : { type: Boolean, value: function() { return false }}
             },
 
             attached: function () {
                 this.translate(AlexandriaCatalogMapItemDictionary);
                 this.countReadyBlocks = 0;
+            },
+
+            update : function(item) {
+                this.item = item;
+                this._updateInfoWindow();
+                this.loaded = true;
+            },
+
+            _updateInfoWindow : function() {
+                var widget = this;
+                var blocks = this.blocks();
+                var infoWindowTemplate = this.$.infoWindowTemplate;
+                infoWindowTemplate.innerHTML = "";
+                for (var i=0; i<blocks.length; i++) {
+                    var moldBlock = document.createElement("alexandria-mold-block");
+                    moldBlock.mode = "map";
+                    moldBlock.item = this.item.name;
+                    moldBlock.block = blocks[i];
+                    moldBlock.addEventListener("navigate-item", function(e) {
+                        widget.fire("navigate-item", e.detail);
+                    });
+                    moldBlock.onStampsReady = this._stampsReady.bind(this);
+                    infoWindowTemplate.appendChild(moldBlock);
+                }
             },
 
             detached : function() {
@@ -106,7 +129,7 @@
                 var widget = this;
                 window.setTimeout(function() {
                     widget.infoWindow = new google.maps.InfoWindow({
-                        content: widget._infoContent()
+                        content: widget.$.infoWindowTemplate
                     });
                 }, 50);
             },
@@ -178,7 +201,10 @@
             _addListeners : function() {
                 this.locationItem.addListener('click', () => {
                     if (this._isInfoWindowOpened()) this.closeInfoWindow();
-            else this.openInfoWindow();
+            else {
+                    this.openInfoWindow();
+                    if (!this.loaded) this.fire("load", this.item.name);
+                }
             });
             },
 

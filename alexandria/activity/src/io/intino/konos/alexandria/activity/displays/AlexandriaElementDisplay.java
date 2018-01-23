@@ -225,7 +225,12 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public void navigate(String key) {
-		if (!key.equals("main")) return;
+		String name = new String(Base64.getDecoder().decode(key.getBytes()));
+		if (!name.equals("main")) return;
+		navigateMain();
+	}
+
+	public void navigateMain() {
 		hidePanel();
 		refreshBreadcrumbs("");
 	}

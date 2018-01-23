@@ -22,10 +22,7 @@ import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -303,7 +300,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		openItemListeners.forEach(l -> l.accept(new AlexandriaElementView.OpenItemEvent() {
 			@Override
 			public String itemId() {
-				return reference.name();
+				return new String(Base64.getDecoder().decode(reference.name()));
 			}
 
 			@Override

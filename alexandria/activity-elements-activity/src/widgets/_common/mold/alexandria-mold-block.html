@@ -92,7 +92,7 @@
                 <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
             </template>
             <template is="dom-if" if="[[stamp.isItemLinks]]">
-                <alexandria-mold-hyperlinks title="[[stamp.properties.title]]" items="[[stamp.properties.links]]" on-item-tap="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-hyperlinks>
+                <alexandria-mold-hyperlinks title="[[stamp.properties.title]]" items="[[stamp.properties.links]]" on-item-tap="_navigateItem" styles="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-hyperlinks>
             </template>
             <template is="dom-if" if="[[stamp.isCatalogLink]]">
                 <div hidden$="[[!stamp.properties.title]]">
@@ -348,7 +348,7 @@
                 var widget = this;
                 this.querySelectorAll(".mold-item-link").forEach((link) => {
                     link.addEventListener("click", function() {
-                    widget.fire("navigate-item", this.name);
+                    widget.fire("navigate-item", { item: { name: this.name, label: this.innerHTML } });
                 });
             });
             },

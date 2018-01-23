@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class Links {
@@ -24,7 +25,7 @@ public class Links {
 		}
 
 		public Link name(String name) {
-			this.name = name;
+			this.name = new String(Base64.getEncoder().encode(name.getBytes()));
 			return this;
 		}
 

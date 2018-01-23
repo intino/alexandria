@@ -26,7 +26,11 @@
         <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>
 
         <template is="dom-repeat" items="{{_itemList}}">
-            <alexandria-catalog-map-item mode="map" map="{{map}}" mold="[[mold]]" item="[[item]]"></alexandria-catalog-map-item>
+            <alexandria-catalog-map-item name$="[[item.name]]"
+                                         mode="map" map="{{map}}"
+                                         mold="[[mold]]" item="[[item]]"
+                                         on-navigate-item="_navigateItem"
+                                         on-load="_loadItem"></alexandria-catalog-map-item>
         </template>
     </template>
 
@@ -82,6 +86,8 @@
             },
 
             refreshItem : function(item) {
+                var catalogItem = this.querySelector("alexandria-catalog-map-item[name='" + item.name + "']");
+                catalogItem.update(item);
             },
 
             closeInfoWindows : function() {
@@ -93,11 +99,11 @@
                 var element = this.querySelector("google-map");
                 element.addEventListener('google-map-idle', () => {
                     var bounds = element.map.getBounds();
-                    this.fire("location-change", { northEast : bounds.getNorthEast(), southWest : bounds.getSouthWest() });
-                });
+                this.fire("location-change", { northEast : bounds.getNorthEast(), southWest : bounds.getSouthWest() });
+            });
                 element.addEventListener('google-map-ready', (e) => {
                     this._notifyMapReady();
-                });
+            });
             },
 
             _refresh : function() {
@@ -119,13 +125,13 @@
 
                 this._refreshTimeout = window.setTimeout(() => {
                     var markers = [];
-                    this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
-                        item.setMap(map);
-                        var marker = item.marker();
-                        if (marker != null) markers.push(marker);
-                    });
-                    this._updateClusterer(markers);
-                }, 100);
+                this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
+                    item.setMap(map);
+                var marker = item.marker();
+                if (marker != null) markers.push(marker);
+            });
+                this._updateClusterer(markers);
+            }, 100);
             },
 
             _updateClusterer : function(markers) {
@@ -157,6 +163,14 @@
                     result.push(operationList[i]);
                 }
                 return result;
+            },
+
+            _loadItem : function(e) {
+                this.fire("load-item", e.detail);
+            },
+
+            _navigateItem : function(e) {
+                this.fire("open-item", e.detail);
             }
 
         });
