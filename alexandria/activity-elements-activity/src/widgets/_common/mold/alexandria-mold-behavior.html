@@ -19,6 +19,10 @@
             element.src = pictureData.value;
         },
 
+        blocks : function() {
+            return this._blocks;
+        },
+
         _refresh : function() {
             if (this.mold == null || this.item == null || this.item.length == 0 || this.mode == null) return;
             this._refreshBlocks();
@@ -55,7 +59,8 @@
         },
 
         _blockHidden : function(moldBlock) {
-            return this.item.itemBlockList.filter(s => s.name == moldBlock.name)[0].hidden;
+            var result = this.item.itemBlockList.filter(s => s.name == moldBlock.name);
+            return result.length > 0 ? result[0].hidden : true;
         },
 
         _blockLayout : function (moldBlock) {
@@ -150,7 +155,8 @@
 
         _addStampBreadcrumbsProperties : function(stamp, moldBlock, moldStamp) {
             if (!stamp.isBreadcrumbs) return;
-            var tree = JSON.parse(this._valueOf(moldBlock, moldStamp));
+            var value = this._valueOf(moldBlock, moldStamp);
+            var tree = (value != "") ? JSON.parse(value) : { items: [] };
             stamp.properties.breadcrumbs = this.treeToBreadcrumbs(tree);
         },
 
@@ -170,8 +176,9 @@
 
         _addStampItemLinksProperties : function(stamp, moldBlock, moldStamp) {
             if (!stamp.isItemLinks) return;
+            var value = this._valueOf(moldBlock, moldStamp);
             stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
-            stamp.properties.links = JSON.parse(this._valueOf(moldBlock, moldStamp)).items;
+            stamp.properties.links = (value != "") ? JSON.parse(value).items : [];
         },
 
         _addStampCatalogLinkProperties : function(stamp, moldBlock, moldStamp) {
@@ -308,11 +315,13 @@
         },
 
         _itemFromStamp: function(stamp) {
-            return this._itemFromStampName(stamp.name);
+            var result = this._itemFromStampName(stamp.name);
+            return result != null ? result : { values: [], propertyList: [] };
         },
 
         _itemFromStampName: function(stamp) {
-            return this.item.itemStampList.filter(s => s.name == stamp)[0];
+            var result = this.item.itemStampList.filter(s => s.name == stamp);
+            return result.length > 0 ? result[0] : null;
         },
 
         _propertyOf: function (object, property) {

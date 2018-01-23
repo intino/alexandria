@@ -5,12 +5,20 @@ import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMapViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Panel;
+import io.intino.konos.alexandria.activity.model.TimeRange;
+import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
+import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -20,12 +28,14 @@ import static java.util.Collections.emptyList;
 public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapViewNotifier> implements AlexandriaCatalogView {
 	private ElementView view;
 	private CatalogViewDisplayProvider provider;
+	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
 	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 
 	public AlexandriaCatalogMapView(Box box) {
 		super(box);
+		pageSize(100000);
 	}
 
 	@Override
@@ -51,6 +61,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 
 	@Override
 	public void onOpenItem(Consumer<OpenItemEvent> listener) {
+		openItemListeners.add(listener);
 	}
 
 	@Override
@@ -134,7 +145,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 
 	@Override
 	protected void sendItems(int start, int limit) {
-		notifier.refresh(ItemBuilder.buildList(provider.items(start, limit, null), itemBuilderProvider(provider, view), provider.baseAssetUrl()));
+		notifier.refresh(ItemBuilder.buildListOnlyLocation(provider.items(start, limit, null), itemBuilderProvider(provider, view), provider.baseAssetUrl()));
 	}
 
 	@Override
@@ -160,4 +171,49 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 		loadingListeners.forEach(l -> l.accept(value));
 	}
 
+	public void loadItem(String id) {
+		String decodedId = new String(Base64.getDecoder().decode(id));
+		Item item = ItemBuilder.build(provider.item(decodedId), itemBuilderProvider(provider, view), provider.baseAssetUrl());
+		notifier.refreshItem(item);
+	}
+
+	public void openItem(String value) {
+		notifyOpenItem(value);
+	}
+
+	private void notifyOpenItem(String item) {
+		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
+			@Override
+			public String itemId() {
+				return new String(Base64.getDecoder().decode(item));
+			}
+
+			@Override
+			public String label() {
+				Optional<Stamp> titleStamp = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Title)).findAny();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), username()) : item().name();
+			}
+
+			@Override
+			public io.intino.konos.alexandria.activity.model.Item item() {
+				return provider.item(itemId());
+			}
+
+			@Override
+			public Panel panel() {
+				return view.onClickRecordEvent().openPanel().panel();
+			}
+
+			@Override
+			public TimeRange range() {
+				return provider.range();
+			}
+
+			@Override
+			public Tree breadcrumbs() {
+				OpenPanel openPanel = view.onClickRecordEvent().openPanel();
+				return openPanel != null ? openPanel.breadcrumbs(item(), username()) : null;
+			}
+		}));
+	}
 }

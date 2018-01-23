@@ -9,15 +9,15 @@
             <div class="title" hidden$="[[!title]]">[[title]]</div>
             <ul class="layout horizontal flex wrap">
                 <template is="dom-repeat" items="[[items]]">
-                    <li><alexandria-mold-hyperlink name="[[item.name]]" label="[[item.label]]"></alexandria-mold-hyperlink></li>
+                    <li><alexandria-mold-hyperlink styles$="[[styles]]" name="[[item.name]]" label="[[item.label]]"></alexandria-mold-hyperlink></li>
                 </template>
             </ul>
         </div>
     </template>
 
     <style>
-        :host > div {
-            margin: 0 10px;
+        :host {
+            display: block;
         }
         :host .title {
             min-width: 75px;
@@ -27,7 +27,7 @@
             list-style: none;
         }
         :host ul {
-            margin: 5px 0;
+            margin: 0;
             padding: 0;
         }
     </style>
@@ -47,7 +47,8 @@
 
             properties : {
                 title : { type: String, value: function() { return null; } },
-                items : Array
+                items : Array,
+                styles : String
             },
 
             attached: function () {

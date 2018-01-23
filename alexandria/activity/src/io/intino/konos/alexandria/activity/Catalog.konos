@@ -18,6 +18,7 @@ Display alexandriaCatalog
 	Request deleteGroupingGroup as Object(GroupingGroup)
 	Request clearFilter
 	Request navigate as Text
+	Request navigateMain
 
 Display alexandriaTemporalRangeCatalog
 	displays = alexandriaCatalogViewList alexandriaDialogContainer alexandriaItem alexandriaTimeRangeNavigator
@@ -37,6 +38,7 @@ Display alexandriaTemporalRangeCatalog
 	Request clearFilter
 	Request timezoneOffset as Integer
 	Request navigate as Text
+	Request navigateMain
 
 Display alexandriaTemporalTimeCatalog
 	displays = alexandriaCatalogViewList alexandriaDialogContainer alexandriaItem alexandriaTimeNavigator
@@ -56,6 +58,7 @@ Display alexandriaTemporalTimeCatalog
 	Request clearFilter
 	Request timezoneOffset as Integer
 	Request navigate as Text
+	Request navigateMain
 
 Display alexandriaItem
 	Notification refresh as Object(ItemRefreshInfo)
@@ -127,6 +130,8 @@ Display alexandriaCatalogMapView
 	Request page as Integer
 	Request openElement as Object(OpenElementParameters)
 
+	Request loadItem as Text
+	Request openItem as Text
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
 	Request openItemDialogOperation as Object(OpenItemDialogParameters)

@@ -13,6 +13,9 @@ AlexandriaCatalogBehaviors.Requester = {
     },
     navigate : function(value) {
     	this.carry("navigate", { "value" : value });
+    },
+    navigateMain : function() {
+    	this.carry("navigateMain");
     }
 
 };

@@ -22,7 +22,9 @@
                                 on-page-change="_loadPage"
                                 toolbar="[[_view.toolbar]]"
                                 on-execute-operation="_executeOperation"
-                                on-download-operation="_downloadOperation"></alexandria-catalog-map>
+                                on-download-operation="_downloadOperation"
+                                on-load-item="_loadItem"
+                                on-open-item="_openItem"></alexandria-catalog-map>
     </template>
 
     <style>
@@ -100,6 +102,14 @@
 
             _downloadOperation : function(e) {
                 this.downloadOperation(e.detail);
+            },
+
+            _loadItem : function(e) {
+                this.loadItem(e.detail);
+            },
+
+            _openItem : function(e) {
+                this.openItem(e.detail.name);
             }
 
         });

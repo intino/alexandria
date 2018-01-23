@@ -134,4 +134,8 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 		super.navigate(value);
 	}
 
+	public void navigateMain() {
+		super.navigateMain();
+	}
+
 }

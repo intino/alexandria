@@ -11,6 +11,12 @@ AlexandriaCatalogMapViewBehaviors.Requester = {
     openElement : function(value) {
     	this.carry("openElement", { "value" : value });
     },
+    loadItem : function(value) {
+    	this.carry("loadItem", { "value" : value });
+    },
+    openItem : function(value) {
+    	this.carry("openItem", { "value" : value });
+    },
     executeOperation : function(value) {
     	this.carry("executeOperation", { "value" : value });
     },
