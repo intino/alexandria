@@ -100,11 +100,13 @@ def type(operations) !type(interface)
 
 		private Graph doWrite(Graph clone) {
 			logger.info("processed " + (processed += box.datalake().receivedMessages()));
+			session.pause();
 			allowWriting(clone, true);
 			assistant.saveGraph(clone);
 			final Graph newClone = new RemounterGraph(clone.store()).loadStashes(assistant.coreStashes());
 			allowWriting(newClone, false);
 			box.put(newClone);
+			session.play();
 			return newClone;
 		}
 
@@ -121,6 +123,7 @@ def type(operations) !type(interface)
 		}
 
 		private void onFinish(Graph clone) {
+			session.pause();
 			box.put(new Graph(clone.store()).loadStashes(assistant.coreStashes()));
 			assistant.after();
 			logger.info("Reflow finished successfully!");
