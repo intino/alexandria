@@ -72,7 +72,7 @@ def trigger(includes)
 end
 
 def type(prototype) trigger(prototype)
-	<alexandria-$type+camelCaseToSnakeCase id="alexandria-$type+camelCaseToSnakeCase"></alexandria-$type+camelCaseToSnakeCase>
+	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
 end
 
 def type(prototype) trigger(attached)
@@ -82,7 +82,7 @@ def type(prototype) trigger(attached)
 	},
 
 	_linkWithAlexandriaElement : function() {
-		var element = document.getElementById("alexandria-$type+camelCaseToSnakeCase");
+		var element = this.querySelector("alexandria-$type+camelCaseToSnakeCase");
 		element.display = this.display;
 		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
 		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
