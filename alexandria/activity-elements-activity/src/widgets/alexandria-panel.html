@@ -111,6 +111,9 @@
             margin: 0px 6px;
             width: calc(100% - 12px);
         }
+        :host #main {
+            position: relative;
+        }
         :host #main.hidden, :host #panel.hidden {
             position: absolute;
             left: -10000px;
@@ -127,6 +130,8 @@
         :host .fixed {
             position: fixed;
             margin-top: 35px;
+            overflow: auto;
+            height: calc(100% - 200px);
             @apply(--alexandria-panel-view-fixed);
         }
         :host .fixed.left {
