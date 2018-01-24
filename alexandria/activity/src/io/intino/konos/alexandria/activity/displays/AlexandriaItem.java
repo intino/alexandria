@@ -142,7 +142,9 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
 		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
 
-		display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, username()));
+		if (catalogLinkStamp.filtered())
+			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, username()));
+
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 

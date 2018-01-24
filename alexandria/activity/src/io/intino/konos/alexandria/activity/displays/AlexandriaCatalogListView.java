@@ -148,9 +148,9 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
 
 		Item source = provider.item(new String(Base64.getDecoder().decode(params.item())));
-		display.filterAndNotify(item -> {
-			return catalogLinkStamp.filter(source, (Item) item, username());
-		});
+		if (catalogLinkStamp.filtered())
+			display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, username()));
+
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
