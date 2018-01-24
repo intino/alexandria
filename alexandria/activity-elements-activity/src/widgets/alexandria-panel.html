@@ -104,7 +104,6 @@
         }
         :host #tabs-content {
             height: calc(100% - 30px);
-            width: 100%;
             overflow: auto;
         }
         :host #panel {
@@ -131,7 +130,7 @@
             @apply(--alexandria-panel-view-fixed);
         }
         :host .fixed.left {
-            width: var(--layout-panel-view-fixed-width, 150px);
+            width: var(--alexandria-panel-view-fixed-width, 150px);
             @apply(--alexandria-panel-view-fixed-left);
         }
         :host .fixed.right {
