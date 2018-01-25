@@ -59,6 +59,14 @@ def type(stamp & breadcrumbs)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Breadcrumbs()$common)
 end
 
+def type(stamp & cardWallet)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CardWallet()$common)
+end
+
+def type(stamp & map)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Map().zoom($zoom).latitude($latitude).longitude($longitude)$common)
+end
+
 def type(stamp & cataloglink)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
 end

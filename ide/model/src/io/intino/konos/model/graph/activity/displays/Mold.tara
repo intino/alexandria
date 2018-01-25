@@ -53,7 +53,12 @@ Concept Mold extends Display
 			sub Picture > var string defaultPicture = empty
 			sub Rating > var string polymerIcon
 			sub Snippet
+			sub CardWallet
 			sub Title
+			sub Map
+				var integer zoom
+				var double latitude
+				var double longitude
 			sub Tree
 				Concept:{0..1} Root extends TreeItem
 				Concept TreeItem

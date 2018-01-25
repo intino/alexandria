@@ -24,6 +24,8 @@
 <link rel="import" href="alexandria-mold-export-operation.html">
 <link rel="import" href="alexandria-mold-catalog.html">
 <link rel="import" href="alexandria-mold-editor.html">
+<link rel="import" href="alexandria-mold-card-wallet.html">
+<link rel="import" href="alexandria-mold-map.html">
 
 <script src="../../../../lib/numeral/numeral.js"></script>
 
@@ -115,6 +117,14 @@
             </template>
             <template is="dom-if" if="[[stamp.isEmbeddedCatalog]]">
                 <alexandria-mold-catalog style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" catalog$="[[stamp.properties.catalog]]" item$="[[item]][[stamp.name]]"></alexandria-mold-catalog>
+            </template>
+            <template is="dom-if" if="[[stamp.isCardWallet]]">
+                <alexandria-mold-card-wallet wallet="[[stamp.properties.wallet]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-card-wallet>
+            </template>
+            <template is="dom-if" if="[[stamp.isMap]]">
+                <alexandria-mold-map marker="[[stamp.value]]" zoom="[[stamp.properties.zoom]]"
+                                     latitude="[[stamp.properties.latitude]]" longitude="[[stamp.properties.longitude]]"
+                                     style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-map>
             </template>
         </template>
     </template>

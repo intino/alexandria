@@ -116,6 +116,8 @@
             stamp.isCatalogLink = this._isCatalogLink(moldStamp);
             stamp.isSnippet = this._isSnippet(moldStamp);
             stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
+            stamp.isCardWallet = this._isCardWallet(moldStamp);
+            stamp.isMap = this._isMap(moldStamp);
         },
 
         _addStampProperties : function(stamp, moldBlock, moldStamp) {
@@ -133,6 +135,8 @@
             this._addStampLocationProperties(stamp, moldStamp);
             this._addStampEmbeddedDisplayProperties(stamp, moldStamp);
             this._addStampEmbeddedCatalogProperties(stamp, moldStamp);
+            this._addStampCardWalletProperties(stamp, moldBlock, moldStamp);
+            this._addStampMapProperties(stamp, moldStamp);
             stamp.properties.color = this._propertyValueOf(moldStamp,'color');
         },
 
@@ -200,6 +204,19 @@
         _addStampEmbeddedCatalogProperties : function(stamp, moldStamp) {
             if (!stamp.isEmbeddedCatalog) return;
             stamp.properties.catalog = this._propertyValueOf(moldStamp,'catalog');
+        },
+
+        _addStampCardWalletProperties : function(stamp, moldBlock, moldStamp) {
+            if (!stamp.isCardWallet) return;
+            var value = this._parseFunctions(this._valueOf(moldBlock, moldStamp));
+            stamp.properties.wallet = (value != "") ? JSON.parse(value) : { cards: [] };
+        },
+
+        _addStampMapProperties : function(stamp, moldStamp) {
+            if (!stamp.isMap) return;
+            stamp.properties.zoom = parseInt(this._propertyValueOf(moldStamp,'zoom'));
+            stamp.properties.latitude = parseFloat(this._propertyValueOf(moldStamp,'latitude'));
+            stamp.properties.longitude = parseFloat(this._propertyValueOf(moldStamp,'longitude'));
         },
 
         _isSingleValue: function (stamp) {
@@ -308,6 +325,14 @@
 
         _isEmbeddedCatalog : function(stamp) {
             return stamp.shape === "embedded-catalog";
+        },
+
+        _isCardWallet : function(stamp) {
+            return stamp.shape === "card-wallet";
+        },
+
+        _isMap : function(stamp) {
+            return stamp.shape === "map";
         },
 
         _classesFor : function(stamp) {
