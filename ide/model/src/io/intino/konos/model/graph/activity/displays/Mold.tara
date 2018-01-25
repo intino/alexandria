@@ -37,7 +37,6 @@ Concept Mold extends Display
 				var word:{Polymer Resource Base64} source
 			sub CustomIcon
 			sub ItemLinks
-			sub Links
 			sub Location
 			sub Operation
 				sub OpenDialogOperation
@@ -54,13 +53,8 @@ Concept Mold extends Display
 			sub Rating > var string polymerIcon
 			sub Snippet
 			sub Title
-			sub Tree
+			sub Breadcrumbs
 				Concept:{0..1} Root extends TreeItem
 				Concept TreeItem
 					var string label
 					has TreeItem
-				sub Breadcrumbs
-
-
-
-

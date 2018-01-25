@@ -90,8 +90,10 @@ public class LayoutRenderer extends PrototypeRenderer {
 		final Frame renderFrame = new Frame("render", "catalogs")
 				.addSlot("box", box)
 				.addSlot("catalog", render.catalogs().stream().map(Layer::name$).toArray(String[]::new));
-		if (render.filtered())
+		if (render.filtered()) {
+			renderFrame.addSlot("filtered", "");
 			renderFrame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
+		}
 		return renderFrame;
 	}
 
