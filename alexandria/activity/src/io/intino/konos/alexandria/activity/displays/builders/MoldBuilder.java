@@ -48,6 +48,7 @@ public class MoldBuilder {
         addIconProperties(propertyList, stamp);
         addDownloadOperationProperties(propertyList, stamp);
         addExportOperationProperties(propertyList, stamp);
+        addMapProperties(propertyList, stamp);
         result.propertyList(propertyList);
 
         return result;
@@ -70,8 +71,10 @@ public class MoldBuilder {
         if (stamp instanceof ItemLinks) return "item-links";
         if (stamp instanceof CatalogLink) return "catalog-link";
         if (stamp instanceof Snippet) return "snippet";
+        if (stamp instanceof CardWallet) return "card-wallet";
         if (stamp instanceof EmbeddedDisplay) return "embedded-display";
         if (stamp instanceof EmbeddedCatalog) return "embedded-catalog";
+        if (stamp instanceof Map) return "map";
         return "";
     }
 
@@ -114,6 +117,14 @@ public class MoldBuilder {
         propertyList.add(shapeProperty("options", String.join(",", exportStamp.options())));
         propertyList.add(shapeProperty("from", String.valueOf(exportStamp.from().toEpochMilli())));
         propertyList.add(shapeProperty("to", String.valueOf(exportStamp.to().toEpochMilli())));
+    }
+
+    private static void addMapProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof Map)) return;
+        Map mapStamp = (Map)stamp;
+        propertyList.add(shapeProperty("zoom", String.valueOf(mapStamp.zoom())));
+        propertyList.add(shapeProperty("latitude", String.valueOf(mapStamp.latitude())));
+        propertyList.add(shapeProperty("longitude", String.valueOf(mapStamp.longitude())));
     }
 
     private static Property shapeProperty(String name, String value) {

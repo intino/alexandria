@@ -104,12 +104,17 @@ public class ItemBuilder {
 
         if (stamp instanceof Breadcrumbs) {
             Tree tree = (Tree) value;
-            return new Gson().toJson(tree);
+            return tree != null ? new Gson().toJson(tree) : "";
+        }
+
+        if (stamp instanceof CardWallet) {
+            Wallet wallet = (Wallet) value;
+            return wallet != null ? new Gson().toJson(wallet) : "";
         }
 
         if (stamp instanceof ItemLinks) {
             Links links = (Links) value;
-            return new Gson().toJson(links);
+            return links != null ? new Gson().toJson(links) : "";
         }
 
         if (stamp instanceof Picture) {

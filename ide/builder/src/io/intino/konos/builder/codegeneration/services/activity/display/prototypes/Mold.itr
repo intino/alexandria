@@ -194,6 +194,10 @@ def attribute(breadcrumbs) trigger(valueType)
 	io.intino.konos.alexandria.activity.model.mold.stamps.Tree
 end
 
+def attribute(cardWallet) trigger(valueType)
+	io.intino.konos.alexandria.activity.model.mold.stamps.Wallet
+end
+
 def attribute(itemlLinks) trigger(valueType)
 	io.intino.konos.alexandria.activity.model.mold.stamps.Links
 end

@@ -1,0 +1,91 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+
+<script src="../../../../lib/wicket/wicket.js"></script>
+<script src="../../../../lib/wicket/wicket-gmap3.js"></script>
+
+<dom-module id="alexandria-mold-map-item">
+
+    <template>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-mold-map-item',
+
+            properties : {
+                map: Object,
+                value: String,
+                marker : { type: Object, value: function() { return null; } },
+                editable : { type: Boolean, value: function() { return false; } },
+                drawingColor : { type: String, value: function() { return null; } },
+                icon : { type: String, value: function() { return null; } }
+            },
+
+            detached : function() {
+                this.setMap(null);
+            },
+
+            setMap : function(map) {
+                this.map = map;
+
+                if (map == null) {
+                    this._setMapToItem(null);
+                    return;
+                }
+
+                this._onRefresh();
+            },
+
+            _setMapToItem : function(map) {
+                if (this.marker == null) return;
+                if (Wkt.isArray(this.marker)) {
+                    for (var i=0; i<this.marker.length; i++)
+                        this.marker[i].setMap(map);
+                } else {
+                    this.marker.setMap(map);
+                }
+            },
+
+            _onRefresh : function() {
+                if (this.map == null) return;
+                this._createMarker();
+            },
+
+            _createMarker : function() {
+                if (this.value == null || this.value == "") return;
+
+                var wkt = new Wkt.Wkt();
+                try {
+                    wkt.read(this.value);
+                    this.marker = wkt.toObject(this._configuration());
+                    this._addIcon();
+                    this._setMapToItem(this.map);
+                } catch (e1) {
+                    if (e1.name === 'WKTError') {
+                        return;
+                    }
+                }
+            },
+
+            _addIcon : function() {
+                if (this.icon == null || this.icon == "") return;
+                this.marker.setIcon(this.icon);
+            },
+
+            _configuration : function() {
+                var config = this.map.defaults != null ? this.map.defaults : {};
+                config.editable = this.editable;
+                if (this.drawingColor != "") {
+                    config.strokeColor = this.drawingColor;
+                    config.fillColor = this.drawingColor;
+                }
+                return config;
+            }
+
+        });
+    </script>
+
+</dom-module>

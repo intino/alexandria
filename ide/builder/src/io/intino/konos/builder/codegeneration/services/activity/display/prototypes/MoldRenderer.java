@@ -65,6 +65,8 @@ public class MoldRenderer extends PrototypeRenderer {
 		else if (stamp.i$(EmbeddedCatalog.class)) frameOf(frame, stamp.a$(EmbeddedCatalog.class));
 		else if (stamp.i$(Icon.class)) frameOf(frame, stamp.a$(Icon.class));
 		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
+		else if (stamp.i$(CardWallet.class)) frameOf(frame, stamp.a$(CardWallet.class));
+		else if (stamp.i$(Map.class)) frameOf(frame, stamp.a$(Map.class));
 		return frame;
 	}
 
@@ -120,6 +122,10 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addSlot("title", baseFrame(stamp));
 	}
 
+	private void frameOf(Frame frame, CardWallet stamp) {
+		frame.addSlot("title", baseFrame(stamp));
+	}
+
 	private void frameOf(Frame frame, Icon stamp) {
 		frame.addTypes(stamp.source().name() + "Icon");
 		frame.addSlot("title", baseFrame(stamp));
@@ -133,6 +139,12 @@ public class MoldRenderer extends PrototypeRenderer {
 	private void frameOf(Frame frame, Location stamp) {
 		frame.addSlot("icon", baseFrame(stamp));
 		frame.addSlot("drawingColor", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Map stamp) {
+		frame.addSlot("zoom", stamp.zoom());
+		frame.addSlot("latitude", stamp.latitude());
+		frame.addSlot("longitude", stamp.longitude());
 	}
 
 	private void frameOf(Frame frame, Operation operation) {

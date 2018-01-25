@@ -41,6 +41,7 @@ public class MoldTemplate extends Template {
 			rule().add((condition("trigger", "valueMethod"))).add(literal("public static ")).add(mark("valueType")).add(literal(" value(")).add(mark("box")).add(literal("Box box, ")).add(mark("moldClass")).add(literal(" ")).add(mark("moldClass", "shortType", "firstLowerCase")).add(literal(", String username) {\n\treturn null;//TODO\n}")),
 			rule().add((condition("attribute", "resource")), (condition("trigger", "valueType"))).add(literal("java.net.URL")),
 			rule().add((condition("attribute", "breadcrumbs")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.activity.model.mold.stamps.Tree")),
+			rule().add((condition("attribute", "cardWallet")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.activity.model.mold.stamps.Wallet")),
 			rule().add((condition("attribute", "itemlLinks")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.activity.model.mold.stamps.Links")),
 			rule().add((condition("attribute", "Picture")), (condition("trigger", "valueType"))).add(literal("java.util.List<java.net.URL>")),
 			rule().add((condition("attribute", "Rating")), (condition("trigger", "valueType"))).add(literal("java.lang.Double")),
