@@ -10,7 +10,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -66,7 +65,7 @@ public class DisplayRenderer {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
-		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay)).update();
+		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay), packageName).update();
 	}
 
 	private void writeRequester(Display display, Frame frame) {
@@ -111,8 +110,7 @@ public class DisplayRenderer {
 	}
 
 	private Frame[] framesOfNotifications(List<Display.Notification> notifications) {
-		List<Frame> frames = notifications.stream().map(this::frameOf).collect(Collectors.toList());
-		return frames.toArray(new Frame[frames.size()]);
+		return notifications.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	private Frame frameOf(Display.Notification notification) {
@@ -128,20 +126,23 @@ public class DisplayRenderer {
 	}
 
 	private Frame[] framesOfRequests(List<Display.Request> requests) {
-		List<Frame> frames = requests.stream().map(DisplayRenderer::frameOf).collect(Collectors.toList());
-		return frames.toArray(new Frame[frames.size()]);
+		return requests.stream().map(r -> frameOf(r, this.packageName)).toArray(Frame[]::new);
 	}
 
-	static Frame frameOf(Display.Request request) {
+	static Frame frameOf(Display.Request request, String packageName) {
 		final Frame frame = new Frame().addTypes("request");
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
 		frame.addSlot("name", request.name$());
 		if (request.asType() != null) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", request.asType().type());
+			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", parameter(request, packageName));
 			if (request.isList()) parameterFrame.addTypes("list");
 			frame.addSlot("parameter", parameterFrame);
 		}
 		return frame;
+	}
+
+	private static String parameter(Display.Request request, String packageName) {
+		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
 	}
 
 	private Template displayNotifierTemplate() {

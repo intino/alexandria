@@ -51,9 +51,9 @@ def type(elementOption & option)
 end
 
 def type(catalogs)
-	public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
+	[$filtered~public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
 		return true;
-	}
+	}]
 end
 
 def type(objects)

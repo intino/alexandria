@@ -27,8 +27,8 @@ public class DisplayTemplate extends Template {
 			rule().add((condition("trigger", "parameter"))).add(mark("value", "firstUpperCase")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;")),
 			rule().add((condition("trigger", "import"))).add(literal("import ")).add(mark("package")).add(literal(".displays.*;")),
-			rule().add((condition("trigger", "parent"))).add(literal("addAndPersonify(new ")).add(mark("value")).add(literal("Display((")).add(mark("dsl")).add(literal("Box) box.owner()));")),
-			rule().add((condition("trigger", "innerDisplay"))).add(literal("addAndPersonify(new ")).add(mark("value", "firstUpperCase")).add(literal("Display((box)));"))
+			rule().add((condition("trigger", "parent"))).add(literal("addAndPersonify(new ")).add(mark("value", "firstUpperCase")).add(literal("((")).add(mark("dsl")).add(literal("Box) box.owner()));")),
+			rule().add((condition("trigger", "innerDisplay"))).add(literal("addAndPersonify(new ")).add(mark("value", "firstUpperCase")).add(literal("((box)));"))
 		);
 		return this;
 	}

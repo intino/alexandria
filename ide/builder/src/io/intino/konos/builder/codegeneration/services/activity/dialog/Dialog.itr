@@ -9,7 +9,7 @@ def type(dialog)
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends Abstract$name+SnakeCaseToCamelCase+FirstUpperCase {
 
-		public $name+SnakeCaseToCamelCase+FirstUpperCase~Dialog($box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+		public $name+SnakeCaseToCamelCase+FirstUpperCase($box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			super(box);
 		}
 

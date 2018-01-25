@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.services.activity.display.prototyp
 import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
 import io.intino.konos.model.graph.Mold.Block.*;
-import io.intino.konos.model.graph.Mold.Block.Tree.TreeItem;
+import io.intino.konos.model.graph.Mold.Block.Breadcrumbs.TreeItem;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
@@ -40,9 +40,9 @@ public class MoldRenderer extends PrototypeRenderer {
 		Frame frame = new Frame("block")
 				.addSlot("name", clean(block.name$()))
 				.addSlot("expanded", block.mode().equals(Mode.Expanded))
-				.addSlot("hidden", baseFrame(block))
-				.addSlot("hiddenIfMobile", block.hiddenIfMobile())
-				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
+				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new))
+				.addSlot("hiddenIfMobile", block.hiddenIfMobile());
+		if (block.hidden().equals(Hidden.HiddenEnabled)) frame.addSlot("hidden", baseFrame(block));
 		if (!block.style().isEmpty()) frame.addSlot("blockStyle", block.style());
 		if (block.height() >= 0) frame.addSlot("height", block.height());
 		if (block.width() >= 0) frame.addSlot("width", block.width());
@@ -57,7 +57,7 @@ public class MoldRenderer extends PrototypeRenderer {
 				.addSlot("common", common(stamp));
 		if (stamp.i$(Picture.class)) frameOf(frame, stamp.a$(Picture.class));
 		else if (stamp.i$(Rating.class)) frameOf(frame, stamp.a$(Rating.class));
-		else if (stamp.i$(Tree.class)) frameOf(frame, stamp.a$(Tree.class));
+		else if (stamp.i$(Breadcrumbs.class)) frameOf(frame, stamp.a$(Breadcrumbs.class));
 		else if (stamp.i$(Location.class)) frameOf(frame, stamp.a$(Location.class));
 		else if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
 		else if (stamp.i$(CatalogLink.class)) frameOf(frame, stamp.a$(CatalogLink.class));
@@ -131,7 +131,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addSlot("title", baseFrame(stamp));
 	}
 
-	private void frameOf(Frame frame, Tree stamp) {
+	private void frameOf(Frame frame, Breadcrumbs stamp) {
 		if (stamp.root() != null) frame.addSlot("root", stamp.root().name$());
 		frameOf(frame, stamp.treeItemList());
 	}

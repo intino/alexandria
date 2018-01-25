@@ -64,9 +64,9 @@ def trigger(import)
 end
 
 def trigger(parent)
-	addAndPersonify(new $value~Display(($dsl~Box) box.owner()));
+	addAndPersonify(new $value+firstUpperCase(($dsl~Box) box.owner()));
 end
 
 def trigger(innerDisplay)
-	addAndPersonify(new $value+firstUpperCase~Display((box)));
+	addAndPersonify(new $value+firstUpperCase((box)));
 end

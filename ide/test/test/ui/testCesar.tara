@@ -15,10 +15,10 @@ Desktop(title = "test cesar", subTitle = "test using cesar layout", logoPath = "
 
 Layout(mode = Menu) testCesarMenu
 	Option("overview") overview > RenderPanels(testCesarOverviewPanel)
-	Group("projects") projects
-		mode = Expanded
+//	Group("projects") projects
+//		mode = Expanded
 //		Options(label=@projectLabel) projectOptions > RenderObjects(@projectsCollection, panel=projectPanel)
-		Options(modelClass = "") projectOptions > RenderObjects(testCesarProjectPanel)
+//		Options(modelClass = "") projectOptions > RenderObjects(testCesarProjectPanel)
 	Option("administration") administration> RenderPanels(testCesarAdminPanel)
 
 // Octavio. Código generado incorrecto.
@@ -84,7 +84,6 @@ Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCat
 	Events
 		OnClickRecord
 			OpenDialog openDialog
-//			OpenDialog(path = 'return ""')
 
 	Views
 		ListView("List", mold = testCesarDeviceListMold, width = 90%)
