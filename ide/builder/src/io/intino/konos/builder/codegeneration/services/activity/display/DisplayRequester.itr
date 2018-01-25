@@ -1,4 +1,4 @@
-def type(display)
+	def type(display)
 	package $package+validPackage.displays.requesters;
 
 	import $package+validPackage.displays.$name+FirstUpperCase;
