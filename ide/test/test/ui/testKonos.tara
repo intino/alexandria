@@ -14,13 +14,13 @@ Desktop testHome
 
 Layout testMenu
 	mode = Menu
-	Group("ddd", Expanded) ddd
-		Option(label="infrastructure") infrastructure
-			polymerIcon = "logo.png"
-			bubble = 1
-			RenderCatalogs(catalogs=testInfrastructure)
-		Option(label="análisis") analisis > RenderPanels(testAnalisis)
-		Option(label="análisis") analisis2 > RenderObjects(panel = testAnalisis)
+//	Group("ddd", Expanded) ddd
+//		Option(label="infrastructure") infrastructure
+//			polymerIcon = "logo.png"
+//			bubble = 1
+//			RenderCatalogs(catalogs=testInfrastructure)
+//		Option(label="análisis") analisis > RenderPanels(testAnalisis)
+//		Option(label="análisis") analisis2 > RenderObjects(panel = testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views

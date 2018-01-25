@@ -57,11 +57,11 @@ def trigger(path)
 end
 
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~Notifier.class).forDisplay($name+firstUpperCase.class);
+	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);
 end
 
 def type(dialog) trigger(notifier)
-	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogNotifier.class).forDisplay($name+firstUpperCase.class);
+	register(io.intino.konos.alexandria.activity.displays.AlexandriaDialogNotifier.class).forDisplay($package+validPackage.dialogs.$name+firstUpperCase.class);
 end
 
 def trigger(custom)

@@ -12,15 +12,31 @@ def type(mold)
     		super(box);
     	}
     	public static class Stamps {
-
-			$block...[$NL$NL]
+			$block+stamps...[$NL$NL]
     	}
+
+    	public static class Blocks {
+    		$block...[$NL]
+		}
     }
 end
 
-def type(block)
+def type(block) trigger(stamps)
 	$stamp...[$NL]
+end
+
+
+def trigger(block)
+	$hidden
 	$block...[$NL]
+end
+
+def trigger(hidden)
+	public static class $name+FirstUpperCase {
+		public static boolean hidden($moldClass $moldClass+shortType+firstLowerCase) {
+
+		}
+	}
 end
 
 def type(stamp & openDialogOperation)
@@ -162,7 +178,7 @@ def trigger(embeddedCatalogFilter)
 end
 
 def trigger(filter)
-	public static boolean filter($box~Box box, $moldClass $moldClass+shortType+firstLowerCase source, Object target, String username) {
+	public static boolean filter($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, Object target, String username) {
 		return true;//TODO
 	}
 end
@@ -190,11 +206,11 @@ def attribute(resource) trigger(valueType)
 	java.net.URL
 end
 
-def attribute(breadcrumbs) trigger(valueType)
+def attribute(Breadcrumbs) trigger(valueType)
 	io.intino.konos.alexandria.activity.model.mold.stamps.Tree
 end
 
-def attribute(itemlLinks) trigger(valueType)
+def attribute(ItemLinks) trigger(valueType)
 	io.intino.konos.alexandria.activity.model.mold.stamps.Links
 end
 
@@ -206,6 +222,6 @@ def attribute(Rating) trigger(valueType)
 	java.lang.Double
 end
 
-def  trigger(valueType)
+def trigger(valueType)
 	java.lang.String
 end

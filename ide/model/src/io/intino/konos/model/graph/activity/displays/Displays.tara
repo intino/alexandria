@@ -54,16 +54,17 @@ Concept Option extends ElementOption is component
 	var string label
 	var string polymerIcon = empty
 	var integer bubble = -1
+	has:{1..1} ElementRenderer
 
 Concept:Named Options extends ElementOption is component
 	var string modelClass
+	has:{1..1} ElementRenderer
 
 Concept Operation is component
 	var string title
 	var string polymerIcon = empty
 
 Concept ElementOption
-	has:{1..1} ElementRenderer
 
 Concept ElementRenderer is component
 	sub RenderMold

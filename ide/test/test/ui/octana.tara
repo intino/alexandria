@@ -16,7 +16,10 @@ Layout(mode = Menu) octanaLayout
 Panel octanaDashboardPanel
 	Views > View("overview") overview > RenderMold(octanaDashboardMold)
 
-Mold(modelClass="") octanaDashboardMold
+Mold(modelClass="Octana") octanaDashboardMold
+	Block ocBlock
+		hidden = HiddenEnabled
+		Title sss
 
 Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
 	Views
@@ -24,7 +27,7 @@ Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
 
 Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
 
-Catalog(modelClass = "io.intino.octana.graph.Person") octanaPersonCatalog
+Catalog(modelClass = "io.intino.octana.graph.Person") octanaPersonCwatalog
 	Views
 		ListView("lista", mold = octanaPersonMold)
 
@@ -37,3 +40,6 @@ Panel octanaAnalysisPanel
 			hidden = HiddenEnabled
 
 
+Catalog(modelClass = "Octana") octanaPersonCatalog
+	Views
+		DisplayView(label = "", display = "") dv

@@ -88,16 +88,14 @@ public class ActivityRenderer {
 
 	private Frame frameOf(Display display) {
 		final Frame frame = new Frame().addTypes("display");
-		frame.addSlot("name", display.name$());
+		frame.addSlot("name", display.name$()).addSlot("package", packageName);
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
 		return frame;
 	}
 
 	private Frame frameOf(Dialog dialog) {
-		final Frame frame = new Frame().addTypes("dialog");
-		frame.addSlot("name", dialog.name$());
-		return frame;
+		return new Frame().addTypes("dialog").addSlot("name", dialog.name$()).addSlot("package", packageName);
 	}
 
 	private Template template() {

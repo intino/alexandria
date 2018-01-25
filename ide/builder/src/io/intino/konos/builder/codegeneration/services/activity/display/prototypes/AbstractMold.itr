@@ -163,7 +163,7 @@ def trigger(taskExecution)
 end
 
 def trigger(filter)
-	(source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, source, target, username)
+	(source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, username)
 end
 
 def trigger(editable)

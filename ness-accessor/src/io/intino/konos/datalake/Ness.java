@@ -72,7 +72,7 @@ public class Ness {
 			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
 			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
-			topicConsumer.listen((m) -> consume(dispatcher, m));
+			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
 			return new ReflowSession() {
 				public void next() throws JMSException {
 					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("next"));
