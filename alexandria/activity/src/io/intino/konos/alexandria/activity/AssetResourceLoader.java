@@ -3,7 +3,6 @@ package io.intino.konos.alexandria.activity;
 import io.intino.konos.alexandria.Box;
 
 public class AssetResourceLoader {
-
 	private final Box box;
 
 	public AssetResourceLoader(Box box) {
@@ -11,7 +10,7 @@ public class AssetResourceLoader {
 	}
 
 	public java.net.URL load(String name) {
-		return null;
+		return AssetResourceLoader.class.getResource(name);
 	}
 
 }

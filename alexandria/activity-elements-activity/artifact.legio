@@ -50,6 +50,7 @@ Artifact(groupId = "io.intino.konos", version = "1.0.1") alexandria-activity-ele
 		WebComponent("bendavis78/paper-date-picker", "1.2.0") paper-date-picker
 		WebComponent("bendavis78/paper-time-picker", "1.1.4") paper-time-picker
 		WebComponent("vis", "4.18.1") vis
+		WebComponent("IngressoRapidoWebComponents/pdf-browser-viewer", "1.0.6") pdf-browser-viewer
 
 		Resolution("jquery", "3.1.0")
 		Resolution("moment", "2.17.1")

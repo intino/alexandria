@@ -115,6 +115,10 @@ def type(stamp & downloadOperation)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution)$common)
 end
 
+def type(stamp & previewOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution)$common)
+end
+
 def type(stamp & taskOperation)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)$common)
 end
@@ -164,6 +168,10 @@ end
 
 def trigger(downloadExecution)
 	(object, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, option, username)
+end
+
+def trigger(previewExecution)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.preview(box, ($moldClass) object, username)
 end
 
 def trigger(taskExecution)

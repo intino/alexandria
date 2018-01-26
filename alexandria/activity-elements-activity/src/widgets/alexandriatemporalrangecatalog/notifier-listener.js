@@ -2,8 +2,12 @@ var AlexandriaTemporalRangeCatalogBehaviors = AlexandriaTemporalRangeCatalogBeha
 
 AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("refreshCatalog").toSelf().execute(function(parameters) {
         	widget._refreshCatalog(parameters.value);
@@ -35,5 +39,6 @@ AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
         this.when("loadTimezoneOffset").toSelf().execute(function(parameters) {
         	widget._loadTimezoneOffset();
         });
+        this._listeningToDisplay = true;
     }
 };

@@ -2,8 +2,12 @@ var AlexandriaPanelBehaviors = AlexandriaPanelBehaviors || {};
 
 AlexandriaPanelBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("refreshTarget").toSelf().execute(function(parameters) {
         	widget._refreshTarget(parameters.value);
@@ -29,5 +33,6 @@ AlexandriaPanelBehaviors.NotifierListener = {
         this.when("showDialog").toSelf().execute(function(parameters) {
         	widget._showDialog();
         });
+        this._listeningToDisplay = true;
     }
 };

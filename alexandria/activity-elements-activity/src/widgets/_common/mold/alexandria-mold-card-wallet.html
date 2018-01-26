@@ -24,6 +24,9 @@
         :host {
             display: block;
         }
+        :host.empty {
+            display: none;
+        }
         :host ul, :host li {
             list-style: none;
         }
@@ -76,7 +79,8 @@
 
             _refresh : function() {
                 var hasCards = (this.wallet != null && this.wallet.cards.length > 0);
-                this.style.display = hasCards ? "block" : "none";
+                if (!hasCards) $(this).addClass("empty");
+                else $(this).removeClass("empty");
                 this._refreshToolbar();
             },
 

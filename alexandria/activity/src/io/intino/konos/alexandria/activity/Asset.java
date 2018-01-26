@@ -44,6 +44,16 @@ public class Asset {
                 }
             }
 
+            @Override
+            public Resource setEmbedded(boolean embedded) {
+                if(!embedded) {
+                    return this;
+                } else {
+                    this.result = this.result + Asset.concat(this.result, "embedded", "true");
+                    return this;
+                }
+            }
+
             public URL toUrl() {
                 try {
                     return new URL(this.result);
@@ -71,8 +81,9 @@ public class Asset {
     }
 
     public interface Resource {
-        Asset.Resource setContentType(String var1);
-        Asset.Resource setLabel(String var1);
+        Asset.Resource setContentType(String contentType);
+        Asset.Resource setLabel(String label);
+        Asset.Resource setEmbedded(boolean embedded);
         URL toUrl();
     }
 }

@@ -2,8 +2,12 @@ var AlexandriaCatalogBehaviors = AlexandriaCatalogBehaviors || {};
 
 AlexandriaCatalogBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("refreshCatalog").toSelf().execute(function(parameters) {
         	widget._refreshCatalog(parameters.value);
@@ -26,5 +30,6 @@ AlexandriaCatalogBehaviors.NotifierListener = {
         this.when("hidePanel").toSelf().execute(function(parameters) {
         	widget._hidePanel();
         });
+        this._listeningToDisplay = true;
     }
 };

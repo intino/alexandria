@@ -92,11 +92,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		children(AlexandriaStamp.class).forEach(display -> {
 			display.item(item);
 			display.provider(AlexandriaItem.this);
-			if (display instanceof AlexandriaTemporalStamp) {
-				AlexandriaTemporalStamp temporalDisplay = (AlexandriaTemporalStamp) display;
-				temporalDisplay.range(provider.range());
-				display.refresh();
-			}
+			updateRange(display);
 			display.refresh();
 		});
 		remove(AlexandriaPageContainer.class);
@@ -114,6 +110,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 				display.item(item);
 				display.provider(AlexandriaItem.this);
 				display.personifyOnce(id + key.displayType());
+				updateRange(display);
 				display.refresh();
 			});
 		pages(item).forEach(display -> {
@@ -124,6 +121,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		embeddedCatalogs().forEach((key, display) -> {
 			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
 			display.label(key.label());
+			display.range(provider.range());
 			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
 			display.embedded(true);
 			add(display);
@@ -227,6 +225,48 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		return ((EmbeddedCatalog)stamp).display();
 	}
 
+	public void saveItem(SaveItemParameters value) {
+		provider.saveItem(value, item);
+	}
+
+	public void emptyMessage(String message) {
+		this.emptyMessage = message;
+	}
+
+	public void openItem(Reference reference) {
+		openItemListeners.forEach(l -> l.accept(new AlexandriaElementView.OpenItemEvent() {
+			@Override
+			public String itemId() {
+				return new String(Base64.getDecoder().decode(reference.name()));
+			}
+
+			@Override
+			public String label() {
+				return reference.label();
+			}
+
+			@Override
+			public Item item() {
+				return null;
+			}
+
+			@Override
+			public Panel panel() {
+				return (Panel) context;
+			}
+
+			@Override
+			public TimeRange range() {
+				return provider.range();
+			}
+
+			@Override
+			public Tree breadcrumbs() {
+				return null;
+			}
+		}));
+	}
+
 	private void sendInfo(io.intino.konos.alexandria.activity.schemas.Item item) {
 		notifier.refresh(new ItemRefreshInfo().mold(MoldBuilder.build(mold)).item(item));
 	}
@@ -299,46 +339,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		return result;
 	}
 
-	public void openItem(Reference reference) {
-		openItemListeners.forEach(l -> l.accept(new AlexandriaElementView.OpenItemEvent() {
-			@Override
-			public String itemId() {
-				return new String(Base64.getDecoder().decode(reference.name()));
-			}
-
-			@Override
-			public String label() {
-				return reference.label();
-			}
-
-			@Override
-			public Item item() {
-				return null;
-			}
-
-			@Override
-			public Panel panel() {
-				return (Panel) context;
-			}
-
-			@Override
-			public TimeRange range() {
-				return provider.range();
-			}
-
-			@Override
-			public Tree breadcrumbs() {
-				return null;
-			}
-		}));
-	}
-
-	public void saveItem(SaveItemParameters value) {
-		provider.saveItem(value, item);
-	}
-
-	public void emptyMessage(String message) {
-		this.emptyMessage = message;
+	private void updateRange(AlexandriaStamp display) {
+		if (!(display instanceof AlexandriaTemporalStamp)) return;
+		AlexandriaTemporalStamp temporalDisplay = (AlexandriaTemporalStamp) display;
+		temporalDisplay.range(provider.range());
 	}
 
 }

@@ -160,6 +160,8 @@ public class MoldRenderer extends PrototypeRenderer {
 			frame.addSlot("exportExecution", baseFrame(operation));
 			if (export.from() != null) frame.addSlot("from", export.from().toEpochMilli());
 			if (export.to() != null) frame.addSlot("to", export.to().toEpochMilli());
+		} else if (operation.i$(PreviewOperation.class)) {
+			frame.addSlot("previewExecution", baseFrame(operation));
 		} else if (operation.i$(TaskOperation.class)) frame.addSlot("taskExecution", baseFrame(operation));
 	}
 

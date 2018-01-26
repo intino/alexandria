@@ -56,6 +56,7 @@ public abstract class Element {
 	}
 
 	public Item item(Object object) {
+		if (object == null) return null;
 		return new Item().id(id(object)).name(name(object)).object(object);
 	}
 

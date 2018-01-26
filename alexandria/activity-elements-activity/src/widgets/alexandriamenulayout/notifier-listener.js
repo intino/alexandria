@@ -2,8 +2,12 @@ var AlexandriaMenuLayoutBehaviors = AlexandriaMenuLayoutBehaviors || {};
 
 AlexandriaMenuLayoutBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("info").toSelf().execute(function(parameters) {
         	widget._info(parameters.value);
@@ -26,5 +30,6 @@ AlexandriaMenuLayoutBehaviors.NotifierListener = {
         this.when("loaded").execute(function(parameters) {
         	widget._loaded();
         });
+        this._listeningToDisplay = true;
     }
 };

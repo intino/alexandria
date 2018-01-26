@@ -216,4 +216,5 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 			}
 		}));
 	}
+
 }

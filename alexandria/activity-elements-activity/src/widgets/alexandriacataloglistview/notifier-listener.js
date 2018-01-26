@@ -2,8 +2,12 @@ var AlexandriaCatalogListViewBehaviors = AlexandriaCatalogListViewBehaviors || {
 
 AlexandriaCatalogListViewBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("refreshView").toSelf().execute(function(parameters) {
         	widget._refreshView(parameters.value);
@@ -35,5 +39,6 @@ AlexandriaCatalogListViewBehaviors.NotifierListener = {
         this.when("refreshPicture").toSelf().execute(function(parameters) {
         	widget._refreshPicture(parameters.value);
         });
+        this._listeningToDisplay = true;
     }
 };

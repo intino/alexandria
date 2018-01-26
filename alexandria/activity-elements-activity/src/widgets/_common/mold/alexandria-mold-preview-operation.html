@@ -1,0 +1,75 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../lib/pdf-browser-viewer/pdf-browser-viewer.html">
+
+<dom-module id="alexandria-mold-preview-operation">
+
+    <template>
+        <div class="container">
+            <a on-tap="_preview">[[_title]]</a>
+        </div>
+        <paper-dialog id="dialog">
+            <template is="dom-if" if="[[!title.length]]">
+                <h2>[[_dialogTitle]]</h2>
+            </template>
+            <div>
+                <pdf-browser-viewer file="[[document]]" width="100%" height="100%"></pdf-browser-viewer>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host a {
+            cursor: pointer;
+            color: var(--default-primary-color);
+        }
+        :host paper-dialog {
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldPreviewOperationDictionary = {
+            es: {
+                Preview : "ver documento",
+                Title : "vista previa"
+            },
+            en: {
+                Preview : "view document",
+                Title : "preview"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-preview-operation',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : { type: String, observer: '_refreshTitle' },
+                _title : String,
+                _dialogTitle : String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldPreviewOperationDictionary);
+            },
+
+            _refreshTitle : function() {
+                var titleDefined = this.title != null && this.title != "";
+                this._title = titleDefined ? this.title : this.Preview;
+                this._dialogTitle = titleDefined ? this.title : this.Title;
+            },
+
+            _preview : function(e) {
+                this.$.dialog.open();
+            }
+
+        });
+    </script>
+
+</dom-module>

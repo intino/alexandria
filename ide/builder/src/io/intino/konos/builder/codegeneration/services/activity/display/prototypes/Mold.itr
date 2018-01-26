@@ -59,6 +59,16 @@ def type(stamp & downloadOperation)
 	}
 end
 
+def type(stamp & previewOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+			return null;//TODO
+		}
+	}
+end
+
 def type(stamp & exportOperation)
 	public static class $name+FirstUpperCase {
 		$common

@@ -2,8 +2,12 @@ var AlexandriaTimeNavigatorBehaviors = AlexandriaTimeNavigatorBehaviors || {};
 
 AlexandriaTimeNavigatorBehaviors.NotifierListener = {
 
+	properties : {
+		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+	},
+
     listenToDisplay : function() {
-		if (this.display == null) return;
+		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
         this.when("refreshScales").toSelf().execute(function(parameters) {
         	widget._refreshScales(parameters.value);
@@ -20,5 +24,6 @@ AlexandriaTimeNavigatorBehaviors.NotifierListener = {
         this.when("refreshState").toSelf().execute(function(parameters) {
         	widget._refreshState(parameters.value);
         });
+        this._listeningToDisplay = true;
     }
 };

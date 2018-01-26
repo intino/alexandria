@@ -53,6 +53,7 @@ public class TemporalCatalog extends Catalog {
 	@Override
 	public Item item(Object object) {
 		Item item = super.item(object);
+		if (item == null) return null;
 		item.created(created(object));
 		return item;
 	}

@@ -106,6 +106,7 @@
             stamp.isPicture = this._isPicture(moldStamp);
             stamp.isOpenDialogOperation = this._isOpenDialogOperation(moldStamp);
             stamp.isDownloadOperation = this._isDownloadOperation(moldStamp);
+            stamp.isPreviewOperation = this._isPreviewOperation(moldStamp);
             stamp.isExportOperation = this._isExportOperation(moldStamp);
             stamp.isTaskOperation = this._isTaskOperation(moldStamp);
             stamp.isPage = this._isPage(moldStamp);
@@ -129,6 +130,7 @@
             this._addStampRatingProperties(stamp, moldStamp);
             this._addStampBreadcrumbsProperties(stamp, moldBlock, moldStamp);
             this._addStampDownloadOperationProperties(stamp, moldStamp);
+            this._addStampPreviewOperationProperties(stamp, moldStamp);
             this._addStampExportOperationProperties(stamp, moldStamp);
             this._addStampItemLinksProperties(stamp, moldBlock, moldStamp);
             this._addStampCatalogLinkProperties(stamp, moldBlock, moldStamp);
@@ -168,6 +170,11 @@
             if (!stamp.isDownloadOperation) return;
             stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
             stamp.properties.options = this._propertyValueOf(moldStamp,'options').split(",");
+        },
+
+        _addStampPreviewOperationProperties : function(stamp, moldStamp) {
+            if (!stamp.isPreviewOperation) return;
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
         },
 
         _addStampExportOperationProperties : function(stamp, moldStamp) {
@@ -285,6 +292,10 @@
 
         _isDownloadOperation : function(stamp) {
             return this.mode != "map" && stamp.shape === "download-operation";
+        },
+
+        _isPreviewOperation : function(stamp) {
+            return this.mode != "map" && stamp.shape === "preview-operation";
         },
 
         _isExportOperation : function(stamp) {
