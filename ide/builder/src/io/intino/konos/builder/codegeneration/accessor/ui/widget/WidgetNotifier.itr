@@ -3,10 +3,15 @@ def type(widget)
 
     $name+FirstUpperCase~Behaviors.NotifierListener = {
 
+    	properties : {
+    		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+    	},
+
         listenToDisplay : function() {
-			if (this.display == null) return;
+			if (this.display == null || this._listeningToDisplay) return;
             var widget = this;
             $notification...[$NL]
+            this._listeningToDisplay = true;
         }
     };
 end

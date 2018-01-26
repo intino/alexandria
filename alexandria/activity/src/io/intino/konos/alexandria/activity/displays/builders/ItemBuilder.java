@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.model.mold.stamps.icons.ResourceIcon;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation;
 import io.intino.konos.alexandria.activity.schemas.Item;
 import io.intino.konos.alexandria.activity.schemas.ItemBlock;
 import io.intino.konos.alexandria.activity.schemas.ItemStamp;
@@ -115,6 +116,10 @@ public class ItemBuilder {
         if (stamp instanceof ItemLinks) {
             Links links = (Links) value;
             return links != null ? new Gson().toJson(links) : "";
+        }
+
+        if (stamp instanceof PreviewOperation) {
+            return toResource(baseAssetUrl, (URL)value).setEmbedded(true).toUrl().toString();
         }
 
         if (stamp instanceof Picture) {

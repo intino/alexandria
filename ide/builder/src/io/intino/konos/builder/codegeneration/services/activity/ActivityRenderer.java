@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.activity;
 
-import io.intino.konos.builder.codegeneration.services.activity.resource.AssetResourceLoaderTemplate;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Dialog;
@@ -51,13 +50,7 @@ public class ActivityRenderer {
 		if (!displays.isEmpty())
 			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName);
 		if (activity.authenticated() != null) frame.addSlot("auth", activity.authenticated().by());
-		if (!Commons.javaFile(src, "AssetResourceLoader").exists())
-			writeFrame(src, "AssetResourceLoader", AssetResourceLoaderTemplate.create().format(resourceLoaderFrame()));
 		writeFrame(gen, snakeCaseToCamelCase(activity.name$() + "Activity"), template().format(frame));
-	}
-
-	private Frame resourceLoaderFrame() {
-		return new Frame().addTypes("resourceloader").addSlot("package", packageName).addSlot("box", boxName);
 	}
 
 	private Frame[] resourcesFrame(List<Activity.AbstractPage> pages) {
