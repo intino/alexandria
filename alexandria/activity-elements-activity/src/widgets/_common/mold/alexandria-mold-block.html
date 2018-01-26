@@ -22,6 +22,7 @@
 <link rel="import" href="alexandria-mold-hyperlinks.html">
 <link rel="import" href="alexandria-mold-download-operation.html">
 <link rel="import" href="alexandria-mold-export-operation.html">
+<link rel="import" href="alexandria-mold-preview-operation.html">
 <link rel="import" href="alexandria-mold-catalog.html">
 <link rel="import" href="alexandria-mold-editor.html">
 <link rel="import" href="alexandria-mold-card-wallet.html">
@@ -105,7 +106,7 @@
                 <alexandria-mold-download-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" on-download-option="_download" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-download-operation>
             </template>
             <template is="dom-if" if="[[stamp.isPreviewOperation]]">
-                <alexandria-mold-preview-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" link="[[stamp.value]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-preview-operation>
+                <alexandria-mold-preview-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" document="[[stamp.properties.document]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-preview-operation>
             </template>
             <template is="dom-if" if="[[stamp.isExportOperation]]">
                 <alexandria-mold-export-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" from="[[stamp.properties.from]]" to="[[stamp.properties.to]]" on-export-option="_export" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-export-operation>
@@ -246,7 +247,7 @@
         }
         @media screen and (max-width: 736px) {
             :host.not-mobile {
-                display: none;
+                display: none !important;
             }
             :host .picture {
                 text-align: center;

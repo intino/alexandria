@@ -5,7 +5,7 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 
 import java.net.URL;
 
-public class PreviewOperation extends Operation<String> {
+public class PreviewOperation extends Operation<URL> {
 	private Execution execution;
 
 	public URL preview(Item item, String username) {
