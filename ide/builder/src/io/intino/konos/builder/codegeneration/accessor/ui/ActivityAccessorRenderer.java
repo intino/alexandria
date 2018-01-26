@@ -149,10 +149,9 @@ public class ActivityAccessorRenderer {
 		else return type;
 	}
 
-
 	@NotNull
 	private String layoutType(Display display) {
-		return display.a$(Layout.class).mode().name();
+		return display.a$(Layout.class).mode().name() + "-layout";
 	}
 
 	private void writeWidgetPaths(Display display, List<Display.Request> requests) throws IOException {
@@ -208,7 +207,7 @@ public class ActivityAccessorRenderer {
 	private Frame frameOf(Display.Request r) {
 		final Frame frame = new Frame().addTypes("request").addSlot("name", r.name$()).addSlot("widget", r.core$().owner().name());
 		if (r.isType()) frame.addTypes("parameter");
-		if(r.registerPath()!= null) frame.addTypes("registerPath");
+		if (r.registerPath() != null) frame.addTypes("registerPath");
 		frame.addSlot("method", r.responseType().name());
 		return frame;
 	}

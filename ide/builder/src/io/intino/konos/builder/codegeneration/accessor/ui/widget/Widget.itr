@@ -62,8 +62,8 @@ def trigger(path)
 end
 
 def trigger(imports)
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/requester.js"></script>
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+lowercase/notifier-listener.js"></script>
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
 end
 
 def trigger(includes)
