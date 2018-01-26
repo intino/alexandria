@@ -175,6 +175,7 @@
         _addStampPreviewOperationProperties : function(stamp, moldStamp) {
             if (!stamp.isPreviewOperation) return;
             stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+            stamp.properties.document = this._propertyValueOf(moldStamp,'document');
         },
 
         _addStampExportOperationProperties : function(stamp, moldStamp) {

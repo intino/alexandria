@@ -118,10 +118,6 @@ public class ItemBuilder {
             return links != null ? new Gson().toJson(links) : "";
         }
 
-        if (stamp instanceof PreviewOperation) {
-            return toResource(baseAssetUrl, (URL)value).setEmbedded(true).toUrl().toString();
-        }
-
         if (stamp instanceof Picture) {
             if (value == null) {
                 String defaultPicture = ((Picture) stamp).defaultPicture();
@@ -161,6 +157,12 @@ public class ItemBuilder {
             String drawingColor = location.drawingColor(item, username);
             if (drawingColor != null)
                 result.add(propertyOf("drawingColor", drawingColor));
+        }
+
+        if (stamp instanceof PreviewOperation) {
+            URL preview = ((PreviewOperation)stamp).preview(item, username);
+            if (preview != null)
+                result.add(propertyOf("document", toResource(baseAssetUrl, preview).setEmbedded(true).toUrl().toString()));
         }
 
         if (stamp instanceof Icon)
