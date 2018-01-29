@@ -203,6 +203,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public abstract void reset();
 
+	public void forceRefresh() {
+		dirty(true);
+		refresh();
+	}
+
 	@Override
 	public void refresh() {
 		refreshView();

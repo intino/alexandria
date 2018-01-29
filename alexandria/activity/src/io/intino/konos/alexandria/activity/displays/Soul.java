@@ -27,6 +27,11 @@ public abstract class Soul implements DisplayRepository {
 
     public abstract void personify();
 
+    public void destroy() {
+        displays.values().forEach(AlexandriaDisplay::remove);
+        displays.clear();
+    }
+
     public URL baseAssetUrl() {
         try {
             return new URL(session.browser().baseAssetUrl());
