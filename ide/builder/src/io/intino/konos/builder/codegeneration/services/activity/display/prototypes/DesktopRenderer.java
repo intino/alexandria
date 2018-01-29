@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Desktop;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -28,8 +29,14 @@ public class DesktopRenderer extends PrototypeRenderer {
 		frame.addSlot("subtitle", desktop.subTitle());
 		if (desktop.logoPath() != null && !desktop.logoPath().isEmpty()) frame.addSlot("logo", desktop.logoPath());
 		if (desktop.faviconPath() != null && !desktop.faviconPath().isEmpty()) frame.addSlot("favicon", desktop.faviconPath());
+		Activity used = findOwnerActivity();
+		if (used != null && used.authenticated() != null) frame.addSlot("activity", used.name$());
 		if (desktop.layout() != null) frame.addSlot("layout", desktop.layout().name$());
 		return frame;
+	}
+
+	private Activity findOwnerActivity() {
+		return this.display.graph().activityList().stream().filter(activity -> activity.userHome().uses().equals(this.display)).findFirst().orElse(null);
 	}
 
 	protected Template template() {

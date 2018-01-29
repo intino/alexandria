@@ -23,6 +23,7 @@ def type(desktop & gen)
     		Desktop desktop = new Desktop();
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
+    		[desktop.authServiceUrl(box.configuration().$activity+firstLowerCase~Configuration().authServiceUrl());]
     		[desktop.logo(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$logo")));]
     		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon")));]
     		desktop.layoutDisplayProvider(() -> $package+validPackage.displays.$name+firstUpperCase.layout(box));
