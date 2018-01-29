@@ -58,7 +58,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         init();
     }
 
-    public final void onDie() {
+    public void onDie() {
     }
 
     public void setLanguage(String language) {
