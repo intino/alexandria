@@ -258,8 +258,8 @@ def type(task) trigger(getter)
 end
 
 def trigger(registerSoul)
-	public Optional<Soul> soul(String clientId) {
-		return Optional.ofNullable(activitySouls.get(clientId));
+	public java.util.Optional<Soul> soul(String clientId) {
+		return java.util.Optional.ofNullable(activitySouls.get(clientId));
 	}
 
 	public void registerSoul(String clientId, Soul soul) {
