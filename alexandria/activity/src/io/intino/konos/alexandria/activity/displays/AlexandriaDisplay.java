@@ -58,6 +58,9 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         init();
     }
 
+    public final void onDie() {
+    }
+
     public void setLanguage(String language) {
         propagateLanguageChanged(language);
     }
@@ -96,6 +99,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
 
     public void die() {
         notifier.die(id);
+        onDie();
     }
 
     public <T extends AlexandriaDisplay> List<T> children(Class<T> clazz) {
@@ -117,6 +121,11 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     public void addAndPersonify(AlexandriaDisplay child) {
         add(child);
         child.personify();
+    }
+
+    public void remove() {
+        children.forEach(this::removeChild);
+        die();
     }
 
     public void remove(Class<? extends AlexandriaDisplay> clazz) {

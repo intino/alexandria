@@ -65,6 +65,7 @@ def type(page)
 			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.alexandria.activity.services.push.ActivityClient>() {
 				@Override
 				public void accept(io.intino.konos.alexandria.activity.services.push.ActivityClient client) {
+					box.soul(client.id()).ifPresent(s -> s.destroy());
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);
 				}

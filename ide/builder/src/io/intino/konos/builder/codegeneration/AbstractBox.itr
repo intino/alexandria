@@ -258,6 +258,10 @@ def type(task) trigger(getter)
 end
 
 def trigger(registerSoul)
+	public Optional<Soul> soul(String clientId) {
+		return Optional.ofNullable(activitySouls.get(clientId));
+	}
+
 	public void registerSoul(String clientId, Soul soul) {
 		[if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
 		activitySouls.put(clientId, soul);
