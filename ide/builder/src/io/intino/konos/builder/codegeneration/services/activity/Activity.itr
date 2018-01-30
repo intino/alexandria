@@ -77,10 +77,10 @@ def type(display)
 end
 
 def type(dialog)
-	spark.route("/$name+lowercase~dialog/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").post(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").get(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase~dialog/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
+	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
+	spark.route("/$name+lowercase/:displayId").post(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase/:displayId").get(manager -> new io.intino.konos.alexandria.activity.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
 def trigger(asset)
