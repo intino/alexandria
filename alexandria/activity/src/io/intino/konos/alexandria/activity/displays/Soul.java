@@ -28,7 +28,7 @@ public abstract class Soul implements DisplayRepository {
     public abstract void personify();
 
     public void destroy() {
-        displays.values().forEach(AlexandriaDisplay::remove);
+        displays.values().forEach(AlexandriaDisplay::die);
         displays.clear();
     }
 
