@@ -28,7 +28,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		timeScaleHandler().updateRange(range.from(), referenceScale.addTo(range.to(), 1), false);
 	}
 
-	@Override // TODO Mario al cambiar de namespace hay que invocar a esto
+	@Override
+	public void forceRefresh() {
+		reset();
+	}
+
+	@Override
 	public void reset() {
 		dirty(true);
 		resetViews();
@@ -76,7 +81,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	public void refresh() {
 
-		if (!equalsRange()) {
+		if (dirty()) {
 			groupingManager.items(filteredItemList(defaultScope(), null).items());
 			refreshGroupingsSelection();
 			filterGroupingManager();
