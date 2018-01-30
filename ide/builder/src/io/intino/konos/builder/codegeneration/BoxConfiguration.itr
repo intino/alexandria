@@ -122,6 +122,7 @@ def type(service & activity) trigger(confClass)
 
 		[public java.net.URL authServiceUrl() {
 			try {
+				if ($custom+customname == null) return null;
 				return new java.net.URL("$auth"$custom+replace...[]);
 			} catch (java.net.MalformedURLException e) {
 				return null;
