@@ -9,7 +9,6 @@ import io.intino.konos.model.graph.Operation;
 import io.intino.konos.model.graph.Panel;
 import io.intino.konos.model.graph.Panel.Views.View;
 import io.intino.konos.model.graph.RenderCatalogs;
-import io.intino.konos.model.graph.RenderDisplay;
 import org.siani.itrules.Template;
 
 import java.io.File;
@@ -67,7 +66,7 @@ public class PanelUpdater extends Updater {
 	}
 
 	private String methodFor(Operation operation) {
-		return template.format(frameOf(operation, panel));
+		return template.format(frameOf(operation, panel, packageName));
 	}
 
 	private void updateViewMethods(PsiClass psiClass) {

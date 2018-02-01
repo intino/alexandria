@@ -60,7 +60,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
 		if (catalogEvent.i$(OnClickRecord.OpenDialog.class)) {
-			return frameOf(catalogEvent.a$(OnClickRecord.OpenDialog.class), this.display).addSlot("box", box);
+			return frameOf(catalogEvent.a$(OnClickRecord.OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
 		}
 		return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
 	}
@@ -173,28 +173,29 @@ public class CatalogRenderer extends PrototypeRenderer {
 		final Catalog owner = toolbar.core$().ownerAs(Catalog.class);
 		frame.addSlot("box", box).addSlot("type", this.modelClass).addSlot("canSearch", toolbar.canSearch());
 		for (Operation operation : toolbar.operations()) {
-			if (operation.i$(Download.class)) frame.addSlot("operation", frameOf(toolbar.download(), owner, box, modelClass));
-			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner, box, modelClass));
+			if (operation.i$(Download.class)) frame.addSlot("operation", frameOf(toolbar.download(), owner, box, modelClass, packageName));
+			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner, box, modelClass, packageName));
 			if (operation.i$(AbstractToolbar.OpenDialog.class))
-				frame.addSlot("operation", frameOf(toolbar.openDialog(), owner, box, modelClass));
-			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass));
-			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass));
-			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass));
+				frame.addSlot("operation", frameOf(toolbar.openDialog(), owner, box, modelClass, packageName));
+			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass, packageName));
+			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(DownloadSelection.class))
-				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass));
+				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(GroupingSelection.class))
-				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass));
+				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass, packageName));
 		}
 		return frame;
 	}
 
-	public static Frame frameOf(Operation operation, Catalog catalog, String box, String modelClass) {
+	public static Frame frameOf(Operation operation, Catalog catalog, String box, String modelClass, String packageName) {
 		Frame frame = new Frame("operation", operation.getClass().getSimpleName().toLowerCase())
 				.addSlot("name", operation.name$())
 				.addSlot("box", box)
 				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
-				.addSlot("catalog", catalog.name$());
+				.addSlot("catalog", catalog.name$())
+				.addSlot("package", packageName);
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
 		return frame;

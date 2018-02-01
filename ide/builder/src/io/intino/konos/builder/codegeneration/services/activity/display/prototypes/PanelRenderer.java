@@ -74,18 +74,19 @@ public class PanelRenderer extends PrototypeRenderer {
 	private Frame frameOf(Panel.Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
-		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), display.a$(Panel.class)));
-		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), display.a$(Panel.class)));
-		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), display.a$(Panel.class)));
-		if (toolbar.task() != null) frame.addSlot("operation", frameOf(toolbar.task(), display.a$(Panel.class)));
+		if (toolbar.download() != null) frame.addSlot("operation", frameOf(toolbar.download(), display.a$(Panel.class), packageName));
+		if (toolbar.export() != null) frame.addSlot("operation", frameOf(toolbar.export(), display.a$(Panel.class), packageName));
+		if (toolbar.openDialog() != null) frame.addSlot("operation", frameOf(toolbar.openDialog(), display.a$(Panel.class), packageName));
+		if (toolbar.task() != null) frame.addSlot("operation", frameOf(toolbar.task(), display.a$(Panel.class), packageName));
 		return frame;
 	}
 
-	public static Frame frameOf(Operation operation, Panel panel) {
+	public static Frame frameOf(Operation operation, Panel panel, String packageName) {
 		Frame frame = new Frame("operation", operation.getClass().getSimpleName())
 				.addSlot("name", operation.name$())
 				.addSlot("title", operation.title())
-				.addSlot("panel", panel.name$());
+				.addSlot("panel", panel.name$())
+				.addSlot("package", packageName);
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
 		return frame;

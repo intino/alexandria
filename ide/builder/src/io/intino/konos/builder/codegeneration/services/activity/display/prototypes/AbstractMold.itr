@@ -7,7 +7,6 @@ def type(mold)
     import io.intino.konos.alexandria.activity.model.mold.Stamp;
     import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 
-    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -161,7 +160,7 @@ def trigger(displayBuilder)
 end
 
 def trigger(embeddedDialogBuilder)
-	(name, username) -> Dialogs.dialogFor(box, "$dialog")
+	(name, username) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
 end
 
 def trigger(title)
@@ -170,7 +169,7 @@ end
 
 def trigger(dialogBuilder)
 	(object, username) -> {
-		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = Dialogs.dialogFor(box, "$dialog");
+		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
 		dialog.target(object);
 		return dialog;
 	}
