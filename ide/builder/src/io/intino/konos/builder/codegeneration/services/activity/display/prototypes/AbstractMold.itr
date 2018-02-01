@@ -6,6 +6,8 @@ def type(mold)
     import io.intino.konos.alexandria.activity.model.mold.Block;
     import io.intino.konos.alexandria.activity.model.mold.Stamp;
     import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+
+    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -68,15 +70,19 @@ def type(stamp & map)
 end
 
 def type(stamp & cataloglink)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().display((io.intino.konos.alexandria.activity.displays.AlexandriaCatalog) ElementDisplays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) ElementDisplays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((username) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
 end
 
 def type(stamp & embeddedDisplay)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType("$displayType").displayBuilder($displayBuilder)$common)
+end
+
+def type(stamp & embeddedDialog)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog().dialogType("$dialogType").dialogBuilder($embeddedDialogBuilder)$common)
 end
 
 def type(stamp & highlight)
@@ -108,7 +114,7 @@ def type(stamp & picture)
 end
 
 def type(stamp & openDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width][.path($dialogPath)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder)$common)
 end
 
 def type(stamp & downloadOperation)
@@ -154,12 +160,20 @@ def trigger(displayBuilder)
 	(name, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.buildDisplay(box, name, username)
 end
 
+def trigger(embeddedDialogBuilder)
+	(name, username) -> Dialogs.dialogFor(box, "$dialog")
+end
+
 def trigger(title)
 	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) object, username)
 end
 
-def trigger(dialogPath)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.path(box, (String) object, username)
+def trigger(dialogBuilder)
+	(object, username) -> {
+		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = Dialogs.dialogFor(box, "$dialog");
+		dialog.target(object);
+		return dialog;
+	}
 end
 
 def trigger(exportExecution)

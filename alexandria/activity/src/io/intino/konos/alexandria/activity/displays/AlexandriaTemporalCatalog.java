@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 
 import java.time.Instant;
@@ -53,6 +54,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		display.range(timeScaleHandler().range());
 
 		return display;
+	}
+
+	@Override
+	public AlexandriaDialog dialog(String stampName) {
+		EmbeddedDialog stamp = (EmbeddedDialog) stamp(stampName);
+		return stamp.createDialog(username());
 	}
 
 	@Override

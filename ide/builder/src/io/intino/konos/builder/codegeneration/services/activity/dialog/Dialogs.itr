@@ -1,0 +1,35 @@
+def type(Dialogs)
+	package $package.dialogs;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.*;
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.lang.reflect.Constructor;
+    import java.lang.reflect.InvocationTargetException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+	public class Dialogs {
+		private static Map<String, DialogBuilder> dialogMap = new HashMap<>();
+
+		static {
+			{
+				$dialog...[$NL]
+			}
+		}
+
+		public static AlexandriaDialog dialogFor($box+firstUpperCase~Box box, String name) {
+			if (!dialogMap.containsKey(name)) return null;
+			return dialogMap.get(name).build(box);
+		}
+
+		private interface DialogBuilder {
+			AlexandriaDialog build($box+firstUpperCase~Box box);
+		}
+	}
+end
+
+def trigger(dialog)
+	dialogMap.put("$name", (box) -> new $name+FirstUpperCase(box));
+end

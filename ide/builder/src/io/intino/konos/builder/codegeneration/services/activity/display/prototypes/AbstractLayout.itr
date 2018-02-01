@@ -39,7 +39,7 @@ def type(layout & gen)
     			}
 
     			private AlexandriaElementDisplay get(Element element, Object o) {
-					return ElementDisplays.displayFor(box, element);
+					return Displays.displayFor(box, element);
 				}
     		});
     		buildOptions(box).forEach(layout::add);
@@ -84,15 +84,15 @@ def type(group) trigger(elementOption)
 end
 
 def type(catalogs) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(ElementDisplays.elementsFor(box, Catalog.class, $catalog+quoted...[, ]))[.filter((catalog, context, target, object, username) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, catalog, context, target, object, username))]
+	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs().catalogs(Displays.elementsFor(box, Catalog.class, $catalog+quoted...[, ]))[.filter((catalog, context, target, object, username) -> $layout+FirstUpperCase.$path+FirstUppercase.filter(box, catalog, context, target, object, username))]
 end
 
 def type(panels) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(ElementDisplays.elementsFor(box, Panel.class, $panel+quoted...[, ]))
+	new io.intino.konos.alexandria.activity.model.renders.RenderPanels().panels(Displays.elementsFor(box, Panel.class, $panel+quoted...[, ]))
 end
 
 def type(objects) trigger(render)
-	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().panel((io.intino.konos.alexandria.activity.model.Panel) ElementDisplays.displayFor(box, $panel+quoted).element()).source((username) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, username))
+	new io.intino.konos.alexandria.activity.model.renders.RenderObjects().panel((io.intino.konos.alexandria.activity.model.Panel) Displays.displayFor(box, $panel+quoted).element()).source((username) -> $layout+FirstUpperCase.$path+FirstUppercase.objects(box, username))
 end
 
 def trigger(quoted)

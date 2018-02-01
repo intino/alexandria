@@ -39,16 +39,6 @@ def trigger(hidden)
 	}
 end
 
-def type(stamp & openDialogOperation)
-	public static class $name+FirstUpperCase {
-		$common
-
-		public static String path($box~Box box, String $moldClass+shortType+firstLowerCase~Id, String username) {
-			return null;//TODO
-		}
-	}
-end
-
 def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common

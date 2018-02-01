@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.0.1") alexandria-activity-elements
+Artifact(groupId = "io.intino.konos", version = "1.1.0") alexandria-activity-elements
 
 	WebImports
 		WebComponent("Polymer/polymer", "1.9 - 2") polymer

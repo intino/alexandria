@@ -62,6 +62,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		else if (stamp.i$(Operation.class)) frameOf(frame, stamp.a$(Operation.class));
 		else if (stamp.i$(CatalogLink.class)) frameOf(frame, stamp.a$(CatalogLink.class));
 		else if (stamp.i$(EmbeddedDisplay.class)) frameOf(frame, stamp.a$(EmbeddedDisplay.class));
+		else if (stamp.i$(EmbeddedDialog.class)) frameOf(frame, stamp.a$(EmbeddedDialog.class));
 		else if (stamp.i$(EmbeddedCatalog.class)) frameOf(frame, stamp.a$(EmbeddedCatalog.class));
 		else if (stamp.i$(Icon.class)) frameOf(frame, stamp.a$(Icon.class));
 		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
@@ -113,6 +114,11 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addSlot("displayType", stamp.display().name$());
 	}
 
+	private void frameOf(Frame frame, EmbeddedDialog stamp) {
+		frame.addSlot("embeddedDialogBuilder", baseFrame(stamp).addSlot("dialog", stamp.dialog().name$()));
+		frame.addSlot("dialogType", stamp.dialog().name$());
+	}
+
 	private void frameOf(Frame frame, CatalogLink stamp) {
 		frame.addSlot("catalog", stamp.catalog().name$());
 		if (stamp.filtered()) frame.addSlot("filter", baseFrame(stamp).addTypes("filter"));
@@ -149,8 +155,10 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Operation operation) {
 		frame.addTypes(operation.getClass().getSimpleName());
-		if (operation.i$(OpenDialogOperation.class))
-			frame.addSlot("width", operation.a$(OpenDialogOperation.class).width()).addSlot("dialogPath", baseFrame(operation));
+		if (operation.i$(OpenDialogOperation.class)) {
+			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
+			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
+		}
 		else if (operation.i$(DownloadOperation.class)) {
 			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
 			frame.addSlot("downloadExecution", baseFrame(operation));
@@ -171,6 +179,10 @@ public class MoldRenderer extends PrototypeRenderer {
 			if (!item.treeItemList().isEmpty()) frameOf(sub, item.treeItemList());
 			frame.addSlot("treeItem", sub);
 		}
+	}
+
+	private Frame frame(OpenDialogOperation operation) {
+		return new Frame(operation.getClass().getSimpleName()).addSlot("dialog", operation.dialog().name$());
 	}
 
 	private Frame baseFrame(Stamp stamp) {

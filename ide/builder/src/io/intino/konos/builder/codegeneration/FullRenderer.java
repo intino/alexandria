@@ -15,8 +15,9 @@ import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.ActivityRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogRenderer;
+import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogsRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.display.DisplayRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.display.ElementDisplaysRenderer;
+import io.intino.konos.builder.codegeneration.services.activity.display.DisplaysRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.resource.ResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
@@ -121,7 +122,8 @@ public class FullRenderer {
 
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName).execute();
-		new ElementDisplaysRenderer(graph, gen, packageName, boxName).execute();
+		new DialogsRenderer(graph, gen, packageName, boxName).execute();
+		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();

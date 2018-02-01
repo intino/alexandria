@@ -1,6 +1,7 @@
-package io.intino.konos.builder.codegeneration.services.activity.display;
+package io.intino.konos.builder.codegeneration.services.activity.dialog;
 
-import io.intino.konos.model.graph.Display;
+import io.intino.konos.builder.codegeneration.services.activity.display.DisplaysTemplate;
+import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -10,44 +11,42 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static java.util.stream.Collectors.toList;
 
-public class ElementDisplaysRenderer {
-	private static final String DISPLAYS = "displays";
+public class DialogsRenderer {
+	private static final String DIALOGS = "dialogs";
 
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
-	private final List<Display> displays;
+	private final List<Dialog> dialogs;
 
-	public ElementDisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public DialogsRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
-		this.displays = graph.displayList().stream().filter(d -> !d.getClass().equals(Display.class)).collect(toList());
+		this.dialogs = graph.dialogList();
 		this.boxName = boxName;
 	}
 
 	public void execute() {
-		if (displays.isEmpty()) return;
+		if (dialogs.isEmpty()) return;
 		Frame frame = createFrame();
-		for (Display display : displays) frame.addSlot("display", displayFrame(display));
+		for (Dialog dialog : dialogs) frame.addSlot("dialog", dialogFrame(dialog));
 		write(frame);
 	}
 
-
-	private Frame displayFrame(Display display) {
-		return new Frame("display")
-				.addSlot("name", display.name$())
-				.addSlot("type", display.getClass().getSimpleName());
+	private Frame dialogFrame(Dialog dialog) {
+		return new Frame("dialog")
+				.addSlot("name", dialog.name$())
+				.addSlot("type", dialog.getClass().getSimpleName());
 	}
 
 	private void write(Frame frame) {
-		final String newDisplay = snakeCaseToCamelCase("ElementDisplays");
-		writeFrame(new File(gen, DISPLAYS), newDisplay, template().format(frame));
+		final String newDisplay = snakeCaseToCamelCase("Dialogs");
+		writeFrame(new File(gen, DIALOGS), newDisplay, template().format(frame));
 	}
 
 	private Template template() {
-		return customize(ElementDisplaysTemplate.create());
+		return customize(DialogsTemplate.create());
 	}
 
 	private Template customize(Template template) {
@@ -58,7 +57,7 @@ public class ElementDisplaysRenderer {
 	}
 
 	private Frame createFrame() {
-		return new Frame("elementDisplays")
+		return new Frame("dialogs")
 				.addSlot("box", boxName)
 				.addSlot("package", packageName);
 	}

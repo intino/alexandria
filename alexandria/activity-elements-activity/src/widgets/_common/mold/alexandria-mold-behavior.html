@@ -111,12 +111,13 @@
             stamp.isTaskOperation = this._isTaskOperation(moldStamp);
             stamp.isPage = this._isPage(moldStamp);
             stamp.isEmbeddedDisplay = this._isEmbeddedDisplay(moldStamp);
+            stamp.isEmbeddedDialog = this._isEmbeddedDialog(moldStamp);
+            stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
             stamp.isLocation = this._isLocation(moldStamp);
             stamp.isBreadcrumbs = this._isBreadcrumbs(moldStamp);
             stamp.isItemLinks = this._isItemLinks(moldStamp);
             stamp.isCatalogLink = this._isCatalogLink(moldStamp);
             stamp.isSnippet = this._isSnippet(moldStamp);
-            stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
             stamp.isCardWallet = this._isCardWallet(moldStamp);
             stamp.isMap = this._isMap(moldStamp);
         },
@@ -136,6 +137,7 @@
             this._addStampCatalogLinkProperties(stamp, moldBlock, moldStamp);
             this._addStampLocationProperties(stamp, moldStamp);
             this._addStampEmbeddedDisplayProperties(stamp, moldStamp);
+            this._addStampEmbeddedDialogProperties(stamp, moldStamp);
             this._addStampEmbeddedCatalogProperties(stamp, moldStamp);
             this._addStampCardWalletProperties(stamp, moldBlock, moldStamp);
             this._addStampMapProperties(stamp, moldStamp);
@@ -207,6 +209,11 @@
         _addStampEmbeddedDisplayProperties : function(stamp, moldStamp) {
             if (!stamp.isEmbeddedDisplay) return;
             stamp.properties.displayType = this._propertyValueOf(moldStamp,'displayType');
+        },
+
+        _addStampEmbeddedDialogProperties : function(stamp, moldStamp) {
+            if (!stamp.isEmbeddedDisplay) return;
+            stamp.properties.dialogType = this._propertyValueOf(moldStamp,'dialogType');
         },
 
         _addStampEmbeddedCatalogProperties : function(stamp, moldStamp) {
@@ -315,6 +322,14 @@
             return this.mode != "map" && stamp.shape === "embedded-display";
         },
 
+        _isEmbeddedDialog : function(stamp) {
+            return this.mode != "map" && stamp.shape === "embedded-dialog";
+        },
+
+        _isEmbeddedCatalog : function(stamp) {
+            return stamp.shape === "embedded-catalog";
+        },
+
         _isLocation : function(stamp) {
             return stamp.shape === "location";
         },
@@ -333,10 +348,6 @@
 
         _isSnippet : function(stamp) {
             return stamp.shape === "snippet";
-        },
-
-        _isEmbeddedCatalog : function(stamp) {
-            return stamp.shape === "embedded-catalog";
         },
 
         _isCardWallet : function(stamp) {

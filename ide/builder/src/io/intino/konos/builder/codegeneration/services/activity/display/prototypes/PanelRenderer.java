@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.PanelUpdater;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Panel.Toolbar.OpenDialog;
 import io.intino.konos.model.graph.Panel.Views.View;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
@@ -86,6 +87,7 @@ public class PanelRenderer extends PrototypeRenderer {
 				.addSlot("title", operation.title())
 				.addSlot("panel", panel.name$());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
+		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
 		return frame;
 	}
 

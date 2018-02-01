@@ -104,28 +104,35 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 	}
 
 	public void itemStampsReady(String id) {
-		if (!embeddedDisplaysCreated)
-			embeddedDisplays(item).forEach((key, display) -> {
-				add(display);
+		if (!embeddedDisplaysCreated) {
+			embeddedDisplays().forEach((key, display) -> {
 				display.item(item);
 				display.provider(AlexandriaItem.this);
+				add(display);
 				display.personifyOnce(id + key.displayType());
 				updateRange(display);
 				display.refresh();
 			});
+			embeddedDialogs().forEach((key, dialog) -> {
+				dialog.target(item);
+				add(dialog);
+				dialog.personifyOnce(id + key.dialogType());
+				dialog.refresh();
+			});
+			embeddedCatalogs().forEach((key, display) -> {
+				display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
+				display.label(key.label());
+				display.range(provider.range());
+				display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
+				display.embedded(true);
+				add(display);
+				display.personifyOnce(id + key.name());
+			});
+		}
 		pages(item).forEach(display -> {
 			add(display);
 			display.personifyOnce(id);
 			display.refresh();
-		});
-		embeddedCatalogs().forEach((key, display) -> {
-			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, username()));
-			display.label(key.label());
-			display.range(provider.range());
-			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
-			display.embedded(true);
-			add(display);
-			display.personifyOnce(id + key.name());
 		});
 		embeddedDisplaysCreated = true;
 	}
@@ -140,6 +147,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
 		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+		display.target(this.item);
 
 		if (catalogLinkStamp.filtered())
 			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, username()));
@@ -151,11 +159,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(ElementHelper.openItemDialogEvent(params.item(), provider.stamp(mold, params.stamp()), username())));
+		openItemDialogListeners.forEach(l -> l.accept(ElementHelper.openItemDialogEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), username())));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(ElementHelper.executeItemTaskEvent(params.item(), provider.stamp(mold, params.stamp()))));
+		executeItemTaskListeners.forEach(l -> l.accept(ElementHelper.executeItemTaskEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()))));
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters parameters) {
@@ -219,10 +227,17 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 	}
 
 	@Override
-	public AlexandriaCatalog embeddedCatalog(String name) {
+	public AlexandriaDialog embeddedDialog(String name) {
+		Stamp stamp = provider.stamp(mold, name);
+		if (stamp == null || !(stamp instanceof EmbeddedDialog)) return null;
+		return ((EmbeddedDialog)stamp).createDialog(username());
+	}
+
+	@Override
+	public AlexandriaAbstractCatalog embeddedCatalog(String name) {
 		Stamp stamp = provider.stamp(mold, name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
-		return ((EmbeddedCatalog)stamp).display();
+		return ((EmbeddedCatalog)stamp).createCatalog(username());
 	}
 
 	public void saveItem(SaveItemParameters value) {
@@ -304,15 +319,16 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		notifier.refreshMode(mode);
 	}
 
-	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays(Item item) {
+	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
 		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(username())), HashMap::putAll);
-		Map<EmbeddedDisplay, AlexandriaStamp> result = mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-		result.forEach((key, value) -> {
-			value.item(item);
-			value.provider(AlexandriaItem.this);
-		});
-		return result;
+		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private Map<EmbeddedDialog, AlexandriaDialog> embeddedDialogs() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDialog).collect(toList());
+		Map<EmbeddedDialog, AlexandriaDialog> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDialog)stamp, ((EmbeddedDialog)stamp).createDialog(username())), HashMap::putAll);
+		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private List<AlexandriaDisplay> pages(Item item) {
@@ -333,7 +349,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 	}
 
 	private AlexandriaAbstractCatalog displayFor(EmbeddedCatalog stamp) {
-		AlexandriaAbstractCatalog result = stamp.display();
+		AlexandriaAbstractCatalog result = stamp.createCatalog(username());
 		if (result == null) return null;
 		result.target(item);
 		return result;
@@ -343,6 +359,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier> impl
 		if (!(display instanceof AlexandriaTemporalStamp)) return;
 		AlexandriaTemporalStamp temporalDisplay = (AlexandriaTemporalStamp) display;
 		temporalDisplay.range(provider.range());
+	}
+
+	private Item itemOf(String item) {
+		return provider.item(item);
 	}
 
 }

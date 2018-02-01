@@ -12,6 +12,9 @@ AlexandriaDialogContainerBehaviors.NotifierListener = {
         this.when("refreshDialog").toSelf().execute(function(parameters) {
         	widget._refreshDialog(parameters.value);
         });
+        this.when("closeDialog").toSelf().execute(function(parameters) {
+        	widget._closeDialog();
+        });
         this._listeningToDisplay = true;
     }
 };

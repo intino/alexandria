@@ -9,8 +9,9 @@ Desktop(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome
 	layout = testEbarTab
 
 Layout(mode = Tab) testEbarTab
-	Group(label = "", mode = Expanded)analysis
-		RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
+	Group(label = "", mode = Expanded) analysis
+		Options(modelClass = "") options
+			RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
 
 Catalog("Infrastructure", modelClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
 	Views
@@ -83,5 +84,7 @@ Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationM
 		Block
 			Icon(label = "icono", source = Polymer) dummy
 		Block(layout = Flexible)
-			OpenDialogOperation editAlert
+			OpenDialogOperation(dialog=editAlertDialog) editAlert
 			 	label = "editar..."
+
+Dialog(url = "", label = "", description = "") editAlertDialog

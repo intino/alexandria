@@ -96,9 +96,9 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	@Override
 	protected void init() {
 		super.init();
+		createDialogContainer();
 		sendTarget();
 		sendViewList();
-		createDialogContainer();
 		buildFixedViews();
 		selectFirstTabView();
 	}

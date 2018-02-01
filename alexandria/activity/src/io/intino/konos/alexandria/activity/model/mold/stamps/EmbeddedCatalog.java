@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
-import io.intino.konos.alexandria.activity.displays.AlexandriaCatalog;
+import io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog;
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmbeddedCatalog extends Stamp<String> {
-	private Catalog catalog;
 	private List<String> views = new ArrayList<>();
-	private AlexandriaCatalog display;
+	private Catalog catalog;
+	private CatalogDisplayBuilder catalogDisplayBuilder;
 	private Filter filter;
 
 	public boolean filter(Element context, Item target, Item item, String username) {
@@ -27,15 +27,6 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
-	public Catalog catalog() {
-		return catalog;
-	}
-
-	public EmbeddedCatalog catalog(Catalog catalog) {
-		this.catalog = catalog;
-		return this;
-	}
-
 	public List<String> views() {
 		return views;
 	}
@@ -45,19 +36,34 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
-	public AlexandriaCatalog display() {
-		display.enabledViews(views);
-		return display;
+	public Catalog catalog() {
+		return this.catalog;
 	}
 
-	public EmbeddedCatalog display(AlexandriaCatalog display) {
-		this.display = display;
+	public EmbeddedCatalog catalog(Catalog catalog) {
+		this.catalog = catalog;
+		return this;
+	}
+
+	public AlexandriaAbstractCatalog createCatalog(String username) {
+		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(username) : null;
+		if (catalog == null) return null;
+		catalog.enabledViews(views);
+		return catalog;
+	}
+
+	public EmbeddedCatalog catalogDisplayBuilder(CatalogDisplayBuilder builder) {
+		this.catalogDisplayBuilder = builder;
 		return this;
 	}
 
 	@Override
 	public String objectValue(Object object, String username) {
 		return null;
+	}
+
+	public interface CatalogDisplayBuilder {
+		AlexandriaAbstractCatalog build(String username);
 	}
 
 	public interface Filter {

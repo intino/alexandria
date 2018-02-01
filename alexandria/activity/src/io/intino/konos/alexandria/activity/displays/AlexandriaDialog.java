@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
@@ -21,9 +22,13 @@ import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialogNotifier> {
+	private int width;
+	private int height;
 	private Box box;
 	private Map<Class<? extends Dialog.Tab.Input>, Function<FormInput, DialogValidator.Result>> validators = new HashMap<>();
 	private Dialog dialog;
+	private Object target;
+	private List<Consumer<DialogExecution.Modification>> doneListeners = new ArrayList<>();
 
 	public AlexandriaDialog(Box box, Dialog dialog) {
 		super();
@@ -46,6 +51,24 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 		return (B) box;
 	}
 
+	public int width() {
+		return width;
+	}
+
+	public AlexandriaDialog width(int width) {
+		this.width = width;
+		return this;
+	}
+
+	public int height() {
+		return height;
+	}
+
+	public AlexandriaDialog height(int height) {
+		this.height = height;
+		return this;
+	}
+
 	public Dialog dialog() {
 		return dialog;
 	}
@@ -53,6 +76,10 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 	public void dialog(Dialog dialog) {
 		this.dialog = dialog;
 		fillDefaultValues();
+	}
+
+	public void onDone(Consumer<DialogExecution.Modification> listener) {
+		doneListeners.add(listener);
 	}
 
 	@Override
@@ -114,7 +141,9 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
-		notifier.done(operation.execute(username()).toString());
+		DialogExecution.Modification modification = operation.execute(username());
+		notifier.done(modification.toString());
+		doneListeners.forEach(l -> l.accept(modification));
 	}
 
 	protected String username() {
@@ -188,6 +217,14 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 
 	private List<Dialog.Tab.Input> inputs(Dialog dialog) {
 		return dialog.tabList().stream().map(Dialog.Tab::inputList).flatMap(Collection::stream).collect(toList());
+	}
+
+	public Object target() {
+		return this.target;
+	}
+
+	public void target(Object target) {
+		this.target = target;
 	}
 
 	interface FormInput {

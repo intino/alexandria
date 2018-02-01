@@ -11,6 +11,7 @@ import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MoldView;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
@@ -40,6 +41,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private TimeRange range;
 	private List<String> enabledViews = null;
 	private AlexandriaPanel openedItemDisplay = null;
+	private AlexandriaDialogContainer dialogContainer = null;
 
 	public AlexandriaElementDisplay(Box box) {
 		super(box);
@@ -170,6 +172,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return ((EmbeddedDisplay)stamp(stampKey)).createDisplay(username());
 	}
 
+	public AlexandriaDialog dialog(String stampKey) {
+		return ((EmbeddedDialog)stamp(stampKey)).createDialog(username());
+	}
+
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
 		Operation operation = operationOf(params);
 		executeOperation(operation, params.option(), selection);
@@ -287,14 +293,14 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void createDialogContainer() {
-		AlexandriaDialogContainer display = new AlexandriaDialogContainer(box);
-		display.onDialogAssertion((modification) -> currentView().ifPresent(view -> {
+		dialogContainer = new AlexandriaDialogContainer(box);
+		dialogContainer.onDialogAssertion((modification) -> currentView().ifPresent(view -> {
 			dirty(true);
 			if (modification.toLowerCase().equals("itemmodified")) view.refresh(currentItem_());
 			else if (modification.toLowerCase().equals("catalogmodified")) view.refresh();
 		}));
-		add(display);
-		display.personifyOnce();
+		add(dialogContainer);
+		dialogContainer.personifyOnce();
 	}
 
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
@@ -315,18 +321,15 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {
-		currentItem(new String(Base64.getDecoder().decode(event.item())));
+		currentItem(event.item().id());
 
-		AlexandriaDialogContainer display = child(AlexandriaDialogContainer.class);
-		display.dialogWidth(event.width());
-		display.dialogHeight(event.height());
-		display.dialogLocation(event.path());
-		display.refresh();
+		dialogContainer.dialog(event.dialog());
+		dialogContainer.refresh();
 		showDialog();
 	}
 
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
-		currentItem(new String(Base64.getDecoder().decode(event.item())));
+		currentItem(event.item().id());
 		Item item = this.currentItem();
 		((TaskOperation)event.stamp()).execute(item, username());
 		dirty(true);
@@ -380,12 +383,9 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	private void executeOperation(Operation operation, String option, List<Item> selection) {
 		if (operation instanceof OpenDialog) {
-			AlexandriaDialogContainer display = child(AlexandriaDialogContainer.class);
 			OpenDialog openDialog = (OpenDialog)operation;
-			display.dialogWidth(openDialog.width());
-			display.dialogHeight(openDialog.height());
-			display.dialogLocation(openDialog.path());
-			display.refresh();
+			dialogContainer.dialog(openDialog.createDialog(username()));
+			dialogContainer.refresh();
 			showDialog();
 		}
 

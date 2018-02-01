@@ -10,6 +10,7 @@ def type(panel & gen)
     import io.intino.konos.alexandria.activity.model.panel.View;
     import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 
+    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -62,7 +63,7 @@ def type(operation & export) trigger(operation)
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
@@ -74,17 +75,17 @@ def type(display) trigger(genview)
 end
 
 def type(mold) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) ElementDisplays.displayFor(box, "$mold").element())).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderMold().mold((io.intino.konos.alexandria.activity.model.Mold) Displays.displayFor(box, "$mold").element())).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
 end
 
 def type(catalogs) trigger(genview)
-	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].displayLoader($displayLoader).catalogs(ElementDisplays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
+	result.add(new View().render(new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs()[.filter($filter+filtercall)].displayLoader($displayLoader).catalogs(Displays.elementsFor(box, io.intino.konos.alexandria.activity.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden]);
 end
 
 def trigger(displayLoader)
 	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs.Loader() {
 		public io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog load(io.intino.konos.alexandria.activity.model.Catalog catalog, String username) {
-			return (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) ElementDisplays.displayFor(box, catalog);
+			return (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, catalog);
 		}
 	}
 end

@@ -111,12 +111,6 @@ def trigger(hasArrangements)
 	}
 end
 
-def type(openDialog)
-	public static String onOpenDialogPath($box+firstUpperCase~Box box, String record) {
-		return null; //return dialog path
-	}
-end
-
 def type(openPanel)
 	$breadcrumbs
 end
