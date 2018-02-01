@@ -158,7 +158,7 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private String operationMethodText(Operation operation) {
-		return template.format(frameOf(operation, catalog, box, catalog.modelClass()));
+		return template.format(frameOf(operation, catalog, box, catalog.modelClass(), packageName));
 	}
 
 	private String sortingMethodText(Sorting sorting) {

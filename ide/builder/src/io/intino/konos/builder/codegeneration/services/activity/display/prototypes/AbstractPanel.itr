@@ -10,7 +10,6 @@ def type(panel & gen)
     import io.intino.konos.alexandria.activity.model.panel.View;
     import io.intino.konos.alexandria.activity.model.renders.RenderDisplay;
 
-    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -63,7 +62,7 @@ def type(operation & export) trigger(operation)
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)

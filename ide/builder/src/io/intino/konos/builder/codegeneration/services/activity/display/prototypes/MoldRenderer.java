@@ -115,7 +115,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, EmbeddedDialog stamp) {
-		frame.addSlot("embeddedDialogBuilder", baseFrame(stamp).addSlot("dialog", stamp.dialog().name$()));
+		frame.addSlot("embeddedDialogBuilder", baseFrame(stamp).addSlot("dialog", stamp.dialog().name$()).addSlot("package", packageName));
 		frame.addSlot("dialogType", stamp.dialog().name$());
 	}
 
@@ -182,7 +182,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frame(OpenDialogOperation operation) {
-		return new Frame(operation.getClass().getSimpleName()).addSlot("dialog", operation.dialog().name$());
+		return new Frame(operation.getClass().getSimpleName()).addSlot("dialog", operation.dialog().name$()).addSlot("package", packageName);
 	}
 
 	private Frame baseFrame(Stamp stamp) {

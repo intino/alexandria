@@ -17,7 +17,6 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.activity.model.TimeScale;
     import io.intino.konos.alexandria.activity.model.toolbar.*;
 
-    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -116,7 +115,7 @@ end
 
 def type(openDialog) trigger(event)
 	openDialog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenDialog()[.height($height)][.width($width)].dialogType("$dialog").dialogBuilder((item, username) -> {
-		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = Dialogs.dialogFor(box, "$dialog");
+		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
 		dialog.target(item);
 		return dialog;
 	}))
@@ -141,7 +140,7 @@ def type(operation & export) trigger(operation)
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
