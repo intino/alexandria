@@ -16,6 +16,8 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
     import io.intino.konos.alexandria.activity.model.TimeScale;
     import io.intino.konos.alexandria.activity.model.toolbar.*;
+
+    import $package+validPackage.dialogs.Dialogs;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -113,13 +115,17 @@ def trigger(toolbar)
 end
 
 def type(openDialog) trigger(event)
-	openDialog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenDialog()[.height($height)][.width($width)].path(record -> $catalog+FirstUpperCase.Events.onOpenDialogPath(box, record)))
+	openDialog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenDialog()[.height($height)][.width($width)].dialogType("$dialog").dialogBuilder((item, username) -> {
+		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = Dialogs.dialogFor(box, "$dialog");
+		dialog.target(item);
+		return dialog;
+	}))
 end
 
 def type(openPanel) trigger(event)
 	openPanel(new io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel()
 		[.breadcrumbs($breadCrumbs)]
-		.panel((io.intino.konos.alexandria.activity.model.Panel) ElementDisplays.displayFor(box, "$panel").element()))
+		.panel((io.intino.konos.alexandria.activity.model.Panel) Displays.displayFor(box, "$panel").element()))
 end
 
 def trigger(breadCrumbs)
@@ -135,7 +141,7 @@ def type(operation & export) trigger(operation)
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().execute((element, from, to, username) -> $catalog+FirstUpperCase.Toolbar.openDialog(box, element, from, to, username)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((username) -> Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
@@ -159,19 +165,19 @@ def type(operation & taskselection) trigger(operation)
 end
 
 def type(listview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.ListView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.ListView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
 end
 
 def type(gridview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.GridView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.ElementDisplays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.GridView()[.noRecordsMessage("$noRecordMessage")][.width($width)].mold((io.intino.konos.alexandria.activity.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
 end
 
 def type(mapview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MapView()[.center(new io.intino.konos.alexandria.activity.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) Displays.displayFor(box, "$mold").element()).name("$name").label("$label"));
 end
 
 def type(magazineview) trigger(add)
-	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MagazineView()[.noRecordMessage("$noRecordMessage")][.width($width)].mold((Mold) ElementDisplays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+	result.add(new io.intino.konos.alexandria.activity.model.catalog.views.MagazineView()[.noRecordMessage("$noRecordMessage")][.width($width)].mold((Mold) Displays.displayFor(box, "$mold").element()).name("$name").label("$label"));
 end
 
 def type(displayview) trigger(add)

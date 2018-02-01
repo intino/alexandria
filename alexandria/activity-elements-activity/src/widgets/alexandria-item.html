@@ -36,7 +36,7 @@
             height: 100%;
         }
         :host alexandria-mold ::content > div {
-            height: 100%;
+            height: calc(100% - 20px);
         }
     </style>
 
@@ -92,7 +92,7 @@
 
             _itemStampsReady : function(event) {
                 if (this.ready) window.clearTimeout(this.ready);
-                this.ready = window.setTimeout(() => this.itemStampsReady(this._item.name, 100));
+                this.ready = window.setTimeout(() => this.itemStampsReady(this._item.name), 300);
             },
 
             _navigateItem : function(e) {

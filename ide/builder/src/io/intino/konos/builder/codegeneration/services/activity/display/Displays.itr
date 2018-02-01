@@ -1,4 +1,4 @@
-def type(elementDisplays)
+def type(Displays)
 	package $package.displays;
 
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
@@ -10,35 +10,36 @@ def type(elementDisplays)
     import java.util.HashMap;
     import java.util.Map;
 
-	public class ElementDisplays {
-		private static Map<String, ComponentCreator> elementMap = new HashMap<>();
+	public class Displays {
+		private static Map<String, ElementDisplayBuilder> displayMap = new HashMap<>();
 
 		static {
 			{
 				$display...[$NL]
+				$dialog...[$NL]
 			}
 		}
 
 		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, String name) {
-			if (!elementMap.containsKey(name)) return null;
-			return elementMap.get(name).build(box);
+			if (!displayMap.containsKey(name)) return null;
+			return displayMap.get(name).build(box);
 		}
 
 		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
-			if (!elementMap.containsKey(element.name())) return defaultElement(box, element);
-			return elementMap.get(element.name()).build(box);
+			if (!displayMap.containsKey(element.name())) return defaultElement(box, element);
+			return displayMap.get(element.name()).build(box);
 		}
 
 		public static <T extends io.intino.konos.alexandria.activity.model.Element> java.util.List<T> elementsFor($box+firstUpperCase~Box box, Class<T> tClass, String... elements) {
 			java.util.List<T> list = new java.util.ArrayList<>();
 			for (String element : elements)
-				list.add((T) elementMap.get(element).build(box).element());
+				list.add((T) displayMap.get(element).build(box).element());
 			return list;
 		}
 
 		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
-			if (!elementMap.containsKey(element.name())) return defaultElementType(box, element);
-			return elementMap.get(element.name()).build(box).getClass();
+			if (!displayMap.containsKey(element.name())) return defaultElementType(box, element);
+			return displayMap.get(element.name()).build(box).getClass();
 		}
 
 		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element) {
@@ -77,12 +78,16 @@ def type(elementDisplays)
 			return null;
 		}
 
-		private interface ComponentCreator {
+		private interface ElementDisplayBuilder {
 			AlexandriaElementDisplay build($box+firstUpperCase~Box box);
 		}
 	}
 end
 
 def trigger(display)
-	elementMap.put("$name", (box) -> new $name+FirstUpperCase(box));
+	displayMap.put("$name", (box) -> new $name+FirstUpperCase(box));
+end
+
+def trigger(dialog)
+	dialogMap.put("$name", (box) -> new $name+FirstUpperCase(box));
 end

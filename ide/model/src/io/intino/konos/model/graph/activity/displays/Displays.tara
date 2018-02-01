@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Dialog
 use Mold
 use Catalog
 use DataTypes
@@ -23,6 +24,7 @@ Concept Panel extends Display
 	Concept:{0..1} Toolbar
     	var boolean canSearch = true
     	Concept:{0..1}:Named OpenDialog extends Operation
+    		var Dialog dialog
     	Concept:{0..1} Export extends Operation
     	Concept:{0..1} Task extends Operation
     	Concept:{0..1} Download extends Operation

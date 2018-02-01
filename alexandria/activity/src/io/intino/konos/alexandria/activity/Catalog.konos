@@ -146,6 +146,7 @@ Display alexandriaDialogContainer
 	displays = empty
 
 	Notification refreshDialog as Object(DialogReference)
+	Notification closeDialog
 	Request dialogAssertionMade as Text
 
 Display alexandriaPageContainer

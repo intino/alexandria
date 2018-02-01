@@ -41,6 +41,7 @@ public class MoldBuilder {
         addCommonProperties(propertyList, stamp);
         addRatingProperties(propertyList, stamp);
         addEmbeddedDisplayProperties(propertyList, stamp);
+        addEmbeddedDialogProperties(propertyList, stamp);
         addEmbeddedCatalogProperties(propertyList, stamp);
         addIconProperties(propertyList, stamp);
         addDownloadOperationProperties(propertyList, stamp);
@@ -72,6 +73,7 @@ public class MoldBuilder {
         if (stamp instanceof Snippet) return "snippet";
         if (stamp instanceof CardWallet) return "card-wallet";
         if (stamp instanceof EmbeddedDisplay) return "embedded-display";
+        if (stamp instanceof EmbeddedDialog) return "embedded-dialog";
         if (stamp instanceof EmbeddedCatalog) return "embedded-catalog";
         if (stamp instanceof Map) return "map";
         return "";
@@ -90,6 +92,11 @@ public class MoldBuilder {
     private static void addEmbeddedDisplayProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof EmbeddedDisplay)) return;
         propertyList.add(shapeProperty("displayType", ((EmbeddedDisplay)stamp).displayType()));
+    }
+
+    private static void addEmbeddedDialogProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof EmbeddedDialog)) return;
+        propertyList.add(shapeProperty("dialogType", ((EmbeddedDialog)stamp).dialogType()));
     }
 
     private static void addEmbeddedCatalogProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {

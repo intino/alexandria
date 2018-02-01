@@ -25,7 +25,7 @@ public class AlexandriaStamp<N extends AlexandriaDisplayNotifier> extends Alexan
         return provider.embeddedDisplay(stamp);
     }
 
-    public AlexandriaCatalog embeddedCatalog(String stamp) {
+    public AlexandriaAbstractCatalog embeddedCatalog(String stamp) {
         return provider.embeddedCatalog(stamp);
     }
 }

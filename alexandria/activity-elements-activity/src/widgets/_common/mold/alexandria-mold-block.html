@@ -91,6 +91,9 @@
             <template is="dom-if" if="[[stamp.isEmbeddedDisplay]]">
                 <div class="display-layer" name$="[[stamp.properties.displayType]]" id$="[[item]][[stamp.properties.displayType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
+            <template is="dom-if" if="[[stamp.isEmbeddedDialog]]">
+                <div class="display-layer" name$="[[stamp.properties.dialogType]]" id$="[[item]][[stamp.properties.dialogType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
             <template is="dom-if" if="[[stamp.isBreadcrumbs]]">
                 <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
             </template>
@@ -354,8 +357,8 @@
             _createZombieDisplayLayers : function() {
                 this.querySelectorAll(".display-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
-            });
+                    this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
+                });
             },
 
             _listenToItemLinks : function() {

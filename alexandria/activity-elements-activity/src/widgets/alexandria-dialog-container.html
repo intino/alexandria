@@ -8,7 +8,6 @@
 <link rel="import" href="../../lib/iron-icons/iron-icons.html">
 <link rel="import" href="../../lib/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../../lib/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../../lib/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="_common/alexandria-configuration-behavior.html">
 
@@ -24,8 +23,7 @@
                       on-iron-overlay-closed="_overlayClosed"
                       with-backdrop>
             <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
-            <paper-spinner active id="loading" class="green layout fit horizontal center center-justified" title="[[Loading]]"></paper-spinner>
-            <iframe id="frame" class="dialog" src="[[_dialogLocation]]"></iframe>
+            <div id="container"></div>
         </paper-dialog>
     </template>
 
@@ -56,7 +54,7 @@
             -moz-box-shadow: -1px 1px 10px #888888;
             box-shadow: -1px 1px 10px #888888;
         }
-        :host paper-dialog iframe {
+        :host paper-dialog #container {
             border: 0;
             overflow: auto;
             width: calc(100% - 20px);
@@ -64,11 +62,6 @@
             border-radius: 2px;
             padding: 0;
             margin: 10px;
-        }
-        :host paper-dialog paper-spinner {
-            height: 50px;
-            width: 50px;
-            margin: auto;
         }
     </style>
 
@@ -97,7 +90,7 @@
             properties : {
                 _width : { type: Number, value: function() { return 100; } },
                 _height : { type: Number, value: function() { return 100; } },
-                _dialogLocation : String
+                _type : String
             },
 
             listeners: { 'iron-resize': '_fitDialog' },
@@ -105,7 +98,6 @@
             attached : function() {
                 this.translate(AlexandriaDialogContainerDictionary);
                 this.listenToDisplay();
-                this.$.frame.onload = this._frameLoaded.bind(this);
             },
 
             open : function() {
@@ -131,34 +123,24 @@
                 this.$.dialog.style.cssText += style;
             },
 
-            close : function() {
-                this.$.dialog.close();
-            },
-
-            _frameLoaded : function() {
-                this.$.loading.active = false;
-
-                var frame = this.$.frame;
-                var delegate = (frame.contentWindow || frame.contentDocument).document;
-                delegate.onDialogCompleted = (modification) => this._dialogCompleted(modification);
-            },
-
-            _dialogCompleted : function(modification) {
-                this.close();
-                this.dialogAssertionMade(modification);
-            },
-
             _refreshDialog : function(dialog) {
                 this._width = dialog.width;
                 this._height = dialog.height;
-                this._refreshLocation(dialog.location);
+                this._type = dialog.type;
+                this._createZombie();
             },
 
-            _refreshLocation : function(location) {
-                if (location == null || location === "") return;
-                var startsWithSlash = location[0] === "/";
-                this.$.loading.active = true;
-                this._dialogLocation = this.getBaseUrl() + (startsWithSlash ? "": "/") + location + "?random=" + Math.random();
+            _closeDialog : function() {
+                this.close();
+            },
+
+            _createZombie : function() {
+                this.$.container.innerHTML = "";
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", this._type);
+                zombie.setAttribute("widget", this._type);
+                zombie.setAttribute("object", this.display.id);
+                this.$.container.appendChild(zombie);
             },
 
             _overlayOpened : function(e) {
@@ -173,8 +155,11 @@
 
             _overlayClosed : function(e) {
                 this._overlayFixed = false;
-            }
+            },
 
+            close : function() {
+                this.$.dialog.close();
+            }
         });
 
     </script>

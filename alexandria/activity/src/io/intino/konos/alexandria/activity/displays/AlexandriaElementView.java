@@ -35,14 +35,12 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	}
 
 	interface OpenItemDialogEvent {
-		String item();
-		String path();
-		int width();
-		int height();
+		Item item();
+		AlexandriaDialog dialog();
 	}
 
 	interface ExecuteItemTaskEvent {
-		String item();
+		Item item();
 		Stamp stamp();
 	}
 }

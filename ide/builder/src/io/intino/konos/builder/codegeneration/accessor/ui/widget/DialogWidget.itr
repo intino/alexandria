@@ -20,7 +20,7 @@ def type(dialog)
 				border: 0;
 				overflow: auto;
 				width: 100%;
-				height: calc(100% - 4px);
+				height: calc(100% - 8px);
 				border-radius: 2px;
 			}
 		</style>

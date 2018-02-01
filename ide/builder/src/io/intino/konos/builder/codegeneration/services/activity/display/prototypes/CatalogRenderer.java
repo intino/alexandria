@@ -59,8 +59,9 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
-		if (catalogEvent.i$(OnClickRecord.OpenDialog.class))
+		if (catalogEvent.i$(OnClickRecord.OpenDialog.class)) {
 			return frameOf(catalogEvent.a$(OnClickRecord.OpenDialog.class), this.display).addSlot("box", box);
+		}
 		return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
 	}
 
@@ -68,6 +69,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 		final Frame frame = new Frame("event", openDialog.getClass().getSimpleName());
 		if (openDialog.height() >= 0) frame.addSlot("height", openDialog.height());
 		if (openDialog.width() >= 0) frame.addSlot("width", openDialog.width());
+		frame.addSlot("dialog", openDialog.dialog().name$());
 		frame.addSlot("catalog", catalog.name$());
 		return frame;
 	}
@@ -194,6 +196,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name$());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
+		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
 		return frame;
 	}
 

@@ -9,25 +9,17 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AlexandriaDialogContainer extends ActivityDisplay<AlexandriaDialogContainerNotifier> {
-	private int width;
-	private int height;
-	private String location;
+	private AlexandriaDialog dialog;
+	private Class<? extends AlexandriaDialog> dialogType;
 	private List<Consumer<String>> assertionListeners = new ArrayList<>();
 
 	public AlexandriaDialogContainer(Box box) {
 		super(box);
 	}
 
-	public void dialogWidth(int width) {
-		this.width = width;
-	}
-
-	public void dialogHeight(int height) {
-		this.height = height;
-	}
-
-	public void dialogLocation(String location) {
-		this.location = location;
+	public void dialog(AlexandriaDialog dialog) {
+		this.dialog = dialog;
+		this.dialogType = dialog.getClass();
 	}
 
 	public void onDialogAssertion(Consumer<String> listener) {
@@ -37,15 +29,24 @@ public class AlexandriaDialogContainer extends ActivityDisplay<AlexandriaDialogC
 	@Override
 	public void refresh() {
 		super.refresh();
+		if (dialogType != null) remove(dialogType);
+		if (dialog == null) return;
+		dialog.onDone(this::dialogAssertionMade);
 		sendInfo();
+		add(dialog);
+		dialog.personifyOnce(id());
 	}
 
 	private void sendInfo() {
-		notifier.refreshDialog(DialogReferenceBuilder.build(location, width, height));
+		notifier.refreshDialog(DialogReferenceBuilder.build(dialogType.getSimpleName(), dialog.width(), dialog.height()));
 	}
 
 	public void dialogAssertionMade(String modification) {
 		assertionListeners.forEach(l -> l.accept(modification));
 	}
 
+	private void dialogAssertionMade(DialogExecution.Modification modification) {
+		notifier.closeDialog();
+		dialogAssertionMade(modification.toString());
+	}
 }

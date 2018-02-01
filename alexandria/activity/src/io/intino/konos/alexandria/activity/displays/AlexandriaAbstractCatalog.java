@@ -188,11 +188,11 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	@Override
 	protected void init() {
 		super.init();
+		createDialogContainer();
 		createGroupingManager();
 		buildViewList();
 		sendCatalog();
 		createItemDisplay();
-		createDialogContainer();
 	}
 
 	protected void createGroupingManager() {

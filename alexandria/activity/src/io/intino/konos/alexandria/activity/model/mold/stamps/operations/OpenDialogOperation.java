@@ -1,11 +1,12 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 
-import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
+import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 
 public class OpenDialogOperation extends Operation<String> {
 	private int width = 100;
-	private Stamp.Value<String> path;
+	private DialogBuilder dialogBuilder;
 
 	public int width() {
 		return this.width;
@@ -16,12 +17,20 @@ public class OpenDialogOperation extends Operation<String> {
 		return this;
 	}
 
-	public String path(String itemId, String username) {
-		return path != null ? path.value(itemId, username) : "";
+	public AlexandriaDialog createDialog(Item item, String username) {
+		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.dialog(item != null ? item.object() : null, username) : null;
+		if (dialog == null) return null;
+		dialog.width(width);
+		dialog.height(height());
+		return dialog;
 	}
 
-	public OpenDialogOperation path(Stamp.Value<String> path) {
-		this.path = path;
+	public OpenDialogOperation dialogBuilder(DialogBuilder dialogBuilder) {
+		this.dialogBuilder = dialogBuilder;
 		return this;
+	}
+
+	public interface DialogBuilder {
+		AlexandriaDialog dialog(Object item, String username);
 	}
 }

@@ -14,14 +14,20 @@ Layout(mode = Menu) octanaLayout
 	Option("análisis") analysis > RenderPanels(octanaAnalysisPanel)
 
 Panel octanaDashboardPanel
+	Toolbar > OpenDialog("abrir", dialog=dialog1) abrir
 	Views > View("overview") overview > RenderMold(octanaDashboardMold)
 
 Mold(modelClass="Octana") octanaDashboardMold
 	Block ocBlock
 		hidden = HiddenEnabled
 		Title sss
+		EmbeddedDialog(dialog = dialog1) embeddedDialog
+
+Dialog(url = "", label = "", description = "") dialog1
 
 Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
+	Toolbar > OpenDialog("abrir", dialog=dialog1)
+	Events > OnClickRecord > OpenDialog(dialog1)
 	Views
 		ListView("lista", mold = octanaCenterMold)
 
