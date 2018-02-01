@@ -36,7 +36,7 @@ public class DesktopRenderer extends PrototypeRenderer {
 	}
 
 	private Activity findOwnerActivity() {
-		return this.display.graph().activityList().stream().filter(activity -> activity.userHome().uses().equals(this.display)).findFirst().orElse(null);
+		return this.display.graph().activityList().stream().filter(activity -> activity.userHome() != null && this.display.equals(activity.userHome().uses())).findFirst().orElse(null);
 	}
 
 	protected Template template() {
