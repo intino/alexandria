@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 
 public class OpenDialogOperation extends Operation<String> {
 	private int width = 100;
+	private String dialogType;
 	private DialogBuilder dialogBuilder;
 
 	public int width() {
@@ -14,6 +15,15 @@ public class OpenDialogOperation extends Operation<String> {
 
 	public OpenDialogOperation width(int width) {
 		this.width = width;
+		return this;
+	}
+
+	public String dialogType() {
+		return dialogType;
+	}
+
+	public OpenDialogOperation dialogType(String dialogType) {
+		this.dialogType = dialogType;
 		return this;
 	}
 
