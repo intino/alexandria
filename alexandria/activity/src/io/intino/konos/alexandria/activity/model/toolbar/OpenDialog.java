@@ -26,7 +26,7 @@ public class OpenDialog extends Operation {
 		return this;
 	}
 
-	public String type() {
+	public String dialogType() {
 		return type;
 	}
 

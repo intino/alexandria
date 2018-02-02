@@ -27,7 +27,6 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 	private Box box;
 	private Map<Class<? extends Dialog.Tab.Input>, Function<FormInput, DialogValidator.Result>> validators = new HashMap<>();
 	private Dialog dialog;
-	private Object target;
 	private List<Consumer<DialogExecution.Modification>> doneListeners = new ArrayList<>();
 
 	public AlexandriaDialog(Box box, Dialog dialog) {
@@ -219,12 +218,12 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 		return dialog.tabList().stream().map(Dialog.Tab::inputList).flatMap(Collection::stream).collect(toList());
 	}
 
-	public Object target() {
-		return this.target;
+	public <T extends Object> T target() {
+		return dialog().target();
 	}
 
 	public void target(Object target) {
-		this.target = target;
+		dialog().target(target);
 	}
 
 	interface FormInput {
