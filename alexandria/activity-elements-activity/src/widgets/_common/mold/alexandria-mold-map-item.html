@@ -60,13 +60,32 @@
                 var wkt = new Wkt.Wkt();
                 try {
                     wkt.read(this.value);
-                    this.marker = wkt.toObject(this._configuration());
+                    this.marker = this._fixWkt(wkt).toObject(this._configuration());
                     this._addIcon();
                     this._setMapToItem(this.map);
                 } catch (e1) {
                     if (e1.name === 'WKTError') {
                         return;
                     }
+                }
+            },
+
+            _fixWkt : function(wkt) {
+                for (var i=0; i<wkt.components.length; i++)
+                    this._fixWktComponent(wkt.components[i]);
+                return wkt;
+            },
+
+            _fixWktComponent : function(component) {
+                if (component instanceof Array) {
+                    for(var i=0; i<component.length; i++) {
+                        this._fixWktComponent(component[i]);
+                    }
+                }
+                else {
+                    var x = component.x;
+                    component.x = component.y;
+                    component.y = x;
                 }
             },
 

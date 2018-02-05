@@ -105,6 +105,7 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 
 	@Override
 	protected void filterTimezone(ItemList itemList, TimeRange range) {
+		if (element().showAll()) return;
 		Instant from = range.from().plusSeconds(timezoneOffset() * 3600);
 		Instant to = range.to().plusSeconds(timezoneOffset() * 3600);
 		itemList.filter(item -> {

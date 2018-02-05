@@ -244,6 +244,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	public void navigateMain() {
 		hidePanel();
 		refreshBreadcrumbs("");
+		refresh();
 	}
 
 	public void selectInstant(CatalogInstantBlock block) {
