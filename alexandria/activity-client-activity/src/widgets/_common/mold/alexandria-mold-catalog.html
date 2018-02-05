@@ -1,0 +1,84 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../alexandria-catalog.html">
+<link rel="import" href="../../alexandria-temporal-range-catalog.html">
+<link rel="import" href="../../alexandria-temporal-time-catalog.html">
+
+<dom-module id="alexandria-mold-catalog">
+
+    <template>
+        <div style$="height:100%;min-height:100px;overflow:auto;" class="layout flex">
+            <cotton-zombie id="entityZombie" display="AlexandriaCatalogDisplay" widget="AlexandriaCatalog" object="[[item]]"></cotton-zombie>
+            <cotton-zombie id="eventZombie" display="AlexandriaTemporalRangeCatalogDisplay" widget="AlexandriaTemporalRangeCatalog" object="[[item]]"></cotton-zombie>
+            <cotton-zombie id="reportZombie" display="AlexandriaTemporalTimeCatalogDisplay" widget="AlexandriaTemporalReportCatalog" object="[[item]]"></cotton-zombie>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            min-height: 100px;
+            @apply(--layout-vertical);
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldCatalogDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-catalog',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            properties : {
+                item: String
+            },
+
+            listeners: {
+                'iron-resize': '_resize'
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldCatalogDictionary);
+                this.$.entityZombie.whenPersonified().execute((widget) => {
+                    this.$.eventZombie.remove();
+                    this.$.reportZombie.remove();
+                });
+                this.$.eventZombie.whenPersonified().execute((widget) => {
+                    this.$.entityZombie.remove();
+                    this.$.reportZombie.remove();
+                });
+                this.$.reportZombie.whenPersonified().execute((widget) => {
+                    this.$.entityZombie.remove();
+                    this.$.eventZombie.remove();
+                });
+            },
+
+            _resize : function() {
+                this._addStyle(this._catalog("alexandria-catalog"));
+                this._addStyle(this._catalog("alexandria-temporal-range-catalog"));
+                this._addStyle(this._catalog("alexandria-temporal-time-catalog"));
+            },
+
+            _addStyle : function(catalog) {
+                var height = $(this).parent().height() + "px";
+                catalog.style.height = height;
+                catalog.style.display = "block";
+            },
+
+            _catalog : function(name) {
+                var result = this.querySelector(name);
+                return result != null ? result : { style: {} };
+            }
+
+        });
+    </script>
+
+</dom-module>

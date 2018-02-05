@@ -48,6 +48,13 @@ public class Formatters {
 		return value -> value.toString().replace("-", "").toLowerCase();
 	}
 
+	private static Formatter subPath() {
+		return value -> {
+			final String path = value.toString();
+			return path.contains(":") ? path.substring(0, path.indexOf(":")) : path;
+		};
+	}
+
 	public static Template customize(Template template) {
 		template.add("validname", validName());
 		template.add("snakecaseToCamelCase", snakeCaseToCamelCase());
@@ -56,6 +63,7 @@ public class Formatters {
 		template.add("quoted", quoted());
 		template.add("validPackage", validPackage());
 		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
+		template.add("subpath", subPath());
 		return template;
 	}
 

@@ -1,0 +1,54 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.CatalogViewBehavior = {
+
+        Dictionary : {
+            es: {
+                MagazineView : "revista",
+                ListView : "lista",
+                MapView : "mapa",
+                DisplayView : "display"
+            },
+            en: {
+                MagazineView : "magazine",
+                ListView : "list",
+                MapView : "map",
+                DisplayView : "display"
+            }
+        },
+
+        _isMagazineView : function(view) {
+            return view.referencePropertyList[0].value.toLowerCase() === "magazineview";
+        },
+
+        _isListView : function(view) {
+            return view.referencePropertyList[0].value.toLowerCase() === "listview";
+        },
+
+        _isGridView : function(view) {
+            return view.referencePropertyList[0].value.toLowerCase() === "gridview";
+        },
+
+        _isMapView : function(view) {
+            return view.referencePropertyList[0].value.toLowerCase() === "mapview";
+        },
+
+        _isDisplayView : function(view) {
+            return view.referencePropertyList[0].value.toLowerCase() === "displayview";
+        },
+
+        _viewLabelOf : function(view) {
+            if (view.label != "") return view.label;
+            if (this._isListView(view)) return this.ListView;
+            else if (this._isMagazineView(view)) return this.MagazineView;
+            else if (this._isMapView(view)) return this.MapView;
+            else if (this._isDisplayView(view)) return this.DisplayView;
+            return "";
+        }
+
+    };
+
+</script>

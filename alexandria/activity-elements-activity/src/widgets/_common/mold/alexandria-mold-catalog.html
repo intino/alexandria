@@ -1,0 +1,87 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../alexandria-catalog.html">
+<link rel="import" href="../../alexandria-temporal-range-catalog.html">
+<link rel="import" href="../../alexandria-temporal-time-catalog.html">
+
+<dom-module id="alexandria-mold-catalog">
+
+    <template>
+        <div id="container" class="layout flex"></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            min-height: 100px;
+            @apply(--layout-vertical);
+        }
+        :host #container {
+            height:100%;
+            min-height:100px;
+            overflow:auto;
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldCatalogDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-catalog',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            properties : {
+                item: { type: String, observer: '_createZombie', value: function() { return null; } },
+                catalog: { type: String, observer: '_createZombie', value: function() { return null; } }
+            },
+
+            listeners: {
+                'iron-resize': '_resize'
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldCatalogDictionary);
+            },
+
+            _resize : function() {
+                this._addStyle(this._catalog());
+            },
+
+            _addStyle : function(catalog) {
+                var height = $(this).parent().height() + "px";
+                catalog.style.height = height;
+                catalog.style.display = "block";
+            },
+
+            _createZombie : function() {
+                if (this.item == null || this.catalog == null || this._zombieAdded) return;
+
+                if (this.timeout != null)
+                    window.clearTimeout(this.timeout);
+
+                this.timeout = window.setTimeout(() => {
+                    var zombie = document.createElement("cotton-zombie");
+                    zombie.setAttribute("display", this.catalog);
+                    zombie.setAttribute("widget", this.catalog);
+                    zombie.setAttribute("object", this.item);
+                    this.$.container.appendChild(zombie);
+                }, 100);
+            },
+
+            _catalog : function() {
+                var result = this.querySelector("#container > *");
+                return result != null ? result : { style: {} };
+            },
+
+        });
+    </script>
+
+</dom-module>

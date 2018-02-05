@@ -4,22 +4,26 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Dialog;
-import io.intino.konos.model.graph.Display;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
 public class UIActionRenderer extends ActionRenderer {
 
 	private final Activity.AbstractPage page;
+	private final File gen;
+	private final Activity activity;
 
-	public UIActionRenderer(Project project, Activity.AbstractPage page, File src, String packageName, String boxName) {
+	public UIActionRenderer(Project project, Activity.AbstractPage page, File src, File gen, String packageName, String boxName) {
 		super(project, src, packageName, boxName);
+		this.gen = gen;
 		this.page = page;
+		this.activity = page.core$().ownerAs(Activity.class);
 	}
 
 	public void execute() {
@@ -30,20 +34,20 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("box", boxName);
 		if (page.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
-		frame.addSlot("ui", page.uses().name$() + (page.uses().i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName()));
+		frame.addSlot("ui", page.uses().name$());
 		frame.addSlot("parameter", parameters());
-		if (!alreadyRendered(destiny, page.name$()))
-			Commons.writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
-		//TODO else Update
+		if (activity.favicon() != null) frame.addSlot("favicon", activity.favicon());
+		else if (activity.title() != null) frame.addSlot("title", activity.title());
+		if (!alreadyRendered(destiny, page.name$())) writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
+		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(page.name$()) + "Action", template().format(frame.addTypes("gen")));
 	}
 
 	private Frame[] parameters() {
 		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
-									  .map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
-
+				.map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
 		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-								  .addSlot("type", "String")
-								  .addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
+				.addSlot("type", "String")
+				.addSlot("name", parameter)).toArray(Frame[]::new);
 	}
 
 }

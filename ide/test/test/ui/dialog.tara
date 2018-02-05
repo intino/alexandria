@@ -1,6 +1,18 @@
 dsl Konos
 
 
+Activity TestWeb
+    Home(uses = application) applicationPage
+    Page(opinion, "/opinion") opinionsPage
+
+Display application
+
+Dialog(url = "", label = "Añadir opinión", description = "añadir una nueva opinión") opinion2
+    Tab("")
+        ComboBox(label = "felicidad") > options = "A" "B" "C" "D"
+
+
+
 Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
 	Toolbar
 		Operation(label = "enviar")a
@@ -12,3 +24,8 @@ Dialog(url = "", label = "Información adicional", description = "Complementar i
 		Text(label = "Email") mail > readonly = true
 		Text(label = "Asunto") issue > readonly = true
 		CheckBox(label = "Finalizado", mode = Boolean) finished
+
+	Tab("Jobs pantalla") screenJobs
+		Section("Jobs") jobs as Multiple
+			ComboBox("Tipo") type > options = "Screen on" "Screen off"
+			Text("Patrón") pattern

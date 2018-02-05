@@ -1,0 +1,220 @@
+def type(mold)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.displays.AlexandriaMold;
+    import io.intino.konos.alexandria.activity.model.Mold;
+    import io.intino.konos.alexandria.activity.model.mold.Block;
+    import io.intino.konos.alexandria.activity.model.mold.Stamp;
+    import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    public abstract class Abstract$name+FirstUpperCase extends AlexandriaMold<$name+FirstUpperCase~Notifier> {
+
+    	public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
+    		super(box);
+    		element(buildMold(box));
+    	}
+
+    	public Mold buildMold($box+FirstUpperCase~Box box) {
+    		Mold mold = new Mold()$block+definition...[$NL];
+			return mold;
+    	}
+    }
+end
+
+def type(block) trigger(definition)
+	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][.style("$blockStyle")][$NL$TAB$stamp...[$NL$TAB$TAB]][
+		$block+definition...[$NL]])
+end
+
+def trigger(height)
+	.height($value)
+end
+
+def trigger(width)
+	.width($value)
+end
+
+def attribute(HiddenEnabled) trigger(hidden)
+	.hidden((object) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(($moldClass) object))
+end
+
+def trigger(hidden)
+end
+
+def trigger(hiddenIfMobile)
+	.hiddenIfMobile($value)
+end
+
+def trigger(layout)
+	.add(Block.Layout.$value+FirstUpperCase)
+end
+
+def type(stamp & location)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$drawingColor][$icon]$common)
+end
+
+def type(stamp & breadcrumbs)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Breadcrumbs()$common)
+end
+
+def type(stamp & cardWallet)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CardWallet()$common)
+end
+
+def type(stamp & map)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Map().zoom($zoom).latitude($latitude).longitude($longitude)$common)
+end
+
+def type(stamp & cataloglink)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
+end
+
+def type(stamp & embeddedCatalog)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((username) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
+end
+
+def type(stamp & embeddedDisplay)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay().displayType("$displayType").displayBuilder($displayBuilder)$common)
+end
+
+def type(stamp & embeddedDialog)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog().dialogType("$dialogType").dialogBuilder($embeddedDialogBuilder)$common)
+end
+
+def type(stamp & highlight)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, username))$common)
+end
+
+def type(stamp & itemLinks)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.ItemLinks().title($title)$common)
+end
+
+def type(stamp & polymerIcon)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.AlexandriaIcon().title($title)$common)
+end
+
+def type(stamp & resourceIcon)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.ResourceIcon().title($title)$common)
+end
+
+def type(stamp & base64Icon)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.icons.Base64Icon().title($title)$common)
+end
+
+def type(stamp & rating)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Rating()[.ratingIcon($ratingIcon+quoted)]$common)
+end
+
+def type(stamp & picture)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Picture()[.defaultPicture("$defaultPicture")]$common)
+end
+
+def type(stamp & openDialogOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder)$common)
+end
+
+def type(stamp & downloadOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution)$common)
+end
+
+def type(stamp & previewOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution)$common)
+end
+
+def type(stamp & taskOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)$common)
+end
+
+def type(stamp & exportOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.ExportOperation()
+		[.from(java.time.Instant.ofEpochMilli($from~L))]
+		[.to(java.time.Instant.ofEpochMilli($to~L))]
+		[.options(java.util.Arrays.asList($options+quoted...[, ]))]
+		.execution($exportexecution)$common)
+end
+
+def type(stamp)
+	.add(new $type+FirstUpperCase()$common)
+end
+
+def trigger(common)
+	[.name("$name")][.label("$label")][$height][
+	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
+	.layout(Stamp.Layout.$layout)][.editable($editable)][
+	$style]
+	$valueMethod
+end
+
+def trigger(style)
+	.style((object, username) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, username))
+end
+def trigger(embeddedCatalogFilter)
+	(element, source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) source, target, username)
+end
+
+def trigger(displayBuilder)
+	(name, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.buildDisplay(box, name, username)
+end
+
+def trigger(embeddedDialogBuilder)
+	(name, username) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
+end
+
+def trigger(title)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) object, username)
+end
+
+def trigger(dialogBuilder)
+	(object, username) -> {
+		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
+		dialog.target(object);
+		return dialog;
+	}
+end
+
+def trigger(exportExecution)
+	(object, from, to, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, from, to, option, username)
+end
+
+def trigger(downloadExecution)
+	(object, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, option, username)
+end
+
+def trigger(previewExecution)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.preview(box, ($moldClass) object, username)
+end
+
+def trigger(taskExecution)
+	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, username)
+end
+
+def trigger(filter)
+	(source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, username)
+end
+
+def trigger(editable)
+	(object, value, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, username)
+end
+
+def trigger(valueMethod)
+	.value((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(box, ($moldClass) object, username))
+end
+
+def trigger(icon)
+	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, username))
+end
+
+def trigger(drawingColor)
+	.drawingColor((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.drawingColor(box, ($moldClass) object, username))
+end
+
+def trigger(expanded)
+	.expanded($value)
+end
+
+def trigger(quoted)
+	"$value"
+end

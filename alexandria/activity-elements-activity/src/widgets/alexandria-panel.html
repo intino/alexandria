@@ -1,0 +1,283 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../lib/paper-tabs/paper-tabs-icons.html">
+<link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="alexandria-panel-custom-view.html">
+<link rel="import" href="alexandria-panel-catalog-view.html">
+<link rel="import" href="alexandria-panel-display-view.html">
+<link rel="import" href="alexandria-dialog-container.html">
+<link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
+<link rel="import" href="_common/alexandria-element-behavior.html">
+
+<script src="alexandriapanel/requester.js"></script>
+<script src="alexandriapanel/notifier-listener.js"></script>
+
+<dom-module id="alexandria-panel">
+
+    <template>
+        <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
+        <div id="main" class="layout vertical flex" style="height:100%;">
+            <div class$="tabs tabs_[[_showTabs]]">
+                <paper-tabs selected="{{_selectedView}}" no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
+                    <template is="dom-repeat" items="[[_viewList]]" as="view">
+                        <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                            <paper-tab name$="[[view.name]]" view="[[view]]" hidden$="[[_isViewHidden(view)]]">[[view.label]]</paper-tab>
+                        </template>
+                    </template>
+                </paper-tabs>
+            </div>
+            <div class="fixed left">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                    </template>
+                </template>
+            </div>
+            <iron-pages id="tabs-content" class$="flex left_fixed_[[_hasLeftFixedViews]] right_fixed_[[_hasRightFixedViews]]" selected="{{_selectedView}}" attr-for-selected="name">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie></div>
+                        </template>
+                    </template>
+                </template>
+            </iron-pages>
+            <div class="fixed right">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isCustomView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCustomView" widget="AlexandriaPanelCustomView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isCatalogView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelCatalogView" widget="AlexandriaPanelCatalogView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayView(view)]]">
+                            <cotton-zombie display="AlexandriaPanelDisplayView" widget="AlexandriaPanelDisplayView" object$="[[_target]][[view.name]]"></cotton-zombie>
+                        </template>
+                    </template>
+                </template>
+            </div>
+        </div>
+        <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
+        <cotton-zombie display="AlexandriaDialogContainer" widget="AlexandriaDialogContainer"></cotton-zombie>
+    </template>
+
+    <style>
+        :host {
+            position: relative;
+        }
+        :host paper-tabs {
+            background: var(--default-primary-color);
+            color: white;
+            height: 30px;
+            @apply(--alexandria-panel-tabs);
+        }
+        :host paper-tab {
+            -webkit-flex: none;
+            flex: none;
+            width: 100px;
+            color: white;
+            @apply(--alexandria-panel-tab);
+        }
+        :host paper-tabs[no-bar] paper-tab.iron-selected {
+            background: white;
+            color: black;
+            @apply(--alexandria-panel-tab-selected);
+        }
+        :host #tabs-content {
+            height: calc(100% - 30px);
+            overflow: auto;
+        }
+        :host #panel {
+            display: block;
+            margin: 0px 6px;
+            width: calc(100% - 12px);
+        }
+        :host #main {
+            position: relative;
+        }
+        :host #main.hidden, :host #panel.hidden {
+            position: absolute;
+            left: -10000px;
+        }
+        :host cotton-breadcrumbs {
+            display: block;
+            padding: 10px;
+            --cotton-breadcrumbs-item-color: var(--default-primary-color);
+            --cotton-breadcrumbs-item-border-color: var(--footer-background-color);
+            --cotton-breadcrumbs-item-size: 12pt;
+            --cotton-breadcrumbs-item-brothers-size: 12pt;
+            --cotton-breadcrumbs-item-parents-size: 12pt;
+        }
+        :host .fixed {
+            position: fixed;
+            margin-top: 35px;
+            overflow: auto;
+            height: calc(100% - 200px);
+            @apply(--alexandria-panel-view-fixed);
+        }
+        :host .fixed.left {
+            width: var(--alexandria-panel-view-fixed-width, 150px);
+            @apply(--alexandria-panel-view-fixed-left);
+        }
+        :host .fixed.right {
+            right: 0;
+            @apply(--alexandria-panel-view-fixed-right);
+        }
+        :host iron-pages > div {
+            height: 100%;
+        }
+        :host iron-pages.left_fixed_true {
+            margin-left: var(--alexandria-panel-view-fixed-width, 150px);
+            padding-left: 10px;
+        }
+        :host iron-pages.right_fixed_true {
+            width: var(--alexandria-panel-view-fixed-width, calc(100% - 150px));
+        }
+        @media screen and (max-width: 736px) {
+            :host cotton-breadcrumbs {
+                margin-left: 30px;
+                margin-top: -3px;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+            :host .tabs.tabs_true {
+                margin-left: 40px;
+                width: calc(100% - 40px);
+                min-height: 30px;
+                margin-top: 4px;
+            }
+        }
+        @media screen and (max-width: 540px) {
+            :host cotton-breadcrumbs {
+                margin-top: 5px;
+            }
+            :host .tabs.tabs_true {
+                margin-top: 12px;
+            }
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaPanelDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-panel',
+            lastView: null,
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.ElementBehavior,
+                AlexandriaPanelBehaviors.Requester,
+                AlexandriaPanelBehaviors.NotifierListener ],
+
+            properties : {
+                _target: { type: String, value: function() { return ""; }},
+                _viewList : Array,
+                _showTabs : Boolean,
+                _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' },
+                _selectedPage : { type: Number, value: function () { return 0; } },
+                _hasLeftFixedViews : { type: Boolean, value: function() { return false; }},
+                _hasRightFixedViews : { type: Boolean, value: function() { return false; }}
+            },
+
+            attached : function() {
+                this.translate(AlexandriaPanelDictionary);
+                this.listenToDisplay();
+            },
+
+            _refreshTarget : function(target) {
+                this._target = target;
+            },
+
+            _refreshViewList : function(viewList) {
+                this._viewList = viewList;
+                this._showTabs = viewList.length > 1;
+                this._hasLeftFixedViews = this._countLeftFixedViews() > 0;
+                this._hasRightFixedViews = this._countRightFixedViews() > 0;
+            },
+
+            _refreshSelectedView : function(name) {
+                if (this._selectedView == name) return;
+                this._selectedView = name;
+            },
+
+            _countLeftFixedViews : function() {
+                var count = 0;
+                for (var i=0; i<this._viewList.length; i++)
+                    if (this._isLeftFixedLayoutView(this._viewList[i])) count++;
+                return count;
+            },
+
+            _countRightFixedViews : function() {
+                var count = 0;
+                for (var i=0; i<this._viewList.length; i++)
+                    if (this._isRightFixedLayoutView(this._viewList[i])) count++;
+                return count;
+            },
+
+            _isCustomView : function(view) {
+                return view.referencePropertyList[0].value == "custom-view";
+            },
+
+            _isCatalogView : function(view) {
+                return view.referencePropertyList[0].value == "catalog-view";
+            },
+
+            _isDisplayView : function(view) {
+                return view.referencePropertyList[0].value == "display-view";
+            },
+
+            _isLeftFixedLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "left-fixed";
+            },
+
+            _isTabLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "tab";
+            },
+
+            _isRightFixedLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "right-fixed";
+            },
+
+            _isViewHidden : function(view) {
+                return view.referencePropertyList[2].value == "true";
+            },
+
+            _selectView : function(name) {
+                var element = this.querySelector("paper-tab[name='" + name + "']");
+                if (element == null) return;
+                if (this.lastView == name) return;
+                this.lastView = name;
+                this.selectView(element.view.name);
+            }
+
+        });
+    </script>
+</dom-module>

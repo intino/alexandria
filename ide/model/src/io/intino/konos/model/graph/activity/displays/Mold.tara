@@ -1,0 +1,70 @@
+dsl Proteo
+
+use Dialog
+use Catalog
+use Displays
+
+Concept Mold extends Display
+	var string modelClass
+	Concept Block
+		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
+        var word:{Expanded Simple} mode = Simple
+        var integer:{%} width = -1%
+        var integer:{%} height = -1%
+        var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
+        var boolean hiddenIfMobile = false
+        var string style = ""
+		has Block
+		Concept:Named Stamp
+			var string label = ""
+			var word:{Fixed Flexible} layout = Fixed
+			var integer:{%} height = -1%
+			var string suffix = ""
+			var string defaultStyle = ""
+			var boolean hasCustomStyle = false
+			var boolean editable = false
+			sub CatalogLink
+				var Catalog catalog
+				var boolean filtered = false
+			sub Description
+			sub EmbeddedDisplay
+				var Display display
+			sub EmbeddedDialog
+				var Dialog dialog
+			sub EmbeddedCatalog
+				var Catalog catalog
+				var CatalogView[] views
+				var boolean filtered = false
+			sub Highlight
+			sub Icon
+				var word:{Polymer Resource Base64} source
+			sub CustomIcon
+			sub ItemLinks
+			sub Location
+			sub Operation
+				sub OpenDialogOperation
+					var Dialog dialog
+					var integer:{%} width = 100%
+				sub ExportOperation
+					var string[] options = empty
+					var instant from  = empty
+					var instant to = empty
+				sub DownloadOperation
+					var string[] options = empty
+				sub TaskOperation
+				sub PreviewOperation
+			sub Page
+			sub Picture > var string defaultPicture = empty
+			sub Rating > var string polymerIcon
+			sub Snippet
+			sub CardWallet
+			sub Title
+			sub Map
+				var integer zoom
+				var double latitude
+				var double longitude
+			sub Breadcrumbs
+				Concept:{0..1} Root extends TreeItem
+				Concept TreeItem
+					var string label
+					has TreeItem

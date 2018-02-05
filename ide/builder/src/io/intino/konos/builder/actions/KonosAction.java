@@ -26,7 +26,7 @@ abstract class KonosAction extends Action {
 		String version = file.getParentFile().getName();
 		final Configuration configuration = TaraUtil.configurationOf(module);
 		if (configuration == null) return;
-		final String interfaceVersion = configuration.interfaceVersion();
+		final String interfaceVersion = configuration.boxVersion();
 		e.getPresentation().setVisible(enabled & version.equals(interfaceVersion));
 		e.getPresentation().setEnabled(enabled & version.equals(interfaceVersion));
 	}

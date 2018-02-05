@@ -3,7 +3,7 @@ dsl Konos
 Activity Platform-Web
 	Home(uses = analytics) homePage
 	UserHome(uses = analyze, paths = "/user") userHomePage
-	Page(uses = analytics, paths = "/{analytics}/{sample}") analyticsPage
+	Page(uses = analytics, paths = "/analytics/:sample") analyticsPage
 	Page(uses = error, paths = "/error") errorPage
 
 Display analytics
@@ -43,6 +43,19 @@ Display olap
 	Request toggleFilter
 	Request removeFilter as Text
 	Request asdasd as Date
+
+Display drillwiseHome
+	displays = analytics
+
+	Notification selectPage as Text
+
+	Request showHome //> RegisterPath(page=home)
+	Request showCategories //> RegisterPath(page=PlatformWeb.analyticsPage)
+	Request showSuppliers //> RegisterPath(page=suppliersPage)
+	Request showPricing //> RegisterPath(page=pricingPage)
+	Request showApi > RegisterPath(page=Platform-Web.analyticsPage)
+	Request showPage as Text
+	Request search as Text > RegisterPath(page=Platform-Web.analyticsPage)
 
 Display timeSeries
 	Notification zoomRange as Object(Range)

@@ -1,0 +1,206 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-scale-selector.html">
+
+<dom-module id="alexandria-scale-selector-slider">
+    <template>
+        <div class="layout vertical" hidden$="[[_hidden]]">
+            <div class="button"><paper-icon-button id="next" on-tap="_nextScale" icon="add"></paper-icon-button></div>
+            <div class="button scale layout horizontal center-justified" title$="[[_current.label]]"><paper-button id="toggleScaleButton" on-tap="_toggleScaleSelector">[[_current.symbol]]</paper-button></div>
+            <div class="button"><paper-icon-button id="previous" on-tap="_previousScale" icon="remove"></paper-icon-button></div>
+            <alexandria-scale-selector mode="horizontal"
+                                       scales="[[scales]]"
+                                       selected-scale="[[selectedScale]]"
+                                       on-scale-selected="_handleScaleSelected" hidden></alexandria-scale-selector>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            background: white;
+            border: 1px solid #d2d2d2;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        :host .button {
+            @apply(--layout-horizontal);
+            @apply(--layout-center-justified);
+        }
+        :host .button:hover {
+            background-color: #ddd;
+        }
+        :host paper-icon-button, :host paper-button {
+            height: 18px;
+            width: 18px;
+            padding: 0;
+        }
+        :host paper-button {
+            background: transparent;
+            color: black;
+            text-decoration: none;
+            text-transform: none;
+            font-size: 10pt;
+        }
+        :host alexandria-scale-selector {
+            position: fixed;
+            z-index: 10;
+            --alexandria-scale-selector-item : {
+                margin-top: 0 !important;
+            }
+        }
+        :host .scale {
+            padding: 2px 0;
+            width: 25px;
+        }
+    </style>
+
+    <script>
+        const AlexandriaScaleSelectorSliderDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-scale-selector-slider',
+            _currentIndex : 0,
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            listeners: {
+                'iron-resize': '_updatePosition'
+            },
+
+            properties: {
+                scales: { type: Array, value: function() { return []; } },
+                selectedScale: { type: String, observer: '_selectScale' },
+                _current: Object,
+                _hidden: Boolean
+            },
+
+            attached : function() {
+                this.translate(AlexandriaScaleSelectorSliderDictionary);
+                //this._addListeners();
+            },
+
+            _addListeners : function() {
+                window.addEventListener("click", () => this._closeScaleSelectorDelayed());
+            },
+
+            _updatePosition : function() {
+                var scaleSelector = this.querySelector("alexandria-scale-selector");
+                var offset = $(this.$.toggleScaleButton).offset();
+                var documentWidth = $(document).width();
+                var scaleSelectorOffset = $(scaleSelector).offset();
+                var outOfWindow = (documentWidth - offset.left) < $(scaleSelector).width();
+                var left = outOfWindow ? offset.left - ($(scaleSelector).width() + 10) : offset.left+25;
+                $(scaleSelector).offset({ top: offset.top - 8, left: left });
+                this._checkOutOfWindow(scaleSelector);
+            },
+
+            _checkOutOfWindow : function(scaleSelector) {
+                var scaleSelectorElement = $(scaleSelector);
+                var componentOffset = scaleSelectorElement.offset();
+                if (componentOffset.left > 0) return;
+                scaleSelectorElement.offset({ top: componentOffset.top, left: 15 });
+            },
+
+            _refresh : function() {
+                this.$.next.disabled = this._currentIndex >= this.scales.length - 1;
+                this.$.previous.disabled = this._currentIndex == 0;
+                this._hidden = this.scales != null && this.scales.length <= 1;
+            },
+
+            _selectScale: function() {
+                this._current = this._findScaleByName(this.selectedScale);
+                this._currentIndex = this._indexOfScale(this.selectedScale);
+                this._refresh();
+            },
+
+            _handleScaleSelected : function(e) {
+                this._closeScaleSelector();
+                this._scaleSelected(e);
+            },
+
+            _scaleSelected: function (e) {
+                let scale = e.target.scale;
+                if (scale == null) return;
+                this.selectedScale = scale;
+                this.fire('scale-selected', scale.name);
+            },
+
+            _findScaleByName: function (name) {
+                return this.scales.filter(scale => scale.name === name)[0];
+            },
+
+            _indexOfScale: function (name) {
+                for (var i=0; i<this.scales.length; i++)
+                    if (this.scales[i].name === name) return i;
+                return 0;
+            },
+
+            _nextScale : function() {
+                this._currentIndex++;
+                this._current = this.scales[this._currentIndex];
+                this._refresh();
+                this._notifyScale(this.scales[this._currentIndex]);
+            },
+
+            _previousScale : function() {
+                this._currentIndex--;
+                this._current = this.scales[this._currentIndex];
+                this._refresh();
+                this._notifyScale(this.scales[this._currentIndex]);
+            },
+
+            _notifyScale : function(scale) {
+                if (this.delay != null) window.clearTimeout(this.delay);
+
+                if (this.lastScale == scale)
+                    return;
+
+                this.delay = window.setTimeout(() => {
+                    this.fire('scale-selected', scale.name);
+                    this.lastScale = scale;
+                }, 600);
+            },
+
+            _toggleScaleSelector : function(event) {
+
+                if (this._isScaleSelectorVisible())
+                    this._closeScaleSelector();
+                else
+                    this._openScaleSelector();
+
+                event.stopPropagation();
+                return false;
+            },
+
+            _isScaleSelectorVisible : function() {
+                return !this.querySelector("alexandria-scale-selector").hasAttribute("hidden");
+            },
+
+            _openScaleSelector : function() {
+                if (this._closeTimer != null) window.clearTimeout(this._closeTimer);
+                this.querySelector("alexandria-scale-selector").removeAttribute("hidden");
+                this._updatePosition();
+            },
+
+            _closeScaleSelector : function() {
+                this.querySelector("alexandria-scale-selector").setAttribute("hidden", "true");
+            },
+
+            _closeScaleSelectorDelayed : function(event) {
+                if (!this._isScaleSelectorVisible()) return;
+                this._closeTimer = window.setTimeout(() => this._closeScaleSelector(), 600);
+            }
+
+        });
+    </script>
+
+</dom-module>

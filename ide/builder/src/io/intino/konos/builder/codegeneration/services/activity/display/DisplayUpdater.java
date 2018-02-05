@@ -17,15 +17,15 @@ public class DisplayUpdater {
 	private final PsiFile file;
 	private Project project;
 	private Display display;
+	private String packageName;
 
-	public DisplayUpdater(Project project, Display display, File file) {
+	public DisplayUpdater(Project project, Display display, File file, String packageName) {
 		this.project = project;
 		this.factory = JavaPsiFacade.getElementFactory(project);
 		this.display = display;
+		this.packageName = packageName;
 		this.file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));
-
 	}
-
 
 	public void update() {
 		if (file == null || !(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
@@ -42,7 +42,7 @@ public class DisplayUpdater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(DisplayTemplate.create()).format(DisplayRenderer.frameOf(request));
+		final String methodText = Formatters.customize(DisplayTemplate.create()).format(DisplayRenderer.frameOf(request, packageName));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), psiClass.getMethods()[psiClass.getMethods().length - 1]);
 	}
 

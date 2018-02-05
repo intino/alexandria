@@ -1,0 +1,72 @@
+dsl Proteo
+
+use Dialog
+use Mold
+use Displays
+
+Concept Catalog extends Display
+	var string modelClass
+	has:{0..1} Toolbar
+	Concept:{0..1} Events
+		Concept:{1..1} OnClickRecord
+			Concept:{1..1} CatalogEvent // TODO Octavio. Revisar la cardinalidad (no lo pide como obligatorio)
+				sub OpenDialog
+					var Dialog dialog
+					var integer:{%} width = 100%
+					var integer:{%} height = 100%
+				sub OpenPanel
+					var Panel panel
+					var boolean hasBreadcrumbs = false
+	Concept:{1..1} Views
+		has CatalogView
+		has:{0..1} DisplayView
+	Concept:{0..1} Arrangement
+		Concept:Named Grouping
+			var string label
+			var word:{Percentage Absolute} histogram = Percentage
+		Concept:Named Sorting
+			var string label
+
+Concept Toolbar is decorable component
+	var boolean canSearch = true
+	Concept:{0..1} GroupingSelection extends Operation
+	Concept:{0..1} OpenDialog extends Operation
+		var Dialog dialog
+
+	Concept:{0..1} Task extends Operation
+	Concept:{0..1} TaskSelection extends Operation
+
+	Concept:{0..1} Download extends Operation
+	Concept:{0..1} DownloadSelection extends Operation
+
+	Concept:{0..1} Export extends Operation
+	Concept:{0..1} ExportSelection extends Operation
+
+Concept TemporalCatalog extends Catalog
+	var word:{Time Range} type
+	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
+	var boolean showAll = false
+
+Concept CatalogView is component
+	var string label
+	var integer:{%} width = 100%
+	var string noRecordMessage = empty
+	var Mold mold
+	sub ListView
+	sub GridView
+	sub MagazineView
+	sub MapView
+		Concept:{0..1} Center
+			var double latitude
+			var double longitude
+		Concept:{1..1} Zoom
+			var integer defaultZoom
+            var integer min
+            var integer max
+
+
+Concept DisplayView is component
+	var string label
+	var string display
+	var boolean hideNavigator = true
+

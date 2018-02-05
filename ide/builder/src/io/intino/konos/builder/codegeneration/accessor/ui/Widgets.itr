@@ -3,5 +3,5 @@ def type(widgets)
 end
 
 def trigger(widget)
-	<link rel="import" href="$value+camelCaseToSnakeCase~-widget.html">
+	<link rel="import" href="$value+camelCaseToSnakeCase~.html">
 end
