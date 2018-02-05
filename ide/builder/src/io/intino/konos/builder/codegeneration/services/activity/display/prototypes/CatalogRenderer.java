@@ -8,6 +8,7 @@ import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
 import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.CatalogEvent;
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenPanel;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -59,13 +60,13 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
-		if (catalogEvent.i$(OnClickRecord.OpenDialog.class)) {
-			return frameOf(catalogEvent.a$(OnClickRecord.OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
+		if (catalogEvent.i$(OpenDialog.class)) {
+			return frameOf(catalogEvent.a$(OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
 		}
 		return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
 	}
 
-	public static Frame frameOf(OnClickRecord.OpenDialog openDialog, Display catalog) {
+	public static Frame frameOf(OpenDialog openDialog, Display catalog) {
 		final Frame frame = new Frame("event", openDialog.getClass().getSimpleName());
 		if (openDialog.height() >= 0) frame.addSlot("height", openDialog.height());
 		if (openDialog.width() >= 0) frame.addSlot("width", openDialog.width());

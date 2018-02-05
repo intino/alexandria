@@ -24,6 +24,7 @@ public class LayoutTemplate extends Template {
 			rule().add((condition("type", "elementOption & option"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\t")).add(mark("elementOption").multiple("\n")).add(literal("\n\n\t")).add(mark("render")).add(literal("\n}")),
 			rule().add((condition("type", "catalogs"))).add(expression().add(mark("filtered")).add(literal("public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {")).add(literal("\n")).add(literal("\treturn true;")).add(literal("\n")).add(literal("}"))),
 			rule().add((condition("type", "objects"))).add(literal("public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects(")).add(mark("box", "firstUpperCase")).add(literal("Box box, String username) {\n\treturn java.util.Collections.emptyList();\n}")),
+			rule().add((condition("type", "display"))).add(literal("public static AlexandriaDisplay ")).add(mark("display", "firstLowerCase")).add(literal("(")).add(mark("box", "firstUpperCase")).add(literal("Box box, Object object, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {\n\treturn null;//TODO\n}")),
 			rule().add((condition("type", "panels"))),
 			rule().add((condition("trigger", "quoted"))).add(literal("\"")).add(mark("value")).add(literal("\""))
 		);
