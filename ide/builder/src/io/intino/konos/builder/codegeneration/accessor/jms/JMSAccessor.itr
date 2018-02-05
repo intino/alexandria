@@ -1,7 +1,7 @@
 def type(accessor)
 	package $package+validPackage;
 
-	import io.intino.konos.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import io.intino.konos.jms.QueueProducer;
 	import com.google.gson.Gson;
 
@@ -67,15 +67,17 @@ def type(request) trigger(interface)
 end
 
 def type(request & reply)
-	public javax.jms.MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
+	public MessageConsumer $name([$parameter+signature...[, ], ]$name+firstUpperCase~Response callback) throws JMSException {
 		Destination temporaryQueue = session.createTemporaryQueue();
-		javax.jms.MessageConsumer consumer = session.createConsumer(temporaryQueue);
+		MessageConsumer consumer = session.createConsumer(temporaryQueue);
 		consumer.setMessageListener(callback);
 		final $messageType~Message message = session.create$messageType~Message();
 		message.setJMSReplyTo(temporaryQueue);
 		message.setJMSCorrelationID(createRandomString());
 		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
-		new QueueProducer(session, "$queue"[$custom...[]]).produce(message);
+		QueueProducer producer = new QueueProducer(session, "$queue"[$custom...[]]);
+		producer.produce(message);
+		producer.close();
 		return consumer;
 	}
 
@@ -92,7 +94,6 @@ def !type(parameter) trigger(signature)
 	String $value+validname
 end
 
-
 def !type(parameter) trigger(assign)
 	this.$value+validname = $value+validname;
 end
@@ -101,12 +102,13 @@ def !type(parameter) trigger(custom)
 	.replace("{$value}", this.$value+validname)
 end
 
-
 def type(request)
 	public void $name([$parameter+signature...[, ]]) throws JMSException {
 		final TextMessage message = session.createTextMessage();
 		fill$name+firstUpperCase(message[, $parameter+name...[, ]]);
+		QueueProducer producer = new QueueProducer(session, "$queue");
 		new QueueProducer(session, "$queue").produce(message);
+		producer.close();
 	}
 
 	private void fill$name+firstUpperCase($messageType~Message message[, $parameter+signature...[, ]]) throws JMSException {

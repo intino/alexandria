@@ -1,0 +1,74 @@
+def type(paths)
+	<link rel="import" href="../../../lib/polymer/polymer.html">
+    <link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+    <link rel="import" href="../../../lib/app-route/app-route.html">
+    <link rel="import" href="../../../lib/app-route/app-location.html">
+
+    <script src="requester-paths.js"></script>
+
+    <dom-module id="$name+camelCaseToSnakeCase~-paths">
+
+        <template>
+            <app-location route="{{route}}"></app-location>
+            <app-route route="{{route}}" pattern="/" data="{{showHomeRouteData}}"></app-route>
+
+            $path...[$NL]
+        </template>
+
+        <style></style>
+
+        <script>
+
+            Polymer({
+                is: '$name+camelCaseToSnakeCase~-paths',
+
+                behaviors: $[ CottonBehaviors.CarrierBehavior, $name+firstuppercase~Behaviors.Requester $],
+
+                observers: $[
+                    '_pathChanged(route.path)'
+                $],
+
+                attached : function() {
+                    var parent = $$(this).parent().get(0);
+                    this.display = parent.display;
+                },
+
+                setPath : function(path) {
+                    this.set("route.path", path);
+                },
+
+                _pathChanged : function(path) {
+                    if (this.timeout != null)
+                        window.clearTimeout(this.timeout);
+
+                    this.timeout = window.setTimeout(() => {
+                        if (path == "/") this.routeShowHome(this.display);
+                        $path+onChanged...[$NL]
+                    }, 50);
+                },
+				$path+function...[,$NL]
+            });
+        </script>
+
+    </dom-module>
+end
+
+def trigger(onChanged)
+	else if (path.indexOf("$path+subpath") != -1) this.route$request+FirstUpperCase(this.display, window.atob(path.replace("$path+subpath","")));
+end
+
+def type(parameter) trigger(function)
+	 $request : function(value) {
+		this.set("route.path", "$path+subpath" + window.btoa(value));
+	}
+end
+
+def trigger(function)
+	 $request : function() {
+		this.set("route.path", "$path+subpath");
+	}
+end
+
+def trigger(path)
+	<app-route route="{{route}}" pattern="$path" data="{{$request~RouteData}}"></app-route>
+end

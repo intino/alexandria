@@ -1,8 +1,10 @@
 def type(tanks)
 	package $package+validPackage.ness;
 
+	import io.intino.konos.datalake.MessageDispatcher;
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
+	import io.intino.konos.datalake.Ness;
 	import io.intino.konos.jms.Consumer;
 	import io.intino.konos.jms.Bus;
     import org.apache.activemq.ActiveMQConnection;
@@ -16,13 +18,22 @@ def type(tanks)
 	import javax.jms.Message;
     import java.util.ArrayList;
     import java.util.List;
+    import java.util.Map;
+    import java.util.HashMap;
 
-	public class NessTanks {
+	public class NessTanks implements MessageDispatcher {
 		$tank+field...[$NL]
+
+		private static Map<String, Ness.TankFlow> handlersMap = new HashMap<>();
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			$tank+assign...[$NL]
 			$tank+subscribe...[$NL]
+		}
+
+		@Override
+		public void dispatch(io.intino.ness.inl.Message message) {
+			handlersMap.get(message.type().toLowerCase()).consume(message);
 		}
 
 		$tank+getter...[$NL$NL]
@@ -53,6 +64,7 @@ end
 
 def type(tank) trigger(assign)
 	$name = box.datalake().tank($messageType+format);
+	handlersMap.put($simpleMessageType+shortPath+quoted, new $name+FirstUpperCase~Subscriptor(box));
 end
 
 def type(tank) trigger(getter)
@@ -61,6 +73,9 @@ def type(tank) trigger(getter)
 	}
 end
 
+def type(tank) trigger(map)
+	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
+end
 def type(tank) trigger(subscribe)
 	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
 end
@@ -81,6 +96,10 @@ def trigger(format)
 	"$name"[$custom...[]]
 end
 
+def trigger(quoted)
+	"$value"
+end
+
 def trigger(custom)
 	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
@@ -93,14 +112,16 @@ def trigger(tank) trigger(class)
 			this.box = box;
 		}
 
-		@Override
 		public void consume(Message message) {
-			box.datalake().lastMessage(java.time.Instant.now());
 			if (isRegisterOnly(message)) return;
-			String text = Consumer.textFrom(message);
+			consume(io.intino.ness.inl.Message.load(Consumer.textFrom(message)));
+		}
+
+		public void consume(io.intino.ness.inl.Message m) {
+			box.datalake().lastMessage(java.time.Instant.now());
 			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
 			tank.box = box;
-			tank.message = io.intino.ness.Inl.load(text).get(0);
+			tank.message = m;
 			tank.execute();
 		}
 	}

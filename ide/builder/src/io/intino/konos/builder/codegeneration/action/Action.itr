@@ -2,15 +2,15 @@ def type(action) !type(page)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import io.intino.konos.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import java.time.*;
 	import java.util.*;
 	$schemaImport
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		$parameter+type...[$NL]
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;[
+		$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
 			$returnType+return
@@ -18,49 +18,54 @@ def type(action) !type(page)
 	}
 end
 
-def type(page & action)
+def type(page & action & gen)
 	package $package+validPackage.actions;
 
-	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import io.intino.konos.exceptions.*;
-	import io.intino.konos.server.activity.spark.actions.PageAction;
-	import java.time.*;
+	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
 	import java.util.*;
-	[import $importDialogs+validPackage.dialogs.*;]
-	[import $importDisplays+validPackage.displays.*;]
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends PageAction {
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaPageAction {
 
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		$parameter+type...[$NL]
-
-		public $name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
+		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
 			return super.template("$name");
 		}
 
-		$ui
-
 		@Override
 		protected String title() {
-			return "";
+			return "$title";
 		}
 
 		@Override
-		protected String subtitle() {
-			return "";
+		protected java.net.URL favicon() {
+			return [$favicon?null;]
 		}
+	}
+end
 
-		@Override
-		protected java.net.URL logo() {
-			return null;
-		}
+def trigger(favicon)
+	this.getClass().getResource("$value");
+end
 
-		@Override
-		protected java.net.URL icon() {
-			return null;
-		}
+def type(page & action) !type(gen)
+	package $package+validPackage.actions;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
+	import java.time.*;
+	import java.util.*;
+	[import $importDialogs+validPackage.dialogs.*;]
+	[import $importDisplays+validPackage.displays.*;]
+
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Action {
+
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		$parameter+type...[$NL]
+
+		$ui
 	}
 end
 
@@ -88,8 +93,8 @@ def type(schemaImport) trigger(schemaImport)
 end
 
 def trigger(ui)
-	public io.intino.konos.server.activity.displays.Soul prepareSoul(io.intino.konos.server.activity.services.push.ActivityClient client) {
-	    return new io.intino.konos.server.activity.displays.Soul(session) {
+	public io.intino.konos.alexandria.activity.displays.Soul prepareSoul(io.intino.konos.alexandria.activity.services.push.ActivityClient client) {
+	    return new io.intino.konos.alexandria.activity.displays.Soul(session) {
 			@Override
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);

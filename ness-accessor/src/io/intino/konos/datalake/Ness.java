@@ -1,9 +1,9 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.Consumer;
-import io.intino.konos.jms.MessageFactory;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
+import io.intino.ness.inl.Message;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
 import org.slf4j.Logger;
@@ -16,14 +16,16 @@ import javax.jms.TextMessage;
 import java.time.Instant;
 import java.util.Arrays;
 
+import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
+import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
 
 public class Ness {
 	private static Logger logger = LoggerFactory.getLogger(Ness.class);
 	private static final String REFLOW_PATH = "service.ness.reflow";
-	private static final String REFLOW_ACK = "service.ness.reflow.ack";
+	private static final String FLOW_PATH = "flow.ness.reflow";
 
 	public static final String REGISTER_ONLY = "registerOnly";
 	private final String url;
@@ -60,23 +62,36 @@ public class Ness {
 		return new Tank(tank);
 	}
 
-	public ReflowSession reflow(int blockSize, Tank... tanks) {
-		return reflow(blockSize, Arrays.stream(tanks).map(t -> t.name).toArray(String[]::new));
+	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Tank... tanks) {
+		return reflow(blockSize, dispatcher, Arrays.stream(tanks).map(t -> t.name).toArray(String[]::new));
 	}
 
-	public Ness.ReflowSession reflow(int blockSize, String... tanks) {
+	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, String... tanks) {
 		try {
 			TopicProducer producer = new TopicProducer(session, REFLOW_PATH);
-			producer.produce(MessageFactory.createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
+			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
+			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
+			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
 			return new ReflowSession() {
 				public void next() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("next"));
+					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("next"));
 				}
 
 				public void finish() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("finish"));
+					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("finish"));
 				}
+
+				@Override
+				public void play() {
+					topicConsumer.listen((m) -> consume(dispatcher, m));
+				}
+
+				@Override
+				public void pause() {
+					topicConsumer.stop();
+				}
+
 			};
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
@@ -84,27 +99,17 @@ public class Ness {
 		}
 	}
 
-	private void waitUntilReflowSession() {
-		try {
-			while (!ack()) {
-				stop();
-				sleep(10 * 1000);
-				start();
-			}
-		} catch (InterruptedException e) {
-		}
+	private void consume(MessageDispatcher dispatcher, javax.jms.Message m) {
+		dispatcher.dispatch(load(textFrom(m)));
 	}
 
-	private boolean ack() {
-		boolean[] answer = {false};
-		new TopicConsumer(session, REFLOW_ACK).listen(m -> answer[0] = true);
+	private void waitUntilReflowSession() {
 		try {
-			new TopicProducer(session, REFLOW_PATH).produce(MessageFactory.createMessageFor("ready?"));
-			sleep(3 * 1000);
-		} catch (JMSException | InterruptedException e) {
-			logger.error(e.getMessage(), e);
+			stop();
+			sleep(40000);
+			start();
+		} catch (InterruptedException e) {
 		}
-		return answer[0];
 	}
 
 	public void stop() {
@@ -233,7 +238,7 @@ public class Ness {
 	}
 
 	public interface TankFlow extends Consumer {
-
+		void consume(Message message);
 	}
 
 	public interface ReflowSession {
@@ -241,6 +246,10 @@ public class Ness {
 		void next() throws JMSException;
 
 		void finish() throws JMSException;
+
+		void play();
+
+		void pause();
 	}
 
 }

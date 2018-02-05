@@ -26,6 +26,7 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.io.Stash;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 import tara.dsl.Konos;
@@ -41,7 +42,6 @@ import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
 	private static final Logger LOG = Logger.getInstance("CreateKonosBoxAction: ");
-	private static final String KONOS = "Konos";
 	private static final String BOX = "box";
 	private static final String TEXT = "Create Konos Box";
 
@@ -73,7 +73,6 @@ public class CreateKonosBoxAction extends KonosAction {
 		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
 	}
 
-
 	private boolean noProject(AnActionEvent e, Project project) {
 		if (project == null) {
 			LOG.error("actionPerformed: no project for " + e);
@@ -98,7 +97,7 @@ public class CreateKonosBoxAction extends KonosAction {
 				return;
 			}
 			final Configuration configuration = configurationOf(module);
-			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + "." + BOX;
+			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
 			File gen = new File(genDirectory.getPath(), generationPackage.replace(".", File.separator));
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
@@ -137,7 +136,7 @@ public class CreateKonosBoxAction extends KonosAction {
 			try {
 				new FullRenderer(module, graph, src, gen, res, packageName).execute();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.getInstance(this.getClass()).error(e.getMessage(), e);
 				notifyError(e.getMessage() == null ? e.toString() : e.getMessage());
 				return false;
 			}
@@ -183,17 +182,18 @@ public class CreateKonosBoxAction extends KonosAction {
 
 	private VirtualFile createDirectory(Module module, String name) {
 		final Application a = ApplicationManager.getApplication();
-		if (a.isWriteAccessAllowed()) {
-			return a.runWriteAction((Computable<VirtualFile>) () -> {
-				try {
-					final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
-					return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
-				} catch (IOException e) {
-					return null;
-				}
-			});
+		if (!a.isWriteAccessAllowed()) return a.runWriteAction((Computable<VirtualFile>) () -> create(module, name));
+		return create(module, name);
+	}
+
+	@Nullable
+	private VirtualFile create(Module module, String name) {
+		try {
+			final VirtualFile[] contentRoots = ModuleRootManager.getInstance(module).getContentRoots();
+			return VfsUtil.createDirectoryIfMissing(contentRoots[0], name);
+		} catch (IOException e) {
+			return null;
 		}
-		return null;
 	}
 
 }

@@ -4,10 +4,8 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/forrest/pom.xml" />
-        <option value="$PROJECT_DIR$/server/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/forrest/pom.xml" />
         <option value="$PROJECT_DIR$/accessor/pom.xml" />
-        <option value="$PROJECT_DIR$/core/pom.xml" />
         <option value="$PROJECT_DIR$/scheduler/pom.xml" />
         <option value="$PROJECT_DIR$/plugin/teseo/pom.xml" />
         <option value="$PROJECT_DIR$/jmx/pom.xml" />
@@ -22,14 +20,31 @@
         <option value="$PROJECT_DIR$/ide/konos-builder/pom.xml" />
         <option value="$PROJECT_DIR$/ide/konos-test/pom.xml" />
         <option value="$PROJECT_DIR$/ide/builder/pom.xml" />
-        <option value="$PROJECT_DIR$/ide/model/pom.xml" />
-        <option value="$PROJECT_DIR$/ide/test/pom.xml" />
         <option value="$PROJECT_DIR$/datalake/pom.xml" />
-        <option value="$PROJECT_DIR$/server-web/pom.xml" />
         <option value="$PROJECT_DIR$/datalake-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/rest-accessor/pom.xml" />
         <option value="$PROJECT_DIR$/ness-accessor/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-core/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-foundation/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria-framework/pom.xml" />
+        <option value="$PROJECT_DIR$/core/pom.xml" />
+        <option value="$PROJECT_DIR$/activity/pom.xml" />
+        <option value="$PROJECT_DIR$/rest/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/activity/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/core/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/jms/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/jmx/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/rest/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/scheduler/pom.xml" />
+        <option value="$PROJECT_DIR$/alexandria/slack/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/model/pom.xml" />
+        <option value="$PROJECT_DIR$/ide/test/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/activity-core/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8" project-jdk-type="JavaSDK">

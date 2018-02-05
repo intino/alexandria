@@ -16,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../konos-builder/test-gen" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../konos-builder/gen" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA Konos" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="model" />
     <orderEntry type="library" name="Maven: tara.dsl:konos:1.0.0" level="project" />
@@ -88,11 +88,11 @@
     <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte:2.1.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:language:1.0.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:builder:1.2.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:magritte:2.1.7" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:language:1.0.7" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:builder:2.1.13" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.intino.tara:builder-constants:1.2.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:antlr4-runtime:4.6" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.antlr:antlr4-runtime:4.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.siani.itrules:itrules:1.9.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.maven.shared:maven-invoker:2.0.11" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:1.5.6" level="project" />
