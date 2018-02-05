@@ -155,7 +155,7 @@
                 var wkt = new Wkt.Wkt();
                 try {
                     wkt.read(locationStamp.value);
-                    this.locationItem = wkt.toObject(this._configuration(locationStamp));
+                    this.locationItem = this._fixWkt(wkt).toObject(this._configuration(locationStamp));
                     this._addIcon(locationStamp.properties.icon);
                     this._addListeners(this.locationItem);
 //                    this._updateCentroid(this.locationItem);
@@ -165,6 +165,25 @@
                     if (e1.name === 'WKTError') {
                         return;
                     }
+                }
+            },
+
+            _fixWkt : function(wkt) {
+                for (var i=0; i<wkt.components.length; i++)
+                    this._fixWktComponent(wkt.components[i]);
+                return wkt;
+            },
+
+            _fixWktComponent : function(component) {
+                if (component instanceof Array) {
+                    for(var i=0; i<component.length; i++) {
+                        this._fixWktComponent(component[i]);
+                    }
+                }
+                else {
+                    var x = component.x;
+                    component.x = component.y;
+                    component.y = x;
                 }
             },
 
