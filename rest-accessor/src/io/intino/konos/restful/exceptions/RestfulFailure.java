@@ -1,6 +1,6 @@
 package io.intino.konos.restful.exceptions;
 
-import io.intino.konos.Error;
+import io.intino.konos.alexandria.Error;
 
 import java.util.Map;
 

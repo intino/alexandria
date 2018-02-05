@@ -1,0 +1,82 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../alexandria-breadcrumbs-behavior.html">
+<link rel="import" href="alexandria-mold-block.html">
+<link rel="import" href="alexandria-mold-behavior.html">
+
+<dom-module id="alexandria-mold">
+
+    <template>
+        <div style="position:relative">
+            <template is="dom-repeat" items="[[_blocks]]" as="block">
+                <alexandria-mold-block item="[[item.name]]" block="[[block]]" mode="[[mode]]"></alexandria-mold-block>
+            </template>
+            <div class="expanded-block" hidden$="[[!_expandedBlocks.length]]">
+                <template is="dom-repeat" items="[[_expandedBlocks]]" as="block">
+                    <alexandria-mold-block item="[[item.name]]" block="[[block]]" mode="[[mode]]"></alexandria-mold-block>
+                </template>
+            </div>
+            <div id="highlight"></div>
+        </div>
+    </template>
+
+    <style>
+        :host[mode="list"], :host[mode="grid"] {
+            width: 100%;
+        }
+        :host[mode="magazine"] alexandria-mold-block {
+            height: 100%;
+        }
+        :host .block > * {
+            margin-left: 5px;
+        }
+        :host .expanded-block {
+            margin: 10px 1px;
+        }
+        :host #highlight {
+            background: var(--accent-color);
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 0.5s, opacity 0.5s linear;
+            border-radius: 10px;
+        }
+        :host #highlight.visible {
+            visibility: visible;
+            opacity: 0.3;
+            transition: opacity 0.5s linear;
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior,
+                         AlexandriaBehaviors.MoldBehavior,
+                         AlexandriaBehaviors.BreadcrumbsBehavior ],
+
+            attached: function () {
+                this.translate(AlexandriaMoldDictionary);
+            },
+
+            highlight: function() {
+                var highlight = $(this.querySelector("#highlight"));
+                highlight.addClass("visible");
+                window.setTimeout(() => highlight.removeClass("visible"), 1500);
+            }
+
+        });
+    </script>
+
+</dom-module>

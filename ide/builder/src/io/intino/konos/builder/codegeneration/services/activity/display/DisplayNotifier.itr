@@ -1,19 +1,54 @@
 def type(display)
 	package $package+validPackage.displays.notifiers;
 
-	import io.intino.konos.exceptions.*;
+	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~DisplayNotifier extends io.intino.konos.server.activity.displays.DisplayNotifier {
+    public class $name+FirstUpperCase~Notifier extends $type {
 
-        public $name+FirstUpperCase~DisplayNotifier(io.intino.konos.server.activity.displays.Display display, io.intino.konos.server.activity.displays.MessageCarrier carrier) {
+        public $name+FirstUpperCase~Notifier(io.intino.konos.alexandria.activity.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.displays.MessageCarrier carrier) {
             super(display, carrier);
         }
 
 		$notification...[$NL$NL]
     }
+end
 
+def attribute(display) trigger(type)
+	io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifier
+end
+
+def attribute(desktop) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaDesktopNotifier
+end
+
+def attribute(panel) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelNotifier
+end
+
+def attribute(catalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogNotifier
+end
+
+def attribute(temporalTimeCatalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier
+end
+
+def attribute(temporalRangeCatalog) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier
+end
+
+def attribute(mold) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMoldNotifier
+end
+
+def attribute(MenuLayout) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaMenuLayoutNotifier
+end
+
+def attribute(TabLayout) trigger(type)
+	io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaTabLayoutNotifier
 end
 
 def type(notification) trigger(notification)

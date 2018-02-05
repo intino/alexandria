@@ -1,0 +1,36 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.BreadcrumbsBehavior = {
+
+        treeToBreadcrumbs : function(tree) {
+            var breadcrumbs = [];
+            var roots = tree.items;
+
+            if (roots.length > 0)
+                this.treeItemToBreadcrumbs(breadcrumbs, roots[0], roots.slice(1));
+
+            return breadcrumbs;
+        },
+
+        treeItemToBreadcrumbs : function(breadcrumbs, item, brothers) {
+            var result = {};
+
+            result.name = item.name;
+            result.label = item.label;
+            result.brothers = [];
+
+            for (var i=0; i<brothers.length; i++)
+                result.brothers.push({ name: brothers[i].name, label: brothers[i].label });
+
+            breadcrumbs.push(result);
+
+            if (item.children.length > 0)
+                this.treeItemToBreadcrumbs(breadcrumbs, item.children[0], item.children.slice(1));
+        }
+
+    };
+
+</script>

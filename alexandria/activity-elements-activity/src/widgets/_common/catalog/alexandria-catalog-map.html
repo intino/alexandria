@@ -1,0 +1,179 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/google-map/google-map.html">
+<link rel="import" href="../../../../lib/google-map-markerclusterer/google-map-markerclusterer.html">
+<link rel="import" href="alexandria-catalog-map-item.html">
+<link rel="import" href="alexandria-catalog-toolbar.html">
+
+<dom-module id="alexandria-catalog-map">
+
+    <template>
+        <google-map map="{{map}}"
+                    additional-map-options="[[_options]]"
+                    latitude="[[center.latitude]]"
+                    longitude="[[center.longitude]]"
+                    min-zoom="[[zoom.min]]"
+                    zoom="[[zoom.defaultValue]]"
+                    max-zoom="[[zoom.max]]"
+                    api-key="[[_googleApiKey]]"
+                    fit-to-markers="true"
+                    disable-street-view-control="true"></google-map>
+
+        <alexandria-catalog-toolbar operations="[[_operations(toolbar)]]"
+                                    on-execute="_executeOperation"
+                                    on-download="_downloadOperation"></alexandria-catalog-toolbar>
+
+        <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>
+
+        <template is="dom-repeat" items="{{_itemList}}">
+            <alexandria-catalog-map-item name$="[[item.name]]"
+                                         mode="map" map="{{map}}"
+                                         mold="[[mold]]" item="[[item]]"
+                                         on-navigate-item="_navigateItem"
+                                         on-load="_loadItem"></alexandria-catalog-map-item>
+        </template>
+    </template>
+
+    <style>
+        :host alexandria-catalog-toolbar {
+            position: absolute;
+            right: 0;
+            margin-top: 10px;
+            margin-right: 10px;
+            z-index: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 0 10px;
+        }
+    </style>
+
+    <script>
+        const AlexandriaCatalogMapDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-catalog-map',
+
+            properties: {
+                map : Object,
+                center: Object,
+                zoom: Object,
+                mold: Object,
+                itemList: { type: Array, observer: '_refresh', value: function() { return []; } },
+                countItemList: Number,
+                toolbar: Object,
+                _options : { type: Object, value: function() { return {}; } },
+                _mapReady : { type: Boolean, value: function() { return false; } },
+                _itemList: { type: Array, value: function() { return []; } },
+                _googleApiKey: { type: String, value: function() { return window.Application.configuration.googleApiKey; } },
+            },
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            attached: function () {
+                this.translate(AlexandriaCatalogMapDictionary);
+                this._addListeners();
+            },
+
+            clear : function() {
+                let mapItems = this.querySelectorAll("alexandria-catalog-map-item");
+                mapItems.forEach((item) => item.setMap(null));
+                this.notifyPath("_itemList", []);
+            },
+
+            refreshItem : function(item) {
+                var catalogItem = this.querySelector("alexandria-catalog-map-item[name='" + item.name + "']");
+                catalogItem.update(item);
+            },
+
+            closeInfoWindows : function() {
+                let mapItems = this.querySelectorAll("alexandria-catalog-map-item");
+                mapItems.forEach((item) => item.closeInfoWindow());
+            },
+
+            _addListeners : function() {
+                var element = this.querySelector("google-map");
+                element.addEventListener('google-map-idle', () => {
+                    var bounds = element.map.getBounds();
+                this.fire("location-change", { northEast : bounds.getNorthEast(), southWest : bounds.getSouthWest() });
+            });
+                element.addEventListener('google-map-ready', (e) => {
+                    this._notifyMapReady();
+            });
+            },
+
+            _refresh : function() {
+                if (!this._mapReady) return;
+
+                if (this._refreshTimeout != null)
+                    window.clearTimeout(this._refreshTimeout);
+
+                var mapContainer = this.querySelector("google-map");
+                var map = mapContainer.map;
+
+                this.querySelector("alexandria-catalog-toolbar").style.top = ($(mapContainer).position().top + 35) + "px";
+
+                if (map != null)
+                    map.closeInfoWindows = () => this.closeInfoWindows();
+
+                for (var i=0; i<this.itemList.length; i++)
+                    this.push("_itemList", this.itemList[i]);
+
+                this._refreshTimeout = window.setTimeout(() => {
+                    var markers = [];
+                this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
+                    item.setMap(map);
+                var marker = item.marker();
+                if (marker != null) markers.push(marker);
+            });
+                this._updateClusterer(markers);
+            }, 100);
+            },
+
+            _updateClusterer : function(markers) {
+                if (markers.length == 0) return;
+                var clusterer = this.querySelector("google-map-markerclusterer");
+                clusterer.markers = markers;
+                clusterer.repaint();
+            },
+
+            _notifyMapReady : function() {
+                this._mapReady = true;
+                this._refresh();
+            },
+
+            _executeOperation : function(e) {
+                this.fire("execute-operation", e.detail);
+            },
+
+            _downloadOperation : function(e) {
+                this.fire("download-operation", e.detail);
+            },
+
+            _operations : function(toolbar) {
+                var result = [];
+                if (toolbar == null) return result;
+                var operationList = toolbar.operationList;
+                for (var i=0; i<operationList.length; i++) {
+                    if (operationList[i].when != "Always") continue;
+                    result.push(operationList[i]);
+                }
+                return result;
+            },
+
+            _loadItem : function(e) {
+                this.fire("load-item", e.detail);
+            },
+
+            _navigateItem : function(e) {
+                this.fire("open-item", e.detail);
+            }
+
+        });
+    </script>
+
+</dom-module>

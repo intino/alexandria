@@ -1,0 +1,112 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="alexandria-mold-card.html">
+
+<dom-module id="alexandria-mold-card-wallet">
+
+    <template>
+        <div hidden$="[[!wallet.cards.length]]">
+            <iron-pages class="layout horizontal flex wrap" selected="{{_selectedCard}}">
+                <template is="dom-repeat" items="[[wallet.cards]]">
+                    <li><alexandria-mold-card styles$="[[styles]]" card="[[item]]"></alexandria-mold-card></li>
+                </template>
+            </iron-pages>
+            <div class="toolbar" hidden$="[[_noToolbar]]">
+                <div class="layout horizontal">
+                    <a id="previous" on-tap="_previous">[[Previous]]</a>
+                    <a id="next" on-tap="_next">[[Next]]</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host.empty {
+            display: none;
+        }
+        :host ul, :host li {
+            list-style: none;
+        }
+        :host ul {
+            margin: 0;
+            padding: 0;
+        }
+        :host .toolbar {
+            margin-top: 5px;
+        }
+        :host .toolbar a {
+            color: var(--default-primary-color);
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        :host .toolbar a.disabled {
+            cursor: default;
+            color: var(--disabled-text-color);
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldCardWalletDictionary = {
+            es: {
+                Previous: "anterior",
+                Next: "siguiente"
+            },
+            en: {
+                Previous: "previous",
+                Next: "next"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-card-wallet',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : { type: String, value: function() { return null; } },
+                wallet : { type: Object, observer: '_refresh' },
+                styles : String,
+                _selectedCard : { type: Number, value: function() { return 0; } },
+                _noToolbar : { type: Boolean, value: function() { return true; } }
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldCardWalletDictionary);
+            },
+
+            _refresh : function() {
+                var hasCards = (this.wallet != null && this.wallet.cards.length > 0);
+                if (!hasCards) $(this).addClass("empty");
+                else $(this).removeClass("empty");
+                this._refreshToolbar();
+            },
+
+            _refreshToolbar : function() {
+                var count = this.wallet.cards.length;
+                if (this._selectedCard == 0) $(this.$.previous).addClass("disabled");
+                else $(this.$.previous).removeClass("disabled");
+                if (this._selectedCard == count-1) $(this.$.next).addClass("disabled");
+                else $(this.$.next).removeClass("disabled");
+                this._noToolbar = count <= 1;
+            },
+
+            _previous : function() {
+                this._selectedCard--;
+                if (this._selectedCard < 0) this._selectedCard = 0;
+                this._refreshToolbar();
+            },
+
+            _next : function() {
+                this._selectedCard++;
+                var count = this.wallet.cards.length;
+                if (this._selectedCard >= count) this._selectedCard = count-1;
+                this._refreshToolbar();
+            }
+
+        });
+    </script>
+
+</dom-module>

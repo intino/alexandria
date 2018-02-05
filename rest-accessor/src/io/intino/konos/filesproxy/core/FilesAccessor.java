@@ -1,7 +1,7 @@
 package io.intino.konos.filesproxy.core;
 
 import cottons.utils.MimeTypes;
-import io.intino.konos.Resource;
+import io.intino.konos.alexandria.Resource;
 import io.intino.konos.filesproxy.FilesApi;
 import io.intino.konos.filesproxy.exceptions.FilesApiFailure;
 import io.intino.konos.restful.RestfulApi;

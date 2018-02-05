@@ -48,5 +48,5 @@ def type(single & member) trigger(componentfromLayer)
 end
 
 def type(multiple & member) trigger(componentfromLayer)
-	if (component.name().equalsIgnoreCase([$package.]$type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase~List().add($type+FirstLowerCase~FromNode(component));
+	if (component.name().equalsIgnoreCase([$package.]$type+FirstUpperCase.class.getSimpleName())) schema.$name+firstLowerCase$list().add($type+FirstLowerCase~FromNode(component));
 end
