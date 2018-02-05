@@ -8,6 +8,8 @@ def type(index)
       <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css" media="screen">
       <link rel="stylesheet" type="text/css" href="assets/css/style.css">
       <script src="assets/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+	  <script src="assets/js/bootstrap.js"></script>
+      <script src="assets/js/parameters.js" type="text/javascript"></script>
 
       <script>
         const Dictionary = {
@@ -41,37 +43,92 @@ def type(index)
         }
 
         function renderApplication(configuration) {
-          var services = "";
+		  document.getElementById("header").style.display = findGetParameter("embedded") != null ? "none" : "block";
+		  document.getElementById("title").innerHTML = configuration.title;
 
-          for (var i=0; i<configuration.services.length; i++) {
-            var service = configuration.services$[i];
-            var content = Templates.Service;
-            content = content.replace("::name::", service.name);
-            content = content.replace("::label::", service.label);
-            content = content.replace("::description::", service.description);
-            services += content;
-          }
+		  renderTabs(configuration);
+		  renderTabsContent(configuration);
+		}
 
-          document.getElementById("content").innerHTML = "<ul class='summary'>" + services + "</ul>";
-          document.getElementById("title").innerHTML = configuration.title;
-        }
+		function renderTabs(configuration) {
+			var tabs = "";
+
+			for (var i=0; i<configuration.services.length; i++) {
+				var service = configuration.services$[i];
+				var clazz = (i == 0) ? ' class="active"' : '';
+				tabs += '<li' + clazz + '><a data-toggle="tab" href="#' + service.name + '">' + service.label + '</a></li>';
+			}
+
+			document.getElementById("tabs").innerHTML = tabs;
+		}
+
+		function renderTabsContent(configuration) {
+			var tabsContent = "";
+
+			for (var i=0; i<configuration.services.length; i++) {
+				var service = configuration.services$[i];
+				var clazz = (i == 0) ? ' in active' : '';
+				var source = service.name + '/docs/index.html';
+
+				tabsContent += '<div id="' + service.name + '" class="tab-pane fade' + clazz + '">';
+				tabsContent += '<iframe id="frame_' + service.name + '" src="' + source + '" onload="removeHeadersIfEmbedded(\\'frame_' + service.name + '\\')"></iframe>';
+				tabsContent += '</div>';
+			}
+
+			document.getElementById("tabsContent").innerHTML = tabsContent;
+		}
+
+		function removeHeadersIfEmbedded(frameId) {
+			var frame = document.getElementById(frameId);
+			frame.contentDocument.querySelectorAll(".header").forEach(function(header) { header.style.display = "none"; });
+			frame.contentDocument.querySelectorAll(".content").forEach(function(content) { content.style.paddingTop = "0"; });
+		}
       </script>
 
-      <title>Application title</title>
+	  <style>
+		html, body {
+		  height: 100%;
+		}
+		#content {
+		  padding: 0;
+		  margin: 0;
+		  height: 100%;
+		}
+		.nav-tabs {
+		  padding-top: 10px;
+		  margin-bottom: 5px;
+		}
+		.tab-content {
+		  height: calc(100% - 53px);
+		}
+		.tab-content > div {
+		  height: 100%;
+		}
+		.tab-content > div iframe {
+		  border: 0;
+		  width: 100%;
+		  height: 100%;
+		}
+	  </style>
+
+      <title>$application</title>
     </head>
     <body onload="render()">
-      <div class="header">
+      <div id="header" class="header">
         <div class="top-bar">
           <h1 id="logo"><a class="logo" href="/"><span><img src="assets/logo.png"></img></span><span id="title" class="light"></span></a></h1>
         </div>
       </div>
       <div class="model-container"></div>
-      <div id="content" class="content">loading...</div>
+	  <div id="content" class="content">
+		<ul id="tabs" class="nav nav-tabs"></ul>
+		<div id="tabsContent" class="tab-content"></div>
+	  </div>
     </body>
     </html>
 end
 
 def type(service) trigger(service)
-    { name: "$name", label: "$name", description: "" },
+    { name: "$name", label: "$name", description: "$description" }
 end
 

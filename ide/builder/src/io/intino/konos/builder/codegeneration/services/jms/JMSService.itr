@@ -3,7 +3,7 @@ def type(jms)
 	package $package;
 
 	import $package.requests.*;
-	import io.intino.konos.Box;
+	import io.intino.konos.alexandria.Box;
 	import io.intino.konos.jms.$model~Consumer;
 	import io.intino.konos.jms.$model~Producer;
 

@@ -1,0 +1,188 @@
+def type(catalog)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.activity.Resource;
+    import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.activity.model.Catalog;
+    import io.intino.konos.alexandria.activity.model.Element;
+    import io.intino.konos.alexandria.activity.model.catalog.Scope;
+    import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
+    import io.intino.konos.alexandria.activity.model.toolbar.TaskSelection;
+    import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.io.ByteArrayInputStream;
+    import java.io.InputStream;
+    import java.time.Instant;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    import static java.util.Collections.emptyList;
+    import static java.util.stream.Collectors.toList;
+
+    public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+    	public $name+FirstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    	}
+    	[
+    	$range
+    	][
+		$toolbar
+    	]
+    	public static class Source {
+    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.catalog.Scope scope, String condition[, $mode+timerange range], String username) {
+    			return java.util.Collections.emptyList();//TODO
+    		}
+
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, String username) {
+    			return null;//TODO
+    		}
+    		[
+			$hasMagazineView
+			][
+			$range+created
+			]
+    		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase~.core$$().id();
+    			return null;
+    		}
+
+    		public static String $type+shortType+firstLowerCase~Name($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase.name$$();
+    			return null;
+    		}
+    	}[
+
+		$view
+		]
+    	public static class Events {[
+    		$event
+    	]}
+
+
+    	public static class Arrangements {[
+    		$arrangement+method...[$NL$NL]][
+
+			$groupingSelection][
+
+			$hasArrangements
+    	]}
+    }
+end
+
+def trigger(created)
+	public static java.time.Instant $type+shortType+FirstLowerCase~Created($box~Box box, $type object) {
+		//return $type+shortType+firstLowerCase.created();
+		return null;//TODO
+	}
+end
+
+def trigger(range)
+	public static class Temporal {
+		public static io.intino.konos.alexandria.activity.model.TimeRange range($box+firstUpperCase~Box box, String username) {
+			return null;
+		}
+	}
+end
+
+def trigger(timerange)
+	io.intino.konos.alexandria.activity.model.TimeRange
+end
+
+def trigger(hasMagazineView)
+	public static $type root$type+shortType+firstUpperCase($box+firstUpperCase~Box box, java.util.List<$type> objects[, $mode+timerange range], String username) {
+		return null;
+	}
+
+	public static $type default$type+shortType+firstUpperCase($box+firstUpperCase~Box box, String id[, $mode+timerange range], String username) {
+		return null;
+	}
+end
+
+def trigger(groupingSelection)
+	public static void createGroup($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, String grouping, io.intino.konos.alexandria.activity.model.catalog.arrangement.Group group, String username) {
+
+	}
+end
+
+def trigger(hasArrangements)
+	public static io.intino.konos.alexandria.activity.model.Catalog.ArrangementFilterer filterer($box+firstUpperCase~Box box, String username) {
+		return null;
+	}
+end
+
+def type(openPanel)
+	$breadcrumbs
+end
+
+def trigger(breadcrumbs)
+	public static io.intino.konos.alexandria.activity.model.mold.stamps.Tree onOpenPanelBreadcrumbs($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase, String username) {
+		return null; //return breadcrumbs
+	}
+end
+
+def trigger(toolbar)
+	public static class Toolbar {
+		$operation...[$NL$NL]
+	}
+end
+
+def type(view & displayView)
+	public static class Views {
+		public static void $display+firstLowerCase~Scope($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.displays.AlexandriaDisplay display, io.intino.konos.alexandria.activity.model.catalog.Scope scope) {
+		}
+
+		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element context, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener, String username) {
+			return null;//TODO
+		}
+	}
+end
+
+
+def type(arrangement & grouping)
+	public static java.util.List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, String username) {
+		return emptyList(); //TODO
+	}
+end
+
+def type(arrangement & sorting)
+	public static int $name+firstLowerCase~Comparator($type item1, $type item2) {
+		return 0; //TODO
+	}
+end
+
+def type(operation & download)
+	public static io.intino.konos.alexandria.activity.Resource download($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, String username) {
+		return null;
+	}
+end
+
+def type(operation & export)
+	public static io.intino.konos.alexandria.activity.Resource export($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
+		return null;
+	}
+end
+
+def type(operation & task)
+	public static io.intino.konos.alexandria.activity.model.toolbar.Task.Refresh task($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, String username) {
+		return io.intino.konos.alexandria.activity.model.toolbar.Task.Refresh.None;
+	}
+end
+
+def type(operation & downloadselection)
+	public static io.intino.konos.alexandria.activity.Resource downloadSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
+		return null;
+	}
+end
+
+def type(operation & exportselection)
+	public static io.intino.konos.alexandria.activity.Resource exportSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, java.time.Instant from, java.time.Instant to, java.util.List<$type> selection, String username) {
+		return null;
+	}
+end
+
+def type(operation & taskselection)
+	public static io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, String option, java.util.List<$type> selection, String username) {
+		return io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh.None;
+	}
+end

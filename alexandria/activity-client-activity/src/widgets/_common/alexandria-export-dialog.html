@@ -1,0 +1,155 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../lib/paper-input/paper-input.html">
+<link rel="import" href="../../../lib/paper-button/paper-button.html">
+
+<dom-module id="alexandria-export-dialog">
+
+    <template>
+        <paper-dialog on-iron-overlay-closed="_dialogClosed">
+            <h2>[[exportTitle]] [[title]]</h2>
+            <p>
+                <paper-input type="date" value="{{_from}}" label="{{from}}" min="[[_format(range.min)]]" max="[[_maxValueFrom(_to, range.max)]]"></paper-input>
+                <paper-input type="date" value="{{_to}}" label="{{to}}" min="[[_maxValueFrom(_from, range.min)]]" max="[[_format(range.max)]]"></paper-input>
+                <div class="error" hidden$="{{!_rangeTooLong(_from,_to)}}">[[rangeTooLong]]</div>
+            </p>
+            <div class="buttons">
+                <paper-button dialog-dismiss>{{cancel}}</paper-button>
+                <paper-button dialog-confirm autofocus disabled$="{{_missingData(_from, _to)}}">{{export}}</paper-button>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+
+        paper-dialog {
+            background-color: white;
+        }
+
+        paper-dialog h2 {
+            color: black;
+        }
+
+        paper-dialog p {
+            margin-bottom: 10px;
+        }
+
+        paper-dialog .buttons {
+            padding-top: 0;
+        }
+
+        paper-input {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        paper-button {
+            margin: 0 10px;
+            min-width: 80px;
+        }
+
+        :host .error {
+            color: red;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        const AlexandriaExportDialogDictionary = {
+            es: {
+                exportTitle: 'Descargar',
+                cancel: 'Cancelar',
+                export: 'Descargar',
+                from: 'desde',
+                to: 'hasta',
+                rangeTooLong : 'el máximo periodo permitido es de 6 meses'
+            },
+            en: {
+                exportTitle: 'Download data',
+                cancel: 'Cancel',
+                export: 'Download',
+                from: 'from',
+                to: 'to',
+                rangeTooLong : 'maximum allowed period is defined in 6 months'
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-export-dialog',
+            Month : 2629746000,
+
+            properties: {
+                title : String,
+                range: Object,
+                _container: Object,
+                _from: String,
+                _to: String
+            },
+
+            behaviors: [CottonBehaviors.TranslatorBehavior],
+
+            attached: function () {
+                this.translate(AlexandriaExportDialogDictionary);
+                this._container = this.querySelector('paper-dialog');
+            },
+
+            open: function (range) {
+                this._from = this._format(range.min);
+                this._to = this._format(range.max);
+                this._container.open();
+            },
+
+            _missingData: function (from, to) {
+                return !(from && to) || !this._checkDates(from, to) || this._rangeTooLong(from, to);
+            },
+
+            _checkDates : function(from, to) {
+                return to != "" && from != "" ? (new Date(to).getTime() - new Date(from).getTime()) >= 0 : true;
+            },
+
+            _rangeTooLong : function(from, to) {
+                var difference = to != "" && from != "" ? new Date(to).getTime() - new Date(from).getTime() : 0;
+                return difference > this.Month * 6;
+            },
+
+            _dialogClosed: function (e) {
+                if (e.detail.confirmed) {
+                    this.fire('export', {from: new Date(this._from).getTime(), to: new Date(this._to).getTime()});
+                }
+            },
+
+            _maxValueFrom: function (to, max) {
+                if (to) {
+                    return this._formatDate(new Date(to));
+                }
+                return this._format(max);
+            },
+
+            _minValueFrom: function (from, min) {
+                if (from) {
+                    return this._formatDate(new Date(from));
+                }
+                return this._format(min);
+            },
+
+            _format: function (value) {
+                return this._formatDate(new Date(value));
+            },
+
+            _formatDate: function (date) {
+                return `${date.getFullYear()}-${this._twoDecimals(date.getMonth() + 1)}-${this._twoDecimals(date.getDate())}`;
+            },
+
+            _twoDecimals: function (value) {
+                return value > 9 ? value : '0' + value;
+            }
+        });
+    </script>
+
+</dom-module>

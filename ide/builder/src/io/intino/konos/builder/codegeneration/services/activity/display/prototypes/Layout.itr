@@ -1,0 +1,76 @@
+def type(layout)
+	package $package.displays;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+
+		public $name+FirstUpperCase($box+firstUpperCase~Box box) {
+			super(box);
+		}
+
+		$elementOption...[$NL]
+	}
+end
+
+def type(elementOption & options)
+	public static class $name+FirstUpperCase {
+
+		public static String label($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, $modelClass $modelClass+shortType+firstLowerCase) {
+			return null;
+		}
+
+		public static String icon($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, $modelClass $modelClass+shortType+firstLowerCase) {
+			return null;
+		}
+
+		public static Integer bubble($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Element element, $modelClass $modelClass+shortType+firstLowerCase) {
+			return null;
+		}
+
+		$render
+
+		$elementOption...[$NL]
+	}
+end
+
+def type(elementOption & group)
+	public static class $name+FirstUpperCase {
+		$elementOption...[$NL]
+
+		$render
+	}
+end
+
+def type(elementOption & option)
+	public static class $name+FirstUpperCase {
+		$elementOption...[$NL]
+
+		$render
+	}
+end
+
+def type(catalogs)
+	[$filtered~public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
+		return true;
+	}]
+end
+
+def type(objects)
+	public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects($box+firstUpperCase~Box box, String username) {
+		return java.util.Collections.emptyList();
+	}
+end
+
+def type(display)
+	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Object object, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		return null;//TODO
+	}
+end
+
+def type(panels)
+end
+
+def trigger(quoted)
+	"$value"
+end

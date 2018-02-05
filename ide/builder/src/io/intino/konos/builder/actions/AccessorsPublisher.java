@@ -9,6 +9,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
@@ -16,6 +18,8 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.plugin.toolwindows.console.IntinoTopics;
+import io.intino.plugin.toolwindows.console.MavenListener;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.actions.utils.FileSystemUtils;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -109,10 +113,17 @@ class AccessorsPublisher {
 
 	private void log(Invoker invoker) throws IOException {
 		invoker.setErrorHandler(LOG::error);
-		invoker.setOutputHandler(line -> {
-			System.out.println(line);
-			if (line.contains("[ERROR]")) log.append(line);
-		});
+		invoker.setOutputHandler(this::publish);
+	}
+
+	private void publish(String line) {
+		if (module.getProject().isDisposed()) return;
+		final MessageBus messageBus = module.getProject().getMessageBus();
+		final MavenListener mavenListener = messageBus.syncPublisher(IntinoTopics.MAVEN);
+		mavenListener.println(line);
+		final MessageBusConnection connect = messageBus.connect();
+		connect.deliverImmediately();
+		connect.disconnect();
 	}
 
 	private void config(InvocationRequest request, File mavenHome) {

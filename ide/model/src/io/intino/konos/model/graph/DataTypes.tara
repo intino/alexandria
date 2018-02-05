@@ -4,7 +4,7 @@ dsl Proteo
 Concept Data is abstract
 
 Concept:Named Parameter extends Data is component
-	var boolean required = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defcto false
+	var boolean required = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defecto false
 
 Facet Type on Data
 	var string type is reactive private
@@ -30,7 +30,7 @@ Facet Type on Data
 		var string format = "dd/MM/yyyy HH:mm:ss"
 		var string type = "java.time.Instant" is reactive private
 	sub File
-		var string type = "io.intino.konos.Resource" is reactive private
+		var string type = "io.intino.konos.alexandria.Resource" is reactive private
 		var word:{body path form header query} in = form
 	sub Object
 		var Schema schema

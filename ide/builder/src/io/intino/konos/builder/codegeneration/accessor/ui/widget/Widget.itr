@@ -1,0 +1,112 @@
+def type(widget)
+	<link rel="import" href="../../lib/polymer/polymer.html">
+    <link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+    <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+    <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+    <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+    [<link rel="import" href="../../lib/alexandria-activity-elements/alexandria-$type+camelCaseToSnakeCase.html">]
+
+	[$parent+import
+	]
+	[$imports
+	][
+	$path+pahtimport
+	]
+	<script src="$name+lowercase/requester.js"></script>
+    <script src="$name+lowercase/notifier-listener.js"></script>
+
+    <dom-module id="$name+camelCaseToSnakeCase">
+
+        <template>
+        	$path
+        	$parent
+            $innerDisplay...[$NL]
+            $attached+prototype
+        </template>
+
+        <style>
+        </style>
+
+        <script>
+
+            const $name+firstuppercase~Dictionary = {
+                es: {
+                },
+                en: {
+                }
+            };
+
+            Polymer({
+                is: '$name+camelCaseToSnakeCase',
+
+                behaviors: $[ CottonBehaviors.CarrierBehavior,
+                             CottonBehaviors.PushBehavior,
+                             CottonBehaviors.TranslatorBehavior[,
+                             $includes]
+                             $],
+
+                properties : {
+                },
+				$attached
+
+            });
+        </script>
+    </dom-module>
+end
+
+def trigger(pathImport)
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-paths.html">
+end
+def trigger(path)
+	<$name+camelCaseToSnakeCase-paths></$name+camelCaseToSnakeCase-paths>
+end
+
+def trigger(imports)
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
+	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
+end
+
+def trigger(includes)
+	$widget+firstuppercase~Behaviors.Requester,
+	$widget+firstuppercase~Behaviors.NotifierListener
+end
+
+def type(prototype) trigger(prototype)
+	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
+end
+
+def type(prototype) trigger(attached)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this._linkWithAlexandriaElement();
+	},
+
+	_linkWithAlexandriaElement : function() {
+		var element = this.querySelector("alexandria-$type+camelCaseToSnakeCase");
+		element.display = this.display;
+		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
+		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
+		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.Requester);
+		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.NotifierListener);
+		element.listenToDisplay();
+	}
+end
+
+def trigger(attached)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this.listenToDisplay();
+	}
+end
+
+def trigger(import)
+	<link rel="import" href="../../lib/$dsl+lowercase/$value+lowercase~.html">
+end
+
+def trigger(innerDisplay)
+	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
+end
+
+def trigger(parent)
+	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
+end

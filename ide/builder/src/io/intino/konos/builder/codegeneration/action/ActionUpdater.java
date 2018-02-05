@@ -38,8 +38,7 @@ class ActionUpdater {
 
 	void update() {
 		if (file == null || !(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
-		PsiJavaFile javaFile = (PsiJavaFile) file;
-		final PsiClass psiClass = javaFile.getClasses()[0];
+		final PsiClass psiClass = ((PsiJavaFile) file).getClasses()[0];
 		if (!ApplicationManager.getApplication().isWriteAccessAllowed())
 			runWriteCommandAction(project, () -> update(psiClass));
 		else update(psiClass);
@@ -48,9 +47,16 @@ class ActionUpdater {
 	private void update(PsiClass psiClass) {
 		updateFields(psiClass);
 		if (psiClass.getMethods().length > 0) {
-			updateExceptions(psiClass.getMethods()[0]);
-			updateReturnType(psiClass.getMethods()[0]);
+			PsiMethod method = findExecuteMethod(psiClass);
+			updateExceptions(method);
+			updateReturnType(method);
 		}
+	}
+
+	private PsiMethod findExecuteMethod(PsiClass psiClass) {
+		for (PsiMethod method : psiClass.findMethodsByName("execute", false))
+			if (!method.hasTypeParameters()) return method;
+		return psiClass.getMethods()[0];
 	}
 
 	private void updateFields(PsiClass psiClass) {

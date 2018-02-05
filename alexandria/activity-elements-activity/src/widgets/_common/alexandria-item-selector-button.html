@@ -1,0 +1,173 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../lib/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-expand-animation.html">
+
+<dom-module id="alexandria-item-selector-button">
+
+    <template>
+        <paper-menu-button id="menuButton" vertical-align="bottom" disabled$="{{_buttonDisabled}}">
+            <paper-button class="dropdown-trigger" title="[[label]]" on-tap="_onAdd"><iron-icon icon="icons:add-circle-outline"></iron-icon></paper-button>
+            <paper-menu id="menu" class="dropdown-content" on-iron-select="_onItemSelected" vertical-align="bottom">
+                <template is="dom-repeat" items="[[items]]">
+                    <paper-item>{{item.label}}</paper-item>
+                </template>
+            </paper-menu>
+        </paper-menu-button>
+    </template>
+
+    <style>
+        :host {
+            display: inline-block;
+            position: relative;
+            --paper-menu-background-color: #fff;
+            --paper-menu-button-dropdown-background: #fff;
+            --paper-menu-button-content : {
+                border: 1px solid var(--default-primary-color);
+                margin: 6px;
+                padding: 1px;
+                left: -135px !important;
+                min-height: 150px !important;
+                max-height: 300px !important;
+                @apply(--item-selector-panel);
+            };
+        }
+
+        paper-menu-button {
+            padding: 0;
+        }
+
+        paper-menu {
+            width: 300px;
+        }
+
+        paper-button {
+            padding: 0;
+            width: 40px;
+        }
+
+        paper-menu-button paper-button {
+            background-color: transparent;
+        }
+
+        paper-button iron-icon {
+            color: var(--default-primary-color);
+        }
+
+        paper-menu-button[disabled] paper-button iron-icon {
+            color: var(--disabled-text-color);
+        }
+
+        paper-menu {
+            padding: 0;
+        }
+
+        :host[wrap] paper-menu ::content .selectable-content {
+            @apply(--layout-horizontal);
+            @apply(--layout-wrap);
+        }
+
+        paper-item {
+            @apply(--option-style);
+            cursor: pointer;
+            line-height: 16px;
+            min-height: 24px;
+            font-size: 14px;
+            padding: 3px 10px;
+        }
+
+        :host[wrap] paper-item {
+            min-width: 130px;
+        }
+
+        paper-item:hover {
+            background-color: var(--accent-color);
+        }
+
+        @media screen and (max-width: 736px) {
+        }
+    </style>
+
+    <script>
+        const AlexandriaItemSelectorButtonDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-item-selector-button',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            properties: {
+                label: String,
+                items: { type: Array, observer: '_refresh' },
+                disabled: { type: Boolean, observer: '_refresh' },
+                wrap: { type: Boolean, value: function() { return false; } }
+            },
+
+            listeners: {
+                'iron-resize': '_resize'
+            },
+
+            attached: function () {
+                this.translate(AlexandriaItemSelectorButtonDictionary);
+            },
+
+            _onItemSelected: function (e) {
+                this.fire('item-selected', e.detail.item.textContent.trim());
+                this.$.menu.selected = undefined;
+            },
+
+            _refresh : function() {
+                this._buttonDisabled = this.items == null || !this.items.length || this.disabled;
+            },
+
+            _onAdd : function() {
+                this._resize();
+
+                if (this.items.length == 1) {
+                    this.fire('item-selected', this.items[0].label.trim());
+                    this.$.menuButton.close();
+                }
+            },
+
+            _resize : function() {
+                var widget = this;
+                window.setTimeout(function () {
+                    var menu = widget.querySelector("iron-dropdown");
+                    var button = $(widget.querySelector("paper-button"));
+                    var offset = button.offset();
+                    $(menu).offset({ top: offset.top-$(menu).height()/2, left: offset.left+30});
+                    widget._checkOutOfWindow(menu);
+                }, 50);
+            },
+
+            _checkOutOfWindow : function(menu) {
+                var menuElement = $(menu);
+                var documentWidth = $(document).width();
+                var menuWidth = menuElement.width();
+
+                if (menuWidth == 0 || menuWidth >= documentWidth)
+                    return;
+
+                var menuOffset = menuElement.offset();
+                var offsetLeft = menuOffset.left;
+                var outOfWindow = (documentWidth - offsetLeft) < menuWidth;
+                while (outOfWindow) {
+                    offsetLeft--;
+                    outOfWindow = (documentWidth - offsetLeft) < menuWidth;
+                }
+                menuElement.offset({ top: menuOffset.top, left: offsetLeft - 30 });
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,363 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.MoldBehavior = {
+        _onRefresh : null,
+
+        properties: {
+            mold: { type: Object, notify: true, value: function () { return null; }, observer: '_refresh' },
+            item: { type: Object, notify: true, value: function () { return null; }, observer: '_refresh' },
+            mode: { type: String, notify: true, value: function () { return "list"; }, observer: '_refresh' },
+            _blocks : { type: Array, notify: true },
+            _expandedBlocks : { type: Array, notify: true }
+        },
+
+        refreshPicture : function(pictureData) {
+            var element = this.querySelector(".picture_img_" + pictureData.stamp);
+            element.src = pictureData.value;
+        },
+
+        _refresh : function() {
+            if (this.mold == null || this.item == null || this.item.length == 0 || this.mode == null) return;
+            this._refreshBlocks();
+            if (this._onRefresh) this._onRefresh();
+        },
+
+        _refreshItem : function() {
+        },
+
+        _refreshBlocks : function() {
+            var blocks = [], expandedBlocks = [];
+            for (var i=0; i<this.mold.moldBlockList.length; i++) {
+                var block = this._blockOf(this.mold.moldBlockList[i]);
+                if (block.expanded) expandedBlocks.push(block);
+                else blocks.push(block);
+            }
+            this._blocks = blocks;
+            this._expandedBlocks = blocks;
+            this.notifyPath("_blocks", blocks);
+            this.notifyPath("_expandedBlocks", expandedBlocks);
+        },
+
+        _blockOf : function(moldBlock) {
+            var block = { expanded: moldBlock.expanded, hidden: this._blockHidden(moldBlock), hiddenIfMobile: moldBlock.hiddenIfMobile,
+                          layout: this._blockLayout(moldBlock), width: this._blockWidth(moldBlock),
+                          height: this._blockHeight(moldBlock), style: moldBlock.style, stampList: [], blocks: [] };
+            for (let i = 0; i<moldBlock.moldBlockList.length; i++) block.blocks.push(this._blockOf(moldBlock.moldBlockList[i]));
+            for (let i = 0; i<moldBlock.stampList.length; i++) block.stampList.push(this._stampOf(moldBlock, moldBlock.stampList[i]));
+            return block;
+        },
+
+        _allowLazyLoad : function() {
+            return this.mode == "list" || this.mode == "grid";
+        },
+
+        _blockHidden : function(moldBlock) {
+            return this.item.itemBlockList.filter(s => s.name == moldBlock.name)[0].hidden;
+        },
+
+        _blockLayout : function (moldBlock) {
+            var layout = moldBlock.layout.toLowerCase();
+            layout = layout.replace("startjustified", "start-justified");
+            layout = layout.replace("centerjustified", "center-justified");
+            layout = layout.replace("endjustified", "end-justified");
+            layout = layout.replace("fixed", "");
+            layout = layout.replace("flexible", "flex");
+            return layout !== "" ? "layout " + layout : "";
+        },
+
+        _blockWidth : function (moldBlock) {
+            return moldBlock.width != -1 ? moldBlock.width + "%" : "100%";
+        },
+
+        _blockHeight : function (moldBlock) {
+            return moldBlock.height != -1 ? moldBlock.height + "%" : "100%";
+        },
+
+        _stampOf : function(moldBlock, moldStamp) {
+            var stamp = {};
+            stamp.isEditable = moldStamp.editable;
+            this._addStampShapes(stamp, moldStamp);
+            this._addStampProperties(stamp, moldBlock, moldStamp);
+            stamp.isSingleValue = this._isSingleValue(moldStamp);
+            stamp.countValues = this._countValuesOf(moldStamp);
+            stamp.value = this._parseFunctions(this._valueOf(moldBlock, moldStamp));
+            stamp.values = this._valuesOf(moldStamp);
+            stamp.classes = this._classesFor(moldStamp);
+            stamp.label = moldStamp.label;
+            stamp.name = moldStamp.name;
+            stamp.height = moldStamp.height != -1 ? moldStamp.height + "%" : "100%";
+            return stamp;
+        },
+
+        _addStampShapes : function(stamp, moldStamp) {
+            stamp.isTitle = this._isTitle(moldStamp);
+            stamp.isDescription = this._isDescription(moldStamp);
+            stamp.isIcon = this._isIcon(moldStamp);
+            stamp.isRating = this._isRating(moldStamp);
+            stamp.isHighlight = this._isHighlight(moldStamp);
+            stamp.isPicture = this._isPicture(moldStamp);
+            stamp.isOpenDialogOperation = this._isOpenDialogOperation(moldStamp);
+            stamp.isDownloadOperation = this._isDownloadOperation(moldStamp);
+            stamp.isExportOperation = this._isExportOperation(moldStamp);
+            stamp.isTaskOperation = this._isTaskOperation(moldStamp);
+            stamp.isPage = this._isPage(moldStamp);
+            stamp.isDisplay = this._isDisplay(moldStamp);
+            stamp.isLocation = this._isLocation(moldStamp);
+            stamp.isBreadcrumbs = this._isBreadcrumbs(moldStamp);
+            stamp.isItemLinks = this._isItemLinks(moldStamp);
+            stamp.isCatalogLink = this._isCatalogLink(moldStamp);
+            stamp.isSnippet = this._isSnippet(moldStamp);
+            stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
+        },
+
+        _addStampProperties : function(stamp, moldBlock, moldStamp) {
+            stamp.properties = {};
+            stamp.properties.suffix = this._propertyValueOf(moldStamp,'suffix');
+            stamp.properties.defaultStyle = this._propertyValueOf(moldStamp,'defaultStyle');
+            stamp.properties.style = this._propertyValueOf(moldStamp,'style');
+            this._addStampIconProperties(stamp, moldBlock, moldStamp);
+            this._addStampRatingProperties(stamp, moldStamp);
+            this._addStampBreadcrumbsProperties(stamp, moldBlock, moldStamp);
+            this._addStampDownloadOperationProperties(stamp, moldStamp);
+            this._addStampExportOperationProperties(stamp, moldStamp);
+            this._addStampItemLinksProperties(stamp, moldBlock, moldStamp);
+            this._addStampCatalogLinkProperties(stamp, moldBlock, moldStamp);
+            this._addStampLocationProperties(stamp, moldStamp);
+            this._addStampEmbeddedCatalogProperties(stamp, moldStamp);
+            stamp.properties.color = this._propertyValueOf(moldStamp,'color');
+        },
+
+        _addStampIconProperties : function(stamp, moldBlock, moldStamp) {
+            if (!stamp.isIcon) return;
+            let iconType = this._propertyValueOf(moldStamp,'icon-type');
+            var icon = this._valueOf(moldBlock, moldStamp);
+            if (icon == null || icon == "") {
+                icon = "warning";
+                stamp.value = "";
+            }
+            stamp.properties.icon = iconType === "sumus" ? icon : "";
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+        },
+
+        _addStampRatingProperties : function(stamp, moldStamp) {
+            if (!stamp.isRating) return;
+            stamp.properties.icon = this._propertyValueOf(moldStamp,'icon');
+        },
+
+        _addStampBreadcrumbsProperties : function(stamp, moldBlock, moldStamp) {
+            if (!stamp.isBreadcrumbs) return;
+            var tree = JSON.parse(this._valueOf(moldBlock, moldStamp));
+            stamp.properties.breadcrumbs = this.treeToBreadcrumbs(tree);
+        },
+
+        _addStampDownloadOperationProperties : function(stamp, moldStamp) {
+            if (!stamp.isDownloadOperation) return;
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+            stamp.properties.options = this._propertyValueOf(moldStamp,'options').split(",");
+        },
+
+        _addStampExportOperationProperties : function(stamp, moldStamp) {
+            if (!stamp.isExportOperation) return;
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+            stamp.properties.options = this._propertyValueOf(moldStamp,'options').split(",");
+            stamp.properties.from = this._propertyValueOf(moldStamp,'from');
+            stamp.properties.to = this._propertyValueOf(moldStamp,'to');
+        },
+
+        _addStampItemLinksProperties : function(stamp, moldBlock, moldStamp) {
+            if (!stamp.isItemLinks) return;
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+            stamp.properties.links = JSON.parse(this._valueOf(moldBlock, moldStamp)).items;
+        },
+
+        _addStampCatalogLinkProperties : function(stamp, moldBlock, moldStamp) {
+            if (!stamp.isCatalogLink) return;
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
+        },
+
+        _addStampLocationProperties : function(stamp, moldStamp) {
+            if (!stamp.isLocation) return;
+            stamp.properties.icon = this._propertyValueOf(moldStamp,'icon');
+        },
+
+        _addStampEmbeddedCatalogProperties : function(stamp, moldStamp) {
+            if (!stamp.isEmbeddedCatalog) return;
+            stamp.properties.catalog = this._propertyValueOf(moldStamp,'catalog');
+        },
+
+        _isSingleValue: function (stamp) {
+            if (this.item == null) return true;
+            return this.mode == "map" || this._itemFromStamp(stamp).values.length == 1;
+        },
+
+        _valueOf: function (moldBlock, moldStamp) {
+            if (this.item == null) return "";
+            let values = this._itemFromStamp(moldStamp).values;
+            let value = values.length > 0 ? values[0] : "";
+            let isPicture = this._isPicture(moldStamp);
+
+            if (isPicture) {
+                if (this._allowLazyLoad() && moldBlock.expanded)
+                    value = "data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+                else
+                    value += value != null && value != "" ? ((value.indexOf("?") != -1 ? "&" : "?") + "random=" + Math.random()) : "";
+            }
+
+            return value;
+        },
+
+        _valuesOf: function (stamp) {
+            if (this.item == null) return [];
+            return this._itemFromStamp(stamp).values;
+        },
+
+        _countValuesOf: function (stamp) {
+            return this._valuesOf(stamp).length;
+        },
+
+        _propertyValueOf: function (stamp, propertyName) {
+            var property = this._propertyOf(stamp, propertyName);
+            if (property == null && this.item != null) property = this._propertyOf(this._itemFromStamp(stamp), propertyName);
+            return property != null ? property.value : "";
+        },
+
+        _isTitle : function(stamp) {
+            return stamp.shape === "title";
+        },
+
+        _isDescription : function(stamp) {
+            return stamp.shape === "description";
+        },
+
+        _isIcon : function(stamp) {
+            return stamp.shape === "icon";
+        },
+
+        _isRating : function(stamp) {
+            return stamp.shape === "rating";
+        },
+
+        _isHighlight : function(stamp) {
+            return stamp.shape === "highlight";
+        },
+
+        _isPicture : function(stamp) {
+            return stamp.shape === "picture";
+        },
+
+        _isOpenDialogOperation : function(stamp) {
+            return this.mode != "map" && stamp.shape === "open-dialog-operation";
+        },
+
+        _isDownloadOperation : function(stamp) {
+            return this.mode != "map" && stamp.shape === "download-operation";
+        },
+
+        _isExportOperation : function(stamp) {
+            return this.mode != "map" && stamp.shape === "export-operation";
+        },
+
+        _isTaskOperation : function(stamp) {
+            return this.mode != "map" && stamp.shape === "task-operation";
+        },
+
+        _isPage : function(stamp) {
+            return this.mode != "map" && stamp.shape === "page";
+        },
+
+        _isDisplay : function(stamp) {
+            return this.mode != "map" && stamp.shape === "display";
+        },
+
+        _isLocation : function(stamp) {
+            return stamp.shape === "location";
+        },
+
+        _isBreadcrumbs : function(stamp) {
+            return stamp.shape === "breadcrumbs";
+        },
+
+        _isItemLinks : function(stamp) {
+            return stamp.shape === "item-links";l
+        },
+
+        _isCatalogLink : function(stamp) {
+            return stamp.shape === "catalog-link";l
+        },
+
+        _isSnippet : function(stamp) {
+            return stamp.shape === "snippet";
+        },
+
+        _isEmbeddedCatalog : function(stamp) {
+            return stamp.shape === "embedded-catalog";
+        },
+
+        _classesFor : function(stamp) {
+            return stamp.layout.toLowerCase() === "flexible" ? "flex" : "";
+        },
+
+        _itemFromStamp: function(stamp) {
+            return this._itemFromStampName(stamp.name);
+        },
+
+        _itemFromStampName: function(stamp) {
+            return this.item.itemStampList.filter(s => s.name == stamp)[0];
+        },
+
+        _propertyOf: function (object, property) {
+            var propertyList = object.propertyList;
+            for (var i = 0; i < propertyList.length; i++)
+                if (propertyList[i].name === property)
+                    return propertyList[i];
+            return null;
+        },
+
+        _locationStampList : function() {
+            var result = [];
+            if (this._blocks == null) return result;
+            for (var i = 0; i < this._blocks.length; i++)
+                result = result.concat(this._locationStampListOfBlock(this._blocks[i]));
+            return result;
+        },
+
+        _locationStampListOfBlock : function(block) {
+            var result = [];
+
+            for (var j=0; j<block.blocks.length; j++)
+                result = result.concat(this._locationStampListOfBlock(block.blocks[j]));
+
+            for (var j=0; j<block.stampList.length; j++) {
+                if (block.stampList[j].isLocation) result.push(block.stampList[j]);
+            }
+
+            return result;
+        },
+
+        _parseFunctions : function(value) {
+            value = this._parseDates(value);
+            return value;
+        },
+
+        _parseDates : function(value) {
+            var regExp = new RegExp(/date\(([^,]*),([^\)]*)\)/);
+            var match = regExp.exec(value);
+            if (match == null) return value;
+
+            var language = this.getLanguage();
+            moment.locale(language);
+            while (match != null) {
+                var date = moment(new Date(parseInt(match[1]))).format(match[2]);
+                value = value.replace(match[0], date);
+                match = regExp.exec(value);
+            }
+
+            return value;
+        }
+
+    };
+
+</script>
