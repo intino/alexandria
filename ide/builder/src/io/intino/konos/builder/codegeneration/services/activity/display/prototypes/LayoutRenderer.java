@@ -84,6 +84,7 @@ public class LayoutRenderer extends PrototypeRenderer {
 		if (renderer instanceof RenderCatalogs) frame.addSlot("render", renderCatalogs(renderer.a$(RenderCatalogs.class)));
 		else if (renderer instanceof RenderPanels) frame.addSlot("render", renderPanels(renderer.a$(RenderPanels.class)));
 		else if (renderer instanceof RenderObjects) frame.addSlot("render", renderObjects(renderer.a$(RenderObjects.class)));
+		else if (renderer instanceof RenderDisplay) frame.addSlot("render", renderDisplay(renderer.a$(RenderDisplay.class)));
 	}
 
 	private Frame renderCatalogs(RenderCatalogs render) {
@@ -109,6 +110,10 @@ public class LayoutRenderer extends PrototypeRenderer {
 		Frame frame = new Frame("render", "objects").addSlot("box", box).addSlot("panel", render.panel().name$());
 		frame.addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner()));
 		return frame;
+	}
+
+	private Frame renderDisplay(RenderDisplay render) {
+		return new Frame("render", "display").addSlot("box", box).addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(render.core$().owner())).addSlot("display",render.display());
 	}
 
 	private String pathOf(Node node) {

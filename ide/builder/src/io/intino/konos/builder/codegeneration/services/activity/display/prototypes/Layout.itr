@@ -62,6 +62,12 @@ def type(objects)
 	}
 end
 
+def type(display)
+	public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, Object object, Consumer<Boolean> loadingListener, Consumer<CatalogInstantBlock> instantListener) {
+		return null;//TODO
+	}
+end
+
 def type(panels)
 end
 
