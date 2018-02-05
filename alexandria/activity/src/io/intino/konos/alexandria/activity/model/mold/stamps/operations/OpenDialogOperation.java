@@ -31,7 +31,7 @@ public class OpenDialogOperation extends Operation<String> {
 		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.dialog(item != null ? item.object() : null, username) : null;
 		if (dialog == null) return null;
 		dialog.width(width);
-		dialog.height(height());
+		dialog.height(height() != -1 ? height() : 100);
 		return dialog;
 	}
 
@@ -43,4 +43,5 @@ public class OpenDialogOperation extends Operation<String> {
 	public interface DialogBuilder {
 		AlexandriaDialog dialog(Object item, String username);
 	}
+
 }
