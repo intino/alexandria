@@ -2,5 +2,5 @@ dsl Konos
 
 use Displays
 
-Activity ActivityElements
+Activity(title = "", favicon = "") ActivityElements
 	Home(uses=alexandriaDesktop, paths="") homePage

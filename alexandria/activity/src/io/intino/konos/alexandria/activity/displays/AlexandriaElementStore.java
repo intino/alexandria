@@ -68,7 +68,7 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
 
     private <E extends AlexandriaElementDisplay> E addAndBuildDisplay(Element element, Item target, String label) {
         E display = buildDisplay(element, target, label);
-        display.personifyOnce(label);
+        display.personifyOnce(id() + label);
         return display;
     }
 
