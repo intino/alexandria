@@ -108,12 +108,14 @@
                 this.map.closeInfoWindows();
                 this.infoWindow.open(this.map, this.locationItem);
                 this.infoWindow.opened = true;
+                if (this.onOpen) this.onOpen(this);
             },
 
             closeInfoWindow : function() {
-                if (this.infoWindow == null || !this._isInfoWindowOpened()) return;
+                if (this.infoWindow == null || !this.isInfoWindowOpened()) return;
                 this.infoWindow.close();
                 this.infoWindow.opened = false;
+                if (this.onClose) this.onClose(this);
             },
 
             _stampsReady : function() {
@@ -148,6 +150,7 @@
                 for (var i=0; i<stampList.length; i++)
                     this._addLocation(stampList[i]);
             },
+
 
             _addLocation : function(locationStamp) {
                 if (locationStamp == null || locationStamp.value == "") return;
@@ -219,15 +222,15 @@
 
             _addListeners : function() {
                 this.locationItem.addListener('click', () => {
-                    if (this._isInfoWindowOpened()) this.closeInfoWindow();
-            else {
-                    this.openInfoWindow();
-                    if (!this.loaded) this.fire("load", this.item.name);
-                }
-            });
+                    if (this.isInfoWindowOpened()) this.closeInfoWindow();
+                    else {
+                        this.openInfoWindow();
+                        if (!this.loaded) this.fire("load", this.item.name);
+                    }
+                });
             },
 
-            _isInfoWindowOpened : function() {
+            isInfoWindowOpened : function() {
                 return this.infoWindow.opened;
             },
 
