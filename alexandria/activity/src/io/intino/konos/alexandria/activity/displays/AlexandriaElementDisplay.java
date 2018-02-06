@@ -115,9 +115,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public void clearFilter() {
-		boolean refresh = dynamicFilter != null;
+		boolean hasDynamicFilters = dynamicFilter != null;
 		filterAndNotify(null);
-		if (refresh) refresh();
+		if (!hasDynamicFilters) return;
+		target(null);
+		refresh();
 	}
 
 	public List<Block> blocks() {

@@ -23,7 +23,7 @@
                                     on-execute="_executeOperation"
                                     on-download="_downloadOperation"></alexandria-catalog-toolbar>
 
-        <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>
+        <google-map-markerclusterer minimum-cluster-size="4" map="{{map}}"></google-map-markerclusterer>
 
         <template is="dom-repeat" items="{{_itemList}}">
             <alexandria-catalog-map-item name$="[[item.name]]"
