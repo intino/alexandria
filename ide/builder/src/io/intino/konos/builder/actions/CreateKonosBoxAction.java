@@ -56,9 +56,8 @@ public class CreateKonosBoxAction extends KonosAction {
 		super.update(e);
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;
-		String version = file.getParentFile().getName();
 		final Module module = e.getData(LangDataKeys.MODULE);
-		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + version + ")");
+		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + file.getParentFile().getName() + ")");
 	}
 
 	@SuppressWarnings("ConstantConditions")
