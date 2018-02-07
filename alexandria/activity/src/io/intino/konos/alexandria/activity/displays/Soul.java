@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static java.util.stream.Collectors.toList;
+
 public abstract class Soul implements DisplayRepository {
     private final Map<String, AlexandriaDisplay> displays = new HashMap();
     private final List<Consumer<AlexandriaDisplay>> registerListeners = new ArrayList<>();
@@ -38,6 +40,10 @@ public abstract class Soul implements DisplayRepository {
         } catch (MalformedURLException e) {
             return null;
         }
+    }
+
+    public <T extends AlexandriaDisplay> List<T> displays(Class<T> clazz) {
+        return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
     public <T extends AlexandriaDesktop> T desktop() {
