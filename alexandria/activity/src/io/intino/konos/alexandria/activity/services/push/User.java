@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.services.push;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ public class User {
     private URL photo;
     private String language;
     private Map<String, String> preferences = new HashMap<>();
+    private List<String> roles = new ArrayList<>();
 
     public String username() {
         return username;
@@ -70,6 +72,15 @@ public class User {
     public User add(String preference, String value) {
         preferences.put(preference, value);
         return this;
+    }
+
+    public List<String> roles() {
+        return roles;
+    }
+
+    public void roles(List<String> roles) {
+        this.roles.clear();
+        this.roles.addAll(roles);
     }
 
 }
