@@ -96,7 +96,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -134,12 +134,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
             <version>4.12</version>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-rest</artifactId>
-            <version>1.0.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

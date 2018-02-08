@@ -92,6 +92,7 @@ public class AuthenticateCallbackResource extends Resource {
         user.email(info.email());
         user.language(info.language());
         user.photo(info.photo());
+        user.roles(info.roleList());
 
         return user;
     }

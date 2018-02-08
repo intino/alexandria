@@ -354,6 +354,8 @@
                 var oldItem = this._getComponentItem(this.$.items, item.name);
                 var index = this._getComponentItemIndex(this.$.items, item.name);
 
+                item.group = oldItem.group;
+
                 this.set("itemList." + index, item);
                 this.set("_itemList." + index, item);
                 for (var i=0;i<this.selectedItemList.length;i++)

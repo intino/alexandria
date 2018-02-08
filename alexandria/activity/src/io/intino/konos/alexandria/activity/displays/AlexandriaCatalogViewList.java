@@ -24,6 +24,8 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private Map<String, AlexandriaCatalogView> viewDisplayMap = new HashMap<>();
 
+	private static final String ViewId = "%s%s";
+
 	public AlexandriaCatalogViewList(Box box) {
 		super(box);
 		registerBuilders();
@@ -82,7 +84,6 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	@Override
 	protected void init() {
 		super.init();
-		sendTarget();
 		sendViewList();
 		if (viewList.size() > 0)
 			selectView(viewList.get(0).name());
@@ -97,11 +98,6 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	private void buildViewDisplay(String name) {
 		ElementView view = viewList.stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
 		builders.get(view.type()).apply(view);
-	}
-
-	private void sendTarget() {
-		if (provider.target() == null) return;
-		notifier.refreshTarget(provider.target().name());
 	}
 
 	private void sendViewList() {
@@ -167,7 +163,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	}
 
 	private String idOf(ElementView view) {
-		return (provider.target() != null ? provider.target().name() : "") + view.name();
+		return String.format(ViewId, this.id(), view.name());
 	}
 
 }

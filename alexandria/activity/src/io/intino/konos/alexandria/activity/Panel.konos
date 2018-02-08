@@ -7,7 +7,6 @@ use Schemas
 Display alexandriaPanel
 	displays = alexandriaPanelCustomView alexandriaPanelCatalogView alexandriaPanelDisplayView alexandriaMold
 
-	Notification refreshTarget as Text
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text
 	Notification refreshBreadcrumbs as Text

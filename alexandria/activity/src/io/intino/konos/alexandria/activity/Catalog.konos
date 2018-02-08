@@ -79,7 +79,6 @@ Display alexandriaItem
 
 Display alexandriaCatalogViewList
 	displays = alexandriaCatalogMagazineView alexandriaCatalogListView alexandriaCatalogMapView alexandriaCatalogDisplayView
-	Notification refreshTarget as Text
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text
 

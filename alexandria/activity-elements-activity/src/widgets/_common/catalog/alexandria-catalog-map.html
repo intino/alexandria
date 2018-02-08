@@ -23,7 +23,7 @@
                                     on-execute="_executeOperation"
                                     on-download="_downloadOperation"></alexandria-catalog-toolbar>
 
-        <google-map-markerclusterer map="{{map}}"></google-map-markerclusterer>
+        <google-map-markerclusterer minimum-cluster-size="4" map="{{map}}"></google-map-markerclusterer>
 
         <template is="dom-repeat" items="{{_itemList}}">
             <alexandria-catalog-map-item name$="[[item.name]]"
@@ -70,6 +70,8 @@
                 _mapReady : { type: Boolean, value: function() { return false; } },
                 _itemList: { type: Array, value: function() { return []; } },
                 _googleApiKey: { type: String, value: function() { return window.Application.configuration.googleApiKey; } },
+                _activeItem : { type: Object, value: function() { return null; } },
+                _openingInfoWindow : { type: Boolean, value: function() { return false; } }
             },
 
             behaviors: [ CottonBehaviors.TranslatorBehavior ],
@@ -104,6 +106,20 @@
                 element.addEventListener('google-map-ready', (e) => {
                     this._notifyMapReady();
             });
+                element.addEventListener('click', (e) => this._closeActiveItem());
+            },
+
+            _updateActiveItem : function(item) {
+                window.setTimeout(() => {
+                    this._activeItem = item;
+                if (!this._activeItem.isInfoWindowOpened())
+                    this._activeItem.openInfoWindow();
+            }, 100);
+            },
+
+            _closeActiveItem : function() {
+                if (this._openingInfoWindow || this._activeItem == null) return;
+                this._activeItem.closeInfoWindow();
             },
 
             _refresh : function() {
@@ -127,6 +143,7 @@
                     var markers = [];
                 this.querySelectorAll("alexandria-catalog-map-item").forEach((item) => {
                     item.setMap(map);
+                item.onOpen = this._updateActiveItem.bind(this);
                 var marker = item.marker();
                 if (marker != null) markers.push(marker);
             });
