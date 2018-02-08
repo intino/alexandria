@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-jms</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -68,12 +68,12 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>5.14.4</version>
+            <version>5.15.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

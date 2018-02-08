@@ -1,10 +1,6 @@
 package schemas;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.time.Instant;
 
 public class Status {
     public double battery;
@@ -12,7 +8,7 @@ public class Status {
     public boolean isPlugged;
     public boolean isScreenOn;
     public double temperature;
-    public Date created;
+    public Instant created;
 
     public Status temperature(double temperature) {
         this.temperature = temperature;
@@ -43,22 +39,13 @@ public class Status {
         return isScreenOn;
     }
 
-    public Date created() {
+    public Instant created() {
         return created;
     }
 
     public Status created(String date) {
-        created = parseDate(date);
+        created = Instant.parse(date);
         return this;
-    }
-
-    private static Date parseDate(final String inputDateAsString) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        try {
-            return format.parse(inputDateAsString);
-        } catch (ParseException e) {
-            return null;
-        }
     }
 
 }

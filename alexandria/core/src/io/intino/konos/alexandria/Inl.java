@@ -1,7 +1,8 @@
 package io.intino.konos.alexandria;
 
-import io.intino.ness.inl.Deserializer;
-import io.intino.ness.inl.Serializer;
+
+import io.intino.konos.alexandria.schema.Deserializer;
+import io.intino.konos.alexandria.schema.Serializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

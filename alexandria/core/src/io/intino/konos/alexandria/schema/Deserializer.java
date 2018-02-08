@@ -17,20 +17,22 @@ import static io.intino.konos.alexandria.schema.Accessory.fieldsOf;
 
 public class Deserializer {
     private final BufferedReader reader;
-    private Mapping mapping = new Mapping();
+	private final ResourceLoader[] loaders;
+	private final Mapping mapping = new Mapping();
     private String line;
 
-    public static Deserializer deserialize(InputStream is) {
-        return new Deserializer(is);
+	public static Deserializer deserialize(String text, ResourceLoader... loaders) {
+		return deserialize(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)), loaders);
+	}
+
+    public static Deserializer deserialize(InputStream is, ResourceLoader... loaders) {
+        return new Deserializer(is, loaders);
     }
 
-    public static Deserializer deserialize(String text) {
-        return deserialize(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
-    }
-
-    private Deserializer(InputStream is) {
+    private Deserializer(InputStream is, ResourceLoader[] loaders) {
         this.reader = new BufferedReader(new InputStreamReader(is));
-        nextLine();
+		this.loaders = loaders;
+		nextLine();
     }
 
     @SuppressWarnings("unchecked")
@@ -51,19 +53,15 @@ public class Deserializer {
 		return value.startsWith("\"") && value.endsWith("\"") ? value.substring(1, value.length() - 1) : value;
 	}
 
-	private String map(String id) {
-        return mapping.get(id);
-    }
-
     private <T> T fill(T object) {
         Object scope = object;
         String attribute = "";
         String value = "";
         nextLine();
         while (!isTerminated(object)) {
-            if (isMultilineIn(line)) setAttribute(scope, attribute, value = (value != null ? value + "\n" : "") + line.substring(1));
-            else if (isHeaderIn(line)) scope = addComponent(object, line.substring(1,line.length()-1));
-            else if (isAttributeIn(line)) setAttribute(scope, attribute = attributeOf(line), value = valueOf(line));
+            if (isMultiline()) setAttribute(scope, attribute, value = (value != null ? value + "\n" : "") + line.substring(1));
+            else if (isHeader()) scope = addComponent(object, line.substring(1,line.length()-1));
+            else if (isAttribute()) setAttribute(scope, attribute = attributeOf(line), value = valueOf(line));
             nextLine();
         }
         return object;
@@ -77,15 +75,19 @@ public class Deserializer {
 		return line.indexOf(":") + 1 < line.length() ? unwrap(line.substring(line.indexOf(":") + 1)) : null;
 	}
 
-	private boolean isMultilineIn(String line) {
+	private boolean isMultiline() {
 		return line.startsWith("\t");
 	}
 
-	private boolean isHeaderIn(String line) {
+	private String map(String id) {
+		return mapping.get(id);
+	}
+
+	private boolean isHeader() {
 		return line.startsWith("[");
 	}
 
-	private boolean isAttributeIn(String line) {
+	private boolean isAttribute() {
 		return line.contains(":");
 	}
 
@@ -174,13 +176,42 @@ public class Deserializer {
     private Object setField(Field field, Object object, Object value) {
         if (field == null) return null;
         try {
-            field.setAccessible(true);
-            field.set(object, value);
-            return value;
+			field.setAccessible(true);
+			if (value.getClass().isArray()) value = append((Object[]) field.get(object), (Object[]) value);
+			if (value instanceof List) value = append((List) field.get(object), (List) value);
+			if (value instanceof Resource) load((Resource) value);
+			field.set(object, value);
+			return value;
         } catch (IllegalAccessException e) {
             return null;
         }
     }
+
+	private Object append(Object[] current, Object[] value) {
+		if (current == null) current = new Object[0];
+		System.arraycopy(current, 0, value, 0, current.length);
+		Object o = value[current.length];
+		if (o instanceof Resource) load((Resource) o);
+		return value;
+	}
+
+	private List append(List current, List value) {
+		if (current == null) current = new ArrayList();
+		final Object o = value.get(value.size() - 1);
+		if (o instanceof Resource) load((Resource) o);
+		//noinspection unchecked
+		current.add(o);
+		return current;
+	}
+
+	private void load(Resource resource) {
+		for (ResourceLoader loader : loaders) {
+			final byte[] data = loader.load(resource.id());
+			if (data == null) continue;
+			resource.data(data);
+			return;
+		}
+	}
 
 	private Field findField(String type, Object object) {
         for (Field field : fieldsOf(object).asList()) {
