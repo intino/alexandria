@@ -1,6 +1,6 @@
 package schemas;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Teacher extends Person {
     public String university;
@@ -8,7 +8,7 @@ public class Teacher extends Person {
     public Teacher() {
     }
 
-    public Teacher(String name, double money, Date birthDate, Country country) {
+    public Teacher(String name, double money, Instant birthDate, Country country) {
         super(name, money, birthDate, country);
     }
 }

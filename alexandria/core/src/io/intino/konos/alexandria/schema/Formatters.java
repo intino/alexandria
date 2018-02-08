@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Formatters {
-
 	private static final String NullValue = "\0";
 	private static final Map<Class, Formatter> formatters = new HashMap<>();
 
@@ -50,6 +49,7 @@ public class Formatters {
 		formatters.put(Float.class, Object::toString);
 		formatters.put(Double.class, Object::toString);
 		formatters.put(Instant.class, Object::toString);
+		formatters.put(Resource.class, Formatters::formatResource);
 		formatters.put(String[].class, ArrayFormatter.of(String.class)::format);
 		formatters.put(Boolean[].class, ArrayFormatter.of(Boolean.class)::format);
 		formatters.put(Byte[].class, ArrayFormatter.of(Byte.class)::format);
@@ -57,12 +57,18 @@ public class Formatters {
 		formatters.put(Float[].class, ArrayFormatter.of(Float.class)::format);
 		formatters.put(Double[].class, ArrayFormatter.of(Double.class)::format);
 		formatters.put(Instant[].class, ArrayFormatter.of(Instant.class)::format);
+		formatters.put(Resource[].class, ArrayFormatter.of(Resource.class)::format);
 	}
 
 	private static String formatText(Object o) {
 		if (o == null) return NullValue;
 		String text = o.toString();
 		return text.contains("\n") ? "\n\t" + text.replaceAll("\n", "\n\t") : text;
+	}
+
+	private static String formatResource(Object o) {
+		if (o == null) return NullValue;
+		return "@" + o.toString();
 	}
 
 
