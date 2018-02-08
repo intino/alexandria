@@ -18,7 +18,7 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
-		ItemList itemList = element().items(scope, condition, username());
+		ItemList itemList = element().items(scope, condition, user());
 		applyFilter(itemList);
 		return itemList;
 	}

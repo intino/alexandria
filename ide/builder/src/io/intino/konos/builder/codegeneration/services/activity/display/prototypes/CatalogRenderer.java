@@ -8,6 +8,7 @@ import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
 import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.CatalogEvent;
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenCatalog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenPanel;
 import org.siani.itrules.Template;
@@ -60,10 +61,11 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
-		if (catalogEvent.i$(OpenDialog.class)) {
+		if (catalogEvent.i$(OpenDialog.class))
 			return frameOf(catalogEvent.a$(OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
-		}
-		return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
+		if (catalogEvent.i$(OpenPanel.class))
+			return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
+		return frameOf(catalogEvent.a$(OpenCatalog.class), display.a$(Catalog.class), box, modelClass);
 	}
 
 	public static Frame frameOf(OpenDialog openDialog, Display catalog) {
@@ -83,11 +85,20 @@ public class CatalogRenderer extends PrototypeRenderer {
 		return frame;
 	}
 
+	public static Frame frameOf(OpenCatalog openCatalog, Catalog catalog, String box, String modelClass) {
+		final Frame frame = new Frame("event", openCatalog.getClass().getSimpleName());
+		frame.addSlot("catalog", openCatalog.catalog().name$());
+		if (openCatalog.hasItemToLoad())
+			frame.addSlot("openCatalogLoader", new Frame("openCatalogLoader").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+		return frame;
+	}
+
 	private void toolbar(Catalog catalog, Frame frame) {
 		if (catalog.toolbar() != null) {
 			frame.addSlot("toolbar", frameOf(catalog.toolbar()));
-			if (catalog.toolbar().groupingSelection() != null)
-				frame.addSlot("groupingselection", baseFrame());
+// TODO MC filtros
+//			if (catalog.toolbar().groupingSelection() != null)
+//				frame.addSlot("groupingselection", baseFrame());
 		}
 	}
 
@@ -183,8 +194,9 @@ public class CatalogRenderer extends PrototypeRenderer {
 			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(DownloadSelection.class))
 				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass, packageName));
-			if (operation.i$(GroupingSelection.class))
-				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass, packageName));
+// TODO MC filtros
+//			if (operation.i$(GroupingSelection.class))
+//				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass, packageName));
 		}
 		return frame;
 	}

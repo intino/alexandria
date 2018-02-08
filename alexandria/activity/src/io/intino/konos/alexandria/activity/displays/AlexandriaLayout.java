@@ -76,7 +76,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	protected void init() {
 		super.init();
 		sendInfo(info());
-		user().ifPresent(user -> sendUser(userOf(user)));
+		User user = user();
+		if (user != null) sendUser(userOf(user));
 		sendItems();
 		notifyLoaded();
 	}
@@ -174,7 +175,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 
 	private List<Item> objectItems(ElementRender r) {
 		RenderObjects render = (RenderObjects) r;
-		ItemList itemList = render.source(username());
+		ItemList itemList = render.source(user());
 		return itemList.items().stream().map(record -> itemOf(r, render.panel(), record)).collect(toList());
 	}
 

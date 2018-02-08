@@ -31,7 +31,6 @@ Panel(label = "Análisis") testAnalisis
 
 Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") testInfrastructure
 	Toolbar
-		GroupingSelection("crear grupo", polymerIcon = "content-copy")
 		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 		Download("download", polymerIcon = "file-download")
 		DownloadSelection("download assets info", polymerIcon = "file-download")
@@ -86,8 +85,6 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
 		Block b1
 			DownloadOperation download
 				options = "a" "b"
-			OpenDialogOperation open
-				width =100%
 			ExportOperation export
 				from = "2011-12-03T10:15:30Z"
 				to = "2011-12-03T10:15:31Z"

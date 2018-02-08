@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCatalogDisplayViewNotifier> implements AlexandriaCatalogView {
+public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCatalogDisplayViewNotifier, Box> implements AlexandriaCatalogView {
     private ElementView<Catalog> view;
     private CatalogViewDisplayProvider provider;
     private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
@@ -34,6 +34,10 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
 
     @Override
     public void onOpenItemDialog(Consumer<OpenItemDialogEvent> location) {
+    }
+
+    @Override
+    public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
     }
 
     @Override
@@ -76,7 +80,7 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
     @Override
     protected void init() {
         super.init();
-        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), username());
+        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), user());
         sendDisplayType(display);
         add(display);
         display.personifyOnce();

@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -42,8 +43,8 @@ public class ExportOperation extends Operation<String> {
 		return this;
 	}
 
-	public Resource execute(Item item, Instant from, Instant to, String option, String username) {
-		return item != null && execution != null ? execution.export(item.object(), from, to, option, username) : null;
+	public Resource execute(Item item, Instant from, Instant to, String option, User user) {
+		return item != null && execution != null ? execution.export(item.object(), from, to, option, user) : null;
 	}
 
 	public ExportOperation execution(Execution execution) {
@@ -52,6 +53,6 @@ public class ExportOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		Resource export(Object object, Instant from, Instant to, String option, String username);
+		Resource export(Object object, Instant from, Instant to, String option, User user);
 	}
 }

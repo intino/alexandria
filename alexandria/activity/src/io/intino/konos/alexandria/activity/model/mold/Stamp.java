@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold;
 
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 public abstract class Stamp<O> {
 	private String name = "";
@@ -31,11 +32,11 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public O value(Item item, String username) {
-		return objectValue(item != null ? item.object() : null, username);
+	public O value(Item item, User user) {
+		return objectValue(item != null ? item.object() : null, user);
 	}
 
-	public abstract O objectValue(Object object, String username);
+	public abstract O objectValue(Object object, User user);
 
 	public Stamp value(Value<O> value) {
 		this.value = value;
@@ -78,12 +79,12 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public String style(Item item, String username) {
-		return objectStyle(item != null ? item.object() : null, username);
+	public String style(Item item, User user) {
+		return objectStyle(item != null ? item.object() : null, user);
 	}
 
-	public String objectStyle(Object object, String username) {
-		return style != null ? style.value(object, username) : empty().value(object, username);
+	public String objectStyle(Object object, User user) {
+		return style != null ? style.value(object, user) : empty().value(object, user);
 	}
 
 	public Stamp style(Value style) {
@@ -91,8 +92,8 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public Editable.Refresh save(Item item, String value, String username) {
-		return editable != null ? editable.save(item.object(), value, username) : Editable.Refresh.None;
+	public Editable.Refresh save(Item item, String value, User user) {
+		return editable != null ? editable.save(item.object(), value, user) : Editable.Refresh.None;
 	}
 
 	public boolean editable() {
@@ -109,11 +110,11 @@ public abstract class Stamp<O> {
 	}
 
 	public interface Value<O> {
-		O value(Object object, String username);
+		O value(Object object, User user);
 	}
 
 	public interface Editable {
-		Refresh save(Object object, String value, String username);
+		Refresh save(Object object, String value, User user);
 
 		enum Refresh {
 			None, Object, Catalog
@@ -125,6 +126,6 @@ public abstract class Stamp<O> {
 	}
 
 	private static Value<String> empty() {
-		return (object, username) -> "";
+		return (object, user) -> "";
 	}
 }

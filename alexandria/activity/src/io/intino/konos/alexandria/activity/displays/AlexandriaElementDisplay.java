@@ -19,6 +19,7 @@ import io.intino.konos.alexandria.activity.model.toolbar.*;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class AlexandriaElementDisplay<E extends Element, DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements ItemBuilder.ItemBuilderProvider {
+public abstract class AlexandriaElementDisplay<E extends Element, DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN, Box> implements ItemBuilder.ItemBuilderProvider {
 	private String label;
 	private E element;
 	private Item target;
@@ -171,11 +172,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public AlexandriaStamp display(String stampKey) {
-		return ((EmbeddedDisplay)stamp(stampKey)).createDisplay(username());
+		return ((EmbeddedDisplay)stamp(stampKey)).createDisplay(user());
 	}
 
 	public AlexandriaDialog dialog(String stampKey) {
-		return ((EmbeddedDialog)stamp(stampKey)).createDialog(username());
+		return ((EmbeddedDialog)stamp(stampKey)).createDialog(user());
 	}
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
@@ -193,7 +194,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (!stamp.editable()) return;
 
 		currentItem(new String(Base64.getDecoder().decode(params.item())));
-		Stamp.Editable.Refresh refresh = stamp.save(item, params.value(), username());
+		Stamp.Editable.Refresh refresh = stamp.save(item, params.value(), user());
 		currentView().ifPresent(view -> {
 			dirty(true);
 			if (refresh == Stamp.Editable.Refresh.Object) view.refresh(currentItem_());
@@ -331,10 +332,16 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		showDialog();
 	}
 
+	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
+		AlexandriaElementDisplay display = openElement(event.catalog().label());
+		AlexandriaElementView.OpenItemEvent itemToOpen = event.itemToOpen();
+		if (itemToOpen != null) display.openItem(itemToOpen);
+	}
+
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
 		currentItem(event.item().id());
 		Item item = this.currentItem();
-		((TaskOperation)event.stamp()).execute(item, username());
+		((TaskOperation)event.stamp()).execute(item, user());
 		dirty(true);
 		refresh(this.currentItem());
 	}
@@ -359,7 +366,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void hidePanel();
 
 	protected Item loadItem(String id) {
-		return element().item(id, username());
+		return element().item(id, user());
 	}
 
 	protected void applyFilter(ItemList itemList) {
@@ -387,14 +394,14 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private void executeOperation(Operation operation, String option, List<Item> selection) {
 		if (operation instanceof OpenDialog) {
 			OpenDialog openDialog = (OpenDialog)operation;
-			dialogContainer.dialog(openDialog.createDialog(username()));
+			dialogContainer.dialog(openDialog.createDialog(user()));
 			dialogContainer.refresh();
 			showDialog();
 		}
 
 		if (operation instanceof Task) {
 			Task taskOperation = (Task)operation;
-			Task.Refresh refresh = taskOperation.execute(element(), option, username());
+			Task.Refresh refresh = taskOperation.execute(element(), option, user());
 			if (refresh == Task.Refresh.Catalog)
 				this.refresh();
 			return;
@@ -402,7 +409,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		if (operation instanceof TaskSelection) {
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
-			TaskSelection.Refresh refresh = taskSelectionOperation.execute(element(), option, selection, username());
+			TaskSelection.Refresh refresh = taskSelectionOperation.execute(element(), option, selection, user());
 			if (refresh == TaskSelection.Refresh.Catalog)
 				this.refresh();
 			else if (refresh == TaskSelection.Refresh.Selection)
@@ -412,19 +419,19 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	private Resource downloadOperation(Operation operation, ElementOperationParameters params, List<Item> selection) {
 		E element = element();
-		String username = username();
+		User user = user();
 
 		if (operation instanceof Export)
-			return ((Export)operation).execute(element, params.from(), params.to(), username);
+			return ((Export)operation).execute(element, params.from(), params.to(), user);
 
 		if (operation instanceof ExportSelection)
-			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, username);
+			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, user);
 
 		if (operation instanceof Download)
-			return ((Download)operation).execute(element, params.option(), username);
+			return ((Download)operation).execute(element, params.option(), user);
 
 		if (operation instanceof DownloadSelection)
-			return ((DownloadSelection)operation).execute(element, params.option(), selection, username);
+			return ((DownloadSelection)operation).execute(element, params.option(), selection, user);
 
 		return null;
 	}

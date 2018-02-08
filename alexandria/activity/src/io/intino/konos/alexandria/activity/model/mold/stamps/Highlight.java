@@ -2,16 +2,17 @@ package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 public class Highlight extends Stamp<String> {
 	private Value<String> color;
 
-	public String color(Item item, String username) {
-		return objectColor(item != null ? item.object() : null, username);
+	public String color(Item item, User user) {
+		return objectColor(item != null ? item.object() : null, user);
 	}
 
-	public String objectColor(Object object, String username) {
-		return color != null ? color.value(object, username) : "";
+	public String objectColor(Object object, User user) {
+		return color != null ? color.value(object, user) : "";
 	}
 
 	public Highlight color(Value<String> color) {
@@ -20,8 +21,8 @@ public class Highlight extends Stamp<String> {
 	}
 
 	@Override
-	public String objectValue(Object object, String username) {
-		return value() != null ? value().value(object, username) : null;
+	public String objectValue(Object object, User user) {
+		return value() != null ? value().value(object, user) : null;
 	}
 
 }

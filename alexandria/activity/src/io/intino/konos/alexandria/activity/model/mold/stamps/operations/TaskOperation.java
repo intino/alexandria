@@ -2,12 +2,13 @@ package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 public class TaskOperation extends Operation<String> {
 	private Execution execution;
 
-	public void execute(Item item, String username) {
-		execution.task(item != null ? item.object() : null, username);
+	public void execute(Item item, User user) {
+		execution.task(item != null ? item.object() : null, user);
 	}
 
 	public TaskOperation execution(Execution execution) {
@@ -16,6 +17,6 @@ public class TaskOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		void task(Object object, String username);
+		void task(Object object, User user);
 	}
 }

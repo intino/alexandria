@@ -1,5 +1,7 @@
 package io.intino.konos.alexandria.activity.model;
 
+import io.intino.konos.alexandria.activity.services.push.User;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +53,8 @@ public abstract class Element {
 		return this;
 	}
 
-	public Item item(String id, String username) {
-		return objectLoader != null ? item(objectLoader.load(id, username)) : null;
+	public Item item(String id, User user) {
+		return objectLoader != null ? item(objectLoader.load(id, user)) : null;
 	}
 
 	public Item item(Object object) {
@@ -88,7 +90,7 @@ public abstract class Element {
 	}
 
 	public interface ObjectLoader {
-		Object load(String id, String username);
+		Object load(String id, User user);
 	}
 
 	public interface ObjectIdLoader {

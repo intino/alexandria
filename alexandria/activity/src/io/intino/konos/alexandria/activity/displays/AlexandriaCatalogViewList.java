@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalogViewListNotifier> {
+public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalogViewListNotifier, Box> {
 	private List<Consumer<AlexandriaCatalogView>> selectListeners = new ArrayList<>();
 	private Map<String, Function<ElementView, ? extends AlexandriaDisplay>> builders = new HashMap<>();
 	private List<ElementView> viewList;
@@ -21,6 +21,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementView.OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private Map<String, AlexandriaCatalogView> viewDisplayMap = new HashMap<>();
 
@@ -53,6 +54,10 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 
 	public void onOpenItemDialog(Consumer<AlexandriaElementView.OpenItemDialogEvent> listener) {
 		openItemDialogListeners.add(listener);
+	}
+
+	public void onOpenItemCatalog(Consumer<AlexandriaElementView.OpenItemCatalogEvent> listener) {
+		openItemCatalogListeners.add(listener);
 	}
 
 	public void onExecuteItemTask(Consumer<AlexandriaElementView.ExecuteItemTaskEvent> listener) {
@@ -140,6 +145,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		display.provider(provider);
 		display.onOpenItem(this::openItem);
 		display.onOpenItemDialog(this::openItemDialog);
+		display.onOpenItemCatalog(this::openItemCatalog);
 		display.onExecuteItemTask(this::executeTask);
 		display.view(view);
 		display.onLoading(this::notifyLoading);
@@ -152,6 +158,10 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 
 	private void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {
 		openItemDialogListeners.forEach(l -> l.accept(event));
+	}
+
+	private void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
+		openItemCatalogListeners.forEach(l -> l.accept(event));
 	}
 
 	private void executeTask(AlexandriaElementView.ExecuteItemTaskEvent event) {

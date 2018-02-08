@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,11 @@ public class EmbeddedCatalog extends Stamp<String> {
 	private CatalogDisplayBuilder catalogDisplayBuilder;
 	private Filter filter;
 
-	public boolean filter(Element context, Item target, Item item, String username) {
+	public boolean filter(Element context, Item target, Item item, User user) {
 		if (filter == null) return true;
 		if (target == null && item == null) return true;
 		if (target == null || item == null) return false;
-		return filter.filter(context, target.object(), item.object(), username);
+		return filter.filter(context, target.object(), item.object(), user);
 	}
 
 	public EmbeddedCatalog filter(Filter filter) {
@@ -45,8 +46,8 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
-	public AlexandriaAbstractCatalog createCatalog(String username) {
-		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(username) : null;
+	public AlexandriaAbstractCatalog createCatalog(User user) {
+		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(user) : null;
 		if (catalog == null) return null;
 		catalog.enabledViews(views);
 		return catalog;
@@ -58,16 +59,16 @@ public class EmbeddedCatalog extends Stamp<String> {
 	}
 
 	@Override
-	public String objectValue(Object object, String username) {
+	public String objectValue(Object object, User user) {
 		return null;
 	}
 
 	public interface CatalogDisplayBuilder {
-		AlexandriaAbstractCatalog build(String username);
+		AlexandriaAbstractCatalog build(User user);
 	}
 
 	public interface Filter {
-		boolean filter(Element context, Object target, Object object, String username);
+		boolean filter(Element context, Object target, Object object, User user);
 	}
 
 }

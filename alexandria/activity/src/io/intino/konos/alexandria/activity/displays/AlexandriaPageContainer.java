@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPageContainerNotifier;
 import io.intino.konos.alexandria.activity.schemas.PageLocation;
 
-public class AlexandriaPageContainer extends ActivityDisplay<AlexandriaPageContainerNotifier> {
+public class AlexandriaPageContainer extends ActivityDisplay<AlexandriaPageContainerNotifier, Box> {
     private PageLocation location;
 
     public AlexandriaPageContainer(Box box) {

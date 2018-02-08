@@ -16,12 +16,11 @@ import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 
 public interface ElementViewDisplayProvider {
     Element element();
     Item item(String id);
-    Optional<User> user();
+    User user();
     URL baseAssetUrl();
     boolean embedded();
 
