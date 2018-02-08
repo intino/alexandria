@@ -6,7 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-rest</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.sparkjava</groupId>

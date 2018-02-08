@@ -1,12 +1,11 @@
+import io.intino.konos.alexandria.schema.ResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
-import schemas.Crash;
-import schemas.CrashX;
-import schemas.Menu;
-import schemas.Teacher;
+import schemas.*;
 
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static io.intino.konos.alexandria.schema.Deserializer.deserialize;
 import static messages.Messages.*;
@@ -18,7 +17,6 @@ public class Deserializer_ {
 
 	@Before
 	public void setUp() throws Exception {
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 
 	@Test
@@ -26,7 +24,7 @@ public class Deserializer_ {
 		Teacher teacher = deserialize(MessageWithParentClass).next(Teacher.class);
 		assertThat(teacher.name, is("Jose"));
 		assertThat(teacher.money, is(50.0));
-		assertThat(teacher.birthDate, is(date(2016, 10, 4, 20, 10, 12)));
+		assertThat(teacher.birthDate, is(instant(2016, 10, 4, 20, 10, 12)));
 		assertThat(teacher.university, is("ULPGC"));
 		assertThat(teacher.country.name, is("Spain"));
 	}
@@ -36,7 +34,7 @@ public class Deserializer_ {
 		Teacher teacher = deserialize(EmptyAttributeMessage).next(Teacher.class);
 		assertThat(teacher.name, is("Jose"));
 		assertThat(teacher.money, is(50.0));
-		assertThat(teacher.birthDate, is(date(2016, 10, 4, 20, 10, 11)));
+		assertThat(teacher.birthDate, is(instant(2016, 10, 4, 20, 10, 11)));
 		assertThat(teacher.university, is("ULPGC"));
 		assertThat(teacher.country.name, is("Spain"));
 		assertThat(teacher.country.continent, is(nullValue()));
@@ -105,7 +103,7 @@ public class Deserializer_ {
 	@Test
 	public void should_deserialize_message_with_multi_line_attributes() throws Exception {
 		Crash crash = deserialize(CrashMessage).next(Crash.class);
-		assertThat(crash.instant.toString(), is("Tue Mar 21 07:39:00 UTC 2017"));
+		assertThat(crash.instant.toString(), is("2017-03-21T07:39:00Z"));
 		assertThat(crash.app, is("io.intino.consul"));
 		assertThat(crash.deviceId, is("b367172b0c6fe726"));
 		assertThat(crash.stack, is(Stack));
@@ -121,7 +119,7 @@ public class Deserializer_ {
 				map("stack", "lines").
 				next(CrashX.class);
 
-		assertThat(crash.ts.toString(), is("Tue Mar 21 07:39:00 UTC 2017"));
+		assertThat(crash.ts.toString(), is("2017-03-21T07:39:00Z"));
 		assertThat(crash.application, is("io.intino.consul"));
 		assertThat(crash.device, is("b367172b0c6fe726"));
 		assertThat(crash.lines.length, is(11));
@@ -134,7 +132,7 @@ public class Deserializer_ {
 		Teacher teacher = deserialize(MultipleComponentMessage).next(Teacher.class);
 		assertThat(teacher.name, is("Jose"));
 		assertThat(teacher.money, is(50.0));
-		assertThat(teacher.birthDate, is(date(2016, 10, 4, 20, 10, 11)));
+		assertThat(teacher.birthDate, is(instant(2016, 10, 4, 20, 10, 11)));
 		assertThat(teacher.country.name, is("Spain"));
 		assertThat(teacher.phones.size(), is(2));
 		assertThat(teacher.phones.get(0).value, is("+150512101402"));
@@ -148,14 +146,48 @@ public class Deserializer_ {
 		Teacher teacher = deserialize(OldFormatMessage).next(Teacher.class);
 		assertThat(teacher.name, is("Jose"));
 		assertThat(teacher.money, is(50.0));
-		assertThat(teacher.birthDate, is(date(2016, 10, 4, 20, 10, 12)));
+		assertThat(teacher.birthDate, is(instant(2016, 10, 4, 20, 10, 12)));
 		assertThat(teacher.university, is("ULPGC"));
 		assertThat(teacher.country.name, is("Spain"));
 		assertThat(teacher.country.continent, is(nullValue()));
 	}
 
-	private Date date(int y, int m, int d, int h, int mn, int s) {
-		return new Date(y - 1900, m - 1, d, h, mn, s);
+	@Test
+	public void should_deserialize_message_with_resource() {
+		Document document = deserialize(DocumentMessage, id -> new byte[id.length()]).next(Document.class);
+		assertThat(document.ts().toString(), is("2017-03-21T07:39:00Z"));
+		assertThat(document.file().id(), is("4444-444-44-44444.png"));
+		assertThat(document.file().data().length, is("4444-444-44-44444.png".length()));
+	}
+
+	@Test
+	public void should_deserialize_message_with_resource_list() {
+		DocumentList documentList = deserialize(DocumentListMessage, getResourceLoader()).next(DocumentList.class);
+		assertThat(documentList.ts().toString(), is("2017-03-21T07:39:00Z"));
+		assertThat(documentList.files().size(), is(2));
+		assertThat(documentList.files().get(0).id(), is("4444-444-44-44444.png"));
+		assertThat(documentList.files().get(1).id(), is("5555-555-55.jpeg"));
+		assertThat(documentList.files().get(0).data().length, is("4444-444-44-44444.png".length()));
+		assertThat(documentList.files().get(1).data().length, is("5555-555-55.jpeg".length()));
+	}
+
+	@Test
+	public void should_deserialize_message_with_resource_array() {
+		DocumentArray documentArray = deserialize(DocumentArrayMessage, getResourceLoader()).next(DocumentArray.class);
+		assertThat(documentArray.ts().toString(), is("2017-03-21T07:39:00Z"));
+		assertThat(documentArray.files().length, is(2));
+		assertThat(documentArray.files()[0].id(), is("4444-444-44-44444.png"));
+		assertThat(documentArray.files()[1].id(), is("5555-555-55.jpeg"));
+		assertThat(documentArray.files()[0].data().length, is("4444-444-44-44444.png".length()));
+		assertThat(documentArray.files()[1].data().length, is("5555-555-55.jpeg".length()));
+	}
+
+	private ResourceLoader getResourceLoader() {
+		return id -> new byte[id.length()];
+	}
+
+	private Instant instant(int y, int m, int d, int h, int mn, int s) {
+		return LocalDateTime.of(y, m, d, h, mn, s).atZone(ZoneId.of("UTC")).toInstant();
 	}
 
 }

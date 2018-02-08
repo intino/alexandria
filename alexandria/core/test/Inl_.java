@@ -1,4 +1,4 @@
-import io.intino.ness.Inl;
+import io.intino.konos.alexandria.Inl;
 import io.intino.ness.inl.Message;
 import org.junit.Test;
 import schemas.AlertModified;
@@ -65,8 +65,7 @@ public class Inl_ {
 				"mailingList:\n" +
 				"\tjbelizon@monentia.es\n" +
 				"applyToAllStations: false";
-		Message message = Message.load(text);
-		AlertModified object = message.as(AlertModified.class);
+		AlertModified object = Inl.deserialize(text).next(AlertModified.class);
 		assertNotNull(object);
 		assertThat(object.mailingList().size(), is(1));
 	}
