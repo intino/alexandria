@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AlexandriaPanelView<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> implements AlexandriaElementView<ElementViewDisplayProvider> {
+public abstract class AlexandriaPanelView<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN, Box> implements AlexandriaElementView<ElementViewDisplayProvider> {
 	private Panel context;
 	private Item target;
 	private ElementView<Panel> view;
@@ -17,6 +17,7 @@ public abstract class AlexandriaPanelView<DN extends AlexandriaDisplayNotifier> 
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 
 	public AlexandriaPanelView(Box box) {
@@ -76,6 +77,11 @@ public abstract class AlexandriaPanelView<DN extends AlexandriaDisplayNotifier> 
 	}
 
 	@Override
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
+		openItemCatalogListeners.add(listener);
+	}
+
+	@Override
 	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener) {
 		executeItemTaskListeners.add(listener);
 	}
@@ -90,6 +96,10 @@ public abstract class AlexandriaPanelView<DN extends AlexandriaDisplayNotifier> 
 
 	protected void notifyOpenItemDialog(OpenItemDialogEvent params) {
 		openItemDialogListeners.forEach(l -> l.accept(params));
+	}
+
+	protected void notifyOpenItemCatalog(OpenItemCatalogEvent params) {
+		openItemCatalogListeners.forEach(l -> l.accept(params));
 	}
 
 	protected void notifyExecuteItemTaskOperation(ExecuteItemTaskEvent params) {

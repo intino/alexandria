@@ -73,7 +73,7 @@ def type(stamp & cataloglink)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((username) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((user) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
 end
 
 def type(stamp & embeddedDisplay)
@@ -85,7 +85,7 @@ def type(stamp & embeddedDialog)
 end
 
 def type(stamp & highlight)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, username))$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, user))$common)
 end
 
 def type(stamp & itemLinks)
@@ -149,26 +149,26 @@ def trigger(common)
 end
 
 def trigger(style)
-	.style((object, username) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, username))
+	.style((object, user) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, user))
 end
 def trigger(embeddedCatalogFilter)
-	(element, source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) source, target, username)
+	(element, source, target, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) source, target, user)
 end
 
 def trigger(displayBuilder)
-	(name, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.buildDisplay(box, name, username)
+	(name, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.buildDisplay(box, name, user)
 end
 
 def trigger(embeddedDialogBuilder)
-	(name, username) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
+	(name, user) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
 end
 
 def trigger(title)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) object, username)
+	(object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.title(box, ($moldClass) object, user)
 end
 
 def trigger(dialogBuilder)
-	(object, username) -> {
+	(object, user) -> {
 		io.intino.konos.alexandria.activity.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
 		dialog.target(object);
 		return dialog;
@@ -176,39 +176,39 @@ def trigger(dialogBuilder)
 end
 
 def trigger(exportExecution)
-	(object, from, to, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, from, to, option, username)
+	(object, from, to, option, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, from, to, option, user)
 end
 
 def trigger(downloadExecution)
-	(object, option, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, option, username)
+	(object, option, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, option, user)
 end
 
 def trigger(previewExecution)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.preview(box, ($moldClass) object, username)
+	(object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.preview(box, ($moldClass) object, user)
 end
 
 def trigger(taskExecution)
-	(object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, username)
+	(object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, user)
 end
 
 def trigger(filter)
-	(source, target, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, username)
+	(source, target, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, user)
 end
 
 def trigger(editable)
-	(object, value, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, username)
+	(object, value, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, user)
 end
 
 def trigger(valueMethod)
-	.value((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(box, ($moldClass) object, username))
+	.value((object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.value(box, ($moldClass) object, user))
 end
 
 def trigger(icon)
-	.icon((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, username))
+	.icon((object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, user))
 end
 
 def trigger(drawingColor)
-	.drawingColor((object, username) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.drawingColor(box, ($moldClass) object, username))
+	.drawingColor((object, user) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.drawingColor(box, ($moldClass) object, user))
 end
 
 def trigger(expanded)

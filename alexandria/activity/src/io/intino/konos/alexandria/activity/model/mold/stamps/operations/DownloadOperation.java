@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class DownloadOperation extends Operation<String> {
 		return this;
 	}
 
-	public Resource execute(Item item, String option, String username) {
-		return item != null && execution != null ? execution.download(item.object(), option, username) : null;
+	public Resource execute(Item item, String option, User user) {
+		return item != null && execution != null ? execution.download(item.object(), option, user) : null;
 	}
 
 	public DownloadOperation execution(Execution execution) {
@@ -29,6 +30,6 @@ public class DownloadOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		Resource download(Object object, String option, String username);
+		Resource download(Object object, String option, User user);
 	}
 }

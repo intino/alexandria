@@ -17,6 +17,9 @@ Concept Catalog extends Display
 				sub OpenPanel
 					var Panel panel
 					var boolean hasBreadcrumbs = false
+				sub OpenCatalog
+					var Catalog catalog
+					var boolean hasItemToLoad = false
 	Concept:{1..1} Views
 		has CatalogView
 		has:{0..1} DisplayView
@@ -29,7 +32,7 @@ Concept Catalog extends Display
 
 Concept Toolbar is decorable component
 	var boolean canSearch = true
-	Concept:{0..1} GroupingSelection extends Operation
+//TODO MC -> Filtros	Concept:{0..1} GroupingSelection extends Operation
 	Concept:{0..1} OpenDialog extends Operation
 		var Dialog dialog
 

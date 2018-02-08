@@ -126,12 +126,12 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	@Override
 	public Item rootItem(List<Item> itemList) {
-		return element().rootItem(itemList, username());
+		return element().rootItem(itemList, user());
 	}
 
 	@Override
 	public Item defaultItem(String name) {
-		return element().defaultItem(name, username());
+		return element().defaultItem(name, user());
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(username()));
+		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(user()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
@@ -353,6 +353,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		display.onSelectView(this::updateCurrentView);
 		display.onOpenItem(this::openItem);
 		display.onOpenItemDialog(this::openItemDialog);
+		display.onOpenItemCatalog(this::openItemCatalog);
 		display.onExecuteItemTask(this::executeItemTask);
 		display.onLoading(this::notifyLoading);
 		add(display);
@@ -374,9 +375,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	@Override
 	public void createClusterGroup(ClusterGroup value) {
-		List<Item> itemList = value.items().stream().map(itemId -> item(new String(Base64.getDecoder().decode(itemId)))).collect(toList());
-		element().addGroupingGroup(value.cluster(), value.name(), itemList, username());
-		sendCatalog();
+		// TODO MC
+//		List<Item> itemList = value.items().stream().map(itemId -> item(new String(Base64.getDecoder().decode(itemId)))).collect(toList());
+//		element().addGroupingGroup(value.cluster(), value.name(), itemList, user());
+//		sendCatalog();
 	}
 
 	private Scope calculateScope(boolean addAttachedGrouping) {
@@ -389,9 +391,9 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 										 .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
 										 .collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));
 
-		scope.objects(groupingSelectionMap.entrySet().stream().filter(this::isCluster)
-										  .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
-										  .collect(toMap(Map.Entry::getKey, e -> objects(e.getValue()))));
+//		scope.objects(groupingSelectionMap.entrySet().stream().filter(this::isCluster)
+//										  .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
+//										  .collect(toMap(Map.Entry::getKey, e -> objects(e.getValue()))));
 
 		return scope;
 	}
@@ -431,19 +433,19 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		return groupMap != null ? groupsNames(selection.groups()).stream().map(groupMap::get).collect(toList()) : emptyList();
 	}
 
-	private List<Object> objects(GroupingSelection selection) {
-		return groupsNames(selection.groups()).stream().map(group -> objects(selection.name(), group)).flatMap(Collection::stream).collect(toList());
-	}
+//	private List<Object> objects(GroupingSelection selection) {
+//		return groupsNames(selection.groups()).stream().map(group -> objects(selection.name(), group)).flatMap(Collection::stream).collect(toList());
+//	}
 
-	private List<Object> objects(String groupingName, String groupName) {
-		Grouping grouping = groupingOf(groupingName);
-		return objectsOf(grouping, groupName);
-	}
+//	private List<Object> objects(String groupingName, String groupName) {
+//		Grouping grouping = groupingOf(groupingName);
+//		return objectsOf(grouping, groupName);
+//	}
 
-	private List<Object> objectsOf(Grouping grouping, String groupLabel) {
-		Group group = groupingManager.groups(grouping).values().stream().filter(g -> g.label().equals(groupLabel)).findFirst().orElse(null);
-		return group != null ? group.objects() : emptyList();
-	}
+//	private List<Object> objectsOf(Grouping grouping, String groupLabel) {
+//		Group group = groupingManager.groups(grouping).values().stream().filter(g -> g.label().equals(groupLabel)).findFirst().orElse(null);
+//		return group != null ? group.objects() : emptyList();
+//	}
 
 	private List<Grouping> groupings() {
 		return element().groupings();

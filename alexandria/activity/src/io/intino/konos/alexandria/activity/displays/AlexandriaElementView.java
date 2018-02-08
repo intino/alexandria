@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Panel;
 import io.intino.konos.alexandria.activity.model.TimeRange;
@@ -19,6 +20,7 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 
 	void onOpenItem(Consumer<OpenItemEvent> listener);
 	void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener);
+	void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener);
 	void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener);
 
 	interface OpenItemEvent {
@@ -37,6 +39,12 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	interface OpenItemDialogEvent {
 		Item item();
 		AlexandriaDialog dialog();
+	}
+
+	interface OpenItemCatalogEvent {
+		Item sender();
+		Catalog catalog();
+		OpenItemEvent itemToOpen();
 	}
 
 	interface ExecuteItemTaskEvent {

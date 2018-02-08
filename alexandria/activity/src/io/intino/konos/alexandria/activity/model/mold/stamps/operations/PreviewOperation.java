@@ -2,14 +2,15 @@ package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.URL;
 
 public class PreviewOperation extends Operation<URL> {
 	private Execution execution;
 
-	public URL preview(Item item, String username) {
-		return item != null && execution != null ? execution.preview(item.object(), username) : null;
+	public URL preview(Item item, User user) {
+		return item != null && execution != null ? execution.preview(item.object(), user) : null;
 	}
 
 	public PreviewOperation preview(Execution execution) {
@@ -18,6 +19,6 @@ public class PreviewOperation extends Operation<URL> {
 	}
 
 	public interface Execution {
-		URL preview(Object object, String username);
+		URL preview(Object object, User user);
 	}
 }

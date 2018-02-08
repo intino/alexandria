@@ -6,7 +6,7 @@ import io.intino.konos.alexandria.activity.model.TimeScale;
 
 import java.util.List;
 
-public abstract class AlexandriaNavigator<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN> {
+public abstract class AlexandriaNavigator<DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN, Box> {
     private TimeScaleHandler timeScaleHandler;
 
     public AlexandriaNavigator(Box box) {

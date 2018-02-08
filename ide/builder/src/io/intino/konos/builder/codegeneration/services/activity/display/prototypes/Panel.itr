@@ -3,6 +3,7 @@ def type(panel)
 
 	import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 	import io.intino.konos.alexandria.activity.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.activity.services.push.User;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import java.util.function.Consumer;
@@ -48,13 +49,13 @@ def type(view & catalogs)
 end
 
 def type(filter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, String username) {
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, User user) {
 		return true;//TODO
 	}
 end
 
 def trigger(hidden)
-	public static boolean hidden($box~Box box, Object object, String username) {
+	public static boolean hidden($box~Box box, Object object, User user) {
 		return false;//TODO
 	}
 end

@@ -27,13 +27,14 @@ Dialog(url = "", label = "", description = "") dialog1
 
 Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
 	Toolbar > OpenDialog("abrir", dialog=dialog1)
-	Events > OnClickRecord > OpenDialog(dialog1)
+//	Events > OnClickRecord > OpenDialog(dialog1)
+	Events > OnClickRecord > OpenCatalog(octanaPersonCatalog, hasItemToLoad=true)
 	Views
 		ListView("lista", mold = octanaCenterMold)
 
 Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
 
-Catalog(modelClass = "io.intino.octana.graph.Person") octanaPersonCwatalog
+Catalog(modelClass = "io.intino.octana.graph.Person") octanaPersonCatalog
 	Views
 		ListView("lista", mold = octanaPersonMold)
 

@@ -27,7 +27,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>[3.1.0, 3.2.0]</version>
+            <version>[3.2.0, 3.3.0]</version>
             <scope>test</scope>
         </dependency>
         <dependency>

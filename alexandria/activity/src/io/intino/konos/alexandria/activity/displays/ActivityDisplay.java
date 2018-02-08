@@ -7,22 +7,16 @@ import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Optional;
 
-public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<DN> {
-    protected Box box;
+public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier, B extends Box> extends AlexandriaDisplay<DN> {
+    protected B box;
 
-    public ActivityDisplay(Box box) {
+    public ActivityDisplay(B box) {
         this.box = box;
     }
 
-    public Optional<User> user() {
-        return Optional.ofNullable(session().user());
-    }
-
-    public String username() {
-        User user = session().user();
-        return user != null ? user.username() : session().id();
+    public User user() {
+        return session().user();
     }
 
     public URL baseAssetUrl() {

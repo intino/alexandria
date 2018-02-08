@@ -8,6 +8,7 @@ import io.intino.konos.alexandria.activity.displays.adapters.gson.FormAdapter;
 import io.intino.konos.alexandria.activity.model.dialog.Form;
 import io.intino.konos.alexandria.activity.model.dialog.Value;
 import io.intino.konos.alexandria.activity.model.dialog.Values;
+import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -213,9 +214,9 @@ public class Dialog {
                 return this;
             }
 
-            public DialogExecution.Modification execute(String username) {
+            public DialogExecution.Modification execute(User user) {
                 if (launcher == null) return DialogExecution.Modification.ItemModified;
-                return launcher.execute(this, username);
+                return launcher.execute(this, user);
             }
         }
 

@@ -1,5 +1,7 @@
 package io.intino.konos.alexandria.activity.model;
 
+import io.intino.konos.alexandria.activity.services.push.User;
+
 public class AbstractView {
 	private String name;
 	private String label;
@@ -23,8 +25,8 @@ public class AbstractView {
 		return this;
 	}
 
-	public boolean hidden(Item item, String username) {
-		return hidden != null && hidden.hidden(item != null ? item.object() : null, username);
+	public boolean hidden(Item item, User user) {
+		return hidden != null && hidden.hidden(item != null ? item.object() : null, user);
 	}
 
 	public AbstractView hidden(Hidden hidden) {
@@ -33,6 +35,6 @@ public class AbstractView {
 	}
 
 	public interface Hidden {
-		boolean hidden(Object object, String username);
+		boolean hidden(Object object, User user);
 	}
 }
