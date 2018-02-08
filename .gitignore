@@ -1,12 +1,10 @@
 gen
 test-gen
 out
-plugin/plugin/target/
 .idea/libraries
 .idea/dictionaries
 test-res/*.stash
 target/
-workspace.xml
 /ide/konos-plugin/dependency-reduced-pom.xml
 slack/target
 workspace.xml
