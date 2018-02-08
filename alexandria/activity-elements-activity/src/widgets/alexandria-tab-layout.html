@@ -29,7 +29,7 @@
 
             <template is="dom-repeat" items="[[_itemList]]" as="item">
                 <div class="item" name$="[[item.label]]">
-                    <cotton-zombie display$="[[item.type]]" widget$="[[item.type]]" object$="[[item.label]]"></cotton-zombie>
+                    <cotton-zombie display$="[[item.type]]" widget$="[[item.type]]" object$="[[display.id]][[item.label]]"></cotton-zombie>
                 </div>
             </template>
             <div name="noItems" class="message layout horizontal center"><span>[[NoItemsMessage]]</span></div>

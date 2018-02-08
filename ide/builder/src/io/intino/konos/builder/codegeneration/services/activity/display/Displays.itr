@@ -78,6 +78,19 @@ def type(Displays)
 			return null;
 		}
 
+/*		private void refreshCatalog($box+firstUpperCase~Box box, String catalog, Item... items) {
+			activitySouls.values().stream().map(Soul::getAll).flatMap(Collection::stream)
+					.filter(d -> d instanceof AlexandriaAbstractCatalog && ((AlexandriaAbstractCatalog) d)
+							.isFor(catalog)).forEach(d -> {
+				AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) d;
+				display.dirty(true);
+				if (categorizationsHaveChanges || items.length == 0)
+					display.refresh();
+				else
+					display.refresh(items);
+			});
+		}
+*/
 		private interface ElementDisplayBuilder {
 			AlexandriaElementDisplay build($box+firstUpperCase~Box box);
 		}

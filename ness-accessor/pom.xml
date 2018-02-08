@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-ness-accessor</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -68,23 +68,18 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.13</version>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-core</artifactId>
-            <version>1.0.0</version>
+            <version>1.7.7</version>
         </dependency>
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-jms</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.12</version>
         </dependency>
 
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-jmx</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

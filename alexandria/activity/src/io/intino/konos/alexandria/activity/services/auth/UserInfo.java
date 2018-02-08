@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.services.auth;
 
 import java.net.URL;
+import java.util.List;
 
 public interface UserInfo {
     String username();
@@ -8,4 +9,5 @@ public interface UserInfo {
     URL photo();
     String email();
     String language();
+    List<String> roleList();
 }

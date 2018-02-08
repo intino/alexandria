@@ -97,7 +97,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	protected void init() {
 		super.init();
 		createDialogContainer();
-		sendTarget();
 		sendViewList();
 		buildFixedViews();
 		selectFirstTabView();
@@ -110,11 +109,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 				break;
 			}
 		}
-	}
-
-	private void sendTarget() {
-		if (target() == null) return;
-		notifier.refreshTarget(target().name());
 	}
 
 	private void sendViewList() {
@@ -188,8 +182,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	private String viewId(AbstractView view) {
-		if (target() == null) return view.name();
-		return String.format(ViewId, target().name(), view.name());
+		return String.format(ViewId, id(), view.name());
 	}
 
 	public void navigate(String key) {

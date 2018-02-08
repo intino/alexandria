@@ -8,10 +8,8 @@ import io.intino.konos.alexandria.activity.model.layout.ElementOption;
 import io.intino.konos.alexandria.activity.model.layout.options.Group;
 import io.intino.konos.alexandria.activity.model.layout.options.Option;
 import io.intino.konos.alexandria.activity.model.layout.options.Options;
-import io.intino.konos.alexandria.activity.model.renders.RenderCatalogs;
-import io.intino.konos.alexandria.activity.model.renders.RenderMold;
-import io.intino.konos.alexandria.activity.model.renders.RenderObjects;
-import io.intino.konos.alexandria.activity.model.renders.RenderPanels;
+import io.intino.konos.alexandria.activity.model.panel.View;
+import io.intino.konos.alexandria.activity.model.renders.*;
 import io.intino.konos.alexandria.activity.schemas.PlatformInfo;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
@@ -190,6 +188,12 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return singletonList(itemOf(r, render.mold()));
 	}
 
+	private List<Item> displayItem(ElementRender r) {
+		Panel panel = new Panel();
+		panel.views().add(new View().render(r).name(UUID.randomUUID().toString()));
+		return singletonList(itemOf(r, panel));
+	}
+
 	private PlatformInfo info() {
 		return PlatformInfoBuilder.build(settings);
 	}
@@ -207,6 +211,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		itemsProviders.put(RenderObjects.class, this::objectItems);
 		itemsProviders.put(RenderCatalogs.class, this::catalogItems);
 		itemsProviders.put(RenderMold.class, this::moldItems);
+		itemsProviders.put(RenderDisplay.class, this::displayItem);
 	}
 
 	private Item itemOf(ElementRender render, Element element) {

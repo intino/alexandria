@@ -1,6 +1,5 @@
 package io.intino.konos.alexandria;
 
-import io.intino.ness.Inl;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
