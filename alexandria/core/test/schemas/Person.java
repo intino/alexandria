@@ -1,20 +1,20 @@
 package schemas;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Person {
     public String name;
     public double money;
-    public Date birthDate;
+    public Instant birthDate;
     public Country country;
     public List<Phone> phones;
 
     public Person() {
     }
 
-    public Person(String name, double money, Date birthDate, Country country) {
+    public Person(String name, double money, Instant birthDate, Country country) {
         this.name = name;
         this.money = money;
         this.birthDate = birthDate;

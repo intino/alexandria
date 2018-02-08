@@ -1,9 +1,9 @@
 package schemas;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class CrashX {
-    public Date ts;
+    public Instant ts;
     public String application;
     public String device;
     public String[] lines;

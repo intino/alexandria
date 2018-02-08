@@ -4,6 +4,7 @@ package io.intino.konos.alexandria.schema;
 import io.intino.konos.alexandria.schema.Formatters.Formatter;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.reflect.Modifier.isStatic;
@@ -13,15 +14,21 @@ public class Serializer {
 	private final Object object;
 	private final String path;
 	private final Accessory.Mapping mapping;
+	private ResourceStore resourceStore;
 
 	public static Serializer serialize(Object object) {
-		return new Serializer(object, "", new Accessory.Mapping());
+		return serialize(object, ResourceStore.collector());
 	}
 
-	private Serializer(Object object, String path, Accessory.Mapping mapping) {
+	public static Serializer serialize(Object object, ResourceStore resourceStore) {
+		return new Serializer(object, "", new Accessory.Mapping(), resourceStore);
+	}
+
+	private Serializer(Object object, String path, Accessory.Mapping mapping, ResourceStore resourceStore) {
 		this.object = object;
 		this.path = path;
 		this.mapping = mapping;
+		this.resourceStore = resourceStore;
 	}
 
 	public String toInl() {
@@ -57,10 +64,34 @@ public class Serializer {
 			if (isTransient(field.getModifiers())) continue;
 			if (isStatic(field.getModifiers())) continue;
 			if (!isAttribute(field)) continue;
-			if (valueOf(field) == null || isEmpty(field)) continue;
+			Object value = valueOf(field);
+			if (isEmpty(value)) continue;
 			result.append(serializeAttribute(field)).append("\n");
+			collectResources(value);
 		}
 		return result.toString();
+	}
+
+	private String serializeComponents() {
+		StringBuilder result = new StringBuilder();
+		for (Field field : Accessory.fieldsOf(object).asList()) {
+			if (isTransient(field.getModifiers())) continue;
+			if (isStatic(field.getModifiers())) continue;
+			if (isEmpty(valueOf(field))) continue;
+			if (isAttribute(field)) continue;
+			result.append(serializeComponent(field));
+		}
+		return result.toString();
+	}
+
+	private void collectResources(Object value) {
+		if (value instanceof Resource) resourceStore.add((Resource) value);
+		if (value instanceof Resource[]) Arrays.stream((Resource[]) value).forEach(r -> resourceStore.add(r));
+		if (value instanceof List && isResourceList((List) value)) ((List<?>) value).forEach(o -> resourceStore.add((Resource) o));
+	}
+
+	private boolean isResourceList(List list) {
+		return !list.isEmpty() && list.get(0) instanceof Resource;
 	}
 
 	private String serializeAttribute(Field field) {
@@ -89,18 +120,6 @@ public class Serializer {
 		return result;
 	}
 
-	private String serializeComponents() {
-		StringBuilder result = new StringBuilder();
-		for (Field field : Accessory.fieldsOf(object).asList()) {
-			if (isTransient(field.getModifiers())) continue;
-			if (isStatic(field.getModifiers())) continue;
-			if (valueOf(field) == null || isEmpty(field)) continue;
-			if (isAttribute(field)) continue;
-			result.append(serializeComponent(field));
-		}
-		return result.toString();
-	}
-
 	private String serializeComponent(Field field) {
 		Object object = valueOf(field);
 		if (object == null) return "";
@@ -116,7 +135,7 @@ public class Serializer {
 
 	private String serializeItem(Object value) {
 		Class<?> aClass = value.getClass();
-		return "\n" + (isPrimitive(aClass) || isArrayOfPrimitives(aClass) ? value.toString() : new Serializer(value, type(), mapping).toInl());
+		return "\n" + (isPrimitive(aClass) || isArrayOfPrimitives(aClass) ? value.toString() : new Serializer(value, type(), mapping, resourceStore).toInl());
 	}
 
 	private boolean isAttribute(Field field) {
@@ -136,7 +155,7 @@ public class Serializer {
 		return isPrimitive(aClass.getName()) || aClass.isPrimitive();
 	}
 
-	private static String[] primitives = {"java.lang", "java.util.Date", "java.time"};
+	private static String[] primitives = {"java.lang", Resource.class.getName(), "java.time"};
 
 	private boolean isPrimitive(String className) {
 		if (className.contains("<")) className = className.substring(className.indexOf('<') + 1);
@@ -144,11 +163,11 @@ public class Serializer {
 		return false;
 	}
 
-	private boolean isEmpty(Field field) {
-		Object value = valueOf(field);
-		return value != null && value.getClass().isArray() && ((Object[]) value).length == 0;
+	private boolean isEmpty(Object value) {
+		return value == null
+				|| value.getClass().isArray() && ((Object[]) value).length == 0
+				|| value instanceof List && ((List) value).isEmpty();
 	}
-
 
 	private boolean isList(Field field) {
 		return field.getType().isAssignableFrom(List.class);

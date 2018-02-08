@@ -1,9 +1,9 @@
 package schemas;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class Crash {
-    public Date instant;
+    public Instant instant;
     public String app;
     public String deviceId;
     public String stack;
