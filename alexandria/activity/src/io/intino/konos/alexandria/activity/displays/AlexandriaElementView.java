@@ -44,7 +44,7 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	interface OpenItemCatalogEvent {
 		Item sender();
 		Catalog catalog();
-		OpenItemEvent itemToOpen();
+		String itemToOpen();
 	}
 
 	interface ExecuteItemTaskEvent {

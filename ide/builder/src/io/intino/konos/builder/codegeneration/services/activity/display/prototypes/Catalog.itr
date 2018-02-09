@@ -127,7 +127,7 @@ def type(openCatalog)
 end
 
 def trigger(openCatalogLoader)
-	public static io.intino.konos.alexandria.activity.model.Item onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, User user) {
+	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, User user) {
 		return null; //return item to load in catalog
 	}
 end

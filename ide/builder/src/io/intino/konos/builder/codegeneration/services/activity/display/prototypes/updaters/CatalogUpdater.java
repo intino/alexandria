@@ -11,6 +11,7 @@ import io.intino.konos.builder.codegeneration.services.activity.display.prototyp
 import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Catalog.Arrangement.Grouping;
 import io.intino.konos.model.graph.Catalog.Arrangement.Sorting;
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenCatalog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenPanel;
 import io.intino.konos.model.graph.DisplayView;
@@ -109,6 +110,7 @@ public class CatalogUpdater extends Updater {
 		if (events == null)
 			events = (PsiClass) psiClass.addAfter(createInnerClass("Events"), innerClass(psiClass, "Source").getNextSibling());
 		if (event.i$(OpenPanel.class)) processPanel(event, events);
+		else if (event.i$(OpenCatalog.class)) processCatalog(event, events);
 		else processDialog(event, events);
 	}
 
@@ -123,6 +125,14 @@ public class CatalogUpdater extends Updater {
 		if (!event.a$(OpenPanel.class).hasBreadcrumbs()) return;
 		if (events.findMethodsByName("onOpenPanelBreadcrumbs", false).length == 0) {
 			String text = openPanelMethodText(event.a$(OpenPanel.class));
+			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
+		}
+	}
+
+	private void processCatalog(Catalog.Events.OnClickRecord.CatalogEvent event, PsiClass events) {
+		if (!event.a$(OpenCatalog.class).hasItemToLoad()) return;
+		if (events.findMethodsByName("onOpenCatalog", false).length == 0) {
+			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}
 	}
@@ -150,6 +160,10 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private String openPanelMethodText(OpenPanel event) {
+		return template.format(frameOf(event, catalog, box, catalog.modelClass()));
+	}
+
+	private String openCatalogMethodText(OpenCatalog event) {
 		return template.format(frameOf(event, catalog, box, catalog.modelClass()));
 	}
 

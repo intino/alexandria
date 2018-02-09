@@ -314,9 +314,10 @@
                 return parent.querySelector("l2t-paper-slider");
             },
 
-            _openDialog : function(event) {
-                var stamp = event.target.getAttribute("stamp");
+            _openDialog : function(e) {
+                var stamp = e.target.getAttribute("stamp");
                 this.fire("open-dialog", { stamp: stamp, item: this.item });
+                e.stopPropagation();
             },
 
             _refresh : function() {
@@ -357,8 +358,8 @@
             _createZombieDisplayLayers : function() {
                 this.querySelectorAll(".display-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                    this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
-                });
+                this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
+            });
             },
 
             _listenToItemLinks : function() {
@@ -404,16 +405,19 @@
             _download : function(e) {
                 var name = e.target.getAttribute("name");
                 this.fire("download-item", { stamp: name, option: e.detail });
+                e.stopPropagation();
             },
 
             _export : function(e) {
                 var name = e.target.getAttribute("name");
                 this.fire("export-item", { stamp: name, from: e.detail.from, to: e.detail.to, option: e.detail.option });
+                e.stopPropagation();
             },
 
-            _executeTask : function(event) {
-                var stamp = event.target.getAttribute("stamp");
+            _executeTask : function(e) {
+                var stamp = e.target.getAttribute("stamp");
                 this.fire("execute-task-item", { stamp: stamp, item: this.item });
+                e.stopPropagation();
             },
 
             _edit : function(e) {

@@ -16,7 +16,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../konos-builder/test-gen" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../konos-builder/gen" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="IDEA Konos" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="model" />
     <orderEntry type="library" name="Maven: tara.dsl:konos:1.0.0" level="project" />

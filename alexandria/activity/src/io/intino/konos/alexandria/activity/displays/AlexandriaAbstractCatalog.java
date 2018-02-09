@@ -361,16 +361,16 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	@Override
-	protected void openItem(OpenItemEvent parameters) {
-		if (parameters.panel() == null)
+	protected void openItem(OpenItemEvent event) {
+		if (event.panel() == null)
 			return;
 
 		if (openItemListeners.size() > 0) {
-			openItemListeners.forEach(l -> l.accept(parameters));
+			openItemListeners.forEach(l -> l.accept(event));
 			return;
 		}
 
-		super.openItem(parameters);
+		super.openItem(event);
 	}
 
 	@Override

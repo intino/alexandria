@@ -138,7 +138,7 @@ def trigger(breadCrumbs)
 end
 
 def trigger(openCatalogLoader)
-	(catalog, sender, user) -> $catalog+FirstUpperCase.Events.onOpenCatalog(box, ($type) sender, user)
+	(element, sender, user) -> $catalog+FirstUpperCase.Events.onOpenCatalog(box, element, ($type) sender, user)
 end
 
 def type(operation & download) trigger(operation)

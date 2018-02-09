@@ -9,6 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.ullink.slack:simpleslackapi:0.6.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.httpcomponents:httpmime:4.4" level="project" />

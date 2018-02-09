@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.rest.spark;
 
 import cottons.utils.MimeTypes;
-import io.intino.konos.alexandria.Resource;
+import io.intino.konos.alexandria.schema.Resource;
 import spark.Response;
 import spark.utils.IOUtils;
 
@@ -60,7 +60,7 @@ class SparkWriter {
 	}
 
 	private void writeResource(Resource resource, boolean embedded) {
-		writeResponse(resource.name(), resource.content(), embedded, response.raw());
+		writeResponse(resource.id(), resource.data(), embedded, response.raw());
 	}
 
 	private void writeBytes(byte[] content, String filename, boolean embedded) {

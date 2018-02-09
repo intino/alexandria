@@ -221,9 +221,8 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			}
 
 			@Override
-			public OpenItemEvent itemToOpen() {
-				Item itemToOpen = view.onClickRecordEvent().openCatalog().item(item, user());
-				return itemToOpen != null ? openItemEventOf(itemToOpen.name()) : null;
+			public String itemToOpen() {
+				return view.onClickRecordEvent().openCatalog().item(item, user());
 			}
 		}));
 	}

@@ -125,8 +125,8 @@ public class Catalog extends Element {
 
 	public interface ArrangementFilterer {
 		User user();
-		void add(Group... groups);
-		boolean contains(String id);
+		void add(String grouping, Group... groups);
+		boolean contains(Object item);
 		void clear();
 		boolean isEmpty();
 	}
