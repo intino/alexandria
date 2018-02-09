@@ -41,7 +41,7 @@ public class GroupingManager {
 	public void filter(String groupingName, List<String> groups) {
 		Grouping grouping = grouping(groupingName);
 		List<String> groupNames = groups.stream().map(Group::name).collect(toList());
-		if (filter != null) filter.add(collect(groupNames, grouping));
+		if (filter != null) filter.add(grouping.name(), collect(groupNames, grouping));
 		filteredGroupings.put(groupingName, groupNames);
 		fixedGrouping = groupingName;
 	}
@@ -88,7 +88,7 @@ public class GroupingManager {
 
 	private List<Item> filteredItems() {
 		if (filter == null || filter.isEmpty()) return items;
-		return items.stream().filter(item -> filter.contains(item.id())).collect(toList());
+		return items.stream().filter(item -> filter.contains(item != null ? item.object() : null)).collect(toList());
 	}
 
 }

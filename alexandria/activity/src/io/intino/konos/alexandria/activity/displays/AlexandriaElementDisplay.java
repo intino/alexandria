@@ -6,13 +6,16 @@ import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
+import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.View;
+import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MoldView;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
@@ -307,6 +310,52 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogContainer.personifyOnce();
 	}
 
+	protected void openItem(String item) {
+		openItem(new AlexandriaElementView.OpenItemEvent() {
+			@Override
+			public String label() {
+				if (molds().size() <= 0) return item;
+				Optional<Stamp> titleStamp = stamps(molds().get(0)).stream().filter(s -> (s instanceof Title)).findAny();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), user()) : item().name();
+			}
+
+			@Override
+			public String itemId() {
+				return item;
+			}
+
+			@Override
+			public Item item() {
+				return AlexandriaElementDisplay.this.item(item);
+			}
+
+			@Override
+			public Panel panel() {
+				E element = AlexandriaElementDisplay.this.element();
+				if (!(element instanceof Catalog)) return null;
+				Events events = ((Catalog) element).events();
+				if (events == null) return null;
+				OnClickRecord onClickRecord = events.onClickRecord();
+				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().panel() : null;
+			}
+
+			@Override
+			public TimeRange range() {
+				return AlexandriaElementDisplay.this.range();
+			}
+
+			@Override
+			public Tree breadcrumbs() {
+				E element = AlexandriaElementDisplay.this.element();
+				if (!(element instanceof Catalog)) return null;
+				Events events = ((Catalog) element).events();
+				if (events == null) return null;
+				OnClickRecord onClickRecord = events.onClickRecord();
+				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().breadcrumbs(item(), user()) : null;
+			}
+		});
+	}
+
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
 		removePanelDisplay();
 		openedItem = event;
@@ -334,7 +383,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
 		AlexandriaElementDisplay display = openElement(event.catalog().label());
-		AlexandriaElementView.OpenItemEvent itemToOpen = event.itemToOpen();
+		String itemToOpen = event.itemToOpen();
 		if (itemToOpen != null) display.openItem(itemToOpen);
 	}
 

@@ -17,7 +17,7 @@ public class OpenCatalog extends Open {
 		return this;
 	}
 
-	public Item item(Item target, User user) {
+	public String item(Item target, User user) {
 		return itemLoader != null ? itemLoader.item(catalog, target != null ? target.object() : null, user) : null;
 	}
 
@@ -27,6 +27,6 @@ public class OpenCatalog extends Open {
 	}
 
 	public interface ItemLoader {
-		Item item(Catalog catalog, Object target, User user);
+		String item(Catalog catalog, Object target, User user);
 	}
 }

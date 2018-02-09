@@ -56,16 +56,17 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void events(Catalog catalog, Frame frame) {
-		if (catalog.events() != null) frame.addSlot("event", frameOf(catalog.events().onClickRecord()));
+		if (catalog.events() != null)
+			frame.addSlot("event", frameOf(catalog.events().onClickRecord()));
 	}
 
 	private Frame frameOf(OnClickRecord onClickRecord) {
 		final CatalogEvent catalogEvent = onClickRecord.catalogEvent();
-		if (catalogEvent.i$(OpenDialog.class))
-			return frameOf(catalogEvent.a$(OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
 		if (catalogEvent.i$(OpenPanel.class))
 			return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, modelClass);
-		return frameOf(catalogEvent.a$(OpenCatalog.class), display.a$(Catalog.class), box, modelClass);
+		else if (catalogEvent.i$(OpenCatalog.class))
+			return frameOf(catalogEvent.a$(OpenCatalog.class), display.a$(Catalog.class), box, modelClass);
+		return frameOf(catalogEvent.a$(OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
 	}
 
 	public static Frame frameOf(OpenDialog openDialog, Display catalog) {

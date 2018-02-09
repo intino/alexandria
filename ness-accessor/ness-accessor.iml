@@ -10,6 +10,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: io.intino.konos:konos-jms:1.0.10" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:activemq-client:5.15.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="module" module-name="jms" />
     <orderEntry type="module" module-name="core" />
