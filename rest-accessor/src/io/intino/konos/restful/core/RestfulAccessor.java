@@ -1,6 +1,6 @@
 package io.intino.konos.restful.core;
 
-import io.intino.konos.alexandria.Resource;
+import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.restful.RestfulApi;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;
@@ -14,7 +14,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.*;
@@ -205,7 +204,7 @@ public class RestfulAccessor implements RestfulApi {
 			}
 
 			HttpEntity entity = response.getEntity();
-			return new Resource(response.getFirstHeader("Content-Disposition").getValue(), response.getFirstHeader("Content-Disposition").getValue(), entity.getContentType().getValue(), entity.getContent());
+			return new Resource(response.getFirstHeader("Content-Disposition").getValue()).contentType(entity.getContentType().getValue()).data(entity.getContent());
 		} catch (URISyntaxException | IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
@@ -270,8 +269,8 @@ public class RestfulAccessor implements RestfulApi {
 		entityBuilder.setCharset(Charset.forName("UTF-8"));
 
 		addContent(entityBuilder, resource);
-		addParameters(entityBuilder, resource);
-		addSecureParameters(certificate, password, entityBuilder, resource);
+//		addParameters(entityBuilder, resource);
+//		addSecureParameters(certificate, password, entityBuilder, resource);
 
 		return entityBuilder.build();
 	}
@@ -292,34 +291,34 @@ public class RestfulAccessor implements RestfulApi {
 		return result;
 	}
 
-	private void addContent(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
-		builder.addPart(resource.name(), new InputStreamBody(resource.content(), ContentType.create(resource.contentType()), resource.fileName()));
+	private void addContent(MultipartEntityBuilder builder, Resource resource) {
+		builder.addPart(resource.id(), new InputStreamBody(resource.data(), ContentType.create(resource.contentType()), resource.id()));
 	}
 
-	private void addParameters(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
-		resource.parameters().forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
-	}
+//	private void addParameters(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
+//		resource.parameters().forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
+//	}
 
-	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
-		if (certificate == null)
-			return;
-
-		try {
-			Map<String, String> secureParameters = secureParameters(parametersOf(resource), certificate, password);
-			secureParameters.forEach((name, value) -> {
-				entityBuilder.addTextBody(name, value, ContentType.TEXT_PLAIN);
-			});
-		} catch (Exception exception) {
-			throw new RestfulFailure(String.format("Could not sign with certificate: %s", certificate.toString()));
-		}
-	}
-
-	private Map<String, String> parametersOf(Resource resource) {
-		return new HashMap<String, String>() {{
-			put("contentType", resource.contentType());
-			resource.parameters().forEach(this::put);
-		}};
-	}
+//	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
+//		if (certificate == null)
+//			return;
+//
+//		try {
+//			Map<String, String> secureParameters = secureParameters(parametersOf(resource), certificate, password);
+//			secureParameters.forEach((name, value) -> {
+//				entityBuilder.addTextBody(name, value, ContentType.TEXT_PLAIN);
+//			});
+//		} catch (Exception exception) {
+//			throw new RestfulFailure(String.format("Could not sign with certificate: %s", certificate.toString()));
+//		}
+//	}
+//
+//	private Map<String, String> parametersOf(Resource resource) {
+//		return new HashMap<String, String>() {{
+//			put("contentType", resource.contentType());
+//			resource.parameters().forEach(this::put);
+//		}};
+//	}
 
 	private Map<String, String> secureParameters(Map<String, String> parameters, URL certificate, String password) throws RestfulFailure {
 		if (certificate == null)
