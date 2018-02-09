@@ -5,7 +5,7 @@ def type(accessor)
     import java.util.ArrayList;
 	import java.net.URL;
 	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.Resource;
+	import io.intino.konos.alexandria.schema.Resource;
 	import io.intino.konos.restful.core.RestfulAccessor;
 	import io.intino.konos.restful.exceptions.RestfulFailure;
 	import com.google.gson.Gson;

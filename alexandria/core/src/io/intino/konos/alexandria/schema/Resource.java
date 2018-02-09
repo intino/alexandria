@@ -1,25 +1,26 @@
 package io.intino.konos.alexandria.schema;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import cottons.utils.MimeTypes;
+
+import java.io.*;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Resource {
+	private static Map<String, String> mimeTypes;
+
 	private String id;
 	private String type;
-	private byte[] data;
+	private String contentType;
+	private InputStream data;
 
-	private static Map<String, String> mimeTypes;
 
 	public Resource(String id) {
 		this.id = id;
 		this.type = id.substring(id.lastIndexOf('.') + 1);
-		this.data = new byte[0];
+		this.data = null;
 	}
 
 	public String id() {
@@ -30,29 +31,36 @@ public class Resource {
 		return type;
 	}
 
-	public String mimeType() {
-		return mimeTypes.getOrDefault(type, "application/" + type);
+	public String contentType() {
+		return contentType;
 	}
 
-	public byte[] data() {
+	public InputStream data() {
 		return data;
 	}
 
+	public String mimeType() {
+		return MimeTypes.getFromFilename(id);
+	}
+
+	public Resource contentType(String type) {
+		contentType = type;
+		return this;
+	}
+
 	public Resource data(byte[] data) {
-		this.data = data;
+		this.data = new ByteArrayInputStream(data);
+		return this;
+	}
+
+	public Resource data(InputStream stream) {
+		this.data = stream;
 		return this;
 	}
 
 	@Override
 	public String toString() {
 		return id;
-	}
-
-	static {
-		mimeTypes = new HashMap<>();
-		mimeTypes.put("txt", "text/plain");
-		mimeTypes.put("pdf", "application/pdf");
-		mimeTypes.put("png", "image/png");
 	}
 
 	public static String resolveContentType(File file) throws IOException {
