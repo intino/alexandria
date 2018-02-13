@@ -6,7 +6,7 @@ import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,8 @@ public class Catalog extends Element {
 	private ClusterManager clusterManager;
 	private Events events;
 
-	public Item rootItem(List<Item> itemList, User user) {
-		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), user)) : null;
+	public Item rootItem(List<Item> itemList, ActivitySession session) {
+		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), session)) : null;
 	}
 
 	public Catalog rootObjectLoader(RootObjectLoader loader) {
@@ -32,8 +32,8 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public Item defaultItem(String id, User user) {
-		return defaultObjectLoader != null ? item(defaultObjectLoader.load(id, user)) : null;
+	public Item defaultItem(String id, ActivitySession session) {
+		return defaultObjectLoader != null ? item(defaultObjectLoader.load(id, session)) : null;
 	}
 
 	public Catalog defaultObjectLoader(DefaultObjectLoader loader) {
@@ -41,9 +41,9 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public ItemList items(Scope scope, String condition, User user) {
+	public ItemList items(Scope scope, String condition, ActivitySession session) {
 		if (objectsLoader == null) return new ItemList();
-		return new ItemList(objectsLoader.load(scope, condition, user).stream().map(this::item).collect(toList()));
+		return new ItemList(objectsLoader.load(scope, condition, session).stream().map(this::item).collect(toList()));
 	}
 
 	public Catalog objectsLoader(ObjectsLoader loader) {
@@ -64,8 +64,8 @@ public class Catalog extends Element {
 		return this;
 	}
 
-	public ArrangementFilterer arrangementFilterer(User user) {
-		return this.arrangementFiltererLoader != null ? arrangementFiltererLoader.load(user) : null;
+	public ArrangementFilterer arrangementFilterer(ActivitySession session) {
+		return this.arrangementFiltererLoader != null ? arrangementFiltererLoader.load(session) : null;
 	}
 
 	public Catalog arrangementFiltererLoader(ArrangementFiltererLoader loader) {
@@ -91,7 +91,7 @@ public class Catalog extends Element {
 //		this.scopeChangeEvent.onChange(scope, username);
 //	}
 
-	public void addGroupingGroup(String grouping, String label, List<Item> itemList, User user) {
+	public void addGroupingGroup(String grouping, String label, List<Item> itemList, ActivitySession session) {
 		// TODO MC
 //		if (clusterManager == null) return;
 //		Group group = new Group().label(label).objects(objects(itemList));
@@ -104,27 +104,27 @@ public class Catalog extends Element {
 	}
 
 	public interface ObjectsLoader {
-		List<Object> load(Scope scope, String condition, User user);
+		List<Object> load(Scope scope, String condition, ActivitySession session);
 	}
 
 	public interface RootObjectLoader {
-		Object load(List<Object> objectList, User user);
+		Object load(List<Object> objectList, ActivitySession session);
 	}
 
 	public interface DefaultObjectLoader {
-		Object load(String id, User user);
+		Object load(String id, ActivitySession session);
 	}
 
 	public interface ScopeChangeEvent {
-		void onChange(Scope scope, User user);
+		void onChange(Scope scope, ActivitySession session);
 	}
 
 	public interface ArrangementFiltererLoader {
-		ArrangementFilterer load(User user);
+		ArrangementFilterer load(ActivitySession session);
 	}
 
 	public interface ArrangementFilterer {
-		User user();
+		ActivitySession session();
 		void add(String grouping, Group... groups);
 		boolean contains(Object item);
 		void clear();
@@ -132,6 +132,6 @@ public class Catalog extends Element {
 	}
 
 	public interface ClusterManager {
-		void createClusterGroup(Catalog element, String grouping, Group group, User user);
+		void createClusterGroup(Catalog element, String grouping, Group group, ActivitySession session);
 	}
 }

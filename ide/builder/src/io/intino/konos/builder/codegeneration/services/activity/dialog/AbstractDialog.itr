@@ -11,7 +11,7 @@ def type(dialogDisplay)
 
     public abstract class Abstract$name+SnakeCaseToCamelCase+firstUpperCase extends AlexandriaDialog {
 
-        public Abstract$name+SnakeCaseToCamelCase+firstUpperCase($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
+		public Abstract$name+SnakeCaseToCamelCase+firstUpperCase($box+SnakeCaseToCamelCase+firstUpperCase~Box box) {
             super(box, buildDialog(box));
         }
 
@@ -37,7 +37,7 @@ end
 
 
 def trigger(operation)
-	dialog.toolbar().createOperation().name("$name")[.label("$label")].execute((operation, user) -> $dialog+FirstUpperCase.Toolbar.$execution(box, dialog, operation, user));
+	dialog.toolbar().createOperation().name("$name")[.label("$label")].execute((operation, session) -> $dialog+FirstUpperCase.Toolbar.$execution(box, dialog, operation, session));
 end
 
 def type(section)

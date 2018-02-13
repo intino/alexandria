@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class Map extends Stamp<String> {
 	private int zoom;
@@ -9,8 +9,8 @@ public class Map extends Stamp<String> {
 	private double longitude;
 
 	@Override
-	public String objectValue(Object object, User user) {
-		return value() != null ? value().value(object, user) : null;
+	public String objectValue(Object object, ActivitySession session) {
+		return value() != null ? value().value(object, session) : null;
 	}
 
 	public int zoom() {

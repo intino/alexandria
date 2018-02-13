@@ -30,7 +30,7 @@ public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier, B ex
     public String currentLanguage() {
         ActivitySession session = session();
         if (session == null) return "en";
-        ActivityClient client = (ActivityClient) session.currentClient();
+        ActivityClient client = session.client();
         return client != null ? client.language() : session().browser().languageFromMetadata();
     }
 

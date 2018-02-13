@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model;
 
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -33,8 +33,8 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public Item rootItem(List<Item> itemList, TimeRange range, User user) {
-		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), range, user)) : null;
+	public Item rootItem(List<Item> itemList, TimeRange range, ActivitySession session) {
+		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), range, session)) : null;
 	}
 
 	public TemporalCatalog rootObjectLoader(RootObjectLoader loader) {
@@ -42,8 +42,8 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public Item defaultItem(String id, TimeRange range, User user) {
-		return defaultObjectLoader != null ? item(defaultObjectLoader.load(id, range, user)) : null;
+	public Item defaultItem(String id, TimeRange range, ActivitySession session) {
+		return defaultObjectLoader != null ? item(defaultObjectLoader.load(id, range, session)) : null;
 	}
 
 	public TemporalCatalog defaultObjectLoader(DefaultObjectLoader loader) {
@@ -59,9 +59,9 @@ public class TemporalCatalog extends Catalog {
 		return item;
 	}
 
-	public ItemList items(Scope scope, String condition, TimeRange range, User user) {
+	public ItemList items(Scope scope, String condition, TimeRange range, ActivitySession session) {
 		if (objectsLoader == null) return new ItemList();
-		return new ItemList(objectsLoader.load(scope, condition, range, user).stream().map(this::item).collect(toList()));
+		return new ItemList(objectsLoader.load(scope, condition, range, session).stream().map(this::item).collect(toList()));
 	}
 
 	public TemporalCatalog objectsLoader(ObjectsLoader loader) {
@@ -69,8 +69,8 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public TimeRange range(User user) {
-		return rangeLoader != null ? rangeLoader.load(user) : null;
+	public TimeRange range(ActivitySession session) {
+		return rangeLoader != null ? rangeLoader.load(session) : null;
 	}
 
 	public TemporalCatalog rangeLoader(RangeLoader loader) {
@@ -115,15 +115,15 @@ public class TemporalCatalog extends Catalog {
 	}
 
 	public interface ObjectsLoader {
-		List<Object> load(Scope scope, String condition, TimeRange range, User user);
+		List<Object> load(Scope scope, String condition, TimeRange range, ActivitySession session);
 	}
 
 	public interface RootObjectLoader {
-		Object load(List<Object> objectList, TimeRange range, User user);
+		Object load(List<Object> objectList, TimeRange range, ActivitySession session);
 	}
 
 	public interface DefaultObjectLoader {
-		Object load(String id, TimeRange range, User user);
+		Object load(String id, TimeRange range, ActivitySession session);
 	}
 
 	public interface ObjectCreatedLoader {
@@ -131,7 +131,7 @@ public class TemporalCatalog extends Catalog {
 	}
 
 	public interface RangeLoader {
-		TimeRange load(User user);
+		TimeRange load(ActivitySession session);
 	}
 
 	private Instant created(Object object) {

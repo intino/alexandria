@@ -2,7 +2,7 @@ package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +33,9 @@ public class GroupingManager {
 	}
 
 	private Map<Grouping, GroupMap> calculateGroupings(List<Item> items) {
-		User user = filter != null ? filter.user() : null;
+		ActivitySession session = filter != null ? filter.session() : null;
 		List<Item> groupingManagerItems = this.items;
-		return this.groupings.stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems, user) : g.groups(items, user)));
+		return this.groupings.stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems, session) : g.groups(items, session)));
 	}
 
 	public void filter(String groupingName, List<String> groups) {

@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class OpenDialogOperation extends Operation<String> {
 	private int width = 100;
@@ -28,8 +28,8 @@ public class OpenDialogOperation extends Operation<String> {
 		return this;
 	}
 
-	public AlexandriaDialog createDialog(Item item, User user) {
-		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.dialog(item != null ? item.object() : null, user) : null;
+	public AlexandriaDialog createDialog(Item item, ActivitySession session) {
+		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.dialog(item != null ? item.object() : null, session) : null;
 		if (dialog == null) return null;
 		dialog.width(width);
 		dialog.height(height() != -1 ? height() : 100);
@@ -42,7 +42,7 @@ public class OpenDialogOperation extends Operation<String> {
 	}
 
 	public interface DialogBuilder {
-		AlexandriaDialog dialog(Object item, User user);
+		AlexandriaDialog dialog(Object item, ActivitySession session);
 	}
 
 }

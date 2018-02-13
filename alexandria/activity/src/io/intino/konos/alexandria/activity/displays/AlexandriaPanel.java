@@ -117,7 +117,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private Reference referenceOf(AbstractView view) {
 		Reference reference = ReferenceBuilder.build(view);
-		reference.referencePropertyList().add(new ReferenceProperty().name("hidden").value(String.valueOf(view.hidden(target(), user()))));
+		reference.referencePropertyList().add(new ReferenceProperty().name("hidden").value(String.valueOf(view.hidden(target(), session()))));
 		return reference;
 	}
 

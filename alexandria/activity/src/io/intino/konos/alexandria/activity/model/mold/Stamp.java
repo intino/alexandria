@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold;
 
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public abstract class Stamp<O> {
 	private String name = "";
@@ -32,11 +32,11 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public O value(Item item, User user) {
-		return objectValue(item != null ? item.object() : null, user);
+	public O value(Item item, ActivitySession session) {
+		return objectValue(item != null ? item.object() : null, session);
 	}
 
-	public abstract O objectValue(Object object, User user);
+	public abstract O objectValue(Object object, ActivitySession session);
 
 	public Stamp value(Value<O> value) {
 		this.value = value;
@@ -79,12 +79,12 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public String style(Item item, User user) {
-		return objectStyle(item != null ? item.object() : null, user);
+	public String style(Item item, ActivitySession session) {
+		return objectStyle(item != null ? item.object() : null, session);
 	}
 
-	public String objectStyle(Object object, User user) {
-		return style != null ? style.value(object, user) : empty().value(object, user);
+	public String objectStyle(Object object, ActivitySession session) {
+		return style != null ? style.value(object, session) : empty().value(object, session);
 	}
 
 	public Stamp style(Value style) {
@@ -92,8 +92,8 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public Editable.Refresh save(Item item, String value, User user) {
-		return editable != null ? editable.save(item.object(), value, user) : Editable.Refresh.None;
+	public Editable.Refresh save(Item item, String value, ActivitySession session) {
+		return editable != null ? editable.save(item.object(), value, session) : Editable.Refresh.None;
 	}
 
 	public boolean editable() {
@@ -110,11 +110,11 @@ public abstract class Stamp<O> {
 	}
 
 	public interface Value<O> {
-		O value(Object object, User user);
+		O value(Object object, ActivitySession session);
 	}
 
 	public interface Editable {
-		Refresh save(Object object, String value, User user);
+		Refresh save(Object object, String value, ActivitySession session);
 
 		enum Refresh {
 			None, Object, Catalog

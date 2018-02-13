@@ -19,7 +19,7 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.operations.ExportOp
 import io.intino.konos.alexandria.activity.model.mold.stamps.pages.ExternalPage;
 import io.intino.konos.alexandria.activity.model.mold.stamps.pages.InternalPage;
 import io.intino.konos.alexandria.activity.schemas.*;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.io.InputStream;
@@ -121,7 +121,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 				dialog.refresh();
 			});
 			embeddedCatalogs().forEach((key, display) -> {
-				display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, user()));
+				display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
 				display.label(key.label());
 				display.range(provider.range());
 				display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
@@ -151,7 +151,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		display.target(this.item);
 
 		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, user()));
+			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, session()));
 
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
@@ -160,7 +160,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(ElementHelper.openItemDialogEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), user())));
+		openItemDialogListeners.forEach(l -> l.accept(ElementHelper.openItemDialogEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), session())));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
@@ -170,7 +170,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	public ActivityFile downloadItemOperation(DownloadItemParameters parameters) {
 		Stamp stamp = provider.stamps(mold).stream().filter(s -> s.name().equals(parameters.stamp())).findFirst().orElse(null);
 		if (stamp == null) return null;
-		Resource resource = ((DownloadOperation)stamp).execute(item, parameters.option(), user());
+		Resource resource = ((DownloadOperation)stamp).execute(item, parameters.option(), session());
 		return new ActivityFile() {
 			@Override
 			public String label() {
@@ -187,7 +187,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	public ActivityFile exportItemOperation(ExportItemParameters parameters) {
 		Stamp stamp = provider.stamps(mold).stream().filter(s -> s.name().equals(parameters.stamp())).findFirst().orElse(null);
 		if (stamp == null) return null;
-		Resource resource = ((ExportOperation)stamp).execute(item, parameters.from(), parameters.to(), parameters.option(), user());
+		Resource resource = ((ExportOperation)stamp).execute(item, parameters.from(), parameters.to(), parameters.option(), session());
 		return new ActivityFile() {
 			@Override
 			public String label() {
@@ -224,21 +224,21 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	public AlexandriaStamp embeddedDisplay(String name) {
 		Stamp stamp = provider.stamp(mold, name);
 		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
-		return ((EmbeddedDisplay)stamp).createDisplay(user());
+		return ((EmbeddedDisplay)stamp).createDisplay(session());
 	}
 
 	@Override
 	public AlexandriaDialog embeddedDialog(String name) {
 		Stamp stamp = provider.stamp(mold, name);
 		if (stamp == null || !(stamp instanceof EmbeddedDialog)) return null;
-		return ((EmbeddedDialog)stamp).createDialog(user());
+		return ((EmbeddedDialog)stamp).createDialog(session());
 	}
 
 	@Override
 	public AlexandriaAbstractCatalog embeddedCatalog(String name) {
 		Stamp stamp = provider.stamp(mold, name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
-		return ((EmbeddedCatalog)stamp).createCatalog(user());
+		return ((EmbeddedCatalog)stamp).createCatalog(session());
 	}
 
 	public void saveItem(SaveItemParameters value) {
@@ -300,8 +300,8 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 			}
 
 			@Override
-			public User user() {
-				return AlexandriaItem.this.user();
+			public ActivitySession session() {
+				return AlexandriaItem.this.session();
 			}
 
 			@Override
@@ -322,13 +322,13 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
-		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(user())), HashMap::putAll);
+		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(session())), HashMap::putAll);
 		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private Map<EmbeddedDialog, AlexandriaDialog> embeddedDialogs() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDialog).collect(toList());
-		Map<EmbeddedDialog, AlexandriaDialog> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDialog)stamp, ((EmbeddedDialog)stamp).createDialog(user())), HashMap::putAll);
+		Map<EmbeddedDialog, AlexandriaDialog> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDialog)stamp, ((EmbeddedDialog)stamp).createDialog(session())), HashMap::putAll);
 		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
@@ -350,7 +350,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private AlexandriaAbstractCatalog displayFor(EmbeddedCatalog stamp) {
-		AlexandriaAbstractCatalog result = stamp.createCatalog(user());
+		AlexandriaAbstractCatalog result = stamp.createCatalog(session());
 		if (result == null) return null;
 		result.target(item);
 		return result;

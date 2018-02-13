@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.activity.model.ElementRender;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.Panel;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class RenderObjects extends ElementRender {
 		return this;
 	}
 
-	public ItemList source(User user) {
-		return source != null ? items(source.entries(user)) : new ItemList();
+	public ItemList source(ActivitySession session) {
+		return source != null ? items(source.entries(session)) : new ItemList();
 	}
 
 	public RenderObjects source(Source source) {
@@ -41,7 +41,7 @@ public class RenderObjects extends ElementRender {
 	}
 
 	public interface Source {
-		List<Entry> entries(User user);
+		List<Entry> entries(ActivitySession session);
 
 		class Entry {
 			private String id;

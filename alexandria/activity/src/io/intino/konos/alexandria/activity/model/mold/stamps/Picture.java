@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.util.List;
@@ -19,8 +19,8 @@ public class Picture extends Stamp<List<URL>> {
 	}
 
 	@Override
-	public List<URL> objectValue(Object object, User user) {
-		return value() != null ? value().value(object, user) : null;
+	public List<URL> objectValue(Object object, ActivitySession session) {
+		return value() != null ? value().value(object, session) : null;
 	}
 
 }

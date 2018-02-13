@@ -1,7 +1,7 @@
 def type(layout)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.activity.services.push.User;
+    import io.intino.konos.alexandria.activity.services.push.ActivitySession;
     import $package+validPackage.$box+firstUpperCase~Box;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
@@ -52,13 +52,13 @@ def type(elementOption & option)
 end
 
 def type(catalogs)
-	[$filtered~public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, User user) {
+	[$filtered~public static boolean filter(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.model.Element context, Object target, Object object, ActivitySession session) {
 		return true;
 	}]
 end
 
 def type(objects)
-	public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects($box+firstUpperCase~Box box, User user) {
+	public static java.util.List<io.intino.konos.alexandria.activity.model.renders.RenderObjects.Source.Entry> objects($box+firstUpperCase~Box box, ActivitySession session) {
 		return java.util.Collections.emptyList();
 	}
 end
