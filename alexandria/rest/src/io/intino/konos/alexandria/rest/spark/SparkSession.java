@@ -34,7 +34,7 @@ public class SparkSession<C extends Client> implements Session<C> {
 	}
 
 	@Override
-	public C currentClient() {
+	public C client() {
 		return clientsMap.get(currentClient);
 	}
 

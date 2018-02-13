@@ -54,19 +54,19 @@ def trigger(toolbar)
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, user) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, option, user)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, session) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, option, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, user) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, user)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, session) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((user) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, user) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, user)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, session) -> $panel.Toolbar.$name+validName+firstLowerCase(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(display) trigger(genview)
@@ -83,21 +83,21 @@ end
 
 def trigger(displayLoader)
 	new io.intino.konos.alexandria.activity.model.renders.RenderCatalogs.Loader() {
-		public io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog load(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.services.push.User user) {
+		public io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog load(io.intino.konos.alexandria.activity.model.Catalog catalog, io.intino.konos.alexandria.activity.services.push.ActivitySession session) {
 			return (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, catalog);
 		}
 	}
 end
 
 def trigger(hidden)
-	.hidden((object, user) -> $panel+FirstUpperCase.Views.$view+FirstUpperCase.hidden(box, object, user))
+	.hidden((object, session) -> $panel+FirstUpperCase.Views.$view+FirstUpperCase.hidden(box, object, session))
 end
 
 def trigger(hidden)
 end
 
 def trigger(filtercall)
-	(catalog, context, target, object, user) -> $panel+firstUpperCase.Views.$view+firstUpperCase.filter(box, catalog, context, target, ($modelClass)object, user)
+	(catalog, context, target, object, session) -> $panel+firstUpperCase.Views.$view+firstUpperCase.filter(box, catalog, context, target, ($modelClass)object, session)
 end
 
 def type(view & mold)

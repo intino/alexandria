@@ -18,7 +18,7 @@ public class AuthenticateCallbackAction {
     private void updateSoulWith(User user) {
         session.user(user);
 
-        ActivityClient client = (ActivityClient) session.currentClient();
+        ActivityClient client = session.client();
         if (client == null) return;
 
         client.soul().user(user);

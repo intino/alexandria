@@ -17,7 +17,7 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.util.List;
@@ -100,8 +100,8 @@ public class ElementHelper {
 			}
 
 			@Override
-			public User user() {
-				return provider.user();
+			public ActivitySession session() {
+				return provider.session();
 			}
 
 			@Override
@@ -111,7 +111,7 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementView.OpenItemDialogEvent openItemDialogEvent(Item item, Stamp stamp, User user) {
+	public static AlexandriaElementView.OpenItemDialogEvent openItemDialogEvent(Item item, Stamp stamp, ActivitySession session) {
 		return new AlexandriaElementView.OpenItemDialogEvent() {
 			@Override
 			public Item item() {
@@ -120,7 +120,7 @@ public class ElementHelper {
 
 			@Override
 			public AlexandriaDialog dialog() {
-				return ((OpenDialogOperation)stamp).createDialog(item, user);
+				return ((OpenDialogOperation)stamp).createDialog(item, session);
 			}
 		};
 	}

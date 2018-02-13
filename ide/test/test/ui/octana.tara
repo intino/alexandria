@@ -28,7 +28,7 @@ Dialog(url = "", label = "", description = "") dialog1
 Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
 	Toolbar > OpenDialog("abrir", dialog=dialog1)
 //	Events > OnClickRecord > OpenDialog(dialog1)
-	Events > OnClickRecord > OpenCatalog(octanaPersonCatalog, hasItemToLoad=true)
+	Events > OnClickRecord > OpenCatalog(octanaPersonCatalog, filtered=true)
 	Views
 		ListView("lista", mold = octanaCenterMold)
 

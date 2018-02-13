@@ -19,7 +19,7 @@ Concept Catalog extends Display
 					var boolean hasBreadcrumbs = false
 				sub OpenCatalog
 					var Catalog catalog
-					var boolean hasItemToLoad = false
+					var boolean filtered = false
 	Concept:{1..1} Views
 		has CatalogView
 		has:{0..1} DisplayView

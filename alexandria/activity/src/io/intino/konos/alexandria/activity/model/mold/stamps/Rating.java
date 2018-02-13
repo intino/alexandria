@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class Rating extends Stamp<Double> {
 	private String ratingIcon;
@@ -16,8 +16,8 @@ public class Rating extends Stamp<Double> {
 	}
 
 	@Override
-	public Double objectValue(Object object, User user) {
-		return value() != null ? value().value(object, user) : null;
+	public Double objectValue(Object object, ActivitySession session) {
+		return value() != null ? value().value(object, session) : null;
 	}
 
 }

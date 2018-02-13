@@ -1,7 +1,7 @@
 package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class Grouping extends Arrangement {
 		return groupManager != null ? groupManager.remove(group) : null;
 	}
 
-	public GroupMap groups(List<Item> items, User user) {
+	public GroupMap groups(List<Item> items, ActivitySession session) {
 		List<Object> objects = items.stream().map(Item::object).collect(toList());
-		return groupLoader != null ? new GroupMap().putAll(groupLoader.load(objects, user)) : new GroupMap();
+		return groupLoader != null ? new GroupMap().putAll(groupLoader.load(objects, session)) : new GroupMap();
 	}
 
 	public Grouping groups(GroupLoader loader) {
@@ -56,7 +56,7 @@ public class Grouping extends Arrangement {
 	}
 
 	public interface GroupLoader {
-		List<Group> load(List<Object> items, User user);
+		List<Group> load(List<Object> items, ActivitySession session);
 	}
 
 	public enum Histogram {

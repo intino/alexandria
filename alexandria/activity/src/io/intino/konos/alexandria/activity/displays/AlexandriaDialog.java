@@ -139,7 +139,7 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
-		DialogExecution.Modification modification = operation.execute(session().user());
+		DialogExecution.Modification modification = operation.execute(session());
 		notifier.done(modification.toString());
 		doneListeners.forEach(l -> l.accept(modification));
 	}

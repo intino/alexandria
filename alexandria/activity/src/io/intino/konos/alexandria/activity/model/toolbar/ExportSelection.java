@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -40,9 +40,9 @@ public class ExportSelection extends Operation {
 	}
 
 
-	public Resource execute(Element element, Instant from, Instant to, List<Item> selection, User user) {
+	public Resource execute(Element element, Instant from, Instant to, List<Item> selection, ActivitySession session) {
 		List<Object> selectionObjects = selection.stream().map(Item::object).collect(toList());
-		return execution != null ? execution.export(element, from, to, selectionObjects, user) : null;
+		return execution != null ? execution.export(element, from, to, selectionObjects, session) : null;
 	}
 
 	public ExportSelection execute(Execution execution) {
@@ -51,6 +51,6 @@ public class ExportSelection extends Operation {
 	}
 
 	public interface Execution {
-		Resource export(Element element, Instant from, Instant to, List<Object> selection, User user);
+		Resource export(Element element, Instant from, Instant to, List<Object> selection, ActivitySession session);
 	}
 }

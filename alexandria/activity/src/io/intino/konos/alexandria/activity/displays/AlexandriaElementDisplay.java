@@ -22,7 +22,7 @@ import io.intino.konos.alexandria.activity.model.toolbar.*;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -175,11 +175,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public AlexandriaStamp display(String stampKey) {
-		return ((EmbeddedDisplay)stamp(stampKey)).createDisplay(user());
+		return ((EmbeddedDisplay)stamp(stampKey)).createDisplay(session());
 	}
 
 	public AlexandriaDialog dialog(String stampKey) {
-		return ((EmbeddedDialog)stamp(stampKey)).createDialog(user());
+		return ((EmbeddedDialog)stamp(stampKey)).createDialog(session());
 	}
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
@@ -197,7 +197,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (!stamp.editable()) return;
 
 		currentItem(new String(Base64.getDecoder().decode(params.item())));
-		Stamp.Editable.Refresh refresh = stamp.save(item, params.value(), user());
+		Stamp.Editable.Refresh refresh = stamp.save(item, params.value(), session());
 		currentView().ifPresent(view -> {
 			dirty(true);
 			if (refresh == Stamp.Editable.Refresh.Object) view.refresh(currentItem_());
@@ -251,6 +251,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		hidePanel();
 		refreshBreadcrumbs("");
 		refresh();
+		removePanelDisplay();
 	}
 
 	public void selectInstant(CatalogInstantBlock block) {
@@ -316,7 +317,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			public String label() {
 				if (molds().size() <= 0) return item;
 				Optional<Stamp> titleStamp = stamps(molds().get(0)).stream().filter(s -> (s instanceof Title)).findAny();
-				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), user()) : item().name();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session()) : item().name();
 			}
 
 			@Override
@@ -351,7 +352,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 				Events events = ((Catalog) element).events();
 				if (events == null) return null;
 				OnClickRecord onClickRecord = events.onClickRecord();
-				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().breadcrumbs(item(), user()) : null;
+				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().breadcrumbs(item(), session()) : null;
 			}
 		});
 	}
@@ -365,6 +366,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		display.personifyOnce(event.itemId());
 		showPanel();
 		refreshBreadcrumbs(breadcrumbs(event));
+	}
+
+	protected void closeCurrentItem() {
+		openedItem = null;
+		navigateMain();
 	}
 
 	protected void removePanelDisplay() {
@@ -383,14 +389,25 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
 		AlexandriaElementDisplay display = openElement(event.catalog().label());
-		String itemToOpen = event.itemToOpen();
-		if (itemToOpen != null) display.openItem(itemToOpen);
+		List<String> itemsToShow = event.itemsToShow();
+		if (itemsToShow == null || itemsToShow.size() <= 0)
+			display.closeCurrentItem();
+		else if (itemsToShow.size() == 1)
+			display.openItem(itemsToShow.get(0));
+		else {
+			display.closeCurrentItem();
+			display.filterAndNotify(i -> {
+				Item item = (Item) i;
+				return itemsToShow.contains(item.name()) || itemsToShow.contains(item.id());
+			});
+			display.refresh();
+		}
 	}
 
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
 		currentItem(event.item().id());
 		Item item = this.currentItem();
-		((TaskOperation)event.stamp()).execute(item, user());
+		((TaskOperation)event.stamp()).execute(item, session());
 		dirty(true);
 		refresh(this.currentItem());
 	}
@@ -415,7 +432,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void hidePanel();
 
 	protected Item loadItem(String id) {
-		return element().item(id, user());
+		return element().item(id, session());
 	}
 
 	protected void applyFilter(ItemList itemList) {
@@ -443,14 +460,14 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private void executeOperation(Operation operation, String option, List<Item> selection) {
 		if (operation instanceof OpenDialog) {
 			OpenDialog openDialog = (OpenDialog)operation;
-			dialogContainer.dialog(openDialog.createDialog(user()));
+			dialogContainer.dialog(openDialog.createDialog(session()));
 			dialogContainer.refresh();
 			showDialog();
 		}
 
 		if (operation instanceof Task) {
 			Task taskOperation = (Task)operation;
-			Task.Refresh refresh = taskOperation.execute(element(), option, user());
+			Task.Refresh refresh = taskOperation.execute(element(), option, session());
 			if (refresh == Task.Refresh.Catalog)
 				this.refresh();
 			return;
@@ -458,7 +475,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		if (operation instanceof TaskSelection) {
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
-			TaskSelection.Refresh refresh = taskSelectionOperation.execute(element(), option, selection, user());
+			TaskSelection.Refresh refresh = taskSelectionOperation.execute(element(), option, selection, session());
 			if (refresh == TaskSelection.Refresh.Catalog)
 				this.refresh();
 			else if (refresh == TaskSelection.Refresh.Selection)
@@ -468,19 +485,19 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	private Resource downloadOperation(Operation operation, ElementOperationParameters params, List<Item> selection) {
 		E element = element();
-		User user = user();
+		ActivitySession session = session();
 
 		if (operation instanceof Export)
-			return ((Export)operation).execute(element, params.from(), params.to(), user);
+			return ((Export)operation).execute(element, params.from(), params.to(), session);
 
 		if (operation instanceof ExportSelection)
-			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, user);
+			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, session);
 
 		if (operation instanceof Download)
-			return ((Download)operation).execute(element, params.option(), user);
+			return ((Download)operation).execute(element, params.option(), session);
 
 		if (operation instanceof DownloadSelection)
-			return ((DownloadSelection)operation).execute(element, params.option(), selection, user);
+			return ((DownloadSelection)operation).execute(element, params.option(), selection, session);
 
 		return null;
 	}

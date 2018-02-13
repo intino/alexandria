@@ -130,7 +130,7 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private void processCatalog(Catalog.Events.OnClickRecord.CatalogEvent event, PsiClass events) {
-		if (!event.a$(OpenCatalog.class).hasItemToLoad()) return;
+		if (!event.a$(OpenCatalog.class).filtered()) return;
 		if (events.findMethodsByName("onOpenCatalog", false).length == 0) {
 			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
@@ -188,6 +188,6 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private String temporalClass() {
-		return "public static class Temporal {\npublic static io.intino.konos.alexandria.activity.model.TimeRange range (" + Formatters.firstUpperCase(this.box) + "Box box, String username){\nreturn null;\n}\n}";
+		return "public static class Temporal {\npublic static io.intino.konos.alexandria.activity.model.TimeRange range (" + Formatters.firstUpperCase(this.box) + "Box box, ActivitySession session){\nreturn null;\n}\n}";
 	}
 }

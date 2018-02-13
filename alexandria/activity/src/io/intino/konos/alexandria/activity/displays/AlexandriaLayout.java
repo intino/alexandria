@@ -175,7 +175,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 
 	private List<Item> objectItems(ElementRender r) {
 		RenderObjects render = (RenderObjects) r;
-		ItemList itemList = render.source(user());
+		ItemList itemList = render.source(session());
 		return itemList.items().stream().map(record -> itemOf(r, render.panel(), record)).collect(toList());
 	}
 

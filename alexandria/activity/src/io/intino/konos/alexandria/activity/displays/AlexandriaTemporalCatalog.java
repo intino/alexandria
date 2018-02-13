@@ -50,7 +50,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public AlexandriaStamp display(String stampName) {
 		EmbeddedDisplay stamp = (EmbeddedDisplay) stamp(stampName);
 
-		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.createDisplay(user());
+		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.createDisplay(session());
 		display.range(timeScaleHandler().range());
 
 		return display;
@@ -59,7 +59,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	public AlexandriaDialog dialog(String stampName) {
 		EmbeddedDialog stamp = (EmbeddedDialog) stamp(stampName);
-		return stamp.createDialog(user());
+		return stamp.createDialog(session());
 	}
 
 	@Override
@@ -99,12 +99,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	public Item rootItem(List<Item> itemList) {
-		return element().rootItem(itemList, queryRange(), user());
+		return element().rootItem(itemList, queryRange(), session());
 	}
 
 	@Override
 	public Item defaultItem(String id) {
-		return element().defaultItem(id, queryRange(), user());
+		return element().defaultItem(id, queryRange(), session());
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
 		TimeRange range = queryRange();
-		ItemList itemList = element().items(scope, condition, range, user());
+		ItemList itemList = element().items(scope, condition, range, session());
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
 		return itemList;
@@ -153,7 +153,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	private TimeScaleHandler buildTimeScaleHandler() {
-		TimeRange range = element().range(user());
+		TimeRange range = element().range(session());
 		TimeScaleHandler.Bounds bounds = new TimeScaleHandler.Bounds();
 		List<TimeScale> scales = element().scales();
 		Map<TimeScale, Bounds.Zoom> zoomMap = new HashMap<>();

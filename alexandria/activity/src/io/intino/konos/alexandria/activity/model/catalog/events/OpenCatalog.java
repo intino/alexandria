@@ -2,11 +2,13 @@ package io.intino.konos.alexandria.activity.model.catalog.events;
 
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
+
+import java.util.List;
 
 public class OpenCatalog extends Open {
 	private Catalog catalog = null;
-	private ItemLoader itemLoader;
+	private ItemsLoader itemsLoader;
 
 	public Catalog catalog() {
 		return catalog;
@@ -17,16 +19,16 @@ public class OpenCatalog extends Open {
 		return this;
 	}
 
-	public String item(Item target, User user) {
-		return itemLoader != null ? itemLoader.item(catalog, target != null ? target.object() : null, user) : null;
+	public List<String> items(Item target, ActivitySession session) {
+		return itemsLoader != null ? itemsLoader.items(catalog, target != null ? target.object() : null, session) : null;
 	}
 
-	public OpenCatalog itemLoader(ItemLoader itemLoader) {
-		this.itemLoader = itemLoader;
+	public OpenCatalog itemsLoader(ItemsLoader itemsLoader) {
+		this.itemsLoader = itemsLoader;
 		return this;
 	}
 
-	public interface ItemLoader {
-		String item(Catalog catalog, Object target, User user);
+	public interface ItemsLoader {
+		List<String> items(Catalog catalog, Object target, ActivitySession session);
 	}
 }

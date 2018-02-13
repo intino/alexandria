@@ -126,12 +126,12 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	@Override
 	public Item rootItem(List<Item> itemList) {
-		return element().rootItem(itemList, user());
+		return element().rootItem(itemList, session());
 	}
 
 	@Override
 	public Item defaultItem(String name) {
-		return element().defaultItem(name, user());
+		return element().defaultItem(name, session());
 	}
 
 	@Override
@@ -196,7 +196,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(user()));
+		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(session()));
 	}
 
 	protected ElementView<Catalog> catalogViewOf(AbstractView view) {

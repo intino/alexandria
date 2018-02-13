@@ -5,7 +5,7 @@ import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +16,11 @@ public class EmbeddedCatalog extends Stamp<String> {
 	private CatalogDisplayBuilder catalogDisplayBuilder;
 	private Filter filter;
 
-	public boolean filter(Element context, Item target, Item item, User user) {
+	public boolean filter(Element context, Item target, Item item, ActivitySession session) {
 		if (filter == null) return true;
 		if (target == null && item == null) return true;
 		if (target == null || item == null) return false;
-		return filter.filter(context, target.object(), item.object(), user);
+		return filter.filter(context, target.object(), item.object(), session);
 	}
 
 	public EmbeddedCatalog filter(Filter filter) {
@@ -46,8 +46,8 @@ public class EmbeddedCatalog extends Stamp<String> {
 		return this;
 	}
 
-	public AlexandriaAbstractCatalog createCatalog(User user) {
-		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(user) : null;
+	public AlexandriaAbstractCatalog createCatalog(ActivitySession session) {
+		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(session) : null;
 		if (catalog == null) return null;
 		catalog.enabledViews(views);
 		return catalog;
@@ -59,16 +59,16 @@ public class EmbeddedCatalog extends Stamp<String> {
 	}
 
 	@Override
-	public String objectValue(Object object, User user) {
+	public String objectValue(Object object, ActivitySession session) {
 		return null;
 	}
 
 	public interface CatalogDisplayBuilder {
-		AlexandriaAbstractCatalog build(User user);
+		AlexandriaAbstractCatalog build(ActivitySession session);
 	}
 
 	public interface Filter {
-		boolean filter(Element context, Object target, Object object, User user);
+		boolean filter(Element context, Object target, Object object, ActivitySession session);
 	}
 
 }

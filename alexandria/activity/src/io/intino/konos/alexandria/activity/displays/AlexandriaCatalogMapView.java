@@ -109,7 +109,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), user())));
+		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session())));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
@@ -195,7 +195,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 			@Override
 			public String label() {
 				Optional<Stamp> titleStamp = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Title)).findAny();
-				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), user()) : item().name();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session()) : item().name();
 			}
 
 			@Override
@@ -216,7 +216,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 			@Override
 			public Tree breadcrumbs() {
 				OpenPanel openPanel = view.onClickRecordEvent().openPanel();
-				return openPanel != null ? openPanel.breadcrumbs(item(), user()) : null;
+				return openPanel != null ? openPanel.breadcrumbs(item(), session()) : null;
 			}
 		}));
 	}

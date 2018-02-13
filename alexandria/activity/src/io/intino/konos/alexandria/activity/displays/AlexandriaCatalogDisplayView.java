@@ -80,7 +80,7 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
     @Override
     protected void init() {
         super.init();
-        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), user());
+        this.display = ((DisplayView)view().raw()).display(provider.element(), loadingListener(), instantListener(), session());
         sendDisplayType(display);
         add(display);
         display.personifyOnce();
