@@ -126,7 +126,7 @@ public class Catalog extends Element {
 	public interface ArrangementFilterer {
 		ActivitySession session();
 		void add(String grouping, Group... groups);
-		boolean contains(Object item);
+		boolean contains(Item item);
 		void clear();
 		boolean isEmpty();
 	}

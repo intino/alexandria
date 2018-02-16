@@ -16,7 +16,7 @@ public class TemporalCatalog extends Catalog {
 	private RangeLoader rangeLoader;
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
-	private int maxZoom = 100;
+	private int maxZoom = 5;
 	private boolean showAll = false;
 	private Type type = Type.Time;
 

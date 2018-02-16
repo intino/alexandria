@@ -62,6 +62,7 @@
             if (index == this._selectedItem) return;
             if (event.detail == "noItems") return;
 
+            this._selectedItem = index;
             window.setTimeout(() => this.selectItem(event.detail), 100);
         },
 

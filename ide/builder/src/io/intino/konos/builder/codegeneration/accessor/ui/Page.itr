@@ -32,13 +32,13 @@ def type(page)
 
         <body unresolved class="fullbleed">
             <template is="dom-bind" id="app">
-                <page-body base-url="$$baseUrl" url="$$url" client="$$client" language="$$language" title="$$title"></page-body>
+                <page-body base-url="$$baseUrl" url="$$url" client="$$client" language="$$language"></page-body>
             </template>
 
             <dom-module id="page-body">
 
                 <template>
-                    <cotton-zombie display="$uses" widget="$uses" title="$$title" language="$$language"></cotton-zombie>
+                    <cotton-zombie display="$uses" widget="$uses" language="$$language"></cotton-zombie>
                 </template>
 
                 <style>

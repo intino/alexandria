@@ -43,13 +43,11 @@
                         <img class$="single [[stamp.classes]] picture_img_[[stamp.name]]" src="[[stamp.value]]" class="icon" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" />
                     </div>
                     <div hidden$="[[stamp.isSingleValue]]">
-                        <l2t-paper-slider class$="[[stamp.classes]]" total-slides$="[[stamp.countValues]]" tabIndex="-1">
+                        <l2t-paper-slider class$="[[stamp.classes]]" total-slides$="[[stamp.countValues]]" tabIndex="-1" auto-progress slide-duration="4">
                             <template is="dom-repeat" items="[[stamp.values]]" as="picture">
                                 <paper-slide><img src="[[picture]]"/></paper-slide>
                             </template>
                         </l2t-paper-slider>
-                        <paper-icon-button class="slide-button previous" icon="image:navigate-before" on-tap="_previousSlide"></paper-icon-button>
-                        <paper-icon-button class="slide-button next" icon="image:navigate-next" on-tap="_nextSlide"></paper-icon-button>
                     </div>
                 </div>
             </template>
@@ -218,21 +216,6 @@
         :host .picture l2t-paper-slider paper-slide img {
             width: 100%;
         }
-        :host .picture .slide-button {
-            position: absolute;
-            height: 35px;
-            width: 35px;
-            padding: 0;
-            color: #999;
-            top: 100px;
-            display: none;
-        }
-        :host .picture:hover .slide-button {
-            display: block;
-        }
-        :host .slide-button.next {
-            right: 0;
-        }
         :host.grid img.single, :host.map img.single {
             width: 300px;
             max-height: 240px;
@@ -296,22 +279,27 @@
             ready : function() {
                 var widget = this;
                 this.$.stampsTemplate.addEventListener("dom-change", function(e) {
-                    window.setTimeout(function() { widget._createZombieLayers(); }, 50);
-                    window.setTimeout(function() { widget._listenToItemLinks(); }, 50);
+                    window.setTimeout(function() {
+                        widget._createZombieLayers();
+                        widget._listenToItemLinks();
+                        widget._prepareSliders();
+                    }, 50);
                 });
             },
 
-            _previousSlide : function(event) {
-                this._slider(event).movePrev();
-            },
-
-            _nextSlide : function(event) {
-                this._slider(event).moveNext();
-            },
-
-            _slider : function(event) {
-                var parent = $(event.target).parents("alexandria-mold-block").get(0);
-                return parent.querySelector("l2t-paper-slider");
+            _prepareSliders : function() {
+                this.querySelectorAll("l2t-paper-slider").forEach((slider) => {
+                    var picture = $(slider).parents(".picture").get(0);
+                    var height = $(picture).height();
+                    var width = $(picture).width();
+                    var style = "width:" + width + "px;height:" + height + "px !important;";
+                    slider.querySelector("#container").setAttribute("style", style);
+                    slider.querySelectorAll("paper-slide").forEach((slide) => {
+                        slide.setAttribute("style", style);
+                        slide.querySelector("img").setAttribute("style", style);
+                    });
+                    slider.addEventListener("click", (e) => e.stopPropagation());
+                });
             },
 
             _openDialog : function(e) {
