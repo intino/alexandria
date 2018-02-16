@@ -20,6 +20,7 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
+import io.intino.konos.alexandria.activity.utils.StreamUtil;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
@@ -281,16 +282,21 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	private void refreshPictures(String itemId, List<Picture> pictures) {
 		Item item = itemOf(itemId);
 		pictures.forEach(stamp -> {
+			InputStream stream = null;
 			try {
 				String name = stamp.name();
 				Object data = stamp.value(item, session());
 				if ((! (data instanceof List)) || ((List) data).size() != 1) return;
 				List<URL> values = (List<URL>)data;
-				byte[] pictureBytes = IOUtils.toByteArray(values.get(0).openStream());
+				stream = values.get(0).openStream();
+				byte[] pictureBytes = IOUtils.toByteArray(stream);
 				byte[] picture = Base64.getEncoder().encode(pictureBytes);
 				notifier.refreshPicture(PictureDataBuilder.build(item, name, "data:image/png;base64," + new String(picture)));
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			finally {
+				StreamUtil.close(stream);
 			}
 		});
 	}

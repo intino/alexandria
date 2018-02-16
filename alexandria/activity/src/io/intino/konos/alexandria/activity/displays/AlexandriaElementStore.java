@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.model.Layout;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifier> extends AlexandriaElementDisplay<Layout, DN> implements ElementDisplayManager {
     private Map<String, AlexandriaElementDisplay> displayMap = new HashMap<>();
@@ -31,6 +32,11 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         }
 
         refreshLoading(true);
+        try {
+            TimeUnit.MILLISECONDS.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         display = addAndBuildDisplay(element, target, label);
         refreshLoaded();
         refreshSelected(label);

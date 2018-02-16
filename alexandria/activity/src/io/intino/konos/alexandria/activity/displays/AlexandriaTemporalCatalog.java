@@ -66,16 +66,11 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public void refreshView() {
 		super.refreshView();
 
-		if (element().showAll()) {
-			hideNavigator();
-			return;
-		}
-
 		currentView().ifPresent(catalogView -> {
 			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.view().name())).findFirst().orElse(null);
 			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
 				hideNavigator();
-			else
+			else if (!element().showAll())
 				showNavigator();
 		});
 	}
@@ -134,6 +129,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
+		navigatorDisplay.personify();
+		if (element().showAll()) hideNavigator();
 		loadTimezoneOffset();
 	}
 
@@ -149,7 +146,6 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		navigatorDisplay.timeScaleHandler(timeScaleHandler);
 		configureNavigatorDisplay(navigatorDisplay, timeScaleHandler);
 		add(navigatorDisplay);
-		navigatorDisplay.personify();
 	}
 
 	private TimeScaleHandler buildTimeScaleHandler() {

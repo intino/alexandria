@@ -88,7 +88,7 @@ public class GroupingManager {
 
 	private List<Item> filteredItems() {
 		if (filter == null || filter.isEmpty()) return items;
-		return items.stream().filter(item -> filter.contains(item != null ? item.object() : null)).collect(toList());
+		return items.stream().filter(item -> filter.contains(item)).collect(toList());
 	}
 
 }
