@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemDisplayProvider;
 import static java.util.Collections.singletonList;
 
-public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCatalogMagazineViewNotifier> implements AlexandriaCatalogView {
+public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCatalogMagazineViewNotifier, Box> implements AlexandriaCatalogView {
 	private ElementView view;
 	private CatalogViewDisplayProvider provider;
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
@@ -43,6 +43,10 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	@Override
 	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> parameters) {
 		openItemDialogListeners.add(parameters);
+	}
+
+	@Override
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
 	}
 
 	@Override

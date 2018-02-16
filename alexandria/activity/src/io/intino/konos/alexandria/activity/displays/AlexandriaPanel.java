@@ -117,7 +117,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private Reference referenceOf(AbstractView view) {
 		Reference reference = ReferenceBuilder.build(view);
-		reference.referencePropertyList().add(new ReferenceProperty().name("hidden").value(String.valueOf(view.hidden(target(), username()))));
+		reference.referencePropertyList().add(new ReferenceProperty().name("hidden").value(String.valueOf(view.hidden(target(), session()))));
 		return reference;
 	}
 
@@ -175,6 +175,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		display.onLoading(v -> notifyLoading((Boolean) v));
 		display.onOpenItem(params -> openItem((AlexandriaElementView.OpenItemEvent) params));
 		display.onOpenItemDialog(params -> openItemDialog((AlexandriaElementView.OpenItemDialogEvent) params));
+		display.onOpenItemCatalog(params -> openItemCatalog((AlexandriaElementView.OpenItemCatalogEvent) params));
 		display.onExecuteItemTask(params -> executeItemTask((AlexandriaElementView.ExecuteItemTaskEvent) params));
 		add(display);
 		display.personifyOnce(viewId(view));

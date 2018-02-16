@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ public class TaskSelection<T> extends Operation {
 		return this;
 	}
 
-	public Refresh execute(Element element, String option, List<Item> selection, String username) {
+	public Refresh execute(Element element, String option, List<Item> selection, ActivitySession session) {
 		if (launcher == null) return Refresh.None;
-		return launcher.execute(element, option, selection.stream().map(Item::object).collect(toList()), username);
+		return launcher.execute(element, option, selection.stream().map(Item::object).collect(toList()), session);
 	}
 
 	public enum Refresh {
@@ -25,7 +26,7 @@ public class TaskSelection<T> extends Operation {
 	}
 
 	public interface Execution {
-		Refresh execute(Element element, String option, List<Object> selection, String username);
+		Refresh execute(Element element, String option, List<Object> selection, ActivitySession session);
 	}
 
 }

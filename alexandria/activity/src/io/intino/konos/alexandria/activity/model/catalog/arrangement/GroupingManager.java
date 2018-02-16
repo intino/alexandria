@@ -1,7 +1,8 @@
 package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 
-import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Catalog;
+import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,15 +33,15 @@ public class GroupingManager {
 	}
 
 	private Map<Grouping, GroupMap> calculateGroupings(List<Item> items) {
-		String username = filter != null ? filter.username() : null;
+		ActivitySession session = filter != null ? filter.session() : null;
 		List<Item> groupingManagerItems = this.items;
-		return this.groupings.stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems, username) : g.groups(items, username)));
+		return this.groupings.stream().collect(toMap(g -> g, g -> filteredGroupings.keySet().contains(g.name()) ? g.groups(groupingManagerItems, session) : g.groups(items, session)));
 	}
 
 	public void filter(String groupingName, List<String> groups) {
 		Grouping grouping = grouping(groupingName);
 		List<String> groupNames = groups.stream().map(Group::name).collect(toList());
-		if (filter != null) filter.add(collect(groupNames, grouping));
+		if (filter != null) filter.add(grouping.name(), collect(groupNames, grouping));
 		filteredGroupings.put(groupingName, groupNames);
 		fixedGrouping = groupingName;
 	}
@@ -87,7 +88,7 @@ public class GroupingManager {
 
 	private List<Item> filteredItems() {
 		if (filter == null || filter.isEmpty()) return items;
-		return items.stream().filter(item -> filter.contains(item.id())).collect(toList());
+		return items.stream().filter(item -> filter.contains(item)).collect(toList());
 	}
 
 }

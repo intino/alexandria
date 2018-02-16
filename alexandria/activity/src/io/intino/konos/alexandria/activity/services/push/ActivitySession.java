@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.services.push;
 import io.intino.konos.alexandria.rest.pushservice.Client;
 import io.intino.konos.alexandria.rest.spark.SparkSession;
 
-public class ActivitySession<C extends ActivityClient> extends SparkSession<C> {
+public class ActivitySession extends SparkSession<ActivityClient> {
     private User user;
     private Browser browser;
 
@@ -34,7 +34,7 @@ public class ActivitySession<C extends ActivityClient> extends SparkSession<C> {
         if (language != null)
             return language;
 
-        Client client = currentClient();
+        Client client = client();
         if (client != null && client.language() != null)
             return client.language();
 

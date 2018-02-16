@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.ElementRender;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class RenderCatalogs extends ElementRender {
 		return this;
 	}
 
-	public AlexandriaAbstractCatalog display(Catalog catalog, String username) {
-		return loader != null ? loader.load(catalog, username) : null;
+	public AlexandriaAbstractCatalog display(Catalog catalog, ActivitySession session) {
+		return loader != null ? loader.load(catalog, session) : null;
 	}
 
 	public RenderCatalogs displayLoader(Loader loader) {
@@ -31,10 +32,10 @@ public class RenderCatalogs extends ElementRender {
 		return this;
 	}
 
-	public boolean filter(Catalog catalog, Element context, Item target, Item item, String username) {
+	public boolean filter(Catalog catalog, Element context, Item target, Item item, ActivitySession session) {
 		if (target == null && item == null) return true;
 		if (target == null || item == null) return false;
-		return filter == null || filter.filter(catalog, context, target.object(), item.object(), username);
+		return filter == null || filter.filter(catalog, context, target.object(), item.object(), session);
 	}
 
 	public RenderCatalogs filter(Filter filter) {
@@ -43,10 +44,10 @@ public class RenderCatalogs extends ElementRender {
 	}
 
 	public interface Filter {
-		boolean filter(Catalog catalog, Element context, Object target, Object object, String username);
+		boolean filter(Catalog catalog, Element context, Object target, Object object, ActivitySession session);
 	}
 
 	public interface Loader {
-		AlexandriaAbstractCatalog load(Catalog catalog, String username);
+		AlexandriaAbstractCatalog load(Catalog catalog, ActivitySession session);
 	}
 }

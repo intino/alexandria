@@ -11,7 +11,7 @@ public class ActivityClient<S extends Soul> extends SparkClient {
     }
 
     public S soul() {
-        return (S) this.soul;
+        return this.soul;
     }
 
     public void soul(S soul) {

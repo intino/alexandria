@@ -207,12 +207,14 @@
             },
 
             _showTimeNavigator : function() {
-                this.querySelector("alexandria-time-navigator").hidden = false;
+                var navigator = this.querySelector("alexandria-time-navigator");
+                if (navigator != null) navigator.hidden = false;
                 $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
             },
 
             _hideTimeNavigator : function() {
-                this.querySelector("alexandria-time-navigator").hidden = true;
+                var navigator = this.querySelector("alexandria-time-navigator");
+                if (navigator != null) navigator.hidden = true;
                 $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
             },
 

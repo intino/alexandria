@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,9 @@ public class DownloadSelection extends Operation {
 		return this;
 	}
 
-	public Resource execute(Element element, String option, List<Item> selection, String username) {
+	public Resource execute(Element element, String option, List<Item> selection, ActivitySession session) {
 		List<Object> selectionObjects = selection.stream().map(Item::object).collect(toList());
-		return this.execution != null ? this.execution.download(element, option, selectionObjects, username) : null;
+		return this.execution != null ? this.execution.download(element, option, selectionObjects, session) : null;
 	}
 
 	public DownloadSelection execute(Execution execution) {
@@ -37,6 +38,6 @@ public class DownloadSelection extends Operation {
 	}
 
 	public interface Execution {
-		Resource download(Element element, String option, List<Object> selection, String username);
+		Resource download(Element element, String option, List<Object> selection, ActivitySession session);
 	}
 }

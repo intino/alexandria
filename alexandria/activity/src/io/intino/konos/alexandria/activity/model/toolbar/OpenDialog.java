@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model.toolbar;
 
 import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class OpenDialog extends Operation {
 	private int width = 100;
@@ -35,8 +36,8 @@ public class OpenDialog extends Operation {
 		return this;
 	}
 
-	public AlexandriaDialog createDialog(String username) {
-		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.buildDialog(username) : null;
+	public AlexandriaDialog createDialog(ActivitySession session) {
+		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.buildDialog(session) : null;
 		if (dialog == null) return null;
 		dialog.width(width);
 		dialog.height(height);
@@ -49,6 +50,6 @@ public class OpenDialog extends Operation {
 	}
 
 	public interface DialogBuilder {
-		AlexandriaDialog buildDialog(String username);
+		AlexandriaDialog buildDialog(ActivitySession session);
 	}
 }

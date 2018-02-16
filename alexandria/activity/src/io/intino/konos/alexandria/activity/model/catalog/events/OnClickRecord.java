@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.model.catalog.events;
 public class OnClickRecord {
 	private OpenPanel openPanel;
 	private OpenDialog openDialog;
+	private OpenCatalog openCatalog;
 
 	public OpenPanel openPanel() {
 		return openPanel;
@@ -19,6 +20,15 @@ public class OnClickRecord {
 
 	public OnClickRecord openDialog(OpenDialog openDialog) {
 		this.openDialog = openDialog;
+		return this;
+	}
+
+	public OpenCatalog openCatalog() {
+		return openCatalog;
+	}
+
+	public OnClickRecord openCatalog(OpenCatalog openCatalog) {
+		this.openCatalog = openCatalog;
 		return this;
 	}
 }

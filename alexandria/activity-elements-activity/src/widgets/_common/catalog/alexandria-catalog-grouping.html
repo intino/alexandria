@@ -12,7 +12,10 @@
 
     <template>
         <!--<div class="label layout horizontal end-justified"><cotton-checkbox checked id="groupsCheckbox" disabled$="[[_groupsDisabled]]" icon="av:stop" on-change="_toggleGroups">[[_grouping.label]]</cotton-checkbox></div>-->
-        <div class="label layout horizontal">[[_grouping.label]]</div>
+        <div class="label layout horizontal">
+            <div>[[_grouping.label]]</div>
+            <div hidden$="[[!_allSelected]]">[[UnSelectAll]]</div>
+        </div>
         <div class="toolbar" hidden="[[!_enoughGroups]]">
             <paper-input id="filterInput" noLabelFloat placeholder="[[Filter]]" on-keyup="_filter"><iron-icon icon="search" suffix></iron-icon></paper-input>
             <div class="layout horizontal end-justified info"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[_grouping.groupList.length]]</div></div>
@@ -126,7 +129,8 @@
                 _selectedCount: Number,
                 _enoughGroups: Boolean,
                 _groupsDisabled: Boolean,
-                _chartsVisible : Boolean
+                _chartsVisible : Boolean,
+                _allSelected : Boolean
             },
 
             behaviors: [CottonBehaviors.TranslatorBehavior],
@@ -139,7 +143,7 @@
                 var result = [];
                 this.querySelectorAll(".groups cotton-checkbox").forEach((checkbox) => {
                     if (checkbox.checked) result.push(checkbox.getAttribute("name"));
-            });
+                });
                 return result;
             },
 

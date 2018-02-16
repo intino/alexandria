@@ -50,7 +50,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public AlexandriaStamp display(String stampName) {
 		EmbeddedDisplay stamp = (EmbeddedDisplay) stamp(stampName);
 
-		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.createDisplay(username());
+		AlexandriaTemporalStamp display = (AlexandriaTemporalStamp) stamp.createDisplay(session());
 		display.range(timeScaleHandler().range());
 
 		return display;
@@ -59,23 +59,18 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	public AlexandriaDialog dialog(String stampName) {
 		EmbeddedDialog stamp = (EmbeddedDialog) stamp(stampName);
-		return stamp.createDialog(username());
+		return stamp.createDialog(session());
 	}
 
 	@Override
 	public void refreshView() {
 		super.refreshView();
 
-		if (element().showAll()) {
-			hideNavigator();
-			return;
-		}
-
 		currentView().ifPresent(catalogView -> {
 			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.view().name())).findFirst().orElse(null);
 			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
 				hideNavigator();
-			else
+			else if (!element().showAll())
 				showNavigator();
 		});
 	}
@@ -99,12 +94,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	public Item rootItem(List<Item> itemList) {
-		return element().rootItem(itemList, queryRange(), username());
+		return element().rootItem(itemList, queryRange(), session());
 	}
 
 	@Override
 	public Item defaultItem(String id) {
-		return element().defaultItem(id, queryRange(), username());
+		return element().defaultItem(id, queryRange(), session());
 	}
 
 	@Override
@@ -118,7 +113,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
 		TimeRange range = queryRange();
-		ItemList itemList = element().items(scope, condition, range, username());
+		ItemList itemList = element().items(scope, condition, range, session());
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
 		return itemList;
@@ -134,6 +129,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
+		navigatorDisplay.personify();
+		if (element().showAll()) hideNavigator();
 		loadTimezoneOffset();
 	}
 
@@ -149,11 +146,10 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		navigatorDisplay.timeScaleHandler(timeScaleHandler);
 		configureNavigatorDisplay(navigatorDisplay, timeScaleHandler);
 		add(navigatorDisplay);
-		navigatorDisplay.personify();
 	}
 
 	private TimeScaleHandler buildTimeScaleHandler() {
-		TimeRange range = element().range(username());
+		TimeRange range = element().range(session());
 		TimeScaleHandler.Bounds bounds = new TimeScaleHandler.Bounds();
 		List<TimeScale> scales = element().scales();
 		Map<TimeScale, Bounds.Zoom> zoomMap = new HashMap<>();

@@ -1,6 +1,7 @@
 def type(mold)
 	package $package.displays;
 
+    import io.intino.konos.alexandria.activity.services.push.ActivitySession;
     import $package+validPackage.$box+firstUpperCase~Box;
 
     import java.net.URL;
@@ -43,7 +44,7 @@ def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, String username) {
+		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -53,7 +54,7 @@ def type(stamp & previewOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -63,7 +64,7 @@ def type(stamp & exportOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, String username) {
+		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -74,7 +75,7 @@ def type(stamp & taskOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static void execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static void execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 
 		}
 	}
@@ -84,11 +85,11 @@ def type(stamp & location)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static java.net.URL icon($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static java.net.URL icon($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -106,7 +107,7 @@ def type(stamp & highlight)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static String color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return "";//TODO
 		}
 	}
@@ -132,7 +133,7 @@ def type(stamp & icon)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return "";//TODO
 		}
 	}
@@ -142,7 +143,7 @@ def type(stamp & itemLinks)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+		public static String title($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return "";//TODO
 		}
 	}
@@ -166,38 +167,38 @@ def trigger(common)
 end
 
 def trigger(style)
-	public static String style($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+	public static String style($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 		return "";//TODO
 	}
 end
 
 def trigger(embeddedCatalogFilter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase source, Object target, String username) {
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase source, Object target, ActivitySession session) {
 		return true;//TODO
 	}
 end
 
 def trigger(filter)
-	public static boolean filter($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, Object target, String username) {
+	public static boolean filter($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, Object target, ActivitySession session) {
 		return true;//TODO
 	}
 end
 
 
 def trigger(displayBuilder)
-	public static io.intino.konos.alexandria.activity.displays.AlexandriaStamp buildDisplay($box~Box box, String name, String username) {
+	public static io.intino.konos.alexandria.activity.displays.AlexandriaStamp buildDisplay($box~Box box, String name, ActivitySession session) {
 		return null;//TODO
 	}
 end
 
 def trigger(editable)
-	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Editable.Refresh onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, String username) {
+	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Editable.Refresh onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
 		return null;
 	}
 end
 
 def trigger(valueMethod)
-	public static $valueType value($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String username) {
+	public static $valueType value($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 		return null;//TODO
 	}
 end

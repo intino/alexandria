@@ -32,8 +32,10 @@
                                                 on-download="_downloadOperation"></alexandria-catalog-toolbar>
                     <div class="search-box flex layout vertical center-justified" hidden$="[[!canSearch]]">
                         <paper-input id="filter" label="[[Search]]" type="text" no-label-float on-keyup="_filter">
-                            <iron-icon icon="search" suffix></iron-icon>
+                            <iron-icon icon="search" prefix></iron-icon>
+                            <paper-icon-button suffix icon="icons:cancel" hidden$="[[!condition]]" on-tap="_clearFilter"></paper-icon-button>
                         </paper-input>
+
                     </div>
                 </div>
             </div>
@@ -62,10 +64,10 @@
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
                                         <div class="flex">
                                             <alexandria-mold name$="_item_[[item.name]]"
-                                                         item="[[item]]"
-                                                         mold="[[mold]]"
-                                                         on-open-dialog="_openStampDialog"
-                                                         on-execute-task-item="_executeStampTask"></alexandria-mold>
+                                                             item="[[item]]"
+                                                             mold="[[mold]]"
+                                                             on-open-dialog="_openStampDialog"
+                                                             on-execute-task-item="_executeStampTask"></alexandria-mold>
                                         </div>
                                     </div>
                                 </template>
@@ -74,11 +76,11 @@
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
                                         <div class="flex">
                                             <alexandria-mold name$="_item_[[item.name]]"
-                                                         item="[[item]]"
-                                                         mold="[[mold]]"
-                                                         mode="grid"
-                                                         on-open-dialog="_openStampDialog"
-                                                         on-execute-task-item="_executeStampTask"></alexandria-mold>
+                                                             item="[[item]]"
+                                                             mold="[[mold]]"
+                                                             mode="grid"
+                                                             on-open-dialog="_openStampDialog"
+                                                             on-execute-task-item="_executeStampTask"></alexandria-mold>
                                         </div>
                                     </div>
                                 </template>
@@ -99,9 +101,18 @@
             border: 1px solid #ddd;
             margin-left: 6px;
             margin-right: 7px;
+            position: relative;
+            background: #efefef;
         }
         :host .toolbar .search-box:hover {
-            background: #efefef;
+            background: white;
+        }
+        :host .toolbar .search-box paper-icon-button {
+            margin-top: -4px;
+            height: 22px;
+            width: 22px;
+            color: #888;
+            padding: 0;
         }
         :host .toolbar .search-box paper-input {
             margin: 2px 7px 0;
@@ -287,6 +298,7 @@
                 itemList: { type: Array, observer: '_refresh' },
                 countItemList : { type: Number, value: function() { return -1; } },
                 toolbar : { type: Object, observer: '_refreshToolbar' },
+                condition : { type: String, value: function() { return ""; } },
                 _countSelectionOperations : { type: Number, value: function() { return 0; } },
                 _allowSelection : Boolean,
                 _itemList: { type: Array, value: function() { return []; } },
@@ -329,13 +341,13 @@
 
                 this.resizeTimeout = window.setTimeout(() => {
                     var list = this.querySelector("iron-list[grid]");
-                    if (list == null) return;
-                    var height = -1;
-                    list.querySelectorAll(".item.container").forEach(function(container) {
-                        if (height == -1) height = $(container).height();
-                        $(container).height(height);
-                    });
-                }, 100);
+                if (list == null) return;
+                var height = -1;
+                list.querySelectorAll(".item.container").forEach(function(container) {
+                    if (height == -1) height = $(container).height();
+                    $(container).height(height);
+                });
+            }, 100);
             },
 
             _listOffsetHeight : function() {
@@ -378,7 +390,7 @@
                 this._countSelectionOperations = this._operations(this.toolbar,"Selection").length > 0;
                 this._allowSelection = this._countSelectionOperations > 0;
                 this._toolbarHidden = this.toolbar != null && this.toolbar.operationList.length <= 0 &&
-                                      !this.canSearch && this.sortingList.length <= 0;
+                    !this.canSearch && this.sortingList.length <= 0;
             },
 
             _refresh: function() {
@@ -407,8 +419,8 @@
                 if (!this._resized) {
                     window.setTimeout(() => {
                         this.$.items.fire("iron-resize");
-                        this._resized = true;
-                    }, 50);
+                    this._resized = true;
+                }, 50);
                 }
             },
 
@@ -460,9 +472,9 @@
             _updateSizeForItems : function(items) {
                 window.setTimeout(() => {
                     for (var i=0; i<items.length; i++) {
-                        this._updateSizeForItem(items[i]);
-                    }
-                }, 100);
+                    this._updateSizeForItem(items[i]);
+                }
+            }, 100);
             },
 
             _updateSizeForItem : function(item) {
@@ -500,13 +512,19 @@
                 this.fire("execute-stamp-task", event.detail);
             },
 
-            _filter : function(event) {
+            _clearFilter : function() {
+                this.$.filter.value = "";
+                this.condition = "";
+                this.fire("filter", this.condition);
+            },
+
+            _filter : function() {
                 window.setTimeout(() => {
                     var condition = this.$.filter.value;
-                    if (this.condition === condition) return;
-                    this.condition = condition;
-                    this.fire("filter", condition);
-                }, 800);
+                if (this.condition === condition) return;
+                this.condition = condition;
+                this.fire("filter", condition);
+            }, 800);
             },
 
             _groupStyle : function(idx) {

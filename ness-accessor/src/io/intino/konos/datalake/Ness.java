@@ -74,12 +74,13 @@ public class Ness {
 			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
 			return new ReflowSession() {
-				public void next() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("next"));
+				public void next() {
+					producer.produce(createMessageFor("next"));
 				}
 
-				public void finish() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("finish"));
+				public void finish() {
+					producer.produce(createMessageFor("finish"));
+					topicConsumer.stop();
 				}
 
 				@Override
