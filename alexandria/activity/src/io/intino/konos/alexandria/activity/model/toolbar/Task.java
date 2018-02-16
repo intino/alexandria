@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model.toolbar;
 
 import io.intino.konos.alexandria.activity.model.Element;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class Task extends Operation {
 	private Execution launcher;
@@ -10,9 +11,9 @@ public class Task extends Operation {
 		return this;
 	}
 
-	public Refresh execute(Element element, String option, String username) {
+	public Refresh execute(Element element, String option, ActivitySession session) {
 		if (launcher == null) return Refresh.None;
-		return launcher.execute(element, option, username);
+		return launcher.execute(element, option, session);
 	}
 
 	public enum Refresh {
@@ -20,6 +21,6 @@ public class Task extends Operation {
 	}
 
 	public interface Execution {
-		Refresh execute(Element element, String option, String username);
+		Refresh execute(Element element, String option, ActivitySession session);
 	}
 }

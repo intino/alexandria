@@ -211,12 +211,14 @@
             },
 
             _showTimeRangeNavigator : function() {
-                this.querySelector("alexandria-time-range-navigator").hidden = false;
+                var navigator = this.querySelector("alexandria-time-range-navigator");
+                if (navigator != null) navigator.hidden = false;
                 $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
             },
 
             _hideTimeRangeNavigator : function() {
-                this.querySelector("alexandria-time-range-navigator").hidden = true;
+                var navigator = this.querySelector("alexandria-time-range-navigator");
+                if (navigator != null) navigator.hidden = true;
                 $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
             },
 

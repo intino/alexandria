@@ -7,7 +7,7 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
     import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.activity.services.push.User;
+    import io.intino.konos.alexandria.activity.services.push.ActivitySession;
     $parent+import
 
     public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~Notifier> {

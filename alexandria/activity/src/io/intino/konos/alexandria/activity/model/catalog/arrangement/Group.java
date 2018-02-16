@@ -1,10 +1,8 @@
 package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 
-import java.util.List;
-
 public class Group {
 	private String label;
-	private List<Object> objects;
+	private int countObjects;
 
 	private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
@@ -21,17 +19,13 @@ public class Group {
 		return this;
 	}
 
-	public List<Object> objects() {
-		return this.objects;
+	public int countObjects() {
+		return countObjects;
 	}
 
-	public Group objects(List<Object> objects) {
-		this.objects = objects;
+	public Group countObjects(int countObjects) {
+		this.countObjects = countObjects;
 		return this;
-	}
-
-	public int countItems() {
-		return objects != null ? objects.size() : 0;
 	}
 
 	public static String name(String name) {

@@ -6,7 +6,6 @@ import io.intino.konos.alexandria.activity.displays.builders.ValidationBuilder;
 import io.intino.konos.alexandria.activity.model.Dialog;
 import io.intino.konos.alexandria.activity.schemas.DialogInput;
 import io.intino.konos.alexandria.activity.schemas.DialogInputResource;
-import io.intino.konos.alexandria.activity.services.push.User;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import org.apache.commons.codec.binary.Base64;
 
@@ -140,14 +139,9 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
-		DialogExecution.Modification modification = operation.execute(username());
+		DialogExecution.Modification modification = operation.execute(session());
 		notifier.done(modification.toString());
 		doneListeners.forEach(l -> l.accept(modification));
-	}
-
-	protected String username() {
-		User user = session().user();
-		return user != null ? user.username() : null;
 	}
 
 	public abstract void prepare();

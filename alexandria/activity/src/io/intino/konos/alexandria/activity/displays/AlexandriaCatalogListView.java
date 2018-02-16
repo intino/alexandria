@@ -20,6 +20,7 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
+import io.intino.konos.alexandria.activity.utils.StreamUtil;
 import spark.utils.IOUtils;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	private CatalogViewDisplayProvider provider;
 	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private String condition = null;
 	private Map<String, List<AlexandriaStamp>> recordDisplaysMap = new HashMap<>();
@@ -88,6 +90,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	@Override
 	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
 		openItemDialogListeners.add(listener);
+	}
+
+	@Override
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
+		openItemCatalogListeners.add(listener);
 	}
 
 	@Override
@@ -139,6 +146,8 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 		if (view.onClickRecordEvent().openPanel() != null)
 			notifyOpenItem(value);
+		else if (view.onClickRecordEvent().openCatalog() != null)
+			notifyOpenCatalog(itemOf(value));
 		else if (view.onClickRecordEvent().openDialog() != null)
 			notifyOpenDialog(itemOf(value));
 	}
@@ -152,7 +161,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 		Item source = itemOf(params.item());
 		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, username()));
+			display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
 
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
@@ -161,7 +170,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private void notifyOpenItem(String item) {
-		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
+		openItemListeners.forEach(l -> l.accept(openItemEventOf(item)));
+	}
+
+	private OpenItemEvent openItemEventOf(String item) {
+		return new OpenItemEvent() {
 			@Override
 			public String itemId() {
 				return new String(Base64.getDecoder().decode(item));
@@ -170,7 +183,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			@Override
 			public String label() {
 				Optional<Stamp> titleStamp = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Title)).findAny();
-				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), username()) : item().name();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session()) : item().name();
 			}
 
 			@Override
@@ -191,7 +204,26 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			@Override
 			public Tree breadcrumbs() {
 				OpenPanel openPanel = view.onClickRecordEvent().openPanel();
-				return openPanel != null ? openPanel.breadcrumbs(item(), username()) : null;
+				return openPanel != null ? openPanel.breadcrumbs(item(), session()) : null;
+			}
+		};
+	}
+
+	private void notifyOpenCatalog(Item item) {
+		openItemCatalogListeners.forEach(l -> l.accept(new OpenItemCatalogEvent() {
+			@Override
+			public Item sender() {
+				return item;
+			}
+
+			@Override
+			public Catalog catalog() {
+				return view.onClickRecordEvent().openCatalog().catalog();
+			}
+
+			@Override
+			public List<String> itemsToShow() {
+				return view.onClickRecordEvent().openCatalog().items(item, session());
 			}
 		}));
 	}
@@ -205,7 +237,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 			@Override
 			public AlexandriaDialog dialog() {
-				return view.onClickRecordEvent().openDialog().createDialog(item, username());
+				return view.onClickRecordEvent().openDialog().createDialog(item, session());
 			}
 		}));
 	}
@@ -250,16 +282,21 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	private void refreshPictures(String itemId, List<Picture> pictures) {
 		Item item = itemOf(itemId);
 		pictures.forEach(stamp -> {
+			InputStream stream = null;
 			try {
 				String name = stamp.name();
-				Object data = stamp.value(item, username());
+				Object data = stamp.value(item, session());
 				if ((! (data instanceof List)) || ((List) data).size() != 1) return;
 				List<URL> values = (List<URL>)data;
-				byte[] pictureBytes = IOUtils.toByteArray(values.get(0).openStream());
+				stream = values.get(0).openStream();
+				byte[] pictureBytes = IOUtils.toByteArray(stream);
 				byte[] picture = Base64.getEncoder().encode(pictureBytes);
 				notifier.refreshPicture(PictureDataBuilder.build(item, name, "data:image/png;base64," + new String(picture)));
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			finally {
+				StreamUtil.close(stream);
 			}
 		});
 	}
@@ -311,21 +348,21 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	public AlexandriaStamp embeddedDisplay(String name) {
 		Stamp stamp = provider.stamp(view.mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
-		return ((EmbeddedDisplay)stamp).createDisplay(username());
+		return ((EmbeddedDisplay)stamp).createDisplay(session());
 	}
 
 	@Override
 	public AlexandriaDialog embeddedDialog(String name) {
 		Stamp stamp = provider.stamp(view.mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDialog)) return null;
-		return ((EmbeddedDialog)stamp).createDialog(username());
+		return ((EmbeddedDialog)stamp).createDialog(session());
 	}
 
 	@Override
 	public AlexandriaAbstractCatalog embeddedCatalog(String name) {
 		Stamp stamp = provider.stamp(view.mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
-		return ((EmbeddedCatalog)stamp).createCatalog(username());
+		return ((EmbeddedCatalog)stamp).createCatalog(session());
 	}
 
 	private void sendView() {
@@ -343,13 +380,13 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> displays() {
 		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
-		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).createDisplay(username())));
+		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).createDisplay(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private Map<EmbeddedDialog, AlexandriaDialog> dialogs() {
 		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
-		Map<EmbeddedDialog, AlexandriaDialog> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDialog)s, s -> ((EmbeddedDialog)s).createDialog(username())));
+		Map<EmbeddedDialog, AlexandriaDialog> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDialog)s, s -> ((EmbeddedDialog)s).createDialog(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
@@ -409,7 +446,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), username())));
+		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session())));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {

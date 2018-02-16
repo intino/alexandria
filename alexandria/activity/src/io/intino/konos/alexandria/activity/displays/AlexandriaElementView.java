@@ -1,12 +1,14 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.Panel;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
@@ -19,6 +21,7 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 
 	void onOpenItem(Consumer<OpenItemEvent> listener);
 	void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener);
+	void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener);
 	void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener);
 
 	interface OpenItemEvent {
@@ -37,6 +40,12 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	interface OpenItemDialogEvent {
 		Item item();
 		AlexandriaDialog dialog();
+	}
+
+	interface OpenItemCatalogEvent {
+		Item sender();
+		Catalog catalog();
+		List<String> itemsToShow();
 	}
 
 	interface ExecuteItemTaskEvent {

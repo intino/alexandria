@@ -48,7 +48,6 @@ public abstract class Updater {
 
 	@NotNull
 	protected PsiMethod createMethodFromText(String text) {
-
 		return factory.createMethodFromText(text, null);
 	}
 

@@ -7,7 +7,7 @@ public interface Session<C extends Client> {
 
     List<C> clients();
     C client(String id);
-    C currentClient();
+    C client();
     void currentClient(C client);
 
     void add(C client);

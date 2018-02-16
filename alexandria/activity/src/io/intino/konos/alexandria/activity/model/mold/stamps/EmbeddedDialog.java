@@ -2,18 +2,19 @@ package io.intino.konos.alexandria.activity.model.mold.stamps;
 
 import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class EmbeddedDialog extends Stamp<String> {
 	private String type;
 	private DialogBuilder dialogBuilder;
 
 	@Override
-	public String objectValue(Object object, String username) {
+	public String objectValue(Object object, ActivitySession session) {
 		return null;
 	}
 
-	public AlexandriaDialog createDialog(String username) {
-		return dialogBuilder != null ? dialogBuilder.dialog(name(), username) : null;
+	public AlexandriaDialog createDialog(ActivitySession session) {
+		return dialogBuilder != null ? dialogBuilder.dialog(name(), session) : null;
 	}
 
 	public String dialogType() {
@@ -31,6 +32,6 @@ public class EmbeddedDialog extends Stamp<String> {
 	}
 
 	public interface DialogBuilder {
-		AlexandriaDialog dialog(String name, String username);
+		AlexandriaDialog dialog(String name, ActivitySession session);
 	}
 }

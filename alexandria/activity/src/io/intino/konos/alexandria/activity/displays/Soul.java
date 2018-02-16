@@ -5,10 +5,7 @@ import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.toList;

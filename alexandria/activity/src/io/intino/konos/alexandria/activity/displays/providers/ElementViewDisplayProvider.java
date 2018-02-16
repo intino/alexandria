@@ -12,16 +12,15 @@ import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
-import io.intino.konos.alexandria.activity.services.push.User;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 
 public interface ElementViewDisplayProvider {
     Element element();
     Item item(String id);
-    Optional<User> user();
+    ActivitySession session();
     URL baseAssetUrl();
     boolean embedded();
 

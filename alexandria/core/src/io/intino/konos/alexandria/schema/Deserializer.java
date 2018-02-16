@@ -272,11 +272,8 @@ public class Deserializer {
 
 	private static String normalize(String line) {
 		if (line == null) return null;
-		if (line.startsWith("\t")) return line;
-		line = line.trim();
-		if (line.isEmpty()) return line;
-		if (line.startsWith("[")) return line;
-		return line.replaceAll("(\\w*)\\s*[:=]\\s*(.*)", "$1:$2");
+		if (line.startsWith("\t") || line.isEmpty() || line.startsWith("[")) return line;
+		return line.trim().replaceAll("(\\w*)\\s*[:=]\\s*(.*)", "$1:$2");
 	}
 
 

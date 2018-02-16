@@ -52,7 +52,7 @@ public class CatalogBuilder {
     }
 
     private static Group buildGroup(io.intino.konos.alexandria.activity.model.catalog.arrangement.Group group, boolean selected) {
-        return new Group().name(group.name()).label(group.label()).selected(selected).count(group.countItems());
+        return new Group().name(group.name()).label(group.label()).selected(selected).count(group.countObjects());
     }
 
 }

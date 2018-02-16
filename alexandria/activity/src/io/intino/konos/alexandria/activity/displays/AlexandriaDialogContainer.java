@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AlexandriaDialogContainer extends ActivityDisplay<AlexandriaDialogContainerNotifier> {
+public class AlexandriaDialogContainer extends ActivityDisplay<AlexandriaDialogContainerNotifier, Box> {
 	private AlexandriaDialog dialog;
 	private Class<? extends AlexandriaDialog> dialogType;
 	private List<Consumer<String>> assertionListeners = new ArrayList<>();

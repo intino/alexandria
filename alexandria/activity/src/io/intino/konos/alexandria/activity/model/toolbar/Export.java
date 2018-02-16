@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.model.Element;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -34,8 +35,8 @@ public class Export extends Operation {
 		return this;
 	}
 
-	public Resource execute(Element element, Instant from, Instant to, String username) {
-		return execution != null ? execution.export(element, from, to, username) : null;
+	public Resource execute(Element element, Instant from, Instant to, ActivitySession session) {
+		return execution != null ? execution.export(element, from, to, session) : null;
 	}
 
 	public Export execute(Execution execution) {
@@ -44,6 +45,6 @@ public class Export extends Operation {
 	}
 
 	public interface Execution {
-		Resource export(Element element, Instant from, Instant to, String username);
+		Resource export(Element element, Instant from, Instant to, ActivitySession session);
 	}
 }

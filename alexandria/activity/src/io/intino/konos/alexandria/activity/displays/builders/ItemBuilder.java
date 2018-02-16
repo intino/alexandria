@@ -11,6 +11,7 @@ import io.intino.konos.alexandria.activity.schemas.Item;
 import io.intino.konos.alexandria.activity.schemas.ItemBlock;
 import io.intino.konos.alexandria.activity.schemas.ItemStamp;
 import io.intino.konos.alexandria.activity.schemas.Property;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.time.Instant;
@@ -57,7 +58,7 @@ public class ItemBuilder {
     private static String label(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider) {
         String defaultLabel = item != null ? item.name() :  "";
         return provider.stamps().stream().filter(s -> (s instanceof Title)).findAny()
-                                 .map(stamp -> (String) stamp.value(item, provider.username()))
+                                 .map(stamp -> (String) stamp.value(item, provider.session()))
                                  .orElse(defaultLabel);
     }
 
@@ -90,7 +91,7 @@ public class ItemBuilder {
     }
 
     private static List<String> valuesOf(Stamp stamp, io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
-        Object value = stamp.value(item, provider.username());
+        Object value = stamp.value(item, provider.session());
 
         if (value instanceof List) {
             List<Object> values = (List<Object>) value;
@@ -134,39 +135,39 @@ public class ItemBuilder {
 
     private static List<Property> propertiesOf(Stamp stamp, io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
         List<Property> result = new ArrayList<>();
-        String username = provider.username();
-        String style = stamp.style(item, username);
+        ActivitySession session = provider.session();
+        String style = stamp.style(item, session);
 
         if (style != null && !style.isEmpty())
             result.add(propertyOf("style", style));
 
         if (stamp instanceof Highlight)
-            result.add(propertyOf("color", ((Highlight)stamp).color(item, username)));
+            result.add(propertyOf("color", ((Highlight)stamp).color(item, session)));
 
         if (stamp instanceof ItemLinks)
-            result.add(propertyOf("title", ((ItemLinks)stamp).title(item, username)));
+            result.add(propertyOf("title", ((ItemLinks)stamp).title(item, session)));
 
         if (stamp instanceof CatalogLink)
-            result.add(propertyOf("title", ((CatalogLink)stamp).value(item, username)));
+            result.add(propertyOf("title", ((CatalogLink)stamp).value(item, session)));
 
         if (stamp instanceof Location) {
             Location location = (Location) stamp;
-            URL icon = location.icon(item, username);
+            URL icon = location.icon(item, session);
             if (icon != null)
                 result.add(propertyOf("icon", toResource(baseAssetUrl, icon).toUrl().toString()));
-            String drawingColor = location.drawingColor(item, username);
+            String drawingColor = location.drawingColor(item, session);
             if (drawingColor != null)
                 result.add(propertyOf("drawingColor", drawingColor));
         }
 
         if (stamp instanceof PreviewOperation) {
-            URL preview = ((PreviewOperation)stamp).preview(item, username);
+            URL preview = ((PreviewOperation)stamp).preview(item, session);
             if (preview != null)
                 result.add(propertyOf("document", toResource(baseAssetUrl, preview).setEmbedded(true).toUrl().toString()));
         }
 
         if (stamp instanceof Icon)
-            result.add(propertyOf("title", ((Icon)stamp).title(item, username)));
+            result.add(propertyOf("title", ((Icon)stamp).title(item, session)));
 
         return result;
     }
@@ -178,7 +179,7 @@ public class ItemBuilder {
     public interface ItemBuilderProvider {
         List<Block> blocks();
         List<Stamp> stamps();
-        String username();
+        ActivitySession session();
         TimeScale scale();
     }
 }

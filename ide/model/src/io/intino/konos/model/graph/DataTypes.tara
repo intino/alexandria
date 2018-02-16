@@ -1,6 +1,5 @@
 dsl Proteo
 
-
 Concept Data is abstract
 
 Concept:Named Parameter extends Data is component
@@ -62,3 +61,7 @@ Concept Exception extends Data
 Concept Response extends Data is component
 	var string code = "200"
 	var string description = ""
+
+
+Facet Event on Schema
+	var string subDomain = ""

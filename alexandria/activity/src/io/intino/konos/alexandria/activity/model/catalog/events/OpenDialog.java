@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.activity.model.catalog.events;
 
 import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class OpenDialog extends Open {
 	private int width = 100;
@@ -28,8 +29,8 @@ public class OpenDialog extends Open {
 		return this;
 	}
 
-	public AlexandriaDialog createDialog(Item item, String username) {
-		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.buildDialog(item != null ? item.object() : null, username) : null;
+	public AlexandriaDialog createDialog(Item item, ActivitySession session) {
+		AlexandriaDialog dialog = dialogBuilder != null ? dialogBuilder.buildDialog(item != null ? item.object() : null, session) : null;
 		if (dialog == null) return null;
 		dialog.width(width);
 		dialog.height(height);
@@ -42,6 +43,6 @@ public class OpenDialog extends Open {
 	}
 
 	public interface DialogBuilder {
-		AlexandriaDialog buildDialog(Object item, String username);
+		AlexandriaDialog buildDialog(Object item, ActivitySession session);
 	}
 }

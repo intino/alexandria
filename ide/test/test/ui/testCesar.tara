@@ -69,7 +69,6 @@ Mold(modelClass="") testCesarOverviewMold
 
 Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCatalog
 	Toolbar
-		GroupingSelection("crear grupo", polymerIcon = "content-copy")
 		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 //			execute = @removeAssets
 		Download("descargar", polymerIcon = "file-download")
@@ -80,10 +79,6 @@ Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCat
 //			execute = @export
 		ExportSelection("export selection", polymerIcon = "archive")
 //			execute = @exportarSelection
-
-	Events
-		OnClickRecord
-			OpenDialog openDialog
 
 	Views
 		ListView("List", mold = testCesarDeviceListMold, width = 90%)
@@ -253,7 +248,6 @@ Catalog("Systems", modelClass = "io.intino.cesar.graph.System") testCesarSimpleS
 
 Catalog("Assets", modelClass = "io.intino.cesar.graph.Asset") testCesarAssetCatalog
 	Toolbar
-		GroupingSelection("crear grupo", polymerIcon = "content-copy")
 		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 //			execute = @removeAssets
 //			refresh = Catalog
