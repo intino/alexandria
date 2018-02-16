@@ -123,7 +123,7 @@ def type(operations) !type(interface)
 		}
 
 		private void onFinish(Graph clone) {
-			session.pause();
+			session.finish();
 			box.put(new Graph(clone.store()).loadStashes(assistant.coreStashes()));
 			assistant.after();
 			logger.info("Reflow finished successfully!");
