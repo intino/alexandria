@@ -68,7 +68,7 @@ def type(operations) !type(interface)
 				allowWriting(original, false);
 				Graph clone = original.realClone();
 				box.put(clone);
-				next();
+				this.session.next();
 				timerTask(clone).run();
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
@@ -94,7 +94,7 @@ def type(operations) !type(interface)
 			if (box.datalake().receivedMessages() < assistant.blockSize()) return clone;
 			Graph result = doWrite(clone);
 			box.datalake().reset();
-			next();
+			this.session.next();
 			return result;
 		}
 
@@ -108,14 +108,6 @@ def type(operations) !type(interface)
 			box.put(newClone);
 			session.play();
 			return newClone;
-		}
-
-		private void next() {
-			try {
-				session.next();
-			} catch (javax.jms.JMSException e) {
-				logger.error(e.getMessage(), e);
-			}
 		}
 
 		private void allowWriting(Graph original, boolean flag) {
