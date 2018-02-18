@@ -68,18 +68,32 @@ public class Ness {
 
 	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, String... tanks) {
 		try {
-			TopicProducer producer = new TopicProducer(session, REFLOW_PATH);
+			TopicProducer producer = newProducer();
 			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
 			waitUntilReflowSession();
 			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
 			return new ReflowSession() {
-				public void next() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("next"));
+				public void next() {
+					try {
+						final TopicProducer topicProducer = newProducer();
+						topicProducer.produce(createMessageFor("next"));
+						topicProducer.close();
+					} catch (JMSException e) {
+						logger.error(e.getMessage(), e);
+
+					}
 				}
 
-				public void finish() throws JMSException {
-					new TopicProducer(session, REFLOW_PATH).produce(createMessageFor("finish"));
+				public void finish() {
+					try {
+						final TopicProducer topicProducer = newProducer();
+						topicProducer.produce(createMessageFor("finish"));
+						topicProducer.close();
+					} catch (JMSException e) {
+						logger.error(e.getMessage(), e);
+					}
+					topicConsumer.stop();
 				}
 
 				@Override
@@ -97,6 +111,10 @@ public class Ness {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
+	}
+
+	private TopicProducer newProducer() throws JMSException {
+		return new TopicProducer(session, REFLOW_PATH);
 	}
 
 	private void consume(MessageDispatcher dispatcher, javax.jms.Message m) {
@@ -243,9 +261,9 @@ public class Ness {
 
 	public interface ReflowSession {
 
-		void next() throws JMSException;
+		void next();
 
-		void finish() throws JMSException;
+		void finish();
 
 		void play();
 
