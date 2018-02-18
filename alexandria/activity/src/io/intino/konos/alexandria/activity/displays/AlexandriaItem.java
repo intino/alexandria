@@ -147,16 +147,18 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
 		display.target(this.item);
-
-		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, session()));
 
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
-		display.refresh();
+		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(this.item, session()));
+		else {
+			if (catalogLinkStamp.filtered())
+				display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item) item, session()));
+			display.refresh();
+		}
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {

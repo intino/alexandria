@@ -157,16 +157,18 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
 
 		Item source = itemOf(params.item());
-		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
-
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
-		display.refresh();
+		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(source, session()));
+		else {
+			if (catalogLinkStamp.filtered())
+				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
+			display.refresh();
+		}
 	}
 
 	private void notifyOpenItem(String item) {
@@ -222,8 +224,18 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			}
 
 			@Override
-			public List<String> itemsToShow() {
-				return view.onClickRecordEvent().openCatalog().items(item, session());
+			public boolean filtered() {
+				return view.onClickRecordEvent().openCatalog().filtered();
+			}
+
+			@Override
+			public boolean filter(Item target) {
+				return view.onClickRecordEvent().openCatalog().filter(item, target, session());
+			}
+
+			@Override
+			public String itemToShow() {
+				return view.onClickRecordEvent().openCatalog().item(item, session());
 			}
 		}));
 	}

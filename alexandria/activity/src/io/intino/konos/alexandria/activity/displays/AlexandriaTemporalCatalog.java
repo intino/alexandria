@@ -26,7 +26,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		dirty(true);
 		TimeScale scale = range.scale();
 		TimeScale referenceScale = (scale.ordinal() > TimeScale.Day.ordinal()) ? scale : TimeScale.Day;
-		timeScaleHandler().updateRange(range.from(), referenceScale.addTo(range.to(), 1), false);
+		Instant from = range.from();
+		Instant to = referenceScale.addTo(range.to(), 1);
+		TimeRange bounds = element().range(session());
+
+		if (from.isBefore(bounds.from())) from = bounds.to();
+		if (to.isAfter(bounds.to())) to = bounds.to();
+
+		timeScaleHandler().updateRange(from, to, false);
 	}
 
 	@Override
@@ -149,12 +156,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	private TimeScaleHandler buildTimeScaleHandler() {
-		TimeRange range = element().range(session());
 		TimeScaleHandler.Bounds bounds = new TimeScaleHandler.Bounds();
 		List<TimeScale> scales = element().scales();
 		Map<TimeScale, Bounds.Zoom> zoomMap = new HashMap<>();
 
-		bounds.range(new TimeRange(range.from(), range.to(), TimeScale.Minute));
+		bounds.rangeLoader(() -> {
+			TimeRange range = element().range(session());
+			return new TimeRange(range.from(), range.to(), TimeScale.Minute);
+		});
 		bounds.mode(Bounds.Mode.ToTheLast);
 
 		scales.forEach(scale -> zoomMap.put(scale, new Bounds.Zoom().min(1).max(maxZoom())));
@@ -162,7 +171,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 		TimeScaleHandler timeScaleHandler = new TimeScaleHandler(bounds, scales, scales.get(0));
 		timeScaleHandler.availableScales(scales);
-		configureTimeScaleHandler(timeScaleHandler, range, scales);
+		configureTimeScaleHandler(timeScaleHandler, element().range(session()), scales);
 
 		return timeScaleHandler;
 	}

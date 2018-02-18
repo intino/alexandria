@@ -100,6 +100,7 @@ def type(stamp & catalogLink)
 		$common
 
 		[$filter]
+		[$itemLoader]
 	}
 end
 
@@ -184,6 +185,11 @@ def trigger(filter)
 	}
 end
 
+def trigger(itemLoader)
+	public static String item($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+		return null;//TODO return item to open
+	}
+end
 
 def trigger(displayBuilder)
 	public static io.intino.konos.alexandria.activity.displays.AlexandriaStamp buildDisplay($box~Box box, String name, ActivitySession session) {

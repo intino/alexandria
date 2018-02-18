@@ -124,11 +124,18 @@ end
 
 def type(openCatalog)
 	$openCatalogLoader
+	$openCatalogFilter
 end
 
 def trigger(openCatalogLoader)
-	public static java.util.List<String> onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, ActivitySession session) {
-		return null; //return items to show in catalog
+	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, ActivitySession session) {
+		return null; //return item id to show when catalog is opened
+	}
+end
+
+def trigger(openCatalogFilter)
+	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, ActivitySession session) {
+		return false;
 	}
 end
 

@@ -69,7 +69,7 @@ def type(stamp & map)
 end
 
 def type(stamp & cataloglink)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)][.itemLoader($itemLoader)]$common)
 end
 
 def type(stamp & embeddedCatalog)
@@ -193,6 +193,10 @@ end
 
 def trigger(filter)
 	(source, target, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, session)
+end
+
+def trigger(itemLoader)
+	(source, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.item(box, ($moldClass) source, session)
 end
 
 def trigger(editable)
