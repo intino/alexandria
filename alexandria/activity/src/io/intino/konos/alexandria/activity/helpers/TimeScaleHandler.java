@@ -370,16 +370,16 @@ public class TimeScaleHandler {
 	}
 
 	public static class Bounds {
-		private TimeRange range;
+		private TimeRangeLoader loader;
 		private io.intino.konos.alexandria.activity.helpers.Bounds.Mode mode;
 		private Map<TimeScale, io.intino.konos.alexandria.activity.helpers.Bounds.Zoom> zooms;
 
 		public TimeRange range() {
-			return range;
+			return loader.load();
 		}
 
-		public Bounds range(TimeRange range) {
-			this.range = range;
+		public Bounds rangeLoader(TimeRangeLoader loader) {
+			this.loader = loader;
 			return this;
 		}
 
@@ -399,6 +399,10 @@ public class TimeScaleHandler {
 		public Bounds zooms(Map<TimeScale, io.intino.konos.alexandria.activity.helpers.Bounds.Zoom> zooms) {
 			this.zooms = zooms;
 			return this;
+		}
+
+		public interface TimeRangeLoader {
+			TimeRange load();
 		}
 
 		public interface Zoom {

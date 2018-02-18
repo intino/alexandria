@@ -389,17 +389,12 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
 		AlexandriaElementDisplay display = openElement(event.catalog().label());
-		List<String> itemsToShow = event.itemsToShow();
-		if (itemsToShow == null || itemsToShow.size() <= 0)
-			display.closeCurrentItem();
-		else if (itemsToShow.size() == 1)
-			display.openItem(itemsToShow.get(0));
+		String itemToShow = event.itemToShow();
+
+		if (itemToShow != null) display.openItem(itemToShow);
 		else {
 			display.closeCurrentItem();
-			display.filterAndNotify(i -> {
-				Item item = (Item) i;
-				return itemsToShow.contains(item.name()) || itemsToShow.contains(item.id());
-			});
+			if (event.filtered()) display.filterAndNotify(i -> event.filter((Item) i));
 			display.refresh();
 		}
 	}

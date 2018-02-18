@@ -129,7 +129,8 @@ end
 
 def type(openCatalog) trigger(event)
 	openCatalog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenCatalog()
-		[.itemsLoader($openCatalogLoader)]
+		[.itemLoader($openCatalogLoader)]
+		[.filter($openCatalogFilter)]
 		.catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()))
 end
 
@@ -139,6 +140,10 @@ end
 
 def trigger(openCatalogLoader)
 	(element, sender, session) -> $catalog+FirstUpperCase.Events.onOpenCatalog(box, element, ($type) sender, session)
+end
+
+def trigger(openCatalogFilter)
+	(element, sender, item, session) -> $catalog+FirstUpperCase.Events.onOpenCatalogFilter(box, element, ($type) sender, item, session)
 end
 
 def type(operation & download) trigger(operation)

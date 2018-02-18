@@ -89,8 +89,10 @@ public class CatalogRenderer extends PrototypeRenderer {
 	public static Frame frameOf(OpenCatalog openCatalog, Catalog catalog, String box, String modelClass) {
 		final Frame frame = new Frame("event", openCatalog.getClass().getSimpleName());
 		frame.addSlot("catalog", openCatalog.catalog().name$());
-		if (openCatalog.filtered())
+		if (openCatalog.openItem())
 			frame.addSlot("openCatalogLoader", new Frame("openCatalogLoader").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+		if (openCatalog.filtered())
+			frame.addSlot("openCatalogFilter", new Frame("openCatalogFilter").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 		return frame;
 	}
 

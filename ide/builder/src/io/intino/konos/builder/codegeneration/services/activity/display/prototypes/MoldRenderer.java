@@ -122,6 +122,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	private void frameOf(Frame frame, CatalogLink stamp) {
 		frame.addSlot("catalog", stamp.catalog().name$());
 		if (stamp.filtered()) frame.addSlot("filter", baseFrame(stamp).addTypes("filter"));
+		if (stamp.openItem()) frame.addSlot("itemLoader", baseFrame(stamp).addTypes("itemLoader"));
 	}
 
 	private void frameOf(Frame frame, ItemLinks stamp) {

@@ -21,7 +21,7 @@ public interface ItemDisplayProvider {
 	List<Stamp> stamps(Mold mold);
 	Stamp stamp(Mold mold, String stampName);
 
-	AlexandriaElementDisplay openElement(String label);
+	<D extends AlexandriaElementDisplay> D openElement(String label);
 
 	void executeOperation(ElementOperationParameters params, List<Item> items);
 	Resource downloadOperation(ElementOperationParameters params, List<Item> items);
