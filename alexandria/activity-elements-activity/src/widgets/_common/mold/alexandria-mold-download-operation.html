@@ -10,7 +10,7 @@
 
     <template>
         <div class="container">
-            <paper-icon-button id="operation" icon="[[_icon]]" title="[[_title]]" on-tap="_openDownloadOptions"></paper-icon-button>
+            <paper-icon-button style$="[[styles]]" id="operation" icon="[[_icon]]" title="[[_title]]" on-tap="_openDownloadOptions"></paper-icon-button>
         </div>
         <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
             <template is="dom-if" if="[[!title.length]]">
@@ -27,6 +27,9 @@
     <style>
         :host {
             display: block;
+        }
+        :host .container {
+            margin: 0 !important;
         }
         :host a {
             cursor: pointer;
@@ -82,7 +85,8 @@
                 _title : { type: String, observer: "_refreshTitle" },
                 options : Array,
                 icon : { type: String, observer: "_refreshIcon" },
-                _icon : { type: String, value: function() { return "file-download"; } }
+                _icon : { type: String, value: function() { return "file-download"; } },
+                styles : String
             },
 
             attached: function () {

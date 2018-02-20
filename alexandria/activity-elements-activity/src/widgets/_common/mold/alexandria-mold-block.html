@@ -104,7 +104,7 @@
                 </div>
             </template>
             <template is="dom-if" if="[[stamp.isDownloadOperation]]">
-                <alexandria-mold-download-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" on-download-option="_download" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-download-operation>
+                <alexandria-mold-download-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" on-download-option="_download" styles="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-download-operation>
             </template>
             <template is="dom-if" if="[[stamp.isPreviewOperation]]">
                 <alexandria-mold-preview-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" document="[[stamp.properties.document]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-preview-operation>
@@ -186,7 +186,7 @@
             margin-right: 7px;
         }
         :host .description div {
-            margin-right: 3px;
+            /*margin-right: 3px;*/
         }
         :host paper-button {
             color: black;
@@ -290,16 +290,16 @@
             _prepareSliders : function() {
                 this.querySelectorAll("l2t-paper-slider").forEach((slider) => {
                     var picture = $(slider).parents(".picture").get(0);
-                    var height = $(picture).height();
-                    var width = $(picture).width();
-                    var style = "width:" + width + "px;height:" + height + "px !important;";
-                    slider.querySelector("#container").setAttribute("style", style);
-                    slider.querySelectorAll("paper-slide").forEach((slide) => {
-                        slide.setAttribute("style", style);
-                        slide.querySelector("img").setAttribute("style", style);
-                    });
-                    slider.addEventListener("click", (e) => e.stopPropagation());
-                });
+                var height = $(picture).height();
+                var width = $(picture).width();
+                var style = "width:" + width + "px;height:" + height + "px !important;";
+                slider.querySelector("#container").setAttribute("style", style);
+                slider.querySelectorAll("paper-slide").forEach((slide) => {
+                    slide.setAttribute("style", style);
+                slide.querySelector("img").setAttribute("style", style);
+            });
+                slider.addEventListener("click", (e) => e.stopPropagation());
+            });
             },
 
             _openDialog : function(e) {
@@ -393,7 +393,7 @@
 
             _download : function(e) {
                 var name = e.target.getAttribute("name");
-                this.fire("download-item", { stamp: name, option: e.detail });
+                this.fire("download-item", { item: this.item, stamp: name, option: e.detail });
                 e.stopPropagation();
             },
 
