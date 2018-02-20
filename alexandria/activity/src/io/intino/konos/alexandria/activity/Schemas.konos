@@ -60,6 +60,7 @@ Schema DialogReference
 	Attribute height as Integer
 
 Schema DownloadItemParameters
+	Attribute item as Text
 	Attribute stamp as Text
 	Attribute option as Text
 

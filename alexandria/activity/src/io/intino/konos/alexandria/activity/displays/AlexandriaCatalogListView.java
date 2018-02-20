@@ -18,6 +18,7 @@ import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
 import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import io.intino.konos.alexandria.activity.utils.StreamUtil;
@@ -465,8 +466,21 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()))));
 	}
 
-	public ActivityFile downloadItemOperation(DownloadItemParameters value) {
-		return null;
+	public ActivityFile downloadItemOperation(DownloadItemParameters params) {
+		Stamp stamp = provider.stamps(view.mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
+		if (stamp == null) return null;
+		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
+		return new ActivityFile() {
+			@Override
+			public String label() {
+				return resource.label();
+			}
+
+			@Override
+			public InputStream content() {
+				return resource.content();
+			}
+		};
 	}
 
 	public void executeOperation(ElementOperationParameters value) {
