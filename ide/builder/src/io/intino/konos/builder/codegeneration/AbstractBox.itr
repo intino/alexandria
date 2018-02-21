@@ -263,15 +263,14 @@ def trigger(registerSoul)
 	}
 
 	public void registerSoul(String clientId, Soul soul) {
-		[if(owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
 		activitySouls.put(clientId, soul);
 	}
 
 	public void unRegisterSoul(String clientId) {
-		[if(owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
 		activitySouls.remove(clientId);
 	}
-
 end
 
 def trigger(import)
