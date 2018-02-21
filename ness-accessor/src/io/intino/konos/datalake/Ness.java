@@ -245,7 +245,8 @@ public class Ness {
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) logger.error("Session is null");
 			topicConsumer = new TopicConsumer(session(), flowChannel());
-			topicConsumer.listen(flow, flowID);
+			if (flowID != null) topicConsumer.listen(flow, flowID);
+			else topicConsumer.listen(flow);
 			return topicConsumer;
 		}
 
