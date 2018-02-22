@@ -84,6 +84,14 @@ def type(stamp & embeddedDialog)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog().dialogType("$dialogType").dialogBuilder($embeddedDialogBuilder)$common)
 end
 
+def type(stamp & catalogTimeRangeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTimeRangeNavigator()$common)
+end
+
+def type(stamp & catalogTimeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTimeNavigator()$common)
+end
+
 def type(stamp & highlight)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, session))$common)
 end

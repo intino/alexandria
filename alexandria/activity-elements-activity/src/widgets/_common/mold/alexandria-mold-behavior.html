@@ -113,6 +113,8 @@
             stamp.isEmbeddedDisplay = this._isEmbeddedDisplay(moldStamp);
             stamp.isEmbeddedDialog = this._isEmbeddedDialog(moldStamp);
             stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
+            stamp.isCatalogTimeRangeNavigator = this._isCatalogTimeRangeNavigator(moldStamp);
+            stamp.isCatalogTimeNavigator = this._isCatalogTimeNavigator(moldStamp);
             stamp.isLocation = this._isLocation(moldStamp);
             stamp.isBreadcrumbs = this._isBreadcrumbs(moldStamp);
             stamp.isItemLinks = this._isItemLinks(moldStamp);
@@ -328,6 +330,14 @@
 
         _isEmbeddedCatalog : function(stamp) {
             return stamp.shape === "embedded-catalog";
+        },
+
+        _isCatalogTimeRangeNavigator : function(stamp) {
+            return stamp.shape === "catalog-time-range-navigator";
+        },
+
+        _isCatalogTimeNavigator : function(stamp) {
+            return stamp.shape === "catalog-time-navigator";
         },
 
         _isLocation : function(stamp) {

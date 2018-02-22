@@ -36,6 +36,8 @@ Concept Mold extends Display
 				var Catalog catalog
 				var CatalogView[] views
 				var boolean filtered = false
+			sub CatalogTimeRangeNavigator
+			sub CatalogTimeNavigator
 			sub Highlight
 			sub Icon
 				var word:{Polymer Resource Base64} source

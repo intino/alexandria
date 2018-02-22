@@ -49,7 +49,10 @@ Concept Toolbar is decorable component
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
 	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
-	var boolean showAll = false
+
+	Concept:{0..1} TemporalFilter
+		var boolean enabled
+		var boolean visible
 
 Concept CatalogView is component
 	var string label

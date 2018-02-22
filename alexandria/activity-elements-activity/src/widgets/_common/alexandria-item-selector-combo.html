@@ -11,7 +11,7 @@
             <paper-button class="dropdown-trigger" title="[[label]]" on-tap="_opened"><span class="button-text">[[textValue]]</span><iron-icon icon="icons:arrow-drop-down"></iron-icon></paper-button>
             <paper-menu id="menu" class="dropdown-content" on-iron-select="_onItemSelected" selected$="[[_selected]]" vertical-align="bottom">
                 <template is="dom-repeat" items="[[items]]">
-                    <paper-item name$="[[item.name]]">{{item.label}}</paper-item>
+                    <paper-item name$="[[item.name]]">[[item.label]]</paper-item>
                 </template>
             </paper-menu>
         </paper-menu-button>

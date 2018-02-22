@@ -117,4 +117,10 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 		super.navigateMain();
 	}
 
+	@Override
+	public <N extends AlexandriaNavigator> void configureTemporalNavigator(N navigator) {
+		TimeScaleHandler timeScaleHandler = timeScaleHandler();
+		navigator.timeScaleHandler(timeScaleHandler);
+		configureNavigatorDisplay((AlexandriaTimeNavigator) navigator, timeScaleHandler);
+	}
 }

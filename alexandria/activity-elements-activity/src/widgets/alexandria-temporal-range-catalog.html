@@ -26,7 +26,7 @@
             <div class="main flex">
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
-                <cotton-zombie display="AlexandriaTimeRangeNavigator" widget="AlexandriaTimeRangeNavigator"></cotton-zombie>
+                <cotton-zombie display="AlexandriaTimeRangeNavigator" widget="AlexandriaTimeRangeNavigator" object$="[[display.id]]"></cotton-zombie>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
