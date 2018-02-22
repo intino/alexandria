@@ -1,0 +1,72 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+
+<dom-module id="alexandria-mold-operation-trigger">
+
+    <template>
+        <div class$="mode [[mode]]">
+            <paper-icon-button class="option icon" style$="[[styles]]" id="iconOperation" icon="[[_icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button class="option button" style$="[[styles]]" on-tap="_execute">[[_title]]</paper-button>
+            <a class="option link" style$="[[styles]]" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host .mode .option {
+            display: none;
+        }
+        :host .mode.icon .option.icon {
+            display: block;
+        }
+        :host .mode.button .option.button {
+            display: block;
+        }
+        :host .mode.link .option.link {
+            display: block;
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldOperationTriggerDictionary = {
+            es: {
+                Execute: "ejecutar..."
+            },
+            en: {
+                Execute: "execute..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-operation-trigger',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : String,
+                _title : { type: String, observer: "_refreshTitle" },
+                icon : String,
+                styles : String,
+                mode : String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldOperationTriggerDictionary);
+            },
+
+            _refreshTitle : function() {
+                this._title = this.title != null && this.title != "" ? this.title : this.Execute;
+            },
+
+            _execute : function(e) {
+                this.fire("execute");
+            }
+
+        });
+    </script>
+
+</dom-module>

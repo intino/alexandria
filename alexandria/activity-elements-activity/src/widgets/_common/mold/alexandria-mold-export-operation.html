@@ -5,11 +5,12 @@
 <link rel="import" href="../../../../lib/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../lib/paper-item/paper-item.html">
 <link rel="import" href="../alexandria-export-dialog.html">
+<link rel="import" href="alexandria-mold-operation-trigger.html">
 
 <dom-module id="alexandria-mold-export-operation">
 
     <template>
-        <paper-icon-button id="operation" icon="[[_icon]]" title$="[[_title]]" on-tap="_openExportOptions"></paper-icon-button>
+        <alexandria-mold-operation-trigger id="operation" title="[[_title]]" icon="[[_icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_openExportOptions"></alexandria-mold-operation-trigger>
         <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
             <template is="dom-if" if="[[!title.length]]">
                 <h2>[[Export]]</h2>
@@ -77,7 +78,9 @@
                 option : String,
                 options : { type: Array, observer: "_selectOption" },
                 icon : { type: String, observer: "_refreshIcon" },
-                _icon : { type: String, value: function() { return "archive"; } }
+                _icon : { type: String, value: function() { return "archive"; } },
+                styles : String,
+                mode : String
             },
 
             attached: function () {
