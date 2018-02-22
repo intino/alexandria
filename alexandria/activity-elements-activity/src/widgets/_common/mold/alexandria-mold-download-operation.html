@@ -5,12 +5,13 @@
 <link rel="import" href="../../../../lib/paper-menu/paper-menu.html">
 <link rel="import" href="../../../../lib/paper-item/paper-item.html">
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="alexandria-mold-operation-trigger.html">
 
 <dom-module id="alexandria-mold-download-operation">
 
     <template>
         <div class="container">
-            <paper-icon-button style$="[[styles]]" id="operation" icon="[[_icon]]" title="[[_title]]" on-tap="_openDownloadOptions"></paper-icon-button>
+            <alexandria-mold-operation-trigger id="operation" title="[[_title]]" icon="[[_icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_openDownloadOptions"></alexandria-mold-operation-trigger>
         </div>
         <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
             <template is="dom-if" if="[[!title.length]]">
@@ -86,7 +87,8 @@
                 options : Array,
                 icon : { type: String, observer: "_refreshIcon" },
                 _icon : { type: String, value: function() { return "file-download"; } },
-                styles : String
+                styles : String,
+                mode : String
             },
 
             attached: function () {
