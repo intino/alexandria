@@ -17,6 +17,8 @@
 <link rel="import" href="../../../../lib/paper-rating/paper-rating.html">
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../alexandriatimerangenavigator/alexandria-pocket-time-range-navigator.html">
+<link rel="import" href="../../alexandriatimenavigator/alexandria-pocket-time-navigator.html">
 <link rel="import" href="../../alexandria-page-container.html">
 <link rel="import" href="alexandria-mold-hyperlink.html">
 <link rel="import" href="alexandria-mold-hyperlinks.html">
@@ -91,6 +93,12 @@
             </template>
             <template is="dom-if" if="[[stamp.isEmbeddedDialog]]">
                 <div class="display-layer" name$="[[stamp.properties.dialogType]]" id$="[[item]][[stamp.properties.dialogType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
+            <template is="dom-if" if="[[stamp.isCatalogTimeRangeNavigator]]">
+                <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaPocketTimeRangeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
+            <template is="dom-if" if="[[stamp.isCatalogTimeNavigator]]">
+                <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaPocketTimeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isBreadcrumbs]]">
                 <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
@@ -340,15 +348,18 @@
             _createZombiePageLayers : function() {
                 this.querySelectorAll(".page-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                this._addZombieLayer(layer, "PageContainer").style.height = "100%";
+                this._addZombieLayer(layer, "PageContainer", "PageContainer").style.height = "100%";
             });
             },
 
             _createZombieDisplayLayers : function() {
                 this.querySelectorAll(".display-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                this._addZombieLayer(layer, layer.getAttribute("name"), layer.getAttribute("id"));
-            });
+                    var name = layer.getAttribute("name");
+                    var widget = layer.getAttribute("widget");
+                    widget = widget != null && widget != "" ? widget : name;
+                    this._addZombieLayer(layer, layer.getAttribute("name"), widget, layer.getAttribute("id"));
+                });
             },
 
             _listenToItemLinks : function() {
@@ -363,21 +374,21 @@
             _addSnippets : function() {
                 this.querySelectorAll(".snippet-layer").forEach((layer) => {
                     var content = $(layer.querySelector(".text")).text();
-                var contentLayer = layer.querySelector(".snippet-content");
-                if (contentLayer == null) {
-                    contentLayer = document.createElement("div");
-                    layer.appendChild(contentLayer);
-                }
-                contentLayer.className = "snippet-content";
-                contentLayer.innerHTML = content;
-                layer.style.display = "block";
-            });
+                    var contentLayer = layer.querySelector(".snippet-content");
+                    if (contentLayer == null) {
+                        contentLayer = document.createElement("div");
+                        layer.appendChild(contentLayer);
+                    }
+                    contentLayer.className = "snippet-content";
+                    contentLayer.innerHTML = content;
+                    layer.style.display = "block";
+                });
             },
 
-            _addZombieLayer : function(layer, name, object) {
+            _addZombieLayer : function(layer, name, widget, object) {
                 var zombie = document.createElement("cotton-zombie");
                 zombie.setAttribute("display", name);
-                zombie.setAttribute("widget", name);
+                zombie.setAttribute("widget", widget);
                 if (object != null) zombie.setAttribute("object", object);
                 layer.appendChild(zombie);
                 return zombie;

@@ -17,7 +17,8 @@ public class TemporalCatalog extends Catalog {
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
 	private int maxZoom = 5;
-	private boolean showAll = false;
+	private boolean temporalFilterEnabled = false;
+	private boolean temporalFilterVisible = false;
 	private Type type = Type.Time;
 
 	public enum Type {
@@ -105,12 +106,21 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public boolean showAll() {
-		return showAll;
+	public boolean temporalFilterEnabled() {
+		return temporalFilterEnabled;
 	}
 
-	public TemporalCatalog showAll(boolean showAll) {
-		this.showAll = showAll;
+	public TemporalCatalog temporalFilterEnabled(boolean value) {
+		this.temporalFilterEnabled = value;
+		return this;
+	}
+
+	public boolean temporalFilterVisible() {
+		return temporalFilterVisible;
+	}
+
+	public TemporalCatalog temporalFilterVisible(boolean value) {
+		this.temporalFilterVisible = value;
 		return this;
 	}
 

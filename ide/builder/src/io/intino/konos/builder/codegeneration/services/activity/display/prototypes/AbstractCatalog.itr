@@ -34,7 +34,7 @@ def type(catalog & gen)
     		io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog();
 			catalog.objectsLoader((scope, condition[, $mode+timerange], session) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], session));[
 			$mode+setMode][
-            $showAll][
+            $temporalFilter][
 			$range][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
@@ -74,8 +74,8 @@ def trigger(setMode)
 	catalog.type(TemporalCatalog.Type.$value+firstUpperCase);
 end
 
-def trigger(showAll)
-	catalog.showAll($value);
+def trigger(temporalFilter)
+	catalog.temporalFilterEnabled($enabled).temporalFilterVisible($visible);
 end
 
 def trigger(range)

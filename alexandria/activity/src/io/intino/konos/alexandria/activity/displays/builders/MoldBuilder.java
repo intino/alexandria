@@ -75,6 +75,8 @@ public class MoldBuilder {
         if (stamp instanceof EmbeddedDisplay) return "embedded-display";
         if (stamp instanceof EmbeddedDialog) return "embedded-dialog";
         if (stamp instanceof EmbeddedCatalog) return "embedded-catalog";
+        if (stamp instanceof CatalogTimeRangeNavigator) return "catalog-time-range-navigator";
+        if (stamp instanceof CatalogTimeNavigator) return "catalog-time-navigator";
         if (stamp instanceof Map) return "map";
         return "";
     }

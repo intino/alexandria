@@ -13,13 +13,12 @@
 <dom-module id="alexandria-pocket-time-navigator">
 
     <template>
-        <div class="field">
-            <label>[[Scale]]</label>
-            <div><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" boxed></alexandria-item-selector-combo></div>
-        </div>
-        <div class="field">
-            <label>[[Date]]</label>
-            <alexandria-date-selector id="dateSelector" date="[[_date]]" scale="[[_selectedScale]]" label="" on-change="_selectDate" short></alexandria-date-selector>
+        <div class="layout horizontal">
+            <div><a class="previous" disabled$="[[!_canPrevious]]" on-tap="_previous">&lt;&nbsp;[[Previous]]</a></div>
+            <div class="field">
+                <div><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" boxed></alexandria-item-selector-combo></div>
+            </div>
+            <div><a class="next" disabled$="[[!_canNext]]" on-tap="_next">[[Next]]&nbsp;&gt;</a></div>
         </div>
     </template>
 
@@ -27,6 +26,27 @@
         :host {
             display: block;
             position: relative;
+        }
+        :host a {
+            background: var(--default-primary-color);
+            padding: 4px 10px;
+            margin: 1px 10px;
+            display: inline-block;
+            border-radius: 2px;
+            color: white;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+        :host a[disabled] {
+            background-color: var(--disabled-text-color);
+            cursor: default;
+        }
+        :host .previous {
+            @apply(--alexandria-pocket-time-navigator-previous);
+        }
+        :host .next {
+            @apply(--alexandria-pocket-time-navigator-next);
         }
         :host alexandria-item-selector-combo {
             display: block;
@@ -50,11 +70,15 @@
         const AlexandriaPocketTimeNavigatorDictionary = {
             es: {
                 Scale: 'escala',
-                Date: 'fecha'
+                Date: 'fecha',
+                Previous : 'anterior',
+                Next : 'siguiente'
             },
             en: {
                 Scale: 'scale',
-                Date: 'date'
+                Date: 'date',
+                Previous : 'previous',
+                Next : 'next'
             }
         };
 
@@ -62,10 +86,10 @@
             is: 'alexandria-pocket-time-navigator',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
-                         CottonBehaviors.PushBehavior,
-                         CottonBehaviors.TranslatorBehavior,
-                         AlexandriaTimeNavigatorBehaviors.Requester,
-                         AlexandriaTimeNavigatorBehaviors.NotifierListener ],
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeNavigatorBehaviors.Requester,
+                AlexandriaTimeNavigatorBehaviors.NotifierListener ],
 
             properties : {
                 _olapRange : Object,
@@ -73,7 +97,9 @@
                 _slider : { type: Object },
                 _maxDate : Object,
                 _selectedScale : String,
-                _selectedScaleEntity : Object
+                _selectedScaleEntity : Object,
+                _canPrevious : Boolean,
+                _canNext : Boolean
             },
 
             attached : function() {
@@ -106,7 +132,9 @@
                 this._refresh();
             },
 
-            _refreshState : function(date) {
+            _refreshState : function(state) {
+                this._canPrevious = state.canPrevious;
+                this._canNext = state.canNext;
             },
 
             _refresh : function() {
@@ -118,8 +146,17 @@
 
             _notifyScaleSelected : function(e) {
                 this.selectScale(e.detail);
-            }
+            },
 
+            _previous : function() {
+                if (!this._canPrevious) return;
+                this.previousDate();
+            },
+
+            _next : function() {
+                if (!this._canNext) return;
+                this.nextDate();
+            }
         });
     </script>
 </dom-module>

@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.displays.providers.TemporalCatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.helpers.Bounds;
 import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> {
+public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> implements TemporalCatalogViewDisplayProvider {
 	private N navigatorDisplay = null;
 
 	public AlexandriaTemporalCatalog(Box box, N navigatorDisplay) {
@@ -77,7 +78,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.view().name())).findFirst().orElse(null);
 			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
 				hideNavigator();
-			else if (!element().showAll())
+			else if (isNavigatorVisible())
 				showNavigator();
 		});
 	}
@@ -136,8 +137,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
-		navigatorDisplay.personify();
-		if (element().showAll()) hideNavigator();
+		navigatorDisplay.personifyOnce(id());
+		if (!isNavigatorVisible()) hideNavigator();
 		loadTimezoneOffset();
 	}
 
@@ -196,4 +197,11 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void hideNavigator();
 	protected abstract void loadTimezoneOffset();
 
+	private boolean isNavigatorVisible() {
+		return element().temporalFilterVisible();
+	}
+
+	protected boolean showAll() {
+		return !element().temporalFilterEnabled();
+	}
 }
