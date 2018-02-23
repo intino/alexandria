@@ -3,14 +3,14 @@
 <link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
 <link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="../_common/alexandria-item-selector-combo.html">
-<link rel="import" href="../_common/alexandria-date-selector.html">
-<link rel="import" href="../_common/alexandria-scale-selector-slider.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../_common/alexandria-item-selector-combo.html"/>
+<link rel="import" href="../_common/alexandria-date-selector.html"/>
 
 <script src="requester.js"></script>
 <script src="notifier-listener.js"></script>
 
-<dom-module id="alexandria-pocket-time-navigator">
+<dom-module id="alexandria-stamp-time-range-navigator">
 
     <template>
         <div class="field">
@@ -18,8 +18,12 @@
             <div><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" boxed></alexandria-item-selector-combo></div>
         </div>
         <div class="field">
-            <label>[[Date]]</label>
-            <alexandria-date-selector id="dateSelector" date="[[_date]]" scale="[[_selectedScale]]" label="" on-change="_selectDate" short></alexandria-date-selector>
+            <label>[[RangeMin]]</label>
+            <alexandria-date-selector id="minDateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateFrom" short></alexandria-date-selector>
+        </div>
+        <div class="field">
+            <label>[[RangeMax]]</label>
+            <alexandria-date-selector id="maxDateSelector" date="[[_range.max]]" scale="[[_selectedScale]]" label="" on-change="_updateTo" short></alexandria-date-selector>
         </div>
     </template>
 
@@ -47,73 +51,70 @@
 
     <script>
 
-        const AlexandriaPocketTimeNavigatorDictionary = {
+        const AlexandriaStampTimeRangeNavigatorDictionary = {
             es: {
                 Scale: 'escala',
-                Date: 'fecha'
+                RangeMin: 'desde',
+                RangeMax: 'hasta'
             },
             en: {
                 Scale: 'scale',
-                Date: 'date'
+                RangeMin: 'from',
+                RangeMax: 'to'
             }
         };
 
         Polymer({
-            is: 'alexandria-pocket-time-navigator',
+            is: 'alexandria-stamp-time-range-navigator',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
-                CottonBehaviors.PushBehavior,
-                CottonBehaviors.TranslatorBehavior,
-                AlexandriaTimeNavigatorBehaviors.Requester,
-                AlexandriaTimeNavigatorBehaviors.NotifierListener ],
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         AlexandriaTimeRangeNavigatorBehaviors.Requester,
+                         AlexandriaTimeRangeNavigatorBehaviors.NotifierListener ],
 
             properties : {
-                _olapRange : Object,
-                _internalDate : { type: Object, value: function() { return new Date(); } },
-                _slider : { type: Object },
-                _maxDate : Object,
+                _zoomRange: Object,
+                _widget: Object,
+                _range : Object,
+                _scaleList : Array,
                 _selectedScale : String,
                 _selectedScaleEntity : Object
             },
 
             attached : function() {
-                this.translate(AlexandriaPocketTimeNavigatorDictionary);
+                this.translate(AlexandriaStampTimeRangeNavigatorDictionary);
                 this.listenToDisplay();
-            },
-
-            getDate : function() {
-                return this._dateObject;
             },
 
             _refreshScales : function(scaleList) {
                 this._scaleList = scaleList;
             },
 
-            _refreshScale : function(scale) {
-                this._selectedScale = scale;
-                this._selectedScaleEntity = { name: scale };
-                this._refresh();
+            _refreshRange : function(range) {
+                this._range = range;
+                this._selectedScale = range.scale;
+                this._selectedScaleEntity = { name: range.scale };
+            },
+
+            _min : function (range) {
+                if (range.scale == "FiffteenMinutes") return range.min-(60000);
+                return range.min;
             },
 
             _refreshOlapRange : function(range) {
-                this._olapRange = range;
-                this._refresh();
             },
 
-            _refreshDate : function(date) {
-                this._date = date;
-                this._dateObject = new Date(date);
-                this._refresh();
+            _refreshZoomRange : function(range) {
+                this._zoomRange = range;
             },
 
-            _refreshState : function(date) {
+            _updateFrom : function(event) {
+                this.selectFrom(event.detail.date);
             },
 
-            _refresh : function() {
-            },
-
-            _selectDate : function(event) {
-                this.selectDate(event.detail.date);
+            _updateTo : function(event) {
+                this.selectTo(event.detail.date);
             },
 
             _notifyScaleSelected : function(e) {

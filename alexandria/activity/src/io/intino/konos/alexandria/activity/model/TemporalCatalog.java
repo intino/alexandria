@@ -17,8 +17,8 @@ public class TemporalCatalog extends Catalog {
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
 	private int maxZoom = 5;
-	private boolean temporalFilterEnabled = false;
-	private boolean temporalFilterVisible = false;
+	private boolean temporalFilterEnabled = true;
+	private boolean temporalFilterVisible = true;
 	private Type type = Type.Time;
 
 	public enum Type {

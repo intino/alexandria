@@ -121,19 +121,19 @@ def type(stamp & picture)
 end
 
 def type(stamp & openDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")][.confirmText("$confirmText")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")][.confirmText("$confirmText")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & previewOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")][.confirmText("$confirmText")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")][.confirmText("$confirmText")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -143,7 +143,6 @@ def type(stamp & exportOperation)
 		[.options(java.util.Arrays.asList($options+quoted...[, ]))]
 		.execution($exportexecution)
 		[.alexandriaIcon("$alexandriaIcon")]
-		[.confirmText("$confirmText")]
 		.mode("$mode")$common)
 end
 

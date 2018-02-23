@@ -11,7 +11,7 @@
 
     <template>
         <div class="container">
-            <alexandria-mold-operation-trigger id="operation" title="[[_title]]" icon="[[_icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_openDownloadOptions"></alexandria-mold-operation-trigger>
+            <alexandria-mold-operation-trigger id="operation" title="[[_title]]" icon="[[icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_openDownloadOptions"></alexandria-mold-operation-trigger>
         </div>
         <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
             <template is="dom-if" if="[[!title.length]]">
@@ -82,11 +82,10 @@
             behaviors: [ CottonBehaviors.TranslatorBehavior ],
 
             properties : {
-                title : String,
-                _title : { type: String, observer: "_refreshTitle" },
+                title : { type: String, observer: "_refreshTitle" },
+                _title : String,
                 options : Array,
-                icon : { type: String, observer: "_refreshIcon" },
-                _icon : { type: String, value: function() { return "file-download"; } },
+                icon : String,
                 styles : String,
                 mode : String
             },
@@ -106,11 +105,6 @@
 
             _refreshTitle : function() {
                 this._title = this.title != null && this.title != "" ? this.title : this.Download;
-            },
-
-            _refreshIcon : function() {
-                if (this.icon == null) return;
-                this._icon = this.icon;
             },
 
             _download : function(e) {

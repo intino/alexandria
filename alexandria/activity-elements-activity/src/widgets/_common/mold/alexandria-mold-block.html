@@ -15,10 +15,9 @@
 <link rel="import" href="../../../../lib/iron-icons/communication-icons.html">
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../lib/paper-rating/paper-rating.html">
-<link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
-<link rel="import" href="../../alexandriatimerangenavigator/alexandria-pocket-time-range-navigator.html">
-<link rel="import" href="../../alexandriatimenavigator/alexandria-pocket-time-navigator.html">
+<link rel="import" href="../../alexandriatimerangenavigator/alexandria-stamp-time-range-navigator.html">
+<link rel="import" href="../../alexandriatimenavigator/alexandria-stamp-time-navigator.html">
 <link rel="import" href="../../alexandria-page-container.html">
 <link rel="import" href="alexandria-mold-hyperlink.html">
 <link rel="import" href="alexandria-mold-hyperlinks.html">
@@ -26,6 +25,7 @@
 <link rel="import" href="alexandria-mold-download-operation.html">
 <link rel="import" href="alexandria-mold-export-operation.html">
 <link rel="import" href="alexandria-mold-preview-operation.html">
+<link rel="import" href="alexandria-mold-task-operation.html">
 <link rel="import" href="alexandria-mold-catalog.html">
 <link rel="import" href="alexandria-mold-editor.html">
 <link rel="import" href="alexandria-mold-card-wallet.html">
@@ -93,10 +93,10 @@
                 <div class="display-layer" name$="[[stamp.properties.dialogType]]" id$="[[item]][[stamp.properties.dialogType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isCatalogTimeRangeNavigator]]">
-                <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaPocketTimeRangeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+                <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaStampTimeRangeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isCatalogTimeNavigator]]">
-                <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaPocketTimeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+                <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaStampTimeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isBreadcrumbs]]">
                 <cotton-breadcrumbs items="[[stamp.properties.breadcrumbs]]" on-item-selected="_navigateItem" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></cotton-breadcrumbs>
@@ -119,10 +119,24 @@
                 <alexandria-mold-preview-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" document="[[stamp.properties.document]]" icon="[[stamp.properties.alexandriaIcon]]" mode="[[stamp.properties.mode]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-preview-operation>
             </template>
             <template is="dom-if" if="[[stamp.isExportOperation]]">
-                <alexandria-mold-export-operation name$="[[stamp.name]]" title="[[stamp.properties.title]]" options="[[stamp.properties.options]]" icon="[[stamp.properties.alexandriaIcon]]" mode="[[stamp.properties.mode]]" from="[[stamp.properties.from]]" to="[[stamp.properties.to]]" on-export-option="_export" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-export-operation>
+                <alexandria-mold-export-operation name$="[[stamp.name]]"
+                                                  title="[[stamp.properties.title]]"
+                                                  options="[[stamp.properties.options]]"
+                                                  icon="[[stamp.properties.alexandriaIcon]]"
+                                                  mode="[[stamp.properties.mode]]"
+                                                  from="[[stamp.properties.from]]"
+                                                  to="[[stamp.properties.to]]"
+                                                  on-export-option="_export"
+                                                  style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></alexandria-mold-export-operation>
             </template>
             <template is="dom-if" if="[[stamp.isTaskOperation]]">
-                <alexandria-mold-operation-trigger title="[[stamp.label]]" stamp$="[[stamp.name]]" on-execute="_executeTask" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" icon="[[stamp.properties.alexandriaIcon]]" mode="[[stamp.properties.mode]]"></alexandria-mold-operation-trigger>
+                <alexandria-mold-task-operation title="[[stamp.label]]"
+                                                stamp$="[[stamp.name]]"
+                                                on-do-task="_executeTask"
+                                                style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"
+                                                icon="[[stamp.properties.alexandriaIcon]]"
+                                                mode="[[stamp.properties.mode]]"
+                                                confirm="[[stamp.properties.confirm]]"></alexandria-mold-task-operation>
             </template>
             <template is="dom-if" if="[[stamp.isSnippet]]">
                 <div hidden$="[[!stamp.value.length]]" style$="display:none;[[stamp.properties.defaultStyle]];[[stamp.properties.style]]" class="snippet-layer">
@@ -196,13 +210,6 @@
         }
         :host .description div {
             /*margin-right: 3px;*/
-        }
-        :host paper-button {
-            color: black;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            padding: 5px;
-            background: none;
         }
         :host .picture {
             position: relative;
@@ -356,11 +363,11 @@
             _createZombieDisplayLayers : function() {
                 this.querySelectorAll(".display-layer").forEach((layer) => {
                     if (layer.querySelectorAll("cotton-zombie").length > 0) return;
-                    var name = layer.getAttribute("name");
-                    var widget = layer.getAttribute("widget");
-                    widget = widget != null && widget != "" ? widget : name;
-                    this._addZombieLayer(layer, layer.getAttribute("name"), widget, layer.getAttribute("id"));
-                });
+                var name = layer.getAttribute("name");
+                var widget = layer.getAttribute("widget");
+                widget = widget != null && widget != "" ? widget : name;
+                this._addZombieLayer(layer, layer.getAttribute("name"), widget, layer.getAttribute("id"));
+            });
             },
 
             _listenToItemLinks : function() {
@@ -375,15 +382,15 @@
             _addSnippets : function() {
                 this.querySelectorAll(".snippet-layer").forEach((layer) => {
                     var content = $(layer.querySelector(".text")).text();
-                    var contentLayer = layer.querySelector(".snippet-content");
-                    if (contentLayer == null) {
-                        contentLayer = document.createElement("div");
-                        layer.appendChild(contentLayer);
-                    }
-                    contentLayer.className = "snippet-content";
-                    contentLayer.innerHTML = content;
-                    layer.style.display = "block";
-                });
+                var contentLayer = layer.querySelector(".snippet-content");
+                if (contentLayer == null) {
+                    contentLayer = document.createElement("div");
+                    layer.appendChild(contentLayer);
+                }
+                contentLayer.className = "snippet-content";
+                contentLayer.innerHTML = content;
+                layer.style.display = "block";
+            });
             },
 
             _addZombieLayer : function(layer, name, widget, object) {
