@@ -161,8 +161,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
-		}
-		else if (operation.i$(DownloadOperation.class)) {
+		} else if (operation.i$(DownloadOperation.class)) {
 			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
 			frame.addSlot("downloadExecution", baseFrame(operation));
 		} else if (operation.i$(ExportOperation.class)) {
