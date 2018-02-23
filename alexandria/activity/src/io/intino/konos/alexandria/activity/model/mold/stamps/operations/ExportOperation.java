@@ -16,6 +16,10 @@ public class ExportOperation extends Operation<String> {
 	private Instant to = Instant.now(Clock.systemUTC()).plus(1, ChronoUnit.DAYS);
 	private Execution execution;
 
+	public ExportOperation() {
+		this.alexandriaIcon("icons:archive");
+	}
+
 	public List<String> options() {
 		return this.options;
 	}

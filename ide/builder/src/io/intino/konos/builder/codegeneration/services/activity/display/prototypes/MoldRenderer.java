@@ -158,8 +158,6 @@ public class MoldRenderer extends PrototypeRenderer {
 		frame.addTypes(operation.getClass().getSimpleName()).addSlot("mode", operation.mode().toString());
 		if (operation.alexandriaIcon() != null)
 			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
-		if (operation.confirmText() != null)
-			frame.addSlot("confirmText", operation.confirmText());
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
@@ -175,7 +173,11 @@ public class MoldRenderer extends PrototypeRenderer {
 			if (export.to() != null) frame.addSlot("to", export.to().toEpochMilli());
 		} else if (operation.i$(PreviewOperation.class)) {
 			frame.addSlot("previewExecution", baseFrame(operation));
-		} else if (operation.i$(TaskOperation.class)) frame.addSlot("taskExecution", baseFrame(operation));
+		} else if (operation.i$(TaskOperation.class)) {
+			frame.addSlot("taskExecution", baseFrame(operation));
+			String confirmText = operation.a$(TaskOperation.class).confirmText();
+			if (confirmText != null) frame.addSlot("confirmText", confirmText);
+		}
 	}
 
 	private void frameOf(Frame frame, List<TreeItem> treeItems) {

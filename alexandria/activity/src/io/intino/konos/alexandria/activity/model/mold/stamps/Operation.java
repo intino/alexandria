@@ -5,8 +5,7 @@ import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public abstract class Operation<O> extends Stamp<O> {
 	private Mode mode = Mode.Button;
-	private String alexandriaIcon;
-	private String confirmText;
+	private String alexandriaIcon = "icons:execute";
 
 	public String alexandriaIcon() {
 		return this.alexandriaIcon;
@@ -29,15 +28,6 @@ public abstract class Operation<O> extends Stamp<O> {
 
 	public Operation alexandriaIcon(String alexandriaIcon) {
 		this.alexandriaIcon = alexandriaIcon;
-		return this;
-	}
-
-	public String confirmText() {
-		return this.confirmText;
-	}
-
-	public Operation confirmText(String confirmText) {
-		this.confirmText = confirmText;
 		return this;
 	}
 

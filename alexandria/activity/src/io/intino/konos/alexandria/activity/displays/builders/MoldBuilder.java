@@ -48,6 +48,7 @@ public class MoldBuilder {
         addOperationProperties(propertyList, stamp);
         addExportOperationProperties(propertyList, stamp);
         addPreviewOperationProperties(propertyList, stamp);
+        addTaskOperationProperties(propertyList, stamp);
         addMapProperties(propertyList, stamp);
         result.propertyList(propertyList);
 
@@ -116,7 +117,6 @@ public class MoldBuilder {
         if (! (stamp instanceof Operation)) return;
         Operation previewStamp = (Operation)stamp;
         propertyList.add(shapeProperty("alexandriaIcon", previewStamp.alexandriaIcon()));
-        propertyList.add(shapeProperty("confirm", previewStamp.confirmText()));
         propertyList.add(shapeProperty("mode", previewStamp.mode().toString()));
     }
 
@@ -143,6 +143,12 @@ public class MoldBuilder {
         PreviewOperation previewStamp = (PreviewOperation)stamp;
         propertyList.add(shapeProperty("title", previewStamp.label()));
         propertyList.add(shapeProperty("alexandriaIcon", previewStamp.alexandriaIcon()));
+    }
+
+    private static void addTaskOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof TaskOperation)) return;
+        TaskOperation taskStamp = (TaskOperation)stamp;
+        propertyList.add(shapeProperty("confirm", taskStamp.confirmText()));
     }
 
     private static void addMapProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {

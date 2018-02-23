@@ -2,12 +2,13 @@
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../lib/paper-button/paper-button.html">
 
 <dom-module id="alexandria-mold-operation-trigger">
 
     <template>
         <div class$="mode [[mode]]">
-            <paper-icon-button class="option icon" style$="[[styles]]" id="iconOperation" icon="[[_icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-icon-button class="option icon" style$="[[styles]]" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
             <paper-button class="option button" style$="[[styles]]" on-tap="_execute">[[_title]]</paper-button>
             <a class="option link" style$="[[styles]]" title="[[_title]]" on-tap="_execute">[[_title]]</a>
         </div>
@@ -16,6 +17,16 @@
     <style>
         :host {
             display: block;
+        }
+        :host paper-button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 5px;
+            text-align: center;
+        }
+        :host a {
+            color: var(--default-primary-color);
+            cursor: pointer;
         }
         :host .mode .option {
             display: none;
@@ -47,8 +58,8 @@
             behaviors: [ CottonBehaviors.TranslatorBehavior ],
 
             properties : {
-                title : String,
-                _title : { type: String, observer: "_refreshTitle" },
+                title : { type: String, observer: "_refreshTitle" },
+                _title : String,
                 icon : String,
                 styles : String,
                 mode : String
