@@ -36,7 +36,9 @@ Concept Mold extends Display
 				var Catalog catalog
 				var CatalogView[] views
 				var boolean filtered = false
+			sub CatalogTimeRange
 			sub CatalogTimeRangeNavigator
+			sub CatalogTime
 			sub CatalogTimeNavigator
 			sub Highlight
 			sub Icon

@@ -390,7 +390,9 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private void createTemporalCatalogNavigators(String id) {
+		catalogTimeRanges().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
 		catalogTimeRangeNavigators().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
+		catalogTimes().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
 		catalogTimeNavigators().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
 	}
 
@@ -401,6 +403,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		navigator.refresh();
 	}
 
+	private Map<CatalogTimeRange, AlexandriaTimeRangeNavigator> catalogTimeRanges() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeRange).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeRange)s, s -> new AlexandriaTimeRangeNavigator(box)));
+	}
+
 	private Map<CatalogTimeRangeNavigator, AlexandriaTimeRangeNavigator> catalogTimeRangeNavigators() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeRangeNavigator).collect(toList());
 		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeRangeNavigator)s, s -> new AlexandriaTimeRangeNavigator(box)));
@@ -409,6 +416,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private Map<CatalogTimeNavigator, AlexandriaTimeNavigator> catalogTimeNavigators() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeNavigator).collect(toList());
 		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeNavigator)s, s -> new AlexandriaTimeNavigator(box)));
+	}
+
+	private Map<CatalogTime, AlexandriaTimeNavigator> catalogTimes() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTime).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTime)s, s -> new AlexandriaTimeNavigator(box)));
 	}
 
 }

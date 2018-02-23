@@ -55,8 +55,9 @@ public class AlexandriaTimeNavigator extends AlexandriaNavigator<AlexandriaTimeN
 
 	public void selectScale(String value) {
 		TimeScale scale = TimeScale.valueOf(value);
-		timeScaleHandler().updateInstant(scale.normalise(date), scale);
-		notifyMove(scale.normalise(date));
+		updateDate(scale, date);
+		timeScaleHandler().updateInstant(date, scale);
+		notifyMove(date);
 	}
 
 	public Instant date() {
@@ -64,8 +65,15 @@ public class AlexandriaTimeNavigator extends AlexandriaNavigator<AlexandriaTimeN
 	}
 
 	public void selectDate(Instant date) {
-		timeScaleHandler().updateInstant(scale.normalise(date), scale);
-		notifyMove(scale.normalise(date));
+		updateDate(scale, date);
+		timeScaleHandler().updateInstant(this.date, scale);
+		notifyMove(this.date);
+	}
+
+	public void lastDate() {
+		updateDate(scale, timeScaleHandler().boundsRange().to());
+		timeScaleHandler().updateInstant(this.date, scale);
+		notifyMove(this.date);
 	}
 
 	public void previousDate() {
@@ -157,8 +165,16 @@ public class AlexandriaTimeNavigator extends AlexandriaNavigator<AlexandriaTimeN
 
 	private void refreshScale(TimeRange timeRange) {
 		scale = timeRange.scale();
+		notifier.refreshDate(date);
 		notifier.refreshScale(scale.name());
 		notifier.refreshState(state());
+	}
+
+	private void updateDate(TimeScale scale, Instant date) {
+		TimeRange range = timeScaleHandler().boundsRange();
+		this.date = scale.normalise(date);
+		if (date.isBefore(range.from())) this.date = scale.normalise(range.from());
+		if (date.isAfter(range.to())) this.date = scale.normalise(range.to());
 	}
 
 }
