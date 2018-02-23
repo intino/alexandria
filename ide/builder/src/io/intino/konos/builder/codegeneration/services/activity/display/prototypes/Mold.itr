@@ -26,7 +26,6 @@ def type(block) trigger(stamps)
 	$stamp...[$NL]
 end
 
-
 def trigger(block)
 	$hidden
 	$block...[$NL]
