@@ -16,7 +16,9 @@
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../../lib/paper-rating/paper-rating.html">
 <link rel="import" href="../../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../alexandriatimerangenavigator/alexandria-stamp-time-range.html">
 <link rel="import" href="../../alexandriatimerangenavigator/alexandria-stamp-time-range-navigator.html">
+<link rel="import" href="../../alexandriatimenavigator/alexandria-stamp-time.html">
 <link rel="import" href="../../alexandriatimenavigator/alexandria-stamp-time-navigator.html">
 <link rel="import" href="../../alexandria-page-container.html">
 <link rel="import" href="alexandria-mold-hyperlink.html">
@@ -92,8 +94,14 @@
             <template is="dom-if" if="[[stamp.isEmbeddedDialog]]">
                 <div class="display-layer" name$="[[stamp.properties.dialogType]]" id$="[[item]][[stamp.properties.dialogType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
+            <template is="dom-if" if="[[stamp.isCatalogTimeRange]]">
+                <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaStampTimeRange" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
             <template is="dom-if" if="[[stamp.isCatalogTimeRangeNavigator]]">
                 <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaStampTimeRangeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
+            </template>
+            <template is="dom-if" if="[[stamp.isCatalogTime]]">
+                <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaStampTime" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isCatalogTimeNavigator]]">
                 <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaStampTimeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>

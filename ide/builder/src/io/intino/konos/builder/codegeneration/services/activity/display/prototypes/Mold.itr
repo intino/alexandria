@@ -122,7 +122,19 @@ def type(stamp & embeddedDisplay)
 	}
 end
 
+def type(stamp & catalogTimeRange)
+	public static class $name+FirstUpperCase {
+		$common
+	}
+end
+
 def type(stamp & catalogTimeRangeNavigator)
+	public static class $name+FirstUpperCase {
+		$common
+	}
+end
+
+def type(stamp & catalogTime)
 	public static class $name+FirstUpperCase {
 		$common
 	}

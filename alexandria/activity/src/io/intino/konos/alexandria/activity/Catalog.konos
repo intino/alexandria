@@ -166,6 +166,7 @@ Display alexandriaTimeNavigator
 	Request nextDate
 	Request play
 	Request pause
+	Request lastDate
 
 Display alexandriaTimeRangeNavigator
 	Notification refreshScales as List Object(Scale)
