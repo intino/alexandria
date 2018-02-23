@@ -20,6 +20,8 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
+
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
@@ -124,10 +126,9 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private void arrangements(Catalog catalog, Frame frame) {
 		if (catalog.arrangement() == null) return;
-		frame.addSlot("hasArrangements", baseFrame());
-		for (Grouping grouping : catalog.arrangement().groupingList()) {
+		if (!catalog.arrangement().groupingList().isEmpty()) frame.addSlot("hasArrangements", baseFrame());
+		for (Grouping grouping : catalog.arrangement().groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
-		}
 		for (Sorting sorting : catalog.arrangement().sortingList())
 			frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass));
 	}
@@ -195,9 +196,12 @@ public class CatalogRenderer extends PrototypeRenderer {
 			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner, box, modelClass, packageName));
 			if (operation.i$(AbstractToolbar.OpenDialog.class))
 				frame.addSlot("operation", frameOf(toolbar.openDialog(), owner, box, modelClass, packageName));
-			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass, packageName));
-			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass, packageName));
-			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(AbstractToolbar.Task.class))
+				frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass, packageName));
+			if (operation.i$(TaskSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(ExportSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(DownloadSelection.class))
 				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass, packageName));
 // TODO MC filtros
