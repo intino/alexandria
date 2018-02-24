@@ -14,6 +14,7 @@ Schema Catalog
 	Attribute label as Text
 	Attribute embedded as Bool
 	Attribute hideGroupings as Bool
+	Attribute arrangementHistogramsMode as Text
 
 	Schema Grouping
 		Attribute name as Text

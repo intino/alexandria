@@ -91,8 +91,8 @@ var AlpacaInputConverter = function() {
         schema: function (input) {
             var result = {};
             result.title = input.label;
-            result.readonly = input.readonly ? input.readonly : false;
-            result.required = input.required ? input.required : false;
+            result.readonly = input.readonly != null ? input.readonly : false;
+            result.required = input.required != null ? input.required : false;
             result.inputType = input.type;
             return result;
         },
@@ -101,7 +101,8 @@ var AlpacaInputConverter = function() {
             var result = {};
             result.helper = input.helper ? input.helper : false;
             result.placeholder = input.placeholder ? input.placeholder : false;
-            result.disabled = input.readonly ? input.readonly : false;
+            result.disabled = input.readonly != null ? input.readonly : false;
+            result.hidden = input.visible != null ? !input.visible : false;
             result.events = _addEvents(result, input);
             result.validator = _receiveValidationAlgorithmAndRegisterItToInput.bind(input);
             return result;

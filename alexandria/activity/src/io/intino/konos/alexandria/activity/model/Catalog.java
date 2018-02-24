@@ -18,10 +18,15 @@ public class Catalog extends Element {
 	private RootObjectLoader rootObjectLoader;
 	private DefaultObjectLoader defaultObjectLoader;
 	private ScopeChangeEvent scopeChangeEvent;
+	private ArrangementHistogramsMode arrangementHistogramsMode;
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
 	private ClusterManager clusterManager;
 	private Events events;
+
+	public enum ArrangementHistogramsMode {
+		EnabledAndVisible, EnabledButHidden, Disabled
+	}
 
 	public Item rootItem(List<Item> itemList, ActivitySession session) {
 		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), session)) : null;
@@ -82,7 +87,20 @@ public class Catalog extends Element {
 		return this;
 	}
 
-//	public Catalog onScopeChange(ScopeChangeEvent event) {
+	public ArrangementHistogramsMode arrangementHistogramsMode() {
+		return arrangementHistogramsMode;
+	}
+
+	public Catalog arrangementHistogramsMode(String mode) {
+		return arrangementHistogramsMode(ArrangementHistogramsMode.valueOf(mode));
+	}
+
+	public Catalog arrangementHistogramsMode(ArrangementHistogramsMode mode) {
+		this.arrangementHistogramsMode = mode;
+		return this;
+	}
+
+	//	public Catalog onScopeChange(ScopeChangeEvent event) {
 //		this.scopeChangeEvent = event;
 //		return this;
 //	}

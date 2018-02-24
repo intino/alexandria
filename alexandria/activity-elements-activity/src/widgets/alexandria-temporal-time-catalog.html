@@ -21,6 +21,7 @@
         <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
             <a id="showGroupingsButton" class="layout vertical center center-justified" hidden="[[_hideGroupings]]" on-tap="_showGroupingsDialog"><div>[[ShowGroupings]]</div></a>
             <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                              histograms-mode="[[_catalog.arrangementHistogramsMode]]"
                                               grouping-list="[[_catalog.groupingList]]"
                                               on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list>
             <div class="main flex">
