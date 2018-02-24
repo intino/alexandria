@@ -28,6 +28,8 @@ def type(catalog)
     	[
     	$range
     	][
+		$temporalFilter
+		][
 		$toolbar
     	]
     	public static class Source {
@@ -84,6 +86,37 @@ def trigger(range)
 			return null;
 		}
 	}
+end
+
+def trigger(temporalFilter)
+	public static class TemporalFilter {
+		$temporalFilterEnabled
+		$temporalFilterVisible
+	}
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	public static boolean enable($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.TemporalCatalog catalog, io.intino.konos.alexandria.activity.model.catalog.Scope scope, ActivitySession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	public static boolean visible($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.TemporalCatalog catalog, io.intino.konos.alexandria.activity.model.catalog.Scope scope, ActivitySession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterVisible)
 end
 
 def trigger(timerange)

@@ -62,10 +62,6 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	@Override
 	protected void configureTimeScaleHandler(TimeScaleHandler timeScaleHandler, TimeRange range, List<TimeScale> scales) {
 		timeScaleHandler.updateScale(scales.get(0));
-		if (showAll()) {
-			TimeRange timeRange = timeScaleHandler.boundsRange();
-			timeScaleHandler.updateRange(timeRange.from(), timeRange.to(), false);
-		}
 	}
 
 	@Override
