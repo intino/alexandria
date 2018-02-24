@@ -51,8 +51,8 @@ Concept TemporalCatalog extends Catalog
 	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
 
 	Concept:{0..1} TemporalFilter
-		var boolean enabled
-		var boolean visible
+		var word:{Always Conditional Never} enabled
+		var word:{Always Conditional Never} visible
 
 Concept CatalogView is component
 	var string label

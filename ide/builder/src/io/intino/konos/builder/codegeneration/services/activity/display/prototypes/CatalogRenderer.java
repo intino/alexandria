@@ -20,8 +20,6 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
-
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
@@ -47,10 +45,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("mode", temporalCatalog.type().name());
 			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
 			frame.addSlot("range", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
-			if (temporalCatalog.temporalFilter() != null) {
-				TemporalCatalog.TemporalFilter filter = temporalCatalog.temporalFilter();
-				frame.addSlot("temporalFilter", new Frame().addSlot("visible", filter.visible()).addSlot("enabled", filter.enabled()));
-			}
+			if (temporalCatalog.temporalFilter() != null) frame.addSlot("temporalFilter", frameOf(temporalCatalog, temporalCatalog.temporalFilter()));
 		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);
@@ -63,6 +58,24 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private void events(Catalog catalog, Frame frame) {
 		if (catalog.events() != null)
 			frame.addSlot("event", frameOf(catalog.events().onClickRecord()));
+	}
+
+	private Frame frameOf(TemporalCatalog catalog, TemporalCatalog.TemporalFilter filter) {
+		Frame frame = new Frame();
+
+		Frame enabledFrame = new Frame();
+		if (filter.enabled() == TemporalCatalog.TemporalFilter.Enabled.Conditional)
+			enabledFrame.addSlot("catalog", catalog.name$());
+
+		frame.addSlot("temporalFilterEnabled", enabledFrame.addSlot(filter.enabled().toString(), filter.enabled().toString()));
+
+		Frame visibleFrame = new Frame();
+		if (filter.visible() == TemporalCatalog.TemporalFilter.Visible.Conditional)
+			visibleFrame.addSlot("catalog", catalog.name$());
+
+		frame.addSlot("temporalFilterVisible", visibleFrame.addSlot(filter.visible().toString(), filter.visible().toString()));
+
+		return frame;
 	}
 
 	private Frame frameOf(OnClickRecord onClickRecord) {

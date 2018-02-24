@@ -97,6 +97,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			filterGroupingManager();
 		}
 
+		if (!isNavigatorVisible()) hideNavigator();
+
 		refreshView();
 	}
 
@@ -120,7 +122,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
-		TimeRange range = queryRange();
+		TimeRange range = showAll() ? timeScaleHandler().boundsRange() : queryRange();
 		ItemList itemList = element().items(scope, condition, range, session());
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
@@ -138,7 +140,6 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
 		navigatorDisplay.personifyOnce(id());
-		if (!isNavigatorVisible()) hideNavigator();
 		loadTimezoneOffset();
 	}
 
@@ -198,10 +199,10 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void loadTimezoneOffset();
 
 	private boolean isNavigatorVisible() {
-		return element().temporalFilterVisible();
+		return element().temporalFilterVisible(defaultScope(), session());
 	}
 
 	protected boolean showAll() {
-		return !element().temporalFilterEnabled();
+		return !element().temporalFilterEnabled(defaultScope(), session());
 	}
 }

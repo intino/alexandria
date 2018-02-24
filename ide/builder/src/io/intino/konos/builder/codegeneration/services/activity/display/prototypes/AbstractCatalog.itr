@@ -75,7 +75,31 @@ def trigger(setMode)
 end
 
 def trigger(temporalFilter)
-	catalog.temporalFilterEnabled($enabled).temporalFilterVisible($visible);
+	catalog.temporalFilter(new io.intino.konos.alexandria.activity.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible));
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.enable(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+	(c, scope, session) -> false
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.visible(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterVisible)
+	(c, scope, session) -> false
 end
 
 def trigger(range)
