@@ -140,6 +140,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
 		navigatorDisplay.personifyOnce(id());
+		if (!isNavigatorVisible()) hideNavigator();
 		loadTimezoneOffset();
 	}
 
