@@ -18,7 +18,8 @@ public class CatalogBuilder {
                 .embedded(embedded)
                 .hideGroupings(catalog.groupings().size() <= 0)
                 .groupingList(buildGroupingList(catalog, manager))
-                .sortingList(buildSortingList(catalog));
+                .sortingList(buildSortingList(catalog))
+                .arrangementHistogramsMode(catalog.arrangementHistogramsMode().toString());
     }
 
     private static List<Grouping> buildGroupingList(io.intino.konos.alexandria.activity.model.Catalog catalog, GroupingManager manager) {

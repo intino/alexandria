@@ -25,7 +25,7 @@
                 <paper-icon-button hidden$="[[menuButtonHidden]]" class="toggle" icon="menu" drawer-toggle></paper-icon-button>
             </div>
         </app-drawer-layout>
-        <div id="loadingLayer" class="loading message layout horizontal center" hidden="[[!_catalogList.length]]"><span>[[loading]]</span></div>
+        <div id="loadingLayer" class="loading message layout horizontal center" hidden="[[!_catalogList.length]]"><!--<span>[[Loading]]</span>--></div>
     </template>
 
     <style>
@@ -82,10 +82,10 @@
     <script>
         const AlexandriaDesktopDictionary = {
             es: {
-                loading: 'cargando vista...'
+                Loading: 'cargando vista...'
             },
             en: {
-                loading: 'loading view...'
+                Loading: 'loading view...'
             }
         };
 

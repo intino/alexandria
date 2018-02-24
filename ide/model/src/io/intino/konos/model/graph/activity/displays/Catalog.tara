@@ -25,6 +25,8 @@ Concept Catalog extends Display
 		has CatalogView
 		has:{0..1} DisplayView
 	Concept:{0..1} Arrangement
+		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = EnabledButHidden
+
 		Concept:Named Grouping
 			var string label
 			var word:{Percentage Absolute} histogram = Percentage

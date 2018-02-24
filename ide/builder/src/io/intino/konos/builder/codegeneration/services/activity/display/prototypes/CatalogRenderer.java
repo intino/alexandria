@@ -139,7 +139,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 
 	private void arrangements(Catalog catalog, Frame frame) {
 		if (catalog.arrangement() == null) return;
-		if (!catalog.arrangement().groupingList().isEmpty()) frame.addSlot("hasArrangements", baseFrame());
+		if (!catalog.arrangement().groupingList().isEmpty()) frame.addSlot("hasArrangements", baseFrame().addSlot("arrangementHistogramsMode", catalog.arrangement().histograms().toString()));
 		for (Grouping grouping : catalog.arrangement().groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
 		for (Sorting sorting : catalog.arrangement().sortingList())

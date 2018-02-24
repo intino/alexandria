@@ -14,7 +14,7 @@
         <cotton-cookies language="[[_language]]" theme="light-top"></cotton-cookies>
 
         <div class="toolbar layout horizontal end-justified">
-            <cotton-checkbox checked="{{_checked}}" on-change="_toggleCharts">[[_toggleChartsLabel]]</cotton-checkbox>
+            <cotton-checkbox id="chartsCheckBox" checked="{{_checked}}" on-change="_toggleCharts">[[_toggleChartsLabel]]</cotton-checkbox>
         </div>
         <ul class="groupings">
             <template is="dom-if" if="[[!groupingList.length]]">
@@ -94,6 +94,7 @@
 
             properties: {
                 groupingList: { type: Object, value: function() { return []; }, observer: '_refreshDelayed' },
+                histogramsMode : { type: String, observer: '_refreshHistogramsMode' },
                 _language: String,
                 _toggleChartsLabel : String,
                 _checked : { type: Boolean, value: function() { return true; } }
@@ -136,6 +137,13 @@
 
             _refreshDelayed : function() {
                 window.setTimeout(() => this._refresh(), 100);
+            },
+
+            _refreshHistogramsMode : function () {
+                if (Cookies.get("alexandria-catalog-groupings-charts") != null) return;
+                var mode = this.histogramsMode;
+                this.$.chartsCheckBox.hidden = mode === "Disabled";
+                this._checked = mode === "EnabledAndVisible";
             },
 
             _refresh : function() {
