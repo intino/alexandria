@@ -383,7 +383,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private void sendSortingList(List<Sorting> sortings) {
-		notifier.refreshSortingList(CatalogSortingBuilder.buildList(sortings));
+		notifier.refreshSortingList(CatalogSortingBuilder.buildList(sortings.stream().filter(Sorting::visible).collect(toList())));
 	}
 
 	private void sendSelectedSorting() {

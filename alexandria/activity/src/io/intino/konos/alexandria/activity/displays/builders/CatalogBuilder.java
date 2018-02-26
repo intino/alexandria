@@ -39,7 +39,7 @@ public class CatalogBuilder {
     }
 
     private static List<Sorting> buildSortingList(io.intino.konos.alexandria.activity.model.Catalog catalog) {
-        return CatalogSortingBuilder.buildList(catalog.sortings());
+        return CatalogSortingBuilder.buildList(catalog.sortings().stream().filter(io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting::visible).collect(toList()));
     }
 
     private static String typeOf(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping grouping) {

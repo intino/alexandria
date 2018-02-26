@@ -228,7 +228,7 @@ def type(displayview) trigger(add)
 end
 
 def type(sorting) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(($type)object1, ($type)object2)).name("$name").label("$label"));
+	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(($type)object1, ($type)object2)).visible($visible).name("$name").label("$label"));
 end
 
 def type(grouping) trigger(add)

@@ -316,7 +316,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private Item itemOf(String item) {
-		return provider.item(item);
+		return provider.item(new String(Base64.getDecoder().decode(item)));
 	}
 
 	private void createEmbeddedDisplays(String id) {

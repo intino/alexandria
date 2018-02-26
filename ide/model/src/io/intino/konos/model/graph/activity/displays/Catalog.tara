@@ -32,6 +32,7 @@ Concept Catalog extends Display
 			var word:{Percentage Absolute} histogram = Percentage
 		Concept:Named Sorting
 			var string label
+			var boolean visible = true
 
 Concept Toolbar is decorable component
 	var boolean canSearch = true

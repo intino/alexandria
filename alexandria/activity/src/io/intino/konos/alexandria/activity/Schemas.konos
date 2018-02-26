@@ -223,6 +223,7 @@ Schema Sorting
 	Attribute name as Text
 	Attribute label as Text
 	Attribute mode as Text
+	Attribute visible as Bool
 
 Schema UserInfo
 	Attribute fullName as Text
