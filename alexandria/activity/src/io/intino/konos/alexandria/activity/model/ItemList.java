@@ -28,6 +28,10 @@ public class ItemList {
 		items = items.stream().filter(filter::apply).collect(Collectors.toList());
 	}
 
+	public void filterCount(int maxItems) {
+		items = items.subList(0, maxItems > items.size() ? items.size() : maxItems);
+	}
+
 	public ItemList sort(ElementViewDisplayProvider.Sorting sorting) {
 		if (sorting == null || this.sorting == sorting) return this;
 
@@ -54,4 +58,5 @@ public class ItemList {
 		sort(sorting);
 		return items(start, limit);
 	}
+
 }

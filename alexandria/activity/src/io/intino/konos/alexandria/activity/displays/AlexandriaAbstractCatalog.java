@@ -36,6 +36,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected ItemList itemList = null;
 	protected GroupingManager groupingManager;
 	private String attachedGrouping = null;
+	private int maxItems = -1;
 
 	public AlexandriaAbstractCatalog(Box box) {
 		super(box);
@@ -381,6 +382,11 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 //		sendCatalog();
 	}
 
+	public void maxItems(int max) {
+		element().mode(Catalog.Mode.Preview);
+		this.maxItems = max;
+	}
+
 	private Scope calculateScope(boolean addAttachedGrouping) {
 		Scope scope = defaultScope();
 
@@ -412,6 +418,12 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 			});
 
 		sendCatalog();
+	}
+
+	@Override
+	protected void applyFilter(ItemList itemList) {
+		super.applyFilter(itemList);
+		if (this.maxItems > 0) itemList.filterCount(maxItems);
 	}
 
 	private boolean attachedGroupingFilter(GroupingSelection groupingSelection, boolean addAttachedGrouping) {
@@ -464,4 +476,5 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected void reloadGroupings() {
 		sendCatalog();
 	}
+
 }
