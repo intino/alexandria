@@ -414,7 +414,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public Item item(String key) {
-		return loadItem(key);
+		return target;
 	}
 
 	protected abstract void showDialog();
@@ -425,10 +425,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void createPanel(CreatePanelParameters params);
 	protected abstract void showPanel();
 	protected abstract void hidePanel();
-
-	protected Item loadItem(String id) {
-		return element().item(id, session());
-	}
 
 	protected void applyFilter(ItemList itemList) {
 		if (staticFilter != null) itemList.filter(staticFilter);

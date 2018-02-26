@@ -24,6 +24,10 @@ public class Catalog extends Element {
 	private ClusterManager clusterManager;
 	private Events events;
 
+	public Catalog() {
+		arrangementHistogramsMode = ArrangementHistogramsMode.EnabledAndVisible;
+	}
+
 	public enum ArrangementHistogramsMode {
 		EnabledAndVisible, EnabledButHidden, Disabled
 	}

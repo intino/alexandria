@@ -155,6 +155,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("box", box)
 				.addSlot("name", sorting.name$())
 				.addSlot("label", sorting.label())
+				.addSlot("visible", sorting.visible())
 				.addSlot("catalog", catalog.name$())
 				.addSlot("type", modelClass);
 	}

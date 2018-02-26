@@ -151,7 +151,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		if (!dirty() && itemList != null)
 			item = itemList.items().stream().filter(i -> i.id().equals(key) || i.name().equals(key)).findFirst().orElse(null);
 
-		return item != null ? item : loadItem(key);
+		return item != null ? item : element().item(key);
 	}
 
 	@Override
