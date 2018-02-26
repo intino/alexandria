@@ -21,12 +21,16 @@ public class Catalog extends Element {
 	private ArrangementHistogramsMode arrangementHistogramsMode;
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
+	private Mode mode;
 	private ClusterManager clusterManager;
 	private Events events;
 
 	public Catalog() {
 		arrangementHistogramsMode = ArrangementHistogramsMode.EnabledAndVisible;
+		mode = Mode.Normal;
 	}
+
+	public enum Mode { Normal, Preview }
 
 	public enum ArrangementHistogramsMode {
 		EnabledAndVisible, EnabledButHidden, Disabled
@@ -79,6 +83,15 @@ public class Catalog extends Element {
 
 	public Catalog arrangementFiltererLoader(ArrangementFiltererLoader loader) {
 		this.arrangementFiltererLoader = loader;
+		return this;
+	}
+
+	public Mode mode() {
+		return mode;
+	}
+
+	public Catalog mode(Mode mode) {
+		this.mode = mode;
 		return this;
 	}
 

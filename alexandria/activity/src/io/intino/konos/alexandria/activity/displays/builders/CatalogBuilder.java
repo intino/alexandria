@@ -19,7 +19,8 @@ public class CatalogBuilder {
                 .hideGroupings(catalog.groupings().size() <= 0)
                 .groupingList(buildGroupingList(catalog, manager))
                 .sortingList(buildSortingList(catalog))
-                .arrangementHistogramsMode(catalog.arrangementHistogramsMode().toString());
+                .arrangementHistogramsMode(catalog.arrangementHistogramsMode().toString())
+                .mode(catalog.mode().toString());
     }
 
     private static List<Grouping> buildGroupingList(io.intino.konos.alexandria.activity.model.Catalog catalog, GroupingManager manager) {

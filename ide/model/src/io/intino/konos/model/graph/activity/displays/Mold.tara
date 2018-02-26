@@ -36,6 +36,7 @@ Concept Mold extends Display
 				var Catalog catalog
 				var CatalogView[] views
 				var boolean filtered = false
+				var integer maxItems = -1
 			sub CatalogTimeRange
 			sub CatalogTimeRangeNavigator
 			sub CatalogTime

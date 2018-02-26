@@ -104,6 +104,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
+		if (stamp.maxItems() > 0) frame.addSlot("embeddedCatalogMaxItems", stamp.maxItems());
 		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
 		frame.addSlot("catalog", stamp.catalog().name$());
 		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
