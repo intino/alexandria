@@ -2,10 +2,7 @@ package io.intino.konos.alexandria.activity.model;
 
 import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.*;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;

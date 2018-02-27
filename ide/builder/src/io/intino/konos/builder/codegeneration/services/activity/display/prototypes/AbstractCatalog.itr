@@ -39,7 +39,7 @@ def type(catalog & gen)
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
 			catalog.events(new io.intino.konos.alexandria.activity.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
-			$hasArrangements][
+			$hasGroupings][
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
@@ -75,7 +75,7 @@ def trigger(setMode)
 end
 
 def trigger(temporalFilter)
-	catalog.temporalFilter(new io.intino.konos.alexandria.activity.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible));
+	catalog.temporalFilter(new io.intino.konos.alexandria.activity.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible).layout("$temporalFilterLayout"));
 end
 
 def attribute(conditional) trigger(temporalFilterEnabled)
@@ -124,9 +124,9 @@ def trigger(hasMagazineView)
 	catalog.defaultObjectLoader((id, range, session) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], session));
 end
 
-def trigger(hasArrangements)
+def trigger(hasGroupings)
 	catalog.arrangementFiltererLoader((session) -> $name+firstUpperCase.Arrangements.filterer(box, session));
-	catalog.arrangementHistogramsMode("$arrangementHistogramsMode");
+	catalog.arrangementHistogramsMode("$histogramsMode");
 end
 
 def trigger(toolbar)

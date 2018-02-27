@@ -114,10 +114,10 @@
             stamp.isEmbeddedDisplay = this._isEmbeddedDisplay(moldStamp);
             stamp.isEmbeddedDialog = this._isEmbeddedDialog(moldStamp);
             stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
-            stamp.isCatalogTimeRange = this._isCatalogTimeRange(moldStamp);
-            stamp.isCatalogTimeRangeNavigator = this._isCatalogTimeRangeNavigator(moldStamp);
-            stamp.isCatalogTime = this._isCatalogTime(moldStamp);
-            stamp.isCatalogTimeNavigator = this._isCatalogTimeNavigator(moldStamp);
+            stamp.isTemporalCatalogRange = this._isTemporalCatalogRange(moldStamp);
+            stamp.isTemporalCatalogRangeNavigator = this._isTemporalCatalogRangeNavigator(moldStamp);
+            stamp.isTemporalCatalogTime = this._isTemporalCatalogTime(moldStamp);
+            stamp.isTemporalCatalogTimeNavigator = this._isTemporalCatalogTimeNavigator(moldStamp);
             stamp.isLocation = this._isLocation(moldStamp);
             stamp.isBreadcrumbs = this._isBreadcrumbs(moldStamp);
             stamp.isItemLinks = this._isItemLinks(moldStamp);
@@ -354,20 +354,20 @@
             return stamp.shape === "embedded-catalog";
         },
 
-        _isCatalogTimeRange : function(stamp) {
-            return stamp.shape === "catalog-time-range";
+        _isTemporalCatalogRange : function(stamp) {
+            return stamp.shape === "temporal-catalog-range";
         },
 
-        _isCatalogTimeRangeNavigator : function(stamp) {
-            return stamp.shape === "catalog-time-range-navigator";
+        _isTemporalCatalogRangeNavigator : function(stamp) {
+            return stamp.shape === "temporal-catalog-range-navigator";
         },
 
-        _isCatalogTime : function(stamp) {
-            return stamp.shape === "catalog-time";
+        _isTemporalCatalogTime : function(stamp) {
+            return stamp.shape === "temporal-catalog-time";
         },
 
-        _isCatalogTimeNavigator : function(stamp) {
-            return stamp.shape === "catalog-time-navigator";
+        _isTemporalCatalogTimeNavigator : function(stamp) {
+            return stamp.shape === "temporal-catalog-time-navigator";
         },
 
         _isLocation : function(stamp) {

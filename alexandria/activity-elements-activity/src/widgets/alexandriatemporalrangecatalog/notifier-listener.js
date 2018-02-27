@@ -18,6 +18,9 @@ AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
         this.when("refreshBreadcrumbs").toSelf().execute(function(parameters) {
         	widget._refreshBreadcrumbs(parameters.value);
         });
+        this.when("refreshNavigatorLayout").toSelf().execute(function(parameters) {
+        	widget._refreshNavigatorLayout(parameters.value);
+        });
         this.when("showDialog").toSelf().execute(function(parameters) {
         	widget._showDialog();
         });

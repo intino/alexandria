@@ -37,10 +37,10 @@ Concept Mold extends Display
 				var CatalogView[] views
 				var boolean filtered = false
 				var integer maxItems = -1
-			sub CatalogTimeRange
-			sub CatalogTimeRangeNavigator
-			sub CatalogTime
-			sub CatalogTimeNavigator
+			sub TemporalCatalogTime
+			sub TemporalCatalogTimeNavigator
+			sub TemporalCatalogRange
+			sub TemporalCatalogRangeNavigator
 			sub Highlight
 			sub Icon
 				var word:{Polymer Resource Base64} source

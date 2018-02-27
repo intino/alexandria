@@ -94,16 +94,16 @@
             <template is="dom-if" if="[[stamp.isEmbeddedDialog]]">
                 <div class="display-layer" name$="[[stamp.properties.dialogType]]" id$="[[item]][[stamp.properties.dialogType]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
-            <template is="dom-if" if="[[stamp.isCatalogTimeRange]]">
+            <template is="dom-if" if="[[stamp.isTemporalCatalogRange]]">
                 <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaStampTimeRange" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
-            <template is="dom-if" if="[[stamp.isCatalogTimeRangeNavigator]]">
+            <template is="dom-if" if="[[stamp.isTemporalCatalogRangeNavigator]]">
                 <div class="display-layer" name="AlexandriaTimeRangeNavigator" widget="AlexandriaStampTimeRangeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
-            <template is="dom-if" if="[[stamp.isCatalogTime]]">
+            <template is="dom-if" if="[[stamp.isTemporalCatalogTime]]">
                 <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaStampTime" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
-            <template is="dom-if" if="[[stamp.isCatalogTimeNavigator]]">
+            <template is="dom-if" if="[[stamp.isTemporalCatalogTimeNavigator]]">
                 <div class="display-layer" name="AlexandriaTimeNavigator" widget="AlexandriaStampTimeNavigator" id$="[[item]][[stamp.name]]" style$="[[stamp.properties.defaultStyle]];[[stamp.properties.style]]"></div>
             </template>
             <template is="dom-if" if="[[stamp.isBreadcrumbs]]">

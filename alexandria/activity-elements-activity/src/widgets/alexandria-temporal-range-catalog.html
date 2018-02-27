@@ -27,7 +27,7 @@
             <div class="main flex">
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
-                <cotton-zombie display="AlexandriaTimeRangeNavigator" widget="AlexandriaTimeRangeNavigator" object$="[[display.id]]"></cotton-zombie>
+                <cotton-zombie display="AlexandriaTimeRangeNavigator" widget$="AlexandriaTimeRange[[_navigatorLayout]]Navigator" object$="[[display.id]]"></cotton-zombie>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
@@ -187,7 +187,8 @@
             properties : {
                 _catalog: Object,
                 _filtered : { type: Boolean, value: function() { return false; }},
-                _hideGroupings: { type: Boolean, value: function() { return true; }}
+                _hideGroupings: { type: Boolean, value: function() { return true; }},
+                _navigatorLayout : { type: String, value: function() { return ""; }}
             },
 
             attached : function() {
@@ -221,6 +222,10 @@
                 var navigator = this.querySelector("alexandria-time-range-navigator");
                 if (navigator != null) navigator.hidden = true;
                 $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
+            },
+
+            _refreshNavigatorLayout : function(layout) {
+                this._navigatorLayout = layout;
             },
 
             _handleGroupingChange : function(event) {

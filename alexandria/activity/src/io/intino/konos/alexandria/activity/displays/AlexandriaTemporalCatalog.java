@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.helpers.Bounds;
 import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
+import io.intino.konos.alexandria.activity.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
@@ -139,6 +140,10 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
+
+		if (element().temporalFilterLayout() != TemporalFilter.Layout.HorizontalTimeLine)
+			refreshNavigatorLayout(element().temporalFilterLayout());
+
 		navigatorDisplay.personifyOnce(id());
 		if (!isNavigatorVisible()) hideNavigator();
 		loadTimezoneOffset();
@@ -198,6 +203,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void showNavigator();
 	protected abstract void hideNavigator();
 	protected abstract void loadTimezoneOffset();
+	protected abstract void refreshNavigatorLayout(TemporalFilter.Layout layout);
 
 	private boolean isNavigatorVisible() {
 		return element().temporalFilterVisible(defaultScope(), session());
