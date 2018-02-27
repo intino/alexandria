@@ -138,8 +138,9 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
 		DialogExecution.Modification modification = operation.execute(session());
-		notifier.done(modification.toString());
-		doneListeners.forEach(l -> l.accept(modification));
+		DialogExecution.Modification result = modification != null ? modification : DialogExecution.Modification.None;
+		notifier.done(result.toString());
+		doneListeners.forEach(l -> l.accept(result));
 	}
 
 	public abstract void prepare();

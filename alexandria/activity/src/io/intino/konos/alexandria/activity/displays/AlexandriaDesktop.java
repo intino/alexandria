@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 
 import java.net.URL;
 
-public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
+public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop,DN> {
 
 	public AlexandriaDesktop(ActivityBox box) {
 		super(box);
@@ -53,6 +53,10 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 		});
 		notifier.displayType(display.name());
 		addAndPersonify(display);
+	}
+
+	public <E extends AlexandriaElementDisplay> E openElement(String label) {
+		return (E) layout().openElement(label);
 	}
 
 	public <T extends AlexandriaLayout> T layout() {

@@ -14,10 +14,7 @@ import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
@@ -146,11 +143,13 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		}).forEach(v -> buildView(v.name()).refresh());
 	}
 
-	public AlexandriaPanelView selectView(String name) {
-		AlexandriaPanelView viewDisplay = buildView(name);
+	public AlexandriaPanelView selectView(String key) {
+		AbstractView view = viewOf(key);
+		if (view == null) return null;
+		AlexandriaPanelView viewDisplay = buildView(view.name());
 		viewDisplay.refresh();
 		updateCurrentView(viewDisplay);
-		notifier.refreshSelectedView(name);
+		notifier.refreshSelectedView(view.name());
 		return viewDisplay;
 	}
 
@@ -158,10 +157,15 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		if (viewDisplayMap.containsKey(name))
 			return viewDisplayMap.get(name);
 		notifyLoading(true);
-		AlexandriaPanelView display = buildView(views().stream().filter(v -> v.name().equals(name)).findFirst().orElse(null));
-		viewDisplayMap.put(name, display);
+		AbstractView view = viewOf(name);
+		AlexandriaPanelView display = buildView(view);
+		viewDisplayMap.put(view.name(), display);
 		notifyLoading(false);
 		return display;
+	}
+
+	private AbstractView viewOf(String key) {
+		return views().stream().filter(v -> (v.label() != null && v.label().equals(key)) || v.name().equals(key)).findFirst().orElse(null);
 	}
 
 	private AlexandriaPanelView buildView(AbstractView view) {

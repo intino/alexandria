@@ -182,8 +182,8 @@ public class Dialog {
             return add(new Operation());
         }
 
-        public Operation operation(String label) {
-            return operationList.stream().filter(o -> o.label().equals(label)).findFirst().orElse(null);
+        public Operation operation(String key) {
+            return operationList.stream().filter(o -> o.name().equals(key) || o.label().equals(key)).findFirst().orElse(null);
         }
 
         public class Operation {
