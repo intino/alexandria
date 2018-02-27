@@ -84,20 +84,20 @@ def type(stamp & embeddedDialog)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog().dialogType("$dialogType").dialogBuilder($embeddedDialogBuilder)$common)
 end
 
-def type(stamp & catalogTimeRange)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTimeRange()$common)
+def type(stamp & temporalCatalogRange)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogRange()$common)
 end
 
-def type(stamp & catalogTimeRangeNavigator)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTimeRangeNavigator()$common)
+def type(stamp & temporalCatalogRangeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogRangeNavigator()$common)
 end
 
-def type(stamp & catalogTime)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTime()$common)
+def type(stamp & temporalCatalogTime)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogTime()$common)
 end
 
-def type(stamp & catalogTimeNavigator)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogTimeNavigator()$common)
+def type(stamp & temporalCatalogTimeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogTimeNavigator()$common)
 end
 
 def type(stamp & highlight)

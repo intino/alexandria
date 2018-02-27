@@ -114,6 +114,10 @@ public class TemporalCatalog extends Catalog {
 		return temporalFilter == null || temporalFilter.visible(this, scope, session);
 	}
 
+	public TemporalFilter.Layout temporalFilterLayout() {
+		return temporalFilter != null ? temporalFilter.layout() : TemporalFilter.Layout.HorizontalTimeLine;
+	}
+
 	public TemporalCatalog temporalFilter(TemporalFilter filter) {
 		this.temporalFilter = filter;
 		return this;

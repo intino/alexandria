@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.TimeScale;
+import io.intino.konos.alexandria.activity.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
 
@@ -86,6 +87,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	@Override
 	protected void loadTimezoneOffset() {
 		notifier.loadTimezoneOffset();
+	}
+
+	@Override
+	protected void refreshNavigatorLayout(TemporalFilter.Layout layout) {
+		notifier.refreshNavigatorLayout(layout.toString());
 	}
 
 	@Override

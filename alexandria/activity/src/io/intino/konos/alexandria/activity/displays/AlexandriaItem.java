@@ -403,24 +403,24 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		navigator.refresh();
 	}
 
-	private Map<CatalogTimeRange, AlexandriaTimeRangeNavigator> catalogTimeRanges() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeRange).collect(toList());
-		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeRange)s, s -> new AlexandriaTimeRangeNavigator(box)));
+	private Map<TemporalCatalogRange, AlexandriaTimeRangeNavigator> catalogTimeRanges() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogRange).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogRange)s, s -> new AlexandriaTimeRangeNavigator(box)));
 	}
 
-	private Map<CatalogTimeRangeNavigator, AlexandriaTimeRangeNavigator> catalogTimeRangeNavigators() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeRangeNavigator).collect(toList());
-		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeRangeNavigator)s, s -> new AlexandriaTimeRangeNavigator(box)));
+	private Map<TemporalCatalogRangeNavigator, AlexandriaTimeRangeNavigator> catalogTimeRangeNavigators() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogRangeNavigator).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogRangeNavigator)s, s -> new AlexandriaTimeRangeNavigator(box)));
 	}
 
-	private Map<CatalogTimeNavigator, AlexandriaTimeNavigator> catalogTimeNavigators() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTimeNavigator).collect(toList());
-		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTimeNavigator)s, s -> new AlexandriaTimeNavigator(box)));
+	private Map<TemporalCatalogTimeNavigator, AlexandriaTimeNavigator> catalogTimeNavigators() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogTimeNavigator).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogTimeNavigator)s, s -> new AlexandriaTimeNavigator(box)));
 	}
 
-	private Map<CatalogTime, AlexandriaTimeNavigator> catalogTimes() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof CatalogTime).collect(toList());
-		return stamps.stream().collect(Collectors.toMap(s -> (CatalogTime)s, s -> new AlexandriaTimeNavigator(box)));
+	private Map<TemporalCatalogTime, AlexandriaTimeNavigator> catalogTimes() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogTime).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogTime)s, s -> new AlexandriaTimeNavigator(box)));
 	}
 
 }

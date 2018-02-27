@@ -63,6 +63,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private Frame frameOf(TemporalCatalog catalog, TemporalCatalog.TemporalFilter filter) {
 		Frame frame = new Frame();
 
+		frame.addSlot("temporalFilterLayout", filter.layout().toString());
+
 		Frame enabledFrame = new Frame();
 		if (filter.enabled() == TemporalCatalog.TemporalFilter.Enabled.Conditional)
 			enabledFrame.addSlot("catalog", catalog.name$());
@@ -138,11 +140,17 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void arrangements(Catalog catalog, Frame frame) {
-		if (catalog.arrangement() == null) return;
-		if (!catalog.arrangement().groupingList().isEmpty()) frame.addSlot("hasArrangements", baseFrame().addSlot("arrangementHistogramsMode", catalog.arrangement().histograms().toString()));
-		for (Grouping grouping : catalog.arrangement().groupingList())
+		Catalog.Arrangement arrangement = catalog.arrangement();
+		boolean existsGroupings = arrangement != null && !arrangement.groupingList().isEmpty();
+
+		if (existsGroupings)
+			frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", arrangement.histograms().toString()));
+
+		if (arrangement == null) return;
+
+		for (Grouping grouping : arrangement.groupingList())
 			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
-		for (Sorting sorting : catalog.arrangement().sortingList())
+		for (Sorting sorting : arrangement.sortingList())
 			frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass));
 	}
 
