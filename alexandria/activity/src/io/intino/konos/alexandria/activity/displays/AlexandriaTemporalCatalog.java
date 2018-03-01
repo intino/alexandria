@@ -141,11 +141,13 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
 
-		if (element().temporalFilterLayout() != TemporalFilter.Layout.HorizontalTimeLine)
+		if (element().temporalFilterLayout() != TemporalFilter.Layout.Horizontal)
 			refreshNavigatorLayout(element().temporalFilterLayout());
 
 		navigatorDisplay.personifyOnce(id());
-		if (!isNavigatorVisible()) hideNavigator();
+		if (isNavigatorVisible()) showNavigator();
+		else hideNavigator();
+
 		loadTimezoneOffset();
 	}
 
@@ -170,7 +172,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 		bounds.rangeLoader(() -> {
 			TimeRange range = element().range(session());
-			return new TimeRange(range.from(), range.to(), TimeScale.Minute);
+			return new TimeRange(range.from(), range.to(), TimeScale.Second);
 		});
 		bounds.mode(Bounds.Mode.ToTheLast);
 
