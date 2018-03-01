@@ -105,15 +105,17 @@ public class TimeScaleHandler {
 	}
 
 	public TimeRange updateRangeFrom(Instant from) {
-		if (from.isAfter(range().to())) return range();
-		TimeRange range = validOlapRangeFor(from, range().to());
+		long count = range().allInstants().count();
+		TimeScale scale = range().scale();
+		TimeRange range = validOlapRangeFor(from, scale.addTo(from, count));
 		updateRange(range.from(), range.to(), false);
 		return range;
 	}
 
 	public TimeRange updateRangeTo(Instant to) {
-		if (range().from().isAfter(to)) return range();
-		TimeRange range = validOlapRangeFor(range().from(), to);
+		long count = range().allInstants().count();
+		TimeScale scale = range().scale();
+		TimeRange range = validOlapRangeFor(scale.addTo(to, -count), to);
 		updateRange(range.from(), range.to(), false);
 		return range;
 	}

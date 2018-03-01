@@ -6,9 +6,9 @@ import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 public class TemporalFilter {
 	private EnabledLoader enabledLoader;
 	private VisibilityLoader visibilityLoader;
-	private Layout layout = Layout.HorizontalTimeLine;
+	private Layout layout = Layout.Horizontal;
 
-	public enum Layout { VerticalTimeLine, HorizontalTimeLine }
+	public enum Layout { Vertical, Horizontal }
 
 	public boolean enabled(TemporalCatalog catalog, Scope scope, ActivitySession session) {
 		return enabledLoader == null || enabledLoader.enabled(catalog, scope, session);

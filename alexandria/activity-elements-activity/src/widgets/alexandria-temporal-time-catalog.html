@@ -6,6 +6,7 @@
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="_common/catalog/alexandria-catalog-grouping-list.html">
 <link rel="import" href="alexandria-time-navigator.html">
+<link rel="import" href="alexandriatimenavigator/alexandria-vertical-time-navigator.html">
 <link rel="import" href="alexandria-catalog-view-list.html">
 <link rel="import" href="alexandria-dialog-container.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
@@ -24,10 +25,10 @@
                                               histograms-mode="[[_catalog.arrangementHistogramsMode]]"
                                               grouping-list="[[_catalog.groupingList]]"
                                               on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list>
-            <div class="main flex">
+            <div class$="main flex [[_navigatorLayout]]">
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilterr]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
-                <cotton-zombie display="AlexandriaTimeNavigator" widget$="AlexandriaTime[[_navigatorLayout]]Navigator" object$="[[display.id]]"></cotton-zombie>
+                <cotton-zombie display="AlexandriaTimeNavigator" widget$="Alexandria[[_navigatorLayout]]TimeNavigator" object$="[[display.id]]"></cotton-zombie>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
@@ -56,6 +57,9 @@
             border: 1px solid #ddd;
             border-left: 0;
             width: 1px;
+        }
+        :host .main.Vertical {
+            position: relative;
         }
         :host .embedded_true .main {
             border-right-width: 0;
@@ -125,6 +129,16 @@
         :host #main.hidden, :host #panel.hidden {
             position: absolute;
             left: -10000px;
+        }
+        :host alexandria-vertical-time-navigator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: white;
+            margin-top: 50px;
+            margin-right: 20px;
+            padding-left: 30px;
+            height: calc(100% - 50px);
         }
         :host cotton-breadcrumbs {
             display: block;
@@ -211,11 +225,17 @@
             _showTimeNavigator : function() {
                 var navigator = this.querySelector("alexandria-time-navigator");
                 if (navigator != null) navigator.hidden = false;
-                $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
+                navigator = this.querySelector("alexandria-vertical-time-navigator");
+                if (navigator != null) navigator.hidden = false;
+
+                if (this._navigatorLayout != null && this._navigatorLayout == "Vertical") $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
+                else $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
             },
 
             _hideTimeNavigator : function() {
                 var navigator = this.querySelector("alexandria-time-navigator");
+                if (navigator != null) navigator.hidden = true;
+                navigator = this.querySelector("alexandria-vertical-time-navigator");
                 if (navigator != null) navigator.hidden = true;
                 $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
             },

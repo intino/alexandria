@@ -56,7 +56,7 @@ Concept TemporalCatalog extends Catalog
 	Concept:{0..1} TemporalFilter
 		var word:{Always Conditional Never} enabled
 		var word:{Always Conditional Never} visible
-		var word:{VerticalTimeLine HorizontalTimeLine} layout = HorizontalTimeLine
+		var word:{Vertical Horizontal} layout = Horizontal
 
 Concept CatalogView is component
 	var string label
