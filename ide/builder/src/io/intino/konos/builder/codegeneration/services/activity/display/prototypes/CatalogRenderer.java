@@ -20,6 +20,8 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
+
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
@@ -45,7 +47,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("mode", temporalCatalog.type().name());
 			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
 			frame.addSlot("range", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
-			if (temporalCatalog.temporalFilter() != null) frame.addSlot("temporalFilter", frameOf(temporalCatalog, temporalCatalog.temporalFilter()));
+			if (temporalCatalog.temporalFilter() != null)
+				frame.addSlot("temporalFilter", frameOf(temporalCatalog, temporalCatalog.temporalFilter()));
 		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);
@@ -142,16 +145,10 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private void arrangements(Catalog catalog, Frame frame) {
 		Catalog.Arrangement arrangement = catalog.arrangement();
 		boolean existsGroupings = arrangement != null && !arrangement.groupingList().isEmpty();
-
-		if (existsGroupings)
-			frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", arrangement.histograms().toString()));
-
+		if (existsGroupings) frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", arrangement.histograms().toString()));
 		if (arrangement == null) return;
-
-		for (Grouping grouping : arrangement.groupingList())
-			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
-		for (Sorting sorting : arrangement.sortingList())
-			frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass));
+		arrangement.groupingList().forEach(grouping -> frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass)));
+		arrangement.sortingList().forEach(sorting -> frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass)));
 	}
 
 	private Frame baseFrame() {
@@ -204,6 +201,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("box", box)
 				.addSlot("catalog", catalog.name$())
 				.addSlot("name", view.name$())
+				.addSlot("label", view.label())
 				.addSlot("package", packageName)
 				.addSlot("hideNavigator", view.hideNavigator())
 				.addSlot("display", view.display());
