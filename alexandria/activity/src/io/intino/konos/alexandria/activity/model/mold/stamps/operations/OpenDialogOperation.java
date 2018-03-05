@@ -10,6 +10,10 @@ public class OpenDialogOperation extends Operation<String> {
 	private String dialogType;
 	private DialogBuilder dialogBuilder;
 
+	public OpenDialogOperation() {
+		alexandriaIcon("editor:mode-edit");
+	}
+
 	public int width() {
 		return this.width;
 	}

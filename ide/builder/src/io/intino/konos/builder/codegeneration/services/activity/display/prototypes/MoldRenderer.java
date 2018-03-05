@@ -104,6 +104,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
+		if (stamp.maxItems() > 0) frame.addSlot("embeddedCatalogMaxItems", stamp.maxItems());
 		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
 		frame.addSlot("catalog", stamp.catalog().name$());
 		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
@@ -122,6 +123,7 @@ public class MoldRenderer extends PrototypeRenderer {
 	private void frameOf(Frame frame, CatalogLink stamp) {
 		frame.addSlot("catalog", stamp.catalog().name$());
 		if (stamp.filtered()) frame.addSlot("filter", baseFrame(stamp).addTypes("filter"));
+		if (stamp.openItem()) frame.addSlot("itemLoader", baseFrame(stamp).addTypes("itemLoader"));
 	}
 
 	private void frameOf(Frame frame, ItemLinks stamp) {
@@ -154,12 +156,13 @@ public class MoldRenderer extends PrototypeRenderer {
 	}
 
 	private void frameOf(Frame frame, Operation operation) {
-		frame.addTypes(operation.getClass().getSimpleName());
+		frame.addTypes(operation.getClass().getSimpleName()).addSlot("mode", operation.mode().toString());
+		if (operation.alexandriaIcon() != null)
+			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
-		}
-		else if (operation.i$(DownloadOperation.class)) {
+		} else if (operation.i$(DownloadOperation.class)) {
 			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
 			frame.addSlot("downloadExecution", baseFrame(operation));
 		} else if (operation.i$(ExportOperation.class)) {
@@ -170,7 +173,11 @@ public class MoldRenderer extends PrototypeRenderer {
 			if (export.to() != null) frame.addSlot("to", export.to().toEpochMilli());
 		} else if (operation.i$(PreviewOperation.class)) {
 			frame.addSlot("previewExecution", baseFrame(operation));
-		} else if (operation.i$(TaskOperation.class)) frame.addSlot("taskExecution", baseFrame(operation));
+		} else if (operation.i$(TaskOperation.class)) {
+			frame.addSlot("taskExecution", baseFrame(operation));
+			String confirmText = operation.a$(TaskOperation.class).confirmText();
+			if (confirmText != null) frame.addSlot("confirmText", confirmText);
+		}
 	}
 
 	private void frameOf(Frame frame, List<TreeItem> treeItems) {

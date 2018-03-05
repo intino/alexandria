@@ -1,0 +1,83 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../lib/paper-button/paper-button.html">
+
+<dom-module id="alexandria-mold-operation-trigger">
+
+    <template>
+        <div class$="mode [[mode]]">
+            <paper-icon-button class="option icon" style$="[[styles]]" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button class="option button" style$="[[styles]]" on-tap="_execute">[[_title]]</paper-button>
+            <a class="option link" style$="[[styles]]" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host paper-button {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 5px;
+            text-align: center;
+        }
+        :host a {
+            color: var(--default-primary-color);
+            cursor: pointer;
+        }
+        :host .mode .option {
+            display: none;
+        }
+        :host .mode.icon .option.icon {
+            display: block;
+        }
+        :host .mode.button .option.button {
+            display: block;
+        }
+        :host .mode.link .option.link {
+            display: block;
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldOperationTriggerDictionary = {
+            es: {
+                Execute: "ejecutar..."
+            },
+            en: {
+                Execute: "execute..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-mold-operation-trigger',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : { type: String, observer: "_refreshTitle" },
+                _title : String,
+                icon : String,
+                styles : String,
+                mode : String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldOperationTriggerDictionary);
+            },
+
+            _refreshTitle : function() {
+                this._title = this.title != null && this.title != "" ? this.title : this.Execute;
+            },
+
+            _execute : function(e) {
+                this.fire("execute");
+            }
+
+        });
+    </script>
+
+</dom-module>

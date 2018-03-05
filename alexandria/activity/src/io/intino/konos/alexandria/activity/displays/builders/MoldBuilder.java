@@ -45,8 +45,10 @@ public class MoldBuilder {
         addEmbeddedCatalogProperties(propertyList, stamp);
         addIconProperties(propertyList, stamp);
         addDownloadOperationProperties(propertyList, stamp);
-        addPreviewOperationProperties(propertyList, stamp);
+        addOperationProperties(propertyList, stamp);
         addExportOperationProperties(propertyList, stamp);
+        addPreviewOperationProperties(propertyList, stamp);
+        addTaskOperationProperties(propertyList, stamp);
         addMapProperties(propertyList, stamp);
         result.propertyList(propertyList);
 
@@ -75,6 +77,10 @@ public class MoldBuilder {
         if (stamp instanceof EmbeddedDisplay) return "embedded-display";
         if (stamp instanceof EmbeddedDialog) return "embedded-dialog";
         if (stamp instanceof EmbeddedCatalog) return "embedded-catalog";
+        if (stamp instanceof TemporalCatalogRange) return "temporal-catalog-range";
+        if (stamp instanceof TemporalCatalogRangeNavigator) return "temporal-catalog-range-navigator";
+        if (stamp instanceof TemporalCatalogTime) return "temporal-catalog-time";
+        if (stamp instanceof TemporalCatalogTimeNavigator) return "temporal-catalog-time-navigator";
         if (stamp instanceof Map) return "map";
         return "";
     }
@@ -109,17 +115,19 @@ public class MoldBuilder {
         propertyList.add(shapeProperty("icon-type", stamp instanceof AlexandriaIcon ? "alexandria" : ""));
     }
 
+    private static void addOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof Operation)) return;
+        Operation previewStamp = (Operation)stamp;
+        propertyList.add(shapeProperty("alexandriaIcon", previewStamp.alexandriaIcon()));
+        propertyList.add(shapeProperty("mode", previewStamp.mode().toString()));
+    }
+
     private static void addDownloadOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
         if (! (stamp instanceof DownloadOperation)) return;
         DownloadOperation downloadStamp = (DownloadOperation)stamp;
         propertyList.add(shapeProperty("title", downloadStamp.label()));
         propertyList.add(shapeProperty("options", String.join(",", downloadStamp.options())));
-    }
-
-    private static void addPreviewOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
-        if (! (stamp instanceof PreviewOperation)) return;
-        PreviewOperation previewStamp = (PreviewOperation)stamp;
-        propertyList.add(shapeProperty("title", previewStamp.label()));
+        propertyList.add(shapeProperty("alexandriaIcon", downloadStamp.alexandriaIcon()));
     }
 
     private static void addExportOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
@@ -129,6 +137,20 @@ public class MoldBuilder {
         propertyList.add(shapeProperty("options", String.join(",", exportStamp.options())));
         propertyList.add(shapeProperty("from", String.valueOf(exportStamp.from().toEpochMilli())));
         propertyList.add(shapeProperty("to", String.valueOf(exportStamp.to().toEpochMilli())));
+        propertyList.add(shapeProperty("alexandriaIcon", exportStamp.alexandriaIcon()));
+    }
+
+    private static void addPreviewOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof PreviewOperation)) return;
+        PreviewOperation previewStamp = (PreviewOperation)stamp;
+        propertyList.add(shapeProperty("title", previewStamp.label()));
+        propertyList.add(shapeProperty("alexandriaIcon", previewStamp.alexandriaIcon()));
+    }
+
+    private static void addTaskOperationProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {
+        if (! (stamp instanceof TaskOperation)) return;
+        TaskOperation taskStamp = (TaskOperation)stamp;
+        propertyList.add(shapeProperty("confirm", taskStamp.confirmText()));
     }
 
     private static void addMapProperties(List<Property> propertyList, io.intino.konos.alexandria.activity.model.mold.Stamp stamp) {

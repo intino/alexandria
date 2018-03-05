@@ -28,6 +28,8 @@ def type(catalog)
     	[
     	$range
     	][
+		$temporalFilter
+		][
 		$toolbar
     	]
     	public static class Source {
@@ -86,6 +88,37 @@ def trigger(range)
 	}
 end
 
+def trigger(temporalFilter)
+	public static class TemporalFilter {
+		$temporalFilterEnabled
+		$temporalFilterVisible
+	}
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	public static boolean enable($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.TemporalCatalog catalog, io.intino.konos.alexandria.activity.model.catalog.Scope scope, ActivitySession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	public static boolean visible($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.TemporalCatalog catalog, io.intino.konos.alexandria.activity.model.catalog.Scope scope, ActivitySession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterVisible)
+end
+
 def trigger(timerange)
 	io.intino.konos.alexandria.activity.model.TimeRange
 end
@@ -124,11 +157,18 @@ end
 
 def type(openCatalog)
 	$openCatalogLoader
+	$openCatalogFilter
 end
 
 def trigger(openCatalogLoader)
-	public static java.util.List<String> onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, ActivitySession session) {
-		return null; //return items to show in catalog
+	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, ActivitySession session) {
+		return null; //return item id to show when catalog is opened
+	}
+end
+
+def trigger(openCatalogFilter)
+	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, ActivitySession session) {
+		return false;
 	}
 end
 

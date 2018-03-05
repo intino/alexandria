@@ -1,9 +1,11 @@
 import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.alexandria.schema.ResourceStore;
 import io.intino.konos.alexandria.schema.Serializer;
+import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import schemas.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -93,38 +95,38 @@ public class Serializer_ {
 	}
 
 	@Test
-	public void should_serialize_document() {
+	public void should_serialize_document() throws IOException {
 		Document document = new Document(instant(2017, 3, 21, 7, 39, 0), new Resource("4444-444-44-44444.png").data(new byte[100]));
 		ResourceStore documentStore = ResourceStore.collector();
 		assertThat(serialize(document, documentStore).toInl(), is(DocumentMessage));
 		assertThat(documentStore.resources().size(), is(1));
 		assertThat(documentStore.resources().get(0).id(), is("4444-444-44-44444.png"));
-		assertThat(documentStore.resources().get(0).data().length, is(100));
+		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(100));
 	}
 
 
 	@Test
-	public void should_serialize_document_list() {
+	public void should_serialize_document_list() throws IOException {
 		DocumentList documentList = new DocumentList(instant(2017, 3, 21, 7, 39, 0), new Resource("4444-444-44-44444.png").data(new byte[100]), new Resource("5555-555-55.jpeg").data(new byte[80]));
 		ResourceStore documentStore = ResourceStore.collector();
 		assertThat(serialize(documentList, documentStore).toInl(), is(DocumentListMessage));
 		assertThat(documentStore.resources().size(), is(2));
 		assertThat(documentStore.resources().get(0).id(), is("4444-444-44-44444.png"));
-		assertThat(documentStore.resources().get(0).data().length, is(100));
+		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(100));
 		assertThat(documentStore.resources().get(1).id(), is("5555-555-55.jpeg"));
-		assertThat(documentStore.resources().get(1).data().length, is(80));
+		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(80));
 	}
 
 	@Test
-	public void should_serialize_document_array() {
+	public void should_serialize_document_array() throws IOException {
 		DocumentArray documentArray = new DocumentArray(instant(2017, 3, 21, 7, 39, 0), new Resource("4444-444-44-44444.png").data(new byte[100]), new Resource("5555-555-55.jpeg").data(new byte[80]));
 		ResourceStore documentStore = ResourceStore.collector();
 		assertThat(serialize(documentArray, documentStore).toInl(), is(DocumentArrayMessage));
 		assertThat(documentStore.resources().size(), is(2));
 		assertThat(documentStore.resources().get(0).id(), is("4444-444-44-44444.png"));
-		assertThat(documentStore.resources().get(0).data().length, is(100));
+		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(100));
 		assertThat(documentStore.resources().get(1).id(), is("5555-555-55.jpeg"));
-		assertThat(documentStore.resources().get(1).data().length, is(80));
+		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(80));
 	}
 
 	private Instant instant(int y, int m, int d, int h, int mn, int s) {

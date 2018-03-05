@@ -14,13 +14,13 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.time.Instant;
-import java.util.Arrays;
 
 import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 
 public class Ness {
 	private static Logger logger = LoggerFactory.getLogger(Ness.class);
@@ -63,13 +63,17 @@ public class Ness {
 	}
 
 	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Tank... tanks) {
-		return reflow(blockSize, dispatcher, Arrays.stream(tanks).map(t -> t.name).toArray(String[]::new));
+		return reflow(blockSize, dispatcher, Instant.MIN, stream(tanks).map(t -> t.name).toArray(String[]::new));
 	}
 
-	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, String... tanks) {
+	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, Tank... tanks) {
+		return reflow(blockSize, dispatcher, from, stream(tanks).map(t -> t.name).toArray(String[]::new));
+	}
+
+	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, String... tanks) {
 		try {
 			TopicProducer producer = newProducer();
-			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).tanks(asList(tanks))));
+			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
 			waitUntilReflowSession();
 			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
@@ -245,7 +249,8 @@ public class Ness {
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) logger.error("Session is null");
 			topicConsumer = new TopicConsumer(session(), flowChannel());
-			topicConsumer.listen(flow, flowID);
+			if (flowID != null) topicConsumer.listen(flow, flowID);
+			else topicConsumer.listen(flow);
 			return topicConsumer;
 		}
 

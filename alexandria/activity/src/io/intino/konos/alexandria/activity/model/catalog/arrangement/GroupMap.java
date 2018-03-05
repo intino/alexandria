@@ -1,11 +1,10 @@
 package io.intino.konos.alexandria.activity.model.catalog.arrangement;
 
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class GroupMap extends HashMap<String, Group> {
+public class GroupMap extends LinkedHashMap<String, Group> {
 
 	public GroupMap putAll(List<Group> groupList) {
 		groupList.forEach(g -> put(g.name(), g));
@@ -13,6 +12,6 @@ public class GroupMap extends HashMap<String, Group> {
 	}
 
 	public List<Group> toList() {
-		return this.values().stream().sorted(Comparator.comparing(Group::label)).collect(Collectors.toList());
+		return new ArrayList<>(this.values());
 	}
 }

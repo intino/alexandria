@@ -1,17 +1,12 @@
 package io.intino.konos.alexandria.activity.helpers;
 
 import io.intino.konos.alexandria.activity.Resource;
-import io.intino.konos.alexandria.activity.displays.AlexandriaDialog;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementDisplay;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementView;
-import io.intino.konos.alexandria.activity.displays.ElementView;
+import io.intino.konos.alexandria.activity.displays.*;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
-import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.Mold;
-import io.intino.konos.alexandria.activity.model.TimeRange;
-import io.intino.konos.alexandria.activity.model.TimeScale;
+import io.intino.konos.alexandria.activity.displays.providers.TemporalCatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
@@ -66,8 +61,14 @@ public class ElementHelper {
 			}
 
 			@Override
-			public AlexandriaElementDisplay openElement(String label) {
+			public <D extends AlexandriaElementDisplay> D openElement(String label) {
 				return provider.openElement(label);
+			}
+
+			@Override
+			public <N extends AlexandriaNavigator> void configureTemporalNavigator(N navigator) {
+				if (! (provider.element() instanceof TemporalCatalog)) return;
+				((TemporalCatalogViewDisplayProvider)provider).configureTemporalNavigator(navigator);
 			}
 
 			@Override

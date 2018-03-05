@@ -1,8 +1,10 @@
 import io.intino.konos.alexandria.schema.ResourceLoader;
+import org.apache.tika.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import schemas.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -153,33 +155,33 @@ public class Deserializer_ {
 	}
 
 	@Test
-	public void should_deserialize_message_with_resource() {
+	public void should_deserialize_message_with_resource() throws IOException {
 		Document document = deserialize(DocumentMessage, id -> new byte[id.length()]).next(Document.class);
 		assertThat(document.ts().toString(), is("2017-03-21T07:39:00Z"));
 		assertThat(document.file().id(), is("4444-444-44-44444.png"));
-		assertThat(document.file().data().length, is("4444-444-44-44444.png".length()));
+		assertThat(IOUtils.toString(document.file().data()).length(), is("4444-444-44-44444.png".length()));
 	}
 
 	@Test
-	public void should_deserialize_message_with_resource_list() {
+	public void should_deserialize_message_with_resource_list() throws IOException {
 		DocumentList documentList = deserialize(DocumentListMessage, getResourceLoader()).next(DocumentList.class);
 		assertThat(documentList.ts().toString(), is("2017-03-21T07:39:00Z"));
 		assertThat(documentList.files().size(), is(2));
 		assertThat(documentList.files().get(0).id(), is("4444-444-44-44444.png"));
 		assertThat(documentList.files().get(1).id(), is("5555-555-55.jpeg"));
-		assertThat(documentList.files().get(0).data().length, is("4444-444-44-44444.png".length()));
-		assertThat(documentList.files().get(1).data().length, is("5555-555-55.jpeg".length()));
+		assertThat(IOUtils.toString(documentList.files().get(0).data()).length(), is("4444-444-44-44444.png".length()));
+		assertThat(IOUtils.toString(documentList.files().get(1).data()).length(), is("5555-555-55.jpeg".length()));
 	}
 
 	@Test
-	public void should_deserialize_message_with_resource_array() {
+	public void should_deserialize_message_with_resource_array() throws IOException {
 		DocumentArray documentArray = deserialize(DocumentArrayMessage, getResourceLoader()).next(DocumentArray.class);
 		assertThat(documentArray.ts().toString(), is("2017-03-21T07:39:00Z"));
 		assertThat(documentArray.files().length, is(2));
 		assertThat(documentArray.files()[0].id(), is("4444-444-44-44444.png"));
 		assertThat(documentArray.files()[1].id(), is("5555-555-55.jpeg"));
-		assertThat(documentArray.files()[0].data().length, is("4444-444-44-44444.png".length()));
-		assertThat(documentArray.files()[1].data().length, is("5555-555-55.jpeg".length()));
+		assertThat(IOUtils.toString(documentArray.files()[0].data()).length(), is("4444-444-44-44444.png".length()));
+		assertThat(IOUtils.toString(documentArray.files()[1].data()).length(), is("5555-555-55.jpeg".length()));
 	}
 
 	private ResourceLoader getResourceLoader() {

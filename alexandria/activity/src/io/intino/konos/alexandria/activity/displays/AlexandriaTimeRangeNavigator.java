@@ -21,6 +21,7 @@ public class AlexandriaTimeRangeNavigator extends AlexandriaNavigator<Alexandria
 	private List<Consumer<TimeRange>> fromListeners = new ArrayList<>();
 	private List<Consumer<TimeRange>> scaleListener = new ArrayList<>();
 	private List<Consumer<TimeRange>> toListeners = new ArrayList<>();
+	private TimeRange boundsRange = null;
 
 	public AlexandriaTimeRangeNavigator(Box box) {
 		super(box);
@@ -31,16 +32,28 @@ public class AlexandriaTimeRangeNavigator extends AlexandriaNavigator<Alexandria
 		super.init();
 
 		TimeRange range = timeScaleHandler().range();
+		boundsRange = timeScaleHandler().boundsRange();
 		notifier.refreshScales(ScaleBuilder.buildList(scales(), currentLanguage()));
 		notifier.refreshZoomRange(RangeBuilder.build(timeScaleHandler().zoomRange()));
-		notifier.refreshOlapRange(RangeBuilder.build(timeScaleHandler().boundsRange()));
+		notifier.refreshOlapRange(RangeBuilder.build(boundsRange));
 		notifier.refreshRange(RangeBuilder.build(range));
 	}
 
 	@Override
 	protected void addListeners(TimeScaleHandler timeScaleHandler) {
-		timeScaleHandler.onRangeChange(tr -> notifier.refreshRange(RangeBuilder.build(tr)));
+		timeScaleHandler.onRangeChange(tr -> {
+			updateBoundsRangeIfNeeded();
+			notifier.refreshRange(RangeBuilder.build(tr));
+		});
 		timeScaleHandler.onScaleChange(tr -> notifier.refreshRange(RangeBuilder.build(tr)));
+	}
+
+	private void updateBoundsRangeIfNeeded() {
+		Instant from = timeScaleHandler().boundsRange().from();
+		Instant to = timeScaleHandler().boundsRange().to();
+		if (from == boundsRange.from() && to == boundsRange.to()) return;
+		boundsRange = timeScaleHandler().boundsRange();
+		notifier.refreshOlapRange(RangeBuilder.build(boundsRange));
 	}
 
 	public void onMove(Consumer<TimeRange> listener) {

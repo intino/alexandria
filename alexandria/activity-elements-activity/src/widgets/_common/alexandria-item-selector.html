@@ -104,7 +104,7 @@
 
             properties: {
                 label: String,
-                items: { type: Array, value: function() { return []; }, observer: 'unCheckAll' },
+                items: { type: Array, value: function() { return []; }, observer: '_refreshSelected' },
                 multiple: { type: Boolean, value: function() { return false; } },
                 noLabel: { type: Boolean, value: function() { return false; } },
                 selected: { type: Object, observer: '_refreshSelected' },
@@ -121,6 +121,7 @@
             },
 
             _refreshSelected : function() {
+                if (this.selected == null) return;
                 this._updateItemsSelection(this.multiple ? this.selected : [ this.selected ]);
             },
 

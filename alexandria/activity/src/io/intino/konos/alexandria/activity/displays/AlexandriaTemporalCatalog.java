@@ -1,10 +1,12 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.displays.providers.TemporalCatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.helpers.Bounds;
 import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
+import io.intino.konos.alexandria.activity.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
@@ -14,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> {
+public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> implements TemporalCatalogViewDisplayProvider {
 	private N navigatorDisplay = null;
 
 	public AlexandriaTemporalCatalog(Box box, N navigatorDisplay) {
@@ -26,7 +28,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		dirty(true);
 		TimeScale scale = range.scale();
 		TimeScale referenceScale = (scale.ordinal() > TimeScale.Day.ordinal()) ? scale : TimeScale.Day;
-		timeScaleHandler().updateRange(range.from(), referenceScale.addTo(range.to(), 1), false);
+		Instant from = range.from();
+		Instant to = referenceScale.addTo(range.to(), 1);
+		TimeRange bounds = element().range(session());
+
+		if (from.isBefore(bounds.from())) from = bounds.to();
+		if (to.isAfter(bounds.to())) to = bounds.to();
+
+		timeScaleHandler().updateRange(from, to, false);
 	}
 
 	@Override
@@ -70,7 +79,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.view().name())).findFirst().orElse(null);
 			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
 				hideNavigator();
-			else if (!element().showAll())
+			else if (isNavigatorVisible())
 				showNavigator();
 		});
 	}
@@ -88,6 +97,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			refreshGroupingsSelection();
 			filterGroupingManager();
 		}
+
+		if (!isNavigatorVisible()) hideNavigator();
 
 		refreshView();
 	}
@@ -112,7 +123,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
-		TimeRange range = queryRange();
+		TimeRange range = showAll() ? timeScaleHandler().boundsRange() : queryRange();
 		ItemList itemList = element().items(scope, condition, range, session());
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
@@ -129,8 +140,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScaleHandler timeScaleHandler = buildTimeScaleHandler();
 		buildNavigatorDisplay(timeScaleHandler);
 		super.init();
-		navigatorDisplay.personify();
-		if (element().showAll()) hideNavigator();
+
+		if (element().temporalFilterLayout() != TemporalFilter.Layout.Horizontal)
+			refreshNavigatorLayout(element().temporalFilterLayout());
+
+		navigatorDisplay.personifyOnce(id());
+		if (isNavigatorVisible()) showNavigator();
+		else hideNavigator();
+
 		loadTimezoneOffset();
 	}
 
@@ -149,12 +166,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	private TimeScaleHandler buildTimeScaleHandler() {
-		TimeRange range = element().range(session());
 		TimeScaleHandler.Bounds bounds = new TimeScaleHandler.Bounds();
 		List<TimeScale> scales = element().scales();
 		Map<TimeScale, Bounds.Zoom> zoomMap = new HashMap<>();
 
-		bounds.range(new TimeRange(range.from(), range.to(), TimeScale.Minute));
+		bounds.rangeLoader(() -> {
+			TimeRange range = element().range(session());
+			return new TimeRange(range.from(), range.to(), TimeScale.Second);
+		});
 		bounds.mode(Bounds.Mode.ToTheLast);
 
 		scales.forEach(scale -> zoomMap.put(scale, new Bounds.Zoom().min(1).max(maxZoom())));
@@ -162,7 +181,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 		TimeScaleHandler timeScaleHandler = new TimeScaleHandler(bounds, scales, scales.get(0));
 		timeScaleHandler.availableScales(scales);
-		configureTimeScaleHandler(timeScaleHandler, range, scales);
+		configureTimeScaleHandler(timeScaleHandler, element().range(session()), scales);
 
 		return timeScaleHandler;
 	}
@@ -186,5 +205,13 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void showNavigator();
 	protected abstract void hideNavigator();
 	protected abstract void loadTimezoneOffset();
+	protected abstract void refreshNavigatorLayout(TemporalFilter.Layout layout);
 
+	private boolean isNavigatorVisible() {
+		return element().temporalFilterVisible(defaultScope(), session());
+	}
+
+	protected boolean showAll() {
+		return !element().temporalFilterEnabled(defaultScope(), session());
+	}
 }

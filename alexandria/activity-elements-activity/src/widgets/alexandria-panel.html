@@ -19,7 +19,7 @@
 <dom-module id="alexandria-panel">
 
     <template>
-        <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
+        <cotton-breadcrumbs class="breadcrumbs" items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class="layout vertical flex" style="height:100%;">
             <div class$="tabs tabs_[[_showTabs]]">
                 <paper-tabs selected="{{_selectedView}}" no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
@@ -84,6 +84,9 @@
         :host {
             position: relative;
         }
+        :host .breadcrumbs {
+            @apply(--alexandria-panel-breadcrumbs);
+        }
         :host paper-tabs {
             background: var(--default-primary-color);
             color: white;
@@ -110,6 +113,7 @@
             display: block;
             margin: 0px 6px;
             width: calc(100% - 12px);
+            @apply(--alexandria-panel-panels);
         }
         :host #main {
             position: relative;

@@ -34,6 +34,7 @@
                       on-open-item="_openItem"
                       on-save-item="_saveItem"
                       on-select-items="_selectItems"
+                      on-download-item="_downloadItem"
                       on-create-cluster-group="_createClusterGroup"
                       on-filter="_filter"
                       toolbar="[[_view.toolbar]]"
@@ -116,6 +117,10 @@
 
             _saveItem : function(e) {
                 this.saveItem(e.detail);
+            },
+
+            _downloadItem : function(e) {
+                this.downloadItemOperation(e.detail);
             },
 
             _selectItems : function(e) {

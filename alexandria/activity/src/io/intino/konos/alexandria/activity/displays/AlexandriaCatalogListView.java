@@ -18,6 +18,7 @@ import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
 import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import io.intino.konos.alexandria.activity.utils.StreamUtil;
@@ -157,16 +158,18 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
 
 		Item source = itemOf(params.item());
-		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
-
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
-		display.refresh();
+		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(source, session()));
+		else {
+			if (catalogLinkStamp.filtered())
+				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
+			display.refresh();
+		}
 	}
 
 	private void notifyOpenItem(String item) {
@@ -222,8 +225,18 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			}
 
 			@Override
-			public List<String> itemsToShow() {
-				return view.onClickRecordEvent().openCatalog().items(item, session());
+			public boolean filtered() {
+				return view.onClickRecordEvent().openCatalog().filtered();
+			}
+
+			@Override
+			public boolean filter(Item target) {
+				return view.onClickRecordEvent().openCatalog().filter(item, target, session());
+			}
+
+			@Override
+			public String itemToShow() {
+				return view.onClickRecordEvent().openCatalog().item(item, session());
 			}
 		}));
 	}
@@ -370,7 +383,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private void sendSortingList(List<Sorting> sortings) {
-		notifier.refreshSortingList(CatalogSortingBuilder.buildList(sortings));
+		notifier.refreshSortingList(CatalogSortingBuilder.buildList(sortings.stream().filter(Sorting::visible).collect(toList())));
 	}
 
 	private void sendSelectedSorting() {
@@ -453,8 +466,21 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()))));
 	}
 
-	public ActivityFile downloadItemOperation(DownloadItemParameters value) {
-		return null;
+	public ActivityFile downloadItemOperation(DownloadItemParameters params) {
+		Stamp stamp = provider.stamps(view.mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
+		if (stamp == null) return null;
+		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
+		return new ActivityFile() {
+			@Override
+			public String label() {
+				return resource.label();
+			}
+
+			@Override
+			public InputStream content() {
+				return resource.content();
+			}
+		};
 	}
 
 	public void executeOperation(ElementOperationParameters value) {

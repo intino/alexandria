@@ -20,6 +20,8 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
+import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
+
 public class CatalogRenderer extends PrototypeRenderer {
 
 	private final Project project;
@@ -45,7 +47,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 			frame.addSlot("mode", temporalCatalog.type().name());
 			frame.addSlot("scale", temporalCatalog.scales().stream().map(Enum::name).toArray());
 			frame.addSlot("range", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
-			if (temporalCatalog.showAll()) frame.addSlot("showAll", new Frame().addSlot("value", temporalCatalog.showAll()));
+			if (temporalCatalog.temporalFilter() != null)
+				frame.addSlot("temporalFilter", frameOf(temporalCatalog, temporalCatalog.temporalFilter()));
 		}
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		events(catalog, frame);
@@ -58,6 +61,26 @@ public class CatalogRenderer extends PrototypeRenderer {
 	private void events(Catalog catalog, Frame frame) {
 		if (catalog.events() != null)
 			frame.addSlot("event", frameOf(catalog.events().onClickRecord()));
+	}
+
+	private Frame frameOf(TemporalCatalog catalog, TemporalCatalog.TemporalFilter filter) {
+		Frame frame = new Frame();
+
+		frame.addSlot("temporalFilterLayout", filter.layout().toString());
+
+		Frame enabledFrame = new Frame();
+		if (filter.enabled() == TemporalCatalog.TemporalFilter.Enabled.Conditional)
+			enabledFrame.addSlot("catalog", catalog.name$());
+
+		frame.addSlot("temporalFilterEnabled", enabledFrame.addSlot(filter.enabled().toString(), filter.enabled().toString()));
+
+		Frame visibleFrame = new Frame();
+		if (filter.visible() == TemporalCatalog.TemporalFilter.Visible.Conditional)
+			visibleFrame.addSlot("catalog", catalog.name$());
+
+		frame.addSlot("temporalFilterVisible", visibleFrame.addSlot(filter.visible().toString(), filter.visible().toString()));
+
+		return frame;
 	}
 
 	private Frame frameOf(OnClickRecord onClickRecord) {
@@ -89,8 +112,10 @@ public class CatalogRenderer extends PrototypeRenderer {
 	public static Frame frameOf(OpenCatalog openCatalog, Catalog catalog, String box, String modelClass) {
 		final Frame frame = new Frame("event", openCatalog.getClass().getSimpleName());
 		frame.addSlot("catalog", openCatalog.catalog().name$());
-		if (openCatalog.filtered())
+		if (openCatalog.openItem())
 			frame.addSlot("openCatalogLoader", new Frame("openCatalogLoader").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+		if (openCatalog.filtered())
+			frame.addSlot("openCatalogFilter", new Frame("openCatalogFilter").addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 		return frame;
 	}
 
@@ -118,13 +143,12 @@ public class CatalogRenderer extends PrototypeRenderer {
 	}
 
 	private void arrangements(Catalog catalog, Frame frame) {
-		if (catalog.arrangement() == null) return;
-		frame.addSlot("hasArrangements", baseFrame());
-		for (Grouping grouping : catalog.arrangement().groupingList()) {
-			frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass));
-		}
-		for (Sorting sorting : catalog.arrangement().sortingList())
-			frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass));
+		Catalog.Arrangement arrangement = catalog.arrangement();
+		boolean existsGroupings = arrangement != null && !arrangement.groupingList().isEmpty();
+		if (existsGroupings) frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", arrangement.histograms().toString()));
+		if (arrangement == null) return;
+		arrangement.groupingList().forEach(grouping -> frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.modelClass)));
+		arrangement.sortingList().forEach(sorting -> frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.modelClass)));
 	}
 
 	private Frame baseFrame() {
@@ -136,6 +160,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("box", box)
 				.addSlot("name", sorting.name$())
 				.addSlot("label", sorting.label())
+				.addSlot("visible", sorting.visible())
 				.addSlot("catalog", catalog.name$())
 				.addSlot("type", modelClass);
 	}
@@ -176,6 +201,7 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("box", box)
 				.addSlot("catalog", catalog.name$())
 				.addSlot("name", view.name$())
+				.addSlot("label", view.label())
 				.addSlot("package", packageName)
 				.addSlot("hideNavigator", view.hideNavigator())
 				.addSlot("display", view.display());
@@ -190,9 +216,12 @@ public class CatalogRenderer extends PrototypeRenderer {
 			if (operation.i$(Export.class)) frame.addSlot("operation", frameOf(toolbar.export(), owner, box, modelClass, packageName));
 			if (operation.i$(AbstractToolbar.OpenDialog.class))
 				frame.addSlot("operation", frameOf(toolbar.openDialog(), owner, box, modelClass, packageName));
-			if (operation.i$(AbstractToolbar.Task.class)) frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass, packageName));
-			if (operation.i$(TaskSelection.class)) frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass, packageName));
-			if (operation.i$(ExportSelection.class)) frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(AbstractToolbar.Task.class))
+				frame.addSlot("operation", frameOf(toolbar.task(), owner, box, modelClass, packageName));
+			if (operation.i$(TaskSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.taskSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(ExportSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(DownloadSelection.class))
 				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass, packageName));
 // TODO MC filtros

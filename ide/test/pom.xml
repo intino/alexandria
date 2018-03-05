@@ -11,7 +11,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <tara.level>Solution</tara.level>
         <tara.dsl>Konos</tara.dsl>
-        <tara.dsl.version>3.2.0</tara.dsl.version>
+        <tara.dsl.version>1.0.0</tara.dsl.version>
         <tara.working.package>io.intino.konos.builder</tara.working.package>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>[3.2.0, 3.3.0]</version>
+            <version>[3.4.0, 3.5.0]</version>
             <scope>test</scope>
         </dependency>
         <dependency>

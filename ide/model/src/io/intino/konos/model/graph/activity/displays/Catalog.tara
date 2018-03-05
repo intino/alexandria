@@ -20,15 +20,19 @@ Concept Catalog extends Display
 				sub OpenCatalog
 					var Catalog catalog
 					var boolean filtered = false
+					var boolean openItem = false
 	Concept:{1..1} Views
 		has CatalogView
 		has:{0..1} DisplayView
 	Concept:{0..1} Arrangement
+		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = EnabledButHidden
+
 		Concept:Named Grouping
 			var string label
 			var word:{Percentage Absolute} histogram = Percentage
 		Concept:Named Sorting
 			var string label
+			var boolean visible = true
 
 Concept Toolbar is decorable component
 	var boolean canSearch = true
@@ -48,7 +52,11 @@ Concept Toolbar is decorable component
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type
 	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
-	var boolean showAll = false
+
+	Concept:{0..1} TemporalFilter
+		var word:{Always Conditional Never} enabled
+		var word:{Always Conditional Never} visible
+		var word:{Vertical Horizontal} layout = Horizontal
 
 Concept CatalogView is component
 	var string label

@@ -11,6 +11,10 @@ public class DownloadOperation extends Operation<String> {
 	private List<String> options = new java.util.ArrayList<>();
 	private Execution execution;
 
+	public DownloadOperation() {
+		alexandriaIcon("icons:file-download");
+	}
+
 	public List<String> options() {
 		return this.options;
 	}

@@ -15,6 +15,7 @@ public class EmbeddedCatalog extends Stamp<String> {
 	private Catalog catalog;
 	private CatalogDisplayBuilder catalogDisplayBuilder;
 	private Filter filter;
+	private int maxItems = -1;
 
 	public boolean filter(Element context, Item target, Item item, ActivitySession session) {
 		if (filter == null) return true;
@@ -50,11 +51,21 @@ public class EmbeddedCatalog extends Stamp<String> {
 		AlexandriaAbstractCatalog catalog = catalogDisplayBuilder != null ? catalogDisplayBuilder.build(session) : null;
 		if (catalog == null) return null;
 		catalog.enabledViews(views);
+		if (maxItems() > 0) catalog.maxItems(maxItems());
 		return catalog;
 	}
 
 	public EmbeddedCatalog catalogDisplayBuilder(CatalogDisplayBuilder builder) {
 		this.catalogDisplayBuilder = builder;
+		return this;
+	}
+
+	public int maxItems() {
+		return maxItems;
+	}
+
+	public EmbeddedCatalog maxItems(int maxItems) {
+		this.maxItems = maxItems;
 		return this;
 	}
 

@@ -9,6 +9,10 @@ import java.net.URL;
 public class PreviewOperation extends Operation<URL> {
 	private Execution execution;
 
+	public PreviewOperation() {
+		alexandriaIcon("icons:description");
+	}
+
 	public URL preview(Item item, ActivitySession session) {
 		return item != null && execution != null ? execution.preview(item.object(), session) : null;
 	}

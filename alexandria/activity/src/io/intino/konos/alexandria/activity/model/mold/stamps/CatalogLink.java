@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class CatalogLink extends Stamp<String> {
 	private Catalog catalog;
+	private ItemLoader itemLoader;
 	private Filter filter;
 
 	public Catalog catalog() {
@@ -16,6 +17,11 @@ public class CatalogLink extends Stamp<String> {
 	public CatalogLink catalog(Catalog catalog) {
 		this.catalog = catalog;
 		return this;
+	}
+
+	@Override
+	public String objectValue(Object object, ActivitySession session) {
+		return value() != null ? value().value(object, session) : null;
 	}
 
 	public boolean filtered() {
@@ -32,9 +38,21 @@ public class CatalogLink extends Stamp<String> {
 		return this;
 	}
 
-	@Override
-	public String objectValue(Object object, ActivitySession session) {
-		return value() != null ? value().value(object, session) : null;
+	public boolean openItemOnLoad() {
+		return itemLoader != null;
+	}
+
+	public String item(Item target, ActivitySession session) {
+		return itemLoader != null ? itemLoader.item(target != null ? target.object() : null, session) : null;
+	}
+
+	public CatalogLink itemLoader(ItemLoader itemLoader) {
+		this.itemLoader = itemLoader;
+		return this;
+	}
+
+	public interface ItemLoader {
+		String item(Object target, ActivitySession session);
 	}
 
 	public interface Filter {

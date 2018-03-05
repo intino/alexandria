@@ -26,6 +26,7 @@ Display alexandriaTemporalRangeCatalog
 	Notification refreshCatalog as Object(Catalog)
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
+	Notification refreshNavigatorLayout as Text
 	Notification showDialog
 	Notification showTimeRangeNavigator
 	Notification hideTimeRangeNavigator
@@ -46,6 +47,7 @@ Display alexandriaTemporalTimeCatalog
 	Notification refreshCatalog as Object(Catalog)
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
+	Notification refreshNavigatorLayout as Text
 	Notification showDialog
 	Notification showTimeNavigator
 	Notification hideTimeNavigator
@@ -166,6 +168,7 @@ Display alexandriaTimeNavigator
 	Request nextDate
 	Request play
 	Request pause
+	Request lastDate
 
 Display alexandriaTimeRangeNavigator
 	Notification refreshScales as List Object(Scale)

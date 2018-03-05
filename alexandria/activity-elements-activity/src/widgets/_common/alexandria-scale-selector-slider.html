@@ -9,9 +9,9 @@
 <dom-module id="alexandria-scale-selector-slider">
     <template>
         <div class="layout vertical" hidden$="[[_hidden]]">
-            <div class="button"><paper-icon-button id="next" on-tap="_nextScale" icon="add"></paper-icon-button></div>
+            <div class="button control"><paper-icon-button id="next" on-tap="_nextScale" icon="add"></paper-icon-button></div>
             <div class="button scale layout horizontal center-justified" title$="[[_current.label]]"><paper-button id="toggleScaleButton" on-tap="_toggleScaleSelector">[[_current.symbol]]</paper-button></div>
-            <div class="button"><paper-icon-button id="previous" on-tap="_previousScale" icon="remove"></paper-icon-button></div>
+            <div class="button control"><paper-icon-button id="previous" on-tap="_previousScale" icon="remove"></paper-icon-button></div>
             <alexandria-scale-selector mode="horizontal"
                                        scales="[[scales]]"
                                        selected-scale="[[selectedScale]]"
@@ -29,6 +29,9 @@
         :host .button {
             @apply(--layout-horizontal);
             @apply(--layout-center-justified);
+        }
+        :host .button.control {
+            @apply(--alexandria-scale-selector-slider-control-button);
         }
         :host .button:hover {
             background-color: #ddd;
@@ -166,8 +169,8 @@
 
                 this.delay = window.setTimeout(() => {
                     this.fire('scale-selected', scale.name);
-                    this.lastScale = scale;
-                }, 600);
+                this.lastScale = scale;
+            }, 600);
             },
 
             _toggleScaleSelector : function(event) {

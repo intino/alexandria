@@ -16,17 +16,17 @@
             <div>[[_grouping.label]]</div>
             <div hidden$="[[!_allSelected]]">[[UnSelectAll]]</div>
         </div>
-        <div class="toolbar" hidden="[[!_enoughGroups]]">
-            <paper-input id="filterInput" noLabelFloat placeholder="[[Filter]]" on-keyup="_filter"><iron-icon icon="search" suffix></iron-icon></paper-input>
-            <div class="layout horizontal end-justified info"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[_grouping.groupList.length]]</div></div>
+        <div class="toolbar" hidden$="[[!_enoughGroups]]">
+            <paper-input id="filterInput" noLabelFloat placeholder="[[Filter]]" on-keyup="_keyUp"><iron-icon icon="search" suffix></iron-icon></paper-input>
+            <div class="layout horizontal end-justified info" hidden$="[[!_selectedCount]]"><div class="count">[[_selectedCount]]</div>&nbsp;/&nbsp;<div class="total">[[_count]]</div></div>
         </div>
-        <ul class="groups">
+        <ul id="groups" class="groups collapsed">
             <li class="message" hidden$="[[_grouping.groupList.length]]">[[NoGroups]]</li>
             <template is="dom-if" if="[[!someGroupsVisible]]">
                 <li class="message">[[NoGroups]]</li>
             </template>
             <template is="dom-repeat" items="[[_grouping.groupList]]" as="group">
-                <li class$="layout horizontal group _[[group.idx]]">
+                <li name$="_[[group.idx]]" class$="layout horizontal group expanded_[[group.expanded]]">
                     <div class="chart"><alexandria-group-chart group="[[group]]" percentage="[[_grouping.isPercentage]]" count="[[_grouping.countItems]]" color="[[group.color]]"></alexandria-group-chart></div>
                     <div class="layout horizontal flex">
                         <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="{{group.selected}}" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
@@ -34,6 +34,7 @@
                     </div>
                 </li>
             </template>
+            <a id="showAll" on-tap="_allGroups" class="show-all" hidden$="[[!_enoughGroups]]">[[ShowAll]]</a>
         </ul>
     </template>
 
@@ -81,11 +82,23 @@
             padding: 0;
             list-style: none;
             font-size: 10pt;
-            max-height: 230px;
-            overflow: auto;
+        }
+        :host .groups.collapsed .expanded_true {
+            display: none;
+        }
+        :host .groups .expanded_true {
+            display: flex;
         }
         :host .groups li {
             margin-bottom: 3px;
+        }
+        :host .groups .show-all {
+            margin-top: 5px;
+            margin-left: 21px;
+            display: block;
+            margin-bottom: 10px;
+            color: var(--default-primary-color);
+            cursor: pointer;
         }
         :host .message {
             text-align: center;
@@ -108,16 +121,19 @@
         const AlexandriaCatalogGroupingDictionary = {
             es: {
                 Filter : "filtrar",
-                NoGroups : "no hay opciones"
+                NoGroups : "no hay opciones",
+                ShowAll : "mostrar todos"
             },
             en: {
                 Filter : "filter",
-                NoGroups : "no options"
+                NoGroups : "no options",
+                ShowAll : "show all"
             }
         };
 
         const AlexandriaCatalogGroupingGroupColorEnabled = "#499A00";
         const AlexandriaCatalogGroupingGroupColorDisabled = "#ddd";
+        const AlexandriaCatalogGroupingMaxItems = 10;
 
         Polymer({
             is: 'alexandria-catalog-grouping',
@@ -126,11 +142,13 @@
                 grouping: { type: Object, observer: '_refreshGrouping' },
                 _grouping: Object,
                 someGroupsVisible: Boolean,
+                _count: Number,
                 _selectedCount: Number,
                 _enoughGroups: Boolean,
                 _groupsDisabled: Boolean,
                 _chartsVisible : Boolean,
-                _allSelected : Boolean
+                _allSelected : Boolean,
+                _showAll : { type: Boolean, value: function() { return false; } }
             },
 
             behaviors: [CottonBehaviors.TranslatorBehavior],
@@ -143,7 +161,7 @@
                 var result = [];
                 this.querySelectorAll(".groups cotton-checkbox").forEach((checkbox) => {
                     if (checkbox.checked) result.push(checkbox.getAttribute("name"));
-                });
+            });
                 return result;
             },
 
@@ -163,8 +181,13 @@
                 let count = this.grouping.groupList.length;
                 this._refreshInternalGrouping();
                 this._groupsDisabled = count == 1 && !this._isCluster();
-                this._enoughGroups = count > 10;
-                this._selectedCount = count;
+                this._enoughGroups = count > AlexandriaCatalogGroupingMaxItems;
+                this._selectedCount = this.getSelectedGroups().length;
+                this._count = count;
+                window.setTimeout(() => {
+                    if (this.$.filterInput.value === "") return;
+                this._filter();
+            }, 100);
             },
 
             _refreshInternalGrouping : function() {
@@ -178,6 +201,7 @@
                 for (var i=0; i<groups.length; i++) {
                     var group = groups[i];
                     group.idx = this._groupIdx(group.label);
+                    group.expanded = i > AlexandriaCatalogGroupingMaxItems;
                     group.color = this._colorOf(group);
                 }
                 this.notifyPath("_grouping.groupList", groups);
@@ -225,19 +249,29 @@
             },
 
             _groupIdx : function(label) {
-                return label.replace(/[\W_]+/g,"");
+                return label.normalize('NFD').replace(/[\W_]+/g,"").replace(/[\u0300-\u036f]/g, "");
             },
 
             _filter : function() {
                 var value = this._groupIdx(this.$.filterInput.value).toLowerCase();
-                var someGroupsVisible = false;
+                var countValidGroups = 0;
+                var showAll = this._showAll;
                 this.querySelectorAll(".group").forEach(function(group) {
-                    var className = group.className;
-                    let visible = value === "" || className.toLowerCase().indexOf(value) !== -1;
-                    if (visible) someGroupsVisible = true;
-                    group.style.display = visible ? "flex" : "none";
+                    var name = group.getAttribute("name");
+                    let valid = value === "" || name.toLowerCase().indexOf(value) !== -1;
+                    if (valid) countValidGroups++;
+                    group.expanded = valid && !showAll && countValidGroups > AlexandriaCatalogGroupingMaxItems;
+                    group.style.display = valid && !group.expanded ? "flex" : "none";
                 });
-                this.someGroupsVisible = someGroupsVisible;
+                if (!this._showAll) $(this.$.groups).addClass("collapsed");
+                if (!this._showAll && countValidGroups > AlexandriaCatalogGroupingMaxItems) this._showAllGroups();
+                else this._hideAllGroups();
+                this.someGroupsVisible = countValidGroups > 0;
+            },
+
+            _keyUp : function() {
+                this._showAll = false;
+                this._filter();
             },
 
             _isCluster : function() {
@@ -252,6 +286,21 @@
                 var target = e.target;
                 var group = target.getAttribute("group") != null ? target.getAttribute("group") : $(target).parent("paper-icon-button").get(0).getAttribute("group");
                 this.fire("delete-grouping-group", { grouping: this.grouping.name, name: group });
+            },
+
+            _allGroups : function(e) {
+                $(this.$.groups).removeClass("collapsed");
+                this._showAll = true;
+                this._hideAllGroups();
+                this._filter();
+            },
+
+            _showAllGroups : function() {
+                this.$.showAll.hidden = false;
+            },
+
+            _hideAllGroups : function() {
+                this.$.showAll.hidden = true;
             }
 
         });

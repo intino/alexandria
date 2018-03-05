@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model;
 
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
+import io.intino.konos.alexandria.activity.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.time.Instant;
@@ -17,7 +18,7 @@ public class TemporalCatalog extends Catalog {
 	private ObjectCreatedLoader objectCreatedLoader;
 	private List<TimeScale> scales = new ArrayList<>();
 	private int maxZoom = 5;
-	private boolean showAll = false;
+	private TemporalFilter temporalFilter;
 	private Type type = Type.Time;
 
 	public enum Type {
@@ -105,12 +106,20 @@ public class TemporalCatalog extends Catalog {
 		return this;
 	}
 
-	public boolean showAll() {
-		return showAll;
+	public boolean temporalFilterEnabled(Scope scope, ActivitySession session) {
+		return temporalFilter == null || temporalFilter.enabled(this, scope, session);
 	}
 
-	public TemporalCatalog showAll(boolean showAll) {
-		this.showAll = showAll;
+	public boolean temporalFilterVisible(Scope scope, ActivitySession session) {
+		return temporalFilter == null || temporalFilter.visible(this, scope, session);
+	}
+
+	public TemporalFilter.Layout temporalFilterLayout() {
+		return temporalFilter != null ? temporalFilter.layout() : TemporalFilter.Layout.Horizontal;
+	}
+
+	public TemporalCatalog temporalFilter(TemporalFilter filter) {
+		this.temporalFilter = filter;
 		return this;
 	}
 

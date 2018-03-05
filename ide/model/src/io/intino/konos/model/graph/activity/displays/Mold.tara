@@ -26,6 +26,7 @@ Concept Mold extends Display
 			sub CatalogLink
 				var Catalog catalog
 				var boolean filtered = false
+				var boolean openItem = false
 			sub Description
 			sub EmbeddedDisplay
 				var Display display
@@ -35,6 +36,11 @@ Concept Mold extends Display
 				var Catalog catalog
 				var CatalogView[] views
 				var boolean filtered = false
+				var integer maxItems = -1
+			sub TemporalCatalogTime
+			sub TemporalCatalogTimeNavigator
+			sub TemporalCatalogRange
+			sub TemporalCatalogRangeNavigator
 			sub Highlight
 			sub Icon
 				var word:{Polymer Resource Base64} source
@@ -42,6 +48,8 @@ Concept Mold extends Display
 			sub ItemLinks
 			sub Location
 			sub Operation
+				var word:{Link Button Icon} mode = Button
+				var string alexandriaIcon = empty
 				sub OpenDialogOperation
 					var Dialog dialog
 					var integer:{%} width = 100%
@@ -52,6 +60,7 @@ Concept Mold extends Display
 				sub DownloadOperation
 					var string[] options = empty
 				sub TaskOperation
+					var string confirmText = empty
 				sub PreviewOperation
 			sub Page
 			sub Picture > var string defaultPicture = empty
