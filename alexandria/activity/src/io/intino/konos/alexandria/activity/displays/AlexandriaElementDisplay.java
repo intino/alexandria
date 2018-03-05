@@ -269,49 +269,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return elementDisplayManager.openElement(label);
 	}
 
-	private AlexandriaAbstractCatalog catalogDisplayOf(CatalogInstantBlock block) {
-		if (!this.element.name().equals(block.catalog()) && !this.element.label().equals(block.catalog()))
-			return openElement(block.catalog());
-
-		AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) this;
-		List<?> views = display.views();
-		View view = views.stream().map(v -> (View)v).filter(v -> !(v instanceof DisplayView)).findFirst().orElse(null);
-		if (view != null) display.selectView(view.name());
-
-		return display;
-	}
-
-	protected void notifyLoading(Boolean loading) {
-		loadingListeners.forEach(l -> l.accept(loading));
-	}
-
-	protected List<? extends AbstractView> views() {
-		List<AbstractView> elementViews = element().views();
-		if (enabledViews == null) return elementViews;
-		return elementViews.stream().filter(v -> enabledViews.contains(v.name())).collect(toList());
-	}
-
-	protected List<Mold> molds() {
-		return views().stream().filter(v -> (v instanceof MoldView)).map(v -> ((MoldView)v).mold()).collect(toList());
-	}
-
-	protected void updateCurrentView(AlexandriaElementView display) {
-		this.currentView = display;
-		refreshView();
-	}
-
-	protected void createDialogContainer() {
-		dialogContainer = new AlexandriaDialogContainer(box);
-		dialogContainer.onDialogAssertion((modification) -> currentView().ifPresent(view -> {
-			dirty(true);
-			if (modification.toLowerCase().equals("itemmodified")) view.refresh(currentItem_());
-			else if (modification.toLowerCase().equals("catalogmodified")) view.refresh();
-		}));
-		add(dialogContainer);
-		dialogContainer.personifyOnce();
-	}
-
-	protected void openItem(String item) {
+	public void openItem(String item) {
 		openItem(new AlexandriaElementView.OpenItemEvent() {
 			@Override
 			public String label() {
@@ -357,6 +315,48 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		});
 	}
 
+	private AlexandriaAbstractCatalog catalogDisplayOf(CatalogInstantBlock block) {
+		if (!this.element.name().equals(block.catalog()) && !this.element.label().equals(block.catalog()))
+			return openElement(block.catalog());
+
+		AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) this;
+		List<?> views = display.views();
+		View view = views.stream().map(v -> (View)v).filter(v -> !(v instanceof DisplayView)).findFirst().orElse(null);
+		if (view != null) display.selectView(view.name());
+
+		return display;
+	}
+
+	protected void notifyLoading(Boolean loading) {
+		loadingListeners.forEach(l -> l.accept(loading));
+	}
+
+	protected List<? extends AbstractView> views() {
+		List<AbstractView> elementViews = element().views();
+		if (enabledViews == null) return elementViews;
+		return elementViews.stream().filter(v -> enabledViews.contains(v.name())).collect(toList());
+	}
+
+	protected List<Mold> molds() {
+		return views().stream().filter(v -> (v instanceof MoldView)).map(v -> ((MoldView)v).mold()).collect(toList());
+	}
+
+	protected void updateCurrentView(AlexandriaElementView display) {
+		this.currentView = display;
+		refreshView();
+	}
+
+	protected void createDialogContainer() {
+		dialogContainer = new AlexandriaDialogContainer(box);
+		dialogContainer.onDialogAssertion((modification) -> currentView().ifPresent(view -> {
+			dirty(true);
+			if (modification.toLowerCase().equals("itemmodified")) view.refresh(currentItem_());
+			else if (modification.toLowerCase().equals("catalogmodified")) view.refresh();
+		}));
+		add(dialogContainer);
+		dialogContainer.personifyOnce();
+	}
+
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
 		removePanelDisplay();
 		openedItem = event;
@@ -389,17 +389,12 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
 		AlexandriaElementDisplay display = openElement(event.catalog().label());
-		List<String> itemsToShow = event.itemsToShow();
-		if (itemsToShow == null || itemsToShow.size() <= 0)
-			display.closeCurrentItem();
-		else if (itemsToShow.size() == 1)
-			display.openItem(itemsToShow.get(0));
+		String itemToShow = event.itemToShow();
+
+		if (itemToShow != null) display.openItem(itemToShow);
 		else {
 			display.closeCurrentItem();
-			display.filterAndNotify(i -> {
-				Item item = (Item) i;
-				return itemsToShow.contains(item.name()) || itemsToShow.contains(item.id());
-			});
+			if (event.filtered()) display.filterAndNotify(i -> event.filter((Item) i));
 			display.refresh();
 		}
 	}
@@ -419,7 +414,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public Item item(String key) {
-		return loadItem(key);
+		return target;
 	}
 
 	protected abstract void showDialog();
@@ -430,10 +425,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void createPanel(CreatePanelParameters params);
 	protected abstract void showPanel();
 	protected abstract void hidePanel();
-
-	protected Item loadItem(String id) {
-		return element().item(id, session());
-	}
 
 	protected void applyFilter(ItemList itemList) {
 		if (staticFilter != null) itemList.filter(staticFilter);

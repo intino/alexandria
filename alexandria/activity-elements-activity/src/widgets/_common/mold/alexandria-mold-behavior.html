@@ -105,6 +105,7 @@
             stamp.isHighlight = this._isHighlight(moldStamp);
             stamp.isPicture = this._isPicture(moldStamp);
             stamp.isOpenDialogOperation = this._isOpenDialogOperation(moldStamp);
+            stamp.isOperation = this._isOperation(moldStamp);
             stamp.isDownloadOperation = this._isDownloadOperation(moldStamp);
             stamp.isPreviewOperation = this._isPreviewOperation(moldStamp);
             stamp.isExportOperation = this._isExportOperation(moldStamp);
@@ -113,6 +114,10 @@
             stamp.isEmbeddedDisplay = this._isEmbeddedDisplay(moldStamp);
             stamp.isEmbeddedDialog = this._isEmbeddedDialog(moldStamp);
             stamp.isEmbeddedCatalog = this._isEmbeddedCatalog(moldStamp);
+            stamp.isTemporalCatalogRange = this._isTemporalCatalogRange(moldStamp);
+            stamp.isTemporalCatalogRangeNavigator = this._isTemporalCatalogRangeNavigator(moldStamp);
+            stamp.isTemporalCatalogTime = this._isTemporalCatalogTime(moldStamp);
+            stamp.isTemporalCatalogTimeNavigator = this._isTemporalCatalogTimeNavigator(moldStamp);
             stamp.isLocation = this._isLocation(moldStamp);
             stamp.isBreadcrumbs = this._isBreadcrumbs(moldStamp);
             stamp.isItemLinks = this._isItemLinks(moldStamp);
@@ -130,9 +135,11 @@
             this._addStampIconProperties(stamp, moldBlock, moldStamp);
             this._addStampRatingProperties(stamp, moldStamp);
             this._addStampBreadcrumbsProperties(stamp, moldBlock, moldStamp);
+            this._addStampOperationProperties(stamp, moldStamp);
             this._addStampDownloadOperationProperties(stamp, moldStamp);
             this._addStampPreviewOperationProperties(stamp, moldStamp);
             this._addStampExportOperationProperties(stamp, moldStamp);
+            this._addStampTaskOperationProperties(stamp, moldStamp);
             this._addStampItemLinksProperties(stamp, moldBlock, moldStamp);
             this._addStampCatalogLinkProperties(stamp, moldBlock, moldStamp);
             this._addStampLocationProperties(stamp, moldStamp);
@@ -168,6 +175,12 @@
             stamp.properties.breadcrumbs = this.treeToBreadcrumbs(tree);
         },
 
+        _addStampOperationProperties : function(stamp, moldStamp) {
+            if (!stamp.isOperation) return;
+            stamp.properties.mode = this._propertyValueOf(moldStamp,'mode').toLowerCase();
+            stamp.properties.alexandriaIcon = this._propertyValueOf(moldStamp,'alexandriaIcon');
+        },
+
         _addStampDownloadOperationProperties : function(stamp, moldStamp) {
             if (!stamp.isDownloadOperation) return;
             stamp.properties.title = this._parseFunctions(this._propertyValueOf(moldStamp,'title'));
@@ -186,6 +199,11 @@
             stamp.properties.options = this._propertyValueOf(moldStamp,'options').split(",");
             stamp.properties.from = this._propertyValueOf(moldStamp,'from');
             stamp.properties.to = this._propertyValueOf(moldStamp,'to');
+        },
+
+        _addStampTaskOperationProperties : function(stamp, moldStamp) {
+            if (!stamp.isTaskOperation) return;
+            stamp.properties.confirm = this._parseFunctions(this._propertyValueOf(moldStamp,'confirm'));
         },
 
         _addStampItemLinksProperties : function(stamp, moldBlock, moldStamp) {
@@ -298,6 +316,12 @@
             return this.mode != "map" && stamp.shape === "open-dialog-operation";
         },
 
+        _isOperation : function(stamp) {
+            return this._isDownloadOperation(stamp) || this._isExportOperation(stamp) ||
+                this._isPreviewOperation(stamp) || this._isTaskOperation(stamp) ||
+                this._isOpenDialogOperation(stamp);
+        },
+
         _isDownloadOperation : function(stamp) {
             return this.mode != "map" && stamp.shape === "download-operation";
         },
@@ -328,6 +352,22 @@
 
         _isEmbeddedCatalog : function(stamp) {
             return stamp.shape === "embedded-catalog";
+        },
+
+        _isTemporalCatalogRange : function(stamp) {
+            return stamp.shape === "temporal-catalog-range";
+        },
+
+        _isTemporalCatalogRangeNavigator : function(stamp) {
+            return stamp.shape === "temporal-catalog-range-navigator";
+        },
+
+        _isTemporalCatalogTime : function(stamp) {
+            return stamp.shape === "temporal-catalog-time";
+        },
+
+        _isTemporalCatalogTimeNavigator : function(stamp) {
+            return stamp.shape === "temporal-catalog-time-navigator";
         },
 
         _isLocation : function(stamp) {

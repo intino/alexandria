@@ -16,9 +16,15 @@ public class CatalogBuilder {
     public static Catalog build(io.intino.konos.alexandria.activity.model.Catalog catalog, GroupingManager manager, String label, boolean embedded) {
         return new Catalog().name(catalog.name()).label(label)
                 .embedded(embedded)
-                .hideGroupings(catalog.groupings().size() <= 0)
+                .hideGroupings(catalog.groupings().size() <= 0 || allGroupingsEmpty(catalog, manager))
                 .groupingList(buildGroupingList(catalog, manager))
-                .sortingList(buildSortingList(catalog));
+                .sortingList(buildSortingList(catalog))
+                .arrangementHistogramsMode(catalog.arrangementHistogramsMode().toString())
+                .mode(catalog.mode().toString());
+    }
+
+    private static boolean allGroupingsEmpty(io.intino.konos.alexandria.activity.model.Catalog catalog, GroupingManager manager) {
+        return catalog.groupings().stream().filter(g -> !manager.groups(g).isEmpty()).count() <= 0;
     }
 
     private static List<Grouping> buildGroupingList(io.intino.konos.alexandria.activity.model.Catalog catalog, GroupingManager manager) {
@@ -38,7 +44,7 @@ public class CatalogBuilder {
     }
 
     private static List<Sorting> buildSortingList(io.intino.konos.alexandria.activity.model.Catalog catalog) {
-        return CatalogSortingBuilder.buildList(catalog.sortings());
+        return CatalogSortingBuilder.buildList(catalog.sortings().stream().filter(io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting::visible).collect(toList()));
     }
 
     private static String typeOf(io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping grouping) {

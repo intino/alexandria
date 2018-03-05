@@ -8,7 +8,6 @@ import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
@@ -45,7 +44,9 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	interface OpenItemCatalogEvent {
 		Item sender();
 		Catalog catalog();
-		List<String> itemsToShow();
+		boolean filtered();
+		boolean filter(Item target);
+		String itemToShow();
 	}
 
 	interface ExecuteItemTaskEvent {

@@ -4,11 +4,10 @@ import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
-import java.util.List;
-
 public class OpenCatalog extends Open {
 	private Catalog catalog = null;
-	private ItemsLoader itemsLoader;
+	private ItemLoader itemLoader;
+	private Filter filter;
 
 	public Catalog catalog() {
 		return catalog;
@@ -19,16 +18,38 @@ public class OpenCatalog extends Open {
 		return this;
 	}
 
-	public List<String> items(Item target, ActivitySession session) {
-		return itemsLoader != null ? itemsLoader.items(catalog, target != null ? target.object() : null, session) : null;
+	public boolean filtered() {
+		return filter != null;
 	}
 
-	public OpenCatalog itemsLoader(ItemsLoader itemsLoader) {
-		this.itemsLoader = itemsLoader;
+	public boolean filter(Item source, Item target, ActivitySession session) {
+		if (filter == null) return true;
+		return filter.filter(catalog, source != null ? source.object() : null, target != null ? target.object() : null, session);
+	}
+
+	public OpenCatalog filter(Filter filter) {
+		this.filter = filter;
 		return this;
 	}
 
-	public interface ItemsLoader {
-		List<String> items(Catalog catalog, Object target, ActivitySession session);
+	public boolean openItemOnLoad() {
+		return itemLoader != null;
+	}
+
+	public String item(Item target, ActivitySession session) {
+		return itemLoader != null ? itemLoader.item(catalog, target != null ? target.object() : null, session) : null;
+	}
+
+	public OpenCatalog itemLoader(ItemLoader itemLoader) {
+		this.itemLoader = itemLoader;
+		return this;
+	}
+
+	public interface ItemLoader {
+		String item(Catalog catalog, Object target, ActivitySession session);
+	}
+
+	public interface Filter {
+		boolean filter(Catalog catalog, Object sourceObject, Object targetObject, ActivitySession session);
 	}
 }

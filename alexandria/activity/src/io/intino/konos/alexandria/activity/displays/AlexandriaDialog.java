@@ -20,17 +20,15 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
-public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialogNotifier> {
+public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogNotifier, Box> {
 	private int width;
 	private int height;
-	private Box box;
 	private Map<Class<? extends Dialog.Tab.Input>, Function<FormInput, DialogValidator.Result>> validators = new HashMap<>();
 	private Dialog dialog;
 	private List<Consumer<DialogExecution.Modification>> doneListeners = new ArrayList<>();
 
 	public AlexandriaDialog(Box box, Dialog dialog) {
-		super();
-		this.box = box;
+		super(box);
 		this.dialog(dialog);
 		validators.put(Dialog.Tab.Text.class, this::validateText);
 		validators.put(Dialog.Tab.Section.class, this::validateSection);
@@ -140,8 +138,9 @@ public abstract class AlexandriaDialog extends AlexandriaDisplay<AlexandriaDialo
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
 		DialogExecution.Modification modification = operation.execute(session());
-		notifier.done(modification.toString());
-		doneListeners.forEach(l -> l.accept(modification));
+		DialogExecution.Modification result = modification != null ? modification : DialogExecution.Modification.None;
+		notifier.done(result.toString());
+		doneListeners.forEach(l -> l.accept(result));
 	}
 
 	public abstract void prepare();

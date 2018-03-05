@@ -19,6 +19,9 @@ AlexandriaTimeNavigatorBehaviors.Requester = {
     },
     pause : function() {
     	this.carry("pause");
+    },
+    lastDate : function() {
+    	this.carry("lastDate");
     }
 
 };

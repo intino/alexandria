@@ -28,6 +28,7 @@ def type(tanks)
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			$tank+assign...[$NL]
+			final String clientID = box.configuration().nessConfiguration().clientID;
 			$tank+subscribe...[$NL]
 		}
 
@@ -74,10 +75,10 @@ def type(tank) trigger(getter)
 end
 
 def type(tank) trigger(map)
-	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
+	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box),  clientID != null ? clientID + "-$name" : null);
 end
 def type(tank) trigger(subscribe)
-	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box), box.configuration().nessConfiguration().clientID + "-$name");
+	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor(box),  clientID != null ? clientID + "-$name" : null);
 end
 
 def type(custom) trigger(replace)

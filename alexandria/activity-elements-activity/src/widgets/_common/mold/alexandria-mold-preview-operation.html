@@ -7,11 +7,14 @@
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../lib/pdf-browser-viewer/pdf-browser-viewer.html">
 <link rel="import" href="../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-mold-operation-trigger.html">
 
 <dom-module id="alexandria-mold-preview-operation">
 
     <template>
-        <div class="container"><a on-tap="_preview">[[_title]]</a></div>
+        <div class="container">
+            <alexandria-mold-operation-trigger title="[[_title]]" icon="[[icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_preview"></alexandria-mold-operation-trigger>
+        </div>
         <div id="dialogContainer" class="alexandria-mold-preview-operation-0">
             <paper-dialog id="dialog" no-overlap entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
                 <paper-icon-button icon="close" on-tap="_close"></paper-icon-button>
@@ -23,6 +26,9 @@
     </template>
 
     <style>
+        :host .container {
+            margin: 0 !important;
+        }
         :host a {
             cursor: pointer;
             color: var(--default-primary-color);
@@ -80,7 +86,10 @@
                 _width : { type: Number, value: function() { return 100; } },
                 height: Number,
                 _height : { type: Number, value: function() { return 100; } },
-                _title : String
+                _title : String,
+                icon : String,
+                styles : String,
+                mode : String
             },
 
             attached: function () {

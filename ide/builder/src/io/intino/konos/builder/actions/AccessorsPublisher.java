@@ -175,7 +175,6 @@ class AccessorsPublisher {
 		return apps;
 	}
 
-
 	private File createPom(File root, String group, String artifact, String version) throws IOException {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
 		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));

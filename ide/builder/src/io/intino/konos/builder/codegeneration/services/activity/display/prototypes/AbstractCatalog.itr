@@ -34,12 +34,12 @@ def type(catalog & gen)
     		io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.activity.model.[Temporal$mode+empty]Catalog();
 			catalog.objectsLoader((scope, condition[, $mode+timerange], session) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], session));[
 			$mode+setMode][
-            $showAll][
+            $temporalFilter][
 			$range][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
 			catalog.events(new io.intino.konos.alexandria.activity.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
-			$hasArrangements][
+			$hasGroupings][
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
@@ -74,8 +74,32 @@ def trigger(setMode)
 	catalog.type(TemporalCatalog.Type.$value+firstUpperCase);
 end
 
-def trigger(showAll)
-	catalog.showAll($value);
+def trigger(temporalFilter)
+	catalog.temporalFilter(new io.intino.konos.alexandria.activity.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible).layout("$temporalFilterLayout"));
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.enable(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+	(c, scope, session) -> false
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	(c, scope, session) -> $catalog+FirstUpperCase.TemporalFilter.visible(box, c, scope, session)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+	(c, scope, session) -> true
+end
+
+def attribute(never) trigger(temporalFilterVisible)
+	(c, scope, session) -> false
 end
 
 def trigger(range)
@@ -100,8 +124,9 @@ def trigger(hasMagazineView)
 	catalog.defaultObjectLoader((id, range, session) -> $name+firstUpperCase.Source.default$type+shortType+firstUpperCase(box, id[, $mode+timerange], session));
 end
 
-def trigger(hasArrangements)
+def trigger(hasGroupings)
 	catalog.arrangementFiltererLoader((session) -> $name+firstUpperCase.Arrangements.filterer(box, session));
+	catalog.arrangementHistogramsMode("$histogramsMode");
 end
 
 def trigger(toolbar)
@@ -129,7 +154,8 @@ end
 
 def type(openCatalog) trigger(event)
 	openCatalog(new io.intino.konos.alexandria.activity.model.catalog.events.OpenCatalog()
-		[.itemsLoader($openCatalogLoader)]
+		[.itemLoader($openCatalogLoader)]
+		[.filter($openCatalogFilter)]
 		.catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()))
 end
 
@@ -139,6 +165,10 @@ end
 
 def trigger(openCatalogLoader)
 	(element, sender, session) -> $catalog+FirstUpperCase.Events.onOpenCatalog(box, element, ($type) sender, session)
+end
+
+def trigger(openCatalogFilter)
+	(element, sender, item, session) -> $catalog+FirstUpperCase.Events.onOpenCatalogFilter(box, element, ($type) sender, item, session)
 end
 
 def type(operation & download) trigger(operation)
@@ -198,7 +228,7 @@ def type(displayview) trigger(add)
 end
 
 def type(sorting) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(($type)object1, ($type)object2)).name("$name").label("$label"));
+	arrangements.add(new io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(($type)object1, ($type)object2)).visible($visible).name("$name").label("$label"));
 end
 
 def type(grouping) trigger(add)

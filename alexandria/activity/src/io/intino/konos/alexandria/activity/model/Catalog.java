@@ -2,10 +2,7 @@ package io.intino.konos.alexandria.activity.model;
 
 import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Arrangement;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Group;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Grouping;
-import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
+import io.intino.konos.alexandria.activity.model.catalog.arrangement.*;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
@@ -18,10 +15,23 @@ public class Catalog extends Element {
 	private RootObjectLoader rootObjectLoader;
 	private DefaultObjectLoader defaultObjectLoader;
 	private ScopeChangeEvent scopeChangeEvent;
+	private ArrangementHistogramsMode arrangementHistogramsMode;
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
+	private Mode mode;
 	private ClusterManager clusterManager;
 	private Events events;
+
+	public Catalog() {
+		arrangementHistogramsMode = ArrangementHistogramsMode.EnabledAndVisible;
+		mode = Mode.Normal;
+	}
+
+	public enum Mode { Normal, Preview }
+
+	public enum ArrangementHistogramsMode {
+		EnabledAndVisible, EnabledButHidden, Disabled
+	}
 
 	public Item rootItem(List<Item> itemList, ActivitySession session) {
 		return rootObjectLoader != null ? item(rootObjectLoader.load(objects(itemList), session)) : null;
@@ -73,6 +83,15 @@ public class Catalog extends Element {
 		return this;
 	}
 
+	public Mode mode() {
+		return mode;
+	}
+
+	public Catalog mode(Mode mode) {
+		this.mode = mode;
+		return this;
+	}
+
 	public Events events() {
 		return events;
 	}
@@ -82,7 +101,20 @@ public class Catalog extends Element {
 		return this;
 	}
 
-//	public Catalog onScopeChange(ScopeChangeEvent event) {
+	public ArrangementHistogramsMode arrangementHistogramsMode() {
+		return arrangementHistogramsMode;
+	}
+
+	public Catalog arrangementHistogramsMode(String mode) {
+		return arrangementHistogramsMode(ArrangementHistogramsMode.valueOf(mode));
+	}
+
+	public Catalog arrangementHistogramsMode(ArrangementHistogramsMode mode) {
+		this.arrangementHistogramsMode = mode;
+		return this;
+	}
+
+	//	public Catalog onScopeChange(ScopeChangeEvent event) {
 //		this.scopeChangeEvent = event;
 //		return this;
 //	}

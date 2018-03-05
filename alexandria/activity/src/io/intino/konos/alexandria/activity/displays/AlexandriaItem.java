@@ -41,7 +41,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
-	private boolean embeddedDisplaysCreated = false;
+	private boolean initialized = false;
 	private String emptyMessage = null;
 
 	public AlexandriaItem(Box box) {
@@ -105,37 +105,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	public void itemStampsReady(String id) {
-		if (!embeddedDisplaysCreated) {
-			embeddedDisplays().forEach((key, display) -> {
-				display.item(item);
-				display.provider(AlexandriaItem.this);
-				add(display);
-				display.personifyOnce(id + key.displayType());
-				updateRange(display);
-				display.refresh();
-			});
-			embeddedDialogs().forEach((key, dialog) -> {
-				dialog.target(item);
-				add(dialog);
-				dialog.personifyOnce(id + key.dialogType());
-				dialog.refresh();
-			});
-			embeddedCatalogs().forEach((key, display) -> {
-				display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
-				display.label(key.label());
-				display.range(provider.range());
-				display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
-				display.embedded(true);
-				add(display);
-				display.personifyOnce(id + key.name());
-			});
+		if (!initialized) {
+			createEmbeddedDisplays(id);
+			initialized = true;
 		}
-		pages(item).forEach(display -> {
-			add(display);
-			display.personifyOnce(id);
-			display.refresh();
-		});
-		embeddedDisplaysCreated = true;
+		createPages(id);
 	}
 
 	public void notifyOpenItem(AlexandriaElementView.OpenItemEvent params) {
@@ -147,16 +121,18 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaElementDisplay display = provider.openElement(catalogLinkStamp.catalog().label());
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
 		display.target(this.item);
-
-		if (catalogLinkStamp.filtered())
-			display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item)item, session()));
 
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
-		display.refresh();
+		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(this.item, session()));
+		else {
+			if (catalogLinkStamp.filtered())
+				display.filterAndNotify(item -> catalogLinkStamp.filter(this.item, (Item) item, session()));
+			display.refresh();
+		}
 	}
 
 	public void openItemDialogOperation(OpenItemDialogParameters params) {
@@ -320,29 +296,6 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		notifier.refreshMode(mode);
 	}
 
-	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedDisplays() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
-		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(session())), HashMap::putAll);
-		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private Map<EmbeddedDialog, AlexandriaDialog> embeddedDialogs() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDialog).collect(toList());
-		Map<EmbeddedDialog, AlexandriaDialog> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDialog)stamp, ((EmbeddedDialog)stamp).createDialog(session())), HashMap::putAll);
-		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private List<AlexandriaDisplay> pages(Item item) {
-		return provider.stamps(mold).stream().filter(s -> s instanceof Page)
-				.map(stamp -> new AlexandriaPageContainer(box).pageLocation(location(stamp, item)))
-				.collect(Collectors.toList());
-	}
-
-	private Map<EmbeddedCatalog, AlexandriaAbstractCatalog> embeddedCatalogs() {
-		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedCatalog).collect(toList());
-		return stamps.stream().collect(Collectors.toMap(s -> (EmbeddedCatalog)s, s -> displayFor((EmbeddedCatalog)s)));
-	}
-
 	private PageLocation location(Stamp stamp, Item item) {
 		PageLocation location = new PageLocation();
 		if (stamp instanceof ExternalPage) return location.value(((ExternalPage)stamp).url(item).toString()).internal(false);
@@ -363,7 +316,111 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private Item itemOf(String item) {
-		return provider.item(item);
+		return provider.item(new String(Base64.getDecoder().decode(item)));
+	}
+
+	private void createEmbeddedDisplays(String id) {
+		createEmbeddedCustomDisplays(id);
+		createEmbeddedDialogs(id);
+		createEmbeddedCatalogs(id);
+		createTemporalCatalogNavigators(id);
+	}
+
+	private void createEmbeddedCustomDisplays(String id) {
+		embeddedCustomDisplays().forEach((key, display) -> {
+			display.item(item);
+			display.provider(AlexandriaItem.this);
+			add(display);
+			display.personifyOnce(id + key.displayType());
+			updateRange(display);
+			display.refresh();
+		});
+	}
+
+	private Map<EmbeddedDisplay, AlexandriaStamp> embeddedCustomDisplays() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDisplay).collect(toList());
+		Map<EmbeddedDisplay, AlexandriaStamp> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDisplay)stamp, ((EmbeddedDisplay)stamp).createDisplay(session())), HashMap::putAll);
+		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private void createEmbeddedDialogs(String id) {
+		embeddedDialogs().forEach((key, dialog) -> {
+			dialog.target(item);
+			add(dialog);
+			dialog.personifyOnce(id + key.dialogType());
+			dialog.refresh();
+		});
+	}
+
+	private Map<EmbeddedDialog, AlexandriaDialog> embeddedDialogs() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedDialog).collect(toList());
+		Map<EmbeddedDialog, AlexandriaDialog> mapWithNulls = stamps.stream().collect(HashMap::new, (map, stamp)->map.put((EmbeddedDialog)stamp, ((EmbeddedDialog)stamp).createDialog(session())), HashMap::putAll);
+		return mapWithNulls.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+	}
+
+	private void createEmbeddedCatalogs(String id) {
+		embeddedCatalogs().forEach((key, display) -> {
+			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
+			display.label(key.label());
+			display.range(provider.range());
+			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
+			display.embedded(true);
+			add(display);
+			display.personifyOnce(id + key.name());
+		});
+	}
+
+	private Map<EmbeddedCatalog, AlexandriaAbstractCatalog> embeddedCatalogs() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedCatalog).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (EmbeddedCatalog)s, s -> displayFor((EmbeddedCatalog)s)));
+	}
+
+	private void createPages(String id) {
+		pages(item).forEach(display -> {
+			add(display);
+			display.personifyOnce(id);
+			display.refresh();
+		});
+	}
+
+	private List<AlexandriaDisplay> pages(Item item) {
+		return provider.stamps(mold).stream().filter(s -> s instanceof Page)
+				.map(stamp -> new AlexandriaPageContainer(box).pageLocation(location(stamp, item)))
+				.collect(Collectors.toList());
+	}
+
+	private void createTemporalCatalogNavigators(String id) {
+		catalogTimeRanges().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
+		catalogTimeRangeNavigators().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
+		catalogTimes().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
+		catalogTimeNavigators().forEach((key, display) -> createTemporalCatalogNavigator(id, key.name(), display));
+	}
+
+	private void createTemporalCatalogNavigator(String id, String name, AlexandriaNavigator navigator) {
+		add(navigator);
+		provider.configureTemporalNavigator(navigator);
+		navigator.personifyOnce(id + name);
+		navigator.refresh();
+	}
+
+	private Map<TemporalCatalogRange, AlexandriaTimeRangeNavigator> catalogTimeRanges() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogRange).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogRange)s, s -> new AlexandriaTimeRangeNavigator(box)));
+	}
+
+	private Map<TemporalCatalogRangeNavigator, AlexandriaTimeRangeNavigator> catalogTimeRangeNavigators() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogRangeNavigator).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogRangeNavigator)s, s -> new AlexandriaTimeRangeNavigator(box)));
+	}
+
+	private Map<TemporalCatalogTimeNavigator, AlexandriaTimeNavigator> catalogTimeNavigators() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogTimeNavigator).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogTimeNavigator)s, s -> new AlexandriaTimeNavigator(box)));
+	}
+
+	private Map<TemporalCatalogTime, AlexandriaTimeNavigator> catalogTimes() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof TemporalCatalogTime).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (TemporalCatalogTime)s, s -> new AlexandriaTimeNavigator(box)));
 	}
 
 }

@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.activity.model.ItemList;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.TimeScale;
+import io.intino.konos.alexandria.activity.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.GroupingSelection;
 
@@ -62,10 +63,7 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	@Override
 	protected void configureTimeScaleHandler(TimeScaleHandler timeScaleHandler, TimeRange range, List<TimeScale> scales) {
 		timeScaleHandler.updateScale(scales.get(0));
-		if (element().showAll()) {
-			TimeRange timeRange = timeScaleHandler.boundsRange();
-			timeScaleHandler.updateRange(timeRange.from(), timeRange.to(), false);
-		}
+		timeScaleHandler.onScaleChange(this::refresh);
 	}
 
 	@Override
@@ -93,6 +91,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	protected void refreshNavigatorLayout(TemporalFilter.Layout layout) {
+		notifier.refreshNavigatorLayout(layout.toString());
+	}
+
+	@Override
 	protected TimeRange queryRange() {
 		int offset = timezoneOffset();
 		TimeRange range = timeScaleHandler().range();
@@ -105,7 +108,7 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 
 	@Override
 	protected void filterTimezone(ItemList itemList, TimeRange range) {
-		if (element().showAll()) return;
+		if (showAll()) return;
 		Instant from = range.from().plusSeconds(timezoneOffset() * 3600);
 		Instant to = range.to().plusSeconds(timezoneOffset() * 3600);
 		itemList.filter(item -> {
@@ -139,4 +142,10 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 		super.navigateMain();
 	}
 
+	@Override
+	public <N extends AlexandriaNavigator> void configureTemporalNavigator(N navigator) {
+		TimeScaleHandler timeScaleHandler = timeScaleHandler();
+		navigator.timeScaleHandler(timeScaleHandler);
+		configureNavigatorDisplay((AlexandriaTimeRangeNavigator) navigator, timeScaleHandler);
+	}
 }

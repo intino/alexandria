@@ -40,6 +40,10 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMo
 TemporalCatalog(label = "Episodios EBAR", modelClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
 	type = Range
 	scales = Day
+
+	TemporalFilter(enabled=Always, visible=Always)
+		layout = Grouping
+
 	Toolbar
 		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
 

@@ -14,6 +14,8 @@ Schema Catalog
 	Attribute label as Text
 	Attribute embedded as Bool
 	Attribute hideGroupings as Bool
+	Attribute arrangementHistogramsMode as Text
+	Attribute mode as Text
 
 	Schema Grouping
 		Attribute name as Text
@@ -60,6 +62,7 @@ Schema DialogReference
 	Attribute height as Integer
 
 Schema DownloadItemParameters
+	Attribute item as Text
 	Attribute stamp as Text
 	Attribute option as Text
 
@@ -221,6 +224,7 @@ Schema Sorting
 	Attribute name as Text
 	Attribute label as Text
 	Attribute mode as Text
+	Attribute visible as Bool
 
 Schema UserInfo
 	Attribute fullName as Text

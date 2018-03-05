@@ -130,8 +130,11 @@ public class CatalogUpdater extends Updater {
 	}
 
 	private void processCatalog(Catalog.Events.OnClickRecord.CatalogEvent event, PsiClass events) {
-		if (!event.a$(OpenCatalog.class).filtered()) return;
-		if (events.findMethodsByName("onOpenCatalog", false).length == 0) {
+		if (event.a$(OpenCatalog.class).openItem() && events.findMethodsByName("onOpenCatalog", false).length == 0) {
+			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
+			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
+		}
+		if (event.a$(OpenCatalog.class).filtered() && events.findMethodsByName("onOpenCatalogFilter", false).length == 0) {
 			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}

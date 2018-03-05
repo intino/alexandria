@@ -69,11 +69,11 @@ def type(stamp & map)
 end
 
 def type(stamp & cataloglink)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink().catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element())[.filter($filter)][.itemLoader($itemLoader)]$common)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.maxItems($embeddedCatalogMaxItems)][.filter($embeddedCatalogFilter)]$common)
 end
 
 def type(stamp & embeddedDisplay)
@@ -82,6 +82,22 @@ end
 
 def type(stamp & embeddedDialog)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog().dialogType("$dialogType").dialogBuilder($embeddedDialogBuilder)$common)
+end
+
+def type(stamp & temporalCatalogRange)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogRange()$common)
+end
+
+def type(stamp & temporalCatalogRangeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogRangeNavigator()$common)
+end
+
+def type(stamp & temporalCatalogTime)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogTime()$common)
+end
+
+def type(stamp & temporalCatalogTimeNavigator)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.TemporalCatalogTimeNavigator()$common)
 end
 
 def type(stamp & highlight)
@@ -113,19 +129,19 @@ def type(stamp & picture)
 end
 
 def type(stamp & openDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder)$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution)$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & previewOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution)$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -133,7 +149,9 @@ def type(stamp & exportOperation)
 		[.from(java.time.Instant.ofEpochMilli($from~L))]
 		[.to(java.time.Instant.ofEpochMilli($to~L))]
 		[.options(java.util.Arrays.asList($options+quoted...[, ]))]
-		.execution($exportexecution)$common)
+		.execution($exportexecution)
+		[.alexandriaIcon("$alexandriaIcon")]
+		.mode("$mode")$common)
 end
 
 def type(stamp)
@@ -193,6 +211,10 @@ end
 
 def trigger(filter)
 	(source, target, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, ($moldClass) source, target, session)
+end
+
+def trigger(itemLoader)
+	(source, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.item(box, ($moldClass) source, session)
 end
 
 def trigger(editable)

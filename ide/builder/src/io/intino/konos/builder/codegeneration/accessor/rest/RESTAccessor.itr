@@ -144,7 +144,7 @@ def type(invokeSentence & void)
 end
 
 def type(invokeSentence & object & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<Array$returnType>(){}.getType());
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<$returnType>(){}.getType());
 end
 
 def type(invokeSentence & object)
@@ -184,7 +184,7 @@ def type(invokeSentence & primitive & int)
 end
 
 def type(invokeSentence & primitive & list)
-    return gsonReader.fromJson($doInvoke.content(), new TypeToken<Array$returnType>(){}.getType());
+    return gsonReader.fromJson($doInvoke.content(), new TypeToken<ArrayList<$returnType>(){}.getType());
 end
 
 def type(invokeSentence & primitive)

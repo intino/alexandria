@@ -106,15 +106,20 @@
                     autoResize: true
                 };
 
+                if (this._widget != null) {
+                    this._widget.setOptions(options);
+                    return;
+                }
+
                 this._widget = new vis.Timeline(this.$.visualization, new vis.DataSet([]), options);
                 this._widget.on('rangechanged', e => {
-                    if (e.byUser) {
-                    this.move({from: e.start.getTime(), to: e.end.getTime()});
-                }
-            });
+                        if (e.byUser) {
+                        this.move({from: e.start.getTime(), to: e.end.getTime()});
+                    }
+                });
                 this._widget.on('doubleClick', e => {
                     this._showDateSelector();
-            });
+                });
             },
 
             _refreshScales : function(scaleList) {
