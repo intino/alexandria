@@ -12,6 +12,10 @@ def type(interface)
     	@Description("Starts remount mode to reproduce events coming from datalake")
 		@Parameters({})
     	boolean reflow();
+
+    	@Description("Starts remount mode to reproduce events coming from datalake since instant parameter")
+		@Parameters({})
+		boolean reflow(String fromInstant);
     }
 end
 
@@ -54,11 +58,19 @@ def type(operations) !type(interface)
 			return operations;
 		}
 
+		public boolean reflow(String from) {
+			reflow(Instant.parse(from));
+		}
+
 		public boolean reflow() {
+			reflow(Instant.MIN);
+		}
+
+		public boolean reflow(Instant from) {
 			logger.info("Starting Reflow...");
 			assistant.before();
 			$package+validPackage.ness.NessTanks.unregister();
-			this.session = box.datalake().reflow(assistant.blockSize(), new $package+validPackage.ness.NessTanks(), assistant.tanks().toArray(new Ness.Tank$[0]));
+			this.session = box.datalake().reflow(assistant.blockSize(), new $package+validPackage.ness.NessTanks(),from, assistant.tanks().toArray(new Ness.Tank$[0]));
 			box.datalake().lastMessage(null);
 			box.datalake().reset();
 			final Graph graph = assistant.graph();
