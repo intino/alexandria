@@ -59,11 +59,11 @@ def type(operations) !type(interface)
 		}
 
 		public boolean reflow(String from) {
-			reflow(Instant.parse(from));
+			return reflow(Instant.parse(from));
 		}
 
 		public boolean reflow() {
-			reflow(Instant.MIN);
+			return reflow(Instant.MIN);
 		}
 
 		public boolean reflow(Instant from) {
