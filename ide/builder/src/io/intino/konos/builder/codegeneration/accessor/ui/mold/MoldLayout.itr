@@ -1,0 +1,150 @@
+def trigger(mold)
+	<link rel="import" href="../../../lib/polymer/polymer.html">
+    <link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+
+    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-layout-behavior.html">
+    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-block.html">
+    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-stamps.html">
+
+    <dom-module id="$name+camelCaseToSnakeCase-layout">
+
+        <template>
+        	$block...[$NL]
+
+			$expandedBlocks
+        </template>
+
+        <style>
+            :host$[mode="list"], :host$[mode="grid"] {
+                width: 100%;
+            }
+            :host$[mode="magazine"] alexandria-mold-block {
+                height: 100%;
+            }
+            :host > alexandria-mold-block > * {
+                margin-left: 5px;
+            }
+            :host .expanded-block {
+                margin: 10px 1px;
+            }
+            :host #highlight {
+                background: var(--accent-color);
+                position: absolute;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s 0.5s, opacity 0.5s linear;
+                border-radius: 10px;
+            }
+            :host #highlight.visible {
+                visibility: visible;
+                opacity: 0.3;
+                transition: opacity 0.5s linear;
+            }
+        </style>
+
+        <script>
+            Polymer({
+                is: '$name+camelCaseToSnakeCase-layout',
+
+                behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior ],
+
+                blocks : function() {
+                    var blocks = $[];
+                    $block+js...[$NL]
+                    $expandedblocks+expandedblocksjs
+                    return blocks;
+                },
+
+                stamps : function() {
+                    var stamps = $[];
+					$stamp+js
+                    stamps.push({ name: "hora", type: "title", properties : { defaultStyle: "width:40px;" }});
+                    stamps.push({ name: "titulo", type: "title" });
+                    stamps.push({ name: "reosCirculoAmistad", type: "snippet" });
+                    stamps.push({ name: "prohibirVisitas", type: "task-operation", label: "prohibir visitas", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "fechaEstimadaRegresoQuebrantamientoCondena", type: "description", label: "fecha estimada de regreso" });
+                    stamps.push({ name: "emitirOrdenCaptura", type: "task-operation", label: "emitir orden de captura", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "desdeSolicitudPermiso", type: "description", label: "fecha de salida" });
+                    stamps.push({ name: "hastaSolicitudPermiso", type: "description", label: "fecha de regreso" });
+                    stamps.push({ name: "generarPermiso", type: "task-operation", label: "generar permiso", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "origenClasificacionRegimen", type: "description", label: "propuesto por" });
+                    stamps.push({ name: "gestionarCambio", type: "task-operation", label: "cambiar de régimen", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "internosPelea", type: "snippet" });
+                    stamps.push({ name: "abrirExpedientePelea", type: "task-operation", label: "abrir expediente", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "internosAmotinamiento", type: "snippet" });
+                    stamps.push({ name: "abrirExpedienteAmotinamiento", type: "task-operation", label: "abrir expediente", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    stamps.push({ name: "personaStatus", type: "highlight", properties : { defaultStyle: "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;" } });
+                    stamps.push({ name: "personaFoto", type: "picture", properties : { defaultStyle: "height:100px;width:80px;" } });
+                    stamps.push({ name: "personaGradoInsercion", type: "highlight", properties : { defaultStyle: "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;" } });
+                    stamps.push({ name: "personaEstadoSituacion", type: "description", properties : { defaultStyle: "margin-bottom:5px;" } });
+                    stamps.push({ name: "personaNumeroIdentificacion", type: "description", label: "Número de identificación" });
+                    stamps.push({ name: "personaNacionalidad", type: "description", label: "Nacionalidad" });
+                    stamps.push({ name: "personaFechaIngreso", type: "description", label: "Fecha de ingreso" });
+                    stamps.push({ name: "personaDuracionCondena", type: "description", label: "Duración de la condena" });
+                    stamps.push({ name: "personaNombreApellidosAlias", type: "title", properties : { defaultStyle: "margin-left:0;" } });
+                    stamps.push({ name: "abrirPersona", type: "catalog-link", properties : { catalog: "octanaPoblacion", defaultStyle: "font-size:10pt;margin:3px 6px 0 0;padding:0px;background:none;display:block;" } });
+                    stamps.push({ name: "cambiosScreeningAprobado", type: "snippet" });
+                    stamps.push({ name: "trasladosScreeningAprobado", type: "snippet" });
+                    stamps.push({ name: "ejecutarScreeningAprobado", type: "task-operation", label: "ejecutar", properties : { mode: "Button", defaultStyle: "width:180px" } });
+                    return stamps;
+                }
+            });
+        </script>
+
+    </dom-module>
+end
+
+def trigger(expandedBlocks)
+	<div class="expanded-block" hidden$="$[$[!hasExpandedBlocks]]">
+		$block...[$NL]
+	</div>
+end
+
+def type(block) trigger(block)
+	<alexandria-mold-block block="$[$[$name]]">
+		$block...[$NL]
+		$stamp...[$NL]
+	</alexandria-mold-block>
+end
+
+def trigger(stamp)
+	<alexandria-stamp-$type stamp="$[$[$name]]"></alexandria-stamp-$type>
+end
+
+def trigger(expandedblocksjs)
+		$block+js...[$NL]
+end
+
+def type(block) trigger(js)
+	blocks.push({ [name: "$name"][, layout: "$layout"][, style: "$style"][, width: "$width"][, height: "$height"][, hiddenIfMobile: $hiddenIfMobile] });
+	$block...[$NL]
+end
+
+def type(stamp & rating) trigger(js)
+	stamps.push({$commonAttributes, properties : { defaultStyle: "width:40px;" }});
+end
+
+def type(stamp & icon) trigger(js)
+	stamps.push({$commonAttributes, properties : { iconType : $value }});
+end
+
+def trigger(commonAttributes)
+	name: "hora", type: "title"
+end
+
+
+    //                common -> name, label, editable, shape, layout, height, type, expanded, properties.suffix, properties.defaultStyle, properties.style
+    //                icon -> properties.iconType
+    //                rating -> properties.icon
+    //                embedded-display -> displayType
+    //                embedded-dialog -> dialogType
+    //                embedded-catalog -> catalog
+    //                download-operation -> alexandriaIcon, mode, title, options
+    //                export-operation -> alexandriaIcon, mode, title, options, from, to
+    //                preview-operation -> alexandriaIcon, mode, title
+    //                task-operation -> alexandriaIcon, mode, confirm
+    //                map -> zoom(entero), latitude(float), longitud(float)
+    //                highlight -> color

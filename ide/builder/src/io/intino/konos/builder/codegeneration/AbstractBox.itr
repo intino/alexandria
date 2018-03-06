@@ -22,8 +22,8 @@ def type(box)
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
-        $hasActivity+hide~protected Map<String, Soul> activitySouls = new java.util.HashMap<>();]
-	    $hasActivity+hide~private java.util.List<io.intino.konos.alexandria.activity.ActivityBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();
+        $hasActivity+hide~protected Map<String, Soul> activitySouls = new java.util.HashMap<>();][
+	    $hasActivity+hide~private java.util.List<io.intino.konos.alexandria.activity.ActivityBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
