@@ -1,0 +1,24 @@
+def trigger(mold)
+
+	<link rel="import" href="../../lib/polymer/polymer.html">
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-layout.html">
+
+	<dom-module id="$name+camelCaseToSnakeCase">
+
+		<template>
+			<$name+camelCaseToSnakeCase-layout item="$[$[item]]" mode="$[$[mode]]"></$name+camelCaseToSnakeCase-layout>
+		</template>
+
+		<script>
+			Polymer({
+				is: '$name+camelCaseToSnakeCase',
+
+				properties : {
+					item : Object,
+					mode : String
+				}
+			});
+		</script>
+	</dom-module>
+	
+end

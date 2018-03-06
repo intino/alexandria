@@ -3,6 +3,9 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import com.intellij.openapi.module.Module;
 import com.intellij.util.io.ZipUtil;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldFrameBuilder;
+import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldLayoutTemplate;
+import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.widget.*;
 import io.intino.konos.model.graph.*;
 import io.intino.tara.compiler.shared.Configuration;
@@ -29,6 +32,8 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.camelCaseToSnakeCase;
+import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.model.graph.KonosGraph.componentsOf;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
@@ -110,17 +115,39 @@ public class ActivityAccessorRenderer {
 	private void createWidgets() throws IOException {
 		Frame widgets = new Frame().addTypes("widgets");
 		for (Component component : componentsOf(activity)) {
-			if (component.i$(Display.class)) createDisplayComponents(component.a$(Display.class));
-			if (component.i$(Dialog.class)) createDialogWidget(component.a$(Dialog.class));
+			if (component.i$(Mold.class)) createMold(component.a$(Mold.class));
+			if (component.i$(Display.class) && !component.i$(Mold.class)) createDisplay(component.a$(Display.class));
+			if (component.i$(Dialog.class)) createDialog(component.a$(Dialog.class));
 			widgets.addSlot("widget", component.name$());
 		}
-		write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), Formatters.customize(WidgetsTemplate.create()).format(widgets).getBytes());
+		write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), customize(WidgetsTemplate.create()).format(widgets).getBytes());
 	}
 
-	private void createDisplayComponents(Display component) throws IOException {
+	private void createDisplay(Display component) throws IOException {
 		createNotifier(component);
 		createRequester(component);
 		createDisplayWidget(component);
+	}
+
+	private void createMold(Mold mold) throws IOException {
+		Frame frame = frameOf(mold);
+		createMoldLayout(mold.name$(), frame);
+		createMold(mold.name$(), frame);
+	}
+
+	private Frame frameOf(Mold mold) {
+		return new MoldFrameBuilder(activity, mold).build();
+	}
+
+	private void createMoldLayout(String name, Frame frame) throws IOException {
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + name.toLowerCase() + separator + camelCaseToSnakeCase().format(name) + "-layout.html");
+		file.getParentFile().mkdirs();
+		write(file.toPath(), customize(MoldLayoutTemplate.create()).format(frame).getBytes());
+	}
+
+	private void createMold(String name, Frame frame) throws IOException {
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase().format(name) + ".html");
+		if (!file.exists()) write(file.toPath(), customize(MoldTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createDisplayWidget(Display display) throws IOException {
@@ -158,7 +185,7 @@ public class ActivityAccessorRenderer {
 		final Frame frame = new Frame("paths").addSlot("name", display.name$());
 		for (Display.Request request : requests) frame.addSlot("path", pathFrame(request));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-paths.html");
-		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetPathsTemplate.create()).format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), customize(WidgetPathsTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame pathFrame(Display.Request r) {
@@ -170,32 +197,32 @@ public class ActivityAccessorRenderer {
 
 	private void writeWidget(Display display, Frame frame) throws IOException {
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
-		if (!file.exists()) write(file.toPath(), Formatters.customize(WidgetTemplate.create()).format(frame).getBytes());
+		if (!file.exists()) write(file.toPath(), customize(WidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private boolean isPrototype(Display display) {
 		return !display.getClass().getSimpleName().equals(Display.class.getSimpleName());
 	}
 
-	private void createDialogWidget(Dialog dialog) throws IOException {
+	private void createDialog(Dialog dialog) throws IOException {
 		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name$());
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + ".html");
 		if (!file.exists())
-			write(file.toPath(), Formatters.customize(DialogWidgetTemplate.create()).format(frame).getBytes());
+			write(file.toPath(), customize(DialogWidgetTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createRequester(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("request", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), Formatters.customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
+		write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame).getBytes());
 	}
 
 	private void createNotifier(Display display) throws IOException {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), Formatters.customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
+		write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame).getBytes());
 	}
 
 	private Frame frameOf(Display.Notification n) {
