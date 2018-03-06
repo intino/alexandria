@@ -19,7 +19,7 @@ def type(mold)
 
     	public Mold buildMold($box+FirstUpperCase~Box box) {
     		Mold mold = new Mold()$block+definition...[$NL];
-    		mold.type("$name+SnakeCaseToCamelCase");
+    		mold.type("$name+camelCaseToSnakeCase");
 			return mold;
     	}
     }

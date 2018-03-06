@@ -42,7 +42,7 @@ TemporalCatalog(label = "Episodios EBAR", modelClass = "com.monentia.ebar.graph.
 	scales = Day
 
 	TemporalFilter(enabled=Always, visible=Always)
-		layout = Grouping
+		layout = Horizontal
 
 	Toolbar
 		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export

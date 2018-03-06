@@ -64,7 +64,7 @@
 
         _blockHidden : function(block) {
             var result = this.item.itemBlockList.filter(s => s.name == block.name);
-            return result.length > 0 ? result[0].hidden : true;
+            return result.length > 0 ? result[0].hidden : false;
         },
 
         _blockLayout : function (block) {
