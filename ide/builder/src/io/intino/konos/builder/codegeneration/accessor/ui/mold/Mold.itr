@@ -1,12 +1,12 @@
-def trigger(mold)
+def type(mold)
 
 	<link rel="import" href="../../lib/polymer/polymer.html">
-	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-layout.html">
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-layout.html">
 
-	<dom-module id="$name+camelCaseToSnakeCase">
+	<dom-module id="$name+CamelCaseToSnakeCase">
 
 		<template>
-			<$name+camelCaseToSnakeCase-layout item="$[$[item]]" mode="$[$[mode]]"></$name+camelCaseToSnakeCase-layout>
+			<$name+camelCaseToSnakeCase~-layout item="$[$[item]]" mode="$[$[mode]]"></$name+camelCaseToSnakeCase~-layout>
 		</template>
 
 		<script>
@@ -20,5 +20,4 @@ def trigger(mold)
 			});
 		</script>
 	</dom-module>
-	
 end

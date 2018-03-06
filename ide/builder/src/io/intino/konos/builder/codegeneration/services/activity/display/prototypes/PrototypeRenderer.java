@@ -6,6 +6,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.*;
 
@@ -43,6 +44,7 @@ public abstract class PrototypeRenderer {
 
 	public static Template customize(Template template) {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
+		template.add("CamelCaseToSnakeCase", value -> camelCaseToSnakeCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		template.add("shortType", value -> shortType(value.toString()));
