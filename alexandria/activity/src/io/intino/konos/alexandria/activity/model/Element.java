@@ -10,7 +10,6 @@ import static java.util.stream.Collectors.toList;
 public abstract class Element {
 	private String name;
 	private String label;
-	private Object type;
 	private Toolbar toolbar;
 	private List<AbstractView> viewList = new ArrayList<>();
 	private ObjectLoader objectLoader;

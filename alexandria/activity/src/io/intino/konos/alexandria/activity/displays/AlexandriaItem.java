@@ -3,7 +3,6 @@ package io.intino.konos.alexandria.activity.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
-import io.intino.konos.alexandria.activity.displays.builders.MoldBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaItemNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -260,7 +259,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private void sendInfo(io.intino.konos.alexandria.activity.schemas.Item item) {
-		notifier.refresh(new ItemRefreshInfo().mold(MoldBuilder.build(mold)).item(item));
+		notifier.refresh(new ItemRefreshInfo().mold(mold.type()).item(item));
 	}
 
 	private void sendInfo() {

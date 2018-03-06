@@ -15,14 +15,17 @@
 
     <template>
         <cotton-timeline class="layout vertical center-justified" id="timeline"
-                                       on-next="_moveNext"
-                                       on-before="_movePrevious"
-                                       on-select="_updateDate"
-                                       on-tap-timeline="_showDateSelector">
-            <div class="scale-component">
+                         on-next="_moveNext"
+                         on-before="_movePrevious"
+                         on-select="_updateDate"
+                         on-tap-timeline="_showDateSelector">
+            <div class="toolbar-top">
+                <paper-icon-button icon="icons:date-range" on-tap="_showDateSelector"></paper-icon-button>
+            </div>
+            <div class="toolbar-bottom">
                 <alexandria-scale-selector-slider scales="[[_scaleList]]"
-                                           selected-scale="[[_selectedScale]]"
-                                           on-scale-selected="_notifyScaleSelected"></alexandria-scale-selector-slider>
+                                                  selected-scale="[[_selectedScale]]"
+                                                  on-scale-selected="_notifyScaleSelected"></alexandria-scale-selector-slider>
             </div>
         </cotton-timeline>
         <alexandria-date-selector id="dateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateSelectorDate"></alexandria-date-selector>
@@ -31,6 +34,13 @@
     <style>
         :host cotton-timeline {
             height: calc(100% - 25px);
+        }
+        :host paper-icon-button {
+            padding: 0;
+            margin: 0 4px;
+            display: block;
+            height: 18px;
+            width: 18px;
         }
         :host alexandria-date-selector {
             position: absolute;
@@ -57,10 +67,10 @@
             is: 'alexandria-vertical-time-navigator',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
-                         CottonBehaviors.PushBehavior,
-                         CottonBehaviors.TranslatorBehavior,
-                         AlexandriaTimeNavigatorBehaviors.Requester,
-                         AlexandriaTimeNavigatorBehaviors.NotifierListener ],
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeNavigatorBehaviors.Requester,
+                AlexandriaTimeNavigatorBehaviors.NotifierListener ],
 
             properties : {
                 _range : { type : Object, value: function() { return null; } },

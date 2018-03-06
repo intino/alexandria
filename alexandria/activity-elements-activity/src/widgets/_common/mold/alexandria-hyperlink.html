@@ -1,10 +1,9 @@
 <link rel="import" href="../../../../lib/polymer/polymer.html">
-<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 
-<dom-module id="alexandria-mold-hyperlink">
+<dom-module id="alexandria-hyperlink">
 
     <template>
-        <a style="[[styles]]" on-tap="_navigate">[[label]]</a>
+        <a style="[[style]]" on-tap="_navigate">[[label]]</a>
     </template>
 
     <style>
@@ -22,26 +21,13 @@
     </style>
 
     <script>
-        const AlexandriaMoldHyperlinkDictionary = {
-            es: {
-            },
-            en: {
-            }
-        };
-
         Polymer({
-            is: 'alexandria-mold-hyperlink',
-
-            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+            is: 'alexandria-hyperlink',
 
             properties : {
                 name : String,
                 label : String,
-                styles : { type: String, value: function() { return ""; } }
-            },
-
-            attached: function () {
-                this.translate(AlexandriaMoldHyperlinkDictionary);
+                style : { type: String, value: function() { return ""; } }
             },
 
             _navigate : function(e) {
