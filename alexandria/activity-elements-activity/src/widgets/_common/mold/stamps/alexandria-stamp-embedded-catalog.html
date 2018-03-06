@@ -1,0 +1,73 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../../alexandria-catalog.html">
+<link rel="import" href="../../../alexandria-temporal-range-catalog.html">
+<link rel="import" href="../../../alexandria-temporal-time-catalog.html">
+
+<dom-module id="alexandria-stamp-embedded-catalog">
+
+    <template>
+        <div id="container" class="layout flex"></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            min-height: 100px;
+            @apply(--layout-vertical);
+        }
+        :host #container {
+            height:100%;
+            min-height:100px;
+            overflow:auto;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-embedded-catalog',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, Polymer.IronResizableBehavior ],
+
+            listeners: {
+                'iron-resize': '_resize'
+            },
+
+            _resize : function() {
+                this._addStyle(this._catalogElement());
+            },
+
+            _addStyle : function(catalog) {
+                var height = $(this).parent().height() + "px";
+                catalog.style.height = height;
+                catalog.style.display = "block";
+            },
+
+            _render : function() {
+                var key = this.stamp.item + this.stamp.name;
+                var catalog = this.stamp.properties.catalog;
+
+                if (key == null || catalog == null) return;
+
+                if (this.timeout != null)
+                    window.clearTimeout(this.timeout);
+
+                this.timeout = window.setTimeout(() => {
+                    var zombie = document.createElement("cotton-zombie");
+                    zombie.setAttribute("display", catalog);
+                    zombie.setAttribute("widget", catalog);
+                    zombie.setAttribute("object", key);
+                    this.$.container.appendChild(zombie);
+                }, 100);
+            },
+
+            _catalogElement : function() {
+                var result = this.querySelector("#container > *");
+                return result != null ? result : { style: {} };
+            }
+        });
+    </script>
+
+</dom-module>

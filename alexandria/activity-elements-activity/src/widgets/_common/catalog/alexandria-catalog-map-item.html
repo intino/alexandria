@@ -1,7 +1,7 @@
 <link rel="import" href="../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../mold/alexandria-mold-block.html">
-<link rel="import" href="../mold/alexandria-mold-behavior.html">
+<link rel="import" href="../mold/alexandria-mold-layout-behavior.html">
 
 <script src="../../../../lib/wicket/wicket.js"></script>
 <script src="../../../../lib/wicket/wicket-gmap3.js"></script>
@@ -136,14 +136,6 @@
                 }, 50);
             },
 
-            _infoContent : function() {
-                var content = this.querySelector(".info-template").innerHTML;
-                content = content.replace(/<template[^<\/]*<\/template>/g, "");
-                content = content.replace(/<alexandria-mold-block/g, "<div");
-                content = content.replace(/<\/alexandria-mold-block>/g, "</div>");
-                return content;
-            },
-
             _onRefresh : function() {
                 if (this.map == null) return;
                 var stampList = this._locationStampList();
@@ -193,7 +185,7 @@
             _configuration : function(stamp) {
                 var config = this.map.defaults != null ? this.map.defaults : {};
                 var drawingColor = stamp.properties.drawingColor;
-                config.editable = stamp.isEditable != null ? stamp.isEditable : false;
+                config.editable = stamp.editable != null ? stamp.editable : false;
                 if (drawingColor != "") {
                     config.strokeColor = drawingColor;
                     config.fillColor = drawingColor;

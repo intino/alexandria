@@ -1,0 +1,29 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../alexandria-hyperlinks.html">
+
+<dom-module id="alexandria-stamp-item-links">
+
+    <template>
+        <alexandria-hyperlinks title="[[stamp.label]]"
+                               items="[[stamp.properties.links]]"
+                               on-item-tap="_navigateItem"
+                               styles="[[_style]]"></alexandria-hyperlinks>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-item-links',
+
+            behaviors : [ AlexandriaBehaviors.StampBehavior ],
+
+            _navigateItem : function(e) {
+                this.fire("navigate-item", e.detail.item);
+            }
+        });
+    </script>
+
+</dom-module>
