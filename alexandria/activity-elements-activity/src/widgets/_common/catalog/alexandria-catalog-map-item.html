@@ -52,7 +52,8 @@
                 infoWindow : { type: Object, value: function() { return null; }},
                 locationItem : { type: Object, value: function() { return null; }},
                 countReadyBlocks : { type: Number, value: function() { return 0; }},
-                loaded : { type: Boolean, value: function() { return false }}
+                loaded : { type: Boolean, value: function() { return false }},
+                _moldContainer : Object
             },
 
             attached: function () {
@@ -62,26 +63,29 @@
 
             update : function(item) {
                 this.item = item;
-                this._updateInfoWindow();
+                this._prepareInfoWindow();
                 this.loaded = true;
             },
 
-            _updateInfoWindow : function() {
+            _prepareInfoWindow : function() {
+                this._renderMold();
+                this._createInfoWindow();
+            },
+
+            _renderMold : function() {
                 var widget = this;
-                var blocks = this.blocks();
                 var infoWindowTemplate = this.$.infoWindowTemplate;
                 infoWindowTemplate.innerHTML = "";
-                for (var i=0; i<blocks.length; i++) {
-                    var moldBlock = document.createElement("alexandria-mold-block");
-                    moldBlock.mode = "map";
-                    moldBlock.item = this.item.name;
-                    moldBlock.block = blocks[i];
-                    moldBlock.addEventListener("navigate-item", function(e) {
-                        widget.fire("navigate-item", e.detail);
-                    });
-                    moldBlock.onStampsReady = this._stampsReady.bind(this);
-                    infoWindowTemplate.appendChild(moldBlock);
-                }
+
+                this._moldContainer = document.createElement(this.mold);
+                this._moldContainer.mode = this.mode;
+                this._moldContainer.item = this.item;
+                this._moldContainer.mold = this.mold;
+                this._moldContainer.addEventListener("navigate-item", function(e) {
+                    widget.fire("navigate-item", e.detail);
+                });
+
+                infoWindowTemplate.appendChild(this._moldContainer);
             },
 
             detached : function() {
@@ -118,13 +122,6 @@
                 if (this.onClose) this.onClose(this);
             },
 
-            _stampsReady : function() {
-                this.countReadyBlocks++;
-                if (this.countReadyBlocks < this._blocks.length) return;
-                this.countReadyBlocks = 0;
-                this._createInfoWindow();
-            },
-
             _createInfoWindow : function() {
                 if (this.infoWindow != null) return;
                 if (this.map == null) return;
@@ -137,21 +134,22 @@
             },
 
             _onRefresh : function() {
-                if (this.map == null) return;
-                var stampList = this._locationStampList();
+                if (this.map == null || this.item == null) return;
+                var stampList = this.item.itemStampList;
                 for (var i=0; i<stampList.length; i++)
                     this._addLocation(stampList[i]);
             },
 
 
             _addLocation : function(locationStamp) {
-                if (locationStamp == null || locationStamp.value == "") return;
+                if (locationStamp == null || locationStamp.values.length == 0 || locationStamp.values[0] == "") return;
 
                 var wkt = new Wkt.Wkt();
                 try {
-                    wkt.read(locationStamp.value);
+                    wkt.read(locationStamp.values[0]);
                     this.locationItem = this._fixWkt(wkt).toObject(this._configuration(locationStamp));
-                    this._addIcon(locationStamp.properties.icon);
+                    if (locationStamp.propertyList.icon)
+                        this._addIcon(locationStamp.propertyList.icon);
                     this._addListeners(this.locationItem);
 //                    this._updateCentroid(this.locationItem);
 //                    if (this._isMarker(this.locationItem)) return;
@@ -184,7 +182,7 @@
 
             _configuration : function(stamp) {
                 var config = this.map.defaults != null ? this.map.defaults : {};
-                var drawingColor = stamp.properties.drawingColor;
+                var drawingColor = stamp.propertyList.drawingColor;
                 config.editable = stamp.editable != null ? stamp.editable : false;
                 if (drawingColor != "") {
                     config.strokeColor = drawingColor;

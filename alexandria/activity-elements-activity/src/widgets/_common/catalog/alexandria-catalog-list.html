@@ -374,13 +374,13 @@
                     if (this.selectedItemList[i].name === oldItem.name)
                         this.set("selectedItemList." + i, item);
 
-                var item = this.querySelector("alexandria-mold[name=\"_item_" + item.name + "\"]");
+                var item = this.querySelector("alexandria-mold-container[name=\"_item_" + item.name + "\"]");
                 if (item != null) item.highlight();
             },
 
             refreshItemPicture : function(pictureData) {
                 var itemName = pictureData.item;
-                let item = this.querySelector("alexandria-mold[name=\"_item_" + itemName + "\"]");
+                let item = this.querySelector("alexandria-mold-container[name=\"_item_" + itemName + "\"]");
                 if (item == null) return;
                 item.refreshPicture(pictureData);
                 window.setTimeout(() => this._updateSizeForItem(itemName), 100);

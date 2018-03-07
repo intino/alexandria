@@ -90,12 +90,14 @@
             },
 
             _updateSelectedOption : function() {
-                if (this.options.length <= 0) return;
-                this.option = this.options[0];
+                var options = this.stamp.properties.options;
+                if (options.length <= 0) return;
+                this.option = options[0];
             },
 
             _openExportOptions : function(e) {
-                if (this.options.length <= 1) {
+                var options = this.stamp.properties.options;
+                if (options.length <= 1) {
                     this._showExportDialog();
                     return;
                 }

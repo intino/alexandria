@@ -20,6 +20,18 @@
                 mode : { type: String, observer: '_createMold', value: function() { return "list"; } }
             },
 
+            highlight : function() {
+                var mold = this.querySelector(this.mold);
+                if (mold == null) return;
+                mold.highlight();
+            },
+
+            refreshPicture : function(pictureData) {
+                var mold = this.querySelector(this.mold);
+                if (mold == null) return;
+                mold.refreshPicture(pictureData);
+            },
+
             _createMold : function() {
                 if (this.item == null || this.mold == null) return;
                 this.$.mold.innerHTML = "";

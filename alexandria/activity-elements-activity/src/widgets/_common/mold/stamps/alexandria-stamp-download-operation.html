@@ -98,7 +98,8 @@
             },
 
             _openDownloadOptions : function(e) {
-                if (this.options.length <= 1) {
+                var options = this.stamp.properties.options;
+                if (options.length <= 1) {
                     this.fire("download-item", { item: this.stamp.item, stamp: this.stamp.name, option: "" });
                     return;
                 }

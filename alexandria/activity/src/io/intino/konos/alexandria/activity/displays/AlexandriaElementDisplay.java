@@ -402,8 +402,9 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
 		currentItem(event.item().id());
 		Item item = this.currentItem();
-		((TaskOperation)event.stamp()).execute(item, session());
+		TaskOperation.Refresh refresh = ((TaskOperation) event.stamp()).execute(item, session());
 		dirty(true);
+		if (refresh != TaskOperation.Refresh.Item) return;
 		refresh(this.currentItem());
 	}
 
