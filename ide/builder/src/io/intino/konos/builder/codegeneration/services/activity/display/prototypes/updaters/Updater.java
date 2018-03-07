@@ -18,11 +18,11 @@ public abstract class Updater {
 
 
 	public Updater(File file, Project project, String packageName, String box) {
-		this.file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));
+		this.file = project == null ? null : PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));
 		this.project = project;
 		this.packageName = packageName;
 		this.box = box;
-		this.factory = JavaPsiFacade.getElementFactory(project);
+		this.factory = project == null ? null :JavaPsiFacade.getElementFactory(project);
 
 	}
 

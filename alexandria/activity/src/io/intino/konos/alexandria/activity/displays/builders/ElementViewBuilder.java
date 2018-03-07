@@ -17,13 +17,12 @@ import static java.util.stream.Collectors.toList;
 public class ElementViewBuilder {
 
     public static ElementView build(io.intino.konos.alexandria.activity.displays.ElementView view) {
-        ElementView result = new ElementView().name(view.name()).label(view.label());
+        ElementView result = new ElementView().name(view.name()).label(view.label()).mold(view.mold().type());
 
         if (view.toolbar() != null)
             result.toolbar(buildToolbar(view.toolbar()));
 
         result.embeddedElement(view.embeddedElement());
-        result.mold(MoldBuilder.build(view.mold()));
         result.type(view.type());
         result.width(view.width());
         result.canSearch(view.canSearch());

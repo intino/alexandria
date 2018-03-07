@@ -66,6 +66,7 @@ Mold(modelClass="") testCesarOverviewMold
 	Block
 		Picture("vista", defaultPicture = "/images/overview.png") overviewPicture
 			defaultStyle = "width:100%;"
+	Block(mode = Expanded)
 
 Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCatalog
 	Toolbar
