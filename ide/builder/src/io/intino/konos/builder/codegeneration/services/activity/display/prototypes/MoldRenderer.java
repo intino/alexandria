@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.validMoldName;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -38,7 +39,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(Block block) {
 		Frame frame = new Frame("block")
-				.addSlot("name", clean(block.name$()))
+				.addSlot("name", validMoldName().format(block.name$()))
 				.addSlot("expanded", block.mode().equals(Mode.Expanded))
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new))
 				.addSlot("hiddenIfMobile", block.hiddenIfMobile());
@@ -220,9 +221,5 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	protected Template srcTemplate() {
 		return customize(MoldTemplate.create());
-	}
-
-	private String clean(String name) {
-		return name.replace("-", "");
 	}
 }

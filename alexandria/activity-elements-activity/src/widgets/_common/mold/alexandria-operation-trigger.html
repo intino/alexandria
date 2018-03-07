@@ -1,16 +1,15 @@
 <link rel="import" href="../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 
-<dom-module id="alexandria-mold-operation-trigger">
+<dom-module id="alexandria-operation-trigger">
 
     <template>
         <div class$="mode [[mode]]">
-            <paper-icon-button class="option icon" style$="[[styles]]" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
-            <paper-button class="option button" style$="[[styles]]" on-tap="_execute">[[_title]]</paper-button>
-            <a class="option link" style$="[[styles]]" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+            <paper-icon-button class="option Icon" style$="[[styles]]" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button class="option Button" style$="[[styles]]" on-tap="_execute">[[_title]]</paper-button>
+            <a class="option Link" style$="[[styles]]" title="[[_title]]" on-tap="_execute">[[_title]]</a>
         </div>
     </template>
 
@@ -31,19 +30,19 @@
         :host .mode .option {
             display: none;
         }
-        :host .mode.icon .option.icon {
+        :host .mode.Icon .option.Icon {
             display: block;
         }
-        :host .mode.button .option.button {
+        :host .mode.Button .option.Button {
             display: block;
         }
-        :host .mode.link .option.link {
+        :host .mode.Link .option.Link {
             display: block;
         }
     </style>
 
     <script>
-        const AlexandriaMoldOperationTriggerDictionary = {
+        const AlexandriaOperationTriggerDictionary = {
             es: {
                 Execute: "ejecutar..."
             },
@@ -53,7 +52,7 @@
         };
 
         Polymer({
-            is: 'alexandria-mold-operation-trigger',
+            is: 'alexandria-operation-trigger',
 
             behaviors: [ CottonBehaviors.TranslatorBehavior ],
 
@@ -66,7 +65,7 @@
             },
 
             attached: function () {
-                this.translate(AlexandriaMoldOperationTriggerDictionary);
+                this.translate(AlexandriaOperationTriggerDictionary);
             },
 
             _refreshTitle : function() {

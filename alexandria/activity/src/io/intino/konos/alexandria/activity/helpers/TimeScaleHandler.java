@@ -105,6 +105,7 @@ public class TimeScaleHandler {
 	}
 
 	public TimeRange updateRangeFrom(Instant from) {
+		if (from.isBefore(boundsRange().from())) from = boundsRange().from();
 		long count = range().allInstants().count();
 		TimeScale scale = range().scale();
 		TimeRange range = validOlapRangeFor(from, scale.addTo(from, count));
@@ -113,6 +114,7 @@ public class TimeScaleHandler {
 	}
 
 	public TimeRange updateRangeTo(Instant to) {
+		if (to.isAfter(boundsRange().to())) to = boundsRange().to();
 		long count = range().allInstants().count();
 		TimeScale scale = range().scale();
 		TimeRange range = validOlapRangeFor(scale.addTo(to, -count), to);
@@ -210,6 +212,11 @@ public class TimeScaleHandler {
 		}
 		resetLoadedPoints();
 		currentScale = scale;
+		notifyScaleChange(calculateNewRange(timeRange.from(), timeRange.to(), currentScale));
+	}
+
+	public void reloadScale() {
+		resetLoadedPoints();
 		notifyScaleChange(calculateNewRange(timeRange.from(), timeRange.to(), currentScale));
 	}
 

@@ -14,10 +14,12 @@
 <dom-module id="alexandria-stamp-time">
 
     <template>
-        <div class="layout horizontal">
+        <div class="layout horizontal center">
             <div>[[_date]]</div>
-            <paper-icon-button icon="today" on-tap="_lastDate"></paper-icon-button>
+            <paper-icon-button icon="today" on-tap="_showDateSelector"></paper-icon-button>
+            <paper-icon-button icon="last-page" on-tap="_lastDate"></paper-icon-button>
         </div>
+        <alexandria-date-selector id="dateSelector" date="[[_date]]" scale="[[_selectedScale]]" label="" on-change="_selectDate"></alexandria-date-selector>
     </template>
 
     <style>
@@ -30,6 +32,10 @@
             width: 20px;
             height: 20px;
             margin: 0 0 0 5px;
+        }
+        :host alexandria-date-selector {
+            position: absolute;
+            left: -5000px;
         }
     </style>
 
@@ -90,6 +96,14 @@
 
             _lastDate : function() {
                 this.lastDate();
+            },
+
+            _selectDate : function(event) {
+                this.selectDate(event.detail.date);
+            },
+
+            _showDateSelector : function() {
+                this.$.dateSelector.open();
             }
         });
     </script>

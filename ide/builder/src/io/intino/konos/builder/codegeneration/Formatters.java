@@ -7,14 +7,12 @@ import org.siani.itrules.Template;
 
 public class Formatters {
 
-
-	public static Formatter cleanMoldName() {
+	public static Formatter validMoldName() {
 		return (value) -> {
 			final String name = value.toString().replace("-", "");
-			return Integer.parseInt(name[0]);
+			return Character.isDigit(name.charAt(0)) ? "m" + name : name;
 		};
 	}
-
 
 	public static Formatter validName() {
 		return (value) -> StringHelper.snakeCaseToCamelCase(value.toString().replace(".", "-"));
