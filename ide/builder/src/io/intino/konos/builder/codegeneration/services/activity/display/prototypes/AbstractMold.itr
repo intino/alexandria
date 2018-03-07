@@ -206,7 +206,7 @@ def trigger(previewExecution)
 end
 
 def trigger(taskExecution)
-	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, session)
+	return (object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, session)
 end
 
 def trigger(filter)
