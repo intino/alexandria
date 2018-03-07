@@ -75,7 +75,7 @@ def type(operations) !type(interface)
 			box.datalake().reset();
 			final Graph graph = assistant.graph();
 			try {
-				if (graph.store() instanceof FileSystemStore) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
+				if (graph.store() instanceof FileSystemStore && from.equals(Instant.MIN)) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
 				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
 				allowWriting(original, false);
 				Graph clone = original.realClone();
