@@ -15,17 +15,23 @@
         blocks : function() { return []; },
         stamps : function() { return []; },
 
+        highlight: function() {
+            var highlight = $(this.querySelector("#highlight"));
+            highlight.addClass("visible");
+            window.setTimeout(() => highlight.removeClass("visible"), 1500);
+        },
+
+        refreshPicture : function(pictureData) {
+            var element = this.querySelector(".picture_img_" + pictureData.stamp);
+            element.src = pictureData.value;
+        },
+
         _initMold : function() {
             if (this.item == null || this.item.length === 0 || this.mode == null) return;
             this._initBlocks(this.blocks());
             this._initStamps(this.stamps());
             this.hasExpandedBlocks = this._hasExpandedBlocks();
             if (this._onRefresh) this._onRefresh();
-        },
-
-        refreshPicture : function(pictureData) {
-            var element = this.querySelector(".picture_img_" + pictureData.stamp);
-            element.src = pictureData.value;
         },
 
         _refreshItem : function() {
@@ -93,10 +99,10 @@
         },
 
         _initStamp : function(stamp) {
+            stamp.properties = stamp.properties != null ? stamp.properties : {};
             this._initStampProperties(stamp);
             stamp.mode = this.mode;
             stamp.label = stamp.label != null ? this._parseFunctions(stamp.label) : "";
-            stamp.properties = stamp.properties != null ? stamp.properties : {};
             stamp.item = this.item.name;
             stamp.singleValue = this._singleValue(stamp);
             stamp.countValues = this._countValuesOf(stamp);
@@ -118,6 +124,7 @@
             this._initLocationProperties(stamp);
             this._initCardWalletProperties(stamp);
             this._initHighlightProperties(stamp);
+            this._initCatalogLinkProperties(stamp);
         },
 
         _initIconProperties : function(stamp) {
@@ -183,6 +190,11 @@
             stamp.properties.color = this._propertyValueOf(stamp, 'color');
         },
 
+        _initCatalogLinkProperties : function(stamp) {
+            if (stamp.type !== "catalog-link") return;
+            stamp.label = this._parseFunctions(this._valueOf(stamp));
+        },
+
         _singleValue: function (stamp) {
             if (this.item == null) return true;
             return this.mode == "map" || this._itemFromStamp(stamp).values.length == 1;
@@ -237,27 +249,6 @@
                 if (propertyList[i].name === property)
                     return propertyList[i];
             return null;
-        },
-
-        _locationStampList : function() {
-            var result = [];
-            if (this._blocks == null) return result;
-            for (var i = 0; i < this._blocks.length; i++)
-                result = result.concat(this._locationStampListOfBlock(this._blocks[i]));
-            return result;
-        },
-
-        _locationStampListOfBlock : function(block) {
-            var result = [];
-
-            for (var j=0; j<block.blocks.length; j++)
-                result = result.concat(this._locationStampListOfBlock(block.blocks[j]));
-
-            for (var j=0; j<block.stampList.length; j++) {
-                if (block.stampList[j].isLocation) result.push(block.stampList[j]);
-            }
-
-            return result;
         },
 
         _parseFunctions : function(value) {

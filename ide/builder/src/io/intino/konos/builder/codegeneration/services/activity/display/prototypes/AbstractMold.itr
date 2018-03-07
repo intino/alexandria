@@ -163,8 +163,8 @@ def trigger(common)
 	[.name("$name")][.label("$label")][$height][
 	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
 	.layout(Stamp.Layout.$layout)][.editable($editable)][
-	$style]
-	$valueMethod
+	$style][
+	$valueMethod]
 end
 
 def trigger(style)

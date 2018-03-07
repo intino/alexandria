@@ -21,8 +21,8 @@ public class TaskOperation extends Operation<String> {
 		return this;
 	}
 
-	public void execute(Item item, ActivitySession session) {
-		execution.task(item != null ? item.object() : null, session);
+	public Refresh execute(Item item, ActivitySession session) {
+		return execution.task(item != null ? item.object() : null, session);
 	}
 
 	public TaskOperation execution(Execution execution) {
@@ -31,6 +31,10 @@ public class TaskOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		void task(Object object, ActivitySession session);
+		Refresh task(Object object, ActivitySession session);
+	}
+
+	public enum Refresh {
+		None, Item
 	}
 }

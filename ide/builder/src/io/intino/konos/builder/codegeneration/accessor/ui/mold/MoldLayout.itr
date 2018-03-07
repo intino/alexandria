@@ -10,8 +10,8 @@ def type(mold)
 
         <template>
         	$block...[$NL]
-
 			$expandedBlocks
+			<div id="highlight"></div>
         </template>
 
         <style>
@@ -21,11 +21,12 @@ def type(mold)
             :host$[mode="magazine"] alexandria-mold-block {
                 height: 100%;
             }
-            :host > alexandria-mold-block > * {
-                margin-left: 5px;
+            :host alexandria-mold-block {
+                margin-left: 2px;
+                margin-right: 2px;
             }
             :host .expanded-block {
-                margin: 10px 1px;
+                margin: 10px 0;
             }
             :host #highlight {
                 background: var(--accent-color);
