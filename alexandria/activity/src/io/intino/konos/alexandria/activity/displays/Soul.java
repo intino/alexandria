@@ -43,6 +43,10 @@ public abstract class Soul implements DisplayRepository {
         return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
+    public <T extends AlexandriaDisplay> T displayWithId(String id) {
+        return (T) displays.values().stream().filter(d -> d.id().equals(id)).findFirst().orElse(null);
+    }
+
     public <T extends AlexandriaDesktop> T desktop() {
         return (T) displays.values().stream().filter(d -> d instanceof AlexandriaDesktop).findFirst().orElse(null);
     }
