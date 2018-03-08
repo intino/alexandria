@@ -175,7 +175,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		} else if (operation.i$(PreviewOperation.class)) {
 			frame.addSlot("previewExecution", baseFrame(operation));
 		} else if (operation.i$(TaskOperation.class)) {
-			frame.addSlot("taskExecution", baseFrame(operation));
+			frame.addSlot("taskExecution", baseFrame(operation)).addSlot("mold", mold.name$());
 			String confirmText = operation.a$(TaskOperation.class).confirmText();
 			if (confirmText != null) frame.addSlot("confirmText", confirmText);
 		}
