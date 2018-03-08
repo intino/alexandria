@@ -72,7 +72,7 @@ end
 
 
 def type(block) trigger(js)
-	blocks.push({[name:"$name"][,layout:"$layout"][,expanded:$expanded][,style:"$style"][,width:"$width"][,height:"$height"][,hiddenIfMobile:$hiddenIfMobile]});[
+	blocks.push({[name:"$name"][,layout:"$layout...[ ]"][,expanded:$expanded][,style:"$style"][,width:"$width"][,height:"$height"][,hiddenIfMobile:$hiddenIfMobile]});[
 	$block+js...[$NL]]
 end
 

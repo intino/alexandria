@@ -8,6 +8,9 @@
     </template>
 
     <style>
+        :host {
+            width: 100%;
+        }
     </style>
 
     <script>
@@ -20,6 +23,8 @@
                 if (this.$.layer.querySelectorAll("cotton-zombie").length > 0) return;
                 var type = this.stamp.properties.displayType;
                 var id = this.stamp.item + this.stamp.properties.displayType;
+                var rendered = this.$.layer.innerHTML != "";
+                if (rendered) return;
                 this._addZombieLayer(this.$.layer, type, type, id);
             }
         });

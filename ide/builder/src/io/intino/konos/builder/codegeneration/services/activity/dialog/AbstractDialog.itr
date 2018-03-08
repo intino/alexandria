@@ -24,6 +24,7 @@ def type(dialogDisplay)
 end
 
 def type(dialog)
+	[dialog.name("$name");]
 	[dialog.label("$label");]
 	[dialog.description("$description");][
 	$operation...[$NL]]

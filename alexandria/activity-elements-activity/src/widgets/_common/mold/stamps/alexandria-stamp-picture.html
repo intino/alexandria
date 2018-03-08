@@ -6,16 +6,16 @@
 
     <template>
         <div class="picture layout vertical center-justified" style$="[[_style]]" hidden$="[[!stamp.value.length]]">
-            <div hidden$="[[!stamp.singleValue]]">
+            <template is="dom-if" if="[[stamp.singleValue]]">
                 <img class$="single [[stamp.classes]] picture_img_[[stamp.name]]" src="[[stamp.value]]" class="icon" style$="[[_style]]" />
-            </div>
-            <div hidden$="[[stamp.singleValue]]">
+            </template>
+            <template is="dom-if" if="[[!stamp.singleValue]]">
                 <l2t-paper-slider id="paperSlider" class$="[[stamp.classes]]" total-slides$="[[stamp.countValues]]" tabIndex="-1" slide-duration="4">
                     <template is="dom-repeat" items="[[stamp.values]]" as="picture">
                         <paper-slide><img src="[[picture]]"/></paper-slide>
                     </template>
                 </l2t-paper-slider>
-            </div>
+            </template>
         </div>
     </template>
 

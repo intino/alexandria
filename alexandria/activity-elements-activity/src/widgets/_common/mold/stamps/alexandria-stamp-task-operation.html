@@ -90,6 +90,7 @@
             _render : function() {
                 var title = this.stamp.label;
                 this._title = title != null && title != "" ? title : this.Execute;
+                $(this).attr("style", $(this).attr("style") + ";" + this._style);
             },
 
             _confirmTask : function(e) {

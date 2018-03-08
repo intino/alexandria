@@ -208,6 +208,7 @@ public class AbstractDialogRenderer {
 
 	private void addCommon(Frame frame, Tab.Input input) {
 		frame.addSlot("owner", input.core$().owner().name());
+		if (input.name$() != null) frame.addSlot("name", input.name$());
 		frame.addSlot("label", input.label());
 		frame.addSlot("readonly", input.readonly());
 		frame.addSlot("required", input.required());
