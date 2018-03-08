@@ -126,7 +126,7 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementView.ExecuteItemTaskEvent executeItemTaskEvent(Item item, Stamp stamp) {
+	public static AlexandriaElementView.ExecuteItemTaskEvent executeItemTaskEvent(Item item, Stamp stamp, AlexandriaDisplay self) {
 		return new AlexandriaElementView.ExecuteItemTaskEvent() {
 			@Override
 			public Item item() {
@@ -136,6 +136,11 @@ public class ElementHelper {
 			@Override
 			public Stamp stamp() {
 				return stamp;
+			}
+
+			@Override
+			public AlexandriaDisplay self() {
+				return self;
 			}
 		};
 	}

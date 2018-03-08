@@ -463,7 +463,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()))));
+		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), this)));
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters params) {

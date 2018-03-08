@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 
+import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
@@ -21,8 +22,8 @@ public class TaskOperation extends Operation<String> {
 		return this;
 	}
 
-	public Refresh execute(Item item, ActivitySession session) {
-		return execution.task(item != null ? item.object() : null, session);
+	public Refresh execute(Item item, AlexandriaDisplay self, ActivitySession session) {
+		return execution.task(item != null ? item.object() : null, self.id(), session);
 	}
 
 	public TaskOperation execution(Execution execution) {
@@ -31,7 +32,7 @@ public class TaskOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		Refresh task(Object object, ActivitySession session);
+		Refresh task(Object object, String selfId, ActivitySession session);
 	}
 
 	public enum Refresh {
