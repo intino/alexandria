@@ -76,7 +76,7 @@ def type(stamp & taskOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, Abstract$mold+FirstUpperCase mold, ActivitySession session) {
+		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, Abstract$mold+firstUpperCase mold, ActivitySession session) {
 			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
 		}
 	}
