@@ -110,7 +110,7 @@ def type(block) trigger(block)
 end
 
 def type(stamp)
-	<alexandria-stamp-$type stamp="$[$[$name]]"></alexandria-stamp-$type>
+	<alexandria-stamp-$type  class="$name" stamp="$[$[$name]]"></alexandria-stamp-$type>
 end
 
 def type(expandedBlocks) trigger(js)
