@@ -12,6 +12,7 @@ def type(mold)
     	public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
     		super(box);
     	}
+
     	public static class Stamps {
 			$block+stamps...[$NL$NL]
     	}
@@ -24,6 +25,7 @@ end
 
 def type(block) trigger(stamps)
 	$stamp...[$NL]
+	$block+stamps...[$NL]
 end
 
 def trigger(block)
@@ -34,7 +36,7 @@ end
 def trigger(hidden)
 	public static class $name+FirstUpperCase {
 		public static boolean hidden($moldClass $moldClass+shortType+firstLowerCase) {
-
+			return false;//TODO
 		}
 	}
 end
@@ -197,7 +199,7 @@ def trigger(style)
 end
 
 def trigger(embeddedCatalogFilter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase source, Object target, ActivitySession session) {
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, ActivitySession session) {
 		return true;//TODO
 	}
 end

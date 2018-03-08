@@ -48,11 +48,11 @@ def type(dateTime | date) trigger(parameter)
 end
 
 def type(list) trigger(parameter)
-    $value+firstUpperCase$[]
+    $value$[]
 end
 
 def trigger(parameter)
-    $value+firstUpperCase
+    $value
 end
 
 def type(schemaImport)
