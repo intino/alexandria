@@ -22,6 +22,7 @@
 
             _navigateCatalog : function(e) {
                 this.fire("navigate-catalog", { item: this.stamp.item, stamp: e.detail.item });
+                $(this).attr("style", $(this).attr("style") + ";" + this._style);
             }
         });
     </script>
