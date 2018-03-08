@@ -44,7 +44,7 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public <T extends AlexandriaDisplay> T displayWithId(String id) {
-        return (T) displays.values().stream().filter(d -> d.id().equals(id)).findFirst().orElse(null);
+        return displays.containsKey(id) ? (T) displays.get(id) : null;
     }
 
     public <T extends AlexandriaDesktop> T desktop() {

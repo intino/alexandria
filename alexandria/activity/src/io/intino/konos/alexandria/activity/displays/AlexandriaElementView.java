@@ -52,5 +52,6 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	interface ExecuteItemTaskEvent {
 		Item item();
 		Stamp stamp();
+		AlexandriaDisplay self();
 	}
 }

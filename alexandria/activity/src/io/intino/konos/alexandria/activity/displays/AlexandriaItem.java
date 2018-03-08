@@ -139,7 +139,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(ElementHelper.executeItemTaskEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()))));
+		executeItemTaskListeners.forEach(l -> l.accept(ElementHelper.executeItemTaskEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), this)));
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters parameters) {
