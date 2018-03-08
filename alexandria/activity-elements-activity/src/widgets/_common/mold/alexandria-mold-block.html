@@ -42,7 +42,7 @@
                 if (this.block.style != "") this.style.cssText += ";" + this.block.style;
                 if (this.block.hiddenIfMobile) $(this).addClass("not-mobile");
                 if (this.block.layout.indexOf("flex") !== -1)
-                    this.style.width = "100%";
+                    this.style.width = "calc(100% - 4px)";
                 if (this.block.width !== "100%")
                     this.style.width = this.block.width;
                 if (this.block.height !== "-1") {

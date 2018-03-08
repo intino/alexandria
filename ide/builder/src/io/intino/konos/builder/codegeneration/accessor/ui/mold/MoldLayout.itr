@@ -2,6 +2,7 @@ def type(mold)
 	<link rel="import" href="../../../lib/polymer/polymer.html">
     <link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
 
+    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/alexandria-breadcrumbs-behavior.html">
     <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-layout-behavior.html">
     <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-block.html">
     <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-stamps.html">
@@ -15,6 +16,11 @@ def type(mold)
         </template>
 
         <style>
+        	:host {
+        		display: block;
+        		height: 100%;
+        		overflow: auto;
+        	}
             :host$[mode="list"], :host$[mode="grid"] {
                 width: 100%;
             }
@@ -50,7 +56,7 @@ def type(mold)
             Polymer({
                 is: '$name+CamelCaseToSnakeCase~-layout',
 
-                behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior ],
+                behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior, AlexandriaBehaviors.BreadcrumbsBehavior ],
 
                 blocks : function() {
                     var blocks = $[];[
