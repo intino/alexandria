@@ -7,6 +7,7 @@ use Displays
 Concept Mold extends Display
 	var string modelClass
 	Concept Block
+		var boolean hasCustomClass = false
 		var word[]:{Vertical Horizontal Fixed Flexible Wrap Justified StartJustified CenterJustified EndJustified Start Center End} layout = Vertical
         var word:{Expanded Simple} mode = Simple
         var integer:{%} width = -1%
@@ -22,6 +23,7 @@ Concept Mold extends Display
 			var string suffix = ""
 			var string defaultStyle = ""
 			var boolean hasCustomStyle = false
+			var boolean hasCustomClass = false
 			var boolean editable = false
 			sub CatalogLink
 				var Catalog catalog
