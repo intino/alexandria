@@ -99,7 +99,6 @@
         },
 
         _initStamp : function(stamp) {
-            stamp.properties = stamp.properties != null ? stamp.properties : {};
             this._initStampProperties(stamp);
             stamp.mode = this.mode;
             stamp.label = stamp.label != null ? this._parseFunctions(stamp.label) : "";
@@ -114,6 +113,9 @@
         },
 
         _initStampProperties : function(stamp) {
+            stamp.properties = stamp.properties != null ? stamp.properties : {};
+            stamp.properties.style = this._propertyValueOf(stamp, 'style');
+
             this._initIconProperties(stamp);
             this._initBreadcrumbsProperties(stamp);
             this._initDownloadOperationProperties(stamp);

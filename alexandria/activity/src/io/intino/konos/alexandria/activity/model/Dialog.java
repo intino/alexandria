@@ -298,7 +298,7 @@ public class Dialog {
 
         public class Input {
             private String path;
-            private String name;
+            private String name = null;
             private String label;
             private boolean required;
             private boolean readonly;
@@ -312,7 +312,12 @@ public class Dialog {
             private static final String AlphaAndDigits = "[^a-zA-Z0-9]+";
 
             public String name() {
-                return name;
+                return name != null ? name : clean(label);
+            }
+
+            public Input name(String name) {
+                this.name = name;
+                return this;
             }
 
             public String path() {
@@ -329,7 +334,6 @@ public class Dialog {
             }
 
             public Input label(String label) {
-                this.name = clean(label);
                 this.label = label;
                 return this;
             }

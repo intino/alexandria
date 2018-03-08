@@ -7,7 +7,7 @@ use Displays
 Concept Mold extends Display
 	var string modelClass
 	Concept Block
-		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
+		var word[]:{Vertical Horizontal Fixed Flexible Wrap Justified StartJustified CenterJustified EndJustified Start Center End} layout = Vertical
         var word:{Expanded Simple} mode = Simple
         var integer:{%} width = -1%
         var integer:{%} height = -1%

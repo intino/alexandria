@@ -1,7 +1,7 @@
 <link rel="import" href="../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../mold/alexandria-mold-block.html">
-<link rel="import" href="../mold/alexandria-mold-layout-behavior.html">
+<link rel="import" href="../mold/alexandria-mold-behavior.html">
 
 <script src="../../../../lib/wicket/wicket.js"></script>
 <script src="../../../../lib/wicket/wicket-gmap3.js"></script>
@@ -51,14 +51,12 @@
                 centroid : { type: Object, value: function() { return { latitude: 0, longitude: 0 }; } },
                 infoWindow : { type: Object, value: function() { return null; }},
                 locationItem : { type: Object, value: function() { return null; }},
-                countReadyBlocks : { type: Number, value: function() { return 0; }},
                 loaded : { type: Boolean, value: function() { return false }},
                 _moldContainer : Object
             },
 
             attached: function () {
                 this.translate(AlexandriaCatalogMapItemDictionary);
-                this.countReadyBlocks = 0;
             },
 
             update : function(item) {
@@ -77,7 +75,7 @@
                 var infoWindowTemplate = this.$.infoWindowTemplate;
                 infoWindowTemplate.innerHTML = "";
 
-                this._moldContainer = document.createElement(this.mold);
+                this._moldContainer = document.createElement("alexandria-mold-container");
                 this._moldContainer.mode = this.mode;
                 this._moldContainer.item = this.item;
                 this._moldContainer.mold = this.mold;

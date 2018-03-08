@@ -9,7 +9,7 @@
 <dom-module id="alexandria-stamp-embedded-catalog">
 
     <template>
-        <div id="container" class="layout flex"></div>
+        <div id="container" class="layout flex" style$="[[_style]]"></div>
     </template>
 
     <style>
@@ -48,19 +48,10 @@
             _render : function() {
                 var key = this.stamp.item + this.stamp.name;
                 var catalog = this.stamp.properties.catalog;
+                var rendered = this.$.container.innerHTML != "";
 
-                if (key == null || catalog == null) return;
-
-                if (this.timeout != null)
-                    window.clearTimeout(this.timeout);
-
-                this.timeout = window.setTimeout(() => {
-                    var zombie = document.createElement("cotton-zombie");
-                    zombie.setAttribute("display", catalog);
-                    zombie.setAttribute("widget", catalog);
-                    zombie.setAttribute("object", key);
-                    this.$.container.appendChild(zombie);
-                }, 100);
+                if (key == null || catalog == null || rendered) return;
+                this._addZombieLayer(this.$.container, catalog, catalog, key);
             },
 
             _catalogElement : function() {

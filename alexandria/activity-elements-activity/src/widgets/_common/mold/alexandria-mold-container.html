@@ -7,7 +7,7 @@
 <dom-module id="alexandria-mold-container">
 
     <template>
-        <div id="mold"></div>
+        <div id="container"></div>
     </template>
 
     <script>
@@ -17,7 +17,8 @@
             properties : {
                 item : { type: Object, observer: '_createMold', value: function() { return null; } },
                 mold : { type: String, observer: '_createMold', value: function() { return null; } },
-                mode : { type: String, observer: '_createMold', value: function() { return "list"; } }
+                mode : { type: String, observer: '_createMold', value: function() { return "list"; } },
+                _stampsReadyTimeout : { type: Number, value : function() { return null; }}
             },
 
             highlight : function() {
@@ -34,11 +35,20 @@
 
             _createMold : function() {
                 if (this.item == null || this.mold == null) return;
-                this.$.mold.innerHTML = "";
-                var mold = document.createElement(this.mold);
-                mold.item = this.item;
+                var mold = this.$.container.querySelector(".mold-wrap");
+                if (mold == null) {
+                    mold = document.createElement(this.mold);
+                    mold.addEventListener("stamp-ready", () => this._notifyStampsReady());
+                    this.$.container.appendChild(mold);
+                    $(mold).addClass("mold-wrap");
+                }
                 mold.mode = this.mode;
-                this.$.mold.appendChild(mold);
+                mold.item = this.item;
+            },
+
+            _notifyStampsReady : function() {
+                if (this.stampsReadyTimeout) window.clearTimeout(this.stampsReadyTimeout);
+                this.stampsReadyTimeout = window.setTimeout(() => this.fire("stamps-ready"), 100);
             }
         });
     </script>

@@ -20,6 +20,8 @@
             _render : function() {
                 if (this.$.layer.querySelectorAll("cotton-zombie").length > 0) return;
                 var id = this.stamp.item + this.stamp.name;
+                var rendered = this.$.layer.innerHTML != "";
+                if (rendered) return;
                 this._addZombieLayer(this.$.layer, "AlexandriaTimeNavigator", "AlexandriaStampTimeNavigator", id);
             }
         });
