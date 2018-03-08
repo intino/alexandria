@@ -5,6 +5,9 @@ import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
 import org.siani.itrules.model.Frame;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,9 +114,11 @@ public class MoldFrameBuilder extends Frame {
 			propertyList.add(frameOf("options", String.join(",", stamp.a$(Block.DownloadOperation.class).options())));
 
 		if (stamp.i$(Block.ExportOperation.class)) {
-			propertyList.add(frameOf("options", String.join(",", stamp.a$(Block.ExportOperation.class).options())));
-			propertyList.add(frameOf("from", stamp.a$(Block.ExportOperation.class).from().toEpochMilli(), "number"));
-			propertyList.add(frameOf("to", stamp.a$(Block.ExportOperation.class).to().toEpochMilli(), "number"));
+			final Block.ExportOperation exportOperation = stamp.a$(Block.ExportOperation.class);
+			final Instant defaultTo = Instant.now(Clock.systemUTC()).plus(1, ChronoUnit.DAYS);
+			propertyList.add(frameOf("options", String.join(",", exportOperation.options())));
+			propertyList.add(frameOf("from", exportOperation.from() != null ? exportOperation.from().toEpochMilli() : Instant.now().toEpochMilli(), "number"));
+			propertyList.add(frameOf("to", exportOperation.to() != null ? exportOperation.to().toEpochMilli() : defaultTo.toEpochMilli(), "number"));
 		}
 
 		if (stamp.i$(Block.TaskOperation.class)) {
