@@ -20,9 +20,9 @@ def type(mold)
         		display: block;
         		height: 100%;
         		overflow: auto;
-        	}
-        	$block+style...[$NL]
-        	$stamp+style...[$NL]
+        	}[
+        	$block+style...[$NL]][
+        	$stamp+style...[$NL]]
             :host$[mode="list"], :host$[mode="grid"] {
                 width: 100%;
             }
@@ -88,13 +88,19 @@ def type(stamp) trigger(js)
 	stamps.push({name:"$name",type:"$type"[,$attribute...[,]][,properties:{$property...[,]}]});
 end
 
-def type(stamp) trigger(style)
+def type(stamp & hasCustomClass) trigger(style)
 	:host .$name { @apply(--$name); }
 end
 
-def type(block) trigger(style)
+def type(stamp) trigger(style)
+end
+
+def type(block & hasCustomClass) trigger(style)
 	:host .$name { @apply(--$name); }[
 	$block+style...[$NL]]
+end
+
+def type(block) trigger(style)
 end
 
 def type(boolean | number) trigger(attribute)
@@ -121,7 +127,7 @@ def type(block) trigger(block)
 end
 
 def type(stamp)
-	<alexandria-stamp-$type  class="$name" stamp="$[$[$name]]"></alexandria-stamp-$type>
+	<alexandria-stamp-$type class="$name" stamp="$[$[$name]]"></alexandria-stamp-$type>
 end
 
 def type(expandedBlocks) trigger(js)
