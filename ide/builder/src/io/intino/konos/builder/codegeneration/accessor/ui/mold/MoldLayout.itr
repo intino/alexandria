@@ -21,6 +21,7 @@ def type(mold)
         		height: 100%;
         		overflow: auto;
         	}
+        	$stamp+style...[$NL]
             :host$[mode="list"], :host$[mode="grid"] {
                 width: 100%;
             }
@@ -84,6 +85,10 @@ end
 
 def type(stamp) trigger(js)
 	stamps.push({name:"$name",type:"$type"[,$attribute...[,]][,properties:{$property...[,]}]});
+end
+
+def type(stamp) trigger(js)
+	:host .$name { @apply(--$name); }
 end
 
 def type(boolean | number) trigger(attribute)
