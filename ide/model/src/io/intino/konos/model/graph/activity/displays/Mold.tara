@@ -7,7 +7,6 @@ use Displays
 Concept Mold extends Display
 	var string modelClass
 	Concept Block
-		var boolean hasCustomClass = false
 		var word[]:{Vertical Horizontal Fixed Flexible Wrap Justified StartJustified CenterJustified EndJustified Start Center End} layout = Vertical
         var word:{Expanded Simple} mode = Simple
         var integer:{%} width = -1%
@@ -15,6 +14,7 @@ Concept Mold extends Display
         var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
         var boolean hiddenIfMobile = false
         var string style = ""
+		var boolean hasCustomClass = false
 		has Block
 		Concept:Named Stamp
 			var string label = ""

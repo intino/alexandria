@@ -45,6 +45,7 @@ public class MoldFrameBuilder extends Frame {
 		Frame frame = new Frame("block")
 				.addSlot("name", validMoldName().format(block.name$()))
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
+		if (block.hasCustomClass()) frame.addTypes("hasCustomClass");
 		if (isExpanded(block)) frame.addSlot("expanded", true);
 		if (block.hiddenIfMobile()) frame.addSlot("hiddenIfMobile", block.hiddenIfMobile());
 		if (!block.style().isEmpty()) frame.addSlot("style", block.style());
@@ -143,6 +144,9 @@ public class MoldFrameBuilder extends Frame {
 	}
 
 	private Frame baseFrameOf(Block.Stamp stamp) {
-		return new Frame().addTypes("stamp").addSlot("name", validMoldName().format(stamp.name$())).addSlot("type", camelCaseToSnakeCase().format(stamp.getClass().getSimpleName()));
+		Frame result = new Frame().addTypes("stamp");
+		if (stamp.hasCustomClass()) result.addTypes("hasCustomClass");
+		result.addSlot("name", validMoldName().format(stamp.name$())).addSlot("type", camelCaseToSnakeCase().format(stamp.getClass().getSimpleName()));
+		return result;
 	}
 }
