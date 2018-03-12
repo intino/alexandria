@@ -427,8 +427,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	private boolean attachedGroupingFilter(GroupingSelection groupingSelection, boolean addAttachedGrouping) {
-		if (addAttachedGrouping) return true;
-		return !groupingSelection.name().equals(attachedGrouping);
+		return addAttachedGrouping || !groupingSelection.name().equals(attachedGrouping);
 	}
 
 	private List<String> groupsNames(List<String> labels) {

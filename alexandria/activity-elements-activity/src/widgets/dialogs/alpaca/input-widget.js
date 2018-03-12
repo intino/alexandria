@@ -99,6 +99,7 @@ var AlpacaInputConverter = function() {
 
         options: function (input) {
             var result = {};
+            result.name = input.name;
             result.helper = input.helper ? input.helper : false;
             result.placeholder = input.placeholder ? input.placeholder : false;
             result.disabled = input.readonly != null ? input.readonly : false;

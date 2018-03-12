@@ -17,6 +17,9 @@ def type(mold)
 				properties : {
 					item : Object,
 					mode : String
+				},
+				ready : function() {
+					this.scopeSubtree(this.$$.layout, true);
 				}
 			});
 		</script>
