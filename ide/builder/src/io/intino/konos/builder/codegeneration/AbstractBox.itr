@@ -259,6 +259,10 @@ def type(task) trigger(getter)
 end
 
 def trigger(registerSoul)
+	public java.util.List<Soul> souls() {
+		return new java.util.ArrayList<>(activitySouls.values());
+	}
+
 	public java.util.Optional<Soul> soul(String clientId) {
 		return java.util.Optional.ofNullable(activitySouls.get(clientId));
 	}
