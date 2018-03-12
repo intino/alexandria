@@ -268,10 +268,10 @@
 
     document.pathOf = function(input) {
         var parent = input.getParent();
-        var path = parent == null ? input.schema.title : "";
+        var path = parent == null ? input.options.name : "";
 
         if (parent != null)
-            path = (isSection(parent) || isMultiple(parent) ? parent.schema.title + input.getPath() : input.getPath()) + (path != "" ? "." + path : "");
+            path = (isSection(parent) || isMultiple(parent) ? parent.options.name + input.getPath() : input.getPath()) + (path != "" ? "." + path : "");
 
         path = path.replace(/\//g, ".");
         path = path.replace("[", "");

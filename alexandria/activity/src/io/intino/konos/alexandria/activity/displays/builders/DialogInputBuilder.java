@@ -14,6 +14,7 @@ public class DialogInputBuilder {
     public static JsonObject build(Dialog.Tab.Input input) {
         JsonObject result = new JsonObject();
 
+        result.addProperty("name", input.name());
         result.addProperty("label", input.label());
         result.addProperty("type", input.getClass().getSimpleName().toLowerCase());
         result.addProperty("required", input.required());

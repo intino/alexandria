@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-test-resource" />
     </content>
-    <orderEntry type="jdk" jdkName="IDEA Tara" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA Konos" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="builder" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />

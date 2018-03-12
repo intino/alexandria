@@ -5,13 +5,16 @@
 
     <template>
         <div hidden$="[[!stamp.label]]">
-            <alexandria-hyperlink name="[[stamp.name]]" label="[[stamp.label]]"
+            <alexandria-hyperlink class="hyperlink" name="[[stamp.name]]" label="[[stamp.label]]"
                                   on-item-tap="_navigateCatalog"
                                   style$="[[_style]]"></alexandria-hyperlink>
         </div>
     </template>
 
     <style>
+        :host .hyperlink {
+            @apply(--alexandria-stamp-catalog-link-hyperlink);
+        }
     </style>
 
     <script>

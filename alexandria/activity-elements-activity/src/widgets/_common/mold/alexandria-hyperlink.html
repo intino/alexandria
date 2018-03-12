@@ -3,7 +3,7 @@
 <dom-module id="alexandria-hyperlink">
 
     <template>
-        <a style="[[style]]" on-tap="_navigate">[[label]]</a>
+        <a class="link" style="[[style]]" on-tap="_navigate">[[label]]</a>
     </template>
 
     <style>
@@ -14,9 +14,15 @@
             font-size: 12pt;
             color: var(--default-primary-color);
         }
+        :host .link {
+            @apply(--alexandria-hyperlink-link);
+        }
         :host a:hover {
             background: var(--footer-background-color);
             border-radius: 2px;
+        }
+        :host .link:hover {
+            @apply(--alexandria-hyperlink-link-hover);
         }
     </style>
 

@@ -24,7 +24,7 @@
             var style = this.stamp.properties.defaultStyle != null ? this.stamp.properties.defaultStyle : "";
             style += style !== "" ? ";" : "";
             style += this.stamp.properties.style != null ? this.stamp.properties.style : "";
-            if (style == null || style === "") return;
+            if (style == null) return;
             this._style = style;
         },
 
