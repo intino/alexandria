@@ -10,7 +10,7 @@ public class ActivitySession extends SparkSession<ActivityClient> {
     public ActivitySession(String id) {
         super(id);
         this.browser = new Browser();
-    }
+
 
     public User user() {
         return this.user;
@@ -18,6 +18,10 @@ public class ActivitySession extends SparkSession<ActivityClient> {
 
     public void user(User user) {
         this.user = user;
+    }
+
+    public boolean isLogged() {
+        return user() != null;
     }
 
     public Browser browser() {
