@@ -47,15 +47,30 @@ public class Ness {
 
 	public Session start() {
 		try {
-			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
-			if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
-			connection.start();
+			createConnection();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 			return this.session;
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
+	}
+
+	public Session startTransacted() {
+		try {
+			createConnection();
+			this.session = connection.createSession(true, Session.SESSION_TRANSACTED);
+			return this.session;
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
+	}
+
+	private void createConnection() throws JMSException {
+		connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
+		if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
+		connection.start();
 	}
 
 	public Tank tank(String tank) {
