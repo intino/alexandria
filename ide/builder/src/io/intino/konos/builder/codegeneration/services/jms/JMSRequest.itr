@@ -73,7 +73,7 @@ def trigger(try)
 end
 
 def trigger(catch)
-	} catch (KonosException e) {
+	} catch (AlexandriaException e) {
 		response(session, replyTo(request), exceptionMessage(session, idOf(request), e));
 	}
 end
