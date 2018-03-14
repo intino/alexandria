@@ -10,7 +10,7 @@ public class ActivitySession extends SparkSession<ActivityClient> {
     public ActivitySession(String id) {
         super(id);
         this.browser = new Browser();
-
+    }
 
     public User user() {
         return this.user;
