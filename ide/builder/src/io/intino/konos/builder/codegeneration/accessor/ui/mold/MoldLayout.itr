@@ -1,81 +1,82 @@
 def type(mold)
 	<link rel="import" href="../../../lib/polymer/polymer.html">
-    <link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+	<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
 
-    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/alexandria-breadcrumbs-behavior.html">
-    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-layout-behavior.html">
-    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-block.html">
-    <link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-stamps.html">
+	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/alexandria-breadcrumbs-behavior.html">
+	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-layout-behavior.html">
+	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-block.html">
+	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-stamps.html">
 
-    <dom-module id="$name+CamelCaseToSnakeCase~-layout">
+	<dom-module id="$name+CamelCaseToSnakeCase~-layout">
 
-        <template>
-        	$block...[$NL]
+		<template>
+			$block...[$NL]
 			$expandedBlocks
 			<div id="highlight"></div>
-        </template>
+		</template>
 
-        <style>
-        	:host {
-        		display: block;
-        		height: 100%;
-        		overflow: auto;
-        	}[
-        	$block+style...[$NL]][
-        	$stamp+style...[$NL]]
-            :host$[mode="list"], :host$[mode="grid"] {
-                width: 100%;
-            }
-            :host$[mode="magazine"] alexandria-mold-block {
-                height: 100%;
-            }
-            :host alexandria-mold-block {
-                margin-left: 2px;
-                margin-right: 2px;
-            }
-            :host .expanded-block {
-                margin: 10px 0;
-            }
-            :host #highlight {
-                background: var(--accent-color);
-                position: absolute;
-                top: 0;
-                height: 100%;
-                width: 100%;
-                visibility: hidden;
-                opacity: 0;
-                transition: visibility 0s 0.5s, opacity 0.5s linear;
-                border-radius: 10px;
-            }
-            :host #highlight.visible {
-                visibility: visible;
-                opacity: 0.3;
-                transition: opacity 0.5s linear;
-            }
-        </style>
+		<style>
+			:host {
+				display:block;
+				height:100%;
+				overflow:auto;
+				position:relative;
+			}[
+			$block+style...[$NL]][
+			$stamp+style...[$NL]]
+			:host$[mode="list"], :host$[mode="grid"] {
+				width: 100%;
+			}
+			:host$[mode="magazine"] alexandria-mold-block {
+				height: 100%;
+			}
+			:host alexandria-mold-block {
+				margin-left: 2px;
+				margin-right: 2px;
+			}
+			:host .expanded-block {
+				margin: 10px 0;
+			}
+			:host #highlight {
+				background: var(--accent-color);
+				position: absolute;
+				top: 0;
+				height: 100%;
+				width: 100%;
+				visibility: hidden;
+				opacity: 0;
+				transition: visibility 0s 0.5s, opacity 0.5s linear;
+				border-radius: 10px;
+			}
+			:host #highlight.visible {
+				visibility: visible;
+				opacity: 0.3;
+				transition: opacity 0.5s linear;
+			}
+		</style>
 
-        <script>
-            Polymer({
-                is: '$name+CamelCaseToSnakeCase~-layout',
+		<script>
+			Polymer({
+				is: '$name+CamelCaseToSnakeCase~-layout',
 
-                behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior, AlexandriaBehaviors.BreadcrumbsBehavior ],
+				behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior, AlexandriaBehaviors.BreadcrumbsBehavior ],
 
-                blocks : function() {
-                    var blocks = $[];[
-                    $block+js...[$NL]][
-                    $expandedblocks+js
-                    ]return blocks;
-                },
+				blocks : function() {
+					var blocks = $[];[
+					$block+js...[$NL]][
+					$expandedblocks+js
+					]return blocks;
+				},
 
-                stamps : function() {
-                    var stamps = $[];
+				stamps : function() {
+					var stamps = $[];
 					[$stamp+js...[$NL]
-                    ]return stamps;
-                }
-            });
-        </script>
+					]return stamps;
+				}
+			});
+		</script>
 
-    </dom-module>
+	</dom-module>
 end
 
 
