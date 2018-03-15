@@ -160,7 +160,7 @@ public class ActivityAccessorRenderer {
 		if (prototype) {
 			frame.addSlot("imports", new Frame().addSlot("type", type));
 			frame.addSlot("type", type);
-		} else frame.addSlot("includes", new Frame().addSlot("widget", display.name$()));
+		}
 		final List<Display.Request> requests = display.requestList().stream().filter(r -> r.registerPath() != null).collect(Collectors.toList());
 		if (!requests.isEmpty()) {
 			frame.addSlot("path", new Frame("path").addSlot("name", display.name$()));

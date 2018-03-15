@@ -138,6 +138,7 @@
                 stamp.value = "";
             }
             stamp.properties.icon = iconType === "alexandria" ? icon : "";
+            stamp.properties.title = this._parseFunctions(this._propertyValueOf(stamp, "title"));
         },
 
         _initBreadcrumbsProperties : function(stamp) {

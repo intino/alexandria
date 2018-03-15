@@ -40,7 +40,7 @@
             itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
             this._itemList = itemList;
             this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
-            this._selectedItem = 0;
+            this._selectedItem = this._loadDefaultItem(itemList);
         },
 
         _itemProperty : function(item, property) {
@@ -63,7 +63,12 @@
             if (event.detail == "noItems") return;
 
             this._selectedItem = index;
-            window.setTimeout(() => this.selectItem(event.detail), 100);
+            window.setTimeout(() => {
+                if (this._itemList[this._selectedItem] == null) return;
+            var label = this._itemList[this._selectedItem].label;
+            this.selectItem(label);
+            this._saveDefaultItem(label);
+        }, 100);
         },
 
         _refreshSelected : function(selected) {
@@ -109,6 +114,26 @@
 
         _userLoggedOut : function(homeUrl) {
             window.location.href = homeUrl;
+        },
+
+        _loadDefaultItem : function(itemList) {
+            try {
+                var label = Cookies.get("alexandria-layout");
+                label = label != null && label !== "" ? label : (itemList.length > 0 ? itemList[0].label : null);
+                if (this._indexOf(label) == -1) label = (itemList.length > 0 ? itemList[itemList.length-1].label : null);
+                return label;
+            }
+            catch(e) {
+                return itemList.length > 0 ? itemList[0].label : null;
+            }
+        },
+
+        _saveDefaultItem : function(label) {
+            try {
+                Cookies.set("alexandria-layout", label, 30);
+            }
+            catch (exception) {
+            }
         }
 
     };

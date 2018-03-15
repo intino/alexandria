@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.displays.AlexandriaDisplayNotifierPro
 import io.intino.konos.alexandria.activity.displays.MessageCarrier;
 import io.intino.konos.alexandria.activity.services.AuthService;
 import io.intino.konos.alexandria.activity.services.AuthService.Authentication;
+import io.intino.konos.alexandria.activity.services.auth.SessionAuthService;
 import io.intino.konos.alexandria.activity.services.auth.Space;
 import io.intino.konos.alexandria.activity.services.auth.exceptions.CouldNotInvalidateAccessToken;
 import io.intino.konos.alexandria.activity.services.auth.exceptions.CouldNotObtainAuthorizationUrl;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,13 +48,19 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	protected boolean isLogged() {
 		if (!isFederated()) return true;
 
+		AuthService authService = manager.authService();
+		if (authService instanceof SessionAuthService)
+			((SessionAuthService)authService).inject(manager);
+
 		String authId = manager.fromQuery("authId", String.class);
 		Authentication authentication = authenticationOf(authId).orElse(null);
-		return authentication != null && manager.authService().valid(authentication.accessToken());
+		return authentication != null && authService.valid(authentication.accessToken());
 	}
 
 	protected synchronized void authenticate() {
-		manager.redirect(authenticate(manager.baseUrl()));
+		String authenticate = authenticate(manager.baseUrl());
+		if (authenticate == null) authenticate = manager.baseUrl();
+		manager.redirect(authenticate);
 	}
 
 	protected synchronized String authenticate(String baseUrl) {
@@ -150,7 +158,9 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	private String authenticate(Authentication authentication) {
 		try {
-			return RequestHelper.post(authentication.authenticationUrl(authentication.requestToken())).toString();
+			URL url = authentication.authenticationUrl(authentication.requestToken());
+			if (url == null) return null;
+			return RequestHelper.post(url).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
 			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			return null;
