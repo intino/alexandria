@@ -176,7 +176,7 @@ def type(dataLake) trigger(init)
 	if (configuration().nessConfiguration() == null) return;
 	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
 	java.lang.Thread thread = new java.lang.Thread(()-> {
-		this.ness.start();
+		this.ness.start$mode();
 		$package.ness.NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		logger.info("Ness connection: started!");
@@ -187,6 +187,13 @@ def type(dataLake) trigger(init)
 	} catch (InterruptedException e) {
 		logger.error(e.getMessage());
 	}
+end
+
+def attribute(Transacted) trigger(mode)
+	Transacted
+end
+
+def trigger(mode)
 end
 
 def type(service & jmx) trigger(field)

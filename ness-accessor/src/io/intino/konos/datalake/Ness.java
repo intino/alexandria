@@ -36,7 +36,6 @@ public class Ness {
 	private Connection connection;
 	private Instant lastMessage;
 	private int receivedMessages = 0;
-	private TopicConsumer topicConsumer;
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -263,15 +262,15 @@ public class Ness {
 
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) logger.error("Session is null");
-			topicConsumer = new TopicConsumer(session(), flowChannel());
-			if (flowID != null) topicConsumer.listen(flow, flowID);
-			else topicConsumer.listen(flow);
-			return topicConsumer;
+			this.flow = new TopicConsumer(session(), flowChannel());
+			if (flowID != null) this.flow.listen(flow, flowID);
+			else this.flow.listen(flow);
+			return this.flow;
 		}
 
 		public void unregister() {
-			if (topicConsumer != null) topicConsumer.stop();
-			topicConsumer = null;
+			if (flow != null) flow.stop();
+			flow = null;
 		}
 	}
 
