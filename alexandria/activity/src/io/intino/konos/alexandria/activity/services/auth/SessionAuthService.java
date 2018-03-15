@@ -2,14 +2,16 @@ package io.intino.konos.alexandria.activity.services.auth;
 
 import io.intino.konos.alexandria.activity.services.AuthService;
 import io.intino.konos.alexandria.activity.services.auth.exceptions.*;
+import io.intino.konos.alexandria.activity.spark.ActivitySparkManager;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
-public class DefaultAuthService implements AuthService {
-	private Map<String, String> tokenMap = new HashMap<>();
+public class SessionAuthService implements AuthService {
+	private ActivitySparkManager manager;
+
+	public void inject(ActivitySparkManager manager) {
+		this.manager = manager;
+	}
 
 	@Override
 	public URL url() {
@@ -24,13 +26,10 @@ public class DefaultAuthService implements AuthService {
 	@Override
 	public AuthService.Authentication authenticate() throws SpaceAuthCallbackUrlIsNull {
 		return new AuthService.Authentication() {
-			private String requestToken = null;
-			private String accessToken = null;
 
 			@Override
 			public Token requestToken() throws CouldNotObtainRequestToken {
-				createPair();
-				return () -> requestToken;
+				return null;
 			}
 
 			@Override
@@ -40,34 +39,26 @@ public class DefaultAuthService implements AuthService {
 
 			@Override
 			public Token accessToken() {
-				createPair();
-				return () -> accessToken;
+				return null;
 			}
 
 			@Override
 			public Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken {
-				return () -> accessToken;
+				return null;
 			}
 
 			@Override
 			public void invalidate() throws CouldNotInvalidateAccessToken {
-				tokenMap.remove(requestToken);
-				requestToken = null;
-				accessToken = null;
 			}
 
 			private void createPair() {
-				if (requestToken != null) return;
-				requestToken = UUID.randomUUID().toString();
-				accessToken = UUID.randomUUID().toString();
-				tokenMap.put(requestToken, accessToken);
 			}
 		};
 	}
 
 	@Override
 	public boolean valid(Token token) {
-		return tokenMap.values().stream().anyMatch(t -> t.equals(token.id()));
+		return manager.currentSession().user() != null;
 	}
 
 	@Override
@@ -87,4 +78,5 @@ public class DefaultAuthService implements AuthService {
 	@Override
 	public void addPushListener(Token token, AuthService.FederationNotificationListener federationNotificationListener) throws CouldNotObtainInfo {
 	}
+
 }

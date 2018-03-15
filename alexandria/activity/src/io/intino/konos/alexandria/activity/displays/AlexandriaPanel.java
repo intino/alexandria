@@ -82,8 +82,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 			AlexandriaPanelCatalogView viewDisplay = (AlexandriaPanelCatalogView) selectView(view.name());
 			return viewDisplay.catalogDisplay();
 		}
-
-		return super.openElement(label);
+		else {
+			AlexandriaPanel parent = parent(AlexandriaPanel.class);
+			if (parent != null) return (E) parent.openElement(label);
+			else return super.openElement(label);
+		}
 	}
 
 	private boolean renderContainsCatalogWithLabel(RenderCatalogs render, String label) {

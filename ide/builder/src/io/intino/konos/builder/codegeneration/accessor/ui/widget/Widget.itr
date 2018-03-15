@@ -10,7 +10,7 @@ def type(widget)
 	]
 	[$imports
 	][
-	$path+pahtimport
+	$path+pathImport
 	]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
@@ -41,8 +41,9 @@ def type(widget)
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior,
                              CottonBehaviors.PushBehavior,
-                             CottonBehaviors.TranslatorBehavior[,
-                             $includes]
+                             CottonBehaviors.TranslatorBehavior,
+							 $name+firstuppercase~Behaviors.Requester,
+							 $name+firstuppercase~Behaviors.NotifierListener
                              $],
 
                 properties : {
@@ -66,11 +67,6 @@ def trigger(imports)
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
 end
 
-def trigger(includes)
-	$widget+firstuppercase~Behaviors.Requester,
-	$widget+firstuppercase~Behaviors.NotifierListener
-end
-
 def type(prototype) trigger(prototype)
 	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
 end
@@ -79,6 +75,7 @@ def type(prototype) trigger(attached)
 	attached : function() {
 		this.translate($widget+firstuppercase~Dictionary);
 		this._linkWithAlexandriaElement();
+		this.listenToDisplay();
 	},
 
 	_linkWithAlexandriaElement : function() {

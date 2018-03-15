@@ -15,6 +15,7 @@
     <style>
         :host {
             display: block;
+            width: 100%;
             min-height: 100px;
             @apply(--layout-vertical);
         }
@@ -40,6 +41,12 @@
             },
 
             _addStyle : function(catalog) {
+                if (this.stamp != null && this.stamp.layout == "Flexible") {
+                    catalog.style.height = "100%";
+                    this.querySelectorAll("alexandria-catalog-view-list").forEach((viewList) => viewList.style.overflow = "hidden");
+                    this.querySelectorAll("cotton-list").forEach((list) => list.style.height = "100%");
+                    return;
+                }
                 var height = $(this).parent().height() + "px";
                 catalog.style.height = height;
                 catalog.style.display = "block";
