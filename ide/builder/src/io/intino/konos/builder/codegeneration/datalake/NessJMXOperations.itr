@@ -128,6 +128,7 @@ def type(operations) !type(interface)
 
 		private void onFinish(Graph clone) {
 			session.finish();
+			NessTanks.registerTanks(box);
 			box.put(new Graph(clone.store()).loadStashes(assistant.coreStashes()));
 			assistant.after();
 			logger.info("Reflow finished successfully!");
