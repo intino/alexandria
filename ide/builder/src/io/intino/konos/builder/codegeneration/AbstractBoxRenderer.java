@@ -72,7 +72,7 @@ public class AbstractBoxRenderer {
 
 	private void dataLake(Frame frame, String name) {
 		if (konos.dataLake() != null)
-			frame.addSlot("dataLake", (Frame) new Frame().addTypes("dataLake").addSlot("name", konos.dataLake().name$()).addSlot("package", packageName).addSlot("configuration", name));
+			frame.addSlot("dataLake", (Frame) new Frame().addTypes("dataLake").addSlot("mode", konos.dataLake().mode().name()).addSlot("name", konos.dataLake().name$()).addSlot("package", packageName).addSlot("configuration", name));
 	}
 
 	private void services(Frame frame, String name) {
