@@ -120,7 +120,7 @@
             try {
                 var label = Cookies.get("alexandria-layout");
                 label = label != null && label !== "" ? label : (itemList.length > 0 ? itemList[0].label : null);
-                if (this._indexOf(label) == -1) label = (itemList.length > 0 ? itemList[itemList.length-1].label : null);
+                if (this._indexOf(label) == -1) label = (itemList.length > 0 ? itemList[0].label : null);
                 return label;
             }
             catch(e) {
