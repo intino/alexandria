@@ -52,6 +52,7 @@ Concept Mold extends Display
 			sub Operation
 				var word:{Link Button Icon} mode = Button
 				var string alexandriaIcon = empty
+
 				sub OpenDialogOperation
 					var Dialog dialog
 					var integer:{%} width = 100%
@@ -64,6 +65,7 @@ Concept Mold extends Display
 				sub TaskOperation
 					var string confirmText = empty
 				sub PreviewOperation
+
 			sub Page
 			sub Picture > var string defaultPicture = empty
 			sub Rating > var string polymerIcon

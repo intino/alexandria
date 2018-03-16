@@ -41,11 +41,25 @@ def trigger(hidden)
 	}
 end
 
+def type(stamp & openDialogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
 def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, ActivitySession session) {
+			return null;//TODO
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -58,6 +72,24 @@ def type(stamp & previewOperation)
 		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & taskOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
+			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
 	}
 end
 
@@ -68,19 +100,13 @@ def type(stamp & exportOperation)
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, ActivitySession session) {
 			return null;//TODO
 		}
-	}
-end
 
-
-def type(stamp & taskOperation)
-	public static class $name+FirstUpperCase {
-		$common
-
-		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
-			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
 		}
 	}
 end
+
 
 def type(stamp & location)
 	public static class $name+FirstUpperCase {

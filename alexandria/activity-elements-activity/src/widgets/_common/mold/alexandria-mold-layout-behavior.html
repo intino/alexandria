@@ -118,6 +118,7 @@
 
             this._initIconProperties(stamp);
             this._initBreadcrumbsProperties(stamp);
+            this._initOperationProperties(stamp);
             this._initDownloadOperationProperties(stamp);
             this._initPreviewOperationProperties(stamp);
             this._initExportOperationProperties(stamp);
@@ -146,6 +147,17 @@
             var value = this._valueOf(stamp);
             var tree = (value !== "") ? JSON.parse(value) : { items: [] };
             stamp.properties.breadcrumbs = this.treeToBreadcrumbs(tree);
+        },
+
+        _initOperationProperties : function(stamp) {
+            let type = stamp.type;
+
+            if (type != "download-operation" || type != "export-operation" ||
+                type != "open-dialog-operation" || type != "preview-operation" ||
+                type != "task-operation")
+                return;
+
+            stamp.properties.drawingColor = this._propertyValueOf(stamp, "drawingColor");
         },
 
         _initDownloadOperationProperties : function(stamp) {

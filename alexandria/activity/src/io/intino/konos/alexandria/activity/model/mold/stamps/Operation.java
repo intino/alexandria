@@ -1,11 +1,13 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps;
 
+import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public abstract class Operation<O> extends Stamp<O> {
 	private Mode mode = Mode.Button;
 	private String alexandriaIcon = "icons:execute";
+	private Value<String> drawingColor;
 
 	public String alexandriaIcon() {
 		return this.alexandriaIcon;
@@ -31,8 +33,22 @@ public abstract class Operation<O> extends Stamp<O> {
 		return this;
 	}
 
+	public String drawingColor(Item item, ActivitySession session) {
+		return objectColor(item != null ? item.object() : null, session);
+	}
+
+	public String objectColor(Object object, ActivitySession session) {
+		return this.drawingColor != null ? this.drawingColor.value(object, session) : null;
+	}
+
+	public Operation drawingColor(Value<String> color) {
+		this.drawingColor = color;
+		return this;
+	}
+
 	@Override
 	public O objectValue(Object object, ActivitySession session) {
 		return null;
 	}
+
 }
