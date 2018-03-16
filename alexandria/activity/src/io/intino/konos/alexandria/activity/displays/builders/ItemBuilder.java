@@ -160,6 +160,9 @@ public class ItemBuilder {
                 result.add(propertyOf("drawingColor", drawingColor));
         }
 
+        if (stamp instanceof Operation)
+            result.add(propertyOf("drawingColor", ((Operation)stamp).drawingColor(item, session)));
+
         if (stamp instanceof PreviewOperation) {
             URL preview = ((PreviewOperation)stamp).preview(item, session);
             if (preview != null)

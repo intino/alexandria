@@ -7,9 +7,9 @@
 
     <template>
         <div class$="mode [[mode]]">
-            <paper-icon-button class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
-            <paper-button class="option Button" on-tap="_execute">[[_title]]</paper-button>
-            <a class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+            <paper-icon-button style$="color:[[_color]];" class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button style$="color:[[_color]];" class="option Button" on-tap="_execute">[[_title]]</paper-button>
+            <a style$="color:[[_color]];" class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
         </div>
     </template>
 
@@ -61,11 +61,13 @@
                 _title : String,
                 icon : String,
                 styles : String,
-                mode : String
+                mode : String,
+                _color: String
             },
 
             attached: function () {
                 this.translate(AlexandriaOperationTriggerDictionary);
+                this._fillColor();
             },
 
             _refreshTitle : function() {
@@ -74,6 +76,18 @@
 
             _execute : function(e) {
                 this.fire("execute");
+            },
+
+            _fillColor : function() {
+                var defaultColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
+                var drawingColor = this._drawingColor();
+                this._color = drawingColor != null ? drawingColor : defaultColor;
+            },
+
+            _drawingColor : function() {
+                if (this.stamp == null) return null;
+                if (this.stamp.properties == null) return null;
+                return this.stamp.properties.drawingColor != "" ? this.stamp.properties.drawingColor : null;
             }
 
         });

@@ -130,19 +130,19 @@ def type(stamp & picture)
 end
 
 def type(stamp & openDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & previewOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -151,6 +151,7 @@ def type(stamp & exportOperation)
 		[.to(java.time.Instant.ofEpochMilli($to~L))]
 		[.options(java.util.Arrays.asList($options+quoted...[, ]))]
 		.execution($exportexecution)
+		.drawingColor($drawingColor)
 		[.alexandriaIcon("$alexandriaIcon")]
 		.mode("$mode")$common)
 end
