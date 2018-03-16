@@ -158,6 +158,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Operation operation) {
 		frame.addTypes(operation.getClass().getSimpleName()).addSlot("mode", operation.mode().toString());
+		frame.addSlot("drawingColor", baseFrame(operation));
 		if (operation.alexandriaIcon() != null)
 			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
 		if (operation.i$(OpenDialogOperation.class)) {
