@@ -121,7 +121,7 @@ def trigger(property)
 end
 
 def type(block) trigger(block)
-	<alexandria-mold-block block="$[$[$name]]">[
+	<alexandria-mold-block class="$name" block="$[$[$name]]">[
 		$block...[$NL]][
 		$stamp...[$NL]]
 	</alexandria-mold-block>
