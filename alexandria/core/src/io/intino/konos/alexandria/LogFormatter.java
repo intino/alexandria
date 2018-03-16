@@ -14,12 +14,12 @@ public class LogFormatter extends java.util.logging.Formatter {
 
 	@Override
 	public String format(java.util.logging.LogRecord record) {
-		final LogRecord logRecord = new LogRecord().created(Instant.now()).level(record.getLevel().getName()).
+		final Log log = new Log().ts(Instant.now()).level(record.getLevel().getName()).
 				message(record.getMessage()).
 				sourceClass(record.getSourceClassName()).
 				sourceMethod(record.getSourceMethodName());
-		if (record.getThrown() != null) logRecord.stackTrace(stackTrace(record.getThrown()));
-		return Inl.serialize(logRecord) + "\n\n";
+		if (record.getThrown() != null) log.stackTrace(stackTrace(record.getThrown()));
+		return Inl.serialize(log) + "\n\n";
 	}
 
 	private String stackTrace(Throwable thrown) {
@@ -29,9 +29,9 @@ public class LogFormatter extends java.util.logging.Formatter {
 		return sw.toString();
 	}
 
-	public static class LogRecord implements java.io.Serializable {
+	public static class Log implements java.io.Serializable {
 
-		private Instant created;
+		private Instant ts;
 		private String level = "";
 		private String message = "";
 		private String sourceClass = "";
@@ -39,7 +39,7 @@ public class LogFormatter extends java.util.logging.Formatter {
 		private String stackTrace = "";
 
 		public Instant created() {
-			return this.created;
+			return this.ts;
 		}
 
 		public String level() {
@@ -62,32 +62,32 @@ public class LogFormatter extends java.util.logging.Formatter {
 			return this.stackTrace;
 		}
 
-		public LogRecord created(Instant created) {
-			this.created = created;
+		public Log ts(Instant created) {
+			this.ts = created;
 			return this;
 		}
 
-		public LogRecord level(String level) {
+		public Log level(String level) {
 			this.level = level;
 			return this;
 		}
 
-		public LogRecord message(String message) {
+		public Log message(String message) {
 			this.message = message;
 			return this;
 		}
 
-		public LogRecord sourceClass(String sourceClass) {
+		public Log sourceClass(String sourceClass) {
 			this.sourceClass = sourceClass;
 			return this;
 		}
 
-		public LogRecord sourceMethod(String sourceMethod) {
+		public Log sourceMethod(String sourceMethod) {
 			this.sourceMethod = sourceMethod;
 			return this;
 		}
 
-		public LogRecord stackTrace(String stackTrace) {
+		public Log stackTrace(String stackTrace) {
 			this.stackTrace = stackTrace;
 			return this;
 		}
