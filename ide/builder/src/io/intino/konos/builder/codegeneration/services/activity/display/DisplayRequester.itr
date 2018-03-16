@@ -49,6 +49,10 @@ def type(list) trigger(parameter)
     manager.fromQuery("value", $value~$[].class)
 end
 
+def type(parameter & file) trigger(parameter)
+    manager.fromForm("value", $value.class)
+end
+
 def type(parameter) trigger(parameter)
     manager.fromQuery("value", $value.class)
 end

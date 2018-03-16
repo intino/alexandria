@@ -18,7 +18,7 @@ Artifact(groupId = "io.intino.konos", version = "1.5.0") alexandria-activity-ele
 		WebComponent("https://bitbucket.org/cottons/cotton-cookies.git", "2.0.2") cotton-cookies
 		WebComponent("https://bitbucket.org/cottons/cotton-list.git", "1.0.15") cotton-list
 		WebComponent("https://bitbucket.org/cottons/cotton-breadcrumbs.git", "1.0.7") cotton-breadcrumbs
-		WebComponent("https://bitbucket.org/cottons/cotton-layout.git", "1.1.22") cotton-layout
+		WebComponent("https://bitbucket.org/cottons/cotton-layout.git", "1.1.23") cotton-layout
 		WebComponent("https://bitbucket.org/cottons/cotton-delay-executor.git", "1.0.0") cotton-delay-executor
 		WebComponent("https://bitbucket.org/cottons/cotton-timeline.git", "1.0.1") cotton-timeline
 

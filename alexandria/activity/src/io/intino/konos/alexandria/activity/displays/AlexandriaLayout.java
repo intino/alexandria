@@ -67,6 +67,10 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		loadedListeners.forEach(l -> l.accept(true));
 	}
 
+	public void refreshUser(User user) {
+		sendUser(userInfoOf(user));
+	}
+
 	public void logout() {
 		session().logout();
 		notifyLoggedOut();
@@ -77,7 +81,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		super.init();
 		sendInfo(info());
 		User user = user();
-		if (user != null) sendUser(userOf(user));
+		if (user != null) sendUser(userInfoOf(user));
 		sendItems();
 		notifyLoaded();
 	}
@@ -199,7 +203,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return PlatformInfoBuilder.build(settings);
 	}
 
-	private UserInfo userOf(User user) {
+	private UserInfo userInfoOf(User user) {
 		return new UserInfo().fullName(user.fullName()).photo(user.photo().toString());
 	}
 

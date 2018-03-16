@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.rest.spark;
 
+import io.intino.konos.alexandria.schema.Resource;
 import spark.Request;
 import spark.Response;
 
@@ -48,15 +49,10 @@ public class SparkManager {
 	}
 
 	public <T> T fromForm(String name, Class<T> type) {
-		return readPart(type);
-	}
-
-	private <T> T readPart(Class<T> type) {
 		try {
-			Part part = request.raw().getPart("content");
-			if (part == null) return null;
-			return SparkReader.read(part.getInputStream(), type);
-		} catch (IOException | ServletException e) {
+			Part part = request.raw().getPart(name);
+			return (T) new Resource(part.getName()).data(part.getInputStream()).contentType(part.getContentType());
+		} catch (ServletException | IOException e) {
 			return null;
 		}
 	}
