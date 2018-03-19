@@ -26,7 +26,7 @@ public class AbstractMoldTemplate extends Template {
 			rule().add((condition("trigger", "hidden"))),
 			rule().add((condition("trigger", "hiddenIfMobile"))).add(literal(".hiddenIfMobile(")).add(mark("value")).add(literal(")")),
 			rule().add((condition("trigger", "layout"))).add(literal(".add(Block.Layout.")).add(mark("value", "FirstUpperCase")).add(literal(")")),
-			rule().add((condition("type", "stamp & location"))).add(literal(".add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()")).add(expression().add(mark("drawingColor"))).add(expression().add(mark("icon"))).add(mark("common")).add(literal(")")),
+			rule().add((condition("type", "stamp & location"))).add(literal(".add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()")).add(expression().add(literal(".drawingColor(")).add(mark("drawingColor")).add(literal(")"))).add(expression().add(mark("icon"))).add(mark("common")).add(literal(")")),
 			rule().add((condition("type", "stamp & breadcrumbs"))).add(literal(".add(new io.intino.konos.alexandria.activity.model.mold.stamps.Breadcrumbs()")).add(mark("common")).add(literal(")")),
 			rule().add((condition("type", "stamp & cardWallet"))).add(literal(".add(new io.intino.konos.alexandria.activity.model.mold.stamps.CardWallet()")).add(mark("common")).add(literal(")")),
 			rule().add((condition("type", "stamp & map"))).add(literal(".add(new io.intino.konos.alexandria.activity.model.mold.stamps.Map().zoom(")).add(mark("zoom")).add(literal(").latitude(")).add(mark("latitude")).add(literal(").longitude(")).add(mark("longitude")).add(literal(")")).add(mark("common")).add(literal(")")),
@@ -67,7 +67,7 @@ public class AbstractMoldTemplate extends Template {
 			rule().add((condition("trigger", "editable"))).add(literal("(object, value, session) -> ")).add(mark("mold", "FirstUpperCase")).add(literal(".Stamps.")).add(mark("name", "FirstUpperCase")).add(literal(".onChange(box, (")).add(mark("moldClass")).add(literal(") object, value, session)")),
 			rule().add((condition("trigger", "valueMethod"))).add(literal(".value((object, session) -> ")).add(mark("mold", "FirstUpperCase")).add(literal(".Stamps.")).add(mark("name", "FirstUpperCase")).add(literal(".value(box, (")).add(mark("moldClass")).add(literal(") object, session))")),
 			rule().add((condition("trigger", "icon"))).add(literal(".icon((object, session) -> ")).add(mark("mold", "FirstUpperCase")).add(literal(".Stamps.")).add(mark("name", "FirstUpperCase")).add(literal(".icon(box, (")).add(mark("moldClass")).add(literal(") object, session))")),
-			rule().add((condition("trigger", "drawingColor"))).add(literal(".drawingColor((object, session) -> ")).add(mark("mold", "FirstUpperCase")).add(literal(".Stamps.")).add(mark("name", "FirstUpperCase")).add(literal(".drawingColor(box, (")).add(mark("moldClass")).add(literal(") object, session))")),
+			rule().add((condition("trigger", "drawingColor"))).add(literal("(object, session) -> ")).add(mark("mold", "FirstUpperCase")).add(literal(".Stamps.")).add(mark("name", "FirstUpperCase")).add(literal(".drawingColor(box, (")).add(mark("moldClass")).add(literal(") object, session)")),
 			rule().add((condition("trigger", "expanded"))).add(literal(".expanded(")).add(mark("value")).add(literal(")")),
 			rule().add((condition("trigger", "quoted"))).add(literal("\"")).add(mark("value")).add(literal("\""))
 		);
