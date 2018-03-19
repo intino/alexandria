@@ -23,6 +23,9 @@
         :host .picture {
             position: relative;
         }
+        :host img {
+            @apply(--alexandria-stamp-picture-image);
+        }
         :host.grid .picture {
             height: 259px;
             margin-bottom: 10px;
@@ -88,8 +91,8 @@
                 slider.querySelector("#container").setAttribute("style", style);
                 slider.querySelectorAll("paper-slide").forEach((slide) => {
                     slide.setAttribute("style", style);
-                    slide.querySelector("img").setAttribute("style", style);
-                });
+                slide.querySelector("img").setAttribute("style", style);
+            });
                 slider.addEventListener("click", (e) => e.stopPropagation());
             }
 
