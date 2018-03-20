@@ -74,7 +74,7 @@ def type(stamp & cataloglink)
 end
 
 def type(stamp & embeddedCatalog)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.maxItems($embeddedCatalogMaxItems)][.filter($embeddedCatalogFilter)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog().catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.maxItems($embeddedCatalogMaxItems)][.filter($catalogFilter)]$common)
 end
 
 def type(stamp & embeddedDisplay)
@@ -133,6 +133,14 @@ def type(stamp & openDialogOperation)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
+def type(stamp & openExternalDialogOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenExternalDialogOperation()[$width].dialogPathBuilder($dialogPathBuilder).dialogTitleBuilder($dialogTitleBuilder).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+end
+
+def type(stamp & openCatalogOperation)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection").mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+end
+
 def type(stamp & downloadOperation)
 	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
@@ -171,7 +179,8 @@ end
 def trigger(style)
 	.style((object, session) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, session))
 end
-def trigger(embeddedCatalogFilter)
+
+def trigger(catalogFilter)
 	(element, source, target, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.filter(box, element, ($moldClass) source, target, session)
 end
 
@@ -193,6 +202,14 @@ def trigger(dialogBuilder)
 		dialog.target(object);
 		return dialog;
 	}
+end
+
+def trigger(dialogPathBuilder)
+	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.dialogPath(box, ($moldClass) object, session)
+end
+
+def trigger(dialogTitleBuilder)
+	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.dialogTitle(box, ($moldClass) object, session)
 end
 
 def trigger(exportExecution)

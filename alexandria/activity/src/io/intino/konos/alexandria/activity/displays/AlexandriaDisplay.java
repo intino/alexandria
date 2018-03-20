@@ -18,6 +18,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     private SoulProvider soulProvider;
     private ActivitySession session;
     private AlexandriaDisplay owner = null;
+    private Boolean dirty = null;
 
     public AlexandriaDisplay() {
         this.id = UUID.randomUUID().toString();
@@ -91,12 +92,29 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     public void refresh() {
     }
 
+    public void forceRefresh() {
+        dirty(true);
+        refresh();
+    }
+
+    public boolean dirty() {
+        return dirty == null || dirty;
+    }
+
+    public void dirty(boolean value) {
+        dirty = value;
+    }
+
     public String id() {
         return id;
     }
 
     public void die() {
         notifier.die(id);
+    }
+
+    public List<AlexandriaDisplay> children() {
+        return children;
     }
 
     public <T extends AlexandriaDisplay> List<T> children(Class<T> clazz) {

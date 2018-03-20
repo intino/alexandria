@@ -38,7 +38,7 @@ public class AlexandriaDialogContainer extends ActivityDisplay<AlexandriaDialogC
 	}
 
 	private void sendInfo() {
-		notifier.refreshDialog(DialogReferenceBuilder.build(dialogType.getSimpleName(), dialog.width(), dialog.height()));
+		notifier.refreshDialog(DialogReferenceBuilder.build(dialog.label(), dialogType.getSimpleName(), dialog.width(), dialog.height()));
 	}
 
 	public void dialogAssertionMade(String modification) {

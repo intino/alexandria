@@ -57,6 +57,7 @@ Schema DialogInputResource
 	Attribute file as File
 
 Schema DialogReference
+	Attribute label as Text
 	Attribute type as Text
 	Attribute width as Integer
 	Attribute height as Integer

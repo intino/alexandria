@@ -84,6 +84,12 @@ public class MoldFrameBuilder extends Frame {
 		if (stamp.editable()) attributeList.add(frameOf("editable", stamp.editable(), "boolean"));
 		if (stamp.layout() != null) attributeList.add(frameOf("layout", stamp.layout().toString()));
 		if (stamp.height() != -1) attributeList.add(frameOf("height", stamp.height(), "number"));
+		if (stamp.i$(Block.OpenCatalogOperation.class))
+			attributeList.add(frameOf("width", stamp.a$(Block.OpenCatalogOperation.class).width(), "number"));
+		if (stamp.i$(Block.OpenDialogOperation.class))
+			attributeList.add(frameOf("width", stamp.a$(Block.OpenDialogOperation.class).width(), "number"));
+		if (stamp.i$(Block.OpenExternalDialogOperation.class))
+			attributeList.add(frameOf("width", stamp.a$(Block.OpenExternalDialogOperation.class).width(), "number"));
 		if (expanded) attributeList.add(frameOf("expanded", true, "boolean"));
 	}
 
@@ -109,6 +115,13 @@ public class MoldFrameBuilder extends Frame {
 			if (operation.alexandriaIcon() != null)
 				propertyList.add(frameOf("alexandriaIcon", operation.alexandriaIcon()));
 			propertyList.add(frameOf("mode", operation.mode().toString()));
+		}
+
+		if (stamp.i$(Block.OpenCatalogOperation.class)) {
+			Block.OpenCatalogOperation operation = stamp.a$(Block.OpenCatalogOperation.class);
+			if (operation.position() != null) propertyList.add(frameOf("position", operation.position().toString()));
+			if (operation.selection() != null) propertyList.add(frameOf("selection", operation.selection().toString()));
+			if (operation.catalog() != null) propertyList.add(frameOf("catalog", operation.catalog().name$()));
 		}
 
 		if (stamp.i$(Block.DownloadOperation.class))
