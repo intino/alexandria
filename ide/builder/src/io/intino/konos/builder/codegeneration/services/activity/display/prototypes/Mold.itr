@@ -51,6 +51,36 @@ def type(stamp & openDialogOperation)
 	}
 end
 
+def type(stamp & openExternalDialogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String dialogPath($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+
+		public static String dialogTitle($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//by default is set to operation label
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & openCatalogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		[$catalogFilter]
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
 def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common
@@ -177,7 +207,7 @@ def type(stamp & embeddedCatalog)
 	public static class $name+FirstUpperCase {
 		$common
 
-		[$embeddedCatalogFilter]
+		[$catalogFilter]
 	}
 end
 
@@ -224,7 +254,7 @@ def trigger(style)
 	}
 end
 
-def trigger(embeddedCatalogFilter)
+def trigger(catalogFilter)
 	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, ActivitySession session) {
 		return true;//TODO
 	}

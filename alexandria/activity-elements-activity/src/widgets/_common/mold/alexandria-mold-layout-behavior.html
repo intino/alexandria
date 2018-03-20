@@ -108,7 +108,7 @@
             stamp.value = this._parseFunctions(this._valueOf(stamp));
             stamp.values = this._valuesOf(stamp);
             stamp.classes = this._classesFor(stamp);
-            stamp.height = stamp.height !== -1 ? stamp.height + "%" : "100%";
+            stamp.heightPercent = stamp.height !== -1 ? stamp.height + "%" : "100%";
             return stamp;
         },
 
@@ -119,6 +119,7 @@
             this._initIconProperties(stamp);
             this._initBreadcrumbsProperties(stamp);
             this._initOperationProperties(stamp);
+            this._initOpenExternalDialogOperationProperties(stamp);
             this._initDownloadOperationProperties(stamp);
             this._initPreviewOperationProperties(stamp);
             this._initExportOperationProperties(stamp);
@@ -153,11 +154,18 @@
             let type = stamp.type;
 
             if (type != "download-operation" || type != "export-operation" ||
-                type != "open-dialog-operation" || type != "preview-operation" ||
-                type != "task-operation")
+                type != "open-dialog-operation" || type != "open-external-dialog-operation" ||
+                type != "preview-operation" || type != "task-operation" ||
+                type != "open-catalog-operation")
                 return;
 
             stamp.properties.drawingColor = this._propertyValueOf(stamp, "drawingColor");
+        },
+
+        _initOpenExternalDialogOperationProperties : function(stamp) {
+            if (stamp.type !== "open-external-dialog-operation") return;
+            stamp.properties.dialogTitle = this._propertyValueOf(stamp, "dialogTitle");
+            stamp.properties.dialogPath = this._propertyValueOf(stamp, "dialogPath");
         },
 
         _initDownloadOperationProperties : function(stamp) {

@@ -49,6 +49,7 @@
         :host paper-dialog .message {
             margin-top: 0;
             margin-bottom: 5px;
+            padding: 0 10px;
         }
         :host paper-dialog .buttons {
             margin-bottom: 5px;
@@ -112,6 +113,7 @@
             },
 
             _execute : function(e) {
+                this._close();
                 this.fire("execute-task-item", { stamp: this.stamp.name, item: this.stamp.item });
                 e.stopPropagation();
             },

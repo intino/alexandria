@@ -53,8 +53,17 @@ Concept Mold extends Display
 				var word:{Link Button Icon} mode = Button
 				var string alexandriaIcon = empty
 
+				sub OpenCatalogOperation
+					var Catalog catalog
+					var CatalogView[] views
+					var boolean filtered = false
+					var word:{None Single Multiple} selection = None
+					var word:{Standalone RelativeToOperation} position = Standalone
+					var integer:{%} width = 100%
 				sub OpenDialogOperation
 					var Dialog dialog
+					var integer:{%} width = 100%
+				sub OpenExternalDialogOperation
 					var integer:{%} width = 100%
 				sub ExportOperation
 					var string[] options = empty

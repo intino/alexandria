@@ -9,12 +9,12 @@ import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvide
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.ExportOperation;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.pages.ExternalPage;
 import io.intino.konos.alexandria.activity.model.mold.stamps.pages.InternalPage;
 import io.intino.konos.alexandria.activity.schemas.*;
@@ -51,8 +51,16 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		this.mold = mold;
 	}
 
+	public Element context() {
+		return this.context;
+	}
+
 	public void context(Element context) {
 		this.context = context;
+	}
+
+	public Item item() {
+		return this.item;
 	}
 
 	public void item(Item item) {
@@ -93,8 +101,8 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 			display.item(item);
 			display.provider(AlexandriaItem.this);
 			updateRange(display);
-			display.refresh();
 		});
+		children().forEach(AlexandriaDisplay::forceRefresh);
 		remove(AlexandriaPageContainer.class);
 		sendInfo();
 	}
@@ -308,6 +316,13 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		return result;
 	}
 
+	private AlexandriaAbstractCatalog displayFor(OpenCatalogOperation stamp) {
+		AlexandriaAbstractCatalog result = stamp.createCatalog(session());
+		if (result == null) return null;
+		result.target(item);
+		return result;
+	}
+
 	private void updateRange(AlexandriaStamp display) {
 		if (!(display instanceof AlexandriaTemporalStamp)) return;
 		AlexandriaTemporalStamp temporalDisplay = (AlexandriaTemporalStamp) display;
@@ -323,6 +338,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		createEmbeddedDialogs(id);
 		createEmbeddedCatalogs(id);
 		createTemporalCatalogNavigators(id);
+		createOpenCatalogDisplays(id);
 	}
 
 	private void createEmbeddedCustomDisplays(String id) {
@@ -360,18 +376,34 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private void createEmbeddedCatalogs(String id) {
 		embeddedCatalogs().forEach((key, display) -> {
 			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
-			display.label(key.label());
-			display.range(provider.range());
-			display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
-			display.embedded(true);
-			add(display);
-			display.personifyOnce(id + key.name());
+			createCatalog(id, key.name(), key.label(), display);
 		});
 	}
 
 	private Map<EmbeddedCatalog, AlexandriaAbstractCatalog> embeddedCatalogs() {
 		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof EmbeddedCatalog).collect(toList());
 		return stamps.stream().collect(Collectors.toMap(s -> (EmbeddedCatalog)s, s -> displayFor((EmbeddedCatalog)s)));
+	}
+
+	private void createOpenCatalogDisplays(String id) {
+		openCatalogOperations().forEach((key, display) -> {
+			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
+			createCatalog(id, key.name(), key.label(), display);
+		});
+	}
+
+	private void createCatalog(String id, String name, String label, AlexandriaAbstractCatalog display) {
+		display.label(label);
+		display.range(provider.range());
+		display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
+		display.embedded(true);
+		add(display);
+		display.personifyOnce(id + name);
+	}
+
+	private Map<OpenCatalogOperation, AlexandriaAbstractCatalog> openCatalogOperations() {
+		List<Stamp> stamps = provider.stamps(mold).stream().filter(s -> s instanceof OpenCatalogOperation).collect(toList());
+		return stamps.stream().collect(Collectors.toMap(s -> (OpenCatalogOperation)s, s -> displayFor((OpenCatalogOperation)s)));
 	}
 
 	private void createPages(String id) {

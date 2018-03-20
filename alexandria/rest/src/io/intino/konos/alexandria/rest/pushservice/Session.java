@@ -8,10 +8,8 @@ public interface Session<C extends Client> {
     List<C> clients();
     C client(String id);
     C client();
-    void currentClient(C client);
+    void clientProvider(ClientProvider<C> clientProvider);
 
-    void add(C client);
-    void remove(C client);
     void send(String message);
 
     String login(String baseUrl);

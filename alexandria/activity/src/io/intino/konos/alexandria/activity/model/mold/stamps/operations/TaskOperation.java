@@ -36,6 +36,6 @@ public class TaskOperation extends Operation<String> {
 	}
 
 	public enum Refresh {
-		None, Item
+		None, Item, Element
 	}
 }

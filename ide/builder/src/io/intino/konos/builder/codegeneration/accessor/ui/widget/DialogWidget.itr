@@ -16,12 +16,15 @@ def type(dialog)
 		</template>
 
 		<style>
+			:host {
+				display: block;
+				height: calc(100% - 2px);
+			}
 			:host iframe {
 				border: 0;
 				overflow: auto;
 				width: 100%;
-				height: calc(100% - 8px);
-				border-radius: 2px;
+				height: calc(100% - 2px);
 			}
 		</style>
 

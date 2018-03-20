@@ -106,9 +106,18 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
 		if (stamp.maxItems() > 0) frame.addSlot("embeddedCatalogMaxItems", stamp.maxItems());
-		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
+		if (stamp.filtered()) frame.addSlot("catalogFilter", baseFrame(stamp));
 		frame.addSlot("catalog", stamp.catalog().name$());
 		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
+	}
+
+	private void frameOf(Frame frame, OpenCatalogOperation stamp) {
+		if (stamp.filtered()) frame.addSlot("catalogFilter", baseFrame(stamp));
+		frame.addSlot("catalog", stamp.catalog().name$());
+		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
+		frame.addSlot("width", stamp.width());
+		frame.addSlot("position", stamp.position().toString());
+		frame.addSlot("selection", stamp.selection().toString());
 	}
 
 	private void frameOf(Frame frame, EmbeddedDisplay stamp) {
@@ -164,6 +173,11 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
+		} else if (operation.i$(OpenExternalDialogOperation.class)) {
+			OpenExternalDialogOperation openExternalDialogOperation = operation.a$(OpenExternalDialogOperation.class);
+			frame.addSlot("width", openExternalDialogOperation.width()).addSlot("dialogPathBuilder", baseFrame(openExternalDialogOperation)).addSlot("dialogTitleBuilder", baseFrame(openExternalDialogOperation));
+		} else if (operation.i$(OpenCatalogOperation.class)) {
+			frameOf(frame, operation.a$(OpenCatalogOperation.class));
 		} else if (operation.i$(DownloadOperation.class)) {
 			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
 			frame.addSlot("downloadExecution", baseFrame(operation));
