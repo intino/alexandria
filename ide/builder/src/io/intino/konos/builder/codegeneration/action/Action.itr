@@ -9,7 +9,8 @@ def type(action) !type(page)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
-		public $box+snakecaseToCamelCase+firstUpperCase~Box box;[
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		public io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();[
 		$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
