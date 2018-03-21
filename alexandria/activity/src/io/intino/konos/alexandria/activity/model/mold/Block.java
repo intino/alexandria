@@ -108,7 +108,7 @@ public class Block {
 	}
 
 	public enum Layout {
-		Vertical, Horizontal, Fixed, Flexible, Wrap, Center, Justified, StartJustified, CenterJustified, EndJustified;
+		Vertical, Horizontal, Fixed, Flexible, Wrap, Justified, StartJustified, CenterJustified, EndJustified, Start, Center, End;
 	}
 
 	public interface Hidden {

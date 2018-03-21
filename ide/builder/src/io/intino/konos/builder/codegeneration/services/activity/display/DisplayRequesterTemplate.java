@@ -23,6 +23,7 @@ public class DisplayRequesterTemplate extends Template {
 			rule().add((condition("type", "request & asset")), (condition("trigger", "request"))).add(literal("if (operation.equals(\"")).add(mark("name")).add(literal("\")) {\n\tio.intino.konos.alexandria.activity.spark.ActivityFile file = display.")).add(mark("name")).add(literal("(")).add(mark("parameter")).add(literal(");\n\tmanager.write(file.content(), file.label(), file.embedded());\n\treturn;\n}")),
 			rule().add((condition("type", "request")), (condition("trigger", "request"))).add(literal("if (operation.equals(\"")).add(mark("name")).add(literal("\")) display.")).add(mark("name")).add(literal("(")).add(mark("parameter")).add(literal(");")),
 			rule().add((condition("type", "list")), (condition("trigger", "parameter"))).add(literal("manager.fromQuery(\"value\", ")).add(mark("value")).add(literal("[].class)")),
+			rule().add((condition("type", "parameter & file")), (condition("trigger", "parameter"))).add(literal("manager.fromForm(\"value\", ")).add(mark("value")).add(literal(".class)")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "parameter"))).add(literal("manager.fromQuery(\"value\", ")).add(mark("value")).add(literal(".class)")),
 			rule().add((condition("trigger", "parameter"))),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))

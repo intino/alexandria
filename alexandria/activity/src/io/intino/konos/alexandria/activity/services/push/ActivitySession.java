@@ -20,6 +20,10 @@ public class ActivitySession extends SparkSession<ActivityClient> {
         this.user = user;
     }
 
+    public boolean isLogged() {
+        return user() != null;
+    }
+
     public Browser browser() {
         return this.browser;
     }

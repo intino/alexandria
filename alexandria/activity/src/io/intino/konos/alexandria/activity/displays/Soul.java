@@ -1,11 +1,15 @@
 package io.intino.konos.alexandria.activity.displays;
 
+import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static java.util.stream.Collectors.toList;
@@ -41,6 +45,18 @@ public abstract class Soul implements DisplayRepository {
 
     public <T extends AlexandriaDisplay> List<T> displays(Class<T> clazz) {
         return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
+    }
+
+    public <T extends AlexandriaDisplay> List<T> moldsWithTarget(String target) {
+        return displays.values().stream().filter(d -> {
+            if (!(d instanceof AlexandriaItem)) return false;
+            Item item = ((AlexandriaItem) d).item();
+            return item != null && item.id().equals(target);
+        }).map(d -> (T)d).collect(toList());
+    }
+
+    public <T extends AlexandriaDisplay> T displayWithId(String id) {
+        return displays.containsKey(id) ? (T) displays.get(id) : null;
     }
 
     public <T extends AlexandriaDesktop> T desktop() {

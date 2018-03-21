@@ -1,0 +1,72 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="alexandria-stamp-editor.html">
+
+<dom-module id="alexandria-stamp-title">
+
+    <template>
+        <div id="layer" on-tap="_edit" class$="title [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]" style$="[[_style]]">[[stamp.value]]</div>
+        <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}" hidden$="[[!stamp.editable]]" style="display:none;" on-save="_save" on-close="_close"></alexandria-stamp-editor>
+    </template>
+
+    <style>
+        :host .title {
+            font-size: 11pt !important;
+        }
+        :host .editable_true {
+            margin-top: -1px;
+            padding: 2px 0;
+            border: 1px solid transparent;
+            cursor: text;
+        }
+        :host .editable_true:hover {
+            border-color: #ddd;
+            background: #efefef;
+        }
+        :host.grid .title {
+            max-width: 210px;
+            text-overflow: ellipsis;
+            display: inline-block;
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-title',
+
+            behaviors : [ AlexandriaBehaviors.StampBehavior ],
+
+            _edit : function(e) {
+                var target = $(this.$.layer);
+                if (!target.hasClass("editable_true")) return;
+                this.$.layer.style.display = "none";
+                this._showEditor();
+            },
+
+            _save : function(e) {
+                this.fire("save-item", { stamp: this.stamp.name, item: this.stamp.item, value: e.detail });
+                this._hideEditor();
+            },
+
+            _close : function(e) {
+                this._hideEditor();
+            },
+
+            _showEditor : function() {
+                var editor = this.$.editor;
+                editor.style.display = "block";
+                editor.focus();
+                this.$.layer.style.display = "none";
+            },
+
+            _hideEditor : function() {
+                var editor = this.$.editor;
+                editor.style.display = "none";
+                this.$.layer.style.display = "block";
+            }
+
+        });
+    </script>
+
+</dom-module>

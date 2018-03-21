@@ -17,18 +17,6 @@ public class EmbeddedCatalog extends Stamp<String> {
 	private Filter filter;
 	private int maxItems = -1;
 
-	public boolean filter(Element context, Item target, Item item, ActivitySession session) {
-		if (filter == null) return true;
-		if (target == null && item == null) return true;
-		if (target == null || item == null) return false;
-		return filter.filter(context, target.object(), item.object(), session);
-	}
-
-	public EmbeddedCatalog filter(Filter filter) {
-		this.filter = filter;
-		return this;
-	}
-
 	public List<String> views() {
 		return views;
 	}
@@ -57,6 +45,18 @@ public class EmbeddedCatalog extends Stamp<String> {
 
 	public EmbeddedCatalog catalogDisplayBuilder(CatalogDisplayBuilder builder) {
 		this.catalogDisplayBuilder = builder;
+		return this;
+	}
+
+	public boolean filter(Element context, Item target, Item item, ActivitySession session) {
+		if (filter == null) return true;
+		if (target == null && item == null) return true;
+		if (target == null || item == null) return false;
+		return filter.filter(context, target.object(), item.object(), session);
+	}
+
+	public EmbeddedCatalog filter(Filter filter) {
+		this.filter = filter;
 		return this;
 	}
 

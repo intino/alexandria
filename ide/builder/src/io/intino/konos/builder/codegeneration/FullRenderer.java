@@ -29,6 +29,7 @@ import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +38,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
 
@@ -112,8 +114,9 @@ public class FullRenderer {
 	private void bus() {
 		if (graph.dataLake() == null) return;
 		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
+		if (((LegioConfiguration) configurationOf(module)).model() != null)
+			new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 	}
 
 	private void slack() {
@@ -139,7 +142,7 @@ public class FullRenderer {
 
 	private String boxName() {
 		if (module != null) {
-			final Configuration configuration = TaraUtil.configurationOf(module);
+			final Configuration configuration = configurationOf(module);
 			if (configuration == null) return "";
 			final String dsl = configuration.outDSL();
 			if (dsl == null || dsl.isEmpty()) return module.getName();
@@ -151,7 +154,7 @@ public class FullRenderer {
 		try {
 			if (module == null) return null;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-			final Configuration configuration = TaraUtil.configurationOf(module);
+			final Configuration configuration = configurationOf(module);
 			final List<? extends Configuration.LanguageLibrary> languages = configuration.languages();
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
@@ -165,7 +168,7 @@ public class FullRenderer {
 	}
 
 	private boolean hasModel() {
-		return module != null && TaraUtil.configurationOf(module) != null && hasModel(TaraUtil.configurationOf(module));
+		return module != null && configurationOf(module) != null && hasModel(configurationOf(module));
 	}
 
 	private boolean hasModel(Configuration configuration) {

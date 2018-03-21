@@ -3,7 +3,7 @@
 <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
 <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="_common/mold/alexandria-mold.html">
+<link rel="import" href="_common/mold/alexandria-mold-container.html">
 <link rel="import" href="alexandria-page-container.html">
 
 <script src="alexandriaitem/requester.js"></script>
@@ -12,15 +12,15 @@
 <dom-module id="alexandria-item">
 
     <template>
-        <alexandria-mold mold="[[_mold]]" item="[[_item]]" mode="[[_mode]]"
-                         on-stamps-ready="_itemStampsReady"
-                         on-navigate-item="_navigateItem"
-                         on-navigate-catalog="_navigateCatalog"
-                         on-open-dialog="_openStampDialog"
-                         on-execute-task-item="_executeTask"
-                         on-download-item="_download"
-                         on-save-item="_save"
-                         on-export-item="_export"></alexandria-mold>
+        <alexandria-mold-container mold="[[_mold]]" item="[[_item]]" mode="[[_mode]]"
+                                   on-stamps-ready="_itemStampsReady"
+                                   on-navigate-item="_navigateItem"
+                                   on-navigate-catalog="_navigateCatalog"
+                                   on-open-dialog="_openStampDialog"
+                                   on-execute-task-item="_executeTask"
+                                   on-download-item="_download"
+                                   on-save-item="_save"
+                                   on-export-item="_export"></alexandria-mold-container>
         <template is="dom-if" if="[[!_item]]">
             <div class="message layout horizontal center center-justified">[[_emptyMessage]]</div>
         </template>
@@ -61,7 +61,7 @@
                 AlexandriaItemBehaviors.NotifierListener ],
 
             properties : {
-                _mold: { type: Object, value: function() { return null; } },
+                _mold: { type: String, value: function() { return null; } },
                 _item: { type: Object, value: function() { return null; } },
                 _mode: { type: String, value: function() { return null; } },
                 _emptyMessage: String

@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.validMoldName;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -38,7 +39,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private Frame frameOf(Block block) {
 		Frame frame = new Frame("block")
-				.addSlot("name", clean(block.name$()))
+				.addSlot("name", validMoldName().format(block.name$()))
 				.addSlot("expanded", block.mode().equals(Mode.Expanded))
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new))
 				.addSlot("hiddenIfMobile", block.hiddenIfMobile());
@@ -105,9 +106,18 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
 		if (stamp.maxItems() > 0) frame.addSlot("embeddedCatalogMaxItems", stamp.maxItems());
-		if (stamp.filtered()) frame.addSlot("embeddedCatalogFilter", baseFrame(stamp));
+		if (stamp.filtered()) frame.addSlot("catalogFilter", baseFrame(stamp));
 		frame.addSlot("catalog", stamp.catalog().name$());
 		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
+	}
+
+	private void frameOf(Frame frame, OpenCatalogOperation stamp) {
+		if (stamp.filtered()) frame.addSlot("catalogFilter", baseFrame(stamp));
+		frame.addSlot("catalog", stamp.catalog().name$());
+		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
+		frame.addSlot("width", stamp.width());
+		frame.addSlot("position", stamp.position().toString());
+		frame.addSlot("selection", stamp.selection().toString());
 	}
 
 	private void frameOf(Frame frame, EmbeddedDisplay stamp) {
@@ -157,11 +167,17 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Operation operation) {
 		frame.addTypes(operation.getClass().getSimpleName()).addSlot("mode", operation.mode().toString());
+		frame.addSlot("drawingColor", baseFrame(operation));
 		if (operation.alexandriaIcon() != null)
 			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
+		} else if (operation.i$(OpenExternalDialogOperation.class)) {
+			OpenExternalDialogOperation openExternalDialogOperation = operation.a$(OpenExternalDialogOperation.class);
+			frame.addSlot("width", openExternalDialogOperation.width()).addSlot("dialogPathBuilder", baseFrame(openExternalDialogOperation)).addSlot("dialogTitleBuilder", baseFrame(openExternalDialogOperation));
+		} else if (operation.i$(OpenCatalogOperation.class)) {
+			frameOf(frame, operation.a$(OpenCatalogOperation.class));
 		} else if (operation.i$(DownloadOperation.class)) {
 			frame.addSlot("options", operation.a$(DownloadOperation.class).options().toArray(new String[0]));
 			frame.addSlot("downloadExecution", baseFrame(operation));
@@ -174,7 +190,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		} else if (operation.i$(PreviewOperation.class)) {
 			frame.addSlot("previewExecution", baseFrame(operation));
 		} else if (operation.i$(TaskOperation.class)) {
-			frame.addSlot("taskExecution", baseFrame(operation));
+			frame.addSlot("taskExecution", baseFrame(operation)).addSlot("mold", mold.name$());
 			String confirmText = operation.a$(TaskOperation.class).confirmText();
 			if (confirmText != null) frame.addSlot("confirmText", confirmText);
 		}
@@ -220,9 +236,5 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	protected Template srcTemplate() {
 		return customize(MoldTemplate.create());
-	}
-
-	private String clean(String name) {
-		return name.replace("-", "");
 	}
 }

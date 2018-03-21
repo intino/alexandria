@@ -59,11 +59,11 @@ def type(operations) !type(interface)
 		}
 
 		public boolean reflow(String from) {
-			reflow(Instant.parse(from));
+			return reflow(Instant.parse(from));
 		}
 
 		public boolean reflow() {
-			reflow(Instant.MIN);
+			return reflow(Instant.MIN);
 		}
 
 		public boolean reflow(Instant from) {
@@ -75,7 +75,7 @@ def type(operations) !type(interface)
 			box.datalake().reset();
 			final Graph graph = assistant.graph();
 			try {
-				if (graph.store() instanceof FileSystemStore) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
+				if (graph.store() instanceof FileSystemStore && from.equals(Instant.MIN)) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
 				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
 				allowWriting(original, false);
 				Graph clone = original.realClone();
@@ -128,7 +128,10 @@ def type(operations) !type(interface)
 
 		private void onFinish(Graph clone) {
 			session.finish();
-			box.put(new Graph(clone.store()).loadStashes(assistant.coreStashes()));
+			final Graph graph = new Graph(clone.store());
+			allowWriting(graph, true);
+			box.put(graph.loadStashes(assistant.coreStashes()));
+			NessTanks.registerTanks(box);
 			assistant.after();
 			logger.info("Reflow finished successfully!");
 		}

@@ -1,0 +1,105 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/l2t-paper-slider/l2t-paper-slider.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+
+<dom-module id="alexandria-stamp-picture">
+
+    <template>
+        <div class="picture layout vertical center-justified" style$="[[_style]]" hidden$="[[!stamp.value.length]]">
+            <template is="dom-if" if="[[stamp.singleValue]]">
+                <img class$="single [[stamp.classes]] picture_img_[[stamp.name]]" src="[[stamp.value]]" class="icon" style$="[[_style]]" />
+            </template>
+            <template is="dom-if" if="[[!stamp.singleValue]]">
+                <l2t-paper-slider id="paperSlider" class$="[[stamp.classes]]" total-slides$="[[stamp.countValues]]" tabIndex="-1" slide-duration="4">
+                    <template is="dom-repeat" items="[[stamp.values]]" as="picture">
+                        <paper-slide><img src="[[picture]]"/></paper-slide>
+                    </template>
+                </l2t-paper-slider>
+            </template>
+        </div>
+    </template>
+
+    <style>
+        :host .picture {
+            position: relative;
+        }
+        :host img {
+            @apply(--alexandria-stamp-picture-image);
+        }
+        :host.grid .picture {
+            height: 259px;
+            margin-bottom: 10px;
+        }
+        :host .picture l2t-paper-slider {
+            margin-bottom: 10px;
+            --paper-slider-styles : {
+                height: 250px !important;
+            };
+            --paper-slide-width: 300px;
+            --paper-slide-height: 300px;
+        }
+        :host .picture l2t-paper-slider:focus {
+            outline: none !important;
+        }
+        :host .picture l2t-paper-slider paper-slide img {
+            width: 100%;
+        }
+        :host.grid img.single, :host.map img.single {
+            width: 300px;
+            max-height: 240px;
+        }
+        @media screen and (max-width: 980px) {
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 90%;
+                @apply(--alexandria-stamp-picture-image-mobile);
+            }
+        }
+        @media screen and (max-width: 736px) {
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 100%;
+                @apply(--alexandria-stamp-picture-image-mobile);
+            }
+        }
+        @media screen and (max-width: 540px) {
+            :host .picture {
+                text-align: center;
+            }
+            :host .picture img {
+                width: 90%;
+                @apply(--alexandria-stamp-picture-image-mobile);
+            }
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-picture',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior ],
+
+            _render : function() {
+                if (this.stamp.singleValue) return;
+                var slider = this.$.paperSlider;
+                var picture = $(slider).parents(".picture").get(0);
+                var height = $(picture).height();
+                var width = $(picture).width();
+                var style = "width:" + width + "px;height:" + height + "px !important;";
+                slider.autoProgress = true;
+                slider.querySelector("#container").setAttribute("style", style);
+                slider.querySelectorAll("paper-slide").forEach((slide) => {
+                    slide.setAttribute("style", style);
+                slide.querySelector("img").setAttribute("style", style);
+            });
+                slider.addEventListener("click", (e) => e.stopPropagation());
+            }
+
+        });
+    </script>
+
+</dom-module>

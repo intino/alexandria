@@ -2,12 +2,11 @@ var AlpacaDialogWidget = function() {
     function widget() {}
 
     widget.prototype = {};
-    widget.prototype.template = function() { return '<h3 class="label"></h3><div class="description"></div><div class="done alert-success" role="alert"></div><div class="tabs"></div><div class="toolbar"></div></div>'; };
+    widget.prototype.template = function() { return '<div class="content"><div class="description"></div><div class="done alert-success" role="alert"></div><div class="tabs"></div></div><div class="toolbar"></div></div>'; };
 
     widget.prototype.render = function(dialog, container) {
         container.innerHTML = this.template();
 
-        _renderLabel(dialog, container.querySelector(".label"));
         _renderDone(dialog, container.querySelector(".done"));
         _renderDescription(dialog, container.querySelector(".description"));
         _renderTabs(dialog, container.querySelector(".tabs"));
@@ -29,15 +28,12 @@ var AlpacaDialogWidget = function() {
         return AlpacaWidgetFactory.get("inputlist").getInput(key);
     };
 
-    function _renderLabel(dialog, container) {
-        container.innerHTML = dialog.label;
-    }
-
     function _renderDone(dialog, container) {
         container.innerHTML = DialogAlpacaDictionary.labelFor("done");
     }
 
     function _renderDescription(dialog, container) {
+        container.style.display = dialog.description != "" ? "block" : "none";
         container.innerHTML = dialog.description;
     }
 

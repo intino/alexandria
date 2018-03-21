@@ -51,6 +51,10 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 		return width;
 	}
 
+	public String label() {
+		return dialog.label();
+	}
+
 	public AlexandriaDialog width(int width) {
 		this.width = width;
 		return this;

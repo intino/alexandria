@@ -1,9 +1,7 @@
-<link rel="import" href="../../../../lib/polymer/polymer.html">
-<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="../../../../lib/cotton-zombie/cotton-zombie.html">
-<link rel="import" href="../../../../lib/paper-input/paper-input.html">
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/paper-input/paper-input.html">
 
-<dom-module id="alexandria-mold-editor">
+<dom-module id="alexandria-stamp-editor">
 
     <template>
         <paper-input no-label-float value="{{value}}" on-keydown="_keyDown" on-blur="_close"></paper-input>
@@ -16,6 +14,7 @@
         :host paper-input {
             --paper-input-container : {
                 padding: 0;
+                height: 18px;
             };
             --paper-input-container-input : {
                 border: 1px solid #ddd;
@@ -36,25 +35,12 @@
     </style>
 
     <script>
-        const AlexandriaMoldEditorDictionary = {
-            es: {
-            },
-            en: {
-            }
-        };
-
         Polymer({
-            is: 'alexandria-mold-editor',
-
-            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+            is: 'alexandria-stamp-editor',
 
             properties : {
                 label: String,
                 value: String
-            },
-
-            attached: function () {
-                this.translate(AlexandriaMoldEditorDictionary);
             },
 
             focus : function() {

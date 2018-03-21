@@ -17,6 +17,8 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     protected N notifier;
     private SoulProvider soulProvider;
     private ActivitySession session;
+    private AlexandriaDisplay owner = null;
+    private Boolean dirty = null;
 
     public AlexandriaDisplay() {
         this.id = UUID.randomUUID().toString();
@@ -90,12 +92,29 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     public void refresh() {
     }
 
+    public void forceRefresh() {
+        dirty(true);
+        refresh();
+    }
+
+    public boolean dirty() {
+        return dirty == null || dirty;
+    }
+
+    public void dirty(boolean value) {
+        dirty = value;
+    }
+
     public String id() {
         return id;
     }
 
     public void die() {
         notifier.die(id);
+    }
+
+    public List<AlexandriaDisplay> children() {
+        return children;
     }
 
     public <T extends AlexandriaDisplay> List<T> children(Class<T> clazz) {
@@ -110,8 +129,27 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     }
 
     public void add(AlexandriaDisplay child) {
+        child.owner(this);
         repository.register(child);
         this.children.add(child);
+    }
+
+    public <T extends AlexandriaDisplay> T owner() {
+        return (T) owner;
+    }
+
+    public <T extends AlexandriaDisplay> T parent(Class<T> type) {
+        return parent(owner, type);
+    }
+
+    public <T extends AlexandriaDisplay> T parent(AlexandriaDisplay display, Class<T> type) {
+        if (display == null) return null;
+        if (type.isAssignableFrom(display.getClass())) return (T) display;
+        return parent(display.owner(), type);
+    }
+
+    private void owner(AlexandriaDisplay owner) {
+        this.owner = owner;
     }
 
     public void addAndPersonify(AlexandriaDisplay child) {

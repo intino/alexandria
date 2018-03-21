@@ -9,7 +9,7 @@
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/cotton-checkbox/cotton-checkbox.html">
-<link rel="import" href="../mold/alexandria-mold.html">
+<link rel="import" href="../mold/alexandria-mold-container.html">
 <link rel="import" href="alexandria-catalog-behavior.html">
 <link rel="import" href="alexandria-catalog-sorting.html">
 <link rel="import" href="alexandria-catalog-cluster-dialog.html">
@@ -63,11 +63,11 @@
                                     <div class="layout horizontal flex">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
                                         <div class="flex">
-                                            <alexandria-mold name$="_item_[[item.name]]"
-                                                             item="[[item]]"
-                                                             mold="[[mold]]"
-                                                             on-open-dialog="_openStampDialog"
-                                                             on-execute-task-item="_executeStampTask"></alexandria-mold>
+                                            <alexandria-mold-container name$="_item_[[item.name]]"
+                                                                       item="[[item]]"
+                                                                       mold="[[mold]]"
+                                                                       on-open-dialog="_openStampDialog"
+                                                                       on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
                                 </template>
@@ -75,12 +75,12 @@
                                     <div class="layout horizontal flex">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
                                         <div class="flex">
-                                            <alexandria-mold name$="_item_[[item.name]]"
-                                                             item="[[item]]"
-                                                             mold="[[mold]]"
-                                                             mode="grid"
-                                                             on-open-dialog="_openStampDialog"
-                                                             on-execute-task-item="_executeStampTask"></alexandria-mold>
+                                            <alexandria-mold-container name$="_item_[[item.name]]"
+                                                                       item="[[item]]"
+                                                                       mold="[[mold]]"
+                                                                       mode="grid"
+                                                                       on-open-dialog="_openStampDialog"
+                                                                       on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
                                 </template>
@@ -282,6 +282,7 @@
             is: 'alexandria-catalog-list',
 
             properties: {
+                mold : String,
                 grid: { type: Boolean, observer: '_refreshClasses' },
                 width: { type: Number, observer: '_refreshWidth' },
                 emptyMessage : { type: String, notify: true, observer: '_refreshEmptyMessage' },
@@ -292,7 +293,6 @@
                 canCreateClusters: Boolean,
                 clusterList: { type: Array, value: function() { return []; } },
                 sortingList: { type: Array, value: function() { return []; }, observer: '_refreshToolbar' },
-                mold : Object,
                 selectedSorting: Object,
                 pageSize: Number,
                 itemList: { type: Array, observer: '_refresh' },
@@ -374,13 +374,13 @@
                     if (this.selectedItemList[i].name === oldItem.name)
                         this.set("selectedItemList." + i, item);
 
-                var item = this.querySelector("alexandria-mold[name=\"_item_" + item.name + "\"]");
+                var item = this.querySelector("alexandria-mold-container[name=\"_item_" + item.name + "\"]");
                 if (item != null) item.highlight();
             },
 
             refreshItemPicture : function(pictureData) {
                 var itemName = pictureData.item;
-                let item = this.querySelector("alexandria-mold[name=\"_item_" + itemName + "\"]");
+                let item = this.querySelector("alexandria-mold-container[name=\"_item_" + itemName + "\"]");
                 if (item == null) return;
                 item.refreshPicture(pictureData);
                 window.setTimeout(() => this._updateSizeForItem(itemName), 100);

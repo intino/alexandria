@@ -63,9 +63,10 @@
         text-align: left;
     }
     .description {
-        font-size: 10pt;
+        font-size: 11pt;
         color: #727272;
-        margin-bottom: 15px;
+        padding: 10px;
+        font-weight: normal;
     }
     div.label { /* document and section input title */
         display: inline-block;
@@ -73,17 +74,19 @@
         margin-bottom: 5px;
         font-weight: 700;
     }
+    .dialog > .content {
+        height: calc(100% - 55px);
+        padding: 0 10px;
+        overflow: auto;
+    }
     .toolbar {
         border-top: 1px solid #ddd;
-        margin: 15px 0;
-        padding-top: 10px;
+        padding: 10px 15px 0;
+        height: 55px;
     }
     .toolbar > div {
         float: right;
         margin-left: 10px;
-    }
-    .tabs {
-        height: calc(100% - 100px);
     }
     .tabs .inputs {
         margin: 10px;
@@ -267,10 +270,10 @@
 
     document.pathOf = function(input) {
         var parent = input.getParent();
-        var path = parent == null ? input.schema.title : "";
+        var path = parent == null ? input.options.name : "";
 
         if (parent != null)
-            path = (isSection(parent) || isMultiple(parent) ? parent.schema.title + input.getPath() : input.getPath()) + (path != "" ? "." + path : "");
+            path = (isSection(parent) || isMultiple(parent) ? parent.options.name + input.getPath() : input.getPath()) + (path != "" ? "." + path : "");
 
         path = path.replace(/\//g, ".");
         path = path.replace("[", "");

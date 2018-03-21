@@ -24,6 +24,7 @@ def type(dialogDisplay)
 end
 
 def type(dialog)
+	[dialog.name("$name");]
 	[dialog.label("$label");]
 	[dialog.description("$description");][
 	$operation...[$NL]]
@@ -47,43 +48,43 @@ def type(section)
 end
 
 def type(text)
-	w$owner+SnakeCaseToCamelCase.createText()[.edition(Dialog.TextEdition.$edition)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createText()[.edition(Dialog.TextEdition.$edition)][.validation($validation)][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(memo)
-	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode+firstUpperCase)][.height($height)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createMemo()[.mode(Dialog.MemoMode.$mode+firstUpperCase)][.height($height)][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(radio)
-	w$owner+SnakeCaseToCamelCase.createRadioBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createRadioBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(check)
-	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode+firstUpperCase)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createCheckBox()[.mode(Dialog.CheckBoxMode.$mode+firstUpperCase)][.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(combo)
-	w$owner+SnakeCaseToCamelCase.createComboBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createComboBox()[.source(input -> java.util.Arrays.asList($options+quoted...[, ]))][$source][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(password)
-	w$owner+SnakeCaseToCamelCase.createPassword()[.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createPassword()[.validation($validation)][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(file)
-	w$owner+SnakeCaseToCamelCase.createFile()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createFile()[.showPreview($showPreview)][.validation($validation)][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(picture)
-	w$owner+SnakeCaseToCamelCase.createPicture()[.showPreview($showPreview)][.validation($validation)][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createPicture()[.showPreview($showPreview)][.validation($validation)][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(date)
-	w$owner+SnakeCaseToCamelCase.createDate()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createDate()[.format("$format")][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(dateTime)
-	w$owner+SnakeCaseToCamelCase.createDateTime()[.format("$format")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
+	w$owner+SnakeCaseToCamelCase.createDateTime()[.format("$format")][.name("$name")][.label("$label")][.required($required)][.readonly($readonly)][$multiple][.placeholder("$placeholder")][.helper("$helper")][.defaultValue("$defaultValue")][$validator];
 end
 
 def type(validation & text)

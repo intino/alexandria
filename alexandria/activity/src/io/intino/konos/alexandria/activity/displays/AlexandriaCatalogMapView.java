@@ -113,7 +113,7 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()))));
+		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), this)));
 	}
 
 	@Override
