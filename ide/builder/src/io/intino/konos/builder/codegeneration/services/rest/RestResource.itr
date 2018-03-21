@@ -33,8 +33,9 @@ def type(resource)
 		$returnType+write]
 
 		private io.intino.konos.alexandria.schema.Context context() {
-			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context()
-			context.put("requestUrl", manager.request().url();
+			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
+			context.put("name", request.raw().getSession().getServletContext().getServletContextName());
+			context.put("requestUrl", manager.request().url());
 			return context;
 		}
 	}
