@@ -57,9 +57,16 @@ public class SparkManager {
 		}
 	}
 
+	public Request request() {
+		return request;
+	}
+
+	public Response response() {
+		return response;
+	}
+
 	private void setUpMultipartConfiguration() {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 	}
-
 }
