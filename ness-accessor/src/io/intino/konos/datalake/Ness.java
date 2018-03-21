@@ -14,6 +14,8 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
@@ -36,7 +38,7 @@ public class Ness {
 	private Connection connection;
 	private Instant lastMessage;
 	private int receivedMessages = 0;
-	private TopicConsumer topicConsumer;
+	Map<String, TopicProducer> tankProducers = new HashMap<>();
 
 	public Ness(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -47,15 +49,30 @@ public class Ness {
 
 	public Session start() {
 		try {
-			connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
-			if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
-			connection.start();
+			createConnection();
 			this.session = connection.createSession(false, javax.jms.Session.AUTO_ACKNOWLEDGE);
 			return this.session;
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
+	}
+
+	public Session startTransacted() {
+		try {
+			createConnection();
+			this.session = connection.createSession(true, Session.SESSION_TRANSACTED);
+			return this.session;
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+			return null;
+		}
+	}
+
+	private void createConnection() throws JMSException {
+		connection = new ActiveMQConnectionFactory(url).createConnection(user, password);
+		if (clientID != null && !clientID.isEmpty()) connection.setClientID(this.clientID);
+		connection.start();
 	}
 
 	public Tank tank(String tank) {
@@ -71,55 +88,38 @@ public class Ness {
 	}
 
 	public Ness.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, String... tanks) {
-		try {
-			TopicProducer producer = newProducer();
-			producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
-			waitUntilReflowSession();
-			TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
-			topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
-			return new ReflowSession() {
-				public void next() {
-					try {
-						final TopicProducer topicProducer = newProducer();
-						topicProducer.produce(createMessageFor("next"));
-						topicProducer.close();
-					} catch (JMSException e) {
-						logger.error(e.getMessage(), e);
+		TopicProducer producer = newProducer(REFLOW_PATH);
+		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
+		waitUntilReflowSession();
+		TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
+		topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
+		return new ReflowSession() {
+			public void next() {
+				final TopicProducer topicProducer = newProducer(REFLOW_PATH);
+				topicProducer.produce(createMessageFor("next"));
+				topicProducer.close();
+			}
 
-					}
-				}
+			public void finish() {
+				final TopicProducer topicProducer = newProducer(REFLOW_PATH);
+				topicProducer.produce(createMessageFor("finish"));
+				topicProducer.close();
+				topicConsumer.stop();
+			}
 
-				public void finish() {
-					try {
-						final TopicProducer topicProducer = newProducer();
-						topicProducer.produce(createMessageFor("finish"));
-						topicProducer.close();
-					} catch (JMSException e) {
-						logger.error(e.getMessage(), e);
-					}
-					topicConsumer.stop();
-				}
+			@Override
+			public void play() {
+				topicConsumer.listen((m) -> consume(dispatcher, m));
+			}
 
-				@Override
-				public void play() {
-					topicConsumer.listen((m) -> consume(dispatcher, m));
-				}
+			@Override
+			public void pause() {
+				topicConsumer.stop();
+			}
 
-				@Override
-				public void pause() {
-					topicConsumer.stop();
-				}
-
-			};
-		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
-			return null;
-		}
+		};
 	}
 
-	private TopicProducer newProducer() throws JMSException {
-		return new TopicProducer(session, REFLOW_PATH);
-	}
 
 	private void consume(MessageDispatcher dispatcher, javax.jms.Message m) {
 		dispatcher.dispatch(load(textFrom(m)));
@@ -136,6 +136,7 @@ public class Ness {
 
 	public void stop() {
 		try {
+			for (TopicProducer topicProducer : tankProducers.values()) topicProducer.close();
 			if (session != null) {
 				session.close();
 				session = null;
@@ -171,7 +172,9 @@ public class Ness {
 			return null;
 		}
 		try {
-			return new TopicProducer(session(), tank);
+			if (!tankProducers.containsKey(tank) || tankProducers.get(tank).isClosed())
+				tankProducers.put(tank, new TopicProducer(session, tank));
+			return tankProducers.get(tank);
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return null;
@@ -230,10 +233,7 @@ public class Ness {
 				if (jmsMessage == null) return;
 				jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
 				final TopicProducer producer = newProducer(dropChannel());
-				if (producer != null) {
-					producer.produce(jmsMessage);
-					producer.close();
-				}
+				if (producer != null) producer.produce(jmsMessage);
 			} catch (JMSException e) {
 				logger.error(e.getMessage(), e);
 			}
@@ -248,15 +248,15 @@ public class Ness {
 
 		public TopicConsumer flow(TankFlow flow, String flowID) {
 			if (session() == null) logger.error("Session is null");
-			topicConsumer = new TopicConsumer(session(), flowChannel());
-			if (flowID != null) topicConsumer.listen(flow, flowID);
-			else topicConsumer.listen(flow);
-			return topicConsumer;
+			this.flow = new TopicConsumer(session(), flowChannel());
+			if (flowID != null) this.flow.listen(flow, flowID);
+			else this.flow.listen(flow);
+			return this.flow;
 		}
 
 		public void unregister() {
-			if (topicConsumer != null) topicConsumer.stop();
-			topicConsumer = null;
+			if (flow != null) flow.stop();
+			flow = null;
 		}
 	}
 

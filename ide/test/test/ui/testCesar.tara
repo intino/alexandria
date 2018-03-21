@@ -4,389 +4,93 @@ Activity(title = "", favicon = "") testCesar
 	Home(uses=testCesarDesktop) testCesarHomePage
 
 Display testCesarHome
+Display systemLoad
+	Notification render as Object(systemLoadMetrics)
+	Notification update as Object(systemLoadMetrics)
+	Request reload
 
-// Octavio. Regenerar en la medida de lo posible las clases src. Muy incómodo
-//# Octavio. NO poner sufijos en los nombres de las clases
+Display deviceLoad
+	Notification render as Object(deviceLoadMetrics)
+	Notification update as Object(deviceLoadMetrics)
+	Request reload
+
+Display deviceIssuesTimeLine
+	Notification render as List Object(deviceTimelineEvent)
+	Notification update as List Object(deviceTimelineEvent)
+	Request reload as Object(timeRange)
+
+Display cesarDeviceOperations
+	Notification render as Object(deviceIssues)
+	Notification update as Object(deviceIssues)
+	Request reload
+
+Display cesarDeviceRules
+	Notification render as Object(deviceIssues)
+	Request reload
+
+Desktop(title = "test cesar", subTitle = "test using cesar layout", logoPath = "favicon.png", faviconPath = "favicon.png", layout = empty) testCesarDesktop
 
 
-// Mario. Está pendiente el logo y favicon
-Desktop(title = "test cesar", subTitle = "test using cesar layout", logoPath = "favicon.png", faviconPath = "favicon.png") testCesarDesktop
-	layout = testCesarMenu
-
-Layout(mode = Menu) testCesarMenu
-	Option("overview") overview > RenderPanels(testCesarOverviewPanel)
-//	Group("projects") projects
-//		mode = Expanded
-//		Options(label=@projectLabel) projectOptions > RenderObjects(@projectsCollection, panel=projectPanel)
-//		Options(modelClass = "") projectOptions > RenderObjects(testCesarProjectPanel)
-	Option("administration") administration> RenderPanels(testCesarAdminPanel)
-
-// Octavio. Código generado incorrecto.
-// Octavio. En código generado, todas las vistas se crean de tipo RenderDisplay y el método no tiene nombre
-Panel(label = "Project") testCesarProjectPanel
+Panel cesarDevicePanel
 	Views
-		View("dashboard", layout = RightFixed) > RenderMold(testCesarProjectDashboard)
-		View("devices") view > RenderCatalogs(testCesarDeviceCatalog, filtered = true)
-		View("servers") > RenderCatalogs(testCesarServerCatalog)
-		View("feeders") > RenderCatalogs(testCesarFeederCatalog)
-		View("systems") > RenderCatalogs(testCesarSystemCatalog)
+		View("info", layout=LeftFixed) > RenderMold(deviceInfoMold)
+		View("status") > RenderMold(deviceMold)
+		View("rules") > RenderMold(deviceRulesMold)
+		View("operations") operations > RenderMold(deviceOperationsMold)
 
-// Octavio. Si modelClass es vacío, el código generado PETA porque no pone una clase por defecto (ej: Object)
-// Octavio. En código generado, el attributo hidden no se genera
-// Octavio. En código generado, el atributo height se están pasando como String cuando son int
-// Octavio. En código generado, el atributo width no se está pasando
-Mold(modelClass = "") testCesarProjectDashboard
-	Block a
-		Block(hidden=HiddenEnabled) b
-			EmbeddedDisplay(display=sampleDisplay) embedded
-			height = 30 %
-			Picture(label = "overview", defaultPicture = "images/dashboard.png") overviewPicture
-				defaultStyle = "height:200px;width:100%;"
-		Block(layout=Horizontal Flexible)
-			height = 30 %
-			Block(width = 50 %)
-				EmbeddedCatalog(label = "systems", catalog=testCesarSimpleSystemCatalog, views = empty) systemsStampCatalog
-					height = 300 %
-			Block(width = 50 %)
-				CatalogLink(catalog = testCesarAssetCatalog) link
-//				EmbeddedCatalog(label = "server", catalog=testCesarSimpleServerCatalog) serversStampCatalog
-//					height = 300 %
+Mold(modelClass="io.intino.cesar.graph.Device") deviceInfoMold
+	Block(Vertical)
+		Block(Horizontal Center)
+			Title(defaultStyle = "margin:0px 0px;font-weight:normal;font-size:12pt !important;") label
+			TaskOperation(label = "refresh", defaultStyle = "margin:0px 10px;", mode = Icon, alexandriaIcon = "icons:update") refresh
 		Block
-			height = 30 %
-//			EmbeddedCatalog(catalog=testCesarSimpleDeviceCatalog) deviceStampCatalog
+			Picture(defaultPicture = "/images/tablet_no_status.png", defaultStyle = "width:210px;") image
+		Block(Horizontal Center)
+			Title(defaultStyle = "margin:0px 0px;font-weight:normal;font-size:12pt !important;") consul
+			Title(defaultStyle = "margin:0px 5px;font-weight:normal;font-size:12pt !important;") consulVersion
+			TaskOperation(label = "update", defaultStyle = "margin:0px 10px;", mode = Icon, alexandriaIcon = "icons:system-update-alt") update
+		Block(Horizontal CenterJustified)
+			TaskOperation(label = "shutdown", defaultStyle = "width:50% margin:0 10px", hasCustomStyle = true) shutdown
+			TaskOperation(label = "reboot", defaultStyle = "width:50%", hasCustomStyle = true) reboot
+		Block(hidden = HiddenEnabled) mapBlock
+			Map(zoom = 5, latitude = 19.2643486, longitude = -99.2086771, defaultStyle = "margin-top:10px;width:200px;height:200px") mapa
 
-Display sampleDisplay
+Mold(modelClass = "io.intino.cesar.graph.Device") deviceMold
+	Block(Horizontal Center, style = "margin:8px 0 10px 10px;")
+		Title(defaultStyle = "font-weight:normal;font-size:12pt !important;") On
+	Block(Horizontal Center, style = "margin:0 0 10px 10px;")
+		Block(Vertical Center, hidden = HiddenEnabled, style = "margin:0 15px 0 0") connectionBlock
+			Icon(source = Polymer) connectionIcon > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+			Description connectionDescription > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+			Title connectionStatus > defaultStyle = "font-size:12pt;color:black;"
+		Block(Vertical Center, hidden = HiddenEnabled, style = "margin:0 15px 0 0") screenBlock
+			Icon(source = Polymer) screenIcon > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+			Description screenDescription > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+			Title screenStatus > defaultStyle = "font-size:12pt;color:black;"
+		Block(Vertical Center, hidden = HiddenEnabled, style = "margin:0 15px") powerBlock
+			Icon(source = Polymer) powerIcon > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+			Description powerDescription > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+			Title powerStatus > defaultStyle =  "font-size:12pt;color:black;"
+		Block(Vertical Center, hidden = HiddenEnabled, style = "margin:0 15px") batteryBlock
+			Icon(source = Polymer) batteryIcon > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+			Description batteryDescription > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+			Title batteryStatus > defaultStyle = "font-size:12pt;color:black;"
+		Block(Vertical Center, hidden = HiddenEnabled, style = "margin:0 15px") temperatureBlock
+			Icon(source = Polymer) temperatureIcon > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+			Description temperatureDescription > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+			Title temperatureStatus > defaultStyle = "font-size:12pt;color:black;"
+	Block(Horizontal Justified, style = "margin-top10px;border-top:1px solid #dfdfdf;margin:0 0 10px 10px;")
+		Title(defaultStyle = "font-weight:normal;margin:20px 0 5px 0;font-size:12pt !important;") timeline
+	Block(Horizontal Center, style = "margin:0 0 10px 10px;")
+		EmbeddedDisplay(defaultStyle = "width:100%;", display = deviceIssuesTimeLine) deviceTimeLine
 
-Panel(label = "Overview") testCesarOverviewPanel
-	Views
-		View(label = "overview") overview> RenderMold(testCesarOverviewMold)
-		View(label = "análisis") analisis > RenderDisplay(display="cesarOlap")
+Mold(modelClass = "io.intino.cesar.graph.Device") deviceRulesMold
+	Block(Horizontal Center, style = "margin: 0 26px 20px;width:calc(100% - 52px);min-height:300px;")
+		EmbeddedDisplay(defaultStyle = "width:100%;", display = cesarDeviceRules) deviceRules
 
-Mold(modelClass="") testCesarOverviewMold
-	Block
-		Picture("vista", defaultPicture = "/images/overview.png") overviewPicture
-			defaultStyle = "width:100%;"
-
-Catalog("Devices", modelClass="io.intino.cesar.graph.Device") testCesarDeviceCatalog
-	Toolbar
-		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
-//			execute = @removeAssets
-		Download("descargar", polymerIcon = "file-download")
-//			execute = @download
-		DownloadSelection("download assets info", polymerIcon = "file-download")
-//			execute = @downloadAssets
-		Export("export", polymerIcon = "archive")
-//			execute = @export
-		ExportSelection("export selection", polymerIcon = "archive")
-//			execute = @exportarSelection
-
-	Views
-		ListView("List", mold = testCesarDeviceListMold, width = 90%)
-		GridView("Grid", mold = testCesarDeviceGridMold, width = 90%)
-		DisplayView("Charts", display="cesarOlap")
-
-	Arrangement
-		Grouping(label = "Units") unitCategorization //(categorization = unitCategorization)
-		Grouping(label = "Status") statusCategorization //(categorization = statusCategorization)
-
-// Octavio. Falta Icon
-Mold(modelClass = "") testCesarDeviceListMold
-	Block(layout = Horizontal Center)
-//		Block > Title(title = @title) name
-//		Block(Horizontal Flexible EndJustified)
-//			SumusIcon(icon = @noDataIcon, style = '"color:red;"') noData
-//			SumusIcon batteryIcon
-//				style = @batteryIconStyle
-//				icon = @batteryIcon
-//				title = @batteryTitle
-//			SumusIcon hotIcon
-//				icon = @hotIcon
-//				style = @hotIconStyle
-//				title = @hotTitle
-//			SumusIcon(icon = @timeIcon) timeIcon
-//				title = @dateTitle
-//				style = @dateIconStyle
-
-Mold(modelClass = "") testCesarDeviceGridMold
-//	Block > Picture("", defaultPicture = "/images/tablet_no_status.png", picture = @assetPicture) image
-//	Block(Horizontal Center)
-//		Block > Title(title = @title) name
-//		Block(Horizontal Flexible EndJustified)
-//			SumusIcon(icon = @noDataIcon, style = '"color:red;"') noData
-//			SumusIcon batteryIcon
-//				style = @batteryIconStyle
-//				icon = @batteryIcon
-//				title = @batteryTitle
-//			SumusIcon hotIcon
-//				icon = @hotIcon
-//				style = @hotIconStyle
-//				title = @hotTitle
-//			SumusIcon(icon = @timeIcon) timeIcon
-//				title = @dateTitle
-//				style = @dateIconStyle
-
-// Octavio. noRecordMessage no existe. En ListView, GridView, MapView es noRecordMessage. En MagazineView es noRecordMessage.
-
-Mold(modelClass = "io.intino.cesar.graph.System") testCesarSystemMold
-	Block(layout= Horizontal Center)
-//		Block > Title(title = @systemTitle) name
-//		Block(Horizontal Flexible EndJustified)
-//			SumusIcon(icon = @noDataIcon, style = '"color:red;"') noData
-//			SumusIcon cpuIcon
-//				style = @cpuIconStyle
-//				icon = @cpuIcon
-//				title = @cpuTitle
-//			SumusIcon memory
-//				icon = @memoryIcon
-//				style = @memoryIconStyle
-//				title = @memoryTitle
-//			SumusIcon threads
-//				icon = @threadsIcon
-//				style = @threadsIconStyle
-//				title = @threadsTitle
-//			SumusIcon(icon = @timeIcon) timeIcon
-//				title = @dateSystemTitle
-//				style = @dateIconStyle
-
-Panel(label = "System") testCesarSystemPanel
-	Views
-		View("info") > RenderMold(testCesarSystemMold)
-		View("servers") > RenderCatalogs(testCesarServerCatalog)
-
-Catalog("Servers", modelClass="io.intino.cesar.graph.Server") testCesarServerCatalog
-	Toolbar > canSearch = false
-	Views
-		ListView("List", mold = testCesarServerMold, width = 100%)
-
-Mold(modelClass = "io.intino.cesar.graph.Server") testCesarServerMold
-//	Block(Horizontal Center)
-//		Block
-//			Title(title = @title) title
-//		Block(Horizontal Flexible EndJustified)
-//			SumusIcon(icon = @noDataIcon, style = '"color:red;"') noData
-//			SumusIcon cpuIcon
-//				style = @cpuIconStyle
-//				icon = @cpuIcon
-//				title = @cpuTitle
-//			SumusIcon hddIcon
-//				style = @hddIconStyle
-//				icon = @hddIcon
-//				title = @hddTitle
-//			SumusIcon(icon = @timeIcon) timeIcon
-//				title = @dateTitle
-//				style = @dateIconStyle
-
-Catalog("Feeders", modelClass = "io.intino.cesar.graph.Feeder") testCesarFeederCatalog
-	Views
-		ListView("List", mold=testCesarFeederMold, width = 100%)
-
-Mold(modelClass = "io.intino.cesar.graph.Feeder") testCesarFeederMold
-//	Block(Horizontal Center)
-//		Block > Title(title = @title) title
-//		Block(Horizontal Flexible EndJustified)
-//			SumusIcon(icon = @noDataIcon, style = '"color:red;"') noData
-//			SumusIcon hotIcon
-//				icon = @hotFeederIcon
-//				style = @hotFeederIconStyle
-//				title = @hotFeederTitle
-//			SumusIcon cpuIcon
-//				style = @cpuIconStyle
-//				icon = @cpuIcon
-//				title = @cpuTitle
-//			SumusIcon hddIcon
-//				style = @hddIconStyle
-//				icon = @hddIcon
-//				title = @hddTitle
-//			SumusIcon(icon = @timeIcon) timeIcon
-//				title = @dateTitle
-//				style = @dateIconStyle
-
-Catalog("Systems", modelClass = "io.intino.cesar.graph.System") testCesarSystemCatalog
-	Toolbar > canSearch = false
-	Events > OnClickRecord > OpenPanel(testCesarSystemPanel)
-	Views
-		ListView("List", mold = testCesarSystemMold, width = 100%)
-		MagazineView(label = "", mold = testCesarAdministrationMold)
-
-Panel("Administration") testCesarAdminPanel
-	Views > View("Administration") > RenderMold(testCesarAdministrationMold)
-
-Mold(modelClass = "") testCesarAdministrationMold
-	Block(Horizontal)
-		Block
-			Highlight("Notifications") notifications
-//				value = 'return record.core$().as(Configuration.class).notifications() ? "Notifications active" : "Notifications off";'
-//				color = 'return record.core$().as(Configuration.class).notifications() ? "#388e3c" : "#9d9d9d";'
-//			Icon("icono", icon = @alertIcon) icono
-			Icon("icono") icono
-				source = Polymer
-		Block(layout = Flexible)
-			Description("Device Temperature Threshold") deviceTemperatureThreshold
-			Description("Device Battery Threshold") deviceBatteryThreshold
-			Description("Device Low Battery Threshold") deviceLowBatteryThreshold
-			Description("Device Disconnected Time Threshold") deviceDisconnectedTimeThreshold
-	Block(layout = Horizontal, mode = Expanded)
-		Block
-			Icon("icono") dummy
-				source = Polymer
-		Block(layout = Flexible)
-//			OpenDialogOperation("editar...", path = @configurationDialogPath) editAlert
-
-Catalog("Devices", modelClass = "io.intino.cesar.graph.Device") testCesarSimpleDeviceCatalog
-	Toolbar > canSearch = false
-	Views > ListView("List", mold = testCesarDeviceListMold, width = 100%)
-
-Catalog("Servers", modelClass = "io.intino.cesar.graph.Server") testCesarSimpleServerCatalog
-	Toolbar > canSearch = false
-	Views > ListView("List", mold = testCesarServerMold, width = 100%, noRecordMessage="no servers!!")
-
-
-Catalog("Systems", modelClass = "io.intino.cesar.graph.System") testCesarSimpleSystemCatalog
-	Toolbar > canSearch = false
-	Views > ListView("List", mold = testCesarSystemMold, width = 100%, noRecordMessage="no systems!!")
-	Events > OnClickRecord > OpenPanel(testCesarSystemPanel)
-
-Catalog("Assets", modelClass = "io.intino.cesar.graph.Asset") testCesarAssetCatalog
-	Toolbar
-		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
-//			execute = @removeAssets
-//			refresh = Catalog
-		Download("descargar", polymerIcon = "file-download")
-//			execute = @download
-		DownloadSelection("download assets info", polymerIcon = "file-download")
-//			execute = @downloadAssets
-		Export("export", polymerIcon = "archive")
-//			execute = @export
-		ExportSelection("export selection", polymerIcon = "archive")
-//			execute = @exportarSelection
-
-	Views
-		GridView("Grid", mold = testCesarDeviceGridMold, width = 90%)
-		ListView("List", mold = testCesarDeviceListMold, width = 90%)
-		DisplayView("Charts", display="cesarOlap")
-
-	Arrangement
-		Grouping("Units") unit // (categorization = unitCategorization)
-		Grouping("Status") status // (categorization = statusCategorization)
-
-Service CesarBot as SlackBot
-	Request("Show the list of all units with its last status") units
-	Request("Show the list of all devices with its last status") devices
-	Request("Show the list of all devices with its id") devices-id
-	Request("State of systems") systems
-	Request("List of servers") servers
-	Request("Show registered responsibles") responsibles
-
-	Request("Provides a token to develop systems on this infrastructure") develop-token
-	Request("Turn the notifications `on` `off`") notifications
-		Parameter(String) state
-	Request("Show the list of all compromised devices or servers") issues
-
-	Request("Administration cesar actions") manage
-		Request("Register responsible in the infrastructure. Set `username`, `email` and `fullName`") add-responsible
-			Parameter(String) user
-			Parameter(String) email
-			Parameter(String, true) fullName
-		Request("Remove responsible by username. Will be removed also of all units") remove-responsible
-			Parameter(String) user
-		Request("Add a device list providing `deviceId` and `name` separated by `;`") add-devices
-			Parameter(String, true) devices
-		Request("Add a device providing `deviceId` and `name`") add-device
-			Parameter(String) deviceId
-			Parameter(String) name
-		Request("Remove a device by either its `deviceId` or `name`") remove-device
-			Parameter(String) deviceId
-		Request("Add a server providing `embed or regular` `alias` `external server url with port`, and `IP`" ) add-server
-			Parameter(String) Type
-			Parameter(String) label
-			Parameter(String) url
-			Parameter(String) ip
-		Request("Add a server providing `server-name`") remove-server
-			Parameter(String) name
-		Request("Add a server providing `system-name`") remove-system
-			Parameter(String) name
-
-	Request("Open a connection with a device by either its `deviceId`, `name` or `position`") device
-		Parameter(String) deviceId
-		Request("Rename the label of device-> name `newName`") name
-			Parameter(String) newName
-		Request("Status of the selected device") status
-		Request("Reboots a device") reboot
-		Request("Shows what is on the device's screen") capture-screen
-		Request("Shows what is on the device's screen including a guide to help the tap") capture-grid
-		Request("Turn the opened device's screen `on` `off`") screen
-			Parameter(String) state
-		Request("Produces a touch event in the given position of grid. Example: tap A5") tap
-			Parameter(String) square
-		Request("Produces a touch event in the given position X and Y") tap-pixel
-			Parameter(Integer) x
-			Parameter(Integer) y
-		Request("Produces a drag event from the origin square to destination") drag
-			Parameter(String) fromSquare
-			Parameter(String) toSquare
-		Request("Kill a task in the opened device by providing the `android package`") kill
-			Parameter(String) packageName
-		Request("Launch a task in the opened device by providing the `android package`") launch
-			Parameter(String) packageName
-		Request("Uninstall an apk in the opened device by providing the `android package`") uninstall
-			Parameter(String) packageName
-		Request("Install an apk in the opened device by providing the `url` to the file") install
-			Parameter(String) url
-		Request("Update an apk in the opened device by providing the `url` to the file") update
-			Parameter(String) url
-		Request("Execute command on the device. Add name value pair after command name") execute
-			Parameter(String, true) command
-		Request("Show registered responsibles") responsibles
-		Request("Assign responsibles to this device from registered") set-responsibles
-			Parameter(String, true) users
-		Request("set notifications for `unplug` `temperature` `battery` `lowBattery` `disconnected` as macro on/off specifing all") set-notifications
-			Parameter(String) unplug
-			Parameter(String) temperature
-			Parameter(String) battery
-			Parameter(String) lowBattery
-			Parameter(String) disconnected
-
-	//Server Scope
-	Request("Open a connection with a server by either its `name` or `position`") server
-		Parameter(String) name
-		Request("Open a connection with another server by either its `name` or `position`") server
-			Parameter(String) name
-		Request("Rename the alias of device-> name `newName`") name
-			Parameter(String) newName
-		Request("Status of the selected server") status
-		Request("set/get remote connection") remote-connection
-			Parameter(String) url
-			Parameter(Integer) port
-			Parameter(String) user
-		Request("Shutdown the server") shutdown
-		Request("Reboot the server") reboot
-		Request("Log of the server") log
-		Request("Update consul") update-consul
-		Request("Show registered responsibles") responsibles
-		Request("Assign responsibles of this device from registered") set-responsibles
-			Parameter(String, true) users
-
-	//System Scope
-	Request("Open a connection with a syste by either its `deviceId`, `name` or `position` to operate with it") system
-		Parameter(String) systemId
-
-		Request("Status of the selected system") status
-		Request("Log of system") log
-		Request("Add or update value of a parameter") parameter
-			Parameter(String) name
-			Parameter(String) value
-		Request("Start system") start
-		Request("Start system") debug
-		Request("Stop system") stop
-		Request("Restart system") restart
-		Request("Parameters of running system") parameters
-		Request("Show registered responsibles") responsibles
-		Request("Assign responsibles to this system from registered") set-responsibles
-			Parameter(String, true) users
-		Request("Invokes an available operation over this system") invoke
-			Parameter(String) operation
-			Parameter(String, true) parameters
-		Request("Shows available operations of this system") operations
+Mold(modelClass = "io.intino.cesar.graph.Device") deviceOperationsMold
+	Block(Horizontal Center, style = "margin: 0 26px 20px;width:calc(100% - 52px);min-height:300px;")
+		EmbeddedDisplay(defaultStyle = "width:100%;", display = cesarDeviceOperations) aaa
 
 Schema Command
 	Attribute operation as Text
@@ -453,3 +157,46 @@ Schema Crash
 	Attribute deviceId as Text
 	Attribute stack as Text
 	Attribute consulVersion as Text
+
+Schema deviceLoadMetrics
+	//TODO
+Schema systemLoadMetrics
+	Attribute updateMinutesInterval as Integer(defaultValue = 15)
+	Attribute from as DateTime
+	Attribute(multiple = true) cpu as Real
+	Attribute(multiple = true) memory as Real
+	Attribute(multiple = true) threads as Integer
+
+Schema deviceTimelineEvent
+	Attribute id as Text
+	Attribute content as Text
+	Attribute icon as Text
+	Attribute type as Text
+	Attribute className as Text
+	Attribute start as DateTime
+	Attribute end as DateTime
+
+Schema timeRange
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute scale as Text
+
+Dialog(url = "", label = "Issue", description = "") issueDialog
+	Tab("Issue") tab
+		Text(label = "Issue id") type > readonly = true
+		Text(label = "Issue") issue > readonly = true
+		Text(label = "instant") moment > readonly = true
+		Text(label = "level") level > readonly = true
+		Text(label = "remarks") remarks > readonly = true
+		Text(label = "log") log > readonly = true
+	Toolbar
+		Operation(label = "go to item") gotoItem
+		Operation(label = "mark solved") resolveIssue
+		Operation(label = "discard") discardIssue
+
+Schema deviceIssues
+	Schema(multiple = true) Issue
+		Attribute ts as DateTime
+		Attribute issueType as Text
+		Attribute parameters as Text
+			multiple = true

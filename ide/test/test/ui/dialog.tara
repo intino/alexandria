@@ -1,7 +1,7 @@
 dsl Konos
 
 
-Activity TestWeb
+Activity(title = "", favicon = "") TestWeb
     Home(uses = application) applicationPage
     Page(opinion, "/opinion") opinionsPage
 

@@ -10,6 +10,7 @@
 <link rel="import" href="../../lib/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="_common/alexandria-configuration-behavior.html">
+<link rel="import" href="_common/alexandria-dialog-behavior.html">
 
 <script src="alexandriadialogcontainer/requester.js"></script>
 <script src="alexandriadialogcontainer/notifier-listener.js"></script>
@@ -22,8 +23,13 @@
                       on-iron-overlay-opened="_overlayOpened"
                       on-iron-overlay-closed="_overlayClosed"
                       with-backdrop>
-            <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
-            <div id="container"></div>
+            <div class="container">
+                <div class="header layout horizontal center">
+                    <div class="label flex">[[_label]]</div>
+                    <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
+                </div>
+                <div id="dialogContent"></div>
+            </div>
         </paper-dialog>
     </template>
 
@@ -37,31 +43,32 @@
             margin: 50px;
             padding: 0;
             background: white;
-            top: 0 !important;
-            left: 0 !important;
-            position: fixed !important;
-            border-radius: 10px;
         }
         :host paper-dialog paper-icon-button {
-            position: absolute;
-            top: 0;
-            right: 0;
             padding: 6px;
-            background: white;
-            border-radius: 50px;
-            margin: -15px -15px 0 0;
-            -webkit-box-shadow: -1px 1px 10px #888888;
-            -moz-box-shadow: -1px 1px 10px #888888;
-            box-shadow: -1px 1px 10px #888888;
         }
-        :host paper-dialog #container {
+        :host paper-dialog .container {
             border: 0;
             overflow: auto;
-            width: calc(100% - 20px);
-            height: calc(100% - 20px);
             border-radius: 2px;
             padding: 0;
-            margin: 10px;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        :host paper-dialog .header {
+            padding: 5px 5px 5px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        :host paper-dialog .header .label {
+            font-size: 12pt;
+        }
+        :host paper-dialog #dialogContent {
+            border: 0;
+            overflow: auto;
+            width: 100%;
+            height: calc(100% - 51px);
+            border-radius: 2px;
         }
     </style>
 
@@ -85,81 +92,36 @@
                 AlexandriaDialogContainerBehaviors.Requester,
                 AlexandriaDialogContainerBehaviors.NotifierListener,
                 AlexandriaBehaviors.ConfigurationBehavior,
+                AlexandriaBehaviors.DialogBehavior,
                 Polymer.IronResizableBehavior ],
 
             properties : {
-                _width : { type: Number, value: function() { return 100; } },
-                _height : { type: Number, value: function() { return 100; } },
+                _label : String,
                 _type : String
             },
-
-            listeners: { 'iron-resize': '_fitDialog' },
 
             attached : function() {
                 this.translate(AlexandriaDialogContainerDictionary);
                 this.listenToDisplay();
             },
 
-            open : function() {
-                this._fitDialog();
-                this.$.dialog.open();
-            },
-
-            _fitDialog : function() {
-                var style = "";
-
-                if (this._width != 100) {
-                    var width = $(window).width();
-                    style += ";width:" + this._width + "%;margin-left:" + ((width-(width*(this._width / 100)))/2) + "px;";
-                }
-                else style += ";width:calc(100% - 100px)";
-
-                if (this._height != 100) {
-                    var height = $(window).height();
-                    style += ";height:" + this._height + "%;margin-top:" + ((height - (height * (this._height / 100))) / 2) + "px;";
-                }
-                else style += ";height:calc(100% - 100px)";
-
-                this.$.dialog.style.cssText += style;
-            },
-
             _refreshDialog : function(dialog) {
+                this._label = dialog.label;
                 this._width = dialog.width;
                 this._height = dialog.height;
                 this._type = dialog.type;
                 this._createZombie();
             },
 
-            _closeDialog : function() {
-                this.close();
-            },
-
             _createZombie : function() {
-                this.$.container.innerHTML = "";
+                this.$.dialogContent.innerHTML = "";
                 var zombie = document.createElement("cotton-zombie");
                 zombie.setAttribute("display", this._type);
                 zombie.setAttribute("widget", this._type);
                 zombie.setAttribute("object", this.display.id);
-                this.$.container.appendChild(zombie);
-            },
-
-            _overlayOpened : function(e) {
-                var dialog = e.target;
-                var overlay = dialog.backdropElement;
-
-                if (overlay.previousSibling !== dialog && !this._overlayFixed) {
-                    dialog.parentNode.insertBefore(overlay, null);
-                    this._overlayFixed = true;
-                }
-            },
-
-            _overlayClosed : function(e) {
-                this._overlayFixed = false;
-            },
-
-            close : function() {
-                this.$.dialog.close();
+                this.$.dialogContent.appendChild(zombie);
             }
+
         });
 
     </script>

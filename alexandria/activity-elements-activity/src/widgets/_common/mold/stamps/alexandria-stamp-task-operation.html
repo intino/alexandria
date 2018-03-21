@@ -1,19 +1,22 @@
-<link rel="import" href="../../../../lib/polymer/polymer.html">
-<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="../../../../lib/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../../../lib/paper-button/paper-button.html">
-<link rel="import" href="alexandria-mold-operation-trigger.html">
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../../lib/paper-button/paper-button.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../alexandria-operation-trigger.html">
 
-<dom-module id="alexandria-mold-task-operation">
+<dom-module id="alexandria-stamp-task-operation">
 
     <template>
         <div class="container">
-            <alexandria-mold-operation-trigger title="[[_title]]" icon="[[icon]]" styles="[[styles]]" mode="[[mode]]" on-execute="_confirmTask"></alexandria-mold-operation-trigger>
+            <alexandria-operation-trigger title="[[_title]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                          styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                          on-execute="_confirmTask"></alexandria-operation-trigger>
         </div>
-        <div id="dialogContainer" class="alexandria-mold-task-operation-0">
+        <div id="dialogContainer" class="alexandria-stamp-task-operation-0">
             <paper-dialog id="dialog" no-overlap entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
                 <h2>[[Title]]</h2>
-                <div class="message">[[confirm]]</div>
+                <div class="message">[[stamp.properties.confirm]]</div>
                 <div class="buttons">
                     <paper-button dialog-dismiss>[[Cancel]]</paper-button>
                     <paper-button dialog-confirm autofocus on-tap="_execute">[[Accept]]</paper-button>
@@ -37,12 +40,16 @@
             border-radius: 10px;
         }
         :host paper-dialog h2 {
-            margin-top: 10px;
-            font-size: 14pt;
+            background: #efefef;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 11pt;
+            padding: 4px 10px;
         }
         :host paper-dialog .message {
             margin-top: 0;
             margin-bottom: 5px;
+            padding: 0 10px;
         }
         :host paper-dialog .buttons {
             margin-bottom: 5px;
@@ -51,69 +58,64 @@
             padding: 0 10px;
             margin: 0 10px 0 0;
             height: 25px;
-            widht: 90px;
+            width: 90px;
         }
     </style>
 
     <script>
-        const AlexandriaMoldTaskOperationDictionary = {
+        const AlexandriaStampTaskOperationDictionary = {
             es: {
                 Execute : "ejecutar",
-                Title : "confirmar operación",
+                Title : "confirmar",
                 Accept : "aceptar",
                 Cancel : "cancelar"
             },
             en: {
                 Execute : "execute",
-                Title : "confirm operation",
+                Title : "confirm",
                 Accept : "accept",
                 Cancel : "cancel"
             }
         };
 
         Polymer({
-            is: 'alexandria-mold-task-operation',
+            is: 'alexandria-stamp-task-operation',
 
-            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+            behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior ],
 
             properties : {
-                title : { type: String, observer: '_refreshTitle' },
-                document : String,
-                width: Number,
-                _width : { type: Number, value: function() { return 100; } },
-                height: Number,
-                _height : { type: Number, value: function() { return 100; } },
-                _title : String,
-                icon : String,
-                styles : String,
-                mode : String,
-                confirm : { type: String, value: function() { return null; } }
+                _title: String
             },
 
             attached: function () {
-                this.translate(AlexandriaMoldTaskOperationDictionary);
+                this.translate(AlexandriaStampTaskOperationDictionary);
             },
 
-            _refreshTitle : function() {
-                var titleDefined = this.title != null && this.title != "";
-                this._title = titleDefined ? this.title : this.Execute;
+            _render : function() {
+                var title = this.stamp.label;
+                this._title = title != null && title != "" ? title : this.Execute;
+                $(this).attr("style", $(this).attr("style") + ";" + this._style);
             },
 
             _confirmTask : function(e) {
                 if (!this._requireConfirm()) {
-                    this._execute();
+                    this._execute(e);
                     return;
                 }
                 document.querySelector("body").appendChild(this.$.dialogContainer);
                 this.$.dialog.open();
+                e.stopPropagation();
             },
 
             _requireConfirm : function() {
-                return this.confirm != null && this.confirm != "";
+                var confirm = this.stamp.properties.confirm;
+                return confirm != null && confirm != "";
             },
 
-            _execute : function() {
-                this.fire("do-task");
+            _execute : function(e) {
+                this._close();
+                this.fire("execute-task-item", { stamp: this.stamp.name, item: this.stamp.item });
+                e.stopPropagation();
             },
 
             _close : function() {

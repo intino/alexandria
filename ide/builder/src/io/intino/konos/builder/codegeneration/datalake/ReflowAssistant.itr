@@ -6,6 +6,8 @@ def type(operations)
 	import io.intino.konos.datalake.Ness;
 	import io.intino.tara.magritte.Store;
 
+	import java.util.List;
+
 	class ReflowAssistant {
 
 		private final $box+FirstUpperCase~Box box;

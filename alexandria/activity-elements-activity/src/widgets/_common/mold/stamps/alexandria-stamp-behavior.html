@@ -1,0 +1,43 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.StampBehavior = {
+
+        properties : {
+            stamp : { type: Object, observer: '_init', value: function() { return null; } },
+            _style: { type: String, value: function() { return ""; } }
+        },
+
+        _init : function() {
+            if (this.stamp == null) return;
+            this._updateStyle();
+            this._render();
+        },
+
+        _render : function() { }, // implemented by stamps
+
+        _updateStyle : function () {
+            var properties = this.stamp.properties;
+            if (properties == null) return;
+            var style = this.stamp.properties.defaultStyle != null ? this.stamp.properties.defaultStyle : "";
+            style += style !== "" ? ";" : "";
+            style += this.stamp.properties.style != null ? this.stamp.properties.style : "";
+            if (style == null) return;
+            this._style = style;
+        },
+
+        _addZombieLayer : function(layer, name, widget, object) {
+            var zombie = document.createElement("cotton-zombie");
+            zombie.setAttribute("display", name);
+            zombie.setAttribute("widget", widget);
+            if (object != null) zombie.setAttribute("object", object);
+            layer.appendChild(zombie);
+            this.fire("stamp-ready");
+            return zombie;
+        }
+
+    };
+
+</script>

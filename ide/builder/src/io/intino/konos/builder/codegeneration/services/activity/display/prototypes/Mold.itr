@@ -12,6 +12,7 @@ def type(mold)
     	public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
     		super(box);
     	}
+
     	public static class Stamps {
 			$block+stamps...[$NL$NL]
     	}
@@ -24,6 +25,7 @@ end
 
 def type(block) trigger(stamps)
 	$stamp...[$NL]
+	$block+stamps...[$NL]
 end
 
 def trigger(block)
@@ -34,7 +36,47 @@ end
 def trigger(hidden)
 	public static class $name+FirstUpperCase {
 		public static boolean hidden($moldClass $moldClass+shortType+firstLowerCase) {
+			return false;//TODO
+		}
+	}
+end
 
+def type(stamp & openDialogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & openExternalDialogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static String dialogPath($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+
+		public static String dialogTitle($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//by default is set to operation label
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & openCatalogOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		[$catalogFilter]
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
 		}
 	}
 end
@@ -44,6 +86,10 @@ def type(stamp & downloadOperation)
 		$common
 
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, ActivitySession session) {
+			return null;//TODO
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -56,6 +102,24 @@ def type(stamp & previewOperation)
 		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
+	}
+end
+
+def type(stamp & taskOperation)
+	public static class $name+FirstUpperCase {
+		$common
+
+		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
+			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
+		}
+
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
+		}
 	}
 end
 
@@ -66,19 +130,13 @@ def type(stamp & exportOperation)
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, ActivitySession session) {
 			return null;//TODO
 		}
-	}
-end
 
-
-def type(stamp & taskOperation)
-	public static class $name+FirstUpperCase {
-		$common
-
-		public static void execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-
+		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+			return null;//TODO
 		}
 	}
 end
+
 
 def type(stamp & location)
 	public static class $name+FirstUpperCase {
@@ -149,7 +207,7 @@ def type(stamp & embeddedCatalog)
 	public static class $name+FirstUpperCase {
 		$common
 
-		[$embeddedCatalogFilter]
+		[$catalogFilter]
 	}
 end
 
@@ -196,8 +254,8 @@ def trigger(style)
 	}
 end
 
-def trigger(embeddedCatalogFilter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase source, Object target, ActivitySession session) {
+def trigger(catalogFilter)
+	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, ActivitySession session) {
 		return true;//TODO
 	}
 end

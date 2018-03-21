@@ -7,13 +7,14 @@ use Displays
 Concept Mold extends Display
 	var string modelClass
 	Concept Block
-		var word[]:{Vertical Horizontal Fixed Flexible Wrap Center Justified StartJustified CenterJustified EndJustified} layout = Vertical
+		var word[]:{Vertical Horizontal Fixed Flexible Wrap Justified StartJustified CenterJustified EndJustified Start Center End} layout = Vertical
         var word:{Expanded Simple} mode = Simple
         var integer:{%} width = -1%
         var integer:{%} height = -1%
         var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
         var boolean hiddenIfMobile = false
         var string style = ""
+		var boolean hasCustomClass = false
 		has Block
 		Concept:Named Stamp
 			var string label = ""
@@ -22,6 +23,7 @@ Concept Mold extends Display
 			var string suffix = ""
 			var string defaultStyle = ""
 			var boolean hasCustomStyle = false
+			var boolean hasCustomClass = false
 			var boolean editable = false
 			sub CatalogLink
 				var Catalog catalog
@@ -50,8 +52,18 @@ Concept Mold extends Display
 			sub Operation
 				var word:{Link Button Icon} mode = Button
 				var string alexandriaIcon = empty
+
+				sub OpenCatalogOperation
+					var Catalog catalog
+					var CatalogView[] views
+					var boolean filtered = false
+					var word:{None Single Multiple} selection = None
+					var word:{Standalone RelativeToOperation} position = Standalone
+					var integer:{%} width = 100%
 				sub OpenDialogOperation
 					var Dialog dialog
+					var integer:{%} width = 100%
+				sub OpenExternalDialogOperation
 					var integer:{%} width = 100%
 				sub ExportOperation
 					var string[] options = empty
@@ -62,6 +74,7 @@ Concept Mold extends Display
 				sub TaskOperation
 					var string confirmText = empty
 				sub PreviewOperation
+
 			sub Page
 			sub Picture > var string defaultPicture = empty
 			sub Rating > var string polymerIcon

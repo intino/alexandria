@@ -16,6 +16,7 @@ public class UIGenerationTest {
 	private static final String konos = "testkonos";
 	private static final String ebar = "testebar";
 	private static final String octana = "octana";
+	private static final String octanaPackage = "io.intino.octana.box";
 	private static final String cesarPackage = "io.intino.cesar.box";
 	private static final String DIR = "test-gen";
 
@@ -48,7 +49,7 @@ public class UIGenerationTest {
 
 	@Test
 	public void testOctana() throws Exception {
-		execute(new File(DIR, octana), octana, octana);
+		execute(new File(DIR, octanaPackage.replace(".", File.separator)), octana, octanaPackage);
 	}
 
 	@Test
@@ -61,7 +62,7 @@ public class UIGenerationTest {
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-//		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
+		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
 	}
 
 }

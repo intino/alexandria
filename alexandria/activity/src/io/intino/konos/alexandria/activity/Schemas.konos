@@ -57,6 +57,7 @@ Schema DialogInputResource
 	Attribute file as File
 
 Schema DialogReference
+	Attribute label as Text
 	Attribute type as Text
 	Attribute width as Integer
 	Attribute height as Integer
@@ -82,6 +83,7 @@ Schema ElementView
 	Attribute canCreateClusters as Bool
 	Attribute(multiple=true) clusters as Text
 	Attribute emptyMessage as Text
+	Attribute mold as Text
 
 	Schema(multiple=false) Toolbar
 		Schema Operation
@@ -92,9 +94,6 @@ Schema ElementView
 			Attribute when as Text
 
 			Has(Property)
-
-	Schema(multiple=false) Mold
-		Has(MoldBlock)
 
 	Schema(multiple=false) Center
 		Attribute latitude as Real
@@ -123,6 +122,10 @@ Schema GroupingSelection
 	Attribute name as Text
 	Attribute(multiple=true) groups as Text
 
+Schema ItemRefreshInfo
+	Attribute mold as Text
+	Has(Item, multiple=false)
+
 Schema Item
 	Attribute name as Text
 	Attribute label as Text
@@ -136,34 +139,6 @@ Schema Item
 	Schema ItemBlock
 		Attribute name as Text
 		Attribute hidden as Bool
-
-Schema ItemRefreshInfo
-	Has(Mold, multiple=false)
-	Has(Item, multiple=false)
-
-Schema Mold
-	Has(MoldBlock)
-
-Schema MoldBlock
-	Attribute name as Text
-	Attribute expanded as Bool
-	Attribute layout as Text
-	Attribute style as Text
-	Attribute width as Integer
-	Attribute height as Integer
-	Attribute hidden as Bool
-	Attribute hiddenIfMobile as Bool
-
-	Schema Stamp
-		Attribute name as Text
-		Attribute label as Text
-		Attribute editable as Bool
-		Attribute shape as Text
-		Attribute layout as Text
-		Attribute height as Integer
-		Has(Property)
-
-	Has(MoldBlock)
 
 Schema OpenItemDialogParameters
 	Attribute item as Text

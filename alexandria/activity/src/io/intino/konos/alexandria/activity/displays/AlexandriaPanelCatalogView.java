@@ -23,7 +23,7 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 	@Override
 	public void refresh() {
 		super.refresh();
-		if (catalogDisplay != null) catalogDisplay.refresh();
+		if (catalogDisplay != null) catalogDisplay.forceRefresh();
 	}
 
 	public <E extends AlexandriaElementDisplay> E catalogDisplay() {

@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
 import io.intino.konos.alexandria.activity.model.mold.stamps.icons.ResourceIcon;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenExternalDialogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation;
 import io.intino.konos.alexandria.activity.schemas.Item;
 import io.intino.konos.alexandria.activity.schemas.ItemBlock;
@@ -158,6 +159,14 @@ public class ItemBuilder {
             String drawingColor = location.drawingColor(item, session);
             if (drawingColor != null)
                 result.add(propertyOf("drawingColor", drawingColor));
+        }
+
+        if (stamp instanceof Operation)
+            result.add(propertyOf("drawingColor", ((Operation)stamp).drawingColor(item, session)));
+
+        if (stamp instanceof OpenExternalDialogOperation) {
+            result.add(propertyOf("dialogTitle", ((OpenExternalDialogOperation) stamp).dialogTitle(item, session)));
+            result.add(propertyOf("dialogPath", ((OpenExternalDialogOperation) stamp).dialogPath(item, session)));
         }
 
         if (stamp instanceof PreviewOperation) {

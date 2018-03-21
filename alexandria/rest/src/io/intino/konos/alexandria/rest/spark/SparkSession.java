@@ -1,18 +1,16 @@
 package io.intino.konos.alexandria.rest.spark;
 
 import io.intino.konos.alexandria.rest.pushservice.Client;
+import io.intino.konos.alexandria.rest.pushservice.ClientProvider;
 import io.intino.konos.alexandria.rest.pushservice.Session;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class SparkSession<C extends Client> implements Session<C> {
-	private final Map<String, C> clientsMap = new HashMap<>();
 	private final String id;
-	private String currentClient;
+	private ClientProvider<C> clientProvider;
 	private Function<String, String> loginListener;
 	private Consumer<Boolean> logoutListener;
 
@@ -25,37 +23,25 @@ public class SparkSession<C extends Client> implements Session<C> {
 	}
 
 	public List<C> clients() {
-		return (List<C>) clientsMap.values();
+		return (List<C>) clientProvider.clients(id);
 	}
 
 	@Override
 	public C client(String id) {
-		return clientsMap.get(id);
+		return clientProvider.client(id);
 	}
 
 	@Override
 	public C client() {
-		return clientsMap.get(currentClient);
+		return clientProvider.client();
 	}
 
 	@Override
-	public void currentClient(C client) {
-		this.currentClient = client != null ? client.id() : null;
+	public void clientProvider(ClientProvider<C> clientProvider) {
+		this.clientProvider = clientProvider;
 	}
 
-	public void add(C client) {
-		clientsMap.put(client.id(), client);
-	}
-
-	public void remove(C client) {
-		if (!clientsMap.containsKey(client.id())) return;
-		clientsMap.remove(client.id());
-		this.currentClient = null;
-	}
-
-	public void send(String message) {
-		clientsMap.values().forEach(client -> client.send(message));
-	}
+	public void send(String message) { clients().forEach(client -> client.send(message)); }
 
 	public void whenLogin(Function<String, String> listener) {
 		this.loginListener = listener;

@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
+import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
 import io.intino.konos.alexandria.activity.model.panel.View;
@@ -14,9 +15,13 @@ import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
+import static io.intino.konos.alexandria.activity.model.panel.View.Layout.Tab;
 import static java.util.stream.Collectors.toList;
 
 public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends AlexandriaElementDisplay<Panel, DN> implements ElementViewDisplayProvider {
@@ -31,6 +36,19 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	@Override
 	public void reset() {
+	}
+
+	@Override
+	public void refresh() {
+		super.refresh();
+		views().stream().filter(v -> !((View)v).layout().equals(Tab) && viewDisplayMap.containsKey(v.name())).forEach(v -> viewDisplayMap.get(v.name()).refresh());
+	}
+
+	@Override
+	public void refresh(Item... objects) {
+		super.refresh();
+		io.intino.konos.alexandria.activity.schemas.Item[] items = ElementHelper.items(objects, this, this.baseAssetUrl());
+		views().stream().filter(v -> !((View)v).layout().equals(Tab) && viewDisplayMap.containsKey(v.name())).forEach(v -> viewDisplayMap.get(v.name()).refresh(items));
 	}
 
 	@Override
@@ -82,8 +100,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 			AlexandriaPanelCatalogView viewDisplay = (AlexandriaPanelCatalogView) selectView(view.name());
 			return viewDisplay.catalogDisplay();
 		}
-
-		return super.openElement(label);
+		else {
+			AlexandriaPanel parent = parent(AlexandriaPanel.class);
+			if (parent != null) return (E) parent.openElement(label);
+			else return super.openElement(label);
+		}
 	}
 
 	private boolean renderContainsCatalogWithLabel(RenderCatalogs render, String label) {
@@ -101,7 +122,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private void selectFirstTabView() {
 		for (AbstractView view : views()) {
-			if (((View)view).layout() == View.Layout.Tab) {
+			if (((View)view).layout() == Tab) {
 				selectView(view.name());
 				break;
 			}

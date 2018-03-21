@@ -34,7 +34,7 @@ public class RenderCatalogs extends ElementRender {
 
 	public boolean filter(Catalog catalog, Element context, Item target, Item item, ActivitySession session) {
 		if (target == null && item == null) return true;
-		if (target == null || item == null) return false;
+		if (target == null || item == null) return true;
 		return filter == null || filter.filter(catalog, context, target.object(), item.object(), session);
 	}
 

@@ -39,7 +39,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private AlexandriaElementView currentView = null;
 	private Function<Item, Boolean> staticFilter = null;
 	private Function<Item, Boolean> dynamicFilter = null;
-	private Boolean dirty = null;
 	private boolean embedded = false;
 	private AlexandriaElementView.OpenItemEvent openedItem = null;
 	private TimeRange range;
@@ -215,11 +214,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public abstract void reset();
 
-	public void forceRefresh() {
-		dirty(true);
-		refresh();
-	}
-
 	@Override
 	public void refresh() {
 		refreshView();
@@ -231,14 +225,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public void refresh(Item... objects) {
 		currentView().ifPresent(v -> v.refresh(ElementHelper.items(objects, this, baseAssetUrl())));
-	}
-
-	public boolean dirty() {
-		return dirty == null || dirty;
-	}
-
-	public void dirty(boolean value) {
-		dirty = value;
 	}
 
 	public void navigate(String key) {
@@ -400,11 +386,14 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
+		notifyLoading(true);
 		currentItem(event.item().id());
 		Item item = this.currentItem();
-		((TaskOperation)event.stamp()).execute(item, session());
+		TaskOperation.Refresh refresh = ((TaskOperation) event.stamp()).execute(item, event.self(), session());
 		dirty(true);
-		refresh(this.currentItem());
+		if (refresh == TaskOperation.Refresh.Item) refresh(this.currentItem());
+		else if (refresh == TaskOperation.Refresh.Element) forceRefresh();
+		notifyLoading(false);
 	}
 
 	public AlexandriaPanel createPanelDisplay(AlexandriaElementView.OpenItemEvent event) {

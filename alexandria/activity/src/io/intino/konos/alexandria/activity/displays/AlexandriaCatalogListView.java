@@ -463,7 +463,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()))));
+		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), this)));
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters params) {
@@ -507,8 +507,8 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void saveItem(SaveItemParameters value) {
-		if (selectedItems().size() != 1) return;
-		provider.saveItem(value, selectedItems().get(0));
+		Item item = itemOf(value.item());
+		provider.saveItem(value, item);
 	}
 
 	private Item itemOf(String id) {

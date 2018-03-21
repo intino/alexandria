@@ -1,0 +1,126 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../../../lib/paper-item/paper-item.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../alexandria-export-dialog.html">
+<link rel="import" href="../alexandria-operation-trigger.html">
+
+<dom-module id="alexandria-stamp-export-operation">
+
+    <template>
+        <alexandria-operation-trigger id="operation" title="[[_title]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                      styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                      on-execute="_openExportOptions"></alexandria-operation-trigger>
+
+        <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
+            <template is="dom-if" if="[[!_title.length]]">
+                <h2>[[Export]]</h2>
+            </template>
+            <paper-menu>
+                <template is="dom-repeat" items="[[stamp.properties.options]]">
+                    <paper-item name$="[[item]]" on-tap="_showExportDialog">[[item]]</paper-item>
+                </template>
+            </paper-menu>
+        </paper-dialog>
+        <alexandria-export-dialog on-export="_export"></alexandria-export-dialog>
+    </template>
+
+    <style>
+        :host paper-dialog {
+            margin: 10px 0 0;
+            background: white;
+        }
+        :host paper-dialog h2 {
+            color: #777;
+            border-bottom: 1px solid #ccc;
+            margin: 3px 0;
+            padding: 0 8px 3px;
+            font-size: 15px;
+        }
+        :host paper-dialog paper-menu {
+            margin: 10px;
+            padding: 0;
+            background: white;
+        }
+        :host paper-dialog paper-item {
+            min-height: 28px;
+            font-size: 14px;
+            padding: 0 15px;
+            min-width: 130px;
+            cursor: pointer;
+        }
+        @media screen and (max-width: 540px) {
+            :host {
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+        const AlexandriaMoldExportOperationDictionary = {
+            es: {
+                Export: "exportar..."
+            },
+            en: {
+                Export: "export..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-export-operation',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                _title : String,
+                option: String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaMoldExportOperationDictionary);
+            },
+
+            _render : function() {
+                var title = this.stamp.label;
+                this._title = title != null && title != "" ? title : this.Export;
+                this._updateSelectedOption();
+            },
+
+            _updateSelectedOption : function() {
+                var options = this.stamp.properties.options;
+                if (options.length <= 0) return;
+                this.option = options[0];
+            },
+
+            _openExportOptions : function(e) {
+                var options = this.stamp.properties.options;
+                if (options.length <= 1) {
+                    this._showExportDialog();
+                    return;
+                }
+                this.$.dialog.positionTarget = this.$.operation;
+                this.$.dialog.open();
+            },
+
+            _showExportDialog : function(e) {
+                this.$.dialog.close();
+                if (e != null) this.option = e.target.getAttribute("name");
+                var dialog = this.querySelector("alexandria-export-dialog");
+                var properties = this.stamp.properties;
+                dialog.open({ min: parseInt(properties.from), max: parseInt(properties.to) });
+            },
+
+            _export : function(e) {
+                var from = e.detail.from;
+                var to = e.detail.to;
+                this.fire("export-item", { stamp: this.stamp.name, from: from, to: to, option: this.option });
+                e.stopPropagation();
+            }
+
+        });
+    </script>
+
+</dom-module>

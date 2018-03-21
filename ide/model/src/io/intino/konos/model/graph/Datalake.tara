@@ -1,6 +1,7 @@
 dsl Proteo
 
 Concept:{0..1} DataLake
+	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
 	Concept:Named Tank
