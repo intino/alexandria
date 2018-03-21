@@ -17,6 +17,7 @@ public class SparkManager {
 	public SparkManager(Request request, Response response) {
 		this.request = request;
 		this.response = response;
+		request.raw().getSession().getServletContext().getServletContextName()
 		setUpMultipartConfiguration();
 	}
 
