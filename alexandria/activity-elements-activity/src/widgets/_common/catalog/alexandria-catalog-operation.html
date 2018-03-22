@@ -2,7 +2,7 @@
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../mold/stamps/alexandria-stamp-download-operation.html">
+<link rel="import" href="../alexandria-operation-download.html">
 <link rel="import" href="../alexandria-export-dialog.html">
 
 <dom-module id="alexandria-catalog-operation">
@@ -12,7 +12,9 @@
             <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_execute"></paper-icon-button>
         </template>
         <template is="dom-if" if="[[_isDownload(operation)]]">
-            <alexandria-stamp-download-operation icon="[[operation.icon]]" title$="[[operation.title]]" options="[[_options()]]" on-download-option="_download"></alexandria-stamp-download-operation>
+            <alexandria-operation-download title="[[operation.title]]" icon="[[operation.icon]]"
+                                           options="[[_options()]]" on-tap-download="_download"
+                                           mode="Icon"></alexandria-operation-download>
         </template>
         <template is="dom-if" if="[[_isExport(operation)]]">
             <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_showExportDialog"></paper-icon-button>
@@ -75,7 +77,7 @@
             },
 
             _download : function(e) {
-                this.fire("download", { operation: this.operation.name, option: e.detail });
+                this.fire("download", { operation: this.operation.name, option: e.detail.option });
             },
 
             _group : function() {
