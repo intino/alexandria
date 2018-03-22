@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.6.0") alexandria-activity-elements
+Artifact(groupId = "io.intino.konos", version = "1.6.1") alexandria-activity-elements
 
 	WebImports
 		WebComponent("Polymer/polymer", "1.9 - 2") polymer
@@ -10,14 +10,14 @@ Artifact(groupId = "io.intino.konos", version = "1.6.0") alexandria-activity-ele
 		WebComponent("numeraljs", "1.5.6") numeral
 		WebComponent("sortable.js", "1.4.2") Sortable
 
-		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.1.11") cotton-carrier
+		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.2.0") cotton-carrier
 		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.0.0") cotton-push
 		WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "1.0.5") cotton-translator
 		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "1.1.4") cotton-zombie
 		WebComponent("https://bitbucket.org/cottons/cotton-checkbox.git", "1.0.6") cotton-checkbox
 		WebComponent("https://bitbucket.org/cottons/cotton-cookies.git", "2.0.2") cotton-cookies
 		WebComponent("https://bitbucket.org/cottons/cotton-list.git", "1.0.15") cotton-list
-		WebComponent("https://bitbucket.org/cottons/cotton-breadcrumbs.git", "1.0.7") cotton-breadcrumbs
+		WebComponent("https://bitbucket.org/cottons/cotton-breadcrumbs.git", "1.1.0") cotton-breadcrumbs
 		WebComponent("https://bitbucket.org/cottons/cotton-layout.git", "1.1.23") cotton-layout
 		WebComponent("https://bitbucket.org/cottons/cotton-delay-executor.git", "1.0.0") cotton-delay-executor
 		WebComponent("https://bitbucket.org/cottons/cotton-timeline.git", "1.0.1") cotton-timeline
