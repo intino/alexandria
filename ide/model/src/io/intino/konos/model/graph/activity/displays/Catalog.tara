@@ -44,7 +44,9 @@ Concept Toolbar is decorable component
 	Concept:{0..1} TaskSelection extends Operation
 
 	Concept:{0..1} Download extends Operation
+		var string[] options = empty
 	Concept:{0..1} DownloadSelection extends Operation
+		var string[] options = empty
 
 	Concept:{0..1} Export extends Operation
 	Concept:{0..1} ExportSelection extends Operation

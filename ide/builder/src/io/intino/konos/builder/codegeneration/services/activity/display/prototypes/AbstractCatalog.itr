@@ -172,11 +172,11 @@ def trigger(openCatalogFilter)
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, session) -> $catalog+FirstUpperCase.Toolbar.download(box, element, option, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, options, session) -> $catalog+FirstUpperCase.Toolbar.download(box, (Catalog) element, options, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.export(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.export(box, (Catalog) element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openDialog) trigger(operation)
@@ -184,15 +184,15 @@ def type(operation & openDialog) trigger(operation)
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.task(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & downloadselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.DownloadSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.downloadSelection(box, element, option, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.DownloadSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.downloadSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object) selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & exportselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.ExportSelection().execute((element, from, to, selection, session) -> $catalog+firstUpperCase.Toolbar.exportSelection(box, element, from, to, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.ExportSelection().execute((element, from, to, selection, session) -> $catalog+firstUpperCase.Toolbar.exportSelection(box, (Catalog) element, from, to, (java.util.List<$type>)(Object) selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & groupingselection) trigger(operation)
@@ -200,7 +200,7 @@ def type(operation & groupingselection) trigger(operation)
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, element, option, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(listview) trigger(add)

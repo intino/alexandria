@@ -447,7 +447,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		if (operation instanceof Task) {
 			Task taskOperation = (Task)operation;
-			Task.Refresh refresh = taskOperation.execute(element(), session());
+			Task.Refresh refresh = taskOperation.execute(element(), id(), session());
 			if (refresh == Task.Refresh.Catalog)
 				this.refresh();
 			return;
