@@ -11,9 +11,9 @@ public class Task extends Operation {
 		return this;
 	}
 
-	public Refresh execute(Element element, String option, ActivitySession session) {
+	public Refresh execute(Element element, ActivitySession session) {
 		if (launcher == null) return Refresh.None;
-		return launcher.execute(element, option, session);
+		return launcher.execute(element, session);
 	}
 
 	public enum Refresh {
@@ -21,6 +21,6 @@ public class Task extends Operation {
 	}
 
 	public interface Execution {
-		Refresh execute(Element element, String option, ActivitySession session);
+		Refresh execute(Element element, ActivitySession session);
 	}
 }
