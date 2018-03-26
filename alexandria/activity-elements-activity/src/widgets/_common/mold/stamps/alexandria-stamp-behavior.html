@@ -7,7 +7,8 @@
 
         properties : {
             stamp : { type: Object, observer: '_init', value: function() { return null; } },
-            _style: { type: String, value: function() { return ""; } }
+            _style: { type: String, value: function() { return ""; } },
+            _zombie : Object
         },
 
         _init : function() {
@@ -28,6 +29,12 @@
             this._style = style;
         },
 
+        _removeZombieLayer : function() {
+            if (this._zombie == null) return;
+            this._zombie.remove();
+            this._zombie = null;
+        },
+
         _addZombieLayer : function(layer, name, widget, object) {
             var zombie = document.createElement("cotton-zombie");
             zombie.setAttribute("display", name);
@@ -35,6 +42,7 @@
             if (object != null) zombie.setAttribute("object", object);
             layer.appendChild(zombie);
             this.fire("stamp-ready");
+            this._zombie = zombie;
             return zombie;
         }
 

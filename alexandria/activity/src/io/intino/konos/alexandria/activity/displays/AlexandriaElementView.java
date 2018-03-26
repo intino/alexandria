@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.activity.model.Panel;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
+import io.intino.konos.alexandria.activity.schemas.Position;
 
 import java.util.function.Consumer;
 
@@ -38,15 +39,18 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 
 	interface OpenItemDialogEvent {
 		Item item();
+		Stamp stamp();
 		AlexandriaDialog dialog();
 	}
 
 	interface OpenItemCatalogEvent {
-		Item sender();
+		Item item();
+		Stamp stamp();
 		Catalog catalog();
+		Position position();
+		String itemToShow();
 		boolean filtered();
 		boolean filter(Item target);
-		String itemToShow();
 	}
 
 	interface ExecuteItemTaskEvent {
@@ -54,4 +58,5 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 		Stamp stamp();
 		AlexandriaDisplay self();
 	}
+
 }

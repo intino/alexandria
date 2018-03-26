@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.model.mold;
 
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +54,8 @@ public class Block {
 		return this;
 	}
 
-	public boolean hidden(Item item) {
-		return hidden != null && hidden.hidden(item != null ? item.object() : null);
+	public boolean hidden(Item item, ActivitySession session) {
+		return hidden != null && hidden.hidden(item != null ? item.object() : null, session);
 	}
 
 	public Block hidden(Hidden hidden) {
@@ -112,15 +113,10 @@ public class Block {
 	}
 
 	public interface Hidden {
-		boolean hidden(Object object);
+		boolean hidden(Object object, ActivitySession session);
 	}
 
 	private static Hidden defaultHidden() {
-		return new Hidden() {
-			@Override
-			public boolean hidden(Object object) {
-				return false;
-			}
-		};
+		return (object, session) -> false;
 	}
 }

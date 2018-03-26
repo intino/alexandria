@@ -18,8 +18,8 @@ AlexandriaCatalogBehaviors.NotifierListener = {
         this.when("refreshBreadcrumbs").toSelf().execute(function(parameters) {
         	widget._refreshBreadcrumbs(parameters.value);
         });
-        this.when("showDialog").toSelf().execute(function(parameters) {
-        	widget._showDialog();
+        this.when("showDialogBox").toSelf().execute(function(parameters) {
+        	widget._showDialogBox();
         });
         this.when("createPanel").toSelf().execute(function(parameters) {
         	widget._createPanel(parameters.value);

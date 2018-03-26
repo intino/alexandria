@@ -11,6 +11,7 @@ import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.CatalogEvent;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenCatalog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
 import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenPanel;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -19,8 +20,6 @@ import java.io.File;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-
-import io.intino.konos.model.graph.Catalog.Events.OnClickRecord.OpenDialog;
 
 public class CatalogRenderer extends PrototypeRenderer {
 
@@ -224,9 +223,10 @@ public class CatalogRenderer extends PrototypeRenderer {
 				frame.addSlot("operation", frameOf(toolbar.exportSelection(), owner, box, modelClass, packageName));
 			if (operation.i$(DownloadSelection.class))
 				frame.addSlot("operation", frameOf(toolbar.downloadSelection(), owner, box, modelClass, packageName));
-// TODO MC filtros
-//			if (operation.i$(GroupingSelection.class))
-//				frame.addSlot("operation", frameOf(toolbar.groupingSelection(), owner, box, modelClass, packageName));
+			if (operation.i$(OpenCatalog.class))
+				frame.addSlot("operation", frameOf(toolbar.openCatalog(), owner, box, modelClass, packageName));
+			if (operation.i$(OpenCatalogSelection.class))
+				frame.addSlot("operation", frameOf(toolbar.openCatalogSelection(), owner, box, modelClass, packageName));
 		}
 		return frame;
 	}
@@ -238,9 +238,30 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("type", modelClass)
 				.addSlot("title", operation.title())
 				.addSlot("catalog", catalog.name$())
+				.addSlot("mode", operation.mode().toString())
 				.addSlot("package", packageName);
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
+		if (operation.i$(Toolbar.OpenCatalog.class)) {
+			Toolbar.OpenCatalog openCatalog = operation.a$(Toolbar.OpenCatalog.class);
+			frame.addSlot("width", openCatalog.width());
+			frame.addSlot("height", openCatalog.height());
+			frame.addSlot("position", openCatalog.position().toString());
+			frame.addSlot("openCatalog", openCatalog.catalog().name$());
+			frame.addSlot("view", openCatalog.views().stream().map(Layer::name$).toArray(String[]::new));
+			if (openCatalog.filtered()) frame.addSlot("openCatalogOperationFilter", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box));
+		}
+		if (operation.i$(OpenCatalogSelection.class)) {
+			OpenCatalogSelection openCatalogSelection = operation.a$(OpenCatalogSelection.class);
+			frame.addSlot("width", openCatalogSelection.width());
+			frame.addSlot("height", openCatalogSelection.height());
+			frame.addSlot("position", openCatalogSelection.position().toString());
+			frame.addSlot("openCatalog", openCatalogSelection.catalog().name$());
+			frame.addSlot("view", openCatalogSelection.views().stream().map(Layer::name$).toArray(String[]::new));
+			frame.addSlot("selection", openCatalogSelection.selection().toString());
+			if (openCatalogSelection.filtered()) frame.addSlot("openCatalogSelectionOperationFilter", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+			frame.addSlot("openCatalogSelectionOperation", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
+		}
 		return frame;
 	}
 

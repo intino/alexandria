@@ -39,6 +39,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private ItemDisplayProvider provider;
 	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<AlexandriaElementView.OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private boolean initialized = false;
 	private String emptyMessage = null;
@@ -81,6 +82,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 
 	public void onOpenItemDialog(Consumer<AlexandriaElementView.OpenItemDialogEvent> parameters) {
 		openItemDialogListeners.add(parameters);
+	}
+
+	public void onOpenItemCatalog(Consumer<AlexandriaElementView.OpenItemCatalogEvent> parameters) {
+		openItemCatalogListeners.add(parameters);
 	}
 
 	public void onExecuteItemTask(Consumer<AlexandriaElementView.ExecuteItemTaskEvent> parameters) {
@@ -142,8 +147,12 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		}
 	}
 
-	public void openItemDialogOperation(OpenItemDialogParameters params) {
+	public void openItemDialogOperation(OpenItemParameters params) {
 		openItemDialogListeners.forEach(l -> l.accept(ElementHelper.openItemDialogEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), session())));
+	}
+
+	public void openItemCatalogOperation(OpenItemParameters params) {
+		openItemCatalogListeners.forEach(l -> l.accept(ElementHelper.openItemCatalogEvent(itemOf(params.item()), provider.stamp(mold, params.stamp()), params.position(), context, session())));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {

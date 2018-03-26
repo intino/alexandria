@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.activity.display.prototypes;
 
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.model.graph.Display;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -48,6 +49,7 @@ public abstract class PrototypeRenderer {
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
 		template.add("shortType", value -> shortType(value.toString()));
+		template.add("quoted", Formatters.quoted());
 		return template;
 	}
 

@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class Rating extends Stamp<Double> {
 	private String ratingIcon;
+	private int max;
 
 	public String ratingIcon() {
 		return this.ratingIcon;
@@ -12,6 +13,15 @@ public class Rating extends Stamp<Double> {
 
 	public Rating ratingIcon(String ratingIcon) {
 		this.ratingIcon = ratingIcon;
+		return this;
+	}
+
+	public int max() {
+		return max;
+	}
+
+	public Rating max(int max) {
+		this.max = max;
 		return this;
 	}
 

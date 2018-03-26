@@ -56,7 +56,7 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	}
 
 	@Override
-	protected void showDialog() {
+	protected void showDialogBox() {
 	}
 
 	@Override

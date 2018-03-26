@@ -56,7 +56,7 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 	}
 
 	@Override
-	protected void showDialog() {
+	protected void showDialogBox() {
 	}
 
 	@Override

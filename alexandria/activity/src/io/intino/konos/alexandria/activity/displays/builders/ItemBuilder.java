@@ -74,7 +74,7 @@ public class ItemBuilder {
     }
 
     private static ItemBlock itemBlock(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl, Block block) {
-        return new ItemBlock().name(block.name()).hidden(block.hidden(item));
+        return new ItemBlock().name(block.name()).hidden(block.hidden(item, provider.session()));
     }
 
     private static List<ItemStamp> itemStampList(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {

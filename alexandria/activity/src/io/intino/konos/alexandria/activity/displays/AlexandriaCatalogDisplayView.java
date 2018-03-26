@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static java.util.Collections.emptyList;
+
 public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCatalogDisplayViewNotifier, Box> implements AlexandriaCatalogView {
     private ElementView<Catalog> view;
     private CatalogViewDisplayProvider provider;
@@ -50,6 +52,11 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
 
     @Override
     public void reset() {
+    }
+
+    @Override
+    public List<io.intino.konos.alexandria.activity.model.Item> selectedItems() {
+        return emptyList();
     }
 
     @Override

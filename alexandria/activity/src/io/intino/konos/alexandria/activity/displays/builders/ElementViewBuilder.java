@@ -43,6 +43,7 @@ public class ElementViewBuilder {
         Operation result = new Operation().title(operation.title()).name(operation.name());
 
         result.type(type(operation));
+        result.mode(operation.mode().toString());
         result.icon(operation.alexandriaIcon());
         result.when(when(operation));
         result.propertyList(propertiesOf(operation));
@@ -52,7 +53,8 @@ public class ElementViewBuilder {
 
     private static String when(io.intino.konos.alexandria.activity.model.toolbar.Operation operation) {
         if ((operation instanceof TaskSelection) || (operation instanceof ExportSelection) ||
-            (operation instanceof DownloadSelection) || (operation instanceof GroupingSelection))
+            (operation instanceof DownloadSelection) || (operation instanceof GroupingSelection) ||
+            (operation instanceof OpenCatalogSelection))
             return "Selection";
         return "Always";
     }
@@ -91,6 +93,7 @@ public class ElementViewBuilder {
     private static String type(io.intino.konos.alexandria.activity.model.toolbar.Operation operation) {
         if (operation instanceof Download || operation instanceof DownloadSelection) return "download";
         if (operation instanceof Export || operation instanceof ExportSelection) return "export";
+        if (operation instanceof OpenCatalog || operation instanceof OpenCatalogSelection) return "open-catalog";
         if (operation instanceof OpenDialog) return "open-dialog";
         if (operation instanceof GroupingSelection) return "grouping";
         return "operation";

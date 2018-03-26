@@ -64,7 +64,7 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 	}
 
 	@Override
-	protected void showDialog() {
+	protected void showDialogBox() {
 	}
 
 	@Override
