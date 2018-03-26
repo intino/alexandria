@@ -60,8 +60,8 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
-	protected void showDialog() {
-		notifier.showDialog();
+	protected void showDialogBox() {
+		notifier.showDialogBox();
 	}
 
 	@Override

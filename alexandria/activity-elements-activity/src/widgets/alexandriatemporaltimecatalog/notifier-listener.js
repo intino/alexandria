@@ -21,8 +21,8 @@ AlexandriaTemporalTimeCatalogBehaviors.NotifierListener = {
         this.when("refreshNavigatorLayout").toSelf().execute(function(parameters) {
         	widget._refreshNavigatorLayout(parameters.value);
         });
-        this.when("showDialog").toSelf().execute(function(parameters) {
-        	widget._showDialog();
+        this.when("showDialogBox").toSelf().execute(function(parameters) {
+        	widget._showDialogBox();
         });
         this.when("showTimeNavigator").toSelf().execute(function(parameters) {
         	widget._showTimeNavigator();

@@ -33,6 +33,7 @@ public class AlexandriaPanelCustomView extends AlexandriaPanelView<AlexandriaPan
 		display.provider(itemDisplayProvider(provider(), view));
 		display.onOpenItem(this::notifyOpenItem);
 		display.onOpenItemDialog(this::notifyOpenItemDialog);
+		display.onOpenItemCatalog(this::notifyOpenItemCatalog);
 		display.onExecuteItemTask(this::notifyExecuteItemTaskOperation);
 		add(display);
 		display.personifyOnce();

@@ -1,15 +1,16 @@
 dsl Konos
 
+use Displays
 use Mold
 use Schemas
 
 Display alexandriaCatalog
-	displays = alexandriaCatalogViewList alexandriaDialogContainer alexandriaItem alexandriaMold
+	displays = alexandriaCatalogViewList alexandriaDialogBox alexandriaItem alexandriaMold
 
 	Notification refreshCatalog as Object(Catalog)
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
-	Notification showDialog
+	Notification showDialogBox
 	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
@@ -21,13 +22,13 @@ Display alexandriaCatalog
 	Request navigateMain
 
 Display alexandriaTemporalRangeCatalog
-	displays = alexandriaCatalogViewList alexandriaDialogContainer alexandriaItem alexandriaTimeRangeNavigator
+	displays = alexandriaCatalogViewList alexandriaDialogBox alexandriaItem alexandriaTimeRangeNavigator
 
 	Notification refreshCatalog as Object(Catalog)
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
 	Notification refreshNavigatorLayout as Text
-	Notification showDialog
+	Notification showDialogBox
 	Notification showTimeRangeNavigator
 	Notification hideTimeRangeNavigator
 	Notification createPanel as Object(CreatePanelParameters)
@@ -42,13 +43,13 @@ Display alexandriaTemporalRangeCatalog
 	Request navigateMain
 
 Display alexandriaTemporalTimeCatalog
-	displays = alexandriaCatalogViewList alexandriaDialogContainer alexandriaItem alexandriaTimeNavigator
+	displays = alexandriaCatalogViewList alexandriaDialogBox alexandriaItem alexandriaTimeNavigator
 
 	Notification refreshCatalog as Object(Catalog)
 	Notification refreshFiltered as Bool
 	Notification refreshBreadcrumbs as Text
 	Notification refreshNavigatorLayout as Text
-	Notification showDialog
+	Notification showDialogBox
 	Notification showTimeNavigator
 	Notification hideTimeNavigator
 	Notification createPanel as Object(CreatePanelParameters)
@@ -73,7 +74,8 @@ Display alexandriaItem
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
-	Request openItemDialogOperation as Object(OpenItemDialogParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
+	Request openItemCatalogOperation as Object(OpenItemParameters)
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
 	Request(Asset) exportItemOperation as Object(ExportItemParameters)
@@ -113,7 +115,8 @@ Display alexandriaCatalogListView
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
-	Request openItemDialogOperation as Object(OpenItemDialogParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
+	Request openItemCatalogOperation as Object(OpenItemParameters)
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
 	Request saveItem as Object(SaveItemParameters)
@@ -135,20 +138,13 @@ Display alexandriaCatalogMapView
 	Request openItem as Text
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
-	Request openItemDialogOperation as Object(OpenItemDialogParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
 
 Display alexandriaCatalogDisplayView
 	Notification refreshView as Object(ElementView)
 	Notification displayType as Text
-
-Display alexandriaDialogContainer
-	displays = empty
-
-	Notification refreshDialog as Object(DialogReference)
-	Notification closeDialog
-	Request dialogAssertionMade as Text
 
 Display alexandriaPageContainer
 	displays = empty

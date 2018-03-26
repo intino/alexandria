@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogViewListNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.catalog.views.*;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+	private List<Consumer<List<Item>>> selectItemListeners = new ArrayList<>();
 	private Map<String, AlexandriaCatalogView> viewDisplayMap = new HashMap<>();
 
 	private static final String ViewId = "%s%s";
@@ -62,6 +64,10 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 
 	public void onExecuteItemTask(Consumer<AlexandriaElementView.ExecuteItemTaskEvent> listener) {
 		executeItemTaskListeners.add(listener);
+	}
+
+	public void onSelectItems(Consumer<List<Item>> listener) {
+		selectItemListeners.add(listener);
 	}
 
 	public List<AlexandriaCatalogView> viewList() {
@@ -147,9 +153,14 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		display.onOpenItemDialog(this::openItemDialog);
 		display.onOpenItemCatalog(this::openItemCatalog);
 		display.onExecuteItemTask(this::executeTask);
+		if (display instanceof PageDisplay) ((PageDisplay) display).onSelectItems((selection) -> selectItems((List<Item>) selection));
 		display.view(view);
 		display.onLoading(this::notifyLoading);
 		viewDisplayMap.put(view.name(), display);
+	}
+
+	private void selectItems(List<Item> selection) {
+		selectItemListeners.forEach(l -> l.accept(selection));
 	}
 
 	private void openItem(AlexandriaElementView.OpenItemEvent parameters) {

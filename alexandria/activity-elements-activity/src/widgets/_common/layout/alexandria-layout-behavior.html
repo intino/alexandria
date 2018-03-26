@@ -19,7 +19,8 @@
         properties : {
             _itemList: { type: Array, observer: '_itemsLoaded' },
             _itemTabList: Array,
-            _selectedItem: { type: Number, notify: true, observer: '_selectItemByLabel' },
+            _selectedItem : { type: String, observer: '_selectItemByLabel' },
+            _selectedItemIndex: Number,
             _title : String,
             _subtitle : String,
             _logo : String,
@@ -40,7 +41,7 @@
             itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
             this._itemList = itemList;
             this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
-            this._selectedItem = this._loadDefaultItem(itemList);
+            this._loadDefaultItem(itemList);
         },
 
         _itemProperty : function(item, property) {
@@ -53,26 +54,32 @@
         },
 
         _selectItemByLabel : function(label) {
+            if (this._refreshingSelected) return;
+            this._selectItemDelayed(label);
         },
 
-        _selectItem : function(event) {
+        _selectItemByIndex : function(event) {
+            if (this._refreshingSelected) return;
             if (this._itemList == null) return;
+            this._selectItemDelayed(event.detail);
+        },
 
-            var index = this._indexOf(event.detail);
-            if (index == this._selectedItem) return;
-            if (event.detail == "noItems") return;
-
-            this._selectedItem = index;
-            window.setTimeout(() => {
-                if (this._itemList[this._selectedItem] == null) return;
-            var label = this._itemList[this._selectedItem].label;
+        _selectItemDelayed : function(label) {
+            if (this._selectItemTimeout != null) window.clearTimeout(this._selectItemTimeout);
+            this._selectItemTimeout = window.setTimeout(() => {
+                if (label == "noItems") return;
+            if (this._selectedItemIndex == this._indexOf(label)) return;
             this.selectItem(label);
-            this._saveDefaultItem(label);
         }, 100);
         },
 
         _refreshSelected : function(selected) {
-            this._selectedItem = this._indexOf(selected);
+            if (this._selectedItem == selected) return;
+            this._refreshingSelected = true;
+            this._selectedItem = selected;
+            this._selectedItemIndex = this._indexOf(selected);
+            this._saveDefaultItem(selected);
+            this._refreshingSelected = false;
         },
 
         _indexOf : function(label) {
@@ -121,7 +128,7 @@
                 var label = Cookies.get("alexandria-layout");
                 label = label != null && label !== "" ? label : (itemList.length > 0 ? itemList[0].label : null);
                 if (this._indexOf(label) == -1) label = (itemList.length > 0 ? itemList[0].label : null);
-                return label;
+                this._selectItemByLabel(label);
             }
             catch(e) {
                 return itemList.length > 0 ? itemList[0].label : null;

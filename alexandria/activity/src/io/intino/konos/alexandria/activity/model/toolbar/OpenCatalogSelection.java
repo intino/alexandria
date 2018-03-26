@@ -1,19 +1,17 @@
-package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
+package io.intino.konos.alexandria.activity.model.toolbar;
 
 import io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog;
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
-public class OpenCatalogOperation extends Operation<String> {
+public class OpenCatalogSelection extends Operation {
 	private int width = 100;
+	private int height = 100;
 	private List<String> views = new ArrayList<>();
 	private Catalog catalog;
 	private CatalogDisplayBuilder catalogDisplayBuilder;
@@ -25,16 +23,25 @@ public class OpenCatalogOperation extends Operation<String> {
 	public enum Position { Standalone, RelativeToOperation };
 	public enum Selection { None, Single, Multiple };
 
-	public OpenCatalogOperation() {
-		alexandriaIcon("icons:dns");
+	public OpenCatalogSelection() {
+		alexandriaIcon("icons:list");
 	}
 
 	public int width() {
 		return this.width;
 	}
 
-	public OpenCatalogOperation width(int width) {
+	public OpenCatalogSelection width(int width) {
 		this.width = width;
+		return this;
+	}
+
+	public int height() {
+		return this.height;
+	}
+
+	public OpenCatalogSelection height(int height) {
+		this.height = height;
 		return this;
 	}
 
@@ -42,7 +49,7 @@ public class OpenCatalogOperation extends Operation<String> {
 		return views;
 	}
 
-	public OpenCatalogOperation views(List<String> views) {
+	public OpenCatalogSelection views(List<String> views) {
 		this.views = views;
 		return this;
 	}
@@ -51,7 +58,7 @@ public class OpenCatalogOperation extends Operation<String> {
 		return this.catalog;
 	}
 
-	public OpenCatalogOperation catalog(Catalog catalog) {
+	public OpenCatalogSelection catalog(Catalog catalog) {
 		this.catalog = catalog;
 		return this;
 	}
@@ -63,7 +70,7 @@ public class OpenCatalogOperation extends Operation<String> {
 		return catalog;
 	}
 
-	public OpenCatalogOperation catalogDisplayBuilder(CatalogDisplayBuilder builder) {
+	public OpenCatalogSelection catalogDisplayBuilder(CatalogDisplayBuilder builder) {
 		this.catalogDisplayBuilder = builder;
 		return this;
 	}
@@ -72,14 +79,12 @@ public class OpenCatalogOperation extends Operation<String> {
 		return filter != null;
 	}
 
-	public boolean filter(Element context, Item target, Item item, ActivitySession session) {
+	public boolean filter(Element context, List<Item> selection, Item item, ActivitySession session) {
 		if (filter == null) return true;
-		if (target == null && item == null) return true;
-		if (target == null || item == null) return false;
-		return filter.filter(context, target.object(), item.object(), session);
+		return filter.filter(context, objects(selection), item != null ? item.object() : null, session);
 	}
 
-	public OpenCatalogOperation filter(Filter filter) {
+	public OpenCatalogSelection filter(Filter filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -88,11 +93,11 @@ public class OpenCatalogOperation extends Operation<String> {
 		return position;
 	}
 
-	public OpenCatalogOperation position(String position) {
+	public OpenCatalogSelection position(String position) {
 		return position(Position.valueOf(position));
 	}
 
-	public OpenCatalogOperation position(Position position) {
+	public OpenCatalogSelection position(Position position) {
 		this.position = position;
 		return this;
 	}
@@ -101,21 +106,21 @@ public class OpenCatalogOperation extends Operation<String> {
 		return selection;
 	}
 
-	public OpenCatalogOperation selection(String selection) {
+	public OpenCatalogSelection selection(String selection) {
 		return selection(Selection.valueOf(selection));
 	}
 
-	public OpenCatalogOperation selection(Selection selection) {
+	public OpenCatalogSelection selection(Selection selection) {
 		this.selection = selection;
 		return this;
 	}
 
-	public Refresh execute(Item target, List<Item> items, ActivitySession session) {
+	public Refresh execute(Element element, List<Item> selection, List<Item> openCatalogSelection, ActivitySession session) {
 		if (execution == null) return Refresh.None;
-		return execution.execute(target != null ? target.object() : null, items.stream().map(Item::object).collect(toList()), session);
+		return execution.execute(element, objects(selection), objects(openCatalogSelection), session);
 	}
 
-	public OpenCatalogOperation execution(Execution execution) {
+	public OpenCatalogSelection execution(Execution execution) {
 		this.execution = execution;
 		return this;
 	}
@@ -125,11 +130,11 @@ public class OpenCatalogOperation extends Operation<String> {
 	}
 
 	public interface Filter {
-		boolean filter(Element context, Object target, Object object, ActivitySession session);
+		boolean filter(Element context, List<Object> selection, Object object, ActivitySession session);
 	}
 
 	public interface Execution {
-		Refresh execute(Object target, List<Object> items, ActivitySession session);
+		Refresh execute(Element element, List<Object> selection, List<Object> openCatalogSelection, ActivitySession session);
 	}
 
 	public enum Refresh {

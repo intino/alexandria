@@ -36,7 +36,7 @@ Concept Catalog extends Display
 
 Concept Toolbar is decorable component
 	var boolean canSearch = true
-//TODO MC -> Filtros	Concept:{0..1} GroupingSelection extends Operation
+
 	Concept:{0..1} OpenDialog extends Operation
 		var Dialog dialog
 
@@ -50,6 +50,22 @@ Concept Toolbar is decorable component
 
 	Concept:{0..1} Export extends Operation
 	Concept:{0..1} ExportSelection extends Operation
+
+	Concept:{0..1} OpenCatalog extends Operation
+		var Catalog catalog
+		var CatalogView[] views
+		var boolean filtered = false
+		var integer:{%} width = 100%
+		var integer:{%} height = 100%
+		var word:{Standalone RelativeToOperation} position = Standalone
+	Concept:{0..1} OpenCatalogSelection extends Operation
+		var Catalog catalog
+		var CatalogView[] views
+		var boolean filtered = false
+		var word:{None Single Multiple} selection = None
+		var word:{Standalone RelativeToOperation} position = Standalone
+		var integer:{%} width = 100%
+		var integer:{%} height = 100%
 
 Concept TemporalCatalog extends Catalog
 	var word:{Time Range} type

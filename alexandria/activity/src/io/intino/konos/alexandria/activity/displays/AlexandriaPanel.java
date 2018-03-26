@@ -72,8 +72,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
-	protected void showDialog() {
-		notifier.showDialog();
+	protected void showDialogBox() {
+		notifier.showDialogBox();
 	}
 
 	@Override

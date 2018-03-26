@@ -109,17 +109,17 @@
             },
 
             _displayType : function(type) {
-                this._createZombie(this.$.drawer, type, null, "AlexandriaMenuLayoutMobile");
-                this._createZombie(this.$.main, type, "layoutZombie", type);
-                this.querySelector("#layoutZombie").whenPersonified().execute(() => this.menuButtonHidden = true);
+                this._createZombie(this.$.drawer, type, "AlexandriaMenuLayoutMobile");
+                var layoutZombie = this._createZombie(this.$.main, type, type);
+                layoutZombie.whenPersonified().execute(() => this.menuButtonHidden = true);
             },
 
-            _createZombie : function(container, type, id, widget) {
+            _createZombie : function(container, type, widget) {
                 var zombie = document.createElement("cotton-zombie");
-                if (id != null) zombie.setAttribute("id", id);
                 zombie.setAttribute("display", type);
                 zombie.setAttribute("widget", widget);
                 container.appendChild(zombie);
+                return zombie;
             },
 
             _loading : function(withMessage) {

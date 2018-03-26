@@ -1,9 +1,18 @@
 package io.intino.konos.alexandria.activity.model.toolbar;
 
+import io.intino.konos.alexandria.activity.model.Item;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 public class Operation {
 	private String name;
 	private String title;
+	private Mode mode;
 	private String alexandriaIcon;
+
+	public enum Mode { Button, Link, Icon, Chip }
 
 	public String name() {
 		return name;
@@ -23,6 +32,19 @@ public class Operation {
 		return this;
 	}
 
+	public Operation.Mode mode() {
+		return mode;
+	}
+
+	public Operation mode(String mode) {
+		return mode(Operation.Mode.valueOf(mode));
+	}
+
+	public Operation mode(Operation.Mode mode) {
+		this.mode = mode;
+		return this;
+	}
+
 	public String alexandriaIcon() {
 		return alexandriaIcon;
 	}
@@ -31,4 +53,9 @@ public class Operation {
 		this.alexandriaIcon = icon;
 		return this;
 	}
+
+	protected List<Object> objects(List<Item> items) {
+		return items.stream().map(Item::object).collect(toList());
+	}
+
 }

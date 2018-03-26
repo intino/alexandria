@@ -20,6 +20,9 @@ AlexandriaItemBehaviors.Requester = {
     openItemDialogOperation : function(value) {
     	this.carry("openItemDialogOperation", { "value" : value });
     },
+    openItemCatalogOperation : function(value) {
+    	this.carry("openItemCatalogOperation", { "value" : value });
+    },
     executeItemTaskOperation : function(value) {
     	this.carry("executeItemTaskOperation", { "value" : value });
     },

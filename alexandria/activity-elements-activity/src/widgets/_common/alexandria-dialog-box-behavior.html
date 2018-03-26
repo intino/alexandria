@@ -3,14 +3,30 @@
 
     var AlexandriaBehaviors = AlexandriaBehaviors || {};
 
-    AlexandriaBehaviors.DialogBehavior = {
+    AlexandriaBehaviors.DialogBoxBehavior = {
+
+        Dictionary : {
+            es : {
+                Accept : "aceptar"
+            },
+            en : {
+                Accept : "accept"
+            }
+        },
 
         properties : {
             _width : { type: Number, value: function() { return 100; } },
-            _height : { type: Number, value: function() { return 100; } }
+            _height : { type: Number, value: function() { return 100; } },
+            _position : { type: Object, value: function() { return null; } },
+            _toolbarVisible : { type: Boolean, value: function() { return false; } }
         },
 
         listeners: { 'iron-resize': '_fitDialog' },
+
+        _resize : function() {
+            if (this._position != null) this._updatePosition();
+            this._fitDialog();
+        },
 
         _fitDialog : function() {
             var style = "";
@@ -55,6 +71,18 @@
 
         _closeDialog : function() {
             this.close();
+        },
+
+        _updatePosition : function() {
+            var dialog = this.$.dialog;
+            var left = this._position.left;
+            var top = this._position.top;
+            var windowWidth = $(window).width();
+            var dialogWidth = $(dialog).width();
+            var position = left > windowWidth ? "right" : ((left + $(dialog).width()) > windowWidth ? "center" : "left");
+            left = position === "left" ? left : left - (position === "center" ? dialogWidth/2 : dialogWidth);
+            dialog.style.top = (top + 5) + "px";
+            dialog.style.left = (left + 3) + "px";
         }
 
     };

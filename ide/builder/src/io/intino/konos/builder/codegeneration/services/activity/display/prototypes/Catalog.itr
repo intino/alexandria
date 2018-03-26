@@ -168,7 +168,7 @@ end
 
 def trigger(openCatalogFilter)
 	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, ActivitySession session) {
-		return false;
+		return true;
 	}
 end
 
@@ -188,7 +188,6 @@ def type(view & displayView)
 		}
 	}
 end
-
 
 def type(arrangement & grouping)
 	public static java.util.List<io.intino.konos.alexandria.activity.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, ActivitySession session) {
@@ -235,5 +234,33 @@ end
 def type(operation & taskselection)
 	public static io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, String option, java.util.List<$type> selection, ActivitySession session) {
 		return io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh.None;
+	}
+end
+
+def type(operation & openCatalog)
+	[$openCatalogOperationFilter]
+end
+
+def trigger(openCatalogOperationFilter)
+	public static boolean openCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, Object object, ActivitySession session) {
+		return true;
+	}
+end
+
+def type(operation & openCatalogSelection)
+	[$openCatalogSelectionOperationFilter]
+	$openCatalogSelectionOperation
+end
+
+def trigger(openCatalogSelectionOperationFilter)
+	public static boolean openCatalogSelectionFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, java.util.List<$type> selection, Object object, ActivitySession session) {
+		return true;
+	}
+end
+
+def trigger(openCatalogSelectionOperation)
+	public static io.intino.konos.alexandria.activity.model.toolbar.OpenCatalogSelection.Refresh openCatalogSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, java.util.List<$type> selection, java.util.List<Object> openCatalogSelection, ActivitySession session) {
+		return io.intino.konos.alexandria.activity.model.toolbar.OpenCatalogSelection.Refresh.None;
+
 	}
 end

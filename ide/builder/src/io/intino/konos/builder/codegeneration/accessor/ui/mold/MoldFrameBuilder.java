@@ -102,7 +102,11 @@ public class MoldFrameBuilder extends Frame {
 	private void addCustomProperties(List<Frame> propertyList, Block.Stamp stamp) {
 		if (stamp.i$(Block.Icon.class))
 			propertyList.add(frameOf("iconType", stamp.a$(Block.Icon.class).source() == Block.Icon.Source.Polymer ? "alexandria" : ""));
-		if (stamp.i$(Block.Rating.class)) propertyList.add(frameOf("icon", stamp.a$(Block.Rating.class).polymerIcon()));
+		if (stamp.i$(Block.Rating.class)) {
+			Block.Rating rating = stamp.a$(Block.Rating.class);
+			propertyList.add(frameOf("icon", rating.polymerIcon()));
+			propertyList.add(frameOf("max", rating.max(), "number"));
+		}
 		if (stamp.i$(Block.EmbeddedDisplay.class))
 			propertyList.add(frameOf("displayType", stamp.a$(Block.EmbeddedDisplay.class).display().name$()));
 		if (stamp.i$(Block.EmbeddedDialog.class))

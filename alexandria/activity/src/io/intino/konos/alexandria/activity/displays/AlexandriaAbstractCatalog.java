@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toMap;
 public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends AlexandriaDisplayNotifier> extends AlexandriaElementDisplay<E, DN> implements CatalogViewDisplayProvider {
 	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
 	private List<Consumer<OpenElementEvent>> openElementListeners = new ArrayList<>();
+	private List<Consumer<List<Item>>> selectItemListeners = new ArrayList<>();
 	private String condition = null;
 	private String currentItem = null;
 	protected Map<String, GroupingSelection> groupingSelectionMap = new HashMap<>();
@@ -97,6 +98,13 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 			groupingSelection.groups().remove(group.label());
 			selectGrouping(groupingSelection);
 		}
+	}
+
+	@Override
+	public void forceRefresh() {
+		super.forceRefresh();
+		createGroupingManager();
+		reloadGroupings();
 	}
 
 	public void refresh(Grouping grouping) {
@@ -352,6 +360,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		display.itemProvider(this);
 		display.viewList(viewList());
 		display.onSelectView(this::updateCurrentView);
+		display.onSelectItems(this::itemsSelected);
 		display.onOpenItem(this::openItem);
 		display.onOpenItemDialog(this::openItemDialog);
 		display.onOpenItemCatalog(this::openItemCatalog);
@@ -385,6 +394,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	public void maxItems(int max) {
 		element().mode(Catalog.Mode.Preview);
 		this.maxItems = max;
+	}
+
+	public void onSelectItems(Consumer<List<Item>> listener) {
+		selectItemListeners.add(listener);
 	}
 
 	private Scope calculateScope(boolean addAttachedGrouping) {
@@ -474,6 +487,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	protected void reloadGroupings() {
 		sendCatalog();
+	}
+
+	private void itemsSelected(List<Item> selection) {
+		selectItemListeners.forEach(l -> l.accept(selection));
 	}
 
 }

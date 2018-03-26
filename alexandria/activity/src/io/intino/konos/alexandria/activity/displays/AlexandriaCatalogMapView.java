@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.*;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapViewNotifier> implements AlexandriaCatalogView {
 	private ElementView view;
@@ -73,6 +74,11 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 	}
 
 	@Override
+	public List<io.intino.konos.alexandria.activity.model.Item> selectedItems() {
+		return selection().stream().map(this::itemOf).collect(toList());
+	}
+
+	@Override
 	public void onLoading(Consumer<Boolean> listener) {
 		loadingListeners.add(listener);
 	}
@@ -108,8 +114,11 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 		notifyLoading(false);
 	}
 
-	public void openItemDialogOperation(OpenItemDialogParameters params) {
+	public void openItemDialogOperation(OpenItemParameters params) {
 		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session())));
+	}
+
+	public void openItemCatalogOperation(OpenItemParameters params) {
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
@@ -224,4 +233,5 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 	private io.intino.konos.alexandria.activity.model.Item itemOf(String item) {
 		return provider.item(item);
 	}
+
 }

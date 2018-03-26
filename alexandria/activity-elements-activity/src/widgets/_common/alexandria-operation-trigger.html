@@ -2,6 +2,7 @@
 <link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../lib/cotton-chip/cotton-chip.html">
 
 <dom-module id="alexandria-operation-trigger">
 
@@ -10,6 +11,7 @@
             <paper-icon-button style$="color:[[_color]];" class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
             <paper-button style$="color:[[_color]];" class="option Button" on-tap="_execute">[[_title]]</paper-button>
             <a style$="color:[[_color]];" class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+            <cotton-chip style$="color:[[_color]];" class="option Chip" text="[[_title]]" icon="[[icon]]" on-tap="_execute"></cotton-chip>
         </div>
     </template>
 
@@ -37,6 +39,9 @@
             display: block;
         }
         :host .mode.Link .option.Link {
+            display: block;
+        }
+        :host .mode.Chip .option.Chip {
             display: block;
         }
     </style>
@@ -76,6 +81,7 @@
 
             _execute : function(e) {
                 this.fire("execute");
+                e.stopPropagation();
             },
 
             _fillColor : function() {

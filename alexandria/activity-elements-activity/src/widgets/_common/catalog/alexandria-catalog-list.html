@@ -67,6 +67,7 @@
                                                                        item="[[item]]"
                                                                        mold="[[mold]]"
                                                                        on-open-dialog="_openStampDialog"
+                                                                       on-open-catalog="_openStampCatalog"
                                                                        on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
@@ -80,6 +81,7 @@
                                                                        mold="[[mold]]"
                                                                        mode="grid"
                                                                        on-open-dialog="_openStampDialog"
+                                                                       on-open-catalog="_openStampCatalog"
                                                                        on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
@@ -173,7 +175,7 @@
         :host .selection_false .content .selector {
             display: none;
         }
-        :host  .selection_true.selection_enabled_true .container .content .selector, :host .selection_true .container .content:hover .selector {
+        :host .selection_true.selection_enabled_true .container .content .selector, :host .selection_true .container .content:hover .selector {
             visibility: visible;
             opacity: 1;
         }
@@ -345,9 +347,9 @@
                 var height = -1;
                 list.querySelectorAll(".item.container").forEach(function(container) {
                     if (height == -1) height = $(container).height();
-                    $(container).height(height);
+                        $(container).height(height);
                 });
-            }, 100);
+                }, 100);
             },
 
             _listOffsetHeight : function() {
@@ -455,11 +457,15 @@
             },
 
             _selectionChanged: function() {
+                if (this._selectionChangeTimeout != null) {
+                    window.clearTimeout(this._selectionChangeTimeout);
+                    this._selectionChangeTimeout = null;
+                }
                 if (this.selectedItemList == null) return;
                 this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
                 this.$.items.fire("iron-resize");
                 let items = this.selectionOf(this.$.items).items;
-                this.fire("select-items", items);
+                this._selectionChangeTimeout = window.setTimeout(() => this.fire("select-items", items), 100);
                 this._updateSizeForItems(items);
                 this._updateCheckboxes(items);
             },
@@ -506,6 +512,10 @@
 
             _openStampDialog : function(event) {
                 this.fire("open-stamp-dialog", event.detail);
+            },
+
+            _openStampCatalog : function(event) {
+                this.fire("open-stamp-catalog", event.detail);
             },
 
             _executeStampTask : function(event) {

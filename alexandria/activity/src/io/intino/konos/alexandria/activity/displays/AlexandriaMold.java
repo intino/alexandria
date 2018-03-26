@@ -17,7 +17,7 @@ public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends 
     }
 
     @Override
-    protected void showDialog() {
+    protected void showDialogBox() {
     }
 
     @Override

@@ -39,7 +39,7 @@ def trigger(width)
 end
 
 def attribute(HiddenEnabled) trigger(hidden)
-	.hidden((object) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(($moldClass) object))
+	.hidden((object, session) -> $mold+FirstUpperCase.Blocks.$name+FirstUpperCase.hidden(box, ($moldClass) object, session))
 end
 
 def trigger(hidden)
@@ -122,7 +122,7 @@ def type(stamp & base64Icon)
 end
 
 def type(stamp & rating)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Rating()[.ratingIcon($ratingIcon+quoted)]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Rating().max($ratingMax)[.ratingIcon($ratingIcon+quoted)]$common)
 end
 
 def type(stamp & picture)
@@ -138,7 +138,7 @@ def type(stamp & openExternalDialogOperation)
 end
 
 def type(stamp & openCatalogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection").mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection")[.execution($openCatalogOperationExecution)].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)
@@ -226,6 +226,10 @@ end
 
 def trigger(taskExecution)
 	(object, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, selfId, session)
+end
+
+def trigger(openCatalogOperationExecution)
+	(object, selection, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, selection, session)
 end
 
 def trigger(filter)
