@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.intino.konos.alexandria.schema.Accessory.valueOf;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.lang.reflect.Modifier.isTransient;
 
@@ -64,7 +65,7 @@ public class Serializer {
 			if (isTransient(field.getModifiers())) continue;
 			if (isStatic(field.getModifiers())) continue;
 			if (!isAttribute(field)) continue;
-			Object value = valueOf(field);
+			Object value = valueOf(field, this.object);
 			if (isEmpty(value)) continue;
 			result.append(serializeAttribute(field)).append("\n");
 			collectResources(value);
@@ -77,7 +78,7 @@ public class Serializer {
 		for (Field field : Accessory.fieldsOf(object).asList()) {
 			if (isTransient(field.getModifiers())) continue;
 			if (isStatic(field.getModifiers())) continue;
-			if (isEmpty(valueOf(field))) continue;
+			if (isEmpty(valueOf(field, this.object))) continue;
 			if (isAttribute(field)) continue;
 			result.append(serializeComponent(field));
 		}
@@ -95,7 +96,7 @@ public class Serializer {
 	}
 
 	private String serializeAttribute(Field field) {
-		return map(field.getName()) + separatorFor(serializeAttributeValue(valueOf(field)));
+		return map(field.getName()) + separatorFor(serializeAttributeValue(valueOf(field, this.object)));
 	}
 
 	private String serializeAttributeValue(Object value) {
@@ -121,7 +122,7 @@ public class Serializer {
 	}
 
 	private String serializeComponent(Field field) {
-		Object object = valueOf(field);
+		Object object = valueOf(field, this.object);
 		if (object == null) return "";
 		return isList(field) ? serializeTable((List) object) : serializeItem(object);
 	}
@@ -138,32 +139,32 @@ public class Serializer {
 		return "\n" + (isPrimitive(aClass) || isArrayOfPrimitives(aClass) ? value.toString() : new Serializer(value, type(), mapping, resourceStore).toInl());
 	}
 
-	private boolean isAttribute(Field field) {
+	static boolean isAttribute(Field field) {
 		Class<?> aClass = field.getType();
 		return isPrimitive(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
 	}
 
-	private boolean isArrayOfPrimitives(Class<?> aClass) {
+	private static boolean isArrayOfPrimitives(Class<?> aClass) {
 		return aClass.isArray() && isPrimitive(aClass.getComponentType());
 	}
 
-	private boolean isListOfPrimitives(Field field) {
+	private static boolean isListOfPrimitives(Field field) {
 		return field.getType().isAssignableFrom(List.class) && isPrimitive(field.getGenericType().toString());
 	}
 
-	private boolean isPrimitive(Class<?> aClass) {
+	private static boolean isPrimitive(Class<?> aClass) {
 		return isPrimitive(aClass.getName()) || aClass.isPrimitive();
 	}
 
 	private static String[] primitives = {"java.lang", Resource.class.getName(), "java.time"};
 
-	private boolean isPrimitive(String className) {
+	private static boolean isPrimitive(String className) {
 		if (className.contains("<")) className = className.substring(className.indexOf('<') + 1);
 		for (String primitive : primitives) if (className.startsWith(primitive)) return true;
 		return false;
 	}
 
-	private boolean isEmpty(Object value) {
+	static boolean isEmpty(Object value) {
 		return value == null
 				|| value.getClass().isArray() && ((Object[]) value).length == 0
 				|| value instanceof List && ((List) value).isEmpty();
@@ -177,14 +178,6 @@ public class Serializer {
 		return object.getClass().getSimpleName();
 	}
 
-	private Object valueOf(Field field) {
-		try {
-			field.setAccessible(true);
-			return field.get(object);
-		} catch (IllegalAccessException e) {
-			return null;
-		}
-	}
 
 	public Serializer map(String from, String to) {
 		mapping.put(from, to);

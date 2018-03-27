@@ -2,6 +2,7 @@ package io.intino.konos.alexandria;
 
 
 import io.intino.konos.alexandria.schema.Deserializer;
+import io.intino.konos.alexandria.schema.ObjectToMessage;
 import io.intino.konos.alexandria.schema.Serializer;
 import io.intino.ness.inl.Loader;
 import io.intino.ness.inl.Message;
@@ -35,13 +36,16 @@ public class Inl {
 			T object = deserialize.next(aClass);
 			if (object == null) break;
 			list.add(object);
-
 		}
 		return list;
 	}
 
 	public static <T> List<T> deserializeAll(String text, Class<T> aClass) {
 		return deserializeAll(new ByteArrayInputStream(text.getBytes()), aClass);
+	}
+
+	public static Message toMessage(Object object) {
+		return ObjectToMessage.toMessage(object);
 	}
 
 	public static List<Message> load(String text) {
