@@ -27,9 +27,10 @@ public class ObjectToMessage {
 		return message;
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void convertAttribute(Message message, Field field, Object value) {
 		if (isList(field)) ((List) value).forEach(o -> writeAttribute(message, field, o));
-		else if (isArray(field)) Arrays.asList((Object[]) value).forEach(o -> writeAttribute(message, field, o));
+		else if (isArray(field)) Arrays.asList((Object[]) value).forEach(ob -> writeAttribute(message, field, ob));
 		else writeAttribute(message, field, value);
 	}
 

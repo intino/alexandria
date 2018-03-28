@@ -3,10 +3,7 @@ import io.intino.ness.inl.Message;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
-import schemas.AlertModified;
-import schemas.Country;
-import schemas.Menu;
-import schemas.Person;
+import schemas.*;
 
 import static java.util.Arrays.asList;
 import static messages.Messages.*;
@@ -60,15 +57,16 @@ public class ObjectToMessage {
 				"active: true\n" +
 				"mailingList: jbelizon@monentia.es\n" +
 				"applyToAllStations: false";
-		AlertModified object = Inl.deserialize(text).next(AlertModified.class);
+		AlertModified object = Inl.fromMessage(Message.load(text), AlertModified.class);
 		assertThat(object.mailingList().size(), is(1));
 		assertNotNull(object);
-		assertEquals(text, Inl.toMessage(object).toString());
+		final Message message = Inl.toMessage(object);
+		assertEquals(text, message.toString());
 	}
 
 	@Test
 	public void should_serialize_schema2() {
-		Inl_.InfrastructureOperation object = new Inl_.InfrastructureOperation();
-		Inl.serialize(object);
+		InfrastructureOperation object = new InfrastructureOperation();
+		Inl.toMessage(object);
 	}
 }
