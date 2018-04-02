@@ -1,6 +1,6 @@
 var AlexandriaDialogBehaviors = AlexandriaDialogBehaviors || {};
 
-AlexandriaDialogBehaviors.DialogBoxBehavior = {
+AlexandriaDialogBehaviors.DialogBehavior = {
     DialogDelegate : "lib/alexandria-activity-elements/dialogs/alpaca.html",
 
     properties : {

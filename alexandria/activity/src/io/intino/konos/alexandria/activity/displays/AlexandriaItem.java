@@ -285,7 +285,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private void sendInfo() {
-		sendInfo(ItemBuilder.build(item, new ItemBuilder.ItemBuilderProvider() {
+		sendInfo(ItemBuilder.build(item, item != null ? item.id() : id(), new ItemBuilder.ItemBuilderProvider() {
 			@Override
 			public List<Block> blocks() {
 				return provider.blocks(mold);
