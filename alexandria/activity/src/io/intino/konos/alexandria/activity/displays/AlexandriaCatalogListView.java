@@ -127,9 +127,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void selectItems(String[] records) {
-		List<String> newRecords = new ArrayList<>(Arrays.asList(records));
-		newRecords.removeAll(selection());
-		newRecords.forEach(record -> {
+		Arrays.stream(records).forEach(record -> {
 			if (!recordDisplaysMap.containsKey(record)) renderDisplays(record);
 			if (!recordDialogsMap.containsKey(record)) renderDialogs(record);
 			renderExpandedPictures(record);
@@ -138,13 +136,15 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void openItem(String value) {
-		selection(singletonList(value));
 
 		if (view.onClickRecordEvent() == null) {
 			if (provider.expandedStamps(view.mold()).size() > 0)
 				notifier.refreshSelection(selection().contains(value) ? emptyList() : singletonList(value));
+			selection(singletonList(value));
 			return;
 		}
+
+		selection(singletonList(value));
 
 		if (view.onClickRecordEvent().openPanel() != null)
 			notifyOpenItem(value);
@@ -400,6 +400,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		Stamp stamp = provider.stamp(view.mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
 		return ((EmbeddedCatalog)stamp).createCatalog(session());
+	}
+
+	@Override
+	public void fullRefresh() {
+		forceRefresh();
 	}
 
 	@Override

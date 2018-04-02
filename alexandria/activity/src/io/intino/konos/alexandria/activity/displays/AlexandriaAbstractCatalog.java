@@ -38,6 +38,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected GroupingManager groupingManager;
 	private String attachedGrouping = null;
 	private int maxItems = -1;
+	private boolean selectionEnabledByDefault = false;
 
 	public AlexandriaAbstractCatalog(Box box) {
 		super(box);
@@ -271,6 +272,11 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 			}
 
 			@Override
+			public boolean selectionEnabledByDefault() {
+				return AlexandriaAbstractCatalog.this.selectionEnabledByDefault();
+			}
+
+			@Override
 			public List<String> clusters() {
 				return element().groupings().stream().filter(Grouping::cluster).map(Grouping::label).collect(toList());
 			}
@@ -293,6 +299,15 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 				return null;
 			}
 		};
+	}
+
+	public boolean selectionEnabledByDefault() {
+		return selectionEnabledByDefault;
+	}
+
+	public AlexandriaAbstractCatalog selectionEnabledByDefault(boolean value) {
+		selectionEnabledByDefault = value;
+		return this;
 	}
 
 	protected abstract void sendCatalog();

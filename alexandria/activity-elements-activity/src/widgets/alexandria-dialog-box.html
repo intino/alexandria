@@ -7,6 +7,7 @@
 <link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../lib/iron-icons/iron-icons.html">
 <link rel="import" href="../../lib/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../lib/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../../lib/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="_common/alexandria-configuration-behavior.html">
@@ -18,11 +19,10 @@
 <dom-module id="alexandria-dialog-box">
 
     <template>
-        <paper-dialog id="dialog" entry-animation="scale-up-animation"
+        <paper-dialog id="dialog"
                       exit-animation="fade-out-animation"
                       on-iron-overlay-opened="_overlayOpened"
-                      on-iron-overlay-closed="_overlayClosed"
-                      with-backdrop>
+                      on-iron-overlay-closed="_overlayClosed">
             <div class="container">
                 <div class="header layout horizontal center">
                     <div class="label flex">[[_label]]</div>
@@ -43,9 +43,15 @@
             padding: 0;
         }
         :host paper-dialog {
-            margin: 50px;
             padding: 0;
             background: white;
+            position: fixed;
+        }
+        :host paper-dialog.fit-body {
+            margin: 50px;
+        }
+        :host paper-dialog.fit-trigger {
+            margin: 25px 0;
         }
         :host paper-dialog paper-icon-button {
             padding: 6px;
@@ -127,8 +133,8 @@
             },
 
             _refreshSettings : function(settings) {
-                this._width = settings.width;
-                this._height = settings.height;
+                this._width = settings.size.width;
+                this._height = settings.size.height;
                 this._position = settings.position;
                 this._toolbarVisible = settings.acceptButton;
             },

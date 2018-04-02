@@ -27,6 +27,7 @@ public class ElementViewBuilder {
         result.width(view.width());
         result.canSearch(view.canSearch());
         result.canCreateClusters(view.canCreateClusters());
+        result.selectionEnabledByDefault(view.selectionEnabledByDefault());
         result.clusters(view.clusters());
         result.emptyMessage(view.emptyMessage() != null ? view.emptyMessage() : "");
         addMapViewProperties(result, view);

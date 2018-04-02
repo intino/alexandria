@@ -27,6 +27,7 @@ public class OpenCatalogOperation extends Operation<String> {
 
 	public OpenCatalogOperation() {
 		alexandriaIcon("icons:dns");
+		height(100);
 	}
 
 	public int width() {

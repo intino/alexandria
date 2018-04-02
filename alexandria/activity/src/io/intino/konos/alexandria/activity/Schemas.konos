@@ -91,6 +91,7 @@ Schema ElementView
 	Attribute type as Text
 	Attribute embeddedElement as Bool
 	Attribute width as Integer
+	Attribute selectionEnabledByDefault as Bool
 	Attribute canSearch as Bool
 	Attribute canCreateClusters as Bool
 	Attribute(multiple=true) clusters as Text

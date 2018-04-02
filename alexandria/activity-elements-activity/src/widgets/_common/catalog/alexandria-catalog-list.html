@@ -293,6 +293,7 @@
                 embedded: Boolean,
                 canSearch: { type: Boolean, observer: '_refreshToolbar' },
                 canCreateClusters: Boolean,
+                selectionEnabledByDefault: { type: Boolean, observer: '_refreshToolbar' },
                 clusterList: { type: Array, value: function() { return []; } },
                 sortingList: { type: Array, value: function() { return []; }, observer: '_refreshToolbar' },
                 selectedSorting: Object,
@@ -462,12 +463,14 @@
                     this._selectionChangeTimeout = null;
                 }
                 if (this.selectedItemList == null) return;
-                this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
-                this.$.items.fire("iron-resize");
-                let items = this.selectionOf(this.$.items).items;
-                this._selectionChangeTimeout = window.setTimeout(() => this.fire("select-items", items), 100);
-                this._updateSizeForItems(items);
-                this._updateCheckboxes(items);
+                this._selectionChangeTimeout = window.setTimeout(() => {
+                    this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
+                    this.$.items.fire("iron-resize");
+                    let items = this.selectionOf(this.$.items).items;
+                    this.fire("select-items", items);
+                    this._updateSizeForItems(items);
+                    this._updateCheckboxes(items);
+                }, 100);
             },
 
             _clearSelection : function() {
