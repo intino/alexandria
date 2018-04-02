@@ -19,7 +19,7 @@ public class LogFormatter extends java.util.logging.Formatter {
 				sourceClass(record.getSourceClassName()).
 				sourceMethod(record.getSourceMethodName());
 		if (record.getThrown() != null) log.stackTrace(stackTrace(record.getThrown()));
-		return Inl.serialize(log) + "\n\n";
+		return Inl.toMessage(log) + "\n\n";
 	}
 
 	private String stackTrace(Throwable thrown) {
