@@ -233,6 +233,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		return ((EmbeddedCatalog)stamp).createCatalog(session());
 	}
 
+	@Override
+	public void fullRefresh() {
+		forceRefresh();
+	}
+
 	public void saveItem(SaveItemParameters value) {
 		provider.saveItem(value, item);
 	}

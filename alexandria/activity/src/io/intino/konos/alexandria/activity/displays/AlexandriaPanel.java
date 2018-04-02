@@ -275,6 +275,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 			}
 
 			@Override
+			public boolean selectionEnabledByDefault() {
+				return false;
+			}
+
+			@Override
 			public List<String> clusters() {
 				return Collections.emptyList();
 			}

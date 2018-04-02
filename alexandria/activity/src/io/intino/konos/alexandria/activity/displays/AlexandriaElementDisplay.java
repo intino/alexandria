@@ -22,6 +22,7 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOper
 import io.intino.konos.alexandria.activity.model.toolbar.*;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.activity.schemas.Position;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
@@ -183,7 +184,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
 		Operation operation = operationOf(params);
-		executeOperation(operation, params.option(), selection);
+		executeOperation(operation, params.option(), selection, params.position());
 	}
 
 	public Resource downloadOperation(ElementOperationParameters params, List<Item> selection) {
@@ -405,6 +406,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		AlexandriaAbstractCatalog display = catalogOperation.createCatalog(session());
 		if (event.filtered()) display.staticFilter(i -> event.filter((Item) i));
 		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Single) display.onSelectItems((s) -> dialogBox.accept());
+		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Multiple) display.selectionEnabledByDefault(true);
 		dialogBox.label(catalogOperation.label());
 		dialogBox.display(display);
 		dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true, event.position());
@@ -472,7 +474,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return Optional.ofNullable(element().toolbar());
 	}
 
-	private void executeOperation(Operation operation, String option, List<Item> selection) {
+	private void executeOperation(Operation operation, String option, List<Item> selection, Position position) {
 		if (operation instanceof OpenDialog) {
 			OpenDialog openDialog = (OpenDialog)operation;
 			AlexandriaDialog dialog = openDialog.createDialog(session());
@@ -517,9 +519,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			AlexandriaAbstractCatalog display = catalogOperation.createCatalog(session());
 			if (catalogOperation.filtered()) display.staticFilter(i -> catalogOperation.filter(element(), selection, (Item) i, session()));
 			if (catalogOperation.selection() == OpenCatalogSelection.Selection.Single) display.onSelectItems((s) -> dialogBox.accept());
+			if (catalogOperation.selection() == OpenCatalogSelection.Selection.Multiple) display.selectionEnabledByDefault(true);
 			dialogBox.label(catalogOperation.title());
 			dialogBox.display(display);
-			dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true);
+			dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true, catalogOperation.position() == OpenCatalogSelection.Position.RelativeToOperation ? position : null);
 			dialogBox.refresh();
 			dialogBox.onAccept((value) -> {
 				display.currentView().ifPresent(v -> {
