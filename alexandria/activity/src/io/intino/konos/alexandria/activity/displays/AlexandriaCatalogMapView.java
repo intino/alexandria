@@ -186,7 +186,8 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 
 	public void loadItem(String id) {
 		String decodedId = new String(Base64.getDecoder().decode(id));
-		Item item = ItemBuilder.build(provider.item(decodedId), itemBuilderProvider(provider, view), provider.baseAssetUrl());
+		io.intino.konos.alexandria.activity.model.Item modelItem = provider.item(decodedId);
+		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider, view), provider.baseAssetUrl());
 		notifier.refreshItem(item);
 	}
 

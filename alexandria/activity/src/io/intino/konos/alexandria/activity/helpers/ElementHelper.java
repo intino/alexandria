@@ -28,7 +28,7 @@ public class ElementHelper {
 	}
 
 	public static io.intino.konos.alexandria.activity.schemas.Item item(io.intino.konos.alexandria.activity.model.Item item, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
-		return ItemBuilder.build(item, provider, baseAssetUrl);
+		return ItemBuilder.build(item, item.id(), provider, baseAssetUrl);
 	}
 
 	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, ElementView view) {

@@ -28,9 +28,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ItemBuilder {
 
-    public static Item build(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
-        String id = item != null ? item.id() : UUID.randomUUID().toString();
-
+    public static Item build(io.intino.konos.alexandria.activity.model.Item item, String id, ItemBuilderProvider provider, URL baseAssetUrl) {
         return new Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
                 .group(group(item, provider.scale()))
                 .label(label(item, provider))
@@ -49,7 +47,7 @@ public class ItemBuilder {
     }
 
     public static List<Item> buildList(List<io.intino.konos.alexandria.activity.model.Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
-        return itemList.stream().map(item -> ItemBuilder.build(item, provider, baseAssetUrl)).collect(toList());
+        return itemList.stream().map(item -> ItemBuilder.build(item, item.id(), provider, baseAssetUrl)).collect(toList());
     }
 
     public static List<Item> buildListOnlyLocation(List<io.intino.konos.alexandria.activity.model.Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
