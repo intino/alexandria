@@ -14,6 +14,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
@@ -175,14 +176,14 @@ class AccessorsPublisher {
 		return apps;
 	}
 
-	private File createPom(File root, String group, String artifact, String version) throws IOException {
+	private File createPom(File root, String group, String artifact, String version) {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
 		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
 		SimpleEntry<String, String> distroRepo = configuration.distributionReleaseRepository();
 		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
 		final Template template = AccessorPomTemplate.create();
 		final File pomFile = new File(root, "pom.xml");
-		Files.write(pomFile.toPath(), template.format(frame).getBytes());
+		Commons.write(pomFile.toPath(), template.format(frame));
 		return pomFile;
 	}
 

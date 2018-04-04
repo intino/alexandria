@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,11 +61,7 @@ public class RESTServiceRenderer {
 	}
 
 	private void writeIndex(File www, Frame doc) {
-		try {
-			Files.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc).getBytes());
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		Commons.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc));
 	}
 
 	private void copyAssets(File www) {

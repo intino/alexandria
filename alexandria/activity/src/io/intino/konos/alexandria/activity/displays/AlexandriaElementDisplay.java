@@ -31,7 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
-
 public abstract class AlexandriaElementDisplay<E extends Element, DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN, Box> implements ItemBuilder.ItemBuilderProvider {
 	private String label;
 	private E element;
