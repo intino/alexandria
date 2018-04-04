@@ -3,6 +3,7 @@ package swagger;
 
 import io.intino.konos.builder.codegeneration.swagger.OpenApiDescriptor;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
+import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
@@ -27,7 +28,7 @@ public class SwaggerApiGeneratorTest {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
 		OpenApiDescriptor descriptor = new OpenApiDescriptor(graph.rESTServiceList().get(0));
 		final String jsonDescriptor = descriptor.createJSONDescriptor();
-		Files.write(new File(SWAGGER, "petstore.json").toPath(), jsonDescriptor.getBytes());
+		Commons.write(new File(SWAGGER, "petstore.json").toPath(), jsonDescriptor);
 //		assertEquals(jsonDescriptor, new String(Files.readAllBytes(new File("test-res", "swagger" + File.separator + "petstore_expected.json").toPath())));
 	}
 

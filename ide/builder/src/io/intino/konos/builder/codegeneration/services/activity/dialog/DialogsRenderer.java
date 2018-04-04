@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.activity.dialog;
 
-import io.intino.konos.builder.codegeneration.services.activity.display.DisplaysTemplate;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;

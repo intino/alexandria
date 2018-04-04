@@ -60,7 +60,6 @@ public class MessageToObject {
 		return current;
 	}
 
-
 	private static List append(List current, List value) {
 		if (current == null) current = new ArrayList();
 		final Object o = value.get(value.size() - 1);
