@@ -116,8 +116,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	protected void loadItemList(String condition) {
 		if (!dirty() && itemList != null) return;
-		itemList = filteredItemList(scopeWithAttachedGrouping(), condition);
 		range(timeScaleHandler().range());
+		itemList = filteredItemList(scopeWithAttachedGrouping(), condition);
 		dirty(false);
 	}
 
@@ -152,10 +152,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	protected void refresh(Instant instant) {
+		dirty(true);
 		refresh();
 	}
 
 	protected void refresh(TimeRange range) {
+		dirty(true);
 		refresh();
 	}
 

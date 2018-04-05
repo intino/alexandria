@@ -44,7 +44,7 @@ public abstract class AlexandriaPageAction {
 		String language = session.discoverLanguage();
 		Browser browser = session.browser();
 
-		template = template.replace("$title", title());
+		template = template.replace("$title", title() != null ? title() : "");
 		template = template.replace("$language", language);
 		template = template.replace("$currentSession", sessionId);
 		template = template.replace("$client", clientId);
