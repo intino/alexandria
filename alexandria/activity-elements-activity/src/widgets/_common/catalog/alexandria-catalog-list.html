@@ -60,9 +60,9 @@
                             <div class="group-header" style$="[[item.group.style]]">[[item.group.label]]</div>
                             <div class="content layout horizontal">
                                 <template is="dom-if" if="[[!grid]]">
-                                    <div class="layout horizontal flex">
+                                    <div class="layout horizontal flex" style="width:100%">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
-                                        <div class="flex">
+                                        <div class="flex" style="width:100%">
                                             <alexandria-mold-container name$="_item_[[item.name]]"
                                                                        item="[[item]]"
                                                                        mold="[[mold]]"
@@ -73,9 +73,9 @@
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[grid]]">
-                                    <div class="layout horizontal flex">
+                                    <div class="layout horizontal flex" style="width:100%">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
-                                        <div class="flex">
+                                        <div class="flex" style="width:100%">
                                             <alexandria-mold-container name$="_item_[[item.name]]"
                                                                        item="[[item]]"
                                                                        mold="[[mold]]"
