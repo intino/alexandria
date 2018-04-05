@@ -9,6 +9,8 @@ def type(tasker)
 	import java.util.LinkedHashSet;
 	import java.util.Map;
 	import java.util.Set;
+	import java.time.ZoneId;
+	import java.util.TimeZone;
 	import java.util.logging.Logger;
 
 	import static org.quartz.JobBuilder.newJob;
@@ -61,7 +63,7 @@ def type(task) trigger(init)
 end
 
 def type(cronTrigger) trigger(job)
-	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")).build()
+	newTrigger().withIdentity("$name").withSchedule(cronSchedule("$pattern")[.inTimeZone(TimeZone.getTimeZone(ZoneId.of("$timeZone")))]).build()
 end
 
 def type(onBootTrigger) trigger(job)

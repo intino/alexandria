@@ -4,6 +4,7 @@ import io.intino.konos.model.graph.rest.RESTService;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SwaggerGenerator {
 
 	private String writeFile(String json) {
 		try {
-			return Files.write(Files.createTempFile("__swagger", ".json"), json.getBytes()).toFile().getPath();
+			return Files.write(Files.createTempFile("__swagger", ".json"), json.getBytes(Charset.forName("UTF-8"))).toFile().getPath();
 		} catch (IOException ignored) {
 			return "";
 		}
