@@ -6,7 +6,7 @@ use DataTypes
 Concept Task
 
 
-Facet Scheduled on Task
+Facet Scheduled on Task is abstract
 
 Facet BootTrigger extends Scheduled
 	var integer:{ms} delay = 0 ms
@@ -22,6 +22,7 @@ Facet PeriodicTrigger extends Scheduled on Task // TODO scheduled render
 Facet CronTrigger extends Scheduled on Task
 	var string pattern
 	var string mean = ""
+	var string timeZone = empty
 
 Facet ShutdownTrigger extends Scheduled on Task
 

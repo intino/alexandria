@@ -47,8 +47,7 @@ public class TaskerRenderer {
 	}
 
 	private Frame processTask(ScheduledTask task) {
-		final Frame schedule = new Frame().addTypes("task").addTypes(task.getClass().getSimpleName()).
-				addSlot("name", task.name$());
+		final Frame schedule = new Frame().addTypes("task").addTypes(task.getClass().getSimpleName()).addSlot("name", task.name$());
 		final Frame jobFrame = new Frame().addTypes("job").addTypes(task.getClass().getSimpleName())
 				.addSlot("name", task.core$().id());
 		if (task.i$(CronTriggerTask.class)) {
@@ -56,9 +55,8 @@ public class TaskerRenderer {
 			jobFrame.addTypes("cronTrigger")
 					.addSlot("pattern", cron.pattern())
 					.addSlot("mean", cron.mean());
-		} else if (task.i$(BootTriggerTask.class)) {
-			jobFrame.addTypes("onBootTrigger");
-		}
+			if (cron.timeZone() != null) jobFrame.addSlot("timeZone", cron.timeZone());
+		} else if (task.i$(BootTriggerTask.class)) jobFrame.addTypes("onBootTrigger");
 		schedule.addSlot("job", jobFrame);
 		return schedule;
 	}
