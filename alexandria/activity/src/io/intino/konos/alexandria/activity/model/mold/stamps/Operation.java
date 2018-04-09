@@ -4,6 +4,10 @@ import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 public abstract class Operation<O> extends Stamp<O> {
 	private Mode mode = Mode.Button;
 	private String alexandriaIcon = "icons:execute";
@@ -13,7 +17,7 @@ public abstract class Operation<O> extends Stamp<O> {
 		return this.alexandriaIcon;
 	}
 
-	public enum Mode { Button, Link, Icon }
+	public enum Mode { Button, Link, Icon, Chip }
 
 	public Mode mode() {
 		return mode;
@@ -44,6 +48,10 @@ public abstract class Operation<O> extends Stamp<O> {
 	public Operation drawingColor(Value<String> color) {
 		this.drawingColor = color;
 		return this;
+	}
+
+	public List<Object> objects(List<Item> items) {
+		return items.stream().map(Item::object).collect(toList());
 	}
 
 	@Override

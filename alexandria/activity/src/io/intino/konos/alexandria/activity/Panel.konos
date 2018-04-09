@@ -1,11 +1,12 @@
 dsl Konos
 
+use Displays
 use Mold
 use Catalog
 use Schemas
 
 Display alexandriaPanel
-	displays = alexandriaPanelCustomView alexandriaPanelCatalogView alexandriaPanelDisplayView alexandriaMold
+	displays = alexandriaPanelCustomView alexandriaPanelCatalogView alexandriaPanelDisplayView alexandriaDialogBox alexandriaMold
 
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text
@@ -13,7 +14,7 @@ Display alexandriaPanel
 	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
 	Notification hidePanel
-	Notification showDialog
+	Notification showDialogBox
 
 	Request selectView as Text
 	Request navigate as Text

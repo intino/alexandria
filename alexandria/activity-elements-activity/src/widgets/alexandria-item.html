@@ -17,6 +17,7 @@
                                    on-navigate-item="_navigateItem"
                                    on-navigate-catalog="_navigateCatalog"
                                    on-open-dialog="_openStampDialog"
+                                   on-open-catalog="_openStampCatalog"
                                    on-execute-task-item="_executeTask"
                                    on-download-item="_download"
                                    on-save-item="_save"
@@ -105,6 +106,10 @@
 
             _openStampDialog : function(e) {
                 this.openItemDialogOperation(e.detail);
+            },
+
+            _openStampCatalog : function(e) {
+                this.openItemCatalogOperation(e.detail);
             },
 
             _download : function(e) {

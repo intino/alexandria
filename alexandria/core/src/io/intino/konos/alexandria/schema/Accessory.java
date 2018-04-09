@@ -10,7 +10,7 @@ import static java.util.Arrays.asList;
 
 public class Accessory {
 
-	static FieldQuery fieldsOf(Object object) {
+	public static FieldQuery fieldsOf(Object object) {
 		return new FieldQuery(object);
 	}
 
@@ -21,7 +21,16 @@ public class Accessory {
 		return list;
 	}
 
-	static class Mapping {
+	static Object valueOf(Field field, Object owner) {
+		try {
+			field.setAccessible(true);
+			return field.get(owner);
+		} catch (IllegalAccessException e) {
+			return null;
+		}
+	}
+
+	public static class Mapping {
 
 		private Map<String, String> map = new HashMap<>();
 
@@ -34,14 +43,14 @@ public class Accessory {
 		}
 	}
 
-	static class FieldQuery {
+	public static class FieldQuery {
 		private final Object object;
 
 		FieldQuery(Object object) {
 			this.object = object;
 		}
 
-		List<Field> asList() {
+		public List<Field> asList() {
 			return fieldsOf(object.getClass());
 		}
 

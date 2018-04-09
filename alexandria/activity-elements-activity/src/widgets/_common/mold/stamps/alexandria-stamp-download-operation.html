@@ -1,82 +1,18 @@
 <link rel="import" href="../../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="../../../../../lib/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../../../../lib/paper-menu/paper-menu.html">
-<link rel="import" href="../../../../../lib/paper-item/paper-item.html">
-<link rel="import" href="../../../../../lib/iron-icon/iron-icon.html">
 <link rel="import" href="alexandria-stamp-behavior.html">
-<link rel="import" href="../alexandria-operation-trigger.html">
+<link rel="import" href="../../alexandria-operation-download.html">
 
 <dom-module id="alexandria-stamp-download-operation">
 
     <template>
-        <div class="container">
-            <alexandria-operation-trigger id="operation" title="[[_title]]" icon="[[stamp.properties.alexandriaIcon]]"
-                                          styles="[[_style]]" mode="[[stamp.properties.mode]]"
-                                          on-execute="_openDownloadOptions"></alexandria-operation-trigger>
-        </div>
-        <paper-dialog id="dialog" no-overlap horizontal-align="left" vertical-align="top">
-            <template is="dom-if" if="[[!title.length]]">
-                <h2>[[Download]]</h2>
-            </template>
-            <paper-menu>
-                <template is="dom-repeat" items="[[stamp.properties.options]]">
-                    <paper-item name$="[[item]]" on-tap="_download">[[item]]</paper-item>
-                </template>
-            </paper-menu>
-        </paper-dialog>
+        <alexandria-operation-download title="[[stamp.label]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                       styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                       options="[[stamp.properties.options]]" on-tap-download="_download"></alexandria-operation-download>
     </template>
-
-    <style>
-        :host {
-            display: block;
-        }
-        :host .container {
-            margin: 0 !important;
-        }
-        :host a {
-            cursor: pointer;
-            color: var(--default-primary-color);
-        }
-        :host paper-dialog {
-            margin: 10px 0 0;
-            background: white;
-        }
-        :host paper-dialog h2 {
-            color: #777;
-            border-bottom: 1px solid #ccc;
-            margin: 3px 0;
-            padding: 0 8px 3px;
-            font-size: 15px;
-        }
-        :host paper-dialog paper-menu {
-            margin: 10px;
-            padding: 0;
-            background: white;
-        }
-        :host paper-dialog paper-item {
-            min-height: 28px;
-            font-size: 14px;
-            padding: 0 15px;
-            min-width: 130px;
-            cursor: pointer;
-        }
-        @media screen and (max-width: 540px) {
-            :host {
-                display: none;
-            }
-        }
-    </style>
 
     <script>
         const AlexandriaStampDownloadOperationDictionary = {
-            es: {
-                Download: "descargar..."
-            },
-            en: {
-                Download: "download..."
-            }
         };
 
         Polymer({
@@ -84,34 +20,13 @@
 
             behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior ],
 
-            properties : {
-                _title : String
-            },
-
             attached: function () {
                 this.translate(AlexandriaStampDownloadOperationDictionary);
             },
 
-            _render : function() {
-                var title = this.stamp.label;
-                this._title = title != null && title != "" ? title : this.Download;
-            },
-
-            _openDownloadOptions : function(e) {
-                var options = this.stamp.properties.options;
-                if (options.length <= 1) {
-                    this.fire("download-item", { item: this.stamp.item, stamp: this.stamp.name, option: "" });
-                    return;
-                }
-                this.$.dialog.positionTarget = this.$.operation;
-                this.$.dialog.open();
-            },
-
             _download : function(e) {
-                this.$.dialog.close();
-                var option = e.target.getAttribute("name");
+                var option = e.detail.option;
                 this.fire("download-item", { item: this.stamp.item, stamp: this.stamp.name, option: option });
-                e.stopPropagation();
             }
         });
     </script>

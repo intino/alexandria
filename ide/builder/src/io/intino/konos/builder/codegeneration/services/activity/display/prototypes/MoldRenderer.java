@@ -102,6 +102,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Rating stamp) {
 		frame.addSlot("ratingIcon", stamp.polymerIcon());
+		frame.addSlot("ratingMax", stamp.max());
 	}
 
 	private void frameOf(Frame frame, EmbeddedCatalog stamp) {
@@ -113,6 +114,7 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, OpenCatalogOperation stamp) {
 		if (stamp.filtered()) frame.addSlot("catalogFilter", baseFrame(stamp));
+		if (stamp.selection() != OpenCatalogOperation.Selection.None) frame.addSlot("openCatalogOperationExecution", baseFrame(stamp));
 		frame.addSlot("catalog", stamp.catalog().name$());
 		frame.addSlot("view", stamp.views().stream().map(Layer::name$).toArray(String[]::new));
 		frame.addSlot("width", stamp.width());

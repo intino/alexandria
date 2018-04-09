@@ -14,12 +14,14 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemDisplayProvider;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCatalogMagazineViewNotifier, Box> implements AlexandriaCatalogView {
 	private ElementView view;
 	private CatalogViewDisplayProvider provider;
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
 	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private Item item = null;
 	private String condition = null;
@@ -41,12 +43,13 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	}
 
 	@Override
-	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> parameters) {
-		openItemDialogListeners.add(parameters);
+	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
+		openItemDialogListeners.add(listener);
 	}
 
 	@Override
 	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
+		openItemCatalogListeners.add(listener);
 	}
 
 	@Override
@@ -61,6 +64,11 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	@Override
 	public void reset() {
 		currentItem = null;
+	}
+
+	@Override
+	public List<io.intino.konos.alexandria.activity.model.Item> selectedItems() {
+		return emptyList();
 	}
 
 	@Override
@@ -95,6 +103,7 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 		display.provider(itemDisplayProvider(provider, view));
 		display.onOpenItem(this::selectRecord);
 		display.onOpenItemDialog(this::openItemDialogOperation);
+		display.onOpenItemCatalog(this::openItemCatalogOperation);
 		display.onExecuteItemTask(this::executeItemTaskOperation);
 		add(display);
 		display.personifyOnce();
@@ -145,6 +154,10 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 
 	public void openItemDialogOperation(OpenItemDialogEvent event) {
 		openItemDialogListeners.forEach(l -> l.accept(event));
+	}
+
+	public void openItemCatalogOperation(OpenItemCatalogEvent event) {
+		openItemCatalogListeners.forEach(l -> l.accept(event));
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskEvent event) {

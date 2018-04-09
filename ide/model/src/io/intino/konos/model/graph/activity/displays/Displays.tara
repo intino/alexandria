@@ -33,6 +33,7 @@ Concept Panel extends Display
 			var string label
 			var word:{Tab LeftFixed RightFixed} layout = Tab
 			var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
+//			var boolean hasBubble
 			has:{1..1} ElementRenderer
 
 Concept Desktop extends Display
@@ -65,6 +66,7 @@ Concept:Named Options extends ElementOption is component
 Concept Operation is component
 	var string title
 	var string polymerIcon = empty
+	var word:{Link Button Icon Chip} mode = Icon
 
 Concept ElementOption
 

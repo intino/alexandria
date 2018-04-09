@@ -33,11 +33,14 @@ import tara.dsl.Konos;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
+import static io.intino.konos.builder.utils.GraphLoader.loadGraph;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
@@ -105,7 +108,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private void generate(String packageName, File gen, File src, File res) {
-			KonosGraph graph = loadGraph();
+			KonosGraph graph = loadGraph(module);
 			if (graph == null) {
 				notifyError("Models have errors");
 				return;
@@ -113,16 +116,6 @@ public class CreateKonosBoxAction extends KonosAction {
 			if (!render(packageName, gen, src, res, graph)) return;
 			refreshDirectories(gen, src, res);
 			notifySuccess();
-		}
-
-		private KonosGraph loadGraph() {
-			if (!konosFiles.isEmpty()) {
-				final Stash stash = new StashBuilder(konosFiles.stream().map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList()), new Konos(), module.getName()).build();
-				if (stash == null) {
-					notifyError("Models have errors");
-					return null;
-				} else return GraphLoader.loadGraph(stash);
-			} else return GraphLoader.loadGraph();
 		}
 
 		private void refreshDirectories(File gen, File src, File res) {

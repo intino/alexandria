@@ -35,7 +35,7 @@ end
 
 def trigger(hidden)
 	public static class $name+FirstUpperCase {
-		public static boolean hidden($moldClass $moldClass+shortType+firstLowerCase) {
+		public static boolean hidden($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return false;//TODO
 		}
 	}
@@ -74,6 +74,7 @@ def type(stamp & openCatalogOperation)
 		$common
 
 		[$catalogFilter]
+		[$openCatalogOperationExecution]
 
 		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
@@ -257,6 +258,12 @@ end
 def trigger(catalogFilter)
 	public static boolean filter($box~Box box, io.intino.konos.alexandria.activity.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, ActivitySession session) {
 		return true;//TODO
+	}
+end
+
+def trigger(openCatalogOperationExecution)
+	public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, ActivitySession session) {
+		return io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh.None;
 	}
 end
 

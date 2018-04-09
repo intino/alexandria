@@ -56,7 +56,18 @@ Schema DialogInputResource
 	Attribute path as Text
 	Attribute file as File
 
-Schema DialogReference
+Schema DisplayReference
+	Attribute label as Text
+	Attribute type as Text
+
+Schema DialogBoxSettings
+	Has(Position, multiple=false)
+	Attribute acceptButton as Bool
+	Schema(multiple=false) Size
+		Attribute width as Integer
+		Attribute height as Integer
+
+Schema CatalogDialogReference
 	Attribute label as Text
 	Attribute type as Text
 	Attribute width as Integer
@@ -72,6 +83,7 @@ Schema ElementOperationParameters
 	Attribute option as Text
 	Attribute from as DateTime
 	Attribute to as DateTime
+	Has(Position, multiple=false)
 
 Schema ElementView
 	Attribute name as Text
@@ -79,6 +91,7 @@ Schema ElementView
 	Attribute type as Text
 	Attribute embeddedElement as Bool
 	Attribute width as Integer
+	Attribute selectionEnabledByDefault as Bool
 	Attribute canSearch as Bool
 	Attribute canCreateClusters as Bool
 	Attribute(multiple=true) clusters as Text
@@ -89,6 +102,7 @@ Schema ElementView
 		Schema Operation
 			Attribute name as Text
 			Attribute title as Text
+			Attribute mode as Text
 			Attribute type as Text
 			Attribute icon as Text
 			Attribute when as Text
@@ -140,9 +154,14 @@ Schema Item
 		Attribute name as Text
 		Attribute hidden as Bool
 
-Schema OpenItemDialogParameters
+Schema OpenItemParameters
 	Attribute item as Text
 	Attribute stamp as Text
+	Has(Position, multiple=false)
+
+Schema Position
+	Attribute left as Real
+	Attribute top as Real
 
 Schema PageLocation
 	Attribute value as Text

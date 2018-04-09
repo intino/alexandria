@@ -19,6 +19,7 @@
                       empty-message="[[_view.emptyMessage]]"
                       can-search="[[_view.canSearch]]"
                       can-create-clusters="[[_view.canCreateClusters]]"
+                      selection-enabled-by-default="[[_view.selectionEnabledByDefault]]"
                       cluster-list="[[_view.clusterList]]"
                       page-size="[[_pageSize]]"
                       item-list="[[_itemList]]"
@@ -29,6 +30,7 @@
                       on-select-sorting="_selectSorting"
                       on-stamps-ready="_renderExpandedPictures"
                       on-open-stamp-dialog="_openStampDialog"
+                      on-open-stamp-catalog="_openStampCatalog"
                       on-execute-stamp-task="_executeStampTask"
                       on-navigate-catalog="_navigateCatalog"
                       on-open-item="_openItem"
@@ -159,6 +161,10 @@
 
             _openStampDialog : function(e) {
                 this.openItemDialogOperation(e.detail);
+            },
+
+            _openStampCatalog : function(e) {
+                this.openItemCatalogOperation(e.detail);
             },
 
             _executeStampTask : function(e) {

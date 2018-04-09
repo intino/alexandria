@@ -72,8 +72,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
-	protected void showDialog() {
-		notifier.showDialog();
+	protected void showDialogBox() {
+		notifier.showDialogBox();
 	}
 
 	@Override
@@ -271,6 +271,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 			@Override
 			public boolean canSearch() {
+				return false;
+			}
+
+			@Override
+			public boolean selectionEnabledByDefault() {
 				return false;
 			}
 

@@ -153,10 +153,7 @@
         _initOperationProperties : function(stamp) {
             let type = stamp.type;
 
-            if (type != "download-operation" || type != "export-operation" ||
-                type != "open-dialog-operation" || type != "open-external-dialog-operation" ||
-                type != "preview-operation" || type != "task-operation" ||
-                type != "open-catalog-operation")
+            if (type.indexOf("-operation") == -1)
                 return;
 
             stamp.properties.drawingColor = this._propertyValueOf(stamp, "drawingColor");

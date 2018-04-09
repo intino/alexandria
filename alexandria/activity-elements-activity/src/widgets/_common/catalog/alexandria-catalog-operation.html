@@ -2,26 +2,37 @@
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../mold/stamps/alexandria-stamp-download-operation.html">
+<link rel="import" href="../alexandria-operation-download.html">
+<link rel="import" href="../alexandria-operation-trigger.html">
 <link rel="import" href="../alexandria-export-dialog.html">
 
 <dom-module id="alexandria-catalog-operation">
 
     <template>
         <template is="dom-if" if="[[_isOperation(operation)]]">
-            <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_execute"></paper-icon-button>
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
         </template>
         <template is="dom-if" if="[[_isDownload(operation)]]">
-            <alexandria-stamp-download-operation icon="[[operation.icon]]" title$="[[operation.title]]" options="[[_options()]]" on-download-option="_download"></alexandria-stamp-download-operation>
+            <alexandria-operation-download title="[[operation.title]]" icon="[[operation.icon]]"
+                                           options="[[_options()]]" on-tap-download="_download"
+                                           mode="Icon"></alexandria-operation-download>
         </template>
         <template is="dom-if" if="[[_isExport(operation)]]">
-            <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_showExportDialog"></paper-icon-button>
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_showExportDialog"></alexandria-operation-trigger>
         </template>
         <template is="dom-if" if="[[_isOpenDialog(operation)]]">
-            <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_execute"></paper-icon-button>
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
         </template>
         <template is="dom-if" if="[[_isGrouping(operation)]]">
-            <paper-icon-button icon="[[operation.icon]]" title$="[[operation.title]]" on-tap="_group"></paper-icon-button>
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_group"></alexandria-operation-trigger>
+        </template>
+        <template is="dom-if" if="[[_isOpenCatalog(operation)]]">
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
         </template>
         <alexandria-export-dialog on-export="_export"></alexandria-export-dialog>
     </template>
@@ -66,16 +77,21 @@
                 return operation.type === "open-dialog";
             },
 
+            _isOpenCatalog : function(operation) {
+                return operation.type === "open-catalog";
+            },
+
             _isGrouping : function(operation) {
                 return operation.type === "grouping";
             },
 
             _execute : function(e) {
-                this.fire("execute", { operation: this.operation.name });
+                var position = $(e.target).offset();
+                this.fire("execute", { operation: this.operation.name, position: position });
             },
 
             _download : function(e) {
-                this.fire("download", { operation: this.operation.name, option: e.detail });
+                this.fire("download", { operation: this.operation.name, option: e.detail.option });
             },
 
             _group : function() {
