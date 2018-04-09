@@ -37,6 +37,12 @@ def type(tanks)
 			handlersMap.get(message.type().toLowerCase()).consume(message);
 		}
 
+		public List<io.intino.konos.datalake.Datalake.Tank> tanks() {
+			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
+			$tank+add...[$NL]
+			return tanks;
+		}
+
 		$tank+getter...[$NL$NL]
 
 		$tank+class...[$NL$NL]
@@ -47,7 +53,7 @@ def type(tanks)
 
 		private static boolean isRegisterOnly(Message message) {
 			try {
-				return message.getBooleanProperty(io.intino.konos.datalake.Ness.REGISTER_ONLY);
+				return message.getBooleanProperty(io.intino.konos.datalake.Datalake.REGISTER_ONLY);
 			} catch (JMSException e) {
 				return false;
 			}
@@ -60,12 +66,16 @@ def type(tank) trigger(unregister)
 end
 
 def type(tank) trigger(field)
-	private static io.intino.konos.datalake.Ness.Tank $name;
+	private static io.intino.konos.datalake.Datalake.Tank $name;
 end
 
 def type(tank) trigger(assign)
 	$name = box.datalake().tank($messageType+format);
 	handlersMap.put($simpleMessageType+shortPath+lowerCase+quoted, new $name+FirstUpperCase~Subscriptor(box));
+end
+
+def type(tank) trigger(add)
+	tanks.add(this.$name);
 end
 
 def type(tank) trigger(getter)

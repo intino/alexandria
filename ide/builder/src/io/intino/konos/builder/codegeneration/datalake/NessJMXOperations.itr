@@ -70,7 +70,7 @@ def type(operations) !type(interface)
 			logger.info("Starting Reflow...");
 			assistant.before();
 			$package+validPackage.ness.NessTanks.unregister();
-			this.session = box.datalake().reflow(assistant.blockSize(), new $package+validPackage.ness.NessTanks(),from, assistant.tanks().toArray(new Ness.Tank$[0]));
+			this.session = box.datalake().reflow(assistant.blockSize(), new $package+validPackage.ness.NessTanks(), from, assistant.tanks().toArray(new Ness.Tank$[0]));
 			box.datalake().lastMessage(null);
 			box.datalake().reset();
 			final Graph graph = assistant.graph();
