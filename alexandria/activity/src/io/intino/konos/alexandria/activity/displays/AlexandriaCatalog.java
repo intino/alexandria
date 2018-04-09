@@ -49,8 +49,8 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	}
 
 	@Override
-	protected void showDialog() {
-		notifier.showDialog();
+	protected void showDialogBox() {
+		notifier.showDialogBox();
 	}
 
 	@Override

@@ -5,8 +5,6 @@ out
 .idea/dictionaries
 test-res/*.stash
 target/
-/ide/konos-plugin/dependency-reduced-pom.xml
-slack/target
 workspace.xml
 dependency-reduced-pom.xml
 .idea/compiler.xml

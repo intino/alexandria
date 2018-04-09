@@ -17,10 +17,12 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.activity.schemas.Position;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
@@ -29,7 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
-
 public abstract class AlexandriaElementDisplay<E extends Element, DN extends AlexandriaDisplayNotifier> extends ActivityDisplay<DN, Box> implements ItemBuilder.ItemBuilderProvider {
 	private String label;
 	private E element;
@@ -43,8 +44,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private AlexandriaElementView.OpenItemEvent openedItem = null;
 	private TimeRange range;
 	private List<String> enabledViews = null;
-	private AlexandriaPanel openedItemDisplay = null;
-	private AlexandriaDialogContainer dialogContainer = null;
+	private AlexandriaDialogBox dialogBox = null;
 
 	public AlexandriaElementDisplay(Box box) {
 		super(box);
@@ -183,7 +183,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public void executeOperation(ElementOperationParameters params, List<Item> selection) {
 		Operation operation = operationOf(params);
-		executeOperation(operation, params.option(), selection);
+		executeOperation(operation, params.option(), selection, params.position());
 	}
 
 	public Resource downloadOperation(ElementOperationParameters params, List<Item> selection) {
@@ -333,14 +333,9 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void createDialogContainer() {
-		dialogContainer = new AlexandriaDialogContainer(box);
-		dialogContainer.onDialogAssertion((modification) -> currentView().ifPresent(view -> {
-			dirty(true);
-			if (modification.toLowerCase().equals("itemmodified")) view.refresh(currentItem_());
-			else if (modification.toLowerCase().equals("catalogmodified")) view.refresh();
-		}));
-		add(dialogContainer);
-		dialogContainer.personifyOnce();
+		dialogBox = new AlexandriaDialogBox(box);
+		add(dialogBox);
+		dialogBox.personifyOnce();
 	}
 
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
@@ -368,12 +363,30 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {
 		currentItem(event.item().id());
 
-		dialogContainer.dialog(event.dialog());
-		dialogContainer.refresh();
-		showDialog();
+		AlexandriaDialog dialog = event.dialog();
+
+		dialog.onDone((modification) -> currentView().ifPresent(view -> {
+			dirty(true);
+			if (modification == DialogExecution.Modification.ItemModified) view.refresh(currentItem_());
+			else if (modification == DialogExecution.Modification.CatalogModified) view.refresh();
+			dialogBox.close();
+		}));
+
+		dialogBox.label(dialog.label());
+		dialogBox.display(dialog);
+		dialogBox.settings(dialog.width(), dialog.height());
+		dialogBox.refresh();
+		showDialogBox();
 	}
 
 	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
+		Stamp stamp = event.stamp();
+
+		if (stamp != null && stamp instanceof OpenCatalogOperation) {
+			openItemCatalogInDialogBox(event);
+			return;
+		}
+
 		AlexandriaElementDisplay display = openElement(event.catalog().label());
 		String itemToShow = event.itemToShow();
 
@@ -383,6 +396,29 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			if (event.filtered()) display.filterAndNotify(i -> event.filter((Item) i));
 			display.refresh();
 		}
+	}
+
+	protected void openItemCatalogInDialogBox(AlexandriaElementView.OpenItemCatalogEvent event) {
+		currentItem(event.item().id());
+
+		OpenCatalogOperation catalogOperation = (OpenCatalogOperation) event.stamp();
+		AlexandriaAbstractCatalog display = catalogOperation.createCatalog(session());
+		if (event.filtered()) display.staticFilter(i -> event.filter((Item) i));
+		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Single) display.onSelectItems((s) -> dialogBox.accept());
+		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Multiple) display.selectionEnabledByDefault(true);
+		dialogBox.label(catalogOperation.label());
+		dialogBox.display(display);
+		dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true, event.position());
+		dialogBox.refresh();
+		dialogBox.onAccept((value) -> {
+			display.currentView().ifPresent(v -> {
+				OpenCatalogOperation.Refresh refresh = catalogOperation.execute(event.item(), ((AlexandriaCatalogView) v).selectedItems(), session());
+				if (refresh == OpenCatalogOperation.Refresh.Item) refresh(this.currentItem());
+				else if (refresh == OpenCatalogOperation.Refresh.Element) forceRefresh();
+			});
+			dialogBox.close();
+		});
+		showDialogBox();
 	}
 
 	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
@@ -406,7 +442,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return target;
 	}
 
-	protected abstract void showDialog();
+	protected abstract void showDialogBox();
 	protected abstract void currentItem(String id);
 	protected abstract Item currentItem();
 	protected abstract void notifyFiltered(boolean value);
@@ -437,17 +473,20 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return Optional.ofNullable(element().toolbar());
 	}
 
-	private void executeOperation(Operation operation, String option, List<Item> selection) {
+	private void executeOperation(Operation operation, String option, List<Item> selection, Position position) {
 		if (operation instanceof OpenDialog) {
 			OpenDialog openDialog = (OpenDialog)operation;
-			dialogContainer.dialog(openDialog.createDialog(session()));
-			dialogContainer.refresh();
-			showDialog();
+			AlexandriaDialog dialog = openDialog.createDialog(session());
+			dialogBox.label(dialog.label());
+			dialogBox.display(dialog);
+			dialogBox.settings(dialog.width(), dialog.height());
+			dialogBox.refresh();
+			showDialogBox();
 		}
 
 		if (operation instanceof Task) {
 			Task taskOperation = (Task)operation;
-			Task.Refresh refresh = taskOperation.execute(element(), option, session());
+			Task.Refresh refresh = taskOperation.execute(element(), id(), session());
 			if (refresh == Task.Refresh.Catalog)
 				this.refresh();
 			return;
@@ -460,6 +499,39 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 				this.refresh();
 			else if (refresh == TaskSelection.Refresh.Selection)
 				this.refresh(selection.toArray(new Item[selection.size()]));
+		}
+
+		if (operation instanceof OpenCatalog) {
+			OpenCatalog openCatalog = (OpenCatalog)operation;
+			AlexandriaAbstractCatalog display = openCatalog.createCatalog(session());
+			if (openCatalog.filtered()) display.staticFilter(i -> openCatalog.filter(element(), (Item) i, session()));
+			dialogBox.label(openCatalog.title());
+			dialogBox.display(display);
+			dialogBox.settings(openCatalog.width(), openCatalog.height(), false);
+			dialogBox.refresh();
+			showDialogBox();
+			return;
+		}
+
+		if (operation instanceof OpenCatalogSelection) {
+			OpenCatalogSelection catalogOperation = (OpenCatalogSelection) operation;
+			AlexandriaAbstractCatalog display = catalogOperation.createCatalog(session());
+			if (catalogOperation.filtered()) display.staticFilter(i -> catalogOperation.filter(element(), selection, (Item) i, session()));
+			if (catalogOperation.selection() == OpenCatalogSelection.Selection.Single) display.onSelectItems((s) -> dialogBox.accept());
+			if (catalogOperation.selection() == OpenCatalogSelection.Selection.Multiple) display.selectionEnabledByDefault(true);
+			dialogBox.label(catalogOperation.title());
+			dialogBox.display(display);
+			dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true, catalogOperation.position() == OpenCatalogSelection.Position.RelativeToOperation ? position : null);
+			dialogBox.refresh();
+			dialogBox.onAccept((value) -> {
+				display.currentView().ifPresent(v -> {
+					OpenCatalogSelection.Refresh refresh = catalogOperation.execute(element(), selection, ((AlexandriaCatalogView) v).selectedItems(), session());
+					if (refresh == OpenCatalogSelection.Refresh.Item) refresh(this.currentItem());
+					else if (refresh == OpenCatalogSelection.Refresh.Element) forceRefresh();
+				});
+				dialogBox.close();
+			});
+			showDialogBox();
 		}
 	}
 

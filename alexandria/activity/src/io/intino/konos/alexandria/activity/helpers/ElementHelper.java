@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.activity.helpers;
 
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.*;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenItemCatalogEvent;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -9,8 +10,10 @@ import io.intino.konos.alexandria.activity.displays.providers.TemporalCatalogVie
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.activity.schemas.Position;
 import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
@@ -25,7 +28,7 @@ public class ElementHelper {
 	}
 
 	public static io.intino.konos.alexandria.activity.schemas.Item item(io.intino.konos.alexandria.activity.model.Item item, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
-		return ItemBuilder.build(item, provider, baseAssetUrl);
+		return ItemBuilder.build(item, item.id(), provider, baseAssetUrl);
 	}
 
 	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, ElementView view) {
@@ -120,8 +123,61 @@ public class ElementHelper {
 			}
 
 			@Override
+			public Stamp stamp() {
+				return stamp;
+			}
+
+			@Override
 			public AlexandriaDialog dialog() {
 				return ((OpenDialogOperation)stamp).createDialog(item, session);
+			}
+		};
+	}
+
+	public static OpenItemCatalogEvent openItemCatalogEvent(Item item, Stamp stamp, Position position, Element context, ActivitySession session) {
+		return new OpenItemCatalogEvent() {
+			@Override
+			public Item item() {
+				return item;
+			}
+
+			@Override
+			public Stamp stamp() {
+				return stamp;
+			}
+
+			@Override
+			public Catalog catalog() {
+				if (! (stamp instanceof OpenCatalogOperation)) return null;
+				OpenCatalogOperation operation = (OpenCatalogOperation) stamp;
+				return operation.catalog();
+			}
+
+			@Override
+			public Position position() {
+				if (! (stamp instanceof OpenCatalogOperation)) return null;
+				OpenCatalogOperation operation = (OpenCatalogOperation) stamp;
+				if (operation.position() == OpenCatalogOperation.Position.Standalone) return null;
+				return position;
+			}
+
+			@Override
+			public String itemToShow() {
+				return null;
+			}
+
+			@Override
+			public boolean filtered() {
+				if (! (stamp instanceof OpenCatalogOperation)) return false;
+				OpenCatalogOperation operation = (OpenCatalogOperation) stamp;
+				return operation.filtered();
+			}
+
+			@Override
+			public boolean filter(Item source) {
+				if (! (stamp instanceof OpenCatalogOperation)) return true;
+				OpenCatalogOperation operation = (OpenCatalogOperation) stamp;
+				return operation.filter(context, item, source, session);
 			}
 		};
 	}

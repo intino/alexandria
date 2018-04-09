@@ -51,7 +51,6 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	private Map<String, List<AlexandriaStamp>> recordDisplaysMap = new HashMap<>();
 	private Map<String, List<AlexandriaDialog>> recordDialogsMap = new HashMap<>();
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
-	private List<String> lastSelection = new ArrayList<>();
 
 	public AlexandriaCatalogListView(Box box) {
 		super(box);
@@ -128,22 +127,24 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void selectItems(String[] records) {
-		List<String> newRecords = new ArrayList<>(Arrays.asList(records));
-		newRecords.removeAll(lastSelection);
-		newRecords.forEach(record -> {
+		Arrays.stream(records).forEach(record -> {
 			if (!recordDisplaysMap.containsKey(record)) renderDisplays(record);
 			if (!recordDialogsMap.containsKey(record)) renderDialogs(record);
 			renderExpandedPictures(record);
 		});
-		this.lastSelection = new ArrayList<>(Arrays.asList(records));
+		selection(new ArrayList<>(Arrays.asList(records)));
 	}
 
 	public void openItem(String value) {
+
 		if (view.onClickRecordEvent() == null) {
 			if (provider.expandedStamps(view.mold()).size() > 0)
-				notifier.refreshSelection(lastSelection.contains(value) ? emptyList() : singletonList(value));
+				notifier.refreshSelection(selection().contains(value) ? emptyList() : singletonList(value));
+			selection(singletonList(value));
 			return;
 		}
+
+		selection(singletonList(value));
 
 		if (view.onClickRecordEvent().openPanel() != null)
 			notifyOpenItem(value);
@@ -213,15 +214,25 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private void notifyOpenCatalog(Item item) {
-		openItemCatalogListeners.forEach(l -> l.accept(new OpenItemCatalogEvent() {
+		notifyOpenCatalog(new OpenItemCatalogEvent() {
 			@Override
-			public Item sender() {
+			public Item item() {
 				return item;
+			}
+
+			@Override
+			public Stamp stamp() {
+				return null;
 			}
 
 			@Override
 			public Catalog catalog() {
 				return view.onClickRecordEvent().openCatalog().catalog();
+			}
+
+			@Override
+			public Position position() {
+				return null;
 			}
 
 			@Override
@@ -238,7 +249,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			public String itemToShow() {
 				return view.onClickRecordEvent().openCatalog().item(item, session());
 			}
-		}));
+		});
+	}
+
+	private void notifyOpenCatalog(OpenItemCatalogEvent event) {
+		openItemCatalogListeners.forEach(l -> l.accept(event));
 	}
 
 	private void notifyOpenDialog(Item item) {
@@ -249,6 +264,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 			}
 
 			@Override
+			public Stamp stamp() {
+				return null;
+			}
+
+			@Override
 			public AlexandriaDialog dialog() {
 				return view.onClickRecordEvent().openDialog().createDialog(item, session());
 			}
@@ -256,17 +276,17 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void renderExpandedPictures() {
-		lastSelection.forEach(this::renderExpandedPictures);
+		selection().forEach(this::renderExpandedPictures);
 	}
 
 	private void renderDisplays(String item) {
 		Map<EmbeddedDisplay, AlexandriaStamp> displays = displays();
-		Item itemObject = provider.item(item);
+		Item itemObject = itemOf(item);
 		displays.forEach((stamp, display) -> {
 			display.item(itemObject);
 			display.provider(AlexandriaCatalogListView.this);
 			add(display);
-			display.personify(item + stamp.displayType());
+			display.personifyOnce(item + stamp.displayType());
 			display.refresh();
 		});
 		recordDisplaysMap.put(item, new ArrayList<>(displays.values()));
@@ -278,7 +298,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		dialogs.forEach((stamp, dialog) -> {
 			dialog.target(itemObject);
 			add(dialog);
-			dialog.personify(item + stamp.dialogType());
+			dialog.personifyOnce(item + stamp.dialogType());
 			dialog.refresh();
 		});
 		recordDialogsMap.put(item, new ArrayList<>(dialogs.values()));
@@ -325,6 +345,10 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 	@Override
 	protected void sendClear() {
+		recordDisplaysMap.values().stream().flatMap(Collection::stream).forEach(this::removeChild);
+		recordDialogsMap.values().stream().flatMap(Collection::stream).forEach(this::removeChild);
+		recordDisplaysMap.clear();
+		recordDialogsMap.clear();
 		notifier.clear();
 	}
 
@@ -376,6 +400,16 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		Stamp stamp = provider.stamp(view.mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
 		return ((EmbeddedCatalog)stamp).createCatalog(session());
+	}
+
+	@Override
+	public void fullRefresh() {
+		forceRefresh();
+	}
+
+	@Override
+	public List<Item> selectedItems() {
+		return selection().stream().map(this::itemOf).collect(toList());
 	}
 
 	private void sendView() {
@@ -458,7 +492,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		loadingListeners.forEach(l -> l.accept(value));
 	}
 
-	public void openItemDialogOperation(OpenItemDialogParameters params) {
+	public void openItemDialogOperation(OpenItemParameters params) {
 		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session())));
 	}
 
@@ -502,13 +536,13 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		};
 	}
 
-	private List<Item> selectedItems() {
-		return lastSelection.stream().map(this::itemOf).collect(toList());
-	}
-
 	public void saveItem(SaveItemParameters value) {
 		Item item = itemOf(value.item());
 		provider.saveItem(value, item);
+	}
+
+	public void openItemCatalogOperation(OpenItemParameters params) {
+		notifyOpenCatalog(openItemCatalogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), params.position(), provider.element(), session()));
 	}
 
 	private Item itemOf(String id) {

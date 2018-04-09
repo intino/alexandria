@@ -27,8 +27,8 @@ AlexandriaPanelBehaviors.NotifierListener = {
         this.when("hidePanel").toSelf().execute(function(parameters) {
         	widget._hidePanel();
         });
-        this.when("showDialog").toSelf().execute(function(parameters) {
-        	widget._showDialog();
+        this.when("showDialogBox").toSelf().execute(function(parameters) {
+        	widget._showDialogBox();
         });
         this._listeningToDisplay = true;
     }

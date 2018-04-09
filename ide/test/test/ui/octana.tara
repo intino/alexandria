@@ -88,7 +88,11 @@ Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
 Dialog(url = "", label = "", description = "") dialog1
 
 Catalog(modelClass = "io.intino.octana.graph.Center") octanaCenterCatalog
-	Toolbar > OpenDialog("abrir", dialog=dialog1)
+	Toolbar
+		OpenDialog("abrir", dialog=dialog1)
+		Task(title = "ss") task
+		Download(title = "") down
+
 //	Events > OnClickRecord > OpenDialog(dialog1)
 	Events > OnClickRecord > OpenCatalog(octanaPersonCatalog, filtered=true)
 	Views
@@ -108,10 +112,6 @@ Panel octanaAnalysisPanel
 			RenderDisplay(display = "olap")
 			hidden = HiddenEnabled
 
-
-Catalog(modelClass = "Octana") octanaPersonCatalog
-	Views
-		DisplayView(label = "", display = "") dv
 
 Catalog(modelClass = "io.intino.octana.graph.Persona", label = "población") octanaPoblacion
 	Events > OnClickRecord > OpenPanel(panel = octanaPanelPersona)

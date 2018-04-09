@@ -1,5 +1,6 @@
 package io.intino.konos.builder.helpers;
 
+import com.intellij.openapi.diagnostic.Logger;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.rest.RESTService;
@@ -9,7 +10,9 @@ import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,14 +23,27 @@ import java.util.regex.Pattern;
 import static java.util.stream.Collectors.toList;
 
 public class Commons {
+	private static final Logger LOG = Logger.getInstance("Konos: ");
 
-	public static void writeFrame(File packageFolder, String name, String format) {
+	public static void writeFrame(File packageFolder, String name, String text) {
 		try {
 			packageFolder.mkdirs();
 			File file = javaFile(packageFolder, name);
-			Files.write(file.toPath(), format.getBytes());
+			Files.write(file.toPath(), text.getBytes(Charset.forName("UTF-8")));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(), e);
+		}
+	}
+
+	public static void write(File file, String text) {
+		write(file.toPath(), text);
+	}
+
+	public static void write(Path file, String text) {
+		try {
+			Files.write(file, text.getBytes(Charset.forName("UTF-8")));
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
 		}
 	}
 

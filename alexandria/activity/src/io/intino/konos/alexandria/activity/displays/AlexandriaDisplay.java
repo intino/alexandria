@@ -162,7 +162,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         childrenToRemove.forEach(this::removeChild);
     }
 
-    private void removeChild(AlexandriaDisplay display) {
+    public void removeChild(AlexandriaDisplay display) {
         display.die();
         children.remove(display);
         repository.remove(display.id);

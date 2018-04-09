@@ -143,7 +143,10 @@ Schema Crash
 	Attribute consulVersion as Text
 
 Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "everyTwoMinutes")
+	timeZone = "Atlantic/Canary"
+
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
+
 
 //Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate
 

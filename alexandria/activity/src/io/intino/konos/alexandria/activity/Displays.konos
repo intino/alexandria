@@ -40,3 +40,13 @@ Display alexandriaMenuLayout
 	Request logout
 	Request selectItem as Text
 	Request showHome
+
+Display alexandriaDialogBox
+	displays = empty
+
+	Notification refreshDisplay as Object(DisplayReference)
+	Notification refreshSettings as Object(DialogBoxSettings)
+	Notification closeDialog
+
+	Request accept
+	Request close

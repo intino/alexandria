@@ -21,6 +21,7 @@ public interface ElementView<E extends Element> {
     OnClickRecord onClickRecordEvent();
     boolean canCreateClusters();
     boolean canSearch();
+    boolean selectionEnabledByDefault();
     List<String> clusters();
     Item target();
     E element();

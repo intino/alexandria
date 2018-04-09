@@ -10,6 +10,7 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
     private int page;
     private int pageSize;
     private List<Consumer<List<String>>> selectListeners = new ArrayList<>();
+    private List<String> selection = new ArrayList<>();
 
     private static final int PageSize = 20;
 
@@ -19,7 +20,17 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
         this.pageSize = PageSize;
     }
 
-    public void addSelectListener(Consumer<List<String>> listener) {
+    public List<String> selection() {
+        return selection;
+    }
+
+    public PageDisplay selection(List<String> selection) {
+        this.selection = selection;
+        if (selection.size() > 0) notifySelectListeners(selection);
+        return this;
+    }
+
+    public void onSelectItems(Consumer<List<String>> listener) {
         selectListeners.add(listener);
     }
 
@@ -78,7 +89,7 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
     protected abstract void sendPageSize(int pageSize);
     protected abstract void sendCount(int count);
 
-    protected void notifySelectListeners(List<String> selection) {
+    private void notifySelectListeners(List<String> selection) {
         selectListeners.forEach(listener -> listener.accept(selection));
     }
 

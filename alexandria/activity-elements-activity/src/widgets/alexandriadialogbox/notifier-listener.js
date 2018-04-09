@@ -1,6 +1,6 @@
-var AlexandriaDialogContainerBehaviors = AlexandriaDialogContainerBehaviors || {};
+var AlexandriaDialogBoxBehaviors = AlexandriaDialogBoxBehaviors || {};
 
-AlexandriaDialogContainerBehaviors.NotifierListener = {
+AlexandriaDialogBoxBehaviors.NotifierListener = {
 
 	properties : {
 		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
@@ -9,8 +9,11 @@ AlexandriaDialogContainerBehaviors.NotifierListener = {
     listenToDisplay : function() {
 		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
-        this.when("refreshDialog").toSelf().execute(function(parameters) {
-        	widget._refreshDialog(parameters.value);
+        this.when("refreshDisplay").toSelf().execute(function(parameters) {
+        	widget._refreshDisplay(parameters.value);
+        });
+        this.when("refreshSettings").toSelf().execute(function(parameters) {
+        	widget._refreshSettings(parameters.value);
         });
         this.when("closeDialog").toSelf().execute(function(parameters) {
         	widget._closeDialog();

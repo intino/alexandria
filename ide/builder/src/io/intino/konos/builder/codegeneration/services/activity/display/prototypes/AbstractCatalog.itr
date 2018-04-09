@@ -172,35 +172,51 @@ def trigger(openCatalogFilter)
 end
 
 def type(operation & download) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, option, session) -> $catalog+FirstUpperCase.Toolbar.download(box, element, option, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Download().execute((element, options, session) -> $catalog+FirstUpperCase.Toolbar.download(box, (Catalog) element, options, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon"]));
 end
 
 def type(operation & export) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.export(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Export().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.export(box, (Catalog) element, from, to, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openDialog) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenDialog().dialogType("$dialog").dialogBuilder((session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, from, to, session) -> $catalog+FirstUpperCase.Toolbar.task(box, element, from, to, session)).name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+end
+
+def type(operation & openCatalog) trigger(operation)
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenCatalog()[.filter($openCatalogOperationFilter)].position("$position").catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$openCatalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$openCatalog").element()).views(java.util.Arrays.asList($view+quoted...[, ])).width($width).height($height).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
+end
+
+def trigger(openCatalogOperationFilter)
+	(context, object, session) -> $catalog+firstUpperCase.Toolbar.openCatalogFilter(box, (Catalog) context, object, session)
 end
 
 def type(operation & downloadselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.DownloadSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.downloadSelection(box, element, option, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.DownloadSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.downloadSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object) selection, session)).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & exportselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.ExportSelection().execute((element, from, to, selection, session) -> $catalog+firstUpperCase.Toolbar.exportSelection(box, element, from, to, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.ExportSelection().execute((element, from, to, selection, session) -> $catalog+firstUpperCase.Toolbar.exportSelection(box, (Catalog) element, from, to, (java.util.List<$type>)(Object) selection, session)).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & groupingselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.GroupingSelection()[.name("$name")][.title("$title")][.alexandriaIcon("$icon"))];
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.GroupingSelection().mode("$mode")[.name("$name")][.title("$title")][.alexandriaIcon("$icon"))];
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, element, option, (java.util.List<$type>)(Object)selection, session)).name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session)).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
+end
+
+def type(operation & opencatalogselection) trigger(operation)
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenCatalogSelection().execution((element, selection, openCatalogSelection, session) -> $catalog+firstUpperCase.Toolbar.openCatalogSelection(box, (Catalog) element, (java.util.List<$type>)(Object)selection, (java.util.List<Object>)openCatalogSelection, session))[.filter($openCatalogSelectionOperationFilter)].position("$position").selection("$selection").catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$openCatalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$openCatalog").element()).views(java.util.Arrays.asList($view+quoted...[, ])).width($width).height($height).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
+end
+
+def trigger(openCatalogSelectionOperationFilter)
+	(context, selection, object, session) -> $catalog+firstUpperCase.Toolbar.openCatalogSelectionFilter(box, (Catalog) context, (java.util.List<$type>)(Object)selection, object, session)
 end
 
 def type(listview) trigger(add)

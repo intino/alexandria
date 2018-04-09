@@ -7,28 +7,31 @@
 <link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../lib/iron-icons/iron-icons.html">
 <link rel="import" href="../../lib/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../../lib/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="../../lib/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../../lib/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="_common/alexandria-configuration-behavior.html">
-<link rel="import" href="_common/alexandria-dialog-behavior.html">
+<link rel="import" href="_common/alexandria-dialog-box-behavior.html">
 
-<script src="alexandriadialogcontainer/requester.js"></script>
-<script src="alexandriadialogcontainer/notifier-listener.js"></script>
+<script src="alexandriadialogbox/requester.js"></script>
+<script src="alexandriadialogbox/notifier-listener.js"></script>
 
-<dom-module id="alexandria-dialog-container">
+<dom-module id="alexandria-dialog-box">
 
     <template>
-        <paper-dialog id="dialog" entry-animation="scale-up-animation"
+        <paper-dialog id="dialog"
                       exit-animation="fade-out-animation"
                       on-iron-overlay-opened="_overlayOpened"
-                      on-iron-overlay-closed="_overlayClosed"
-                      with-backdrop>
+                      on-iron-overlay-closed="_overlayClosed">
             <div class="container">
                 <div class="header layout horizontal center">
                     <div class="label flex">[[_label]]</div>
                     <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
                 </div>
-                <div id="dialogContent"></div>
+                <div class$="toolbar-visible-[[_toolbarVisible]]" id="displayContent"></div>
+                <div class="toolbar layout horizontal center end-justified" hidden$="[[!_toolbarVisible]]">
+                    <paper-button on-tap="accept">[[Accept]]</paper-button>
+                </div>
             </div>
         </paper-dialog>
     </template>
@@ -40,9 +43,15 @@
             padding: 0;
         }
         :host paper-dialog {
-            margin: 50px;
             padding: 0;
             background: white;
+            position: fixed;
+        }
+        :host paper-dialog.fit-body {
+            margin: 50px;
+        }
+        :host paper-dialog.fit-trigger {
+            margin: 25px 0;
         }
         :host paper-dialog paper-icon-button {
             padding: 6px;
@@ -63,18 +72,29 @@
         :host paper-dialog .header .label {
             font-size: 12pt;
         }
-        :host paper-dialog #dialogContent {
+        :host paper-dialog #displayContent {
             border: 0;
             overflow: auto;
             width: 100%;
             height: calc(100% - 51px);
             border-radius: 2px;
         }
+        :host paper-dialog #displayContent.toolbar-visible-true {
+            height: calc(100% - 102px);
+        }
+        :host paper-dialog .toolbar {
+            height: 50px;
+            border-top: 1px solid #ddd;
+        }
+        :host paper-dialog .toolbar paper-button {
+            padding: 5px;
+            margin-right: 15px;
+        }
     </style>
 
     <script>
 
-        const AlexandriaDialogContainerDictionary = {
+        const AlexandriaDialogBoxDictionary = {
             es: {
                 Loading: "cargando diálogo..."
             },
@@ -84,15 +104,15 @@
         };
 
         Polymer({
-            is: 'alexandria-dialog-container',
+            is: 'alexandria-dialog-box',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
-                AlexandriaDialogContainerBehaviors.Requester,
-                AlexandriaDialogContainerBehaviors.NotifierListener,
+                AlexandriaDialogBoxBehaviors.Requester,
+                AlexandriaDialogBoxBehaviors.NotifierListener,
                 AlexandriaBehaviors.ConfigurationBehavior,
-                AlexandriaBehaviors.DialogBehavior,
+                AlexandriaBehaviors.DialogBoxBehavior,
                 Polymer.IronResizableBehavior ],
 
             properties : {
@@ -101,25 +121,31 @@
             },
 
             attached : function() {
-                this.translate(AlexandriaDialogContainerDictionary);
+                this.translate(AlexandriaDialogBoxDictionary);
+                this.translate(AlexandriaBehaviors.DialogBoxBehavior.Dictionary);
                 this.listenToDisplay();
             },
 
-            _refreshDialog : function(dialog) {
-                this._label = dialog.label;
-                this._width = dialog.width;
-                this._height = dialog.height;
-                this._type = dialog.type;
+            _refreshDisplay : function(display) {
+                this._label = display.label;
+                this._type = display.type;
                 this._createZombie();
             },
 
+            _refreshSettings : function(settings) {
+                this._width = settings.size.width;
+                this._height = settings.size.height;
+                this._position = settings.position;
+                this._toolbarVisible = settings.acceptButton;
+            },
+
             _createZombie : function() {
-                this.$.dialogContent.innerHTML = "";
+                this.$.displayContent.innerHTML = "";
                 var zombie = document.createElement("cotton-zombie");
                 zombie.setAttribute("display", this._type);
                 zombie.setAttribute("widget", this._type);
                 zombie.setAttribute("object", this.display.id);
-                this.$.dialogContent.appendChild(zombie);
+                this.$.displayContent.appendChild(zombie);
             }
 
         });

@@ -60,26 +60,28 @@
                             <div class="group-header" style$="[[item.group.style]]">[[item.group.label]]</div>
                             <div class="content layout horizontal">
                                 <template is="dom-if" if="[[!grid]]">
-                                    <div class="layout horizontal flex">
+                                    <div class="layout horizontal flex" style="width:100%">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
-                                        <div class="flex">
+                                        <div class="flex" style="width:100%">
                                             <alexandria-mold-container name$="_item_[[item.name]]"
                                                                        item="[[item]]"
                                                                        mold="[[mold]]"
                                                                        on-open-dialog="_openStampDialog"
+                                                                       on-open-catalog="_openStampCatalog"
                                                                        on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
                                 </template>
                                 <template is="dom-if" if="[[grid]]">
-                                    <div class="layout horizontal flex">
+                                    <div class="layout horizontal flex" style="width:100%">
                                         <div class="selector"><cotton-checkbox checked$="[[item.checked]]" name$="[[item.name]]" on-change="_toggleSelection" icon="done"></cotton-checkbox></div>
-                                        <div class="flex">
+                                        <div class="flex" style="width:100%">
                                             <alexandria-mold-container name$="_item_[[item.name]]"
                                                                        item="[[item]]"
                                                                        mold="[[mold]]"
                                                                        mode="grid"
                                                                        on-open-dialog="_openStampDialog"
+                                                                       on-open-catalog="_openStampCatalog"
                                                                        on-execute-task-item="_executeStampTask"></alexandria-mold-container>
                                         </div>
                                     </div>
@@ -173,7 +175,7 @@
         :host .selection_false .content .selector {
             display: none;
         }
-        :host  .selection_true.selection_enabled_true .container .content .selector, :host .selection_true .container .content:hover .selector {
+        :host .selection_true.selection_enabled_true .container .content .selector, :host .selection_true .container .content:hover .selector {
             visibility: visible;
             opacity: 1;
         }
@@ -291,6 +293,7 @@
                 embedded: Boolean,
                 canSearch: { type: Boolean, observer: '_refreshToolbar' },
                 canCreateClusters: Boolean,
+                selectionEnabledByDefault: { type: Boolean, observer: '_refreshToolbar' },
                 clusterList: { type: Array, value: function() { return []; } },
                 sortingList: { type: Array, value: function() { return []; }, observer: '_refreshToolbar' },
                 selectedSorting: Object,
@@ -345,9 +348,9 @@
                 var height = -1;
                 list.querySelectorAll(".item.container").forEach(function(container) {
                     if (height == -1) height = $(container).height();
-                    $(container).height(height);
+                        $(container).height(height);
                 });
-            }, 100);
+                }, 100);
             },
 
             _listOffsetHeight : function() {
@@ -455,13 +458,19 @@
             },
 
             _selectionChanged: function() {
+                if (this._selectionChangeTimeout != null) {
+                    window.clearTimeout(this._selectionChangeTimeout);
+                    this._selectionChangeTimeout = null;
+                }
                 if (this.selectedItemList == null) return;
-                this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
-                this.$.items.fire("iron-resize");
-                let items = this.selectionOf(this.$.items).items;
-                this.fire("select-items", items);
-                this._updateSizeForItems(items);
-                this._updateCheckboxes(items);
+                this._selectionChangeTimeout = window.setTimeout(() => {
+                    this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
+                    this.$.items.fire("iron-resize");
+                    let items = this.selectionOf(this.$.items).items;
+                    this.fire("select-items", items);
+                    this._updateSizeForItems(items);
+                    this._updateCheckboxes(items);
+                }, 100);
             },
 
             _clearSelection : function() {
@@ -506,6 +515,10 @@
 
             _openStampDialog : function(event) {
                 this.fire("open-stamp-dialog", event.detail);
+            },
+
+            _openStampCatalog : function(event) {
+                this.fire("open-stamp-catalog", event.detail);
             },
 
             _executeStampTask : function(event) {

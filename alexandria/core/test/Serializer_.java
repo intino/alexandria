@@ -129,7 +129,8 @@ public class Serializer_ {
 		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(80));
 	}
 
-	private Instant instant(int y, int m, int d, int h, int mn, int s) {
+
+	static Instant instant(int y, int m, int d, int h, int mn, int s) {
 		return LocalDateTime.of(y, m, d, h, mn, s).atZone(ZoneId.of("UTC")).toInstant();
 	}
 

@@ -15,8 +15,8 @@
     <template>
         <cotton-cookies language="[[_language]]" theme="light-top"></cotton-cookies>
 
-        <div class="toolbar layout horizontal end-justified">
-            <cotton-checkbox id="chartsCheckBox" checked="{{_checked}}" on-change="_toggleCharts">[[_toggleChartsLabel]]</cotton-checkbox>
+        <div id="toolbar" class="toolbar layout horizontal end-justified">
+            <cotton-checkbox checked="{{_checked}}" on-change="_toggleCharts">[[_toggleChartsLabel]]</cotton-checkbox>
         </div>
         <ul class="groupings">
             <template is="dom-if" if="[[!groupingList.length]]">
@@ -150,9 +150,15 @@
             },
 
             _refreshHistogramsMode : function () {
-                if (Cookies.get("alexandria-catalog-groupings-charts") != null) return;
                 var mode = this.histogramsMode;
-                this.$.chartsCheckBox.hidden = mode === "Disabled";
+
+                if (mode === "Disabled") {
+                    this.$.toolbar.hidden = true;
+                    return;
+                }
+
+                this.$.toolbar.hidden = false;
+                if (Cookies.get("alexandria-catalog-groupings-charts") != null) return;
                 this._checked = mode === "EnabledAndVisible";
             },
 
