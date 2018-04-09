@@ -11,6 +11,8 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
@@ -23,7 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import tara.dsl.Konos;
 
 import java.io.File;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PublishAccessorAction extends KonosAction implements DumbAware {
@@ -67,9 +70,9 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 		});
 	}
 
-	private List<File> konosFiles(Module module) {
+	private Map<File, Charset> konosFiles(Module module) {
 		return KonosUtils.findKonosFiles(module).stream().
-				map(pf -> new File(pf.getVirtualFile().getPath())).collect(Collectors.toList());
+				map(PsiFile::getVirtualFile).collect(Collectors.toMap(vf -> new File(vf.getPath()), VirtualFile::getCharset));
 	}
 
 	private boolean projectIsNull(AnActionEvent e, Project project) {
