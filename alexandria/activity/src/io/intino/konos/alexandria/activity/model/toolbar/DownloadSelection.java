@@ -27,9 +27,9 @@ public class DownloadSelection extends Operation {
 		return this;
 	}
 
-	public Resource execute(Element element, String option, List<Item> selection, ActivitySession session) {
+	public Resource execute(Element element, String option, List<Item> selection, String displayId, ActivitySession session) {
 		List<Object> selectionObjects = selection.stream().map(Item::object).collect(toList());
-		return this.execution != null ? this.execution.download(element, option, selectionObjects, session) : null;
+		return this.execution != null ? this.execution.download(element, option, selectionObjects, displayId, session) : null;
 	}
 
 	public DownloadSelection execute(Execution execution) {
@@ -38,6 +38,6 @@ public class DownloadSelection extends Operation {
 	}
 
 	public interface Execution {
-		Resource download(Element element, String option, List<Object> selection, ActivitySession session);
+		Resource download(Element element, String option, List<Object> selection, String displayId, ActivitySession session);
 	}
 }

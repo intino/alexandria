@@ -45,7 +45,7 @@ public abstract class AlexandriaPageAction {
 		Browser browser = session.browser();
 
 		template = template.replace("$title", title() != null ? title() : "");
-		template = template.replace("$language", language);
+		template = template.replace("$language", language != null ? language : "");
 		template = template.replace("$currentSession", sessionId);
 		template = template.replace("$client", clientId);
 		template = template.replace("$baseUrl", browser.baseUrl());

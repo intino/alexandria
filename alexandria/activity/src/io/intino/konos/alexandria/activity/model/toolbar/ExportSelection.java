@@ -40,9 +40,9 @@ public class ExportSelection extends Operation {
 	}
 
 
-	public Resource execute(Element element, Instant from, Instant to, List<Item> selection, ActivitySession session) {
+	public Resource execute(Element element, Instant from, Instant to, List<Item> selection, String displayId, ActivitySession session) {
 		List<Object> selectionObjects = selection.stream().map(Item::object).collect(toList());
-		return execution != null ? execution.export(element, from, to, selectionObjects, session) : null;
+		return execution != null ? execution.export(element, from, to, selectionObjects, displayId, session) : null;
 	}
 
 	public ExportSelection execute(Execution execution) {
@@ -51,6 +51,6 @@ public class ExportSelection extends Operation {
 	}
 
 	public interface Execution {
-		Resource export(Element element, Instant from, Instant to, List<Object> selection, ActivitySession session);
+		Resource export(Element element, Instant from, Instant to, List<Object> selection, String displayId, ActivitySession session);
 	}
 }
