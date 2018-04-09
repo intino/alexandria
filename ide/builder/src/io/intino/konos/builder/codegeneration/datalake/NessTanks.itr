@@ -65,7 +65,7 @@ end
 
 def type(tank) trigger(assign)
 	$name = box.datalake().tank($messageType+format);
-	handlersMap.put($simpleMessageType+shortPath+quoted, new $name+FirstUpperCase~Subscriptor(box));
+	handlersMap.put($simpleMessageType+shortPath+lowerCase+quoted, new $name+FirstUpperCase~Subscriptor(box));
 end
 
 def type(tank) trigger(getter)
@@ -106,10 +106,10 @@ def trigger(custom)
 end
 
 def trigger(tank) trigger(class)
-	private static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements io.intino.konos.datalake.Ness.TankFlow {
+	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor implements io.intino.konos.datalake.Ness.TankFlow {
 		private final $box+firstUppercase~Box box;
 
-		$name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor($box+firstUppercase~Box box) {
+		public $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
@@ -123,7 +123,11 @@ def trigger(tank) trigger(class)
 			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
 			tank.box = box;
 			tank.message = m;
-			tank.execute();
+			try {
+				tank.execute();
+			} catch(Throwable e) {
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+			}
 		}
 	}
 end
