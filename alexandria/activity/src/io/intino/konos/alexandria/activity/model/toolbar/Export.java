@@ -35,8 +35,8 @@ public class Export extends Operation {
 		return this;
 	}
 
-	public Resource execute(Element element, Instant from, Instant to, ActivitySession session) {
-		return execution != null ? execution.export(element, from, to, session) : null;
+	public Resource execute(Element element, Instant from, Instant to, String displayId, ActivitySession session) {
+		return execution != null ? execution.export(element, from, to, displayId, session) : null;
 	}
 
 	public Export execute(Execution execution) {
@@ -45,6 +45,6 @@ public class Export extends Operation {
 	}
 
 	public interface Execution {
-		Resource export(Element element, Instant from, Instant to, ActivitySession session);
+		Resource export(Element element, Instant from, Instant to, String displayId, ActivitySession session);
 	}
 }

@@ -14,6 +14,8 @@ def type(page)
             <script src="lib/cotton-push/PushService.js"></script>
             <script src="lib/webcomponentsjs/webcomponents-lite.min.js"></script>
             <script src="lib/moment/min/moment-with-locales.min.js"></script>
+            <script src="lib/numeral/numeral.min.js"></script>
+            <script src="lib/numeral/languages.min.js"></script>
 
             <script src="main.js"></script>
 

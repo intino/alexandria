@@ -24,8 +24,8 @@ public class Download extends Operation {
 		return this;
 	}
 
-	public Resource execute(Element element, String option, ActivitySession session) {
-		return this.execution != null ? this.execution.download(element, option, session) : null;
+	public Resource execute(Element element, String option, String displayId, ActivitySession session) {
+		return this.execution != null ? this.execution.download(element, option, displayId, session) : null;
 	}
 
 	public Download execute(Execution execution) {
@@ -34,6 +34,6 @@ public class Download extends Operation {
 	}
 
 	public interface Execution {
-		Resource download(Element element, String option, ActivitySession session);
+		Resource download(Element element, String option, String displayId, ActivitySession session);
 	}
 }

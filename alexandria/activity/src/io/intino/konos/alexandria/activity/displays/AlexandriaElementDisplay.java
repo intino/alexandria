@@ -428,7 +428,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		TaskOperation.Refresh refresh = ((TaskOperation) event.stamp()).execute(item, event.self(), session());
 		dirty(true);
 		if (refresh == TaskOperation.Refresh.Item) refresh(this.currentItem());
-		else if (refresh == TaskOperation.Refresh.Element) forceRefresh();
+		else if (refresh == TaskOperation.Refresh.Element) {
+			closeCurrentItem();
+			forceRefresh();
+		}
 		notifyLoading(false);
 	}
 
@@ -540,16 +543,16 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		ActivitySession session = session();
 
 		if (operation instanceof Export)
-			return ((Export)operation).execute(element, params.from(), params.to(), session);
+			return ((Export)operation).execute(element, params.from(), params.to(), id(), session);
 
 		if (operation instanceof ExportSelection)
-			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, session);
+			return ((ExportSelection)operation).execute(element, params.from(), params.to(), selection, id(), session);
 
 		if (operation instanceof Download)
-			return ((Download)operation).execute(element, params.option(), session);
+			return ((Download)operation).execute(element, params.option(), id(), session);
 
 		if (operation instanceof DownloadSelection)
-			return ((DownloadSelection)operation).execute(element, params.option(), selection, session);
+			return ((DownloadSelection)operation).execute(element, params.option(), selection, id(), session);
 
 		return null;
 	}
