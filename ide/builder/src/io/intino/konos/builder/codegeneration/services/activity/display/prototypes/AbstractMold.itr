@@ -150,7 +150,7 @@ def type(stamp & previewOperation)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.messageLoader($operationMessageLoader)][.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.messageLoader($operationMessageLoader)][.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
