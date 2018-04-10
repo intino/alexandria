@@ -37,7 +37,7 @@ def type(tanks)
 			handlersMap.get(message.type().toLowerCase()).consume(message);
 		}
 
-		public List<io.intino.konos.datalake.Datalake.Tank> tanks() {
+		public static List<io.intino.konos.datalake.Datalake.Tank> tanks() {
 			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
@@ -70,16 +70,16 @@ def type(tank) trigger(field)
 end
 
 def type(tank) trigger(assign)
-	$name = box.datalake().tank($messageType+format);
+	$name = box.datalake().add($messageType+format);
 	handlersMap.put($simpleMessageType+shortPath+lowerCase+quoted, new $name+FirstUpperCase~Subscriptor(box));
 end
 
 def type(tank) trigger(add)
-	tanks.add(this.$name);
+	tanks.add(NessTanks.$name);
 end
 
 def type(tank) trigger(getter)
-	public static io.intino.konos.datalake.Ness.Tank $name() {
+	public static io.intino.konos.datalake.Datalake.Tank $name() {
 		return NessTanks.$name;
 	}
 end

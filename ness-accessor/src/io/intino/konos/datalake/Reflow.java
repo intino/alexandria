@@ -8,13 +8,6 @@ public class Reflow implements java.io.Serializable {
 	private java.util.List<String> tanks = new java.util.ArrayList<>();
 	private Instant from = Instant.MIN;
 
-	public Integer blockSize() {
-		return this.blockSize;
-	}
-
-	public java.util.List<String> tanks() {
-		return this.tanks;
-	}
 
 	public Reflow blockSize(Integer blockSize) {
 		this.blockSize = blockSize;
@@ -29,9 +22,5 @@ public class Reflow implements java.io.Serializable {
 	public Reflow from(Instant from) {
 		this.from = from;
 		return this;
-	}
-
-	public Instant from() {
-		return from;
 	}
 }
