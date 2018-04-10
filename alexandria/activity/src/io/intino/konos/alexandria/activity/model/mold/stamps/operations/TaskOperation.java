@@ -1,7 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold.stamps.operations;
 
 import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
-import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
@@ -33,25 +32,26 @@ public class TaskOperation extends Operation<String> {
 		return this;
 	}
 
-	public interface Execution {
-		Refresh task(Object object, String selfId, ActivitySession session);
-	}
-
 	public String message(Item item, AlexandriaDisplay self, ActivitySession session) {
 		return messageLoader != null ? messageLoader.load(item != null ? item.object() : null, self.id(), session) : null;
+	}
+
+	public TaskOperation messageLoader(MessageLoader loader) {
+		this.messageLoader = loader;
+		return this;
 	}
 
 	public enum Refresh {
 		None, Item, Element
 	}
 
-	public interface MessageLoader {
-		String load(Element element, String displayId, ActivitySession session);
+	public interface Execution {
+		Refresh task(Object object, String selfId, ActivitySession session);
 	}
 
-	public TaskOperation messageLoader(MessageLoader loader) {
-		this.messageLoader = loader;
-		return this;
+	public interface MessageLoader {
+		String load(Object object, String selfId, ActivitySession session);
+
 	}
 
 }
