@@ -13,8 +13,6 @@ import static io.intino.konos.datalake.Datalake.Tank;
 
 public class Ness {
 
-	private Instant lastMessage;
-	private int receivedMessages = 0;
 	private final Datalake datalake;
 
 	public Ness(String url, String user, String password, String clientID) {
@@ -29,7 +27,7 @@ public class Ness {
 		datalake.disconnect();
 	}
 
-	public Datalake.ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, Tank... tanks) {
+	public Datalake.ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
 		return datalake.reflow(blockSize, dispatcher, from, tanks);
 	}
 
@@ -42,26 +40,7 @@ public class Ness {
 		return datalake instanceof JMSDatalake ? new JMSTank(tank, ((JMSDatalake) datalake)) : new FSTank(tank, (FSDatalake) datalake);
 	}
 
-	public Instant lastMessage() {
-		return lastMessage;
-	}
-
-	public void lastMessage(Instant lastMessage) {
-		this.lastMessage = lastMessage;
-		if (lastMessage != null) this.receivedMessages++;
-	}
-
-	public int receivedMessages() {
-		return receivedMessages;
-	}
-
-	public void reset() {
-		this.receivedMessages = 0;
-	}
-
 	public interface TankFlow extends Consumer {
 		void consume(Message message);
 	}
-
-
 }
