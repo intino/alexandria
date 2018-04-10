@@ -115,6 +115,7 @@
         _initStampProperties : function(stamp) {
             stamp.properties = stamp.properties != null ? stamp.properties : {};
             stamp.properties.style = this._propertyValueOf(stamp, 'style');
+            stamp.properties.className = this._propertyValueOf(stamp, 'className');
 
             this._initIconProperties(stamp);
             this._initBreadcrumbsProperties(stamp);

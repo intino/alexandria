@@ -136,9 +136,13 @@ public class ItemBuilder {
         List<Property> result = new ArrayList<>();
         ActivitySession session = provider.session();
         String style = stamp.style(item, session);
+        String className = stamp.className(item, session);
 
         if (style != null && !style.isEmpty())
             result.add(propertyOf("style", style));
+
+        if (className != null && !className.isEmpty())
+            result.add(propertyOf("className", className));
 
         if (stamp instanceof Highlight)
             result.add(propertyOf("color", ((Highlight)stamp).color(item, session)));
