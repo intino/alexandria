@@ -1,6 +1,7 @@
 package io.intino.konos.datalake;
 
 import io.intino.konos.jms.TopicConsumer;
+import io.intino.ness.inl.Message;
 
 import java.time.Instant;
 
@@ -9,7 +10,7 @@ public interface Datalake {
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
 
-	ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, Tank... tanks);
+	ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks);
 
 	void commit();
 
@@ -20,6 +21,10 @@ public interface Datalake {
 	void connect(String... args);
 
 	interface Tank {
+		void handler(MessageHandler handler);
+
+		void handle(Message message);
+
 		String name();
 
 		default String flowChannel() {

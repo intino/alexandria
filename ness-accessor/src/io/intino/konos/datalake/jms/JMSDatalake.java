@@ -1,8 +1,8 @@
 package io.intino.konos.datalake.jms;
 
 import io.intino.konos.datalake.Datalake;
-import io.intino.konos.datalake.MessageDispatcher;
 import io.intino.konos.datalake.Reflow;
+import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -60,9 +60,8 @@ public class JMSDatalake implements Datalake {
 		return session;
 	}
 
-
 	@Override
-	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, Tank... tanks) {
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
 		return reflow(blockSize, dispatcher, from, stream(tanks).map(Tank::name).toArray(String[]::new));
 	}
 
@@ -80,12 +79,12 @@ public class JMSDatalake implements Datalake {
 
 	}
 
-	private ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, String... tanks) {
+	private ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, String... tanks) {
 		TopicProducer producer = newProducer(REFLOW_PATH);
 		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
 		waitUntilReflowSession();
 		TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
-		topicConsumer.listen((m) -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
+		topicConsumer.listen(m -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
 		return new ReflowSession() {
 			public void next() {
 				final TopicProducer topicProducer = newProducer(REFLOW_PATH);
@@ -161,7 +160,7 @@ public class JMSDatalake implements Datalake {
 			disconnect();
 			sleep(40 * 1000);
 			connect();
-		} catch (InterruptedException e) {
+		} catch (InterruptedException ignored) {
 		}
 	}
 
@@ -171,8 +170,7 @@ public class JMSDatalake implements Datalake {
 		connection.start();
 	}
 
-	private void consume(MessageDispatcher dispatcher, javax.jms.Message m) {
+	private void consume(ReflowDispatcher dispatcher, javax.jms.Message m) {
 		dispatcher.dispatch(load(textFrom(m)));
 	}
-
 }

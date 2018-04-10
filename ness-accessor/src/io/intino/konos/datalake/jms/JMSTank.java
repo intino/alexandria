@@ -1,9 +1,11 @@
 package io.intino.konos.datalake.jms;
 
 import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.MessageHandler;
 import io.intino.konos.datalake.Ness;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
+import io.intino.ness.inl.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +21,21 @@ public class JMSTank implements Datalake.Tank {
 	private String name;
 	private JMSDatalake datalake;
 	private TopicConsumer flow;
+	private MessageHandler handler;
 
 	public JMSTank(String name, JMSDatalake datalake) {
 		this.name = name;
 		this.datalake = datalake;
+	}
+
+	@Override
+	public void handler(MessageHandler handler) {
+		this.handler = handler;
+	}
+
+	@Override
+	public void handle(Message message) {
+		handler.handle(message);
 	}
 
 	public String name() {
