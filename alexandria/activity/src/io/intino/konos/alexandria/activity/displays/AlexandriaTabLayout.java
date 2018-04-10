@@ -88,6 +88,10 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	protected void hidePanel() {
 	}
 
+	@Override
+	protected void showOperationMessage(String message) {
+	}
+
 	public void logout() {
 		super.logout();
 	}

@@ -6,6 +6,7 @@
 <link rel="import" href="../../lib/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../lib/paper-tabs/paper-tabs-icons.html">
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../lib/paper-toast/paper-toast.html">
 <link rel="import" href="alexandria-panel-custom-view.html">
 <link rel="import" href="alexandria-panel-catalog-view.html">
 <link rel="import" href="alexandria-panel-display-view.html">
@@ -78,6 +79,7 @@
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
+        <paper-toast class="fit-bottom operation-message" text="[[_operationMessage]]"></paper-toast>
     </template>
 
     <style>

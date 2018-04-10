@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class TaskSelection<T> extends Operation {
+public class TaskSelection extends MessageOperation {
 	private Execution launcher;
 
 	public TaskSelection execute(Execution launcher) {

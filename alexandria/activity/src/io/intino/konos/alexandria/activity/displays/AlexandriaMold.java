@@ -48,4 +48,9 @@ public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends 
     @Override
     protected void hidePanel() {
     }
+
+    @Override
+    protected void showOperationMessage(String message) {
+    }
+
 }

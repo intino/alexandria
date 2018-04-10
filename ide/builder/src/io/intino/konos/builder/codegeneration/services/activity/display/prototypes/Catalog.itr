@@ -217,6 +217,7 @@ def type(operation & task)
 	public static io.intino.konos.alexandria.activity.model.toolbar.Task.Refresh task($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, String selfId, ActivitySession session) {
 		return io.intino.konos.alexandria.activity.model.toolbar.Task.Refresh.None;
 	}
+	[$operationMessageLoader]
 end
 
 def type(operation & downloadselection)
@@ -235,10 +236,17 @@ def type(operation & taskselection)
 	public static io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh taskSelection($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, String option, java.util.List<$type> selection, ActivitySession session) {
 		return io.intino.konos.alexandria.activity.model.toolbar.TaskSelection.Refresh.None;
 	}
+	[$operationMessageLoader]
 end
 
 def type(operation & openCatalog)
 	[$openCatalogOperationFilter]
+end
+
+def trigger(operationMessageLoader)
+	public static String $operationType~UserMessage($box+firstUpperCase~Box box, io.intino.konos.alexandria.activity.model.Catalog catalog, String selfId, ActivitySession session) {
+		return null;
+	}
 end
 
 def trigger(openCatalogOperationFilter)

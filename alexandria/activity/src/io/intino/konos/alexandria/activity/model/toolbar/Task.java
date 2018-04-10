@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
-public class Task extends Operation {
+public class Task extends MessageOperation {
 	private Execution launcher;
 
 	public Task execute(Execution launcher) {

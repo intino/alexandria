@@ -6,7 +6,8 @@
     AlexandriaBehaviors.ElementBehavior = {
 
         properties : {
-            _breadcrumbs : { type: Object, value: function () { return []; } }
+            _breadcrumbs : { type: Object, value: function () { return []; } },
+            _operationMessage : String
         },
 
         _refreshBreadcrumbs : function(tree) {
@@ -30,6 +31,11 @@
         _hidePanel : function() {
             $(this.$.main).removeClass("hidden");
             $(this.$.panel).addClass("hidden");
+        },
+
+        _showOperationMessage : function(message) {
+            this._operationMessage = message;
+            this.querySelector("paper-toast.operation-message").open();
         },
 
         _showDialogBox : function() {

@@ -55,6 +55,11 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
+	protected void showOperationMessage(String message) {
+		notifier.showOperationMessage(message);
+	}
+
+	@Override
 	protected void sendCatalog() {
 		notifier.refreshCatalog(CatalogBuilder.build(element(), groupingManager, label(), embedded()));
 	}

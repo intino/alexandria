@@ -150,7 +150,7 @@ def type(stamp & previewOperation)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.messageLoader($operationMessageLoader)][.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -190,6 +190,10 @@ end
 
 def trigger(embeddedDialogBuilder)
 	(name, session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
+end
+
+def trigger(operationMessageLoader)
+	(object, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.userMessage(box, ($moldClass) object, selfId, session)
 end
 
 def trigger(title)
