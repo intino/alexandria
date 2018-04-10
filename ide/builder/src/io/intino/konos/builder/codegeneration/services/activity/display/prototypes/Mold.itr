@@ -121,6 +121,7 @@ def type(stamp & taskOperation)
 		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
+		[$operationMessageLoader]
 	}
 end
 
@@ -264,6 +265,12 @@ end
 def trigger(openCatalogOperationExecution)
 	public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, ActivitySession session) {
 		return io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh.None;
+	}
+end
+
+def trigger(operationMessageLoader)
+	public static String userMessage($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
+		return null;
 	}
 end
 

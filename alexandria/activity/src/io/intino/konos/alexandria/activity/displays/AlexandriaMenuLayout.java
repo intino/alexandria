@@ -88,6 +88,10 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 	protected void hidePanel() {
 	}
 
+	@Override
+	protected void showOperationMessage(String message) {
+	}
+
 	public void logout() {
 		super.logout();
 	}

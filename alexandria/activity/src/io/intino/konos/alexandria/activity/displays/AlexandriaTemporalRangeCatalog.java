@@ -51,6 +51,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	protected void showOperationMessage(String message) {
+		notifier.showOperationMessage(message);
+	}
+
+	@Override
 	protected void showDialogBox() {
 		notifier.showDialogBox();
 	}

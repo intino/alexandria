@@ -96,6 +96,10 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 	protected void hidePanel() {
 	}
 
+	@Override
+	protected void showOperationMessage(String message) {
+	}
+
 	private void refreshLoading(boolean withMessage) {
 		notifier.loading(withMessage);
 	}

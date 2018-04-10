@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.activity.model.toolbar;
 
+import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 
 import java.util.List;

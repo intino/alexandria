@@ -73,6 +73,7 @@ Concept Mold extends Display
 					var string[] options = empty
 				sub TaskOperation
 					var string confirmText = empty
+					var boolean showMessageToUser = false
 				sub PreviewOperation
 
 			sub Page

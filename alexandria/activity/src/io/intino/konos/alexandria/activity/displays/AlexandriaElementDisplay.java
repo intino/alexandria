@@ -425,13 +425,15 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		notifyLoading(true);
 		currentItem(event.item().id());
 		Item item = this.currentItem();
-		TaskOperation.Refresh refresh = ((TaskOperation) event.stamp()).execute(item, event.self(), session());
+		TaskOperation stamp = (TaskOperation) event.stamp();
+		TaskOperation.Refresh refresh = stamp.execute(item, event.self(), session());
 		dirty(true);
 		if (refresh == TaskOperation.Refresh.Item) refresh(this.currentItem());
 		else if (refresh == TaskOperation.Refresh.Element) {
 			closeCurrentItem();
 			forceRefresh();
 		}
+		showOperationMessageIfNotEmpty(stamp.message(item, event.self(), session()));
 		notifyLoading(false);
 	}
 
@@ -453,6 +455,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void createPanel(CreatePanelParameters params);
 	protected abstract void showPanel();
 	protected abstract void hidePanel();
+	protected abstract void showOperationMessage(String message);
 
 	protected void applyFilter(ItemList itemList) {
 		if (staticFilter != null) itemList.filter(staticFilter);
@@ -492,6 +495,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			Task.Refresh refresh = taskOperation.execute(element(), id(), session());
 			if (refresh == Task.Refresh.Catalog)
 				this.refresh();
+			showOperationMessageIfNotEmpty(taskOperation.message(element(), id(), session()));
 			return;
 		}
 
@@ -570,4 +574,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		return new Gson().toJson(tree);
 	}
+
+	private void showOperationMessageIfNotEmpty(String message) {
+		if (message == null || message.isEmpty()) return;
+		showOperationMessage(message);
+	}
+
 }

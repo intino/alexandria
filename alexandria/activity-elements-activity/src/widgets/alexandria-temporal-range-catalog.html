@@ -4,6 +4,7 @@
 <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../lib/paper-toast/paper-toast.html">
 <link rel="import" href="_common/catalog/alexandria-catalog-grouping-list.html">
 <link rel="import" href="alexandria-time-range-navigator.html">
 <link rel="import" href="alexandriatimerangenavigator/alexandria-vertical-time-range-navigator.html">
@@ -33,6 +34,7 @@
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
+        <paper-toast class="fit-bottom operation-message" text="[[_operationMessage]]"></paper-toast>
         <paper-dialog id="groupingsDialog" no-overlap>
             <h2>[[ShowGroupings]]</h2>
             <alexandria-catalog-grouping-list hidden="[[_hideGroupings]]"

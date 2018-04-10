@@ -262,6 +262,9 @@ public class CatalogRenderer extends PrototypeRenderer {
 			if (openCatalogSelection.filtered()) frame.addSlot("openCatalogSelectionOperationFilter", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 			frame.addSlot("openCatalogSelectionOperation", new Frame().addSlot("catalog", catalog.name$()).addSlot("box", box).addSlot("type", modelClass));
 		}
+		if ((operation.i$(Toolbar.Task.class) && operation.a$(Toolbar.Task.class).showMessageToUser()) ||
+			(operation.i$(Toolbar.TaskSelection.class) && operation.a$(Toolbar.TaskSelection.class).showMessageToUser()))
+			frame.addSlot("operationMessageLoader", new Frame().addSlot("catalog", catalog.name$()).addSlot("operationType", operation.getClass().getSimpleName()));
 		return frame;
 	}
 
