@@ -40,8 +40,12 @@ public class AlexandriaStamp<N extends AlexandriaDisplayNotifier> extends Alexan
         }
     }
 
-    public void fullRefresh() {
-        provider.fullRefresh();
+    public void refreshItem() {
+        provider.refreshItem();
+    }
+
+    public void refreshElement() {
+        provider.refreshElement();
     }
 
 }

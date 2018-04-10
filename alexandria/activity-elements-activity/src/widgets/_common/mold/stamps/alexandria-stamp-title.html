@@ -5,14 +5,14 @@
 <dom-module id="alexandria-stamp-title">
 
     <template>
-        <div id="layer" on-tap="_edit" class$="title [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]" style$="[[_style]]">[[stamp.value]]</div>
+        <div id="layer" on-tap="_edit" class$="value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]" style$="[[_style]]">[[stamp.value]]</div>
         <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}" hidden$="[[!stamp.editable]]" style="display:none;" on-save="_save" on-close="_close"></alexandria-stamp-editor>
     </template>
 
     <style>
-        :host .title {
-            font-size: 11pt !important;
-            @apply(alexandria-stamp-title-)
+        :host {
+            font-size: 11pt;
+            @apply(--alexandria-stamp-title);
         }
         :host .editable_true {
             margin-top: -1px;
@@ -26,7 +26,7 @@
             border-color: #ddd;
             background: #efefef;
         }
-        :host.grid .title {
+        :host.grid .value {
             max-width: 210px;
             text-overflow: ellipsis;
             display: inline-block;
