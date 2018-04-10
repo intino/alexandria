@@ -7,7 +7,7 @@ import io.intino.ness.datalake.Scale;
 import io.intino.ness.datalake.graph.DatalakeGraph;
 import io.intino.ness.inl.Message;
 import io.intino.tara.magritte.Graph;
-import io.intino.tara.magritte.stores.FileSystemStore;
+import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
 import java.time.Instant;
@@ -20,9 +20,7 @@ public class FSDatalake implements Datalake {
 	private final DatalakeGraph datalake;
 
 	public FSDatalake(String url) {
-		final File datalakeStore = new File(clean(url), "store");
-		datalakeStore.mkdirs();
-		datalake = new Graph(new FileSystemStore(datalakeStore)).loadStashes("Datalake").as(DatalakeGraph.class);
+		datalake = new Graph(new ResourcesStore()).loadStashes("Datalake").as(DatalakeGraph.class);
 		final File store = new File(clean(url), "datalake");
 		store.mkdirs();
 		datalake.directory(store);
@@ -41,8 +39,9 @@ public class FSDatalake implements Datalake {
 			@Override
 			public void next() {
 				int messages = 0;
-				while (!stream.hasNext()) {
-					dispatcher.dispatch(stream.next());
+				while (stream.hasNext()) {
+					final Message next = stream.next();
+					dispatcher.dispatch(next);
 					if (++messages == blockSize) return;
 				}
 			}

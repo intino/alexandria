@@ -49,6 +49,7 @@ def type(box)
 
 		public io.intino.konos.alexandria.Box open() {
 			if(owner != null) owner.open();
+			initLogger();
 			initActivities();
 			initRESTServices();
 			initJMXServices();
