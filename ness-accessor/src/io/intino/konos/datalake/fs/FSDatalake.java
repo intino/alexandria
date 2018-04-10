@@ -1,7 +1,7 @@
 package io.intino.konos.datalake.fs;
 
 import io.intino.konos.datalake.Datalake;
-import io.intino.konos.datalake.MessageDispatcher;
+import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.ness.datalake.ReflowMessageInputStream;
 import io.intino.ness.datalake.Scale;
 import io.intino.ness.datalake.graph.DatalakeGraph;
@@ -32,7 +32,7 @@ public class FSDatalake implements Datalake {
 	}
 
 	@Override
-	public ReflowSession reflow(int blockSize, MessageDispatcher dispatcher, Instant from, Tank... tanks) {
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
 		return new ReflowSession() {
 			final ReflowMessageInputStream stream = new ReflowMessageInputStream(stream(tanks).map(t -> datalake.tank(t.name())).collect(toList()), from);
 
