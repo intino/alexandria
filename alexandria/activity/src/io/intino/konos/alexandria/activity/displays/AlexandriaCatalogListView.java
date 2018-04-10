@@ -403,8 +403,18 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	@Override
-	public void fullRefresh() {
+	public void refreshElement() {
 		forceRefresh();
+	}
+
+	@Override
+	public void refreshItem() {
+		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(this.provider, view);
+
+		selection().forEach(itemKey -> {
+			Item item = itemOf(itemKey);
+			refresh(ItemBuilder.build(item, item.id(), provider, baseAssetUrl()));
+		});
 	}
 
 	@Override

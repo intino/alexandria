@@ -8,5 +8,6 @@ public interface AlexandriaStampProvider {
     AlexandriaStamp embeddedDisplay(String stamp);
     AlexandriaDialog embeddedDialog(String stamp);
     AlexandriaAbstractCatalog embeddedCatalog(String stamp);
-    void fullRefresh();
+    void refreshElement();
+    void refreshItem();
 }

@@ -234,7 +234,12 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	@Override
-	public void fullRefresh() {
+	public void refreshElement() {
+		forceRefresh();
+	}
+
+	@Override
+	public void refreshItem() {
 		forceRefresh();
 	}
 
