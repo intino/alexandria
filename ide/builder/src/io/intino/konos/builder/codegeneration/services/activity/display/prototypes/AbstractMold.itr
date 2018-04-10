@@ -173,11 +173,16 @@ def trigger(common)
 	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
 	.layout(Stamp.Layout.$layout)][.editable($editable)][
 	$style][
+	$className][
 	$valueMethod]
 end
 
 def trigger(style)
 	.style((object, session) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, session))
+end
+
+def trigger(className)
+	.className((object, session) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.className(box, ($moldClass) object, session))
 end
 
 def trigger(catalogFilter)

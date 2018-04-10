@@ -12,6 +12,7 @@ public abstract class Stamp<O> {
 	private String suffix = "";
 	private String defaultStyle = "";
 	private Value<String> style = empty();
+	private Value<String> className = empty();
 	private Editable editable;
 
 	public String name() {
@@ -89,6 +90,19 @@ public abstract class Stamp<O> {
 
 	public Stamp style(Value style) {
 		this.style = style;
+		return this;
+	}
+
+	public String className(Item item, ActivitySession session) {
+		return objectClassName(item != null ? item.object() : null, session);
+	}
+
+	public String objectClassName(Object object, ActivitySession session) {
+		return className != null ? className.value(object, session) : empty().value(object, session);
+	}
+
+	public Stamp className(Value className) {
+		this.className = className;
 		return this;
 	}
 

@@ -77,6 +77,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		final Frame frame = baseFrame(stamp).addTypes("common");
 		if (!stamp.defaultStyle().isEmpty()) frame.addSlot("defaultStyle", stamp.defaultStyle());
 		if (stamp.hasCustomStyle()) frame.addSlot("style", baseFrame(stamp));
+		if (stamp.hasCustomClass()) frame.addSlot("className", baseFrame(stamp));
 		if (stamp.editable()) frame.addSlot("editable", baseFrame(stamp));
 		if (stamp.height() >= 0) frame.addSlot("height", stamp.height());
 		if (!stamp.label().isEmpty()) frame.addSlot("label", stamp.label());

@@ -13,11 +13,19 @@
 
         _init : function() {
             if (this.stamp == null) return;
+            this._updateClassName();
             this._updateStyle();
             this._render();
         },
 
         _render : function() { }, // implemented by stamps
+
+        _updateClassName : function () {
+            var properties = this.stamp.properties;
+            if (properties == null) return;
+            if (this.stamp.properties.className == null) return;
+            $(this).addClass(this.stamp.properties.className);
+        },
 
         _updateStyle : function () {
             var properties = this.stamp.properties;

@@ -247,11 +247,20 @@ def trigger(common)
 	$editable][
 
 	$style
+	][
+
+	$className
 	]
 end
 
 def trigger(style)
 	public static String style($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+		return "";//TODO
+	}
+end
+
+def trigger(className)
+	public static String className($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 		return "";//TODO
 	}
 end
