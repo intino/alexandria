@@ -2,7 +2,6 @@ package io.intino.konos.datalake.fs;
 
 import io.intino.konos.datalake.Datalake.Tank;
 import io.intino.konos.datalake.MessageHandler;
-import io.intino.konos.datalake.Ness;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
@@ -42,12 +41,7 @@ public class FSTank implements Tank {
 	}
 
 	@Override
-	public TopicConsumer flow(Ness.TankFlow flow) {
-		return null;
-	}
-
-	@Override
-	public TopicConsumer flow(Ness.TankFlow flow, String flowID) {
+	public TopicConsumer flow(String flowID) {
 		return null;
 	}
 

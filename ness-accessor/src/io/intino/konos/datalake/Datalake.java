@@ -4,13 +4,14 @@ import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
 import java.time.Instant;
+import java.util.List;
 
 public interface Datalake {
 	String REFLOW_PATH = "service.ness.reflow";
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
 
-	ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks);
+	ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from);
 
 	void commit();
 
@@ -43,9 +44,7 @@ public interface Datalake {
 
 		void drop(io.intino.ness.inl.Message message);
 
-		TopicConsumer flow(Ness.TankFlow flow);
-
-		TopicConsumer flow(Ness.TankFlow flow, String flowID);
+		TopicConsumer flow(String flowID);
 
 		void unregister();
 	}

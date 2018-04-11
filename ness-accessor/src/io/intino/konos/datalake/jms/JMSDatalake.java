@@ -3,6 +3,7 @@ package io.intino.konos.datalake.jms;
 import io.intino.konos.datalake.Datalake;
 import io.intino.konos.datalake.Reflow;
 import io.intino.konos.datalake.ReflowDispatcher;
+import io.intino.konos.datalake.fs.FSDatalake;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -12,7 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import javax.jms.Session;
+import java.io.File;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,8 +24,8 @@ import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 public class JMSDatalake implements Datalake {
 	private static Logger logger = LoggerFactory.getLogger(JMSDatalake.class);
@@ -60,28 +63,23 @@ public class JMSDatalake implements Datalake {
 		return session;
 	}
 
-	@Override
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
-		return reflow(blockSize, dispatcher, from, stream(tanks).map(Tank::name).toArray(String[]::new));
-	}
-
-	@Override
-	public void commit() {
-		try {
-			session.commit();
-		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void add(String tank) {
-
-	}
-
-	private ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, String... tanks) {
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
 		TopicProducer producer = newProducer(REFLOW_PATH);
-		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
+		String quickURL = tryWithQuickReflow(producer);
+		if (quickURL != null && new File(quickURL.replace("file://", "")).exists())
+			return requestResponse(producer, requireNonNull(createMessageFor("startQuickReflow"))).equalsIgnoreCase("ack") ?
+					fsReflow(blockSize, dispatcher, from, producer, quickURL) : null;
+		else return reflow(blockSize, dispatcher, from, producer);
+	}
+
+	private ReflowSession fsReflow(int blockSize, ReflowDispatcher dispatcher, Instant from, TopicProducer producer, String quickURL) {
+		final FSDatalake fsDatalake = new FSDatalake(quickURL);
+		dispatcher.tanks().forEach(t -> fsDatalake.add(t.name()));
+		return fsDatalake.reflow(blockSize, dispatcher, from, () -> producer.produce(createMessageFor("finish")));
+	}
+
+	private ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, TopicProducer producer) {
+		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(dispatcher.tanks().stream().map(Tank::name).collect(toList()))));
 		waitUntilReflowSession();
 		TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 		topicConsumer.listen(m -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
@@ -99,17 +97,42 @@ public class JMSDatalake implements Datalake {
 				topicConsumer.stop();
 			}
 
-			@Override
 			public void play() {
 				topicConsumer.listen((m) -> consume(dispatcher, m));
 			}
 
-			@Override
 			public void pause() {
 				topicConsumer.stop();
 			}
-
 		};
+	}
+
+	private String tryWithQuickReflow(TopicProducer producer) {
+		return requestResponse(producer, createMessageFor("quickReflow"));
+
+	}
+
+	public void commit() {
+		try {
+			session.commit();
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private String requestResponse(TopicProducer producer, Message message) {
+		try {
+			message.setJMSReplyTo(this.session.createTemporaryQueue());
+			producer.produce(message);
+			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive());
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+			return "";
+		}
+	}
+
+	public void add(String tank) {
+
 	}
 
 	public void disconnect() {

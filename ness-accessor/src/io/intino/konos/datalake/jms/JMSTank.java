@@ -2,7 +2,6 @@ package io.intino.konos.datalake.jms;
 
 import io.intino.konos.datalake.Datalake;
 import io.intino.konos.datalake.MessageHandler;
-import io.intino.konos.datalake.Ness;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import io.intino.ness.inl.Message;
@@ -71,18 +70,11 @@ public class JMSTank implements Datalake.Tank {
 		}
 	}
 
-	public TopicConsumer flow(Ness.TankFlow flow) {
+	public TopicConsumer flow(String flowID) {
 		if (datalake.session() == null) logger.error("Session is null");
 		this.flow = new TopicConsumer(datalake.session(), flowChannel());
-		this.flow.listen(flow);
-		return this.flow;
-	}
-
-	public TopicConsumer flow(Ness.TankFlow flow, String flowID) {
-		if (datalake.session() == null) logger.error("Session is null");
-		this.flow = new TopicConsumer(datalake.session(), flowChannel());
-		if (flowID != null) this.flow.listen(flow, flowID);
-		else this.flow.listen(flow);
+		if (flowID != null) this.flow.listen(handler, flowID);
+		else this.flow.listen(handler);
 		return this.flow;
 	}
 

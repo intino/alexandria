@@ -226,6 +226,22 @@ public class Messages {
 					"\t@4444-444-44-44444.png\n" +
 					"\t@5555-555-55.jpeg\n";
 
+	public static String CredentialLoginSchema =
+			"[CredentialLogin]\n" +
+					"authentication: open\n" +
+					"\n" +
+					"[CredentialLogin.Parameter]\n" +
+					"name: username\n" +
+					"value: mcaballero\n" +
+					"\n" +
+					"[CredentialLogin.Parameter]\n" +
+					"name: rememberMe\n" +
+					"value: true\n" +
+					"\n" +
+					"[CredentialLogin.Parameter]\n" +
+					"name: token\n" +
+					"value: abcdedgrd";
+
 	private static String indent(String text) {
 		return "\t" + text.replaceAll("\\n", "\n\t");
 	}
