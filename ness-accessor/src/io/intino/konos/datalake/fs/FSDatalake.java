@@ -12,7 +12,6 @@ import io.intino.tara.magritte.stores.ResourcesStore;
 import java.io.File;
 import java.time.Instant;
 
-import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static java.util.stream.Collectors.toList;
 
 public class FSDatalake implements Datalake {
@@ -32,9 +31,12 @@ public class FSDatalake implements Datalake {
 	}
 
 	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
+		return reflow(blockSize, dispatcher, from, () -> {});
+	}
+
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Runnable onFinish) {
 		return new ReflowSession() {
 			final ReflowMessageInputStream stream = new ReflowMessageInputStream(dispatcher.tanks().stream().map(t -> datalake.tank(t.name())).collect(toList()), from);
-
 			int messages = 0;
 
 			public void next() {
@@ -54,19 +56,18 @@ public class FSDatalake implements Datalake {
 				return new Message("endReflow").set("count", count);
 			}
 
-		public void finish () {
-			stream.close();
-		}
+			public void finish() {
+				stream.close();
+				onFinish.run();
+			}
 
-		public void play () {
-		}
+			public void play() {
+			}
 
-		public void pause () {
-		}
+			public void pause() {
+			}
+		};
 	}
-
-	;
-}
 
 	public void commit() {
 	}
