@@ -108,6 +108,7 @@ def type(box)
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
 			handler.setFormatter(new io.intino.konos.alexandria.LogFormatter("log"));
+			logger.setUseParentHandlers(false);
 			logger.addHandler(handler);
 		}
 	}

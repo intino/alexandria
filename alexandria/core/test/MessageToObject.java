@@ -15,8 +15,10 @@ import static io.intino.konos.alexandria.schema.Deserializer.deserialize;
 import static messages.Messages.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("ALL")
 public class MessageToObject {
 
 	@Before
@@ -166,6 +168,15 @@ public class MessageToObject {
 		assertThat(documentArray.files()[1].id(), is("5555-555-55.jpeg"));
 		assertThat(IOUtils.toString(documentArray.files()[0].data()).length(), is("4444-444-44-44444.png".length()));
 		assertThat(IOUtils.toString(documentArray.files()[1].data()).length(), is("5555-555-55.jpeg".length()));
+	}
+
+	@Test
+	public void should_deserialize_schema_3() {
+		final CredentialLogin t = Inl.fromMessage(Message.load(CredentialLoginSchema), CredentialLogin.class);
+		assertEquals("open", t.authentication());
+		assertThat(t.parameterList().size(), is(3));
+		assertThat(t.parameterList().get(0).name(), is("username"));
+		assertThat(t.parameterList().get(0).value(), is("mcaballero"));
 	}
 
 	private ResourceLoader getResourceLoader() {

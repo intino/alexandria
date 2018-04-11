@@ -12,7 +12,7 @@ import io.intino.tara.magritte.stores.ResourcesStore;
 import java.io.File;
 import java.time.Instant;
 
-import static java.util.Arrays.stream;
+import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static java.util.stream.Collectors.toList;
 
 public class FSDatalake implements Datalake {
@@ -31,53 +31,54 @@ public class FSDatalake implements Datalake {
 		datalake.tank(name).drop(message);
 	}
 
-	@Override
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
 		return new ReflowSession() {
-			final ReflowMessageInputStream stream = new ReflowMessageInputStream(stream(tanks).map(t -> datalake.tank(t.name())).collect(toList()), from);
+			final ReflowMessageInputStream stream = new ReflowMessageInputStream(dispatcher.tanks().stream().map(t -> datalake.tank(t.name())).collect(toList()), from);
 
-			@Override
+			int messages = 0;
+
 			public void next() {
-				int messages = 0;
 				while (stream.hasNext()) {
 					final Message next = stream.next();
 					dispatcher.dispatch(next);
-					if (++messages == blockSize) return;
+					if ((++messages % blockSize) == 0) break;
 				}
+				dispatcher.dispatch(stream.hasNext() ? createEndBlockMessage(messages) : createEndReflowMessage(messages));
 			}
 
-			@Override
-			public void finish() {
-				stream.close();
+			private Message createEndBlockMessage(int count) {
+				return new Message("endBlock").set("count", count);
 			}
 
-			@Override
-			public void play() {
+			private Message createEndReflowMessage(int count) {
+				return new Message("endReflow").set("count", count);
 			}
 
-			@Override
-			public void pause() {
-			}
-		};
+		public void finish () {
+			stream.close();
+		}
+
+		public void play () {
+		}
+
+		public void pause () {
+		}
 	}
 
-	@Override
+	;
+}
+
 	public void commit() {
 	}
 
-	@Override
 	public void add(String tank) {
 		datalake.add(clean(tank));
 	}
 
-	@Override
 	public void disconnect() {
-
 	}
 
-	@Override
 	public void connect(String... args) {
-
 	}
 
 	private String clean(String url) {
