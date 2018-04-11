@@ -22,37 +22,37 @@ end
 def type(operations) !type(interface)
 	package $package+validPackage.ness;
 
-	import $package+validPackage.$box+FirstUpperCase~Box;
-    import io.intino.konos.jmx.JMXServer;
-	import io.intino.konos.datalake.Ness;
-    import io.intino.tara.magritte.Graph;
-    import io.intino.tara.magritte.RemounterGraph;
-    import io.intino.tara.magritte.Store;
-    import io.intino.tara.magritte.stores.FileSystemStore;
-    import org.apache.commons.io.FileUtils;
+	import io.intino.konos.datalake.MessageHandler;
+	import io.intino.konos.datalake.ReflowDispatcher;
+	import io.intino.konos.jmx.JMXServer;
+	import io.intino.tara.magritte.Graph;
+	import io.intino.tara.magritte.RemounterGraph;
+	import io.intino.tara.magritte.stores.FileSystemStore;
+	import org.apache.commons.io.FileUtils;
+	import org.siani.adquiver.analytics.box.AnalyticsBox;
 	import org.slf4j.Logger;
 	import org.slf4j.LoggerFactory;
+
 	import java.io.IOException;
-    import java.time.Instant;
-	import java.util.*;
+	import java.time.Instant;
+	import java.util.Collections;
 
 	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-    import static java.time.temporal.ChronoUnit.SECONDS;
 
 	public class NessOperations implements NessOperationsMBean {
-
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-    	private final $box+FirstUpperCase~Box box;
-    	private final ReflowAssistant assistant;
-    	private int processed = 0;
+		private final AnalyticsBox box;
+		private final ReflowAssistant assistant;
+		private int processed = 0;
 		private io.intino.konos.datalake.Datalake.ReflowSession session;
+		private Graph graph;
 
-    	public NessOperations($box+FirstUpperCase~Box box) {
-    		this.box = box;
-    		this.assistant = new $package+validPackage.ness.ReflowAssistant(box);
-    	}
+		public NessOperations(AnalyticsBox box) {
+			this.box = box;
+			this.assistant = new $package+validPackage.ness.ReflowAssistant(box);
+		}
 
-    	public java.util.List<String> help() {
+		public java.util.List<String> help() {
 			java.util.List<String> operations = new java.util.ArrayList<>();
 			operations.add("boolean reflow():Starts remount mode to reproduce events coming from datalake");
 			return operations;
@@ -70,18 +70,16 @@ def type(operations) !type(interface)
 			logger.info("Starting Reflow...");
 			assistant.before();
 			$package+validPackage.ness.NessTanks.unregister();
-			this.session = box.datalake().reflow(assistant.blockSize(), new $package+validPackage.ness.NessTanks(), from, assistant.tanks().toArray(new io.intino.konos.datalake.Datalake.Tank$[0]));
-			box.datalake().lastMessage(null);
-			box.datalake().reset();
+			this.session = box.datalake().reflow(assistant.blockSize(), new ReflowDispatcher(assistant.tanks(), onBlock(), onFinish()), from);
 			final Graph graph = assistant.graph();
 			try {
-				if (graph.store() instanceof FileSystemStore && from.equals(Instant.MIN)) FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
+				if (graph.store() instanceof FileSystemStore && from.equals(Instant.MIN))
+					FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
 				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
 				allowWriting(original, false);
-				Graph clone = original.realClone();
-				box.put(clone);
+				this.graph = original.realClone();
+				box.put(this.graph);
 				this.session.next();
-				timerTask(clone).run();
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 				return false;
@@ -89,56 +87,41 @@ def type(operations) !type(interface)
 			return true;
 		}
 
-		private TimerTask timerTask(Graph clone) {
-			return new TimerTask() {
-				@Override
-				public void run() {
-					Graph newClone = write(clone);
-					if (finished()) {
-						doWrite(clone);
-						onFinish(clone);
-					} else new Timer("Reflow task", true).schedule(timerTask(newClone), 5000);
-				}
+		private MessageHandler onFinish() {
+			return m -> {
+				doWrite();
+				session.finish();
+				final Graph graph = new Graph(NessOperations.this.graph.store());
+				allowWriting(graph, true);
+				box.put(graph.loadStashes(assistant.coreStashes()));
+				NessTanks.registerTanks(box);
+				assistant.after();
+				logger.info("Reflow finished - " + m.get("count") + " messages processed");
 			};
 		}
 
-		private Graph write(Graph clone) {
-			if (box.datalake().receivedMessages() < assistant.blockSize()) return clone;
-			Graph result = doWrite(clone);
-			box.datalake().reset();
-			this.session.next();
-			return result;
+		private MessageHandler onBlock() {
+			return m -> {
+				doWrite();
+				logger.info("Block processed - " + m.get("count") + " messages processed");
+				session.next();
+			};
 		}
 
-		private Graph doWrite(Graph clone) {
-			logger.info("processed " + (processed += box.datalake().receivedMessages()));
+		private void doWrite() {
 			session.pause();
-			allowWriting(clone, true);
-			assistant.saveGraph(clone);
-			final Graph newClone = new RemounterGraph(clone.store()).loadStashes(assistant.coreStashes());
-			allowWriting(newClone, false);
-			box.put(newClone);
+			allowWriting(graph, true);
+			assistant.saveGraph(graph);
+			this.graph = new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
+			allowWriting(graph, false);
+			box.put(graph);
 			session.play();
-			return newClone;
 		}
 
 		private void allowWriting(Graph original, boolean flag) {
 			if (original.store() instanceof FileSystemStore) ((FileSystemStore) original.store()).allowWriting(flag);
 		}
 
-		private void onFinish(Graph clone) {
-			session.finish();
-			final Graph graph = new Graph(clone.store());
-			allowWriting(graph, true);
-			box.put(graph.loadStashes(assistant.coreStashes()));
-			NessTanks.registerTanks(box);
-			assistant.after();
-			logger.info("Reflow finished successfully!");
-		}
-
-		private boolean finished() {
-			return box.datalake().lastMessage() != null && box.datalake().lastMessage().until(Instant.now(), SECONDS) > 120;
-		}
 
 		public static JMXServer init($box+FirstUpperCase~Box box) {
 			JMXServer server = new JMXServer(Collections.singletonMap("$package.ness.NessOperations", new Object$[]{box}));

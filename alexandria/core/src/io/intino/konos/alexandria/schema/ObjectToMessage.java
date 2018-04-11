@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.schema;
 import io.intino.ness.inl.Message;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,13 +17,16 @@ public class ObjectToMessage {
 
 
 	public static Message toMessage(Object object) {
-		final Message message = new Message(object.getClass().getSimpleName());
+		final Message message = new Message(object instanceof List ? collectionType((List) object) : object.getClass().getSimpleName());
 		for (Field field : Accessory.fieldsOf(object).asList()) {
 			if (!isConvertible(field)) continue;
 			Object value = valueOf(field, object);
 			if (isNull(value) || isEmpty(value)) continue;
 			if (isAttribute(field)) convertAttribute(message, field, value);
-			else message.add(toMessage(value));
+			else {
+				if (isList(field) || isArray(field)) valuesOf(field, object).forEach(v -> message.add(toMessage(v)));
+				else message.add(toMessage(value));
+			}
 		}
 		return message;
 	}
@@ -61,6 +65,17 @@ public class ObjectToMessage {
 		} catch (IllegalAccessException e) {
 			return null;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<Object> valuesOf(Field field, Object object) {
+		final Object o = valueOf(field, object);
+		return o instanceof List ? (List<Object>) o : Arrays.asList((Object[]) o);
+	}
+
+	private static String collectionType(List object) {
+		final String typeName = ((ParameterizedType) (object).getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
+		return typeName.contains(".") ? typeName.substring(typeName.lastIndexOf(".") + 1) : typeName;
 	}
 
 }

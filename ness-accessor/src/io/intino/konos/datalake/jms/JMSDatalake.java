@@ -16,13 +16,13 @@ import javax.jms.Session;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 
 public class JMSDatalake implements Datalake {
 	private static Logger logger = LoggerFactory.getLogger(JMSDatalake.class);
@@ -60,28 +60,9 @@ public class JMSDatalake implements Datalake {
 		return session;
 	}
 
-	@Override
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Tank... tanks) {
-		return reflow(blockSize, dispatcher, from, stream(tanks).map(Tank::name).toArray(String[]::new));
-	}
-
-	@Override
-	public void commit() {
-		try {
-			session.commit();
-		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void add(String tank) {
-
-	}
-
-	private ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, String... tanks) {
+	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
 		TopicProducer producer = newProducer(REFLOW_PATH);
-		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(asList(tanks))));
+		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(dispatcher.tanks().stream().map(Tank::name).collect(toList()))));
 		waitUntilReflowSession();
 		TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 		topicConsumer.listen(m -> consume(dispatcher, m), "consumer-" + FLOW_PATH);
@@ -99,17 +80,27 @@ public class JMSDatalake implements Datalake {
 				topicConsumer.stop();
 			}
 
-			@Override
 			public void play() {
 				topicConsumer.listen((m) -> consume(dispatcher, m));
 			}
 
-			@Override
 			public void pause() {
 				topicConsumer.stop();
 			}
 
 		};
+	}
+
+	public void commit() {
+		try {
+			session.commit();
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void add(String tank) {
+
 	}
 
 	public void disconnect() {

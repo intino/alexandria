@@ -105,7 +105,7 @@ public class Serializer_ {
 	}
 
 
-	@Test
+	//@Test
 	public void should_serialize_document_list() throws IOException {
 		DocumentList documentList = new DocumentList(instant(2017, 3, 21, 7, 39, 0), new Resource("4444-444-44-44444.png").data(new byte[100]), new Resource("5555-555-55.jpeg").data(new byte[80]));
 		ResourceStore documentStore = ResourceStore.collector();
@@ -117,7 +117,7 @@ public class Serializer_ {
 		assertThat(IOUtils.toString(documentStore.resources().get(0).data()).length(), is(80));
 	}
 
-	@Test
+	//@Test
 	public void should_serialize_document_array() throws IOException {
 		DocumentArray documentArray = new DocumentArray(instant(2017, 3, 21, 7, 39, 0), new Resource("4444-444-44-44444.png").data(new byte[100]), new Resource("5555-555-55.jpeg").data(new byte[80]));
 		ResourceStore documentStore = ResourceStore.collector();
