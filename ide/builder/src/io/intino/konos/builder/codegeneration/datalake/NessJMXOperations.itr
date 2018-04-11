@@ -29,7 +29,7 @@ def type(operations) !type(interface)
 	import io.intino.tara.magritte.RemounterGraph;
 	import io.intino.tara.magritte.stores.FileSystemStore;
 	import org.apache.commons.io.FileUtils;
-	import org.siani.adquiver.analytics.box.AnalyticsBox;
+	import $package+validPackage.$box+FirstUpperCase~Box;
 	import org.slf4j.Logger;
 	import org.slf4j.LoggerFactory;
 
@@ -41,13 +41,13 @@ def type(operations) !type(interface)
 
 	public class NessOperations implements NessOperationsMBean {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-		private final AnalyticsBox box;
+		private final $box+firstUpperCase~Box box;
 		private final ReflowAssistant assistant;
 		private int processed = 0;
 		private io.intino.konos.datalake.Datalake.ReflowSession session;
 		private Graph graph;
 
-		public NessOperations(AnalyticsBox box) {
+		public NessOperations($box+firstUpperCase~Box box) {
 			this.box = box;
 			this.assistant = new $package+validPackage.ness.ReflowAssistant(box);
 		}
