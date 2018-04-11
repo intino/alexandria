@@ -7,18 +7,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ReflowDispatcher {
-
-
+	private final List<Datalake.Tank> tanks;
 	private Map<String, MessageHandler> handlers;
 
 	public ReflowDispatcher(List<Datalake.Tank> tanks, MessageHandler onBlock, MessageHandler onFinish) {
-		this.handlers = tanks.stream().collect(Collectors.toMap(Datalake.Tank::name, t -> t::handle));
+		this.tanks = tanks;
+		this.handlers = tanks.stream().collect(Collectors.toMap(tank -> typeOf(tank), t -> t::handle));
 		handlers.put("endblock", onBlock);
 		handlers.put("endreflow", onFinish);
 	}
 
-	public void dispatch(Message message) {
-		handlers.get(message.type()).handle(message);
+	private String typeOf(Datalake.Tank tank) {
+		final String name = tank.name().toLowerCase();
+		return name.contains(".") ? name.substring(name.lastIndexOf(".") + 1) : name;
 	}
 
+	public void dispatch(Message message) {
+		handlers.get(message.type().toLowerCase()).handle(message);
+	}
+
+	public List<Datalake.Tank> tanks() {
+		return tanks;
+	}
 }

@@ -1,7 +1,6 @@
 def type(tanks)
 	package $package+validPackage.ness;
 
-	import io.intino.konos.datalake.MessageDispatcher;
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
 	import io.intino.konos.datalake.Ness;
@@ -21,20 +20,13 @@ def type(tanks)
     import java.util.Map;
     import java.util.HashMap;
 
-	public class NessTanks implements MessageDispatcher {
+	public class NessTanks {
 		$tank+field...[$NL]
-
-		private static Map<String, Ness.TankFlow> handlersMap = new HashMap<>();
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			$tank+assign...[$NL]
 			final String clientID = box.configuration().nessConfiguration().clientID;
 			$tank+subscribe...[$NL]
-		}
-
-		@Override
-		public void dispatch(io.intino.ness.inl.Message message) {
-			handlersMap.get(message.type().toLowerCase()).consume(message);
 		}
 
 		public static List<io.intino.konos.datalake.Datalake.Tank> tanks() {
@@ -71,7 +63,7 @@ end
 
 def type(tank) trigger(assign)
 	$name = box.datalake().add($messageType+format);
-	this.$name.handler(new $name+FirstUpperCase~Handler(box));
+	$name.handler(new $name+FirstUpperCase~Handler(box));
 end
 
 def type(tank) trigger(add)
@@ -84,11 +76,8 @@ def type(tank) trigger(getter)
 	}
 end
 
-def type(tank) trigger(map)
-	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Handler(box),  clientID != null ? clientID + "-$name" : null);
-end
 def type(tank) trigger(subscribe)
-	$name.flow(new $name+snakeCaseToCamelCase+FirstUpperCase~Handler(box),  clientID != null ? clientID + "-$name" : null);
+	$name.flow(clientID != null ? clientID + "-$name" : null);
 end
 
 def type(custom) trigger(replace)
@@ -119,17 +108,11 @@ def trigger(tank) trigger(class)
 	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
-		public $name+snakeCaseToCamelCase+FirstUpperCase~Subscriptor($box+firstUppercase~Box box) {
+		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
-		public void handle(Message message) {
-			if (isRegisterOnly(message)) return;
-			consume(io.intino.ness.inl.Message.load(Consumer.textFrom(message)));
-		}
-
-		public void consume(io.intino.ness.inl.Message m) {
-			box.datalake().lastMessage(java.time.Instant.now());
+		public void handle(io.intino.ness.inl.Message m) {
 			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
 			tank.box = box;
 			tank.message = m;
