@@ -350,7 +350,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void closeCurrentItem() {
-		openedItem = null;
 		navigateMain();
 	}
 
