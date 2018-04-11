@@ -101,10 +101,12 @@
             var left = this._position.left;
             var top = this._position.top;
             var windowWidth = $(window).width();
+            var windowHeight = $(window).height();
             var dialogWidth = $(dialog).width();
+            var dialogHeight = $(dialog).height();
             var position = left + dialogWidth > windowWidth ? "right" : ((left + dialogWidth/2) > windowWidth ? "center" : "left");
             left = position === "left" ? left : left - (position === "center" ? dialogWidth/2 : dialogWidth);
-            dialog.style.top = (top + 5) + "px";
+            dialog.style.top = top + dialogHeight > windowHeight ? (top-dialogHeight - 30) + "px" : (top + 5) + "px";
             dialog.style.left = (left + 3) + "px";
         },
 
