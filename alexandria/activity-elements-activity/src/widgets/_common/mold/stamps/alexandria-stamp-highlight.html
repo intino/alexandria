@@ -5,7 +5,7 @@
 
     <template>
         <div hidden$="[[!stamp.value.length]]">
-            <div class$="highlight [[stamp.classes]]" style$="background-color:[[stamp.properties.color]];[[_style]]">
+            <div class$="highlight [[stamp.classes]]" style$="color:[[stamp.properties.color.text]];background-color:[[stamp.properties.color.background]];[[_style]]">
                 <span>[[stamp.value]]</span>
                 <span class="suffix">[[stamp.properties.suffix]]</span>
             </div>

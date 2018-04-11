@@ -11,7 +11,6 @@ import static java.util.stream.Collectors.toList;
 public abstract class Operation<O> extends Stamp<O> {
 	private Mode mode = Mode.Button;
 	private String alexandriaIcon = "icons:execute";
-	private Value<String> drawingColor;
 
 	public String alexandriaIcon() {
 		return this.alexandriaIcon;
@@ -34,19 +33,6 @@ public abstract class Operation<O> extends Stamp<O> {
 
 	public Operation alexandriaIcon(String alexandriaIcon) {
 		this.alexandriaIcon = alexandriaIcon;
-		return this;
-	}
-
-	public String drawingColor(Item item, ActivitySession session) {
-		return objectColor(item != null ? item.object() : null, session);
-	}
-
-	public String objectColor(Object object, ActivitySession session) {
-		return this.drawingColor != null ? this.drawingColor.value(object, session) : null;
-	}
-
-	public Operation drawingColor(Value<String> color) {
-		this.drawingColor = color;
 		return this;
 	}
 

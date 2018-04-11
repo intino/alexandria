@@ -360,7 +360,6 @@
             clear : function() {
                 this._page = 0;
                 this.notifyPath('_itemList', []);
-                this.$.items.fire("iron-resize");
                 var list = this.querySelector("cotton-list");
                 if (list != null) list.clear();
             },

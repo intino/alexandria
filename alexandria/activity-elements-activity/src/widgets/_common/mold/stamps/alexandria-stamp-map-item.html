@@ -20,7 +20,7 @@
                 value: String,
                 marker : { type: Object, value: function() { return null; } },
                 editable : { type: Boolean, value: function() { return false; } },
-                drawingColor : { type: String, value: function() { return null; } },
+                color : { type: Object, value: function() { return null; } },
                 icon : { type: String, value: function() { return null; } }
             },
 
@@ -97,9 +97,9 @@
             _configuration : function() {
                 var config = this.map.defaults != null ? this.map.defaults : {};
                 config.editable = this.editable;
-                if (this.drawingColor != "") {
-                    config.strokeColor = this.drawingColor;
-                    config.fillColor = this.drawingColor;
+                if (this.color != null) {
+                    config.strokeColor = this.color.text;
+                    config.fillColor = this.color.text;
                 }
                 return config;
             }
