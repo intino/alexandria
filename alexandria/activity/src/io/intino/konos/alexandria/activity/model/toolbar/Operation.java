@@ -1,6 +1,5 @@
 package io.intino.konos.alexandria.activity.model.toolbar;
 
-import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
 
 import java.util.List;
@@ -58,5 +57,4 @@ public class Operation {
 	protected List<Object> objects(List<Item> items) {
 		return items.stream().map(Item::object).collect(toList());
 	}
-
 }

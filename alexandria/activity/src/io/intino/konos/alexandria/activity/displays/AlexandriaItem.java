@@ -395,7 +395,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private void createEmbeddedCatalogs(String id) {
 		embeddedCatalogs().forEach((key, display) -> {
 			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
-			createCatalog(id, key.name(), key.label(), display);
+			createCatalog(id, key.name(), key.label(AlexandriaItem.this.item, session()), display);
 		});
 	}
 
@@ -407,7 +407,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private void createOpenCatalogDisplays(String id) {
 		openCatalogOperations().forEach((key, display) -> {
 			display.staticFilter(item -> key.filter(context, AlexandriaItem.this.item, (Item) item, session()));
-			createCatalog(id, key.name(), key.label(), display);
+			createCatalog(id, key.name(), key.label(AlexandriaItem.this.item, session()), display);
 		});
 	}
 

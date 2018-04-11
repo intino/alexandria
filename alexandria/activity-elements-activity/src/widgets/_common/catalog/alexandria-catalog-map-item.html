@@ -180,11 +180,11 @@
 
             _configuration : function(stamp) {
                 var config = this.map.defaults != null ? this.map.defaults : {};
-                var drawingColor = stamp.propertyList.drawingColor;
+                var color = stamp.propertyList.color;
                 config.editable = stamp.editable != null ? stamp.editable : false;
-                if (drawingColor != "") {
-                    config.strokeColor = drawingColor;
-                    config.fillColor = drawingColor;
+                if (color != null) {
+                    config.strokeColor = color.text;
+                    config.fillColor = color.text;
                 }
                 return config;
             },
