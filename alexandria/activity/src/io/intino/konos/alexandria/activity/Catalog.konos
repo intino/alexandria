@@ -82,7 +82,8 @@ Display alexandriaItem
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
 	Request(Asset) exportItemOperation as Object(ExportItemParameters)
-	Request saveItem as Object(SaveItemParameters)
+	Request changeItem as Object(ChangeItemParameters)
+	Request validateItem as Object(ValidateItemParameters)
 
 Display alexandriaCatalogViewList
 	displays = alexandriaCatalogMagazineView alexandriaCatalogListView alexandriaCatalogMapView alexandriaCatalogDisplayView
@@ -122,7 +123,8 @@ Display alexandriaCatalogListView
 	Request openItemCatalogOperation as Object(OpenItemParameters)
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
-	Request saveItem as Object(SaveItemParameters)
+	Request changeItem as Object(ChangeItemParameters)
+	Request validateItem as Object(ValidateItemParameters)
 
 Display alexandriaCatalogMapView
 	Notification refreshView as Object(ElementView)

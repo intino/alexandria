@@ -34,7 +34,8 @@
                       on-execute-stamp-task="_executeStampTask"
                       on-navigate-catalog="_navigateCatalog"
                       on-open-item="_openItem"
-                      on-save-item="_saveItem"
+                      on-change-item="_changeItem"
+                      on-validate-item="_validateItem"
                       on-select-items="_selectItems"
                       on-download-item="_downloadItem"
                       on-create-cluster-group="_createClusterGroup"
@@ -117,8 +118,8 @@
                 this.openItem(e.detail);
             },
 
-            _saveItem : function(e) {
-                this.saveItem(e.detail);
+            _changeItem : function(e) {
+                this.changeItem(e.detail);
             },
 
             _downloadItem : function(e) {

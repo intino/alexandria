@@ -1,6 +1,6 @@
 {
   "name": "alexandria-activity-elements",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "dependencies": {
   		"polymer": "Polymer/polymer#1.9 - 2",
   		"jquery": "3.1.0",

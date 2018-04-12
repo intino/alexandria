@@ -12,9 +12,10 @@ import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
+import io.intino.konos.alexandria.activity.schemas.ChangeItemParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.schemas.Position;
-import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
+import io.intino.konos.alexandria.activity.schemas.ValidateItemParameters;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
@@ -85,8 +86,13 @@ public class ElementHelper {
 			}
 
 			@Override
-			public void saveItem(SaveItemParameters params, Item item) {
-				provider.saveItem(params, item);
+			public void changeItem(Item item, ChangeItemParameters params) {
+				provider.changeItem(item, params);
+			}
+
+			@Override
+			public void validateItem(Item item, ValidateItemParameters params) {
+				provider.validateItem(item, params);
 			}
 		};
 	}

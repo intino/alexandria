@@ -97,9 +97,7 @@ def type(stamp & taskOperation)
 
 		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
 			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
-		}[
-
-		$operationMessageLoader]
+		}
 	}
 end
 
@@ -212,14 +210,13 @@ def trigger(common)
 
 	$editable][
 
-	$labelLoader
-	][
+	$messageLoader][
 
-	$style
-	][
+	$labelLoader][
 
-	$className
-	][
+	$style][
+
+	$className][
 
 	$color]
 end
@@ -254,7 +251,7 @@ def trigger(openCatalogOperationExecution)
 	}
 end
 
-def trigger(operationMessageLoader)
+def trigger(messageLoader)
 	public static String userMessage($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
 		return null;
 	}
@@ -280,6 +277,9 @@ end
 
 def trigger(editable)
 	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Editable.Refresh onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
+		return null;
+	}
+	public static String onValidate($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
 		return null;
 	}
 end

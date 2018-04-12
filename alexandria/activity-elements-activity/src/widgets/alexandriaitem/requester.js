@@ -32,8 +32,11 @@ AlexandriaItemBehaviors.Requester = {
     exportItemOperation : function(value) {
     	this.download("exportItemOperation", { "value" : value });
     },
-    saveItem : function(value) {
-    	this.carry("saveItem", { "value" : value });
+    changeItem : function(value) {
+    	this.carry("changeItem", { "value" : value });
+    },
+    validateItem : function(value) {
+    	this.carry("validateItem", { "value" : value });
     }
 
 };

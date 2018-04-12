@@ -20,7 +20,8 @@
                                    on-open-catalog="_openStampCatalog"
                                    on-execute-task-item="_executeTask"
                                    on-download-item="_download"
-                                   on-save-item="_save"
+                                   on-save-item="_change"
+                                   on-change-item="_validate"
                                    on-export-item="_export"></alexandria-mold-container>
         <template is="dom-if" if="[[!_item]]">
             <div class="message layout horizontal center center-justified">[[_emptyMessage]]</div>
@@ -116,8 +117,8 @@
                 this.downloadItemOperation(e.detail);
             },
 
-            _save : function(e) {
-                this.saveItem(e.detail);
+            _change : function(e) {
+                this.changeItem(e.detail);
             },
 
             _export : function(e) {

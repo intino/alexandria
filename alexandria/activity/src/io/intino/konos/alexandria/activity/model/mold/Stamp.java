@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.activity.model.mold;
 
+import io.intino.konos.alexandria.activity.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
@@ -14,7 +15,9 @@ public abstract class Stamp<O> {
 	private String defaultStyle = "";
 	private Value<String> style = empty();
 	private Value<String> className = empty();
-	private Editable editable;
+	private ChangeEvent changeEvent;
+	private ValidateEvent validateEvent;
+	private MessageLoader messageLoader;
 	private Value<Color> color = emptyColor();
 
 	public String name() {
@@ -126,17 +129,35 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public Editable.Refresh save(Item item, String value, ActivitySession session) {
-		return editable != null ? editable.save(item.object(), value, session) : Editable.Refresh.None;
+	public ChangeEvent.Refresh change(Item item, String value, AlexandriaDisplay self, ActivitySession session) {
+		return changeEvent != null ? changeEvent.change(item != null ? item.object() : null, value, self.id(), session) : ChangeEvent.Refresh.None;
+	}
+
+	public Stamp changeEvent(ChangeEvent event) {
+		this.changeEvent = event;
+		return this;
+	}
+
+	public String validate(Item item, String value, AlexandriaDisplay self, ActivitySession session) {
+		return validateEvent != null ? validateEvent.validate(item != null ? item.object() : null, value, self.id(), session) : null;
+	}
+
+	public Stamp validateEvent(ValidateEvent event) {
+		this.validateEvent = event;
+		return this;
+	}
+
+	public String message(Item item, AlexandriaDisplay self, ActivitySession session) {
+		return messageLoader != null ? messageLoader.load(item != null ? item.object() : null, self.id(), session) : null;
+	}
+
+	public Stamp messageLoader(MessageLoader loader) {
+		this.messageLoader = loader;
+		return this;
 	}
 
 	public boolean editable() {
-		return editable != null;
-	}
-
-	public Stamp editable(Editable editable) {
-		this.editable = editable;
-		return this;
+		return changeEvent != null;
 	}
 
 	public enum Layout {
@@ -147,12 +168,20 @@ public abstract class Stamp<O> {
 		O value(Object object, ActivitySession session);
 	}
 
-	public interface Editable {
-		Refresh save(Object object, String value, ActivitySession session);
+	public interface MessageLoader {
+		String load(Object object, String selfId, ActivitySession session);
+	}
+
+	public interface ChangeEvent {
+		Refresh change(Object object, String value, String selfId, ActivitySession session);
 
 		enum Refresh {
 			None, Object, Catalog
 		}
+	}
+
+	public interface ValidateEvent {
+		String validate(Object object, String value, String selfIf, ActivitySession session);
 	}
 
 	public static class Color {
