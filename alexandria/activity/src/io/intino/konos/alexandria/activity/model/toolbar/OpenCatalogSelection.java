@@ -115,8 +115,8 @@ public class OpenCatalogSelection extends Operation {
 		return this;
 	}
 
-	public Refresh execute(Element element, List<Item> selection, List<Item> openCatalogSelection, ActivitySession session) {
-		if (execution == null) return Refresh.None;
+	public ToolbarSelectionResult execute(Element element, List<Item> selection, List<Item> openCatalogSelection, ActivitySession session) {
+		if (execution == null) return ToolbarSelectionResult.none();
 		return execution.execute(element, objects(selection), objects(openCatalogSelection), session);
 	}
 
@@ -134,11 +134,7 @@ public class OpenCatalogSelection extends Operation {
 	}
 
 	public interface Execution {
-		Refresh execute(Element element, List<Object> selection, List<Object> openCatalogSelection, ActivitySession session);
-	}
-
-	public enum Refresh {
-		None, Item, Element
+		ToolbarSelectionResult execute(Element element, List<Object> selection, List<Object> openCatalogSelection, ActivitySession session);
 	}
 
 }

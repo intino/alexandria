@@ -546,14 +546,14 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		};
 	}
 
-	public void changeItem(ChangeItemParameters value) {
-		Item item = itemOf(value.item());
-		provider.changeItem(item, value);
+	public void changeItem(ChangeItemParameters params) {
+		Item item = itemOf(params.item());
+		provider.changeItem(item, provider.stamp(view().mold(), params.stamp()), params.value());
 	}
 
-	public void validateItem(io.intino.konos.alexandria.activity.schemas.ValidateItemParameters value) {
-		Item item = itemOf(value.item());
-		provider.validateItem(item, value);
+	public void validateItem(io.intino.konos.alexandria.activity.schemas.ValidateItemParameters params) {
+		Item item = itemOf(params.item());
+		provider.validateItem(item, provider.stamp(view().mold(), params.stamp()), params.value());
 	}
 
 	public void openItemCatalogOperation(OpenItemParameters params) {

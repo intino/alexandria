@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class TaskSelection extends MessageOperation {
+public class TaskSelection extends Operation {
 	private Execution launcher;
 
 	public TaskSelection execute(Execution launcher) {
@@ -16,17 +16,13 @@ public class TaskSelection extends MessageOperation {
 		return this;
 	}
 
-	public Refresh execute(Element element, String option, List<Item> selection, ActivitySession session) {
-		if (launcher == null) return Refresh.None;
+	public ToolbarSelectionResult execute(Element element, String option, List<Item> selection, ActivitySession session) {
+		if (launcher == null) return ToolbarSelectionResult.none();
 		return launcher.execute(element, option, selection.stream().map(Item::object).collect(toList()), session);
 	}
 
-	public enum Refresh {
-		None, Catalog, Selection;
-	}
-
 	public interface Execution {
-		Refresh execute(Element element, String option, List<Object> selection, ActivitySession session);
+		ToolbarSelectionResult execute(Element element, String option, List<Object> selection, ActivitySession session);
 	}
 
 }

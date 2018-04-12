@@ -3,7 +3,7 @@ package io.intino.konos.alexandria.activity.model.toolbar;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
-public class Task extends MessageOperation {
+public class Task extends Operation {
 	private Execution launcher;
 
 	public Task execute(Execution launcher) {
@@ -11,16 +11,12 @@ public class Task extends MessageOperation {
 		return this;
 	}
 
-	public Refresh execute(Element element, String displayId, ActivitySession session) {
-		if (launcher == null) return Refresh.None;
+	public ToolbarResult execute(Element element, String displayId, ActivitySession session) {
+		if (launcher == null) return ToolbarResult.none();
 		return launcher.execute(element, displayId, session);
 	}
 
-	public enum Refresh {
-		None, Catalog
-	}
-
 	public interface Execution {
-		Refresh execute(Element element, String displayId, ActivitySession session);
+		ToolbarResult execute(Element element, String displayId, ActivitySession session);
 	}
 }

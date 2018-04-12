@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog;
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.mold.StampResult;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Operation;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
@@ -111,8 +112,8 @@ public class OpenCatalogOperation extends Operation<String> {
 		return this;
 	}
 
-	public Refresh execute(Item target, List<Item> items, ActivitySession session) {
-		if (execution == null) return Refresh.None;
+	public StampResult execute(Item target, List<Item> items, ActivitySession session) {
+		if (execution == null) return StampResult.none();
 		return execution.execute(target != null ? target.object() : null, items.stream().map(Item::object).collect(toList()), session);
 	}
 
@@ -130,11 +131,7 @@ public class OpenCatalogOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		Refresh execute(Object target, List<Object> items, ActivitySession session);
-	}
-
-	public enum Refresh {
-		None, Item, Element
+		StampResult execute(Object target, List<Object> items, ActivitySession session);
 	}
 
 }

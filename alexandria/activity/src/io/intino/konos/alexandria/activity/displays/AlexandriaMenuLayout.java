@@ -21,6 +21,10 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 	}
 
 	@Override
+	public void notifyUser(String message) {
+	}
+
+	@Override
 	protected void refreshSelected(String label) {
 		notifier.refreshSelected(label);
 	}
@@ -86,10 +90,6 @@ public class AlexandriaMenuLayout<DN extends AlexandriaMenuLayoutNotifier> exten
 
 	@Override
 	protected void hidePanel() {
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
 	}
 
 	public void logout() {

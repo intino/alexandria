@@ -17,7 +17,6 @@ public abstract class Stamp<O> {
 	private Value<String> className = empty();
 	private ChangeEvent changeEvent;
 	private ValidateEvent validateEvent;
-	private MessageLoader messageLoader;
 	private Value<Color> color = emptyColor();
 
 	public String name() {
@@ -129,8 +128,8 @@ public abstract class Stamp<O> {
 		return this;
 	}
 
-	public ChangeEvent.Refresh change(Item item, String value, AlexandriaDisplay self, ActivitySession session) {
-		return changeEvent != null ? changeEvent.change(item != null ? item.object() : null, value, self.id(), session) : ChangeEvent.Refresh.None;
+	public StampResult change(Item item, String value, AlexandriaDisplay self, ActivitySession session) {
+		return changeEvent != null ? changeEvent.change(item != null ? item.object() : null, value, session) : StampResult.none();
 	}
 
 	public Stamp changeEvent(ChangeEvent event) {
@@ -139,20 +138,11 @@ public abstract class Stamp<O> {
 	}
 
 	public String validate(Item item, String value, AlexandriaDisplay self, ActivitySession session) {
-		return validateEvent != null ? validateEvent.validate(item != null ? item.object() : null, value, self.id(), session) : null;
+		return validateEvent != null ? validateEvent.validate(item != null ? item.object() : null, value, session) : null;
 	}
 
 	public Stamp validateEvent(ValidateEvent event) {
 		this.validateEvent = event;
-		return this;
-	}
-
-	public String message(Item item, AlexandriaDisplay self, ActivitySession session) {
-		return messageLoader != null ? messageLoader.load(item != null ? item.object() : null, self.id(), session) : null;
-	}
-
-	public Stamp messageLoader(MessageLoader loader) {
-		this.messageLoader = loader;
 		return this;
 	}
 
@@ -168,20 +158,12 @@ public abstract class Stamp<O> {
 		O value(Object object, ActivitySession session);
 	}
 
-	public interface MessageLoader {
-		String load(Object object, String selfId, ActivitySession session);
-	}
-
 	public interface ChangeEvent {
-		Refresh change(Object object, String value, String selfId, ActivitySession session);
-
-		enum Refresh {
-			None, Object, Catalog
-		}
+		StampResult change(Object object, String value, ActivitySession session);
 	}
 
 	public interface ValidateEvent {
-		String validate(Object object, String value, String selfIf, ActivitySession session);
+		String validate(Object object, String value, ActivitySession session);
 	}
 
 	public static class Color {

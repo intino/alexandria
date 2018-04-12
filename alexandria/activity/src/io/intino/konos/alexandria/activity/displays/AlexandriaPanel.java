@@ -52,6 +52,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
+	public void notifyUser(String message) {
+		notifier.notifyUser(message);
+	}
+
+	@Override
 	protected void refreshBreadcrumbs(String breadcrumbs) {
 		notifier.refreshBreadcrumbs(breadcrumbs);
 	}
@@ -69,11 +74,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	@Override
 	protected void hidePanel() {
 		notifier.hidePanel();
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
-		notifier.showOperationMessage(message);
 	}
 
 	@Override

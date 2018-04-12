@@ -59,6 +59,10 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 		return (E) layout().openElement(label);
 	}
 
+	@Override
+	public void notifyUser(String message) {
+	}
+
 	public <T extends AlexandriaLayout> T layout() {
 		return (T) child(AlexandriaLayout.class);
 	}
@@ -94,10 +98,6 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 
 	@Override
 	protected void hidePanel() {
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
 	}
 
 	private void refreshLoading(boolean withMessage) {

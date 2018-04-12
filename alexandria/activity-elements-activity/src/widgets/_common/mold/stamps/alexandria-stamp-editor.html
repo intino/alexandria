@@ -4,7 +4,7 @@
 <dom-module id="alexandria-stamp-editor">
 
     <template>
-        <paper-input no-label-float value="{{value}}" on-keydown="_keyDown" on-blur="_close"></paper-input>
+        <paper-input no-label-float value="{{value}}" on-keydown="_keyDown" on-keyup="_validate" on-blur="_close"></paper-input>
     </template>
 
     <style>
@@ -59,6 +59,14 @@
                 if (event.keyCode == 27) this.fire("close");
                 else if (event.keyCode == 13)
                     this.fire("save", this.value);
+            },
+
+            _validate : function(e) {
+                if (this.validateTimeout != null) {
+                    window.clearTimeout(this.validateTimeout);
+                    this.validateTimeout = null;
+                }
+                window.setTimeout(() => this.fire("validate", this.value), 100);
             }
 
         });

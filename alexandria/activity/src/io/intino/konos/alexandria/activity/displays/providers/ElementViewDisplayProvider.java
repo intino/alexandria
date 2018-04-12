@@ -10,9 +10,7 @@ import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.schemas.ChangeItemParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.activity.schemas.ValidateItemParameters;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
@@ -39,8 +37,8 @@ public interface ElementViewDisplayProvider {
 
     void executeOperation(ElementOperationParameters params, List<Item> selection);
     Resource downloadOperation(ElementOperationParameters params, List<Item> selection);
-    void changeItem(Item item, ChangeItemParameters params);
-    void validateItem(Item item, ValidateItemParameters params);
+    void changeItem(Item item, Stamp stamp, String value);
+    void validateItem(Item item, Stamp stamp, String value);
 
     interface Sorting {
         String name();

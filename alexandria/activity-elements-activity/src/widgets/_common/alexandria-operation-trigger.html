@@ -87,8 +87,8 @@
             },
 
             _fillColor : function() {
-                var defaultTextColor = "white";
-                var defaultBackgroundColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
+                var defaultTextColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
+                var defaultBackgroundColor = "white";
                 this._textColor = this.color != null ? this.color.text : defaultTextColor;
                 this._backgroundColor = this.color != null ? this.color.background : defaultBackgroundColor;
             }

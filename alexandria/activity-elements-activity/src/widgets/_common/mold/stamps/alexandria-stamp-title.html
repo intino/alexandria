@@ -5,8 +5,11 @@
 <dom-module id="alexandria-stamp-title">
 
     <template>
-        <div id="layer" on-tap="_edit" class$="value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]" style$="[[_style]]">[[stamp.value]]</div>
-        <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}" hidden$="[[!stamp.editable]]" style="display:none;" on-change="_change" on-close="_close"></alexandria-stamp-editor>
+        <div id="layer" on-tap="_edit" class$="value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]"
+                        style$="[[_style]]">[[stamp.value]]</div>
+        <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}"
+                                 hidden$="[[!stamp.editable]]" style="display:none;" validation-result="[[stamp.validationResult]]"
+                                 on-change="_change" on-validate="_validate" on-close="_close"></alexandria-stamp-editor>
     </template>
 
     <style>
@@ -50,6 +53,10 @@
             _change : function(e) {
                 this.fire("change-item", { stamp: this.stamp.name, item: this.stamp.item, value: e.detail });
                 this._hideEditor();
+            },
+
+            _validate : function(e) {
+                this.fire("validate-item", { stamp: this.stamp.name, item: this.stamp.item, value: e.detail });
             },
 
             _close : function(e) {

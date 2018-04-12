@@ -18,6 +18,7 @@ public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
 	void view(ElementView view);
 	void refresh();
 	void refresh(io.intino.konos.alexandria.activity.schemas.Item... items);
+	void refreshValidation(String validationMessage, io.intino.konos.alexandria.activity.schemas.Item item, Stamp stamp);
 
 	void onOpenItem(Consumer<OpenItemEvent> listener);
 	void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener);

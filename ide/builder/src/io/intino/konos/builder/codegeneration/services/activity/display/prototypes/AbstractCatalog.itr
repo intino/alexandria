@@ -184,7 +184,7 @@ def type(operation & openDialog) trigger(operation)
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session)).mode("$mode").name("$name")[.title("$title")][.messageLoader($operationMessageLoader)][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openCatalog) trigger(operation)
@@ -208,15 +208,11 @@ def type(operation & groupingselection) trigger(operation)
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session)).mode("$mode").name("$name").title("$title")[.messageLoader($operationMessageLoader)].alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session)).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & opencatalogselection) trigger(operation)
 	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.OpenCatalogSelection().execution((element, selection, openCatalogSelection, session) -> $catalog+firstUpperCase.Toolbar.openCatalogSelection(box, (Catalog) element, (java.util.List<$type>)(Object)selection, (java.util.List<Object>)openCatalogSelection, session))[.filter($openCatalogSelectionOperationFilter)].position("$position").selection("$selection").catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$openCatalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$openCatalog").element()).views(java.util.Arrays.asList($view+quoted...[, ])).width($width).height($height).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
-end
-
-def trigger(operationMessageLoader)
-	(element, selfId, session) -> $catalog+firstUpperCase.Toolbar.$operationType~UserMessage(box, (Catalog) element, selfId, session)
 end
 
 def trigger(openCatalogSelectionOperationFilter)
