@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 public class ElementViewBuilder {
 
@@ -98,10 +97,6 @@ public class ElementViewBuilder {
         if (operation instanceof OpenDialog) return "open-dialog";
         if (operation instanceof GroupingSelection) return "grouping";
         return "operation";
-    }
-
-    public static List<ElementView> buildList(List<io.intino.konos.alexandria.activity.displays.ElementView> viewList) {
-        return viewList.stream().map(ElementViewBuilder::build).collect(toList());
     }
 
     private static void addMapViewProperties(ElementView result, io.intino.konos.alexandria.activity.displays.ElementView view) {

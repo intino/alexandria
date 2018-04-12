@@ -44,10 +44,6 @@ end
 def type(stamp & openDialogOperation)
 	public static class $name+FirstUpperCase {
 		$common
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
 	}
 end
 
@@ -62,23 +58,16 @@ def type(stamp & openExternalDialogOperation)
 		public static String dialogTitle($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//by default is set to operation label
 		}
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
 	}
 end
 
 def type(stamp & openCatalogOperation)
 	public static class $name+FirstUpperCase {
-		$common
+		$common[
 
-		[$catalogFilter]
-		[$openCatalogOperationExecution]
+		$catalogFilter][
 
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
+		$openCatalogOperationExecution]
 	}
 end
 
@@ -87,10 +76,6 @@ def type(stamp & downloadOperation)
 		$common
 
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, ActivitySession session) {
-			return null;//TODO
-		}
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -103,10 +88,6 @@ def type(stamp & previewOperation)
 		public static java.net.URL preview($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
 	}
 end
 
@@ -116,12 +97,9 @@ def type(stamp & taskOperation)
 
 		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
 			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
-		}
+		}[
 
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
-		[$operationMessageLoader]
+		$operationMessageLoader]
 	}
 end
 
@@ -130,10 +108,6 @@ def type(stamp & exportOperation)
 		$common
 
 		public static io.intino.konos.alexandria.activity.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, ActivitySession session) {
-			return null;//TODO
-		}
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -145,10 +119,6 @@ def type(stamp & location)
 		$common
 
 		public static java.net.URL icon($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return null;//TODO
-		}
-
-		public static String drawingColor($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 			return null;//TODO
 		}
 	}
@@ -166,10 +136,6 @@ end
 def type(stamp & highlight)
 	public static class $name+FirstUpperCase {
 		$common
-
-		public static String color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
-			return "";//TODO
-		}
 	}
 end
 
@@ -246,11 +212,22 @@ def trigger(common)
 
 	$editable][
 
+	$labelLoader
+	][
+
 	$style
 	][
 
 	$className
-	]
+	][
+
+	$color]
+end
+
+def trigger(labelLoader)
+	public static String label($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+		return "";//TODO
+	}
 end
 
 def trigger(style)
@@ -309,6 +286,12 @@ end
 
 def trigger(valueMethod)
 	public static $valueType value($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+		return null;//TODO
+	}
+end
+
+def trigger(color)
+	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Color color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 		return null;//TODO
 	}
 end

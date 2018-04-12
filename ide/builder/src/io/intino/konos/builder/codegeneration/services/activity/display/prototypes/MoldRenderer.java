@@ -78,6 +78,8 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (!stamp.defaultStyle().isEmpty()) frame.addSlot("defaultStyle", stamp.defaultStyle());
 		if (stamp.hasCustomStyle()) frame.addSlot("style", baseFrame(stamp));
 		if (stamp.hasCustomClass()) frame.addSlot("className", baseFrame(stamp));
+		if (stamp.hasCustomLabel()) frame.addSlot("labelLoader", baseFrame(stamp));
+		if (stamp.hasCustomColor()) frame.addSlot("color", baseFrame(stamp));
 		if (stamp.editable()) frame.addSlot("editable", baseFrame(stamp));
 		if (stamp.height() >= 0) frame.addSlot("height", stamp.height());
 		if (!stamp.label().isEmpty()) frame.addSlot("label", stamp.label());
@@ -85,7 +87,6 @@ public class MoldRenderer extends PrototypeRenderer {
 		addValueMethod(stamp, frame);
 		return frame;
 	}
-
 
 	private void addValueMethod(Stamp stamp, Frame frame) {
 		if (stamp.i$(EmbeddedDisplay.class) || stamp.i$(EmbeddedCatalog.class) || stamp.i$(Operation.class) || stamp.i$(Page.class))
@@ -159,7 +160,6 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Location stamp) {
 		frame.addSlot("icon", baseFrame(stamp));
-		frame.addSlot("drawingColor", baseFrame(stamp));
 	}
 
 	private void frameOf(Frame frame, Map stamp) {
@@ -170,7 +170,6 @@ public class MoldRenderer extends PrototypeRenderer {
 
 	private void frameOf(Frame frame, Operation operation) {
 		frame.addTypes(operation.getClass().getSimpleName()).addSlot("mode", operation.mode().toString());
-		frame.addSlot("drawingColor", baseFrame(operation));
 		if (operation.alexandriaIcon() != null)
 			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
 		if (operation.i$(OpenDialogOperation.class)) {
