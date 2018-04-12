@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.services.activity.display.prototy
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.services.activity.display.prototypes.updaters.MoldUpdater;
+import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
 import io.intino.konos.model.graph.Mold.Block.*;
@@ -56,6 +57,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		final Frame frame = baseFrame(stamp).addTypes("stamp")
 				.addSlot("type", stamp.getClass().getSimpleName())
 				.addSlot("common", common(stamp));
+
 		if (stamp.i$(Picture.class)) frameOf(frame, stamp.a$(Picture.class));
 		else if (stamp.i$(Rating.class)) frameOf(frame, stamp.a$(Rating.class));
 		else if (stamp.i$(Breadcrumbs.class)) frameOf(frame, stamp.a$(Breadcrumbs.class));
@@ -69,6 +71,7 @@ public class MoldRenderer extends PrototypeRenderer {
 		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
 		else if (stamp.i$(CardWallet.class)) frameOf(frame, stamp.a$(CardWallet.class));
 		else if (stamp.i$(Map.class)) frameOf(frame, stamp.a$(Map.class));
+
 		return frame;
 	}
 
@@ -84,7 +87,12 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (stamp.height() >= 0) frame.addSlot("height", stamp.height());
 		if (!stamp.label().isEmpty()) frame.addSlot("label", stamp.label());
 		if (!stamp.suffix().isEmpty()) frame.addSlot("suffix", stamp.suffix());
+
+		if (stamp.editable() || (stamp.i$(TaskOperation.class) && stamp.a$(TaskOperation.class).showMessageToUser()))
+			frame.addSlot("messageLoader", baseFrame(stamp)).addSlot("mold", mold.name$());
+
 		addValueMethod(stamp, frame);
+
 		return frame;
 	}
 
@@ -174,7 +182,8 @@ public class MoldRenderer extends PrototypeRenderer {
 			frame.addSlot("alexandriaIcon", operation.alexandriaIcon());
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
-			frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", openDialogOperation.dialog().name$()).addSlot("dialogBuilder", frame(openDialogOperation));
+			Dialog dialog = openDialogOperation.dialog();
+			if (dialog != null) frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", dialog.name$()).addSlot("dialogBuilder", frame(openDialogOperation));
 		} else if (operation.i$(OpenExternalDialogOperation.class)) {
 			OpenExternalDialogOperation openExternalDialogOperation = operation.a$(OpenExternalDialogOperation.class);
 			frame.addSlot("width", openExternalDialogOperation.width()).addSlot("dialogPathBuilder", baseFrame(openExternalDialogOperation)).addSlot("dialogTitleBuilder", baseFrame(openExternalDialogOperation));
@@ -194,7 +203,6 @@ public class MoldRenderer extends PrototypeRenderer {
 		} else if (operation.i$(TaskOperation.class)) {
 			TaskOperation taskOperation = operation.a$(TaskOperation.class);
 			frame.addSlot("taskExecution", baseFrame(operation)).addSlot("mold", mold.name$());
-			if (taskOperation.showMessageToUser()) frame.addSlot("operationMessageLoader", baseFrame(operation)).addSlot("mold", mold.name$());
 			if (taskOperation.confirmText() != null) frame.addSlot("confirmText", taskOperation.confirmText());
 		}
 	}

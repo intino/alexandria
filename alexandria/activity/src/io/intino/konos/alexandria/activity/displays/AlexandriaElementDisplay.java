@@ -6,6 +6,9 @@ import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
+import io.intino.konos.alexandria.activity.model.Catalog;
+import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.Toolbar;
 import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.View;
 import io.intino.konos.alexandria.activity.model.catalog.events.OnClickRecord;
@@ -20,10 +23,8 @@ import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
-import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
-import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.activity.schemas.Position;
-import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
+import io.intino.konos.alexandria.activity.model.toolbar.Operation;
+import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.*;
@@ -191,17 +192,27 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return downloadOperation(operation, params, selection);
 	}
 
-	public void saveItem(SaveItemParameters params, Item item) {
+	public void changeItem(Item item, ChangeItemParameters params) {
 		Stamp stamp = stamp(params.stamp());
 		if (!stamp.editable()) return;
 
 		currentItem(new String(Base64.getDecoder().decode(params.item())));
-		Stamp.Editable.Refresh refresh = stamp.save(item, params.value(), session());
+		Stamp.ChangeEvent.Refresh refresh = stamp.change(item, params.value(), this, session());
 		currentView().ifPresent(view -> {
 			dirty(true);
-			if (refresh == Stamp.Editable.Refresh.Object) view.refresh(currentItem_());
-			else if (refresh == Stamp.Editable.Refresh.Catalog) view.refresh();
+			if (refresh == Stamp.ChangeEvent.Refresh.Object) view.refresh(currentItem_());
+			else if (refresh == Stamp.ChangeEvent.Refresh.Catalog) view.refresh();
 		});
+		showOperationMessageIfNotEmpty(stamp.message(item, this, session()));
+	}
+
+	public void validateItem(Item item, ValidateItemParameters params) {
+		Stamp stamp = stamp(params.stamp());
+		if (!stamp.editable()) return;
+
+		currentItem(new String(Base64.getDecoder().decode(params.item())));
+		String message = stamp.validate(item, params.value(), this, session());
+		showOperationMessageIfNotEmpty(message);
 	}
 
 	public Optional<AlexandriaElementView> currentView() {

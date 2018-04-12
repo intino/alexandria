@@ -7,7 +7,7 @@
     <template>
         <paper-rating class$="rating [[stamp.classes]]" icon$="[[stamp.properties.icon]]"
                       rating$="[[stamp.value]]" disabled style$="[[_style]]"
-                      hidden$="[[!stamp.value.length]]" max="[[stamp.properties.max]]" on-tap="_save"></paper-rating>
+                      hidden$="[[!stamp.value.length]]" max="[[stamp.properties.max]]" on-tap="_change"></paper-rating>
     </template>
 
     <style>
@@ -18,10 +18,10 @@
             is: 'alexandria-stamp-rating',
             behaviors: [ AlexandriaBehaviors.StampBehavior ],
 
-            _save : function(e) {
+            _change : function(e) {
                 if (!this.stamp.editable) return;
                 var value = this.querySelector("paper-rating").rating;
-                this.fire("save-item", { stamp: this.stamp.name, item: this.stamp.item, value: value });
+                this.fire("change-item", { stamp: this.stamp.name, item: this.stamp.item, value: value });
             }
         });
     </script>

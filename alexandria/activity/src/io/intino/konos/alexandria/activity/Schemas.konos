@@ -204,7 +204,12 @@ Schema Resource
 	Attribute name as Text
 	Attribute value as Text
 
-Schema SaveItemParameters
+Schema ChangeItemParameters
+	Attribute stamp as Text
+	Attribute item as Text
+	Attribute value as Text
+
+Schema ValidateItemParameters
 	Attribute stamp as Text
 	Attribute item as Text
 	Attribute value as Text

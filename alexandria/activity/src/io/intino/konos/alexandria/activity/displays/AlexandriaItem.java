@@ -243,8 +243,12 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		forceRefresh();
 	}
 
-	public void saveItem(SaveItemParameters value) {
-		provider.saveItem(value, item);
+	public void changeItem(ChangeItemParameters value) {
+		provider.changeItem(item, value);
+	}
+
+	public void validateItem(ValidateItemParameters value) {
+		provider.validateItem(item, value);
 	}
 
 	public void emptyMessage(String message) {

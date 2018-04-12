@@ -150,7 +150,7 @@ def type(stamp & previewOperation)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.messageLoader($operationMessageLoader)][.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -170,7 +170,7 @@ end
 def trigger(common)
 	[.name("$name")][.label("$label")][$labelLoader][$height][
 	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
-	.layout(Stamp.Layout.$layout)][.color($color)][.editable($editable)][
+	.layout(Stamp.Layout.$layout)][.color($color)][$editable][$messageLoader][
 	$style][
 	$className][
 	$valueMethod]
@@ -200,8 +200,8 @@ def trigger(embeddedDialogBuilder)
 	(name, session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
 end
 
-def trigger(operationMessageLoader)
-	(object, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.userMessage(box, ($moldClass) object, selfId, session)
+def trigger(messageLoader)
+	.messageLoader((object, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.userMessage(box, ($moldClass) object, selfId, session))
 end
 
 def trigger(title)
@@ -253,7 +253,8 @@ def trigger(itemLoader)
 end
 
 def trigger(editable)
-	(object, value, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, session)
+	.changeEvent((object, value, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, session))
+	.validateEvent((object, value, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onValidate(box, ($moldClass) object, value, session))
 end
 
 def trigger(valueMethod)

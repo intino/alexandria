@@ -8,8 +8,9 @@ import io.intino.konos.alexandria.activity.model.Mold;
 import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.schemas.ChangeItemParameters;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.activity.schemas.SaveItemParameters;
+import io.intino.konos.alexandria.activity.schemas.ValidateItemParameters;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public interface ItemDisplayProvider {
 
 	void executeOperation(ElementOperationParameters params, List<Item> items);
 	Resource downloadOperation(ElementOperationParameters params, List<Item> items);
-	void saveItem(SaveItemParameters params, Item item);
+	void changeItem(Item item, ChangeItemParameters parameters);
+	void validateItem(Item item, ValidateItemParameters parameters);
 }
 
