@@ -58,7 +58,7 @@ public class JMSDatalake implements Datalake {
 		}
 	}
 
-	public javax.jms.Session session() {
+	public Session session() {
 		if (session == null || ((ActiveMQSession) session).isClosed()) connect();
 		return session;
 	}
