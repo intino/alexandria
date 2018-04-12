@@ -101,7 +101,8 @@
         _initStamp : function(stamp) {
             this._initStampProperties(stamp);
             stamp.mode = this.mode;
-            stamp.label = stamp.label != null ? this._parseFunctions(stamp.label) : "";
+            var label = stamp.properties.label != null ? stamp.properties.label : stamp.label;
+            stamp.label = label != null ? this._parseFunctions(label) : "";
             stamp.item = this.item.name;
             stamp.singleValue = this._singleValue(stamp);
             stamp.countValues = this._countValuesOf(stamp);
@@ -117,9 +118,14 @@
             stamp.properties.style = this._propertyValueOf(stamp, 'style');
             stamp.properties.className = this._propertyValueOf(stamp, 'className');
 
+            var label = this._propertyValueOf(stamp, 'label');
+            if (label != null && label != "") stamp.properties.label = label;
+
+            var color = this._propertyValueOf(stamp, "color");
+            stamp.properties.color = color != "" && color != "null" ? JSON.parse(color) : null;
+
             this._initIconProperties(stamp);
             this._initBreadcrumbsProperties(stamp);
-            this._initOperationProperties(stamp);
             this._initOpenExternalDialogOperationProperties(stamp);
             this._initDownloadOperationProperties(stamp);
             this._initPreviewOperationProperties(stamp);
@@ -128,7 +134,6 @@
             this._initItemLinksProperties(stamp);
             this._initLocationProperties(stamp);
             this._initCardWalletProperties(stamp);
-            this._initHighlightProperties(stamp);
             this._initCatalogLinkProperties(stamp);
         },
 
@@ -149,15 +154,6 @@
             var value = this._valueOf(stamp);
             var tree = (value !== "") ? JSON.parse(value) : { items: [] };
             stamp.properties.breadcrumbs = this.treeToBreadcrumbs(tree);
-        },
-
-        _initOperationProperties : function(stamp) {
-            let type = stamp.type;
-
-            if (type.indexOf("-operation") == -1)
-                return;
-
-            stamp.properties.drawingColor = this._propertyValueOf(stamp, "drawingColor");
         },
 
         _initOpenExternalDialogOperationProperties : function(stamp) {
@@ -197,18 +193,12 @@
         _initLocationProperties : function(stamp) {
             if (stamp.type !== "location") return;
             stamp.properties.icon = this._propertyValueOf(stamp,'icon');
-            stamp.properties.drawingColor = this._propertyValueOf(stamp,'drawingColor');
         },
 
         _initCardWalletProperties : function(stamp) {
             if (stamp.type !== "card-wallet") return;
             var value = this._parseFunctions(this._valueOf(stamp));
             stamp.properties.wallet = (value != "") ? JSON.parse(value) : { cards: [] };
-        },
-
-        _initHighlightProperties : function(stamp) {
-            if (stamp.type !== "highlight") return;
-            stamp.properties.color = this._propertyValueOf(stamp, 'color');
         },
 
         _initCatalogLinkProperties : function(stamp) {

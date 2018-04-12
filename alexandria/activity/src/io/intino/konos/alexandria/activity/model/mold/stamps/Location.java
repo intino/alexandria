@@ -8,7 +8,6 @@ import java.net.URL;
 
 public class Location extends Stamp<String> {
 	private Value<URL> icon;
-	private Value<String> drawingColor;
 
 	public URL icon(Item item, ActivitySession session) {
 		return objectIcon(item != null ? item.object() : null, session);
@@ -20,19 +19,6 @@ public class Location extends Stamp<String> {
 
 	public Location icon(Value<URL> icon) {
 		this.icon = icon;
-		return this;
-	}
-
-	public String drawingColor(Item item, ActivitySession session) {
-		return objectColor(item != null ? item.object() : null, session);
-	}
-
-	public String objectColor(Object object, ActivitySession session) {
-		return this.drawingColor != null ? this.drawingColor.value(object, session) : null;
-	}
-
-	public Location drawingColor(Value<String> color) {
-		this.drawingColor = color;
 		return this;
 	}
 

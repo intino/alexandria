@@ -8,10 +8,10 @@
 
     <template>
         <div class$="mode [[mode]]">
-            <paper-icon-button style$="background-color:[[_color]];" class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
-            <paper-button style$="background-color:[[_color]];" class="option Button" on-tap="_execute">[[_title]]</paper-button>
-            <a style$="background-color:[[_color]];" class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
-            <cotton-chip style$="background-color:[[_color]];" class="option Chip" text="[[_title]]" icon="[[icon]]" on-tap="_execute"></cotton-chip>
+            <paper-icon-button style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Button" on-tap="_execute">[[_title]]</paper-button>
+            <a style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+            <cotton-chip style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Chip" text="[[_title]]" icon="[[icon]]" on-tap="_execute"></cotton-chip>
         </div>
     </template>
 
@@ -67,8 +67,9 @@
                 icon : String,
                 styles : String,
                 mode : String,
-                color: { type: String, observer: "_fillColor" },
-                _color: String
+                color: { type: Object, observer: "_fillColor" },
+                _textColor: String,
+                _backgroundColor: String
             },
 
             attached: function () {
@@ -86,8 +87,10 @@
             },
 
             _fillColor : function() {
-                var defaultColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
-                this._color = this.color != null && this.color != "" ? this.color : defaultColor;
+                var defaultTextColor = "white";
+                var defaultBackgroundColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
+                this._textColor = this.color != null ? this.color.text : defaultTextColor;
+                this._backgroundColor = this.color != null ? this.color.background : defaultBackgroundColor;
             }
 
         });

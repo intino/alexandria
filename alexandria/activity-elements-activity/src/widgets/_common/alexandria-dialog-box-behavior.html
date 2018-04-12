@@ -4,6 +4,7 @@
     var AlexandriaBehaviors = AlexandriaBehaviors || {};
 
     AlexandriaBehaviors.DialogBoxBehavior = {
+        _openedPosition: null,
 
         Dictionary : {
             es : {
@@ -22,19 +23,20 @@
             _resized : Boolean
         },
 
-//        listeners: { 'iron-resize': '_resize' },
+        listeners: { 'iron-resize': '_resize' },
 
         _resize : function() {
             this._updateSize();
-            if (this._position != null) this._fitToTrigger();
+            this._fitToTrigger();
         },
 
         open : function() {
             if (this.$.dialog.opened) this.close();
             this._addClasses();
+            this._updateOpenedPosition();
             var dialog = this.$.dialog;
-            dialog.withBackdrop = this._position == null;
-            dialog.entryAnimation = this._position == null ? "scale-up-animation" : "fade-in-animation";
+            dialog.withBackdrop = !this._isFitted();
+            dialog.entryAnimation = !this._isFitted() ? "scale-up-animation" : "fade-in-animation";
             dialog.resizerShouldNotify(false);
             dialog.open();
             window.setTimeout(() => this._resize(), 10);
@@ -45,7 +47,7 @@
         },
 
         _overlayOpened : function(e) {
-            if (this._position != null) return;
+            if (this._isFitted()) return;
             var dialog = e.target;
             var overlay = dialog.backdropElement;
 
@@ -95,16 +97,19 @@
         },
 
         _fitToTrigger : function() {
+            if (!this._isFitted()) return;
             var dialog = this.$.dialog;
             dialog.style.marginLeft = 0;
             dialog.style.marginTop = "25px";
-            var left = this._position.left;
-            var top = this._position.top;
+            var left = this._left();
+            var top = this._top();
             var windowWidth = $(window).width();
+            var windowHeight = $(window).height();
             var dialogWidth = $(dialog).width();
+            var dialogHeight = $(dialog).height();
             var position = left + dialogWidth > windowWidth ? "right" : ((left + dialogWidth/2) > windowWidth ? "center" : "left");
             left = position === "left" ? left : left - (position === "center" ? dialogWidth/2 : dialogWidth);
-            dialog.style.top = (top + 5) + "px";
+            dialog.style.top = top + dialogHeight > windowHeight ? (top-dialogHeight - 30) + "px" : (top + 5) + "px";
             dialog.style.left = (left + 3) + "px";
         },
 
@@ -112,7 +117,23 @@
             var dialog = $(this.$.dialog);
             dialog.removeClass("fit-body");
             dialog.removeClass("fit-trigger");
-            dialog.addClass(this._position != null ? "fit-trigger" : "fit-body");
+            dialog.addClass(this._isFitted() ? "fit-trigger" : "fit-body");
+        },
+
+        _isFitted : function() {
+            return AlexandriaBehaviors.DialogBoxBehavior._openedPosition != null;
+        },
+
+        _left : function() {
+            return AlexandriaBehaviors.DialogBoxBehavior._openedPosition.left;
+        },
+
+        _top : function() {
+            return AlexandriaBehaviors.DialogBoxBehavior._openedPosition.top;
+        },
+
+        _updateOpenedPosition : function() {
+            AlexandriaBehaviors.DialogBoxBehavior._openedPosition = this._position;
         }
 
     };

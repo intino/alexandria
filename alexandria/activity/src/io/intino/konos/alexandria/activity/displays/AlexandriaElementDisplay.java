@@ -350,7 +350,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void closeCurrentItem() {
-		openedItem = null;
 		navigateMain();
 	}
 
@@ -406,7 +405,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (event.filtered()) display.staticFilter(i -> event.filter((Item) i));
 		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Single) display.onSelectItems((s) -> dialogBox.accept());
 		if (catalogOperation.selection() == OpenCatalogOperation.Selection.Multiple) display.selectionEnabledByDefault(true);
-		dialogBox.label(catalogOperation.label());
+		dialogBox.label(catalogOperation.label(event.item(), session()));
 		dialogBox.display(display);
 		dialogBox.settings(catalogOperation.width(), catalogOperation.height(), true, event.position());
 		dialogBox.refresh();

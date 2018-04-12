@@ -55,7 +55,7 @@ public class ItemBuilder {
     }
 
     private static String label(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider) {
-        String defaultLabel = item != null ? item.name() :  "";
+        String defaultLabel = item != null ? item.name() : "";
         return provider.stamps().stream().filter(s -> (s instanceof Title)).findAny()
                                  .map(stamp -> (String) stamp.value(item, provider.session()))
                                  .orElse(defaultLabel);
@@ -135,17 +135,18 @@ public class ItemBuilder {
     private static List<Property> propertiesOf(Stamp stamp, io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
         List<Property> result = new ArrayList<>();
         ActivitySession session = provider.session();
+
         String style = stamp.style(item, session);
+        if (style != null && !style.isEmpty()) result.add(propertyOf("style", style));
+
         String className = stamp.className(item, session);
+        if (className != null && !className.isEmpty()) result.add(propertyOf("className", className));
 
-        if (style != null && !style.isEmpty())
-            result.add(propertyOf("style", style));
+        Stamp.Color color = stamp.color(item, session);
+        if (color != null) result.add(propertyOf("color", new Gson().toJson(color)));
 
-        if (className != null && !className.isEmpty())
-            result.add(propertyOf("className", className));
-
-        if (stamp instanceof Highlight)
-            result.add(propertyOf("color", ((Highlight)stamp).color(item, session)));
+        String label = stamp.label(item, session);
+        if (label != null && !label.isEmpty()) result.add(propertyOf("label", label));
 
         if (stamp instanceof ItemLinks)
             result.add(propertyOf("title", ((ItemLinks)stamp).title(item, session)));
@@ -156,15 +157,8 @@ public class ItemBuilder {
         if (stamp instanceof Location) {
             Location location = (Location) stamp;
             URL icon = location.icon(item, session);
-            if (icon != null)
-                result.add(propertyOf("icon", toResource(baseAssetUrl, icon).toUrl().toString()));
-            String drawingColor = location.drawingColor(item, session);
-            if (drawingColor != null)
-                result.add(propertyOf("drawingColor", drawingColor));
+            if (icon != null) result.add(propertyOf("icon", toResource(baseAssetUrl, icon).toUrl().toString()));
         }
-
-        if (stamp instanceof Operation)
-            result.add(propertyOf("drawingColor", ((Operation)stamp).drawingColor(item, session)));
 
         if (stamp instanceof OpenExternalDialogOperation) {
             result.add(propertyOf("dialogTitle", ((OpenExternalDialogOperation) stamp).dialogTitle(item, session)));

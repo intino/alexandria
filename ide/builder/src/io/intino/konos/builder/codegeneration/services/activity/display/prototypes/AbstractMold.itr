@@ -54,7 +54,7 @@ def trigger(layout)
 end
 
 def type(stamp & location)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[.drawingColor($drawingColor)][$icon]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Location()[$icon]$common)
 end
 
 def type(stamp & breadcrumbs)
@@ -102,7 +102,7 @@ def type(stamp & temporalCatalogTimeNavigator)
 end
 
 def type(stamp & highlight)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight().color((object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, session))$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Highlight()$common)
 end
 
 def type(stamp & itemLinks)
@@ -130,27 +130,27 @@ def type(stamp & picture)
 end
 
 def type(stamp & openDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation()[$width].dialogType("$dialogType").dialogBuilder($dialogBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & openExternalDialogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenExternalDialogOperation()[$width].dialogPathBuilder($dialogPathBuilder).dialogTitleBuilder($dialogTitleBuilder).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenExternalDialogOperation()[$width].dialogPathBuilder($dialogPathBuilder).dialogTitleBuilder($dialogTitleBuilder).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & openCatalogOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection")[.execution($openCatalogOperationExecution)].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.activity.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.activity.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection")[.execution($openCatalogOperationExecution)].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation()[.options(java.util.Arrays.asList($options+quoted...[, ]))].execution($downloadexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & previewOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation().preview($previewexecution).mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & taskOperation)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.messageLoader($operationMessageLoader)][.confirmText("$confirmText")].mode("$mode").drawingColor($drawingColor)[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation().execution($taskexecution)[.messageLoader($operationMessageLoader)][.confirmText("$confirmText")].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & exportOperation)
@@ -159,7 +159,6 @@ def type(stamp & exportOperation)
 		[.to(java.time.Instant.ofEpochMilli($to~L))]
 		[.options(java.util.Arrays.asList($options+quoted...[, ]))]
 		.execution($exportexecution)
-		.drawingColor($drawingColor)
 		[.alexandriaIcon("$alexandriaIcon")]
 		.mode("$mode")$common)
 end
@@ -169,12 +168,16 @@ def type(stamp)
 end
 
 def trigger(common)
-	[.name("$name")][.label("$label")][$height][
+	[.name("$name")][.label("$label")][$labelLoader][$height][
 	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
-	.layout(Stamp.Layout.$layout)][.editable($editable)][
+	.layout(Stamp.Layout.$layout)][.color($color)][.editable($editable)][
 	$style][
 	$className][
 	$valueMethod]
+end
+
+def trigger(labelLoader)
+	.labelLoader((object, session) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.label(box, ($moldClass) object, session))
 end
 
 def trigger(style)
@@ -261,8 +264,8 @@ def trigger(icon)
 	.icon((object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.icon(box, ($moldClass) object, session))
 end
 
-def trigger(drawingColor)
-	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.drawingColor(box, ($moldClass) object, session)
+def trigger(color)
+	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, session)
 end
 
 def trigger(expanded)
