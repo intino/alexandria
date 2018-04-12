@@ -20,6 +20,11 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
+	public void notifyUser(String message) {
+		notifier.notifyUser(message);
+	}
+
+	@Override
 	protected int maxZoom() {
 		return 0;
 	}
@@ -52,11 +57,6 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	@Override
 	protected void hidePanel() {
 		notifier.hidePanel();
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
-		notifier.showOperationMessage(message);
 	}
 
 	@Override

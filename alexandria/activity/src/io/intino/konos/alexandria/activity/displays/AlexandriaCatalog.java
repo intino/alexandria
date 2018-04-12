@@ -17,6 +17,11 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	}
 
 	@Override
+	public void notifyUser(String message) {
+		notifier.notifyUser(message);
+	}
+
+	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
 		ItemList itemList = element().items(scope, condition, session());
 		applyFilter(itemList);
@@ -46,11 +51,6 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	@Override
 	protected void hidePanel() {
 		notifier.hidePanel();
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
-		notifier.showOperationMessage(message);
 	}
 
 	@Override

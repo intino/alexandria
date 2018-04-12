@@ -16,6 +16,7 @@ import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MoldView;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.model.mold.StampResult;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
 import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
@@ -42,7 +43,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private Function<Item, Boolean> staticFilter = null;
 	private Function<Item, Boolean> dynamicFilter = null;
 	private boolean embedded = false;
-	private AlexandriaElementView.OpenItemEvent openedItem = null;
+	private Item openedItem = null;
 	private TimeRange range;
 	private List<String> enabledViews = null;
 	private AlexandriaDialogBox dialogBox = null;
@@ -192,27 +193,29 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return downloadOperation(operation, params, selection);
 	}
 
-	public void changeItem(Item item, ChangeItemParameters params) {
-		Stamp stamp = stamp(params.stamp());
+	public void changeItem(Item item, Stamp stamp, String value) {
 		if (!stamp.editable()) return;
 
-		currentItem(new String(Base64.getDecoder().decode(params.item())));
-		Stamp.ChangeEvent.Refresh refresh = stamp.change(item, params.value(), this, session());
+		if (item != null) currentItem(item.id());
+		StampResult result = stamp.change(item, value, this, session());
 		currentView().ifPresent(view -> {
 			dirty(true);
-			if (refresh == Stamp.ChangeEvent.Refresh.Object) view.refresh(currentItem_());
-			else if (refresh == Stamp.ChangeEvent.Refresh.Catalog) view.refresh();
+			StampResult.Refresh refresh = result.refresh();
+			if (refresh == StampResult.Refresh.Item) view.refresh(currentItem_());
+			else if (refresh == StampResult.Refresh.Element) view.refresh();
 		});
-		showOperationMessageIfNotEmpty(stamp.message(item, this, session()));
+		notifyUserIfNotEmpty(result.message());
 	}
 
-	public void validateItem(Item item, ValidateItemParameters params) {
-		Stamp stamp = stamp(params.stamp());
+	public void validateItem(Item item, Stamp stamp, String value) {
 		if (!stamp.editable()) return;
 
-		currentItem(new String(Base64.getDecoder().decode(params.item())));
-		String message = stamp.validate(item, params.value(), this, session());
-		showOperationMessageIfNotEmpty(message);
+		if (item != null) currentItem(item.id());
+		String message = stamp.validate(item, value, this, session());
+		currentView().ifPresent(view -> {
+			dirty(true);
+			view.refreshValidation(message, currentItem_(), stamp);
+		});
 	}
 
 	public Optional<AlexandriaElementView> currentView() {
@@ -351,7 +354,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
 		removePanelDisplay();
-		openedItem = event;
+		openedItem = Item.createFrom(event.item()).label(event.label());
 		AlexandriaPanel display = createPanelDisplay(event);
 		createPanel(new CreatePanelParameters().displayType(display.getClass().getSimpleName()).item(event.itemId()));
 		add(display);
@@ -366,7 +369,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void removePanelDisplay() {
 		if (openedItem == null) return;
-		elementDisplayManager.removeElement(openedItem.item());
+		elementDisplayManager.removeElement(openedItem);
 		remove(AlexandriaPanel.class);
 	}
 
@@ -422,9 +425,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.refresh();
 		dialogBox.onAccept((value) -> {
 			display.currentView().ifPresent(v -> {
-				OpenCatalogOperation.Refresh refresh = catalogOperation.execute(event.item(), ((AlexandriaCatalogView) v).selectedItems(), session());
-				if (refresh == OpenCatalogOperation.Refresh.Item) refresh(this.currentItem());
-				else if (refresh == OpenCatalogOperation.Refresh.Element) forceRefresh();
+				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaCatalogView) v).selectedItems(), session());
+				StampResult.Refresh refresh = result.refresh();
+				if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
+				else if (refresh == StampResult.Refresh.Element) forceRefresh();
+				notifyUserIfNotEmpty(result.message());
 			});
 			dialogBox.close();
 		});
@@ -436,14 +441,15 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		currentItem(event.item().id());
 		Item item = this.currentItem();
 		TaskOperation stamp = (TaskOperation) event.stamp();
-		TaskOperation.Refresh refresh = stamp.execute(item, event.self(), session());
+		StampResult result = stamp.execute(item, event.self(), session());
+		StampResult.Refresh refresh = result.refresh();
 		dirty(true);
-		if (refresh == TaskOperation.Refresh.Item) refresh(this.currentItem());
-		else if (refresh == TaskOperation.Refresh.Element) {
+		if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
+		else if (refresh == StampResult.Refresh.Element) {
 			closeCurrentItem();
 			forceRefresh();
 		}
-		showOperationMessageIfNotEmpty(stamp.message(item, event.self(), session()));
+		notifyUserIfNotEmpty(result.message());
 		notifyLoading(false);
 	}
 
@@ -457,6 +463,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return target;
 	}
 
+	public abstract void notifyUser(String message);
 	protected abstract void showDialogBox();
 	protected abstract void currentItem(String id);
 	protected abstract Item currentItem();
@@ -465,7 +472,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	protected abstract void createPanel(CreatePanelParameters params);
 	protected abstract void showPanel();
 	protected abstract void hidePanel();
-	protected abstract void showOperationMessage(String message);
 
 	protected void applyFilter(ItemList itemList) {
 		if (staticFilter != null) itemList.filter(staticFilter);
@@ -473,7 +479,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	private io.intino.konos.alexandria.activity.schemas.Item currentItem_() {
-		return ElementHelper.item(this.currentItem(), this, baseAssetUrl());
+		Item item = this.currentItem();
+		return item != null ? ElementHelper.item(item, this, baseAssetUrl()) : null;
 	}
 
 	private Operation operationOf(ElementOperationParameters params) {
@@ -502,20 +509,19 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		if (operation instanceof Task) {
 			Task taskOperation = (Task)operation;
-			Task.Refresh refresh = taskOperation.execute(element(), id(), session());
-			if (refresh == Task.Refresh.Catalog)
-				this.refresh();
-			showOperationMessageIfNotEmpty(taskOperation.message(element(), id(), session()));
+			ToolbarResult result = taskOperation.execute(element(), id(), session());
+			if (result.refresh() == ToolbarResult.Refresh.Element) this.refresh();
+			notifyUserIfNotEmpty(result.message());
 			return;
 		}
 
 		if (operation instanceof TaskSelection) {
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
-			TaskSelection.Refresh refresh = taskSelectionOperation.execute(element(), option, selection, session());
-			if (refresh == TaskSelection.Refresh.Catalog)
-				this.refresh();
-			else if (refresh == TaskSelection.Refresh.Selection)
-				this.refresh(selection.toArray(new Item[selection.size()]));
+			ToolbarSelectionResult result = taskSelectionOperation.execute(element(), option, selection, session());
+			ToolbarSelectionResult.Refresh refresh = result.refresh();
+			if (refresh == ToolbarSelectionResult.Refresh.Element) this.refresh();
+			else if (refresh == ToolbarSelectionResult.Refresh.Selection) this.refresh(selection.toArray(new Item[selection.size()]));
+			notifyUserIfNotEmpty(result.message());
 		}
 
 		if (operation instanceof OpenCatalog) {
@@ -542,9 +548,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			dialogBox.refresh();
 			dialogBox.onAccept((value) -> {
 				display.currentView().ifPresent(v -> {
-					OpenCatalogSelection.Refresh refresh = catalogOperation.execute(element(), selection, ((AlexandriaCatalogView) v).selectedItems(), session());
-					if (refresh == OpenCatalogSelection.Refresh.Item) refresh(this.currentItem());
-					else if (refresh == OpenCatalogSelection.Refresh.Element) forceRefresh();
+					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaCatalogView) v).selectedItems(), session());
+					ToolbarSelectionResult.Refresh refresh = result.refresh();
+					if (refresh == ToolbarSelectionResult.Refresh.Item) refresh(this.currentItem());
+					else if (refresh == ToolbarSelectionResult.Refresh.Element) forceRefresh();
 				});
 				dialogBox.close();
 			});
@@ -577,17 +584,16 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (tree == null) {
 			tree = new Tree();
 			Tree.TreeItem main = new Tree.TreeItem().name("main").label(label());
-			if (openedItem != null)
-				main.add(new Tree.TreeItem().name(openedItem.item().name()).label(openedItem.label()));
+			if (openedItem != null) main.add(new Tree.TreeItem().name(openedItem.name()).label(openedItem.label()));
 			tree.add(main);
 		}
 
 		return new Gson().toJson(tree);
 	}
 
-	private void showOperationMessageIfNotEmpty(String message) {
+	private void notifyUserIfNotEmpty(String message) {
 		if (message == null || message.isEmpty()) return;
-		showOperationMessage(message);
+		notifyUser(message);
 	}
 
 }

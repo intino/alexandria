@@ -170,7 +170,7 @@ end
 def trigger(common)
 	[.name("$name")][.label("$label")][$labelLoader][$height][
 	.defaultStyle("$defaultStyle")][.suffix("$suffix")][
-	.layout(Stamp.Layout.$layout)][.color($color)][$editable][$messageLoader][
+	.layout(Stamp.Layout.$layout)][.color($color)][$editable][
 	$style][
 	$className][
 	$valueMethod]
@@ -198,10 +198,6 @@ end
 
 def trigger(embeddedDialogBuilder)
 	(name, session) -> $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog")
-end
-
-def trigger(messageLoader)
-	.messageLoader((object, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.userMessage(box, ($moldClass) object, selfId, session))
 end
 
 def trigger(title)

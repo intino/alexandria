@@ -7,7 +7,7 @@
 
         properties : {
             _breadcrumbs : { type: Object, value: function () { return []; } },
-            _operationMessage : String
+            _notifyMessage : String
         },
 
         _refreshBreadcrumbs : function(tree) {
@@ -33,9 +33,9 @@
             $(this.$.panel).addClass("hidden");
         },
 
-        _showOperationMessage : function(message) {
-            this._operationMessage = message;
-            this.querySelector("paper-toast.operation-message").open();
+        _notifyUser : function(message) {
+            this._notifyMessage = message;
+            this.$.notifyMessageToast.open();
         },
 
         _showDialogBox : function() {

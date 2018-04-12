@@ -88,9 +88,6 @@ public class MoldRenderer extends PrototypeRenderer {
 		if (!stamp.label().isEmpty()) frame.addSlot("label", stamp.label());
 		if (!stamp.suffix().isEmpty()) frame.addSlot("suffix", stamp.suffix());
 
-		if (stamp.editable() || (stamp.i$(TaskOperation.class) && stamp.a$(TaskOperation.class).showMessageToUser()))
-			frame.addSlot("messageLoader", baseFrame(stamp)).addSlot("mold", mold.name$());
-
 		addValueMethod(stamp, frame);
 
 		return frame;

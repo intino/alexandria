@@ -95,8 +95,8 @@ def type(stamp & taskOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
-			return io.intino.konos.alexandria.activity.model.mold.stamps.operations.TaskOperation.Refresh.None;
+		public static io.intino.konos.alexandria.activity.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
+			return io.intino.konos.alexandria.activity.model.mold.StampResult.none();
 		}
 	}
 end
@@ -210,8 +210,6 @@ def trigger(common)
 
 	$editable][
 
-	$messageLoader][
-
 	$labelLoader][
 
 	$style][
@@ -246,14 +244,8 @@ def trigger(catalogFilter)
 end
 
 def trigger(openCatalogOperationExecution)
-	public static io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, ActivitySession session) {
-		return io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation.Refresh.None;
-	}
-end
-
-def trigger(messageLoader)
-	public static String userMessage($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, ActivitySession session) {
-		return null;
+	public static io.intino.konos.alexandria.activity.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, ActivitySession session) {
+		return io.intino.konos.alexandria.activity.model.mold.StampResult.none();
 	}
 end
 
@@ -276,8 +268,8 @@ def trigger(displayBuilder)
 end
 
 def trigger(editable)
-	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Editable.Refresh onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
-		return null;
+	public static io.intino.konos.alexandria.activity.model.mold.StampResult onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
+		return StampResult.none();
 	}
 	public static String onValidate($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, ActivitySession session) {
 		return null;

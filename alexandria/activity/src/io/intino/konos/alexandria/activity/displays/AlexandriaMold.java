@@ -17,6 +17,10 @@ public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends 
     }
 
     @Override
+    public void notifyUser(String message) {
+    }
+
+    @Override
     protected void showDialogBox() {
     }
 
@@ -47,10 +51,6 @@ public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends 
 
     @Override
     protected void hidePanel() {
-    }
-
-    @Override
-    protected void showOperationMessage(String message) {
     }
 
 }

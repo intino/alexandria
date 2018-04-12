@@ -21,6 +21,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	public void notifyUser(String message) {
+		notifier.notifyUser(message);
+	}
+
+	@Override
 	protected void sendCatalog() {
 		notifier.refreshCatalog(CatalogBuilder.build(element(), groupingManager, label(), embedded()));
 	}
@@ -48,11 +53,6 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	@Override
 	protected void hidePanel() {
 		notifier.hidePanel();
-	}
-
-	@Override
-	protected void showOperationMessage(String message) {
-		notifier.showOperationMessage(message);
 	}
 
 	@Override

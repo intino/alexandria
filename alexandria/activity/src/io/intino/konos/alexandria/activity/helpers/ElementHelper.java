@@ -87,12 +87,12 @@ public class ElementHelper {
 
 			@Override
 			public void changeItem(Item item, ChangeItemParameters params) {
-				provider.changeItem(item, params);
+				provider.changeItem(item, stamp(view.mold(), params.stamp()), params.value());
 			}
 
 			@Override
 			public void validateItem(Item item, ValidateItemParameters params) {
-				provider.validateItem(item, params);
+				provider.validateItem(item, stamp(view.mold(), params.stamp()), params.value());
 			}
 		};
 	}

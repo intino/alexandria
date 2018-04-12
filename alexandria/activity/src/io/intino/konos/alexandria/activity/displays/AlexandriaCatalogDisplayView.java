@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplay
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
 import io.intino.konos.alexandria.activity.model.catalog.views.DisplayView;
+import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.Item;
 
 import java.util.ArrayList;
@@ -77,6 +78,10 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
 
     @Override
     public void refresh(Item... items) {
+    }
+
+    @Override
+    public void refreshValidation(String validationMessage, Item item, Stamp stamp) {
     }
 
     public void refresh(Scope scope) {

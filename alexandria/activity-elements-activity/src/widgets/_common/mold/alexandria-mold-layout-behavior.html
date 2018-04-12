@@ -104,6 +104,7 @@
             var label = stamp.properties.label != null ? stamp.properties.label : stamp.label;
             stamp.label = label != null ? this._parseFunctions(label) : "";
             stamp.item = this.item.name;
+            stamp.validationResult = this.item.validationResult;
             stamp.singleValue = this._singleValue(stamp);
             stamp.countValues = this._countValuesOf(stamp);
             stamp.value = this._parseFunctions(this._valueOf(stamp));
