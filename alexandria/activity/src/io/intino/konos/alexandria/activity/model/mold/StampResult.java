@@ -13,11 +13,11 @@ public class StampResult extends AbstractResult<StampResult.Refresh> {
 	}
 
 	public static StampResult element() {
-		return new StampResult().refresh(Refresh.Element);
+		return new StampResult().refresh(Refresh.Container);
 	}
 
 	public enum Refresh {
-		None, Item, Element
+		None, Item, Container
 	}
 
 }

@@ -66,7 +66,7 @@
                 _title : String,
                 icon : String,
                 styles : String,
-                mode : String,
+                mode : { type: String, observer: "_fillColor" },
                 color: { type: Object, observer: "_fillColor" },
                 _textColor: String,
                 _backgroundColor: String
@@ -87,8 +87,9 @@
             },
 
             _fillColor : function() {
-                var defaultTextColor = getComputedStyle(document.body).getPropertyValue('--default-primary-color');
-                var defaultBackgroundColor = "white";
+                var color = this._ownStyleProperties != null ? this._ownStyleProperties['--default-primary-color'] : "";
+                var defaultTextColor = this.mode == "Button" || this.mode == "Chip" ? "white" : color;
+                var defaultBackgroundColor = this.mode == "Button" || this.mode == "Chip" ? color : "white";
                 this._textColor = this.color != null ? this.color.text : defaultTextColor;
                 this._backgroundColor = this.color != null ? this.color.background : defaultBackgroundColor;
             }

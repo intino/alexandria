@@ -81,7 +81,7 @@ public class AlexandriaCatalogDisplayView extends ActivityDisplay<AlexandriaCata
     }
 
     @Override
-    public void refreshValidation(String validationMessage, Item item, Stamp stamp) {
+    public void refreshValidation(String validationMessage, Stamp stamp, Item item) {
     }
 
     public void refresh(Scope scope) {

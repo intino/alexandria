@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMagazineViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
@@ -85,6 +86,11 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
 		if (items.length <= 0) return;
 		child(AlexandriaItem.class).refresh(items[0]);
+	}
+
+	@Override
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.activity.schemas.Item item) {
+		child(AlexandriaItem.class).refreshValidation(validationMessage, stamp, item);
 	}
 
 	@Override

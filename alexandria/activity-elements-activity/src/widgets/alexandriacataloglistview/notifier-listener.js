@@ -24,6 +24,9 @@ AlexandriaCatalogListViewBehaviors.NotifierListener = {
         this.when("refreshItem").toSelf().execute(function(parameters) {
         	widget._refreshItem(parameters.value);
         });
+        this.when("refreshItemValidation").toSelf().execute(function(parameters) {
+        	widget._refreshItemValidation(parameters.value);
+        });
         this.when("refreshCount").toSelf().execute(function(parameters) {
         	widget._refreshCount(parameters.value);
         });

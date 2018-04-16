@@ -6,10 +6,10 @@
 
     <template>
         <div id="layer" on-tap="_edit" class$="value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]"
-                        style$="[[_style]]">[[stamp.value]]</div>
+             style$="[[_style]]">[[stamp.value]]</div>
         <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}"
-                                 hidden$="[[!stamp.editable]]" style="display:none;" validation-result="[[stamp.validationResult]]"
-                                 on-change="_change" on-validate="_validate" on-close="_close"></alexandria-stamp-editor>
+                                 hidden$="[[!stamp.editable]]" style="display:none;"
+                                 on-save="_save" on-validate="_validate" on-close="_close"></alexandria-stamp-editor>
     </template>
 
     <style>
@@ -50,7 +50,8 @@
                 this._showEditor();
             },
 
-            _change : function(e) {
+            _save : function(e) {
+                this.notifyPath("stamp.value", e.detail);
                 this.fire("change-item", { stamp: this.stamp.name, item: this.stamp.item, value: e.detail });
                 this._hideEditor();
             },
@@ -60,6 +61,7 @@
             },
 
             _close : function(e) {
+                this.notifyPath("stamp.value", e.detail);
                 this._hideEditor();
             },
 
