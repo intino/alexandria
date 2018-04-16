@@ -360,6 +360,7 @@
             clear : function() {
                 this._page = 0;
                 this.notifyPath('_itemList', []);
+                this._resize();
                 var list = this.querySelector("cotton-list");
                 if (list != null) list.clear();
             },
@@ -378,6 +379,12 @@
 
                 var item = this.querySelector("alexandria-mold-container[name=\"_item_" + item.name + "\"]");
                 if (item != null) item.highlight();
+            },
+
+            refreshItemValidation : function(message, stamp, item) {
+                var element = item != null ? this.querySelector("alexandria-mold-container[name=\"_item_" + item + "\"]") : this;
+                var stamp = element.querySelector("." + stamp);
+                stamp.refreshValidation(message);
             },
 
             refreshItemPicture : function(pictureData) {

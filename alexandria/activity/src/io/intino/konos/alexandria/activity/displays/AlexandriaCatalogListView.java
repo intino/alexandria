@@ -2,10 +2,7 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
-import io.intino.konos.alexandria.activity.displays.builders.CatalogSortingBuilder;
-import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
-import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
-import io.intino.konos.alexandria.activity.displays.builders.PictureDataBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.*;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogListViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
@@ -124,6 +121,11 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	@Override
 	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
 		Stream.of(items).forEach(this::refresh);
+	}
+
+	@Override
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.activity.schemas.Item item) {
+		notifier.refreshItemValidation(ItemValidationRefreshInfoBuilder.build(validationMessage, stamp, item));
 	}
 
 	public void selectItems(String[] records) {

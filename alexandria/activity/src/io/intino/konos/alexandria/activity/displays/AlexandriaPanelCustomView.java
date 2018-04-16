@@ -2,6 +2,8 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelCustomViewNotifier;
+import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.schemas.Item;
 
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemDisplayProvider;
 
@@ -21,6 +23,11 @@ public class AlexandriaPanelCustomView extends AlexandriaPanelView<AlexandriaPan
 	public void refresh() {
 		super.refresh();
 		child(AlexandriaItem.class).refresh();
+	}
+
+	@Override
+	public void refreshValidation(String validationMessage, Stamp stamp, Item item) {
+		child(AlexandriaItem.class).refreshValidation(validationMessage, stamp, item);
 	}
 
 	private void createItemDisplay() {

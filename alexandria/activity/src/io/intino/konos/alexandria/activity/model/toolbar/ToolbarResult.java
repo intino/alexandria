@@ -9,11 +9,11 @@ public class ToolbarResult extends AbstractResult<ToolbarResult.Refresh> {
 	}
 
 	public static ToolbarResult element() {
-		return new ToolbarResult().refresh(ToolbarResult.Refresh.Element);
+		return new ToolbarResult().refresh(ToolbarResult.Refresh.Container);
 	}
 
 	public enum Refresh {
-		None, Element
+		None, Container
 	}
 
 }

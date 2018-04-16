@@ -80,6 +80,11 @@
                 this._item = info.item;
             },
 
+            _refreshValidation : function(info) {
+                var stamp = this.querySelector("." + info.stamp);
+                stamp.refreshValidation(info.message);
+            },
+
             _reset : function() {
                 this._mold = this._item = null;
             },
@@ -119,10 +124,12 @@
 
             _change : function(e) {
                 this.changeItem(e.detail);
+                e.stopPropagation();
             },
 
             _validate : function(e) {
                 this.validateItem(e.detail);
+                e.stopPropagation();
             },
 
             _export : function(e) {

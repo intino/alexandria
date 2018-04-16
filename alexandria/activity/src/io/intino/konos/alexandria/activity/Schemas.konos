@@ -140,6 +140,11 @@ Schema ItemRefreshInfo
 	Attribute mold as Text
 	Has(Item, multiple=false)
 
+Schema ItemValidationRefreshInfo
+	Attribute item as Text
+	Attribute stamp as Text
+	Attribute message as Text
+
 Schema Item
 	Attribute name as Text
 	Attribute label as Text

@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMapViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Panel;
@@ -128,6 +129,11 @@ public class AlexandriaCatalogMapView extends PageDisplay<AlexandriaCatalogMapVi
 	@Override
 	public void refresh(Item... items) {
 		Stream.of(items).forEach(item -> notifier.refreshItem(item));
+	}
+
+	@Override
+	public void refreshValidation(String validationMessage, Stamp stamp, Item item) {
+		notifier.refreshItemValidation(ItemValidationRefreshInfoBuilder.build(validationMessage, stamp, item));
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters value) {

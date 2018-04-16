@@ -12,6 +12,9 @@ AlexandriaItemBehaviors.NotifierListener = {
         this.when("refresh").toSelf().execute(function(parameters) {
         	widget._refresh(parameters.value);
         });
+        this.when("refreshValidation").toSelf().execute(function(parameters) {
+        	widget._refreshValidation(parameters.value);
+        });
         this.when("refreshMode").toSelf().execute(function(parameters) {
         	widget._refreshMode(parameters.value);
         });

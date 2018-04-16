@@ -18,6 +18,11 @@
             this._render();
         },
 
+        refreshValidation : function(message) {
+            if (this.$.editor == null) return;
+            this.$.editor.validationMessage(message);
+        },
+
         _render : function() { }, // implemented by stamps
 
         _updateClassName : function () {

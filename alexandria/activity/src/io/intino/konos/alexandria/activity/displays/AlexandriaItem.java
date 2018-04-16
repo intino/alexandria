@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.activity.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaItemNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -114,6 +115,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 
 	public void refresh(io.intino.konos.alexandria.activity.schemas.Item item) {
 		sendInfo(item);
+	}
+
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.activity.schemas.Item item) {
+		notifier.refreshValidation(ItemValidationRefreshInfoBuilder.build(validationMessage, stamp, item));
 	}
 
 	public void itemStampsReady(String id) {

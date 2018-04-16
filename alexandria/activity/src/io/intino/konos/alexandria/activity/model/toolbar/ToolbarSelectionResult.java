@@ -17,11 +17,11 @@ public class ToolbarSelectionResult extends AbstractResult<ToolbarSelectionResul
 	}
 
 	public static ToolbarSelectionResult element() {
-		return new ToolbarSelectionResult().refresh(Refresh.Element);
+		return new ToolbarSelectionResult().refresh(Refresh.Container);
 	}
 
 	public enum Refresh {
-		None, Selection, Item, Element
+		None, Selection, Item, Container
 	}
 
 }

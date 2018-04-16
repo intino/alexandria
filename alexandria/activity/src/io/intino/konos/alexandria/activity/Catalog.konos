@@ -68,6 +68,7 @@ Display alexandriaTemporalTimeCatalog
 
 Display alexandriaItem
 	Notification refresh as Object(ItemRefreshInfo)
+	Notification refreshValidation as Object(ItemValidationRefreshInfo)
 	Notification refreshMode as Text
 	Notification refreshEmptyMessage as Text
 
@@ -101,6 +102,7 @@ Display alexandriaCatalogListView
 	Notification refresh as List Object(Item)
 	Notification refreshPageSize as Integer
 	Notification refreshItem as Object(Item)
+	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
 	Notification refreshCount as Integer
 	Notification refreshSelection as List Text
 	Notification refreshSortingList as List Object(Sorting)
@@ -132,6 +134,7 @@ Display alexandriaCatalogMapView
 	Notification refresh as List Object(Item)
 	Notification refreshPageSize as Integer
 	Notification refreshItem as Object(Item)
+	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
 	Notification refreshCount as Integer
 	Notification refreshSelection as List Text
 

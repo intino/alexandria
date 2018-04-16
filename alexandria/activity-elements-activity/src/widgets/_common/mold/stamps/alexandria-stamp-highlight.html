@@ -8,6 +8,7 @@
             <div class$="highlight [[stamp.classes]]" style$="color:[[stamp.properties.color.text]];background-color:[[stamp.properties.color.background]];[[_style]]">
                 <span>[[stamp.value]]</span>
                 <span class="suffix">[[stamp.properties.suffix]]</span>
+                <paper-icon-button hidden$="[[!stamp.editable]]" icon="clear" on-tap="_save"></paper-icon-button>
             </div>
         </div>
     </template>
@@ -25,7 +26,12 @@
     <script>
         Polymer({
             is: 'alexandria-stamp-highlight',
-            behaviors : [ AlexandriaBehaviors.StampBehavior ]
+            behaviors : [ AlexandriaBehaviors.StampBehavior ],
+
+            _save : function(e) {
+                this.fire("change-item", { stamp: this.stamp.name, item: this.stamp.item, value: "" });
+            }
+
         });
     </script>
 

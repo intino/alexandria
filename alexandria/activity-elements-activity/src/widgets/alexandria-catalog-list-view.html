@@ -102,6 +102,10 @@
                 this.itemRefreshed(item.name);
             },
 
+            _refreshItemValidation : function(info) {
+                this.querySelector("alexandria-catalog-list").refreshItemValidation(info.message, info.stamp, info.item);
+            },
+
             _refreshPicture : function(pictureData) {
                 this.querySelector("alexandria-catalog-list").refreshItemPicture(pictureData);
             },
@@ -120,10 +124,12 @@
 
             _changeItem : function(e) {
                 this.changeItem(e.detail);
+                e.stopPropagation();
             },
 
             _validateItem : function(e) {
                 this.validateItem(e.detail);
+                e.stopPropagation();
             },
 
             _downloadItem : function(e) {
