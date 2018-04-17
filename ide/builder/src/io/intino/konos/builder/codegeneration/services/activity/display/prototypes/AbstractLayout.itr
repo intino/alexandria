@@ -59,11 +59,11 @@ def type(options) trigger(add)
 		label((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.label(box, element, ($modelClass) object))
 		[.icon((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.icon(box, element, ($modelClass) object))]
 		[.bubble((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.bubble(box, element, ($modelClass) object))]
-		.render($render))
+		.render($render)[.hidden($hidden)])
 end
 
 def	type(option & elementOption) trigger(add)
-	.add(new io.intino.konos.alexandria.activity.model.layout.options.Option().label("$label").render($render))
+	.add(new io.intino.konos.alexandria.activity.model.layout.options.Option().label("$label").render($render)[.hidden($hidden)])
 end
 
 def type(options) trigger(elementOption)
@@ -71,15 +71,15 @@ def type(options) trigger(elementOption)
 		label((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.label(box, element, object))
 		.icon((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.icon(box, element, object))
 		.bubble((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.bubble(box, element, object))
-		.render($render));
+		.render($render)[.hidden($hidden)]);
 end
 
 def type(option) trigger(elementOption)
-	result.add(new io.intino.konos.alexandria.activity.model.layout.options.Option()[.label("$label")].render($render));
+	result.add(new io.intino.konos.alexandria.activity.model.layout.options.Option()[.label("$label")].render($render)[.hidden($hidden)]);
 end
 
 def type(group) trigger(elementOption)
-	result.add(new Group().[label("$label")].mode(Group.Mode.$mode)[
+	result.add(new Group().[label("$label")].mode(Group.Mode.$mode)[.hidden($hidden)][
 			$elementOption+add...[$NL]]);
 end
 
@@ -97,6 +97,10 @@ end
 
 def type(display) trigger(render)
 	new io.intino.konos.alexandria.activity.model.renders.RenderDisplay().displayLoader((object, loadingListener, instantListener) -> $layout+firstUpperCase.$path+FirstUppercase.$display+firstLowerCase(box, object, loadingListener, instantListener))
+end
+
+def trigger(hidden)
+	(session) -> $layout+firstUpperCase.$path+FirstUppercase.hidden(box, session)
 end
 
 def trigger(quoted)

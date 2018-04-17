@@ -29,8 +29,9 @@ def type(elementOption & options)
 			return null;
 		}
 
-		$render
-
+		$render[
+		$hidden
+	]
 		$elementOption...[$NL]
 	}
 end
@@ -39,7 +40,9 @@ def type(elementOption & group)
 	public static class $name+FirstUpperCase {
 		$elementOption...[$NL]
 
-		$render
+		$render[
+		$hidden
+	]
 	}
 end
 
@@ -48,6 +51,8 @@ def type(elementOption & option)
 		$elementOption...[$NL]
 
 		$render
+		$hidden[
+	]
 	}
 end
 
@@ -74,4 +79,10 @@ end
 
 def trigger(quoted)
 	"$value"
+end
+
+def trigger(hidden)
+	public static boolean hidden($box+firstUpperCase~Box box, ActivitySession session) {
+		return false;//TODO
+	}
 end

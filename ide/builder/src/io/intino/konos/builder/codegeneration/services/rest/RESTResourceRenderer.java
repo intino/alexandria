@@ -1,10 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
 import com.intellij.openapi.project.Project;
+import cottons.utils.MimeTypes;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.RESTActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.list.ListData;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
@@ -64,10 +66,16 @@ public class RESTResourceRenderer {
 		frame.addSlot("operation", operation.getClass().getSimpleName());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));
-		frame.addSlot("returnType", Commons.returnType(operation.response(), packageName));
+		frame.addSlot("returnType", frameOf(operation.response()));
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
 		if (!resource.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+		return frame;
+	}
+
+	private Frame frameOf(Response response) {
+		Frame frame = new Frame().addSlot("value", Commons.returnType(response, packageName));
+		if (response.isText() && response.format() != Response.Format.html) frame.addSlot("format", MimeTypes.get(response.format().toString()));
 		return frame;
 	}
 

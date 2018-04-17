@@ -7,11 +7,11 @@ Desktop(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPat
 	layout = octanaLayout
 
 Layout(mode = Menu) octanaLayout
-	Option("dashboard") dashboard
+	Option(label="dashboard") dashboard
 		RenderPanels(octanaDashboardPanel)
-	Option("centros") centers > RenderCatalogs(octanaCenterCatalog)
-	Option("personas") persons > RenderCatalogs(octanaPersonCatalog)
-	Option("análisis") analysis > RenderPanels(octanaAnalysisPanel)
+	Option(label="centros") centers > RenderCatalogs(octanaCenterCatalog)
+	Option(label="personas") persons > RenderCatalogs(octanaPersonCatalog)
+	Option(label="análisis", hidden=HiddenEnabled) analysis > RenderPanels(octanaAnalysisPanel)
 
 Panel octanaDashboardPanel
 	Toolbar > OpenDialog("abrir", dialog=dialog1) abrir

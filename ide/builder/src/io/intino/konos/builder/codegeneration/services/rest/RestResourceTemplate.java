@@ -24,7 +24,7 @@ public class RestResourceTemplate extends Template {
 			rule().add((condition("attribute", "void")), (condition("trigger", "ending"))),
 			rule().add((condition("trigger", "ending"))).add(literal(")")),
 			rule().add((condition("attribute", "void")), (condition("trigger", "write"))),
-			rule().add((condition("trigger", "write"))).add(literal("private void write(")).add(mark("value", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" object) {\n\tmanager.write(object);\n}")),
+			rule().add((condition("trigger", "write"))).add(literal("private void write(")).add(mark("value", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" object) {\n\tmanager.write(object")).add(expression().add(literal(", \"")).add(mark("format")).add(literal("\""))).add(literal(");\n}")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "type"))).add(mark("parameterType")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "assign"))).add(literal("action.")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" = manager.from")).add(mark("in", "firstUpperCase")).add(literal("(\"")).add(mark("name")).add(literal("\", ")).add(mark("parameterType")).add(literal(");")),
 			rule().add((condition("type", "list")), (condition("trigger", "parameterType"))).add(literal("new java.util.ArrayList<")).add(mark("value")).add(literal(">(0).getClass()")),
