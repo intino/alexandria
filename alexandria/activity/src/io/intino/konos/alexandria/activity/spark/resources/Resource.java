@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class Resource implements io.intino.konos.alexandria.rest.Resource {
 	private final AlexandriaDisplayNotifierProvider notifierProvider;
@@ -43,6 +40,19 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	@Override
 	public void execute() throws AlexandriaException {
 		fillBrowser(manager);
+	}
+
+	protected String parameterValue(String key) {
+		String value = manager.fromPath(key, String.class);
+
+		if (value == null || value.isEmpty()) return null;
+
+		try {
+			return new String(Base64.getDecoder().decode(value));
+		}
+		catch (IllegalArgumentException ex) {
+			return value;
+		}
 	}
 
 	protected boolean isLogged() {
