@@ -43,7 +43,7 @@ public class SchemaAdaptersRenderer {
 	private Frame processSchema(Schema schema) {
 		final Service service = schema.core$().ownerAs(Service.class);
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
-		return SchemaRenderer.createSchemaFrame(schema, subPackage.isEmpty() ? packageName : packageName + "." + subPackage.replace(File.separator, "."), packageName);
+		return new SchemaRenderer(schema.core$().graph().as(KonosGraph.class), null, packageName).createSchemaFrame(schema, subPackage.isEmpty() ? packageName : packageName + "." + subPackage.replace(File.separator, "."));
 	}
 
 	private Collection<Schema> findActivitySchemas() {
