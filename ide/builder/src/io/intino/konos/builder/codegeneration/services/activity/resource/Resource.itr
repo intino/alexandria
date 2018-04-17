@@ -78,5 +78,5 @@ def type(page)
 end
 
 def type(parameter)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.fromPath("$name", String.class) != null && !manager.fromPath("$name", String.class).isEmpty() ? new String(Base64.getDecoder().decode(manager.fromPath("$name", String.class))) : null;
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
 end
