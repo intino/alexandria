@@ -14,6 +14,7 @@ import io.intino.konos.alexandria.activity.model.renders.RenderMold;
 import io.intino.konos.alexandria.activity.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -126,8 +127,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	private void selectFirstTabView() {
+		ActivitySession session = session();
+
 		for (AbstractView view : views()) {
-			if (((View)view).layout() == Tab) {
+			View panelView = (View) view;
+			if (panelView.layout() == Tab && !panelView.hidden(target(), session)) {
 				selectView(view.name());
 				break;
 			}

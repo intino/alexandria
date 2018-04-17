@@ -14,6 +14,7 @@ import io.intino.konos.alexandria.activity.schemas.PlatformInfo;
 import io.intino.konos.alexandria.activity.schemas.Reference;
 import io.intino.konos.alexandria.activity.schemas.ReferenceProperty;
 import io.intino.konos.alexandria.activity.schemas.UserInfo;
+import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 import io.intino.konos.alexandria.activity.services.push.User;
 
 import java.util.*;
@@ -157,7 +158,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	private List<Item> items() {
-		return optionList().map(this::itemOf).flatMap(Collection::stream).collect(toList());
+		ActivitySession session = session();
+		return optionList().filter(option ->!option.hidden(session)).map(this::itemOf).flatMap(Collection::stream).collect(toList());
 	}
 
 	private Stream<ElementOption> optionList() {

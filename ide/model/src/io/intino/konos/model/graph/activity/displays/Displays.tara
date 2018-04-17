@@ -69,6 +69,7 @@ Concept Operation is component
 	var word:{Link Button Icon Chip} mode = Icon
 
 Concept ElementOption
+	var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
 
 Concept ElementRenderer is component
 	sub RenderMold

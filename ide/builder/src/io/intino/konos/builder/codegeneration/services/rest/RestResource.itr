@@ -59,7 +59,7 @@ end
 
 def trigger(write)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
-		manager.write(object);
+		manager.write(object[, "$format"]);
 	}
 end
 

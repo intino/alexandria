@@ -15,6 +15,7 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.ElementOption.Hidden.HiddenEnabled;
 import static io.intino.konos.model.graph.RenderPanels.WithObject.withObject;
 
 
@@ -51,20 +52,14 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(Options options) {
-		Frame frame = new Frame("elementOption", "options").addSlot("box", box)
-				.addSlot("layout", this.display.a$(Layout.class).name$())
-				.addSlot("name", options.name$())
-				.addSlot("path", pathOf(options.core$()))
-				.addSlot("modelClass", options.modelClass());
+		Frame frame = baseFrame(options).addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(options.core$())).addSlot("modelClass", options.modelClass());
 		render(options.elementRenderer(), frame);
+
 		return frame;
 	}
 
 	private Frame frameOf(Group group) {
-		final Frame frame = new Frame("elementOption", "group").addSlot("box", box)
-				.addSlot("label", group.label())
-				.addSlot("name", group.name$())
-				.addSlot("mode", group.mode());
+		final Frame frame = baseFrame(group).addSlot("label", group.label()).addSlot("mode", group.mode());
 		if (!group.optionList().isEmpty())
 			frame.addSlot("elementOption", group.optionList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!group.optionsList().isEmpty())
@@ -73,11 +68,19 @@ public class LayoutRenderer extends PrototypeRenderer {
 	}
 
 	private Frame frameOf(Option option) {
-		final Frame frame = new Frame("option", "elementOption").addSlot("name", option.name$()).addSlot("box", box);
+		final Frame frame = baseFrame(option);
 		final ElementRenderer renderer = option.elementRenderer();
 		frame.addTypes(renderer instanceof RenderCatalogs ? "catalogs" : "panels").addSlot("label", option.label());
 		render(renderer, frame);
 		return frame;
+	}
+
+	private Frame baseFrame(ElementOption elementOption) {
+		Frame frame = new Frame("elementOption", elementOption.getClass().getSimpleName().toLowerCase()).addSlot("box", box).addSlot("name", elementOption.name$());
+		if (elementOption.hidden()== HiddenEnabled)
+			frame.addSlot("hidden", new Frame().addSlot("box", box).addSlot("layout", this.display.a$(Layout.class).name$()).addSlot("path", pathOf(elementOption.core$())));
+		return frame;
+
 	}
 
 	private void render(ElementRenderer renderer, Frame frame) {
