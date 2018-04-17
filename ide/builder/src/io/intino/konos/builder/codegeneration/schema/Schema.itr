@@ -1,8 +1,12 @@
-def type(schema)
+def type(root)
 	package $package+ValidPackage;
 
 	import $root.schemas.*;
 
+	$schema
+end
+
+def trigger(schema)
 	public class $name+firstUpperCase implements java.io.Serializable {
 
 		$attribute+declaration...[$NL]
@@ -10,6 +14,8 @@ def type(schema)
 		$attribute+getter...[$NL$NL]
 
 		$attribute+setter...[$NL$NL]
+		[
+		$schema...[$NL]]
 	}
 end
 
