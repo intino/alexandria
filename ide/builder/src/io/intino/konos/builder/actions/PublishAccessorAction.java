@@ -17,12 +17,9 @@ import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.io.Stash;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
-import tara.dsl.Konos;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -60,19 +57,13 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 		ProgressManager.getInstance().run(new Task.Backgroundable(module.getProject(), "Publishing Konos Accessor", false) {
 			@Override
 			public void run(@NotNull ProgressIndicator indicator) {
+				final KonosGraph graph = GraphLoader.loadGraph(module);
 				final Configuration configuration = TaraUtil.configurationOf(module);
 				String generationPackage = configuration != null ? configuration.workingPackage() : "konos";
-				final Stash stashes = new StashBuilder(konosFiles(module), new Konos(), module.getName()).build();
-				final KonosGraph graph = GraphLoader.loadGraph(stashes);
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
 				new AccessorsPublisher(module, graph, generationPackage).publish();
 			}
 		});
-	}
-
-	private Map<File, Charset> konosFiles(Module module) {
-		return KonosUtils.findKonosFiles(module).stream().
-				map(PsiFile::getVirtualFile).collect(Collectors.toMap(vf -> new File(vf.getPath()), VirtualFile::getCharset));
 	}
 
 	private boolean projectIsNull(AnActionEvent e, Project project) {

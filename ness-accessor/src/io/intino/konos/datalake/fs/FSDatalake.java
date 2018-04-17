@@ -31,7 +31,8 @@ public class FSDatalake implements Datalake {
 	}
 
 	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
-		return reflow(blockSize, dispatcher, from, () -> {});
+		return reflow(blockSize, dispatcher, from, () -> {
+		});
 	}
 
 	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Runnable onFinish) {
@@ -77,6 +78,7 @@ public class FSDatalake implements Datalake {
 	}
 
 	public void disconnect() {
+		datalake.tankList().forEach(io.intino.ness.datalake.graph.Tank::terminate);
 	}
 
 	public void connect(String... args) {
@@ -84,7 +86,8 @@ public class FSDatalake implements Datalake {
 
 	private String clean(String url) {
 		final int index = url.indexOf("?");
-		return url.substring(index != -1 ? index : 0).replace("file://", "");
+		if (index!= -1) url = url.substring(0, index);
+		return url.replace("file://", "");
 	}
 
 	private Scale scaleOf(String url) {

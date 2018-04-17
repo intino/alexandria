@@ -54,30 +54,30 @@ def type(tanks)
 end
 
 def type(tank) trigger(unregister)
-	$name.unregister();
+	$name+firstLowerCase.unregister();
 end
 
 def type(tank) trigger(field)
-	private static io.intino.konos.datalake.Datalake.Tank $name;
+	private static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase;
 end
 
 def type(tank) trigger(assign)
-	$name = box.datalake().add($messageType+format);
-	$name.handler(new $name+FirstUpperCase~Handler(box));
+	$name+firstLowerCase = box.datalake().add("$messageType");
+	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
 end
 
 def type(tank) trigger(add)
-	tanks.add(NessTanks.$name);
+	tanks.add(NessTanks.$name+firstLowerCase);
 end
 
 def type(tank) trigger(getter)
-	public static io.intino.konos.datalake.Datalake.Tank $name() {
-		return NessTanks.$name;
+	public static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase() {
+		return NessTanks.$name+firstLowerCase;
 	}
 end
 
 def type(tank) trigger(subscribe)
-	$name.flow(clientID != null ? clientID + "-$name" : null);
+	$name+firstLowerCase.flow(clientID != null ? clientID + "-$name+lowerCase" : null);
 end
 
 def type(custom) trigger(replace)
@@ -86,22 +86,6 @@ end
 
 def trigger(formatMessage)
 	"$name"[$custom+customType...[]]
-end
-
-def trigger(customType)
-	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
-end
-
-def trigger(format)
-	"$name"[$custom...[]]
-end
-
-def trigger(quoted)
-	"$value"
-end
-
-def trigger(custom)
-	.replace("{$value}", box.configuration().$conf~Configuration().$value+validname+firstLowerCase)
 end
 
 def trigger(tank) trigger(class)
@@ -119,7 +103,7 @@ def trigger(tank) trigger(class)
 			try {
 				tank.execute();
 			} catch(Throwable e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 		}
 	}

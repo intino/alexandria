@@ -1,8 +1,11 @@
 dsl Proteo
 
+use DataTypes
+
 Concept:{0..1} DataLake
 	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
-	Concept:Named Tank
-		var string topic
+	Concept:NamedIfNoSchema Tank
+		var Schema schema
+		var string subdomain = ""

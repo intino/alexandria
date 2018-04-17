@@ -102,7 +102,6 @@ public class BoxConfigurationRenderer {
 		if (dataLake == null) return;
 		for (DataLake.Tank handler : dataLake.tankList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$()).addSlot("configuration", boxName);
-			addUserVariables(handler, channelFrame, findCustomParameters(handler));
 			frame.addSlot("service", channelFrame);
 		}
 	}
@@ -129,12 +128,6 @@ public class BoxConfigurationRenderer {
 	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
 		for (String custom : userVariables)
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name$()).addSlot("name", custom).addSlot("type", "String"));
-	}
-
-	private Set<String> findCustomParameters(DataLake.Tank channel) {
-		Set<String> set = new LinkedHashSet<>();
-		set.addAll(Commons.extractParameters(channel.topic()));
-		return set;
 	}
 
 	private Set<String> findCustomParameters(JMSService service) {

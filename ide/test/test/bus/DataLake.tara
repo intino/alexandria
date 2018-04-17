@@ -1,7 +1,8 @@
 dsl Konos
 
-DataLake(clientID = "{sample-id}") monentia
-	Tank("catalogs") opinions
-	Tank("{sample}") durableChannel
-	Tank("processes") inputProcesses
+DataLake(domain = "org.siani", clientID = "") monentia
+	Tank(schema = opinion) opinions
+	Tank(schema = empty) inputProcesses
 
+Schema opinion
+	Attribute asas as Text
