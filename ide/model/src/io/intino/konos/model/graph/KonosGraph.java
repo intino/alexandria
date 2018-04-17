@@ -33,12 +33,6 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return components;
 	}
 
-	public Set<String> findCustomParameters(DataLake.Tank channel) {
-		Set<String> set = new LinkedHashSet<>();
-		set.addAll(extractParameters(channel.topic()));
-		return set;
-	}
-
 	public Set<String> findCustomParameters(JMSService service) {
 		Set<String> set = new LinkedHashSet<>();
 		for (JMSService.Request request : service.requestList())

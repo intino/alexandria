@@ -4,6 +4,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.DataLake;
 import io.intino.konos.model.graph.KonosGraph;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -32,12 +33,22 @@ public class NessTanksRenderer {
 		Commons.writeFrame(new File(gen, "ness"), "NessTanks", template().format(frame));
 	}
 
-	private Frame frameOf(DataLake.Tank handler) {
+	private Frame frameOf(DataLake.Tank tank) {
+		final String type = type(tank);
 		return new Frame().addTypes("tank").
-				addSlot("name", handler.name$()).
+				addSlot("name", type).
 				addSlot("box", boxName).
-				addSlot("messageType", customize(handler.name$(), handler.topic())).
-				addSlot("simpleMessageType", handler.topic());
+				addSlot("messageType", dataLake.domain() + "." + subdomain(tank) + type).
+				addSlot("simpleMessageType", type);
+	}
+
+	@NotNull
+	private String subdomain(DataLake.Tank tank) {
+		return tank.subdomain().isEmpty() ? "" : tank.subdomain() + ".";
+	}
+
+	private String type(DataLake.Tank tank) {
+		return tank.schema() == null ? tank.name$() : tank.schema().name$();
 	}
 
 	private Frame customize(String name, String topic) {

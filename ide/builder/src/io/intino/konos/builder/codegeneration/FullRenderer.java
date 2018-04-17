@@ -31,7 +31,6 @@ import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -115,7 +114,7 @@ public class FullRenderer {
 		if (graph.dataLake() == null) return;
 		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
 		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
-		if (((LegioConfiguration) configurationOf(module)).model() != null)
+		if (module != null && ((LegioConfiguration) configurationOf(module)).model() != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 	}
 
