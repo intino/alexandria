@@ -184,7 +184,7 @@ def type(operation & openDialog) trigger(operation)
 end
 
 def type(operation & task) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.Task().execute((element, selfId, session) -> $catalog+FirstUpperCase.Toolbar.task(box, (Catalog) element, selfId, session))[.confirmText("$confirmText")].mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & openCatalog) trigger(operation)
@@ -208,7 +208,7 @@ def type(operation & groupingselection) trigger(operation)
 end
 
 def type(operation & taskselection) trigger(operation)
-	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session)).mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
+	toolbar.add(new io.intino.konos.alexandria.activity.model.toolbar.TaskSelection().execute((element, option, selection, session) -> $catalog+firstUpperCase.Toolbar.taskSelection(box, (Catalog) element, option, (java.util.List<$type>)(Object)selection, session))[.confirmText("$confirmText")].mode("$mode").name("$name").title("$title").alexandriaIcon("$icon"));
 end
 
 def type(operation & opencatalogselection) trigger(operation)

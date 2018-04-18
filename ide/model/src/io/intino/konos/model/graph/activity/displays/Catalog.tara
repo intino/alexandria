@@ -41,7 +41,9 @@ Concept Toolbar is decorable component
 		var Dialog dialog
 
 	Concept:{0..1} Task extends Operation
+		var string confirmText = empty
 	Concept:{0..1} TaskSelection extends Operation
+		var string confirmText = empty
 
 	Concept:{0..1} Download extends Operation
 		var string[] options = empty

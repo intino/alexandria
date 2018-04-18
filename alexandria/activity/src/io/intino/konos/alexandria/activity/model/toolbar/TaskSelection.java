@@ -9,7 +9,17 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class TaskSelection extends Operation {
+	private String confirmText;
 	private Execution launcher;
+
+	public String confirmText() {
+		return this.confirmText;
+	}
+
+	public TaskSelection confirmText(String confirmText) {
+		this.confirmText = confirmText;
+		return this;
+	}
 
 	public TaskSelection execute(Execution launcher) {
 		this.launcher = launcher;

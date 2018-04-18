@@ -519,7 +519,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
 			ToolbarSelectionResult result = taskSelectionOperation.execute(element(), option, selection, session());
 			ToolbarSelectionResult.Refresh refresh = result.refresh();
-			if (refresh == ToolbarSelectionResult.Refresh.Container) this.refresh();
+			if (refresh == ToolbarSelectionResult.Refresh.Container) this.forceRefresh();
 			else if (refresh == ToolbarSelectionResult.Refresh.Selection) this.refresh(selection.toArray(new Item[selection.size()]));
 			notifyUserIfNotEmpty(result.message());
 		}
