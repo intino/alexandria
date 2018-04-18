@@ -16,7 +16,7 @@ public class ToolbarSelectionResult extends AbstractResult<ToolbarSelectionResul
 		return new ToolbarSelectionResult().refresh(Refresh.Item);
 	}
 
-	public static ToolbarSelectionResult element() {
+	public static ToolbarSelectionResult container() {
 		return new ToolbarSelectionResult().refresh(Refresh.Container);
 	}
 

@@ -8,7 +8,7 @@ public class ToolbarResult extends AbstractResult<ToolbarResult.Refresh> {
 		return new ToolbarResult().refresh(ToolbarResult.Refresh.None);
 	}
 
-	public static ToolbarResult element() {
+	public static ToolbarResult container() {
 		return new ToolbarResult().refresh(ToolbarResult.Refresh.Container);
 	}
 

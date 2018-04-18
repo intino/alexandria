@@ -12,7 +12,7 @@ public class StampResult extends AbstractResult<StampResult.Refresh> {
 		return new StampResult().refresh(Refresh.Item);
 	}
 
-	public static StampResult element() {
+	public static StampResult container() {
 		return new StampResult().refresh(Refresh.Container);
 	}
 

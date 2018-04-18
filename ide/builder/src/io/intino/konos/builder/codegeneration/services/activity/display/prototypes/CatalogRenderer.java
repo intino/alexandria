@@ -242,6 +242,8 @@ public class CatalogRenderer extends PrototypeRenderer {
 				.addSlot("package", packageName);
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
 		if (operation.i$(OpenDialog.class)) frame.addSlot("dialog", operation.a$(OpenDialog.class).dialog().name$());
+		if (operation.i$(AbstractToolbar.Task.class) && operation.a$(AbstractToolbar.Task.class).confirmText() != null) frame.addSlot("confirmText", operation.a$(AbstractToolbar.Task.class).confirmText());
+		if (operation.i$(AbstractToolbar.TaskSelection.class) && operation.a$(AbstractToolbar.TaskSelection.class).confirmText() != null) frame.addSlot("confirmText", operation.a$(AbstractToolbar.TaskSelection.class).confirmText());
 		if (operation.i$(Toolbar.OpenCatalog.class)) {
 			Toolbar.OpenCatalog openCatalog = operation.a$(Toolbar.OpenCatalog.class);
 			frame.addSlot("width", openCatalog.width());
