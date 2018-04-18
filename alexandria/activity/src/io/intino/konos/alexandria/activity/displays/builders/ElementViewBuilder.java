@@ -48,6 +48,9 @@ public class ElementViewBuilder {
         result.when(when(operation));
         result.propertyList(propertiesOf(operation));
 
+        if (operation instanceof Task) result.confirmText(((Task)operation).confirmText());
+        if (operation instanceof TaskSelection) result.confirmText(((TaskSelection)operation).confirmText());
+
         return result;
     }
 

@@ -1,9 +1,8 @@
 <link rel="import" href="../../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
-<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
-<link rel="import" href="../../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="alexandria-stamp-behavior.html">
 <link rel="import" href="../../alexandria-operation-trigger.html">
+<link rel="import" href="../../alexandria-operation-confirm-dialog.html">
 
 <dom-module id="alexandria-stamp-task-operation">
 
@@ -14,16 +13,7 @@
                                           color="[[stamp.properties.color]]"
                                           on-execute="_confirmTask"></alexandria-operation-trigger>
         </div>
-        <div id="dialogContainer" class="alexandria-stamp-task-operation-0">
-            <paper-dialog id="dialog" no-overlap entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
-                <h2>[[Title]]</h2>
-                <div class="message">[[stamp.properties.confirm]]</div>
-                <div class="buttons">
-                    <paper-button dialog-dismiss>[[Cancel]]</paper-button>
-                    <paper-button dialog-confirm autofocus on-tap="_execute">[[Accept]]</paper-button>
-                </div>
-            </paper-dialog>
-        </div>
+        <alexandria-operation-confirm-dialog id="dialog" message="[[stamp.properties.confirm]]" on-accept="_execute"></alexandria-operation-confirm-dialog>
     </template>
 
     <style>
@@ -66,16 +56,10 @@
     <script>
         const AlexandriaStampTaskOperationDictionary = {
             es: {
-                Execute : "ejecutar",
-                Title : "confirmar",
-                Accept : "aceptar",
-                Cancel : "cancelar"
+                Execute : "ejecutar"
             },
             en: {
-                Execute : "execute",
-                Title : "confirm",
-                Accept : "accept",
-                Cancel : "cancel"
+                Execute : "execute"
             }
         };
 
@@ -99,32 +83,16 @@
             },
 
             _confirmTask : function(e) {
-                if (!this._requireConfirm()) {
+                if (!this.$.dialog.requireConfirm()) {
                     this._execute(e);
                     return;
                 }
-                document.querySelector("body").appendChild(this.$.dialogContainer);
                 this.$.dialog.open();
                 e.stopPropagation();
             },
 
-            _requireConfirm : function() {
-                var confirm = this.stamp.properties.confirm;
-                return confirm != null && confirm != "";
-            },
-
             _execute : function(e) {
-                this._close();
                 this.fire("execute-task-item", { stamp: this.stamp.name, item: this.stamp.item });
-                e.stopPropagation();
-            },
-
-            _close : function() {
-                this.$.dialog.close();
-            },
-
-            _overlayClosed : function(e) {
-                this.appendChild(this.$.dialogContainer);
             }
 
         });

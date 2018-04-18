@@ -1,13 +1,16 @@
 dsl Konos
 
 Schema Bounds
-	Schema(multiple=false) NorthEast
-		Attribute longitude as Real
-		Attribute latitude as Real
+	Has(NorthEast, multiple=false)
+	Has(SouthWest, multiple=false)
 
-	Schema(multiple=false) SouthWest
-		Attribute longitude as Real
-		Attribute latitude as Real
+Schema NorthEast
+	Attribute longitude as Real
+	Attribute latitude as Real
+
+Schema SouthWest
+	Attribute longitude as Real
+	Attribute latitude as Real
 
 Schema Catalog
 	Attribute name as Text
@@ -17,20 +20,23 @@ Schema Catalog
 	Attribute arrangementHistogramsMode as Text
 	Attribute mode as Text
 
-	Schema Grouping
-		Attribute name as Text
-		Attribute type as Text
-		Attribute label as Text
-		Attribute countItems as Integer
-		Attribute histogram as Text
-
-		Schema Group
-			Attribute name as Text
-			Attribute label as Text
-			Attribute selected as Bool
-			Attribute count as Integer
-
+	Has(Grouping)
 	Has(Sorting)
+
+Schema Grouping
+	Attribute name as Text
+	Attribute type as Text
+	Attribute label as Text
+	Attribute countItems as Integer
+	Attribute histogram as Text
+
+	Has(Group)
+
+Schema Group
+	Attribute name as Text
+	Attribute label as Text
+	Attribute selected as Bool
+	Attribute count as Integer
 
 Schema ClusterGroup
 	Attribute name as Text
@@ -63,9 +69,11 @@ Schema DisplayReference
 Schema DialogBoxSettings
 	Has(Position, multiple=false)
 	Attribute acceptButton as Bool
-	Schema(multiple=false) Size
-		Attribute width as Integer
-		Attribute height as Integer
+	Has(Size, multiple=false) size
+
+Schema Size
+	Attribute width as Integer
+	Attribute height as Integer
 
 Schema CatalogDialogReference
 	Attribute label as Text
@@ -98,25 +106,32 @@ Schema ElementView
 	Attribute emptyMessage as Text
 	Attribute mold as Text
 
-	Schema(multiple=false) Toolbar
-		Schema Operation
-			Attribute name as Text
-			Attribute title as Text
-			Attribute mode as Text
-			Attribute type as Text
-			Attribute icon as Text
-			Attribute when as Text
+	Has(Toolbar, multiple=false) toolbar
+	Has(Center, multiple=false) center
+	Has(Zoom, multiple=false) zoom
 
-			Has(Property)
+Schema Toolbar
+	Has(Operation)
 
-	Schema(multiple=false) Center
-		Attribute latitude as Real
-		Attribute longitude as Real
+Schema Operation
+	Attribute name as Text
+	Attribute title as Text
+	Attribute mode as Text
+	Attribute type as Text
+	Attribute icon as Text
+	Attribute when as Text
+	Attribute confirmText as Text
 
-	Schema(multiple=false) Zoom
-		Attribute min as Integer
-		Attribute max as Integer
-		Attribute defaultValue as Integer
+	Has(Property)
+
+Schema Center
+	Attribute latitude as Real
+	Attribute longitude as Real
+
+Schema Zoom
+	Attribute min as Integer
+	Attribute max as Integer
+	Attribute defaultValue as Integer
 
 Schema ExecuteItemTaskParameters
 	Attribute item as Text
@@ -150,14 +165,17 @@ Schema Item
 	Attribute label as Text
 	Attribute group as DateTime
 
-	Schema ItemStamp
-		Attribute name as Text
-		Attribute(multiple=true) values as Text
-		Has(Property)
+	Has(ItemStamp)
+	Has(ItemBlock)
 
-	Schema ItemBlock
-		Attribute name as Text
-		Attribute hidden as Bool
+Schema ItemStamp
+	Attribute name as Text
+	Attribute(multiple=true) values as Text
+	Has(Property)
+
+Schema ItemBlock
+	Attribute name as Text
+	Attribute hidden as Bool
 
 Schema OpenItemParameters
 	Attribute item as Text
@@ -197,9 +215,11 @@ Schema Reference
 	Attribute name as Text
 	Attribute label as Text
 
-	Schema ReferenceProperty
-		Attribute name as Text
-		Attribute value as Text
+	Has(ReferenceProperty)
+
+Schema ReferenceProperty
+	Attribute name as Text
+	Attribute value as Text
 
 Schema RequestRange
 	Attribute from as DateTime

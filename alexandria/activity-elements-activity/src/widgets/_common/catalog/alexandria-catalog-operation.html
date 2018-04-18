@@ -5,13 +5,14 @@
 <link rel="import" href="../alexandria-operation-download.html">
 <link rel="import" href="../alexandria-operation-trigger.html">
 <link rel="import" href="../alexandria-export-dialog.html">
+<link rel="import" href="../alexandria-operation-confirm-dialog.html">
 
 <dom-module id="alexandria-catalog-operation">
 
     <template>
         <template is="dom-if" if="[[_isOperation(operation)]]">
-            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
-                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
+            <alexandria-operation-trigger message$="[[operation.confirmText]]" title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_confirm"></alexandria-operation-trigger>
         </template>
         <template is="dom-if" if="[[_isDownload(operation)]]">
             <alexandria-operation-download title="[[operation.title]]" icon="[[operation.icon]]"
@@ -34,6 +35,7 @@
             <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
                                           mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
         </template>
+        <alexandria-operation-confirm-dialog id="confirmDialog" on-accept="_execute"></alexandria-operation-confirm-dialog>
         <alexandria-export-dialog on-export="_export"></alexandria-export-dialog>
     </template>
 
@@ -83,6 +85,18 @@
 
             _isGrouping : function(operation) {
                 return operation.type === "grouping";
+            },
+
+            _confirm : function(e) {
+                var message = e.target.getAttribute("message");
+                var dialog = this.$.confirmDialog;
+                dialog.message = message;
+                if (!dialog.requireConfirm()) {
+                    this._execute(e);
+                    return;
+                }
+                dialog.open();
+                e.stopPropagation();
             },
 
             _execute : function(e) {
