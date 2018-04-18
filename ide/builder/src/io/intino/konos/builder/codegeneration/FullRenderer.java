@@ -13,7 +13,6 @@ import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.ActivityRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.SchemaAdaptersRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogsRenderer;
 import io.intino.konos.builder.codegeneration.services.activity.display.DisplayRenderer;
@@ -130,7 +129,6 @@ public class FullRenderer {
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
 		new ActivityAccessorCreator(module, graph, parent).execute();
-		if (hasModel) new SchemaAdaptersRenderer(graph, gen, packageName).execute();
 	}
 
 	private void box() {
