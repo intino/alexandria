@@ -26,7 +26,7 @@ def type(mold)
 end
 
 def type(block) trigger(definition)
-	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][.style("$blockStyle")][$NL$TAB$stamp...[$NL$TAB$TAB]][
+	.add(new Block()[.name("$name")][$expanded][$layout...[]][$height][$width][$hidden][$hiddenIfMobile][.style("$blockStyle")][$blockClassName][$NL$TAB$stamp...[$NL$TAB$TAB]][
 		$block+definition...[$NL]])
 end
 
@@ -182,6 +182,10 @@ end
 
 def trigger(style)
 	.style((object, session) -> $mold+FirstUpperCase.Stamps.$name+firstUpperCase.style(box, ($moldClass) object, session))
+end
+
+def trigger(blockClassName)
+	.className((object, session) -> $mold+FirstUpperCase.Blocks.$name+firstUpperCase.className(box, ($moldClass) object, session))
 end
 
 def trigger(className)
