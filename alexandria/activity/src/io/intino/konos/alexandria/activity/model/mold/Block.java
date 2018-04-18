@@ -17,6 +17,7 @@ public class Block {
 	private List<Block> blockList = new ArrayList<>();
 	private List<Stamp> stampList = new ArrayList<>();
 	private boolean expanded = false;
+	private ClassNameLoader classNameLoader = null;
 
 	public String name() {
 		return this.name;
@@ -108,6 +109,15 @@ public class Block {
 		return this;
 	}
 
+	public String className(Item item, ActivitySession session) {
+		return classNameLoader != null ? classNameLoader.value(item != null ? item.object() : null, session) : null;
+	}
+
+	public Block className(ClassNameLoader loader) {
+		this.classNameLoader = loader;
+		return this;
+	}
+
 	public enum Layout {
 		Vertical, Horizontal, Fixed, Flexible, Wrap, Justified, StartJustified, CenterJustified, EndJustified, Start, Center, End;
 	}
@@ -118,5 +128,9 @@ public class Block {
 
 	private static Hidden defaultHidden() {
 		return (object, session) -> false;
+	}
+
+	public interface ClassNameLoader {
+		String value(Object object, ActivitySession session);
 	}
 }

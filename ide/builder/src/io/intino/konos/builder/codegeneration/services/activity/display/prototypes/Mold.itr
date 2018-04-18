@@ -25,12 +25,14 @@ end
 
 def type(block) trigger(stamps)
 	$stamp...[$NL]
-	$block+stamps...[$NL]
+	$block+stamps...[$NL][
+	$blockClassName]
 end
 
 def trigger(block)
 	$hidden
-	$block...[$NL]
+	$block...[$NL][
+	$blockClassName]
 end
 
 def trigger(hidden)

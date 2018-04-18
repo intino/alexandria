@@ -37,6 +37,11 @@
                 if (this.block == null) return;
                 $(this).addClass(this.block.layout);
                 $(this).addClass(this.block.mode);
+                $(this).removeClass(this.lastClassName);
+                if (this.block.className != "") {
+                    $(this).addClass(this.block.className);
+                    this.lastClassName = this.block.className;
+                }
                 if (this.block.style != "") this.style.cssText += ";" + this.block.style;
                 if (this.block.hiddenIfMobile) $(this).addClass("not-mobile");
                 if (this.block.layout.indexOf("flex") !== -1)

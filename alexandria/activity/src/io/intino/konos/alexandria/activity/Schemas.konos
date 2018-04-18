@@ -171,11 +171,13 @@ Schema Item
 Schema ItemStamp
 	Attribute name as Text
 	Attribute(multiple=true) values as Text
+	Attribute className as Text
 	Has(Property)
 
 Schema ItemBlock
 	Attribute name as Text
 	Attribute hidden as Bool
+	Attribute className as Text
 
 Schema OpenItemParameters
 	Attribute item as Text

@@ -45,6 +45,7 @@ public class MoldRenderer extends PrototypeRenderer {
 				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new))
 				.addSlot("hiddenIfMobile", block.hiddenIfMobile());
 		if (block.hidden().equals(Hidden.HiddenEnabled)) frame.addSlot("hidden", baseFrame(block));
+		if (block.hasCustomClass()) frame.addSlot("blockClassName", baseFrame(block));
 		if (!block.style().isEmpty()) frame.addSlot("blockStyle", block.style());
 		if (block.height() >= 0) frame.addSlot("height", block.height());
 		if (block.width() >= 0) frame.addSlot("width", block.width());

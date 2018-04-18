@@ -72,7 +72,7 @@ public class ItemBuilder {
     }
 
     private static ItemBlock itemBlock(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl, Block block) {
-        return new ItemBlock().name(block.name()).hidden(block.hidden(item, provider.session()));
+        return new ItemBlock().name(block.name()).hidden(block.hidden(item, provider.session())).className(block.className(item, provider.session()));
     }
 
     private static List<ItemStamp> itemStampList(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
@@ -86,6 +86,7 @@ public class ItemBuilder {
     private static ItemStamp recordItemStamp(io.intino.konos.alexandria.activity.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl, Stamp stamp) {
         return new ItemStamp().name(stamp.name())
                          .values(valuesOf(stamp, item, provider, baseAssetUrl))
+                         .className(stamp.className(item, provider.session()))
                          .propertyList(propertiesOf(stamp, item, provider, baseAssetUrl));
     }
 
