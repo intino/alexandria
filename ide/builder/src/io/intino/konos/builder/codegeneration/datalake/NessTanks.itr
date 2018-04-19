@@ -97,10 +97,10 @@ def trigger(tank) trigger(class)
 		}
 
 		public void handle(io.intino.ness.inl.Message m) {
-			$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
-			tank.box = box;
-			tank.message = m;
 			try {
+				$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
+				tank.box = box;
+				tank.$type+typeName = $type+load;
 				tank.execute();
 			} catch(Throwable e) {
 				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
@@ -115,4 +115,20 @@ end
 
 def trigger(tankImport)
 	import $value+validPackage.ness.messagehandlers.*;
+end
+
+def type(schema) trigger(load)
+	io.intino.konos.alexandria.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
+end
+
+def trigger(load)
+	m
+end
+
+def type(schema) trigger(typeName)
+	$name+firstLowerCase
+end
+
+def trigger(typeName)
+	message
 end

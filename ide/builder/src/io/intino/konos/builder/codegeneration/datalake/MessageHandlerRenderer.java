@@ -25,14 +25,19 @@ public class MessageHandlerRenderer {
 	}
 
 	public void execute() {
-		for (Tank eventHandler : tanks) {
+		for (Tank tank : tanks) {
+			final String name = tank.schema() != null ? tank.schema().name$() : tank.name$();
 			final Frame frame = new Frame().addTypes("messageHandler").
 					addSlot("box", boxName).
 					addSlot("package", packageName).
-					addSlot("name", eventHandler.name$());
+					addSlot("name", name);
+			if (tank.schema() != null) {
+				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", tank.schema().name$()));
+			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "ness/messagehandlers");
-			final String name = Formatters.firstUpperCase(eventHandler.name$()) + "MessageHandler";
-			if (!alreadyRendered(destination, name)) Commons.writeFrame(destination, name,
+			final String handlerName = Formatters.firstUpperCase(name) + "MessageHandler";
+			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
 					Formatters.customize(MessageHandlerTemplate.create()).format(frame));
 		}
 	}
