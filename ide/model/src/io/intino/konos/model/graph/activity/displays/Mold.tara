@@ -81,7 +81,9 @@ Concept Mold extends Display
 				sub PreviewOperation
 
 			sub Page
-			sub Picture > var string defaultPicture = empty
+			sub Picture
+				var string defaultPicture = empty
+				var boolean avatar = false
 			sub Rating
 				var string polymerIcon
 				var integer max = 5

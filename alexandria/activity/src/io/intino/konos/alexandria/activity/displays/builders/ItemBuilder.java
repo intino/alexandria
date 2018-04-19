@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.activity.model.TimeScale;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.*;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Picture.AvatarProperties;
 import io.intino.konos.alexandria.activity.model.mold.stamps.icons.ResourceIcon;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenExternalDialogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.PreviewOperation;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.intino.konos.alexandria.activity.Asset.toResource;
+import static io.intino.konos.alexandria.activity.utils.AvatarUtil.generateAvatar;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -96,13 +98,13 @@ public class ItemBuilder {
         if (value instanceof List) {
             List<Object> values = (List<Object>) value;
             if (values.isEmpty() && (stamp instanceof Picture)) values = singletonList(toResource(baseAssetUrl, ((Picture)stamp).defaultPicture()));
-            return values.stream().map(v -> valueOf(stamp, v, baseAssetUrl)).collect(toList());
+            return values.stream().map(v -> valueOf(stamp, item, v, provider, baseAssetUrl)).collect(toList());
         }
 
-        return singletonList(valueOf(stamp, value, baseAssetUrl));
+        return singletonList(valueOf(stamp, item, value, provider, baseAssetUrl));
     }
 
-    private static String valueOf(Stamp stamp, Object value, URL baseAssetUrl) {
+    private static String valueOf(Stamp stamp, io.intino.konos.alexandria.activity.model.Item item, Object value, ItemBuilderProvider provider, URL baseAssetUrl) {
 
         if (stamp instanceof Breadcrumbs) {
             Tree tree = (Tree) value;
@@ -121,7 +123,14 @@ public class ItemBuilder {
 
         if (stamp instanceof Picture) {
             if (value == null) {
-                String defaultPicture = ((Picture) stamp).defaultPicture();
+                Picture picture = (Picture) stamp;
+                String defaultPicture = picture.defaultPicture();
+
+                if (defaultPicture == null && picture.isAvatar()) {
+                    AvatarProperties properties = picture.avatarProperties(item, provider.session());
+                    return generateAvatar(properties.text(), properties.color());
+                }
+
                 return defaultPicture != null ? toResource(baseAssetUrl, defaultPicture).toUrl().toString() : "";
             }
             return toResource(baseAssetUrl, (URL)value).toUrl().toString();

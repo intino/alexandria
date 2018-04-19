@@ -106,6 +106,8 @@ public class MoldRenderer extends PrototypeRenderer {
 	private void frameOf(Frame frame, Picture stamp) {
 		if (stamp.defaultPicture() != null)
 			frame.addSlot("defaultPicture", stamp.defaultPicture());
+		if (stamp.avatar())
+			frame.addSlot("avatarProperties", baseFrame(stamp));
 	}
 
 	private void frameOf(Frame frame, Rating stamp) {

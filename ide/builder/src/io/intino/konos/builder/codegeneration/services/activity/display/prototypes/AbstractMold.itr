@@ -126,7 +126,7 @@ def type(stamp & rating)
 end
 
 def type(stamp & picture)
-	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Picture()[.defaultPicture("$defaultPicture")]$common)
+	.add(new io.intino.konos.alexandria.activity.model.mold.stamps.Picture()[.defaultPicture("$defaultPicture")][.avatarProperties($avatarProperties)]$common)
 end
 
 def type(stamp & openDialogOperation)
@@ -267,6 +267,10 @@ end
 
 def trigger(color)
 	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.color(box, ($moldClass) object, session)
+end
+
+def trigger(avatarProperties)
+	(object, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.avatarProperties(box, ($moldClass) object, session)
 end
 
 def trigger(expanded)
