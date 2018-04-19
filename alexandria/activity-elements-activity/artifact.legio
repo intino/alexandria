@@ -76,8 +76,6 @@ Artifact(groupId = "io.intino.konos", version = "1.6.6") alexandria-activity-ele
 	Package(LibrariesLinkedByManifest)
 	Distribution(release = intino.release, language = empty)
 
-Repository("intino-maven")
-	Release("https://artifactory.intino.io/artifactory/releases")
-
 Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
 	Release(url = "https://artifactory.intino.io/artifactory/release-frameworks") release
