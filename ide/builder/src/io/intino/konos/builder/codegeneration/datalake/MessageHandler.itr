@@ -2,15 +2,35 @@ def type(messageHandler)
 	package $package+validPackage.ness.messagehandlers;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
+	$schemaImport
 
 	public class $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler {
 
 		public $box+validName+firstUpperCase~Box box;
-		public io.intino.ness.inl.Message message;
+		public $type+typeClass $type+typeName;
 
 		public void execute() {
 
 		}
-
 	}
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def attribute(message) trigger(typeClass)
+	io.intino.ness.inl.Message
+end
+
+def type(schema) trigger(typeClass)
+	$package.schemas.$name+FirstUpperCase
+end
+
+def type(schema) trigger(typeName)
+	$name+firstLowerCase
+end
+
+def trigger(typeName)
+	message
 end
