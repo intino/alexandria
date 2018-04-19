@@ -133,6 +133,14 @@ def type(stamp & catalogLink)
 	}
 end
 
+def type(stamp & picture)
+	public static class $name+FirstUpperCase {
+		$common[
+
+		$avatarProperties]
+	}
+end
+
 def type(stamp & highlight)
 	public static class $name+FirstUpperCase {
 		$common
@@ -286,6 +294,12 @@ end
 
 def trigger(color)
 	public static io.intino.konos.alexandria.activity.model.mold.Stamp.Color color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
+		return null;//TODO
+	}
+end
+
+def trigger(avatarProperties)
+	public static io.intino.konos.alexandria.activity.model.mold.stamps.Picture.AvatarProperties avatarProperties($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, ActivitySession session) {
 		return null;//TODO
 	}
 end

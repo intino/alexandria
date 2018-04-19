@@ -17,11 +17,13 @@ import io.intino.konos.alexandria.activity.schemas.UserInfo;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 import io.intino.konos.alexandria.activity.services.push.User;
 
+import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.intino.konos.alexandria.activity.utils.AvatarUtil.generateAvatar;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -32,6 +34,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
 	protected Map<Class<? extends ElementRender>, Function<ElementRender, List<Item>>> itemsProviders = new HashMap<>();
 	private Settings settings;
+
+	public static final String AvatarColor = "#3F51B5";
 
 	public AlexandriaLayout(Box box) {
 		super(box);
@@ -206,7 +210,12 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	private UserInfo userInfoOf(User user) {
-		return new UserInfo().fullName(user.fullName()).photo(user.photo().toString());
+		return new UserInfo().fullName(user.fullName()).photo(photo(user));
+	}
+
+	private String photo(User user) {
+		URL photo = user.photo();
+		return photo != null ? photo.toString() : generateAvatar(user.fullName(), AvatarColor);
 	}
 
 	private void notifyLoaded() {

@@ -94,8 +94,8 @@
                 slider.querySelector("#container").setAttribute("style", style);
                 slider.querySelectorAll("paper-slide").forEach((slide) => {
                     slide.setAttribute("style", style);
-                slide.querySelector("img").setAttribute("style", style);
-            });
+                    slide.querySelector("img").setAttribute("style", style);
+                });
                 slider.addEventListener("click", (e) => e.stopPropagation());
             }
 

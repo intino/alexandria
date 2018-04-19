@@ -226,7 +226,7 @@
                 if (this._allowLazyLoad() && stamp.expanded)
                     value = "data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
                 else
-                    value += value != null && value != "" ? ((value.indexOf("?") != -1 ? "&" : "?") + "random=" + Math.random()) : "";
+                    value += value != null && value != "" && value.indexOf("data:image") == -1 ? ((value.indexOf("?") != -1 ? "&" : "?") + "random=" + Math.random()) : "";
             }
 
             return value;
