@@ -30,16 +30,22 @@ public class NessTanksRenderer {
 				addSlot("box", boxName).
 				addSlot("tank", dataLake.tankList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!dataLake.tankList().isEmpty()) frame.addSlot("tankImport", packageName);
+		if (!dataLake.graph().schemaList().isEmpty())
+			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		Commons.writeFrame(new File(gen, "ness"), "NessTanks", template().format(frame));
 	}
 
 	private Frame frameOf(DataLake.Tank tank) {
 		final String type = type(tank);
-		return new Frame().addTypes("tank").
+		final Frame frame = new Frame().addTypes("tank").
 				addSlot("name", type).
 				addSlot("box", boxName).
 				addSlot("messageType", dataLake.domain() + "." + subdomain(tank) + type).
 				addSlot("simpleMessageType", type);
+		if (tank.schema() != null) {
+			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", tank.schema().name$()));
+		} else frame.addSlot("type", "message");
+		return frame;
 	}
 
 	@NotNull

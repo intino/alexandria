@@ -101,7 +101,7 @@ public class BoxConfigurationRenderer {
 		DataLake dataLake = graph.dataLake();
 		if (dataLake == null) return;
 		for (DataLake.Tank handler : dataLake.tankList()) {
-			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$()).addSlot("configuration", boxName);
+			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.schema() != null ? handler.schema().name$() : handler.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", channelFrame);
 		}
 	}
