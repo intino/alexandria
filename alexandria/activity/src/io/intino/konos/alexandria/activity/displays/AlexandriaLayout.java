@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static io.intino.konos.alexandria.activity.Asset.toResource;
 import static io.intino.konos.alexandria.activity.utils.AvatarUtil.generateAvatar;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;

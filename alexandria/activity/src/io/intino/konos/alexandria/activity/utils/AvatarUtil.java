@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AvatarUtil {
+	private static final int TextLength = 2;
 	private static final int Size = 256;
 
 	public static String generateAvatar(String text, String color) {
@@ -26,7 +27,7 @@ public class AvatarUtil {
 		Pattern p = Pattern.compile("((^| )[A-Za-z])");
 		Matcher m = p.matcher(fullName);
 		StringBuilder initials = new StringBuilder();
-		while (m.find()) initials.append(m.group().trim());
+		while (m.find() && initials.length() < TextLength) initials.append(m.group().trim());
 		return initials.toString();
 	}
 
