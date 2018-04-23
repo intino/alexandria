@@ -4,7 +4,7 @@ def type(paths)
     <link rel="import" href="../../../lib/app-route/app-route.html">
     <link rel="import" href="../../../lib/app-route/app-location.html">
 
-    <script src="requester-paths.js"></script>
+    <script src="requester.js"></script>
 
     <dom-module id="$name+camelCaseToSnakeCase~-paths">
 
