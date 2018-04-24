@@ -103,11 +103,11 @@
             },
 
             _navigateItem : function(e) {
-                this.openItem(e.detail);
+                this.fire("navigate-item", e.detail);
             },
 
             _navigateCatalog : function(e) {
-                this.openElement(e.detail);
+                this.fire("navigate-element", e.detail);
             },
 
             _openStampDialog : function(e) {

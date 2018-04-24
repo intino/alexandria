@@ -45,7 +45,7 @@ public class DisplayRenderer {
 	}
 
 	private void processDisplay(Display display) {
-		Frame frame = creteFrame(display);
+		Frame frame = createFrame(display);
 		writeNotifier(display, frame);
 		writeRequester(display, frame);
 		if (display.getClass().getSimpleName().equals(Display.class.getSimpleName())) writeDisplay(display, frame);
@@ -77,7 +77,7 @@ public class DisplayRenderer {
 	}
 
 	@NotNull
-	private Frame creteFrame(Display display) {
+	private Frame createFrame(Display display) {
 		Frame frame = new Frame().addTypes("display");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", display.name$());

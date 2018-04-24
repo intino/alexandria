@@ -12,7 +12,7 @@
 <dom-module id="alexandria-catalog-magazine-view">
 
     <template>
-        <cotton-zombie display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
+        <cotton-zombie id="itemZombie" display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
     </template>
 
     <style>
@@ -41,8 +41,9 @@
                 this.translate(AlexandriaCatalogMagazineViewDictionary);
                 this.translate(AlexandriaBehaviors.CatalogViewBehavior.Dictionary);
                 this.listenToDisplay();
+                this.addEventListener("navigate-item", (e) => this.fire("open-item", e));
+                this.addEventListener("navigate-element", (e) => this.fire("open-element", e));
             }
-
         });
     </script>
 </dom-module>

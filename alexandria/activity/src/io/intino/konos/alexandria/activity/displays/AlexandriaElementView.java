@@ -1,63 +1,178 @@
 package io.intino.konos.alexandria.activity.displays;
 
+import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.Resource;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
-import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.Panel;
-import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
-import io.intino.konos.alexandria.activity.schemas.Position;
+import io.intino.konos.alexandria.activity.model.mold.stamps.CatalogLink;
+import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
+import io.intino.konos.alexandria.activity.schemas.*;
+import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
-public interface AlexandriaElementView<P extends ElementViewDisplayProvider> {
-	void provider(P provider);
-	void onLoading(Consumer<Boolean> listener);
-	ElementView view();
-	void view(ElementView view);
-	void refresh();
-	void refresh(io.intino.konos.alexandria.activity.schemas.Item... items);
-	void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.activity.schemas.Item item);
+import static io.intino.konos.alexandria.activity.helpers.ElementHelper.*;
 
-	void onOpenItem(Consumer<OpenItemEvent> listener);
-	void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener);
-	void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener);
-	void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener);
+public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier, P extends ElementViewDisplayProvider> extends ActivityDisplay<N, Box> {
+	private P provider;
+	private AlexandriaElementViewDefinition definition;
+	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
+	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
+	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 
-	interface OpenItemEvent {
-		String label();
-		String itemId();
-		Item item();
-		Panel panel();
-		TimeRange range();
-		Tree breadcrumbs();
+	public AlexandriaElementView(Box box) {
+		super(box);
 	}
 
-	interface OpenElementEvent {
-		String label();
+	P provider() {
+		return provider;
 	}
 
-	interface OpenItemDialogEvent {
-		Item item();
-		Stamp stamp();
-		AlexandriaDialog dialog();
+	public void provider(P provider) {
+		this.provider = provider;
 	}
 
-	interface OpenItemCatalogEvent {
-		Item item();
-		Stamp stamp();
-		Catalog catalog();
-		Position position();
-		String itemToShow();
-		boolean filtered();
-		boolean filter(Item target);
+	public AlexandriaElementViewDefinition definition() { return this.definition; }
+
+	public void definition(AlexandriaElementViewDefinition definition) {
+		this.definition = definition;
 	}
 
-	interface ExecuteItemTaskEvent {
-		Item item();
-		Stamp stamp();
-		AlexandriaDisplay self();
+	public void onLoading(Consumer<Boolean> listener) {
+		loadingListeners.add(listener);
+	}
+
+	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
+		openItemDialogListeners.add(listener);
+	}
+
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
+		openItemCatalogListeners.add(listener);
+	}
+
+	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener) {
+		executeItemTaskListeners.add(listener);
+	}
+
+	@Override
+	public void refresh() {
+		notifyLoading(true);
+		super.refresh();
+		notifyLoading(false);
+	}
+
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
+		Stream.of(items).forEach(this::refresh);
+	}
+
+	abstract void refresh(io.intino.konos.alexandria.activity.schemas.Item item);
+	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.activity.schemas.Item item);
+
+	Item itemOf(String id) {
+		return provider.item(new String(Base64.getDecoder().decode(id)));
+	}
+
+	void notifyLoading(boolean value) {
+		loadingListeners.forEach(l -> l.accept(value));
+	}
+
+	ActivityFile downloadItemOperation(DownloadItemParameters params) {
+		Stamp stamp = provider().stamps(definition().mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
+		if (stamp == null) return null;
+		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
+		return new ActivityFile() {
+			@Override
+			public String label() {
+				return resource.label();
+			}
+
+			@Override
+			public InputStream content() {
+				return resource.content();
+			}
+		};
+	}
+
+	ActivityFile downloadOperation(ElementOperationParameters value, List<Item> selection) {
+		Resource resource = provider().downloadOperation(value, selection);
+		return new ActivityFile() {
+			@Override
+			public String label() {
+				return resource.label();
+			}
+
+			@Override
+			public InputStream content() {
+				return resource.content();
+			}
+		};
+	}
+
+	void openItemDialogOperation(OpenItemParameters params) {
+		openItemDialogOperation(openItemDialogEvent(itemOf(params.item()), provider.stamp(definition().mold(), params.stamp()), session()));
+	}
+
+	void openItemDialogOperation(OpenItemDialogEvent event) {
+		openItemDialogListeners.forEach(l -> l.accept(event));
+	}
+
+	void openItemCatalogOperation(OpenItemParameters params) {
+		openItemCatalogOperation(openItemCatalogEvent(itemOf(params.item()), provider().stamp(definition().mold(), params.stamp()), params.position(), provider.element(), session()));
+	}
+
+	void openItemCatalogOperation(OpenItemCatalogEvent event) {
+		openItemCatalogListeners.forEach(l -> l.accept(event));
+	}
+
+	void openElement(OpenElementParameters params) {
+		Stamp stamp = provider.stamp(definition().mold(), params.stamp().name());
+		if (!(stamp instanceof CatalogLink)) return;
+
+		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
+
+		Item source = itemOf(params.item());
+		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
+			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
+
+		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(source, session()));
+		else {
+			if (catalogLinkStamp.filtered())
+				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
+			display.refresh();
+		}
+	}
+
+	void executeItemTaskOperation(ExecuteItemTaskParameters params) {
+		executeItemTaskOperation(executeItemTaskEvent(itemOf(params.item()), provider.stamp(definition().mold(), params.stamp()), this));
+	}
+
+	void executeItemTaskOperation(ExecuteItemTaskEvent event) {
+		executeItemTaskListeners.forEach(l -> l.accept(event));
+	}
+
+	void executeOperation(ElementOperationParameters params, List<Item> selection) {
+		provider().executeOperation(params, selection);
+	}
+
+	void changeItem(ChangeItemParameters params) {
+		Item item = itemOf(params.item());
+		provider().changeItem(item, provider().stamp(definition().mold(), params.stamp()), params.value());
+	}
+
+	void validateItem(io.intino.konos.alexandria.activity.schemas.ValidateItemParameters params) {
+		Item item = itemOf(params.item());
+		provider().validateItem(item, provider().stamp(definition().mold(), params.stamp()), params.value());
 	}
 
 }

@@ -2,6 +2,10 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
@@ -103,7 +107,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		}).map(v -> (View)v).findFirst().orElse(null);
 
 		if (view != null) {
-			AlexandriaPanelCatalogView viewDisplay = (AlexandriaPanelCatalogView) selectView(view.name());
+			AlexandriaPanelCatalogView viewDisplay = (AlexandriaPanelCatalogView) openView(view.name());
 			return viewDisplay.catalogDisplay();
 		}
 		else {
@@ -132,7 +136,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		for (AbstractView view : views()) {
 			View panelView = (View) view;
 			if (panelView.layout() == Tab && !panelView.hidden(target(), session)) {
-				selectView(view.name());
+				openView(view.name());
 				break;
 			}
 		}
@@ -173,7 +177,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		}).forEach(v -> buildView(v.name()).refresh());
 	}
 
-	public AlexandriaPanelView selectView(String key) {
+	public AlexandriaPanelView openView(String key) {
 		AbstractView view = viewOf(key);
 		if (view == null) return null;
 		AlexandriaPanelView viewDisplay = buildView(view.name());
@@ -181,6 +185,10 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		updateCurrentView(viewDisplay);
 		notifier.refreshSelectedView(view.name());
 		return viewDisplay;
+	}
+
+	public void openItem(String item) {
+		super.openItem(item);
 	}
 
 	private AlexandriaPanelView buildView(String name) {
@@ -203,14 +211,14 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		ElementRender render = panelView.render();
 		AlexandriaPanelView display = displayBuilders.get(render.getClass()).apply(render);
 		display.provider(this);
-		display.view(panelViewOf(panelView));
+		display.definition(panelViewOf(panelView));
 		display.context(element());
 		display.target(target());
 		display.onLoading(v -> notifyLoading((Boolean) v));
-		display.onOpenItem(params -> openItem((AlexandriaElementView.OpenItemEvent) params));
-		display.onOpenItemDialog(params -> openItemDialog((AlexandriaElementView.OpenItemDialogEvent) params));
-		display.onOpenItemCatalog(params -> openItemCatalog((AlexandriaElementView.OpenItemCatalogEvent) params));
-		display.onExecuteItemTask(params -> executeItemTask((AlexandriaElementView.ExecuteItemTaskEvent) params));
+		display.onOpenItem(event -> openItem((OpenItemEvent) event));
+		display.onOpenItemDialog(event -> openItemDialog((OpenItemDialogEvent) event));
+		display.onOpenItemCatalog(event -> openItemCatalog((OpenItemCatalogEvent) event));
+		display.onExecuteItemTask(event -> executeItemTask((ExecuteItemTaskEvent) event));
 		add(display);
 		display.personifyOnce(viewId(view));
 		return display;
@@ -224,8 +232,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		super.navigate(key);
 	}
 
-	protected ElementView<Panel> panelViewOf(View view) {
-		return new ElementView<Panel>() {
+	protected AlexandriaElementViewDefinition<Panel> panelViewOf(View view) {
+		return new AlexandriaElementViewDefinition<Panel>() {
 			@Override
 			public String name() {
 				return view.name();

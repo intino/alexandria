@@ -2,6 +2,9 @@ package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.displays.builders.ReferenceBuilder;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogViewListNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -16,14 +19,13 @@ import java.util.function.Function;
 
 public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalogViewListNotifier, Box> {
 	private List<Consumer<AlexandriaCatalogView>> selectListeners = new ArrayList<>();
-	private Map<String, Function<ElementView, ? extends AlexandriaDisplay>> builders = new HashMap<>();
-	private List<ElementView> viewList;
+	private Map<String, Function<AlexandriaElementViewDefinition, ? extends AlexandriaDisplay>> builders = new HashMap<>();
+	private List<AlexandriaElementViewDefinition> viewList;
 	private CatalogViewDisplayProvider provider;
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
+	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private List<Consumer<List<Item>>> selectItemListeners = new ArrayList<>();
 	private Map<String, AlexandriaCatalogView> viewDisplayMap = new HashMap<>();
 
@@ -38,7 +40,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		this.provider = provider;
 	}
 
-	public void viewList(List<ElementView> viewList) {
+	public void viewList(List<AlexandriaElementViewDefinition> viewList) {
 		this.viewList = viewList;
 	}
 
@@ -50,19 +52,15 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		loadingListeners.add(listener);
 	}
 
-	public void onOpenItem(Consumer<AlexandriaElementView.OpenItemEvent> listener) {
-		openItemListeners.add(listener);
-	}
-
-	public void onOpenItemDialog(Consumer<AlexandriaElementView.OpenItemDialogEvent> listener) {
+	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
 		openItemDialogListeners.add(listener);
 	}
 
-	public void onOpenItemCatalog(Consumer<AlexandriaElementView.OpenItemCatalogEvent> listener) {
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
 		openItemCatalogListeners.add(listener);
 	}
 
-	public void onExecuteItemTask(Consumer<AlexandriaElementView.ExecuteItemTaskEvent> listener) {
+	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener) {
 		executeItemTaskListeners.add(listener);
 	}
 
@@ -107,7 +105,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 	}
 
 	private void buildViewDisplay(String name) {
-		ElementView view = viewList.stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
+		AlexandriaElementViewDefinition view = viewList.stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
 		builders.get(view.type()).apply(view);
 	}
 
@@ -115,7 +113,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		notifier.refreshViewList(ReferenceBuilder.buildCatalogViewList(viewList));
 	}
 
-	private AlexandriaCatalogMagazineView buildMagazineViewDisplay(ElementView view) {
+	private AlexandriaCatalogMagazineView buildMagazineViewDisplay(AlexandriaElementViewDefinition view) {
 		AlexandriaCatalogMagazineView display = new AlexandriaCatalogMagazineView(box);
 		registerViewDisplay(display, view);
 		add(display);
@@ -123,7 +121,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		return display;
 	}
 
-	private AlexandriaCatalogListView buildListViewDisplay(ElementView view) {
+	private AlexandriaCatalogListView buildListViewDisplay(AlexandriaElementViewDefinition view) {
 		AlexandriaCatalogListView display = new AlexandriaCatalogListView(box);
 		registerViewDisplay(display, view);
 		add(display);
@@ -131,7 +129,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		return display;
 	}
 
-	private AlexandriaCatalogMapView buildMapViewDisplay(ElementView view) {
+	private AlexandriaCatalogMapView buildMapViewDisplay(AlexandriaElementViewDefinition view) {
 		AlexandriaCatalogMapView display = new AlexandriaCatalogMapView(box);
 		registerViewDisplay(display, view);
 		add(display);
@@ -139,7 +137,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		return display;
 	}
 
-	private AlexandriaCatalogDisplayView buildDisplayViewDisplay(ElementView view) {
+	private AlexandriaCatalogDisplayView buildDisplayViewDisplay(AlexandriaElementViewDefinition view) {
 		AlexandriaCatalogDisplayView display = new AlexandriaCatalogDisplayView(box);
 		registerViewDisplay(display, view);
 		add(display);
@@ -147,15 +145,14 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		return display;
 	}
 
-	private void registerViewDisplay(AlexandriaCatalogView display, ElementView view) {
+	private void registerViewDisplay(AlexandriaCatalogView display, AlexandriaElementViewDefinition view) {
 		display.provider(provider);
-		display.onOpenItem(this::openItem);
-		display.onOpenItemDialog(this::openItemDialog);
-		display.onOpenItemCatalog(this::openItemCatalog);
-		display.onExecuteItemTask(this::executeTask);
-		if (display instanceof PageDisplay) ((PageDisplay) display).onSelectItems((selection) -> selectItems((List<Item>) selection));
-		display.view(view);
-		display.onLoading(this::notifyLoading);
+		display.onOpenItemDialog(event -> openItemDialog((OpenItemDialogEvent) event));
+		display.onOpenItemCatalog(event -> openItemCatalog((OpenItemCatalogEvent) event));
+		display.onExecuteItemTask(event -> executeTask((ExecuteItemTaskEvent) event));
+		if (display instanceof AlexandriaCatalogPageDisplay) ((AlexandriaCatalogPageDisplay) display).onSelectItems((selection) -> selectItems((List<Item>) selection));
+		display.definition(view);
+		display.onLoading(value -> notifyLoading((Boolean) value));
 		viewDisplayMap.put(view.name(), display);
 	}
 
@@ -163,19 +160,15 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		selectItemListeners.forEach(l -> l.accept(selection));
 	}
 
-	private void openItem(AlexandriaElementView.OpenItemEvent parameters) {
-		openItemListeners.forEach(l -> l.accept(parameters));
-	}
-
-	private void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {
+	private void openItemDialog(OpenItemDialogEvent event) {
 		openItemDialogListeners.forEach(l -> l.accept(event));
 	}
 
-	private void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
+	private void openItemCatalog(OpenItemCatalogEvent event) {
 		openItemCatalogListeners.forEach(l -> l.accept(event));
 	}
 
-	private void executeTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
+	private void executeTask(ExecuteItemTaskEvent event) {
 		executeItemTaskListeners.forEach(l -> l.accept(event));
 	}
 
@@ -183,7 +176,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		loadingListeners.forEach(l -> l.accept(loading));
 	}
 
-	private String idOf(ElementView view) {
+	private String idOf(AlexandriaElementViewDefinition view) {
 		return String.format(ViewId, this.id(), view.name());
 	}
 

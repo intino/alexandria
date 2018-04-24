@@ -113,7 +113,8 @@
             },
 
             _openItem : function(e) {
-                this.openItem(e.detail.name);
+                e.stopPropagation();
+                this.fire("open-item", { detail: e.detail.name });
             }
 
         });

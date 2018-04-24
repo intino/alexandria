@@ -17,7 +17,8 @@ Display alexandriaPanel
 	Notification notifyUser as Text
 	Notification showDialogBox
 
-	Request selectView as Text
+	Request openView as Text
+	Request openItem as Text
 	Request navigate as Text
 
 Display alexandriaPanelCustomView

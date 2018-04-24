@@ -19,7 +19,7 @@ public class AlexandriaPanelDisplayView extends AlexandriaPanelView<AlexandriaPa
     @Override
     protected void init() {
         super.init();
-        View rawView = view().raw();
+        View rawView = (View) definition().raw();
         RenderDisplay render = rawView.render();
         AlexandriaDisplay display = render.display(target(), loadingListener(), instantListener());
         if (display == null) return;

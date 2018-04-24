@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.activity.displays.builders;
 
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementViewDefinition;
 import io.intino.konos.alexandria.activity.model.AbstractView;
 import io.intino.konos.alexandria.activity.model.catalog.views.MapView;
 import io.intino.konos.alexandria.activity.model.toolbar.*;
@@ -15,7 +16,7 @@ import static java.util.Collections.singletonList;
 
 public class ElementViewBuilder {
 
-    public static ElementView build(io.intino.konos.alexandria.activity.displays.ElementView view) {
+    public static ElementView build(AlexandriaElementViewDefinition view) {
         ElementView result = new ElementView().name(view.name()).label(view.label()).mold(view.mold().type());
 
         if (view.toolbar() != null)
@@ -102,7 +103,7 @@ public class ElementViewBuilder {
         return "operation";
     }
 
-    private static void addMapViewProperties(ElementView result, io.intino.konos.alexandria.activity.displays.ElementView view) {
+    private static void addMapViewProperties(ElementView result, AlexandriaElementViewDefinition view) {
         AbstractView rawView = view.raw();
         if (! (rawView instanceof MapView)) return;
 

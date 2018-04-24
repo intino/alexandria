@@ -22,6 +22,9 @@ Display alexandriaCatalog
 	Request navigate as Text
 	Request navigateMain
 
+	Request openView as Text
+	Request openItem as Text
+
 Display alexandriaTemporalRangeCatalog
 	displays = alexandriaCatalogViewList alexandriaDialogBox alexandriaItem alexandriaTimeRangeNavigator
 
@@ -44,6 +47,9 @@ Display alexandriaTemporalRangeCatalog
 	Request navigate as Text
 	Request navigateMain
 
+	Request openView as Text
+	Request openItem as Text
+
 Display alexandriaTemporalTimeCatalog
 	displays = alexandriaCatalogViewList alexandriaDialogBox alexandriaItem alexandriaTimeNavigator
 
@@ -65,6 +71,9 @@ Display alexandriaTemporalTimeCatalog
 	Request timezoneOffset as Integer
 	Request navigate as Text
 	Request navigateMain
+	
+	Request openView as Text
+	Request openItem as Text
 
 Display alexandriaItem
 	Notification refresh as Object(ItemRefreshInfo)
@@ -73,8 +82,8 @@ Display alexandriaItem
 	Notification refreshEmptyMessage as Text
 
 	Request itemStampsReady as Text
-	Request openItem as Object(Reference)
-	Request openElement as Object(OpenElementParameters)
+//	Request openItem as Object(Reference)
+//	Request openElement as Object(OpenElementParameters)
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
@@ -88,10 +97,9 @@ Display alexandriaItem
 
 Display alexandriaCatalogViewList
 	displays = alexandriaCatalogMagazineView alexandriaCatalogListView alexandriaCatalogMapView alexandriaCatalogDisplayView
+
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text
-
-	Request selectView as Text
 
 Display alexandriaCatalogMagazineView
 	displays = alexandriaItem alexandriaPageContainer
@@ -109,7 +117,6 @@ Display alexandriaCatalogListView
 	Notification refreshSelectedSorting as Object(Sorting)
 	Notification refreshPicture as Object(PictureData)
 
-	Request openItem as Text
 	Request openElement as Object(OpenElementParameters)
 	Request selectItems as List Text
 	Request renderExpandedPictures
@@ -143,7 +150,6 @@ Display alexandriaCatalogMapView
 	Request openElement as Object(OpenElementParameters)
 
 	Request loadItem as Text
-	Request openItem as Text
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
 	Request openItemDialogOperation as Object(OpenItemParameters)

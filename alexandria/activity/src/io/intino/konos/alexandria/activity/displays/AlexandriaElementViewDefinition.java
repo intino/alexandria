@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.activity.model.Mold;
 
 import java.util.List;
 
-public interface ElementView<E extends Element> {
+public interface AlexandriaElementViewDefinition<E extends Element> {
     String name();
     String label();
     String type();

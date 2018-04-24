@@ -134,4 +134,12 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 		navigator.timeScaleHandler(timeScaleHandler);
 		configureNavigatorDisplay((AlexandriaTimeNavigator) navigator, timeScaleHandler);
 	}
+
+	public void openView(String name) {
+		super.openView(name);
+	}
+
+	public void openItem(String item) {
+		super.openItem(item);
+	}
 }

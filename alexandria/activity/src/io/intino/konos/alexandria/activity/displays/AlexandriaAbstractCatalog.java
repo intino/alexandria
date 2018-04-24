@@ -1,9 +1,10 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenElementEvent;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenItemEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenElementEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.catalog.Events;
 import io.intino.konos.alexandria.activity.model.catalog.Scope;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -209,8 +211,8 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(session()));
 	}
 
-	protected ElementView<Catalog> catalogViewOf(AbstractView view) {
-		return new ElementView<Catalog>() {
+	protected AlexandriaElementViewDefinition<Catalog> catalogViewOf(AbstractView view) {
+		return new AlexandriaElementViewDefinition<Catalog>() {
 			@Override
 			public String name() {
 				return view.name();
@@ -257,8 +259,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 			@Override
 			public OnClickRecord onClickRecordEvent() {
-				Events events = AlexandriaAbstractCatalog.this.element().events();
-				return events != null ? events.onClickRecord() : null;
+				return AlexandriaAbstractCatalog.this.onClickRecordEvent();
 			}
 
 			@Override
@@ -325,7 +326,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		return groupingOf(entry.getKey()).cluster();
 	}
 
-	private List<ElementView> viewList() {
+	private List<AlexandriaElementViewDefinition> viewList() {
 		return views().stream().map(this::catalogViewOf).collect(toList());
 	}
 
@@ -376,13 +377,36 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		display.viewList(viewList());
 		display.onSelectView(this::updateCurrentView);
 		display.onSelectItems(this::itemsSelected);
-		display.onOpenItem(this::openItem);
 		display.onOpenItemDialog(this::openItemDialog);
 		display.onOpenItemCatalog(this::openItemCatalog);
 		display.onExecuteItemTask(this::executeItemTask);
 		display.onLoading(this::notifyLoading);
 		add(display);
 		display.personifyOnce();
+	}
+
+	public void openView(String name) {
+		child(AlexandriaCatalogViewList.class).selectView(name);
+	}
+
+	public void openItem(String value) {
+		Optional<AlexandriaCatalogView> optionalView = currentView();
+		if (!optionalView.isPresent()) return;
+
+		AlexandriaCatalogView view = optionalView.get();
+		AlexandriaElementViewDefinition definition = view.definition();
+		OnClickRecord onClickRecord = onClickRecordEvent();
+		Item item = item(new String(Base64.getDecoder().decode(value)));
+
+		view.refreshSelection(singletonList(value));
+		if (onClickRecord == null) return;
+
+		if (onClickRecord.openPanel() != null)
+			openItem(ElementHelper.openItemEvent(value, this, definition, session()));
+		else if (onClickRecord.openCatalog() != null)
+			openItemCatalog(ElementHelper.openItemCatalogEvent(item, this, definition, session()));
+		else if (onClickRecord.openDialog() != null)
+			openItemDialog(ElementHelper.openItemDialogEvent(item, this, definition, session()));
 	}
 
 	@Override
@@ -506,6 +530,11 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	private void itemsSelected(List<Item> selection) {
 		selectItemListeners.forEach(l -> l.accept(selection));
+	}
+
+	private OnClickRecord onClickRecordEvent() {
+		Events events = AlexandriaAbstractCatalog.this.element().events();
+		return events != null ? events.onClickRecord() : null;
 	}
 
 }

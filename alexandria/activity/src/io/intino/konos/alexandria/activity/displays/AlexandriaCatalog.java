@@ -83,4 +83,12 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 		super.navigateMain();
 	}
 
+	public void openView(String name) {
+		super.openView(name);
+	}
+
+	public void openItem(String item) {
+		super.openItem(item);
+	}
+
 }
