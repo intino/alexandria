@@ -76,7 +76,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		super.refreshView();
 
 		currentView().ifPresent(catalogView -> {
-			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.view().name())).findFirst().orElse(null);
+			AbstractView view = views().stream().filter(v -> v.name().equals(catalogView.definition().name())).findFirst().orElse(null);
 			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
 				hideNavigator();
 			else if (isNavigatorVisible())

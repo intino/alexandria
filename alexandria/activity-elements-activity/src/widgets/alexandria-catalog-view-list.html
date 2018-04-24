@@ -47,7 +47,8 @@
 
     <style>
         :host paper-tabs {
-            width: 200px;
+            width: auto;
+            margin: 0 10px;
             height: 25px;
             --paper-tabs-selection-bar: {
                 border-color: var(--accent-color);
@@ -132,7 +133,7 @@
                 if (element == null) return;
                 if (this.lastViewIndex == pos) return;
                 this.lastViewIndex = pos;
-                this.selectView(element.view.name);
+                this.fire("open-view", element.view.name);
             }
 
         });

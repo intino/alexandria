@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaPanelCatalogViewNotifier;
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -31,7 +32,7 @@ public class AlexandriaPanelCatalogView extends AlexandriaPanelView<AlexandriaPa
 	}
 
 	private void createCatalogDisplay() {
-		View rawView = view().raw();
+		View rawView = (View) definition().raw();
 		RenderCatalogs render = rawView.render();
 		Catalog catalog = render.catalogs().get(0);
 		catalogDisplay = render.display(catalog, session());

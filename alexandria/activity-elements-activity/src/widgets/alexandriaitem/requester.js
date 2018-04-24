@@ -5,12 +5,6 @@ AlexandriaItemBehaviors.Requester = {
     itemStampsReady : function(value) {
     	this.carry("itemStampsReady", { "value" : value });
     },
-    openItem : function(value) {
-    	this.carry("openItem", { "value" : value });
-    },
-    openElement : function(value) {
-    	this.carry("openElement", { "value" : value });
-    },
     executeOperation : function(value) {
     	this.carry("executeOperation", { "value" : value });
     },

@@ -4,6 +4,10 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.activity.displays.builders.ItemValidationRefreshInfoBuilder;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaItemNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
@@ -38,10 +42,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private Item item;
 	private String mode;
 	private ItemDisplayProvider provider;
-	private List<Consumer<AlexandriaElementView.OpenItemEvent>> openItemListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
-	private List<Consumer<AlexandriaElementView.ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
+	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
+	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
+	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private boolean initialized = false;
 	private String emptyMessage = null;
 
@@ -77,19 +81,19 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		this.provider = provider;
 	}
 
-	public void onOpenItem(Consumer<AlexandriaElementView.OpenItemEvent> listener) {
+	public void onOpenItem(Consumer<OpenItemEvent> listener) {
 		openItemListeners.add(listener);
 	}
 
-	public void onOpenItemDialog(Consumer<AlexandriaElementView.OpenItemDialogEvent> parameters) {
+	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> parameters) {
 		openItemDialogListeners.add(parameters);
 	}
 
-	public void onOpenItemCatalog(Consumer<AlexandriaElementView.OpenItemCatalogEvent> parameters) {
+	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> parameters) {
 		openItemCatalogListeners.add(parameters);
 	}
 
-	public void onExecuteItemTask(Consumer<AlexandriaElementView.ExecuteItemTaskEvent> parameters) {
+	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> parameters) {
 		executeItemTaskListeners.add(parameters);
 	}
 
@@ -129,7 +133,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		createPages(id);
 	}
 
-	public void notifyOpenItem(AlexandriaElementView.OpenItemEvent params) {
+	public void notifyOpenItem(OpenItemEvent params) {
 		openItemListeners.forEach(l -> l.accept(params));
 	}
 
@@ -261,7 +265,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	public void openItem(Reference reference) {
-		openItemListeners.forEach(l -> l.accept(new AlexandriaElementView.OpenItemEvent() {
+		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
 			@Override
 			public String itemId() {
 				return new String(Base64.getDecoder().decode(reference.name()));
@@ -423,7 +427,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	private void createCatalog(String id, String name, String label, AlexandriaAbstractCatalog display) {
 		display.label(label);
 		display.range(provider.range());
-		display.onOpenItem(params -> notifyOpenItem((AlexandriaElementView.OpenItemEvent) params));
+		display.onOpenItem(params -> notifyOpenItem((OpenItemEvent) params));
 		display.embedded(true);
 		add(display);
 		display.personifyOnce(id + name);

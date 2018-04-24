@@ -31,7 +31,7 @@ public class AlexandriaPanelCustomView extends AlexandriaPanelView<AlexandriaPan
 	}
 
 	private void createItemDisplay() {
-		ElementView view = view();
+		AlexandriaElementViewDefinition view = definition();
 		AlexandriaItem display = new AlexandriaItem(box);
 		display.mold(view.mold());
 		display.context(context());
@@ -39,9 +39,9 @@ public class AlexandriaPanelCustomView extends AlexandriaPanelView<AlexandriaPan
 		display.mode("custom");
 		display.provider(itemDisplayProvider(provider(), view));
 		display.onOpenItem(this::notifyOpenItem);
-		display.onOpenItemDialog(this::notifyOpenItemDialog);
-		display.onOpenItemCatalog(this::notifyOpenItemCatalog);
-		display.onExecuteItemTask(this::notifyExecuteItemTaskOperation);
+		display.onOpenItemDialog(this::openItemDialogOperation);
+		display.onOpenItemCatalog(this::openItemCatalogOperation);
+		display.onExecuteItemTask(this::executeItemTaskOperation);
 		add(display);
 		display.personifyOnce();
 	}

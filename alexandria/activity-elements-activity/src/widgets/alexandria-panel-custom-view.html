@@ -11,7 +11,7 @@
 <dom-module id="alexandria-panel-custom-view">
 
     <template>
-        <cotton-zombie display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
+        <cotton-zombie id="itemZombie" display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
     </template>
 
     <style>
@@ -43,6 +43,8 @@
             attached : function() {
                 this.translate(AlexandriaPanelCustomViewDictionary);
                 this.listenToDisplay();
+                this.addEventListener("navigate-item", (e) => this.fire("open-item", e));
+                this.addEventListener("navigate-element", (e) => this.fire("open-element", e));
             }
 
         });

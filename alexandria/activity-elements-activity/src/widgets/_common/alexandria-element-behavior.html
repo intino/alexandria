@@ -10,6 +10,27 @@
             _notifyMessage : String
         },
 
+        listenOpenEvents : function() {
+            this.addEventListener("open-view", this._openView.bind(this));
+            this.addEventListener("open-item", this._openItem.bind(this));
+            this.addEventListener("open-element", this._openElement.bind(this));
+        },
+
+        _openView : function(e) {
+            this.openView(e.detail);
+            if (e.stopPropagation) e.stopPropagation();
+        },
+
+        _openItem : function(e) {
+            this.openItem(e.detail);
+            if (e.stopPropagation) e.stopPropagation();
+        },
+
+        _openElement : function(e) {
+            this.openElement(e.detail);
+            if (e.stopPropagation) e.stopPropagation();
+        },
+
         _refreshBreadcrumbs : function(tree) {
             this._breadcrumbs = tree != null && tree !== "" ? this.treeToBreadcrumbs(tree) : [];
         },

@@ -1,21 +1,17 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.*;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogListViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
-import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
-import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Item;
-import io.intino.konos.alexandria.activity.model.Panel;
-import io.intino.konos.alexandria.activity.model.TimeRange;
 import io.intino.konos.alexandria.activity.model.catalog.arrangement.Sorting;
-import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
-import io.intino.konos.alexandria.activity.model.mold.stamps.*;
-import io.intino.konos.alexandria.activity.model.mold.stamps.operations.DownloadOperation;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
+import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Picture;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 import io.intino.konos.alexandria.activity.utils.StreamUtil;
@@ -25,42 +21,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static io.intino.konos.alexandria.activity.helpers.ElementHelper.*;
+import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemBuilderProvider;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogListViewNotifier> implements AlexandriaCatalogView, AlexandriaStampProvider {
+public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<AlexandriaCatalogListViewNotifier> implements AlexandriaStampProvider {
 	private ElementViewDisplayProvider.Sorting sorting;
-	private ElementView<Catalog> view;
-	private CatalogViewDisplayProvider provider;
-	private List<Consumer<OpenItemEvent>> openItemListeners = new ArrayList<>();
-	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
-	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
 	private String condition = null;
 	private Map<String, List<AlexandriaStamp>> recordDisplaysMap = new HashMap<>();
 	private Map<String, List<AlexandriaDialog>> recordDialogsMap = new HashMap<>();
-	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 
 	public AlexandriaCatalogListView(Box box) {
 		super(box);
 	}
 
 	@Override
-	public void view(ElementView view) {
-		this.view = view;
-	}
-
-	@Override
-	public void provider(CatalogViewDisplayProvider provider) {
-		this.provider = provider;
+	public void reset() {
 	}
 
 	public void selectSorting(io.intino.konos.alexandria.activity.schemas.Sorting sorting) {
@@ -72,55 +51,16 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 	@Override
 	public int countItems() {
-		return provider.countItems(condition);
+		return provider().countItems(condition);
 	}
 
 	public void page(Integer value) {
 		super.page(value);
 	}
 
-	@Override
-	public void onOpenItem(Consumer<OpenItemEvent> listener) {
-		openItemListeners.add(listener);
-	}
-
-	@Override
-	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
-		openItemDialogListeners.add(listener);
-	}
-
-	@Override
-	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
-		openItemCatalogListeners.add(listener);
-	}
-
-	@Override
-	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> listener) {
-		executeItemTaskListeners.add(listener);
-	}
-
-	@Override
-	public void reset() {
-	}
-
-	@Override
-	public void onLoading(Consumer<Boolean> listener) {
-		loadingListeners.add(listener);
-	}
-
-	@Override
-	public ElementView view() {
-		return view;
-	}
-
 	public void filter(String value) {
 		this.condition = value;
 		this.refresh();
-	}
-
-	@Override
-	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
-		Stream.of(items).forEach(this::refresh);
 	}
 
 	@Override
@@ -137,144 +77,16 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		selection(new ArrayList<>(Arrays.asList(records)));
 	}
 
-	public void openItem(String value) {
-
-		if (view.onClickRecordEvent() == null) {
-			if (provider.expandedStamps(view.mold()).size() > 0)
-				notifier.refreshSelection(selection().contains(value) ? emptyList() : singletonList(value));
-			selection(singletonList(value));
-			return;
-		}
-
-		selection(singletonList(value));
-
-		if (view.onClickRecordEvent().openPanel() != null)
-			notifyOpenItem(value);
-		else if (view.onClickRecordEvent().openCatalog() != null)
-			notifyOpenCatalog(itemOf(value));
-		else if (view.onClickRecordEvent().openDialog() != null)
-			notifyOpenDialog(itemOf(value));
+	@Override
+	public void refreshSelection(List<String> items) {
+		AlexandriaElementViewDefinition definition = definition();
+		if (definition.onClickRecordEvent() == null && provider().expandedStamps(definition.mold()).size() > 0)
+			notifier.refreshSelection(selection().stream().allMatch(items::contains) ? emptyList() : items);
+		selection(items);
 	}
 
 	public void openElement(OpenElementParameters params) {
-		Stamp stamp = provider.stamp(view.mold(), params.stamp().name());
-		if (!(stamp instanceof CatalogLink)) return;
-
-		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
-
-		Item source = itemOf(params.item());
-		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
-			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
-
-		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(source, session()));
-		else {
-			if (catalogLinkStamp.filtered())
-				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
-			display.refresh();
-		}
-	}
-
-	private void notifyOpenItem(String item) {
-		openItemListeners.forEach(l -> l.accept(openItemEventOf(item)));
-	}
-
-	private OpenItemEvent openItemEventOf(String item) {
-		return new OpenItemEvent() {
-			@Override
-			public String itemId() {
-				return new String(Base64.getDecoder().decode(item));
-			}
-
-			@Override
-			public String label() {
-				Optional<Stamp> titleStamp = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Title)).findAny();
-				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session()) : item().name();
-			}
-
-			@Override
-			public Item item() {
-				return provider.item(itemId());
-			}
-
-			@Override
-			public Panel panel() {
-				return view.onClickRecordEvent().openPanel().panel();
-			}
-
-			@Override
-			public TimeRange range() {
-				return provider.range();
-			}
-
-			@Override
-			public Tree breadcrumbs() {
-				OpenPanel openPanel = view.onClickRecordEvent().openPanel();
-				return openPanel != null ? openPanel.breadcrumbs(item(), session()) : null;
-			}
-		};
-	}
-
-	private void notifyOpenCatalog(Item item) {
-		notifyOpenCatalog(new OpenItemCatalogEvent() {
-			@Override
-			public Item item() {
-				return item;
-			}
-
-			@Override
-			public Stamp stamp() {
-				return null;
-			}
-
-			@Override
-			public Catalog catalog() {
-				return view.onClickRecordEvent().openCatalog().catalog();
-			}
-
-			@Override
-			public Position position() {
-				return null;
-			}
-
-			@Override
-			public boolean filtered() {
-				return view.onClickRecordEvent().openCatalog().filtered();
-			}
-
-			@Override
-			public boolean filter(Item target) {
-				return view.onClickRecordEvent().openCatalog().filter(item, target, session());
-			}
-
-			@Override
-			public String itemToShow() {
-				return view.onClickRecordEvent().openCatalog().item(item, session());
-			}
-		});
-	}
-
-	private void notifyOpenCatalog(OpenItemCatalogEvent event) {
-		openItemCatalogListeners.forEach(l -> l.accept(event));
-	}
-
-	private void notifyOpenDialog(Item item) {
-		openItemDialogListeners.forEach(l -> l.accept(new OpenItemDialogEvent() {
-			@Override
-			public Item item() {
-				return item;
-			}
-
-			@Override
-			public Stamp stamp() {
-				return null;
-			}
-
-			@Override
-			public AlexandriaDialog dialog() {
-				return view.onClickRecordEvent().openDialog().createDialog(item, session());
-			}
-		}));
+		super.openElement(params);
 	}
 
 	public void renderExpandedPictures() {
@@ -337,12 +149,12 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	public void createClusterGroup(ClusterGroup value) {
-		provider.createClusterGroup(value);
+		provider().createClusterGroup(value);
 	}
 
 	@Override
 	protected void sendItems(int start, int limit) {
-		notifier.refresh(ItemBuilder.buildList(provider.items(start, limit, condition, sorting), itemBuilderProvider(provider, view), baseAssetUrl()));
+		notifier.refresh(ItemBuilder.buildList(provider().items(start, limit, condition, sorting), itemBuilderProvider(provider(), definition()), baseAssetUrl()));
 	}
 
 	@Override
@@ -368,7 +180,7 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	protected void init() {
 		super.init();
 
-		List<Sorting> sortings = provider.sortings();
+		List<Sorting> sortings = provider().sortings();
 		this.sorting = sortings.size() > 0 ? sortingOf(sortings.get(0)) : null;
 
 		sendView();
@@ -377,29 +189,22 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	@Override
-	public void refresh() {
-		notifyLoading(true);
-		super.refresh();
-		notifyLoading(false);
-	}
-
-	@Override
 	public AlexandriaStamp embeddedDisplay(String name) {
-		Stamp stamp = provider.stamp(view.mold(), name);
+		Stamp stamp = provider().stamp(definition().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
 		return ((EmbeddedDisplay)stamp).createDisplay(session());
 	}
 
 	@Override
 	public AlexandriaDialog embeddedDialog(String name) {
-		Stamp stamp = provider.stamp(view.mold(), name);
+		Stamp stamp = provider().stamp(definition().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDialog)) return null;
 		return ((EmbeddedDialog)stamp).createDialog(session());
 	}
 
 	@Override
 	public AlexandriaAbstractCatalog embeddedCatalog(String name) {
-		Stamp stamp = provider.stamp(view.mold(), name);
+		Stamp stamp = provider().stamp(definition().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
 		return ((EmbeddedCatalog)stamp).createCatalog(session());
 	}
@@ -410,8 +215,17 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	@Override
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item item) {
+		notifier.refreshItem(item);
+		if (recordDisplaysMap.containsKey(item.name()))
+			recordDisplaysMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
+		if (recordDialogsMap.containsKey(item.name()))
+			recordDialogsMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
+	}
+
+	@Override
 	public void refreshItem() {
-		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(this.provider, view);
+		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(provider(), definition());
 
 		selection().forEach(itemKey -> {
 			Item item = itemOf(itemKey);
@@ -419,13 +233,8 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 		});
 	}
 
-	@Override
-	public List<Item> selectedItems() {
-		return selection().stream().map(this::itemOf).collect(toList());
-	}
-
 	private void sendView() {
-		notifier.refreshView(ElementViewBuilder.build(view));
+		notifier.refreshView(ElementViewBuilder.build(definition()));
 	}
 
 	private void sendSortingList(List<Sorting> sortings) {
@@ -438,25 +247,25 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 	}
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> displays() {
-		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
+		List<Stamp> stamps = provider().stamps(definition().mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
 		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).createDisplay(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private Map<EmbeddedDialog, AlexandriaDialog> dialogs() {
-		List<Stamp> stamps = provider.stamps(view.mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
+		List<Stamp> stamps = provider().stamps(definition().mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
 		Map<EmbeddedDialog, AlexandriaDialog> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDialog)s, s -> ((EmbeddedDialog)s).createDialog(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private List<Picture> expandedPictures(String record) {
-		return provider.expandedStamps(view.mold()).stream().filter(s -> (s instanceof Picture))
+		return provider().expandedStamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
 				.map(s -> (Picture)s)
 				.collect(toList());
 	}
 
 	private List<Picture> allPictures(String record) {
-		return provider.stamps(view.mold()).stream().filter(s -> (s instanceof Picture))
+		return provider().stamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
 				.map(s -> (Picture)s)
 				.collect(toList());
 	}
@@ -483,87 +292,45 @@ public class AlexandriaCatalogListView extends PageDisplay<AlexandriaCatalogList
 
 			@Override
 			public int comparator(Item item1, Item item2) {
-				return provider.sorting(name).compare(item1, item2);
+				return provider().sorting(name).compare(item1, item2);
 			}
 		};
-	}
-
-	private void refresh(io.intino.konos.alexandria.activity.schemas.Item item) {
-		notifier.refreshItem(item);
-		if (recordDisplaysMap.containsKey(item.name()))
-			recordDisplaysMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
-		if (recordDialogsMap.containsKey(item.name()))
-			recordDialogsMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
 	}
 
 	public void itemRefreshed(String record) {
 		refreshPictures(record);
 	}
 
-	private void notifyLoading(boolean value) {
-		loadingListeners.forEach(l -> l.accept(value));
-	}
-
 	public void openItemDialogOperation(OpenItemParameters params) {
-		openItemDialogListeners.forEach(l -> l.accept(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session())));
+		super.openItemDialogOperation(params);
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskListeners.forEach(l -> l.accept(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), this)));
+		super.executeItemTaskOperation(params);
 	}
 
 	public ActivityFile downloadItemOperation(DownloadItemParameters params) {
-		Stamp stamp = provider.stamps(view.mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
-		if (stamp == null) return null;
-		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
-		return new ActivityFile() {
-			@Override
-			public String label() {
-				return resource.label();
-			}
-
-			@Override
-			public InputStream content() {
-				return resource.content();
-			}
-		};
+		return super.downloadItemOperation(params);
 	}
 
-	public void executeOperation(ElementOperationParameters value) {
-		provider.executeOperation(value, selectedItems());
+	public void executeOperation(ElementOperationParameters params) {
+		super.executeOperation(params, selectedItems());
 	}
 
-	public ActivityFile downloadOperation(ElementOperationParameters value) {
-		Resource resource = provider.downloadOperation(value, selectedItems());
-		return new ActivityFile() {
-			@Override
-			public String label() {
-				return resource.label();
-			}
-
-			@Override
-			public InputStream content() {
-				return resource.content();
-			}
-		};
+	public ActivityFile downloadOperation(ElementOperationParameters params) {
+		return super.downloadOperation(params, selectedItems());
 	}
 
 	public void changeItem(ChangeItemParameters params) {
-		Item item = itemOf(params.item());
-		provider.changeItem(item, provider.stamp(view().mold(), params.stamp()), params.value());
+		super.changeItem(params);
 	}
 
 	public void validateItem(io.intino.konos.alexandria.activity.schemas.ValidateItemParameters params) {
-		Item item = itemOf(params.item());
-		provider.validateItem(item, provider.stamp(view().mold(), params.stamp()), params.value());
+		super.validateItem(params);
 	}
 
-	public void openItemCatalogOperation(OpenItemParameters params) {
-		notifyOpenCatalog(openItemCatalogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), params.position(), provider.element(), session()));
-	}
+	public void openItemCatalogOperation(OpenItemParameters value) {
 
-	private Item itemOf(String id) {
-		return provider.item(new String(Base64.getDecoder().decode(id)));
 	}
 
 }

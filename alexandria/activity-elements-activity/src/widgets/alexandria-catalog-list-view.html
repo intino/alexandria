@@ -13,36 +13,36 @@
 
     <template>
         <alexandria-catalog-list grid="[[_isGridView(_view)]]"
-                      mold="[[_view.mold]]"
-                      width="[[_view.width]]"
-                      embedded="[[_view.embeddedElement]]"
-                      empty-message="[[_view.emptyMessage]]"
-                      can-search="[[_view.canSearch]]"
-                      can-create-clusters="[[_view.canCreateClusters]]"
-                      selection-enabled-by-default="[[_view.selectionEnabledByDefault]]"
-                      cluster-list="[[_view.clusterList]]"
-                      page-size="[[_pageSize]]"
-                      item-list="[[_itemList]]"
-                      count-item-list="[[_countItemList]]"
-                      sorting-list="[[_sortingList]]"
-                      selected-sorting="[[_selectedSorting]]"
-                      on-load-page="_loadPage"
-                      on-select-sorting="_selectSorting"
-                      on-stamps-ready="_renderExpandedPictures"
-                      on-open-stamp-dialog="_openStampDialog"
-                      on-open-stamp-catalog="_openStampCatalog"
-                      on-execute-stamp-task="_executeStampTask"
-                      on-navigate-catalog="_navigateCatalog"
-                      on-open-item="_openItem"
-                      on-change-item="_changeItem"
-                      on-validate-item="_validateItem"
-                      on-select-items="_selectItems"
-                      on-download-item="_downloadItem"
-                      on-create-cluster-group="_createClusterGroup"
-                      on-filter="_filter"
-                      toolbar="[[_view.toolbar]]"
-                      on-execute-operation="_executeOperation"
-                      on-download-operation="_downloadOperation"></alexandria-catalog-list>
+                                 mold="[[_view.mold]]"
+                                 width="[[_view.width]]"
+                                 embedded="[[_view.embeddedElement]]"
+                                 empty-message="[[_view.emptyMessage]]"
+                                 can-search="[[_view.canSearch]]"
+                                 can-create-clusters="[[_view.canCreateClusters]]"
+                                 selection-enabled-by-default="[[_view.selectionEnabledByDefault]]"
+                                 cluster-list="[[_view.clusterList]]"
+                                 page-size="[[_pageSize]]"
+                                 item-list="[[_itemList]]"
+                                 count-item-list="[[_countItemList]]"
+                                 sorting-list="[[_sortingList]]"
+                                 selected-sorting="[[_selectedSorting]]"
+                                 on-load-page="_loadPage"
+                                 on-select-sorting="_selectSorting"
+                                 on-stamps-ready="_renderExpandedPictures"
+                                 on-open-stamp-dialog="_openStampDialog"
+                                 on-open-stamp-catalog="_openStampCatalog"
+                                 on-execute-stamp-task="_executeStampTask"
+                                 on-navigate-catalog="_navigateCatalog"
+                                 on-open-item="_openItem"
+                                 on-change-item="_changeItem"
+                                 on-validate-item="_validateItem"
+                                 on-select-items="_selectItems"
+                                 on-download-item="_downloadItem"
+                                 on-create-cluster-group="_createClusterGroup"
+                                 on-filter="_filter"
+                                 toolbar="[[_view.toolbar]]"
+                                 on-execute-operation="_executeOperation"
+                                 on-download-operation="_downloadOperation"></alexandria-catalog-list>
     </template>
 
     <style>
@@ -115,11 +115,13 @@
             },
 
             _navigateCatalog : function(e) {
-                this.openElement(e.detail);
+                e.stopPropagation();
+                this.fire("open-element", e.detail);
             },
 
             _openItem : function(e) {
-                this.openItem(e.detail);
+                e.stopPropagation();
+                this.fire("open-item", e.detail);
             },
 
             _changeItem : function(e) {

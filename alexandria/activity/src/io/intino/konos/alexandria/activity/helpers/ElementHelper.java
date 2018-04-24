@@ -2,24 +2,31 @@ package io.intino.konos.alexandria.activity.helpers;
 
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.*;
-import io.intino.konos.alexandria.activity.displays.AlexandriaElementView.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ItemDisplayProvider;
 import io.intino.konos.alexandria.activity.displays.providers.TemporalCatalogViewDisplayProvider;
+import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.*;
+import io.intino.konos.alexandria.activity.model.Item;
+import io.intino.konos.alexandria.activity.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.activity.model.mold.Block;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Title;
+import io.intino.konos.alexandria.activity.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.activity.model.mold.stamps.operations.OpenDialogOperation;
-import io.intino.konos.alexandria.activity.schemas.ChangeItemParameters;
-import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.activity.schemas.Position;
-import io.intino.konos.alexandria.activity.schemas.ValidateItemParameters;
+import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ElementHelper {
@@ -32,7 +39,7 @@ public class ElementHelper {
 		return ItemBuilder.build(item, item.id(), provider, baseAssetUrl);
 	}
 
-	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, ElementView view) {
+	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, AlexandriaElementViewDefinition view) {
 		return new ItemDisplayProvider() {
 			@Override
 			public Mold mold() {
@@ -97,7 +104,7 @@ public class ElementHelper {
 		};
 	}
 
-	public static ItemBuilder.ItemBuilderProvider itemBuilderProvider(ElementViewDisplayProvider provider, ElementView view) {
+	public static ItemBuilder.ItemBuilderProvider itemBuilderProvider(ElementViewDisplayProvider provider, AlexandriaElementViewDefinition view) {
 		return new ItemBuilder.ItemBuilderProvider() {
 			@Override
 			public List<Block> blocks() {
@@ -121,8 +128,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementView.OpenItemDialogEvent openItemDialogEvent(Item item, Stamp stamp, ActivitySession session) {
-		return new AlexandriaElementView.OpenItemDialogEvent() {
+	public static OpenItemDialogEvent openItemDialogEvent(Item item, Stamp stamp, ActivitySession session) {
+		return new OpenItemDialogEvent() {
 			@Override
 			public Item item() {
 				return item;
@@ -136,6 +143,139 @@ public class ElementHelper {
 			@Override
 			public AlexandriaDialog dialog() {
 				return ((OpenDialogOperation)stamp).createDialog(item, session);
+			}
+		};
+	}
+
+	public static OpenItemEvent openItemEvent(String item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, ActivitySession session) {
+		return new OpenItemEvent() {
+			@Override
+			public String itemId() {
+				return new String(Base64.getDecoder().decode(item));
+			}
+
+			@Override
+			public String label() {
+				Optional<Stamp> titleStamp = provider.stamps(definition.mold()).stream().filter(s -> (s instanceof Title)).findAny();
+				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session) : item().name();
+			}
+
+			@Override
+			public Item item() {
+				return provider.item(itemId());
+			}
+
+			@Override
+			public Panel panel() {
+				return definition.onClickRecordEvent().openPanel().panel();
+			}
+
+			@Override
+			public TimeRange range() {
+				return provider.range();
+			}
+
+			@Override
+			public Tree breadcrumbs() {
+				OpenPanel openPanel = definition.onClickRecordEvent().openPanel();
+				return openPanel != null ? openPanel.breadcrumbs(item(), session) : null;
+			}
+		};
+	}
+
+	public static OpenItemCatalogEvent openItemCatalogEvent(String item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, ActivitySession session) {
+		return new OpenItemCatalogEvent() {
+			@Override
+			public Item item() {
+				return provider.item(new String(Base64.getDecoder().decode(item)));
+			}
+
+			@Override
+			public Stamp stamp() {
+				return null;
+			}
+
+			@Override
+			public Catalog catalog() {
+				return definition.onClickRecordEvent().openCatalog().catalog();
+			}
+
+			@Override
+			public Position position() {
+				return null;
+			}
+
+			@Override
+			public boolean filtered() {
+				return definition.onClickRecordEvent().openCatalog().filtered();
+			}
+
+			@Override
+			public boolean filter(Item target) {
+				return definition.onClickRecordEvent().openCatalog().filter(item(), target, session);
+			}
+
+			@Override
+			public String itemToShow() {
+				return definition.onClickRecordEvent().openCatalog().item(item(), session);
+			}
+		};
+	}
+
+	public static OpenItemCatalogEvent openItemCatalogEvent(Item item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, ActivitySession session) {
+		return new OpenItemCatalogEvent() {
+			@Override
+			public Item item() {
+				return item;
+			}
+
+			@Override
+			public Stamp stamp() {
+				return null;
+			}
+
+			@Override
+			public Catalog catalog() {
+				return definition.onClickRecordEvent().openCatalog().catalog();
+			}
+
+			@Override
+			public Position position() {
+				return null;
+			}
+
+			@Override
+			public boolean filtered() {
+				return definition.onClickRecordEvent().openCatalog().filtered();
+			}
+
+			@Override
+			public boolean filter(Item target) {
+				return definition.onClickRecordEvent().openCatalog().filter(item, target, session);
+			}
+
+			@Override
+			public String itemToShow() {
+				return definition.onClickRecordEvent().openCatalog().item(item, session);
+			}
+		};
+	}
+
+	public static OpenItemDialogEvent openItemDialogEvent(Item item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, ActivitySession session) {
+		return new OpenItemDialogEvent() {
+			@Override
+			public Item item() {
+				return item;
+			}
+
+			@Override
+			public Stamp stamp() {
+				return null;
+			}
+
+			@Override
+			public AlexandriaDialog dialog() {
+				return definition.onClickRecordEvent().openDialog().createDialog(item, session);
 			}
 		};
 	}
@@ -188,8 +328,8 @@ public class ElementHelper {
 		};
 	}
 
-	public static AlexandriaElementView.ExecuteItemTaskEvent executeItemTaskEvent(Item item, Stamp stamp, AlexandriaDisplay self) {
-		return new AlexandriaElementView.ExecuteItemTaskEvent() {
+	public static ExecuteItemTaskEvent executeItemTaskEvent(Item item, Stamp stamp, AlexandriaDisplay self) {
+		return new ExecuteItemTaskEvent() {
 			@Override
 			public Item item() {
 				return item;

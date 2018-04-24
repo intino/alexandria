@@ -153,4 +153,12 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 		navigator.timeScaleHandler(timeScaleHandler);
 		configureNavigatorDisplay((AlexandriaTimeRangeNavigator) navigator, timeScaleHandler);
 	}
+
+	public void openView(String name) {
+		super.openView(name);
+	}
+
+	public void openItem(String item) {
+		super.openItem(item);
+	}
 }

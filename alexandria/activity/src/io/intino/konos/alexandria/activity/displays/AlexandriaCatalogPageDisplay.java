@@ -1,12 +1,15 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.activity.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends ActivityDisplay<N, Box> {
+import static java.util.stream.Collectors.toList;
+
+public abstract class AlexandriaCatalogPageDisplay<N extends AlexandriaDisplayNotifier> extends AlexandriaCatalogView<N> {
     private int page;
     private int pageSize;
     private List<Consumer<List<String>>> selectListeners = new ArrayList<>();
@@ -14,17 +17,22 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
 
     private static final int PageSize = 20;
 
-    public PageDisplay(Box box) {
+    public AlexandriaCatalogPageDisplay(Box box) {
         super(box);
         this.page = 0;
         this.pageSize = PageSize;
+    }
+
+    @Override
+    public List<Item> selectedItems() {
+        return selection().stream().map(this::itemOf).collect(toList());
     }
 
     public List<String> selection() {
         return selection;
     }
 
-    public PageDisplay selection(List<String> selection) {
+    public AlexandriaCatalogPageDisplay selection(List<String> selection) {
         this.selection = selection;
         if (selection.size() > 0) notifySelectListeners(selection);
         return this;
@@ -71,12 +79,12 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
 
     @Override
     public void refresh() {
+        notifyLoading(true);
         sendClear();
         sendCount(countItems());
         page(0);
+        notifyLoading(false);
     }
-
-    public abstract int countItems();
 
     @Override
     protected void init() {
@@ -84,6 +92,7 @@ public abstract class PageDisplay<N extends AlexandriaDisplayNotifier> extends A
         sendPageSize(this.pageSize);
     }
 
+    public abstract int countItems();
     protected abstract void sendItems(int start, int limit);
     protected abstract void sendClear();
     protected abstract void sendPageSize(int pageSize);

@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.activity.Resource;
 import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.helpers.ElementHelper;
 import io.intino.konos.alexandria.activity.model.*;
 import io.intino.konos.alexandria.activity.model.Catalog;
@@ -218,8 +222,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		});
 	}
 
-	public Optional<AlexandriaElementView> currentView() {
-		return Optional.ofNullable(currentView);
+	public <V extends AlexandriaElementView> Optional<V> currentView() {
+		return Optional.ofNullable((V) currentView);
 	}
 
 	public TimeScale scale() {
@@ -270,7 +274,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public void openItem(String item) {
-		openItem(new AlexandriaElementView.OpenItemEvent() {
+		openItem(new OpenItemEvent() {
 			@Override
 			public String label() {
 				if (molds().size() <= 0) return item;
@@ -352,7 +356,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.personifyOnce();
 	}
 
-	protected void openItem(AlexandriaElementView.OpenItemEvent event) {
+	protected void openItem(OpenItemEvent event) {
 		removePanelDisplay();
 		openedItem = Item.createFrom(event.item()).label(event.label());
 		AlexandriaPanel display = createPanelDisplay(event);
@@ -363,36 +367,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		refreshBreadcrumbs(breadcrumbs(event));
 	}
 
-	protected void closeCurrentItem() {
-		navigateMain();
-	}
-
-	protected void removePanelDisplay() {
-		if (openedItem == null) return;
-		elementDisplayManager.removeElement(openedItem);
-		remove(AlexandriaPanel.class);
-	}
-
-	protected void openItemDialog(AlexandriaElementView.OpenItemDialogEvent event) {
-		currentItem(event.item().id());
-
-		AlexandriaDialog dialog = event.dialog();
-
-		dialog.onDone((modification) -> currentView().ifPresent(view -> {
-			dirty(true);
-			if (modification == DialogExecution.Modification.ItemModified) view.refresh(currentItem_());
-			else if (modification == DialogExecution.Modification.CatalogModified) view.refresh();
-			dialogBox.close();
-		}));
-
-		dialogBox.label(dialog.label());
-		dialogBox.display(dialog);
-		dialogBox.settings(dialog.width(), dialog.height());
-		dialogBox.refresh();
-		showDialogBox();
-	}
-
-	protected void openItemCatalog(AlexandriaElementView.OpenItemCatalogEvent event) {
+	protected void openItemCatalog(OpenItemCatalogEvent event) {
 		Stamp stamp = event.stamp();
 
 		if (stamp != null && stamp instanceof OpenCatalogOperation) {
@@ -411,7 +386,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		}
 	}
 
-	protected void openItemCatalogInDialogBox(AlexandriaElementView.OpenItemCatalogEvent event) {
+	protected void openItemCatalogInDialogBox(OpenItemCatalogEvent event) {
 		currentItem(event.item().id());
 
 		OpenCatalogOperation catalogOperation = (OpenCatalogOperation) event.stamp();
@@ -436,7 +411,36 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		showDialogBox();
 	}
 
-	protected void executeItemTask(AlexandriaElementView.ExecuteItemTaskEvent event) {
+	protected void openItemDialog(OpenItemDialogEvent event) {
+		currentItem(event.item().id());
+
+		AlexandriaDialog dialog = event.dialog();
+
+		dialog.onDone((modification) -> currentView().ifPresent(view -> {
+			dirty(true);
+			if (modification == DialogExecution.Modification.ItemModified) view.refresh(currentItem_());
+			else if (modification == DialogExecution.Modification.CatalogModified) view.refresh();
+			dialogBox.close();
+		}));
+
+		dialogBox.label(dialog.label());
+		dialogBox.display(dialog);
+		dialogBox.settings(dialog.width(), dialog.height());
+		dialogBox.refresh();
+		showDialogBox();
+	}
+
+	protected void closeCurrentItem() {
+		navigateMain();
+	}
+
+	protected void removePanelDisplay() {
+		if (openedItem == null) return;
+		elementDisplayManager.removeElement(openedItem);
+		remove(AlexandriaPanel.class);
+	}
+
+	protected void executeItemTask(ExecuteItemTaskEvent event) {
 		notifyLoading(true);
 		currentItem(event.item().id());
 		Item item = this.currentItem();
@@ -453,7 +457,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		notifyLoading(false);
 	}
 
-	public AlexandriaPanel createPanelDisplay(AlexandriaElementView.OpenItemEvent event) {
+	public AlexandriaPanel createPanelDisplay(OpenItemEvent event) {
 		AlexandriaPanel display = elementDisplayManager.createElement(event.panel(), event.item());
 		display.range(event.range());
 		return display;
@@ -578,7 +582,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return null;
 	}
 
-	private String breadcrumbs(AlexandriaElementView.OpenItemEvent event) {
+	private String breadcrumbs(OpenItemEvent event) {
 		Tree tree = event.breadcrumbs();
 
 		if (tree == null) {

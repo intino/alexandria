@@ -1,7 +1,10 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.Resource;
+import io.intino.konos.alexandria.activity.displays.events.ExecuteItemTaskEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemCatalogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemDialogEvent;
+import io.intino.konos.alexandria.activity.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogMagazineViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.activity.model.Item;
@@ -9,57 +12,19 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemDisplayProvider;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCatalogMagazineViewNotifier, Box> implements AlexandriaCatalogView {
-	private ElementView view;
-	private CatalogViewDisplayProvider provider;
-	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
-	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
-	private List<Consumer<ExecuteItemTaskEvent>> executeItemTaskListeners = new ArrayList<>();
+public class AlexandriaCatalogMagazineView extends AlexandriaCatalogView<AlexandriaCatalogMagazineViewNotifier> {
 	private Item item = null;
 	private String condition = null;
-	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private String currentItem = null;
 
 	public AlexandriaCatalogMagazineView(Box box) {
 		super(box);
-	}
-
-	@Override
-	public void view(ElementView view) {
-		this.view = view;
-	}
-
-	@Override
-	public void provider(CatalogViewDisplayProvider provider) {
-		this.provider = provider;
-	}
-
-	@Override
-	public void onOpenItemDialog(Consumer<OpenItemDialogEvent> listener) {
-		openItemDialogListeners.add(listener);
-	}
-
-	@Override
-	public void onOpenItemCatalog(Consumer<OpenItemCatalogEvent> listener) {
-		openItemCatalogListeners.add(listener);
-	}
-
-	@Override
-	public void onExecuteItemTask(Consumer<ExecuteItemTaskEvent> parameters) {
-		executeItemTaskListeners.add(parameters);
-	}
-
-	@Override
-	public void onOpenItem(Consumer<OpenItemEvent> listener) {
 	}
 
 	@Override
@@ -73,19 +38,18 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	}
 
 	@Override
-	public void onLoading(Consumer<Boolean> listener) {
-		this.loadingListeners.add(listener);
-	}
-
-	@Override
-	public ElementView view() {
-		return view;
+	public void refreshSelection(List<String> items) {
 	}
 
 	@Override
 	public void refresh(io.intino.konos.alexandria.activity.schemas.Item... items) {
 		if (items.length <= 0) return;
-		child(AlexandriaItem.class).refresh(items[0]);
+		refresh(items[0]);
+	}
+
+	@Override
+	public void refresh(io.intino.konos.alexandria.activity.schemas.Item item) {
+		child(AlexandriaItem.class).refresh(item);
 	}
 
 	@Override
@@ -100,13 +64,14 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	}
 
 	private void createRecordDisplay() {
+		AlexandriaElementViewDefinition definition = definition();
 		AlexandriaItem display = new AlexandriaItem(box);
-		display.emptyMessage(view.emptyMessage());
-		display.mold(view.mold());
-		display.context(provider.element());
+		display.emptyMessage(definition.emptyMessage());
+		display.mold(definition.mold());
+		display.context(provider().element());
 		display.item(null);
 		display.mode("magazine");
-		display.provider(itemDisplayProvider(provider, view));
+		display.provider(itemDisplayProvider(provider(), definition));
 		display.onOpenItem(this::selectRecord);
 		display.onOpenItemDialog(this::openItemDialogOperation);
 		display.onOpenItemCatalog(this::openItemCatalogOperation);
@@ -139,6 +104,7 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 	}
 
 	private void loadRecord() {
+		CatalogViewDisplayProvider provider = provider();
 		int count = provider.countItems(condition);
 		List<Item> items = provider.items(0, count, condition);
 		item = currentItem != null ? provider.item(nameOf(currentItem)) : provider.rootItem(items);
@@ -154,39 +120,24 @@ public class AlexandriaCatalogMagazineView extends ActivityDisplay<AlexandriaCat
 		return shortName;
 	}
 
-	private void notifyLoading(boolean value) {
-		loadingListeners.forEach(l -> l.accept(value));
-	}
-
 	public void openItemDialogOperation(OpenItemDialogEvent event) {
-		openItemDialogListeners.forEach(l -> l.accept(event));
+		super.openItemDialogOperation(event);
 	}
 
 	public void openItemCatalogOperation(OpenItemCatalogEvent event) {
-		openItemCatalogListeners.forEach(l -> l.accept(event));
+		super.openItemCatalogOperation(event);
 	}
 
 	public void executeItemTaskOperation(ExecuteItemTaskEvent event) {
-		executeItemTaskListeners.forEach(l -> l.accept(event));
+		super.executeItemTaskOperation(event);
 	}
 
-	public void executeOperation(ElementOperationParameters value) {
-		provider.executeOperation(value, singletonList(item));
+	public void executeOperation(ElementOperationParameters params) {
+		super.executeOperation(params, singletonList(item));
 	}
 
-	public ActivityFile downloadOperation(ElementOperationParameters value) {
-		Resource resource = provider.downloadOperation(value, singletonList(item));
-		return new ActivityFile() {
-			@Override
-			public String label() {
-				return resource.label();
-			}
-
-			@Override
-			public InputStream content() {
-				return resource.content();
-			}
-		};
+	public ActivityFile downloadOperation(ElementOperationParameters params) {
+		return super.downloadOperation(params, singletonList(item));
 	}
 
 }

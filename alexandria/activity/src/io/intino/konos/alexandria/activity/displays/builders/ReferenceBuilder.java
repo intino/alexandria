@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.activity.displays.builders;
 
-import io.intino.konos.alexandria.activity.displays.ElementView;
+import io.intino.konos.alexandria.activity.displays.AlexandriaElementViewDefinition;
 import io.intino.konos.alexandria.activity.model.AbstractView;
 import io.intino.konos.alexandria.activity.model.Catalog;
 import io.intino.konos.alexandria.activity.model.Element;
@@ -36,7 +36,7 @@ public class ReferenceBuilder {
         return new Reference().name(element.name()).label(element.label());
     }
 
-    public static Reference build(ElementView view) {
+    public static Reference build(AlexandriaElementViewDefinition view) {
         return new Reference().name(view.name()).label(view.label()).referencePropertyList(singletonList(new ReferenceProperty().name("type").value(view.type())));
     }
 
@@ -44,7 +44,7 @@ public class ReferenceBuilder {
         return catalogList.stream().map(ReferenceBuilder::build).collect(toList());
     }
 
-    public static List<Reference> buildCatalogViewList(List<ElementView> viewList) {
+    public static List<Reference> buildCatalogViewList(List<AlexandriaElementViewDefinition> viewList) {
         return viewList.stream().map(ReferenceBuilder::build).collect(toList());
     }
 

@@ -16,6 +16,12 @@ AlexandriaTemporalTimeCatalogBehaviors.Requester = {
     },
     navigateMain : function() {
     	this.carry("navigateMain");
+    },
+    openView : function(value) {
+    	this.carry("openView", { "value" : value });
+    },
+    openItem : function(value) {
+    	this.carry("openItem", { "value" : value });
     }
 
 };

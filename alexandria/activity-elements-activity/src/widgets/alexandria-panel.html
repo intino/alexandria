@@ -215,6 +215,7 @@
             attached : function() {
                 this.translate(AlexandriaPanelDictionary);
                 this.listenToDisplay();
+                this.listenOpenEvents();
             },
 
             _refreshViewList : function(viewList) {
@@ -276,7 +277,7 @@
                 if (element == null) return;
                 if (this.lastView == name) return;
                 this.lastView = name;
-                this.selectView(element.view.name);
+                this._openView({ detail : element.view.name });
             }
 
         });
