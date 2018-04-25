@@ -11,8 +11,7 @@ def type(paths)
         <template>
             <app-location route="{{route}}"></app-location>
             <app-route route="{{route}}" pattern="/" data="{{showHomeRouteData}}"></app-route>
-
-            $path...[$NL]
+            $path+define...[$NL]
         </template>
 
         <style></style>
@@ -46,6 +45,15 @@ def type(paths)
                         $path+onChanged...[$NL]
                     }, 50);
                 },
+
+				_isRoute : function(path, match) {
+					return path.replace(match, "").indexOf("/") == -1;
+				},
+
+				_samePath : function(path) {
+					return path == this.route.path;
+				},
+
 				$path+function...[,$NL]
             });
         </script>
@@ -54,21 +62,25 @@ def type(paths)
 end
 
 def trigger(onChanged)
-	else if (path.indexOf("$path+subpath") != -1) this.route$request+FirstUpperCase(this.display, window.atob(path.replace("$path+subpath","")));
+	else if (this._isRoute(path, "$value+subpath")) this.route$request+FirstUpperCase(this.display, path.replace("$value+subpath",""));
 end
 
 def type(parameter) trigger(function)
 	 $request : function(value) {
-		this.set("route.path", "$path+subpath" + window.btoa(value));
+		var path = "$value+subpath" + value;
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, value);
+		this.set("route.path", path);
 	}
 end
 
 def trigger(function)
 	 $request : function() {
-		this.set("route.path", "$path+subpath");
+		var path = "$value+subpath";
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display);
+		this.set("route.path", path);
 	}
 end
 
-def trigger(path)
-	<app-route route="{{route}}" pattern="$path" data="{{$request~RouteData}}"></app-route>
+def type(path) trigger(define)
+	<app-route route="{{route}}" pattern="$value" data="{{$request~RouteData}}"></app-route>
 end

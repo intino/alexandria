@@ -15,7 +15,7 @@ Display alexandriaTabLayout
 	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
 
 	Notification info as Object(PlatformInfo)
-	Notification refreshSelected as Text
+	Notification refreshOpened as Text
 	Notification refreshItemList as List Object(Reference)
 	Notification user as Object(UserInfo)
 	Notification userLoggedOut as Text
@@ -23,14 +23,14 @@ Display alexandriaTabLayout
 	Notification(Client) loaded
 
 	Request logout
-	Request selectItem as Text
+	Request openItem as Text
 	Request showHome
 
 Display alexandriaMenuLayout
 	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
 
 	Notification info as Object(PlatformInfo)
-	Notification refreshSelected as Text
+	Notification refreshOpened as Text
 	Notification refreshItemList as List Object(Reference)
 	Notification user as Object(UserInfo)
 	Notification userLoggedOut as Text
@@ -38,7 +38,7 @@ Display alexandriaMenuLayout
 	Notification(Client) loaded
 
 	Request logout
-	Request selectItem as Text
+	Request openItem as Text
 	Request showHome
 
 Display alexandriaDialogBox

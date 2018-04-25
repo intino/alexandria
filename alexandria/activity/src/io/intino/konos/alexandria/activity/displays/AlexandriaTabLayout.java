@@ -25,8 +25,8 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	}
 
 	@Override
-	protected void refreshSelected(String label) {
-		notifier.refreshSelected(label);
+	protected void refreshOpened(String label) {
+		notifier.refreshOpened(label);
 	}
 
 	@Override
@@ -96,8 +96,8 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 		super.logout();
 	}
 
-	public void selectItem(String value) {
-		super.selectItem(value);
+	public void openItem(String value) {
+		super.openItem(value);
 	}
 
 	public void showHome() {

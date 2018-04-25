@@ -24,7 +24,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.alexandria.activity.helpers.ElementHelper.itemBuilderProvider;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -81,7 +80,7 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 	public void refreshSelection(List<String> items) {
 		AlexandriaElementViewDefinition definition = definition();
 		if (definition.onClickRecordEvent() == null && provider().expandedStamps(definition.mold()).size() > 0)
-			notifier.refreshSelection(selection().stream().allMatch(items::contains) ? emptyList() : items);
+			notifier.refreshSelection(items);
 		selection(items);
 	}
 
@@ -329,8 +328,8 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 		super.validateItem(params);
 	}
 
-	public void openItemCatalogOperation(OpenItemParameters value) {
-
+	public void openItemCatalogOperation(OpenItemParameters params) {
+		super.openItemCatalogOperation(params);
 	}
 
 }

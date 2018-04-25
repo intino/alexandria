@@ -17,17 +17,17 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         super(box);
     }
 
-    public <E extends AlexandriaElementDisplay> E openElement(String label) {
-        Element element = elementWithLabel(label);
-        Item target = targetWithLabel(label);
-        E display = displayWithLabel(label);
+    public <E extends AlexandriaElementDisplay> E openElement(String key) {
+        Element element = elementWithKey(key);
+        Item target = targetWithKey(key);
+        E display = displayWithKey(key);
 
-        if (label.equals(selected)) return display;
-        selected = label;
+        if (key.equals(selected)) return display;
+        selected = key;
 
         if (display != null) {
             display.clearFilter();
-            refreshSelected(label);
+            refreshOpened(key);
             return display;
         }
 
@@ -37,15 +37,15 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        display = addAndBuildDisplay(element, target, label);
+        display = addAndBuildDisplay(element, target, key);
         refreshLoaded();
-        refreshSelected(label);
+        refreshOpened(key);
 
         return display;
     }
 
     public <E extends AlexandriaElementDisplay> E createElement(Element element, Item target) {
-        E display = displayWithLabel(target.name());
+        E display = displayWithKey(target.name());
         if (display != null) return display;
         return buildDisplay(element, target, target.name());
     }
@@ -57,15 +57,15 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
     }
 
     @Override
-    public <E extends AlexandriaElementDisplay> E displayWithLabel(String label) {
-        return (E) displayMap.getOrDefault(label, null);
+    public <E extends AlexandriaElementDisplay> E displayWithKey(String key) {
+        return (E) displayMap.getOrDefault(key, null);
     }
 
-    protected abstract void refreshSelected(String label);
+    protected abstract void refreshOpened(String label);
     protected abstract void refreshLoading(boolean withMessage);
     protected abstract void refreshLoaded();
-    protected abstract Element elementWithLabel(String label);
-    protected abstract Item targetWithLabel(String label);
+    protected abstract Element elementWithKey(String key);
+    protected abstract Item targetWithKey(String label);
     protected abstract AlexandriaElementDisplay newDisplay(Element element, Item item);
 
     protected Class classFor(Element element) {

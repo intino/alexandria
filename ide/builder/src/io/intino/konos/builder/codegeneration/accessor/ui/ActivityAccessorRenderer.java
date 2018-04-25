@@ -156,7 +156,8 @@ public class ActivityAccessorRenderer {
 			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
 		final boolean prototype = isPrototype(display);
 		final String type = typeOf(display);
-		frame.addSlot("attached", new Frame(prototype ? "prototype" : "display").addSlot("widget", display.name$()).addSlot("type", type));
+		if (prototype) frame.addSlot("prototype", new Frame("prototype").addSlot("widget", display.name$()).addSlot("type", type));
+		if (!prototype) frame.addSlot("attached", new Frame("display").addSlot("widget", display.name$()).addSlot("type", type));
 		if (prototype) {
 			frame.addSlot("imports", new Frame().addSlot("type", type));
 			frame.addSlot("type", type);
@@ -185,13 +186,13 @@ public class ActivityAccessorRenderer {
 		final Frame frame = new Frame("paths").addSlot("name", display.name$());
 		for (Display.Request request : requests) frame.addSlot("path", pathFrame(request));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-paths.html");
-		if (!file.exists()) write(file.toPath(), customize(WidgetPathsTemplate.create()).format(frame));
+		write(file.toPath(), customize(WidgetPathsTemplate.create()).format(frame));
 	}
 
 	private Frame pathFrame(Display.Request r) {
 		final Frame frame = new Frame().addTypes("path").addSlot("request", r.name$());
 		if (r.isType()) frame.addTypes("parameter");
-		frame.addSlot("path", r.registerPath().page().paths().get(0));
+		frame.addSlot("value", r.registerPath().page().paths().get(0));
 		return frame;
 	}
 

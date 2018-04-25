@@ -7,5 +7,5 @@ public interface ElementDisplayManager {
 	<E extends AlexandriaElementDisplay> E openElement(String label);
 	<E extends AlexandriaElementDisplay> E createElement(Element element, Item target);
 	void removeElement(Item item);
-	<E extends AlexandriaElementDisplay> E displayWithLabel(String elementLabel);
+	<E extends AlexandriaElementDisplay> E displayWithKey(String elementLabel);
 }
