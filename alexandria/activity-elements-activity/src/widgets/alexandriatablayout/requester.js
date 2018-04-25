@@ -5,8 +5,8 @@ AlexandriaTabLayoutBehaviors.Requester = {
     logout : function() {
     	this.carry("logout");
     },
-    selectItem : function(value) {
-    	this.carry("selectItem", { "value" : value });
+    openItem : function(value) {
+    	this.carry("openItem", { "value" : value });
     },
     showHome : function() {
     	this.carry("showHome");

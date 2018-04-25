@@ -19,8 +19,8 @@
 
     <template>
         <cotton-layout id="layout" title="[[_title]]" subtitle="[[_subtitle]]" logo="[[_logo]]"
-                       tabs="[[_itemTabList]]" selected-tab="{{_selectedItemIndex}}"
-                       on-select-tab="_selectItemByIndex" on-logout="_logout" on-edit-profile="_editProfile"
+                       tabs="[[_itemTabList]]" selected-tab="{{_openedItemIndex}}"
+                       on-select-tab="_openItemByEvent" on-logout="_logout" on-edit-profile="_editProfile"
                        on-home="showHome">
 
             <div id="user-content">

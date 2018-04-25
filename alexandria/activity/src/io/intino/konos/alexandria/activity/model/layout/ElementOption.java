@@ -4,8 +4,18 @@ import io.intino.konos.alexandria.activity.model.layout.options.Group;
 import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 public class ElementOption {
+	private String name;
 	private Group owner;
 	private Hidden hidden = null;
+
+	public String name() {
+		return name;
+	}
+
+	public ElementOption name(String name) {
+		this.name = name;
+		return this;
+	}
 
 	public Group owner() {
 		return owner;

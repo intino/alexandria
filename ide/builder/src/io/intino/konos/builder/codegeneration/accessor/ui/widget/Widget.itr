@@ -21,7 +21,8 @@ def type(widget)
         	$path
         	$parent
             $innerDisplay...[$NL]
-            $attached+prototype
+            $attached
+            $prototype
         </template>
 
         <style>
@@ -48,7 +49,8 @@ def type(widget)
 
                 properties : {
                 },
-				$attached
+				$attached+js
+				$prototype+js
 
             });
         </script>
@@ -56,10 +58,11 @@ def type(widget)
 end
 
 def trigger(pathImport)
-	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-paths.html">
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-paths.html">
 end
+
 def trigger(path)
-	<$name+camelCaseToSnakeCase-paths></$name+camelCaseToSnakeCase-paths>
+	<$name+camelCaseToSnakeCase~-paths></$name+camelCaseToSnakeCase~-paths>
 end
 
 def trigger(imports)
@@ -67,11 +70,17 @@ def trigger(imports)
 	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
 end
 
-def type(prototype) trigger(prototype)
-	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
+def trigger(attached) trigger(js)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this.listenToDisplay();
+	}
 end
 
-def type(prototype) trigger(attached)
+def type(attached)
+end
+
+def type(prototype) trigger(js)
 	attached : function() {
 		this.translate($widget+firstuppercase~Dictionary);
 		this._linkWithAlexandriaElement();
@@ -81,19 +90,16 @@ def type(prototype) trigger(attached)
 	_linkWithAlexandriaElement : function() {
 		var element = this.querySelector("alexandria-$type+camelCaseToSnakeCase");
 		element.display = this.display;
-		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
-		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
 		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.Requester);
 		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.NotifierListener);
+		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
+		for (var i in $widget+firstuppercase~Behaviors.Requester) element$[i] = $widget+firstuppercase~Behaviors.Requester$[i];
 		element.listenToDisplay();
 	}
 end
 
-def trigger(attached)
-	attached : function() {
-		this.translate($widget+firstuppercase~Dictionary);
-		this.listenToDisplay();
-	}
+def type(prototype)
+	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
 end
 
 def trigger(import)

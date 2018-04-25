@@ -48,7 +48,10 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		if (value == null || value.isEmpty()) return null;
 
 		try {
-			return new String(Base64.getDecoder().decode(value));
+			if (value.matches("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$"))
+				return new String(Base64.getDecoder().decode(value));
+			else
+				return value;
 		}
 		catch (IllegalArgumentException ex) {
 			return value;

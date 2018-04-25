@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static io.intino.konos.alexandria.activity.Asset.toResource;
 import static io.intino.konos.alexandria.activity.utils.AvatarUtil.generateAvatar;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -93,14 +92,14 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	@Override
-	protected Element elementWithLabel(String label) {
-		Item item = itemWithLabel(label);
+	protected Element elementWithKey(String key) {
+		Item item = itemWithKey(key);
 		return item != null ? item.element() : null;
 	}
 
 	@Override
-	protected io.intino.konos.alexandria.activity.model.Item targetWithLabel(String label) {
-		Item item = itemWithLabel(label);
+	protected io.intino.konos.alexandria.activity.model.Item targetWithKey(String key) {
+		Item item = itemWithKey(key);
 		return item != null ? item.target() : null;
 	}
 
@@ -109,11 +108,11 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return element().displayFor(element, item);
 	}
 
-	protected Item itemWithLabel(String label) {
-		return items.stream().filter(i -> i.label().equals(label)).findFirst().orElse(null);
+	protected Item itemWithKey(String key) {
+		return items.stream().filter(i -> key.equals(i.name()) || key.equals(i.label())).findFirst().orElse(null);
 	}
 
-	public void selectItem(String label) {
+	public void openItem(String label) {
 		openElement(label);
 	}
 
@@ -130,7 +129,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 
 	protected abstract void sendLoaded();
 
-	protected abstract void refreshSelected(String value);
+	protected abstract void refreshOpened(String value);
 
 	protected abstract void sendInfo(PlatformInfo value);
 
@@ -239,6 +238,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return new Item() {
 			@Override
 			public String name() {
+				if (render.option() != null) return render.option().name();
 				return target != null ? target.name() : element.name();
 			}
 

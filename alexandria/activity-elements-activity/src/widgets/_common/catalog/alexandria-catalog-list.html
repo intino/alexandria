@@ -319,7 +319,6 @@
             attached: function () {
                 this.translate(AlexandriaCatalogListDictionary);
                 this._groupMap = {};
-                this._resized = false;
                 window.setTimeout(() => this._refreshListSelectionEnabled(false), 100);
             },
 
@@ -426,12 +425,9 @@
                 var listElement = this.querySelector("cotton-list");
                 if (listElement != null) listElement.pageLoaded();
 
-                if (!this._resized) {
-                    window.setTimeout(() => {
-                        this.$.items.fire("iron-resize");
-                    this._resized = true;
+                window.setTimeout(() => {
+                    this.$.items.fire("iron-resize");
                 }, 50);
-                }
             },
 
             _generateGroups : function(itemList) {
@@ -616,6 +612,7 @@
             _openItem : function(e) {
                 if (this._selectionEnabled) return;
                 var target = e.target;
+                if (target == null) return;
                 var name = target.getAttribute("name");
                 if (!$(target).hasClass(".container.item")) name = $(target).parents(".container.item")[0].getAttribute("name");
                 this.fire("open-item", name);

@@ -110,12 +110,12 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 		notifier.refreshItem(item);
 	}
 
-	public void openItemDialogOperation(OpenItemParameters value) {
-
+	public void openItemDialogOperation(OpenItemParameters params) {
+		super.openItemDialogOperation(params);
 	}
 
-	public void executeItemTaskOperation(ExecuteItemTaskParameters value) {
-
+	public void executeItemTaskOperation(ExecuteItemTaskParameters params) {
+		super.executeItemTaskOperation(params);
 	}
 
 }

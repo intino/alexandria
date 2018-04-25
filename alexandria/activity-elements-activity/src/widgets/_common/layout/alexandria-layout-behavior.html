@@ -19,8 +19,8 @@
         properties : {
             _itemList: { type: Array, observer: '_itemsLoaded' },
             _itemTabList: Array,
-            _selectedItem : { type: String, observer: '_selectItemByLabel' },
-            _selectedItemIndex: Number,
+            _openedItem : { type: String, observer: '_openItemByLabel' },
+            _openedItemIndex: Number,
             _title : String,
             _subtitle : String,
             _logo : String,
@@ -53,43 +53,72 @@
             return null;
         },
 
-        _selectItemByLabel : function(label) {
-            if (this._refreshingSelected) return;
-            this._selectItemDelayed(label);
+        _openItemByLabel : function(label) {
+            if (this._refreshingOpened) return;
+            var name = this._nameFromKey(label);
+            if (name == null) return;
+            this._openItemDelayed(name);
         },
 
-        _selectItemByIndex : function(event) {
-            if (this._refreshingSelected) return;
+        _openItemByName : function(name) {
+            if (this._refreshingOpened) return;
+            this._openItemDelayed(name);
+        },
+
+        _openItemByEvent : function(event) {
+            if (this._refreshingOpened) return;
             if (this._itemList == null) return;
-            this._selectItemDelayed(event.detail);
+            var name = this._nameFromKey(event.detail);
+            this._openItemDelayed(name);
         },
 
-        _selectItemDelayed : function(label) {
-            if (this._selectItemTimeout != null) window.clearTimeout(this._selectItemTimeout);
-            this._selectItemTimeout = window.setTimeout(() => {
-                if (label == "noItems") return;
-            if (this._selectedItemIndex == this._indexOf(label)) return;
-            this.selectItem(label);
-        }, 100);
+        _openItemDelayed : function(name) {
+            if (this._openItemTimeout != null) window.clearTimeout(this._openItemTimeout);
+            this._openItemTimeout = window.setTimeout(() => {
+                if (name == "noItems") return;
+                if (this._openedItemIndex == this._indexOf(name)) return;
+                this.openItem(name);
+            }, 100);
         },
 
-        _refreshSelected : function(selected) {
-            if (this._selectedItem == selected) return;
-            this._refreshingSelected = true;
-            this._selectedItem = selected;
-            this._selectedItemIndex = this._indexOf(selected);
-            this._saveDefaultItem(selected);
-            this._refreshingSelected = false;
+        _refreshOpened : function(opened) {
+            var label = this._labelFromKey(opened);
+            if (this._openedItem == label) return;
+            this._refreshingOpened = true;
+            this._openedItem = label;
+            this._openedItemIndex = this._indexOf(opened);
+            this._saveDefaultItem(opened);
+            this._refreshingOpened = false;
         },
 
-        _indexOf : function(label) {
+        _indexOf : function(key) {
             var index = -1;
             for(var i=0; i<this._itemList.length; i++) {
                 var item = this._itemList[i];
-                if (item.label === label)
+                if (item.label === key || item.name === key)
                     index = i;
             }
             return index;
+        },
+
+        _labelFromKey : function(key) {
+            var label = this._labelFromIndex(this._indexOf(key));
+            return label != null ? label : key;
+        },
+
+        _nameFromKey : function(key) {
+            var name = this._nameFromIndex(this._indexOf(key));
+            return name != null ? name : key;
+        },
+
+        _nameFromIndex : function(index) {
+            var item = this._itemList[index];
+            return item != null ? item.name : null;
+        },
+
+        _labelFromIndex : function(index) {
+            var item = this._itemList[index];
+            return item != null ? item.label : null;
         },
 
         _arrayOf : function(itemList) {
@@ -125,19 +154,19 @@
 
         _loadDefaultItem : function(itemList) {
             try {
-                var label = Cookies.get("alexandria-layout");
-                label = label != null && label !== "" ? label : (itemList.length > 0 ? itemList[0].label : null);
-                if (this._indexOf(label) == -1) label = (itemList.length > 0 ? itemList[0].label : null);
-                this._selectItemByLabel(label);
+                var name = Cookies.get("alexandria-layout");
+                name = name != null && name !== "" ? name : (itemList.length > 0 ? itemList[0].name : null);
+                if (this._indexOf(name) == -1) name = (itemList.length > 0 ? itemList[0].name : null);
+                this._openItemByName(name);
             }
             catch(e) {
-                return itemList.length > 0 ? itemList[0].label : null;
+                return itemList.length > 0 ? itemList[0].name : null;
             }
         },
 
-        _saveDefaultItem : function(label) {
+        _saveDefaultItem : function(name) {
             try {
-                Cookies.set("alexandria-layout", label, 30);
+                Cookies.set("alexandria-layout", name, 30);
             }
             catch (exception) {
             }

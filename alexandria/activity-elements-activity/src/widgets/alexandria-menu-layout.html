@@ -29,7 +29,7 @@
             </div>
 
             <div class="layout horizontal item" name="home">
-                <paper-menu selected="{{_selectedItem}}" attr-for-selected="name">
+                <paper-menu selected="{{_openedItem}}" attr-for-selected="name">
                     <template is="dom-repeat" items="[[_groupList]]" as="group">
                         <template is="dom-if" if="{{_singleGroup(group)}}">
                             <template is="dom-repeat" items="{{group.list}}" as="item">
@@ -39,7 +39,7 @@
                         <template is="dom-if" if="{{!_singleGroup(group)}}">
                             <paper-submenu opened$="[[group.opened]]">
                                 <paper-item class="menu-trigger">[[group.label]]</paper-item>
-                                <paper-menu class="menu-content" selected="{{_selectedItem}}" attr-for-selected="name">
+                                <paper-menu class="menu-content" selected="{{_openedItem}}" attr-for-selected="name">
                                     <template is="dom-repeat" items="{{group.list}}" as="item">
                                         <paper-item name$="[[item.label]]">[[item.label]]</paper-item>
                                     </template>
@@ -159,16 +159,16 @@
                 this._layoutTabList = ["home"];
             },
 
-            _selectItemByLabel : function(label) {
+            _openItemByLabel : function(label) {
                 if (this._itemList == null || this._itemList.length <= 0) return;
                 if (label == null) return;
                 if (label == 0) label = this._itemList[0].label;
-                window.setTimeout(() => this.selectItem(label), 100);
+                window.setTimeout(() => this.openItem(this._nameFromLabel(label)), 100);
             },
 
-            _refreshSelected : function(selected) {
-                this._selectedItem = selected;
-                this.$.pages.selected = selected;
+            _refreshOpened : function(opened) {
+                this._openedItem = opened;
+                this.$.pages.selected = opened;
             },
 
             _itemsLoaded : function() {

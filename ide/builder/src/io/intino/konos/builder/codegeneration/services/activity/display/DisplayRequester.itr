@@ -42,7 +42,10 @@ def type(request & asset) trigger(request)
 end
 
 def type(request) trigger(request)
-	if (operation.equals("$name")) display.$name($parameter);
+	if (operation.equals("$name")) {
+		display.$name($parameter);
+		return;
+	}
 end
 
 def type(list) trigger(parameter)
