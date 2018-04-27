@@ -13,7 +13,9 @@ Concept:Named Display extends Component
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty
-		Concept:{0..1} RegisterPath > var Activity.Page page
+		Concept:{0..1} RegisterRoute
+			var Activity.Page page
+			var boolean encoded = false
 		has Exception
 	Concept Notification extends Data
 		var word:{All Client Display} to = Display

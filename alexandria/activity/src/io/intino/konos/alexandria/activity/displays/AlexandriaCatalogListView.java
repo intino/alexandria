@@ -1,7 +1,10 @@
 package io.intino.konos.alexandria.activity.displays;
 
 import io.intino.konos.alexandria.Box;
-import io.intino.konos.alexandria.activity.displays.builders.*;
+import io.intino.konos.alexandria.activity.displays.builders.CatalogSortingBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.ElementViewBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.ItemBuilder;
+import io.intino.konos.alexandria.activity.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.konos.alexandria.activity.displays.notifiers.AlexandriaCatalogListViewNotifier;
 import io.intino.konos.alexandria.activity.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.activity.displays.providers.ElementViewDisplayProvider;
@@ -11,15 +14,9 @@ import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedCatalog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.activity.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.activity.model.mold.stamps.Picture;
 import io.intino.konos.alexandria.activity.schemas.*;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
-import io.intino.konos.alexandria.activity.utils.StreamUtil;
-import spark.utils.IOUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -84,6 +81,11 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 		selection(items);
 	}
 
+	@Override
+	protected void refreshPicture(PictureData data) {
+		notifier.refreshPicture(data);
+	}
+
 	public void openElement(OpenElementParameters params) {
 		super.openElement(params);
 	}
@@ -115,36 +117,6 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 			dialog.refresh();
 		});
 		recordDialogsMap.put(item, new ArrayList<>(dialogs.values()));
-	}
-
-	private void renderExpandedPictures(String item) {
-		refreshPictures(item, expandedPictures(item));
-	}
-
-	private void refreshPictures(String item) {
-		refreshPictures(item, allPictures(item));
-	}
-
-	private void refreshPictures(String itemId, List<Picture> pictures) {
-		Item item = itemOf(itemId);
-		pictures.forEach(stamp -> {
-			InputStream stream = null;
-			try {
-				String name = stamp.name();
-				Object data = stamp.value(item, session());
-				if ((! (data instanceof List)) || ((List) data).size() != 1) return;
-				List<URL> values = (List<URL>)data;
-				stream = values.get(0).openStream();
-				byte[] pictureBytes = IOUtils.toByteArray(stream);
-				byte[] picture = Base64.getEncoder().encode(pictureBytes);
-				notifier.refreshPicture(PictureDataBuilder.build(item, name, "data:image/png;base64," + new String(picture)));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			finally {
-				StreamUtil.close(stream);
-			}
-		});
 	}
 
 	public void createClusterGroup(ClusterGroup value) {
@@ -255,18 +227,6 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 		List<Stamp> stamps = provider().stamps(definition().mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
 		Map<EmbeddedDialog, AlexandriaDialog> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDialog)s, s -> ((EmbeddedDialog)s).createDialog(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
-	}
-
-	private List<Picture> expandedPictures(String record) {
-		return provider().expandedStamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
-				.map(s -> (Picture)s)
-				.collect(toList());
-	}
-
-	private List<Picture> allPictures(String record) {
-		return provider().stamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
-				.map(s -> (Picture)s)
-				.collect(toList());
 	}
 
 	private ElementViewDisplayProvider.Sorting sortingOf(io.intino.konos.alexandria.activity.schemas.Sorting sorting) {

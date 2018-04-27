@@ -33,6 +33,7 @@ public class AlexandriaPanelCustomView extends AlexandriaPanelView<AlexandriaPan
 	private void createItemDisplay() {
 		AlexandriaElementViewDefinition view = definition();
 		AlexandriaItem display = new AlexandriaItem(box);
+		display.route(routeSubPath());
 		display.mold(view.mold());
 		display.context(context());
 		display.item(target());

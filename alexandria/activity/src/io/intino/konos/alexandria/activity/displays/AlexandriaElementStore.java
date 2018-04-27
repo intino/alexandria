@@ -17,17 +17,17 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         super(box);
     }
 
-    public <E extends AlexandriaElementDisplay> E openElement(String key) {
-        Element element = elementWithKey(key);
-        Item target = targetWithKey(key);
-        E display = displayWithKey(key);
+    public <E extends AlexandriaElementDisplay> E openElement(String label) {
+        Element element = elementWithKey(label);
+        Item target = targetWithKey(label);
+        E display = displayWithKey(label);
 
-        if (key.equals(selected)) return display;
-        selected = key;
+        if (label.equals(selected)) return display;
+        selected = label;
 
         if (display != null) {
             display.clearFilter();
-            refreshOpened(key);
+            refreshOpened(label);
             return display;
         }
 
@@ -37,9 +37,9 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        display = addAndBuildDisplay(element, target, key);
+        display = addAndBuildDisplay(element, target, label);
         refreshLoaded();
-        refreshOpened(key);
+        refreshOpened(label);
 
         return display;
     }
@@ -92,9 +92,9 @@ public abstract class AlexandriaElementStore<DN extends AlexandriaDisplayNotifie
     }
 
     private <E extends AlexandriaElementDisplay> E buildDisplayFor(Element element, Item target, String label) {
-        Class clazz = classFor(element);
-
         AlexandriaElementDisplay display = newDisplay(element, target);
+
+        display.route(routeSubPath());
         display.label(label);
         display.element(element);
         display.target(target);

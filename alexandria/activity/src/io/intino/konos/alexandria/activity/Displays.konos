@@ -17,14 +17,15 @@ Display alexandriaTabLayout
 	Notification info as Object(PlatformInfo)
 	Notification refreshOpened as Text
 	Notification refreshItemList as List Object(Reference)
+	Notification openDefaultItem as Text
 	Notification user as Object(UserInfo)
 	Notification userLoggedOut as Text
 	Notification(Client) loading
 	Notification(Client) loaded
 
-	Request logout
+	Request home
 	Request openItem as Text
-	Request showHome
+	Request logout
 
 Display alexandriaMenuLayout
 	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
@@ -32,14 +33,15 @@ Display alexandriaMenuLayout
 	Notification info as Object(PlatformInfo)
 	Notification refreshOpened as Text
 	Notification refreshItemList as List Object(Reference)
+	Notification openDefaultItem as Text
 	Notification user as Object(UserInfo)
 	Notification userLoggedOut as Text
 	Notification(Client) loading
 	Notification(Client) loaded
 
-	Request logout
+	Request home
 	Request openItem as Text
-	Request showHome
+	Request logout
 
 Display alexandriaDialogBox
 	displays = empty

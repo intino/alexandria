@@ -18,6 +18,9 @@ AlexandriaMenuLayoutBehaviors.NotifierListener = {
         this.when("refreshItemList").toSelf().execute(function(parameters) {
         	widget._refreshItemList(parameters.value);
         });
+        this.when("openDefaultItem").toSelf().execute(function(parameters) {
+        	widget._openDefaultItem(parameters.value);
+        });
         this.when("user").toSelf().execute(function(parameters) {
         	widget._user(parameters.value);
         });

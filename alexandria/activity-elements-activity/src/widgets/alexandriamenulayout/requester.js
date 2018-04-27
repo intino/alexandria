@@ -2,14 +2,14 @@ var AlexandriaMenuLayoutBehaviors = AlexandriaMenuLayoutBehaviors || {};
 
 AlexandriaMenuLayoutBehaviors.Requester = {
 
-    logout : function() {
-    	this.carry("logout");
+    home : function() {
+    	this.carry("home");
     },
     openItem : function(value) {
     	this.carry("openItem", { "value" : value });
     },
-    showHome : function() {
-    	this.carry("showHome");
+    logout : function() {
+    	this.carry("logout");
     }
 
 };

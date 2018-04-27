@@ -127,19 +127,22 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		createDialogContainer();
 		sendViewList();
 		buildFixedViews();
-		selectFirstTabView();
+		selectDefaultView();
 	}
 
-	private void selectFirstTabView() {
-		ActivitySession session = session();
+	private void selectDefaultView() {
+		String path = routePath();
+		AbstractView view = (path != null && viewOf(path) != null) ? viewOf(path) : findFirstTabView();
+		if (view == null) return;
+		openView(view.name());
+	}
 
-		for (AbstractView view : views()) {
-			View panelView = (View) view;
-			if (panelView.layout() == Tab && !panelView.hidden(target(), session)) {
-				openView(view.name());
-				break;
-			}
-		}
+	private AbstractView findFirstTabView() {
+		ActivitySession session = session();
+		return views().stream().filter(v -> {
+			View panelView = (View) v;
+			return panelView.layout() == Tab && !panelView.hidden(target(), session);
+		}).findFirst().orElse(null);
 	}
 
 	private void sendViewList() {
@@ -177,20 +180,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		}).forEach(v -> buildView(v.name()).refresh());
 	}
 
-	public AlexandriaPanelView openView(String key) {
-		AbstractView view = viewOf(key);
-		if (view == null) return null;
-		AlexandriaPanelView viewDisplay = buildView(view.name());
-		viewDisplay.refresh();
-		updateCurrentView(viewDisplay);
-		notifier.refreshSelectedView(view.name());
-		return viewDisplay;
-	}
-
-	public void openItem(String item) {
-		super.openItem(item);
-	}
-
 	private AlexandriaPanelView buildView(String name) {
 		if (viewDisplayMap.containsKey(name))
 			return viewDisplayMap.get(name);
@@ -210,6 +199,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		View panelView = (View) view;
 		ElementRender render = panelView.render();
 		AlexandriaPanelView display = displayBuilders.get(render.getClass()).apply(render);
+		display.route(routeSubPath());
 		display.provider(this);
 		display.definition(panelViewOf(panelView));
 		display.context(element());
@@ -226,10 +216,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private String viewId(AbstractView view) {
 		return String.format(ViewId, id(), view.name());
-	}
-
-	public void navigate(String key) {
-		super.navigate(key);
 	}
 
 	protected AlexandriaElementViewDefinition<Panel> panelViewOf(View view) {
@@ -316,6 +302,24 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 				return null;
 			}
 		};
+	}
+
+	public void home() {
+		super.home();
+	}
+
+	public void openItem(String item) {
+		super.openItem(item);
+	}
+
+	public AlexandriaPanelView openView(String key) {
+		AbstractView view = viewOf(key);
+		if (view == null) return null;
+		AlexandriaPanelView viewDisplay = buildView(view.name());
+		viewDisplay.refresh();
+		updateCurrentView(viewDisplay);
+		notifier.refreshSelectedView(view.name());
+		return viewDisplay;
 	}
 
 }

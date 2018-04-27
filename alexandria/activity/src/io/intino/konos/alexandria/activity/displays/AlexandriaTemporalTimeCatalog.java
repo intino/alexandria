@@ -120,14 +120,6 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 		super.timezoneOffset(value);
 	}
 
-	public void navigate(String value) {
-		super.navigate(value);
-	}
-
-	public void navigateMain() {
-		super.navigateMain();
-	}
-
 	@Override
 	public <N extends AlexandriaNavigator> void configureTemporalNavigator(N navigator) {
 		TimeScaleHandler timeScaleHandler = timeScaleHandler();
@@ -135,11 +127,15 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 		configureNavigatorDisplay((AlexandriaTimeNavigator) navigator, timeScaleHandler);
 	}
 
-	public void openView(String name) {
-		super.openView(name);
+	public void home() {
+		super.home();
 	}
 
 	public void openItem(String item) {
 		super.openItem(item);
+	}
+
+	public void openView(String name) {
+		super.openView(name);
 	}
 }

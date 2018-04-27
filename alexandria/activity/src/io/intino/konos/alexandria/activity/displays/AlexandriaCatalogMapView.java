@@ -35,6 +35,11 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 	}
 
 	@Override
+	protected void refreshPicture(PictureData data) {
+		notifier.refreshPicture(data);
+	}
+
+	@Override
 	public int countItems() {
 		return provider().countItems(null);
 	}
@@ -108,6 +113,7 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 		io.intino.konos.alexandria.activity.model.Item modelItem = provider().item(decodedId);
 		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), definition()), provider().baseAssetUrl());
 		notifier.refreshItem(item);
+		renderExpandedPictures(id);
 	}
 
 	public void openItemDialogOperation(OpenItemParameters params) {

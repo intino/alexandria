@@ -93,9 +93,16 @@
             },
 
             refreshItemValidation : function(message, stamp, item) {
-                var element = item != null ? this.querySelector("alexandria-catalog-map-item[name=\"_item_" + item + "\"]") : this;
+                var element = item != null ? this.querySelector("alexandria-catalog-map-item[name='" + item + "']") : this;
                 var stamp = element.querySelector("." + stamp);
                 stamp.refreshValidation(message);
+            },
+
+            refreshItemPicture : function(pictureData) {
+                var itemName = pictureData.item;
+                var item = itemName != null ? this.querySelector("alexandria-catalog-map-item[name='" + itemName + "']") : this;
+                if (item == null) return;
+                item.refreshPicture(pictureData);
             },
 
             closeInfoWindows : function() {

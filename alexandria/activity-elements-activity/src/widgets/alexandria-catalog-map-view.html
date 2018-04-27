@@ -85,6 +85,10 @@
                 this.querySelector("alexandria-catalog-map").refreshItemValidation(info.message, info.stamp, info.item);
             },
 
+            _refreshPicture : function(pictureData) {
+                this.querySelector("alexandria-catalog-map").refreshItemPicture(pictureData);
+            },
+
             _refreshCount : function(count) {
                 this._countItemList = count;
             },

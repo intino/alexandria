@@ -10,7 +10,7 @@ def type(widget)
 	]
 	[$imports
 	][
-	$path+pathImport
+	$routes+routesImport
 	]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
@@ -18,7 +18,7 @@ def type(widget)
     <dom-module id="$name+camelCaseToSnakeCase">
 
         <template>
-        	$path
+        	$routes
         	$parent
             $innerDisplay...[$NL]
             $attached
@@ -57,12 +57,12 @@ def type(widget)
     </dom-module>
 end
 
-def trigger(pathImport)
-	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-paths.html">
+def trigger(routesImport)
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-routes.html">
 end
 
-def trigger(path)
-	<$name+camelCaseToSnakeCase~-paths></$name+camelCaseToSnakeCase~-paths>
+def trigger(routes)
+	<$name+camelCaseToSnakeCase~-routes></$name+camelCaseToSnakeCase~-routes>
 end
 
 def trigger(imports)

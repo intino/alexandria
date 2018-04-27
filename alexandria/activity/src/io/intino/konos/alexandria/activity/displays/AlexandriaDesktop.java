@@ -23,6 +23,7 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 	protected void init() {
 		super.init();
 		AlexandriaLayout display = element().layoutDisplay();
+		display.route(route());
 		display.onLoading((withMessage) -> refreshLoading((Boolean) withMessage));
 		display.onLoaded((value) -> refreshLoaded());
 		display.settings(new Settings() {
