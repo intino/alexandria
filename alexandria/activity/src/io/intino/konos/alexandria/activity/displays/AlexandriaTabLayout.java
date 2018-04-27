@@ -26,7 +26,7 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 
 	@Override
 	protected void refreshOpened(String label) {
-		notifier.refreshOpened(label);
+		notifier.refreshOpened(itemWithKey(label).name());
 	}
 
 	@Override
@@ -42,6 +42,11 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	@Override
 	protected void sendUser(UserInfo userInfo) {
 		notifier.user(userInfo);
+	}
+
+	@Override
+	protected void openDefaultItem(String item) {
+		notifier.openDefaultItem(item);
 	}
 
 	@Override
@@ -92,15 +97,15 @@ public class AlexandriaTabLayout<DN extends AlexandriaTabLayoutNotifier> extends
 	protected void hidePanel() {
 	}
 
-	public void logout() {
-		super.logout();
+	public void home() {
+		super.home();
 	}
 
 	public void openItem(String value) {
 		super.openItem(value);
 	}
 
-	public void showHome() {
-		super.showHome();
+	public void logout() {
+		super.logout();
 	}
 }

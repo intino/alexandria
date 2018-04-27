@@ -33,6 +33,9 @@ AlexandriaCatalogMapViewBehaviors.NotifierListener = {
         this.when("refreshSelection").toSelf().execute(function(parameters) {
         	widget._refreshSelection(parameters.value);
         });
+        this.when("refreshPicture").toSelf().execute(function(parameters) {
+        	widget._refreshPicture(parameters.value);
+        });
         this._listeningToDisplay = true;
     }
 };

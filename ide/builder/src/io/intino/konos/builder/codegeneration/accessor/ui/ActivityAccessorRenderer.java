@@ -162,10 +162,10 @@ public class ActivityAccessorRenderer {
 			frame.addSlot("imports", new Frame().addSlot("type", type));
 			frame.addSlot("type", type);
 		}
-		final List<Display.Request> requests = display.requestList().stream().filter(r -> r.registerPath() != null).collect(Collectors.toList());
+		final List<Display.Request> requests = display.requestList().stream().filter(r -> r.registerRoute() != null).collect(Collectors.toList());
 		if (!requests.isEmpty()) {
-			frame.addSlot("path", new Frame("path").addSlot("name", display.name$()));
-			writeWidgetPaths(display, requests);
+			frame.addSlot("routes", new Frame("routes").addSlot("name", display.name$()));
+			writeWidgetRoutes(display, requests);
 		}
 		writeWidget(display, frame);
 	}
@@ -182,17 +182,27 @@ public class ActivityAccessorRenderer {
 		return display.a$(Layout.class).mode().name() + "-layout";
 	}
 
-	private void writeWidgetPaths(Display display, List<Display.Request> requests) {
-		final Frame frame = new Frame("paths").addSlot("name", display.name$());
-		for (Display.Request request : requests) frame.addSlot("path", pathFrame(request));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-paths.html");
-		write(file.toPath(), customize(WidgetPathsTemplate.create()).format(frame));
+	private void writeWidgetRoutes(Display display, List<Display.Request> requests) {
+		final Frame frame = new Frame("routes").addSlot("name", display.name$());
+		for (Display.Request request : requests) frame.addSlot("route", routeFrame(request));
+		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-routes.html");
+		write(file.toPath(), customize(WidgetRoutesTemplate.create()).format(frame));
 	}
 
-	private Frame pathFrame(Display.Request r) {
-		final Frame frame = new Frame().addTypes("path").addSlot("request", r.name$());
+	private Frame routeFrame(Display.Request r) {
+		final Frame frame = new Frame().addTypes("route").addSlot("request", r.name$());
 		if (r.isType()) frame.addTypes("parameter");
-		frame.addSlot("value", r.registerPath().page().paths().get(0));
+		Display.Request.RegisterRoute registerRoute = r.registerRoute();
+		frame.addSlot("routePath", routePathFrame(r));
+		frame.addSlot("value", registerRoute.page().paths().get(0));
+		return frame;
+	}
+
+	private Frame routePathFrame(Display.Request r) {
+		Frame frame = new Frame("routePath");
+		Display.Request.RegisterRoute registerRoute = r.registerRoute();
+		if (registerRoute.encoded()) frame.addTypes("encoded");
+		frame.addSlot("value", registerRoute.page().paths().get(0));
 		return frame;
 	}
 
@@ -235,7 +245,7 @@ public class ActivityAccessorRenderer {
 	private Frame frameOf(Display.Request r) {
 		final Frame frame = new Frame().addTypes("request").addSlot("name", r.name$()).addSlot("widget", r.core$().owner().name());
 		if (r.isType()) frame.addTypes("parameter");
-		if (r.registerPath() != null) frame.addTypes("registerPath");
+		if (r.registerRoute() != null) frame.addTypes("registerRoute");
 		frame.addSlot("method", r.responseType().name());
 		return frame;
 	}

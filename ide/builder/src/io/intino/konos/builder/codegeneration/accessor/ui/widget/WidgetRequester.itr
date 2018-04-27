@@ -9,27 +9,27 @@ def type(widget)
 end
 
 
-def type(parameter & registerPath) trigger(request)
+def type(parameter & registerRoute) trigger(request)
 	route$name+firstUpperCase : function (fromDisplay, value) {
 		if (this.display == null || fromDisplay == null || fromDisplay.id != this.display.id) return;
 		this.carry("$name", { "value" : value });
 	},
 	$name : function (value) {
-		var pathsElement = this.querySelector("$widget+camelCaseToSnakeCase~-paths");
-		if (pathsElement == null) pathsElement = this.parentElement.querySelector("$widget+camelCaseToSnakeCase~-paths")
+		var pathsElement = this.querySelector("$widget+camelCaseToSnakeCase~-routes");
+		if (pathsElement == null) pathsElement = this.parentElement.querySelector("$widget+camelCaseToSnakeCase~-routes")
 		pathsElement.$name(value);
 	}
 end
 
 
-def type(registerPath) !type(parameter) trigger(request)
+def type(registerRoute) !type(parameter) trigger(request)
 	route$name+firstUpperCase : function (fromDisplay) {
 		if (this.display == null || fromDisplay == null || fromDisplay.id != this.display.id) return;
 		this.carry("$name");
 	},
 	$name : function () {
-		var pathsElement = this.querySelector("$widget+camelCaseToSnakeCase~-paths");
-		if (pathsElement == null) pathsElement = this.parentElement.querySelector("$widget+camelCaseToSnakeCase~-paths")
+		var pathsElement = this.querySelector("$widget+camelCaseToSnakeCase~-routes");
+		if (pathsElement == null) pathsElement = this.parentElement.querySelector("$widget+camelCaseToSnakeCase~-routes")
 		pathsElement.$name(value);
 	}
 end

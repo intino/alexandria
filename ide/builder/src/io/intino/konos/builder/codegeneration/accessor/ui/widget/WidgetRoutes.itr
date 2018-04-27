@@ -1,4 +1,4 @@
-def type(paths)
+def type(routes)
 	<link rel="import" href="../../../lib/polymer/polymer.html">
     <link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
     <link rel="import" href="../../../lib/app-route/app-route.html">
@@ -6,12 +6,12 @@ def type(paths)
 
     <script src="requester.js"></script>
 
-    <dom-module id="$name+camelCaseToSnakeCase~-paths">
+    <dom-module id="$name+camelCaseToSnakeCase~-routes">
 
         <template>
             <app-location route="{{route}}"></app-location>
             <app-route route="{{route}}" pattern="/" data="{{showHomeRouteData}}"></app-route>
-            $path+define...[$NL]
+            $route+define...[$NL]
         </template>
 
         <style></style>
@@ -19,7 +19,7 @@ def type(paths)
         <script>
 
             Polymer({
-                is: '$name+camelCaseToSnakeCase~-paths',
+                is: '$name+camelCaseToSnakeCase~-routes',
 
                 behaviors: $[ CottonBehaviors.CarrierBehavior, $name+firstuppercase~Behaviors.Requester $],
 
@@ -42,7 +42,7 @@ def type(paths)
 
                     this.timeout = window.setTimeout(() => {
                         if (path == "/") this.routeShowHome(this.display);
-                        $path+onChanged...[$NL]
+                        $route+onChanged...[$NL]
                     }, 50);
                 },
 
@@ -54,7 +54,7 @@ def type(paths)
 					return path == this.route.path;
 				},
 
-				$path+function...[,$NL]
+				$route+function...[,$NL]
             });
         </script>
 
@@ -62,13 +62,13 @@ def type(paths)
 end
 
 def trigger(onChanged)
-	else if (this._isRoute(path, "$value+subpath")) this.route$request+FirstUpperCase(this.display, path.replace("$value+subpath",""));
+	else if (this._isRoute(path, "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
 end
 
 def type(parameter) trigger(function)
 	 $request : function(value) {
-		var path = "$value+subpath" + value;
-		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, value);
+		var path = $routePath+register;
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, path);
 		this.set("route.path", path);
 	}
 end
@@ -81,6 +81,22 @@ def trigger(function)
 	}
 end
 
-def type(path) trigger(define)
+def type(route) trigger(define)
 	<app-route route="{{route}}" pattern="$value" data="{{$request~RouteData}}"></app-route>
+end
+
+def type(routePath & encoded) trigger(call)
+	window.atob(path.replace("$value+subpath~enc:",""))
+end
+
+def type(routePath & encoded) trigger(register)
+	"$value+subpath" + "enc:" + window.btoa(value)
+end
+
+def type(routePath) trigger(call)
+	path.replace("$value+subpath","")
+end
+
+def type(routePath) trigger(register)
+	"$value+subpath" + value
 end

@@ -425,9 +425,7 @@
                 var listElement = this.querySelector("cotton-list");
                 if (listElement != null) listElement.pageLoaded();
 
-                window.setTimeout(() => {
-                    this.$.items.fire("iron-resize");
-                }, 50);
+//                window.setTimeout(() => this.$.items.fire("iron-resize"), 50);
             },
 
             _generateGroups : function(itemList) {

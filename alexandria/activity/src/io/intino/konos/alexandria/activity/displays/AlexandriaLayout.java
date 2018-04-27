@@ -55,7 +55,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		loadedListeners.add(listener);
 	}
 
-	public void showHome() {
+	public void home() {
 		if (this.items.size() <= 1) return;
 		openElement(this.items.get(0).label());
 	}
@@ -88,6 +88,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		User user = user();
 		if (user != null) sendUser(userInfoOf(user));
 		sendItems();
+		openDefaultItem(routePath());
 		notifyLoaded();
 	}
 
@@ -112,8 +113,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return items.stream().filter(i -> key.equals(i.name()) || key.equals(i.label())).findFirst().orElse(null);
 	}
 
-	public void openItem(String label) {
-		openElement(label);
+	public void openItem(String key) {
+		openElement(itemWithKey(key).label());
 	}
 
 	protected Reference schemaItemOf(Item item) {
@@ -126,17 +127,12 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	protected abstract void sendLoading();
-
 	protected abstract void sendLoaded();
-
 	protected abstract void refreshOpened(String value);
-
 	protected abstract void sendInfo(PlatformInfo value);
-
 	protected abstract void sendItems(List<Item> value);
-
 	protected abstract void sendUser(UserInfo value);
-
+	protected abstract void openDefaultItem(String item);
 	protected abstract void notifyLoggedOut();
 
 	private List<Item> itemOf(ElementOption option) {

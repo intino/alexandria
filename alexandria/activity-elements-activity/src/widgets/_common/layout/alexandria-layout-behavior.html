@@ -24,7 +24,8 @@
             _title : String,
             _subtitle : String,
             _logo : String,
-            _authServiceUrl : String
+            _authServiceUrl : String,
+            _defaultItemReceived: { type: Boolean, value: function() { return false; } }
         },
 
         _loading : function() {
@@ -41,7 +42,26 @@
             itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
             this._itemList = itemList;
             this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
-            this._loadDefaultItem(itemList);
+        },
+
+        _openDefaultItem : function(name) {
+            this._defaultItemReceived = true;
+
+            var itemList = this.itemList;
+            try {
+
+                if (name != null) {
+                    this._openItemByName(name);
+                    return;
+                }
+
+                var name = Cookies.get("alexandria-layout");
+                name = name != null && name !== "" ? name : (itemList.length > 0 ? itemList[0].name : null);
+                if (this._indexOf(name) == -1) name = (itemList.length > 0 ? itemList[0].name : null);
+                this._openItemByName(name);
+            }
+            catch(e) {
+            }
         },
 
         _itemProperty : function(item, property) {
@@ -55,6 +75,7 @@
 
         _openItemByLabel : function(label) {
             if (this._refreshingOpened) return;
+            if (this._itemList == null) return;
             var name = this._nameFromKey(label);
             if (name == null) return;
             this._openItemDelayed(name);
@@ -62,6 +83,7 @@
 
         _openItemByName : function(name) {
             if (this._refreshingOpened) return;
+            if (this._itemList == null) return;
             this._openItemDelayed(name);
         },
 
@@ -76,9 +98,10 @@
             if (this._openItemTimeout != null) window.clearTimeout(this._openItemTimeout);
             this._openItemTimeout = window.setTimeout(() => {
                 if (name == "noItems") return;
-                if (this._openedItemIndex == this._indexOf(name)) return;
-                this.openItem(name);
-            }, 100);
+            if (!this._defaultItemReceived) return;
+            if (this._openedItemIndex == this._indexOf(name)) return;
+            this.openItem(name);
+        }, 100);
         },
 
         _refreshOpened : function(opened) {
@@ -150,18 +173,6 @@
 
         _userLoggedOut : function(homeUrl) {
             window.location.href = homeUrl;
-        },
-
-        _loadDefaultItem : function(itemList) {
-            try {
-                var name = Cookies.get("alexandria-layout");
-                name = name != null && name !== "" ? name : (itemList.length > 0 ? itemList[0].name : null);
-                if (this._indexOf(name) == -1) name = (itemList.length > 0 ? itemList[0].name : null);
-                this._openItemByName(name);
-            }
-            catch(e) {
-                return itemList.length > 0 ? itemList[0].name : null;
-            }
         },
 
         _saveDefaultItem : function(name) {

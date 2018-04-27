@@ -245,13 +245,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		currentView().ifPresent(v -> v.refresh(ElementHelper.items(objects, this, baseAssetUrl())));
 	}
 
-	public void navigate(String key) {
-		String name = new String(Base64.getDecoder().decode(key.getBytes()));
-		if (!name.equals("main")) return;
-		navigateMain();
-	}
-
-	public void navigateMain() {
+	public void home() {
 		hidePanel();
 		refreshBreadcrumbs("");
 		refresh();
@@ -431,7 +425,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected void closeCurrentItem() {
-		navigateMain();
+		home();
 	}
 
 	protected void removePanelDisplay() {

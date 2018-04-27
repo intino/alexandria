@@ -10,6 +10,7 @@ import io.intino.konos.alexandria.activity.displays.providers.CatalogViewDisplay
 import io.intino.konos.alexandria.activity.model.Item;
 import io.intino.konos.alexandria.activity.model.mold.Stamp;
 import io.intino.konos.alexandria.activity.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.activity.schemas.PictureData;
 import io.intino.konos.alexandria.activity.spark.ActivityFile;
 
 import java.util.List;
@@ -39,6 +40,10 @@ public class AlexandriaCatalogMagazineView extends AlexandriaCatalogView<Alexand
 
 	@Override
 	public void refreshSelection(List<String> items) {
+	}
+
+	@Override
+	protected void refreshPicture(PictureData data) {
 	}
 
 	@Override

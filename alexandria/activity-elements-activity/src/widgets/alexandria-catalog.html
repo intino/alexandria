@@ -19,7 +19,7 @@
     <template>
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
         <div class="breadcrumbs layout horizontal" hidden$="[[!_breadcrumbs.length]]">
-            <paper-button on-tap="_navigateMain">[[Back]]</paper-button>
+            <paper-button on-tap="home">[[Back]]</paper-button>
             <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate"></cotton-breadcrumbs>
         </div>
         <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
@@ -236,10 +236,6 @@
 
             _showGroupingsDialog : function () {
                 this.$.groupingsDialog.open();
-            },
-
-            _navigateMain : function() {
-                this.navigateMain();
             }
 
         });

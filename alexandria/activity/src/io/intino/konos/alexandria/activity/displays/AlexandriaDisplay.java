@@ -5,9 +5,11 @@ import io.intino.konos.alexandria.activity.services.push.ActivitySession;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
@@ -19,6 +21,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     private ActivitySession session;
     private AlexandriaDisplay owner = null;
     private Boolean dirty = null;
+    private List<String> route = new ArrayList<>();
 
     public AlexandriaDisplay() {
         this.id = UUID.randomUUID().toString();
@@ -58,6 +61,24 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     public final void personifyOnce(String object) {
         notifier.personifyOnce(id, name(), object);
         init();
+    }
+
+    public void route(String... paths) {
+        route(Arrays.asList(paths));
+    }
+
+    public void route(List<String> paths) {
+        this.route = paths;
+    }
+
+    public List<String> route() { return this.route; }
+
+    public String routePath() {
+        return route.size() > 0 ? route.get(0) : null;
+    }
+
+    public List<String> routeSubPath() {
+        return route.size() > 1 ? route.subList(1, route.size()) : emptyList();
     }
 
     public void setLanguage(String language) {

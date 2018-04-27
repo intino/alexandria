@@ -11,17 +11,14 @@ AlexandriaTemporalTimeCatalogBehaviors.Requester = {
     timezoneOffset : function(value) {
     	this.carry("timezoneOffset", { "value" : value });
     },
-    navigate : function(value) {
-    	this.carry("navigate", { "value" : value });
-    },
-    navigateMain : function() {
-    	this.carry("navigateMain");
-    },
-    openView : function(value) {
-    	this.carry("openView", { "value" : value });
+    home : function() {
+    	this.carry("home");
     },
     openItem : function(value) {
     	this.carry("openItem", { "value" : value });
+    },
+    openView : function(value) {
+    	this.carry("openView", { "value" : value });
     }
 
 };
