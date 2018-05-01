@@ -52,7 +52,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	private void resetViews() {
-		child(AlexandriaCatalogViewList.class).viewList().forEach(AlexandriaCatalogView::reset);
+		child(AlexandriaCatalogViewList.class).displayViewList().forEach(AlexandriaCatalogView::reset);
 	}
 
 	@Override

@@ -1,14 +1,16 @@
 package io.intino.konos.alexandria.ui.displays.builders;
 
 import io.intino.konos.alexandria.ui.displays.AlexandriaElementViewDefinition;
-import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.Catalog;
 import io.intino.konos.alexandria.ui.model.Element;
-import io.intino.konos.alexandria.ui.model.ElementRender;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.panel.PanelView;
 import io.intino.konos.alexandria.ui.model.renders.RenderCatalogs;
 import io.intino.konos.alexandria.ui.model.renders.RenderDisplay;
 import io.intino.konos.alexandria.ui.model.renders.RenderMold;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.views.container.Container;
+import io.intino.konos.alexandria.ui.model.views.container.MoldContainer;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
 
@@ -44,28 +46,27 @@ public class ReferenceBuilder {
         return catalogList.stream().map(ReferenceBuilder::build).collect(toList());
     }
 
-    public static List<Reference> buildCatalogViewList(List<AlexandriaElementViewDefinition> viewList) {
+    public static List<Reference> buildCatalogViewList(List<View> viewList) {
         return viewList.stream().map(ReferenceBuilder::build).collect(toList());
     }
 
     private static String typeOf(View view) {
-        if (! (view instanceof PanelView)) return "";
+        if (! (view instanceof ContainerView)) return "";
 
-        ElementRender render = ((PanelView) view).render();
-        if (render instanceof RenderMold) return "custom-view";
-        if (render instanceof RenderCatalogs) return "catalog-view";
-        if (render instanceof RenderDisplay) return "display-view";
+        Container container = ((ContainerView) view).container();
+        if (container instanceof RenderMold) return "custom-view";
+        if (container instanceof RenderCatalogs) return "catalog-view";
+        if (container instanceof RenderDisplay) return "display-view";
 
         return "";
     }
 
     private static String layoutOf(View view) {
-        if (! (view instanceof PanelView)) return "";
+        View.Layout layout = view.layout();
 
-        PanelView.Layout layout = ((PanelView) view).layout();
-        if (layout == PanelView.Layout.Tab) return "tab";
-        if (layout == PanelView.Layout.LeftFixed) return "left-fixed";
-        if (layout == PanelView.Layout.RightFixed) return "right-fixed";
+        if (layout == View.Layout.Tab) return "tab";
+        if (layout == View.Layout.LeftFixed) return "left-fixed";
+        if (layout == View.Layout.RightFixed) return "right-fixed";
 
         return "";
     }

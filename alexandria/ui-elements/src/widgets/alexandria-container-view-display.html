@@ -4,10 +4,10 @@
 <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 
-<script src="alexandriapanelcatalogview/requester.js"></script>
-<script src="alexandriapanelcatalogview/notifier-listener.js"></script>
+<script src="alexandriacontainerviewdisplay/requester.js"></script>
+<script src="alexandriacontainerviewdisplay/notifier-listener.js"></script>
 
-<dom-module id="alexandria-panel-catalog-view">
+<dom-module id="alexandria-container-view-display">
 
     <template>
         <div id="container"></div>
@@ -15,21 +15,13 @@
 
     <style>
         :host #container {
-            position: relative;
-            padding-top: 8px;
-            height: calc(100% - 8px);
-            overflow: hidden;
-        }
-        :host ::content alexandria-catalog ::content .main,
-        :host ::content alexandria-temporal-range-catalog ::content .main,
-        :host ::content alexandria-temporal-time-catalog ::content .main {
-            border: 0 !important;
+            height: 100%;
         }
     </style>
 
     <script>
 
-        const AlexandriaPanelCatalogViewDictionary = {
+        const AlexandriaContainerViewDisplayDictionary = {
             es: {
             },
             en: {
@@ -37,19 +29,19 @@
         };
 
         Polymer({
-            is: 'alexandria-panel-catalog-view',
+            is: 'alexandria-panel-display-view',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
-                AlexandriaPanelCatalogViewBehaviors.Requester,
-                AlexandriaPanelCatalogViewBehaviors.NotifierListener ],
+                AlexandriaContainerViewDisplayBehaviors.Requester,
+                AlexandriaContainerViewDisplayBehaviors.NotifierListener ],
 
             properties : {
             },
 
             attached : function() {
-                this.translate(AlexandriaPanelCatalogViewDictionary);
+                this.translate(AlexandriaContainerViewDisplayDictionary);
                 this.listenToDisplay();
             },
 
@@ -63,4 +55,5 @@
 
         });
     </script>
+
 </dom-module>

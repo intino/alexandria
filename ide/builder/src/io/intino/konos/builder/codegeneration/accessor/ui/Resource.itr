@@ -1,4 +1,4 @@
-def type(page)
+def type(resource)
 	<!DOCTYPE html>
     <html>
         <head>

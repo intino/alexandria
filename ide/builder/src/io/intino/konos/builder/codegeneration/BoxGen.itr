@@ -23,7 +23,7 @@ def type(box)
 		$dataLake+field...[$NL]][
 		$task+field][
         $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
-	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
+	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.UIBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -115,7 +115,7 @@ def type(box)
 end
 
 def trigger(uiBox)
-	io.intino.konos.alexandria.ui.AlexandriaUiBox
+	io.intino.konos.alexandria.ui.UIBox
 end
 
 def type(ui) trigger(setup)

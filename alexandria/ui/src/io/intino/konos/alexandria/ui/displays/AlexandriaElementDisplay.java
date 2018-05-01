@@ -10,11 +10,8 @@ import io.intino.konos.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.helpers.ElementHelper;
 import io.intino.konos.alexandria.ui.model.*;
-import io.intino.konos.alexandria.ui.model.Catalog;
-import io.intino.konos.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.model.Toolbar;
 import io.intino.konos.alexandria.ui.model.catalog.Events;
-import io.intino.konos.alexandria.ui.model.catalog.events.OnClickRecord;
+import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
 import io.intino.konos.alexandria.ui.model.mold.Block;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.model.mold.StampResult;
@@ -25,11 +22,17 @@ import io.intino.konos.alexandria.ui.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
-import io.intino.konos.alexandria.ui.model.toolbar.Operation;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.views.container.DisplayContainer;
+import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.ui.schemas.Position;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -262,7 +265,11 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public <E extends AlexandriaElementDisplay> E openElement(String label) {
-		return elementDisplayManager.openElement(label);
+		return openElement(label, id());
+	}
+
+	public <E extends AlexandriaElementDisplay> E openElement(String label, String ownerId) {
+		return elementDisplayManager.openElement(label, ownerId);
 	}
 
 	public void openItem(String item) {
@@ -290,8 +297,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 				if (!(element instanceof Catalog)) return null;
 				Events events = ((Catalog) element).events();
 				if (events == null) return null;
-				OnClickRecord onClickRecord = events.onClickRecord();
-				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().panel() : null;
+				OnClickItem onClickItem = events.onClickItem();
+				return onClickItem != null && onClickItem.openPanel() != null ? onClickItem.openPanel().panel() : null;
 			}
 
 			@Override
@@ -305,8 +312,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 				if (!(element instanceof Catalog)) return null;
 				Events events = ((Catalog) element).events();
 				if (events == null) return null;
-				OnClickRecord onClickRecord = events.onClickRecord();
-				return onClickRecord != null && onClickRecord.openPanel() != null ? onClickRecord.openPanel().breadcrumbs(item(), session()) : null;
+				OnClickItem onClickItem = events.onClickItem();
+				return onClickItem != null && onClickItem.openPanel() != null ? onClickItem.openPanel().breadcrumbs(item(), session()) : null;
 			}
 		});
 	}
@@ -316,8 +323,8 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			return openElement(block.catalog());
 
 		AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) this;
-		List<?> views = display.views();
-		io.intino.konos.alexandria.ui.model.catalog.View view = views.stream().map(v -> (io.intino.konos.alexandria.ui.model.catalog.View)v).filter(v -> !(v instanceof DisplayView)).findFirst().orElse(null);
+		List<View> views = display.views();
+		View view = views.stream().filter(v -> (v instanceof ContainerView) && ((ContainerView)v).container() instanceof DisplayContainer).findFirst().orElse(null);
 		if (view != null) display.selectView(view.name());
 
 		return display;
@@ -327,14 +334,14 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		loadingListeners.forEach(l -> l.accept(loading));
 	}
 
-	protected List<? extends View> views() {
+	protected List<View> views() {
 		List<View> elementViews = element().views();
 		if (enabledViews == null) return elementViews;
 		return elementViews.stream().filter(v -> enabledViews.contains(v.name())).collect(toList());
 	}
 
 	protected List<Mold> molds() {
-		return views().stream().filter(v -> (v instanceof MoldView)).map(v -> ((MoldView)v).mold()).collect(toList());
+		return views().stream().map(View::mold).collect(toList());
 	}
 
 	protected void updateCurrentView(AlexandriaElementView display) {

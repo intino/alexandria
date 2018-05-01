@@ -65,6 +65,7 @@ public class ViewFrameBuilder extends Frame {
 		if (!view.i$(ContainerView.class)) return;
 
 		frame.addTypes("container");
+		frame.addSlot("containerViewDisplayTypeLoader", new Frame("containerViewDisplayTypeLoader"));
 
 		ContainerView view = this.view.a$(ContainerView.class);
 		addDisplayContainerProperties(view, frame);

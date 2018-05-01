@@ -5,10 +5,10 @@
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="alexandria-item.html">
 
-<script src="alexandriapanelcustomview/requester.js"></script>
-<script src="alexandriapanelcustomview/notifier-listener.js"></script>
+<script src="alexandriacontainerviewmold/requester.js"></script>
+<script src="alexandriacontainerviewmold/notifier-listener.js"></script>
 
-<dom-module id="alexandria-panel-custom-view">
+<dom-module id="alexandria-container-view-mold">
 
     <template>
         <cotton-zombie id="itemZombie" display="AlexandriaItem" widget="AlexandriaItem"></cotton-zombie>
@@ -24,7 +24,7 @@
 
     <script>
 
-        const AlexandriaPanelCustomViewDictionary = {
+        const AlexandriaContainerViewMoldDictionary = {
             es: {
             },
             en: {
@@ -32,16 +32,16 @@
         };
 
         Polymer({
-            is: 'alexandria-panel-custom-view',
+            is: 'alexandria-container-view-mold',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
-                AlexandriaPanelCustomViewBehaviors.Requester,
-                AlexandriaPanelCustomViewBehaviors.NotifierListener ],
+                AlexandriaContainerViewMoldBehaviors.Requester,
+                AlexandriaContainerViewMoldBehaviors.NotifierListener ],
 
             attached : function() {
-                this.translate(AlexandriaPanelCustomViewDictionary);
+                this.translate(AlexandriaContainerViewMoldDictionary);
                 this.listenToDisplay();
                 this.addEventListener("navigate-item", (e) => this.fire("open-item", e));
                 this.addEventListener("navigate-element", (e) => this.fire("open-element", e));
@@ -49,4 +49,5 @@
 
         });
     </script>
+
 </dom-module>

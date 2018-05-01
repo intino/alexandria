@@ -103,15 +103,15 @@ public class UIAccessorRenderer {
 
 	private void createResources() {
 		for (UIService.Resource resource : service.resourceList()) {
-			Path pagePath = new File(genDirectory, SRC_DIRECTORY + separator + resource.name$() + ".html").toPath();
-			if (!exists(pagePath)) write(pagePath, PageTemplate.create().format(pageFrame(resource)));
+			Path resourcePath = new File(genDirectory, SRC_DIRECTORY + separator + resource.name$() + ".html").toPath();
+			if (!exists(resourcePath)) write(resourcePath, ResourceTemplate.create().format(resourceFrame(resource)));
 		}
 	}
 
-	private Frame pageFrame(UIService.Resource resource) {
+	private Frame resourceFrame(UIService.Resource resource) {
 		Component uses = resource.uses();
 		String usesDisplay = Formatters.firstUpperCase(uses.name$()) + (uses.i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName());
-		return new Frame().addTypes("page").addSlot("usesDisplay", usesDisplay).addSlot("uses", resource.uses().name$()).addSlot("name", resource.name$());
+		return new Frame().addTypes("resource").addSlot("usesDisplay", usesDisplay).addSlot("uses", resource.uses().name$()).addSlot("name", resource.name$());
 	}
 
 	private void createWidgets() {

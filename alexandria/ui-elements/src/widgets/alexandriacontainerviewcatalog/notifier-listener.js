@@ -1,6 +1,6 @@
-var AlexandriaPanelDisplayViewBehaviors = AlexandriaPanelDisplayViewBehaviors || {};
+var AlexandriaContainerViewCatalogBehaviors = AlexandriaContainerViewCatalogBehaviors || {};
 
-AlexandriaPanelDisplayViewBehaviors.NotifierListener = {
+AlexandriaContainerViewCatalogBehaviors.NotifierListener = {
 
 	properties : {
 		_listeningToDisplay : { type: Boolean, value: function() { return false; } }

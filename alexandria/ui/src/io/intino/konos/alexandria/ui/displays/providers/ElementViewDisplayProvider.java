@@ -29,6 +29,7 @@ public interface ElementViewDisplayProvider {
     void selectInstant(CatalogInstantBlock block);
 
     <E extends AlexandriaElementDisplay> E openElement(String label);
+    <E extends AlexandriaElementDisplay> E openElement(String label, String ownerId);
 
     List<Block> blocks(Mold mold);
     List<Stamp> stamps(Mold mold);

@@ -1,16 +1,16 @@
 package io.intino.konos.alexandria.ui.model.catalog;
 
-import io.intino.konos.alexandria.ui.model.catalog.events.OnClickRecord;
+import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
 
 public class Events {
-	private OnClickRecord onClickRecord;
+	private OnClickItem onClickItem;
 
-	public OnClickRecord onClickRecord() {
-		return onClickRecord;
+	public OnClickItem onClickItem() {
+		return onClickItem;
 	}
 
-	public Events onClickRecord(OnClickRecord onClickRecord) {
-		this.onClickRecord = onClickRecord;
+	public Events onClickItem(OnClickItem onClickItem) {
+		this.onClickItem = onClickItem;
 		return this;
 	}
 }

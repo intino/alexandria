@@ -9,6 +9,11 @@ Display alexandriaContainerViewMold
 	displays = alexandriaItem
 
 Display alexandriaContainerViewSet
+	Notification refreshOpened as Text
+	Notification refreshItemList as List Object(Reference)
+
+	Request home
+	Request openItem as Text
 
 Display alexandriaContainerViewPanel
 
@@ -74,7 +79,3 @@ Display alexandriaCatalogMapView
 	Request openItemDialogOperation as Object(OpenItemParameters)
 	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
 	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
-
-Display alexandriaCatalogDisplayView
-	Notification refreshView as Object(ElementView)
-	Notification displayType as Text

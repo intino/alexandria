@@ -1,5 +1,9 @@
 package io.intino.konos.alexandria.ui.model;
 
+import io.intino.konos.alexandria.ui.model.views.CatalogView;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.views.container.Container;
+import io.intino.konos.alexandria.ui.model.views.container.MoldContainer;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 public class View {
@@ -46,6 +50,15 @@ public class View {
 	public View hidden(Hidden hidden) {
 		this.hidden = hidden;
 		return this;
+	}
+
+	public Mold mold() {
+		if (this instanceof ContainerView) {
+			Container container = ((ContainerView)this).container();
+			if (container instanceof MoldContainer) return ((MoldContainer) container).mold();
+			return null;
+		}
+		return (this instanceof CatalogView) ? ((CatalogView)this).mold() : null;
 	}
 
 	public interface Hidden {
