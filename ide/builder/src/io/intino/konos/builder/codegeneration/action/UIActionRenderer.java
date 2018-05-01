@@ -25,7 +25,7 @@ public class UIActionRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("action", "resource");
+		Frame frame = new Frame().addTypes("action", "ui");
 		frame.addSlot("name", resource.name$());
 		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
 		frame.addSlot("package", packageName);

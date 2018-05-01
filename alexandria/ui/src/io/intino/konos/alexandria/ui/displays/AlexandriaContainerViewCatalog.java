@@ -4,6 +4,8 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewCatalogNotifier;
 import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.views.container.CatalogContainer;
 
 
 public class AlexandriaContainerViewCatalog extends AlexandriaContainerView<AlexandriaContainerViewCatalogNotifier> {
@@ -30,13 +32,13 @@ public class AlexandriaContainerViewCatalog extends AlexandriaContainerView<Alex
     }
 
     private void createCatalogDisplay() {
-        PanelView rawView = (PanelView) definition().raw();
-        RenderCatalogs render = rawView.render();
-        io.intino.konos.alexandria.ui.model.Catalog catalog = render.catalogs().get(0);
-        catalogDisplay = render.display(catalog, session());
+        ContainerView view = view();
+        CatalogContainer container = view.container();
+        io.intino.konos.alexandria.ui.model.Catalog catalog = container.catalog();
+        catalogDisplay = container.display(catalog, session());
         if (catalogDisplay == null) return;
         sendDisplayType(catalogDisplay);
-        catalogDisplay.staticFilter(item -> render.filter(catalog, context(), target(), (Item) item, session()));
+        catalogDisplay.staticFilter(item -> container.filter(catalog, context(), target(), (Item) item, session()));
         catalogDisplay.target(target());
         catalogDisplay.elementDisplayManager(provider().elementDisplayManager());
         catalogDisplay.catalog(catalog);

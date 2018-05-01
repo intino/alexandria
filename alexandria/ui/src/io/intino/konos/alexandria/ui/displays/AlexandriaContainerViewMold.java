@@ -8,7 +8,7 @@ import io.intino.konos.alexandria.ui.schemas.Item;
 import static io.intino.konos.alexandria.ui.helpers.ElementHelper.itemDisplayProvider;
 
 
-public class AlexandriaContainerViewMold extends AlexandriaDisplay<AlexandriaContainerViewMoldNotifier> {
+public class AlexandriaContainerViewMold extends AlexandriaContainerView<AlexandriaContainerViewMoldNotifier> {
 
     public AlexandriaContainerViewMold(Box box) {
         super(box);

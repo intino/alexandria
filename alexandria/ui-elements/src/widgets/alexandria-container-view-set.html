@@ -1,0 +1,119 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../lib/paper-menu/paper-submenu.html">
+
+<script src="alexandriacontainerviewset/requester.js"></script>
+<script src="alexandriacontainerviewset/notifier-listener.js"></script>
+
+<dom-module id="alexandria-container-view-set">
+
+    <template>
+        <paper-menu selected="{{_openedItem}}" attr-for-selected="name">
+            <template is="dom-repeat" items="[[_groupList]]" as="group">
+                <template is="dom-if" if="{{_singleGroup(group)}}">
+                    <template is="dom-repeat" items="{{group.list}}" as="item">
+                        <paper-item name$="[[item.label]]">[[item.label]]</paper-item>
+                    </template>
+                </template>
+                <template is="dom-if" if="{{!_singleGroup(group)}}">
+                    <paper-submenu opened$="[[group.opened]]">
+                        <paper-item class="menu-trigger">[[group.label]]</paper-item>
+                        <paper-menu class="menu-content" selected="{{_openedItem}}" attr-for-selected="name">
+                            <template is="dom-repeat" items="{{group.list}}" as="item">
+                                <paper-item name$="[[item.label]]">[[item.label]]</paper-item>
+                            </template>
+                        </paper-menu>
+                    </paper-submenu>
+                </template>
+            </template>
+        </paper-menu>
+        <iron-pages id="pages" class="flex" attr-for-selected="name">
+            <template is="dom-repeat" items="[[_itemList]]" as="item">
+                <div class="item" name$="[[item.label]]">
+                    <cotton-zombie display$="[[item.type]]" widget$="[[item.type]]" object$="[[display.id]][[item.label]]"></cotton-zombie>
+                </div>
+            </template>
+        </iron-pages>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const AlexandriaContainerViewSetDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-container-view-set',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+						 AlexandriaContainerViewSetBehaviors.Requester,
+						 AlexandriaContainerViewSetBehaviors.NotifierListener
+                         ],
+
+            properties : {
+                _openedItem : { type: String, observer: '_openItem' },
+                _itemList : Array,
+                _defaultItemReceived: { type: Boolean, value: function() { return false; } }
+            },
+
+			attached : function() {
+				this.translate(AlexandriaContainerViewSetDictionary);
+				this.listenToDisplay();
+			},
+
+            _refreshItemList : function(itemList) {
+                const countItems = itemList.length;
+                itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
+                this._itemList = itemList;
+            },
+
+            _refreshOpened : function(opened) {
+                this._refreshingOpened = true;
+                this._openedItem = opened;
+                this.$.pages.selected = opened;
+                this._refreshingOpened = false;
+            },
+
+            _openItem : function(label) {
+                if (this._refreshingOpened) return;
+                if (this._itemList == null) return;
+                var name = this._nameFromKey(label);
+                if (name == null) return;
+                this.openItem(name);
+            },
+
+            _nameFromKey : function(key) {
+                var name = this._nameFromIndex(this._indexOf(key));
+                return name != null ? name : key;
+            },
+
+            _nameFromIndex : function(index) {
+                var item = this._itemList[index];
+                return item != null ? item.name : null;
+            },
+
+            _indexOf : function(key) {
+                var index = -1;
+                for(var i=0; i<this._itemList.length; i++) {
+                    var item = this._itemList[i];
+                    if (item.label === key || item.name === key)
+                        index = i;
+                }
+                return index;
+            }
+        });
+    </script>
+    
+</dom-module>

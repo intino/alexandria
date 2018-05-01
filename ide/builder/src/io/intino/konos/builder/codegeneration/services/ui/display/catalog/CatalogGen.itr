@@ -10,7 +10,7 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Arrangement;
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping;
     import io.intino.konos.alexandria.ui.model.catalog.views.DisplayView;
-    import io.intino.konos.alexandria.ui.model.catalog.events.OnClickRecord;
+    import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
     import io.intino.konos.alexandria.ui.model.catalog.views.GridView;
     import io.intino.konos.alexandria.ui.model.catalog.views.ListView;
     import io.intino.konos.alexandria.ui.model.catalog.views.MapView;
@@ -38,7 +38,7 @@ def type(catalog & gen)
 			$range][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
-			catalog.events(new io.intino.konos.alexandria.ui.model.catalog.Events().onClickRecord(new OnClickRecord().$event));][
+			catalog.events(new io.intino.konos.alexandria.ui.model.catalog.Events().onClickItem(new OnClickItem().$event));][
 			$hasGroupings][
 			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][

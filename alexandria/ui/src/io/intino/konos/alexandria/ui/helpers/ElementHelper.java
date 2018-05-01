@@ -13,6 +13,7 @@ import io.intino.konos.alexandria.ui.displays.providers.TemporalCatalogViewDispl
 import io.intino.konos.alexandria.ui.model.Catalog;
 import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
 import io.intino.konos.alexandria.ui.model.catalog.events.OpenPanel;
 import io.intino.konos.alexandria.ui.model.mold.Block;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
@@ -39,7 +40,7 @@ public class ElementHelper {
 		return ItemBuilder.build(item, item.id(), provider, baseAssetUrl);
 	}
 
-	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, AlexandriaElementViewDefinition view) {
+	public static ItemDisplayProvider itemDisplayProvider(ElementViewDisplayProvider provider, View view) {
 		return new ItemDisplayProvider() {
 			@Override
 			public Mold mold() {
@@ -104,7 +105,7 @@ public class ElementHelper {
 		};
 	}
 
-	public static ItemBuilder.ItemBuilderProvider itemBuilderProvider(ElementViewDisplayProvider provider, AlexandriaElementViewDefinition view) {
+	public static ItemBuilder.ItemBuilderProvider itemBuilderProvider(ElementViewDisplayProvider provider, View view) {
 		return new ItemBuilder.ItemBuilderProvider() {
 			@Override
 			public List<Block> blocks() {
@@ -147,7 +148,7 @@ public class ElementHelper {
 		};
 	}
 
-	public static OpenItemEvent openItemEvent(String item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, UISession session) {
+	public static OpenItemEvent openItemEvent(String item, ElementViewDisplayProvider provider, View view, OnClickItem onClickItem, UISession session) {
 		return new OpenItemEvent() {
 			@Override
 			public String itemId() {
@@ -156,7 +157,7 @@ public class ElementHelper {
 
 			@Override
 			public String label() {
-				Optional<Stamp> titleStamp = provider.stamps(definition.mold()).stream().filter(s -> (s instanceof Title)).findAny();
+				Optional<Stamp> titleStamp = provider.stamps(view.mold()).stream().filter(s -> (s instanceof Title)).findAny();
 				return titleStamp.isPresent() ? ((Title)titleStamp.get()).value(item(), session) : item().name();
 			}
 
@@ -167,7 +168,7 @@ public class ElementHelper {
 
 			@Override
 			public Panel panel() {
-				return definition.onClickRecordEvent().openPanel().panel();
+				return onClickItem.openPanel().panel();
 			}
 
 			@Override
@@ -177,13 +178,13 @@ public class ElementHelper {
 
 			@Override
 			public Tree breadcrumbs() {
-				OpenPanel openPanel = definition.onClickRecordEvent().openPanel();
+				OpenPanel openPanel = onClickItem.openPanel();
 				return openPanel != null ? openPanel.breadcrumbs(item(), session) : null;
 			}
 		};
 	}
 
-	public static OpenItemCatalogEvent openItemCatalogEvent(String item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, UISession session) {
+	public static OpenItemCatalogEvent openItemCatalogEvent(String item, ElementViewDisplayProvider provider, View view, OnClickItem onClickItem, UISession session) {
 		return new OpenItemCatalogEvent() {
 			@Override
 			public Item item() {
@@ -197,7 +198,7 @@ public class ElementHelper {
 
 			@Override
 			public Catalog catalog() {
-				return definition.onClickRecordEvent().openCatalog().catalog();
+				return onClickItem.openCatalog().catalog();
 			}
 
 			@Override
@@ -207,22 +208,22 @@ public class ElementHelper {
 
 			@Override
 			public boolean filtered() {
-				return definition.onClickRecordEvent().openCatalog().filtered();
+				return onClickItem.openCatalog().filtered();
 			}
 
 			@Override
 			public boolean filter(Item target) {
-				return definition.onClickRecordEvent().openCatalog().filter(item(), target, session);
+				return onClickItem.openCatalog().filter(item(), target, session);
 			}
 
 			@Override
 			public String itemToShow() {
-				return definition.onClickRecordEvent().openCatalog().item(item(), session);
+				return onClickItem.openCatalog().item(item(), session);
 			}
 		};
 	}
 
-	public static OpenItemCatalogEvent openItemCatalogEvent(Item item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, UISession session) {
+	public static OpenItemCatalogEvent openItemCatalogEvent(Item item, ElementViewDisplayProvider provider, View view, OnClickItem onClickItem, UISession session) {
 		return new OpenItemCatalogEvent() {
 			@Override
 			public Item item() {
@@ -236,7 +237,7 @@ public class ElementHelper {
 
 			@Override
 			public Catalog catalog() {
-				return definition.onClickRecordEvent().openCatalog().catalog();
+				return onClickItem.openCatalog().catalog();
 			}
 
 			@Override
@@ -246,22 +247,22 @@ public class ElementHelper {
 
 			@Override
 			public boolean filtered() {
-				return definition.onClickRecordEvent().openCatalog().filtered();
+				return onClickItem.openCatalog().filtered();
 			}
 
 			@Override
 			public boolean filter(Item target) {
-				return definition.onClickRecordEvent().openCatalog().filter(item, target, session);
+				return onClickItem.openCatalog().filter(item, target, session);
 			}
 
 			@Override
 			public String itemToShow() {
-				return definition.onClickRecordEvent().openCatalog().item(item, session);
+				return onClickItem.openCatalog().item(item, session);
 			}
 		};
 	}
 
-	public static OpenItemDialogEvent openItemDialogEvent(Item item, ElementViewDisplayProvider provider, AlexandriaElementViewDefinition definition, UISession session) {
+	public static OpenItemDialogEvent openItemDialogEvent(Item item, ElementViewDisplayProvider provider, View definition, OnClickItem onClickItem, UISession session) {
 		return new OpenItemDialogEvent() {
 			@Override
 			public Item item() {
@@ -275,7 +276,7 @@ public class ElementHelper {
 
 			@Override
 			public AlexandriaDialog dialog() {
-				return definition.onClickRecordEvent().openDialog().createDialog(item, session);
+				return onClickItem.openDialog().createDialog(item, session);
 			}
 		};
 	}

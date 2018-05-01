@@ -1,6 +1,6 @@
-var AlexandriaCatalogDisplayViewBehaviors = AlexandriaCatalogDisplayViewBehaviors || {};
+var AlexandriaContainerViewDisplayBehaviors = AlexandriaContainerViewDisplayBehaviors || {};
 
-AlexandriaCatalogDisplayViewBehaviors.NotifierListener = {
+AlexandriaContainerViewDisplayBehaviors.NotifierListener = {
 
 	properties : {
 		_listeningToDisplay : { type: Boolean, value: function() { return false; } }
@@ -9,9 +9,6 @@ AlexandriaCatalogDisplayViewBehaviors.NotifierListener = {
     listenToDisplay : function() {
 		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
-        this.when("refreshView").toSelf().execute(function(parameters) {
-        	widget._refreshView(parameters.value);
-        });
         this.when("displayType").toSelf().execute(function(parameters) {
         	widget._displayType(parameters.value);
         });

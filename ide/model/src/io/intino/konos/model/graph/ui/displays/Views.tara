@@ -40,10 +40,6 @@ Facet DisplayContainer extends Container
 	var Display display
 	var boolean hideNavigator = true
 
-//Facet MapContainer extends Container
-//	var Mold mold
-//	has:{1..1} MapProperties
-
 Facet SetContainer extends Container
 	Concept:Named AbstractItem is abstract
 		var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled

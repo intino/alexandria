@@ -20,7 +20,7 @@ def type(view & container & panel)
 end
 
 def type(view & container & set)
-	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.SetContainer()$setViewItems).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
+	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.SetContainer()$containerDisplayTypeLoader$setViewItems).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
 end
 
 def type(view & catalog & list)
@@ -45,6 +45,10 @@ def trigger(catalogDisplayLoader)
 			return (io.intino.konos.alexandria.ui.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, catalog);
 		}
 	}
+end
+
+def type(containerViewDisplayTypeLoader)
+	.displayTypeLoader((element, object) -> Displays.displayFor(element, object))
 end
 
 def type(setViewItems)

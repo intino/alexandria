@@ -7,6 +7,7 @@ import io.intino.konos.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.konos.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.model.mold.stamps.CatalogLink;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.DownloadOperation;
@@ -24,7 +25,7 @@ import static io.intino.konos.alexandria.ui.helpers.ElementHelper.*;
 
 public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier, P extends ElementViewDisplayProvider> extends ActivityDisplay<N, Box> {
 	private P provider;
-	private AlexandriaElementViewDefinition definition;
+	private View view;
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private List<Consumer<OpenItemDialogEvent>> openItemDialogListeners = new ArrayList<>();
 	private List<Consumer<OpenItemCatalogEvent>> openItemCatalogListeners = new ArrayList<>();
@@ -42,10 +43,10 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		this.provider = provider;
 	}
 
-	public AlexandriaElementViewDefinition definition() { return this.definition; }
+	public <V extends View> V view() { return (V) this.view; }
 
-	public void definition(AlexandriaElementViewDefinition definition) {
-		this.definition = definition;
+	public void view(View view) {
+		this.view = view;
 	}
 
 	public void onLoading(Consumer<Boolean> listener) {
@@ -87,7 +88,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	UIFile downloadItemOperation(DownloadItemParameters params) {
-		Stamp stamp = provider().stamps(definition().mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
+		Stamp stamp = provider().stamps(view.mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
 		if (stamp == null) return null;
 		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
 		return new UIFile() {
@@ -119,7 +120,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	void openItemDialogOperation(OpenItemParameters params) {
-		openItemDialogOperation(openItemDialogEvent(itemOf(params.item()), provider.stamp(definition().mold(), params.stamp()), session()));
+		openItemDialogOperation(openItemDialogEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), session()));
 	}
 
 	void openItemDialogOperation(OpenItemDialogEvent event) {
@@ -127,15 +128,23 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	void openItemCatalogOperation(OpenItemParameters params) {
-		openItemCatalogOperation(openItemCatalogEvent(itemOf(params.item()), provider().stamp(definition().mold(), params.stamp()), params.position(), provider.element(), session()));
+		openItemCatalogOperation(openItemCatalogEvent(itemOf(params.item()), provider().stamp(view.mold(), params.stamp()), params.position(), provider.element(), session()));
 	}
 
 	void openItemCatalogOperation(OpenItemCatalogEvent event) {
 		openItemCatalogListeners.forEach(l -> l.accept(event));
 	}
 
+	void openElement(String key) {
+		provider.openElement(key);
+	}
+
+	void openElement(String key, String ownerId) {
+		provider.openElement(key, ownerId);
+	}
+
 	void openElement(OpenElementParameters params) {
-		Stamp stamp = provider.stamp(definition().mold(), params.stamp().name());
+		Stamp stamp = provider.stamp(view.mold(), params.stamp().name());
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
@@ -154,7 +163,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	void executeItemTaskOperation(ExecuteItemTaskParameters params) {
-		executeItemTaskOperation(executeItemTaskEvent(itemOf(params.item()), provider.stamp(definition().mold(), params.stamp()), this));
+		executeItemTaskOperation(executeItemTaskEvent(itemOf(params.item()), provider.stamp(view.mold(), params.stamp()), this));
 	}
 
 	void executeItemTaskOperation(ExecuteItemTaskEvent event) {
@@ -167,12 +176,11 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 
 	void changeItem(ChangeItemParameters params) {
 		Item item = itemOf(params.item());
-		provider().changeItem(item, provider().stamp(definition().mold(), params.stamp()), params.value());
+		provider().changeItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}
 
 	void validateItem(io.intino.konos.alexandria.ui.schemas.ValidateItemParameters params) {
 		Item item = itemOf(params.item());
-		provider().validateItem(item, provider().stamp(definition().mold(), params.stamp()), params.value());
+		provider().validateItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}
-
 }
