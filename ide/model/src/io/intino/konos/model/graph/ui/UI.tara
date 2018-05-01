@@ -1,0 +1,21 @@
+dsl Proteo
+
+use Services
+use DataTypes
+
+Facet UI on Service is decorable
+	var string title
+	var string favicon
+	var string googleApiKey = empty
+
+	Concept:{0..1} Authentication
+		var string by
+
+	Concept:Named Resource
+		var string path
+		var Component uses
+
+Facet Root on UI.Resource
+Facet Confidential on UI.Resource
+
+Concept Component is abstract

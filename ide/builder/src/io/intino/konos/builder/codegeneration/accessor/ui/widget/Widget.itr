@@ -4,7 +4,7 @@ def type(widget)
     <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
     <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
     <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
-    [<link rel="import" href="../../lib/alexandria-activity-elements/alexandria-$type+camelCaseToSnakeCase.html">]
+    [<link rel="import" href="../../lib/alexandria-ui-elements/alexandria-$type+camelCaseToSnakeCase.html">]
 
 	[$parent+import
 	]
@@ -66,8 +66,8 @@ def trigger(routes)
 end
 
 def trigger(imports)
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
+	<script src="../../lib/alexandria-ui-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
+	<script src="../../lib/alexandria-ui-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
 end
 
 def trigger(attached) trigger(js)

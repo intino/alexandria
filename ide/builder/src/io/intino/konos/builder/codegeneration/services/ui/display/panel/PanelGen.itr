@@ -1,0 +1,131 @@
+def type(panel & !desktop & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaPanel;
+    import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.ui.model.panel.PanelView;
+    import io.intino.konos.alexandria.ui.model.Panel;
+    import io.intino.konos.alexandria.ui.model.Toolbar;
+    import io.intino.konos.alexandria.ui.model.panel.View;
+    import io.intino.konos.alexandria.ui.model.renders.RenderDisplay;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanel<$name+firstUpperCase~Notifier> {
+
+    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildPanel(box));
+    	}
+
+    	private static Panel buildPanel($box+firstUpperCase~Box box) {
+    		Panel panel = new Panel();
+    		[panel.name("$name");]
+    		[panel.label("$label");]
+    		[$toolbar+empty~panel.toolbar(buildToolbar(box));]
+    		buildViews(box).forEach(v -> panel.add(v));
+    		return panel;
+    	}
+		[
+		$toolbar
+		]
+    	private static List<PanelView> buildViews($box+firstUpperCase~Box box) {
+    		List<PanelView> result = new ArrayList<>();
+    		$view+genview...[$NL]
+    		return result;
+    	}
+
+    }
+end
+
+def type(panel & desktop & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
+    import io.intino.konos.alexandria.ui.model.Desktop;
+	import io.intino.konos.alexandria.ui.utils.Base64;
+	import io.intino.konos.alexandria.ui.utils.IOUtils;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    import java.net.MalformedURLException;
+    import java.net.URL;
+
+	public abstract class Abstract$name+firstUpperCase extends AlexandriaDesktop<$name+firstUpperCase~Notifier> {
+
+    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildDesktop(box));
+    	}
+
+    	private static Desktop buildDesktop($box+firstUpperCase~Box box) {
+    		Desktop desktop = new Desktop();
+    		desktop.elementDisplayBuilder(new Layout.ElementDisplayBuilder() {
+    			@Override
+    			public AlexandriaElementDisplay displayFor(Element element, Object o) {
+    				return get(element, o);
+    			}
+
+    			@Override
+    			public Class<? extends AlexandriaElementDisplay> displayTypeFor(Element element, Object o) {
+    				return get(element, o).getClass();
+    			}
+
+    			private AlexandriaElementDisplay get(Element element, Object o) {
+					return Displays.displayFor(box, element);
+				}
+    		});
+    		[desktop.title("$title");]
+    		[desktop.subtitle("$subtitle");]
+    		[desktop.authServiceUrl(box.configuration().$uiService+firstLowerCase~Configuration().authServiceUrl());]
+    		[desktop.logo(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$logo")));]
+    		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon")));]
+    		[desktop.layout(Desktop.Layout.$layout);]
+    		[$toolbar+empty~desktop.toolbar(buildToolbar(box));]
+    		buildViews(box).forEach(v -> desktop.add(v));
+    		return desktop;
+    	}
+		[
+		$toolbar
+		]
+    	private static List<PanelView> buildViews($box+firstUpperCase~Box box) {
+    		List<PanelView> result = new ArrayList<>();
+    		$view+genview...[$NL]
+    		return result;
+    	}
+
+    	private static String toBase64(java.io.InputStream resource) {
+			try {
+				if (resource == null) return "";
+				return "data:image/png;base64," + Base64.encode(toByteArray(resource));
+			} catch (java.io.IOException e) {
+				return ""
+			}
+		}
+
+		private static byte$[] toByteArray(java.io.InputStream input) throws java.io.IOException {
+			java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+			IOUtils.copy(input, output);
+			return output.toByteArray();
+		}
+    }
+end
+
+def trigger(toolbar)
+	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
+		Toolbar result = new Toolbar();
+		result.canSearch($canSearch);
+		$operation...[$NL]
+		return result;
+	}
+end
+
+def trigger(empty)
+end

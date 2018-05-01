@@ -38,7 +38,7 @@ def type(service & slack) trigger(fill)
 	"$name+firstLowerCase.token="
 end
 
-def type(service & activity) trigger(fill)
+def type(service & ui) trigger(fill)
 	"$name+firstLowerCase.port=",
 	"$name+firstLowerCase.webDirectory="[$custom+parameter...[]]
 end

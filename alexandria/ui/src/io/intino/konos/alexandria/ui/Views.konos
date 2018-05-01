@@ -1,0 +1,80 @@
+dsl Konos
+
+use Catalog
+use Displays
+use Mold
+use Schemas
+
+Display alexandriaContainerViewMold
+	displays = alexandriaItem
+
+Display alexandriaContainerViewSet
+
+Display alexandriaContainerViewPanel
+
+Display alexandriaContainerViewCatalog
+	displays = alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+	Notification displayType as Text
+
+Display alexandriaContainerViewDisplay
+	Notification displayType as Text
+
+Display alexandriaCatalogMagazineView
+	displays = alexandriaItem alexandriaPageContainer
+
+Display alexandriaCatalogListView
+	Notification refreshView as Object(ElementView)
+	Notification clear
+	Notification refresh as List Object(Item)
+	Notification refreshPageSize as Integer
+	Notification refreshItem as Object(Item)
+	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
+	Notification refreshCount as Integer
+	Notification refreshSelection as List Text
+	Notification refreshSortingList as List Object(Sorting)
+	Notification refreshSelectedSorting as Object(Sorting)
+	Notification refreshPicture as Object(PictureData)
+
+	Request openElement as Object(OpenElementParameters)
+	Request selectItems as List Text
+	Request renderExpandedPictures
+	Request itemRefreshed as Text
+	Request selectSorting as Object(Sorting)
+	Request page as Integer
+	Request filter as Text
+	Request createClusterGroup as Object(ClusterGroup)
+
+	Request executeOperation as Object(ElementOperationParameters)
+	Request(Asset) downloadOperation as Object(ElementOperationParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
+	Request openItemCatalogOperation as Object(OpenItemParameters)
+	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
+	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
+	Request changeItem as Object(ChangeItemParameters)
+	Request validateItem as Object(ValidateItemParameters)
+
+Display alexandriaCatalogMapView
+	Notification refreshView as Object(ElementView)
+	Notification clear
+	Notification refresh as List Object(Item)
+	Notification refreshPageSize as Integer
+	Notification refreshItem as Object(Item)
+	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
+	Notification refreshCount as Integer
+	Notification refreshSelection as List Text
+	Notification refreshPicture as Object(PictureData)
+
+	Request location as Object(Bounds)
+	Request page as Integer
+	Request openElement as Object(OpenElementParameters)
+
+	Request loadItem as Text
+	Request executeOperation as Object(ElementOperationParameters)
+	Request(Asset) downloadOperation as Object(ElementOperationParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
+	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
+	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
+
+Display alexandriaCatalogDisplayView
+	Notification refreshView as Object(ElementView)
+	Notification displayType as Text

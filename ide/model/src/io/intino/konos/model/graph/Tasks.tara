@@ -5,7 +5,6 @@ use DataTypes
 
 Concept Task
 
-
 Facet Scheduled on Task is abstract
 
 Facet BootTrigger extends Scheduled

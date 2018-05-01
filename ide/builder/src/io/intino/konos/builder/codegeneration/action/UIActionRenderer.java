@@ -1,50 +1,47 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static java.util.stream.Collectors.toList;
 
 public class UIActionRenderer extends ActionRenderer {
 
-	private final Activity.AbstractPage page;
+	private final UIService.Resource resource;
 	private final File gen;
-	private final Activity activity;
+	private final UIService service;
 
-	public UIActionRenderer(Project project, Activity.AbstractPage page, File src, File gen, String packageName, String boxName) {
+	public UIActionRenderer(Project project, UIService.Resource resource, File src, File gen, String packageName, String boxName) {
 		super(project, src, packageName, boxName);
 		this.gen = gen;
-		this.page = page;
-		this.activity = page.core$().ownerAs(Activity.class);
+		this.resource = resource;
+		this.service = resource.core$().ownerAs(UIService.class);
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("action", "page");
-		frame.addSlot("name", page.name$());
-		frame.addSlot("activity", page.core$().ownerAs(Activity.class).name$());
+		Frame frame = new Frame().addTypes("action", "resource");
+		frame.addSlot("name", resource.name$());
+		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		if (page.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
+		if (resource.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
-		frame.addSlot("ui", page.uses().name$());
+		frame.addSlot("component", resource.uses().name$());
 		frame.addSlot("parameter", parameters());
-		if (activity.favicon() != null) frame.addSlot("favicon", activity.favicon());
-		else if (activity.title() != null) frame.addSlot("title", activity.title());
-		if (!alreadyRendered(destiny, page.name$())) writeFrame(destinyPackage(destiny), page.name$() + "Action", template().format(frame));
-		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(page.name$()) + "Action", template().format(frame.addTypes("gen")));
+		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
+		else if (service.title() != null) frame.addSlot("title", service.title());
+		if (!alreadyRendered(destiny, resource.name$())) writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().format(frame));
+		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(resource.name$()) + "Action", template().format(frame.addTypes("gen")));
 	}
 
 	private Frame[] parameters() {
-		List<String> parameters = page.paths().stream().filter(path -> path.contains(":"))
-				.map(Commons::extractUrlPathParameters).flatMap(Collection::stream).collect(toList());
+		List<String> parameters = extractUrlPathParameters(resource.path());
 		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
 				.addSlot("type", "String")
 				.addSlot("name", parameter)).toArray(Frame[]::new);

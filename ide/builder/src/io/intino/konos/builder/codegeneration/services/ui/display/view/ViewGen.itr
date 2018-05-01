@@ -1,0 +1,89 @@
+def type(view & container & display)
+	result.add(new ContainerView()
+				.container(new io.intino.konos.alexandria.ui.model.containers.DisplayContainer()
+																			 .displayLoader((target, loadingListener, instantListener) -> $owner+FirstUpperCase.Views.$name+FirstUpperCase.$display+firstLowerCase(box, target, loadingListener, instantListener))
+																			 [.hideNavigator($hideNavigator)]
+																			 [.scopeManager($catalogScope)])
+				.layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
+end
+
+def type(view & container & mold)
+	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.MoldContainer().mold((io.intino.konos.alexandria.ui.model.Mold) Displays.displayFor(box, "$mold").element())).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
+end
+
+def type(view & container & catalog)
+	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.CatalogContainer()[.filter($filter+filtercall)].displayLoader($catalogDisplayLoader).catalogs(Displays.elementsFor(box, io.intino.konos.alexandria.ui.model.Catalog.class, $catalog+quoted...[, ]))).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
+end
+
+def type(view & container & panel)
+	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.PanelContainer().panel(Displays.elementFor(box, Panel.class, $panel+quoted))))
+end
+
+def type(view & container & set)
+	result.add(new ContainerView().container(new io.intino.konos.alexandria.ui.model.containers.SetContainer()$setViewItems).layout(View.Layout.$layout).name("$name")[.label("$label")][$hidden+call]);
+end
+
+def type(view & catalog & list)
+	result.add(new io.intino.konos.alexandria.ui.model.views.ListView()[.noRecordsMessage("$noItemsMessage")][.width($width)].mold((io.intino.konos.alexandria.ui.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
+end
+
+def type(view & catalog & grid)
+	result.add(new io.intino.konos.alexandria.ui.model.views.GridView()[.noRecordsMessage("$noItemsMessage")][.width($width)].mold((io.intino.konos.alexandria.ui.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element()).name("$name")[.label("$label")]);
+end
+
+def type(view & catalog & map)
+	result.add(new io.intino.konos.alexandria.ui.model.views.MapView()[.center(new io.intino.konos.alexandria.ui.model.catalog.views.MapView.Center().latitude($latitude).longitude($longitude))][.$zoom].mold((Mold) Displays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+end
+
+def type(view & catalog & magazine)
+	result.add(new io.intino.konos.alexandria.ui.model.views.MagazineView()[.noItemsMessage("$noItemsMessage")][.width($width)].mold((Mold) Displays.displayFor(box, "$mold").element()).name("$name").label("$label"));
+end
+
+def trigger(catalogDisplayLoader)
+	new io.intino.konos.alexandria.ui.model.containers.CatalogContainer.Loader() {
+		public io.intino.konos.alexandria.ui.displays.AlexandriaAbstractCatalog load(io.intino.konos.alexandria.ui.model.Catalog catalog, io.intino.konos.alexandria.ui.services.push.UISession session) {
+			return (io.intino.konos.alexandria.ui.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, catalog);
+		}
+	}
+end
+
+def type(setViewItems)
+	$items...[$NL]
+end
+
+def type(group)
+	result.add(new Group()[.label("$label")].mode(Group.Mode.$mode)[.hidden($hidden)][
+			$item...[$NL]].name("$name"));
+end
+
+def type(items)
+	.add(new io.intino.konos.alexandria.ui.model.views.set.Items().
+		label((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.label(box, element, ($modelClass) object))
+		[.icon((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.icon(box, element, ($modelClass) object))]
+		[.bubble((element, object) -> $layout+FirstUpperCase.$path+FirstUppercase.bubble(box, element, ($modelClass) object))]
+		.view($view)[.hidden($hidden)])
+end
+
+def	type(item)
+	.add(new io.intino.konos.alexandria.ui.model.views.set.Item().label("$label").view($view)[.hidden($hidden)].name("$name"))
+end
+
+def type(hidden) trigger(call)
+	.hidden((object, session) -> $owner+FirstUpperCase.Views.$view+FirstUpperCase.hidden(box, object, session))
+end
+
+def type(filter) trigger(call)
+	(catalog, context, target, object, session) -> $owner+FirstUpperCase.Views.$view+firstUpperCase.filter(box, catalog, context, target, ($itemClass) object, session)
+end
+
+def type(catalogScope)
+	(display, scope) -> $owner+FirstUpperCase.Views.$display+firstLowerCase~Scope(box, display, scope)
+end
+
+def trigger(zoom)
+	zoom(new io.intino.konos.alexandria.ui.model.catalog.views.MapView.Zoom()[.defaultZoom($default)][.max($max)][.min($min)])
+end
+
+def trigger(quoted)
+	"$value"
+end
