@@ -1,0 +1,79 @@
+dsl Konos
+
+use Panel
+use Schemas
+use Catalog
+
+Display alexandriaDesktop
+	displays = alexandriaTabLayout alexandriaMenuLayout
+
+	Notification displayType as Text
+	Notification(Client) loading as Bool
+	Notification(Client) loaded
+
+Display alexandriaTabLayout
+	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshOpened as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification openDefaultItem as Text
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request home
+	Request openItem as Text
+	Request logout
+
+Display alexandriaMenuLayout
+	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
+
+	Notification info as Object(PlatformInfo)
+	Notification refreshOpened as Text
+	Notification refreshItemList as List Object(Reference)
+	Notification openDefaultItem as Text
+	Notification user as Object(UserInfo)
+	Notification userLoggedOut as Text
+	Notification(Client) loading
+	Notification(Client) loaded
+
+	Request home
+	Request openItem as Text
+	Request logout
+
+Display alexandriaItem
+	Notification refresh as Object(ItemRefreshInfo)
+	Notification refreshValidation as Object(ItemValidationRefreshInfo)
+	Notification refreshMode as Text
+	Notification refreshEmptyMessage as Text
+
+	Request itemStampsReady as Text
+//	Request openItem as Object(Reference)
+//	Request openElement as Object(OpenElementParameters)
+
+	Request executeOperation as Object(ElementOperationParameters)
+	Request(Asset) downloadOperation as Object(ElementOperationParameters)
+	Request openItemDialogOperation as Object(OpenItemParameters)
+	Request openItemCatalogOperation as Object(OpenItemParameters)
+	Request executeItemTaskOperation as Object(ExecuteItemTaskParameters)
+	Request(Asset) downloadItemOperation as Object(DownloadItemParameters)
+	Request(Asset) exportItemOperation as Object(ExportItemParameters)
+	Request changeItem as Object(ChangeItemParameters)
+	Request validateItem as Object(ValidateItemParameters)
+
+Display alexandriaPageContainer
+	displays = empty
+
+	Notification refreshLocation as Object(PageLocation)
+
+Display alexandriaDialogBox
+	displays = empty
+
+	Notification refreshDisplay as Object(DisplayReference)
+	Notification refreshSettings as Object(DialogBoxSettings)
+	Notification closeDialog
+
+	Request accept
+	Request close

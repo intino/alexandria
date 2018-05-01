@@ -1,0 +1,106 @@
+def type(Displays)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.ui.displays.*;
+	import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.lang.reflect.Constructor;
+    import java.lang.reflect.InvocationTargetException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+	public class Displays {
+		private static Map<String, ElementDisplayBuilder> displayMap = new HashMap<>();
+
+		static {
+			{
+				$display...[$NL]
+				$dialog...[$NL]
+			}
+		}
+
+		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, String name) {
+			if (!displayMap.containsKey(name)) return null;
+			return displayMap.get(name).build(box);
+		}
+
+		public static AlexandriaElementDisplay displayFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element) {
+			if (!displayMap.containsKey(element.name())) return defaultElement(box, element);
+			return displayMap.get(element.name()).build(box);
+		}
+
+		public static <T extends io.intino.konos.alexandria.ui.model.Element> java.util.List<T> elementsFor($box+firstUpperCase~Box box, Class<T> tClass, String... elements) {
+			java.util.List<T> list = new java.util.ArrayList<>();
+			for (String element : elements)
+				list.add((T) displayMap.get(element).build(box).element());
+			return list;
+		}
+
+		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element) {
+			if (!displayMap.containsKey(element.name())) return defaultElementType(box, element);
+			return displayMap.get(element.name()).build(box).getClass();
+		}
+
+		private static Class<? extends AlexandriaElementDisplay> defaultElementType($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element) {
+			if (element instanceof io.intino.konos.alexandria.ui.model.Panel) return AlexandriaPanel.class;
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.TemporalCatalog)
+				return ((io.intino.konos.alexandria.ui.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.ui.model.TemporalCatalog.Type.Range ? AlexandriaTemporalRangeCatalog.class : AlexandriaTemporalTimeCatalog.class;
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Catalog)
+				return AlexandriaCatalog.class;
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Layout)
+				return ((io.intino.konos.alexandria.ui.model.Layout) element).mode() == io.intino.konos.alexandria.ui.model.Layout.Mode.Menu ? AlexandriaMenuLayout.class : AlexandriaTabLayout.class;
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Desktop)
+				return AlexandriaDesktop.class;
+
+			return null;
+		}
+
+		private static AlexandriaElementDisplay defaultElement($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element) {
+			if (element instanceof io.intino.konos.alexandria.ui.model.Panel) return new AlexandriaPanel(box);
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.TemporalCatalog)
+				return ((io.intino.konos.alexandria.ui.model.TemporalCatalog) element).type() == io.intino.konos.alexandria.ui.model.TemporalCatalog.Type.Range ? new AlexandriaTemporalRangeCatalog(box) : new AlexandriaTemporalTimeCatalog(box);
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Catalog)
+				return new AlexandriaCatalog(box);
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Layout)
+				return ((io.intino.konos.alexandria.ui.model.Layout) element).mode() == io.intino.konos.alexandria.ui.model.Layout.Mode.Menu ? new AlexandriaMenuLayout(box) : new AlexandriaTabLayout(box);
+
+			if (element instanceof io.intino.konos.alexandria.ui.model.Desktop)
+				return new AlexandriaDesktop(box);
+
+			return null;
+		}
+
+/*		private void refreshCatalog($box+firstUpperCase~Box box, String catalog, Item... items) {
+			uiSouls.values().stream().map(Soul::getAll).flatMap(Collection::stream)
+					.filter(d -> d instanceof AlexandriaAbstractCatalog && ((AlexandriaAbstractCatalog) d)
+							.isFor(catalog)).forEach(d -> {
+				AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) d;
+				display.dirty(true);
+				if (categorizationsHaveChanges || items.length == 0)
+					display.refresh();
+				else
+					display.refresh(items);
+			});
+		}
+*/
+		private interface ElementDisplayBuilder {
+			AlexandriaElementDisplay build($box+firstUpperCase~Box box);
+		}
+	}
+end
+
+def trigger(display)
+	displayMap.put("$name", (box) -> new $name+FirstUpperCase(box));
+end
+
+def trigger(dialog)
+	dialogMap.put("$name", (box) -> new $name+FirstUpperCase(box));
+end

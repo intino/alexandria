@@ -2,6 +2,7 @@ package io.intino.konos.model.graph;
 
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Graph;
 
 import java.util.*;
@@ -18,18 +19,18 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		super(graph, wrapper);
 	}
 
-	public static List<Display> displaysOf(Activity activity) {
-		return activity.graph().core$().find(Display.class);
+	public static List<Display> displaysOf(UIService service) {
+		return service.graph().core$().find(Display.class);
 	}
 
-	public static List<Dialog> dialogsOf(Activity activity) {
-		return activity.graph().core$().find(Dialog.class);
+	public static List<Dialog> dialogsOf(UIService service) {
+		return service.graph().core$().find(Dialog.class);
 	}
 
-	public static List<Component> componentsOf(Activity activity) {
+	public static List<Component> componentsOf(UIService service) {
 		List<Component> components = new ArrayList<>();
-		components.addAll(dialogsOf(activity));
-		components.addAll(displaysOf(activity));
+		components.addAll(dialogsOf(service));
+		components.addAll(displaysOf(service));
 		return components;
 	}
 
@@ -47,12 +48,12 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return set;
 	}
 
-	public Set<String> findCustomParameters(Activity activity) {
+	public Set<String> findCustomParameters(UIService service) {
 		Set<String> set = new LinkedHashSet<>();
-		if (activity.authenticated() != null)
-			set.addAll(extractParameters(activity.authenticated().by()));
-		for (Activity.AbstractPage page : activity.abstractPageList())
-			for (String path : page.paths()) set.addAll(extractParameters(path));
+		if (service.authentication() != null)
+			set.addAll(extractParameters(service.authentication().by()));
+		for (UIService.Resource resource : service.resourceList())
+			set.addAll(extractParameters(resource.path()));
 		return set;
 	}
 

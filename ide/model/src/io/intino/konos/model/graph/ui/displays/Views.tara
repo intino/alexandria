@@ -1,0 +1,77 @@
+dsl Proteo
+
+use Display
+use Panel
+use Catalog
+use Mold
+
+Concept View is abstract
+	var string label
+	var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
+	var word:{Tab LeftFixed RightFixed} layout = Tab
+	var integer:{%} width = 100%
+
+	sub ContainerView
+
+	sub CatalogView is abstract
+		var string noItemsMessage = empty
+		var Mold mold
+
+		sub ListView
+		sub GridView
+		sub MagazineView
+		sub MapView
+			has:{1..1} MapProperties
+
+Facet Container on ContainerView is abstract
+
+Facet MoldContainer extends Container
+	var Mold mold
+
+Facet CatalogContainer extends Container
+	var Catalog catalog
+	var boolean filtered = false
+
+Facet PanelContainer extends Container
+	var Panel panel
+	var word:{withObject withoutObject} withObject = withoutObject
+
+Facet DisplayContainer extends Container
+	var Display display
+	var boolean hideNavigator = true
+
+//Facet MapContainer extends Container
+//	var Mold mold
+//	has:{1..1} MapProperties
+
+Facet SetContainer extends Container
+	Concept:Named AbstractItem is abstract
+		var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
+
+		sub Single
+			var string label
+			var string polymerIcon = empty
+			var integer bubble = -1
+
+			sub Group
+				var word:{Expanded Collapsed} mode
+				has:Named Item
+				has:Named Items
+
+			sub Item
+				has:{1..1} ContainerView
+
+		sub Multiple
+			sub Items
+				var string itemClass
+				has:{1..1} ContainerView
+
+Concept MapProperties is component
+	Concept:{0..1} Center
+		var double latitude
+		var double longitude
+
+	Concept:{1..1} Zoom
+		var integer defaultZoom
+		var integer min
+		var integer max

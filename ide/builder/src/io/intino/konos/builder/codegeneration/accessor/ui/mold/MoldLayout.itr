@@ -2,10 +2,10 @@ def type(mold)
 	<link rel="import" href="../../../lib/polymer/polymer.html">
 	<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
 
-	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/alexandria-breadcrumbs-behavior.html">
-	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-layout-behavior.html">
-	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-block.html">
-	<link rel="import" href="../../../lib/alexandria-activity-elements/_common/mold/alexandria-mold-stamps.html">
+	<link rel="import" href="../../../lib/alexandria-ui-elements/_common/alexandria-breadcrumbs-behavior.html">
+	<link rel="import" href="../../../lib/alexandria-ui-elements/_common/mold/alexandria-mold-layout-behavior.html">
+	<link rel="import" href="../../../lib/alexandria-ui-elements/_common/mold/alexandria-mold-block.html">
+	<link rel="import" href="../../../lib/alexandria-ui-elements/_common/mold/alexandria-mold-stamps.html">
 
 	<dom-module id="$name+CamelCaseToSnakeCase~-layout">
 

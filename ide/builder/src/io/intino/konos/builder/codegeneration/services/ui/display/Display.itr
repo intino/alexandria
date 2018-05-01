@@ -1,0 +1,72 @@
+def type(display)
+	package $package.displays;
+
+	import io.intino.konos.alexandria.exceptions.*;
+	import $package.*;
+	$schemaImport
+	import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.ui.services.push.UISession;
+    $parent+import
+
+    public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~Notifier> {
+        private $box+firstUpperCase~Box box;
+
+        public $name+firstUpperCase($box+firstUpperCase~Box box) {
+            super();
+            this.box = box;
+        }
+		[
+        @Override
+		protected void init() {
+			super.init();
+			$parent
+			$innerDisplay...[$NL]
+		}
+	]
+		$request...[$NL$NL]
+    }
+end
+def type(request & asset)
+	public io.intino.konos.alexandria.ui.spark.UIFile $name([$parameter value]) {
+        return null;
+	}
+end
+def type(request)
+	public void $name([$parameter value]) {
+
+	}
+end
+
+def type(dateTime | date) type(list) trigger(parameter)
+    $value
+end
+
+def type(dateTime | date) trigger(parameter)
+    $value
+end
+
+def type(list) trigger(parameter)
+    $value$[]
+end
+
+def trigger(parameter)
+    $value
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def trigger(import)
+	import $package.displays.*;
+end
+
+def trigger(parent)
+	addAndPersonify(new $value+firstUpperCase(($dsl~Box) box.owner()));
+end
+
+def trigger(innerDisplay)
+	addAndPersonify(new $value+firstUpperCase((box)));
+end

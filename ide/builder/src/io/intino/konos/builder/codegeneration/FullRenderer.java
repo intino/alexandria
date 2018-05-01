@@ -5,19 +5,19 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
-import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
+import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.MessageHandlerRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessTanksRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.ActivityRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogsRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.display.DisplayRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.display.DisplaysRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.resource.ResourceRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogSrcRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
@@ -125,15 +125,15 @@ public class FullRenderer {
 		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName).execute();
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
 		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
-		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
+		new DialogSrcRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
-		new ActivityAccessorCreator(module, graph, parent).execute();
+		new UIRenderer(graph, src, gen, packageName, boxName).execute();
+		new UIAccessorCreator(module, graph, parent).execute();
 	}
 
 	private void box() {
-		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
-		new BoxRenderer(src, packageName, module, hasModel).execute();
+		new BoxGenRenderer(graph, gen, packageName, module, parent, hasModel).execute();
+		new BoxSrcRenderer(src, packageName, module, hasModel).execute();
 		new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 	}
 

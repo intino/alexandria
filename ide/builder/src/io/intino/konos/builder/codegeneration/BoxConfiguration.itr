@@ -26,8 +26,8 @@ def type(boxConfiguration)
 	}
 end
 
-def type(service & activity) trigger(field)
-	$name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
+def type(service & ui) trigger(field)
+	$name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 end
 
 def type(service & datalake) trigger(field)
@@ -63,7 +63,7 @@ def type(service & slack) trigger(fill)
 		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase~_token"));
 end
 
-def type(service & activity) trigger(fill)
+def type(service & ui) trigger(fill)
 	if (args.containsKey("$name+firstLowerCase~_port")) {
 		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port"))[, $custom+parameter...[, ]]);
 		$authURL+assign
@@ -113,11 +113,11 @@ def type(service & slack) trigger(confClass)
 	}
 end
 
-def type(service & activity) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration {
+def type(service & ui) trigger(confClass)
+	public static class $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration {
 		public int port;
 		public String webDirectory;
-		public io.intino.konos.alexandria.activity.services.AuthService authService;
+		public io.intino.konos.alexandria.ui.services.AuthService authService;
 		$custom+field...[$NL]
 
 		[public java.net.URL authServiceUrl() {
@@ -211,16 +211,16 @@ def type(service & rest)
 	}
 end
 
-def type(service & activity)
+def type(service & ui)
 	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration();
+		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration();
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
 		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = "www/";
 		$custom+assign...[$NL]
 		return this;
 	}
 
-	public $name+snakeCaseToCamelCase+firstUpperCase~ActivityConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
+	public $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
 		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
 	}
 end

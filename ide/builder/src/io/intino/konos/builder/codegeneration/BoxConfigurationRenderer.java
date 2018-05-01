@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.DataLake;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
@@ -10,6 +9,7 @@ import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
+import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -107,15 +107,15 @@ public class BoxConfigurationRenderer {
 	}
 
 	private void addActivities(Frame frame, String boxName) {
-		for (Activity activity : graph.activityList()) {
-			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name$()).addSlot("configuration", boxName);
+		for (UIService service : graph.uIServiceList()) {
+			Frame activityFrame = new Frame().addTypes("service", "ui").addSlot("name", service.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", activityFrame);
-			if (activity.authenticated() != null) {
+			if (service.authentication() != null) {
 				activityFrame.addTypes("auth");
-				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name$()).addSlot("configuration", boxName));
-				activityFrame.addSlot("auth", activity.authenticated().by());
+				activityFrame.addSlot("authURL", new Frame().addSlot("name", service.name$()).addSlot("configuration", boxName));
+				activityFrame.addSlot("auth", service.authentication().by());
 			}
-			addUserVariables(activity, activityFrame, findCustomParameters(activity));
+			addUserVariables(service, activityFrame, findCustomParameters(service));
 		}
 	}
 
@@ -144,12 +144,12 @@ public class BoxConfigurationRenderer {
 		return set;
 	}
 
-	private Set<String> findCustomParameters(Activity activity) {
+	private Set<String> findCustomParameters(UIService service) {
 		Set<String> set = new LinkedHashSet<>();
-		if (activity.authenticated() != null)
-			set.addAll(Commons.extractParameters(activity.authenticated().by()));
-		for (Activity.AbstractPage page : activity.abstractPageList())
-			for (String path : page.paths()) set.addAll(Commons.extractParameters(path));
+		if (service.authentication() != null)
+			set.addAll(Commons.extractParameters(service.authentication().by()));
+		for (UIService.Resource resource : service.resourceList())
+			set.addAll(Commons.extractParameters(resource.path()));
 		return set;
 	}
 

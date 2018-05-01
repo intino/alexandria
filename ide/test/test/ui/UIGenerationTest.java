@@ -1,7 +1,7 @@
 package ui;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorRenderer;
+import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorRenderer;
 import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
@@ -26,7 +26,7 @@ public class UIGenerationTest {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
+		for (Activity activity : graph.activityList()) new UIAccessorRenderer(gen, activity).execute();
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class UIGenerationTest {
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (Activity activity : graph.activityList()) new ActivityAccessorRenderer(gen, activity).execute();
+		for (Activity activity : graph.activityList()) new UIAccessorRenderer(gen, activity).execute();
 	}
 
 }

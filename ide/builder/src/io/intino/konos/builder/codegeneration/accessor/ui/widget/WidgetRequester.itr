@@ -9,7 +9,7 @@ def type(widget)
 end
 
 
-def type(parameter & registerRoute) trigger(request)
+def type(parameter & addressable) trigger(request)
 	route$name+firstUpperCase : function (fromDisplay, value) {
 		if (this.display == null || fromDisplay == null || fromDisplay.id != this.display.id) return;
 		this.carry("$name", { "value" : value });
@@ -22,7 +22,7 @@ def type(parameter & registerRoute) trigger(request)
 end
 
 
-def type(registerRoute) !type(parameter) trigger(request)
+def type(addressable) !type(parameter) trigger(request)
 	route$name+firstUpperCase : function (fromDisplay) {
 		if (this.display == null || fromDisplay == null || fromDisplay.id != this.display.id) return;
 		this.carry("$name");

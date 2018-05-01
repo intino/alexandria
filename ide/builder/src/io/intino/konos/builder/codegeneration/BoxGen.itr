@@ -1,0 +1,308 @@
+def type(box)
+	package $package;
+
+	import java.util.LinkedHashMap;
+	import java.util.Map;
+	import java.util.UUID;[$hasUi
+	import java.util.HashMap;
+    import java.util.Map;
+	]
+	import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+	import java.util.logging.ConsoleHandler;
+	import java.util.logging.Level;
+	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+	[
+	$hasREST~import io.intino.konos.alexandria.rest.AlexandriaSpark;][
+    $hasUi+hide~import io.intino.konos.alexandria.ui.displays.Soul;]
+
+	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.konos.alexandria.Box] {
+		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
+		$service+field...[$NL]][
+		$dataLake+field...[$NL]][
+		$task+field][
+        $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
+	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
+
+		public AbstractBox(String$[] args) {
+			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
+		}
+		
+		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
+			[owner = new $parent~Box(configuration);]
+			this.configuration = configuration;[
+			initLogger();
+			$service+setup...[$NL]][
+			$ui+setup...[$NL]]
+		}
+
+		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
+			return ($name+SnakeCaseToCamelCase+firstUpperCase~Configuration) configuration;
+		}
+
+		@Override
+		public io.intino.konos.alexandria.Box put(Object o) {
+			[$hasParent~owner.put(o);]
+			return this;
+		}
+
+		public io.intino.konos.alexandria.Box open() {
+			if(owner != null) owner.open();
+			initLogger();
+			initActivities();
+			initRESTServices();
+			initJMXServices();
+			initJMSServices();
+			initDataLake();
+			initTasks();
+			initSlackBots();
+			return this;
+		}
+
+		public void close() {
+			if(owner != null) owner.close();
+			$spark...[$NL]
+			$service+quit...[$NL]
+			$dataLake+quit...[$NL]
+		}
+
+		[$hasUiService+registerSoul~
+		][$service+getter...[$NL$NL]]
+
+		$dataLake+getter...[$NL$NL]
+
+		$task+getter...[$NL$NL]
+
+		private void initRESTServices() {
+			$service+rest...[$NL]
+		}
+
+		private void initJMSServices() {
+			[$jms~javax.jms.Connection connection;]
+			$service+jms...[$NL]
+		}
+
+		private void initJMXServices() {
+			$service+jmx...[$NL]
+		}
+
+		private void initSlackBots() {
+			$service+slack...[$NL]
+		}
+
+		private void initActivities() {
+			$ui...[$NL]
+		}
+
+		private void initDataLake() {
+			$dataLake+init...[$NL]
+		}
+
+		private void initTasks() {
+			$task+init...[$NL]
+		}
+
+		private void initLogger() {
+			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
+			final ConsoleHandler handler = new ConsoleHandler();
+			handler.setLevel(Level.INFO);
+			handler.setFormatter(new io.intino.konos.alexandria.LogFormatter("log"));
+			logger.setUseParentHandlers(false);
+			logger.addHandler(handler);
+		}
+	}
+end
+
+def trigger(uiBox)
+	io.intino.konos.alexandria.ui.AlexandriaUiBox
+end
+
+def type(ui) trigger(setup)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
+		io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
+end
+
+def type(service & rest) trigger(setup)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
+		io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
+end
+
+def type(service & jmx) trigger(jmx)
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
+	logger.info("JMX service $name: started!");
+end
+
+def type(service & slack) trigger(slack)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	logger.info("Slack service $name: started!");
+end
+
+def type(service & rest) trigger(rest)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	logger.info("REST service $name: started!");
+end
+
+def type(ui) trigger(ui)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~UIService.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	io.intino.konos.alexandria.ui.UIElements.initDisplays(sparkInstance);
+	sparkInstance.start();
+	logger.info("UI $name: started!");
+end
+
+def type(service & jms) trigger(jms)
+	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+	try {
+		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
+		java.lang.Thread thread = new java.lang.Thread(() -> {
+			try {
+				connection.start();
+				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+				logger.info("JMS service $name: started!");
+			} catch (javax.jms.JMSException e) {
+				logger.error(e.getMessage());
+			}
+		}, "jms init");
+		thread.start();
+		thread.join(10000);
+	} catch (javax.jms.JMSException | InterruptedException e) {
+		logger.error(e.getMessage());
+	}
+end
+
+def type(dataLake) trigger(init)
+	if (configuration().nessConfiguration() == null) return;
+	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
+	java.lang.Thread thread = new java.lang.Thread(()-> {
+		this.ness.connect("$mode");
+		$package.ness.NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		logger.info("Ness connection: started!");
+	}, "ness init");
+	try {
+		thread.start();
+		thread.join(10000);
+	} catch (InterruptedException e) {
+		logger.error(e.getMessage());
+	}
+end
+
+def attribute(Transacted) trigger(mode)
+	Transacted
+end
+
+def trigger(mode)
+end
+
+def type(service & jmx) trigger(field)
+	private io.intino.konos.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & slack) trigger(field)
+	private io.intino.konos.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(service & jms) trigger(field)
+	private $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase;
+end
+
+def type(task) trigger(field)
+	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
+end
+
+def type(dataLake) trigger(field)
+	private io.intino.konos.datalake.Ness ness;
+end
+
+def type(service & jms) trigger(getter)
+	public $name+SnakeCaseToCamelCase+firstUpperCase~Service $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(dataLake) trigger(getter)
+	public io.intino.konos.datalake.Ness datalake() {
+		return this.ness;
+	}
+end
+
+def type(service & slack) trigger(getter)
+	public $name+SnakeCaseToCamelCase+firstUpperCase~SlackBot $name+SnakeCaseToCamelCase+firstlowerCase() {
+		return ($name+SnakeCaseToCamelCase+firstUpperCase~SlackBot) $name+SnakeCaseToCamelCase+firstlowerCase;
+	}
+end
+
+def type(service) trigger(getter)
+end
+
+def trigger(spark)
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance().stop();
+end
+
+def type(service) type(jms) trigger(quit)
+	if ($name+SnakeCaseToCamelCase+firstlowerCase != null) $name+SnakeCaseToCamelCase+firstlowerCase.closeSession();
+end
+
+def type(dataLake) trigger(quit)
+	if (ness != null) ness.disconnect();
+end
+
+def type(service) trigger(quit)
+end
+
+def type(service)
+end
+
+def type(task) trigger(init)
+	Tasks.init(this.tasker, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+end
+
+def type(task) trigger(getter)
+	public io.intino.konos.scheduling.KonosTasker tasker() {
+		return this.tasker;
+	}
+end
+
+def trigger(registerSoul)
+	public java.util.List<Soul> souls() {
+		return new java.util.ArrayList<>(uiSouls.values());
+	}
+
+	public java.util.Optional<Soul> soul(String clientId) {
+		return java.util.Optional.ofNullable(uiSouls.get(clientId));
+	}
+
+	public void registerSoul(String clientId, Soul soul) {
+		[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+		uiSouls.put(clientId, soul);
+	}
+
+	public void unRegisterSoul(String clientId) {
+		[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+		uiSouls.remove(clientId);
+		if (uiSouls.size() <= 0) notifySoulsClosed();
+	}
+
+	public void onSoulsClosed(io.intino.konos.alexandria.ui.UIBox.SoulsClosed listener) {
+		[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
+		this.soulsClosedListeners.add(listener);
+	}
+
+	private void notifySoulsClosed() {
+		soulsClosedListeners.forEach(l -> l.accept());
+	}
+end
+
+def trigger(import)
+end
+
+def trigger(parentInit)
+end
+
+def trigger(hide)
+end
+
