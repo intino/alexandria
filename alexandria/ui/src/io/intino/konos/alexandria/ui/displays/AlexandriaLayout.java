@@ -173,7 +173,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	private LayoutItem displayItem(ContainerView view) {
 		DisplayContainer container = view.container();
 		Panel panel = new Panel();
-		panel.views().add(new ContainerView().container(container).name(UUID.randomUUID().toString()));
+		panel.views().add(new ContainerView().container(container).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
 		return itemOf(view, panel);
 	}
 
