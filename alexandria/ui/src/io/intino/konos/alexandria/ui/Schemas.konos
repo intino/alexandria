@@ -38,11 +38,6 @@ Schema Group
 	Attribute selected as Bool
 	Attribute count as Integer
 
-Schema ClusterGroup
-	Attribute name as Text
-	Attribute cluster as Text
-	Attribute(multiple=true) items as Text
-
 Schema DateNavigatorState
 	Attribute playing as Bool
 	Attribute canPlay as Bool
@@ -101,8 +96,6 @@ Schema ElementView
 	Attribute width as Integer
 	Attribute selectionEnabledByDefault as Bool
 	Attribute canSearch as Bool
-	Attribute canCreateClusters as Bool
-	Attribute(multiple=true) clusters as Text
 	Attribute emptyMessage as Text
 	Attribute mold as Text
 

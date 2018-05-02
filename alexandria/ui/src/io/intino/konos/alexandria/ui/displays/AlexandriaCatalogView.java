@@ -23,7 +23,6 @@ public abstract class AlexandriaCatalogView<N extends AlexandriaDisplayNotifier>
 		super(box);
 	}
 
-	public abstract void reset();
 	public abstract List<Item> selectedItems();
 	public abstract void refreshSelection(List<String> items);
 	protected abstract void refreshPicture(PictureData data);
@@ -59,13 +58,13 @@ public abstract class AlexandriaCatalogView<N extends AlexandriaDisplayNotifier>
 	}
 
 	private List<Picture> expandedPictures(String item) {
-		return provider().expandedStamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
+		return provider().expandedStamps(view().mold()).stream().filter(s -> (s instanceof Picture))
 				.map(s -> (Picture)s)
 				.collect(toList());
 	}
 
 	private List<Picture> allPictures(String item) {
-		return provider().stamps(definition().mold()).stream().filter(s -> (s instanceof Picture))
+		return provider().stamps(view().mold()).stream().filter(s -> (s instanceof Picture))
 				.map(s -> (Picture)s)
 				.collect(toList());
 	}

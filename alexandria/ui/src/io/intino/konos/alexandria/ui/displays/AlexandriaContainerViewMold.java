@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.ui.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewMoldNotifier;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.schemas.Item;
 
@@ -32,7 +33,7 @@ public class AlexandriaContainerViewMold extends AlexandriaContainerView<Alexand
     }
 
     private void createItemDisplay() {
-        AlexandriaElementViewDefinition view = definition();
+        View view = view();
         AlexandriaItem display = new AlexandriaItem(box);
         display.route(routeSubPath());
         display.mold(view.mold());

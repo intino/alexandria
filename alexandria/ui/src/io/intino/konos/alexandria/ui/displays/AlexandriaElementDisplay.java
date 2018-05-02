@@ -466,6 +466,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		return target;
 	}
 
+	public Optional<Toolbar> toolbar() {
+		return Optional.ofNullable(element().toolbar());
+	}
+
 	public abstract void notifyUser(String message);
 	protected abstract void showDialogBox();
 	protected abstract void currentItem(String id);
@@ -493,10 +497,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			return null;
 
 		return toolbar.get().operations().stream().filter(op -> op.name().equals(params.operation())).findFirst().orElse(null);
-	}
-
-	private Optional<Toolbar> toolbar() {
-		return Optional.ofNullable(element().toolbar());
 	}
 
 	private void executeOperation(Operation operation, String option, List<Item> selection, Position position) {

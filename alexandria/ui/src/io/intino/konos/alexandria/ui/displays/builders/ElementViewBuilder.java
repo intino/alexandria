@@ -1,10 +1,12 @@
 package io.intino.konos.alexandria.ui.displays.builders;
 
-import io.intino.konos.alexandria.ui.displays.AlexandriaElementViewDefinition;
+import io.intino.konos.alexandria.ui.displays.providers.ElementViewDisplayProvider;
+import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.catalog.views.MapView;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
 import io.intino.konos.alexandria.ui.model.toolbar.GroupingSelection;
+import io.intino.konos.alexandria.ui.model.views.CatalogView;
+import io.intino.konos.alexandria.ui.model.views.MapView;
 import io.intino.konos.alexandria.ui.schemas.*;
 import io.intino.konos.alexandria.ui.schemas.Operation;
 
@@ -16,22 +18,29 @@ import static java.util.Collections.singletonList;
 
 public class ElementViewBuilder {
 
-    public static ElementView build(AlexandriaElementViewDefinition view) {
+    public static ElementView build(View view, ElementViewDisplayProvider provider) {
         ElementView result = new ElementView().name(view.name()).label(view.label()).mold(view.mold().type());
+        Element element = provider.element();
+        io.intino.konos.alexandria.ui.model.Toolbar toolbar = element.toolbar();
 
-        if (view.toolbar() != null)
-            result.toolbar(buildToolbar(view.toolbar()));
+        if (toolbar != null)
+            result.toolbar(buildToolbar(toolbar));
 
-        result.embeddedElement(view.embeddedElement());
-        result.type(view.type());
+        result.embeddedElement(provider.embedded());
+        result.type(view.getClass().getSimpleName());
         result.width(view.width());
-        result.canSearch(view.canSearch());
-        result.canCreateClusters(view.canCreateClusters());
-        result.selectionEnabledByDefault(view.selectionEnabledByDefault());
-        result.clusters(view.clusters());
-        result.emptyMessage(view.emptyMessage() != null ? view.emptyMessage() : "");
+        result.canSearch(toolbar != null && toolbar.canSearch());
+        result.selectionEnabledByDefault(provider.selectionEnabledByDefault());
+        result.emptyMessage(emptyMessage(view));
         addMapViewProperties(result, view);
+
         return result;
+    }
+
+    private static String emptyMessage(View view) {
+        if (!(view instanceof CatalogView)) return "";
+        String message = ((CatalogView) view).noRecordsMessage();
+        return message != null ? message : "";
     }
 
     private static Toolbar buildToolbar(io.intino.konos.alexandria.ui.model.Toolbar toolbar) {
@@ -103,11 +112,10 @@ public class ElementViewBuilder {
         return "operation";
     }
 
-    private static void addMapViewProperties(ElementView result, AlexandriaElementViewDefinition view) {
-        View rawView = view.raw();
-        if (! (rawView instanceof MapView)) return;
+    private static void addMapViewProperties(ElementView result, View view) {
+        if (! (view instanceof MapView)) return;
 
-        MapView mapView = (MapView)rawView;
+        MapView mapView = (MapView)view;
         MapView.Zoom zoom = mapView.zoom();
         MapView.Center center = mapView.center();
 

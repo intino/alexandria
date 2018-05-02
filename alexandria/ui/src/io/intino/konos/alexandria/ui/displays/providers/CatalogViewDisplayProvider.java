@@ -1,7 +1,6 @@
 package io.intino.konos.alexandria.ui.displays.providers;
 
 import io.intino.konos.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.schemas.ClusterGroup;
 
 import java.util.List;
 
@@ -16,7 +15,5 @@ public interface CatalogViewDisplayProvider extends ElementViewDisplayProvider {
     List<io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting> sortings();
 
     io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting sorting(String name);
-
-    void createClusterGroup(ClusterGroup value);
 }
 

@@ -40,7 +40,7 @@ public class UIRenderer {
 	private void processUIService(UIService service) {
 		final List<Dialog> dialogs = dialogsOf(service);
 		final List<Display> displays = displaysOf(service);
-		Frame frame = new Frame().addTypes("service").
+		Frame frame = new Frame().addTypes("ui").
 				addSlot("package", packageName).
 				addSlot("name", service.name$()).
 				addSlot("box", boxName).addSlot("resource", resourcesFrame(service.resourceList()));
@@ -50,7 +50,7 @@ public class UIRenderer {
 		if (!displays.isEmpty())
 			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName);
 		if (service.authentication() != null) frame.addSlot("auth", service.authentication().by());
-		writeFrame(gen, snakeCaseToCamelCase(service.name$() + "UI"), template().format(frame));
+		writeFrame(gen, snakeCaseToCamelCase(service.name$()), template().format(frame));
 	}
 
 	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {

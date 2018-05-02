@@ -2,14 +2,15 @@ package io.intino.konos.alexandria.ui.displays;
 
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewDisplayNotifier;
-import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.catalog.Scope;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.views.container.DisplayContainer;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 
 public class AlexandriaContainerViewDisplay extends AlexandriaContainerView<AlexandriaContainerViewDisplayNotifier> {
+    private AlexandriaDisplay display;
 
     public AlexandriaContainerViewDisplay(Box box) {
         super(box);
@@ -18,9 +19,9 @@ public class AlexandriaContainerViewDisplay extends AlexandriaContainerView<Alex
     @Override
     protected void init() {
         super.init();
-        PanelView rawView = (PanelView) definition().raw();
-        RenderDisplay render = rawView.render();
-        AlexandriaDisplay display = render.display(target(), loadingListener(), instantListener());
+        ContainerView view = view();
+        DisplayContainer container = view.container();
+        display = container.display(target(), loadingListener(), instantListener(), session());
         if (display == null) return;
         sendDisplayType(display);
         add(display);
@@ -30,7 +31,13 @@ public class AlexandriaContainerViewDisplay extends AlexandriaContainerView<Alex
     @Override
     public void refresh() {
         super.refresh();
-        Optional.ofNullable(child(AlexandriaDisplay.class)).ifPresent(AlexandriaDisplay::refresh);
+        display.refresh();
+    }
+
+    public void refresh(Scope scope) {
+        ContainerView view = view();
+        DisplayContainer container = view.container();
+        container.update(display, scope);
     }
 
     private void sendDisplayType(AlexandriaDisplay display) {
@@ -38,17 +45,14 @@ public class AlexandriaContainerViewDisplay extends AlexandriaContainerView<Alex
     }
 
     private Consumer<Boolean> loadingListener() {
-        return value -> AlexandriaPanelDisplayView.this.notifyLoading((Boolean) value);
+        return value -> AlexandriaContainerViewDisplay.this.notifyLoading((Boolean) value);
     }
 
     private Consumer<CatalogInstantBlock> instantListener() {
-        return block -> AlexandriaPanelDisplayView.this.selectInstant((CatalogInstantBlock) block);
+        return block -> AlexandriaContainerViewDisplay.this.selectInstant((CatalogInstantBlock) block);
     }
 
     private void selectInstant(CatalogInstantBlock block) {
-        AlexandriaCatalog display = provider().openElement(block.catalog());
-        List<String> items = block.items();
-        display.filterAndNotify(item -> items.contains(((Item)item).id()));
-        display.refreshView();
+        provider().selectInstant(block);
     }
 }

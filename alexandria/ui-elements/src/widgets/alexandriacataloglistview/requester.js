@@ -23,9 +23,6 @@ AlexandriaCatalogListViewBehaviors.Requester = {
     filter : function(value) {
     	this.carry("filter", { "value" : value });
     },
-    createClusterGroup : function(value) {
-    	this.carry("createClusterGroup", { "value" : value });
-    },
     executeOperation : function(value) {
     	this.carry("executeOperation", { "value" : value });
     },

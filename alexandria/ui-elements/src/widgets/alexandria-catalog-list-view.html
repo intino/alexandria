@@ -18,9 +18,7 @@
                                  embedded="[[_view.embeddedElement]]"
                                  empty-message="[[_view.emptyMessage]]"
                                  can-search="[[_view.canSearch]]"
-                                 can-create-clusters="[[_view.canCreateClusters]]"
                                  selection-enabled-by-default="[[_view.selectionEnabledByDefault]]"
-                                 cluster-list="[[_view.clusterList]]"
                                  page-size="[[_pageSize]]"
                                  item-list="[[_itemList]]"
                                  count-item-list="[[_countItemList]]"
@@ -38,7 +36,6 @@
                                  on-validate-item="_validateItem"
                                  on-select-items="_selectItems"
                                  on-download-item="_downloadItem"
-                                 on-create-cluster-group="_createClusterGroup"
                                  on-filter="_filter"
                                  toolbar="[[_view.toolbar]]"
                                  on-execute-operation="_executeOperation"
@@ -186,10 +183,6 @@
 
             _filter : function(e) {
                 this.filter(e.detail);
-            },
-
-            _createClusterGroup : function(e) {
-                this.createClusterGroup(e.detail);
             },
 
             _executeOperation : function(e) {

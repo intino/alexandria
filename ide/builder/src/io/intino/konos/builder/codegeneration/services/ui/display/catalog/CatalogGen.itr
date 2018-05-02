@@ -40,7 +40,6 @@ def type(catalog & gen)
 			$hasMagazineView][
 			catalog.events(new io.intino.konos.alexandria.ui.model.catalog.Events().onClickItem(new OnClickItem().$event));][
 			$hasGroupings][
-			$groupingselection][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
 			catalog.objectLoader((id, session) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, session))
@@ -113,10 +112,6 @@ end
 
 def trigger(scaleAdd)
 	add(TimeScale.$value+FirstUpperCase);
-end
-
-def trigger(groupingSelection)
-	catalog.clusterManager((element, grouping, group, session) -> $name+firstUpperCase.Arrangements.createGroup(box, element, grouping, group, session));
 end
 
 def trigger(hasMagazineView)

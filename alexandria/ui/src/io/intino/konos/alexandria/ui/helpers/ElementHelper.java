@@ -74,7 +74,7 @@ public class ElementHelper {
 
 			@Override
 			public <D extends AlexandriaElementDisplay> D openElement(String label) {
-				return provider.openElement(label);
+				return (D) provider.openElement(label);
 			}
 
 			@Override

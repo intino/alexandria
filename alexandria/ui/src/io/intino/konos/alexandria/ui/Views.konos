@@ -47,7 +47,6 @@ Display alexandriaCatalogListView
 	Request selectSorting as Object(Sorting)
 	Request page as Integer
 	Request filter as Text
-	Request createClusterGroup as Object(ClusterGroup)
 
 	Request executeOperation as Object(ElementOperationParameters)
 	Request(Asset) downloadOperation as Object(ElementOperationParameters)
