@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
 
 import java.time.Instant;
 import java.util.HashMap;

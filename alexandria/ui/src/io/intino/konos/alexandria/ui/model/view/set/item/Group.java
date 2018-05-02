@@ -1,6 +1,6 @@
-package io.intino.konos.alexandria.ui.model.views.set.item;
+package io.intino.konos.alexandria.ui.model.view.set.item;
 
-import io.intino.konos.alexandria.ui.model.views.set.AbstractItem;
+import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 
 import java.util.ArrayList;
 import java.util.List;

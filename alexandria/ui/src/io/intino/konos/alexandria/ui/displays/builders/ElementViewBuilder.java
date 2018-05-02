@@ -5,8 +5,8 @@ import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
 import io.intino.konos.alexandria.ui.model.toolbar.GroupingSelection;
-import io.intino.konos.alexandria.ui.model.views.CatalogView;
-import io.intino.konos.alexandria.ui.model.views.MapView;
+import io.intino.konos.alexandria.ui.model.view.CatalogView;
+import io.intino.konos.alexandria.ui.model.view.MapView;
 import io.intino.konos.alexandria.ui.schemas.*;
 import io.intino.konos.alexandria.ui.schemas.Operation;
 

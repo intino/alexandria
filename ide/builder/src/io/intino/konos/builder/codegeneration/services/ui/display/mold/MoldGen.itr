@@ -138,7 +138,7 @@ def type(stamp & openExternalDialogOperation)
 end
 
 def type(stamp & openCatalogOperation)
-	.add(new io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.ui.displays.AlexandriaAbstract$$Catalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.ui.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection")[.execution($openCatalogOperationExecution)].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
+	.add(new io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation()[$width].catalogDisplayBuilder((session) -> (io.intino.konos.alexandria.ui.displays.AlexandriaAbstractCatalog) Displays.displayFor(box, "$catalog")).catalog((io.intino.konos.alexandria.ui.model.Catalog) Displays.displayFor(box, "$catalog").element()).views(java.util.Arrays.asList($view+quoted...[, ]))[.filter($catalogFilter)].position("$position").selection("$selection")[.execution($openCatalogOperationExecution)].mode("$mode")[.alexandriaIcon("$alexandriaIcon")]$common)
 end
 
 def type(stamp & downloadOperation)

@@ -1,7 +1,7 @@
 dsl Konos
 
-Activity(title = "", favicon = "") testCesar
-	Home(uses=testCesarDesktop) testCesarHomePage
+Service (title = "", favicon = "") testCesar as UI
+	Resource("/", uses=testCesarDesktop) testCesarHomePage as Root
 
 Display testCesarHome
 Display systemLoad
@@ -28,15 +28,15 @@ Display cesarDeviceRules
 	Notification render as Object(deviceIssues)
 	Request reload
 
-Desktop(title = "test cesar", subTitle = "test using cesar layout", logoPath = "favicon.png", faviconPath = "favicon.png", layout = empty) testCesarDesktop
-
+Panel(title = "test cesar", subTitle = "test using cesar layout", logoPath = "favicon.png", faviconPath = "favicon.png") testCesarDesktop as Desktop
+	Views
 
 Panel cesarDevicePanel
 	Views
-		View("info", layout=LeftFixed) > RenderMold(deviceInfoMold)
-		View("status") > RenderMold(deviceMold)
-		View("rules") > RenderMold(deviceRulesMold)
-		View("operations") operations > RenderMold(deviceOperationsMold)
+		ContainerView("info", layout=LeftFixed) as MoldContainer(deviceInfoMold)
+		ContainerView("status") as MoldContainer(deviceMold)
+		ContainerView("rules") as MoldContainer(deviceRulesMold)
+		ContainerView("operations") operations as MoldContainer(deviceOperationsMold)
 
 Mold(modelClass="io.intino.cesar.graph.Device") deviceInfoMold
 	Block(Vertical)

@@ -3,8 +3,8 @@ package io.intino.konos.alexandria.ui.displays.factory;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.*;
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.views.*;
-import io.intino.konos.alexandria.ui.model.views.container.*;
+import io.intino.konos.alexandria.ui.model.view.*;
+import io.intino.konos.alexandria.ui.model.view.container.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,23 +45,23 @@ public class DisplayViewFactory {
 		return new AlexandriaCatalogMapView(box);
 	}
 
-	private static AlexandriaContainerView buildMoldViewDisplay(Box box, View view) {
+	private static AlexandriaContainerView buildContainerViewMold(Box box, View view) {
 		return new AlexandriaContainerViewMold(box);
 	}
 
-	private static AlexandriaContainerViewCatalog buildCatalogViewDisplay(Box box, View view) {
+	private static AlexandriaContainerViewCatalog buildContainerViewCatalog(Box box, View view) {
 		return new AlexandriaContainerViewCatalog(box);
 	}
 
-	private static AlexandriaContainerViewPanel buildPanelViewDisplay(Box box, View view) {
+	private static AlexandriaContainerViewPanel buildContainerViewPanel(Box box, View view) {
 		return new AlexandriaContainerViewPanel(box);
 	}
 
-	private static AlexandriaContainerViewDisplay buildDisplayViewDisplay(Box box, View view) {
+	private static AlexandriaContainerViewDisplay buildContainerViewDisplay(Box box, View view) {
 		return new AlexandriaContainerViewDisplay(box);
 	}
 
-	private static AlexandriaContainerViewSet buildSetViewDisplay(Box box, View view) {
+	private static AlexandriaContainerViewSet buildContainerViewSet(Box box, View view) {
 		return new AlexandriaContainerViewSet(box);
 	}
 
@@ -71,10 +71,10 @@ public class DisplayViewFactory {
 		viewMap.put(GridView.class, DisplayViewFactory::buildCatalogListView);
 		viewMap.put(MapView.class, DisplayViewFactory::buildCatalogMapView);
 
-		containerViewMap.put(MoldContainer.class, DisplayViewFactory::buildMoldViewDisplay);
-		containerViewMap.put(CatalogContainer.class, DisplayViewFactory::buildCatalogViewDisplay);
-		containerViewMap.put(PanelContainer.class, DisplayViewFactory::buildPanelViewDisplay);
-		containerViewMap.put(DisplayContainer.class, DisplayViewFactory::buildDisplayViewDisplay);
-		containerViewMap.put(SetContainer.class, DisplayViewFactory::buildSetViewDisplay);
+		containerViewMap.put(MoldContainer.class, DisplayViewFactory::buildContainerViewMold);
+		containerViewMap.put(CatalogContainer.class, DisplayViewFactory::buildContainerViewCatalog);
+		containerViewMap.put(PanelContainer.class, DisplayViewFactory::buildContainerViewPanel);
+		containerViewMap.put(DisplayContainer.class, DisplayViewFactory::buildContainerViewDisplay);
+		containerViewMap.put(SetContainer.class, DisplayViewFactory::buildContainerViewSet);
 	}
 }

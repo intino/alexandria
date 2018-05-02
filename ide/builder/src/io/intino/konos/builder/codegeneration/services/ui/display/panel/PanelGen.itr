@@ -1,54 +1,12 @@
-def type(panel & !desktop & gen)
+def type(desktop & gen)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaPanel;
-    import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
-    import io.intino.konos.alexandria.ui.model.panel.PanelView;
-    import io.intino.konos.alexandria.ui.model.Panel;
-    import io.intino.konos.alexandria.ui.model.Toolbar;
-    import io.intino.konos.alexandria.ui.model.panel.View;
-    import io.intino.konos.alexandria.ui.model.renders.RenderDisplay;
-
-    import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
-
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.function.Consumer;
-
-    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanel<$name+firstUpperCase~Notifier> {
-
-    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
-    		super(box);
-    		element(buildPanel(box));
-    	}
-
-    	private static Panel buildPanel($box+firstUpperCase~Box box) {
-    		Panel panel = new Panel();
-    		[panel.name("$name");]
-    		[panel.label("$label");]
-    		[$toolbar+empty~panel.toolbar(buildToolbar(box));]
-    		buildViews(box).forEach(v -> panel.add(v));
-    		return panel;
-    	}
-		[
-		$toolbar
-		]
-    	private static List<PanelView> buildViews($box+firstUpperCase~Box box) {
-    		List<PanelView> result = new ArrayList<>();
-    		$view+genview...[$NL]
-    		return result;
-    	}
-
-    }
-end
-
-def type(panel & desktop & gen)
-	package $package.displays;
-
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
-    import io.intino.konos.alexandria.ui.model.Desktop;
+	import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
+	import io.intino.konos.alexandria.ui.displays.AlexandriaElementDisplay;
+	import io.intino.konos.alexandria.ui.model.Element;
+	import io.intino.konos.alexandria.ui.model.panel.Desktop;
+	import io.intino.konos.alexandria.ui.model.View;
+    import io.intino.konos.alexandria.ui.model.view.ContainerView;
 	import io.intino.konos.alexandria.ui.utils.Base64;
 	import io.intino.konos.alexandria.ui.utils.IOUtils;
 
@@ -57,6 +15,8 @@ def type(panel & desktop & gen)
 
     import java.net.MalformedURLException;
     import java.net.URL;
+    import java.util.ArrayList;
+    import java.util.List;
 
 	public abstract class Abstract$name+firstUpperCase extends AlexandriaDesktop<$name+firstUpperCase~Notifier> {
 
@@ -67,7 +27,7 @@ def type(panel & desktop & gen)
 
     	private static Desktop buildDesktop($box+firstUpperCase~Box box) {
     		Desktop desktop = new Desktop();
-    		desktop.elementDisplayBuilder(new Layout.ElementDisplayBuilder() {
+    		desktop.elementDisplayBuilder(new Desktop.ElementDisplayBuilder() {
     			@Override
     			public AlexandriaElementDisplay displayFor(Element element, Object o) {
     				return get(element, o);
@@ -95,9 +55,9 @@ def type(panel & desktop & gen)
 		[
 		$toolbar
 		]
-    	private static List<PanelView> buildViews($box+firstUpperCase~Box box) {
-    		List<PanelView> result = new ArrayList<>();
-    		$view+genview...[$NL]
+    	private static List<View> buildViews($box+firstUpperCase~Box box) {
+    		List<View> result = new ArrayList<>();
+    		$view...[$NL]
     		return result;
     	}
 
@@ -106,7 +66,7 @@ def type(panel & desktop & gen)
 				if (resource == null) return "";
 				return "data:image/png;base64," + Base64.encode(toByteArray(resource));
 			} catch (java.io.IOException e) {
-				return ""
+				return "";
 			}
 		}
 
@@ -118,14 +78,60 @@ def type(panel & desktop & gen)
     }
 end
 
-def trigger(toolbar)
+def type(panel & gen)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaPanel;
+    import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.ui.model.View;
+    import io.intino.konos.alexandria.ui.model.view.ContainerView;
+    import io.intino.konos.alexandria.ui.model.Panel;
+    import io.intino.konos.alexandria.ui.model.Toolbar;
+    import io.intino.konos.alexandria.ui.model.View;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    public abstract class Abstract$name+firstUpperCase extends AlexandriaPanel<$name+firstUpperCase~Notifier> {
+
+    	public Abstract$name+firstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    		element(buildPanel(box));
+    	}
+
+    	private static Panel buildPanel($box+firstUpperCase~Box box) {
+    		Panel panel = new Panel();
+    		[panel.name("$name");]
+    		[panel.label("$label");]
+    		[$toolbar+empty~panel.toolbar(buildToolbar(box));]
+    		buildViews(box).forEach(v -> panel.add(v));
+    		return panel;
+    	}
+		[
+		$toolbar
+		]
+    	private static List<View> buildViews($box+firstUpperCase~Box box) {
+    		List<View> result = new ArrayList<>();
+    		$view...[$NL]
+    		return result;
+    	}
+
+    }
+end
+
+def type(toolbar) trigger(empty)
+end
+
+def type(toolbar)
 	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
 		Toolbar result = new Toolbar();
 		result.canSearch($canSearch);
 		$operation...[$NL]
 		return result;
 	}
-end
-
-def trigger(empty)
 end

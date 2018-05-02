@@ -50,10 +50,13 @@ public class ViewFrameBuilder extends Frame {
 				.addSlot("label", view.label())
 				.addSlot("layout", view.layout().name())
 				.addSlot("box", box)
-				.addSlot("packageName", packageName)
+				.addSlot("package", packageName)
 				.addSlot("width", view.width());
 
-		if (view.hidden() == HiddenEnabled) frame.addSlot("hidden", hidden(view, box));
+		if (view.hidden() == HiddenEnabled) {
+			frame.addSlot("hidden", hidden(view, box));
+			frame.addTypes("hasMethods");
+		}
 
 		addContainerViewProperties(frame);
 		addCatalogViewProperties(frame);
@@ -65,7 +68,7 @@ public class ViewFrameBuilder extends Frame {
 		if (!view.i$(ContainerView.class)) return;
 
 		frame.addTypes("container");
-		frame.addSlot("containerViewDisplayTypeLoader", new Frame("containerViewDisplayTypeLoader"));
+		frame.addSlot("containerViewDisplayTypeLoader", new Frame("containerViewDisplayTypeLoader").addSlot("package", packageName));
 
 		ContainerView view = this.view.a$(ContainerView.class);
 		addDisplayContainerProperties(view, frame);
@@ -104,15 +107,15 @@ public class ViewFrameBuilder extends Frame {
 		if (!view.i$(MapView.class)) return;
 		frame.addTypes("map");
 
-		MapProperties properties = view.a$(MapView.class).mapProperties();
+		MapView mapView = view.a$(MapView.class);
 
-		if (properties.center() != null)
-			frame.addSlot("latitude", properties.center().latitude()).addSlot("longitude", properties.center().longitude());
+		if (mapView.center() != null)
+			frame.addSlot("latitude", mapView.center().latitude()).addSlot("longitude", mapView.center().longitude());
 
 		frame.addSlot("zoom", new Frame("zoom")
-				.addSlot("default", properties.zoom().defaultZoom())
-				.addSlot("min", properties.zoom().min())
-				.addSlot("max", properties.zoom().max()));
+				.addSlot("default", mapView.zoom().defaultZoom())
+				.addSlot("min", mapView.zoom().min())
+				.addSlot("max", mapView.zoom().max()));
 	}
 
 	private void addMagazineViewProperties(CatalogView view, Frame frame) {
@@ -125,7 +128,6 @@ public class ViewFrameBuilder extends Frame {
 		frame.addTypes("display");
 
 		DisplayContainerContainerView displayView = view.asDisplayContainer();
-		frame.addSlot("display", displayView.display());
 		frame.addSlot("hideNavigator", displayView.hideNavigator());
 		frame.addSlot("display", displayView.display().name$());
 
@@ -145,7 +147,7 @@ public class ViewFrameBuilder extends Frame {
 		frame.addTypes("catalog");
 		CatalogContainerContainerView catalogContainerView = view.asCatalogContainer();
 		frame.addSlot("catalog", catalogContainerView.catalog().name$());
-		frame.addSlot("displayLoader", "");
+		frame.addSlot("catalogDisplayLoader", new Frame("catalogDisplayLoader").addSlot("package", packageName));
 		if (catalogContainerView.filtered()) frame.addSlot("filter", filterFrame(view, box));
 	}
 
@@ -211,7 +213,7 @@ public class ViewFrameBuilder extends Frame {
 	}
 
 	private Frame hidden(View view, String box) {
-		return new Frame().addSlot("panel", owner.name$()).addSlot("view", view.name$()).addSlot("box", box);
+		return new Frame("hidden").addSlot("owner", owner.name$()).addSlot("view", view.name$()).addSlot("box", box);
 	}
 
 	private String pathOf(Node node) {

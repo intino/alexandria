@@ -21,38 +21,33 @@ public class PanelRenderer extends Renderer {
 		this.project = project;
 	}
 
-	public void render() {
-		Frame frame = createFrame();
-		writeSrc(frame);
-		writeGen(frame.addTypes("gen"));
-	}
-
+	@Override
 	protected Frame createFrame() {
 		final Panel panel = this.display.a$(Panel.class);
 		final Frame frame = super.createFrame();
+		frame.addTypes(panel.isDesktop() ? "desktop" : "panel");
 		if (panel.label() != null) frame.addSlot("label", panel.label());
 		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));
-		frame.addSlot("views", frameOf(panel.views()));
+		views(panel.views(), frame);
 		return frame;
 	}
 
 	private Frame frameOf(Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
+		boolean buildingSrc = buildingSrc();
 		toolbar.operations().forEach(operation -> {
 			OperationFrameBuilder builder = new OperationFrameBuilder(operation, display, box, packageName);
-			frame.addSlot("operation", buildingSrc() ? builder.buildSrc() : builder.buildGen());
+			frame.addSlot("operation", buildingSrc ? builder.buildSrc() : builder.buildGen());
 		});
 		return frame;
 	}
 
-	private Frame frameOf(Panel.Views views) {
-		final Frame frame = new Frame("views");
+	private void views(Panel.Views views, Frame frame) {
 		views.containerViewList().forEach(view -> {
 			ViewFrameBuilder builder = new ViewFrameBuilder(view, display, box, packageName);
 			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
 		});
-		return frame;
 	}
 
 	@Override

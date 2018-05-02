@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaCatalogMagazin
 import io.intino.konos.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.alexandria.ui.model.views.CatalogView;
+import io.intino.konos.alexandria.ui.model.view.CatalogView;
 import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.ui.schemas.PictureData;
 import io.intino.konos.alexandria.ui.spark.UIFile;

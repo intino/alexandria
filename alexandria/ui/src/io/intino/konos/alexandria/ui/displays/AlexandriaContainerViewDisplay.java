@@ -3,8 +3,8 @@ package io.intino.konos.alexandria.ui.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewDisplayNotifier;
 import io.intino.konos.alexandria.ui.model.catalog.Scope;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.DisplayContainer;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
 
 import java.util.function.Consumer;
 

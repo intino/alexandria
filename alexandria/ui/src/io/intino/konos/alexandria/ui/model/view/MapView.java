@@ -1,4 +1,4 @@
-package io.intino.konos.alexandria.ui.model.views;
+package io.intino.konos.alexandria.ui.model.view;
 
 public class MapView extends CatalogView {
 	private Center center;

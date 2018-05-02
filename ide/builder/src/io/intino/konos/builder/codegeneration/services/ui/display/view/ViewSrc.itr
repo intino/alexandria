@@ -10,10 +10,13 @@ def type(view & container & display)
 	}
 end
 
-def type(view & container & mold)
+def type(view & container & mold & hasMethods)
+	public static class $name+firstUpperCase {
+		$hidden
+	}
 end
 
-def type(view & container & catalog)
+def type(view & container & catalog & hasMethods)
 	public static class $name+firstUpperCase {
 		$filter
 
@@ -21,8 +24,18 @@ def type(view & container & catalog)
 	}
 end
 
+def type(view & container & panel & hasMethods)
+	public static class $name+firstUpperCase {
+		$hidden
+	}
+end
+
 def type(view & container & set)
-	$item...[$NL]
+	public static class $name+firstUpperCase {
+		$item...[$NL]
+
+		$hidden
+	}
 end
 
 def type(group)

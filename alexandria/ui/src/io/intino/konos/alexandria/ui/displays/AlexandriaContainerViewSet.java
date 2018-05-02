@@ -4,13 +4,13 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewSetNotifier;
 import io.intino.konos.alexandria.ui.model.Element;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.Container;
-import io.intino.konos.alexandria.ui.model.views.container.SetContainer;
-import io.intino.konos.alexandria.ui.model.views.set.AbstractItem;
-import io.intino.konos.alexandria.ui.model.views.set.item.Group;
-import io.intino.konos.alexandria.ui.model.views.set.item.Item;
-import io.intino.konos.alexandria.ui.model.views.set.item.Items;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.Container;
+import io.intino.konos.alexandria.ui.model.view.container.SetContainer;
+import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
+import io.intino.konos.alexandria.ui.model.view.set.item.Group;
+import io.intino.konos.alexandria.ui.model.view.set.item.Item;
+import io.intino.konos.alexandria.ui.model.view.set.item.Items;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
 import io.intino.konos.alexandria.ui.services.push.UISession;
@@ -76,14 +76,14 @@ public class AlexandriaContainerViewSet extends AlexandriaContainerView<Alexandr
     }
 
     private Container containerOf(AbstractItem item) {
-        if (item instanceof io.intino.konos.alexandria.ui.model.views.set.item.Item) return ((io.intino.konos.alexandria.ui.model.views.set.item.Item) item).view().container();
+        if (item instanceof io.intino.konos.alexandria.ui.model.view.set.item.Item) return ((io.intino.konos.alexandria.ui.model.view.set.item.Item) item).view().container();
         else if (item instanceof Items) return ((Items) item).view().container();
         return null;
     }
 
     private String labelOf(AbstractItem item, Element element, io.intino.konos.alexandria.ui.model.Item target) {
 
-        if (item instanceof io.intino.konos.alexandria.ui.model.views.set.item.Item) return ((io.intino.konos.alexandria.ui.model.views.set.item.Item) item).label();
+        if (item instanceof io.intino.konos.alexandria.ui.model.view.set.item.Item) return ((io.intino.konos.alexandria.ui.model.view.set.item.Item) item).label();
         else if (item instanceof Group) return ((Group) item).label();
         else if (item instanceof Items) return ((Items) item).label(element, target != null ? target.object() : null);
 

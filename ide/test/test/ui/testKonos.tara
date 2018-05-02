@@ -1,35 +1,27 @@
 dsl Konos
 
-Activity(title = "", favicon = "") testKonos
-	Home(uses=testHome) homePage
+Service (title = "", favicon = "") testKonos as UI
+	Resource("/", uses=testHome) homePage as Root
 
 Display Drillwise
 
-Desktop testHome
-	layout = testMenu
+Panel testHome as Desktop
+	layout = Menu
 	title = "Ejemplo"
 	subTitle = "Ejemplo de proyecto hecho con Konos"
 	logoPath = "logo.png"
 	faviconPath = "icon.png"
 
-Layout testMenu
-	mode = Menu
-//	Group("ddd", Expanded) ddd
-//		Option(label="infrastructure") infrastructure
-//			polymerIcon = "logo.png"
-//			bubble = 1
-//			RenderCatalogs(catalogs=testInfrastructure)
-//		Option(label="análisis") analisis > RenderPanels(testAnalisis)
-//		Option(label="análisis") analisis2 > RenderObjects(panel = testAnalisis)
+	Views
+		ContainerView("infrastructure") infrastructure as CatalogContainer(testInfrastructure)
+		ContainerView("análisis") infrastructure as PanelContainer(testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views
-		View(label = "olap") olap
-//			RenderDisplay(display = "olapDisplay")
-			RenderCatalogs(catalogs = testInfrastructure)
-				filtered = true
+		ContainerView(label = "olap") olap as CatalogContainer(testInfrastructure)
+			filtered = true
 
-Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") testInfrastructure
+Catalog("Infraestructura", itemClass = "io.intino.test.konos.graph.Station") testInfrastructure
 	Toolbar
 		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
 		Download("download", polymerIcon = "file-download")
@@ -38,23 +30,24 @@ Catalog("Infraestructura", modelClass = "io.intino.test.konos.graph.Station") te
 		ExportSelection("export selection", polymerIcon = "archive")
 
 	Events
-		OnClickRecord
+		OnClickItem
 			OpenPanel(panel = testAnalisis) openDialog
 				hasBreadcrumbs =true
 
 	Views
 		ListView("List", mold=testInfrastructureMold, width = 90%)
 		GridView("Grid", mold=testInfrastructureMold, width = 90%)
-		DisplayView("Charts", display="olapDisplay")
+		ContainerView("Charts") as DisplayContainer(olapDisplay)
 		MapView("mapa", mold = testInfrastructureMold)
 			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 			Zoom(14, min=1, max=18)
 
-	Arrangement
+	Content
 		Grouping(label="units") units
 		Grouping(label="status") status
 		Sorting(label="date") date
 
+Display olapDisplay
 
 Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
 	Block a1

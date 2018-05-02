@@ -8,8 +8,8 @@ import io.intino.konos.alexandria.ui.model.Panel;
 import io.intino.konos.alexandria.ui.model.Settings;
 import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.panel.Desktop;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.*;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
@@ -29,6 +29,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	private List<LayoutItem> items = new ArrayList<>();
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
+	private List<Consumer<Boolean>> logoutListeners = new ArrayList<>();
 	protected Map<Class<? extends Container>, Function<ContainerView, LayoutItem>> itemProviders = new HashMap<>();
 	private Settings settings;
 
@@ -73,8 +74,12 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		sendUser(userInfoOf(user));
 	}
 
+	public void whenLogout(Consumer<Boolean> listener) {
+		logoutListeners.add(listener);
+	}
+
 	public void logout() {
-		session().logout();
+		logoutListeners.forEach(l -> l.accept(true));
 		notifyLoggedOut();
 	}
 
@@ -133,7 +138,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		if (!(view instanceof ContainerView)) return null;
 		ContainerView containerView = (ContainerView)view;
 		Container container = containerView.container();
-		return itemProviders.get(container).apply(containerView);
+		return itemProviders.get(container.getClass()).apply(containerView);
 	}
 
 	private List<LayoutItem> items() {

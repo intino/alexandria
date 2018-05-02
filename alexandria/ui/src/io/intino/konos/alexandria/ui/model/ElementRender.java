@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.ui.model;
 
-import io.intino.konos.alexandria.ui.model.views.set.AbstractItem;
+import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 
 public class ElementRender {
     protected AbstractItem option;

@@ -124,7 +124,8 @@
                 var groups = [];
                 var registeredGroups = [];
                 for (var i=0; i<this._itemList.length; i++) {
-                    var itemGroup = this._itemProperty(this._itemList[i], "group").value;
+                    var groupProperty = this._itemProperty(this._itemList[i], "group");
+                    var itemGroup = groupProperty != null ? groupProperty.value : null;
                     if (itemGroup == null) groups.push({ list: [ this._itemList[i] ] });
                     else {
                         if (registeredGroups[itemGroup] == null) {

@@ -1,4 +1,4 @@
-package io.intino.konos.alexandria.ui.model.views.container;
+package io.intino.konos.alexandria.ui.model.view.container;
 
 import io.intino.konos.alexandria.ui.model.Panel;
 
