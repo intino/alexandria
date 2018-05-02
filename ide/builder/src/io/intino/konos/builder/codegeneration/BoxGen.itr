@@ -67,7 +67,7 @@ def type(box)
 			$dataLake+quit...[$NL]
 		}
 
-		[$hasUiService+registerSoul~
+		[$hasUi+registerSoul~
 		][$service+getter...[$NL$NL]]
 
 		$dataLake+getter...[$NL$NL]
@@ -148,8 +148,8 @@ end
 def type(ui) trigger(ui)
 	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
-	$name+SnakeCaseToCamelCase+FirstUpperCase~UIService.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	io.intino.konos.alexandria.ui.UIElements.initDisplays(sparkInstance);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
 	sparkInstance.start();
 	logger.info("UI $name: started!");
 end

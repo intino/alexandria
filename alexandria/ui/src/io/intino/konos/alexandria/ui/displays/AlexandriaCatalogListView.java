@@ -9,6 +9,7 @@ import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaCatalogListVie
 import io.intino.konos.alexandria.ui.displays.providers.AlexandriaStampProvider;
 import io.intino.konos.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedCatalog;
@@ -75,8 +76,9 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 
 	@Override
 	public void refreshSelection(List<String> items) {
-		AlexandriaElementViewDefinition definition = definition();
-		if (definition.onClickRecordEvent() == null && provider().expandedStamps(definition.mold()).size() > 0)
+		View view = view();
+		io.intino.konos.alexandria.ui.model.Catalog catalog = (io.intino.konos.alexandria.ui.model.Catalog) provider().element();
+		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view.mold()).size() > 0)
 			notifier.refreshSelection(items);
 		selection(items);
 	}
@@ -119,13 +121,9 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 		recordDialogsMap.put(item, new ArrayList<>(dialogs.values()));
 	}
 
-	public void createClusterGroup(ClusterGroup value) {
-		provider().createClusterGroup(value);
-	}
-
 	@Override
 	protected void sendItems(int start, int limit) {
-		notifier.refresh(ItemBuilder.buildList(provider().items(start, limit, condition, sorting), itemBuilderProvider(provider(), definition()), baseAssetUrl()));
+		notifier.refresh(ItemBuilder.buildList(provider().items(start, limit, condition, sorting), itemBuilderProvider(provider(), view()), baseAssetUrl()));
 	}
 
 	@Override
@@ -161,21 +159,21 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 
 	@Override
 	public AlexandriaStamp embeddedDisplay(String name) {
-		Stamp stamp = provider().stamp(definition().mold(), name);
+		Stamp stamp = provider().stamp(view().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDisplay)) return null;
 		return ((EmbeddedDisplay)stamp).createDisplay(session());
 	}
 
 	@Override
 	public AlexandriaDialog embeddedDialog(String name) {
-		Stamp stamp = provider().stamp(definition().mold(), name);
+		Stamp stamp = provider().stamp(view().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedDialog)) return null;
 		return ((EmbeddedDialog)stamp).createDialog(session());
 	}
 
 	@Override
 	public AlexandriaAbstractCatalog embeddedCatalog(String name) {
-		Stamp stamp = provider().stamp(definition().mold(), name);
+		Stamp stamp = provider().stamp(view().mold(), name);
 		if (stamp == null || !(stamp instanceof EmbeddedCatalog)) return null;
 		return ((EmbeddedCatalog)stamp).createCatalog(session());
 	}
@@ -196,7 +194,7 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 
 	@Override
 	public void refreshItem() {
-		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(provider(), definition());
+		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(provider(), view());
 
 		selection().forEach(itemKey -> {
 			Item item = itemOf(itemKey);
@@ -205,7 +203,7 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 	}
 
 	private void sendView() {
-		notifier.refreshView(ElementViewBuilder.build(definition()));
+		notifier.refreshView(ElementViewBuilder.build(view(), provider()));
 	}
 
 	private void sendSortingList(List<Sorting> sortings) {
@@ -218,13 +216,13 @@ public class AlexandriaCatalogListView extends AlexandriaCatalogPageDisplay<Alex
 	}
 
 	private Map<EmbeddedDisplay, AlexandriaStamp> displays() {
-		List<Stamp> stamps = provider().stamps(definition().mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
+		List<Stamp> stamps = provider().stamps(view().mold()).stream().filter(s -> (s instanceof EmbeddedDisplay)).collect(toList());
 		Map<EmbeddedDisplay, AlexandriaStamp> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDisplay)s, s -> ((EmbeddedDisplay)s).createDisplay(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
 	private Map<EmbeddedDialog, AlexandriaDialog> dialogs() {
-		List<Stamp> stamps = provider().stamps(definition().mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
+		List<Stamp> stamps = provider().stamps(view().mold()).stream().filter(s -> (s instanceof EmbeddedDialog)).collect(toList());
 		Map<EmbeddedDialog, AlexandriaDialog> nullableMap = stamps.stream().collect(Collectors.toMap(s -> (EmbeddedDialog)s, s -> ((EmbeddedDialog)s).createDialog(session())));
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}

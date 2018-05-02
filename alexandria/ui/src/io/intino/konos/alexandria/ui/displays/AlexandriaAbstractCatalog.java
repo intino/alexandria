@@ -5,7 +5,10 @@ import io.intino.konos.alexandria.ui.displays.events.OpenElementEvent;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.ui.helpers.ElementHelper;
-import io.intino.konos.alexandria.ui.model.*;
+import io.intino.konos.alexandria.ui.model.Catalog;
+import io.intino.konos.alexandria.ui.model.Item;
+import io.intino.konos.alexandria.ui.model.ItemList;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.catalog.Events;
 import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.model.catalog.arrangement.Group;
@@ -13,7 +16,6 @@ import io.intino.konos.alexandria.ui.model.catalog.arrangement.GroupMap;
 import io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping;
 import io.intino.konos.alexandria.ui.model.catalog.arrangement.GroupingManager;
 import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
-import io.intino.konos.alexandria.ui.schemas.ClusterGroup;
 import io.intino.konos.alexandria.ui.schemas.GroupingGroup;
 import io.intino.konos.alexandria.ui.schemas.GroupingSelection;
 
@@ -86,7 +88,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	public void deleteGroupingGroup(GroupingGroup groupingGroup) {
 		Grouping grouping = groupingOf(groupingGroup.grouping());
-		if (grouping == null || !grouping.cluster()) return;
+		if (grouping == null) return;
 
 		Group group = grouping.remove(groupingGroup.name());
 		if (group == null) return;
@@ -187,9 +189,9 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void refreshScope() {
-		currentView().ifPresent(v -> {
-			if (v instanceof AlexandriaCatalogDisplayView)
-				((AlexandriaCatalogDisplayView) v).refresh(scopeWithAttachedGrouping());
+		currentView().ifPresent(viewDisplay -> {
+			if (viewDisplay instanceof AlexandriaContainerViewDisplay)
+				((AlexandriaContainerViewDisplay) viewDisplay).refresh(scopeWithAttachedGrouping());
 		});
 	}
 
@@ -219,21 +221,8 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected abstract void sendCatalog();
 	protected abstract ItemList filteredItemList(Scope scope, String condition);
 
-	protected boolean canCreateClusters() {
-		return element().groupings().size() > 0;
-	}
-
 	protected boolean isGrouping(Map.Entry<String, GroupingSelection> entry) {
-		return !groupingOf(entry.getKey()).cluster();
-	}
-
-	protected boolean isCluster(Map.Entry<String, GroupingSelection> entry) {
-		return groupingOf(entry.getKey()).cluster();
-	}
-
-	private boolean canSearch() {
-		Toolbar toolbar = element().toolbar();
-		return toolbar == null || toolbar.canSearch();
+		return groupingOf(entry.getKey()) != null;
 	}
 
 	private void updateCondition(String condition) {
@@ -323,14 +312,6 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		super.openItem(event);
 	}
 
-	@Override
-	public void createClusterGroup(ClusterGroup value) {
-		// TODO MC
-//		List<Item> itemList = value.items().stream().map(itemId -> item(new String(Base64.getDecoder().decode(itemId)))).collect(toList());
-//		element().addGroupingGroup(value.cluster(), value.name(), itemList, user());
-//		sendCatalog();
-	}
-
 	public void maxItems(int max) {
 		element().mode(Catalog.Mode.Preview);
 		this.maxItems = max;
@@ -350,10 +331,6 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 										 .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
 										 .collect(toMap(Map.Entry::getKey, e -> groups(e.getValue()))));
 
-//		scope.objects(groupingSelectionMap.entrySet().stream().filter(this::isCluster)
-//										  .filter(g -> attachedGroupingFilter(g.getValue(), addAttachedGrouping))
-//										  .collect(toMap(Map.Entry::getKey, e -> objects(e.getValue()))));
-
 		return scope;
 	}
 
@@ -363,7 +340,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		groupingSelectionMap.values().stream()
 			.filter(g -> {
 				Grouping grouping = groupingOf(g.name());
-				return grouping != null && !grouping.cluster();
+				return grouping != null;
 			})
 			.forEach(selection -> {
 				Grouping grouping = groupingOf(selection);
@@ -388,8 +365,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	private Grouping groupingOf(GroupingSelection selection) {
-		Grouping grouping = groupingOf(selection.name());
-		return grouping != null && !grouping.cluster() ? grouping : null;
+		return groupingOf(selection.name());
 	}
 
 	private List<Group> groups(GroupingSelection selection) {

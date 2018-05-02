@@ -28,8 +28,8 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 
 	@Override
 	public void refreshSelection(List<String> items) {
-		AlexandriaElementViewDefinition definition = definition();
-		if (definition.onClickRecordEvent() == null && provider().expandedStamps(definition.mold()).size() > 0)
+		io.intino.konos.alexandria.ui.model.Catalog catalog = (io.intino.konos.alexandria.ui.model.Catalog) provider().element();
+		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view().mold()).size() > 0)
 			notifier.refreshSelection(selection().stream().allMatch(items::contains) ? emptyList() : items);
 		selection(items);
 	}
@@ -86,7 +86,7 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 
 	@Override
 	protected void sendItems(int start, int limit) {
-		notifier.refresh(ItemBuilder.buildListOnlyLocation(provider().items(start, limit, null), itemBuilderProvider(provider(), definition()), provider().baseAssetUrl()));
+		notifier.refresh(ItemBuilder.buildListOnlyLocation(provider().items(start, limit, null), itemBuilderProvider(provider(), view()), provider().baseAssetUrl()));
 	}
 
 	@Override
@@ -105,13 +105,13 @@ public class AlexandriaCatalogMapView extends AlexandriaCatalogPageDisplay<Alexa
 	}
 
 	private void sendView() {
-		notifier.refreshView(ElementViewBuilder.build(definition()));
+		notifier.refreshView(ElementViewBuilder.build(view(), provider()));
 	}
 
 	public void loadItem(String id) {
 		String decodedId = new String(Base64.getDecoder().decode(id));
 		io.intino.konos.alexandria.ui.model.Item modelItem = provider().item(decodedId);
-		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), definition()), provider().baseAssetUrl());
+		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), view()), provider().baseAssetUrl());
 		notifier.refreshItem(item);
 		renderExpandedPictures(id);
 	}

@@ -9,6 +9,7 @@ import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaCatalogMagazin
 import io.intino.konos.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
+import io.intino.konos.alexandria.ui.model.views.CatalogView;
 import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
 import io.intino.konos.alexandria.ui.schemas.PictureData;
 import io.intino.konos.alexandria.ui.spark.UIFile;
@@ -69,14 +70,14 @@ public class AlexandriaCatalogMagazineView extends AlexandriaCatalogView<Alexand
 	}
 
 	private void createRecordDisplay() {
-		AlexandriaElementViewDefinition definition = definition();
+		CatalogView view = view();
 		AlexandriaItem display = new AlexandriaItem(box);
-		display.emptyMessage(definition.emptyMessage());
-		display.mold(definition.mold());
+		display.emptyMessage(view.noRecordsMessage());
+		display.mold(view.mold());
 		display.context(provider().element());
 		display.item(null);
 		display.mode("magazine");
-		display.provider(itemDisplayProvider(provider(), definition));
+		display.provider(itemDisplayProvider(provider(), view));
 		display.onOpenItem(this::selectRecord);
 		display.onOpenItemDialog(this::openItemDialogOperation);
 		display.onOpenItemCatalog(this::openItemCatalogOperation);

@@ -12,7 +12,6 @@
 <link rel="import" href="../mold/alexandria-mold-container.html">
 <link rel="import" href="alexandria-catalog-behavior.html">
 <link rel="import" href="alexandria-catalog-sorting.html">
-<link rel="import" href="alexandria-catalog-cluster-dialog.html">
 <link rel="import" href="alexandria-catalog-toolbar.html">
 <link rel="import" href="../alexandria-date-behavior.html">
 
@@ -20,7 +19,7 @@
 
     <template>
         <div class="toolbar" hidden$="[[_toolbarHidden]]">
-            <div class="layout horizontal" hidden$="[[_clusterPanelVisible]]">
+            <div class="layout horizontal">
                 <div class="sorting-box layout horizontal center" hidden$="[[!sortingList.length]]">
                     <div class="label">[[Sortings]]</div>
                     <alexandria-catalog-sorting selected-sorting$="[[selectedSorting]]"
@@ -37,16 +36,6 @@
                         </paper-input>
 
                     </div>
-                </div>
-            </div>
-            <div class="box selected" hidden$="[[!_clusterPanelVisible]]">
-                <div class="layout horizontal center center-justified">
-                    <paper-icon-button icon="arrow-back" alt="[[RemoveSelection]]" on-tap="_clearSelection"></paper-icon-button>
-                    <div class="flex">[[_countSelectedItemList(selectedItemList.length)]]</div>
-                    <alexandria-catalog-toolbar operations="[[_selectionOperations(toolbar)]]"
-                                                on-execute="_executeOperation"
-                                                on-download="_downloadOperation"
-                                                on-group="_showClusterDialog"></alexandria-catalog-toolbar>
                 </div>
             </div>
         </div>
@@ -92,7 +81,6 @@
                 </iron-list>
             </cotton-list>
         </div>
-        <alexandria-catalog-cluster-dialog clusters="[[clusters]]" items="[[selectedItemList]]"></alexandria-catalog-cluster-dialog>
     </template>
 
     <style>
@@ -261,7 +249,6 @@
                 Sortings : "mostrar primero",
                 Search : "búsqueda",
                 NoItems : "no hay elementos",
-                CreateCluster : "crear grupo",
                 Deselect : "quitar",
                 OneSelectedItem : "1 elemento seleccionado",
                 CountSelectedItems : "::count:: elementos seleccionados",
@@ -272,7 +259,6 @@
                 Sortings : "show first",
                 Search : "search",
                 NoItems : "no elements",
-                CreateCluster : "create group",
                 Deselect : "deselect",
                 OneSelectedItem : "::count:: selected items",
                 CountSelectedItems : "::count:: selected items",
@@ -293,9 +279,7 @@
                 _offsetWidth: Number,
                 embedded: Boolean,
                 canSearch: { type: Boolean, observer: '_refreshToolbar' },
-                canCreateClusters: Boolean,
                 selectionEnabledByDefault: { type: Boolean, observer: '_refreshToolbar' },
-                clusterList: { type: Array, value: function() { return []; } },
                 sortingList: { type: Array, value: function() { return []; }, observer: '_refreshToolbar' },
                 selectedSorting: Object,
                 pageSize: Number,
@@ -307,7 +291,6 @@
                 _allowSelection : Boolean,
                 _itemList: { type: Array, value: function() { return []; } },
                 _classes : { type: String, value: function () { return ""; } },
-                _clusterPanelVisible: { type: Boolean, value: function() { return false; } },
                 _toolbarHidden: { type: Boolean, value: function() { return false; } },
                 _groupMap : { type: Object, value: function() { return {}; } },
                 _page : Number,
@@ -465,7 +448,6 @@
                 }
                 if (this.selectedItemList == null) return;
                 this._selectionChangeTimeout = window.setTimeout(() => {
-                    this._clusterPanelVisible = this.canCreateClusters && this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
                     this.$.items.fire("iron-resize");
                     let items = this.selectionOf(this.$.items).items;
                     this.fire("select-items", items);
@@ -550,10 +532,6 @@
                 if (item.group == null) return "";
                 var language = this.getLanguage();
                 return this.fullDayOf(new Date(item.group), language);
-            },
-
-            _showClusterDialog : function() {
-                this.querySelector("alexandria-catalog-cluster-dialog").open();
             },
 
             _executeOperation : function(e) {

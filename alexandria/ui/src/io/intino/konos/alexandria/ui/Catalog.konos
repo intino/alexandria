@@ -74,7 +74,7 @@ Display alexandriaTemporalTimeCatalog
 	Request openView as Text
 
 Display alexandriaCatalogViewList
-	displays = alexandriaCatalogMagazineView alexandriaCatalogListView alexandriaCatalogMapView alexandriaCatalogDisplayView
+	displays = alexandriaCatalogMagazineView alexandriaCatalogListView alexandriaCatalogMapView alexandriaContainerViewDisplay
 
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text

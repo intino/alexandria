@@ -97,6 +97,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	}
 
 	@Override
+	public boolean selectionEnabledByDefault() {
+		return false;
+	}
+
+	@Override
 	public <E extends AlexandriaElementDisplay> E openElement(String label) {
 		ContainerView view = views().stream().filter(v -> {
 			Container container = ((ContainerView) v).container();

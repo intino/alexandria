@@ -48,7 +48,7 @@ public class CatalogBuilder {
     }
 
     private static String typeOf(io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping grouping) {
-        return !grouping.cluster() ? "Grouping" : "ClusterGrouping";
+        return "Grouping";
     }
 
     private static List<Group> buildGroupList(io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping grouping, GroupingManager manager) {

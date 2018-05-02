@@ -30,7 +30,7 @@
                     <div class="chart"><alexandria-group-chart group="[[group]]" percentage="[[_grouping.isPercentage]]" count="[[_grouping.countItems]]" color="[[group.color]]"></alexandria-group-chart></div>
                     <div class="layout horizontal flex">
                         <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="{{group.selected}}" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
-                        <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden$="[[!_grouping.isCluster]]"></paper-icon-button>
+                        <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden></paper-icon-button>
                     </div>
                 </li>
             </template>
@@ -180,7 +180,7 @@
             _refreshGrouping : function() {
                 let count = this.grouping.groupList.length;
                 this._refreshInternalGrouping();
-                this._groupsDisabled = count == 1 && !this._isCluster();
+                this._groupsDisabled = count == 1;
                 this._enoughGroups = count > AlexandriaCatalogGroupingMaxItems;
                 this._selectedCount = this.getSelectedGroups().length;
                 this._count = count;
@@ -194,7 +194,6 @@
                 this.notifyPath("_grouping", { name: this.grouping.name,
                     label: this.grouping.label,
                     isPercentage: this._isPercentage(),
-                    isCluster: this._isCluster(),
                     groupList: [] });
                 window.setTimeout(() => {
                     var groups = this.grouping.groupList;
@@ -272,10 +271,6 @@
             _keyUp : function() {
                 this._showAll = false;
                 this._filter();
-            },
-
-            _isCluster : function() {
-                return this.grouping.type.toLowerCase() === "clustergrouping";
             },
 
             _isDisabled : function() {

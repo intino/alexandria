@@ -7,9 +7,9 @@ import io.intino.konos.alexandria.ui.helpers.TimeScaleHandler;
 import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.model.catalog.TemporalFilter;
-import io.intino.konos.alexandria.ui.model.catalog.views.DisplayView;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
+import io.intino.konos.alexandria.ui.model.views.ContainerView;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	private void resetViews() {
-		child(AlexandriaCatalogViewList.class).displayViewList().forEach(AlexandriaCatalogView::reset);
+		child(AlexandriaCatalogViewList.class).displayViewList().forEach(AlexandriaElementView::reset);
 	}
 
 	@Override
@@ -75,9 +75,9 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	public void refreshView() {
 		super.refreshView();
 
-		currentView().ifPresent(catalogView -> {
-			View view = views().stream().filter(v -> v.name().equals(catalogView.definition().name())).findFirst().orElse(null);
-			if (view != null && view instanceof DisplayView && ((DisplayView)view).hideNavigator())
+		currentView().ifPresent(viewDisplay -> {
+			View view = views().stream().filter(v -> v.name().equals(viewDisplay.view().name())).findFirst().orElse(null);
+			if (view != null && view instanceof ContainerView && ((ContainerView)view).hideNavigator())
 				hideNavigator();
 			else if (isNavigatorVisible())
 				showNavigator();
@@ -128,11 +128,6 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
 		return itemList;
-	}
-
-	@Override
-	protected boolean canCreateClusters() {
-		return false;
 	}
 
 	@Override

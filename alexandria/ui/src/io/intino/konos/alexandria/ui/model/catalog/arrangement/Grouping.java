@@ -8,19 +8,9 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class Grouping extends Arrangement {
-	private boolean cluster;
 	private Histogram histogram = Histogram.Percentage;
 	private GroupLoader groupLoader;
 	private GroupManager groupManager;
-
-	public boolean cluster() {
-		return cluster;
-	}
-
-	public Grouping cluster(boolean cluster) {
-		this.cluster = cluster;
-		return this;
-	}
 
 	public Histogram histogram() {
 		return histogram;

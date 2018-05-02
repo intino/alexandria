@@ -79,6 +79,9 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	abstract void refresh(io.intino.konos.alexandria.ui.schemas.Item item);
 	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item);
 
+	public void reset() {
+	}
+
 	Item itemOf(String id) {
 		return provider.item(new String(Base64.getDecoder().decode(id)));
 	}
@@ -88,7 +91,8 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	UIFile downloadItemOperation(DownloadItemParameters params) {
-		Stamp stamp = provider().stamps(view.mold()).stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
+		List<Stamp> stamps = provider().stamps(view.mold());
+		Stamp stamp = stamps.stream().filter(s -> s.name().equals(params.stamp())).findFirst().orElse(null);
 		if (stamp == null) return null;
 		Resource resource = ((DownloadOperation)stamp).execute(itemOf(params.item()), params.option(), session());
 		return new UIFile() {

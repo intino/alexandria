@@ -19,7 +19,6 @@ public class Catalog extends Element {
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
 	private Mode mode;
-	private ClusterManager clusterManager;
 	private Events events;
 
 	public Catalog() {
@@ -123,18 +122,6 @@ public class Catalog extends Element {
 //		this.scopeChangeEvent.onChange(scope, username);
 //	}
 
-	public void addGroupingGroup(String grouping, String label, List<Item> itemList, UISession session) {
-		// TODO MC
-//		if (clusterManager == null) return;
-//		Group group = new Group().label(label).objects(objects(itemList));
-//		clusterManager.createClusterGroup(this, grouping, group, username);
-	}
-
-	public Catalog clusterManager(ClusterManager manager) {
-		this.clusterManager = manager;
-		return this;
-	}
-
 	public interface ObjectsLoader {
 		List<Object> load(Scope scope, String condition, UISession session);
 	}
@@ -161,9 +148,5 @@ public class Catalog extends Element {
 		boolean contains(Item item);
 		void clear();
 		boolean isEmpty();
-	}
-
-	public interface ClusterManager {
-		void createClusterGroup(Catalog element, String grouping, Group group, UISession session);
 	}
 }

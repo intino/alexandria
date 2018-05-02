@@ -11,6 +11,7 @@ public class View {
 	private String label;
 	private Layout layout;
 	private Hidden hidden = null;
+	private int width;
 
 	public enum Layout {
 		Tab, LeftFixed, RightFixed
@@ -49,6 +50,15 @@ public class View {
 
 	public View hidden(Hidden hidden) {
 		this.hidden = hidden;
+		return this;
+	}
+
+	public int width() {
+		return width;
+	}
+
+	public View width(int width) {
+		this.width = width;
 		return this;
 	}
 
