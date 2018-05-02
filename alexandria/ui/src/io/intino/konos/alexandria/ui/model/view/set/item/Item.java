@@ -1,8 +1,8 @@
-package io.intino.konos.alexandria.ui.model.views.set.item;
+package io.intino.konos.alexandria.ui.model.view.set.item;
 
 import io.intino.konos.alexandria.ui.model.ElementRender;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.set.AbstractItem;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 
 public class Item extends AbstractItem {
     private String label;

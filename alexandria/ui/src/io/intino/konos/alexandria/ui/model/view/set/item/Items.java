@@ -1,11 +1,11 @@
-package io.intino.konos.alexandria.ui.model.views.set.item;
+package io.intino.konos.alexandria.ui.model.view.set.item;
 
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.ElementRender;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.ItemList;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.set.AbstractItem;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 import java.util.List;

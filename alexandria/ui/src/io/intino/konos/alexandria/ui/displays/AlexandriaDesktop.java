@@ -21,10 +21,15 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 	public void reset() {
 	}
 
+	public void logout() {
+		session().logout();
+	}
+
 	@Override
 	protected void init() {
 		super.init();
 		AlexandriaLayout display = createLayout();
+		display.whenLogout(value -> logout());
 		display.route(route());
 		display.onLoading((withMessage) -> refreshLoading((Boolean) withMessage));
 		display.onLoaded((value) -> refreshLoaded());

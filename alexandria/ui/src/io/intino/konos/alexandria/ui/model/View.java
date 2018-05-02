@@ -1,9 +1,9 @@
 package io.intino.konos.alexandria.ui.model;
 
-import io.intino.konos.alexandria.ui.model.views.CatalogView;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.Container;
-import io.intino.konos.alexandria.ui.model.views.container.MoldContainer;
+import io.intino.konos.alexandria.ui.model.view.CatalogView;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.Container;
+import io.intino.konos.alexandria.ui.model.view.container.MoldContainer;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 public class View {

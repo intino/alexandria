@@ -1,8 +1,8 @@
-package io.intino.konos.alexandria.ui.model.views;
+package io.intino.konos.alexandria.ui.model.view;
 
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.views.container.Container;
-import io.intino.konos.alexandria.ui.model.views.container.DisplayContainer;
+import io.intino.konos.alexandria.ui.model.view.container.Container;
+import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
 
 public class ContainerView extends View {
 	private Container container;

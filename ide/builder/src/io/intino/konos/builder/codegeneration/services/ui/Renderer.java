@@ -26,23 +26,28 @@ public abstract class Renderer {
 		this.gen = gen;
 	}
 
-	protected final void writeSrc(Frame frame) {
+	public final void render() {
+		writeSrc();
+		writeGen();
+	}
+
+	private void writeSrc() {
 		buildingGen = false;
 
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
 		if (!sourceFile.exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(frame));
+			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(createFrame()));
 		else {
 			Updater updater = updater(newDisplay, sourceFile);
 			if (updater != null) updater.update();
 		}
 	}
 
-	protected final void writeGen(Frame frame) {
+	private void writeGen() {
 		buildingGen = true;
 		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(display.name$()));
-		writeFrame(new File(gen, DISPLAYS), newDisplay, genTemplate().format(frame));
+		writeFrame(new File(gen, DISPLAYS), newDisplay, genTemplate().format(createFrame().addTypes("gen")));
 	}
 
 	protected boolean buildingSrc() {

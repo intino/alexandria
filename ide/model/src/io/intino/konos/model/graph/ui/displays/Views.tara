@@ -21,7 +21,14 @@ Concept View is abstract
 		sub GridView
 		sub MagazineView
 		sub MapView
-			has:{1..1} MapProperties
+			Concept:{0..1} Center
+				var double latitude
+				var double longitude
+
+			Concept:{1..1} Zoom
+				var integer defaultZoom
+				var integer min
+				var integer max
 
 Facet Container on ContainerView is abstract
 
@@ -61,13 +68,3 @@ Facet SetContainer extends Container
 			sub Items
 				var string itemClass
 				has:{1..1} ContainerView
-
-Concept MapProperties is component
-	Concept:{0..1} Center
-		var double latitude
-		var double longitude
-
-	Concept:{1..1} Zoom
-		var integer defaultZoom
-		var integer min
-		var integer max

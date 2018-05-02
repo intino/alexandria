@@ -2,18 +2,18 @@ def type(catalog & gen)
 	package $package.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaCatalog;
-    import io.intino.konos.alexandria.ui.model.AbstractView;
+    import io.intino.konos.alexandria.ui.model.View;
     import io.intino.konos.alexandria.ui.model.Catalog;
     import io.intino.konos.alexandria.ui.model.TemporalCatalog;
     import io.intino.konos.alexandria.ui.model.Mold;
     import io.intino.konos.alexandria.ui.model.Toolbar;
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Arrangement;
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping;
-    import io.intino.konos.alexandria.ui.model.catalog.views.DisplayView;
     import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
-    import io.intino.konos.alexandria.ui.model.catalog.views.GridView;
-    import io.intino.konos.alexandria.ui.model.catalog.views.ListView;
-    import io.intino.konos.alexandria.ui.model.catalog.views.MapView;
+    import io.intino.konos.alexandria.ui.model.view.ContainerView;
+    import io.intino.konos.alexandria.ui.model.view.GridView;
+    import io.intino.konos.alexandria.ui.model.view.ListView;
+    import io.intino.konos.alexandria.ui.model.view.MapView;
     import io.intino.konos.alexandria.ui.model.TimeScale;
     import io.intino.konos.alexandria.ui.model.toolbar.*;
 
@@ -52,9 +52,9 @@ def type(catalog & gen)
     	[
 		$toolbar
 		]
-		private static java.util.List<AbstractView> buildViews($box+firstUpperCase~Box box) {
-			List<AbstractView> result = new ArrayList<>();
-			$view+add...[$NL]
+		private static java.util.List<View> buildViews($box+firstUpperCase~Box box) {
+			List<View> result = new ArrayList<>();
+			$view...[$NL]
 			return result;
 		}
 

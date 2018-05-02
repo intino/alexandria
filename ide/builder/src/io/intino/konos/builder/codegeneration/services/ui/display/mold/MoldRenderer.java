@@ -29,12 +29,12 @@ public class MoldRenderer extends Renderer {
 		this.mold = mold;
 	}
 
-	public void render() {
-		Frame frame = createFrame();
+	@Override
+	protected Frame createFrame() {
+		Frame frame = super.createFrame();
 		frame.addSlot("moldClass", moldClass());
 		for (Block block : mold.blockList()) frame.addSlot("block", frameOf(block));
-		writeSrc(frame);
-		writeGen(frame);
+		return frame;
 	}
 
 	private Frame frameOf(Block block) {

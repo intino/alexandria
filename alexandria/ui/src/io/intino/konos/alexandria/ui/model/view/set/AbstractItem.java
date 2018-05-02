@@ -1,6 +1,6 @@
-package io.intino.konos.alexandria.ui.model.views.set;
+package io.intino.konos.alexandria.ui.model.view.set;
 
-import io.intino.konos.alexandria.ui.model.views.set.item.Group;
+import io.intino.konos.alexandria.ui.model.view.set.item.Group;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 public class AbstractItem {

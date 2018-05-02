@@ -1,8 +1,8 @@
 dsl Konos
 
-Activity Platform-Web
-	Home(uses = analytics, paths = "/analytics") analyticsPage
-	Page(uses = error, paths = "/error") errorPage
+Service Platform-Web as UI(title = "", favicon = "")
+	Resource("/analytics", uses = analytics) analyticsPage as Root
+	Resource("/error", uses = error) errorPage
 
 Display analytics
 	displays = olap dashboard pivotTable

@@ -1,10 +1,10 @@
-package io.intino.konos.alexandria.ui.model.views.container;
+package io.intino.konos.alexandria.ui.model.view.container;
 
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.Panel;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
 
 import java.util.UUID;
 

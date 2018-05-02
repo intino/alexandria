@@ -4,8 +4,8 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaContainerViewCatalogNotifier;
 import io.intino.konos.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.CatalogContainer;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.CatalogContainer;
 
 
 public class AlexandriaContainerViewCatalog extends AlexandriaContainerView<AlexandriaContainerViewCatalogNotifier> {

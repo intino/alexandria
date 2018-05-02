@@ -3,8 +3,8 @@ package io.intino.konos.alexandria.ui.displays.builders;
 import io.intino.konos.alexandria.ui.model.Catalog;
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.views.ContainerView;
-import io.intino.konos.alexandria.ui.model.views.container.*;
+import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
 

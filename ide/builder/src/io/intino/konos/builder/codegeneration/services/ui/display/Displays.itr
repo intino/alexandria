@@ -30,11 +30,9 @@ def type(Displays)
 			return displayMap.get(element.name()).build(box);
 		}
 
-		public static <T extends io.intino.konos.alexandria.ui.model.Element> java.util.List<T> elementsFor($box+firstUpperCase~Box box, Class<T> tClass, String... elements) {
-			java.util.List<T> list = new java.util.ArrayList<>();
-			for (String element : elements)
-				list.add((T) displayMap.get(element).build(box).element());
-			return list;
+		public static <T extends io.intino.konos.alexandria.ui.model.Element> T elementFor($box+firstUpperCase~Box box, Class<T> tClass, String name) {
+			if (!displayMap.containsKey(name)) return null;
+			return (T) displayMap.get(name).build(box).element();
 		}
 
 		public static Class<? extends AlexandriaElementDisplay> displayTypeFor($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element) {
@@ -51,10 +49,7 @@ def type(Displays)
 			if (element instanceof io.intino.konos.alexandria.ui.model.Catalog)
 				return AlexandriaCatalog.class;
 
-			if (element instanceof io.intino.konos.alexandria.ui.model.Layout)
-				return ((io.intino.konos.alexandria.ui.model.Layout) element).mode() == io.intino.konos.alexandria.ui.model.Layout.Mode.Menu ? AlexandriaMenuLayout.class : AlexandriaTabLayout.class;
-
-			if (element instanceof io.intino.konos.alexandria.ui.model.Desktop)
+			if (element instanceof io.intino.konos.alexandria.ui.model.panel.Desktop)
 				return AlexandriaDesktop.class;
 
 			return null;
@@ -69,10 +64,7 @@ def type(Displays)
 			if (element instanceof io.intino.konos.alexandria.ui.model.Catalog)
 				return new AlexandriaCatalog(box);
 
-			if (element instanceof io.intino.konos.alexandria.ui.model.Layout)
-				return ((io.intino.konos.alexandria.ui.model.Layout) element).mode() == io.intino.konos.alexandria.ui.model.Layout.Mode.Menu ? new AlexandriaMenuLayout(box) : new AlexandriaTabLayout(box);
-
-			if (element instanceof io.intino.konos.alexandria.ui.model.Desktop)
+			if (element instanceof io.intino.konos.alexandria.ui.model.panel.Desktop)
 				return new AlexandriaDesktop(box);
 
 			return null;

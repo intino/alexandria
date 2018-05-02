@@ -102,6 +102,7 @@ public class DisplayRenderer {
 
 	private String typeOf(Display display) {
 		String type = display.getClass().getSimpleName().toLowerCase();
+		if (display.i$(DesktopPanel.class)) return "desktop";
 		if (type.equalsIgnoreCase("temporalCatalog")) return "temporal" + display.a$(TemporalCatalog.class).type().name() + "Catalog";
 		else return type;
 	}
