@@ -9,7 +9,7 @@ import io.intino.konos.alexandria.ui.services.push.UISession;
 public class View {
 	private String name;
 	private String label;
-	private Layout layout;
+	private Layout layout = Layout.Tab;
 	private Hidden hidden = null;
 	private int width;
 
