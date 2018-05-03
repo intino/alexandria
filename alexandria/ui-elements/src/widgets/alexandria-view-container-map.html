@@ -23,6 +23,7 @@
                                 toolbar="[[_view.toolbar]]"
                                 on-execute-operation="_executeOperation"
                                 on-download-operation="_downloadOperation"
+                                on-navigate-catalog="_navigateCatalog"
                                 on-load-item="_loadItem"
                                 on-open-item="_openItem"></alexandria-catalog-map>
     </template>
@@ -119,6 +120,11 @@
             _openItem : function(e) {
                 e.stopPropagation();
                 this.fire("open-item", { detail: e.detail.name });
+            },
+
+            _navigateCatalog : function(e) {
+                e.stopPropagation();
+                this.fire("open-element", e.detail);
             }
 
         });

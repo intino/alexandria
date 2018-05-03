@@ -6,7 +6,7 @@ import io.intino.konos.alexandria.ui.services.push.UISession;
 public class TemporalFilter {
 	private EnabledLoader enabledLoader;
 	private VisibilityLoader visibilityLoader;
-	private Layout layout = Layout.Horizontal;
+	private Layout layout = Layout.Vertical;
 
 	public enum Layout { Vertical, Horizontal }
 

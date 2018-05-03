@@ -23,6 +23,7 @@ Display alexandriaCatalog
 
 	Request home
 	Request openItem as Text
+	Request openElement as Object(OpenElementParameters)
 	Request openView as Text
 
 Display alexandriaTemporalRangeCatalog
@@ -47,6 +48,7 @@ Display alexandriaTemporalRangeCatalog
 
 	Request home
 	Request openItem as Text
+	Request openElement as Object(OpenElementParameters)
 	Request openView as Text
 
 Display alexandriaTemporalTimeCatalog
@@ -71,6 +73,7 @@ Display alexandriaTemporalTimeCatalog
 
 	Request home
 	Request openItem as Text
+	Request openElement as Object(OpenElementParameters)
 	Request openView as Text
 
 Display alexandriaCatalogViewList

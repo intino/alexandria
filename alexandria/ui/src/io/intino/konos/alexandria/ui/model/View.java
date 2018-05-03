@@ -1,9 +1,6 @@
 package io.intino.konos.alexandria.ui.model;
 
-import io.intino.konos.alexandria.ui.model.view.container.CollectionContainer;
-import io.intino.konos.alexandria.ui.model.view.container.Container;
-import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
-import io.intino.konos.alexandria.ui.model.view.container.MoldContainer;
+import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 public class View {
@@ -80,7 +77,7 @@ public class View {
 
 	public boolean hideNavigator() {
 		if (container instanceof DisplayContainer) return ((DisplayContainer)container).hideNavigator();
-		return true;
+		return !(container instanceof ListContainer || container instanceof GridContainer || container instanceof MapContainer || container instanceof MagazineContainer);
 	}
 
 	public interface Hidden {

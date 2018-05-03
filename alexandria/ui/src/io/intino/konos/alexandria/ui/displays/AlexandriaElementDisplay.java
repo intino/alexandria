@@ -15,16 +15,15 @@ import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
 import io.intino.konos.alexandria.ui.model.mold.Block;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.model.mold.StampResult;
-import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDialog;
-import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.ui.model.mold.stamps.Title;
-import io.intino.konos.alexandria.ui.model.mold.stamps.Tree;
+import io.intino.konos.alexandria.ui.model.mold.stamps.*;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
+import io.intino.konos.alexandria.ui.model.toolbar.Operation;
 import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
 import io.intino.konos.alexandria.ui.schemas.Position;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
@@ -263,11 +262,15 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		this.enabledViews = views;
 	}
 
-	public <E extends AlexandriaElementDisplay> E openElement(String label) {
-		return openElement(label, id());
+	public void openElement(OpenElementParameters params) {
+		currentView().ifPresent(viewDisplay -> viewDisplay.openElement(params));
 	}
 
-	public <E extends AlexandriaElementDisplay> E openElement(String label, String ownerId) {
+	public <D extends AlexandriaElementDisplay> D openElement(String label) {
+		return elementDisplayManager.openElement(label);
+	}
+
+	public <D extends AlexandriaElementDisplay> D openElement(String label, String ownerId) {
 		return elementDisplayManager.openElement(label, ownerId);
 	}
 

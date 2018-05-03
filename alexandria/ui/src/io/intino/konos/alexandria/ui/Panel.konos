@@ -20,4 +20,5 @@ Display alexandriaPanel
 
 	Request home
 	Request openItem as Text
+	Request openElement as Object(OpenElementParameters)
 	Request openView as Text

@@ -17,6 +17,7 @@ import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.konos.alexandria.ui.model.view.container.Container;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
 import io.intino.konos.alexandria.ui.services.push.UISession;
@@ -100,24 +101,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		return false;
 	}
 
-	@Override
-	public <E extends AlexandriaElementDisplay> E openElement(String label) {
-		View view = views().stream().filter(v -> {
-			Container container = v.container();
-			return container instanceof CatalogContainer && viewContainsCatalogWithLabel((CatalogContainer)container, label);
-		}).findFirst().orElse(null);
-
-		if (view != null) {
-			AlexandriaViewContainerCatalog viewDisplay = (AlexandriaViewContainerCatalog) openView(view.name());
-			return viewDisplay.catalogDisplay();
-		}
-		else {
-			AlexandriaPanel parent = parent(AlexandriaPanel.class);
-			if (parent != null) return (E) parent.openElement(label);
-			else return super.openElement(label);
-		}
-	}
-
 	private boolean viewContainsCatalogWithLabel(CatalogContainer container, String label) {
 		Catalog catalog = container.catalog();
 		return catalog.label() != null && catalog.label().equals(label);
@@ -197,8 +180,37 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		return String.format(ViewId, id(), view.name());
 	}
 
+	@Override
+	public void home() {
+		super.home();
+	}
+
+	@Override
 	public void openItem(String item) {
 		super.openItem(item);
+	}
+
+	@Override
+	public <E extends AlexandriaElementDisplay> E openElement(String label) {
+		View view = views().stream().filter(v -> {
+			Container container = v.container();
+			return container instanceof CatalogContainer && viewContainsCatalogWithLabel((CatalogContainer)container, label);
+		}).findFirst().orElse(null);
+
+		if (view != null) {
+			AlexandriaViewContainerCatalog viewDisplay = (AlexandriaViewContainerCatalog) openView(view.name());
+			return viewDisplay.catalogDisplay();
+		}
+		else {
+			AlexandriaPanel parent = parent(AlexandriaPanel.class);
+			if (parent != null) return (E) parent.openElement(label);
+			else return super.openElement(label);
+		}
+	}
+
+	@Override
+	public void openElement(OpenElementParameters params) {
+		super.openElement(params);
 	}
 
 	public AlexandriaViewContainer openView(String key) {
@@ -209,10 +221,6 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		updateCurrentView(viewDisplay);
 		notifier.refreshSelectedView(view.name());
 		return viewDisplay;
-	}
-
-	public void home() {
-
 	}
 
 }
