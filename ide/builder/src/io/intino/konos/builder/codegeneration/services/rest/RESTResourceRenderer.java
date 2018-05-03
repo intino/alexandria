@@ -66,16 +66,21 @@ public class RESTResourceRenderer {
 		frame.addSlot("operation", operation.getClass().getSimpleName());
 		frame.addSlot("package", packageName);
 		frame.addSlot("throws", throwCodes(operation));
-		frame.addSlot("returnType", frameOf(operation.response()));
+		if (hasResponse(operation)) frame.addSlot("returnType", frameOf(operation.response()));
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
 		if (!resource.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		return frame;
 	}
 
+	private boolean hasResponse(Operation operation) {
+		return operation.response() != null && operation.response().isType();
+	}
+
 	private Frame frameOf(Response response) {
 		Frame frame = new Frame().addSlot("value", Commons.returnType(response, packageName));
-		if (response.isText() && response.format() != Response.Format.html) frame.addSlot("format", MimeTypes.get(response.format().toString()));
+		if (response.isText() && response.format() != Response.Format.html)
+			frame.addSlot("format", MimeTypes.get(response.format().toString()));
 		return frame;
 	}
 
