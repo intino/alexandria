@@ -2,10 +2,10 @@ package io.intino.konos.builder.codegeneration.services.ui.display.panel;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationFrameBuilder;
-import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewFrameBuilder;
+import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewRenderer;
 import io.intino.konos.model.graph.Panel;
 import io.intino.konos.model.graph.Toolbar;
 import org.siani.itrules.Template;
@@ -13,17 +13,17 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-public class PanelRenderer extends Renderer {
+public class PanelRenderer extends DisplayRenderer {
 	private final Project project;
 
-	public PanelRenderer(Project project, Panel panel, File src, File gen, String packageName, String boxName) {
-		super(panel, boxName, packageName, src, gen);
+	public PanelRenderer(Project project, Panel panel, String packageName, String boxName) {
+		super(panel, boxName, packageName);
 		this.project = project;
 	}
 
 	@Override
 	protected Frame createFrame() {
-		final Panel panel = this.display.a$(Panel.class);
+		final Panel panel = display().a$(Panel.class);
 		final Frame frame = super.createFrame();
 		frame.addTypes(panel.isDesktop() ? "desktop" : "panel");
 		if (panel.label() != null) frame.addSlot("label", panel.label());
@@ -37,7 +37,7 @@ public class PanelRenderer extends Renderer {
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
 		boolean buildingSrc = buildingSrc();
 		toolbar.operations().forEach(operation -> {
-			OperationFrameBuilder builder = new OperationFrameBuilder(operation, display, box, packageName);
+			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
 			frame.addSlot("operation", buildingSrc ? builder.buildSrc() : builder.buildGen());
 		});
 		return frame;
@@ -45,7 +45,7 @@ public class PanelRenderer extends Renderer {
 
 	private void views(Panel.Views views, Frame frame) {
 		views.viewList().forEach(view -> {
-			ViewFrameBuilder builder = new ViewFrameBuilder(view, display, box, packageName);
+			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
 			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
 		});
 	}
@@ -62,6 +62,6 @@ public class PanelRenderer extends Renderer {
 
 	@Override
 	protected Updater updater(String displayName, File sourceFile) {
-		return new PanelUpdater(sourceFile, display.a$(Panel.class), project, packageName, box);
+		return new PanelUpdater(sourceFile, display().a$(Panel.class), project, packageName, box);
 	}
 }

@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.services.ui.display.mold;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Mold;
@@ -19,12 +19,12 @@ import java.util.List;
 
 import static io.intino.konos.builder.codegeneration.Formatters.validMoldName;
 
-public class MoldRenderer extends Renderer {
+public class MoldRenderer extends DisplayRenderer {
 	private final Project project;
 	private final Mold mold;
 
-	public MoldRenderer(Project project, Mold mold, File src, File gen, String packageName, String boxName) {
-		super(mold, boxName, packageName, src, gen);
+	public MoldRenderer(Project project, Mold mold, String packageName, String boxName) {
+		super(mold, boxName, packageName);
 		this.project = project;
 		this.mold = mold;
 	}
@@ -244,6 +244,6 @@ public class MoldRenderer extends Renderer {
 
 	@Override
 	protected Updater updater(String displayName, File sourceFile) {
-		return new MoldUpdater(sourceFile, display.a$(Mold.class), project, packageName, box);
+		return new MoldUpdater(sourceFile, display().a$(Mold.class), project, packageName, box);
 	}
 }

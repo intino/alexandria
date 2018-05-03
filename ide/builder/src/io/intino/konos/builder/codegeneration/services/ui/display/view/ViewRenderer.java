@@ -1,5 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.view;
 
+import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Mold;
@@ -18,22 +20,24 @@ import io.intino.konos.model.graph.setcontainer.SetContainerView.Group;
 import io.intino.konos.model.graph.setcontainer.SetContainerView.Item;
 import io.intino.konos.model.graph.setcontainer.SetContainerView.Items;
 import io.intino.tara.magritte.Node;
+import org.siani.itrules.Template;
 import org.siani.itrules.engine.formatters.StringFormatter;
 import org.siani.itrules.model.Frame;
 
+import java.io.File;
 import java.util.List;
 
 import static io.intino.konos.model.graph.View.Hidden.HiddenEnabled;
 
-public class ViewFrameBuilder extends Frame {
+public class ViewRenderer extends Renderer {
 	private final View view;
 	private final Component owner;
 	private final String box;
 	private final String packageName;
 	private boolean buildingSrc = false;
 
-	public ViewFrameBuilder(View view, Component owner, String box, String packageName) {
-		super();
+	public ViewRenderer(View view, Component owner, String box, String packageName) {
+		super(view.name$(), box, packageName);
 		this.view = view;
 		this.owner = owner;
 		this.box = box;
@@ -50,15 +54,29 @@ public class ViewFrameBuilder extends Frame {
 		return ViewGenTemplate.create().format(createFrame());
 	}
 
-	private Frame createFrame() {
-		final Frame frame = new Frame("view")
+	@Override
+	protected Template srcTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Template genTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Updater updater(String displayName, File sourceFile) {
+		return null;
+	}
+
+	@Override
+	protected Frame createFrame() {
+		Frame frame = super.createFrame();
+		frame.addTypes("view")
 				.addSlot("owner", owner.name$())
 				.addSlot("ownerClass", owner.getClass().getSimpleName())
-				.addSlot("name", view.name$())
 				.addSlot("label", view.label())
 				.addSlot("layout", view.layout().name())
-				.addSlot("box", box)
-				.addSlot("package", packageName)
 				.addSlot("width", view.width());
 
 		if (view.hidden() == HiddenEnabled) {
@@ -190,7 +208,7 @@ public class ViewFrameBuilder extends Frame {
 	private Frame frameOf(Item item) {
 		final Frame frame = baseFrame(item).addTypes("item");
 		final View view = item.view();
-		ViewFrameBuilder builder = new ViewFrameBuilder(view, owner, box, packageName);
+		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
 		frame.addSlot("view", buildingSrc ? builder.buildSrc() : builder.buildGen());
 		return frame;
 	}
@@ -198,7 +216,7 @@ public class ViewFrameBuilder extends Frame {
 	private Frame frameOf(Items items) {
 		Frame frame = baseFrame(items).addTypes("items").addSlot("layout", owner.name$()).addSlot("path", pathOf(items.core$())).addSlot("modelClass", items.itemClass());
 		final View view = items.view();
-		ViewFrameBuilder builder = new ViewFrameBuilder(view, owner, box, packageName);
+		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
 		frame.addSlot("view", buildingSrc ? builder.buildSrc() : builder.buildGen());
 		return frame;
 	}
