@@ -41,7 +41,7 @@ Concept Mold extends Display
 				var Dialog dialog
 			sub EmbeddedCatalog
 				var Catalog catalog
-				var CatalogView[] views
+				var View[] views
 				var boolean filtered = false
 				var integer maxItems = -1
 			sub TemporalCatalogTime

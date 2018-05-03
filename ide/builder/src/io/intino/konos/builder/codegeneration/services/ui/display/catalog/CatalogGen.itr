@@ -10,10 +10,7 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Arrangement;
     import io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping;
     import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
-    import io.intino.konos.alexandria.ui.model.view.ContainerView;
-    import io.intino.konos.alexandria.ui.model.view.GridView;
-    import io.intino.konos.alexandria.ui.model.view.ListView;
-    import io.intino.konos.alexandria.ui.model.view.MapView;
+    import io.intino.konos.alexandria.ui.model.View;
     import io.intino.konos.alexandria.ui.model.TimeScale;
     import io.intino.konos.alexandria.ui.model.toolbar.*;
 

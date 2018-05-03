@@ -5,11 +5,11 @@
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../lib/paper-tabs/paper-tabs.html">
 <link rel="import" href="../../lib/paper-tabs/paper-tab.html">
-<link rel="import" href="alexandria-catalog-magazine-view.html">
-<link rel="import" href="alexandria-catalog-list-view.html">
-<link rel="import" href="alexandria-catalog-map-view.html">
-<link rel="import" href="alexandria-container-view-display.html">
-<link rel="import" href="_common/catalog/alexandria-catalog-view-behavior.html">
+<link rel="import" href="alexandria-view-container-magazine.html">
+<link rel="import" href="alexandria-view-container-list.html">
+<link rel="import" href="alexandria-view-container-map.html">
+<link rel="import" href="alexandria-view-container-display.html">
+<link rel="import" href="_common/alexandria-view-behavior.html">
 
 <script src="alexandriacatalogviewlist/requester.js"></script>
 <script src="alexandriacatalogviewlist/notifier-listener.js"></script>
@@ -26,20 +26,20 @@
         </div>
         <iron-pages id="scrollingRegion" selected="{{_selectedView}}" class$="fullSize_[[_viewListHidden]]">
             <template is="dom-repeat" items="[[_viewList]]" as="view">
-                <template is="dom-if" if="[[_isMagazineView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogMagazineView" widget="AlexandriaCatalogMagazineView" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isMagazineContainer(view)]]">
+                    <div><cotton-zombie display="AlexandriaViewContainerMagazine" widget="AlexandriaViewContainerMagazine" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
-                <template is="dom-if" if="[[_isListView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogListView" widget="AlexandriaCatalogListView" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isListContainer(view)]]">
+                    <div><cotton-zombie display="AlexandriaViewContainerList" widget="AlexandriaViewContainerList" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
-                <template is="dom-if" if="[[_isGridView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogListView" widget="AlexandriaCatalogListView" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isGridContainer(view)]]">
+                    <div><cotton-zombie display="AlexandriaViewContainerList" widget="AlexandriaViewContainerList" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
-                <template is="dom-if" if="[[_isMapView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogMapView" widget="AlexandriaCatalogMapView" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isMapContainer(view)]]">
+                    <div><cotton-zombie display="AlexandriaViewContainerMap" widget="AlexandriaViewContainerMap" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
-                <template is="dom-if" if="[[_isDisplayView(view)]]">
-                    <div><cotton-zombie display="AlexandriaCatalogDisplayView" widget="AlexandriaCatalogDisplayView" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                    <div><cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
             </template>
         </iron-pages>
@@ -83,7 +83,7 @@
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
-                AlexandriaBehaviors.CatalogViewBehavior,
+                AlexandriaBehaviors.ViewBehavior,
                 AlexandriaCatalogViewListBehaviors.Requester,
                 AlexandriaCatalogViewListBehaviors.NotifierListener ],
 
@@ -95,7 +95,7 @@
 
             attached : function() {
                 this.translate(AlexandriaCatalogViewListDictionary);
-                this.translate(AlexandriaBehaviors.CatalogViewBehavior.Dictionary);
+                this.translate(AlexandriaBehaviors.ViewBehavior.Dictionary);
                 this.listenToDisplay();
             },
 
@@ -121,10 +121,10 @@
                 return viewList;
                 for(var i=0; i<viewList.length; i++) {
                     var view = viewList[i];
-                    this.magazine = this._isMagazineView(view);
-                    this.list = this._isListView(view);
-                    this.map = this._isMapView(view);
-                    this.display = this._isDisplayView(view);
+                    this.magazine = this._isMagazineContainer(view);
+                    this.list = this._isListContainer(view);
+                    this.map = this._isMapContainer(view);
+                    this.display = this._isDisplayContainer(view);
                 }
             },
 

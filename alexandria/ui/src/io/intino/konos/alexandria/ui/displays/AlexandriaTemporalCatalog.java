@@ -9,7 +9,6 @@ import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -77,7 +76,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 		currentView().ifPresent(viewDisplay -> {
 			View view = views().stream().filter(v -> v.name().equals(viewDisplay.view().name())).findFirst().orElse(null);
-			if (view != null && view instanceof ContainerView && ((ContainerView)view).hideNavigator())
+			if (view != null && view.hideNavigator())
 				hideNavigator();
 			else if (isNavigatorVisible())
 				showNavigator();

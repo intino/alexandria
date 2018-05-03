@@ -190,8 +190,8 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	protected void refreshScope() {
 		currentView().ifPresent(viewDisplay -> {
-			if (viewDisplay instanceof AlexandriaContainerViewDisplay)
-				((AlexandriaContainerViewDisplay) viewDisplay).refresh(scopeWithAttachedGrouping());
+			if (viewDisplay instanceof AlexandriaViewContainerDisplay)
+				((AlexandriaViewContainerDisplay) viewDisplay).refresh(scopeWithAttachedGrouping());
 		});
 	}
 
@@ -280,10 +280,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	public void openItem(String value) {
-		Optional<AlexandriaCatalogView> optionalView = currentView();
+		Optional<AlexandriaViewContainerCollection> optionalView = currentView();
 		if (!optionalView.isPresent()) return;
 
-		AlexandriaCatalogView displayView = optionalView.get();
+		AlexandriaViewContainerCollection displayView = optionalView.get();
 		View view = displayView.view();
 		OnClickItem onClickItem = onClickItemEvent();
 		Item item = item(new String(Base64.getDecoder().decode(value)));

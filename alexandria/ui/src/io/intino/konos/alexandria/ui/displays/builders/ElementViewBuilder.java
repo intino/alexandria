@@ -5,8 +5,9 @@ import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
 import io.intino.konos.alexandria.ui.model.toolbar.GroupingSelection;
-import io.intino.konos.alexandria.ui.model.view.CatalogView;
-import io.intino.konos.alexandria.ui.model.view.MapView;
+import io.intino.konos.alexandria.ui.model.view.container.CollectionContainer;
+import io.intino.konos.alexandria.ui.model.view.container.Container;
+import io.intino.konos.alexandria.ui.model.view.container.MapContainer;
 import io.intino.konos.alexandria.ui.schemas.*;
 import io.intino.konos.alexandria.ui.schemas.Operation;
 
@@ -38,8 +39,9 @@ public class ElementViewBuilder {
     }
 
     private static String emptyMessage(View view) {
-        if (!(view instanceof CatalogView)) return "";
-        String message = ((CatalogView) view).noRecordsMessage();
+        Container container = view.container();
+        if (!(container instanceof CollectionContainer)) return "";
+        String message = ((CollectionContainer) container).noRecordsMessage();
         return message != null ? message : "";
     }
 
@@ -113,11 +115,12 @@ public class ElementViewBuilder {
     }
 
     private static void addMapViewProperties(ElementView result, View view) {
-        if (! (view instanceof MapView)) return;
+        Container container = view.container();
+        if (! (container instanceof MapContainer)) return;
 
-        MapView mapView = (MapView)view;
-        MapView.Zoom zoom = mapView.zoom();
-        MapView.Center center = mapView.center();
+        MapContainer mapContainer = (MapContainer)container;
+        MapContainer.Zoom zoom = mapContainer.zoom();
+        MapContainer.Center center = mapContainer.center();
 
         result.center(new Center().latitude(center.latitude()).longitude(center.longitude()));
         result.zoom(new Zoom().min(zoom.min()).max(zoom.max()).defaultValue(zoom.defaultZoom()));

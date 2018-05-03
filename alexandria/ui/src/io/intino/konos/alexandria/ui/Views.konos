@@ -5,29 +5,29 @@ use Displays
 use Mold
 use Schemas
 
-Display alexandriaContainerViewMold
+Display alexandriaViewContainerMold
 	displays = alexandriaItem
 
-Display alexandriaContainerViewSet
+Display alexandriaViewContainerSet
 	Notification refreshOpened as Text
 	Notification refreshItemList as List Object(Reference)
 
 	Request home
 	Request openItem as Text
 
-Display alexandriaContainerViewPanel
+Display alexandriaViewContainerPanel
 
-Display alexandriaContainerViewCatalog
+Display alexandriaViewContainerCatalog
 	displays = alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
 	Notification displayType as Text
 
-Display alexandriaContainerViewDisplay
+Display alexandriaViewContainerDisplay
 	Notification displayType as Text
 
-Display alexandriaCatalogMagazineView
+Display alexandriaViewContainerMagazine
 	displays = alexandriaItem alexandriaPageContainer
 
-Display alexandriaCatalogListView
+Display alexandriaViewContainerList
 	Notification refreshView as Object(ElementView)
 	Notification clear
 	Notification refresh as List Object(Item)
@@ -57,7 +57,7 @@ Display alexandriaCatalogListView
 	Request changeItem as Object(ChangeItemParameters)
 	Request validateItem as Object(ValidateItemParameters)
 
-Display alexandriaCatalogMapView
+Display alexandriaViewContainerMap
 	Notification refreshView as Object(ElementView)
 	Notification clear
 	Notification refresh as List Object(Item)

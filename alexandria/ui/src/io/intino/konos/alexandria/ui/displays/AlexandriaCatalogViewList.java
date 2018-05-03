@@ -96,7 +96,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 
 	private void buildViewDisplay(String name) {
 		View view = viewList.stream().filter(v -> v.name().equals(name)).findFirst().orElse(null);
-		AlexandriaCatalogView display = DisplayViewFactory.build(box, view);
+		AlexandriaViewContainerCollection display = DisplayViewFactory.build(box, view);
 		registerViewDisplay(display, view);
 		add(display);
 		display.personifyOnce(idOf(view));
@@ -111,7 +111,7 @@ public class AlexandriaCatalogViewList extends ActivityDisplay<AlexandriaCatalog
 		display.onOpenItemDialog(event -> openItemDialog((OpenItemDialogEvent) event));
 		display.onOpenItemCatalog(event -> openItemCatalog((OpenItemCatalogEvent) event));
 		display.onExecuteItemTask(event -> executeTask((ExecuteItemTaskEvent) event));
-		if (display instanceof AlexandriaCatalogPageDisplay) ((AlexandriaCatalogPageDisplay) display).onSelectItems((selection) -> selectItems((List<Item>) selection));
+		if (display instanceof AlexandriaViewContainerCollectionPage) ((AlexandriaViewContainerCollectionPage) display).onSelectItems((selection) -> selectItems((List<Item>) selection));
 		display.view(view);
 		display.onLoading(value -> notifyLoading((Boolean) value));
 		displayViewMap.put(view.name(), display);

@@ -44,7 +44,7 @@ public class PanelRenderer extends Renderer {
 	}
 
 	private void views(Panel.Views views, Frame frame) {
-		views.containerViewList().forEach(view -> {
+		views.viewList().forEach(view -> {
 			ViewFrameBuilder builder = new ViewFrameBuilder(view, display, box, packageName);
 			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
 		});

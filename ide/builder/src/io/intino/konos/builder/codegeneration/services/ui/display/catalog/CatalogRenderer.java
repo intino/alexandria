@@ -103,7 +103,7 @@ public class CatalogRenderer extends Renderer {
 	}
 
 	private void views(Catalog catalog, Frame frame) {
-		if (catalog.views().viewList().stream().anyMatch(v -> v.i$(MagazineView.class))) {
+		if (catalog.views().viewList().stream().anyMatch(View::isMagazineContainer)) {
 			final Frame hasMagazineFrame = baseFrame().addSlot("type", catalog.itemClass());
 			if (catalog.i$(TemporalCatalog.class)) {
 				final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);

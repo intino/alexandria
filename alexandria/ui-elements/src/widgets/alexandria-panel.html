@@ -7,14 +7,15 @@
 <link rel="import" href="../../lib/paper-tabs/paper-tabs-icons.html">
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="../../lib/paper-toast/paper-toast.html">
-<link rel="import" href="alexandria-container-view-mold.html">
-<link rel="import" href="alexandria-container-view-catalog.html">
-<link rel="import" href="alexandria-container-view-panel.html">
-<link rel="import" href="alexandria-container-view-display.html">
-<link rel="import" href="alexandria-container-view-set.html">
+<link rel="import" href="alexandria-view-container-mold.html">
+<link rel="import" href="alexandria-view-container-catalog.html">
+<link rel="import" href="alexandria-view-container-panel.html">
+<link rel="import" href="alexandria-view-container-display.html">
+<link rel="import" href="alexandria-view-container-set.html">
 <link rel="import" href="alexandria-dialog-box.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
+<link rel="import" href="_common/alexandria-view-behavior.html">
 
 <script src="alexandriapanel/requester.js"></script>
 <script src="alexandriapanel/notifier-listener.js"></script>
@@ -37,19 +38,19 @@
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewMold" widget="AlexandriaContainerViewMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isCatalogContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewCatalog" widget="AlexandriaContainerViewCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isPanelContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewPanel" widget="AlexandriaContainerViewPanel" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerPanel" widget="AlexandriaViewContainerPanel" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isDisplayContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewDisplay" widget="AlexandriaContainerViewDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isSetContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewSet" widget="AlexandriaContainerViewSet" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerSet" widget="AlexandriaViewContainerSet" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                     </template>
                 </template>
@@ -58,19 +59,19 @@
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isTabLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaContainerViewMold" widget="AlexandriaContainerViewMold" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isCatalogContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaContainerViewCatalog" widget="AlexandriaContainerViewCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isPanelContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaContainerViewPanel" widget="AlexandriaContainerViewPanel" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerPanel" widget="AlexandriaViewContainerPanel" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isDisplayContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaContainerViewDisplay" widget="AlexandriaContainerViewDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isSetContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaContainerViewSet" widget="AlexandriaContainerViewSet" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerSet" widget="AlexandriaViewContainerSet" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                     </template>
                 </template>
@@ -79,19 +80,19 @@
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewMold" widget="AlexandriaContainerViewMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isCatalogContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewCatalog" widget="AlexandriaContainerViewCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isPanelContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewPanel" widget="AlexandriaContainerViewPanel" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerPanel" widget="AlexandriaViewContainerPanel" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isDisplayContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewDisplay" widget="AlexandriaContainerViewDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                         <template is="dom-if" if="[[_isSetContainer(view)]]">
-                            <cotton-zombie display="AlexandriaContainerViewSet" widget="AlexandriaContainerViewSet" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                            <cotton-zombie display="AlexandriaViewContainerSet" widget="AlexandriaViewContainerSet" object$="[[display.id]][[view.name]]"></cotton-zombie>
                         </template>
                     </template>
                 </template>
@@ -220,6 +221,7 @@
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
                 AlexandriaBehaviors.ElementBehavior,
+                AlexandriaBehaviors.ViewBehavior,
                 AlexandriaPanelBehaviors.Requester,
                 AlexandriaPanelBehaviors.NotifierListener ],
 
@@ -262,26 +264,6 @@
                 for (var i=0; i<this._viewList.length; i++)
                     if (this._isRightFixedLayoutView(this._viewList[i])) count++;
                 return count;
-            },
-
-            _isMoldContainer : function(view) {
-                return view.referencePropertyList[0].value == "container-view-mold";
-            },
-
-            _isCatalogContainer : function(view) {
-                return view.referencePropertyList[0].value == "container-view-catalog";
-            },
-
-            _isPanelContainer : function(view) {
-                return view.referencePropertyList[0].value == "container-view-panel";
-            },
-
-            _isDisplayContainer : function(view) {
-                return view.referencePropertyList[0].value == "container-view-display";
-            },
-
-            _isSetContainer : function(view) {
-                return view.referencePropertyList[0].value == "container-view-set";
             },
 
             _isLeftFixedLayoutView : function(view) {
