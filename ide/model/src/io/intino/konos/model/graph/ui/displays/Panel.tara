@@ -10,7 +10,7 @@ Concept Panel extends Display
 	has:{0..1} Toolbar
 
 	Concept:{1..1} Views
-		has ContainerView
+		has View
 
 Facet Desktop on Panel
 	var word:{Menu Tab} layout = Tab

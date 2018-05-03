@@ -5,32 +5,30 @@ use Panel
 use Catalog
 use Mold
 
-Concept View is abstract
+Concept View
 	var string label
 	var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
 	var word:{Tab LeftFixed RightFixed} layout = Tab
 	var integer:{%} width = 100%
 
-	sub ContainerView
+Facet Container on View is abstract
 
-	sub CatalogView is abstract
-		var string noItemsMessage = empty
-		var Mold mold
+Facet CollectionContainer extends Container is abstract
+	var string noItemsMessage = empty
+	var Mold mold
 
-		sub ListView
-		sub GridView
-		sub MagazineView
-		sub MapView
-			Concept:{0..1} Center
-				var double latitude
-				var double longitude
+Facet ListContainer extends CollectionContainer
+Facet GridContainer extends CollectionContainer
+Facet MagazineContainer extends CollectionContainer
+Facet MapContainer extends CollectionContainer
+	Concept:{0..1} Center
+		var double latitude
+		var double longitude
 
-			Concept:{1..1} Zoom
-				var integer defaultZoom
-				var integer min
-				var integer max
-
-Facet Container on ContainerView is abstract
+	Concept:{1..1} Zoom
+		var integer defaultZoom
+		var integer min
+		var integer max
 
 Facet MoldContainer extends Container
 	var Mold mold
@@ -44,7 +42,7 @@ Facet PanelContainer extends Container
 	var word:{withObject withoutObject} withObject = withoutObject
 
 Facet DisplayContainer extends Container
-	var Display display
+	var string display
 	var boolean hideNavigator = true
 
 Facet SetContainer extends Container
@@ -62,9 +60,9 @@ Facet SetContainer extends Container
 				has:Named Items
 
 			sub Item
-				has:{1..1} ContainerView
+				has:{1..1} View
 
 		sub Multiple
 			sub Items
 				var string itemClass
-				has:{1..1} ContainerView
+				has:{1..1} View

@@ -22,7 +22,6 @@ import io.intino.konos.alexandria.ui.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
@@ -324,7 +323,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		AlexandriaAbstractCatalog display = (AlexandriaAbstractCatalog) this;
 		List<View> views = display.views();
-		View view = views.stream().filter(v -> (v instanceof ContainerView) && ((ContainerView)v).container() instanceof DisplayContainer).findFirst().orElse(null);
+		View view = views.stream().filter(v -> v.container() instanceof DisplayContainer).findFirst().orElse(null);
 		if (view != null) display.selectView(view.name());
 
 		return display;
@@ -399,7 +398,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.refresh();
 		dialogBox.onAccept((value) -> {
 			display.currentView().ifPresent(v -> {
-				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaCatalogView) v).selectedItems(), session());
+				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), session());
 				StampResult.Refresh refresh = result.refresh();
 				if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
 				else if (refresh == StampResult.Refresh.Container) forceRefresh();
@@ -551,7 +550,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			dialogBox.refresh();
 			dialogBox.onAccept((value) -> {
 				display.currentView().ifPresent(v -> {
-					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaCatalogView) v).selectedItems(), session());
+					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaViewContainerCollection) v).selectedItems(), session());
 					ToolbarSelectionResult.Refresh refresh = result.refresh();
 					if (refresh == ToolbarSelectionResult.Refresh.Item) refresh(this.currentItem());
 					else if (refresh == ToolbarSelectionResult.Refresh.Container) forceRefresh();

@@ -3,7 +3,6 @@ package io.intino.konos.alexandria.ui.displays.builders;
 import io.intino.konos.alexandria.ui.model.Catalog;
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.schemas.Reference;
 import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
@@ -40,16 +39,19 @@ public class ReferenceBuilder {
     }
 
     private static String typeOf(View view) {
-        if (! (view instanceof ContainerView)) return view.getClass().getSimpleName();
+        Container container = view.container();
 
-        Container container = ((ContainerView) view).container();
-        if (container instanceof MoldContainer) return "container-view-mold";
-        if (container instanceof CatalogContainer) return "container-view-catalog";
-        if (container instanceof PanelContainer) return "container-view-panel";
-        if (container instanceof DisplayContainer) return "container-view-display";
-        if (container instanceof SetContainer) return "container-view-set";
+        if (container instanceof ListContainer) return "view-container-list";
+        if (container instanceof GridContainer) return "view-container-grid";
+        if (container instanceof MagazineContainer) return "view-container-magazine";
+        if (container instanceof MapContainer) return "view-container-map";
+        if (container instanceof MoldContainer) return "view-container-mold";
+        if (container instanceof CatalogContainer) return "view-container-catalog";
+        if (container instanceof PanelContainer) return "view-container-panel";
+        if (container instanceof DisplayContainer) return "view-container-display";
+        if (container instanceof SetContainer) return "view-container-set";
 
-        return "";
+        return view.getClass().getSimpleName();
     }
 
     private static String layoutOf(View view) {

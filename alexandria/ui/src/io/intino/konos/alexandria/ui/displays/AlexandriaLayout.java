@@ -8,7 +8,6 @@ import io.intino.konos.alexandria.ui.model.Panel;
 import io.intino.konos.alexandria.ui.model.Settings;
 import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.panel.Desktop;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
 import io.intino.konos.alexandria.ui.schemas.Reference;
@@ -30,7 +29,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	private List<Consumer<Boolean>> loadingListeners = new ArrayList<>();
 	private List<Consumer<Boolean>> loadedListeners = new ArrayList<>();
 	private List<Consumer<Boolean>> logoutListeners = new ArrayList<>();
-	protected Map<Class<? extends Container>, Function<ContainerView, LayoutItem>> itemProviders = new HashMap<>();
+	protected Map<Class<? extends Container>, Function<View, LayoutItem>> itemProviders = new HashMap<>();
 	private Settings settings;
 
 	public static final String AvatarColor = "#3F51B5";
@@ -135,10 +134,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	protected abstract void notifyLoggedOut();
 
 	private LayoutItem itemOf(View view) {
-		if (!(view instanceof ContainerView)) return null;
-		ContainerView containerView = (ContainerView)view;
-		Container container = containerView.container();
-		return itemProviders.get(container.getClass()).apply(containerView);
+		Container container = view.container();
+		return itemProviders.get(container.getClass()).apply(view);
 	}
 
 	private List<LayoutItem> items() {
@@ -151,29 +148,29 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		sendItems(items);
 	}
 
-	private LayoutItem panelItem(ContainerView view) {
+	private LayoutItem panelItem(View view) {
 		PanelContainer container = view.container();
 		return itemOf(view, container.panel());
 	}
 
-	private LayoutItem catalogItem(ContainerView view) {
+	private LayoutItem catalogItem(View view) {
 		CatalogContainer container = view.container();
 		return itemOf(view, container.catalog());
 	}
 
-	private LayoutItem setItem(ContainerView view) {
+	private LayoutItem setItem(View view) {
 		return itemOf(view, null);
 	}
 
-	private LayoutItem moldItem(ContainerView view) {
+	private LayoutItem moldItem(View view) {
 		MoldContainer container = view.container();
 		return itemOf(view, container.mold());
 	}
 
-	private LayoutItem displayItem(ContainerView view) {
+	private LayoutItem displayItem(View view) {
 		DisplayContainer container = view.container();
 		Panel panel = new Panel();
-		panel.views().add(new ContainerView().container(container).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
+		panel.views().add(new View().container(container).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
 		return itemOf(view, panel);
 	}
 

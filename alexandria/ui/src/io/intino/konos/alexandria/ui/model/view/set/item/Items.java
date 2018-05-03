@@ -1,10 +1,7 @@
 package io.intino.konos.alexandria.ui.model.view.set.item;
 
-import io.intino.konos.alexandria.ui.model.Element;
-import io.intino.konos.alexandria.ui.model.ElementRender;
+import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.model.ItemList;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
@@ -17,7 +14,7 @@ public class Items extends AbstractItem {
     private Loader<String> icon;
     private Loader<Integer> bubble;
     private Source source = null;
-    private ContainerView view;
+    private View view;
 
     public String label(Element element, Object object) {
         return label != null ? label.value(element, object) : element.label();
@@ -55,7 +52,7 @@ public class Items extends AbstractItem {
         return this;
     }
 
-    public ContainerView view() {
+    public View view() {
         return view;
     }
 

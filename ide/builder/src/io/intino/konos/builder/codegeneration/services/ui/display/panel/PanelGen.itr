@@ -6,7 +6,6 @@ def type(desktop & gen)
 	import io.intino.konos.alexandria.ui.model.Element;
 	import io.intino.konos.alexandria.ui.model.panel.Desktop;
 	import io.intino.konos.alexandria.ui.model.View;
-    import io.intino.konos.alexandria.ui.model.view.ContainerView;
 	import io.intino.konos.alexandria.ui.utils.Base64;
 	import io.intino.konos.alexandria.ui.utils.IOUtils;
 
@@ -85,7 +84,6 @@ def type(panel & gen)
     import io.intino.konos.alexandria.ui.displays.AlexandriaPanel;
     import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
     import io.intino.konos.alexandria.ui.model.View;
-    import io.intino.konos.alexandria.ui.model.view.ContainerView;
     import io.intino.konos.alexandria.ui.model.Panel;
     import io.intino.konos.alexandria.ui.model.Toolbar;
     import io.intino.konos.alexandria.ui.model.View;

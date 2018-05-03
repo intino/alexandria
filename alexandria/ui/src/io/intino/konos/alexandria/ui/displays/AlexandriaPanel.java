@@ -14,7 +14,6 @@ import io.intino.konos.alexandria.ui.model.Catalog;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.Panel;
 import io.intino.konos.alexandria.ui.model.View;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
 import io.intino.konos.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.konos.alexandria.ui.model.view.container.Container;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
@@ -29,7 +28,7 @@ import static io.intino.konos.alexandria.ui.model.View.Layout.Tab;
 import static java.util.stream.Collectors.toList;
 
 public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends AlexandriaElementDisplay<Panel, DN> implements ElementViewDisplayProvider {
-	private Map<String, AlexandriaContainerView> viewDisplayMap = new HashMap<>();
+	private Map<String, AlexandriaViewContainer> viewDisplayMap = new HashMap<>();
 	private static final String ViewId = "%s%s";
 
 	public AlexandriaPanel(Box box) {
@@ -103,13 +102,13 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	@Override
 	public <E extends AlexandriaElementDisplay> E openElement(String label) {
-		ContainerView view = views().stream().filter(v -> {
-			Container container = ((ContainerView) v).container();
+		View view = views().stream().filter(v -> {
+			Container container = v.container();
 			return container instanceof CatalogContainer && viewContainsCatalogWithLabel((CatalogContainer)container, label);
-		}).map(v -> (ContainerView)v).findFirst().orElse(null);
+		}).findFirst().orElse(null);
 
 		if (view != null) {
-			AlexandriaContainerViewCatalog viewDisplay = (AlexandriaContainerViewCatalog) openView(view.name());
+			AlexandriaViewContainerCatalog viewDisplay = (AlexandriaViewContainerCatalog) openView(view.name());
 			return viewDisplay.catalogDisplay();
 		}
 		else {
@@ -159,12 +158,12 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		views().stream().filter(v -> v.layout() == View.Layout.LeftFixed || v.layout() == View.Layout.RightFixed).forEach(v -> buildView(v.name()).refresh());
 	}
 
-	private AlexandriaContainerView buildView(String name) {
+	private AlexandriaViewContainer buildView(String name) {
 		if (viewDisplayMap.containsKey(name))
 			return viewDisplayMap.get(name);
 		notifyLoading(true);
 		View view = viewOf(name);
-		AlexandriaContainerView display = buildView(view);
+		AlexandriaViewContainer display = buildView(view);
 		viewDisplayMap.put(view.name(), display);
 		notifyLoading(false);
 		return display;
@@ -174,10 +173,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		return views().stream().filter(v -> (v.label() != null && v.label().equals(key)) || v.name().equals(key)).findFirst().orElse(null);
 	}
 
-	private AlexandriaContainerView buildView(View view) {
-		ContainerView containerView = (ContainerView) view;
-		Container container = containerView.container();
-		AlexandriaContainerView display = DisplayViewFactory.build(box, view);
+	private AlexandriaViewContainer buildView(View view) {
+		AlexandriaViewContainer display = DisplayViewFactory.build(box, view);
 		if (display == null) return null;
 
 		display.route(routeSubPath());
@@ -204,10 +201,10 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		super.openItem(item);
 	}
 
-	public AlexandriaContainerView openView(String key) {
+	public AlexandriaViewContainer openView(String key) {
 		View view = viewOf(key);
 		if (view == null) return null;
-		AlexandriaContainerView viewDisplay = buildView(view.name());
+		AlexandriaViewContainer viewDisplay = buildView(view.name());
 		viewDisplay.refresh();
 		updateCurrentView(viewDisplay);
 		notifier.refreshSelectedView(view.name());

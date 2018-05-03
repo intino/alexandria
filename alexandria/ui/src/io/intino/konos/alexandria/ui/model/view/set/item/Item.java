@@ -1,14 +1,14 @@
 package io.intino.konos.alexandria.ui.model.view.set.item;
 
 import io.intino.konos.alexandria.ui.model.ElementRender;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 
 public class Item extends AbstractItem {
     private String label;
     private String icon = null;
     private int bubble = -1;
-    private ContainerView view;
+    private View view;
 
     public String label() {
         return label;
@@ -37,7 +37,7 @@ public class Item extends AbstractItem {
         return this;
     }
 
-    public ContainerView view() {
+    public View view() {
         return view;
     }
 

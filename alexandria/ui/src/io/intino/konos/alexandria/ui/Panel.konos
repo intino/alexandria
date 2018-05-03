@@ -7,7 +7,7 @@ use Catalog
 use Schemas
 
 Display alexandriaPanel
-	displays = alexandriaContainerViewMold alexandriaContainerViewCatalog alexandriaContainerViewDisplay alexandriaContainerViewSet alexandriaContainerViewPanel alexandriaDialogBox alexandriaMold
+	displays = alexandriaViewContainerMold alexandriaViewContainerCatalog alexandriaViewContainerDisplay alexandriaViewContainerSet alexandriaViewContainerPanel alexandriaDialogBox alexandriaMold
 
 	Notification refreshViewList as List Object(Reference)
 	Notification refreshSelectedView as Text

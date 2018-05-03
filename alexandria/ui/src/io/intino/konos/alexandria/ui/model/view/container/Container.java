@@ -4,7 +4,7 @@ import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.Panel;
-import io.intino.konos.alexandria.ui.model.view.ContainerView;
+import io.intino.konos.alexandria.ui.model.View;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class Container {
 		if (this instanceof MoldContainer) return ((MoldContainer)this).mold();
 		if (this instanceof DisplayContainer) {
 			Panel panel = new Panel();
-			panel.views().add(new ContainerView().container(this).name(UUID.randomUUID().toString()));
+			panel.views().add(new View().container(this).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
 			return panel;
 		}
 		return null;
