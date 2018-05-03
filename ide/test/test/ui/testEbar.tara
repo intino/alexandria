@@ -9,12 +9,12 @@ Panel(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome a
 	layout = Tab
 
 	Views
-		ContainerView(label = "análisis") as DisplayContainer(testEbarAnalysis)
-		ContainerView("infraestructura") as CatalogContainer(testEbarInfrastructure)
+		View(label = "análisis") as DisplayContainer("testEbarAnalysis")
+		View("infraestructura") as CatalogContainer(testEbarInfrastructure)
 
 Catalog("Infrastructure", itemClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
 	Views
-		MapView("mapa", mold = testEbarInfrastructureMold)
+		View("mapa", mold = testEbarInfrastructureMold) as MapContainer
 			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 			Zoom(14,min=1,max=18)
 
@@ -44,7 +44,7 @@ TemporalCatalog(label = "Episodios EBAR", itemClass = "com.monentia.ebar.graph.S
 		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
 
 	Views
-		ListView("listado", mold = testEbarSequenceMold)
+		View("listado", mold = testEbarSequenceMold) as ListContainer
 
 	Content
 		Sorting(label = "fecha") date
@@ -65,12 +65,12 @@ Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
 			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
 
 Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") testEbarAnalysis
-	Views > ContainerView("análisis") as DisplayContainer(ebarOlap)
+	Views > View("análisis") as DisplayContainer("ebarOlap")
 
 Display ebarOlap
 
 Catalog("Configuración", itemClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
-	Views > ListView("alertas", mold = testEbarConfigurationMold)
+	Views > View("alertas", mold = testEbarConfigurationMold) as ListContainer
 
 Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationMold
 	Block(layout = Horizontal)

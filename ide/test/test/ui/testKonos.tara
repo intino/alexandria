@@ -13,12 +13,12 @@ Panel testHome as Desktop
 	faviconPath = "icon.png"
 
 	Views
-		ContainerView("infrastructure") infrastructure as CatalogContainer(testInfrastructure)
-		ContainerView("análisis") infrastructure as PanelContainer(testAnalisis)
+		View("infrastructure") infrastructure as CatalogContainer(testInfrastructure)
+		View("análisis") infrastructure as PanelContainer(testAnalisis)
 
 Panel(label = "Análisis") testAnalisis
 	Views
-		ContainerView(label = "olap") olap as CatalogContainer(testInfrastructure)
+		View(label = "olap") olap as CatalogContainer(testInfrastructure)
 			filtered = true
 
 Catalog("Infraestructura", itemClass = "io.intino.test.konos.graph.Station") testInfrastructure
@@ -35,10 +35,10 @@ Catalog("Infraestructura", itemClass = "io.intino.test.konos.graph.Station") tes
 				hasBreadcrumbs =true
 
 	Views
-		ListView("List", mold=testInfrastructureMold, width = 90%)
-		GridView("Grid", mold=testInfrastructureMold, width = 90%)
-		ContainerView("Charts") as DisplayContainer(olapDisplay)
-		MapView("mapa", mold = testInfrastructureMold)
+		View("List", mold=testInfrastructureMold, width = 90%) as ListContainer
+		View("Grid", mold=testInfrastructureMold, width = 90%) as GridContainer
+		View("Charts") as DisplayContainer("olapDisplay")
+		View("mapa", mold = testInfrastructureMold) as MapContainer
 			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 			Zoom(14, min=1, max=18)
 
