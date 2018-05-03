@@ -54,14 +54,8 @@ public class CatalogUpdater extends Updater {
 		PsiClass toolbar = innerClass(psiClass, "Toolbar");
 		if (toolbar == null)
 			toolbar = (PsiClass) psiClass.addBefore(createInnerClass("Toolbar"), innerClass(psiClass, "Source").getPrevSibling());
-		for (Operation operation : catalog.toolbar().operations()) {
-			final String operationType = operation.getClass().getSimpleName();
-			final PsiMethod[] methods = toolbar.findMethodsByName(firstLowerCase(operationType), false);
-			if (methods.length == 0) {
-				String text = operationMethodText(operation);
-				if (text != null && !text.isEmpty()) toolbar.add(createMethodFromText(text));
-			}
-		}
+		for (Operation operation : catalog.toolbar().operations())
+			new OperationUpdater(file, toolbar, operation, project, packageName, box).update();
 	}
 
 	private void updateArrangementMethods(PsiClass psiClass) {
@@ -91,37 +85,37 @@ public class CatalogUpdater extends Updater {
 
 	private void updateEventMethods(PsiClass psiClass) {
 		if (catalog.events() == null) return;
-		Catalog.Events.OnClickItem.CatalogEvent event = catalog.events().onClickItem().catalogEvent();
+		OnClickItem.CatalogEvent event = catalog.events().onClickItem().catalogEvent();
 		PsiClass events = innerClass(psiClass, "Events");
 		if (events == null)
 			events = (PsiClass) psiClass.addAfter(createInnerClass("Events"), innerClass(psiClass, "Source").getNextSibling());
-		if (event.i$(OpenPanel.class)) processPanel(event, events);
-		else if (event.i$(OpenCatalog.class)) processCatalog(event, events);
+		if (event.i$(OnClickItem.OpenPanel.class)) processPanel(event, events);
+		else if (event.i$(OnClickItem.OpenCatalog.class)) processCatalog(event, events);
 		else processDialog(event, events);
 	}
 
-	private void processDialog(Catalog.Events.OnClickItem.CatalogEvent event, PsiClass events) {
+	private void processDialog(OnClickItem.CatalogEvent event, PsiClass events) {
 		if (events.findMethodsByName("onOpenDialogPath", false).length == 0) {
-			String text = openDialogMethodText(event.a$(OpenDialog.class));
+			String text = openDialogMethodText(event.a$(OnClickItem.OpenDialog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}
 	}
 
-	private void processPanel(Catalog.Events.OnClickItem.CatalogEvent event, PsiClass events) {
-		if (!event.a$(OpenPanel.class).hasBreadcrumbs()) return;
+	private void processPanel(OnClickItem.CatalogEvent event, PsiClass events) {
+		if (!event.a$(OnClickItem.OpenPanel.class).hasBreadcrumbs()) return;
 		if (events.findMethodsByName("onOpenPanelBreadcrumbs", false).length == 0) {
-			String text = openPanelMethodText(event.a$(OpenPanel.class));
+			String text = openPanelMethodText(event.a$(OnClickItem.OpenPanel.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}
 	}
 
-	private void processCatalog(Catalog.Events.OnClickItem.CatalogEvent event, PsiClass events) {
-		if (event.a$(OpenCatalog.class).openItem() && events.findMethodsByName("onOpenCatalog", false).length == 0) {
-			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
+	private void processCatalog(OnClickItem.CatalogEvent event, PsiClass events) {
+		if (event.a$(OnClickItem.OpenCatalog.class).openItem() && events.findMethodsByName("onOpenCatalog", false).length == 0) {
+			String text = openCatalogMethodText(event.a$(OnClickItem.OpenCatalog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}
-		if (event.a$(OpenCatalog.class).filtered() && events.findMethodsByName("onOpenCatalogFilter", false).length == 0) {
-			String text = openCatalogMethodText(event.a$(OpenCatalog.class));
+		if (event.a$(OnClickItem.OpenCatalog.class).filtered() && events.findMethodsByName("onOpenCatalogFilter", false).length == 0) {
+			String text = openCatalogMethodText(event.a$(OnClickItem.OpenCatalog.class));
 			if (text != null && !text.isEmpty()) events.add(createMethodFromText(text));
 		}
 	}
@@ -148,15 +142,15 @@ public class CatalogUpdater extends Updater {
 		return template.format(frameOf(displayView, catalog, box, packageName));
 	}
 
-	private String openPanelMethodText(OpenPanel event) {
+	private String openPanelMethodText(OnClickItem.OpenPanel event) {
 		return template.format(frameOf(event, catalog, box, catalog.itemClass()));
 	}
 
-	private String openCatalogMethodText(OpenCatalog event) {
+	private String openCatalogMethodText(OnClickItem.OpenCatalog event) {
 		return template.format(frameOf(event, catalog, box, catalog.itemClass()));
 	}
 
-	private String openDialogMethodText(OpenDialog event) {
+	private String openDialogMethodText(OnClickItem.OpenDialog event) {
 		return template.format(frameOf(event, catalog));
 	}
 
@@ -178,5 +172,6 @@ public class CatalogUpdater extends Updater {
 
 	private String temporalClass() {
 		return "public static class Temporal {\npublic static io.intino.konos.alexandria.activity.model.TimeRange range (" + Formatters.firstUpperCase(this.box) + "Box box, ActivitySession session){\nreturn null;\n}\n}";
-	}*/
+	}
+	*/
 }

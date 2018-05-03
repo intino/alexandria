@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
-import io.intino.konos.model.graph.Display;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -11,43 +10,39 @@ import static io.intino.konos.builder.helpers.Commons.*;
 
 public abstract class Renderer {
 	protected static final String DISPLAYS = "displays";
-	protected final Display display;
 	protected final String box;
 	protected final String packageName;
-	protected final File src;
-	private final File gen;
+	protected final String name;
 	private boolean buildingGen = false;
 
-	protected Renderer(Display display, String box, String packageName, File src, File gen) {
-		this.display = display;
+	protected Renderer(String name, String box, String packageName) {
+		this.name = name;
 		this.box = box;
 		this.packageName = packageName;
-		this.src = src;
-		this.gen = gen;
 	}
 
-	public final void render() {
-		writeSrc();
-		writeGen();
+	public final void write(File src, File gen) {
+		writeSrc(src);
+		writeGen(gen);
 	}
 
-	private void writeSrc() {
+	private void writeSrc(File file) {
 		buildingGen = false;
 
-		final String newDisplay = snakeCaseToCamelCase(display.name$());
-		File sourceFile = javaFile(new File(src, DISPLAYS), newDisplay);
+		final String newDisplay = snakeCaseToCamelCase(name);
+		File sourceFile = javaFile(new File(file, DISPLAYS), newDisplay);
 		if (!sourceFile.exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, srcTemplate().format(createFrame()));
+			writeFrame(new File(file, DISPLAYS), newDisplay, srcTemplate().format(createFrame()));
 		else {
 			Updater updater = updater(newDisplay, sourceFile);
 			if (updater != null) updater.update();
 		}
 	}
 
-	private void writeGen() {
+	private void writeGen(File file) {
 		buildingGen = true;
-		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(display.name$()));
-		writeFrame(new File(gen, DISPLAYS), newDisplay, genTemplate().format(createFrame().addTypes("gen")));
+		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(name));
+		writeFrame(new File(file, DISPLAYS), newDisplay, genTemplate().format(createFrame().addTypes("gen")));
 	}
 
 	protected boolean buildingSrc() {
@@ -61,9 +56,9 @@ public abstract class Renderer {
 	protected abstract Updater updater(String displayName, File sourceFile);
 
 	protected Frame createFrame() {
-		return new Frame(display.getClass().getSimpleName().toLowerCase())
+		return new Frame()
 				.addSlot("box", box)
 				.addSlot("package", packageName)
-				.addSlot("name", display.name$());
+				.addSlot("name", name);
 	}
 }

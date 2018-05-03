@@ -1,24 +1,21 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.mold;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiJavaFile;
-import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Mold;
-import io.intino.konos.model.graph.Mold.Block;
-import io.intino.konos.model.graph.Mold.Block.Stamp;
-import org.siani.itrules.Template;
 
 import java.io.File;
-import java.util.List;
-
-import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
-import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class MoldUpdater extends Updater {
+
+	public MoldUpdater(File file, Mold mold, Project project, String packageName, String box) {
+		super(file, project, packageName, box);
+	}
+
+	@Override
+	public void update() {
+	}
+	/*
 	private final MoldRenderer moldRenderer;
 	private final Template template;
 	private PsiClass stamps;
@@ -73,6 +70,6 @@ public class MoldUpdater extends Updater {
 	private String classFor(Stamp stamp) {
 		return template.format(moldRenderer.frameOf(stamp));
 	}
-
+*/
 
 }

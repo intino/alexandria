@@ -7,14 +7,14 @@ Panel(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath 
 	layout = Menu
 
 	Views
-		ContainerView("dashboard", hidden=HiddenEnabled) dashboard as PanelContainer(octanaDashboardPanel)
-		ContainerView("centros") as CatalogContainer(octanaCenterCatalog)
-		ContainerView("personas") as CatalogContainer(octanaPersonCatalog)
-		ContainerView("análisis") as PanelContainer(octanaAnalysisPanel)
+		View("dashboard", hidden=HiddenEnabled) dashboard as PanelContainer(octanaDashboardPanel)
+		View("centros") as CatalogContainer(octanaCenterCatalog)
+		View("personas") as CatalogContainer(octanaPersonCatalog)
+		View("análisis") as PanelContainer(octanaAnalysisPanel)
 
 Panel octanaDashboardPanel
 	Toolbar > OpenDialog("abrir", dialog=dialog1) abrir
-	Views > ContainerView("overview") overview as MoldContainer(octanaDashboardMold)
+	Views > View("overview") overview as MoldContainer(octanaDashboardMold)
 
 Mold(modelClass="Octana") octanaDashboardMold
 	Block ocBlock
@@ -95,27 +95,25 @@ Catalog(itemClass = "io.intino.octana.graph.Center") octanaCenterCatalog
 //	Events > OnClickRecord > OpenDialog(dialog1)
 	Events > OnClickItem > OpenCatalog(octanaPersonCatalog, filtered=true)
 	Views
-		ListView("lista", mold = octanaCenterMold)
+		View("lista", mold = octanaCenterMold) as ListContainer
 
 Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
 
 Catalog(itemClass = "io.intino.octana.graph.Person") octanaPersonCatalog
 	Views
-		ListView("lista", mold = octanaPersonMold)
+		View("lista", mold = octanaPersonMold) as ListContainer
 
 Mold(modelClass="io.intino.octana.graph.Person") octanaPersonMold
 
 Panel octanaAnalysisPanel
 	Views
-		ContainerView("análisis", hidden=HiddenEnabled) analisis as DisplayContainer(display=olapDisplay)
-
-Display olapDisplay
+		View("análisis", hidden=HiddenEnabled) analisis as DisplayContainer("olapDisplay")
 
 Catalog(itemClass = "io.intino.octana.graph.Persona", label = "población") octanaPoblacion
 	Events > OnClickItem > OpenPanel(panel = octanaPanelPersona)
 	Views
-		ListView("listado", mold = octanaMoldePersona) > noItemsMessage = "no hay personas registradas"
-		MapView("mapa", mold = octanaMoldePersonaUbicacion)
+		View("listado", mold = octanaMoldePersona, noItemsMessage = "no hay personas registradas") as ListContainer
+		View("mapa", mold = octanaMoldePersonaUbicacion) as MapContainer
 			noItemsMessage = "no hay personas con cercas registradas"
 			Zoom(10, 1, 20)
 			Center(latitude=19.2643486, longitude=-99.2086771)
@@ -170,12 +168,12 @@ Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaUbicacion
 
 Panel octanaPanelPersona
 	Views
-		ContainerView("resumen", layout=LeftFixed) as MoldContainer(octanaMoldePersonaResumen)
-		ContainerView("ficha") as MoldContainer(octanaMoldePersonaCompleto)
-		ContainerView("causas", hidden = HiddenEnabled) causas as CatalogContainer(octanaCausas) > filtered = true
-		ContainerView("condenas", hidden = HiddenEnabled) condenas as CatalogContainer(octanaCondenas) > filtered = true
-		ContainerView("histórico") historico as CatalogContainer(octanaHistorico) > filtered = true
-		ContainerView("tracking", hidden = HiddenEnabled) tracking as DisplayContainer(octanaTracking)
+		View("resumen", layout=LeftFixed) as MoldContainer(octanaMoldePersonaResumen)
+		View("ficha") as MoldContainer(octanaMoldePersonaCompleto)
+		View("causas", hidden = HiddenEnabled) causas as CatalogContainer(octanaCausas) > filtered = true
+		View("condenas", hidden = HiddenEnabled) condenas as CatalogContainer(octanaCondenas) > filtered = true
+		View("histórico") historico as CatalogContainer(octanaHistorico) > filtered = true
+		View("tracking", hidden = HiddenEnabled) tracking as DisplayContainer("octanaTracking")
 
 Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaResumen
 	Block
@@ -284,7 +282,7 @@ Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
 TemporalCatalog(itemClass = "io.intino.octana.graph.Causa", type=Range, scales = Day) octanaCausas
 	label = "causas"
 	Toolbar > canSearch = false
-	Views > ListView("listado", mold = octanaMoldeCausa) > noItemsMessage = "no tiene causas"
+	Views > View("listado", mold = octanaMoldeCausa, noItemsMessage = "no tiene causas") as ListContainer
 	TemporalFilter(enabled=Never, visible=Never)
 
 Mold(modelClass = "io.intino.octana.graph.Causa") octanaMoldeCausa
@@ -305,7 +303,7 @@ Mold(modelClass = "io.intino.octana.graph.Causa") octanaMoldeCausa
 TemporalCatalog(itemClass = "io.intino.octana.graph.Condena", type=Range, scales = Day) octanaCondenas
 	label = "condenas"
 	Toolbar > canSearch = false
-	Views > ListView("listado", mold = octanaMoldeCondena) > noItemsMessage = "no tiene condenas"
+	Views > View("listado", mold = octanaMoldeCondena, noItemsMessage = "no tiene condenas") as ListContainer
 	TemporalFilter(enabled=Never, visible=Never)
 
 Mold(modelClass = "io.intino.octana.graph.Condena") octanaMoldeCondena
@@ -324,7 +322,7 @@ Mold(modelClass = "io.intino.octana.graph.Condena") octanaMoldeCondena
 TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type=Range, scales = Day) octanaHistorico
 	label = "histórico" // TODO Octavio... el label es obligatorio si está vinculado con un link a un stamp
 	Toolbar > canSearch = false
-	Views > ListView("lista", mold = octanaMoldeEventoHistorico) > noItemsMessage = "no hay eventos"
+	Views > View("lista", mold = octanaMoldeEventoHistorico, noItemsMessage = "no hay eventos") as ListContainer
 	TemporalFilter(enabled=Never, visible=Never)
 
 Display octanaTracking
@@ -359,7 +357,7 @@ Schema Tracking
 TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type = Range, scales = Day) octanaEventos
 	label = "cronología"
 	TemporalFilter > enabled = Always; visible = Always; layout = Vertical
-	Views > ListView("lista", mold = octanaMoldeEvento) > noItemsMessage = "no hay eventos"
+	Views > View("lista", mold = octanaMoldeEvento, noItemsMessage = "no hay eventos") as ListContainer
 
 //	Events > OnClickRecord > OpenCatalog(octanaPoblacion, filtered=true)
 
@@ -423,7 +421,7 @@ Mold(modelClass = "io.intino.octana.graph.Evento") octanaMoldeEvento
 		Block > TaskOperation("ejecutar") ejecutarScreeningAprobado > defaultStyle = "width:180px"
 
 Panel octanaProtocolos
-	Views > ContainerView("overview") overview as DisplayContainer(octanaDashboardProtocolos)
+	Views > View("overview") overview as DisplayContainer("octanaDashboardProtocolos")
 
 Display octanaDashboardProtocolos
 	displays = octanaSimuladorStock

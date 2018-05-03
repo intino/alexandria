@@ -1,26 +1,27 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.toolbar;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.AbstractToolbar;
 import io.intino.konos.model.graph.AbstractToolbar.Operation;
 import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Toolbar;
 import io.intino.tara.magritte.Layer;
+import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
-public class OperationFrameBuilder extends Frame {
+import java.io.File;
+
+public class OperationRenderer extends Renderer {
 	private final Operation operation;
 	private final Component owner;
-	private final String box;
-	private final String packageName;
 
-	public OperationFrameBuilder(Operation operation, Component owner, String box, String packageName) {
-		super();
+	public OperationRenderer(Operation operation, Component owner, String box, String packageName) {
+		super(operation.name$(), box, packageName);
 		this.operation = operation;
 		this.owner = owner;
-		this.box = box;
-		this.packageName = packageName;
 	}
 
 	public String buildSrc() {
@@ -31,15 +32,30 @@ public class OperationFrameBuilder extends Frame {
 		return Formatters.customize(OperationGenTemplate.create()).format(createFrame());
 	}
 
-	private Frame createFrame() {
-		Frame frame = new Frame("operation", operation.getClass().getSimpleName())
-				.addSlot("name", operation.name$())
+	@Override
+	protected Template srcTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Template genTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Updater updater(String displayName, File sourceFile) {
+		return null;
+	}
+
+	@Override
+	protected Frame createFrame() {
+		Frame frame = super.createFrame();
+
+		frame.addTypes("operation", operation.getClass().getSimpleName())
 				.addSlot("title", operation.title())
 				.addSlot("owner", owner.name$())
 				.addSlot("ownerClass", owner.getClass().getSimpleName())
-				.addSlot("mode", operation.mode().toString())
-				.addSlot("box", box)
-				.addSlot("package", packageName);
+				.addSlot("mode", operation.mode().toString());
 
 		if (owner.i$(Catalog.class)) frame.addSlot("itemClass", owner.a$(Catalog.class).itemClass());
 		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());

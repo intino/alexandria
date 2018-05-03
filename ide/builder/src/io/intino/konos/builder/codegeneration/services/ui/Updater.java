@@ -9,13 +9,11 @@ import java.io.File;
 import java.util.Arrays;
 
 public abstract class Updater {
-
 	protected final PsiFile file;
 	protected final Project project;
 	protected final PsiElementFactory factory;
 	protected final String packageName;
 	protected final String box;
-
 
 	public Updater(File file, Project project, String packageName, String box) {
 		this.file = project == null ? null : PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));

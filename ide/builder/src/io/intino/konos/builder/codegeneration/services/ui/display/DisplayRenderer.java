@@ -57,16 +57,16 @@ public class DisplayRenderer {
 	}
 
 	private void processPrototype(Display display) {
-		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), src, gen, packageName, boxName).render();
+		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
 		else if (display.i$(Panel.class)) {
 			Panel panel = display.a$(Panel.class);
 			if (panel.isDesktop()) {
 				DesktopPanel desktop = display.a$(Panel.class).asDesktop();
-				new DesktopRenderer(project, desktop, src, gen, packageName, boxName).render();
+				new DesktopRenderer(project, desktop, packageName, boxName).write(src, gen);
 			}
-			else new PanelRenderer(project, display.a$(Panel.class), src, gen, packageName, boxName).render();
+			else new PanelRenderer(project, display.a$(Panel.class), packageName, boxName).write(src, gen);
 		}
-		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), src, gen, packageName, boxName).render();
+		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), packageName, boxName).write(src, gen);
 	}
 
 	private void writeDisplay(Display display, Frame frame) {

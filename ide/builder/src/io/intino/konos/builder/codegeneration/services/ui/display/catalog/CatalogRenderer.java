@@ -2,10 +2,10 @@ package io.intino.konos.builder.codegeneration.services.ui.display.catalog;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationFrameBuilder;
-import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewFrameBuilder;
+import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Catalog.Events.OnClickItem;
 import io.intino.konos.model.graph.Catalog.Events.OnClickItem.CatalogEvent;
@@ -15,20 +15,20 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-public class CatalogRenderer extends Renderer {
+public class CatalogRenderer extends DisplayRenderer {
 
 	private final Project project;
 	private final String itemClass;
 
-	public CatalogRenderer(Project project, Catalog catalog, File src, File gen, String packageName, String box) {
-		super(catalog, box, packageName, src, gen);
+	public CatalogRenderer(Project project, Catalog catalog, String packageName, String box) {
+		super(catalog, box, packageName);
 		this.project = project;
 		this.itemClass = catalog.itemClass();
 	}
 
 	@Override
 	protected Frame createFrame() {
-		final Catalog catalog = this.display.a$(Catalog.class);
+		final Catalog catalog = display().a$(Catalog.class);
 		final Frame frame = super.createFrame().addTypes("catalog").addSlot("type", itemClass);
 		if (catalog.i$(TemporalCatalog.class)) {
 			final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);
@@ -68,11 +68,12 @@ public class CatalogRenderer extends Renderer {
 
 	private Frame frameOf(OnClickItem onClickItem) {
 		final CatalogEvent catalogEvent = onClickItem.catalogEvent();
+		Display display = display();
 		if (catalogEvent.i$(OpenPanel.class))
 			return frameOf(catalogEvent.a$(OpenPanel.class), display.a$(Catalog.class), box, itemClass);
 		else if (catalogEvent.i$(OnClickItem.OpenCatalog.class))
 			return frameOf(catalogEvent.a$(OnClickItem.OpenCatalog.class), display.a$(Catalog.class), box, itemClass);
-		return frameOf(catalogEvent.a$(OnClickItem.OpenDialog.class), this.display).addSlot("box", box).addSlot("package", packageName);
+		return frameOf(catalogEvent.a$(OnClickItem.OpenDialog.class), display).addSlot("box", box).addSlot("package", packageName);
 	}
 
 	public static Frame frameOf(OnClickItem.OpenDialog openDialog, Display catalog) {
@@ -114,7 +115,7 @@ public class CatalogRenderer extends Renderer {
 		}
 
 		catalog.views().viewList().forEach(view -> {
-			ViewFrameBuilder builder = new ViewFrameBuilder(view, display, box, packageName);
+			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
 			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
 		});
 	}
@@ -129,7 +130,7 @@ public class CatalogRenderer extends Renderer {
 	}
 
 	private Frame baseFrame() {
-		return new Frame().addSlot("box", box).addSlot("name", display.name$());
+		return new Frame().addSlot("box", box).addSlot("name", display().name$());
 	}
 
 	public static Frame frameOf(Catalog.Content.Sorting sorting, Catalog catalog, String box, String modelClass) {
@@ -157,7 +158,7 @@ public class CatalogRenderer extends Renderer {
 		frame.addSlot("box", box).addSlot("type", this.itemClass).addSlot("canSearch", toolbar.canSearch());
 		boolean buildingSrc = buildingSrc();
 		toolbar.operations().forEach(operation -> {
-			OperationFrameBuilder builder = new OperationFrameBuilder(operation, display, box, packageName);
+			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
 			frame.addSlot("operation", buildingSrc ? builder.buildSrc() : builder.buildGen());
 		});
 		return frame;
@@ -173,6 +174,6 @@ public class CatalogRenderer extends Renderer {
 
 	@Override
 	protected Updater updater(String displayName, File sourceFile) {
-		return new CatalogUpdater(sourceFile, display.a$(Catalog.class), project, packageName, box);
+		return new CatalogUpdater(sourceFile, display().a$(Catalog.class), project, packageName, box);
 	}
 }
