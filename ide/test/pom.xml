@@ -84,7 +84,7 @@
         </dependency>
         <dependency>
             <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-activity</artifactId>
+            <artifactId>alexandria-ui</artifactId>
             <version>[1.6.2, 2.0.0)</version>
             <scope>test</scope>
         </dependency>

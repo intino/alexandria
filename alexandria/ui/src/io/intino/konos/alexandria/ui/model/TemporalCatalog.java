@@ -115,7 +115,7 @@ public class TemporalCatalog extends Catalog {
 	}
 
 	public TemporalFilter.Layout temporalFilterLayout() {
-		return temporalFilter != null ? temporalFilter.layout() : TemporalFilter.Layout.Horizontal;
+		return temporalFilter != null ? temporalFilter.layout() : TemporalFilter.Layout.Vertical;
 	}
 
 	public TemporalCatalog temporalFilter(TemporalFilter filter) {

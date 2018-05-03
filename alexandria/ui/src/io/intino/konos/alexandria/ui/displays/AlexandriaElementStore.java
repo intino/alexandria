@@ -16,17 +16,22 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
         super(box);
     }
 
-    public <E extends AlexandriaElementDisplay> E openElement(String label) {
-        Element element = elementWithKey(label);
-        Item target = targetWithKey(label);
-        E display = displayWithKey(label);
+    public <E extends AlexandriaElementDisplay> E openElement(String key) {
+        return openElement(key, id());
+    }
 
-        if (label.equals(selected)) return display;
-        selected = label;
+    public <E extends AlexandriaElementDisplay> E openElement(String key, String ownerId) {
+        String normalizedKey = normalize(key);
+        Element element = elementWithKey(normalizedKey);
+        Item target = targetWithKey(normalizedKey);
+        E display = displayWithKey(normalizedKey);
+
+        if (normalizedKey.equals(selected)) return display;
+        selected = normalizedKey;
 
         if (display != null) {
             display.clearFilter();
-            refreshOpened(label);
+            refreshOpened(normalizedKey);
             return display;
         }
 
@@ -36,9 +41,10 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        display = addAndBuildDisplay(element, target, label);
+
+        display = addAndBuildDisplay(element, target, key, ownerId);
         refreshLoaded();
-        refreshOpened(label);
+        refreshOpened(normalizedKey);
 
         return display;
     }
@@ -64,16 +70,17 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
     protected abstract void refreshLoading(boolean withMessage);
     protected abstract void refreshLoaded();
     protected abstract Element elementWithKey(String key);
-    protected abstract Item targetWithKey(String label);
+    protected abstract Item targetWithKey(String key);
+    protected abstract String normalize(String key);
     protected abstract AlexandriaElementDisplay newDisplay(Element element, Item item);
 
     protected Class classFor(Element element) {
         return element.getClass();
     }
 
-    private <E extends AlexandriaElementDisplay> E addAndBuildDisplay(Element element, Item target, String label) {
+    private <E extends AlexandriaElementDisplay> E addAndBuildDisplay(Element element, Item target, String label, String ownerId) {
         E display = buildDisplay(element, target, label);
-        display.personifyOnce(id() + label);
+        display.personifyOnce(ownerId + normalize(label));
         return display;
     }
 
@@ -97,7 +104,7 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
         display.label(label);
         display.element(element);
         display.target(target);
-        displayMap.put(label, display);
+        displayMap.put(normalize(label), display);
 
         return (E) display;
     }

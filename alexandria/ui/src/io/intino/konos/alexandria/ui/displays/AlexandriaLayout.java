@@ -36,6 +36,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 
 	public AlexandriaLayout(Box box) {
 		super(box);
+		elementDisplayManager(this);
 		buildElementProviders();
 	}
 
@@ -105,12 +106,21 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	@Override
+	protected String normalize(String key) {
+		LayoutItem layoutItem = itemWithKey(key);
+		return layoutItem != null ? layoutItem.label() : key;
+	}
+
+	@Override
 	protected AlexandriaElementDisplay newDisplay(Element element, io.intino.konos.alexandria.ui.model.Item item) {
 		return element().displayFor(element, item);
 	}
 
 	protected LayoutItem itemWithKey(String key) {
-		return items.stream().filter(i -> key.equals(i.name()) || key.equals(i.label())).findFirst().orElse(null);
+		return items.stream().filter(i -> key.equals(i.name()) || key.equals(i.label()) ||
+										  (i.element() != null && key.equals(i.element().name())) ||
+										  (i.element() != null && key.equals(i.element().label()))
+		).findFirst().orElse(null);
 	}
 
 	public void openItem(String key) {

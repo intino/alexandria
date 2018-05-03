@@ -63,6 +63,9 @@
         :host .main.Vertical {
             position: relative;
         }
+        :host .main.Vertical alexandria-catalog-view-list ::content alexandria-catalog-list .list-body {
+            width: calc(100% - 100px) !important;
+        }
         :host .embedded_true .main {
             border-right-width: 0;
         }
@@ -77,9 +80,10 @@
             height: 100%;
         }
         :host .filtered_true .main alexandria-catalog-view-list.full {
-            height: calc(100% - 24px);
+            height: calc(100% - 30px);
         }
-        :host .filtered_true alexandria-catalog-view-list {
+        :host .filtered_true alexandria-catalog-view-list,
+        :host .filtered_true .main.Vertical alexandria-vertical-time-range-navigator {
             background: #ffffef;
         }
         :host .clear {
@@ -134,8 +138,11 @@
             background: white;
             margin-top: 57px;
             margin-right: 20px;
-            padding-left: 30px;
             height: calc(100% - 57px);
+        }
+        :host .filtered_true alexandria-vertical-time-range-navigator {
+            margin-top: 77px;
+            height: calc(100% - 77px);
         }
         :host #panel {
             display: block;
@@ -170,6 +177,11 @@
             }
             :host #main .main {
                 width: calc(100% - 40px);
+            }
+        }
+        @media screen and (max-width: 540px) {
+            :host .main.Vertical alexandria-catalog-view-list ::content alexandria-catalog-list .list-body {
+                width: calc(100% - 85px) !important;
             }
         }
     </style>

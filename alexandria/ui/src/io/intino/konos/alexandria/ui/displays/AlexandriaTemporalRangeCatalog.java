@@ -10,6 +10,7 @@ import io.intino.konos.alexandria.ui.model.TimeScale;
 import io.intino.konos.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.ui.schemas.GroupingSelection;
+import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
 
 import java.time.Instant;
 import java.util.List;
@@ -146,15 +147,23 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 		configureNavigatorDisplay((AlexandriaTimeRangeNavigator) navigator, timeScaleHandler);
 	}
 
+	@Override
 	public void home() {
 		super.home();
 	}
 
+	@Override
 	public void openItem(String item) {
 		super.openItem(item);
 	}
 
+	@Override
 	public void openView(String name) {
 		super.openView(name);
+	}
+
+	@Override
+	public void openElement(OpenElementParameters params) {
+		super.openElement(params);
 	}
 }

@@ -9,6 +9,7 @@ import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.ui.schemas.GroupingGroup;
 import io.intino.konos.alexandria.ui.schemas.GroupingSelection;
+import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
 
 public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends AlexandriaAbstractCatalog<Catalog, DN> {
 
@@ -75,14 +76,22 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 		super.clearFilter();
 	}
 
+	@Override
 	public void home() {
 		super.home();
 	}
 
+	@Override
 	public void openItem(String item) {
 		super.openItem(item);
 	}
 
+	@Override
+	public void openElement(OpenElementParameters params) {
+		super.openElement(params);
+	}
+
+	@Override
 	public void openView(String name) {
 		super.openView(name);
 	}

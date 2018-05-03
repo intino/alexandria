@@ -5,10 +5,12 @@ import io.intino.konos.alexandria.ui.displays.builders.ElementViewBuilder;
 import io.intino.konos.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.konos.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerMapNotifier;
+import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.schemas.*;
 import io.intino.konos.alexandria.ui.spark.UIFile;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -29,9 +31,13 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 
 	@Override
 	public void refreshSelection(List<String> items) {
+		View view = view();
 		io.intino.konos.alexandria.ui.model.Catalog catalog = (io.intino.konos.alexandria.ui.model.Catalog) provider().element();
-		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view().mold()).size() > 0)
-			notifier.refreshSelection(selection().stream().allMatch(items::contains) ? emptyList() : items);
+		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view.mold()).size() > 0) {
+			List<String> newSelection = new ArrayList<>(items);
+			newSelection.removeAll(selection());
+			notifier.refreshSelection(newSelection);
+		}
 		selection(items);
 	}
 

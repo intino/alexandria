@@ -76,8 +76,11 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 	public void refreshSelection(List<String> items) {
 		View view = view();
 		io.intino.konos.alexandria.ui.model.Catalog catalog = (io.intino.konos.alexandria.ui.model.Catalog) provider().element();
-		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view.mold()).size() > 0)
-			notifier.refreshSelection(items);
+		if ((catalog.events() == null || catalog.events().onClickItem() == null) && provider().expandedStamps(view.mold()).size() > 0) {
+			List<String> newSelection = new ArrayList<>(items);
+			newSelection.removeAll(selection());
+			notifier.refreshSelection(newSelection);
+		}
 		selection(items);
 	}
 

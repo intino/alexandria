@@ -186,6 +186,7 @@
             _configuration : function(stamp) {
                 var config = this.map.defaults != null ? this.map.defaults : {};
                 var color = this._propertyValue(stamp.propertyList, "color");
+                config.title = this.item.label;
                 config.editable = stamp.editable != null ? stamp.editable : false;
                 if (color != null) {
                     config.strokeColor = color.text;

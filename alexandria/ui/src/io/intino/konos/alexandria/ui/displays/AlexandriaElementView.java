@@ -152,7 +152,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		if (!(stamp instanceof CatalogLink)) return;
 
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
-		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().label());
+		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().name());
 
 		Item source = itemOf(params.item());
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
