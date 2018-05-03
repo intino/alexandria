@@ -40,7 +40,7 @@ public class NessTanksRenderer {
 		final Frame frame = new Frame().addTypes("tank").
 				addSlot("name", type).
 				addSlot("box", boxName).
-				addSlot("messageType", dataLake.domain() + "." + subdomain(tank) + type).
+				addSlot("messageType",(dataLake.domain().isEmpty() ? "" : dataLake.domain() + ".") + subdomain(tank) + type).
 				addSlot("simpleMessageType", type);
 		if (tank.schema() != null) {
 			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", tank.schema().name$()));
