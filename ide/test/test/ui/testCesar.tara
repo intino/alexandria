@@ -33,10 +33,10 @@ Panel(title = "test cesar", subTitle = "test using cesar layout", logoPath = "fa
 
 Panel cesarDevicePanel
 	Views
-		ContainerView("info", layout=LeftFixed) as MoldContainer(deviceInfoMold)
-		ContainerView("status") as MoldContainer(deviceMold)
-		ContainerView("rules") as MoldContainer(deviceRulesMold)
-		ContainerView("operations") operations as MoldContainer(deviceOperationsMold)
+		View("info", layout=LeftFixed) as MoldContainer(deviceInfoMold)
+		View("status") as MoldContainer(deviceMold)
+		View("rules") as MoldContainer(deviceRulesMold)
+		View("operations") operations as MoldContainer(deviceOperationsMold)
 
 Mold(modelClass="io.intino.cesar.graph.Device") deviceInfoMold
 	Block(Vertical)
