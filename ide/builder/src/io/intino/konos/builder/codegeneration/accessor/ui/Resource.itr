@@ -12,8 +12,8 @@ def type(resource)
 
             <script src="lib/jquery/dist/jquery.min.js"></script>
             <script src="lib/cotton-push/PushService.js"></script>
-            <script src="lib/webcomponentsjs/webcomponents-lite.min.js"></script>
             <script src="lib/moment/min/moment-with-locales.min.js"></script>
+            <script src="lib/webcomponentsjs/webcomponents-lite.min.js"></script> <!-- fix paper-calendar.html import bug -->
             <script src="lib/numeral/min/numeral.min.js"></script>
             <script src="lib/numeral/min/languages.min.js"></script>
 
@@ -21,6 +21,7 @@ def type(resource)
 
             <link rel="import" href="components.html">
             <link rel="import" href="styles/app-theme.html">
+            <script src="lib/moment/min/moment-with-locales.min.js"></script> <!-- fix paper-calendar.html import bug -->
 
 			<style>
 				html {
