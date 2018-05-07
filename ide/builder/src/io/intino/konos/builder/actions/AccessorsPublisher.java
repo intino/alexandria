@@ -134,13 +134,13 @@ class AccessorsPublisher {
 		if (sdk != null && sdk.getHomePath() != null) request.setJavaHome(new File(sdk.getHomePath()));
 	}
 
-	private List<String> createSources() throws IOException {
-		List<String> apps = new ArrayList<>();
+	private List<String> createSources() {
+		List<String> services = new ArrayList<>();
 		if (graph == null) return Collections.emptyList();
-		apps.addAll(rest());
-		apps.addAll(jms());
-		apps.addAll(jmx());
-		return apps;
+		services.addAll(rest());
+		services.addAll(jms());
+		services.addAll(jmx());
+		return services;
 	}
 
 	private List<String> jmx() {
