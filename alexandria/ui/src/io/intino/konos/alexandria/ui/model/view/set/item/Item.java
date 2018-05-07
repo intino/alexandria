@@ -1,6 +1,5 @@
 package io.intino.konos.alexandria.ui.model.view.set.item;
 
-import io.intino.konos.alexandria.ui.model.ElementRender;
 import io.intino.konos.alexandria.ui.model.View;
 import io.intino.konos.alexandria.ui.model.view.set.AbstractItem;
 
@@ -41,7 +40,7 @@ public class Item extends AbstractItem {
         return view;
     }
 
-    public Item view(ElementRender render) {
+    public Item view(View view) {
         this.view = view;
         return this;
     }

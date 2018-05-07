@@ -203,7 +203,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		StampResult result = stamp.change(item, value, this, session());
 		currentView().ifPresent(view -> {
 			dirty(true);
-			StampResult.Refresh refresh = result.refresh();
+			StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 			if (refresh == StampResult.Refresh.Item) view.refresh(currentItem_());
 			else if (refresh == StampResult.Refresh.Container) view.refresh();
 		});
@@ -402,7 +402,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.onAccept((value) -> {
 			display.currentView().ifPresent(v -> {
 				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), session());
-				StampResult.Refresh refresh = result.refresh();
+				StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 				if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
 				else if (refresh == StampResult.Refresh.Container) forceRefresh();
 				notifyUserIfNotEmpty(result.message());
@@ -447,7 +447,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		Item item = this.currentItem();
 		TaskOperation stamp = (TaskOperation) event.stamp();
 		StampResult result = stamp.execute(item, event.self(), session());
-		StampResult.Refresh refresh = result.refresh();
+		StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 		dirty(true);
 		if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
 		else if (refresh == StampResult.Refresh.Container) {
@@ -523,7 +523,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (operation instanceof TaskSelection) {
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
 			ToolbarSelectionResult result = taskSelectionOperation.execute(element(), option, selection, session());
-			ToolbarSelectionResult.Refresh refresh = result.refresh();
+			ToolbarSelectionResult.Refresh refresh = result != null ? result.refresh() : ToolbarSelectionResult.none().refresh();
 			if (refresh == ToolbarSelectionResult.Refresh.Container) this.forceRefresh();
 			else if (refresh == ToolbarSelectionResult.Refresh.Selection) this.refresh(selection.toArray(new Item[selection.size()]));
 			notifyUserIfNotEmpty(result.message());
@@ -554,7 +554,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			dialogBox.onAccept((value) -> {
 				display.currentView().ifPresent(v -> {
 					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaViewContainerCollection) v).selectedItems(), session());
-					ToolbarSelectionResult.Refresh refresh = result.refresh();
+					ToolbarSelectionResult.Refresh refresh = result != null ? result.refresh() : ToolbarSelectionResult.none().refresh();
 					if (refresh == ToolbarSelectionResult.Refresh.Item) refresh(this.currentItem());
 					else if (refresh == ToolbarSelectionResult.Refresh.Container) forceRefresh();
 				});

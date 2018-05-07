@@ -51,7 +51,7 @@ def type(catalog & gen)
 		]
 		private static java.util.List<View> buildViews($box+firstUpperCase~Box box) {
 			List<View> result = new ArrayList<>();
-			$view...[$NL]
+			$view+addView...[$NL]
 			return result;
 		}
 
@@ -169,4 +169,8 @@ end
 
 def type(grouping) trigger(add)
 	arrangements.add(new io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, session)).name("$name")[.label("$label")]);
+end
+
+def trigger(addView)
+	result.add($value);
 end

@@ -43,7 +43,15 @@ public class AlexandriaViewContainerSet extends AlexandriaViewContainer<Alexandr
 	}
 
 	public void openItem(String key) {
-		openElement(itemWithKey(key).label());
+		SetContainer container = view().container();
+		SetItem setItem = itemWithKey(key);
+		AlexandriaElementDisplay display = container.displayFor(setItem.element(), setItem.target());
+		display.label(setItem.label());
+		display.elementDisplayManager(provider().elementDisplayManager());
+		display.element(setItem.element());
+		display.target(setItem.target());
+		add(display);
+		display.personifyOnce(id() + setItem.label());
 	}
 
 	public void refreshOpened(String key) {
@@ -151,6 +159,7 @@ public class AlexandriaViewContainerSet extends AlexandriaViewContainer<Alexandr
 
 			@Override
 			public String type() {
+				Container container = AlexandriaViewContainerSet.this.view().container();
 				return nameOf(container.displayTypeFor(element(), target));
 			}
 

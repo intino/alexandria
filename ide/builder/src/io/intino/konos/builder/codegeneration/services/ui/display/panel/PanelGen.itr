@@ -56,7 +56,7 @@ def type(desktop & gen)
 		]
     	private static List<View> buildViews($box+firstUpperCase~Box box) {
     		List<View> result = new ArrayList<>();
-    		$view...[$NL]
+    		$view+add...[$NL]
     		return result;
     	}
 
@@ -115,7 +115,7 @@ def type(panel & gen)
 		]
     	private static List<View> buildViews($box+firstUpperCase~Box box) {
     		List<View> result = new ArrayList<>();
-    		$view...[$NL]
+    		$view+add...[$NL]
     		return result;
     	}
 
@@ -123,6 +123,10 @@ def type(panel & gen)
 end
 
 def type(toolbar) trigger(empty)
+end
+
+def trigger(add)
+	result.add($value);
 end
 
 def type(toolbar)

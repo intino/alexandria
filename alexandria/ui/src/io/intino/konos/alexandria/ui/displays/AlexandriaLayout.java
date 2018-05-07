@@ -169,7 +169,8 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	private LayoutItem setItem(View view) {
-		return itemOf(view, null);
+		SetContainer container = view.container();
+		return itemOf(view, createPanel(container));
 	}
 
 	private LayoutItem moldItem(View view) {
@@ -179,9 +180,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 
 	private LayoutItem displayItem(View view) {
 		DisplayContainer container = view.container();
-		Panel panel = new Panel();
-		panel.views().add(new View().container(container).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
-		return itemOf(view, panel);
+		return itemOf(view, createPanel(container));
 	}
 
 	private PlatformInfo info() {
@@ -231,6 +230,12 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 				return element;
 			}
 		};
+	}
+
+	private Panel createPanel(Container container) {
+		Panel panel = new Panel();
+		panel.views().add(new View().container(container).name(UUID.randomUUID().toString()).layout(View.Layout.Tab));
+		return panel;
 	}
 
 	protected interface LayoutItem {
