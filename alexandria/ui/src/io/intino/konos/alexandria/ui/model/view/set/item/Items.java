@@ -56,7 +56,7 @@ public class Items extends AbstractItem {
         return view;
     }
 
-    public Items view(ElementRender render) {
+    public Items view(View view) {
         this.view = view;
         return this;
     }

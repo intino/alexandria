@@ -2,7 +2,7 @@ def type(view & display)
 	public static class $name+firstUpperCase {
 		[$catalogScope
 		]
-		public static AlexandriaDisplay $display+firstLowerCase($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.konos.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {
+		public static AlexandriaDisplay display($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.konos.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {
 			return null;//TODO
 		}
 
@@ -94,6 +94,6 @@ def type(filter)
 def
 
 def type(catalogScope)
-	public static void $display+firstLowerCase~Scope($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.model.catalog.Scope scope) {
+	public static void scope($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.model.catalog.Scope scope) {
 	}
 end

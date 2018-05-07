@@ -90,7 +90,7 @@ public class ViewRenderer extends Renderer {
 	}
 
 	private void addViewProperties(Frame frame) {
-		frame.addSlot("viewDisplayTypeLoader", new Frame("viewDisplayTypeLoader").addSlot("package", packageName));
+		frame.addSlot("viewDisplayLoaders", new Frame("viewDisplayLoaders").addSlot("package", packageName));
 
 		addCollectionContainerProperties(view, frame);
 		addDisplayContainerProperties(view, frame);
@@ -183,7 +183,7 @@ public class ViewRenderer extends Renderer {
 		if (!view.isSetContainer()) return;
 		frame.addTypes("set");
 		SetContainerView setView = view.asSetContainer();
-		frame.addSlot("setViewItems", new Frame("setViewItems").addSlot("item", frameOf(setView.abstractItemList())));
+		frame.addSlot("viewContainerSetItems", new Frame("viewContainerSetItems").addSlot("item", frameOf(setView.abstractItemList())));
 	}
 
 	private Frame[] frameOf(List<AbstractItem> items) {
@@ -240,10 +240,11 @@ public class ViewRenderer extends Renderer {
 	private String pathOf(Node node) {
 		String qn = "";
 		Node parent = node;
-		while (!parent.equals(owner.core$())) {
+		while (!parent.equals(view.core$())) {
 			qn = StringFormatter.firstUpperCase().format(parent.name()).toString() + (qn.isEmpty() ? "" : ".") + qn;
 			parent = parent.owner();
 		}
+		qn = StringFormatter.firstUpperCase().format(view.core$().name()).toString() + (qn.isEmpty() ? "" : ".") + qn;
 		return qn;
 	}
 

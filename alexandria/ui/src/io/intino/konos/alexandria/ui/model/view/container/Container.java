@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.ui.model.view.container;
 
-import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+import io.intino.konos.alexandria.ui.displays.AlexandriaElementDisplay;
 import io.intino.konos.alexandria.ui.model.Element;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.Panel;
@@ -9,14 +9,24 @@ import io.intino.konos.alexandria.ui.model.View;
 import java.util.UUID;
 
 public class Container {
-	private DisplayTypeLoader loader;
+	private DisplayLoader loader;
+	private DisplayTypeLoader typeLoader;
 
-	public Class<? extends AlexandriaDisplay> displayTypeFor(Element element, Item item) {
-		return loader != null ? loader.typeFor(element, item != null ? item.object() : null) : null;
+	public AlexandriaElementDisplay displayFor(Element element, Item item) {
+		return loader != null ? loader.displayFor(element, item != null ? item.object() : null) : null;
 	}
 
-	public Container displayTypeLoader(DisplayTypeLoader loader) {
+	public Container displayLoader(DisplayLoader loader) {
 		this.loader = loader;
+		return this;
+	}
+
+	public Class<? extends AlexandriaElementDisplay> displayTypeFor(Element element, Item item) {
+		return typeLoader != null ? typeLoader.typeFor(element, item != null ? item.object() : null) : null;
+	}
+
+	public Container displayTypeLoader(DisplayTypeLoader typeLoader) {
+		this.typeLoader = typeLoader;
 		return this;
 	}
 
@@ -32,7 +42,11 @@ public class Container {
 		return null;
 	}
 
+	public interface DisplayLoader {
+		AlexandriaElementDisplay displayFor(Element element, Object object);
+	}
+
 	public interface DisplayTypeLoader {
-		Class<? extends AlexandriaDisplay> typeFor(Element element, Object object);
+		Class<? extends AlexandriaElementDisplay> typeFor(Element element, Object object);
 	}
 }
