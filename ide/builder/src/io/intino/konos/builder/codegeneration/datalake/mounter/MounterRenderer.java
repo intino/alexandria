@@ -21,7 +21,7 @@ public class MounterRenderer {
 	private final String boxName;
 
 	public MounterRenderer(KonosGraph graph, File src, String packageName, String boxName) {
-		this.mounters = graph.dataLakeConnectorClient(0).messageHandlerList().stream().filter(h -> h.i$(Mounter.class)).map(h -> h.a$(Mounter.class)).collect(toList());
+		this.mounters = graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Mounter.class)).map(h -> h.a$(Mounter.class)).collect(toList());
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;

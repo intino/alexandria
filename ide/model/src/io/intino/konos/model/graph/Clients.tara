@@ -2,7 +2,7 @@ dsl Proteo
 
 use DataTypes
 
-Facet DataLakeConnector on Client
+Facet Ness on Client
 	var string url
 	var string user
 	var string password

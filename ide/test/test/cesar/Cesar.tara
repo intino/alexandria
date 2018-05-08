@@ -159,7 +159,7 @@ Service(title = "cesar", favicon = "/images/icon.png") cesarUi as UI(port = "900
 
 
 
-Client datalake as DataLakeConnector(url = "{datalake}", user = "{user}", password = "{password}", domain = "", clientID = "cesar")
+Client datalake as ness(url = "{datalake}", user = "{user}", password = "{password}", domain = "", clientID = "cesar")
 	Mounter(InfrastructureOperation, "cesar")
 	Mounter(empty, "consul") serverStatus
 	Mounter(empty, "consul") serverLog

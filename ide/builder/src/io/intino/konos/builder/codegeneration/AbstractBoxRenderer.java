@@ -3,9 +3,9 @@ package io.intino.konos.builder.codegeneration;
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.datalakeconnector.DataLakeConnectorClient;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
+import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -19,7 +19,6 @@ import java.io.File;
 import static io.intino.tara.compiler.shared.Configuration.Level.Platform;
 
 public class AbstractBoxRenderer {
-
 	private final File gen;
 	private final String packageName;
 	private final Module module;
@@ -57,9 +56,9 @@ public class AbstractBoxRenderer {
 	}
 
 	private void dataLake(Frame root, String name) {
-		if (!konos.dataLakeConnectorClientList().isEmpty()) {
-			final DataLakeConnectorClient client = konos.dataLakeConnectorClientList().get(0);
-			final Frame datalake = new Frame().addTypes("dataLake").addSlot("mode", konos.dataLakeConnectorClient(0).mode().name()).addSlot("name", konos.dataLakeConnectorClient(0).name$()).addSlot("package", packageName).addSlot("configuration", name);
+		if (!konos.nessClientList().isEmpty()) {
+			final NessClient client = konos.nessClientList().get(0);
+			final Frame datalake = new Frame().addTypes("dataLake").addSlot("mode", konos.nessClient(0).mode().name()).addSlot("name", konos.nessClient(0).name$()).addSlot("package", packageName).addSlot("configuration", name);
 			datalake.addSlot("parameter", new Frame(isCustom(client.url()) ? "custom" : "standard").addSlot("value", client.url()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.user()) ? "custom" : "standard").addSlot("value", client.user()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.password()) ? "custom" : "standard").addSlot("value", client.password()));

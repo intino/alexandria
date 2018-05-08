@@ -6,7 +6,7 @@ import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Mounter;
-import io.intino.konos.model.graph.datalakeconnector.DataLakeConnectorClient;
+import io.intino.konos.model.graph.ness.NessClient;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -20,7 +20,7 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
 
 public class TanksConnectorsRenderer {
-	private final DataLakeConnectorClient datalake;
+	private final NessClient datalake;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
@@ -30,7 +30,7 @@ public class TanksConnectorsRenderer {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
-		this.datalake = graph.dataLakeConnectorClient(0);
+		this.datalake = graph.nessClient(0);
 		this.handlers = new TreeSet((Comparator<MessageHandler>) (o1, o2) -> namesake(o1, o2) ? 0 : -1);
 		handlers.addAll(datalake.messageHandlerList().stream().filter(h -> h.i$(Mounter.class) || h.i$(Feeder.class)).collect(toList()));
 	}

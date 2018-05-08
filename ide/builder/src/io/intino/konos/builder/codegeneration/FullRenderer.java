@@ -112,7 +112,7 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		if (graph.dataLakeConnectorClientList().isEmpty()) return;
+		if (graph.nessClientList().isEmpty()) return;
 		new ProcessRenderer(graph, src, packageName, boxName).execute();
 		new ProcessCoordinatorRenderer(graph, gen, packageName, boxName).execute();
 

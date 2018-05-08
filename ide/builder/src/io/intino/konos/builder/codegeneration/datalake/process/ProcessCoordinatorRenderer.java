@@ -4,7 +4,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Process;
-import io.intino.konos.model.graph.datalakeconnector.DataLakeConnectorClient;
+import io.intino.konos.model.graph.ness.NessClient;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -16,15 +16,15 @@ import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
 
 public class ProcessCoordinatorRenderer {
-	private final DataLakeConnectorClient datalake;
+	private final NessClient datalake;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 	private final List<Process> processes;
 
 	public ProcessCoordinatorRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
-		this.datalake = graph.dataLakeConnectorClientList().isEmpty() ? null : graph.dataLakeConnectorClient(0);
-		this.processes = !graph.dataLakeConnectorClientList().isEmpty() ? graph.dataLakeConnectorClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
+		this.datalake = graph.nessClientList().isEmpty() ? null : graph.nessClient(0);
+		this.processes = !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
