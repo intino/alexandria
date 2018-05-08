@@ -37,7 +37,7 @@ public class PanelRenderer extends DisplayRenderer {
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
 		toolbar.operations().forEach(operation -> {
 			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", builder.buildFrame());
+			frame.addSlot("operation", new Frame().addSlot("value", builder.buildFrame()));
 		});
 		return frame;
 	}
@@ -45,7 +45,7 @@ public class PanelRenderer extends DisplayRenderer {
 	private void views(Panel.Views views, Frame frame) {
 		views.viewList().forEach(view -> {
 			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
-			frame.addSlot("view", builder.buildFrame());
+			frame.addSlot("view", new Frame().addSlot("value", builder.buildFrame()));
 		});
 	}
 

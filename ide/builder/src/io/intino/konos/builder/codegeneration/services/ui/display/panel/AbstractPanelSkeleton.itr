@@ -150,7 +150,7 @@ def type(toolbar)
 	private static Toolbar buildToolbar($box+firstUpperCase~Box box) {
 		Toolbar result = new Toolbar();
 		result.canSearch($canSearch);
-		$operation...[$NL]
+		$operation+add...[$NL]
 		return result;
 	}
 end

@@ -116,7 +116,7 @@ public class CatalogRenderer extends DisplayRenderer {
 
 		catalog.views().viewList().forEach(view -> {
 			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
-			frame.addSlot("view", builder.buildFrame());
+			frame.addSlot("view", new Frame().addSlot("value", builder.buildFrame()));
 		});
 	}
 
@@ -158,7 +158,7 @@ public class CatalogRenderer extends DisplayRenderer {
 		frame.addSlot("box", box).addSlot("type", this.itemClass).addSlot("canSearch", toolbar.canSearch());
 		toolbar.operations().forEach(operation -> {
 			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", builder.buildFrame());
+			frame.addSlot("operation", new Frame().addSlot("value", builder.buildFrame()));
 		});
 		return frame;
 	}
