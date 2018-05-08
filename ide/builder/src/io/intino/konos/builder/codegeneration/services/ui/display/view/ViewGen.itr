@@ -12,7 +12,7 @@ def type(view & mold)
 end
 
 def type(view & catalog)
-	new io.intino.konos.alexandria.ui.model.View().container(new io.intino.konos.alexandria.ui.model.view.container.CatalogContainer()[.filter($filter+filtercall)].displayLoader($catalogDisplayLoader).catalog($package.displays.Displays.elementFor(box, io.intino.konos.alexandria.ui.model.Catalog.class, $catalog+quoted))).layout(View.Layout.$layout)[.width($width)].name("$name")[.label("$label")][$hidden+call]
+	new io.intino.konos.alexandria.ui.model.View().container(new io.intino.konos.alexandria.ui.model.view.container.CatalogContainer()[.filter($filter+call)].displayLoader($catalogDisplayLoader).catalog($package.displays.Displays.elementFor(box, io.intino.konos.alexandria.ui.model.Catalog.class, $catalog+quoted))).layout(View.Layout.$layout)[.width($width)].name("$name")[.label("$label")][$hidden+call]
 end
 
 def type(view & panel)
