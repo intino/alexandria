@@ -6,14 +6,14 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.*;
 
-public class CatalogGenTemplate extends Template {
+public class AbstractCatalogSkeletonTemplate extends Template {
 
-	protected CatalogGenTemplate(Locale locale, LineSeparator separator) {
+	protected AbstractCatalogSkeletonTemplate(Locale locale, LineSeparator separator) {
 		super(locale, separator);
 	}
 
 	public static Template create() {
-		return new CatalogGenTemplate(Locale.ENGLISH, LF).define();
+		return new AbstractCatalogSkeletonTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {

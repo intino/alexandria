@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.view;
 
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Catalog;
@@ -65,12 +66,12 @@ public class ViewRenderer extends Renderer {
 
 	@Override
 	protected Template srcTemplate() {
-		return null;
+		return Formatters.customize(ViewTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return null;
+		return Formatters.customize(AbstractViewTemplate.create());
 	}
 
 	@Override

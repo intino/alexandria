@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.services.ui.display.mold;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Dialog;
@@ -234,12 +235,12 @@ public class MoldRenderer extends DisplayRenderer {
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(MoldSrcTemplate.create());
+		return Formatters.customize(MoldTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(MoldGenTemplate.create());
+		return Formatters.customize(AbstractMoldTemplate.create());
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package io.intino.konos.builder.codegeneration.services.ui.display.catalog;
+package io.intino.konos.builder.codegeneration.services.ui.display.panel;
 
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewTemplate;
@@ -9,18 +9,18 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.LF;
 
-public class AbstractCatalogTemplate extends Template {
+public class PanelTemplate extends Template {
 
-	protected AbstractCatalogTemplate(Locale locale, LineSeparator lineSeparator) {
+	protected PanelTemplate(Locale locale, LineSeparator lineSeparator) {
 		super(locale, lineSeparator);
 	}
 
 	public static Template create() {
-		return new AbstractCatalogTemplate(Locale.ENGLISH, LF).define();
+		return new PanelTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {
-		add(AbstractCatalogSkeletonTemplate.create().rules());
+		add(PanelSkeletonTemplate.create().rules());
 		add(OperationTemplate.create().rules());
 		add(ViewTemplate.create().rules());
 		return this;

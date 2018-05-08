@@ -9,18 +9,18 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.LF;
 
-public class AbstractCatalogTemplate extends Template {
+public class CatalogTemplate extends Template {
 
-	protected AbstractCatalogTemplate(Locale locale, LineSeparator lineSeparator) {
+	protected CatalogTemplate(Locale locale, LineSeparator lineSeparator) {
 		super(locale, lineSeparator);
 	}
 
 	public static Template create() {
-		return new AbstractCatalogTemplate(Locale.ENGLISH, LF).define();
+		return new CatalogTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {
-		add(AbstractCatalogSkeletonTemplate.create().rules());
+		add(CatalogSkeletonTemplate.create().rules());
 		add(OperationTemplate.create().rules());
 		add(ViewTemplate.create().rules());
 		return this;

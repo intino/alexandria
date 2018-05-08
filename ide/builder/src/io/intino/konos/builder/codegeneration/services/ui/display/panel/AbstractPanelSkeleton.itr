@@ -1,4 +1,4 @@
-def type(desktop & gen)
+def type(desktop)
 	package $package.displays;
 
 	import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
@@ -94,7 +94,7 @@ def trigger(authentication)
 	url("$value")
 end
 
-def type(panel & gen)
+def type(panel)
 	package $package.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
