@@ -13,7 +13,6 @@ public abstract class Renderer {
 	protected final String box;
 	protected final String packageName;
 	protected final String name;
-	private boolean buildingGen = false;
 
 	protected Renderer(String name, String box, String packageName) {
 		this.name = name;
@@ -21,32 +20,33 @@ public abstract class Renderer {
 		this.packageName = packageName;
 	}
 
-	public final void write(File src, File gen) {
-		writeSrc(src);
-		writeGen(gen);
+	public Frame buildFrame() {
+		return new Frame()
+				.addSlot("box", box)
+				.addSlot("package", packageName)
+				.addSlot("name", name);
 	}
 
-	private void writeSrc(File file) {
-		buildingGen = false;
+	public final void write(File src, File gen) {
+		Frame frame = buildFrame();
+		writeSrc(src, frame);
+		writeGen(gen, frame);
+	}
 
+	private void writeSrc(File file, Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase(name);
 		File sourceFile = javaFile(new File(file, DISPLAYS), newDisplay);
 		if (!sourceFile.exists())
-			writeFrame(new File(file, DISPLAYS), newDisplay, srcTemplate().format(createFrame()));
+			writeFrame(new File(file, DISPLAYS), newDisplay, srcTemplate().format(frame));
 		else {
 			Updater updater = updater(newDisplay, sourceFile);
 			if (updater != null) updater.update();
 		}
 	}
 
-	private void writeGen(File file) {
-		buildingGen = true;
+	private void writeGen(File file, Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase("Abstract" + firstUpperCase(name));
-		writeFrame(new File(file, DISPLAYS), newDisplay, genTemplate().format(createFrame().addTypes("gen")));
-	}
-
-	protected boolean buildingSrc() {
-		return !buildingGen;
+		writeFrame(new File(file, DISPLAYS), newDisplay, genTemplate().format(frame.addTypes("gen")));
 	}
 
 	protected abstract Template srcTemplate();
@@ -54,11 +54,4 @@ public abstract class Renderer {
 	protected abstract Template genTemplate();
 
 	protected abstract Updater updater(String displayName, File sourceFile);
-
-	protected Frame createFrame() {
-		return new Frame()
-				.addSlot("box", box)
-				.addSlot("package", packageName)
-				.addSlot("name", name);
-	}
 }

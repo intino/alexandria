@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.toolbar;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.AbstractToolbar;
@@ -24,32 +23,9 @@ public class OperationRenderer extends Renderer {
 		this.owner = owner;
 	}
 
-	public String buildSrc() {
-		return Formatters.customize(OperationSrcTemplate.create()).format(createFrame());
-	}
-
-	public String buildGen() {
-		return Formatters.customize(OperationGenTemplate.create()).format(createFrame());
-	}
-
 	@Override
-	protected Template srcTemplate() {
-		return null;
-	}
-
-	@Override
-	protected Template genTemplate() {
-		return null;
-	}
-
-	@Override
-	protected Updater updater(String displayName, File sourceFile) {
-		return null;
-	}
-
-	@Override
-	protected Frame createFrame() {
-		Frame frame = super.createFrame();
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
 
 		frame.addTypes("operation", operation.getClass().getSimpleName())
 				.addSlot("title", operation.title())
@@ -67,6 +43,21 @@ public class OperationRenderer extends Renderer {
 		addOpenCatalogSelectionProperties(frame);
 
 		return frame;
+	}
+
+	@Override
+	protected Template srcTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Template genTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Updater updater(String displayName, File sourceFile) {
+		return null;
 	}
 
 	private void addTaskProperties(Frame frame) {

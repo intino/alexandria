@@ -116,7 +116,7 @@ public class CatalogRenderer extends DisplayRenderer {
 
 		catalog.views().viewList().forEach(view -> {
 			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
-			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
+			frame.addSlot("view", builder.buildFrame());
 		});
 	}
 
@@ -156,20 +156,19 @@ public class CatalogRenderer extends DisplayRenderer {
 	private Frame frameOf(Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		frame.addSlot("box", box).addSlot("type", this.itemClass).addSlot("canSearch", toolbar.canSearch());
-		boolean buildingSrc = buildingSrc();
 		toolbar.operations().forEach(operation -> {
 			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", buildingSrc ? builder.buildSrc() : builder.buildGen());
+			frame.addSlot("operation", builder.buildFrame());
 		});
 		return frame;
 	}
 
 	protected Template srcTemplate() {
-		return Formatters.customize(CatalogSrcTemplate.create());
+		return Formatters.customize(FullCatalogTemplate.create());
 	}
 
 	protected Template genTemplate() {
-		return Formatters.customize(CatalogGenTemplate.create());
+		return Formatters.customize(AbstractCatalogTemplate.create());
 	}
 
 	@Override
