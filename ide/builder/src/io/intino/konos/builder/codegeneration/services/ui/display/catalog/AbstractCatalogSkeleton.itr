@@ -51,7 +51,7 @@ def type(catalog & gen)
 		]
 		private static java.util.List<View> buildViews($box+firstUpperCase~Box box) {
 			List<View> result = new ArrayList<>();
-			$view+addView...[$NL]
+			$view+add...[$NL]
 			return result;
 		}
 
@@ -123,10 +123,10 @@ end
 
 def trigger(toolbar)
 	private static io.intino.konos.alexandria.ui.model.Toolbar buildToolbar($box+firstUpperCase~Box box) {
-		io.intino.konos.alexandria.ui.model.Toolbar toolbar = new Toolbar();
-		toolbar.canSearch($canSearch);
-		$operation...[$NL]
-		return toolbar;
+		io.intino.konos.alexandria.ui.model.Toolbar result = new Toolbar();
+		result.canSearch($canSearch);
+		$operation+add...[$NL]
+		return result;
 	}
 end
 
@@ -171,6 +171,6 @@ def type(grouping) trigger(add)
 	arrangements.add(new io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, session)).name("$name")[.label("$label")]);
 end
 
-def trigger(addView)
+def trigger(add)
 	result.add($value);
 end
