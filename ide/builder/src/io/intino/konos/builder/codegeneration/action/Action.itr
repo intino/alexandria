@@ -26,7 +26,7 @@ def type(ui & action & gen)
 	import io.intino.konos.alexandria.ui.spark.actions.AlexandriaResourceAction;
 	import java.util.*;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaResourceAction {
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends Alexandria$type~Action {
 
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
@@ -93,15 +93,20 @@ def type(schemaImport) trigger(schemaImport)
 	import $package.schemas.*;
 end
 
-def trigger(component)
+def type(component)
 	public io.intino.konos.alexandria.ui.displays.Soul prepareSoul(io.intino.konos.alexandria.ui.services.push.UIClient client) {
 	    return new io.intino.konos.alexandria.ui.displays.Soul(session) {
 			@Override
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);
 				register(display);
+				[$editor]
 				display.personify();
 			}
 		};
 	}
+end
+
+def trigger(editor)
+	display.onSave((document, completed) -> save(document, completed));
 end

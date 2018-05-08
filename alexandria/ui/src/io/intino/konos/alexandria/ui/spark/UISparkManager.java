@@ -1,9 +1,10 @@
 package io.intino.konos.alexandria.ui.spark;
 
 import io.intino.konos.alexandria.ui.services.AuthService;
+import io.intino.konos.alexandria.ui.services.EditorService;
+import io.intino.konos.alexandria.ui.services.push.PushService;
 import io.intino.konos.alexandria.ui.services.push.UIClient;
 import io.intino.konos.alexandria.ui.services.push.UISession;
-import io.intino.konos.alexandria.ui.services.push.PushService;
 import spark.Request;
 import spark.Response;
 
@@ -13,14 +14,16 @@ import java.util.Locale;
 public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkManager {
 	private final PushService pushService;
 	private final AuthService authService;
+	private final EditorService editorService;
 	private final boolean hasUserHome;
 
 	public static final String KonosUserHomePath = "/konos/user";
 
-	public UISparkManager(Request request, Response response, PushService pushService, AuthService authService, boolean hasUserHome) {
+	public UISparkManager(Request request, Response response, PushService pushService, AuthService authService, EditorService editorService, boolean hasUserHome) {
 		super(request, response);
 		this.pushService = pushService;
 		this.authService = authService;
+		this.editorService = editorService;
 		this.hasUserHome = hasUserHome;
 	}
 
@@ -30,6 +33,10 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 
 	public AuthService authService() {
 		return this.authService;
+	}
+
+	public EditorService editorService() {
+		return this.editorService;
 	}
 
 	public void linkToThread(UIClient client) {
