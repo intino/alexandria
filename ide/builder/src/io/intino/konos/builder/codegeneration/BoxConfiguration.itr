@@ -11,7 +11,7 @@ def type(boxConfiguration)
 			defaultArgs();
 			[if (store == null) {
 				if (this.args.get("graph_store") != null)
-					$tara+empty~store = new java.io.File(this.args.get("graph_store"))
+					$tara+empty~store = new java.io.File(this.args.get("graph_store"));
 				else $tara+empty~store = new java.io.File("./store");
 			}]
 		}
