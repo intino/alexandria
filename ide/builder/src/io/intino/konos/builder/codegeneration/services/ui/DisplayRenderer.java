@@ -16,8 +16,8 @@ public abstract class DisplayRenderer extends Renderer {
 	}
 
 	@Override
-	protected Frame createFrame() {
-		Frame frame = super.createFrame();
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
 		frame.addTypes(display.getClass().getSimpleName().toLowerCase());
 		return frame;
 	}

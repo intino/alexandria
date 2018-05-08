@@ -14,9 +14,10 @@ public class DesktopRenderer extends PanelRenderer {
 		super(project, desktop.a$(Panel.class), packageName, boxName);
 	}
 
-	protected Frame createFrame() {
+	@Override
+	public Frame buildFrame() {
 		final DesktopPanel desktop = display().a$(Panel.class).asDesktop();
-		final Frame frame = super.createFrame();
+		final Frame frame = super.buildFrame();
 		frame.addTypes("desktop");
 		frame.addSlot("title", desktop.title());
 		frame.addSlot("subtitle", desktop.subTitle());

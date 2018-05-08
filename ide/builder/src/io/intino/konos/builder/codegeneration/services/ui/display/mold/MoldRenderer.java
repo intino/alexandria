@@ -31,8 +31,8 @@ public class MoldRenderer extends DisplayRenderer {
 	}
 
 	@Override
-	protected Frame createFrame() {
-		Frame frame = super.createFrame();
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
 		frame.addSlot("moldClass", moldClass());
 		for (Block block : mold.blockList()) frame.addSlot("block", frameOf(block));
 		return frame;
