@@ -1,38 +1,8 @@
 dsl Konos
 
+DataLake(domain = "org.siani", clientID = "") monentia
+	Tank(schema = opinion)
+	Tank(schema = empty) inputProcesses
+
 Schema opinion
 	Attribute asas as Text
-
-Schema signUp
-	Attribute name as Text
-	Attribute password as Text
-
-Client datalake as DataLakeConnector(url = "{datalake}", user = "{user}", password = "{password}", domain = "", clientID = "cesar")
-	Mounter(InfrastructureOperation, "cesar")
-	Mounter(empty, "consul") serverStatus
-	Mounter(empty, "consul") serverLog
-	Mounter(empty, "consul") serverUpgrade
-
-	Mounter(empty, "consul") feederStatus
-	Mounter(empty, "consul") feederLog
-	Mounter(empty, "consul") feederUpgrade
-
-	Mounter(empty, "consul") deviceStatus
-	Mounter(empty, "consul") deviceBoot
-	Mounter(empty, "consul") deviceUpgrade
-	Mounter(empty, "consul") deviceCrash
-
-	Mounter(empty, "consul") systemLog
-	Mounter(empty, "consul") systemStatus
-
-Schema InfrastructureOperation
-	Attribute ts as DateTime
-	Attribute operation as Text
-	Attribute user as Text
-	Attribute objectType as Text
-	Attribute objectID as Text
-	Attribute(multiple = true) parameters as Text
-
-Box
-	Parameter(name = "datalakeUser", value = "monentia")
-	Parameter(name = "datalakePassword", value = empty)
