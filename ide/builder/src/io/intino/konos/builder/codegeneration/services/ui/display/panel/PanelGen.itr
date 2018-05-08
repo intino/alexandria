@@ -43,7 +43,7 @@ def type(desktop & gen)
     		});
     		[desktop.title("$title");]
     		[desktop.subtitle("$subtitle");]
-    		[desktop.authServiceUrl(box.configuration().$uiService+firstLowerCase~Configuration().authServiceUrl());]
+    		[desktop.authServiceUrl($authentication);]
     		[desktop.logo(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$logo")));]
     		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon")));]
     		[desktop.layout(Desktop.Layout.$layout);]
@@ -69,12 +69,29 @@ def type(desktop & gen)
 			}
 		}
 
+		private static java.net.URL url(String url) {
+			try {
+			return new java.net.URL(url);
+			} catch (java.net.MalformedURLException e) {
+				return null;
+			}
+		}
+
 		private static byte$[] toByteArray(java.io.InputStream input) throws java.io.IOException {
 			java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
 			IOUtils.copy(input, output);
 			return output.toByteArray();
 		}
     }
+end
+
+
+def type(custom) trigger(authentication)
+	url(box.configuration().get("$value+customParameter"))
+end
+
+def trigger(authentication)
+	url("$value")
 end
 
 def type(panel & gen)

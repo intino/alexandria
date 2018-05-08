@@ -1,0 +1,27 @@
+dsl Proteo
+
+use DataTypes
+
+Facet DataLakeConnector on Client
+	var string url
+	var string user
+	var string password
+	var word:{Normal Transacted} mode = Normal
+	var string domain
+	var string clientID
+	has MessageHandler
+
+Concept:NamedIfNoSchema MessageHandler is component
+	var Schema schema
+	var string subdomain = ""
+	sub Feeder
+	sub Mounter
+
+Concept:JobOrPostCondition:Named Process extends MessageHandler is component
+	Concept:{0..1}:Named PreCondition
+	Concept OnFinish
+		sub:{0..1} Job
+		sub:{0..*} PostCondition
+			var string type
+
+Concept Client

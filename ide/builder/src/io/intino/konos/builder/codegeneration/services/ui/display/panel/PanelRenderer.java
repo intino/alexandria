@@ -13,6 +13,8 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
+
 public class PanelRenderer extends DisplayRenderer {
 	private final Project project;
 
@@ -52,12 +54,12 @@ public class PanelRenderer extends DisplayRenderer {
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(PanelSrcTemplate.create());
+		return customize(PanelSrcTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(PanelGenTemplate.create());
+		return customize(PanelGenTemplate.create());
 	}
 
 	@Override

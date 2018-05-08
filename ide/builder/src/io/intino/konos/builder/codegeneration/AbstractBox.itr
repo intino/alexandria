@@ -33,8 +33,7 @@ def type(box)
 			[owner = new $parent~Box(configuration);]
 			this.configuration = configuration;[
 			initLogger();
-			$service+setup...[$NL]][
-			$ui+setup...[$NL]]
+			$service+setup...[$NL]]
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -50,7 +49,7 @@ def type(box)
 		public io.intino.konos.alexandria.Box open() {
 			if(owner != null) owner.open();
 			initLogger();
-			initActivities();
+			initUI();
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
@@ -69,7 +68,7 @@ def type(box)
 
 		[$hasUi+registerSoul~
 		][$service+getter...[$NL$NL]]
-
+		[$hasUi+authService]
 		$dataLake+getter...[$NL$NL]
 
 		$task+getter...[$NL$NL]
@@ -91,8 +90,8 @@ def type(box)
 			$service+slack...[$NL]
 		}
 
-		private void initActivities() {
-			$ui...[$NL]
+		private void initUI() {
+			$service+ui...[$NL]
 		}
 
 		private void initDataLake() {
@@ -111,6 +110,14 @@ def type(box)
 			logger.setUseParentHandlers(false);
 			logger.addHandler(handler);
 		}
+
+		private static java.net.URL url(String url) {
+			try {
+			return new java.net.URL(url);
+			} catch (java.net.MalformedURLException e) {
+				return null;
+			}
+		}
 	}
 end
 
@@ -118,14 +125,12 @@ def trigger(uiBox)
 	io.intino.konos.alexandria.ui.UIBox
 end
 
-def type(ui) trigger(setup)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
-		io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.authService);
+def type(service & ui) trigger(setup)
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", [this.authService($authentication)?null]);
 end
 
 def type(service & rest) trigger(setup)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration != null)
-		io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.port[, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory], null);
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", null);
 end
 
 def type(service & jmx) trigger(jmx)
@@ -134,19 +139,17 @@ def type(service & jmx) trigger(jmx)
 end
 
 def type(service & slack) trigger(slack)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
-	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, $parameter);
 	logger.info("Slack service $name: started!");
+
 end
 
 def type(service & rest) trigger(rest)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("REST service $name: started!");
 end
 
-def type(ui) trigger(ui)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
+def type(service & ui) trigger(ui)
 	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
 	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
@@ -155,9 +158,8 @@ def type(ui) trigger(ui)
 end
 
 def type(service & jms) trigger(jms)
-	if (configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration == null) return;
 	try {
-		connection = new org.apache.activemq.ActiveMQConnectionFactory(configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.user, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.password, configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration.url).createConnection();
+		connection = new org.apache.activemq.ActiveMQConnectionFactory($parameter...[, ]).createConnection();
 		java.lang.Thread thread = new java.lang.Thread(() -> {
 			try {
 				connection.start();
@@ -175,11 +177,10 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake) trigger(init)
-	if (configuration().nessConfiguration() == null) return;
-	this.ness = new io.intino.konos.datalake.Ness(configuration().nessConfiguration().url, configuration().nessConfiguration().user, configuration().nessConfiguration().password, configuration().nessConfiguration().clientID);
-	java.lang.Thread thread = new java.lang.Thread(()-> {
+	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
+	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.ness.connect("$mode");
-		$package.ness.NessTanks.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		logger.info("Ness connection: started!");
 	}, "ness init");
@@ -189,6 +190,22 @@ def type(dataLake) trigger(init)
 	} catch (InterruptedException e) {
 		logger.error(e.getMessage());
 	}
+end
+
+def type(custom) trigger(parameter)
+	configuration().get("$value+customParameter")
+end
+
+def type(custom) trigger(authentication)
+	url(configuration().get("$value+customParameter"))
+end
+
+def trigger(parameter)
+	"$value"
+end
+
+def trigger(authentication)
+	url("$value")
 end
 
 def attribute(Transacted) trigger(mode)
@@ -267,34 +284,38 @@ def type(task) trigger(getter)
 	}
 end
 
+def trigger(authservice)
+	protected abstract io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
+end
+
 def trigger(registerSoul)
 	public java.util.List<Soul> souls() {
 		return new java.util.ArrayList<>(uiSouls.values());
 	}
 
-	public java.util.Optional<Soul> soul(String clientId) {
-		return java.util.Optional.ofNullable(uiSouls.get(clientId));
-	}
+		public java.util.Optional<Soul> soul(String clientId) {
+			return java.util.Optional.ofNullable(uiSouls.get(clientId));
+		}
 
-	public void registerSoul(String clientId, Soul soul) {
-		[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
-		uiSouls.put(clientId, soul);
-	}
+		public void registerSoul(String clientId, Soul soul) {
+			[if (owner != null) (($parent~Box) owner).registerSoul(clientId, soul);]
+			uiSouls.put(clientId, soul);
+		}
 
-	public void unRegisterSoul(String clientId) {
-		[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
-		uiSouls.remove(clientId);
-		if (uiSouls.size() <= 0) notifySoulsClosed();
-	}
+		public void unRegisterSoul(String clientId) {
+			[if (owner != null) (($parent~Box) owner).unRegisterSoul(clientId);]
+			uiSouls.remove(clientId);
+			if (uiSouls.size() <= 0) notifySoulsClosed();
+		}
 
-	public void onSoulsClosed(io.intino.konos.alexandria.ui.UIBox.SoulsClosed listener) {
-		[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
-		this.soulsClosedListeners.add(listener);
-	}
+		public void onSoulsClosed(io.intino.konos.alexandria.ui.UIBox.SoulsClosed listener) {
+			[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
+			this.soulsClosedListeners.add(listener);
+		}
 
-	private void notifySoulsClosed() {
-		soulsClosedListeners.forEach(l -> l.accept());
-	}
+		private void notifySoulsClosed() {
+			soulsClosedListeners.forEach(l -> l.accept());
+		}
 end
 
 def trigger(import)
