@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
-import io.intino.konos.builder.codegeneration.services.ui.display.catalog.FullCatalogTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewRenderer;
 import io.intino.konos.model.graph.Panel;
@@ -52,7 +51,7 @@ public class PanelRenderer extends DisplayRenderer {
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(FullPanelTemplate.create());
+		return Formatters.customize(PanelTemplate.create());
 	}
 
 	@Override

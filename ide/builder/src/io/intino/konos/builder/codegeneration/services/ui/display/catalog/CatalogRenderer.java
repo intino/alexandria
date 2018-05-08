@@ -164,7 +164,7 @@ public class CatalogRenderer extends DisplayRenderer {
 	}
 
 	protected Template srcTemplate() {
-		return Formatters.customize(FullCatalogTemplate.create());
+		return Formatters.customize(CatalogTemplate.create());
 	}
 
 	protected Template genTemplate() {

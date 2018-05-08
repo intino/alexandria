@@ -1,5 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.toolbar;
 
+import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.Renderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.AbstractToolbar;
@@ -47,12 +48,12 @@ public class OperationRenderer extends Renderer {
 
 	@Override
 	protected Template srcTemplate() {
-		return null;
+		return Formatters.customize(OperationTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return null;
+		return Formatters.customize(AbstractOperationTemplate.create());
 	}
 
 	@Override

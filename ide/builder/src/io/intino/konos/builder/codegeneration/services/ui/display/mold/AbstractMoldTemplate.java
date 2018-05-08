@@ -6,14 +6,14 @@ import java.util.Locale;
 
 import static org.siani.itrules.LineSeparator.*;
 
-public class MoldGenTemplate extends Template {
+public class AbstractMoldTemplate extends Template {
 
-	protected MoldGenTemplate(Locale locale, LineSeparator separator) {
+	protected AbstractMoldTemplate(Locale locale, LineSeparator separator) {
 		super(locale, separator);
 	}
 
 	public static Template create() {
-		return new MoldGenTemplate(Locale.ENGLISH, LF).define();
+		return new AbstractMoldTemplate(Locale.ENGLISH, LF).define();
 	}
 
 	public Template define() {
