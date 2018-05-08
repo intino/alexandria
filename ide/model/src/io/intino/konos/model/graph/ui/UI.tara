@@ -4,6 +4,7 @@ use Services
 use DataTypes
 
 Facet UI on Service is decorable
+	var string port
 	var string title
 	var string favicon
 	var string googleApiKey = empty

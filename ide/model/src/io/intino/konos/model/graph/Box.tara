@@ -1,0 +1,10 @@
+dsl Proteo
+
+Concept:{1..1} Box
+	Concept Parameter
+		var string name
+		var string value
+	Concept Consumer
+		var string topic
+	Concept Producer
+		var string tank

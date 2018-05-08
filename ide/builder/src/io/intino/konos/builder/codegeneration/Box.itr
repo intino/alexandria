@@ -37,7 +37,7 @@ def trigger(quoted)
 end
 
 def trigger(rest)
-	static io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
+	protected io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
 		//TODO add your authService
 		return null;
 	}	

@@ -80,7 +80,12 @@ public class Formatters {
 		template.add("subpath", subPath());
 		template.add("shortType", shortType());
 		template.add("quoted", quoted());
+		template.add("customParameter", customParameter());
 		return template;
+	}
+
+	private static Formatter customParameter() {
+		return value -> value.toString().substring(1, value.toString().length() - 1);
 	}
 
 }
