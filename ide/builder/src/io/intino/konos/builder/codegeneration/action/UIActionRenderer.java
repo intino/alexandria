@@ -30,14 +30,21 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
+		frame.addSlot("type", resource.isEditor() ? "Editor" : "Resource");
 		if (resource.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
 		else frame.addSlot("importDisplays", packageName);
-		frame.addSlot("component", resource.uses().name$());
+		frame.addSlot("component", componentFrame());
 		frame.addSlot("parameter", parameters());
 		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
 		else if (service.title() != null) frame.addSlot("title", service.title());
 		if (!alreadyRendered(destiny, resource.name$())) writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().format(frame));
 		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(resource.name$()) + "Action", template().format(frame.addTypes("gen")));
+	}
+
+	private Frame componentFrame() {
+		Frame result = new Frame("component").addSlot("value", resource.uses().name$());
+		if (resource.isEditor()) result.addSlot("editor", "");
+		return result;
 	}
 
 	private Frame[] parameters() {

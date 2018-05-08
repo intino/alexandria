@@ -11,7 +11,7 @@ def type(resource)
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.konos.alexandria.ui.spark.resources.Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.konos.alexandria.ui.spark.resources.[$editor]Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
 		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
@@ -41,6 +41,7 @@ def type(resource)
 			action.box = box;
 			action.clientId = clientId;
 			action.googleApiKey = "$googleApiKey";
+			[$editor+document]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(action.clientId))
@@ -75,6 +76,11 @@ def type(resource)
 		}
 
 	}
+end
+
+def type(editor) trigger(document)
+	action.document = loadDocument();
+	action.onSave((params) -> saveDocument(params));
 end
 
 def type(parameter)

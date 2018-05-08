@@ -44,6 +44,7 @@ public class ResourceRenderer {
 		frame.addSlot("name", resource.name$());
 		frame.addSlot("box", boxName);
 		frame.addSlot("parameter", parameters(resource));
+		if (resource.isEditor()) frame.addSlot("editor", "Editor");
 		if (resource.core$().ownerAs(UIService.class).googleApiKey() != null)
 			frame.addSlot("googleApiKey", resource.core$().ownerAs(UIService.class).googleApiKey());
 		if (resource.isConfidential()) frame.addSlot("confidential", "");
