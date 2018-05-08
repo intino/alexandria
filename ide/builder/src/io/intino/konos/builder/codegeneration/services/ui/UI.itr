@@ -22,7 +22,7 @@ def type(ui)
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends io.intino.konos.alexandria.ui.UI {
 
 		public static void init(UIAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
-			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration.$name+SnakeCaseToCamelCase+FirstUpperCase~UIConfiguration configuration = box.configuration().$name+SnakeCaseToCamelCase+FirstLowerCase~Configuration;
+			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = box.configuration();
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
@@ -66,7 +66,7 @@ def type(dialog) trigger(notifier)
 end
 
 def trigger(custom)
-	.replace("{$value}", configuration.$value)
+	.replace("{$value}", configuration.get("$value"))
 end
 
 def type(display)
@@ -92,5 +92,5 @@ def trigger(quoted)
 end
 
 def type(custom) trigger(custom)
-	.replace("{$value}", configuration.$value)
+	.replace("{$value}", configuration.get("$value"))
 end

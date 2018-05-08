@@ -42,7 +42,7 @@ Service SimulationInspector as JMX
 		Parameter input as Text
 		Parameter output as Text
 
-Service ConsulJMS as JMS(Topic)
+Service ConsulJMS as JMS(url= "",user="", password = "", clientId = "", subscriptionModel = Topic)
 	Request("service.consul.{consulID}.deploy") deploy
 		Parameter system as Object(SystemSchema)
 		Response as Bool

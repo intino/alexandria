@@ -2,11 +2,11 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.DataLake;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.datalakeconnector.DataLakeConnectorClient;
 import io.intino.konos.model.graph.jms.JMSService;
-import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -56,11 +56,12 @@ public class BoxConfigurationRenderer {
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
 		if (parent != null && configuration != null && !Platform.equals(configuration.level())) frame.addSlot("parent", parent);
+		frame.addSlot("parameter", graph.box().parameterList().stream().filter(p -> p.name() != null && p.value() != null).map(p -> new Frame().addSlot("name", p.name()).addSlot("value", p.value())).toArray(Frame[]::new));
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
-		addDataLakes(frame, boxName);
-		addEventHandlers(frame, boxName);
+		addDataLake(frame, boxName);
+		addMessageHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (isTara) frame.addSlot("tara", "");
 		return boxName;
@@ -83,24 +84,19 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
-	private void addJMXServices(Frame frame, String boxName) {
-		for (JMXService service : graph.jMXServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name$()).addSlot("configuration", boxName);
-			frame.addSlot("service", jmsFrame);
-		}
+	private void addDataLake(Frame frame, String boxName) {
+		if (graph.dataLakeConnectorClientList().isEmpty()) return;
+		final DataLakeConnectorClient datalake = graph.dataLakeConnectorClient(0);
+		if (datalake == null) return;
+		Frame datalakeFrame = new Frame().addTypes("service", "datalake").addSlot("name", datalake.name$()).addSlot("configuration", boxName);
+		frame.addSlot("service", datalakeFrame);
 	}
 
-	private void addDataLakes(Frame frame, String boxName) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name$()).addSlot("configuration", boxName);
-		frame.addSlot("service", dataLakeFrame);
-	}
-
-	private void addEventHandlers(Frame frame, String boxName) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		for (DataLake.Tank handler : dataLake.tankList()) {
+	private void addMessageHandlers(Frame frame, String boxName) {
+		if (graph.dataLakeConnectorClientList().isEmpty()) return;
+		final DataLakeConnectorClient datalake = graph.dataLakeConnectorClient(0);
+		if (datalake == null) return;
+		for (MessageHandler handler : datalake.messageHandlerList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.schema() != null ? handler.schema().name$() : handler.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", channelFrame);
 		}

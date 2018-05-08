@@ -20,16 +20,16 @@ def type(tanks)
     import java.util.Map;
     import java.util.HashMap;
 
-	public class NessTanks {
+	public class TanksConnectors {
 		$tank+field...[$NL]
 
 		public static void registerTanks($box+firstUppercase~Box box) {
+			final String clientID = $clientId;
 			$tank+assign...[$NL]
-			final String clientID = box.configuration().nessConfiguration().clientID;
 			$tank+subscribe...[$NL]
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> tanks() {
+		public static List<io.intino.konos.datalake.Datalake.Tank> tankConnectors() {
 			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
@@ -53,6 +53,14 @@ def type(tanks)
 	}
 end
 
+def type(custom) trigger(clientId)
+	box.configuration().get("$value");
+end
+
+def trigger(clientId)
+	"$value"
+end
+
 def type(tank) trigger(unregister)
 	$name+firstLowerCase.unregister();
 end
@@ -63,20 +71,20 @@ end
 
 def type(tank) trigger(assign)
 	$name+firstLowerCase = box.datalake().add("$messageType");
-	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
 end
 
 def type(tank) trigger(add)
-	tanks.add(NessTanks.$name+firstLowerCase);
+	tanks.add(TanksConnectors.$name+firstLowerCase);
 end
 
 def type(tank) trigger(getter)
 	public static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase() {
-		return NessTanks.$name+firstLowerCase;
+		return TanksConnectors.$name+firstLowerCase;
 	}
 end
 
-def type(tank) trigger(subscribe)
+def type(tank) type(mounter) trigger(subscribe)
+	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
 	$name+firstLowerCase.flow(clientID != null ? clientID + "-$name+lowerCase" : null);
 end
 
@@ -88,7 +96,7 @@ def trigger(formatMessage)
 	"$name"[$custom+customType...[]]
 end
 
-def trigger(tank) trigger(class)
+def trigger(tank) type(mounter) trigger(class)
 	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
@@ -98,10 +106,10 @@ def trigger(tank) trigger(class)
 
 		public void handle(io.intino.ness.inl.Message m) {
 			try {
-				$name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler tank = new $name+snakeCaseToCamelCase+FirstUpperCase~MessageHandler();
-				tank.box = box;
-				tank.$type+typeName = $type+load;
-				tank.execute();
+				$name+snakeCaseToCamelCase+FirstUpperCase~Mounter mounter = new $name+snakeCaseToCamelCase+FirstUpperCase~Mounter();
+				mounter.box = box;
+				mounter.$type+typeName = $type+load;
+				mounter.execute();
 			} catch(Throwable e) {
 				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
@@ -114,7 +122,7 @@ def trigger(replace)
 end
 
 def trigger(tankImport)
-	import $value+validPackage.ness.messagehandlers.*;
+	import $value+validPackage.ness.mounters.*;
 end
 
 def type(schema) trigger(load)

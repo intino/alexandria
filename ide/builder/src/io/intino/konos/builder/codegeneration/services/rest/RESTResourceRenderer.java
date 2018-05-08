@@ -79,8 +79,8 @@ public class RESTResourceRenderer {
 
 	private Frame frameOf(Response response) {
 		Frame frame = new Frame().addSlot("value", Commons.returnType(response, packageName));
-		if (response.isText() && response.format() != Response.Format.html)
-			frame.addSlot("format", MimeTypes.get(response.format().toString()));
+		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
+			frame.addSlot("format", MimeTypes.get(response.dataFormat().toString()));
 		return frame;
 	}
 

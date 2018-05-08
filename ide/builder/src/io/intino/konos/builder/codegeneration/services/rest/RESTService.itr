@@ -9,7 +9,6 @@ def type(server)
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
-			$box+firstUpperCase~Configuration.$name+firstUpperCase+SnakeCaseToCamelCase~Configuration configuration = box.configuration().$name+SnakeCaseToCamelCase+firstLowerCase~Configuration;
 			$secure
 			$resource...[$NL]
 			return server;
@@ -30,5 +29,5 @@ def type(path) trigger(format)
 end
 
 def trigger(custom)
-	.replace("{$value}", configuration.$value)
+	.replace("{$value}", box.configuration().get("$value"))
 end
