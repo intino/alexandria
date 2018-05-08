@@ -22,9 +22,9 @@ public class PanelRenderer extends DisplayRenderer {
 	}
 
 	@Override
-	protected Frame createFrame() {
+	public Frame buildFrame() {
 		final Panel panel = display().a$(Panel.class);
-		final Frame frame = super.createFrame();
+		final Frame frame = super.buildFrame();
 		frame.addTypes(panel.isDesktop() ? "desktop" : "panel");
 		if (panel.label() != null) frame.addSlot("label", panel.label());
 		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));

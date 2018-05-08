@@ -27,9 +27,9 @@ public class CatalogRenderer extends DisplayRenderer {
 	}
 
 	@Override
-	protected Frame createFrame() {
+	public Frame buildFrame() {
 		final Catalog catalog = display().a$(Catalog.class);
-		final Frame frame = super.createFrame().addTypes("catalog").addSlot("type", itemClass);
+		final Frame frame = super.buildFrame().addTypes("catalog").addSlot("type", itemClass);
 		if (catalog.i$(TemporalCatalog.class)) {
 			final TemporalCatalog temporalCatalog = catalog.a$(TemporalCatalog.class);
 			frame.addSlot("mode", temporalCatalog.type().name());
