@@ -23,18 +23,18 @@ public class UIRenderer {
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
-	private final List<UIService> uiSeviceList;
+	private final List<UIService> uiServiceList;
 
 	public UIRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
-		this.uiSeviceList = graph.uIServiceList();
+		this.uiServiceList = graph.uIServiceList();
 	}
 
 	public void execute() {
-		uiSeviceList.forEach(this::processUIService);
+		uiServiceList.forEach(this::processUIService);
 	}
 
 	private void processUIService(UIService service) {

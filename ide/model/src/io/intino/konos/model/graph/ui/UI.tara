@@ -17,5 +17,6 @@ Facet UI on Service is decorable
 
 Facet Root on UI.Resource
 Facet Confidential on UI.Resource
+Facet Editor on UI.Resource
 
 Concept Component is abstract

@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
+import io.intino.konos.builder.codegeneration.services.ui.display.catalog.FullCatalogTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewRenderer;
 import io.intino.konos.model.graph.Panel;
@@ -35,10 +36,9 @@ public class PanelRenderer extends DisplayRenderer {
 	private Frame frameOf(Toolbar toolbar) {
 		final Frame frame = new Frame("toolbar");
 		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
-		boolean buildingSrc = buildingSrc();
 		toolbar.operations().forEach(operation -> {
 			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", buildingSrc ? builder.buildSrc() : builder.buildGen());
+			frame.addSlot("operation", builder.buildFrame());
 		});
 		return frame;
 	}
@@ -46,18 +46,18 @@ public class PanelRenderer extends DisplayRenderer {
 	private void views(Panel.Views views, Frame frame) {
 		views.viewList().forEach(view -> {
 			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
-			frame.addSlot("view", buildingSrc() ? builder.buildSrc() : builder.buildGen());
+			frame.addSlot("view", builder.buildFrame());
 		});
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(PanelSrcTemplate.create());
+		return Formatters.customize(FullPanelTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(PanelGenTemplate.create());
+		return Formatters.customize(AbstractPanelTemplate.create());
 	}
 
 	@Override

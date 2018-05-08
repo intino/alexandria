@@ -34,7 +34,6 @@ public class ViewRenderer extends Renderer {
 	private final Component owner;
 	private final String box;
 	private final String packageName;
-	private boolean buildingSrc = false;
 
 	public ViewRenderer(View view, Component owner, String box, String packageName) {
 		super(view.name$(), box, packageName);
@@ -44,34 +43,9 @@ public class ViewRenderer extends Renderer {
 		this.packageName = packageName;
 	}
 
-	public String buildSrc() {
-		buildingSrc = true;
-		return ViewSrcTemplate.create().format(createFrame());
-	}
-
-	public String buildGen() {
-		buildingSrc = false;
-		return ViewGenTemplate.create().format(createFrame());
-	}
-
 	@Override
-	protected Template srcTemplate() {
-		return null;
-	}
-
-	@Override
-	protected Template genTemplate() {
-		return null;
-	}
-
-	@Override
-	protected Updater updater(String displayName, File sourceFile) {
-		return null;
-	}
-
-	@Override
-	protected Frame createFrame() {
-		Frame frame = super.createFrame();
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
 		frame.addTypes("view")
 				.addSlot("owner", owner.name$())
 				.addSlot("ownerClass", owner.getClass().getSimpleName())
@@ -87,6 +61,21 @@ public class ViewRenderer extends Renderer {
 		addViewProperties(frame);
 
 		return frame;
+	}
+
+	@Override
+	protected Template srcTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Template genTemplate() {
+		return null;
+	}
+
+	@Override
+	protected Updater updater(String displayName, File sourceFile) {
+		return null;
 	}
 
 	private void addViewProperties(Frame frame) {
@@ -209,7 +198,7 @@ public class ViewRenderer extends Renderer {
 		final Frame frame = baseFrame(item).addTypes("item");
 		final View view = item.view();
 		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
-		frame.addSlot("view", buildingSrc ? builder.buildSrc() : builder.buildGen());
+		frame.addSlot("view", builder.buildFrame());
 		return frame;
 	}
 
@@ -217,7 +206,7 @@ public class ViewRenderer extends Renderer {
 		Frame frame = baseFrame(items).addTypes("items").addSlot("layout", owner.name$()).addSlot("path", pathOf(items.core$())).addSlot("modelClass", items.itemClass());
 		final View view = items.view();
 		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
-		frame.addSlot("view", buildingSrc ? builder.buildSrc() : builder.buildGen());
+		frame.addSlot("view", builder.buildFrame());
 		return frame;
 	}
 
