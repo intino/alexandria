@@ -5,7 +5,7 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Service;
-import io.intino.konos.model.graph.datalakeconnector.DataLakeConnectorClient;
+import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
@@ -85,16 +85,16 @@ public class BoxConfigurationRenderer {
 	}
 
 	private void addDataLake(Frame frame, String boxName) {
-		if (graph.dataLakeConnectorClientList().isEmpty()) return;
-		final DataLakeConnectorClient datalake = graph.dataLakeConnectorClient(0);
+		if (graph.nessClientList().isEmpty()) return;
+		final NessClient datalake = graph.nessClient(0);
 		if (datalake == null) return;
 		Frame datalakeFrame = new Frame().addTypes("service", "datalake").addSlot("name", datalake.name$()).addSlot("configuration", boxName);
 		frame.addSlot("service", datalakeFrame);
 	}
 
 	private void addMessageHandlers(Frame frame, String boxName) {
-		if (graph.dataLakeConnectorClientList().isEmpty()) return;
-		final DataLakeConnectorClient datalake = graph.dataLakeConnectorClient(0);
+		if (graph.nessClientList().isEmpty()) return;
+		final NessClient datalake = graph.nessClient(0);
 		if (datalake == null) return;
 		for (MessageHandler handler : datalake.messageHandlerList()) {
 			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.schema() != null ? handler.schema().name$() : handler.name$()).addSlot("configuration", boxName);

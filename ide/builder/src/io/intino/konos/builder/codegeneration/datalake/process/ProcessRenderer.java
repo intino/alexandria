@@ -20,7 +20,7 @@ public class ProcessRenderer {
 	private final String boxName;
 
 	public ProcessRenderer(KonosGraph graph, File src, String packageName, String boxName) {
-		this.processes = !graph.dataLakeConnectorClientList().isEmpty() ? graph.dataLakeConnectorClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
+		this.processes = !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
