@@ -1,228 +1,49 @@
 def type(boxConfiguration)
 	package $package;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.konos.alexandria.BoxConfiguration] {
+	import java.util.Map;
+	import java.util.HashMap;
 
-		$service+field...[$NL]
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.konos.alexandria.BoxConfiguration] {
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
 			super(args);
-			fillWithArgs();
+			defaultArgs();
+			[if (store == null) {
+				if (this.args.get("graph_store") != null)
+					$tara+empty~store = new java.io.File(this.args.get("graph_store"))
+				else $tara+empty~store = new java.io.File("./store");
+			}]
 		}
 
-		private void fillWithArgs() {
-			[if (this.store == null && args.get("graph_store") != null)
-				$tara+empty~store = new java.io.File(args.remove("graph_store"));]
-			$service+fill...[$NL]
+		public String get(String key) {
+			return args.get(key);
 		}
 
 		[$tara+empty~public java.io.File store() {
 			return this.store;
-		}][
+		}]
 
-		$service...[$NL$NL]
-
-		$service+confClass...[$NL$NL]]
-	}
-end
-
-def type(service & ui) trigger(field)
-	$name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-end
-
-def type(service & datalake) trigger(field)
-	NessConfiguration nessConfiguration;
-end
-
-def type(service) trigger(field)
-	$name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-end
-
-def type(service & rest) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase~_port"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port"))[, $custom+parameter...[, ]]);
-
-end
-
-def type(service & jms) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase~_url"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase~_url"), args.remove("$name+firstLowerCase~_user"), args.remove("$name+firstLowerCase~_password")[, $custom+parameter...[, ]]);
-end
-
-def type(service & datalake) trigger(fill)
-	if (args.containsKey("ness_url"))
-		nessConfiguration(args.remove("ness_url"), args.remove("ness_user"), args.remove("ness_password"), args.remove("ness_clientID"));
-end
-
-def type(service & eventHandler) trigger(fill)
-	set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+parameter...[, ]);
-end
-
-def type(service & slack) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase~_token"))
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(args.remove("$name+firstLowerCase~_token"));
-end
-
-def type(service & ui) trigger(fill)
-	if (args.containsKey("$name+firstLowerCase~_port")) {
-		$name+snakeCaseToCamelCase+firstLowerCase~Configuration(toInt(args.remove("$name+firstLowerCase~_port"))[, $custom+parameter...[, ]]);
-		$authURL+assign
-	}
-end
-
-def trigger(authURL)
-	$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authService = $configuration+snakeCaseToCamelCase+firstUpperCase~Box.authService(this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.authServiceUrl());
-end
-
-def type(service & rest) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public int port;
-		public String webDirectory;
-		$custom+field...[$NL]
-	}
-end
-
-def type(service & jms) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public String url;
-		public String user;
-		public String password;
-		$custom+field...[$NL]
-	}
-end
-
-def type(service & eventHandler) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		[public String clientID = "$clientID"];
-		$custom+field...[$NL]
-	}
-end
-
-def type(service & datalake) trigger(confClass)
-	public static class NessConfiguration {
-		public String url;
-		public String user;
-		public String password;
-		public String clientID;
-	}
-end
-
-def type(service & slack) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~Configuration {
-		public String token;
-	}
-end
-
-def type(service & ui) trigger(confClass)
-	public static class $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration {
-		public int port;
-		public String webDirectory;
-		public io.intino.konos.alexandria.ui.services.AuthService authService;
-		$custom+field...[$NL]
-
-		[public java.net.URL authServiceUrl() {
+		public static java.net.URL url(String url) {
 			try {
-				if ($custom+customname == null) return null;
-				return new java.net.URL("$auth"$custom+replace...[]);
+			return new java.net.URL(url);
 			} catch (java.net.MalformedURLException e) {
 				return null;
 			}
-		}]
+		}
+
+		private void defaultArgs() {
+			$parameter...[$NL]
+		}
 	}
 end
 
-def type(custom) trigger(customname)
-	$name+validname+firstLowerCase
+def trigger(parameter)
+	if (!this.args.containsKey("$name")) this.args.put("$name", "$value");
 end
 
 def type(custom) trigger(replace)
 	.replace("{$name}", $name+validname+firstLowerCase)
-end
-
-def type(service & jms)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String url, String user, String password[, $custom+signature...[, ]]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.url = url;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.user = user;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.password = password;
-		$custom+assign...[$NL]
-		return this;
-	}
-
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-	}
-end
-
-def type(service & jmx)
-end
-
-def type(service & slack)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(String token) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.token = token;
-		return this;
-	}
-
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-	}
-end
-
-def type(service & datalake)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration nessConfiguration(String url, String user, String password, String clientID) {
-		this.nessConfiguration = new NessConfiguration();
-		this.nessConfiguration.url = url;
-		this.nessConfiguration.user = user;
-		this.nessConfiguration.password = password;
-		this.nessConfiguration.clientID = clientID;
-		return this;
-	}
-
-	public NessConfiguration nessConfiguration() {
-		return this.nessConfiguration;
-	}
-end
-
-def type(service & eventHandler)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration set$name+snakeCaseToCamelCase+firstUpperCase~Configuration($custom+signature...[, ]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
-		$custom+assign...[$NL]
-		return this;
-	}
-
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-	}
-end
-
-def type(service & rest)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~Configuration();
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = "www/";
-
-		$custom+assign...[$NL]
-		return this;
-	}
-
-	public $name+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-	}
-end
-
-def type(service & ui)
-	public $configuration+snakeCaseToCamelCase+firstUpperCase~Configuration $name+snakeCaseToCamelCase+firstLowerCase~Configuration(int port[, $custom+signature...[, ]]) {
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration = new $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration();
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.port = port;
-		this.$name+snakeCaseToCamelCase+firstLowerCase~Configuration.webDirectory = "www/";
-		$custom+assign...[$NL]
-		return this;
-	}
-
-	public $name+snakeCaseToCamelCase+firstUpperCase~UIConfiguration $name+snakeCaseToCamelCase+firstLowerCase~Configuration() {
-		return $name+snakeCaseToCamelCase+firstLowerCase~Configuration;
-	}
 end
 
 def type(custom) trigger(signature)
@@ -241,7 +62,7 @@ def type(custom) trigger(assign)
 end
 
 def type(custom) trigger(parameter)
-	args.remove("$conf+firstLowerCase~_$name+validname+firstLowerCase")
+	args.get("$conf+firstLowerCase~_$name+validname+firstLowerCase")
 end
 
 def trigger(empty)

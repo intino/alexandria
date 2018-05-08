@@ -3,7 +3,8 @@ dsl Konos
 //Define federation-name
 Exception (NotFound) agentNotFound
 
-Service AgentService as JMS(Topic)
+Service AgentService as JMS(url= "",user="", password = "", clientId = "")
+	subscriptionModel = Topic
 	Request(path="authentication") connect
 		Parameter token as Bool
 		Response as List Object(RequirementList)

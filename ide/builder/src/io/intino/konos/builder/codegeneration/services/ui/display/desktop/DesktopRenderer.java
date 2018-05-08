@@ -24,8 +24,13 @@ public class DesktopRenderer extends PanelRenderer {
 		if (desktop.logoPath() != null && !desktop.logoPath().isEmpty()) frame.addSlot("logo", desktop.logoPath());
 		if (desktop.faviconPath() != null && !desktop.faviconPath().isEmpty()) frame.addSlot("favicon", desktop.faviconPath());
 		UIService service = findOwnerUIService();
-		if (service != null && service.authentication() != null) frame.addSlot("uiService", service.name$());
+		if (service != null && service.authentication() != null)
+			frame.addSlot("authentication", new Frame(isCustom(service.authentication().by()) ? "custom" : "standard").addSlot("value", service.authentication().by()));
 		return frame;
+	}
+
+	private boolean isCustom(String value) {
+		return value != null && value.startsWith("{");
 	}
 
 	private UIService findOwnerUIService() {

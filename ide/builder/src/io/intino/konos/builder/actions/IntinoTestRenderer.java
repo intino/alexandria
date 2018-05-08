@@ -8,7 +8,6 @@ import com.intellij.psi.PsiPackage;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.builder.utils.GraphLoader;
-import io.intino.konos.model.graph.DataLake;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
 import io.intino.konos.model.graph.jms.JMSService;
@@ -26,8 +25,6 @@ import java.util.Set;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 
 public class IntinoTestRenderer {
-
-
 	private KonosGraph graph;
 	private PsiDirectory directory;
 	private String newName;
@@ -46,8 +43,6 @@ public class IntinoTestRenderer {
 		addRESTServices(frame);
 		addJMSServices(frame);
 		addSlackServices(frame);
-		addDataLakes(frame);
-		addMessageHandlers(frame);
 		addUIServices(frame);
 		return template().format(frame);
 	}
@@ -70,22 +65,6 @@ public class IntinoTestRenderer {
 			Frame jmsFrame = new Frame().addTypes("service", "jms").addSlot("name", service.name$());
 			addUserVariables(service.a$(Service.class), jmsFrame, findCustomParameters(service));
 			frame.addSlot("service", jmsFrame);
-		}
-	}
-
-	private void addDataLakes(Frame frame) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name$());
-		frame.addSlot("service", dataLakeFrame);
-	}
-
-	private void addMessageHandlers(Frame frame) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		for (DataLake.Tank handler : dataLake.tankList()) {
-			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$());
-			frame.addSlot("service", channelFrame);
 		}
 	}
 

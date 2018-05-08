@@ -19,7 +19,7 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
-public class BoxSrcRenderer {
+public class BoxRenderer {
 
 
 	private final File destination;
@@ -28,7 +28,7 @@ public class BoxSrcRenderer {
 	private final Configuration configuration;
 	private boolean isTara;
 
-	public BoxSrcRenderer(File destination, String packageName, Module module, boolean isTara) {
+	public BoxRenderer(File destination, String packageName, Module module, boolean isTara) {
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
@@ -72,7 +72,7 @@ public class BoxSrcRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(BoxSrcTemplate.create());
+		return Formatters.customize(BoxTemplate.create());
 	}
 
 	private String name() {
