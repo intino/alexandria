@@ -1,8 +1,0 @@
-dsl Konos
-
-DataLake(domain = "org.siani", clientID = "") monentia
-	Tank(schema = opinion)
-	Tank(schema = empty) inputProcesses
-
-Schema opinion
-	Attribute asas as Text
