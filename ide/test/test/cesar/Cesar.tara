@@ -195,3 +195,12 @@ Panel(label = "Project") projectPanel
 		View("dashboard") as MoldContainer(projectDashboard)
 
 Mold(modelClass = "java.lang.Object") projectDashboard
+
+Catalog("Devices", itemClass = "io.intino.cesar.graph.Device") deviceCatalog
+	Toolbar > TaskSelection("remove elements", polymerIcon = "icons:remove")
+	Events > OnClickItem > OpenPanel(projectPanel)
+	Views
+		View("List", mold = projectDashboard) list as ListContainer
+		View("Charts", display = "cesarOlap") cesarOlap as DisplayContainer
+	Content
+		Grouping(label = "by Status") statusCategorization

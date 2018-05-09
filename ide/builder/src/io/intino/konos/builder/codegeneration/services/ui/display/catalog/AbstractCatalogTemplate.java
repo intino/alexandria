@@ -1,6 +1,8 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.catalog;
 
+import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.AbstractOperationTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationTemplate;
+import io.intino.konos.builder.codegeneration.services.ui.display.view.AbstractViewTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewTemplate;
 import org.siani.itrules.LineSeparator;
 import org.siani.itrules.Template;
@@ -21,8 +23,8 @@ public class AbstractCatalogTemplate extends Template {
 
 	public Template define() {
 		add(AbstractCatalogSkeletonTemplate.create().rules());
-		add(OperationTemplate.create().rules());
-		add(ViewTemplate.create().rules());
+		add(AbstractOperationTemplate.create().rules());
+		add(AbstractViewTemplate.create().rules());
 		return this;
 	}
 }

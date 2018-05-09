@@ -27,7 +27,6 @@ public class OperationRenderer extends Renderer {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
-
 		frame.addTypes("operation", operation.getClass().getSimpleName())
 				.addSlot("title", operation.title())
 				.addSlot("owner", owner.name$())
