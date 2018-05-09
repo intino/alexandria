@@ -131,7 +131,7 @@ def type(service & ui) trigger(setup)
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", null);
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", null, null);
 end
 
 def type(service & jmx) trigger(jmx)
