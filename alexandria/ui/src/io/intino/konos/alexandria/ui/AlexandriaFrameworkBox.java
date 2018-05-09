@@ -1,5 +1,10 @@
 package io.intino.konos.alexandria.ui;
 
+import io.intino.konos.alexandria.ui.services.AuthService;
+import io.intino.konos.alexandria.ui.services.EditorService;
+
+import java.net.URL;
+
 public class AlexandriaFrameworkBox extends AbstractBox {
 
 	public AlexandriaFrameworkBox(String[] args) {
@@ -22,5 +27,15 @@ public class AlexandriaFrameworkBox extends AbstractBox {
 
 	public void close() {
 		super.close();
+	}
+
+	@Override
+	protected AuthService authService(URL authServiceUrl) {
+		return null;
+	}
+
+	@Override
+	protected EditorService editorService(URL editorServiceUrl) {
+		return null;
 	}
 }

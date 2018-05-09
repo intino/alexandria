@@ -12,6 +12,9 @@ Facet UI on Service is decorable
 	Concept:{0..1} Authentication
 		var string by
 
+	Concept:{0..1} Edition
+		var string by
+
 	Concept:Named Resource
 		var string path
 		var Component uses

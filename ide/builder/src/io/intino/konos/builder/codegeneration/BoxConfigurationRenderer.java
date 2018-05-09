@@ -56,7 +56,10 @@ public class BoxConfigurationRenderer {
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
 		if (parent != null && configuration != null && !Platform.equals(configuration.level())) frame.addSlot("parent", parent);
-		frame.addSlot("parameter", graph.box().parameterList().stream().filter(p -> p.name() != null && p.value() != null).map(p -> new Frame().addSlot("name", p.name()).addSlot("value", p.value())).toArray(Frame[]::new));
+
+		if (graph.box() != null)
+			frame.addSlot("parameter", graph.box().parameterList().stream().filter(p -> p.name() != null && p.value() != null).map(p -> new Frame().addSlot("name", p.name()).addSlot("value", p.value())).toArray(Frame[]::new));
+
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
