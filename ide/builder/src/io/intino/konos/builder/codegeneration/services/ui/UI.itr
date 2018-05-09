@@ -53,7 +53,12 @@ def trigger(userHome)
 	spark.route("/alexandria/user").get(manager -> new $value+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
-def trigger(path)
+def type(path & editor)
+	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	spark.route("$value"[$custom...[]]).post(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+end
+
+def type(path)
 	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
