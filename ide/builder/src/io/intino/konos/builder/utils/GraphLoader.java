@@ -131,6 +131,10 @@ public class GraphLoader {
 					? CompilerMessageCategory.WARNING
 					: CompilerMessageCategory.INFORMATION;
 			final VirtualFile file = fileOf(url);
+			if (file == null) {
+				LOG.error("File is null: " + url);
+				return;
+			}
 			CompilerMessage compilerMessage = new CompilerMessageImpl(project, kind, message, file, lineInt, columnInt, PsiManager.getInstance(project).findFile(file));
 			if (LOG.isDebugEnabled()) LOG.debug("Message: " + compilerMessage);
 			compilerMessages.add(compilerMessage);
