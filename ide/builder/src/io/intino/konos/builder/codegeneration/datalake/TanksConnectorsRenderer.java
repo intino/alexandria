@@ -72,7 +72,7 @@ public class TanksConnectorsRenderer {
 	}
 
 	private String composedName(MessageHandler handler) {
-		return handler.subdomain().isEmpty() ? "" : handler.subdomain() + firstUpperCase(name(handler));
+		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" ))) + firstUpperCase(name(handler)));
 	}
 
 	private String subdomain(MessageHandler handler) {
