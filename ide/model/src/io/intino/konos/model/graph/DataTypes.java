@@ -17,10 +17,10 @@ public class DataTypes {
 		StringBuilder fullName = new StringBuilder();
 		Node node = schema.core$();
 		while (node.is(Schema.class)) {
-			fullName.append(".").append(firstUpperCase(node.name()));
+			fullName.insert(0, firstUpperCase(node.name()) + ".");
 			node = node.owner();
 		}
-		return fullName.substring(1);
+		return fullName.substring(0, fullName.length() - 1);
 	}
 
 	private static boolean isInService(Schema schema) {
