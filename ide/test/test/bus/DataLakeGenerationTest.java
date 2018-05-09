@@ -12,7 +12,7 @@ public class DataLakeGenerationTest {
 	private static final String DATALAKE = "datalake";
 
 	@Test
-	public void testChannelsGeneration() throws Exception {
+	public void testDatalakeGeneration() throws Exception {
 		File gen = new File("test-gen", DATALAKE);
 		KonosGraph graph = new Graph().loadStashes("Datalake").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, DATALAKE).execute();
