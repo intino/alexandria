@@ -69,6 +69,7 @@ def type(box)
 		[$hasUi+registerSoul~
 		][$service+getter...[$NL$NL]]
 		[$hasUi+authService]
+		[$hasUi+editorService]
 		$dataLake+getter...[$NL$NL]
 
 		$task+getter...[$NL$NL]
@@ -126,7 +127,7 @@ def trigger(uiBox)
 end
 
 def type(service & ui) trigger(setup)
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", [this.authService($authentication)?null]);
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", [this.authService($authentication)?null], [this.editorService($edition)?null]);
 end
 
 def type(service & rest) trigger(setup)
@@ -200,11 +201,19 @@ def type(custom) trigger(authentication)
 	url(configuration().get("$value+customParameter"))
 end
 
+def type(custom) trigger(edition)
+	url(configuration().get("$value+customParameter"))
+end
+
 def trigger(parameter)
 	"$value"
 end
 
 def trigger(authentication)
+	url("$value")
+end
+
+def trigger(edition)
 	url("$value")
 end
 
@@ -286,6 +295,10 @@ end
 
 def trigger(authservice)
 	protected abstract io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
+end
+
+def trigger(editorService)
+	protected abstract io.intino.konos.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);
 end
 
 def trigger(registerSoul)

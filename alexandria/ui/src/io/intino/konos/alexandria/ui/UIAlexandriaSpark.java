@@ -53,6 +53,10 @@ public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
 		AuthService authService;
 		EditorService editorService;
 
+		public Setup(int port, String webDirectory, AuthService authService) {
+			this(port, webDirectory, authService, null);
+		}
+
 		public Setup(int port, String webDirectory, AuthService authService, EditorService editorService) {
 			this.port = port;
 			this.webDirectory = webDirectory;
