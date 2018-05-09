@@ -1,3 +1,5 @@
+dsl Konos
+
 Box
 
 Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", user = "{nessUser}", password = "{nessPassword}")

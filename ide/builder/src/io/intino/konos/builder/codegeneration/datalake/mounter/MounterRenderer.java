@@ -46,7 +46,7 @@ public class MounterRenderer {
 	}
 
 	private String composedName(MessageHandler handler) {
-		return firstUpperCase(handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" )) + firstUpperCase(name(handler)));
+		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" ))) + firstUpperCase(name(handler)));
 	}
 
 	private String name(MessageHandler handler) {
