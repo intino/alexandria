@@ -39,14 +39,14 @@ public class MounterRenderer {
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", mounter.schema().name$()));
 			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "ness/mounters");
-			final String handlerName = Formatters.firstUpperCase(name) + "Mounter";
+			final String handlerName = name + "Mounter";
 			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
 					Formatters.customize(MounterTemplate.create()).format(frame));
 		}
 	}
 
 	private String composedName(MessageHandler handler) {
-		return handler.subdomain().isEmpty() ? "" : handler.subdomain() + firstUpperCase(name(handler));
+		return firstUpperCase(handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" )) + firstUpperCase(name(handler)));
 	}
 
 	private String name(MessageHandler handler) {
