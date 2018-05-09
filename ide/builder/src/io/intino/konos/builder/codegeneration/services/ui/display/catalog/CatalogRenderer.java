@@ -158,7 +158,7 @@ public class CatalogRenderer extends DisplayRenderer {
 		frame.addSlot("box", box).addSlot("type", this.itemClass).addSlot("canSearch", toolbar.canSearch());
 		toolbar.operations().forEach(operation -> {
 			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", new Frame().addSlot("value", builder.buildFrame()));
+			frame.addSlot("operation", builder.buildFrame());
 		});
 		return frame;
 	}
