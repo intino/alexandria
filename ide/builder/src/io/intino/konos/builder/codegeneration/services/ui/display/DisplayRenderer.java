@@ -49,6 +49,7 @@ public class DisplayRenderer {
 	}
 
 	private void processDisplay(Display display) {
+		if (display == null) return;
 		Frame frame = createFrame(display);
 		writeNotifier(display, frame);
 		writeRequester(display, frame);
@@ -63,10 +64,8 @@ public class DisplayRenderer {
 			if (panel.isDesktop()) {
 				DesktopPanel desktop = display.a$(Panel.class).asDesktop();
 				new DesktopRenderer(project, desktop, packageName, boxName).write(src, gen);
-			}
-			else new PanelRenderer(project, display.a$(Panel.class), packageName, boxName).write(src, gen);
-		}
-		else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), packageName, boxName).write(src, gen);
+			} else new PanelRenderer(project, display.a$(Panel.class), packageName, boxName).write(src, gen);
+		} else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), packageName, boxName).write(src, gen);
 	}
 
 	private void writeDisplay(Display display, Frame frame) {

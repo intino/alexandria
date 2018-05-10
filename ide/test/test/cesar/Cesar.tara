@@ -1,7 +1,5 @@
 dsl Konos
 
-Box
-	Parameter(name = "port", value = "9000")
 Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath = "", port = "{port}")
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
