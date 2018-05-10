@@ -8,7 +8,6 @@ def type(boxConfiguration)
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
 			super(args);
-			defaultArgs();
 			[if (store == null) {
 				if (this.args.get("graph_store") != null)
 					$tara+empty~store = new java.io.File(this.args.get("graph_store"));
@@ -31,15 +30,7 @@ def type(boxConfiguration)
 				return null;
 			}
 		}
-
-		private void defaultArgs() {
-			$parameter...[$NL]
-		}
 	}
-end
-
-def trigger(parameter)
-	if (!this.args.containsKey("$name")) this.args.put("$name", "$value");
 end
 
 def type(custom) trigger(replace)
