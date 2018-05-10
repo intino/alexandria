@@ -1,8 +1,17 @@
 package io.intino.konos.alexandria.ui.services;
 
+import io.intino.konos.alexandria.schema.Resource;
+
 import java.io.InputStream;
 
 public interface EditorService {
+    String DocumentParameter = "document";
+
     InputStream loadDocument(String id);
-    void saveDocument(String id, InputStream document, boolean completed);
+    void saveDocument(String id, Resource document, boolean completed);
+
+    default void saveDocument(String id, InputStream document, boolean completed) {
+        Resource documentResource = new Resource(DocumentParameter).data(document);
+        saveDocument(id, documentResource, completed);
+    }
 }

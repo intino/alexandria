@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.ui.displays.DialogExecution;
 import io.intino.konos.alexandria.ui.displays.DialogSource;
 import io.intino.konos.alexandria.ui.displays.DialogValidator;
 import io.intino.konos.alexandria.ui.displays.adapters.gson.FormAdapter;
+import io.intino.konos.alexandria.ui.model.dialog.DialogResult;
 import io.intino.konos.alexandria.ui.model.dialog.Form;
 import io.intino.konos.alexandria.ui.model.dialog.Value;
 import io.intino.konos.alexandria.ui.model.dialog.Values;
@@ -224,8 +225,8 @@ public class Dialog {
                 return this;
             }
 
-            public DialogExecution.Modification execute(UISession session) {
-                if (launcher == null) return DialogExecution.Modification.ItemModified;
+            public DialogResult execute(UISession session) {
+                if (launcher == null) return DialogResult.item();
                 return launcher.execute(this, session);
             }
         }

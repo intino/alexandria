@@ -12,14 +12,17 @@ import io.intino.konos.alexandria.ui.helpers.ElementHelper;
 import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.catalog.Events;
 import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
+import io.intino.konos.alexandria.ui.model.dialog.DialogResult;
 import io.intino.konos.alexandria.ui.model.mold.Block;
 import io.intino.konos.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.alexandria.ui.model.mold.StampResult;
-import io.intino.konos.alexandria.ui.model.mold.stamps.*;
+import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDialog;
+import io.intino.konos.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
+import io.intino.konos.alexandria.ui.model.mold.stamps.Title;
+import io.intino.konos.alexandria.ui.model.mold.stamps.Tree;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.konos.alexandria.ui.model.mold.stamps.operations.TaskOperation;
 import io.intino.konos.alexandria.ui.model.toolbar.*;
-import io.intino.konos.alexandria.ui.model.toolbar.Operation;
 import io.intino.konos.alexandria.ui.model.view.container.DisplayContainer;
 import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
@@ -414,10 +417,13 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		AlexandriaDialog dialog = event.dialog();
 
-		dialog.onDone((modification) -> currentView().ifPresent(view -> {
+		dialog.onDone((result) -> currentView().ifPresent(view -> {
 			dirty(true);
-			if (modification == DialogExecution.Modification.ItemModified) view.refresh(currentItem_());
-			else if (modification == DialogExecution.Modification.CatalogModified) view.refresh();
+			if (result != null) {
+				DialogResult.Refresh refresh = result.refresh();
+				if (refresh == DialogResult.Refresh.Item) view.refresh(currentItem_());
+				else if (refresh == DialogResult.Refresh.Container) view.refresh();
+			}
 			dialogBox.close();
 		}));
 

@@ -192,6 +192,7 @@
 
             _refreshInternalGrouping : function() {
                 this.notifyPath("_grouping", { name: this.grouping.name,
+                    countItems: this.grouping.countItems,
                     label: this.grouping.label,
                     isPercentage: this._isPercentage(),
                     groupList: [] });

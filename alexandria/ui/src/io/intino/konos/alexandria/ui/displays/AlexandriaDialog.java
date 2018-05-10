@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.builders.DialogBuilder;
 import io.intino.konos.alexandria.ui.displays.builders.ValidationBuilder;
 import io.intino.konos.alexandria.ui.model.Dialog;
+import io.intino.konos.alexandria.ui.model.dialog.DialogResult;
 import io.intino.konos.alexandria.ui.schemas.DialogInput;
 import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
 import io.intino.konos.alexandria.ui.spark.UIFile;
@@ -25,7 +26,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	private int height;
 	private Map<Class<? extends Dialog.Tab.Input>, Function<FormInput, DialogValidator.Result>> validators = new HashMap<>();
 	private Dialog dialog;
-	private List<Consumer<DialogExecution.Modification>> doneListeners = new ArrayList<>();
+	private List<Consumer<DialogResult>> doneListeners = new ArrayList<>();
 
 	public AlexandriaDialog(Box box, Dialog dialog) {
 		super(box);
@@ -78,7 +79,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 		fillDefaultValues();
 	}
 
-	public void onDone(Consumer<DialogExecution.Modification> listener) {
+	public void onDone(Consumer<DialogResult> listener) {
 		doneListeners.add(listener);
 	}
 
@@ -141,16 +142,22 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 
 	public void execute(String name) {
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
-		DialogExecution.Modification modification = operation.execute(session());
-		DialogExecution.Modification result = modification != null ? modification : DialogExecution.Modification.None;
-
+		DialogResult result = operation.execute(session());
+		notifyUserIfNotEmpty(result);
 		if (operation.closeAfterExecution()) {
-			notifier.done(result.toString());
+			notifier.done(result != null ? result.refresh().toString() : DialogResult.none().toString());
 			doneListeners.forEach(l -> l.accept(result));
 		}
 	}
 
 	public abstract void prepare();
+
+	private void notifyUserIfNotEmpty(DialogResult result) {
+		if (result == null) return;
+		String message = result.message();
+		if (message == null || message.isEmpty()) return;
+		notifier.notifyUser(message);
+	}
 
 	private DialogValidator.Result validate(FormInput formInput) {
 		DialogValidator.Result result = formInput.input().validate();

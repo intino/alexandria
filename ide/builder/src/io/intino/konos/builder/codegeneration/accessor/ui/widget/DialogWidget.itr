@@ -4,6 +4,7 @@ def type(dialog)
 	<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
 	<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
 	<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+	<link rel="import" href="../../lib/paper-toast/paper-toast.html">
 
 	<script src="../../lib/alexandria-ui-elements/dialogs/alexandria-dialog-requester.js"></script>
 	<script src="../../lib/alexandria-ui-elements/dialogs/alexandria-dialog-notifier-listener.js"></script>
@@ -13,6 +14,7 @@ def type(dialog)
 
 		<template>
 			<iframe id="frame" class="dialog" src="$[$[delegateUrl$]$]"></iframe>
+			<paper-toast class="notificationBox"></paper-toast>
 		</template>
 
 		<style>
