@@ -189,10 +189,8 @@ class AccessorsPublisher {
 
 	private Frame createRepositoryFrame(String url, String id, String type) {
 		return new Frame().addTypes("repository", "release", type).
-				addSlot("name", id).
-				addSlot("random", new Random().nextInt(10)).
-				addSlot("url", url).
-				addSlot("type", new Random().nextInt() % 10);
+				addSlot("name", UUID.randomUUID().toString()).
+				addSlot("url", url);
 	}
 
 	private void notifySuccess(Configuration conf, List<String> apps) {
