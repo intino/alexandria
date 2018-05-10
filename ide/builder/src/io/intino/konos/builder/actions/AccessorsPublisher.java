@@ -70,6 +70,10 @@ class AccessorsPublisher {
 
 	void publish() {
 		if (configuration == null) return;
+		if (graph == null) {
+			notify("Box has errors. Check problems view for more information", INFORMATION);
+			return;
+		}
 		try {
 			final List<String> apps = createSources();
 			if (apps.isEmpty()) {
@@ -189,7 +193,8 @@ class AccessorsPublisher {
 
 	private Frame createRepositoryFrame(String url, String id, String type) {
 		return new Frame().addTypes("repository", "release", type).
-				addSlot("name", UUID.randomUUID().toString()).
+				addSlot("name", id).
+				addSlot("random", UUID.randomUUID().toString()).
 				addSlot("url", url);
 	}
 
