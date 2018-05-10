@@ -13,7 +13,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class DialogSrcRenderer {
+public class DialogRenderer {
 
 	private static final String DIALOGS = "dialogs";
 	private KonosGraph graph;
@@ -23,7 +23,7 @@ public class DialogSrcRenderer {
 	private final List<Dialog> dialogs;
 	private final String boxName;
 
-	public DialogSrcRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
@@ -96,11 +96,11 @@ public class DialogSrcRenderer {
 	}
 
 	private void renderDialogDisplay() {
-		new DialogGenRenderer(graph, gen, packageName, boxName).execute();
+		new AbstractDialogRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private Template template() {
-		Template template = DialogSrcTemplate.create();
+		Template template = DialogTemplate.create();
 		Formatters.customize(template);
 		return template;
 	}

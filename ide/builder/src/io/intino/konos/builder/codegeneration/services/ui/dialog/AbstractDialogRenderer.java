@@ -16,7 +16,7 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class DialogGenRenderer {
+public class AbstractDialogRenderer {
 
 	private static final String DIALOGS = "dialogs";
 	private final File gen;
@@ -24,7 +24,7 @@ public class DialogGenRenderer {
 	private final List<Dialog> dialogs;
 	private final String boxName;
 
-	public DialogGenRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public AbstractDialogRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
@@ -55,17 +55,18 @@ public class DialogGenRenderer {
 	}
 
 	private void defaultToolbar(Frame frame, String dialog) {
-		frame.addSlot("operation", frameOf(dialog, "send", "send"));
+		frame.addSlot("operation", frameOf(dialog, "send", "send", true));
 	}
 
 	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
 		for (Operation operation : toolbar.operationList())
-			frame.addSlot("operation", frameOf(dialog, operation.name$(), operation.label()));
+			frame.addSlot("operation", frameOf(dialog, operation.name$(), operation.label(), operation.closeAfterExecution()));
 	}
 
-	private Frame frameOf(String dialog, String operation, String operationLabel) {
+	private Frame frameOf(String dialog, String operation, String operationLabel, boolean closeAfterExecution) {
 		final Frame operationFrame = new Frame().addTypes("operation").addSlot("dialog", dialog).addSlot("execution", operation);
 		if (!operation.isEmpty()) operationFrame.addSlot("name", operation).addSlot("label", operationLabel);
+		operationFrame.addSlot("closeAfterExecution", closeAfterExecution);
 		return operationFrame;
 	}
 
@@ -227,7 +228,7 @@ public class DialogGenRenderer {
 	}
 
 	private Template template() {
-		Template template = DialogGenTemplate.create();
+		Template template = AbstractDialogTemplate.create();
 		Formatters.customize(template);
 		return template;
 	}

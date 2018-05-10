@@ -32,6 +32,7 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("box", boxName);
 		frame.addSlot("type", resource.isEditor() ? "Editor" : "Resource");
 		if (resource.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
+		if (resource.isEditor()) frame.addSlot("editor", new Frame("editor"));
 		else frame.addSlot("importDisplays", packageName);
 		frame.addSlot("component", componentFrame());
 		frame.addSlot("parameter", parameters());
@@ -43,7 +44,6 @@ public class UIActionRenderer extends ActionRenderer {
 
 	private Frame componentFrame() {
 		Frame result = new Frame("component").addSlot("value", resource.uses().name$());
-		if (resource.isEditor()) result.addSlot("editor", "");
 		return result;
 	}
 

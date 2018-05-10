@@ -22,7 +22,7 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogSrcRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
@@ -130,7 +130,7 @@ public class FullRenderer {
 		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName).execute();
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
 		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
-		new DialogSrcRenderer(graph, src, gen, packageName, boxName).execute();
+		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
 		new UIRenderer(graph, src, gen, packageName, boxName).execute();
 		new UIAccessorCreator(module, graph, parent).execute();

@@ -93,6 +93,8 @@ public class AbstractBoxRenderer {
 			final Frame uiFrame = new Frame();
 			if (parent != null) uiFrame.addSlot("parent", parent);
 			frame.addSlot("hasUi", uiFrame);
+			frame.addSlot("uiAuthentication", uiFrame);
+			frame.addSlot("uiEdition", uiFrame);
 			frame.addSlot("service", konos.uIServiceList().stream().map(s -> uiServiceFrame(s, name)).toArray(Frame[]::new));
 		}
 	}

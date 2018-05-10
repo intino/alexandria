@@ -40,8 +40,8 @@ def type(resource)
 			action.session.whenLogout(b -> logout());
 			action.box = box;
 			action.clientId = clientId;
-			action.googleApiKey = "$googleApiKey";
-			[$editor+document]
+			action.googleApiKey = "$googleApiKey";[
+			$editor+document]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(action.clientId))
@@ -78,9 +78,8 @@ def type(resource)
 	}
 end
 
-def type(editor) trigger(document)
+def trigger(document)
 	action.document = loadDocument();
-	action.onSave((params) -> saveDocument(params));
 end
 
 def type(parameter)

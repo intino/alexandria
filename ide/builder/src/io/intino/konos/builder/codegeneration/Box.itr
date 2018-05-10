@@ -41,4 +41,9 @@ def trigger(rest)
 		//TODO add your authService
 		return null;
 	}	
+
+	protected io.intino.konos.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl) {
+		//TODO add your editorService
+		return null;
+	}
 end
