@@ -43,7 +43,7 @@
             },
 
             _refreshChart: function () {
-                if (this.group == null) return;
+                if (this.group == null || this.count == null) return;
                 let size = this.count > 0 ? this.group.count*100/this.count : 0;
                 this.$.chart.style.marginLeft = (size > AlexandriaGroupChartSpanPadding ? 100-size-AlexandriaGroupChartSpanPadding : 93) + "%";
                 this.$.chart.style.width = (size > AlexandriaGroupChartSpanPadding ? size-AlexandriaGroupChartSpanPadding : 0) + "%";

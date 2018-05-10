@@ -5,7 +5,7 @@ def type(dialog)
 	import io.intino.konos.alexandria.ui.model.Dialog;
 	import io.intino.konos.alexandria.ui.displays.DialogValidator;
 
-	import static io.intino.konos.alexandria.ui.displays.DialogExecution.Modification;
+	import static io.intino.konos.alexandria.ui.model.dialog.DialogResult;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends Abstract$name+SnakeCaseToCamelCase+FirstUpperCase {
 
@@ -32,8 +32,8 @@ def type(dialog)
 end
 
 def type(execution)
-	public static Modification $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.konos.alexandria.ui.services.push.UISession session) {
-		return Modification.None;
+	public static DialogResult $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.konos.alexandria.ui.services.push.UISession session) {
+		return DialogResult.none();
 	}
 
 end

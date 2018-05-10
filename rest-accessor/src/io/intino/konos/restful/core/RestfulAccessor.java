@@ -249,7 +249,7 @@ public class RestfulAccessor implements RestfulApi {
 			}
 
 			HttpEntity entity = response.getEntity();
-			return new Resource(response.getFirstHeader("Content-Disposition").getValue()).contentType(entity.getContentType().getValue()).data(entity.getContent());
+			return new Resource("content").contentType(entity.getContentType().getValue()).data(entity.getContent());
 		} catch (URISyntaxException | IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
@@ -341,7 +341,8 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	private void addResource(MultipartEntityBuilder builder, Resource resource) {
-		builder.addPart(resource.id(), new InputStreamBody(resource.data(), ContentType.create(resource.contentType()), resource.id()));
+		ContentType contentType = resource.contentType() != null ? ContentType.create(resource.contentType()) : ContentType.APPLICATION_OCTET_STREAM;
+		builder.addPart(resource.id(), new InputStreamBody(resource.data(), contentType, resource.id()));
 	}
 
 	private void addParameters(MultipartEntityBuilder builder, Map<String, String> parameterList) {

@@ -18,10 +18,17 @@ AlexandriaDialogBehaviors.DialogBehavior = {
         this._loadDelegate();
     },
 
-    _done : function(modification) {
+    _notifyUser : function(message) {
+        var toast = this.querySelector("paper-toast.notificationBox");
+        if (toast == null) return;
+        toast.text = message;
+        toast.open();
+    },
+
+    _done : function(refresh) {
         if (this.delegate == null) return;
         this.delegate.done();
-        if (document.onDialogCompleted) document.onDialogCompleted(modification);
+        if (document.onDialogCompleted) document.onDialogCompleted(refresh);
     },
 
     _refresh: function(validation) {

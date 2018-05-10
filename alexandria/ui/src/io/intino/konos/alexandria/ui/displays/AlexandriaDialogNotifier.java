@@ -17,6 +17,10 @@ public class AlexandriaDialogNotifier extends AlexandriaDisplayNotifier {
 		putToDisplay("refresh", "value", value);
 	}
 
+	public void notifyUser(String value) {
+		putToDisplay("notifyUser", "value", value);
+	}
+
 	public void upload(io.intino.konos.alexandria.schema.Resource value) {
 		putToDisplay("upload", "value", value);
 	}
@@ -24,4 +28,5 @@ public class AlexandriaDialogNotifier extends AlexandriaDisplayNotifier {
 	public void done(String value) {
 		putToDisplay("done", "value", value);
 	}
+
 }
