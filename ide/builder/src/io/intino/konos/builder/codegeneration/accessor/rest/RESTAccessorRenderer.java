@@ -64,13 +64,15 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
-		return new Frame().addTypes("resource")
+		final Frame frame = new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response(), packageName))
 				.addSlot("operation", operation.getClass().getSimpleName())
 				.addSlot("name", operation.core$().owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(operation, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(operation));
+		if (operation.parameterList().stream().anyMatch(Parameter::isFile)) frame.addSlot("finally", finallyException(operation));
+		return frame;
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
@@ -139,6 +141,12 @@ public class RESTAccessorRenderer {
 
 	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> responses) {
 		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
+	}
+
+	private Frame finallyException(Operation operation) {
+		final Frame frame = new Frame("io");
+		if (operation.response() == null || operation.response().asType() == null) return frame;
+		return frame.addSlot("return", "");
 	}
 
 	private Frame exceptionResponse(io.intino.konos.model.graph.Exception response) {
