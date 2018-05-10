@@ -27,10 +27,7 @@ import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
 import io.intino.konos.alexandria.ui.schemas.Position;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -343,7 +340,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	protected List<Mold> molds() {
-		return views().stream().map(View::mold).collect(toList());
+		return views().stream().map(View::mold).filter(Objects::nonNull).collect(toList());
 	}
 
 	protected void updateCurrentView(AlexandriaElementView display) {
