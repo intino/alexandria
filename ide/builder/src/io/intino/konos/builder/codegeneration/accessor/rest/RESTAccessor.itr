@@ -3,6 +3,7 @@ def type(accessor)
 
     import java.util.List;
     import java.util.ArrayList;
+    import java.util.Arrays;
 	import java.net.URL;
 	import io.intino.konos.alexandria.exceptions.*;
 	import io.intino.konos.alexandria.schema.Resource;
@@ -69,12 +70,11 @@ def type(resource)
 		try {
 			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
 				$parameter+declaration...[$NL]
-			}};][
-			$parameter+fileDeclaration...[$NL]]
+			}};]
 			$invokeSentence
 		} catch (RestfulFailure e) {
 			$exceptionResponses+throws
-		} $finally
+		}
 	}
 end
 
@@ -84,10 +84,6 @@ end
 
 def type(parameter) trigger(invoke)
 	parameters
-end
-
-def type(parameter & required & fileData) trigger(fileDeclaration)
-	Resource resource = new Resource(new java.io.FileInputStream($name), Resource.resolveContentType($name));
 end
 
 def type(parameter & query & required) type(dateData)  trigger(declaration)
@@ -134,16 +130,6 @@ def type(parameter) trigger(declaration)
 end
 
 def type(parameter) trigger(fileDeclaration)
-end
-
-def type(io) trigger(finally)
-	catch (java.io.IOException e) {
-		logger.error(e.getMessage(), e);[
-		$return~return null;]
-	}
-end
-
-def trigger(finally)
 end
 
 def type(invokeSentence & void)
@@ -220,19 +206,19 @@ def type(exceptionResponse) trigger(declaration)
 end
 
 def type(auth & cert & doInvoke)
-	accessor.secure(this.url, $certificate~this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters])
+	accessor.secure(this.url, $certificate~this.certificate, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
 end
 
 def type(auth & doInvoke)
-	accessor.secure(this.url, this.user, this.password).$type+firstLowerCase($relativePath[, $parameters])
+	accessor.secure(this.url, this.user, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
 end
 
 def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters])
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($resource...[,])])
 end
 
 def type(doInvoke)
-	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters])
+	accessor.$type+firstLowerCase(this.url, $relativePath[, $parameters][, Arrays.asList($resource...[,])])
 end
 
 def type(schemaImport) trigger(schemaImport)

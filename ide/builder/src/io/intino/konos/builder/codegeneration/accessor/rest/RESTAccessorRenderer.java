@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
 import io.intino.konos.model.graph.type.TypeData;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -64,15 +65,13 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
-		final Frame frame = new Frame().addTypes("resource")
+		return new Frame().addTypes("resource")
 				.addSlot("returnType", Commons.returnType(operation.response(), packageName))
 				.addSlot("operation", operation.getClass().getSimpleName())
 				.addSlot("name", operation.core$().owner().name())
 				.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()))
 				.addSlot("invokeSentence", invokeSentence(operation, authenticated, cert))
 				.addSlot("exceptionResponses", exceptionResponses(operation));
-		if (operation.parameterList().stream().anyMatch(Parameter::isFile)) frame.addSlot("finally", finallyException(operation));
-		return frame;
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
@@ -112,9 +111,9 @@ public class RESTAccessorRenderer {
 		if (cert) frame.addTypes("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
 			frame.addSlot("parameters", "parameters");
-		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
+		if (Commons.fileParameters(operation) > 0)
+			frame.addSlot("resource", operation.parameterList().stream().filter(p -> p.i$(FileData.class)).map(Layer::name$).toArray(String[]::new));
 		return frame;
-
 	}
 
 	private String processPath(String path) {
