@@ -2,7 +2,6 @@ package io.intino.konos.alexandria.ui.spark.resources;
 
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
-import io.intino.konos.alexandria.ui.spark.actions.AlexandriaEditorSaveParameters;
 
 import java.io.InputStream;
 
@@ -12,18 +11,26 @@ public abstract class EditorResource extends Resource {
 		super(manager, notifierProvider);
 	}
 
-	protected InputStream loadDocument() {
-		InputStream document = manager.fromForm("document", InputStream.class);
+	protected io.intino.konos.alexandria.schema.Resource loadDocument() {
+		return new io.intino.konos.alexandria.schema.Resource(documentId()).data(content());
+	}
 
-		if (document == null)
-			document = manager.editorService().loadDocument(manager.fromPath("document", String.class));
+	protected InputStream content() {
+		InputStream document = manager.fromForm("content", InputStream.class);
+
+		if (document == null && manager.editorService() != null)
+			document = manager.editorService().loadDocument(documentId());
 
 		return document;
 	}
 
-	protected void saveDocument(AlexandriaEditorSaveParameters parameters) {
-		manager.editorService().saveDocument(manager.fromPath("document", String.class), parameters.document(), parameters.completed());
+	protected void saveDocument(InputStream document, boolean completed) {
+		if (manager.editorService() == null) return;
+		manager.editorService().saveDocument(manager.fromQuery("document", String.class), document, completed);
 	}
 
+	private String documentId() {
+		return manager.fromQuery("document", String.class);
+	}
 }
 

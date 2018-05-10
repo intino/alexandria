@@ -12,6 +12,7 @@ Concept Dialog extends Component
 	Concept:{0..1} Toolbar
 		Concept:Named Operation
 			var string label
+			var boolean closeAfterExecution = true
 
 	Concept Tab
 		var string label

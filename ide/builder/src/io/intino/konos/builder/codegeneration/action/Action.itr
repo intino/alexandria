@@ -26,7 +26,7 @@ def type(ui & action & gen)
 	import io.intino.konos.alexandria.ui.spark.actions.AlexandriaResourceAction;
 	import java.util.*;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends Alexandria$type~Action {
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaResourceAction {
 
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
@@ -55,7 +55,6 @@ def type(ui & action) !type(gen)
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.ui.spark.actions.AlexandriaResourceAction;
 	import java.time.*;
 	import java.util.*;
 	[import $importDialogs+validPackage.dialogs.*;]
@@ -65,6 +64,7 @@ def type(ui & action) !type(gen)
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]
+		[$editor+parameter]
 
 		$component
 	}
@@ -80,6 +80,10 @@ end
 
 def type(parameter) trigger(type)
 	public $type $name+snakecaseToCamelCase+FirstLowerCase;
+end
+
+def type(editor) trigger(parameter)
+	public io.intino.konos.alexandria.schema.Resource document;
 end
 
 def attribute(void) trigger(return)
@@ -100,13 +104,8 @@ def type(component)
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);
 				register(display);
-				[$editor]
 				display.personify();
 			}
 		};
 	}
-end
-
-def trigger(editor)
-	display.onSave((document, completed) -> save(document, completed));
 end

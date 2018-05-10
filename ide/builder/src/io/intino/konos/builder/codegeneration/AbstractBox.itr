@@ -23,7 +23,9 @@ def type(box)
 		$dataLake+field...[$NL]][
 		$task+field][
         $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
-	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.UIBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
+	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.UIBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
+		$hasUi+hide~private io.intino.konos.alexandria.ui.services.AuthService authService;][
+		$hasUi+hide~private io.intino.konos.alexandria.ui.services.EditorService editorService;]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -127,7 +129,9 @@ def trigger(uiBox)
 end
 
 def type(service & ui) trigger(setup)
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", [this.authService($authentication)?null], [this.editorService($edition)?null]);
+	this.authService = [this.authService($authentication)?null];
+	this.editorService = [this.editorService($edition)?null];
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", this.authService, this.editorService);
 end
 
 def type(service & rest) trigger(setup)
@@ -299,6 +303,10 @@ end
 
 def trigger(editorService)
 	protected abstract io.intino.konos.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);
+
+	public io.intino.konos.alexandria.ui.services.EditorService editorService() {
+		return this.editorService;
+	}
 end
 
 def trigger(registerSoul)

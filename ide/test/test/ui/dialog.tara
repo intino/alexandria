@@ -1,9 +1,8 @@
 dsl Konos
 
-
-Service (title = "", favicon = "") TestWeb as UI
+Service (title = "", favicon = "") TestWeb as UI(port = "")
     Resource("/", uses = application) applicationPage as Root
-    Resource("/opinion", opinion) opinionsPage
+    Resource("/opinion", opinion) opinionsPage as Editor
 
 Display application
 
@@ -13,7 +12,7 @@ Dialog(url = "", label = "Añadir opinión", description = "añadir una nueva op
 
 Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
 	Toolbar
-		Operation(label = "enviar")a
+		Operation(label = "enviar") a
 	Tab("Opinión") tab
 		Text(label = "Tipo") tipo > readonly = true
 		Text(label = "Área") area > readonly = true

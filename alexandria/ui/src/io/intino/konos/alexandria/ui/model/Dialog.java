@@ -189,6 +189,7 @@ public class Dialog {
         public class Operation {
             private String name;
             private String label;
+            private boolean closeAfterExecution = true;
             private DialogExecution launcher = null;
 
             public String name() {
@@ -197,6 +198,15 @@ public class Dialog {
 
             public Operation name(String name) {
                 this.name = name;
+                return this;
+            }
+
+            public boolean closeAfterExecution() {
+                return closeAfterExecution;
+            }
+
+            public Operation closeAfterExecution(boolean value) {
+                this.closeAfterExecution = value;
                 return this;
             }
 
