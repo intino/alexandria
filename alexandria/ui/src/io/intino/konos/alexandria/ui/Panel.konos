@@ -3,7 +3,6 @@ dsl Konos
 use Views
 use Displays
 use Mold
-use Catalog
 use Schemas
 
 Display alexandriaPanel
