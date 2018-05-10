@@ -70,6 +70,10 @@ class AccessorsPublisher {
 
 	void publish() {
 		if (configuration == null) return;
+		if (graph == null) {
+			notify("Box has errors. Check problems view for more information", INFORMATION);
+			return;
+		}
 		try {
 			final List<String> apps = createSources();
 			if (apps.isEmpty()) {
