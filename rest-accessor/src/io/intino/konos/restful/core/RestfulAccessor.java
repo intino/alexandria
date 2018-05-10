@@ -14,6 +14,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.*;
@@ -25,6 +26,7 @@ import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 
 public class RestfulAccessor implements RestfulApi {
 
@@ -60,7 +62,18 @@ public class RestfulAccessor implements RestfulApi {
 
 	@Override
 	public Response post(URL url, String path, Resource resource) throws RestfulFailure {
-		return doPost(url, path, multipartEntityOf(resource));
+		return doPost(url, path, multipartEntityOf(emptyMap(), singletonList(resource)));
+	}
+
+	@Override
+	public Response post(URL url, String path, List<Resource> resourceList) throws RestfulFailure {
+		return doPost(url, path, multipartEntityOf(emptyMap(), resourceList));
+	}
+
+	@Override
+	public Response post(URL url, String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+		if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
+		return doPost(url, path, multipartEntityOf(parameters, resourceList));
 	}
 
 	@Override
@@ -75,7 +88,18 @@ public class RestfulAccessor implements RestfulApi {
 
 	@Override
 	public Response put(URL url, String path, Resource resource) throws RestfulFailure {
-		return doPut(url, path, multipartEntityOf(resource));
+		return doPut(url, path, multipartEntityOf(emptyMap(), singletonList(resource)));
+	}
+
+	@Override
+	public Response put(URL url, String path, List<Resource> resourceList) throws RestfulFailure {
+		return doPut(url, path, multipartEntityOf(emptyMap(), resourceList));
+	}
+
+	@Override
+	public Response put(URL url, String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+		if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
+		return doPut(url, path, multipartEntityOf(parameters, resourceList));
 	}
 
 	@Override
@@ -125,7 +149,18 @@ public class RestfulAccessor implements RestfulApi {
 
 			@Override
 			public Response post(String path, Resource resource) throws RestfulFailure {
-				return doPost(url, path, multipartEntityOf(resource));
+				return doPost(url, path, multipartEntityOf(emptyMap(), singletonList(resource)));
+			}
+
+			@Override
+			public Response post(String path, List<Resource> resourceList) throws RestfulFailure {
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList));
+			}
+
+			@Override
+			public Response post(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
+				return doPost(url, path, multipartEntityOf(parameters, resourceList));
 			}
 
 			@Override
@@ -139,10 +174,20 @@ public class RestfulAccessor implements RestfulApi {
 			}
 
 			@Override
+			public Response put(String path, List<Resource> resourceList) throws RestfulFailure {
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList));
+			}
+
+			@Override
+			public Response put(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
+				return doPost(url, path, multipartEntityOf(parameters, resourceList));
+			}
+
+			@Override
 			public Response delete(String path) throws RestfulFailure {
 				return delete(path, emptyMap());
 			}
-
 
 			@Override
 			public Response delete(String path, Map<String, String> parameters) throws RestfulFailure {
@@ -257,19 +302,19 @@ public class RestfulAccessor implements RestfulApi {
 		}
 	}
 
-	private HttpEntity multipartEntityOf(Resource resource) throws RestfulFailure {
-		return multipartEntityOf(resource, null, null);
+	private HttpEntity multipartEntityOf(Map<String, String> parameterList, List<Resource> resourceList) throws RestfulFailure {
+		return multipartEntityOf(parameterList, resourceList, null, null);
 	}
 
-	private HttpEntity multipartEntityOf(Resource resource, URL certificate, String password) throws RestfulFailure {
+	private HttpEntity multipartEntityOf(Map<String, String> parameters, List<Resource> resourceList, URL certificate, String password) throws RestfulFailure {
 		MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 
 		entityBuilder.setContentType(ContentType.MULTIPART_FORM_DATA);
 		entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 		entityBuilder.setCharset(Charset.forName("UTF-8"));
 
-		addContent(entityBuilder, resource);
-//		addParameters(entityBuilder, resource);
+		addResources(entityBuilder, resourceList);
+		addParameters(entityBuilder, parameters);
 //		addSecureParameters(certificate, password, entityBuilder, resource);
 
 		return entityBuilder.build();
@@ -291,13 +336,21 @@ public class RestfulAccessor implements RestfulApi {
 		return result;
 	}
 
-	private void addContent(MultipartEntityBuilder builder, Resource resource) {
+	private void addResources(MultipartEntityBuilder builder, List<Resource> resourceList) {
+		resourceList.forEach(r -> addResource(builder, r));
+	}
+
+	private void addResource(MultipartEntityBuilder builder, Resource resource) {
 		builder.addPart(resource.id(), new InputStreamBody(resource.data(), ContentType.create(resource.contentType()), resource.id()));
 	}
 
-//	private void addParameters(MultipartEntityBuilder builder, Resource resource) throws RestfulFailure {
-//		resource.parameters().forEach((key, value) -> builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON)));
-//	}
+	private void addParameters(MultipartEntityBuilder builder, Map<String, String> parameterList) {
+		parameterList.forEach((key, value) -> addParameter(builder, key, value));
+	}
+
+	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
+		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
+	}
 
 //	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
 //		if (certificate == null)
