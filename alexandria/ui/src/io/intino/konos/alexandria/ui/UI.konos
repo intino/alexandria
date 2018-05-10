@@ -2,7 +2,5 @@ dsl Konos
 
 use Displays
 
-Box
-
 Service(title = "", favicon = "") UiElements as UI(port = "")
 	Resource("/", alexandriaDesktop) homePage as Root
