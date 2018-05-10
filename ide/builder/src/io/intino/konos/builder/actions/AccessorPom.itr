@@ -96,7 +96,7 @@ end
 
 def type(repository) !type(distribution) trigger(release)
 	<repository>
-		<id>$name-~$random</id>
+		<id>$name</id>
 		<url>$url</url>
 	</repository>
 end
