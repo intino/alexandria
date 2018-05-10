@@ -193,7 +193,8 @@ class AccessorsPublisher {
 
 	private Frame createRepositoryFrame(String url, String id, String type) {
 		return new Frame().addTypes("repository", "release", type).
-				addSlot("name", UUID.randomUUID().toString()).
+				addSlot("name", id).
+				addSlot("random", UUID.randomUUID().toString()).
 				addSlot("url", url);
 	}
 
