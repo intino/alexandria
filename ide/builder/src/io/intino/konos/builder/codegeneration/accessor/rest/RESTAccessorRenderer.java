@@ -53,7 +53,7 @@ public class RESTAccessorRenderer {
 			resourceFrames.addAll(resource.operationList().stream().
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
-		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
+		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[0]));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 
