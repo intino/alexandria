@@ -70,7 +70,7 @@ def type(tank) trigger(field)
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = box.datalake().add("$messageType");
+	$name+firstLowerCase = box.datalake().add("$messageType+lowerCase");
 end
 
 def type(tank) trigger(add)
