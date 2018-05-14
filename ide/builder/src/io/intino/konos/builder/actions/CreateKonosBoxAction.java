@@ -20,23 +20,16 @@ import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.io.Stash;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
-import tara.dsl.Konos;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;

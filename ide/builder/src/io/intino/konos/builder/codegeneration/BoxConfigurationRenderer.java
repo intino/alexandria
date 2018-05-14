@@ -2,14 +2,14 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Activity;
-import io.intino.konos.model.graph.DataLake;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Service;
+import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.jms.JMSService;
-import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
+import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
@@ -56,11 +56,12 @@ public class BoxConfigurationRenderer {
 		frame.addSlot("name", boxName);
 		frame.addSlot("package", packageName);
 		if (parent != null && configuration != null && !Platform.equals(configuration.level())) frame.addSlot("parent", parent);
+
 		addRESTServices(frame, boxName);
 		addJMSServices(frame, boxName);
 		addSlackServices(frame, boxName);
-		addDataLakes(frame, boxName);
-		addEventHandlers(frame, boxName);
+		addDataLake(frame, boxName);
+		addMessageHandlers(frame, boxName);
 		addActivities(frame, boxName);
 		if (isTara) frame.addSlot("tara", "");
 		return boxName;
@@ -83,40 +84,34 @@ public class BoxConfigurationRenderer {
 		}
 	}
 
-	private void addJMXServices(Frame frame, String boxName) {
-		for (JMXService service : graph.jMXServiceList()) {
-			Frame jmsFrame = new Frame().addTypes("service", "jmx").addSlot("name", service.name$()).addSlot("configuration", boxName);
-			frame.addSlot("service", jmsFrame);
-		}
+	private void addDataLake(Frame frame, String boxName) {
+		if (graph.nessClientList().isEmpty()) return;
+		final NessClient datalake = graph.nessClient(0);
+		if (datalake == null) return;
+		Frame datalakeFrame = new Frame().addTypes("service", "datalake").addSlot("name", datalake.name$()).addSlot("configuration", boxName);
+		frame.addSlot("service", datalakeFrame);
 	}
 
-	private void addDataLakes(Frame frame, String boxName) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		Frame dataLakeFrame = new Frame().addTypes("service", "dataLake").addSlot("name", dataLake.name$()).addSlot("configuration", boxName);
-		frame.addSlot("service", dataLakeFrame);
-	}
-
-	private void addEventHandlers(Frame frame, String boxName) {
-		DataLake dataLake = graph.dataLake();
-		if (dataLake == null) return;
-		for (DataLake.Tank handler : dataLake.tankList()) {
-			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.name$()).addSlot("configuration", boxName);
-			addUserVariables(handler, channelFrame, findCustomParameters(handler));
+	private void addMessageHandlers(Frame frame, String boxName) {
+		if (graph.nessClientList().isEmpty()) return;
+		final NessClient datalake = graph.nessClient(0);
+		if (datalake == null) return;
+		for (MessageHandler handler : datalake.messageHandlerList()) {
+			Frame channelFrame = new Frame().addTypes("service", "eventHandler").addSlot("name", handler.schema() != null ? handler.schema().name$() : handler.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", channelFrame);
 		}
 	}
 
 	private void addActivities(Frame frame, String boxName) {
-		for (Activity activity : graph.activityList()) {
-			Frame activityFrame = new Frame().addTypes("service", "activity").addSlot("name", activity.name$()).addSlot("configuration", boxName);
+		for (UIService service : graph.uIServiceList()) {
+			Frame activityFrame = new Frame().addTypes("service", "ui").addSlot("name", service.name$()).addSlot("configuration", boxName);
 			frame.addSlot("service", activityFrame);
-			if (activity.authenticated() != null) {
+			if (service.authentication() != null) {
 				activityFrame.addTypes("auth");
-				activityFrame.addSlot("authURL", new Frame().addSlot("name", activity.name$()).addSlot("configuration", boxName));
-				activityFrame.addSlot("auth", activity.authenticated().by());
+				activityFrame.addSlot("authURL", new Frame().addSlot("name", service.name$()).addSlot("configuration", boxName));
+				activityFrame.addSlot("auth", service.authentication().by());
 			}
-			addUserVariables(activity, activityFrame, findCustomParameters(activity));
+			addUserVariables(service, activityFrame, findCustomParameters(service));
 		}
 	}
 
@@ -129,12 +124,6 @@ public class BoxConfigurationRenderer {
 	private void addUserVariables(Layer layer, Frame frame, Collection<String> userVariables) {
 		for (String custom : userVariables)
 			frame.addSlot("custom", new Frame().addTypes("custom").addSlot("conf", layer.name$()).addSlot("name", custom).addSlot("type", "String"));
-	}
-
-	private Set<String> findCustomParameters(DataLake.Tank channel) {
-		Set<String> set = new LinkedHashSet<>();
-		set.addAll(Commons.extractParameters(channel.topic()));
-		return set;
 	}
 
 	private Set<String> findCustomParameters(JMSService service) {
@@ -151,12 +140,12 @@ public class BoxConfigurationRenderer {
 		return set;
 	}
 
-	private Set<String> findCustomParameters(Activity activity) {
+	private Set<String> findCustomParameters(UIService service) {
 		Set<String> set = new LinkedHashSet<>();
-		if (activity.authenticated() != null)
-			set.addAll(Commons.extractParameters(activity.authenticated().by()));
-		for (Activity.AbstractPage page : activity.abstractPageList())
-			for (String path : page.paths()) set.addAll(Commons.extractParameters(path));
+		if (service.authentication() != null)
+			set.addAll(Commons.extractParameters(service.authentication().by()));
+		for (UIService.Resource resource : service.resourceList())
+			set.addAll(Commons.extractParameters(resource.path()));
 		return set;
 	}
 

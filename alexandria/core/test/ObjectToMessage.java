@@ -5,6 +5,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import schemas.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static messages.Messages.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -68,5 +71,20 @@ public class ObjectToMessage {
 	public void should_serialize_schema2() {
 		InfrastructureOperation object = new InfrastructureOperation();
 		Inl.toMessage(object);
+	}
+
+	@Test
+	public void should_serialize_schema_3() {
+		CredentialLogin login = new CredentialLogin().authentication("open").parameterList(parameters());
+		final Message message = Inl.toMessage(login);
+		assertEquals(CredentialLoginSchema, message.toString());
+	}
+
+	private static List<Parameter> parameters() {
+		return new ArrayList<Parameter>() {{
+			add(new Parameter("username", "mcaballero"));
+			add(new Parameter("rememberMe", "true"));
+			add(new Parameter("token", "abcdedgrd"));
+		}};
 	}
 }

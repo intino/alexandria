@@ -22,6 +22,10 @@ public class Formatters {
 		return value -> StringHelper.snakeCaseToCamelCase(value.toString());
 	}
 
+	public static Formatter camelCaseToSnakeCase() {
+		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
+	}
+
 	public static Formatter returnType() {
 		return value -> value.equals("Void") ? "void" : value;
 	}
@@ -42,10 +46,6 @@ public class Formatters {
 		};
 	}
 
-	public static Formatter camelCaseToSnakeCase() {
-		return value -> StringHelper.camelCaseToSnakeCase(value.toString());
-	}
-
 	public static Formatter quoted() {
 		return value -> '"' + value.toString() + '"';
 	}
@@ -61,17 +61,31 @@ public class Formatters {
 		};
 	}
 
+	public static Formatter shortType() {
+		return value -> {
+			String type = value.toString();
+			final String[] s = type.split("\\.");
+			return s[s.length - 1];
+		};
+	}
+
 	public static Template customize(Template template) {
 		template.add("validname", validName());
-		template.add("snakecaseToCamelCase", snakeCaseToCamelCase());
+		template.add("snakeCaseToCamelCase", snakeCaseToCamelCase());
+		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
 		template.add("returnType", returnType());
 		template.add("returnTypeFormatter", returnTypeFormatter());
 		template.add("quoted", quoted());
 		template.add("validPackage", validPackage());
-		template.add("camelCaseToSnakeCase", camelCaseToSnakeCase());
 		template.add("subpath", subPath());
+		template.add("shortType", shortType());
+		template.add("quoted", quoted());
+		template.add("customParameter", customParameter());
 		return template;
 	}
 
+	private static Formatter customParameter() {
+		return value -> value.toString().substring(1, value.toString().length() - 1);
+	}
 
 }

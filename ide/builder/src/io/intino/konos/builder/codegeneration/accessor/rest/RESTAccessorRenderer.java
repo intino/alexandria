@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
 import io.intino.konos.model.graph.type.TypeData;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -53,7 +54,7 @@ public class RESTAccessorRenderer {
 			resourceFrames.addAll(resource.operationList().stream().
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
-		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[resourceFrames.size()]));
+		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[0]));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 
@@ -110,9 +111,9 @@ public class RESTAccessorRenderer {
 		if (cert) frame.addTypes("cert");
 		if (Commons.queryParameters(operation) > 0 || Commons.bodyParameters(operation) > 0)
 			frame.addSlot("parameters", "parameters");
-		else if (Commons.fileParameters(operation) > 0) frame.addSlot("parameters", "resource");
+		if (Commons.fileParameters(operation) > 0)
+			frame.addSlot("resource", operation.parameterList().stream().filter(p -> p.i$(FileData.class)).map(Layer::name$).toArray(String[]::new));
 		return frame;
-
 	}
 
 	private String processPath(String path) {
@@ -139,6 +140,12 @@ public class RESTAccessorRenderer {
 
 	private Frame[] exceptionResponses(List<io.intino.konos.model.graph.Exception> responses) {
 		return responses.stream().map(this::exceptionResponse).toArray(Frame[]::new);
+	}
+
+	private Frame finallyException(Operation operation) {
+		final Frame frame = new Frame("io");
+		if (operation.response() == null || operation.response().asType() == null) return frame;
+		return frame.addSlot("return", "");
 	}
 
 	private Frame exceptionResponse(io.intino.konos.model.graph.Exception response) {

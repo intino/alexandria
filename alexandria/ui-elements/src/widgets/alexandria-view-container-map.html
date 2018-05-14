@@ -1,0 +1,132 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="_common/alexandria-view-behavior.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-map.html">
+
+<script src="alexandriaviewcontainermap/requester.js"></script>
+<script src="alexandriaviewcontainermap/notifier-listener.js"></script>
+
+<dom-module id="alexandria-view-container-map">
+
+    <template>
+        <alexandria-catalog-map page-size="[[_pageSize]]"
+                                item-list="[[_itemList]]"
+                                count-item-list="[[_countItemList]]"
+                                mold="[[_view.mold]]"
+                                center="[[_view.center]]"
+                                zoom="[[_view.zoom]]"
+                                on-location-change="_loadLocation"
+                                on-page-change="_loadPage"
+                                toolbar="[[_view.toolbar]]"
+                                on-execute-operation="_executeOperation"
+                                on-download-operation="_downloadOperation"
+                                on-navigate-catalog="_navigateCatalog"
+                                on-load-item="_loadItem"
+                                on-open-item="_openItem"></alexandria-catalog-map>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+
+        const AlexandriaViewContainerMapDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-view-container-map',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.ViewBehavior,
+                AlexandriaViewContainerMapBehaviors.Requester,
+                AlexandriaViewContainerMapBehaviors.NotifierListener ],
+
+            properties : {
+                _view: Object,
+                _itemList: Array,
+                _countItemList: Number
+            },
+
+            attached : function() {
+                this.translate(AlexandriaViewContainerMapDictionary);
+                this.translate(AlexandriaBehaviors.ViewBehavior.Dictionary);
+                this.listenToDisplay();
+            },
+
+            _refreshView : function(view) {
+                this._view = view;
+            },
+
+            _clear : function() {
+                this.querySelector("alexandria-catalog-map").clear();
+            },
+
+            _refresh : function(items) {
+                this._itemList = items;
+            },
+
+            _refreshPageSize : function(size) {
+                this._pageSize = size;
+            },
+
+            _refreshItem : function(item) {
+                this.querySelector("alexandria-catalog-map").refreshItem(item);
+            },
+
+            _refreshItemValidation : function(info) {
+                this.querySelector("alexandria-catalog-map").refreshItemValidation(info.message, info.stamp, info.item);
+            },
+
+            _refreshPicture : function(pictureData) {
+                this.querySelector("alexandria-catalog-map").refreshItemPicture(pictureData);
+            },
+
+            _refreshCount : function(count) {
+                this._countItemList = count;
+            },
+
+            _refreshSelection : function(selection) {
+            },
+
+            _loadLocation : function(event) {
+                this.location(event.detail);
+            },
+
+            _loadPage : function(event) {
+                this.page(event.detail.page);
+            },
+
+            _executeOperation : function(e) {
+                this.executeOperation(e.detail);
+            },
+
+            _downloadOperation : function(e) {
+                this.downloadOperation(e.detail);
+            },
+
+            _loadItem : function(e) {
+                this.loadItem(e.detail);
+            },
+
+            _openItem : function(e) {
+                e.stopPropagation();
+                this.fire("open-item", { detail: e.detail.name });
+            },
+
+            _navigateCatalog : function(e) {
+                e.stopPropagation();
+                this.fire("open-element", e.detail);
+            }
+
+        });
+    </script>
+</dom-module>

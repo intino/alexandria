@@ -1,0 +1,69 @@
+	def type(display)
+	package $package+validPackage.displays.requesters;
+
+	import $package+validPackage.displays.$name+FirstUpperCase;
+	import io.intino.konos.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+	import io.intino.konos.alexandria.ui.displays.requesters.Alexandria[$type+class+FirstUpperCase]Requester;
+	import io.intino.konos.alexandria.exceptions.AlexandriaException;
+	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.konos.alexandria.ui.spark.UISparkManager;
+
+	public class $name+firstUpperCase~Requester extends [Alexandria$type+class+FirstUpperCase]~Requester {
+
+		public $name+firstUpperCase~Requester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			$name+firstUpperCase display = display();
+			if (display == null) return;
+			String operation = operation();
+
+			$request...[$NL~else ]
+			super.execute();
+		}
+	}
+end
+def attribute(Display) trigger(class)
+	Display
+end
+
+def type(request & asset) trigger(request)
+	if (operation.equals("$name")) {
+		io.intino.konos.alexandria.ui.spark.UIFile file = display.$name($parameter);
+		manager.write(file.content(), file.label(), file.embedded());
+		return;
+	}
+end
+
+def type(request) trigger(request)
+	if (operation.equals("$name")) {
+		display.$name($parameter);
+		return;
+	}
+end
+
+def type(list) trigger(parameter)
+    manager.fromQuery("value", $value~$[].class)
+end
+
+def type(parameter & file) trigger(parameter)
+    manager.fromForm("value", $value.class)
+end
+
+def type(parameter) trigger(parameter)
+    manager.fromQuery("value", $value.class)
+end
+
+def	trigger(parameter)
+
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end

@@ -9,6 +9,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
@@ -16,9 +17,7 @@ import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.jms.JMSService;
-import io.intino.konos.model.graph.jmx.JMXService;
-import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.Service;
 import io.intino.plugin.toolwindows.console.IntinoTopics;
 import io.intino.plugin.toolwindows.console.MavenListener;
 import io.intino.tara.compiler.shared.Configuration;
@@ -39,6 +38,7 @@ import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
@@ -70,21 +70,32 @@ class AccessorsPublisher {
 
 	void publish() {
 		if (configuration == null) return;
+		if (graph == null) {
+			notify("Box has errors. Check problems view for more information", INFORMATION);
+			return;
+		}
+		List<Service> services = collectServices();
+		if (services.isEmpty()) {
+			notify("No services found in module", INFORMATION);
+			return;
+		}
+		if (services.size() > 1)
+			services = new SelectServicesDialog(WindowManager.getInstance().suggestParentWindow(module.getProject()), services).showAndGet();
 		try {
-			final List<String> apps = createSources();
-			if (apps.isEmpty()) {
-				notify("No accessors found in module", INFORMATION);
-				return;
-			} else if (configuration.distributionReleaseRepository() == null) {
+			createSources(services);
+			if (configuration.distributionReleaseRepository() == null) {
 				notify("There isn't distribution repository defined", ERROR);
 				return;
 			}
 			mvn(configuration);
-			notifySuccess(configuration, apps);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
 		}
+	}
+
+	private List<Service> collectServices() {
+		return graph.serviceList().stream().filter(s -> !s.isUI() && !s.isSlackBot()).collect(Collectors.toList());
 	}
 
 	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
@@ -97,6 +108,7 @@ class AccessorsPublisher {
 					throw new IOException("Failed to publish accessor.", result.getExecutionException());
 				else throw new IOException("Failed to publish accessor. Exit code: " + result.getExitCode());
 			} else if (result == null) throw new IOException("Failed to publish accessor. Maven HOME not found");
+			notifySuccess(configuration, file.getName());
 		}
 	}
 
@@ -134,46 +146,35 @@ class AccessorsPublisher {
 		if (sdk != null && sdk.getHomePath() != null) request.setJavaHome(new File(sdk.getHomePath()));
 	}
 
-	private List<String> createSources() throws IOException {
-		List<String> apps = new ArrayList<>();
-		if (graph == null) return Collections.emptyList();
-		apps.addAll(rest());
-		apps.addAll(jms());
-		apps.addAll(jmx());
-		return apps;
+	private void createSources(List<Service> services) {
+		rest(services);
+		jms(services);
+		jmx(services);
 	}
 
-	private List<String> jmx() {
-		List<String> apps = new ArrayList<>();
-		for (JMXService service : graph.jMXServiceList()) {
-			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+	private void rest(List<Service> services) {
+		services.stream().filter(Service::isREST).forEach(s -> {
+			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMXAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name$());
-		}
-		return apps;
+			new RESTAccessorRenderer(s.asREST(), sourcesDestiny, generationPackage).execute();
+		});
 	}
 
-	private List<String> jms() {
-		List<String> apps = new ArrayList<>();
-		for (JMSService service : graph.jMSServiceList()) {
-			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+	private void jms(List<Service> services) {
+		List<String> sources = new ArrayList<>();
+		services.stream().filter(Service::isJMS).forEach(s -> {
+			File sourcesDestiny = new File(new File(root, s.asJMS().name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new JMSAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name$());
-		}
-		return apps;
+			new JMSAccessorRenderer(s.asJMS(), sourcesDestiny, generationPackage).execute();
+		});
 	}
 
-	private List<String> rest() {
-		List<String> apps = new ArrayList<>();
-		for (RESTService service : graph.rESTServiceList()) {
-			File sourcesDestiny = new File(new File(root, service.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
+	private void jmx(List<Service> services) {
+		services.stream().filter(Service::isJMX).forEach(s -> {
+			File sourcesDestiny = new File(new File(root, s.name$() + File.separator + "src"), generationPackage.replace(".", File.separator));
 			sourcesDestiny.mkdirs();
-			new RESTAccessorRenderer(service, sourcesDestiny, generationPackage).execute();
-			apps.add(service.name$());
-		}
-		return apps;
+			new JMXAccessorRenderer(s.asJMX(), sourcesDestiny, generationPackage).execute();
+		});
 	}
 
 	private File createPom(File root, String group, String artifact, String version) {
@@ -190,20 +191,18 @@ class AccessorsPublisher {
 	private Frame createRepositoryFrame(String url, String id, String type) {
 		return new Frame().addTypes("repository", "release", type).
 				addSlot("name", id).
-				addSlot("random", new Random().nextInt(10)).
-				addSlot("url", url).
-				addSlot("type", new Random().nextInt() % 10);
+				addSlot("random", UUID.randomUUID().toString()).
+				addSlot("url", url);
 	}
 
-	private void notifySuccess(Configuration conf, List<String> apps) {
+
+	private void notifySuccess(Configuration conf, String app) {
 		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
-		for (String app : apps) {
-			balloon.createNotification("Accessors generated and uploaded", message(), INFORMATION, (n, e) -> {
-				StringSelection selection = new StringSelection(newDependency(conf, app));
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				clipboard.setContents(selection, selection);
-			}).setImportant(true).notify(module.getProject());
-		}
+		balloon.createNotification("Accessors generated and uploaded", message(), INFORMATION, (n, e) -> {
+			StringSelection selection = new StringSelection(newDependency(conf, app));
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			clipboard.setContents(selection, selection);
+		}).setImportant(true).notify(module.getProject());
 	}
 
 	private void notify(String message, NotificationType type) {

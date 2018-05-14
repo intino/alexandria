@@ -3,7 +3,7 @@ def type(operations)
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.tara.magritte.Graph;
-	import io.intino.konos.datalake.Ness;
+	import io.intino.konos.datalake.Datalake;
 	import io.intino.tara.magritte.Store;
 
 	import java.util.List;
@@ -24,7 +24,7 @@ def type(operations)
 			return Integer.MAX_VALUE;
 		}
 
-		List<Ness.Tank> tanks() {
+		List<Datalake.Tank> tanks() {
 		 	return java.util.Collections.emptyList(); //TODO
 		}
 

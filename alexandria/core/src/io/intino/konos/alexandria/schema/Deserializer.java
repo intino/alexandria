@@ -224,6 +224,7 @@ public class Deserializer {
 		try {
 			return type.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

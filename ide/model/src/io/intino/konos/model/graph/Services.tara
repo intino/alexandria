@@ -8,7 +8,8 @@ Concept:Named Service
 
 Facet REST on Service
 	var string swagger = "2.0" is private
-	var string host = "{rest.host}"
+	var string host
+	var string port
 	var string description = ""
 	var string basePath
 	var string logo = empty
@@ -73,6 +74,10 @@ Facet JMX on Service
     Concept:Named Notification
 
 Facet JMS on Service
+	var string url
+	var string user
+	var string password
+	var string clientId
 	var word:{Queue Topic} subscriptionModel
 	Concept:Named Request
 		var string path
@@ -91,6 +96,7 @@ Facet JMS on Service
 			var string certificate
 
 Facet SlackBot on Service
+	var string token
 	Concept Notification
 		var string channel
 	Concept:Named Request

@@ -1,0 +1,63 @@
+dsl Proteo
+
+use Views
+use Catalog
+use Dialog
+use DataTypes
+use UI
+
+Concept:Named Display extends Component
+	var string label = empty
+	var Display[] displays = empty
+	var string parentDisplay = empty
+	Concept Request extends Data
+		var word:{Asset Void} responseType = Void
+		var Exception[] exceptionRefs = empty
+		has Exception
+	Concept Notification extends Data
+		var word:{All Client Display} to = Display
+		var Exception[] exceptionRefs = empty
+		has Exception
+
+Facet Addressable on Display.Request
+	var UI.Resource addressableResource
+	var boolean encoded = false
+
+Concept Toolbar is decorable component
+	var boolean canSearch = true
+
+	Concept Operation
+		var string title
+		var string polymerIcon = empty
+		var word:{Link Button Icon Chip} mode = Icon
+
+		sub OpenDialog > var Dialog dialog
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%
+
+		sub Task > var string confirmText = empty
+		sub TaskSelection > var string confirmText = empty
+
+		sub Download > var string[] options = empty
+		sub DownloadSelection > var string[] options = empty
+
+		sub Export
+		sub ExportSelection
+
+		sub OpenCatalog
+			var Catalog catalog
+			var View[] views
+			var boolean filtered = false
+			var boolean openItem = false
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%
+			var word:{Standalone RelativeToOperation} position = Standalone
+
+		sub OpenCatalogSelection
+			var Catalog catalog
+			var View[] views
+			var boolean filtered = false
+			var word:{None Single Multiple} selection = None
+			var word:{Standalone RelativeToOperation} position = Standalone
+			var integer:{%} width = 100%
+			var integer:{%} height = 100%

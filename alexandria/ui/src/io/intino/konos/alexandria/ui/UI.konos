@@ -1,0 +1,6 @@
+dsl Konos
+
+use Displays
+
+Service(title = "", favicon = "") UiElements as UI(port = "")
+	Resource("/", alexandriaDesktop) homePage as Root

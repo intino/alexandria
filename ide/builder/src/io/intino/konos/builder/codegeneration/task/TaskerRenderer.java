@@ -43,7 +43,7 @@ public class TaskerRenderer {
 		List<Frame> list = new ArrayList<>();
 		list.addAll(tasks.stream().filter(t -> t.i$(ScheduledTask.class)).map(t -> t.a$(ScheduledTask.class)).map(this::processTask).collect(Collectors.toList()));
 		list.addAll(tasks.stream().filter(t -> t.i$(DirectorySentinelTask.class)).map(t -> t.a$(DirectorySentinelTask.class)).map(this::processDirectorySentinel).collect(Collectors.toList()));
-		return list.toArray(new Frame[list.size()]);
+		return list.toArray(new Frame[0]);
 	}
 
 	private Frame processTask(ScheduledTask task) {

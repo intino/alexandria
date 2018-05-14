@@ -1,6 +1,0 @@
-dsl Konos
-
-use Displays
-
-Activity(title = "", favicon = "") ActivityElements
-	Home(uses=alexandriaDesktop, paths="") homePage

@@ -55,11 +55,6 @@ public class Commons {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
-	public static String[] pathParameters(Operation operation) {
-		return operation.parameterList().stream().filter(p -> p.in() == In.path)
-				.map(Resource.Parameter::name$).toArray(String[]::new);
-	}
-
 	public static long queryParameters(Operation resource) {
 		return resource.parameterList().stream().filter(p -> p.in() == In.query).count();
 	}
@@ -112,6 +107,6 @@ public class Commons {
 	}
 
 	public static String firstUpperCase(String value) {
-		return value.substring(0, 1).toUpperCase() + value.substring(1);
+		return value.isEmpty() ? "" : value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
 }

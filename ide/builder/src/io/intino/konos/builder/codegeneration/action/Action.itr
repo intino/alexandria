@@ -1,4 +1,4 @@
-def type(action) !type(page)
+def type(action) !type(ui)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
@@ -19,16 +19,16 @@ def type(action) !type(page)
 	}
 end
 
-def type(page & action & gen)
+def type(ui & action & gen)
 	package $package+validPackage.actions;
 
 	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
+	import io.intino.konos.alexandria.ui.spark.actions.AlexandriaResourceAction;
 	import java.util.*;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaPageAction {
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Action extends AlexandriaResourceAction {
 
-		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$activity+camelCaseToSnakeCase+lowerCase"); }
+		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
 		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
 			return super.template("$name");
@@ -50,12 +50,11 @@ def trigger(favicon)
 	this.getClass().getResource("$value");
 end
 
-def type(page & action) !type(gen)
+def type(ui & action) !type(gen)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.activity.spark.actions.AlexandriaPageAction;
 	import java.time.*;
 	import java.util.*;
 	[import $importDialogs+validPackage.dialogs.*;]
@@ -65,8 +64,9 @@ def type(page & action) !type(gen)
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]
+		[$editor+parameter]
 
-		$ui
+		$component
 	}
 end
 
@@ -82,6 +82,10 @@ def type(parameter) trigger(type)
 	public $type $name+snakecaseToCamelCase+FirstLowerCase;
 end
 
+def type(editor) trigger(parameter)
+	public io.intino.konos.alexandria.schema.Resource document;
+end
+
 def attribute(void) trigger(return)
 end
 
@@ -93,9 +97,9 @@ def type(schemaImport) trigger(schemaImport)
 	import $package.schemas.*;
 end
 
-def trigger(ui)
-	public io.intino.konos.alexandria.activity.displays.Soul prepareSoul(io.intino.konos.alexandria.activity.services.push.ActivityClient client) {
-	    return new io.intino.konos.alexandria.activity.displays.Soul(session) {
+def type(component)
+	public io.intino.konos.alexandria.ui.displays.Soul prepareSoul(io.intino.konos.alexandria.ui.services.push.UIClient client) {
+	    return new io.intino.konos.alexandria.ui.displays.Soul(session) {
 			@Override
 			public void personify() {
 				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);
