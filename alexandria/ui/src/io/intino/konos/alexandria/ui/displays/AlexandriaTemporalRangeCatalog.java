@@ -22,6 +22,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	public void notifyItemsArrival() {
+		notifier.itemsArrival();
+	}
+
+	@Override
 	public void notifyUser(String message) {
 		notifier.notifyUser(message);
 	}
@@ -165,5 +170,9 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	@Override
 	public void openElement(OpenElementParameters params) {
 		super.openElement(params);
+	}
+
+	public void refreshItems() {
+		forceRefresh();
 	}
 }

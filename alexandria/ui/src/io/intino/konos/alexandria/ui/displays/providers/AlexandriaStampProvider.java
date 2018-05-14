@@ -10,4 +10,5 @@ public interface AlexandriaStampProvider {
     AlexandriaAbstractCatalog embeddedCatalog(String stamp);
     void refreshElement();
     void refreshItem();
+    void resizeItem();
 }
