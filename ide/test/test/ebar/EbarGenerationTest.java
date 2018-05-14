@@ -15,7 +15,7 @@ public class EbarGenerationTest {
 
 	@Test
 	@Ignore
-	public void testEbarGeneration() throws Exception {
+	public void testEbarGeneration() {
 		File gen = new File("test-gen", EBAR);
 		KonosGraph graph = new Graph().loadStashes("Ebar").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, EBAR).execute();

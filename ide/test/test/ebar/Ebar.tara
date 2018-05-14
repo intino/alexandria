@@ -1,88 +1,135 @@
 dsl Konos
 
-Service ebarUI as UI(title = "", favicon = "")
+Client (clientID = "{subscriberId}", domain = "ebar") as Ness(url = "{ness_url}", user = "{ness_user}", password = "{ness_password}")
+	Mounter(SensorChanged) sensorChanged
+	Mounter(StationDisconnected) stationDisconnected
+	Mounter(StationAdded) stationAdded
+	Mounter(StationRemoved) stationRemoved
+	Mounter(StationModified) stationModified
+	Mounter(subdomain = "configuration", schema = AlertModified) alertModified
 
-	Resource("/", application) home as Root Confidential
-	Resource("/error", error) errorPage
+Schema AlertModified
+	Attribute alert as Text
+	Attribute active as Bool
+	Attribute mailingList as Text > multiple = true
+	Attribute applyToAllStations as Bool
 
-Display application
-	displays = stationCatalog
+Schema SensorChanged
+	Attribute station as Text
+	Attribute sensor as Text
+	Attribute value as Bool
+	Attribute ts as DateTime
 
-	Notification userRefresh as Object(User)
-	Notification userLoggedOut
+Schema StationDisconnected
+	Attribute station as Text
+	Attribute ts as DateTime
 
-	Request logout as Text
+Schema StationAdded
+	Attribute name as Text
+	Attribute label as Text
+	Attribute coordinates as Text
+	Attribute ts as DateTime
 
-Display pageDisplay
-	Notification(Client) clear as Text
-	Notification(Client) refreshCount as Integer
+Schema StationRemoved
+	Attribute name as Text
+	Attribute ts as DateTime
 
-	Request page as Integer
-
-Display stationCatalog
-	displays = episodeCatalog
-
-	Notification(Client) refresh as Object(StationList)
-	Notification(Client) refreshSelection as Object(Selection)
-
-	Request state
-	Request location as Object(Bounds)
-	Request selection as Object(Selection)
-
-Display episodeCatalog
-	displays = episodeCatalogToolbar
-
-	Notification(Client) refresh as Object(EpisodeList)
-
-	Request(Asset) downloadEpisode as Text
-
-Display episodeCatalogToolbar
-	Notification refresh as Object(ToolbarInfo)
-
-	Request previousInstant
-	Request nextInstant
-	Request setInstant as Date
-
-Display error
+Schema StationModified
+	Attribute name as Text
+	Attribute newLabel as Text
+	Attribute ts as DateTime
 
 
-Schema User
-	Attribute username as Text
-	Attribute fullName as Text
-	Attribute email as Text
-	Attribute photo as Text
-	Attribute language as Text
+Task CheckSequences as CronTrigger(pattern = "0 0 12 1/1 * ? *", "Every day at 12")
+Task CheckEnginesAndAlarmsDuration as CronTrigger(pattern = "0 0/15 * 1/1 * ? *", "Every fifteen minutes")
 
-Schema StationList
-	Schema Station
-		Attribute name as Text
-		Attribute label as Text
-		Attribute latitude as Integer
-		Attribute longitude as Integer
-		Attribute icon as Text
-		Attribute floatLevel as Integer
-		Attribute pumpAState as Integer
-		Attribute pumpBState as Integer
+Service(title = "Smart Port", favicon = "") productUi as UI(port = "9000")
+	Authentication(by = "{federationUrl}")
+	Resource(uses = ebarDesktop, path = "/") homePage as Confidential
+	Resource configurationPage
+		path = "/configuration/alert/:name"
+		uses = editStationAlerts
 
-Schema EpisodeList
-	Schema Episode
-		Attribute name as Text
-		Attribute label as Text
-		Attribute Instant as Integer
-		Attribute icon as Text
+Dialog(label = "Editar alertas", description = "alertas de la estación ::station::", url="") editStationAlerts
+	Tab("información")
+		CheckBox("activar alertas", mode=Boolean) alertActive
+		Text("direcciones de correo donde notificar", edition=Email) alertEmails as Multiple
+		CheckBox("aplicar al resto de estaciones", mode=Boolean) applyToOtherStations
 
-Schema Bounds
-	Schema NorthEast
-		Attribute longitude as Text
-		Attribute latitude as Text
 
-	Schema SouthWest
-		Attribute longitude as Text
-		Attribute latitude as Text
+Panel(layout = Tab, title = "Smart Port", subTitle = "Puerto de Las Palmas", logoPath = "/images/logo.png", faviconPath = "") ebarDesktop as Desktop
+	Views
+		View(label = "infrastructura") infrastructura as CatalogContainer(infrastructureCatalog)
+		View(label = "episodios") episodios as CatalogContainer(sequenceCatalog)
+		View(label = "análisis") analisis as DisplayContainer("ebarOlap")
+		View(label = "configuración") configuracion as CatalogContainer(configurationCatalog)
 
-Schema Selection
-	Attribute(multiple=true) items as Text
+Catalog(itemClass = "com.monentia.ebar.graph.Asset", label = "Infrastructure") infrastructureCatalog
+	Views views
+		View("mapa", mold = infrastructureMold) as MapContainer
+			Zoom(14,min=1,max=18)
+			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 
-Schema ToolbarInfo
-	Attribute count as Integer
-	Attribute Instant as Integer
+Panel ebarOlapRemove
+	Views v > View(label = "") olap as DisplayContainer("ebarOlap")
+
+
+Mold(modelClass = "com.monentia.ebar.graph.Asset") infrastructureMold
+	Block
+		Block > Location coordinates
+		Block
+			Block
+				Title title
+				Description(label = "Estado") lastEpisode
+				CatalogLink(catalog = sequenceCatalog) stationSequences
+					defaultStyle = "color: white;font-size: 14px;border-radius: 5px;background-color: #365c80;";
+					filtered = true
+
+			Block(layout = Horizontal)
+				Picture(label = "chart", defaultPicture = empty) chart
+					defaultStyle = "margin-top:6px;max-height: 175px;"
+				Snippet(label = "sequencia", layout = Flexible, defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;") sequence
+			Block > Snippet stats
+
+TemporalCatalog(label = "Episodios", itemClass = "com.monentia.ebar.graph.StationSequence", scales = Day, type = Range) sequenceCatalog
+	Views views > View("listado", mold = sequenceMold) as ListContainer
+	Toolbar > Export(title = "Descarga los episodios del último mes", mode = Icon, polymerIcon = "archive")
+	Content
+		Sorting(label = "fecha") date
+		Grouping(label = "Estación") stations
+		Grouping("Estado del episodio") stationSequenceStates
+		Grouping("Tipo de episodio") stationSequenceTypes
+
+Mold(modelClass = "com.monentia.ebar.graph.StationSequence") sequenceMold
+	Block(layout = Horizontal Center Wrap)
+		Block(layout = Horizontal Center)
+			Icon(source = Polymer)  icon > hasCustomStyle = true;
+			Title(hasCustomStyle = true) label
+		Block(layout = Horizontal Flexible EndJustified)
+			hiddenIfMobile = true
+			Highlight sequenceTime
+			Highlight(label = "duration") duration
+			Highlight engineADuration
+			Highlight engineBDuration
+			Highlight failuresCount
+	Block(layout = Horizontal Wrap, mode = Expanded)
+		Picture("sequencia", defaultPicture = empty, defaultStyle = "margin-top:6px;") chart
+		Snippet("sequencia") sequence
+			layout = Flexible
+			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+
+Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") analysisCatalog
+	Views > View(label = "Olap") view as DisplayContainer("ebarOlap")
+
+Catalog("Configuración", itemClass = "com.monentia.ebar.graph.Alerts.Alert") configurationCatalog
+	Views views > View("alertas", mold = configurationMold) as ListContainer
+
+Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") configurationMold
+	Block(Horizontal)
+		Block > Icon(source = Polymer) alertIcon
+		Block(Flexible)
+			Title("estación") title
+			Description("direcciones de correo") emails
+			Highlight("estado") estado
+	Block(Horizontal Wrap, mode = Expanded)
+		Block(Flexible) > OpenDialogOperation("editar...", dialog = editStationAlerts,defaultStyle = "margin-left:32px;") editAlert
