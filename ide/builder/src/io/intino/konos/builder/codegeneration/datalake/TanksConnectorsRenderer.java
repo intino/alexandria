@@ -7,7 +7,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Mounter;
 import io.intino.konos.model.graph.ness.NessClient;
-import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -46,7 +45,7 @@ public class TanksConnectorsRenderer {
 				addSlot("box", boxName).
 				addSlot("tank", handlers.stream().map(this::frameOf).toArray(Frame[]::new));
 		frame.addSlot("clientId", new Frame(isCustom(datalake.clientID()) ? "custom" : "standard").addSlot("value", datalake.clientID()));
-		if (!handlers.isEmpty()) frame.addSlot("tankImport", packageName);
+		if (handlers.stream().anyMatch(h -> h.i$(Mounter.class))) frame.addSlot("tankImport", packageName);
 		if (!datalake.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		Commons.writeFrame(new File(gen, "ness"), "TanksConnectors", template().format(frame));
@@ -72,7 +71,7 @@ public class TanksConnectorsRenderer {
 	}
 
 	private String composedName(MessageHandler handler) {
-		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" ))) + firstUpperCase(name(handler)));
+		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".", "_"))) + firstUpperCase(name(handler)));
 	}
 
 	private String subdomain(MessageHandler handler) {
