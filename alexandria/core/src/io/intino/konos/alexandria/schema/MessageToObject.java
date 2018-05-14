@@ -1,17 +1,25 @@
 package io.intino.konos.alexandria.schema;
 
 import io.intino.ness.inl.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.konos.alexandria.schema.Deserializer.create;
 import static io.intino.konos.alexandria.schema.Deserializer.parserOf;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 @SuppressWarnings("unchecked")
 public class MessageToObject {
+	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+	private static Map<Class, String> classNames = new HashMap<>();
+
 	public static <T> T fromMessage(Message message, Class<T> aClass) {
 		return (T) fillObject(message, aClass, create(aClass));
 	}
@@ -44,7 +52,7 @@ public class MessageToObject {
 			else if (field.getType().isArray()) field.set(owner, append((Object[]) field.get(owner), (Object[]) value));
 			else field.set(owner, value);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -73,7 +81,13 @@ public class MessageToObject {
 
 	private static boolean match(Field field, String attribute) {
 		return attribute.equalsIgnoreCase(field.getName()) ||
-				attribute.equalsIgnoreCase(classOf(field).getSimpleName());
+				attribute.equalsIgnoreCase(className(field));
+	}
+
+	private static String className(Field field) {
+		final Class aClass = classOf(field);
+		if (!classNames.containsKey(aClass)) classNames.put(aClass, aClass.getSimpleName());
+		return classNames.get(aClass);
 	}
 
 	private static Class classOf(Field field) {

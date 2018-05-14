@@ -4,13 +4,13 @@ def type(widget)
     <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
     <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
     <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
-    [<link rel="import" href="../../lib/alexandria-activity-elements/alexandria-$type+camelCaseToSnakeCase.html">]
+    [<link rel="import" href="../../lib/alexandria-ui-elements/alexandria-$type+camelCaseToSnakeCase.html">]
 
 	[$parent+import
 	]
 	[$imports
 	][
-	$path+pathImport
+	$routes+routesImport
 	]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
@@ -18,10 +18,11 @@ def type(widget)
     <dom-module id="$name+camelCaseToSnakeCase">
 
         <template>
-        	$path
+        	$routes
         	$parent
             $innerDisplay...[$NL]
-            $attached+prototype
+            $attached
+            $prototype
         </template>
 
         <style>
@@ -48,30 +49,38 @@ def type(widget)
 
                 properties : {
                 },
-				$attached
+				$attached+js
+				$prototype+js
 
             });
         </script>
     </dom-module>
 end
 
-def trigger(pathImport)
-	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase-paths.html">
+def trigger(routesImport)
+	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-routes.html">
 end
-def trigger(path)
-	<$name+camelCaseToSnakeCase-paths></$name+camelCaseToSnakeCase-paths>
+
+def trigger(routes)
+	<$name+camelCaseToSnakeCase~-routes></$name+camelCaseToSnakeCase~-routes>
 end
 
 def trigger(imports)
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
-	<script src="../../lib/alexandria-activity-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
+	<script src="../../lib/alexandria-ui-elements/alexandria$type+snakecaseToCamelCase+lowercase/requester.js"></script>
+	<script src="../../lib/alexandria-ui-elements/alexandria$type+snakecaseToCamelCase+lowercase/notifier-listener.js"></script>
 end
 
-def type(prototype) trigger(prototype)
-	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
+def trigger(attached) trigger(js)
+	attached : function() {
+		this.translate($widget+firstuppercase~Dictionary);
+		this.listenToDisplay();
+	}
 end
 
-def type(prototype) trigger(attached)
+def type(attached)
+end
+
+def type(prototype) trigger(js)
 	attached : function() {
 		this.translate($widget+firstuppercase~Dictionary);
 		this._linkWithAlexandriaElement();
@@ -81,19 +90,16 @@ def type(prototype) trigger(attached)
 	_linkWithAlexandriaElement : function() {
 		var element = this.querySelector("alexandria-$type+camelCaseToSnakeCase");
 		element.display = this.display;
-		element.behaviors.push($widget+firstuppercase~Behaviors.Requester);
-		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
 		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.Requester);
 		element.behaviors.push(Alexandria~$type+snakeCaseToCamelCase+firstuppercase~Behaviors.NotifierListener);
+		element.behaviors.push($widget+firstuppercase~Behaviors.NotifierListener);
+		for (var i in $widget+firstuppercase~Behaviors.Requester) element$[i] = $widget+firstuppercase~Behaviors.Requester$[i];
 		element.listenToDisplay();
 	}
 end
 
-def trigger(attached)
-	attached : function() {
-		this.translate($widget+firstuppercase~Dictionary);
-		this.listenToDisplay();
-	}
+def type(prototype)
+	<alexandria-$type+camelCaseToSnakeCase></alexandria-$type+camelCaseToSnakeCase>
 end
 
 def trigger(import)

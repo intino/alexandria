@@ -1,0 +1,196 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../lib/moment-element/moment-with-locales-import.html"> <!-- Fix paper-date-picker bug -->
+<link rel="import" href="../../../lib/paper-date-picker/paper-date-picker-dialog-style.html">
+<link rel="import" href="../../../lib/paper-date-picker/paper-date-picker.html">
+<link rel="import" href="../../../lib/paper-time-picker/paper-time-picker-dialog-style.html">
+<link rel="import" href="../../../lib/paper-time-picker/paper-time-picker.html">
+<link rel="import" href="alexandria-date-behavior.html">
+
+<dom-module id="alexandria-date-selector">
+
+    <template>
+        <paper-button class="dropdown-trigger layout horizontal" title="[[label]]" on-tap="_openDialog"><span class="layout flex">[[_formattedDateTime]]</span><iron-icon class="layout horizontal end-justified" icon="icons:arrow-drop-down"></iron-icon></paper-button>
+        <paper-dialog id="dialog" class="paper-date-picker-dialog paper-time-picker-dialog">
+            <paper-date-picker id="datePicker" date="{{_dateObject}}" locale="{{_locale}}"></paper-date-picker>
+            <paper-time-picker id="timePicker" hour="{{_hour}}" minute="{{_minute}}"></paper-time-picker>
+            <div class="toolbar layout horizontal">
+                <div class="layout horizontal">
+                    <paper-icon-button icon="date-range" on-tap="_showDatePicker" hidden$="[[!_isDatePickerVisible]]"></paper-icon-button>
+                    <paper-icon-button icon="schedule" on-tap="_showTimePicker" hidden$="[[!_isTimePickerVisible]]"></paper-icon-button>
+                    <div class="layout horizontal center" hidden$="[[!_isTime]]">
+                        <a hidden$="[[_isDatePickerVisible]]" on-tap="_showTimePicker">[[_formattedTime]]</a>
+                        <a hidden$="[[_isTimePickerVisible]]" on-tap="_showDatePicker">[[_formattedShortDate]]</a>
+                    </div>
+                </div>
+                <div class="layout horizontal flex end-justified">
+                    <paper-button dialog-dismiss>[[Cancel]]</paper-button>
+                    <paper-button dialog-confirm on-tap="_acceptDate">[[Accept]]</paper-button>
+                </div>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <style>
+        :host .dropdown-trigger {
+            background: white;
+            color: black;
+            min-width: 150px;
+            border: 1px solid #ddd;
+            padding: 0 0 0 8px;
+        }
+        :host iron-icon {
+            color: var(--default-primary-color);
+        }
+        :host paper-dialog {
+            background: white;
+            padding: 0;
+        }
+        :host paper-dialog paper-button {
+            background: white;
+            color: black;
+            margin-left: 10px;
+            width: 76px;
+            height: 32px;
+        }
+        :host paper-date-picker, :host paper-time-picker {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+        }
+        :host .paper-date-picker-0[narrow] ::content #heading, :host .paper-time-picker-0[narrow] ::content #heading {
+            width: calc(100% - 8px);
+        }
+        :host .toolbar {
+            margin: 0;
+            padding: 0;
+            min-height: 40px;
+            display: block !important;
+        }
+        :host a {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        const AlexandriaDateSelectorDictionary = {
+            es: {
+                Accept: "aceptar",
+                Cancel: "cancelar"
+            },
+            en: {
+                Accept: "accept",
+                Cancel: "cancel"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-date-selector',
+
+            properties: {
+                label: String,
+                date: { type: Date, observer: '_updateDate' },
+                short : { type: Boolean, value: function() { return false; } },
+                _dateObject: { type: Date, observer: '_refresh' },
+                _hour: { type: Number, observer: '_refresh' },
+                _minute: { type: Number, observer: '_refresh' },
+                scale: { type: String, observer: '_updateDate', value: function() { return "Day"; } },
+                _formattedDateTime : String,
+                _formattedShortDate : String,
+                _formattedTime : String,
+                _isDatePickerVisible : Boolean,
+                _isTimePickerVisible : Boolean,
+                _isTime : Boolean,
+                _locale : { type: String, value: function () { return "en"; } }
+            },
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.DateBehavior ],
+
+            attached : function () {
+                this.translate(AlexandriaDateSelectorDictionary);
+                this.translate(AlexandriaBehaviors.DateBehavior.Dictionary);
+                this._locale = this.getLanguage();
+            },
+
+            open : function() {
+                this._openDialog();
+            },
+
+            _updateDate : function() {
+                if (this.date == null) return;
+
+                this._dateObject = new Date(this.date);
+                this._hour = this._dateObject.getHours();
+                this._minute = this._dateObject.getMinutes();
+                this._formattedDateTime = this.fullDate(this._dateTime(), this.scale, this.getLanguage(), this.short);
+                this._refresh();
+            },
+
+            _refresh : function() {
+                this._refreshDate();
+
+                var isTimeScale = this._isTimeScale();
+                this._isDatePickerVisible = isTimeScale ? this.$.datePicker.hidden : false;
+                this._isTimePickerVisible = isTimeScale ? this.$.timePicker.hidden : false;
+                this._isTime = isTimeScale;
+            },
+
+            _refreshDate : function() {
+                if (this._dateObject == null)
+                    return;
+
+                var dateTime = this._dateTime();
+                var language = this.getLanguage();
+                this._formattedShortDate = this.numericDate(dateTime, this.scale, language);
+                this._formattedTime = this.minuteOf(dateTime);
+            },
+
+            _isTimeScale : function() {
+                var scale = this.scale;
+                return scale == 'SixHours' || scale == 'Hour' || scale == 'FifteenMinutes' || scale == 'Minute' || scale == 'Second';
+            },
+
+            _openDialog : function() {
+
+                if (this._isTimeScale())
+                    this._showTimePicker();
+                else
+                    this._showDatePicker();
+
+                this.$.dialog.open();
+            },
+
+            _acceptDate : function() {
+                this.date = this._dateTime().getTime();
+                this.fire('change', { date: this.date });
+            },
+
+            _dateTime : function() {
+                var newDate = new Date(this._dateObject.getTime());
+                newDate.setHours(this._hour);
+                newDate.setMinutes(this._minute);
+                return newDate;
+            },
+
+            _showDatePicker : function() {
+                this.$.datePicker.hidden = false;
+                this.$.datePicker.notifyResize();
+                this.$.timePicker.hidden = true;
+                this._refresh();
+            },
+
+            _showTimePicker : function() {
+                this.$.datePicker.hidden = true;
+                this.$.timePicker.hidden = false;
+                this.$.timePicker.notifyResize();
+                this._refresh();
+            }
+
+        });
+    </script>
+
+</dom-module>

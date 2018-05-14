@@ -1,0 +1,102 @@
+def type(routes)
+	<link rel="import" href="../../../lib/polymer/polymer.html">
+    <link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+    <link rel="import" href="../../../lib/app-route/app-route.html">
+    <link rel="import" href="../../../lib/app-route/app-location.html">
+
+    <script src="requester.js"></script>
+
+    <dom-module id="$name+camelCaseToSnakeCase~-routes">
+
+        <template>
+            <app-location route="{{route}}"></app-location>
+            <app-route route="{{route}}" pattern="/" data="{{showHomeRouteData}}"></app-route>
+            $route+define...[$NL]
+        </template>
+
+        <style></style>
+
+        <script>
+
+            Polymer({
+                is: '$name+camelCaseToSnakeCase~-routes',
+
+                behaviors: $[ CottonBehaviors.CarrierBehavior, $name+firstuppercase~Behaviors.Requester $],
+
+                observers: $[
+                    '_pathChanged(route.path)'
+                $],
+
+                attached : function() {
+                    var parent = $$(this).parent().get(0);
+                    this.display = parent.display;
+                },
+
+                setPath : function(path) {
+                    this.set("route.path", path);
+                },
+
+                _pathChanged : function(path) {
+                    if (this.timeout != null)
+                        window.clearTimeout(this.timeout);
+
+                    this.timeout = window.setTimeout(() => {
+                        if (path == "/") this.routeShowHome(this.display);
+                        $route+onChanged...[$NL]
+                    }, 50);
+                },
+
+				_isRoute : function(path, match) {
+					return path.replace(match, "").indexOf("/") == -1;
+				},
+
+				_samePath : function(path) {
+					return path == this.route.path;
+				},
+
+				$route+function...[,$NL]
+            });
+        </script>
+
+    </dom-module>
+end
+
+def trigger(onChanged)
+	else if (this._isRoute(path, "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
+end
+
+def type(parameter) trigger(function)
+	 $request : function(value) {
+		var path = $routePath+register;
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, path);
+		this.set("route.path", path);
+	}
+end
+
+def trigger(function)
+	 $request : function() {
+		var path = "$value+subpath";
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display);
+		this.set("route.path", path);
+	}
+end
+
+def type(route) trigger(define)
+	<app-route route="{{route}}" pattern="$value" data="{{$request~RouteData}}"></app-route>
+end
+
+def type(routePath & encoded) trigger(call)
+	window.atob(path.replace("$value+subpath~enc:",""))
+end
+
+def type(routePath & encoded) trigger(register)
+	"$value+subpath" + "enc:" + window.btoa(value)
+end
+
+def type(routePath) trigger(call)
+	path.replace("$value+subpath","")
+end
+
+def type(routePath) trigger(register)
+	"$value+subpath" + value
+end

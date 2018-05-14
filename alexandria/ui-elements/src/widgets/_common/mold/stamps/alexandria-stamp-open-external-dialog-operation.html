@@ -1,0 +1,97 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/iron-resizable/iron-resizable-behavior.html">
+<link rel="import" href="../../../../../lib/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../alexandria-operation-trigger.html">
+<link rel="import" href="../../alexandria-dialog-box-behavior.html">
+
+<dom-module id="alexandria-stamp-open-external-dialog-operation">
+
+    <template>
+        <alexandria-operation-trigger title="[[stamp.label]]" on-execute="_openDialog"
+                                      icon="[[stamp.properties.alexandriaIcon]]"
+                                      mode="[[stamp.properties.mode]]" color="[[stamp.properties.color]]"
+                                      style$="[[_style]]"></alexandria-operation-trigger>
+
+        <paper-dialog id="dialog" entry-animation="scale-up-animation"
+                      exit-animation="fade-out-animation"
+                      on-iron-overlay-opened="_overlayOpened"
+                      on-iron-overlay-closed="_overlayClosed"
+                      with-backdrop>
+            <div class="container">
+                <div class="header layout horizontal center">
+                    <div class="label flex">[[_title]]</div>
+                    <paper-icon-button icon="close" on-tap="close"></paper-icon-button>
+                </div>
+                <iframe id="dialogFrame"></iframe>
+            </div>
+        </paper-dialog>
+    </template>
+
+    <style>
+        paper-dialog {
+            margin: 50px;
+            padding: 0;
+            background: white;
+            position: absolute;
+        }
+        paper-dialog paper-icon-button {
+            padding: 6px;
+        }
+        paper-dialog .container {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        paper-dialog .header {
+            padding: 5px 5px 5px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        paper-dialog .header .label {
+            font-size: 12pt;
+        }
+        paper-dialog iframe {
+            border: 0;
+            overflow: auto;
+            width: 100%;
+            height: calc(100% - 51px);
+            border-radius: 2px;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-open-external-dialog-operation',
+
+            behaviors : [ Polymer.IronResizableBehavior, AlexandriaBehaviors.StampBehavior, AlexandriaBehaviors.DialogBoxBehavior ],
+
+            properties : {
+                _title : String
+            },
+
+            _render : function() {
+                if (this.stamp.properties.dialogPath == null) return;
+                this.$.dialogFrame.src = this.stamp.properties.dialogPath;
+                this._title = this.stamp.properties.dialogTitle != "" ? this.stamp.properties.dialogTitle : this.stamp.label;
+                this._width = this.stamp.width;
+                this._height = this.stamp.height;
+            },
+
+            _openDialog : function(e) {
+                document.body.appendChild(this.$.dialog);
+                this.open();
+                e.stopPropagation();
+            },
+
+            _overlayClosed : function(e) {
+                this._overlayFixed = false;
+                this.appendChild(this.$.dialog);
+            }
+
+        });
+    </script>
+
+</dom-module>

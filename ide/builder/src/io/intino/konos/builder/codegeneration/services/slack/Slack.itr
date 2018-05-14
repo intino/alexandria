@@ -14,8 +14,8 @@ def type(slack & gen)
 		private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
 		$level+field...[$NL]
 
-		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box) {
-			super(box.configuration().$name+snakeCaseToCamelCase+firstLowerCase~Configuration().token);
+		public $name+firstUpperCase+snakeCaseToCamelCase~SlackBot($box+validname+FirstUpperCase~Box box, String token) {
+			super(token);
 			$name+snakeCaseToCamelCase+firstLowerCase~Slack = new $name+snakeCaseToCamelCase+firstUpperCase~Slack(box);
 			$level+constructor...[$NL]
 

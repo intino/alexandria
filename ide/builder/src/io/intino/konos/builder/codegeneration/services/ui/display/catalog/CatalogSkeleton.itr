@@ -1,0 +1,191 @@
+def type(catalog)
+	package $package.displays;
+
+    import io.intino.konos.alexandria.ui.Resource;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
+    import io.intino.konos.alexandria.ui.model.Catalog;
+    import io.intino.konos.alexandria.ui.model.Element;
+    import io.intino.konos.alexandria.ui.model.catalog.Scope;
+    import io.intino.konos.alexandria.ui.model.catalog.arrangement.Group;
+    import io.intino.konos.alexandria.ui.model.toolbar.TaskSelection;
+    import io.intino.konos.alexandria.ui.services.push.UISession;
+    import $package+validPackage.$box+firstUpperCase~Box;
+
+    import java.io.ByteArrayInputStream;
+    import java.io.InputStream;
+    import java.time.Instant;
+    import java.util.List;
+    import java.util.function.Consumer;
+
+    import static java.util.Collections.emptyList;
+    import static java.util.stream.Collectors.toList;
+
+    public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
+    	public $name+FirstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    	}
+    	[
+    	$range
+    	][
+		$temporalFilter
+		][
+		$toolbar
+    	]
+    	public static class Source {
+    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.catalog.Scope scope, String condition[, $mode+timerange range], UISession session) {
+    			return java.util.Collections.emptyList();//TODO
+    		}
+
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, UISession session) {
+    			return null;//TODO
+    		}
+    		[
+			$hasMagazineView
+			][
+			$range+created
+			]
+    		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase~.core$$().id();
+    			return null;
+    		}
+
+    		public static String $type+shortType+firstLowerCase~Name($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
+    			//return $type+shortType+firstLowerCase.name$$();
+    			return null;
+    		}
+    	}[
+
+		$view
+		]
+    	public static class Events {[
+    		$event
+    	]}
+
+
+    	public static class Arrangements {[
+    		$arrangement+method...[$NL$NL]][
+
+			$groupingSelection][
+
+			$hasArrangements
+    	]}
+    }
+end
+
+def trigger(created)
+	public static java.time.Instant $type+shortType+FirstLowerCase~Created($box~Box box, $type object) {
+		//return $type+shortType+firstLowerCase.created();
+		return null;//TODO
+	}
+end
+
+def trigger(range)
+	public static class Temporal {
+		public static io.intino.konos.alexandria.ui.model.TimeRange range($box+firstUpperCase~Box box, UISession session) {
+			return null;
+		}
+	}
+end
+
+def trigger(temporalFilter)
+	public static class TemporalFilter {
+		$temporalFilterEnabled
+		$temporalFilterVisible
+	}
+end
+
+def attribute(always) trigger(temporalFilterEnabled)
+end
+
+def attribute(conditional) trigger(temporalFilterEnabled)
+	public static boolean enable($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.TemporalCatalog catalog, io.intino.konos.alexandria.ui.model.catalog.Scope scope, UISession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterEnabled)
+end
+
+def attribute(always) trigger(temporalFilterVisible)
+end
+
+def attribute(conditional) trigger(temporalFilterVisible)
+	public static boolean visible($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.TemporalCatalog catalog, io.intino.konos.alexandria.ui.model.catalog.Scope scope, UISession session) {
+		return true;
+	}
+end
+
+def attribute(never) trigger(temporalFilterVisible)
+end
+
+def trigger(timerange)
+	io.intino.konos.alexandria.ui.model.TimeRange
+end
+
+def trigger(hasMagazineView)
+	public static $type root$type+shortType+firstUpperCase($box+firstUpperCase~Box box, java.util.List<$type> objects[, $mode+timerange range], UISession session) {
+		return null;
+	}
+
+	public static $type default$type+shortType+firstUpperCase($box+firstUpperCase~Box box, String id[, $mode+timerange range], UISession session) {
+		return null;
+	}
+end
+
+def trigger(groupingSelection)
+	public static void createGroup($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, String grouping, io.intino.konos.alexandria.ui.model.catalog.arrangement.Group group, UISession session) {
+
+	}
+end
+
+def trigger(hasArrangements)
+	public static io.intino.konos.alexandria.ui.model.Catalog.ArrangementFilterer filterer($box+firstUpperCase~Box box, UISession session) {
+		return null;
+	}
+end
+
+def type(openPanel)
+	$breadcrumbs
+end
+
+def trigger(breadcrumbs)
+	public static io.intino.konos.alexandria.ui.model.mold.stamps.Tree onOpenPanelBreadcrumbs($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase, UISession session) {
+		return null; //return breadcrumbs
+	}
+end
+
+def type(openCatalog)
+	$openCatalogLoader
+	$openCatalogFilter
+end
+
+def trigger(openCatalogLoader)
+	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, UISession session) {
+		return null; //return item id to show when catalog is opened
+	}
+end
+
+def trigger(openCatalogFilter)
+	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, UISession session) {
+		return true;
+	}
+end
+
+def trigger(toolbar)
+	public static class Toolbar {
+		$operation...[$NL$NL]
+	}
+end
+
+def type(arrangement & grouping)
+	public static java.util.List<io.intino.konos.alexandria.ui.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, UISession session) {
+		return emptyList(); //TODO
+	}
+end
+
+def type(arrangement & sorting)
+	public static int $name+firstLowerCase~Comparator($type item1, $type item2) {
+		return 0; //TODO
+	}
+end

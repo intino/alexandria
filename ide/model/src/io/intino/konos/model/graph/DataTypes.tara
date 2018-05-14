@@ -61,7 +61,4 @@ Concept Exception extends Data
 Concept Response extends Data is component
 	var string code = "200"
 	var string description = ""
-
-
-Facet Event on Schema
-	var string subDomain = ""
+	var word:{html xml text} dataFormat = html

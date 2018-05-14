@@ -1,0 +1,43 @@
+def type(process)
+	package $package+validPackage.ness.processes;
+
+	import $package+validPackage.$box+firstUpperCase~Box;
+    import io.intino.ness.inl.Message;
+
+    public class $name+FirstUpperCase~Process {
+
+		public $box+validName+firstUpperCase~Box box;
+		public $type+typeClass $type+typeName;
+
+		$precondition
+
+    	public void execute() {
+    	}
+    }
+end
+
+def trigger(precondition)
+	public boolean $name+firstLowerCase($type+typeClass $type+typeName) {
+		return true;
+	}
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def attribute(message) trigger(typeClass)
+	io.intino.ness.inl.Message
+end
+
+def type(schema) trigger(typeClass)
+	$package.schemas.$name+FirstUpperCase
+end
+
+def type(schema) trigger(typeName)
+	$name+firstLowerCase
+end
+
+def trigger(typeName)
+	message
+end

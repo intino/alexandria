@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class BoxRenderer {
 
@@ -44,7 +45,7 @@ public class BoxRenderer {
 		if (isTara) frame.addSlot("tara", fillTara());
 		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(true);
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-		if (facade.findClass("io.intino.konos.server.activity.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
 		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(false);
 		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().format(frame));
@@ -61,10 +62,12 @@ public class BoxRenderer {
 	private String[] dsls() {
 		List<String> dsls = new ArrayList<>();
 		for (Configuration.LanguageLibrary lang : configuration.languages())
-			if (!lang.name().equals(Verso.class.getSimpleName()) && !lang.name().equals(Proteo.class.getSimpleName()))
-				dsls.add(lang.generationPackage().toLowerCase() + "." + Formatters.firstUpperCase(lang.name()));
+			if (!Verso.class.getSimpleName().equals(lang.name()) && !Proteo.class.getSimpleName().equals(lang.name())) {
+				final String genPackage = lang.generationPackage();
+				dsls.add((genPackage == null ? "" : genPackage.toLowerCase() + ".") + firstUpperCase(lang.name()));
+			}
 		if (configuration.level() != Configuration.Level.Solution)
-			dsls.add(configuration.workingPackage().toLowerCase() + "." + Formatters.firstUpperCase(configuration.outDSL()));
+			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.outDSL()));
 		return dsls.toArray(new String[dsls.size()]);
 	}
 

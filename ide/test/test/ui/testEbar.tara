@@ -2,20 +2,19 @@ dsl Konos
 
 Schema dummy
 
-Activity(title = "", favicon = "") testEbar
-	Home(uses=testEbarHome) testEbarHomePage
+Service (title = "", favicon = "") testEbar as UI
+	Resource("/", uses=testEbarHome) testEbarHomePage as Root 
 
-Desktop(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome
-	layout = testEbarTab
+Panel(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome as Desktop
+	layout = Tab
 
-Layout(mode = Tab) testEbarTab
-	Group(label = "", mode = Expanded) analysis
-		Options(modelClass = "") options
-			RenderCatalogs(catalogs = testEbarAnalysis testEbarInfrastructure)
-
-Catalog("Infrastructure", modelClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
 	Views
-		MapView("mapa", mold = testEbarInfrastructureMold)
+		View(label = "análisis") as DisplayContainer("testEbarAnalysis")
+		View("infraestructura") as CatalogContainer(testEbarInfrastructure)
+
+Catalog("Infrastructure", itemClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
+	Views
+		View("mapa", mold = testEbarInfrastructureMold) as MapContainer
 			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
 			Zoom(14,min=1,max=18)
 
@@ -37,7 +36,7 @@ Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMo
 				Snippet("") stats
 
 
-TemporalCatalog(label = "Episodios EBAR", modelClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
+TemporalCatalog(label = "Episodios EBAR", itemClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
 	type = Range
 	scales = Day
 
@@ -45,9 +44,9 @@ TemporalCatalog(label = "Episodios EBAR", modelClass = "com.monentia.ebar.graph.
 		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
 
 	Views
-		ListView("listado", mold = testEbarSequenceMold)
+		View("listado", mold = testEbarSequenceMold) as ListContainer
 
-	Arrangement
+	Content
 		Sorting(label = "fecha") date
 		Grouping(label = "Estación") sequenceStations
 		Grouping(label = "Estado del episodio") stationSequenceStates
@@ -65,11 +64,13 @@ Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
 			layout = Flexible
 			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
 
-Catalog("Análisis", modelClass = "com.monentia.ebar.graph.Asset") testEbarAnalysis
-	Views > DisplayView("análisis", display="ebarOlap")
+Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") testEbarAnalysis
+	Views > View("análisis") as DisplayContainer("ebarOlap")
 
-Catalog("Configuración", modelClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
-	Views > ListView("alertas", mold = testEbarConfigurationMold)
+Display ebarOlap
+
+Catalog("Configuración", itemClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
+	Views > View("alertas", mold = testEbarConfigurationMold) as ListContainer
 
 Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationMold
 	Block(layout = Horizontal)

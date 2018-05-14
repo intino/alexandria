@@ -1,0 +1,21 @@
+dsl Proteo
+
+use Views
+use Dialog
+use Display
+
+Concept Panel extends Display
+	var word:{Menu Tab} layout = Tab
+
+	has:{0..1} Toolbar
+
+	Concept:{1..1} Views
+		has View
+
+Facet Desktop on Panel
+	var word:{Menu Tab} layout = Tab
+	var string title
+	var string subTitle
+	var string logoPath
+	var string faviconPath
+	var boolean hasCustomColor = false

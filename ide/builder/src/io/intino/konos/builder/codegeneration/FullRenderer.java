@@ -5,20 +5,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
-import io.intino.konos.builder.codegeneration.accessor.ui.ActivityAccessorCreator;
-import io.intino.konos.builder.codegeneration.datalake.MessageHandlerRenderer;
+import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
-import io.intino.konos.builder.codegeneration.datalake.NessTanksRenderer;
+import io.intino.konos.builder.codegeneration.datalake.TanksConnectorsRenderer;
+import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
+import io.intino.konos.builder.codegeneration.datalake.process.ProcessCoordinatorRenderer;
+import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.ActivityRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.SchemaAdaptersRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.dialog.DialogsRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.display.DisplayRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.display.DisplaysRenderer;
-import io.intino.konos.builder.codegeneration.services.activity.resource.ResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSRequestRenderer;
 import io.intino.konos.builder.codegeneration.services.jms.JMSServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXOperationsServiceRenderer;
@@ -26,18 +21,24 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
-import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -112,10 +113,13 @@ public class FullRenderer {
 	}
 
 	private void bus() {
-		if (graph.dataLake() == null) return;
-		new NessTanksRenderer(graph, gen, packageName, boxName).execute();
-		new MessageHandlerRenderer(graph, src, packageName, boxName).execute();
-		if (((LegioConfiguration) configurationOf(module)).model() != null)
+		if (graph.nessClientList().isEmpty()) return;
+		new ProcessRenderer(graph, src, packageName, boxName).execute();
+		new ProcessCoordinatorRenderer(graph, gen, packageName, boxName).execute();
+
+		new MounterRenderer(graph, src, packageName, boxName).execute();
+		new TanksConnectorsRenderer(graph, gen, packageName, boxName).execute();
+		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 	}
 
@@ -129,9 +133,8 @@ public class FullRenderer {
 		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new ActivityRenderer(graph, src, gen, packageName, boxName).execute();
-		new ActivityAccessorCreator(module, graph, parent).execute();
-		if (hasModel) new SchemaAdaptersRenderer(graph, gen, packageName).execute();
+		new UIRenderer(graph, src, gen, packageName, boxName).execute();
+		new UIAccessorCreator(module, graph, parent).execute();
 	}
 
 	private void box() {

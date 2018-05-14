@@ -1,10 +1,10 @@
 dsl Konos
 
-Activity Platform-Web
-	Home(uses = analytics) homePage
-	UserHome(uses = analyze, paths = "/user") userHomePage
-	Page(uses = analytics, paths = "/analytics/:sample") analyticsPage
-	Page(uses = error, paths = "/error") errorPage
+Service Platform-Web as UI(title = "", favicon = "")
+	Resource("/", analytics) homePage as Root
+	Resource("/user", analyze) userHomePage as Root Confidential
+	Resource("/analytics/:sample", analytics) analyticsPage
+	Resource("/error", error) errorPage
 
 Display analytics
 	displays = olap dashboard pivotTable
@@ -53,9 +53,9 @@ Display drillwiseHome
 	Request showCategories //> RegisterPath(page=PlatformWeb.analyticsPage)
 	Request showSuppliers //> RegisterPath(page=suppliersPage)
 	Request showPricing //> RegisterPath(page=pricingPage)
-	Request showApi > RegisterPath(page=Platform-Web.analyticsPage)
+	Request showApi as Addressable(Platform-Web.analyticsPage)
 	Request showPage as Text
-	Request search as Text > RegisterPath(page=Platform-Web.analyticsPage)
+	Request search as Text Addressable(Platform-Web.analyticsPage)
 
 Display timeSeries
 	Notification zoomRange as Object(Range)

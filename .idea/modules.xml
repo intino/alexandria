@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/alexandria/activity/activity.iml" filepath="$PROJECT_DIR$/alexandria/activity/activity.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/activity-elements-activity/activity-elements-activity.iml" filepath="$PROJECT_DIR$/alexandria/activity-elements-activity/activity-elements-activity.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/jms/jms.iml" filepath="$PROJECT_DIR$/alexandria/jms/jms.iml" group="alexandria" />
@@ -15,6 +13,8 @@
       <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="konos" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="alexandria" />
     </modules>
   </component>
 </project>

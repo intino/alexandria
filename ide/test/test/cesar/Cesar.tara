@@ -1,6 +1,6 @@
 dsl Konos
 
-Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath = "")
+Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath = "", port = "{port}")
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
@@ -23,7 +23,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Response as Object(schema = SystemSchema)
 			Exception(BadRequest)
 	Resource(path = "/snapshot/:id/opinions/download") downloadSnapshotOpinions
-		Get (description="Download opinions at some instant") DDD
+		Get (description="Download opinions at some instant")
 			Parameter(in = path, required = true) id as Text
 			Parameter(in = query, required = true) username as Text
 			Parameter(in = query) date2 as Date
@@ -147,8 +147,58 @@ Task scheduleServerLogging as CronTrigger(pattern = "0 0/2 * * * *", mean = "eve
 
 Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "everyMinute")
 
-
 //Task directoryChecker as DirectorySentinel(directory = "/sample/", events = OnModify OnCreate
 
 
+Service(title = "cesar", favicon = "/images/icon.png") cesarUi as UI(port = "9000")
+	Authentication(by = "{federationUrl}")
+	Resource("/", cesarDesktop) homePage as Root Confidential
+	Resource("/error", uses = errorDisplay) errorPage
 
+
+
+Client datalake as Ness(url = "{datalake}", user = "{user}", password = "{password}", domain = "", clientID = "cesar")
+	Mounter(InfrastructureOperation, "cesar")
+	Mounter(empty, "consul") serverStatus
+	Mounter(empty, "consul") serverLog
+	Mounter(empty, "consul") serverUpgrade
+
+	Mounter(empty, "consul") feederStatus
+	Mounter(empty, "consul") feederLog
+	Mounter(empty, "consul") feederUpgrade
+
+	Mounter(empty, "consul") deviceStatus
+	Mounter(empty, "consul") deviceBoot
+	Mounter(empty, "consul") deviceUpgrade
+	Mounter(empty, "consul") deviceCrash
+
+	Mounter(empty, "consul") systemLog
+	Mounter(empty, "consul") systemStatus
+
+Schema InfrastructureOperation
+	Attribute ts as DateTime
+	Attribute operation as Text
+	Attribute user as Text
+	Attribute objectType as Text
+	Attribute objectID as Text
+	Attribute(multiple = true) parameters as Text
+
+
+Display cesarDesktop
+Display errorDisplay
+
+
+Panel(label = "Project") projectPanel
+	Views
+		View("dashboard") as MoldContainer(projectDashboard)
+
+Mold(modelClass = "java.lang.Object") projectDashboard
+
+Catalog("Devices", itemClass = "io.intino.cesar.graph.Device") deviceCatalog
+	Toolbar > TaskSelection("remove elements", polymerIcon = "icons:remove")
+	Events > OnClickItem > OpenPanel(projectPanel)
+	Views
+		View("List", mold = projectDashboard) list as ListContainer
+		View("Charts", display = "cesarOlap") cesarOlap as DisplayContainer
+	Content
+		Grouping(label = "by Status") statusCategorization

@@ -12,7 +12,6 @@ public class CheckFileParameter implements NodeRule {
 
 
 	private enum Cause {
-		MultipleFileParameter("Only one File parameter is allowed"),
 		FileParameterNotInForm("File parameters only can be added in form");
 
 		private final String message;
@@ -26,10 +25,7 @@ public class CheckFileParameter implements NodeRule {
 	@Override
 	public boolean accept(Node node) {
 		final List<Node> files = node.components().stream().filter(n -> isParameter(n) && n.facets().stream().anyMatch(f -> f.type().equals("File"))).collect(Collectors.toList());
-		if (files.size() > 1) {
-			cause = Cause.MultipleFileParameter;
-			return false;
-		} else if (!files.isEmpty() && !parameterInForm(files.get(0))) {
+		if (!files.isEmpty() && !parameterInForm(files.get(0))) {
 			cause = Cause.FileParameterNotInForm;
 			return false;
 		}

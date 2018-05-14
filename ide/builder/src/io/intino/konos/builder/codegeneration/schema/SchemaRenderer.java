@@ -19,8 +19,11 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SchemaRenderer {
 	private final List<Schema> schemas;
@@ -28,33 +31,38 @@ public class SchemaRenderer {
 	private String rootPackage;
 
 	public SchemaRenderer(KonosGraph graph, File destination, String rootPackage) {
-		schemas = graph.core$().find(Schema.class);
+		schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(Collectors.toList());
 		this.destination = destination;
 		this.rootPackage = rootPackage;
 	}
 
 	public void execute() {
-		schemas.forEach(this::processSchemas);
-	}
-
-	private void processSchemas(Schema format) {
-		format.core$().findNode(Schema.class).forEach(this::processSchema);
+		schemas.forEach(this::processSchema);
 	}
 
 	private void processSchema(Schema schema) {
 		final Service service = schema.core$().ownerAs(Service.class);
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
 		final File packageFolder = new File(destination, subPackage);
-		Commons.writeFrame(packageFolder, schema.name$(), template().format(createSchemaFrame(schema, subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, "."), rootPackage)));
+		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
+		final Frame frame = createSchemaFrame(schema, packageName);
+		Commons.writeFrame(packageFolder, schema.name$(), template().format(new Frame("root").addSlot("root", rootPackage).addSlot("package", packageName).addSlot("schema", frame)));
 	}
 
-	public static Frame createSchemaFrame(Schema schema, String packageName, String rootPackage) {
-		Frame frame = new Frame("schema").addSlot("name", schema.name$()).addSlot("package", packageName).addSlot("root", rootPackage);
+	public Frame createSchemaFrame(Schema schema, String packageName) {
+		return createSchemaFrame(schema, packageName, new HashSet<>());
+	}
+
+	private Frame createSchemaFrame(Schema schema, String packageName, Set<Schema> processed) {
+		Frame frame = new Frame("schema").addSlot("name", schema.name$()).addSlot("package", packageName);
+		if (schema.core$().owner().is(Schema.class)) frame.addSlot("inner","static");
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList(), rootPackage));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList(), rootPackage));
 		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
 		addReturningValueToAttributes(schema.name$(), frame.frames("attribute"));
+		final Frame[] innerSchemas = schema.schemaList().stream().filter(processed::add).map(s -> createSchemaFrame(s, packageName, processed)).toArray(Frame[]::new);
+		if (innerSchemas.length > 0) frame.addSlot("schema", innerSchemas);
 		return frame;
 	}
 

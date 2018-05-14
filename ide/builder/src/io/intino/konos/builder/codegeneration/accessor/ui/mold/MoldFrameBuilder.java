@@ -1,8 +1,8 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.mold;
 
-import io.intino.konos.model.graph.Activity;
 import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
+import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
 import java.time.Clock;
@@ -17,13 +17,13 @@ import static io.intino.konos.model.graph.Mold.Block.Mode.Expanded;
 import static java.util.stream.Collectors.toList;
 
 public class MoldFrameBuilder extends Frame {
-	private final Activity activity;
+	private final UIService service;
 	private final Mold mold;
 	private final Frame moldFrame;
 
-	public MoldFrameBuilder(Activity activity, Mold mold) {
+	public MoldFrameBuilder(UIService service, Mold mold) {
 		super();
-		this.activity = activity;
+		this.service = service;
 		this.mold = mold;
 		moldFrame = new Frame().addTypes("mold").addSlot("name", mold.name$());
 	}

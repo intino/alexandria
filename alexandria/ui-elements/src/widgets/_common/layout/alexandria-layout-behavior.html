@@ -1,0 +1,188 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.LayoutBehavior = {
+
+        Dictionary : {
+            es: {
+                NoItemsMessage: 'no se ha definido ningún elemento'
+            },
+            en: {
+                NoItemsMessage: 'no elements defined'
+            }
+        },
+
+        _layoutLoadedTimer: null,
+
+        properties : {
+            _itemList: { type: Array, observer: '_itemsLoaded' },
+            _itemTabList: Array,
+            _openedItem : { type: String, observer: '_openItemByLabel' },
+            _openedItemIndex: Number,
+            _title : String,
+            _subtitle : String,
+            _logo : String,
+            _authServiceUrl : String,
+            _defaultItemReceived: { type: Boolean, value: function() { return false; } }
+        },
+
+        _loading : function() {
+            this.$.layout.loading = true;
+            if (this._layoutLoadedTimer != null) window.clearTimeout(this._loadedTimer);
+        },
+
+        _loaded : function() {
+            this._layoutLoadedTimer = window.setTimeout(() => this.$.layout.loading = false, 800);
+        },
+
+        _refreshItemList : function(itemList) {
+            const countItems = itemList.length;
+            itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
+            this._itemList = itemList;
+            this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
+        },
+
+        _openDefaultItem : function(name) {
+            this._defaultItemReceived = true;
+
+            var itemList = this.itemList;
+            try {
+
+                if (name != null) {
+                    this._openItemByName(name);
+                    return;
+                }
+
+                var name = Cookies.get("alexandria-layout");
+                name = name != null && name !== "" ? name : (itemList.length > 0 ? itemList[0].name : null);
+                if (this._indexOf(name) == -1) name = (itemList.length > 0 ? itemList[0].name : null);
+                this._openItemByName(name);
+            }
+            catch(e) {
+            }
+        },
+
+        _itemProperty : function(item, property) {
+            let properties = item.referencePropertyList;
+            for (var i=0; i<properties.length; i++) {
+                if (properties[i].name == property)
+                    return properties[i];
+            }
+            return null;
+        },
+
+        _openItemByLabel : function(label) {
+            if (this._refreshingOpened) return;
+            if (this._itemList == null) return;
+            var name = this._nameFromKey(label);
+            if (name == null) return;
+            this._openItemDelayed(name);
+        },
+
+        _openItemByName : function(name) {
+            if (this._refreshingOpened) return;
+            if (this._itemList == null) return;
+            this._openItemDelayed(name);
+        },
+
+        _openItemByEvent : function(event) {
+            if (this._refreshingOpened) return;
+            if (this._itemList == null) return;
+            var name = this._nameFromKey(event.detail);
+            this._openItemDelayed(name);
+        },
+
+        _openItemDelayed : function(name) {
+            if (this._openItemTimeout != null) window.clearTimeout(this._openItemTimeout);
+            this._openItemTimeout = window.setTimeout(() => {
+                if (name == "noItems") return;
+            if (!this._defaultItemReceived) return;
+            if (this._openedItemIndex == this._indexOf(name)) return;
+            this.openItem(name);
+        }, 100);
+        },
+
+        _refreshOpened : function(opened) {
+            var label = this._labelFromKey(opened);
+            if (this._openedItem == label) return;
+            this._refreshingOpened = true;
+            this._openedItem = label;
+            this._openedItemIndex = this._indexOf(opened);
+            this._saveDefaultItem(opened);
+            this._refreshingOpened = false;
+        },
+
+        _indexOf : function(key) {
+            var index = -1;
+            for(var i=0; i<this._itemList.length; i++) {
+                var item = this._itemList[i];
+                if (item.label === key || item.name === key)
+                    index = i;
+            }
+            return index;
+        },
+
+        _labelFromKey : function(key) {
+            var label = this._labelFromIndex(this._indexOf(key));
+            return label != null ? label : key;
+        },
+
+        _nameFromKey : function(key) {
+            var name = this._nameFromIndex(this._indexOf(key));
+            return name != null ? name : key;
+        },
+
+        _nameFromIndex : function(index) {
+            var item = this._itemList[index];
+            return item != null ? item.name : null;
+        },
+
+        _labelFromIndex : function(index) {
+            var item = this._itemList[index];
+            return item != null ? item.label : null;
+        },
+
+        _arrayOf : function(itemList) {
+            var result = [];
+            for(var i=0; i<itemList.length; i++)
+                result.push(itemList[i].label);
+            return result;
+        },
+
+        _info : function(info) {
+            this._title = info.title;
+            this._subtitle = info.subtitle;
+            this._logo = info.logo;
+            this._authServiceUrl = info.authServiceUrl;
+        },
+
+        _user : function(user) {
+            this.$.layout.user = user;
+        },
+
+        _logout: function () {
+            this.logout();
+        },
+
+        _editProfile: function () {
+            if (this._authServiceUrl == null || this._authServiceUrl === "") return;
+            window.open(this._authServiceUrl, '_blank');
+        },
+
+        _userLoggedOut : function(homeUrl) {
+            window.location.href = homeUrl;
+        },
+
+        _saveDefaultItem : function(name) {
+            try {
+                Cookies.set("alexandria-layout", name, 30);
+            }
+            catch (exception) {
+            }
+        }
+
+    };
+
+</script>

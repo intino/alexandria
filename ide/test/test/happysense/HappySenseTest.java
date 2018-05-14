@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class HappySenseTest {
+public class
+
+HappySenseTest {
 
 	private static final String HAPPYSENSE = "happysense";
 

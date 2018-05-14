@@ -79,7 +79,7 @@ def type(queue) trigger(format)
 end
 
 def trigger(custom)
-	.replace("{$value}", configuration.$value)
+	.replace("{$value}", configuration.get("$value"))
 end
 
 def type(parameter) trigger(name)
