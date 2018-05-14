@@ -101,6 +101,10 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		}
 	}
 
+	public void itemsArrival() {
+		notifyItemsArrival();
+	}
+
 	@Override
 	public void forceRefresh() {
 		super.forceRefresh();
@@ -220,6 +224,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	protected abstract void sendCatalog();
 	protected abstract ItemList filteredItemList(Scope scope, String condition);
+	protected abstract void notifyItemsArrival();
 
 	protected boolean isGrouping(Map.Entry<String, GroupingSelection> entry) {
 		return groupingOf(entry.getKey()) != null;

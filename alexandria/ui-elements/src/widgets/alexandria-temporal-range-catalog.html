@@ -34,6 +34,7 @@
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
+        <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[ItemsArrival]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
         <paper-toast id="notifyMessageToast" class="fit-bottom message" text="[[_notifyMessage]]"></paper-toast>
         <paper-dialog id="groupingsDialog" no-overlap>
             <h2>[[ShowGroupings]]</h2>
@@ -162,6 +163,17 @@
             --cotton-breadcrumbs-item-brothers-size: 12pt;
             --cotton-breadcrumbs-item-parents-size: 12pt;
         }
+        :host #itemsArrival {
+            position: absolute;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            font-size: 10pt;
+        }
+        :host #itemsArrival span {
+            margin-right: 10px;
+        }
         @media screen and (max-width: 736px) {
             :host #showGroupingsButton {
                 display: flex;
@@ -192,12 +204,16 @@
             es: {
                 ClearFilter : "ver todos",
                 ShowGroupings : "filtrar catálogo",
-                Close : "cerrar"
+                Close : "cerrar",
+                ItemsArrival : "han llegado nuevos elementos",
+                RefreshItems : "actualizar"
             },
             en: {
                 ClearFilter : "view all",
                 ShowGroupings : "filter catalog",
-                Close : "close"
+                Close : "close",
+                ItemsArrival : "new items arrival",
+                RefreshItems : "refresh"
             }
         };
 
@@ -232,6 +248,19 @@
             _refreshCatalog : function(catalog) {
                 this._catalog = catalog;
                 this._hideGroupings = this._catalog.hideGroupings;
+            },
+
+            _itemsArrival : function() {
+                this.querySelector("paper-toast#itemsArrival").open();
+            },
+
+            _closeItemsArrival : function() {
+                this.querySelector("paper-toast#itemsArrival").close();
+            },
+
+            _refreshWithArrival : function() {
+                this.refreshItems();
+                this._closeItemsArrival();
             },
 
             _refreshFiltered : function(value) {

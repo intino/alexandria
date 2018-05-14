@@ -18,6 +18,11 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	}
 
 	@Override
+	public void notifyItemsArrival() {
+		notifier.itemsArrival();
+	}
+
+	@Override
 	public void notifyUser(String message) {
 		notifier.notifyUser(message);
 	}
@@ -94,5 +99,9 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 	@Override
 	public void openView(String name) {
 		super.openView(name);
+	}
+
+	public void refreshItems() {
+		forceRefresh();
 	}
 }
