@@ -129,7 +129,7 @@ public abstract class Stamp<O> {
 	}
 
 	public StampResult change(Item item, String value, AlexandriaDisplay self, UISession session) {
-		return changeEvent != null ? changeEvent.change(item != null ? item.object() : null, value, session) : StampResult.none();
+		return changeEvent != null ? changeEvent.change(item != null ? item.object() : null, value, self.id(), session) : StampResult.none();
 	}
 
 	public Stamp changeEvent(ChangeEvent event) {
@@ -138,7 +138,7 @@ public abstract class Stamp<O> {
 	}
 
 	public String validate(Item item, String value, AlexandriaDisplay self, UISession session) {
-		return validateEvent != null ? validateEvent.validate(item != null ? item.object() : null, value, session) : null;
+		return validateEvent != null ? validateEvent.validate(item != null ? item.object() : null, value, self.id(), session) : null;
 	}
 
 	public Stamp validateEvent(ValidateEvent event) {
@@ -159,11 +159,11 @@ public abstract class Stamp<O> {
 	}
 
 	public interface ChangeEvent {
-		StampResult change(Object object, String value, UISession session);
+		StampResult change(Object object, String value, String selfId, UISession session);
 	}
 
 	public interface ValidateEvent {
-		String validate(Object object, String value, UISession session);
+		String validate(Object object, String value, String selfId, UISession session);
 	}
 
 	public static class Color {

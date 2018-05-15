@@ -112,9 +112,9 @@ public class OpenCatalogOperation extends Operation<String> {
 		return this;
 	}
 
-	public StampResult execute(Item target, List<Item> items, UISession session) {
+	public StampResult execute(Item target, List<Item> items, String selfId, UISession session) {
 		if (execution == null) return StampResult.none();
-		return execution.execute(target != null ? target.object() : null, items.stream().map(Item::object).collect(toList()), session);
+		return execution.execute(target != null ? target.object() : null, items.stream().map(Item::object).collect(toList()), selfId, session);
 	}
 
 	public OpenCatalogOperation execution(Execution execution) {
@@ -131,7 +131,7 @@ public class OpenCatalogOperation extends Operation<String> {
 	}
 
 	public interface Execution {
-		StampResult execute(Object target, List<Object> items, UISession session);
+		StampResult execute(Object target, List<Object> items, String selfId, UISession session);
 	}
 
 }

@@ -12,6 +12,7 @@
 <link rel="import" href="alexandria-dialog-box.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-behavior.html">
 
 <script src="alexandriatemporaltimecatalog/requester.js"></script>
 <script src="alexandriatemporaltimecatalog/notifier-listener.js"></script>
@@ -221,14 +222,13 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.CatalogBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaTemporalTimeCatalogBehaviors.Requester,
                 AlexandriaTemporalTimeCatalogBehaviors.NotifierListener ],
 
             properties : {
-                _catalog: Object,
                 _filtered : { type: Boolean, value: function() { return false; }},
-                _hideGroupings: { type: Boolean, value: function() { return true; }},
                 _navigatorLayout : { type: String, value: function() { return ""; }}
             },
 
@@ -238,33 +238,8 @@
                 this.listenOpenEvents();
             },
 
-            _refreshCatalog : function(catalog) {
-                this._catalog = catalog;
-                this._hideGroupings = this._catalog.hideGroupings;
-            },
-
-            _itemsArrival : function() {
-                this.querySelector("paper-toast#itemsArrival").open();
-            },
-
-            _closeItemsArrival : function() {
-                this.querySelector("paper-toast#itemsArrival").close();
-            },
-
-            _refreshWithArrival : function() {
-                this.refreshItems();
-                this._closeItemsArrival();
-            },
-
-            _refreshFiltered : function(value) {
-                this._filtered = value;
-            },
-
             _loadTimezoneOffset : function() {
                 this.timezoneOffset(new Date().getTimezoneOffset()*-1);
-            },
-
-            _selectGrouping : function(event) {
             },
 
             _showTimeNavigator : function() {
@@ -287,14 +262,6 @@
 
             _refreshNavigatorLayout : function(layout) {
                 this._navigatorLayout = layout;
-            },
-
-            _handleGroupingChange : function(event) {
-                this.selectGrouping(event.detail);
-            },
-
-            _showGroupingsDialog : function () {
-                this.$.groupingsDialog.open();
             }
 
         });

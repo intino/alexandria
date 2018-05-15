@@ -401,7 +401,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.refresh();
 		dialogBox.onAccept((value) -> {
 			display.currentView().ifPresent(v -> {
-				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), session());
+				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), id(), session());
 				StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 				if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
 				else if (refresh == StampResult.Refresh.Container) forceRefresh();

@@ -10,6 +10,7 @@
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-behavior.html">
 
 <script src="alexandriacatalog/requester.js"></script>
 <script src="alexandriacatalog/notifier-listener.js"></script>
@@ -212,15 +213,14 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.CatalogBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaCatalogBehaviors.Requester,
                 AlexandriaCatalogBehaviors.NotifierListener ],
 
             properties : {
                 embedded: { type: Boolean, value: function() { return false; } },
-                _catalog: Object,
-                _filtered : { type: Boolean, value: function() { return false; }},
-                _hideGroupings: { type: Boolean, value: function() { return true; }}
+                _showLabel : Boolean
             },
 
             attached : function() {
@@ -235,36 +235,8 @@
                 this._showLabel = catalog.embedded && catalog.label !== "";
             },
 
-            _itemsArrival : function() {
-                this.querySelector("paper-toast#itemsArrival").open();
-            },
-
-            _closeItemsArrival : function() {
-                this.querySelector("paper-toast#itemsArrival").close();
-            },
-
-            _refreshWithArrival : function() {
-                this.refreshItems();
-                this._closeItemsArrival();
-            },
-
-            _refreshFiltered : function(value) {
-                this._filtered = value;
-            },
-
-            _selectGrouping : function(event) {
-            },
-
-            _handleGroupingChange : function(event) {
-                this.selectGrouping(event.detail);
-            },
-
             _handleDeleteGroupingGroup : function(event) {
                 this.deleteGroupingGroup(event.detail);
-            },
-
-            _showGroupingsDialog : function () {
-                this.$.groupingsDialog.open();
             }
 
         });
