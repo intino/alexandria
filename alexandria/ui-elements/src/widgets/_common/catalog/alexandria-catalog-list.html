@@ -10,7 +10,7 @@
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/cotton-checkbox/cotton-checkbox.html">
 <link rel="import" href="../mold/alexandria-mold-container.html">
-<link rel="import" href="alexandria-catalog-behavior.html">
+<link rel="import" href="alexandria-catalog-list-behavior.html">
 <link rel="import" href="alexandria-catalog-sorting.html">
 <link rel="import" href="alexandria-catalog-toolbar.html">
 <link rel="import" href="../alexandria-date-behavior.html">
@@ -307,7 +307,7 @@
                 _selectionPanelVisible: { type: Boolean, value: function() { return false; } }
             },
 
-            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.CatalogBehavior, AlexandriaBehaviors.DateBehavior ],
+            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.CatalogListBehavior, AlexandriaBehaviors.DateBehavior ],
 
             attached: function () {
                 this.translate(AlexandriaCatalogListDictionary);

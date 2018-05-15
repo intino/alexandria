@@ -4,104 +4,43 @@
     AlexandriaBehaviors.CatalogBehavior = {
 
         properties : {
-            refreshingSelection : { type: Boolean, value: function() { return false; } },
-            selectedItemList : { type: Object, value: function() { return null; } }
+            _catalog: Object,
+            _filtered : { type: Boolean, value: function() { return false; }},
+            _hideGroupings: { type: Boolean, value: function() { return true; }}
         },
 
-        observers: [
-            '_selectionChanged(selectedItemList.splices)'
-        ],
-
-        selectItems : function(component, items) {
-            this.clearSelection(component);
-            for (var i=0; i<items.length; i++)
-                this.selectItem(component, items[i]);
+        _refreshCatalog : function(catalog) {
+            this._catalog = catalog;
+            this._hideGroupings = this._catalog.hideGroupings;
         },
 
-        selectItem : function(component, name) {
-            this.refreshingSelection = true;
-
-            var item = this._getComponentItem(component, name);
-            if (item != null)
-                component.selectItem(item);
-
-            this.refreshingSelection = false;
+        _refreshFiltered : function(value) {
+            this._filtered = value;
         },
 
-        unSelectItem : function(component, name) {
-            this.refreshingSelection = true;
-
-            var item = this._getComponentItem(component, name);
-            if (item != null)
-                component.deselectItem(item);
-
-            this.refreshingSelection = false;
+        _selectGrouping : function(event) {
         },
 
-        clearSelection : function(component) {
-            this.refreshingSelection = true;
-
-            if (component.clearSelection) {
-                component.clearSelection();
-                return;
-            }
-
-            var items = component.items;
-            if (items == null) return;
-            for(var i=0; i<items.length; i++) {
-                if (this._isSelected(component, items[i]))
-                    component.selectItem(items[i]);
-            }
-
-            this.refreshingSelection = false;
+        _handleGroupingChange : function(event) {
+            this.selectGrouping(event.detail);
         },
 
-        _refreshSelection : function(component, selection) {
-            if (selection == null || selection.length == 0) {
-                this.clearSelection(component);
-                return;
-            }
-            this.selectItems(component, selection);
+        _showGroupingsDialog : function () {
+            this.$.groupingsDialog.open();
         },
 
-        _isSelected : function(component, item) {
-            var selection = component.selectedItems;
-            if (selection == null) return false;
-            for(var i=0; i<selection.length; i++) {
-                if (selection[i].name == item.name) return true;
-            }
-            return false;
+        _itemsArrival : function() {
+            this.querySelector("paper-toast#itemsArrival").open();
         },
 
-        selectionOf : function(component) {
-            var selection = component.selectedItems;
-            var result = [];
-            if (selection == null) return { "items" : result };
-            selection.forEach(function(item) { result.push(item.name != null ? item.name : item); });
-            return { "items" : result };
+        _closeItemsArrival : function() {
+            this.querySelector("paper-toast#itemsArrival").close();
         },
 
-        selectionOfItem : function(item) {
-            return { "items" : [ item ] };
+        _refreshWithArrival : function() {
+            this.refreshItems();
+            this._closeItemsArrival();
         },
-
-        _getComponentItem : function(component, name) {
-            var items = component.items;
-            if (items == null) return null;
-            for (var i=0; i<items.length; i++)
-                if (items[i].name == name)
-                    return items[i];
-            return null;
-        },
-
-        _getComponentItemIndex : function(component, name) {
-            var items = component.items;
-            if (items == null) return null;
-            for (var i=0; i<items.length; i++)
-                if (items[i].name == name)
-                    return i;
-            return -1;
-        }
 
     };
 </script>
