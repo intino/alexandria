@@ -9,10 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
-import javax.jms.TextMessage;
 
 import static io.intino.konos.datalake.Datalake.REGISTER_ONLY;
-import static io.intino.konos.jms.MessageFactory.createMessageFor;
+import static io.intino.konos.datalake.MessageTranslator.fromInlMessage;
 
 public class JMSTank implements Datalake.Tank {
 	private static Logger logger = LoggerFactory.getLogger(JMSTank.class);
@@ -55,12 +54,12 @@ public class JMSTank implements Datalake.Tank {
 
 	public void feed(io.intino.ness.inl.Message message) {
 		final TopicProducer producer = datalake.newProducer(feedChannel());
-		if (producer != null) producer.produce(createMessageFor(message.toString()));
+		if (producer != null) producer.produce(fromInlMessage(message));
 	}
 
 	public void drop(io.intino.ness.inl.Message message) {
 		try {
-			final TextMessage jmsMessage = (TextMessage) createMessageFor(message.toString());
+			final javax.jms.Message jmsMessage = fromInlMessage(message);
 			if (jmsMessage == null) return;
 			jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
 			final TopicProducer producer = datalake.newProducer(dropChannel());
