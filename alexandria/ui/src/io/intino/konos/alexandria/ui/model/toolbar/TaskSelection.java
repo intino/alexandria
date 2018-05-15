@@ -26,13 +26,13 @@ public class TaskSelection extends Operation {
 		return this;
 	}
 
-	public ToolbarSelectionResult execute(Element element, String option, List<Item> selection, UISession session) {
+	public ToolbarSelectionResult execute(Element element, String option, List<Item> selection, String selfId, UISession session) {
 		if (launcher == null) return ToolbarSelectionResult.none();
-		return launcher.execute(element, option, selection.stream().map(Item::object).collect(toList()), session);
+		return launcher.execute(element, option, selection.stream().map(Item::object).collect(toList()), selfId, session);
 	}
 
 	public interface Execution {
-		ToolbarSelectionResult execute(Element element, String option, List<Object> selection, UISession session);
+		ToolbarSelectionResult execute(Element element, String option, List<Object> selection, String selfId, UISession session);
 	}
 
 }
