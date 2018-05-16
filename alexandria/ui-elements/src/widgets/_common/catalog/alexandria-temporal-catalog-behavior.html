@@ -1,0 +1,46 @@
+<script>
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.CatalogBehavior = {
+
+        properties : {
+            _catalog: Object,
+            _filtered : { type: Boolean, value: function() { return false; }},
+            _hideGroupings: { type: Boolean, value: function() { return true; }}
+        },
+
+        _refreshCatalog : function(catalog) {
+            this._catalog = catalog;
+            this._hideGroupings = this._catalog.hideGroupings;
+        },
+
+        _refreshFiltered : function(value) {
+            this._filtered = value;
+        },
+
+        _selectGrouping : function(event) {
+        },
+
+        _handleGroupingChange : function(event) {
+            this.selectGrouping(event.detail);
+        },
+
+        _showGroupingsDialog : function () {
+            this.$.groupingsDialog.open();
+        },
+
+        _itemsArrival : function() {
+            this.querySelector("paper-toast#itemsArrival").open();
+        },
+
+        _closeItemsArrival : function() {
+            this.querySelector("paper-toast#itemsArrival").close();
+        },
+
+        _refreshWithArrival : function() {
+            this.refreshItems();
+            this._closeItemsArrival();
+        },
+
+    };
+</script>
