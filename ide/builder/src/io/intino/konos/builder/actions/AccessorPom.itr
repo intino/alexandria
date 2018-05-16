@@ -64,21 +64,7 @@ def type(pom)
 	</distributionManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>io.intino.konos</groupId>
-			<artifactId>alexandria-rest-accessor-java</artifactId>
-			<version>$[1.0.0, 2.0.0)</version>
-		</dependency>
-		<dependency>
-			<groupId>io.intino.konos</groupId>
-			<artifactId>alexandria-jmx</artifactId>
-			<version>$[1.0.0, 2.0.0)</version>
-		</dependency>
-		<dependency>
-			<groupId>io.intino.konos</groupId>
-			<artifactId>alexandria-jms</artifactId>
-			<version>$[1.0.0, 2.0.0)</version>
-		</dependency>
+		$dependency
 	</dependencies>
 </project>
 end
@@ -114,4 +100,28 @@ def type(BSD) trigger(license)
 		<name>BSD 3-Clause License</name>
 		<url>https://opensource.org/licenses/BSD-3-Clause</url>
 	</license>
+end
+
+def type(rest) trigger(dependency)
+	<dependency>
+		<groupId>io.intino.konos</groupId>
+		<artifactId>alexandria-rest-accessor-java</artifactId>
+		<version>$[1.0.0, 2.0.0)</version>
+	</dependency>
+end
+
+def type(jmx) trigger(dependency)
+	<dependency>
+		<groupId>io.intino.konos</groupId>
+		<artifactId>alexandria-jmx</artifactId>
+		<version>$[1.0.0, 2.0.0)</version>
+	</dependency>
+end
+
+def type(jms) trigger(dependency)
+	<dependency>
+		<groupId>io.intino.konos</groupId>
+		<artifactId>alexandria-jms</artifactId>
+		<version>$[1.0.0, 2.0.0)</version>
+	</dependency>
 end

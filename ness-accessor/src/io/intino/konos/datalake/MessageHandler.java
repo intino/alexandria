@@ -13,7 +13,8 @@ public interface MessageHandler extends Consumer {
 
 	@Override
 	default void consume(javax.jms.Message message) {
-		handle(Message.load(textFrom(message)));
+		final Message load = Message.load(textFrom(message));
+		handle(load);
 	}
 
 	@SuppressWarnings("Duplicates")

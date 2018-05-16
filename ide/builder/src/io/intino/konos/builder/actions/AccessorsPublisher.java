@@ -36,8 +36,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
@@ -87,7 +89,7 @@ class AccessorsPublisher {
 				notify("There isn't distribution repository defined", ERROR);
 				return;
 			}
-			mvn(configuration);
+			mvn(services, configuration);
 		} catch (IOException | MavenInvocationException e) {
 			notifyError(e.getMessage());
 			LOG.error(e.getMessage());
@@ -98,10 +100,11 @@ class AccessorsPublisher {
 		return graph.serviceList().stream().filter(s -> !s.isUI() && !s.isSlackBot()).collect(Collectors.toList());
 	}
 
-	private void mvn(Configuration conf) throws MavenInvocationException, IOException {
+	private void mvn(List<Service> services, Configuration conf) throws MavenInvocationException, IOException {
 		final File[] files = root.listFiles(File::isDirectory);
 		for (File file : files != null ? files : new File[0]) {
-			final File pom = createPom(file, conf.groupId(), file.getName() + ACCESSOR, conf.version());
+			final Service service = services.stream().filter(s -> s.name$().equals(file.getName())).findFirst().orElse(null);
+			final File pom = createPom(file, service, conf.groupId(), file.getName() + ACCESSOR, conf.version());
 			final InvocationResult result = invoke(pom);
 			if (result != null && result.getExitCode() != 0) {
 				if (result.getExecutionException() != null)
@@ -177,11 +180,13 @@ class AccessorsPublisher {
 		});
 	}
 
-	private File createPom(File root, String group, String artifact, String version) {
+	private File createPom(File root, Service service, String group, String artifact, String version) {
 		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
 		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
 		SimpleEntry<String, String> distroRepo = configuration.distributionReleaseRepository();
 		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
+		final Frame depFrame = new Frame(service.core$().conceptList().stream().map(s -> s.id().split("#")[0].toLowerCase()).toArray(String[]::new)).addSlot("value", "");
+		frame.addSlot("dependency", depFrame);
 		final Template template = AccessorPomTemplate.create();
 		final File pomFile = new File(root, "pom.xml");
 		Commons.write(pomFile.toPath(), template.format(frame));
