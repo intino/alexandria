@@ -24,6 +24,9 @@ AlexandriaViewContainerListBehaviors.NotifierListener = {
         this.when("refreshItem").toSelf().execute(function(parameters) {
         	widget._refreshItem(parameters.value);
         });
+        this.when("resizeItem").toSelf().execute(function(parameters) {
+        	widget._resizeItem(parameters.value);
+        });
         this.when("refreshItemValidation").toSelf().execute(function(parameters) {
         	widget._refreshItemValidation(parameters.value);
         });

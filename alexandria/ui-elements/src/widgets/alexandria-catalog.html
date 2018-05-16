@@ -10,6 +10,7 @@
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-behavior.html">
 
 <script src="alexandriacatalog/requester.js"></script>
 <script src="alexandriacatalog/notifier-listener.js"></script>
@@ -36,6 +37,7 @@
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
+        <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[ItemsArrival]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
         <paper-toast id="notifyMessageToast" class="fit-bottom message" text="[[_notifyMessage]]"></paper-toast>
         <paper-dialog id="groupingsDialog" no-overlap>
             <h2>[[ShowGroupings]]</h2>
@@ -150,6 +152,17 @@
             --cotton-breadcrumbs-item-brothers-size: 10pt;
             --cotton-breadcrumbs-item-parents-size: 10pt;
         }
+        :host #itemsArrival {
+            position: absolute;
+            width: 100%;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            font-size: 10pt;
+        }
+        :host #itemsArrival span {
+            margin-right: 10px;
+        }
         @media screen and (max-width: 736px) {
             :host #showGroupingsButton {
                 display: flex;
@@ -179,13 +192,17 @@
                 ClearFilter : "ver todos",
                 ShowGroupings : "filtrar catálogo",
                 Close : "cerrar",
-                Back : "< volver al catálogo"
+                Back : "< volver al catálogo",
+                ItemsArrival : "han llegado nuevos elementos",
+                RefreshItems : "actualizar"
             },
             en: {
                 ClearFilter : "view all",
                 ShowGroupings : "filter catalog",
                 Close : "close",
-                Back : "< back to catalog"
+                Back : "< back to catalog",
+                ItemsArrival : "new items arrival",
+                RefreshItems : "refresh"
             }
         };
 
@@ -196,15 +213,14 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.CatalogBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaCatalogBehaviors.Requester,
                 AlexandriaCatalogBehaviors.NotifierListener ],
 
             properties : {
                 embedded: { type: Boolean, value: function() { return false; } },
-                _catalog: Object,
-                _filtered : { type: Boolean, value: function() { return false; }},
-                _hideGroupings: { type: Boolean, value: function() { return true; }}
+                _showLabel : Boolean
             },
 
             attached : function() {
@@ -219,23 +235,8 @@
                 this._showLabel = catalog.embedded && catalog.label !== "";
             },
 
-            _refreshFiltered : function(value) {
-                this._filtered = value;
-            },
-
-            _selectGrouping : function(event) {
-            },
-
-            _handleGroupingChange : function(event) {
-                this.selectGrouping(event.detail);
-            },
-
             _handleDeleteGroupingGroup : function(event) {
                 this.deleteGroupingGroup(event.detail);
-            },
-
-            _showGroupingsDialog : function () {
-                this.$.groupingsDialog.open();
             }
 
         });

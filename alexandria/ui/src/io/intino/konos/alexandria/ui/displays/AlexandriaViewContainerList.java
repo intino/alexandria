@@ -203,6 +203,16 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 		});
 	}
 
+	@Override
+	public void resizeItem() {
+		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(provider(), view());
+
+		selection().forEach(itemKey -> {
+			io.intino.konos.alexandria.ui.model.Item item = itemOf(itemKey);
+			notifier.resizeItem(ItemBuilder.build(item, item.id(), provider, baseAssetUrl()));
+		});
+	}
+
 	private void sendView() {
 		notifier.refreshView(ElementViewBuilder.build(view(), provider()));
 	}

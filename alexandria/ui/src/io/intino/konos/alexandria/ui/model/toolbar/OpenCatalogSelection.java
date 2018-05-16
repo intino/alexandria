@@ -115,9 +115,9 @@ public class OpenCatalogSelection extends Operation {
 		return this;
 	}
 
-	public ToolbarSelectionResult execute(Element element, List<Item> selection, List<Item> openCatalogSelection, UISession session) {
+	public ToolbarSelectionResult execute(Element element, List<Item> selection, List<Item> openCatalogSelection, String selfId, UISession session) {
 		if (execution == null) return ToolbarSelectionResult.none();
-		return execution.execute(element, objects(selection), objects(openCatalogSelection), session);
+		return execution.execute(element, objects(selection), objects(openCatalogSelection), selfId, session);
 	}
 
 	public OpenCatalogSelection execution(Execution execution) {
@@ -134,7 +134,7 @@ public class OpenCatalogSelection extends Operation {
 	}
 
 	public interface Execution {
-		ToolbarSelectionResult execute(Element element, List<Object> selection, List<Object> openCatalogSelection, UISession session);
+		ToolbarSelectionResult execute(Element element, List<Object> selection, List<Object> openCatalogSelection, String selfId, UISession session);
 	}
 
 }

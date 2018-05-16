@@ -99,6 +99,10 @@
                 this.itemRefreshed(item.name);
             },
 
+            _resizeItem : function(item) {
+                this.querySelector("alexandria-catalog-list").resizeItem(item);
+            },
+
             _refreshItemValidation : function(info) {
                 this.querySelector("alexandria-catalog-list").refreshItemValidation(info.message, info.stamp, info.item);
             },

@@ -10,7 +10,7 @@
 <link rel="import" href="../../../../lib/paper-button/paper-button.html">
 <link rel="import" href="../../../../lib/cotton-checkbox/cotton-checkbox.html">
 <link rel="import" href="../mold/alexandria-mold-container.html">
-<link rel="import" href="alexandria-catalog-behavior.html">
+<link rel="import" href="alexandria-catalog-list-behavior.html">
 <link rel="import" href="alexandria-catalog-sorting.html">
 <link rel="import" href="alexandria-catalog-toolbar.html">
 <link rel="import" href="../alexandria-date-behavior.html">
@@ -19,7 +19,7 @@
 
     <template>
         <div class="toolbar" hidden$="[[_toolbarHidden]]">
-            <div class="layout horizontal">
+            <div class="layout horizontal" hidden$="[[_selectionPanelVisible]]">
                 <div class="sorting-box layout horizontal center" hidden$="[[!sortingList.length]]">
                     <div class="label">[[Sortings]]</div>
                     <alexandria-catalog-sorting selected-sorting$="[[selectedSorting]]"
@@ -34,8 +34,17 @@
                             <iron-icon icon="search" prefix></iron-icon>
                             <paper-icon-button suffix icon="icons:cancel" hidden$="[[!condition]]" on-tap="_clearFilter"></paper-icon-button>
                         </paper-input>
-
                     </div>
+                </div>
+            </div>
+            <div class="box selected" hidden$="[[!_selectionPanelVisible]]">
+                <div class="layout horizontal center center-justified">
+                    <paper-icon-button icon="arrow-back" alt="[[RemoveSelection]]" on-tap="_clearSelection"></paper-icon-button>
+                    <div class="flex">[[_countSelectedItemList(selectedItemList.length)]]</div>
+                    <alexandria-catalog-toolbar operations="[[_selectionOperations(toolbar)]]"
+                                                on-execute="_executeOperation"
+                                                on-download="_downloadOperation"
+                                                on-group="_showClusterDialog"></alexandria-catalog-toolbar>
                 </div>
             </div>
         </div>
@@ -294,10 +303,11 @@
                 _toolbarHidden: { type: Boolean, value: function() { return false; } },
                 _groupMap : { type: Object, value: function() { return {}; } },
                 _page : Number,
-                _selectionEnabled : { type: Boolean, value: function() { return false; } }
+                _selectionEnabled : { type: Boolean, value: function() { return false; } },
+                _selectionPanelVisible: { type: Boolean, value: function() { return false; } }
             },
 
-            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.CatalogBehavior, AlexandriaBehaviors.DateBehavior ],
+            behaviors: [ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.CatalogListBehavior, AlexandriaBehaviors.DateBehavior ],
 
             attached: function () {
                 this.translate(AlexandriaCatalogListDictionary);
@@ -364,6 +374,10 @@
                 if (item != null) item.highlight();
             },
 
+            resizeItem : function(item) {
+                this._updateSizeForItem(item.name);
+            },
+
             refreshItemValidation : function(message, stamp, item) {
                 var element = item != null ? this.querySelector("alexandria-mold-container[name=\"_item_" + item + "\"]") : this;
                 var stamp = element.querySelector("." + stamp);
@@ -379,7 +393,7 @@
             },
 
             _refreshToolbar: function() {
-                this._countSelectionOperations = this._operations(this.toolbar,"Selection").length > 0;
+                this._countSelectionOperations = this._operations(this.toolbar,"Selection").length;
                 this._allowSelection = this._countSelectionOperations > 0;
                 this._toolbarHidden = this.toolbar != null && this.toolbar.operationList.length <= 0 &&
                     !this.canSearch && this.sortingList.length <= 0;
@@ -443,6 +457,7 @@
 
             _selectionChanged: function() {
                 if (this._selectionChangeTimeout != null) {
+                    this._selectionPanelVisible = this.selectedItemList.length > 0 && this._countSelectionOperations > 0;
                     window.clearTimeout(this._selectionChangeTimeout);
                     this._selectionChangeTimeout = null;
                 }

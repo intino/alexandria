@@ -11,6 +11,9 @@ AlexandriaCatalogBehaviors.Requester = {
     clearFilter : function() {
     	this.carry("clearFilter");
     },
+    refreshItems : function() {
+    	this.carry("refreshItems");
+    },
     home : function() {
     	this.carry("home");
     },
