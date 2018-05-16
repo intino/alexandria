@@ -16,10 +16,12 @@ Display alexandriaCatalog
 	Notification showPanel
 	Notification hidePanel
 	Notification notifyUser as Text
+	Notification itemsArrival
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request deleteGroupingGroup as Object(GroupingGroup)
 	Request clearFilter
+	Request refreshItems
 
 	Request home
 	Request openItem as Text
@@ -40,11 +42,13 @@ Display alexandriaTemporalRangeCatalog
 	Notification showPanel
 	Notification hidePanel
 	Notification notifyUser as Text
+	Notification itemsArrival
 	Notification loadTimezoneOffset
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter
 	Request timezoneOffset as Integer
+	Request refreshItems
 
 	Request home
 	Request openItem as Text
@@ -65,11 +69,13 @@ Display alexandriaTemporalTimeCatalog
 	Notification showPanel
 	Notification hidePanel
 	Notification notifyUser as Text
+	Notification itemsArrival
 	Notification loadTimezoneOffset
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter
 	Request timezoneOffset as Integer
+	Request refreshItems
 
 	Request home
 	Request openItem as Text

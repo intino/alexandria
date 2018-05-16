@@ -241,7 +241,7 @@ def trigger(taskExecution)
 end
 
 def trigger(openCatalogOperationExecution)
-	(object, selection, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, selection, session)
+	(object, selection, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.execute(box, ($moldClass) object, selection, selfId, session)
 end
 
 def trigger(filter)
@@ -253,8 +253,8 @@ def trigger(itemLoader)
 end
 
 def trigger(editable)
-	.changeEvent((object, value, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, session))
-	.validateEvent((object, value, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onValidate(box, ($moldClass) object, value, session))
+	.changeEvent((object, value, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onChange(box, ($moldClass) object, value, selfId, session))
+	.validateEvent((object, value, selfId, session) -> $mold+FirstUpperCase.Stamps.$name+FirstUpperCase.onValidate(box, ($moldClass) object, value, selfId, session))
 end
 
 def trigger(valueMethod)

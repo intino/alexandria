@@ -11,6 +11,9 @@ AlexandriaTemporalTimeCatalogBehaviors.Requester = {
     timezoneOffset : function(value) {
     	this.carry("timezoneOffset", { "value" : value });
     },
+    refreshItems : function() {
+    	this.carry("refreshItems");
+    },
     home : function() {
     	this.carry("home");
     },

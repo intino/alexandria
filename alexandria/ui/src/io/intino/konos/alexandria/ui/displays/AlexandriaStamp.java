@@ -48,4 +48,6 @@ public class AlexandriaStamp<N extends AlexandriaDisplayNotifier> extends Alexan
         provider.refreshElement();
     }
 
+    public void resizeItem() { provider.resizeItem(); }
+
 }

@@ -401,7 +401,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.refresh();
 		dialogBox.onAccept((value) -> {
 			display.currentView().ifPresent(v -> {
-				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), session());
+				StampResult result = catalogOperation.execute(event.item(), ((AlexandriaViewContainerCollection) v).selectedItems(), id(), session());
 				StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 				if (refresh == StampResult.Refresh.Item) refresh(this.currentItem());
 				else if (refresh == StampResult.Refresh.Container) forceRefresh();
@@ -525,7 +525,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 		if (operation instanceof TaskSelection) {
 			TaskSelection taskSelectionOperation = (TaskSelection)operation;
-			ToolbarSelectionResult result = taskSelectionOperation.execute(element(), option, selection, session());
+			ToolbarSelectionResult result = taskSelectionOperation.execute(element(), option, selection, id(), session());
 			ToolbarSelectionResult.Refresh refresh = result != null ? result.refresh() : ToolbarSelectionResult.none().refresh();
 			if (refresh == ToolbarSelectionResult.Refresh.Container) this.forceRefresh();
 			else if (refresh == ToolbarSelectionResult.Refresh.Selection) this.refresh(selection.toArray(new Item[selection.size()]));
@@ -556,7 +556,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 			dialogBox.refresh();
 			dialogBox.onAccept((value) -> {
 				display.currentView().ifPresent(v -> {
-					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaViewContainerCollection) v).selectedItems(), session());
+					ToolbarSelectionResult result = catalogOperation.execute(element(), selection, ((AlexandriaViewContainerCollection) v).selectedItems(), id(), session());
 					ToolbarSelectionResult.Refresh refresh = result != null ? result.refresh() : ToolbarSelectionResult.none().refresh();
 					if (refresh == ToolbarSelectionResult.Refresh.Item) refresh(this.currentItem());
 					else if (refresh == ToolbarSelectionResult.Refresh.Container) forceRefresh();

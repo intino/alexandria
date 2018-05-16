@@ -252,6 +252,10 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		forceRefresh();
 	}
 
+	@Override
+	public void resizeItem() {
+	}
+
 	public void changeItem(ChangeItemParameters value) {
 		provider.changeItem(item, value);
 	}
