@@ -111,6 +111,11 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 		notifier.refreshCount(count);
 	}
 
+	@Override
+	protected void notifyNearToEnd() {
+		provider().itemsLoaded(null, null);
+	}
+
 	private void sendView() {
 		notifier.refreshView(ElementViewBuilder.build(view(), provider()));
 	}

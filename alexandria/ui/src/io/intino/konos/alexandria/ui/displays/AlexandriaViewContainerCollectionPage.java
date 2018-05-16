@@ -46,10 +46,14 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
         return this.page;
     }
 
-    public void page(int index) {
+    public synchronized void page(int index) {
         this.page = index;
         this.checkPageRange();
         this.sendItems(start(), limit());
+        if (isNearToEnd()) {
+            notifyNearToEnd();
+            sendCount(countItems());
+        }
     }
 
     public void pageSize(int pageSize) {
@@ -66,6 +70,10 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
 
     public void firstPage() {
         page(0);
+    }
+
+    public boolean isNearToEnd() {
+        return page >= countPages()-2;
     }
 
     public void lastPage() {
@@ -97,6 +105,7 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
     protected abstract void sendClear();
     protected abstract void sendPageSize(int pageSize);
     protected abstract void sendCount(int count);
+    protected abstract void notifyNearToEnd();
 
     private void notifySelectListeners(List<String> selection) {
         selectListeners.forEach(listener -> listener.accept(selection));

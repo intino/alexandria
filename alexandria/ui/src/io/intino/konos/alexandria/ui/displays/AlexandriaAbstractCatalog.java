@@ -222,6 +222,9 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		return this;
 	}
 
+	public void itemsLoaded(String condition, Sorting sorting) {
+	}
+
 	protected abstract void sendCatalog();
 	protected abstract ItemList filteredItemList(Scope scope, String condition);
 	protected abstract void notifyItemsArrival();

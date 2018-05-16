@@ -17,6 +17,8 @@ import java.util.Map;
 
 public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> implements TemporalCatalogViewDisplayProvider {
 	private N navigatorDisplay = null;
+	private static final int MinItems = 30;
+	private boolean addingItems = false;
 
 	public AlexandriaTemporalCatalog(Box box, N navigatorDisplay) {
 		super(box);
@@ -121,6 +123,22 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	@Override
+	public synchronized void itemsLoaded(String condition, Sorting sorting) {
+		ItemList newItemList = new ItemList();
+		while(newItemList.size() < 30 && this.timeScaleHandler().boundsRange().from().isBefore(this.timeScaleHandler().range().from())) {
+			TimeRange currentRange = range();
+			long movement = currentRange.scale().instantsBetween(currentRange.from(), currentRange.to());
+			Instant from = currentRange.scale().addTo(currentRange.from(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
+			Instant to = currentRange.scale().addTo(currentRange.to(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
+			TimeRange range = new TimeRange(from, to, currentRange.scale());
+			range(range);
+			timeScaleHandler().updateRange(range.from(), range.to(), false);
+			newItemList.addAll(filteredItemList(scopeWithAttachedGrouping(), condition));
+		}
+		itemList.addAll(newItemList);
+	}
+
+	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
 		TimeRange range = showAll() ? timeScaleHandler().boundsRange() : queryRange();
 		ItemList itemList = element().items(scope, condition, range, session());
@@ -189,7 +207,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	protected boolean equalsRange() {
 		TimeRange range = timeScaleHandler().range();
-		return range() != null && range().from() == range.from() && range().scale() == range.scale();
+		return range() != null && range().from().equals(range.from()) && range().scale() == range.scale();
 	}
 
 	protected abstract int maxZoom();
