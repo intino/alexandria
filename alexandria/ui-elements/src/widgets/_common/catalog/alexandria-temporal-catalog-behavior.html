@@ -1,46 +1,43 @@
 <script>
     var AlexandriaBehaviors = AlexandriaBehaviors || {};
 
-    AlexandriaBehaviors.CatalogBehavior = {
+    AlexandriaBehaviors.TemporalCatalogBehavior = {
 
         properties : {
-            _catalog: Object,
             _filtered : { type: Boolean, value: function() { return false; }},
-            _hideGroupings: { type: Boolean, value: function() { return true; }}
+            _navigatorLayout : { type: String, value: function() { return ""; }},
+            _temporalNavigatorName : String,
+            _hideNavigatorTimeout : Number
         },
 
-        _refreshCatalog : function(catalog) {
-            this._catalog = catalog;
-            this._hideGroupings = this._catalog.hideGroupings;
+        _addScrollListener : function(name) {
+            this._temporalNavigatorName = name;
+            this.addEventListener("scroll", () => {
+                this._showScrollingRangeNavigators(this);
+            if (this._hideNavigatorTimeout != null) window.clearTimeout(this._hideNavigatorTimeout);
+            this._hideNavigatorTimeout = window.setTimeout(() => this._hideScrollingRangeNavigators(), 1500);
+        });
         },
 
-        _refreshFiltered : function(value) {
-            this._filtered = value;
+        _showScrollingRangeNavigators : function() {
+            var navigator = this.querySelector(this._temporalNavigatorName);
+            if (navigator == null || !navigator.isVisible) return;
+            $(navigator).addClass("visible");
         },
 
-        _selectGrouping : function(event) {
+        _hideScrollingRangeNavigators : function() {
+            var navigator = this.querySelector("alexandria-vertical-time-range-navigator");
+            if (navigator == null || !navigator.isVisible) return;
+            $(navigator).removeClass("visible");
         },
 
-        _handleGroupingChange : function(event) {
-            this.selectGrouping(event.detail);
+        _loadTimezoneOffset : function() {
+            this.timezoneOffset(new Date().getTimezoneOffset()*-1);
         },
 
-        _showGroupingsDialog : function () {
-            this.$.groupingsDialog.open();
-        },
-
-        _itemsArrival : function() {
-            this.querySelector("paper-toast#itemsArrival").open();
-        },
-
-        _closeItemsArrival : function() {
-            this.querySelector("paper-toast#itemsArrival").close();
-        },
-
-        _refreshWithArrival : function() {
-            this.refreshItems();
-            this._closeItemsArrival();
-        },
+        _refreshNavigatorLayout : function(layout) {
+            this._navigatorLayout = layout;
+        }
 
     };
 </script>

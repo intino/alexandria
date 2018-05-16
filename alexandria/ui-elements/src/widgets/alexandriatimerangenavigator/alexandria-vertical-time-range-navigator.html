@@ -96,7 +96,7 @@
             _refreshRange : function(range) {
                 this._range = range;
                 this._selectedScale = range.scale;
-                this.$.timeline.scale = range.scale;
+                this.$.timeline.scale = this._timelineScale(range.scale);
                 this.$.timeline.update(range.max);
             },
 
@@ -131,6 +131,12 @@
 
             _updateRangeLimit : function(event) {
                 this.selectTo(event.detail.date);
+            },
+
+            _timelineScale : function(scale) {
+                if (scale == "Year" || scale == "QuarterOfYear" || scale == "Month") return "Year";
+                if (scale == "SixHours" || scale == "Hour" || scale == "Minute" || scale == "Seconds") return "Day";
+                return "Month";
             }
 
         });

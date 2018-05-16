@@ -94,7 +94,7 @@
 
             _refreshScale : function(scale) {
                 this._selectedScale = scale;
-                this.$.timeline.scale = scale;
+                this.$.timeline.scale = this._timelineScale(scale);
             },
 
             _refreshDate : function(date) {
@@ -132,8 +132,13 @@
 
             _updateSelectorDate : function(event) {
                 this.selectDate(event.detail.date);
-            }
+            },
 
+            _timelineScale : function(scale) {
+                if (scale == "Year" || scale == "QuarterOfYear" || scale == "Month") return "Year";
+                if (scale == "SixHours" || scale == "Hour" || scale == "Minute" || scale == "Seconds") return "Day";
+                return "Month";
+            }
         });
     </script>
 </dom-module>
