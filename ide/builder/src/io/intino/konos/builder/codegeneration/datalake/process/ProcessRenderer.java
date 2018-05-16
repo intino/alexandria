@@ -20,7 +20,7 @@ public class ProcessRenderer {
 	private final String boxName;
 
 	public ProcessRenderer(KonosGraph graph, File src, String packageName, String boxName) {
-		this.processes = !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
+		this.processes = processes(graph);
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -51,5 +51,10 @@ public class ProcessRenderer {
 
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
+	}
+
+	private List<Process> processes(KonosGraph graph) {
+		if (graph == null) return Collections.emptyList();
+		return !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
 	}
 }
