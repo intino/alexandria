@@ -3,6 +3,7 @@ package io.intino.konos.alexandria.schema;
 
 import io.intino.konos.alexandria.schema.Formatters.Formatter;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -144,6 +145,11 @@ public class Serializer {
 		return isPrimitive(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
 	}
 
+	static boolean isAttachment(Field field) {
+		final Class<?> aClass = field.getType();
+		return aClass.equals(Resource.class);
+	}
+
 	private static boolean isArrayOfPrimitives(Class<?> aClass) {
 		return aClass.isArray() && isPrimitive(aClass.getComponentType());
 	}
@@ -155,6 +161,7 @@ public class Serializer {
 	private static boolean isPrimitive(Class<?> aClass) {
 		return isPrimitive(aClass.getName()) || aClass.isPrimitive();
 	}
+
 
 	private static String[] primitives = {"java.lang", Resource.class.getName(), "java.time"};
 

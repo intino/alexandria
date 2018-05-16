@@ -1,6 +1,7 @@
 package io.intino.konos.alexandria.schema;
 
 import io.intino.ness.inl.Message;
+import io.intino.ness.inl.Message.Attachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public class MessageToObject {
 
 	private static <T> Object fillObject(Message message, Class<T> aClass, Object object) {
 		attributes(message, aClass, object);
+		attachments(message, aClass, object);
 		components(message, aClass, object);
 		return object;
 	}
@@ -34,6 +36,13 @@ public class MessageToObject {
 		for (String attr : message.attributes()) {
 			Field field = fieldByName(aClass, attr);
 			if (field != null) setField(field, object, parserOf(field).parse(message.get(attr)));
+		}
+	}
+
+	private static <T> void attachments(Message message, Class<T> aClass, Object object) {
+		for (Attachment attachment : message.attachments()) {
+			Field field = fieldByName(aClass, attachment.id());
+			if (field != null) setField(field, object, new Resource(attachment.id()).data(attachment.data()));
 		}
 	}
 

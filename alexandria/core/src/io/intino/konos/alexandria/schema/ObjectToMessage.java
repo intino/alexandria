@@ -7,8 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.intino.konos.alexandria.schema.Serializer.isAttribute;
-import static io.intino.konos.alexandria.schema.Serializer.isEmpty;
+import static io.intino.konos.alexandria.schema.Serializer.*;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.lang.reflect.Modifier.isTransient;
 import static java.util.Objects.isNull;
@@ -22,6 +21,7 @@ public class ObjectToMessage {
 			if (!isConvertible(field)) continue;
 			Object value = valueOf(field, object);
 			if (isNull(value) || isEmpty(value)) continue;
+			if (isAttachment(field)) convertAttachment(message, field, value);
 			if (isAttribute(field)) convertAttribute(message, field, value);
 			else {
 				if (isList(field) || isArray(field)) valuesOf(field, object).forEach(v -> message.add(toMessage(v)));
@@ -29,6 +29,10 @@ public class ObjectToMessage {
 			}
 		}
 		return message;
+	}
+
+	private static void convertAttachment(Message message, Field field, Object value) {
+		message.attachment(field.getName()).data(((Resource) value).data());
 	}
 
 	@SuppressWarnings("unchecked")
