@@ -124,7 +124,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="module" module-name="ness-accessor" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: commons-io:commons-io:2.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:datalake:1.0.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:datalake:1.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="module" module-name="slack" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: com.ullink.slack:simpleslackapi:0.6.0" level="project" />
