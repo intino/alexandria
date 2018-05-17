@@ -9,7 +9,7 @@ Concept Catalog extends Display
 	var string itemClass
 
 	Concept:{0..1} Content
-		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = EnabledButHidden
+		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = Disabled
 
 		Concept:Named Grouping
 			var string label

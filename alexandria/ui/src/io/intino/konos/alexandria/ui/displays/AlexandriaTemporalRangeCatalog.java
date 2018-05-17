@@ -139,6 +139,7 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 
 	public void clearFilter() {
 		super.clearFilter();
+		refresh();
 	}
 
 	public void timezoneOffset(Integer value) {

@@ -120,6 +120,7 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 
 	public void clearFilter() {
 		super.clearFilter();
+		refresh();
 	}
 
 	public void timezoneOffset(Integer value) {

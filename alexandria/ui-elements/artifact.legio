@@ -10,7 +10,7 @@ Artifact(groupId = "io.intino.konos", version = "1.0.3") alexandria-ui-elements
 		WebComponent("numeraljs", "1.5.6") numeral
 		WebComponent("sortable.js", "1.4.2") Sortable
 
-		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.2.0") cotton-carrier
+		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.2.1") cotton-carrier
 		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.1.0") cotton-push
 		WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "1.1.2") cotton-translator
 		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "1.3.2") cotton-zombie

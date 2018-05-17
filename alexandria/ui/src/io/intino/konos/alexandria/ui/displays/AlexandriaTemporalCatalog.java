@@ -40,6 +40,14 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	@Override
+	public void clearFilter() {
+		super.clearFilter();
+		timeScaleHandler().reset();
+		range(timeScaleHandler().range());
+		refresh();
+	}
+
+	@Override
 	public void forceRefresh() {
 		reset();
 	}
