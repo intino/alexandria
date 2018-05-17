@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toMap;
+
 public class MessageTranslator {
 	private static Logger logger = LoggerFactory.getLogger(MessageTranslator.class);
 
@@ -33,7 +35,7 @@ public class MessageTranslator {
 				}
 				return result;
 			} else return Message.load(((TextMessage) message).getText());
-		} catch (JMSException e) {
+		} catch (Throwable e) {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
@@ -42,7 +44,7 @@ public class MessageTranslator {
 	public static javax.jms.Message fromInlMessage(Message message) {
 		if (!message.attachments().isEmpty()) {
 			javax.jms.Message result = MessageFactory.byteMessage();
-			addAttachments((BytesMessage) result);
+			addAttachments((BytesMessage) result, message);
 			addTextMessage(message, (BytesMessage) result);
 			return result;
 		} else return MessageFactory.createMessageFor(message.toString());
@@ -52,7 +54,7 @@ public class MessageTranslator {
 		try {
 			final String[] ids = message.getStringProperty(ATTACHMENT_IDS).split(",");
 			final String[] sizes = message.getStringProperty(ATTACHMENT_SIZES).split(",");
-			return IntStream.range(0, ids.length).boxed().collect(Collectors.toMap(i -> ids[i], i -> Integer.parseInt(sizes[i]), (a, b) -> b));
+			return IntStream.range(0, ids.length).boxed().collect(toMap(i -> ids[i], i -> Integer.parseInt(sizes[i])));
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return Collections.emptyMap();
@@ -67,7 +69,13 @@ public class MessageTranslator {
 		}
 	}
 
-	private static void addAttachments(BytesMessage bytesMessage) {
-
+	private static void addAttachments(BytesMessage bytesMessage, Message message) {
+		try {
+			bytesMessage.setStringProperty(ATTACHMENT_IDS, String.join(",", message.attachments().stream().map(Message.Attachment::id).toArray(String[]::new)));
+			bytesMessage.setStringProperty(ATTACHMENT_SIZES, String.join(",", message.attachments().stream().map(a -> a.data().length + "").toArray(String[]::new)));
+			for (Message.Attachment attachment : message.attachments()) bytesMessage.writeBytes(attachment.data());
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 }

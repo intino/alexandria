@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class ItemList {
 	private List<Item> items;
 	private ElementViewDisplayProvider.Sorting sorting = null;
+	private boolean sorted = false;
 
 	public ItemList() {
 		this.items = new ArrayList<>();
@@ -33,7 +34,8 @@ public class ItemList {
 	}
 
 	public ItemList sort(ElementViewDisplayProvider.Sorting sorting) {
-		if (sorting == null || this.sorting == sorting) return this;
+		if (sorting == null) return this;
+		if (sorted && this.sorting == sorting) return this;
 
 		this.sorting = sorting;
 		items.sort(sorting::comparator);
@@ -41,6 +43,7 @@ public class ItemList {
 		if (sorting.mode() == ElementViewDisplayProvider.Sorting.Mode.Descendant)
 			Collections.reverse(items);
 
+		sorted = true;
 		return this;
 	}
 
@@ -59,4 +62,12 @@ public class ItemList {
 		return items(start, limit);
 	}
 
+	public int size() {
+		return items.size();
+	}
+
+	public void addAll(ItemList itemList) {
+		items.addAll(itemList.items);
+		sorted = false;
+	}
 }

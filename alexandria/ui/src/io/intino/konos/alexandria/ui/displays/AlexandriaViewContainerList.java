@@ -147,6 +147,11 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 	}
 
 	@Override
+	protected void notifyNearToEnd() {
+		provider().itemsLoaded(condition, sorting);
+	}
+
+	@Override
 	protected void init() {
 		super.init();
 

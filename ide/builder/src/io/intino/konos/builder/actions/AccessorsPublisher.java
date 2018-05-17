@@ -200,7 +200,6 @@ class AccessorsPublisher {
 				addSlot("url", url);
 	}
 
-
 	private void notifySuccess(Configuration conf, String app) {
 		final NotificationGroup balloon = NotificationGroup.toolWindowGroup("Tara Language", "Balloon");
 		balloon.createNotification("Accessors generated and uploaded", message(), INFORMATION, (n, e) -> {
