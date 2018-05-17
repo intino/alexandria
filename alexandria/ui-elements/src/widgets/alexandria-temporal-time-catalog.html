@@ -13,6 +13,7 @@
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
 <link rel="import" href="_common/catalog/alexandria-catalog-behavior.html">
+<link rel="import" href="_common/catalog/alexandria-temporal-catalog-behavior.html">
 
 <script src="alexandriatemporaltimecatalog/requester.js"></script>
 <script src="alexandriatemporaltimecatalog/notifier-listener.js"></script>
@@ -64,9 +65,6 @@
         }
         :host .main.Vertical {
             position: relative;
-        }
-        :host .main.Vertical alexandria-catalog-view-list ::content alexandria-catalog-list .list-body {
-            width: calc(100% - 100px) !important;
         }
         :host .embedded_true .main {
             border-right-width: 0;
@@ -147,10 +145,22 @@
             margin-right: 20px;
             padding-left: 30px;
             height: calc(100% - 57px);
+            visibility: hidden;
+            opacity:0;
+            transition: opacity 0.5s linear;
+        }
+        :host alexandria-vertical-time-navigator.visible {
+            visibility: visible;
+            opacity: 0.8;
+            transition: opacity 0.5s linear;
+        }
+        :host alexandria-vertical-time-navigator:hover {
+            opacity: 1;
+            visibility: visible;
         }
         :host .filtered_true alexandria-vertical-time-navigator {
-            margin-top: 77px;
-            height: calc(100% - 77px);
+            margin-top: 87px;
+            height: calc(100% - 87px);
         }
         :host cotton-breadcrumbs {
             display: block;
@@ -190,9 +200,6 @@
             }
         }
         @media screen and (max-width: 540px) {
-            :host .main.Vertical alexandria-catalog-view-list ::content alexandria-catalog-list .list-body {
-                width: calc(100% - 85px) !important;
-            }
         }
     </style>
 
@@ -222,31 +229,24 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.TemporalCatalogBehavior,
                 AlexandriaBehaviors.CatalogBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaTemporalTimeCatalogBehaviors.Requester,
                 AlexandriaTemporalTimeCatalogBehaviors.NotifierListener ],
 
-            properties : {
-                _filtered : { type: Boolean, value: function() { return false; }},
-                _navigatorLayout : { type: String, value: function() { return ""; }}
-            },
-
             attached : function() {
                 this.translate(AlexandriaTemporalTimeCatalogDictionary);
                 this.listenToDisplay();
                 this.listenOpenEvents();
-            },
-
-            _loadTimezoneOffset : function() {
-                this.timezoneOffset(new Date().getTimezoneOffset()*-1);
+                this._addScrollListener("alexandria-vertical-time-navigator");
             },
 
             _showTimeNavigator : function() {
                 var navigator = this.querySelector("alexandria-time-navigator");
                 if (navigator != null) navigator.hidden = false;
                 navigator = this.querySelector("alexandria-vertical-time-navigator");
-                if (navigator != null) navigator.hidden = false;
+                if (navigator != null) navigator.isVisible = true;
 
                 if (this._navigatorLayout != null && this._navigatorLayout == "Vertical") $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
                 else $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
@@ -256,12 +256,8 @@
                 var navigator = this.querySelector("alexandria-time-navigator");
                 if (navigator != null) navigator.hidden = true;
                 navigator = this.querySelector("alexandria-vertical-time-navigator");
-                if (navigator != null) navigator.hidden = true;
+                if (navigator != null) navigator.isVisible = false;
                 $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
-            },
-
-            _refreshNavigatorLayout : function(layout) {
-                this._navigatorLayout = layout;
             }
 
         });
