@@ -22,7 +22,7 @@ public class Catalog extends Element {
 	private Events events;
 
 	public Catalog() {
-		arrangementHistogramsMode = ArrangementHistogramsMode.EnabledAndVisible;
+		arrangementHistogramsMode = ArrangementHistogramsMode.Disabled;
 		mode = Mode.Normal;
 	}
 

@@ -79,6 +79,7 @@ public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends Ale
 
 	public void clearFilter() {
 		super.clearFilter();
+		refresh();
 	}
 
 	@Override

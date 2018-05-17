@@ -127,7 +127,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		filterAndNotify(null);
 		if (!hasDynamicFilters) return;
 		target(null);
-		refresh();
 	}
 
 	public List<Block> blocks() {
