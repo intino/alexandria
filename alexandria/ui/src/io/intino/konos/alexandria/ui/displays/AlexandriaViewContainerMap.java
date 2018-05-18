@@ -113,7 +113,7 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 
 	@Override
 	protected void notifyNearToEnd() {
-		provider().itemsLoaded(null, null);
+		provider().loadMoreItems(null, null, PageSize);
 	}
 
 	private void sendView() {

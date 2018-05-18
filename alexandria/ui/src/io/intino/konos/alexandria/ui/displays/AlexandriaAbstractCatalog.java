@@ -5,10 +5,7 @@ import io.intino.konos.alexandria.ui.displays.events.OpenElementEvent;
 import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.konos.alexandria.ui.helpers.ElementHelper;
-import io.intino.konos.alexandria.ui.model.Catalog;
-import io.intino.konos.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.model.ItemList;
-import io.intino.konos.alexandria.ui.model.View;
+import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.catalog.Events;
 import io.intino.konos.alexandria.ui.model.catalog.Scope;
 import io.intino.konos.alexandria.ui.model.catalog.arrangement.Group;
@@ -222,7 +219,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		return this;
 	}
 
-	public void itemsLoaded(String condition, Sorting sorting) {
+	public void loadMoreItems(String condition, Sorting sorting, int minCount) {
 	}
 
 	protected abstract void sendCatalog();

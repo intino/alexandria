@@ -107,9 +107,9 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
-	protected TimeRange queryRange() {
+	protected TimeRange queryRange(TimeRange range) {
 		int offset = timezoneOffset();
-		TimeRange range = timeScaleHandler().range();
+		range = range != null ? range : timeScaleHandler().range();
 		Instant newFrom = range.scale().normalise(range.from().plusSeconds(offset * 3600));
 		Instant newTo = range.scale().nextTime(newFrom);
 		while(!newTo.isAfter(range.to())) newTo = range.scale().nextTime(newTo);
@@ -139,7 +139,6 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 
 	public void clearFilter() {
 		super.clearFilter();
-		refresh();
 	}
 
 	public void timezoneOffset(Integer value) {
