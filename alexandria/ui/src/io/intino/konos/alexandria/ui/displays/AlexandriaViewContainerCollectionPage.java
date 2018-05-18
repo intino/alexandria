@@ -15,7 +15,7 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
     private List<Consumer<List<String>>> selectListeners = new ArrayList<>();
     private List<String> selection = new ArrayList<>();
 
-    private static final int PageSize = 20;
+    protected static final int PageSize = 20;
 
     public AlexandriaViewContainerCollectionPage(Box box) {
         super(box);
@@ -51,8 +51,10 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
         this.checkPageRange();
         this.sendItems(start(), limit());
         if (isNearToEnd()) {
+            int count = countItems();
             notifyNearToEnd();
-            sendCount(countItems());
+            if (count < PageSize && countItems() > PageSize) refresh();
+            else sendCount(countItems());
         }
     }
 

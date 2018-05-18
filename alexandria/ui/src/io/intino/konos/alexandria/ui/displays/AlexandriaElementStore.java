@@ -31,7 +31,6 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
 
         if (display != null) {
             display.clearFilter();
-            display.refresh();
             refreshOpened(normalizedKey);
             return display;
         }

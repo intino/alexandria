@@ -13,7 +13,7 @@ public interface CatalogViewDisplayProvider extends ElementViewDisplayProvider {
     Item rootItem(List<Item> itemList);
     Item defaultItem(String name);
     List<io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting> sortings();
-    void itemsLoaded(String condition, Sorting sorting);
+    void loadMoreItems(String condition, Sorting sorting, int minCount);
 
     io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting sorting(String name);
 }
