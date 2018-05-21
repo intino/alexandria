@@ -191,7 +191,12 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 
 	@Override
 	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
-		notifier.refreshItem(item);
+		refresh(item, true);
+	}
+
+	@Override
+	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(highlight));
 		if (recordDisplaysMap.containsKey(item.name()))
 			recordDisplaysMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
 		if (recordDialogsMap.containsKey(item.name()))
@@ -200,11 +205,16 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 
 	@Override
 	public void refreshItem() {
+		refreshItem(true);
+	}
+
+	@Override
+	public void refreshItem(boolean highlight) {
 		ItemBuilder.ItemBuilderProvider provider = itemBuilderProvider(provider(), view());
 
 		selection().forEach(itemKey -> {
 			io.intino.konos.alexandria.ui.model.Item item = itemOf(itemKey);
-			refresh(ItemBuilder.build(item, item.id(), provider, baseAssetUrl()));
+			refresh(ItemBuilder.build(item, item.id(), provider, baseAssetUrl()), highlight);
 		});
 	}
 

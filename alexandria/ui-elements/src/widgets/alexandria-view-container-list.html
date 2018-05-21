@@ -94,8 +94,9 @@
                 this._pageSize = pageSize;
             },
 
-            _refreshItem : function(item) {
-                this.querySelector("alexandria-catalog-list").refreshItem(item);
+            _refreshItem : function(info) {
+                var item = info.item;
+                this.querySelector("alexandria-catalog-list").refreshItem(info);
                 this.itemRefreshed(item.name);
             },
 

@@ -358,7 +358,8 @@
                 if (list != null) list.clear();
             },
 
-            refreshItem : function(item) {
+            refreshItem : function(info) {
+                var item = info.item;
                 var oldItem = this._getComponentItem(this.$.items, item.name);
                 var index = this._getComponentItemIndex(this.$.items, item.name);
 
@@ -371,7 +372,7 @@
                         this.set("selectedItemList." + i, item);
 
                 var item = this.querySelector("alexandria-mold-container[name=\"_item_" + item.name + "\"]");
-                if (item != null) item.highlight();
+                if (item != null && info.highlight) item.highlight();
             },
 
             resizeItem : function(item) {

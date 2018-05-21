@@ -118,7 +118,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
-		sendInfo(item);
+		sendInfo(item, true);
+	}
+
+	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+		sendInfo(item, highlight);
 	}
 
 	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
@@ -253,6 +257,11 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	@Override
+	public void refreshItem(boolean highlight) {
+		forceRefresh();
+	}
+
+	@Override
 	public void resizeItem() {
 	}
 
@@ -302,8 +311,8 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		}));
 	}
 
-	private void sendInfo(io.intino.konos.alexandria.ui.schemas.Item item) {
-		notifier.refresh(new ItemRefreshInfo().mold(mold.type()).item(item));
+	private void sendInfo(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+		notifier.refresh(new ItemRefreshInfo().mold(mold.type()).item(item).highlight(highlight));
 	}
 
 	private void sendInfo() {
@@ -327,7 +336,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 			public TimeScale scale() {
 				return provider.range() != null ? provider.range().scale() : null;
 			}
-		}, baseAssetUrl()));
+		}, baseAssetUrl()), true);
 	}
 
 	private void sendEmptyMessage() {

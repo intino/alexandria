@@ -244,7 +244,7 @@
         _propertyValueOf: function (stamp, propertyName) {
             var property = this._propertyOf(stamp.properties, propertyName);
             if (property == null && this.item != null) property = this._propertyOf(this._itemFromStamp(stamp).propertyList, propertyName);
-            return property !== null ? property.value : "";
+            return property !== null ? this._parseFunctions(property.value) : "";
         },
 
         _classesFor : function(stamp) {
