@@ -146,6 +146,7 @@ Schema GroupingSelection
 
 Schema ItemRefreshInfo
 	Attribute mold as Text
+	Attribute highlight as Bool
 	Has(Item, multiple=false)
 
 Schema ItemValidationRefreshInfo

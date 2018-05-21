@@ -123,7 +123,7 @@ public class RESTAccessorRenderer {
 				builder.append(" + \"/\" + ").append(asMethodParameter(pathPortion.substring(1)));
 			else builder.append(" + \"/").append(pathPortion).append("\"");
 		}
-		return builder.toString().substring(3);
+			return builder.toString().substring(3);
 	}
 
 	private String asMethodParameter(String parameter) {
