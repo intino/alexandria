@@ -32,7 +32,8 @@ public class ObjectToMessage {
 	}
 
 	private static void convertAttachment(Message message, Field field, Object value) {
-		message.attachment(field.getName()).data(((Resource) value).data());
+		Resource resource = (Resource) value;
+		message.set(field.getName(), resource.id(), resource.type(), resource.data());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -20,11 +20,11 @@ def type(operations)
 
 		}
 
-		int blockSize() {
+		int defaultBlockSize() {
 			return Integer.MAX_VALUE;
 		}
 
-		List<Datalake.Tank> tanks() {
+		List<Datalake.Tank> defaultTanks() {
 		 	return java.util.Collections.emptyList(); //TODO
 		}
 
