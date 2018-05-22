@@ -79,8 +79,7 @@ public class MessageToObject {
 
 	private static List append(List current, List value) {
 		if (current == null) current = new ArrayList();
-		final Object o = value.get(value.size() - 1);
-		current.add(o);
+		current.addAll(value);
 		return current;
 	}
 
