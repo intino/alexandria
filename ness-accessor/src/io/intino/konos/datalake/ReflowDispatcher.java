@@ -12,7 +12,7 @@ public class ReflowDispatcher {
 
 	public ReflowDispatcher(List<Datalake.Tank> tanks, MessageHandler onBlock, MessageHandler onFinish) {
 		this.tanks = tanks;
-		this.handlers = tanks.stream().collect(Collectors.toMap(tank -> typeOf(tank), t -> t::handle));
+		this.handlers = tanks.stream().collect(Collectors.toMap(this::typeOf, t -> t::handle));
 		handlers.put("endblock", onBlock);
 		handlers.put("endreflow", onFinish);
 	}

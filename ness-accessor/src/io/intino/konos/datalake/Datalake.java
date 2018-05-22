@@ -3,15 +3,12 @@ package io.intino.konos.datalake;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
-import java.time.Instant;
-import java.util.List;
-
 public interface Datalake {
 	String REFLOW_PATH = "service.ness.reflow";
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
 
-	ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from);
+	ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher);
 
 	void commit();
 
