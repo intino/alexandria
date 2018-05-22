@@ -1,7 +1,7 @@
 package io.intino.konos.datalake.jms;
 
 import io.intino.konos.datalake.Datalake;
-import io.intino.konos.datalake.Reflow;
+import io.intino.konos.datalake.ReflowConfiguration;
 import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.konos.datalake.fs.FSDatalake;
 import io.intino.konos.jms.TopicConsumer;
@@ -16,7 +16,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.File;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ import static io.intino.konos.jms.MessageFactory.createMessageFor;
 import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 public class JMSDatalake implements Datalake {
 	private static Logger logger = LoggerFactory.getLogger(JMSDatalake.class);
@@ -63,23 +61,23 @@ public class JMSDatalake implements Datalake {
 		return session;
 	}
 
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
+	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
 		TopicProducer producer = newProducer(REFLOW_PATH);
 		String quickURL = tryWithQuickReflow(producer);
 		if (quickURL != null && new File(quickURL.replace("file://", "")).exists())
 			return requestResponse(producer, requireNonNull(createMessageFor("startQuickReflow"))).equalsIgnoreCase("ack") ?
-					fsReflow(blockSize, dispatcher, from, producer, quickURL) : null;
-		else return reflow(blockSize, dispatcher, from, producer);
+					fsReflow(reflow, dispatcher, producer, quickURL) : null;
+		else return reflow(reflow, dispatcher, producer);
 	}
 
-	private ReflowSession fsReflow(int blockSize, ReflowDispatcher dispatcher, Instant from, TopicProducer producer, String quickURL) {
+	private ReflowSession fsReflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, TopicProducer producer, String quickURL) {
 		final FSDatalake fsDatalake = new FSDatalake(quickURL);
 		dispatcher.tanks().forEach(t -> fsDatalake.add(t.name()));
-		return fsDatalake.reflow(blockSize, dispatcher, from, () -> producer.produce(createMessageFor("finish")));
+		return fsDatalake.reflow(reflow, dispatcher, () -> producer.produce(createMessageFor("finish")));
 	}
 
-	private ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, TopicProducer producer) {
-		producer.produce(createMessageFor(new Reflow().blockSize(blockSize).from(from).tanks(dispatcher.tanks().stream().map(Tank::name).collect(toList()))));
+	private ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, TopicProducer producer) {
+		producer.produce(createMessageFor(reflow));
 		waitUntilReflowSession();
 		TopicConsumer topicConsumer = new TopicConsumer(session, FLOW_PATH);
 		topicConsumer.listen(m -> consume(dispatcher, m), "consumer-" + FLOW_PATH);

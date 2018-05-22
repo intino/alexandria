@@ -11,7 +11,6 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.Collections;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toMap;
