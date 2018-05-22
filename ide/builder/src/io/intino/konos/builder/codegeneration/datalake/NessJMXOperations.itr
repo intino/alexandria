@@ -9,13 +9,17 @@ def type(interface)
 		@Parameters({})
 		java.util.List<String> help();
 
-    	@Description("Starts remount mode to reproduce events coming from datalake")
+    	@Description("Starts reflow mode to reproduce events coming from datalake")
 		@Parameters({})
     	boolean reflow();
 
-    	@Description("Starts remount mode to reproduce events coming from datalake since instant parameter")
+    	@Description("Starts reflow mode to reproduce events coming from datalake since instant parameter")
 		@Parameters({})
 		boolean reflow(String fromInstant);
+
+		@Description("Starts reflow mode to reproduce events coming from datalake based on reflow configuration. This configuration is coded on INL with io.intino.konos.datalake.ReflowConfiguration schema")
+		@Parameters({})
+		boolean customReflow(String reflowConfiguration);
     }
 end
 
@@ -24,12 +28,14 @@ def type(operations) !type(interface)
 
 	import io.intino.konos.datalake.MessageHandler;
 	import io.intino.konos.datalake.ReflowDispatcher;
+	import io.intino.konos.datalake.ReflowConfiguration;
 	import io.intino.konos.jmx.JMXServer;
 	import io.intino.tara.magritte.Graph;
 	import io.intino.tara.magritte.RemounterGraph;
 	import io.intino.tara.magritte.stores.FileSystemStore;
 	import org.apache.commons.io.FileUtils;
 	import $package+validPackage.$box+FirstUpperCase~Box;
+	import $package+validPackage.ness.TanksConnectors;
 	import org.slf4j.Logger;
 	import org.slf4j.LoggerFactory;
 
@@ -54,26 +60,34 @@ def type(operations) !type(interface)
 
 		public java.util.List<String> help() {
 			java.util.List<String> operations = new java.util.ArrayList<>();
-			operations.add("boolean reflow():Starts remount mode to reproduce events coming from datalake");
+			operations.add("boolean reflow():Starts reflow mode to reproduce events coming from datalake");
+			operations.add("boolean reflow(String from):Starts reflow mode to reproduce events coming from datalake since the instant parameter");
+			operations.add("boolean customReflow(String reflowConfiguration):Starts reflow mode to reproduce events coming from datalake since the instant parameter");
 			return operations;
 		}
 
-		public boolean reflow(String from) {
-			return reflow(Instant.parse(from));
-		}
 
 		public boolean reflow() {
-			return reflow(Instant.MIN);
+			return reflow(new ReflowConfiguration().blockSize(assistant.defaultBlockSize()).tankList(assistant.defaultTanks().stream().map(t -> new ReflowConfiguration.Tank().name(t.name()).from(Instant.MIN)).collect(java.util.stream.Collectors.toList())));
 		}
 
-		public boolean reflow(Instant from) {
+		public boolean reflow(String from) {
+			Instant instant = Instant.parse(from);
+			return reflow(new ReflowConfiguration().blockSize(assistant.defaultBlockSize()).tankList(assistant.defaultTanks().stream().map(t -> new ReflowConfiguration.Tank().name(t.name()).from(instant)).collect(java.util.stream.Collectors.toList())));
+		}
+
+		public boolean customReflow(String reflowConfiguration) {
+			return reflow(io.intino.konos.alexandria.Inl.fromMessage(io.intino.ness.inl.Message.load(reflowConfiguration), ReflowConfiguration.class));
+		}
+
+		private boolean reflow(ReflowConfiguration configuration) {
 			logger.info("Starting Reflow...");
 			assistant.before();
 			TanksConnectors.unregister();
-			this.session = box.datalake().reflow(assistant.blockSize(), new ReflowDispatcher(assistant.tanks(), onBlock(), onFinish()), from);
+			this.session = box.datalake().reflow(configuration, new ReflowDispatcher(TanksConnectors.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
 			final Graph graph = assistant.graph();
 			try {
-				if (graph.store() instanceof FileSystemStore && from.equals(Instant.MIN))
+				if (graph.store() instanceof FileSystemStore && configuration.cleanStore())
 					FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
 				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
 				allowWriting(original, false);

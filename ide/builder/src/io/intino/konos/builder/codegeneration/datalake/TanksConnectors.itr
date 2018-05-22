@@ -29,10 +29,15 @@ def type(tanks)
 			$tank+subscribe...[$NL]
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> tankConnectors() {
+		public static List<io.intino.konos.datalake.Datalake.Tank> all() {
 			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
+		}
+
+		public static List<io.intino.konos.datalake.Datalake.Tank> byName(List<String> names) {
+			List<io.intino.konos.datalake.Datalake.Tank> tanks = all();
+			return tanks.stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
 		}
 
 		$tank+getter...[$NL$NL]

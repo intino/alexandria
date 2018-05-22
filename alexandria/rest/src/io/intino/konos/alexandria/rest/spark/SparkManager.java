@@ -8,6 +8,7 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -43,6 +44,10 @@ public class SparkManager {
 	}
 
 	public <T> T fromQuery(String name, Class<T> type) {
+		return SparkReader.read(request.queryParams(name), type);
+	}
+
+	public <T> T fromQuery(String name, Type type) {
 		return SparkReader.read(request.queryParams(name), type);
 	}
 
