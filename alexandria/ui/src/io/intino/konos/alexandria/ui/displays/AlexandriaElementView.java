@@ -77,6 +77,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	abstract void refresh(io.intino.konos.alexandria.ui.schemas.Item item);
+	abstract void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight);
 	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item);
 
 	public void reset() {

@@ -87,7 +87,8 @@
                 this.notifyPath("_itemList", []);
             },
 
-            refreshItem : function(item) {
+            refreshItem : function(info) {
+                var item = info.item;
                 var catalogItem = this.querySelector("alexandria-catalog-map-item[name='" + item.name + "']");
                 catalogItem.update(item);
             },

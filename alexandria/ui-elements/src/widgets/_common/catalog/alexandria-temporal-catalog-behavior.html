@@ -6,29 +6,43 @@
         properties : {
             _filtered : { type: Boolean, value: function() { return false; }},
             _navigatorLayout : { type: String, value: function() { return ""; }},
-            _temporalNavigatorName : String,
+            _navigator : String,
             _hideNavigatorTimeout : Number
         },
 
-        _addScrollListener : function(name) {
-            this._temporalNavigatorName = name;
+        _addListeners : function(widget) {
+            this._navigator = widget;
+            this._navigator.addEventListener("open-dialog", this._showRangeNavigatorAlways.bind(this));
+            this._navigator.addEventListener("close-dialog", this._hideRangeNavigatorAlways.bind(this));
+            this._addScrollListener(widget);
+        },
+
+        _addScrollListener : function() {
             this.addEventListener("scroll", () => {
-                this._showScrollingRangeNavigators(this);
+                this._showScrollingRangeNavigators();
             if (this._hideNavigatorTimeout != null) window.clearTimeout(this._hideNavigatorTimeout);
             this._hideNavigatorTimeout = window.setTimeout(() => this._hideScrollingRangeNavigators(), 1500);
         });
         },
 
         _showScrollingRangeNavigators : function() {
-            var navigator = this.querySelector(this._temporalNavigatorName);
-            if (navigator == null || !navigator.isVisible) return;
-            $(navigator).addClass("visible");
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).addClass("visible");
+        },
+
+        _showRangeNavigatorAlways : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).addClass("visible-always");
         },
 
         _hideScrollingRangeNavigators : function() {
-            var navigator = this.querySelector("alexandria-vertical-time-range-navigator");
-            if (navigator == null || !navigator.isVisible) return;
-            $(navigator).removeClass("visible");
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).removeClass("visible");
+        },
+
+        _hideRangeNavigatorAlways : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).removeClass("visible-always");
         },
 
         _loadTimezoneOffset : function() {

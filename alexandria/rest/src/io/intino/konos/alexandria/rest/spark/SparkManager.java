@@ -57,7 +57,7 @@ public class SparkManager {
 	public <T> T fromForm(String name, Class<T> type) {
 		try {
 			Part part = request.raw().getPart(name);
-			return (T) new Resource(part.getName()).data(part.getInputStream()).contentType(part.getContentType());
+			return part != null ? (T) new Resource(part.getName()).data(part.getInputStream()).contentType(part.getContentType()) : null;
 		} catch (ServletException | IOException e) {
 			return null;
 		}

@@ -105,8 +105,8 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
-	protected TimeRange queryRange() {
-		return range() != null ? range() : timeScaleHandler().range();
+	protected TimeRange queryRange(TimeRange range) {
+		return range != null ? range : timeScaleHandler().range();
 	}
 
 	@Override

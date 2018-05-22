@@ -51,7 +51,7 @@ public class TimeScaleHandler {
 		return timeRangeOf(currentScale.addTo(timeRange.to(), 1), to, currentScale);
 	}
 
-	void refresh() {
+	public void reset() {
 		this.timeRange = initialTimeRange(currentScale);
 		resetLoadedPoints();
 	}

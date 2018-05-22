@@ -41,7 +41,11 @@ public class AlexandriaStamp<N extends AlexandriaDisplayNotifier> extends Alexan
     }
 
     public void refreshItem() {
-        provider.refreshItem();
+        provider.refreshItem(true);
+    }
+
+    public void refreshItem(boolean highlight) {
+        provider.refreshItem(highlight);
     }
 
     public void refreshElement() {

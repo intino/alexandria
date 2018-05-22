@@ -59,6 +59,11 @@ public class AlexandriaViewContainerMagazine extends AlexandriaViewContainerColl
 	}
 
 	@Override
+	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+		child(AlexandriaItem.class).refresh(item, highlight);
+	}
+
+	@Override
 	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
 		child(AlexandriaItem.class).refreshValidation(validationMessage, stamp, item);
 	}

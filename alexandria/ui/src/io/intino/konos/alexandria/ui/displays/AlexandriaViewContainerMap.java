@@ -67,7 +67,12 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 
 	@Override
 	public void refresh(Item item) {
-		notifier.refreshItem(item);
+		refresh(item, true);
+	}
+
+	@Override
+	public void refresh(Item item, boolean highlight) {
+		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(highlight));
 	}
 
 	@Override
@@ -113,7 +118,7 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 
 	@Override
 	protected void notifyNearToEnd() {
-		provider().itemsLoaded(null, null);
+		provider().loadMoreItems(null, null, PageSize);
 	}
 
 	private void sendView() {
@@ -124,7 +129,7 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 		String decodedId = new String(Base64.getDecoder().decode(id));
 		io.intino.konos.alexandria.ui.model.Item modelItem = provider().item(decodedId);
 		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), view()), provider().baseAssetUrl());
-		notifier.refreshItem(item);
+		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(true));
 		renderExpandedPictures(id);
 	}
 

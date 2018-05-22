@@ -1,6 +1,7 @@
 package io.intino.konos.datalake.fs;
 
 import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.ReflowConfiguration;
 import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.ness.datalake.ReflowMessageInputStream;
 import io.intino.ness.datalake.Scale;
@@ -10,9 +11,7 @@ import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
-import java.time.Instant;
-
-import static java.util.stream.Collectors.toList;
+import java.util.stream.Collectors;
 
 public class FSDatalake implements Datalake {
 
@@ -30,21 +29,21 @@ public class FSDatalake implements Datalake {
 		datalake.tank(name).drop(message);
 	}
 
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
-		return reflow(blockSize, dispatcher, from, () -> {
+	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
+		return reflow(reflow, dispatcher, () -> {
 		});
 	}
 
-	public ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from, Runnable onFinish) {
+	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, Runnable onFinish) {
 		return new ReflowSession() {
-			final ReflowMessageInputStream stream = new ReflowMessageInputStream(dispatcher.tanks().stream().map(t -> datalake.tank(t.name())).collect(toList()), from);
+			final ReflowMessageInputStream stream = new ReflowMessageInputStream(reflow.tankList().stream().collect(Collectors.toMap(t -> datalake.tank(t.name()), ReflowConfiguration.Tank::from)));
 			int messages = 0;
 
 			public void next() {
 				while (stream.hasNext()) {
 					final Message next = stream.next();
 					dispatcher.dispatch(next);
-					if ((++messages % blockSize) == 0) break;
+					if ((++messages % reflow.blockSize()) == 0) break;
 				}
 				dispatcher.dispatch(stream.hasNext() ? createEndBlockMessage(messages) : createEndReflowMessage(messages));
 			}
@@ -86,7 +85,7 @@ public class FSDatalake implements Datalake {
 
 	private String clean(String url) {
 		final int index = url.indexOf("?");
-		if (index!= -1) url = url.substring(0, index);
+		if (index != -1) url = url.substring(0, index);
 		return url.replace("file://", "");
 	}
 

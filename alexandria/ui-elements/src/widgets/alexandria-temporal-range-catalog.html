@@ -31,7 +31,7 @@
             <div class$="main flex [[_navigatorLayout]]">
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
-                <cotton-zombie display="AlexandriaTimeRangeNavigator" widget$="Alexandria[[_navigatorLayout]]TimeRangeNavigator" object$="[[display.id]]"></cotton-zombie>
+                <cotton-zombie id="navigator" display="AlexandriaTimeRangeNavigator" widget$="Alexandria[[_navigatorLayout]]TimeRangeNavigator" object$="[[display.id]]"></cotton-zombie>
             </div>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
@@ -95,7 +95,7 @@
             cursor: pointer;
             width: calc(100% - 20px);
             display: block;
-            text-align: right;
+            text-align: left;
             font-size: 10pt;
             color: var(--default-primary-color);
         }
@@ -141,12 +141,16 @@
             height: calc(100% - 57px);
             visibility: hidden;
             opacity:0;
-            transition: opacity 0.5s linear;
+            transition: opacity 0.5s linear, visibility 4s linear;
         }
         :host alexandria-vertical-time-range-navigator.visible {
             visibility: visible;
             opacity: 0.8;
-            transition: opacity 0.5s linear;
+            transition: opacity 0.5s linear, visibility 4s linear;
+        }
+        :host alexandria-vertical-time-range-navigator.visible-always {
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         :host alexandria-vertical-time-range-navigator:hover {
             opacity: 1;
@@ -208,14 +212,14 @@
 
         const AlexandriaTemporalRangeCatalogDictionary = {
             es: {
-                ClearFilter : "ver todos",
+                ClearFilter : "ver todos los elementos",
                 ShowGroupings : "filtrar catálogo",
                 Close : "cerrar",
                 ItemsArrival : "han llegado nuevos elementos",
                 RefreshItems : "actualizar"
             },
             en: {
-                ClearFilter : "view all",
+                ClearFilter : "view all items",
                 ShowGroupings : "filter catalog",
                 Close : "close",
                 ItemsArrival : "new items arrival",
@@ -240,7 +244,7 @@
                 this.translate(AlexandriaTemporalRangeCatalogDictionary);
                 this.listenToDisplay();
                 this.listenOpenEvents();
-                this._addScrollListener("alexandria-vertical-time-range-navigator");
+                this.$.navigator.whenPersonified().execute((widget) => this._addListeners(widget));
             },
 
             _showTimeRangeNavigator : function() {

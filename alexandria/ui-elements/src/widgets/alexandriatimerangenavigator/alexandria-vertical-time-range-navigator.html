@@ -29,7 +29,7 @@
                                                   on-scale-selected="_notifyScaleSelected"></alexandria-scale-selector-slider>
             </div>
         </cotton-timeline>
-        <alexandria-date-selector id="dateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateRangeLimit"></alexandria-date-selector>
+        <alexandria-date-selector id="dateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateRangeLimit" on-close="_hideDateSelector"></alexandria-date-selector>
     </template>
 
     <style>
@@ -122,7 +122,12 @@
             },
 
             _showDateSelector : function() {
+                this.fire("open-dialog");
                 this.$.dateSelector.open();
+            },
+
+            _hideDateSelector : function() {
+                this.fire("close-dialog");
             },
 
             _notifyScaleSelected : function(e) {

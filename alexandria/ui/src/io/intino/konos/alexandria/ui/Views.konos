@@ -32,7 +32,7 @@ Display alexandriaViewContainerList
 	Notification clear
 	Notification refresh as List Object(Item)
 	Notification refreshPageSize as Integer
-	Notification refreshItem as Object(Item)
+	Notification refreshItem as Object(ItemRefreshInfo)
 	Notification resizeItem as Object(Item)
 	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
 	Notification refreshCount as Integer
@@ -63,7 +63,7 @@ Display alexandriaViewContainerMap
 	Notification clear
 	Notification refresh as List Object(Item)
 	Notification refreshPageSize as Integer
-	Notification refreshItem as Object(Item)
+	Notification refreshItem as Object(ItemRefreshInfo)
 	Notification refreshItemValidation as Object(ItemValidationRefreshInfo)
 	Notification refreshCount as Integer
 	Notification refreshSelection as List Text

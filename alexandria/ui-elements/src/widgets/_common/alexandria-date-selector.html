@@ -15,7 +15,7 @@
 
     <template>
         <paper-button class="dropdown-trigger layout horizontal" title="[[label]]" on-tap="_openDialog"><span class="layout flex">[[_formattedDateTime]]</span><iron-icon class="layout horizontal end-justified" icon="icons:arrow-drop-down"></iron-icon></paper-button>
-        <paper-dialog id="dialog" class="paper-date-picker-dialog paper-time-picker-dialog">
+        <paper-dialog id="dialog" class="paper-date-picker-dialog paper-time-picker-dialog" on-iron-overlay-closed="_notifyClose">
             <paper-date-picker id="datePicker" date="{{_dateObject}}" locale="{{_locale}}"></paper-date-picker>
             <paper-time-picker id="timePicker" hour="{{_hour}}" minute="{{_minute}}"></paper-time-picker>
             <div class="toolbar layout horizontal">
@@ -167,6 +167,10 @@
             _acceptDate : function() {
                 this.date = this._dateTime().getTime();
                 this.fire('change', { date: this.date });
+            },
+
+            _notifyClose : function () {
+                this.fire('close');
             },
 
             _dateTime : function() {
