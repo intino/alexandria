@@ -341,6 +341,7 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	private void addResource(MultipartEntityBuilder builder, Resource resource) {
+		if (resource == null) return;
 		ContentType contentType = resource.contentType() != null ? ContentType.create(resource.contentType()) : ContentType.APPLICATION_OCTET_STREAM;
 		builder.addPart(resource.id(), new InputStreamBody(resource.data(), contentType, resource.id()));
 	}

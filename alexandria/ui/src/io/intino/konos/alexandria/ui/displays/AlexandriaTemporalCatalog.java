@@ -17,8 +17,7 @@ import java.util.Map;
 
 public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNotifier, N extends AlexandriaNavigator> extends AlexandriaAbstractCatalog<TemporalCatalog, DN> implements TemporalCatalogViewDisplayProvider {
 	private N navigatorDisplay = null;
-	private static final int MinItems = 30;
-	private boolean addingItems = false;
+	private TimeRange moreItemsRange = null;
 
 	public AlexandriaTemporalCatalog(Box box, N navigatorDisplay) {
 		super(box);
@@ -37,6 +36,17 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		if (to.isAfter(bounds.to())) to = bounds.to();
 
 		timeScaleHandler().updateRange(from, to, false);
+	}
+
+	@Override
+	public void range(TimeRange range) {
+		super.range(range);
+		moreItemsRange = null;
+	}
+
+	@Override
+	public void clearFilter() {
+		super.clearFilter();
 	}
 
 	@Override
@@ -106,12 +116,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	public Item rootItem(List<Item> itemList) {
-		return element().rootItem(itemList, queryRange(), session());
+		return element().rootItem(itemList, queryRange(range()), session());
 	}
 
 	@Override
 	public Item defaultItem(String id) {
-		return element().defaultItem(id, queryRange(), session());
+		return element().defaultItem(id, queryRange(range()), session());
 	}
 
 	@Override
@@ -123,28 +133,24 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	@Override
-	public synchronized void itemsLoaded(String condition, Sorting sorting) {
+	public synchronized void loadMoreItems(String condition, Sorting sorting, int minCount) {
 		ItemList newItemList = new ItemList();
-		while(newItemList.size() < 30 && this.timeScaleHandler().boundsRange().from().isBefore(this.timeScaleHandler().range().from())) {
-			TimeRange currentRange = range();
+
+		while(newItemList.size() < minCount && this.timeScaleHandler().boundsRange().from().isBefore(this.timeScaleHandler().range().from())) {
+			TimeRange currentRange = moreItemsRange != null ? moreItemsRange : new TimeRange(range().from(), range().to(), range().scale());
 			long movement = currentRange.scale().instantsBetween(currentRange.from(), currentRange.to());
 			Instant from = currentRange.scale().addTo(currentRange.from(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
 			Instant to = currentRange.scale().addTo(currentRange.to(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
-			TimeRange range = new TimeRange(from, to, currentRange.scale());
-			range(range);
-			timeScaleHandler().updateRange(range.from(), range.to(), false);
-			newItemList.addAll(filteredItemList(scopeWithAttachedGrouping(), condition));
+			moreItemsRange = new TimeRange(from, to, currentRange.scale());
+			newItemList.addAll(filteredItemList(moreItemsRange, scopeWithAttachedGrouping(), condition));
 		}
+
 		itemList.addAll(newItemList);
 	}
 
 	@Override
 	protected ItemList filteredItemList(Scope scope, String condition) {
-		TimeRange range = showAll() ? timeScaleHandler().boundsRange() : queryRange();
-		ItemList itemList = element().items(scope, condition, range, session());
-		applyFilter(itemList);
-		filterTimezone(itemList, range);
-		return itemList;
+		return filteredItemList(range(), scope, condition);
 	}
 
 	@Override
@@ -214,7 +220,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void configureTimeScaleHandler(TimeScaleHandler timeScaleHandler, TimeRange range, List<TimeScale> scales);
 	protected abstract void configureNavigatorDisplay(N navigatorDisplay, TimeScaleHandler timeScaleHandler);
 	protected abstract void filterTimezone(ItemList itemList, TimeRange range);
-	protected abstract TimeRange queryRange();
+	protected abstract TimeRange queryRange(TimeRange range);
 	protected abstract TimeScaleHandler timeScaleHandler();
 	protected abstract void showNavigator();
 	protected abstract void hideNavigator();
@@ -228,4 +234,13 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected boolean showAll() {
 		return !element().temporalFilterEnabled(defaultScope(), session());
 	}
+
+	private ItemList filteredItemList(TimeRange range, Scope scope, String condition) {
+		range = showAll() ? timeScaleHandler().boundsRange() : queryRange(range);
+		ItemList itemList = element().items(scope, condition, range, session());
+		applyFilter(itemList);
+		filterTimezone(itemList, range);
+		return itemList;
+	}
+
 }
