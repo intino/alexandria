@@ -135,17 +135,25 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	public synchronized void loadMoreItems(String condition, Sorting sorting, int minCount) {
 		ItemList newItemList = new ItemList();
+		Instant boundingRangeTo = range().from();
+		Instant boundingRangeFrom = range().to();
 
 		while(newItemList.size() < minCount && this.timeScaleHandler().boundsRange().from().isBefore(this.timeScaleHandler().range().from())) {
 			TimeRange currentRange = moreItemsRange != null ? moreItemsRange : new TimeRange(range().from(), range().to(), range().scale());
 			long movement = currentRange.scale().instantsBetween(currentRange.from(), currentRange.to());
 			Instant from = currentRange.scale().addTo(currentRange.from(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
 			Instant to = currentRange.scale().addTo(currentRange.to(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
+
+			if (sorting != null && sorting.mode() == Sorting.Mode.Descendant) boundingRangeTo = to;
+			else boundingRangeFrom = from;
+
 			moreItemsRange = new TimeRange(from, to, currentRange.scale());
 			newItemList.addAll(filteredItemList(moreItemsRange, scopeWithAttachedGrouping(), condition));
 		}
 
 		itemList.addAll(newItemList);
+		createGroupingManager(filteredItemList(new TimeRange(boundingRangeFrom, boundingRangeTo, moreItemsRange.scale()), defaultScope(),null));
+		reloadGroupings();
 	}
 
 	@Override
