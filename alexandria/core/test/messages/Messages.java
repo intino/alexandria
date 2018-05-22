@@ -242,6 +242,18 @@ public class Messages {
 					"name: token\n" +
 					"value: abcdedgrd";
 
+	public static String infrastructureOperation =
+			"[InfrastructureOperation]\n" +
+					"ts: 2018-05-22T11:17:20.895Z\n" +
+					"operation: Add\n" +
+					"user: cesar\n" +
+					"objectType: Responsible\n" +
+					"objectID: josejuanhernandez\n" +
+					"parameters:\n" +
+					"\tjosejuanhernandez\n" +
+					"\tU0CU1BD7E\n" +
+					"\tjosejuanhernandez@siani.es";
+
 	private static String indent(String text) {
 		return "\t" + text.replaceAll("\\n", "\n\t");
 	}
