@@ -6,7 +6,6 @@ import io.intino.konos.datalake.jms.JMSDatalake;
 import io.intino.konos.datalake.jms.JMSTank;
 
 import javax.jms.Session;
-import java.time.Instant;
 
 import static io.intino.konos.datalake.Datalake.Tank;
 
@@ -26,8 +25,8 @@ public class Ness {
 		datalake.disconnect();
 	}
 
-	public Datalake.ReflowSession reflow(int blockSize, ReflowDispatcher dispatcher, Instant from) {
-		return datalake.reflow(blockSize, dispatcher, from);
+	public Datalake.ReflowSession reflow(ReflowConfiguration configuration, ReflowDispatcher dispatcher) {
+		return datalake.reflow(configuration, dispatcher);
 	}
 
 	public Session session() {
