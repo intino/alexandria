@@ -19,10 +19,10 @@ def type(jms)
 
 	public class $name+firstUpperCase~Service extends io.intino.konos.jms.Bus {
 
-		private $box+firstUpperCase~Configuration.$name+firstUpperCase~Configuration configuration;
+		private $box+firstUpperCase~Configuration configuration;
 
 		public $name+firstUpperCase~Service(Connection connection, $box+firstUpperCase~Box box) {
-			this.configuration = box.configuration().$name+firstLowerCase~Configuration;
+			this.configuration = box.configuration();
 			this.connection = connection;
 			this.session = createSession(connection);
 			if (session == null) return;
