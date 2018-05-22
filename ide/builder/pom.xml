@@ -4,6 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
+    <name>Builder</name>
     <version>4.0.5</version>
 
     <properties>

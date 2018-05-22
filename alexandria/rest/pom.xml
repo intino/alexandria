@@ -6,6 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-rest</artifactId>
+    <name>Rest</name>
     <version>2.1.2</version>
 
     <properties>

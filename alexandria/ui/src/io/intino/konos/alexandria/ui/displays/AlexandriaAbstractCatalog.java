@@ -105,7 +105,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	@Override
 	public void forceRefresh() {
 		super.forceRefresh();
-		createGroupingManager();
+		createGroupingManager(filteredItemList(defaultScope(),null));
 		reloadGroupings();
 	}
 
@@ -200,14 +200,17 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected void init() {
 		super.init();
 		createDialogContainer();
-		createGroupingManager();
+		createGroupingManager(filteredItemList(defaultScope(),null));
 		buildViewList();
 		sendCatalog();
 		createItemDisplay();
 	}
 
-	protected void createGroupingManager() {
-		groupingManager = new GroupingManager(filteredItemList(defaultScope(),null).items(), groupings(), element().arrangementFilterer(session()));
+	protected void createGroupingManager(ItemList itemList) {
+		Map<String, List<String>> filteredGroupings = null;
+		if (groupingManager != null) filteredGroupings = groupingManager.filteredGroupings();
+		groupingManager = new GroupingManager(itemList.items(), groupings(), element().arrangementFilterer(session()));
+		if (filteredGroupings != null) groupingManager.filteredGroupings(filteredGroupings);
 	}
 
 	public boolean selectionEnabledByDefault() {
