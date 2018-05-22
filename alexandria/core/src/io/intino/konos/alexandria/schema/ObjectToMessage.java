@@ -22,7 +22,7 @@ public class ObjectToMessage {
 			Object value = valueOf(field, object);
 			if (isNull(value) || isEmpty(value)) continue;
 			if (isAttachment(field)) convertAttachment(message, field, value);
-			if (isAttribute(field)) convertAttribute(message, field, value);
+			else if (isAttribute(field)) convertAttribute(message, field, value);
 			else {
 				if (isList(field) || isArray(field)) valuesOf(field, object).forEach(v -> message.add(toMessage(v)));
 				else message.add(toMessage(value));
