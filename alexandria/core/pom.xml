@@ -6,6 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-core</artifactId>
+    <name>Core</name>
     <version>1.0.3</version>
 
     <properties>

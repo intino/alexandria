@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-jms</artifactId>
+    <name>Jms</name>
     <version>1.0.14</version>
 
     <properties>

@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-ness-accessor</artifactId>
+    <name>Ness Accessor</name>
     <version>2.1.2</version>
 
     <properties>

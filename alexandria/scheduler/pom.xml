@@ -6,6 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-scheduler</artifactId>
+    <name>Scheduler</name>
     <version>1.0.6</version>
 
     <properties>
