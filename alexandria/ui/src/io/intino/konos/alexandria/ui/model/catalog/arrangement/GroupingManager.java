@@ -52,6 +52,14 @@ public class GroupingManager {
 		fixedGrouping = null;
 	}
 
+	public Map<String, List<String>> filteredGroupings() {
+		return filteredGroupings;
+	}
+
+	public void filteredGroupings(Map<String, List<String>> filteredGroupings) {
+		this.filteredGroupings = filteredGroupings;
+	}
+
 	public List<String> filteredGroups(Grouping grouping) {
 		String key = grouping.name();
 		return filteredGroupings.containsKey(key) ? filteredGroupings.get(key) : emptyList();
