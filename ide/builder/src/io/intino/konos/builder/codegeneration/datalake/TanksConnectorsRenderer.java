@@ -31,7 +31,8 @@ public class TanksConnectorsRenderer {
 		this.boxName = boxName;
 		this.datalake = graph.nessClient(0);
 		this.handlers = new TreeSet((Comparator<MessageHandler>) (o1, o2) -> namesake(o1, o2) ? 0 : -1);
-		handlers.addAll(datalake.messageHandlerList().stream().filter(h -> h.i$(Mounter.class) || h.i$(Feeder.class)).collect(toList()));
+		handlers.addAll(datalake.messageHandlerList().stream().filter(h -> h.i$(Mounter.class)).collect(toList()));
+		handlers.addAll(datalake.messageHandlerList().stream().filter(h -> h.i$(Feeder.class)).collect(toList()));
 	}
 
 	private boolean namesake(MessageHandler o1, MessageHandler o2) {
