@@ -27,7 +27,6 @@ public class MessageToObject {
 
 	private static <T> Object fillObject(Message message, Class<T> aClass, Object object) {
 		attributes(message, aClass, object);
-		attachments(message, aClass, object);
 		components(message, aClass, object);
 		return object;
 	}
@@ -35,15 +34,16 @@ public class MessageToObject {
 	private static <T> void attributes(Message message, Class<T> aClass, Object object) {
 		for (String attr : message.attributes()) {
 			Field field = fieldByName(aClass, attr);
-			if (field != null) setField(field, object, parserOf(field).parse(message.get(attr)));
+			if (field != null) setField(field, object, valueOf(message, attr, field));
 		}
 	}
 
-	private static <T> void attachments(Message message, Class<T> aClass, Object object) {
-		for (Attachment attachment : message.attachments()) {
-			Field field = fieldByName(aClass, attachment.id());
-			if (field != null) setField(field, object, new Resource(attachment.id()).data(attachment.data()));
+	private static Object valueOf(Message message, String attr, Field field) {
+		if (field.getType().isAssignableFrom(Resource.class)) {
+			Attachment attachment = message.attachment(message.get(attr));
+			return new Resource(attachment.id()).data(attachment.data());
 		}
+		return parserOf(field).parse(message.get(attr));
 	}
 
 	private static <T> void components(Message message, Class<T> aClass, Object object) {
