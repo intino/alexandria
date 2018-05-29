@@ -179,6 +179,19 @@ public class MessageToObject {
 		assertThat(t.parameterList().get(0).value(), is("mcaballero"));
 	}
 
+	@Test
+	public void should_deserialize_schema_4() {
+		final InfrastructureOperation op = Inl.fromMessage(Message.load(infrastructureOperation), InfrastructureOperation.class);
+		assertEquals("Add", op.operation());
+		assertEquals("cesar", op.user());
+		assertEquals("Responsible", op.objectType());
+		assertEquals("josejuanhernandez", op.objectID());
+		assertThat(op.parameters().size(), is(3));
+		assertThat(op.parameters().get(0), is("josejuanhernandez"));
+		assertThat(op.parameters().get(1), is("U0CU1BD7E"));
+		assertThat(op.parameters().get(2), is("josejuanhernandez@siani.es"));
+	}
+
 	private ResourceLoader getResourceLoader() {
 		return id -> new byte[id.length()];
 	}

@@ -6,6 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-jmx</artifactId>
+    <name>Jmx</name>
     <version>1.0.4</version>
 
     <properties>

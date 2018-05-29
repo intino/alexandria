@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import static io.intino.konos.alexandria.ui.Asset.toResource;
 import static io.intino.konos.alexandria.ui.utils.AvatarUtil.generateAvatar;
@@ -39,13 +40,19 @@ public class ItemBuilder {
     }
 
     public static Item buildOnlyLocation(io.intino.konos.alexandria.ui.model.Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
-        String id = item != null ? item.id() : UUID.randomUUID().toString();
+        try {
+            String id = item != null ? item.id() : UUID.randomUUID().toString();
 
-        return new Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
-                .group(group(item, provider.scale()))
-                .label(label(item, provider))
-                .itemBlockList(emptyList())
-                .itemStampList(itemLocationStampList(item, provider, baseAssetUrl));
+            return new Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
+                    .group(group(item, provider.scale()))
+                    .label(label(item, provider))
+                    .itemBlockList(emptyList())
+                    .itemStampList(itemLocationStampList(item, provider, baseAssetUrl));
+        }
+        catch (Throwable exception) {
+            Logger.getGlobal().severe(exception.getMessage());
+            return null;
+        }
     }
 
     public static List<Item> buildList(List<io.intino.konos.alexandria.ui.model.Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {

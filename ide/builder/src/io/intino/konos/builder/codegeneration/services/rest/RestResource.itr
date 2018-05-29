@@ -75,7 +75,7 @@ def type(parameter) trigger(assign)
 end
 
 def type(list) trigger(parameterType)
-	new java.util.ArrayList<$value>(0).getClass()
+	com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, $value.class).getType()
 end
 
 def trigger(parameterType)

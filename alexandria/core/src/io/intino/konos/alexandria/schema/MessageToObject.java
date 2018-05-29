@@ -20,6 +20,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public class MessageToObject {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private static Map<Class, String> classNames = new HashMap<>();
+	private static Map<String, Field> fields = new HashMap<>();
 
 	public static <T> T fromMessage(Message message, Class<T> aClass) {
 		return (T) fillObject(message, aClass, create(aClass));
@@ -27,7 +28,6 @@ public class MessageToObject {
 
 	private static <T> Object fillObject(Message message, Class<T> aClass, Object object) {
 		attributes(message, aClass, object);
-		attachments(message, aClass, object);
 		components(message, aClass, object);
 		return object;
 	}
@@ -35,15 +35,16 @@ public class MessageToObject {
 	private static <T> void attributes(Message message, Class<T> aClass, Object object) {
 		for (String attr : message.attributes()) {
 			Field field = fieldByName(aClass, attr);
-			if (field != null) setField(field, object, parserOf(field).parse(message.get(attr)));
+			if (field != null) setField(field, object, valueOf(message, attr, field));
 		}
 	}
 
-	private static <T> void attachments(Message message, Class<T> aClass, Object object) {
-		for (Attachment attachment : message.attachments()) {
-			Field field = fieldByName(aClass, attachment.id());
-			if (field != null) setField(field, object, new Resource(attachment.id()).data(attachment.data()));
+	private static Object valueOf(Message message, String attr, Field field) {
+		if (field.getType().isAssignableFrom(Resource.class)) {
+			Attachment attachment = message.attachment(message.get(attr));
+			return new Resource(attachment.id()).data(attachment.data());
 		}
+		return parserOf(field).parse(message.get(attr));
 	}
 
 	private static <T> void components(Message message, Class<T> aClass, Object object) {
@@ -79,22 +80,30 @@ public class MessageToObject {
 
 	private static List append(List current, List value) {
 		if (current == null) current = new ArrayList();
-		final Object o = value.get(value.size() - 1);
-		current.add(o);
+		current.addAll(value);
 		return current;
 	}
 
 	private static <T> Field fieldByName(Class<T> aClass, String attr) {
-		return Accessory.fieldsOf(aClass).stream().filter(f -> match(f, attr)).findFirst().orElse(null);
+		String attrId = className(aClass) + "." + attr.toLowerCase();
+		if (!fields.containsKey(attrId)) findField(aClass, attr, attrId);
+		return fields.get(attrId);
 	}
 
-	private static boolean match(Field field, String attribute) {
-		return attribute.equalsIgnoreCase(field.getName()) ||
-				attribute.equalsIgnoreCase(className(field));
+	private static <T> void findField(Class<T> aClass, String attr, String attrId) {
+		for (Field field : Accessory.fieldsOf(aClass))
+			if (attr.equalsIgnoreCase(field.getName()) || attr.equalsIgnoreCase(className(field))) {
+				fields.put(attrId, field);
+				break;
+			}
 	}
 
 	private static String className(Field field) {
 		final Class aClass = classOf(field);
+		return className(aClass);
+	}
+
+	private static String className(Class aClass) {
 		if (!classNames.containsKey(aClass)) classNames.put(aClass, aClass.getSimpleName());
 		return classNames.get(aClass);
 	}

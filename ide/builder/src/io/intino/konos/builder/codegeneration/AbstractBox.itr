@@ -144,6 +144,7 @@ def type(service & jmx) trigger(jmx)
 end
 
 def type(service & slack) trigger(slack)
+	if ($parameter == null || $parameter.isEmpty()) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, $parameter);
 	logger.info("Slack service $name: started!");
 

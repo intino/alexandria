@@ -27,7 +27,7 @@ public class RestResourceTemplate extends Template {
 			rule().add((condition("trigger", "write"))).add(literal("private void write(")).add(mark("value", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" object) {\n\tmanager.write(object")).add(expression().add(literal(", \"")).add(mark("format")).add(literal("\""))).add(literal(");\n}")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "type"))).add(mark("parameterType")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "assign"))).add(literal("action.")).add(mark("name", "SnakeCaseToCamelCase", "firstLowerCase")).add(literal(" = manager.from")).add(mark("in", "firstUpperCase")).add(literal("(\"")).add(mark("name")).add(literal("\", ")).add(mark("parameterType")).add(literal(");")),
-			rule().add((condition("type", "list")), (condition("trigger", "parameterType"))).add(literal("new java.util.ArrayList<")).add(mark("value")).add(literal(">(0).getClass()")),
+			rule().add((condition("type", "list")), (condition("trigger", "parameterType"))).add(literal("com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, ")).add(mark("value")).add(literal(".class).getType()")),
 			rule().add((condition("trigger", "parameterType"))).add(mark("value")).add(literal(".class")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);

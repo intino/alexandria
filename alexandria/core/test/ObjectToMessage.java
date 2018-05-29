@@ -1,11 +1,14 @@
 import io.intino.konos.alexandria.Inl;
 import io.intino.ness.inl.Message;
+import messages.Messages;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import schemas.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -69,8 +72,8 @@ public class ObjectToMessage {
 
 	@Test
 	public void should_serialize_schema2() {
-		InfrastructureOperation object = new InfrastructureOperation();
-		Inl.toMessage(object);
+		InfrastructureOperation object = new InfrastructureOperation().user("cesar").ts(Instant.parse("2018-05-22T11:17:20.895Z")).operation("Add").objectType("Responsible").objectID("josejuanhernandez").parameters(Arrays.asList("josejuanhernandez", "U0CU1BD7E", "josejuanhernandez@siani.es"));
+		assertEquals(Messages.infrastructureOperation, Inl.toMessage(object).toString());
 	}
 
 	@Test

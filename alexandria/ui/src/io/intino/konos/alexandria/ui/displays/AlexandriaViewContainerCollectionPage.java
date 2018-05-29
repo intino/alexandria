@@ -53,7 +53,7 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
         if (isNearToEnd()) {
             int count = countItems();
             notifyNearToEnd();
-            if (count < PageSize && countItems() > PageSize) refresh();
+            if (count < PageSize && countItems() >= PageSize) refresh();
             else sendCount(countItems());
         }
     }
