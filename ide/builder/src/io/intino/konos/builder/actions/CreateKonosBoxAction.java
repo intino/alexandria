@@ -1,5 +1,7 @@
 package io.intino.konos.builder.actions;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -16,20 +18,28 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.legio.graph.Artifact.Imports.Dependency;
+import io.intino.plugin.project.LegioConfiguration;
+import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.tara.compiler.shared.Configuration;
+import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.model.java.JavaResourceRootType;
 import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
@@ -53,7 +63,8 @@ public class CreateKonosBoxAction extends KonosAction {
 		final File file = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		if (!file.exists()) return;
 		final Module module = e.getData(LangDataKeys.MODULE);
-		if (module != null) e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + file.getParentFile().getName() + ")");
+		if (module != null)
+			e.getPresentation().setText(TEXT + " for " + module.getName() + " (" + file.getParentFile().getName() + ")");
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -64,8 +75,63 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (noProject(e, project) || module == null) return;
 		project.save();
 		FileDocumentManager.getInstance().saveAllDocuments();
-		List<PsiFile> konosFiles = KonosUtils.findKonosFiles(module);
-		new KonosGenerator(module, konosFiles).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
+		final KonosGraph konosGraph = new KonosGenerator(module).generate(getSrcRoot(module), getGenRoot(module), getResRoot(module));
+		if (konosGraph != null) updateDependencies(module, requiredDependencies(module, konosGraph));
+	}
+
+	private void updateDependencies(Module module, Map<String, String> requiredLibraries) {
+		final LegioConfiguration configuration = (LegioConfiguration) TaraUtil.configurationOf(module);
+		final List<Dependency> dependencies = configuration.graph().artifact().imports().dependencyList();
+		configuration.addCompileDependencies(requiredLibraries.keySet().stream().
+				filter(dep -> findDependency(dependencies, dep) == null).
+				map(dep -> dep + ":" + requiredLibraries.get(dep)).
+				collect(Collectors.toList()));
+		configuration.updateCompileDependencies(requiredLibraries.keySet().stream().
+				filter(dep -> {
+					final Dependency dependency = findDependency(dependencies, dep);
+					return dependency != null && isOlder(dependency, requiredLibraries.get(dep));
+				}).
+				map(dep -> dep + ":" + requiredLibraries.get(dep)).
+				collect(Collectors.toList()));
+		configuration.reload();
+	}
+
+	private boolean isOlder(Dependency dependency, String version) {
+		return new Version(dependency.effectiveVersion()).compareTo(new Version(version)) < 0;
+	}
+
+	private Dependency findDependency(List<Dependency> dependencies, String artifact) {
+		return dependencies.stream().filter(dependency -> artifact.equals(dependency.groupId() + ":" + dependency.artifactId())).findFirst().orElse(null);
+	}
+
+	private Map<String, String> requiredDependencies(Module module, KonosGraph konosGraph) {
+		Type typeOfHashMap = new TypeToken<Map<String, String>>() {
+		}.getType();
+		final InputStream resourceAsStream = this.getClass().getResourceAsStream("/versions.json");
+		if (resourceAsStream == null) return Collections.emptyMap();
+		Map<String, String> dependencies = new Gson().fromJson(new InputStreamReader(resourceAsStream), typeOfHashMap);
+		if (!hasModel(module) && konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
+		if (konosGraph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
+		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
+		if (konosGraph.nessClientList().isEmpty()) remove(dependencies, "ness-accessor");
+		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
+		if (konosGraph.rESTServiceList().isEmpty()) remove(dependencies, "rest");
+		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
+		return dependencies;
+	}
+
+	private void remove(Map<String, String> dependencies, String type) {
+		String toRemove = null;
+		for (String dep : dependencies.keySet()) if (dep.contains(type)) toRemove = dep;
+		if (toRemove != null) dependencies.remove(toRemove);
+	}
+
+	private boolean hasModel(Module module) {
+		return module != null && configurationOf(module) != null && hasModel(configurationOf(module));
+	}
+
+	private boolean hasModel(Configuration configuration) {
+		return !configuration.languages().isEmpty();
 	}
 
 	private boolean noProject(AnActionEvent e, Project project) {
@@ -79,17 +145,15 @@ public class CreateKonosBoxAction extends KonosAction {
 	private class KonosGenerator {
 
 		private final Module module;
-		private final List<PsiFile> konosFiles;
 
-		KonosGenerator(Module module, List<PsiFile> konosFiles) {
+		KonosGenerator(Module module) {
 			this.module = module;
-			this.konosFiles = konosFiles;
 		}
 
-		void generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory) {
+		KonosGraph generate(VirtualFile srcDirectory, VirtualFile genDirectory, VirtualFile resDirectory) {
 			if (genDirectory == null) {
 				notifyError("gen source root not found.");
-				return;
+				return null;
 			}
 			final Configuration configuration = configurationOf(module);
 			String generationPackage = configuration == null ? BOX : configuration.workingPackage() + (configuration.boxPackage().isEmpty() ? "" : "." + configuration.boxPackage());
@@ -97,18 +161,19 @@ public class CreateKonosBoxAction extends KonosAction {
 			gen.mkdirs();
 			File src = new File(srcDirectory.getPath(), generationPackage.replace(".", File.separator));
 			src.mkdirs();
-			generate(generationPackage, gen, src, new File(resDirectory.getPath()));
+			return generate(generationPackage, gen, src, new File(resDirectory.getPath()));
 		}
 
-		private void generate(String packageName, File gen, File src, File res) {
+		private KonosGraph generate(String packageName, File gen, File src, File res) {
 			KonosGraph graph = loadGraph(module);
 			if (graph == null) {
 				notifyError("Models have errors");
-				return;
+				return null;
 			}
-			if (!render(packageName, gen, src, res, graph)) return;
+			if (!render(packageName, gen, src, res, graph)) return null;
 			refreshDirectories(gen, src, res);
 			notifySuccess();
+			return graph;
 		}
 
 		private void refreshDirectories(File gen, File src, File res) {

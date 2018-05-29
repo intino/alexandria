@@ -6,6 +6,7 @@
 
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-ui</artifactId>
+    <name>User Interface</name>
     <version>1.0.3</version>
 
     <properties>
@@ -61,7 +62,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-rest</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -5,7 +5,7 @@ Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-ui
 		targetPackage = ""
 	Code ("io.intino.konos.alexandria.ui")
 	Imports
-		Compile("io.intino.konos", "alexandria-rest", "2.1.1")
+		Compile("io.intino.konos", "alexandria-rest", "2.1.2")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)

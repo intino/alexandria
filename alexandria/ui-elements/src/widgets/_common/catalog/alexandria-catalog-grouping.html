@@ -29,7 +29,7 @@
                 <li name$="_[[group.idx]]" class$="layout horizontal group expanded_[[group.expanded]]">
                     <div class="chart"><alexandria-group-chart group="[[group]]" percentage="[[_grouping.isPercentage]]" count="[[_grouping.countItems]]" color="[[group.color]]"></alexandria-group-chart></div>
                     <div class="layout horizontal flex">
-                        <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="{{group.selected}}" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
+                        <cotton-checkbox disabled$="[[_groupsDisabled]]" class="flex" name$="[[group.label]]" icon="av:stop" checked$="[[group.selected]]" on-change="_toggleGroup">[[group.label]]</cotton-checkbox>
                         <paper-icon-button group$="[[group.name]]" icon="clear" on-tap="_deleteGroup" hidden></paper-icon-button>
                     </div>
                 </li>
