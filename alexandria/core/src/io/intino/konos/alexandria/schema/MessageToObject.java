@@ -20,6 +20,7 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public class MessageToObject {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private static Map<Class, String> classNames = new HashMap<>();
+	private static Map<String, Field> fields = new HashMap<>();
 
 	public static <T> T fromMessage(Message message, Class<T> aClass) {
 		return (T) fillObject(message, aClass, create(aClass));
@@ -84,16 +85,25 @@ public class MessageToObject {
 	}
 
 	private static <T> Field fieldByName(Class<T> aClass, String attr) {
-		return Accessory.fieldsOf(aClass).stream().filter(f -> match(f, attr)).findFirst().orElse(null);
+		String attrId = className(aClass) + "." + attr.toLowerCase();
+		if (!fields.containsKey(attrId)) findField(aClass, attr, attrId);
+		return fields.get(attrId);
 	}
 
-	private static boolean match(Field field, String attribute) {
-		return attribute.equalsIgnoreCase(field.getName()) ||
-				attribute.equalsIgnoreCase(className(field));
+	private static <T> void findField(Class<T> aClass, String attr, String attrId) {
+		for (Field field : Accessory.fieldsOf(aClass))
+			if (attr.equalsIgnoreCase(field.getName()) || attr.equalsIgnoreCase(className(field))) {
+				fields.put(attrId, field);
+				break;
+			}
 	}
 
 	private static String className(Field field) {
 		final Class aClass = classOf(field);
+		return className(aClass);
+	}
+
+	private static String className(Class aClass) {
 		if (!classNames.containsKey(aClass)) classNames.put(aClass, aClass.getSimpleName());
 		return classNames.get(aClass);
 	}
