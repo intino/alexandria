@@ -8,6 +8,7 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,7 +57,14 @@ public class SparkManager {
 	}
 
 	public <T> T fromBody(String name, Class<T> type) {
-		return SparkReader.read(request.body(), type);
+		try {
+			if (type.isAssignableFrom(Resource.class) || type.isAssignableFrom(InputStream.class))
+				return (T) new Resource(name).data(request.raw().getInputStream());
+
+			return SparkReader.read(request.body(), type);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	public <T> T fromForm(String name, Class<T> type) {
