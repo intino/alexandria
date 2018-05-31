@@ -79,8 +79,11 @@ var AlpacaDialogWidget = function() {
     }
 
     function _renderToolbar(dialog, container) {
-        if (dialog.readonly)
+
+        if (dialog.readonly) {
+            $(container.querySelector(".toolbar")).addClass("empty");
             return;
+        }
 
         var toolbarContainer = container.querySelector(".toolbar");
         var operations = dialog.toolbar.operationList;

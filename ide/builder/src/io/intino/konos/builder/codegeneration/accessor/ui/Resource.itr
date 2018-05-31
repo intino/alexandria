@@ -41,7 +41,7 @@ def type(resource)
             <dom-module id="page-body">
 
                 <template>
-                    <cotton-zombie display="$uses" widget="$uses" language="$$language"></cotton-zombie>
+                    <cotton-zombie id="root" display="$uses" widget="$uses" language="$$language"></cotton-zombie>
                 </template>
 
                 <style>
@@ -52,9 +52,7 @@ def type(resource)
 
                 <script>
 					HTMLImports.whenReady(function() {
-						Polymer({
-							is: 'page-body'
-						});
+						$polymer
 					});
                 </script>
             </dom-module>
@@ -68,6 +66,35 @@ def type(resource)
             </script>
         </body>
     </html>
+end
 
+def type(polymer & editor)
+	Polymer({
+		is: 'page-body',
 
+		attached : function() {
+			this._initEditor();
+		},
+
+		_initEditor : function() {
+			var widget = this;
+			this.$$.root.whenPersonified().execute(function() {
+				var editor = widget.querySelector("alexandria-editor");
+
+				editor.onSaved = function() {
+					if (document.onSaved) document.onSaved();
+				};
+
+				document.save = function() {
+					editor.save();
+				}
+			});
+		}
+	});
+end
+
+def type(polymer)
+	Polymer({
+		is: 'page-body'
+	});
 end

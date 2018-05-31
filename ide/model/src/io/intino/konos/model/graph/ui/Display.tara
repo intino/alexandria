@@ -1,8 +1,8 @@
 dsl Proteo
 
 use Views
-use Catalog
 use Dialog
+use Catalog
 use DataTypes
 use UI
 

@@ -1,7 +1,7 @@
 dsl Konos
 
-Service (title = "", favicon = "") octana as UI
-	Resource("/", octanaDesktop) home as Root
+Service (title = "", favicon = "") octana as UI(port = "")
+	Resource("/") home as DisplayPage(octanaDesktop) Root
 
 Panel(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath = "favicon.png") octanaDesktop as Desktop
 	layout = Menu

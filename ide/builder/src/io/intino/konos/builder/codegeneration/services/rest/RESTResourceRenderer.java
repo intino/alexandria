@@ -94,7 +94,7 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.required() ? "required" : "optional"));
+		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
 		if (parameter.isList()) parameterFrame.addTypes("List");
 		return parameterFrame
 				.addSlot("name", parameter.name$())

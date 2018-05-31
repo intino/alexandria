@@ -18,8 +18,8 @@ Concept Dialog extends Component
 		var string label
 		Concept Input
 			var string label
-			var boolean required = false
-			var boolean readonly = false
+			var boolean isRequired = false
+			var boolean isReadonly = false
 			var string placeHolder = ""
 			var string helper = ""
 			var string defaultValue = ""
@@ -44,7 +44,7 @@ Concept Dialog extends Component
 				var integer height = 5
 			sub Password
 				Concept:{0..1} Validation
-					var word[]:{letter number symbol} required = letter number symbol
+					var word[]:{letter number symbol} isRequired = letter number symbol
 					Concept:{1..1} Length
 						var integer min
 						var integer max

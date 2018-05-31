@@ -3,7 +3,7 @@ dsl Proteo
 Concept Data is abstract
 
 Concept:Named Parameter extends Data is component
-	var boolean required = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defecto false
+	var boolean isRequired = false //TODO si el parametro es en path por defecto es requerido, para el resto de casos por defecto false
 
 Facet Type on Data
 	var string type is reactive private
@@ -40,17 +40,17 @@ Facet List on Data
 
 !! Schemas allows to define how objects are. This objects can be provided as either parameter or response
 Concept Schema
-	var boolean required = false
+	var boolean isRequired = false
 	var boolean multiple = true
 	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
 	Concept:{0..1} AttributeMap
 	!! Attribute of the member
 	Concept:Named Attribute extends Data
-		var boolean required = true
+		var boolean isRequired = true
 		var boolean multiple = false
 	Concept Has
 		var Schema reference
-		var boolean required = false
+		var boolean isRequired = false
 		var boolean multiple = true
 	has Schema
 

@@ -2,8 +2,8 @@ dsl Konos
 
 Schema dummy
 
-Service (title = "", favicon = "") testEbar as UI
-	Resource("/", uses=testEbarHome) testEbarHomePage as Root 
+Service (title = "", favicon = "") testEbar as UI(port = "")
+	Resource("/") testEbarHomePage as DisplayPage(testEbarHome) Root
 
 Panel(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome as Desktop
 	layout = Tab
