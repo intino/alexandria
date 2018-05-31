@@ -1,8 +1,8 @@
 dsl Konos
 
-Service Platform-Web as UI(title = "", favicon = "")
-	Resource("/analytics", uses = analytics) analyticsPage as Root
-	Resource("/error", uses = error) errorPage
+Service Platform-Web as UI(title = "", favicon = "", port = "")
+	Resource("/analytics") analyticsPage as DisplayPage(analytics) Root
+	Resource("/error") errorPage as DisplayPage(error)
 
 Display analytics
 	displays = olap dashboard pivotTable

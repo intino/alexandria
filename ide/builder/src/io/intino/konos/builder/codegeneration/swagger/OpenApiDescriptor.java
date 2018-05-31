@@ -116,7 +116,7 @@ public class OpenApiDescriptor {
 			swaggerParameter.in = parameter.in().name();
 			swaggerParameter.name = parameter.name$();
 			swaggerParameter.type = parameter.asType().type().toLowerCase();
-			swaggerParameter.required = parameter.required();
+			swaggerParameter.required = parameter.isRequired();
 			list.add(swaggerParameter);
 		}
 		return list.isEmpty() ? null : list;
@@ -126,7 +126,7 @@ public class OpenApiDescriptor {
 		Map<String, SwaggerSpec.Definition> map = new LinkedHashMap<>();
 		for (Schema schema : schemas) {
 			SwaggerSpec.Definition definition = new SwaggerSpec.Definition();
-			definition.required = schema.attributeList().stream().filter(Schema.Attribute::required).map(Layer::name$).collect(Collectors.toList());
+			definition.required = schema.attributeList().stream().filter(Schema.Attribute::isRequired).map(Layer::name$).collect(Collectors.toList());
 			definition.properties = toMap(schema.attributeList());
 			map.put(schema.name$(), definition);
 		}

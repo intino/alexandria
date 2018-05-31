@@ -41,7 +41,7 @@ def type(resource)
 			action.box = box;
 			action.clientId = clientId;
 			action.googleApiKey = "$googleApiKey";[
-			$editor+document]
+			$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(action.clientId))
@@ -78,8 +78,9 @@ def type(resource)
 	}
 end
 
-def trigger(document)
+def trigger(parameters)
 	action.document = loadDocument();
+	action.permission = loadPermission();
 end
 
 def type(parameter)

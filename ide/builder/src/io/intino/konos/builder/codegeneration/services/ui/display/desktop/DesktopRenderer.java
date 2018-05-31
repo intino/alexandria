@@ -8,6 +8,8 @@ import io.intino.konos.model.graph.desktop.DesktopPanel;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
+import static io.intino.konos.model.graph.KonosGraph.componentFor;
+
 public class DesktopRenderer extends PanelRenderer {
 
 	public DesktopRenderer(Project project, DesktopPanel desktop, String packageName, String boxName) {
@@ -36,7 +38,7 @@ public class DesktopRenderer extends PanelRenderer {
 
 	private UIService findOwnerUIService() {
 		Display display = display();
-		return display.graph().uIServiceList().stream().filter(s -> s.userHome() != null && display.equals(s.userHome().uses())).findFirst().orElse(null);
+		return display.graph().uIServiceList().stream().filter(s -> s.userHome() != null && display.equals(componentFor(s.userHome()))).findFirst().orElse(null);
 	}
 
 }

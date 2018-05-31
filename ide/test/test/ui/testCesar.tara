@@ -1,7 +1,7 @@
 dsl Konos
 
-Service (title = "", favicon = "") testCesar as UI
-	Resource("/", uses=testCesarDesktop) testCesarHomePage as Root
+Service (title = "", favicon = "") testCesar as UI(port = "")
+	Resource("/") testCesarHomePage as DisplayPage(testCesarDesktop) Root
 
 Display testCesarHome
 Display systemLoad
@@ -183,12 +183,12 @@ Schema timeRange
 
 Dialog(url = "", label = "Issue", description = "") issueDialog
 	Tab("Issue") tab
-		Text(label = "Issue id") type > readonly = true
-		Text(label = "Issue") issue > readonly = true
-		Text(label = "instant") moment > readonly = true
-		Text(label = "level") level > readonly = true
-		Text(label = "remarks") remarks > readonly = true
-		Text(label = "log") log > readonly = true
+		Text(label = "Issue id") type > isReadonly = true
+		Text(label = "Issue") issue > isReadonly = true
+		Text(label = "instant") moment > isReadonly = true
+		Text(label = "level") level > isReadonly = true
+		Text(label = "remarks") remarks > isReadonly = true
+		Text(label = "log") log > isReadonly = true
 	Toolbar
 		Operation(label = "go to item") gotoItem
 		Operation(label = "mark solved") resolveIssue

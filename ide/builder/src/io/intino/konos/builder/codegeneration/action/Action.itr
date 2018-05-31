@@ -57,8 +57,8 @@ def type(ui & action) !type(gen)
 	import io.intino.konos.alexandria.exceptions.*;
 	import java.time.*;
 	import java.util.*;
-	[import $importDialogs+validPackage.dialogs.*;]
-	[import $importDisplays+validPackage.displays.*;]
+	import $importDialogs+validPackage.dialogs.*;
+	import $importDisplays+validPackage.displays.*;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Action {
 
@@ -84,6 +84,7 @@ end
 
 def type(editor) trigger(parameter)
 	public io.intino.konos.alexandria.schema.Resource document;
+	public io.intino.konos.alexandria.ui.services.EditorService.Permission permission;
 end
 
 def attribute(void) trigger(return)
@@ -102,10 +103,17 @@ def type(component)
 	    return new io.intino.konos.alexandria.ui.displays.Soul(session) {
 			@Override
 			public void personify() {
-				$value+snakecaseToCamelCase+firstUpperCase display = new $value+snakecaseToCamelCase+firstUpperCase(box);
-				register(display);
-				display.personify();
+				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
+				$editor+component
+				register(component);
+				component.personify();
 			}
 		};
 	}
+end
+
+def type(editor) trigger(component)
+	component.document(document);
+	component.permission(permission);
+	component.display(new $display+snakecaseToCamelCase+firstUpperCase(box));
 end

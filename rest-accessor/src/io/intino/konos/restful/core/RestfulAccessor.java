@@ -409,6 +409,18 @@ public class RestfulAccessor implements RestfulApi {
 				}
 			}
 
+			@Override
+			public InputStream contentAsStream() {
+				try {
+					if (response == null)
+						return null;
+
+					return response.getEntity().getContent();
+				} catch (IOException e) {
+					return null;
+				}
+			}
+
 			private String stringContentOf(InputStream input) {
 				BufferedReader buffer = null;
 				StringBuilder sb = new StringBuilder();

@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -26,6 +27,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	private int height;
 	private Map<Class<? extends Dialog.Tab.Input>, Function<FormInput, DialogValidator.Result>> validators = new HashMap<>();
 	private Dialog dialog;
+	private List<BiConsumer<String, DialogResult>> executeListeners = new ArrayList<>();
 	private List<Consumer<DialogResult>> doneListeners = new ArrayList<>();
 
 	public AlexandriaDialog(Box box, Dialog dialog) {
@@ -77,6 +79,10 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	public void dialog(Dialog dialog) {
 		this.dialog = dialog;
 		fillDefaultValues();
+	}
+
+	public void onExecute(BiConsumer<String, DialogResult> listener) {
+		executeListeners.add(listener);
 	}
 
 	public void onDone(Consumer<DialogResult> listener) {
@@ -144,6 +150,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 		Dialog.Toolbar.Operation operation = dialog.operation(name);
 		DialogResult result = operation.execute(session());
 		notifyUserIfNotEmpty(result);
+		executeListeners.forEach(l -> l.accept(name, result));
 		if (operation.closeAfterExecution()) {
 			notifier.done(result != null ? result.refresh().toString() : DialogResult.none().toString());
 			doneListeners.forEach(l -> l.accept(result));

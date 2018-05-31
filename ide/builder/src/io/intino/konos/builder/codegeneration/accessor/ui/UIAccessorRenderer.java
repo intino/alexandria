@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.io.ZipUtil;
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldFrameBuilder;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldLayoutTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
@@ -36,6 +35,7 @@ import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.write;
+import static io.intino.konos.model.graph.KonosGraph.componentFor;
 import static io.intino.konos.model.graph.KonosGraph.componentsOf;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
@@ -109,9 +109,16 @@ public class UIAccessorRenderer {
 	}
 
 	private Frame resourceFrame(UIService.Resource resource) {
-		Component uses = resource.uses();
-		String usesDisplay = Formatters.firstUpperCase(uses.name$()) + (uses.i$(Dialog.class) ? Dialog.class.getSimpleName() : Display.class.getSimpleName());
-		return new Frame().addTypes("resource").addSlot("usesDisplay", usesDisplay).addSlot("uses", resource.uses().name$()).addSlot("name", resource.name$());
+		Component uses = componentFor(resource);
+		Frame result = new Frame().addTypes("resource").addSlot("uses", uses.name$()).addSlot("name", resource.name$());
+		result.addSlot("polymer", polymerFrame(resource));
+		return result;
+	}
+
+	private Frame polymerFrame(UIService.Resource resource) {
+		Frame result = new Frame("polymer");
+		if (resource.isEditorPage()) result.addTypes("editor");
+		return result;
 	}
 
 	private void createWidgets() {

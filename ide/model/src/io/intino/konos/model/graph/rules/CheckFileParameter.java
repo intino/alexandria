@@ -25,7 +25,7 @@ public class CheckFileParameter implements NodeRule {
 	@Override
 	public boolean accept(Node node) {
 		final List<Node> files = node.components().stream().filter(n -> isParameter(n) && n.facets().stream().anyMatch(f -> f.type().equals("File"))).collect(Collectors.toList());
-		if (!files.isEmpty() && !parameterInForm(files.get(0))) {
+		if (!files.isEmpty() && (! (parameterInForm(files.get(0)) || parameterInBody(files.get(0))))) {
 			cause = Cause.FileParameterNotInForm;
 			return false;
 		}
@@ -43,6 +43,10 @@ public class CheckFileParameter implements NodeRule {
 
 	private boolean parameterInForm(Node node) {
 		return "form".equals(parameter(node, "in").values().get(0).toString());
+	}
+
+	private boolean parameterInBody(Node node) {
+		return "body".equals(parameter(node, "in").values().get(0).toString());
 	}
 
 	private Parameter parameter(Node node, String name) {

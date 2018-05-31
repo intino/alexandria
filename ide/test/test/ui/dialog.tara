@@ -1,8 +1,8 @@
 dsl Konos
 
 Service (title = "", favicon = "") TestWeb as UI(port = "")
-    Resource("/", uses = application) applicationPage as Root
-    Resource("/opinion", opinion) opinionsPage as Editor
+    Resource("/") applicationPage as DisplayPage(application) Root
+    Resource("/opinion") opinionsPage as DialogPage(dialog=opinion)
 
 Display application
 
@@ -14,12 +14,12 @@ Dialog(url = "", label = "Información adicional", description = "Complementar i
 	Toolbar
 		Operation(label = "enviar") a
 	Tab("Opinión") tab
-		Text(label = "Tipo") tipo > readonly = true
-		Text(label = "Área") area > readonly = true
-		Text(label = "Habitación") room > readonly = true
-		Text(label = "Teléfono") phone > readonly = true
-		Text(label = "Email") mail > readonly = true
-		Text(label = "Asunto") issue > readonly = true
+		Text(label = "Tipo") tipo > isReadonly = true
+		Text(label = "Área") area > isReadonly = true
+		Text(label = "Habitación") room > isReadonly = true
+		Text(label = "Teléfono") phone > isReadonly = true
+		Text(label = "Email") mail > isReadonly = true
+		Text(label = "Asunto") issue > isReadonly = true
 		CheckBox(label = "Finalizado", mode = Boolean) finished
 
 	Tab("Jobs pantalla") screenJobs

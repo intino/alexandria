@@ -1,12 +1,12 @@
 dsl Konos
 
-Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http)
+Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http, port = "")
 	Info(title = "Swagger Petstore", version = "1.0.0")
 		License MIT
 	Resource(path = "/pets") pets
 		Get(summary = "List all pets") listPets
 			tags = "pets"
-			Parameter(in = query, description = "How many items to return at one time (max 100)", required = false) limit as Integer
+			Parameter(in = query, description = "How many items to return at one time (max 100)", isRequired = false) limit as Integer
 			Response(description = "An paged array of pets") as List Object(schema = Pet)
 			Exception(BadRequest, "unexpected error") as Object(Error)
 
@@ -16,7 +16,7 @@ Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host 
 	Resource(path = "/pets/:petId") pet
 		Get(summary = "Info for a specific pet", tags = "pets") showPetById
 			Parameter(in = path) petId as Text
-				required = true
+				isRequired = true
 				description = "The id of the pet to retrieve"
 			Response as List Object(schema = Pet)
 				description = "Expected response to a valid request"
@@ -26,13 +26,13 @@ Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host 
 
 
 
-Service(description = "Cesar Ops Service2", basePath = "/v1") cesar2 as REST(host = "petstore.swagger.io", protocols = http)
+Service(description = "Cesar Ops Service2", basePath = "/v1") cesar2 as REST(host = "petstore.swagger.io", protocols = http, port = "")
 	Info(title = "Swagger Petstore", version = "1.0.0")
 		License MIT
 	Resource(path = "/pets") pets
 		Get(summary = "List all pets") listPets
 			tags = "pets"
-			Parameter(in = query, description = "How many items to return at one time (max 100)", required = false) limit as Integer
+			Parameter(in = query, description = "How many items to return at one time (max 100)", isRequired = false) limit as Integer
 			Response(description = "An paged array of pets") as List Object(schema = Pet)
 			Exception(BadRequest, "unexpected error") as Object(Error)
 
@@ -42,7 +42,7 @@ Service(description = "Cesar Ops Service2", basePath = "/v1") cesar2 as REST(hos
 	Resource(path = "/pets/:petId") pet
 		Get(summary = "Info for a specific pet", tags = "pets") showPetById
 			Parameter(in = path) petId as Text
-				required = true
+				isRequired = true
 				description = "The id of the pet to retrieve"
 			Response as List Object(schema = Pet)
 				description = "Expected response to a valid request"
@@ -54,7 +54,7 @@ Schema Pet
 	Attribute id as Integer
 	Attribute name as Text
 	Attribute tag as Text
-		required = false
+		isRequired = false
 
 Schema Error
 	Attribute code as Integer

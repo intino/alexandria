@@ -3,6 +3,7 @@ package io.intino.konos.restful;
 import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -55,5 +56,6 @@ public interface RestfulApi {
 
     interface Response {
         String content();
+        InputStream contentAsStream();
     }
 }
