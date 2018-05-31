@@ -18,6 +18,7 @@ public class UIGenerationTest {
 	private static final String octana = "octana";
 	private static final String octanaPackage = "io.intino.octana.box";
 	private static final String cesarPackage = "io.intino.cesar.box";
+	private static final String editorPackage = "io.intino.editor.box";
 	private static final String DIR = "test-gen";
 
 
@@ -55,6 +56,11 @@ public class UIGenerationTest {
 	@Test
 	public void testCesar() throws Exception {
 		execute(new File(DIR, cesarPackage.replace(".", File.separator)), "testCesar", cesarPackage);
+	}
+
+	@Test
+	public void testEditor() throws Exception {
+		execute(new File(DIR, editorPackage.replace(".", File.separator)), "editor", editorPackage);
 	}
 
 	private void execute(File gen, String stash, String workingPackage) {

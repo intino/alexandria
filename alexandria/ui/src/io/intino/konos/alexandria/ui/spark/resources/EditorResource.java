@@ -1,11 +1,13 @@
 package io.intino.konos.alexandria.ui.spark.resources;
 
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.konos.alexandria.ui.services.EditorService.Permission;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 
 import java.io.InputStream;
 
 import static io.intino.konos.alexandria.ui.services.EditorService.DocumentParameter;
+import static io.intino.konos.alexandria.ui.services.EditorService.PermissionParameter;
 
 public abstract class EditorResource extends Resource {
 
@@ -17,6 +19,12 @@ public abstract class EditorResource extends Resource {
 		String documentId = documentId();
 		if (documentId == null) return null;
 		return new io.intino.konos.alexandria.schema.Resource(documentId()).data(content());
+	}
+
+	protected Permission loadPermission() {
+		String permission = manager.fromQuery(PermissionParameter, String.class);
+		if (permission == null) return Permission.Editable;
+		return permission.toLowerCase().equals("readonly") ? Permission.ReadOnly : Permission.Editable;
 	}
 
 	protected InputStream content() {

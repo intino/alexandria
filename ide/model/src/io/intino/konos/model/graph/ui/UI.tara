@@ -1,5 +1,8 @@
 dsl Proteo
 
+use Dialog
+use Display
+use Editor
 use Services
 use DataTypes
 
@@ -17,10 +20,15 @@ Facet UI on Service is decorable
 
 	Concept:Named Resource
 		var string path
-		var Component uses
 
 Facet Root on UI.Resource
 Facet Confidential on UI.Resource
-Facet Editor on UI.Resource
+
+Facet DisplayPage on UI.Resource
+	var Display display
+Facet DialogPage on UI.Resource
+	var Dialog dialog
+Facet EditorPage on UI.Resource
+	var Editor editor
 
 Concept Component is abstract

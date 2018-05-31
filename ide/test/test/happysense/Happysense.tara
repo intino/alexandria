@@ -1,9 +1,9 @@
 dsl Konos
 
-Service setupV2 as REST(host = "", basePath = "")
+Service setupV2 as REST(host = "", basePath = "", port = "")
 	Resource(path = "/configuration") configurationV2
 		Get(description="Sensor v2 or v3 configuration")
-			Parameter(in = query, required = true) sensor as Text
+			Parameter(in = query, isRequired = true) sensor as Text
 			Response as Object(schema = Configuration)
 			Exception(code = Unauthorized)
 
@@ -44,10 +44,10 @@ Service setupV2 as REST(host = "", basePath = "")
 
 
 
-Service setupV4 as REST(host = "", basePath = "v4")
+Service setupV4 as REST(host = "", basePath = "v4", port = "")
 	Resource(path = "/configuration") configurationV4
 		Get(description="Sensor v4 configuration")
-			Parameter(in = query, required = true) sensor as Text
+			Parameter(in = query, isRequired = true) sensor as Text
 			Response as Object(schema = Configuration)
 			Exception(code = Unauthorized)
 

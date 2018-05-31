@@ -24,8 +24,8 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 	Resource(path = "/snapshot/:id/opinions/download") downloadSnapshotOpinions
 		Get (description="Download opinions at some instant")
-			Parameter(in = path, required = true) id as Text
-			Parameter(in = query, required = true) username as Text
+			Parameter(in = path, isRequired = true) id as Text
+			Parameter(in = query, isRequired = true) username as Text
 			Parameter(in = query) date2 as Date
 			Parameter(in = query) date as DateTime
 			Parameter(in = query) language as Text
@@ -152,8 +152,8 @@ Task scheduleSystemLogging as CronTrigger(pattern = "0 * * * * *", mean = "every
 
 Service(title = "cesar", favicon = "/images/icon.png") cesarUi as UI(port = "9000")
 	Authentication(by = "{federationUrl}")
-	Resource("/", cesarDesktop) homePage as Root Confidential
-	Resource("/error", uses = errorDisplay) errorPage
+	Resource("/") homePage as DisplayPage(cesarDesktop) Root Confidential
+	Resource("/error") errorPage as DisplayPage(errorDisplay)
 
 
 
