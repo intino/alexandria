@@ -45,10 +45,8 @@ Task CheckEnginesAndAlarmsDuration as CronTrigger(pattern = "0 0/15 * 1/1 * ? *"
 
 Service(title = "Smart Port", favicon = "") productUi as UI(port = "9000")
 	Authentication(by = "{federationUrl}")
-	Resource(uses = ebarDesktop, path = "/") homePage as Confidential
-	Resource configurationPage
-		path = "/configuration/alert/:name"
-		uses = editStationAlerts
+	Resource("/") homePage as DisplayPage(ebarDesktop) Confidential
+	Resource("/configuration/alert/:name") configurationPage as DialogPage(editStationAlerts)
 
 Dialog(label = "Editar alertas", description = "alertas de la estación ::station::", url="") editStationAlerts
 	Tab("información")

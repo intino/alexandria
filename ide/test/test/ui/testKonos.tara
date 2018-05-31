@@ -1,7 +1,7 @@
 dsl Konos
 
-Service (title = "", favicon = "") testKonos as UI
-	Resource("/", uses=testHome) homePage as Root
+Service (title = "", favicon = "") testKonos as UI(port = "")
+	Resource("/") homePage as DisplayPage(testHome) Root
 
 Display Drillwise
 

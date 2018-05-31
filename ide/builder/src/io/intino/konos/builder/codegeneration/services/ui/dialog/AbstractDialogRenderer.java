@@ -136,7 +136,7 @@ public class AbstractDialogRenderer {
 
 	private Frame frameOf(Tab.Password.Validation validation) {
 		final Frame frame = new Frame().addTypes("password", "validation");
-		frame.addSlot("required", validation.required().stream().map(Enum::name).toArray(String[]::new));
+		frame.addSlot("required", validation.isRequired().stream().map(Enum::name).toArray(String[]::new));
 		if (validation.length() != null)
 			frame.addSlot("min", validation.length().min()).addSlot("max", validation.length().max());
 		return frame;
@@ -212,8 +212,8 @@ public class AbstractDialogRenderer {
 		frame.addSlot("owner", input.core$().owner().name());
 		if (input.name$() != null) frame.addSlot("name", input.name$());
 		frame.addSlot("label", input.label());
-		frame.addSlot("readonly", input.readonly());
-		frame.addSlot("required", input.required());
+		frame.addSlot("readonly", input.isReadonly());
+		frame.addSlot("required", input.isRequired());
 		frame.addSlot("placeholder", input.placeHolder());
 		frame.addSlot("defaultValue", input.defaultValue());
 		if (input.i$(MultipleInput.class)) {

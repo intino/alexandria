@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.services.ui.display;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.services.ui.display.catalog.CatalogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.desktop.DesktopRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.display.editor.EditorRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.mold.MoldRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.panel.PanelRenderer;
 import io.intino.konos.model.graph.*;
@@ -58,7 +59,8 @@ public class DisplayRenderer {
 	}
 
 	private void processPrototype(Display display) {
-		if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
+		if (display.i$(Editor.class)) new EditorRenderer(project, display.a$(Editor.class), packageName, boxName).write(src, gen);
+		else if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
 		else if (display.i$(Panel.class)) {
 			Panel panel = display.a$(Panel.class);
 			if (panel.isDesktop()) {

@@ -72,7 +72,7 @@ public class UIRenderer {
 		String path = resource.path();
 		Set<String> custom = Commons.extractParameters(path);
 		Frame pathFrame = new Frame("path").addSlot("value", path).addSlot("name", resource.name$());
-		if (resource.isEditor()) pathFrame.addTypes("editor");
+		if (resource.isEditorPage()) pathFrame.addTypes("editor");
 		if (service.userHome() != null) pathFrame.addSlot("userHome", service.userHome().name$());
 		if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
 		frame.addSlot("path", pathFrame);

@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.model.graph.Dialog;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
@@ -10,6 +10,7 @@ import java.util.List;
 
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
+import static io.intino.konos.model.graph.KonosGraph.componentFor;
 
 public class UIActionRenderer extends ActionRenderer {
 
@@ -30,10 +31,10 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		frame.addSlot("type", resource.isEditor() ? "Editor" : "Resource");
-		if (resource.uses().i$(Dialog.class)) frame.addSlot("importDialogs", packageName);
-		if (resource.isEditor()) frame.addSlot("editor", new Frame("editor"));
-		else frame.addSlot("importDisplays", packageName);
+		frame.addSlot("type", resource.isEditorPage() ? "Editor" : "Resource");
+		frame.addSlot("importDialogs", packageName);
+		frame.addSlot("importDisplays", packageName);
+		if (resource.isEditorPage()) frame.addSlot("editor", new Frame("editor"));
 		frame.addSlot("component", componentFrame());
 		frame.addSlot("parameter", parameters());
 		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
@@ -43,7 +44,11 @@ public class UIActionRenderer extends ActionRenderer {
 	}
 
 	private Frame componentFrame() {
-		Frame result = new Frame("component").addSlot("value", resource.uses().name$());
+		Frame result = new Frame("component").addSlot("value", componentFor(resource).name$());
+		if (resource.isEditorPage()) {
+			Component display = resource.asEditorPage().editor().display();
+			result.addSlot("editor", new Frame("editor").addSlot("display", display.name$()));
+		}
 		return result;
 	}
 
