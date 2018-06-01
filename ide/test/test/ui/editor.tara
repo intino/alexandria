@@ -13,9 +13,3 @@ Dialog(url = "", label = "Diálogo 1", description = "Esto es una descripción d
 
 	Tab(label = "Información general")
 		Text("campo de prueba") campo1
-
-	Toolbar
-		Operation("guardar borrador") saveDraft
-			closeAfterExecution = false
-
-		Operation("guardar") save
