@@ -54,16 +54,8 @@ public class DialogRenderer {
 	}
 
 	private void processToolbar(Frame frame, Dialog.Toolbar toolbar) {
-		if (toolbar != null) customToolbar(frame, toolbar);
-		else defaultToolbar(frame);
-	}
-
-	private void customToolbar(Frame frame, Dialog.Toolbar toolbar) {
+		if (toolbar == null) return;
 		for (Dialog.Toolbar.Operation operation : toolbar.operationList()) processOperation(frame, operation);
-	}
-
-	private void defaultToolbar(Frame frame) {
-		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", boxName).addSlot("name", "send"));
 	}
 
 	private void processOperation(Frame frame, Dialog.Toolbar.Operation operation) {

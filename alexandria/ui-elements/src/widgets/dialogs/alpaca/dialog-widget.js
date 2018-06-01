@@ -79,14 +79,14 @@ var AlpacaDialogWidget = function() {
     }
 
     function _renderToolbar(dialog, container) {
+        var operations = dialog.toolbar.operationList;
 
-        if (dialog.readonly) {
+        if (dialog.readonly || operations.length <= 0) {
             $(container.querySelector(".toolbar")).addClass("empty");
             return;
         }
 
         var toolbarContainer = container.querySelector(".toolbar");
-        var operations = dialog.toolbar.operationList;
 
         for (var i=operations.length-1; i>=0; i--) {
             var label = DialogAlpacaDictionary.labelFor(operations[i].name);
