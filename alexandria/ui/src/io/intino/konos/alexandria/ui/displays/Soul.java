@@ -24,11 +24,11 @@ public abstract class Soul implements DisplayRepository {
         this.session = session;
     }
 
+    public abstract void personify();
+
     public User user() {
         return session != null ? session.user() : null;
     }
-
-    public abstract void personify();
 
     public void destroy() {
         displays.values().forEach(AlexandriaDisplay::die);

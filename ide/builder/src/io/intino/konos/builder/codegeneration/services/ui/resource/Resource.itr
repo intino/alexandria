@@ -38,9 +38,11 @@ def type(resource)
 				}
 			});
 			action.session.whenLogout(b -> logout());
+			if (parameterValue("device") != null && !parameterValue("device").isEmpty()) action.session.device(parameterValue("device"));
 			action.box = box;
 			action.clientId = clientId;
-			action.googleApiKey = "$googleApiKey";[
+			action.googleApiKey = "$googleApiKey";
+			action.device = parameterValue("device");[
 			$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
@@ -58,6 +60,7 @@ def type(resource)
 					display.inject(() -> soul);
 				});
 				client.soul(soul);
+
 				box.registerSoul(clientId, soul);
 
 				return true;

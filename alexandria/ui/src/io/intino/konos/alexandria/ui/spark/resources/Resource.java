@@ -44,7 +44,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	protected String parameterValue(String key) {
 		String value = manager.fromPath(key, String.class);
-
+		if (value == null || value.isEmpty()) value = manager.fromQuery(key, String.class);
 		if (value == null || value.isEmpty()) return null;
 
 		try {
