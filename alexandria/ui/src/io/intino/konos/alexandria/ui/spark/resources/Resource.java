@@ -42,6 +42,11 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		fillBrowser(manager);
 	}
 
+	protected void fillDeviceParameter() {
+		String device = parameterValue("device");
+		if (device != null && !device.isEmpty()) manager.currentSession().device(device);
+	}
+
 	protected String parameterValue(String key) {
 		String value = manager.fromPath(key, String.class);
 		if (value == null || value.isEmpty()) value = manager.fromQuery(key, String.class);
@@ -62,8 +67,11 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		if (!isFederated()) return true;
 
 		AuthService authService = manager.authService();
-		if (authService instanceof SessionAuthService)
-			((SessionAuthService)authService).inject(manager);
+
+		if (authService instanceof SessionAuthService) {
+			((SessionAuthService) authService).inject(manager);
+			return authService.valid(null);
+		}
 
 		String authId = manager.fromQuery("authId", String.class);
 		Authentication authentication = authenticationOf(authId).orElse(null);

@@ -22,6 +22,7 @@ def type(resource)
 		@Override
 		public void execute() throws AlexandriaException {
 			super.execute();
+			fillDeviceParameter();
 			[$confidential
 			if (isLogged()) render();
 			else authenticate();?render();]
@@ -38,7 +39,6 @@ def type(resource)
 				}
 			});
 			action.session.whenLogout(b -> logout());
-			if (parameterValue("device") != null && !parameterValue("device").isEmpty()) action.session.device(parameterValue("device"));
 			action.box = box;
 			action.clientId = clientId;
 			action.googleApiKey = "$googleApiKey";
