@@ -26,6 +26,10 @@ public abstract class Soul implements DisplayRepository {
 
     public abstract void personify();
 
+    public UISession session() {
+        return session;
+    }
+
     public User user() {
         return session != null ? session.user() : null;
     }
