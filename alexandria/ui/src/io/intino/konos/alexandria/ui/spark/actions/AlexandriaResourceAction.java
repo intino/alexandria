@@ -18,6 +18,7 @@ public abstract class AlexandriaResourceAction {
 	public UISession session;
 	public String clientId;
 	public String googleApiKey;
+	public String device;
 
 	private static final String TemplateName = "/www/%s/%s.html";
 

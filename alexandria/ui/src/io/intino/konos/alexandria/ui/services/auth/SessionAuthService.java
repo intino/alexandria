@@ -7,7 +7,7 @@ import io.intino.konos.alexandria.ui.spark.UISparkManager;
 import java.net.URL;
 
 public class SessionAuthService implements AuthService {
-	private UISparkManager manager;
+	protected UISparkManager manager;
 
 	public void inject(UISparkManager manager) {
 		this.manager = manager;

@@ -22,6 +22,7 @@ def type(resource)
 		@Override
 		public void execute() throws AlexandriaException {
 			super.execute();
+			fillDeviceParameter();
 			[$confidential
 			if (isLogged()) render();
 			else authenticate();?render();]
@@ -40,7 +41,8 @@ def type(resource)
 			action.session.whenLogout(b -> logout());
 			action.box = box;
 			action.clientId = clientId;
-			action.googleApiKey = "$googleApiKey";[
+			action.googleApiKey = "$googleApiKey";
+			action.device = parameterValue("device");[
 			$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
@@ -58,6 +60,7 @@ def type(resource)
 					display.inject(() -> soul);
 				});
 				client.soul(soul);
+
 				box.registerSoul(clientId, soul);
 
 				return true;

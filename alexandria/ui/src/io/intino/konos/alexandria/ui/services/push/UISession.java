@@ -6,6 +6,7 @@ import io.intino.konos.alexandria.rest.spark.SparkSession;
 public class UISession extends SparkSession<UIClient> {
     private User user;
     private Browser browser;
+    private String device = null;
 
     public UISession(String id) {
         super(id);
@@ -30,6 +31,19 @@ public class UISession extends SparkSession<UIClient> {
 
     public void browser(Browser browser) {
         this.browser = browser;
+    }
+
+    public String device() {
+        return device;
+    }
+
+    public UISession device(String device) {
+        this.device = device;
+        return this;
+    }
+
+    public boolean isMobile() {
+        return device != null;
     }
 
     public String discoverLanguage() {
