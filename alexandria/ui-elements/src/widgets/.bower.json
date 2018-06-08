@@ -21,6 +21,7 @@
   		"cotton-timeline": "https://bitbucket.org/cottons/cotton-timeline.git#1.0.2",
   		"cotton-chip": "https://bitbucket.org/cottons/cotton-chip.git#1.1.0",
   		"cotton-loading": "https://bitbucket.org/cottons/cotton-loading.git#1.1.0",
+  		"cotton-pdf-viewer": "https://bitbucket.org/cottons/cotton-pdf-viewer.git#1.0.2",
   		"app-layout": "PolymerElements/app-layout#2.0.0",
   		"iron-pages": "PolymerElements/iron-pages#1.0.8",
   		"paper-dialog": "PolymerElements/paper-dialog#1.1.0",
@@ -50,8 +51,7 @@
   		"paper-rating": "mgibas/paper-rating#1.2.0",
   		"paper-date-picker": "bendavis78/paper-date-picker#1.2.0",
   		"paper-time-picker": "bendavis78/paper-time-picker#1.1.4",
-  		"vis": "vis#4.18.1",
-  		"pdf-browser-viewer": "IngressoRapidoWebComponents/pdf-browser-viewer#1.0.6"
+  		"vis": "vis#4.18.1"
 
   },
   "resolutions": {
