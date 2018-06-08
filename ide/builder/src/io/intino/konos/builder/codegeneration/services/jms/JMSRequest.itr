@@ -22,9 +22,12 @@ def type(request)
 		}
 
 		public void consume(Session session, Message request) {
-			[$exception+try
-				]$call[
-			$exception+catch]
+			try {
+				$call
+			} $exception+catch
+			catch (Throwable e) {
+				org.apache.log4j.Logger.getRootLogger().error(e.getMessage(), e);
+			}
 		}
 
 		private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
@@ -33,7 +36,7 @@ def type(request)
 			try {
 				$parameter+assign...[$NL]
 			} catch (JMSException e) {
-				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+				org.apache.log4j.Logger.getRootLogger().error(e.getMessage(), e);
 			}]
 			return action;
 		}
@@ -45,7 +48,7 @@ def type(request)
 				$returnMessageType+return
 				return message;
 			} catch (JMSException e) {
-				Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+				org.apache.log4j.Logger.getRootLogger().error(e.getMessage(), e);
 				return null;
 			}
 		}]
@@ -68,12 +71,8 @@ def trigger(call)
 	actionFor(request).execute();
 end
 
-def trigger(try)
-	try {
-end
-
 def trigger(catch)
-	} catch (AlexandriaException e) {
+	catch (AlexandriaException e) {
 		response(session, replyTo(request), exceptionMessage(session, idOf(request), e));
 	}
 end

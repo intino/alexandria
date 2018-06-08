@@ -50,15 +50,7 @@ public class AbstractDialogRenderer {
 	}
 
 	private void createToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
-		if (toolbar != null) customToolbar(frame, dialog, toolbar);
-		else defaultToolbar(frame, dialog);
-	}
-
-	private void defaultToolbar(Frame frame, String dialog) {
-		frame.addSlot("operation", frameOf(dialog, "send", "send", true));
-	}
-
-	private void customToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+		if (toolbar == null) return;
 		for (Operation operation : toolbar.operationList())
 			frame.addSlot("operation", frameOf(dialog, operation.name$(), operation.label(), operation.closeAfterExecution()));
 	}
