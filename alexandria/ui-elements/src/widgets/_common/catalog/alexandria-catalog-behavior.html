@@ -5,12 +5,14 @@
 
         properties : {
             _catalog: Object,
+            _showLabel : Boolean,
             _filtered : { type: Boolean, value: function() { return false; }},
             _hideGroupings: { type: Boolean, value: function() { return true; }}
         },
 
         _refreshCatalog : function(catalog) {
             this._catalog = catalog;
+            this._showLabel = catalog.embedded && catalog.label !== "";
             this._hideGroupings = this._catalog.hideGroupings;
         },
 
@@ -18,15 +20,11 @@
             this._filtered = value;
         },
 
-        _selectGrouping : function(event) {
+        _selectGrouping : function(e) {
         },
 
-        _handleGroupingChange : function(event) {
-            this.selectGrouping(event.detail);
-        },
-
-        _showGroupingsDialog : function () {
-            this.$.groupingsDialog.open();
+        _handleGroupingChange : function(e) {
+            this.selectGrouping(e.detail);
         },
 
         _itemsArrival : function() {

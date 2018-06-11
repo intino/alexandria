@@ -171,7 +171,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		display.onOpenItemCatalog(event -> openItemCatalog((OpenItemCatalogEvent) event));
 		display.onExecuteItemTask(event -> executeItemTask((ExecuteItemTaskEvent) event));
 		add(display);
-		display.personifyOnce(viewId(view));
+		display.personify(viewId(view));
 
 		return display;
 	}

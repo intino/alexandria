@@ -1,0 +1,86 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="alexandria-catalog-grouping-summary.html">
+
+<script src="../../../../lib/cotton-cookies/cookies.js"></script>
+
+<dom-module id="alexandria-catalog-grouping-list-summary">
+
+    <template>
+        <ul class="layout horizontal wrap">
+            <li class="message">[[FilteredBy]]</li>
+            <template is="dom-repeat" items="[[groupingList]]" as="grouping">
+                <alexandria-catalog-grouping-summary grouping$="[[grouping]]" on-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-summary>
+            </template>
+        </ul>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+        }
+        :host ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        :host ul li {
+            margin-right: 10px;
+            padding-right: 20px;
+            margin-bottom: 2px;
+            position: relative;
+            white-space: nowrap;
+        }
+        :host ul li.message {
+            color: #888;
+            font-size: 9pt;
+            padding-right: 0;
+            margin-top: 1px;
+        }
+    </style>
+
+    <script>
+        const AlexandriaCatalogGroupingListSummaryDictionary = {
+            es: {
+                FilteredBy: "filtrado por"
+            },
+            en: {
+                FilteredBy: "filtered by"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-catalog-grouping-list-summary',
+
+            properties: {
+                groupingList: { type: Object, value: function() { return []; }, observer: '_refreshVisibility' }
+            },
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            attached: function () {
+                this.translate(AlexandriaCatalogGroupingListSummaryDictionary);
+            },
+
+            _refreshVisibility : function() {
+                window.setTimeout(() => {
+                    var count = 0;
+                this.querySelectorAll("alexandria-catalog-grouping-summary").forEach((grouping) => {
+                    count += grouping.getSelectedGroups().length;
+            });
+                this.hidden = (count == 0);
+            }, 100);
+            },
+
+            _handleGroupingChange : function() {
+                var groupingElement = event.target;
+                var grouping = groupingElement.grouping;
+                this.fire('grouping-selection-change', { name: grouping.name, groups: groupingElement.getSelectedGroups() });
+            }
+
+        });
+    </script>
+
+</dom-module>
