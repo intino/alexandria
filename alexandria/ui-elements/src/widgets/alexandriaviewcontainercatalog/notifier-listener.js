@@ -9,8 +9,8 @@ AlexandriaViewContainerCatalogBehaviors.NotifierListener = {
     listenToDisplay : function() {
 		if (this.display == null || this._listeningToDisplay) return;
         var widget = this;
-        this.when("displayType").toSelf().execute(function(parameters) {
-        	widget._displayType(parameters.value);
+        this.when("displayInfo").toSelf().execute(function(parameters) {
+        	widget._displayInfo(parameters.value);
         });
         this._listeningToDisplay = true;
     }

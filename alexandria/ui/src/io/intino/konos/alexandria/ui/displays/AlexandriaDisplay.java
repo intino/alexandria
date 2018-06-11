@@ -1,6 +1,10 @@
 package io.intino.konos.alexandria.ui.displays;
 
 import io.intino.konos.alexandria.ui.Asset;
+import io.intino.konos.alexandria.ui.model.Catalog;
+import io.intino.konos.alexandria.ui.model.Element;
+import io.intino.konos.alexandria.ui.model.Panel;
+import io.intino.konos.alexandria.ui.model.TemporalCatalog;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 import java.net.URL;
@@ -199,4 +203,11 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return index != -1 ? name.substring(0, index) : name;
     }
 
+    public String typeOf(Element element) {
+        if (element instanceof Panel) return AlexandriaPanel.class.getSimpleName();
+        if (element instanceof Catalog) return AlexandriaCatalog.class.getSimpleName();
+        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Range) return AlexandriaTemporalRangeCatalog.class.getSimpleName();
+        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Time) return AlexandriaTemporalTimeCatalog.class.getSimpleName();
+        return null;
+    }
 }

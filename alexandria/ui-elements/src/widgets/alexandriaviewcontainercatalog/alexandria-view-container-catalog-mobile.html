@@ -1,13 +1,13 @@
-<link rel="import" href="../../lib/polymer/polymer.html">
-<link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
-<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
-<link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
-<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
 
-<script src="alexandriaviewcontainercatalog/requester.js"></script>
-<script src="alexandriaviewcontainercatalog/notifier-listener.js"></script>
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
 
-<dom-module id="alexandria-view-container-catalog">
+<dom-module id="alexandria-view-container-catalog-mobile">
 
     <template>
         <div id="container"></div>
@@ -28,7 +28,7 @@
 
     <script>
 
-        const AlexandriaViewContainerCatalogDictionary = {
+        const AlexandriaViewContainerCatalogMobileDictionary = {
             es: {
             },
             en: {
@@ -36,7 +36,7 @@
         };
 
         Polymer({
-            is: 'alexandria-view-container-catalog',
+            is: 'alexandria-view-container-catalog-mobile',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
@@ -48,14 +48,14 @@
             },
 
             attached : function() {
-                this.translate(AlexandriaViewContainerCatalogDictionary);
+                this.translate(AlexandriaViewContainerCatalogMobileDictionary);
                 this.listenToDisplay();
             },
 
             _displayInfo : function(info) {
                 var zombie = document.createElement("cotton-zombie");
                 zombie.setAttribute("display", info.type);
-                zombie.setAttribute("widget", info.type);
+                zombie.setAttribute("widget", info.elementType + "Mobile");
                 zombie.setAttribute("object", this.display.id);
                 this.$.container.appendChild(zombie);
             }

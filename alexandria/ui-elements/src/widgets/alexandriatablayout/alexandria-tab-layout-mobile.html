@@ -1,0 +1,92 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/cotton-layout/cotton-layout.html">
+<link rel="import" href="../_common/layout/alexandria-layout-behavior.html">
+<link rel="import" href="../_common/alexandria-item-selector-combo.html">
+<link rel="import" href="../alexandriapanel/alexandria-panel-mobile.html">
+<link rel="import" href="../alexandriacatalog/alexandria-catalog-mobile.html">
+<link rel="import" href="../alexandriatemporalrangecatalog/alexandria-temporal-range-catalog-mobile.html">
+<link rel="import" href="../alexandriatemporaltimecatalog/alexandria-temporal-time-catalog-mobile.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+<script src="../../../lib/cotton-delay-executor/DelayExecutor.js"></script>
+
+<dom-module id="alexandria-tab-layout-mobile">
+
+    <template>
+        <cotton-header id="layout" title="[[_title]]" subtitle="[[_subtitle]]" logo="[[_logo]]" on-logout="_logout" on-edit-profile="_editProfile">
+            <content select="#header-content"></content>
+        </cotton-header>
+        <iron-pages id="pages" class="flex" attr-for-selected="name" hidden$="[[_noItems]]" selected="[[_openedItem]]">
+            <template is="dom-repeat" items="[[_itemList]]" as="item">
+                <div class="item" name$="[[item.label]]">
+                    <cotton-zombie display$="[[item.type]]" widget$="[[item.elementType]]Mobile" object$="[[display.id]][[item.label]]"></cotton-zombie>
+                </div>
+            </template>
+        </iron-pages>
+        <div hidden$="[[!_noItems]]" name="noItems" class="message layout horizontal center"><span>[[NoItemsMessage]]</span></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            height: 100%;
+        }
+        :host iron-pages {
+            height: calc(100% - 65px);
+        }
+        :host .message {
+            height: 100%;
+        }
+        :host .message span {
+            margin: 0 auto;
+            background: var(--default-primary-color);
+            color: white;
+            padding: 3px 20px;
+            border-radius: 5px;
+            font-size: 14pt;
+        }
+        :host .item {
+            height: calc(100% - 1px);
+        }
+        @media screen and (max-width: 736px) {
+        }
+    </style>
+
+    <script>
+        const AlexandriaTabLayoutMobileDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-tab-layout-mobile',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTabLayoutBehaviors.Requester,
+                AlexandriaTabLayoutBehaviors.NotifierListener,
+                AlexandriaBehaviors.LayoutBehavior ],
+
+            attached : function() {
+                this.translate(AlexandriaTabLayoutMobileDictionary);
+                this.translate(AlexandriaBehaviors.LayoutBehavior.Dictionary);
+                this.listenToDisplay();
+            },
+
+            _itemsLoaded : function() {
+            },
+
+            _user : function(user) {
+            }
+
+        });
+    </script>
+</dom-module>

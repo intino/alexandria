@@ -2,7 +2,6 @@ package io.intino.konos.builder.codegeneration.services.ui.display.mold;
 
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Dialog;

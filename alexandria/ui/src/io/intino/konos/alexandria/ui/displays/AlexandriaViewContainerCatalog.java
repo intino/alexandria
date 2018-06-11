@@ -5,6 +5,7 @@ import io.intino.konos.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerCatalogNotifier;
 import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.view.container.CatalogContainer;
+import io.intino.konos.alexandria.ui.schemas.DisplayInfo;
 
 
 public class AlexandriaViewContainerCatalog extends AlexandriaViewContainer<AlexandriaViewContainerCatalogNotifier> {
@@ -36,7 +37,7 @@ public class AlexandriaViewContainerCatalog extends AlexandriaViewContainer<Alex
 		io.intino.konos.alexandria.ui.model.Catalog catalog = container.catalog();
 		catalogDisplay = container.display(catalog, session());
 		if (catalogDisplay == null) return;
-		sendDisplayType(catalogDisplay);
+		sendDisplayType();
 		catalogDisplay.staticFilter(item -> container.filter(catalog, context(), target(), (Item) item, session()));
 		catalogDisplay.target(target());
 		catalogDisplay.elementDisplayManager(provider().elementDisplayManager());
@@ -48,8 +49,8 @@ public class AlexandriaViewContainerCatalog extends AlexandriaViewContainer<Alex
 		catalogDisplay.personifyOnce(id());
 	}
 
-	private void sendDisplayType(AlexandriaDisplay display) {
-		notifier.displayType(display.name());
+	private void sendDisplayType() {
+		notifier.displayInfo(new DisplayInfo().type(catalogDisplay.name()).elementType(typeOf(catalogDisplay.element())));
 	}
 
 }

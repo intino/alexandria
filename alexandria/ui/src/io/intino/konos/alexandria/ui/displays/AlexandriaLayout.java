@@ -3,10 +3,7 @@ package io.intino.konos.alexandria.ui.displays;
 import io.intino.konos.alexandria.Box;
 import io.intino.konos.alexandria.ui.displays.builders.PlatformInfoBuilder;
 import io.intino.konos.alexandria.ui.displays.builders.ReferenceBuilder;
-import io.intino.konos.alexandria.ui.model.Element;
-import io.intino.konos.alexandria.ui.model.Panel;
-import io.intino.konos.alexandria.ui.model.Settings;
-import io.intino.konos.alexandria.ui.model.View;
+import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.model.panel.Desktop;
 import io.intino.konos.alexandria.ui.model.view.container.*;
 import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
@@ -131,6 +128,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		Reference result = ReferenceBuilder.build(item.name(), item.label());
 		List<ReferenceProperty> referenceProperties = result.referencePropertyList();
 		referenceProperties.add(new ReferenceProperty().name("type").value(item.type()));
+		referenceProperties.add(new ReferenceProperty().name("elementType").value(item.elementType()));
 		return result;
 	}
 
@@ -221,6 +219,11 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 			}
 
 			@Override
+			public String elementType() {
+				return AlexandriaLayout.this.typeOf(element);
+			}
+
+			@Override
 			public String type() {
 				return nameOf(AlexandriaLayout.this.element().displayTypeFor(element, null));
 			}
@@ -241,6 +244,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	protected interface LayoutItem {
 		String name();
 		String label();
+		String elementType();
 		String type();
 		Element element();
 	}

@@ -21,9 +21,9 @@
 <dom-module id="alexandria-temporal-range-catalog">
 
     <template>
+        <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
         <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class$="layout horizontal filtered_[[_filtered]] embedded_[[_catalog.embedded]]">
-            <a id="showGroupingsButton" class="layout vertical center center-justified" hidden="[[_hideGroupings]]" on-tap="_showGroupingsDialog"><div>[[ShowGroupings]]</div></a>
             <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
                                               histograms-mode="[[_catalog.arrangementHistogramsMode]]"
                                               grouping-list="[[_catalog.groupingList]]"
@@ -38,16 +38,6 @@
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
         <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[ItemsArrival]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
         <paper-toast id="notifyMessageToast" class="fit-bottom message" text="[[_notifyMessage]]"></paper-toast>
-        <paper-dialog id="groupingsDialog" no-overlap>
-            <h2>[[ShowGroupings]]</h2>
-            <alexandria-catalog-grouping-list hidden="[[_hideGroupings]]"
-                                              grouping-list="[[_catalog.groupingList]]"
-                                              on-grouping-selection-change="_handleGroupingChange"
-                                              on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
-            <div class="buttons">
-                <paper-button dialog-dismiss>[[Close]]</paper-button>
-            </div>
-        </paper-dialog>
     </template>
 
     <style>
@@ -98,19 +88,6 @@
             text-align: left;
             font-size: 10pt;
             color: var(--default-primary-color);
-        }
-        :host #showGroupingsButton {
-            display: none;
-            background: var(--default-primary-color);
-            cursor: pointer;
-            width: 39px;
-            border-right: 1px solid white;
-        }
-        :host #showGroupingsButton div {
-            transform: rotate(90deg);
-            background: transparent;
-            color: white;
-            width: 110px;
         }
         :host paper-dialog {
             background: white;
@@ -190,9 +167,6 @@
             margin-right: 10px;
         }
         @media screen and (max-width: 736px) {
-            :host #showGroupingsButton {
-                display: flex;
-            }
             :host #embeddedGroupings {
                 display: none;
             }
@@ -213,14 +187,12 @@
         const AlexandriaTemporalRangeCatalogDictionary = {
             es: {
                 ClearFilter : "ver todos los elementos",
-                ShowGroupings : "filtrar catálogo",
                 Close : "cerrar",
                 ItemsArrival : "han llegado nuevos elementos",
                 RefreshItems : "actualizar"
             },
             en: {
                 ClearFilter : "view all items",
-                ShowGroupings : "filter catalog",
                 Close : "close",
                 ItemsArrival : "new items arrival",
                 RefreshItems : "refresh"

@@ -5,6 +5,7 @@
 <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../lib/paper-toast/paper-toast.html">
 <link rel="import" href="_common/catalog/alexandria-catalog-grouping-list.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-grouping-list-summary.html">
 <link rel="import" href="alexandria-catalog-view-list.html">
 <link rel="import" href="alexandria-dialog-box.html">
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
@@ -24,13 +25,14 @@
             <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate"></cotton-breadcrumbs>
         </div>
         <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
-            <a id="showGroupingsButton" class="layout vertical center center-justified" hidden="[[_hideGroupings]]" on-tap="_showGroupingsDialog"><div>[[ShowGroupings]]</div></a>
             <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
                                               histograms-mode="[[_catalog.arrangementHistogramsMode]]"
                                               grouping-list="[[_catalog.groupingList]]"
                                               on-grouping-selection-change="_handleGroupingChange"
                                               on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
             <div class="main flex">
+                <alexandria-catalog-grouping-list-summary grouping-list="[[_catalog.groupingList]]"
+                                                          on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list-summary>
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
             </div>
@@ -39,16 +41,6 @@
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
         <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[ItemsArrival]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
         <paper-toast id="notifyMessageToast" class="fit-bottom message" text="[[_notifyMessage]]"></paper-toast>
-        <paper-dialog id="groupingsDialog" no-overlap>
-            <h2>[[ShowGroupings]]</h2>
-            <alexandria-catalog-grouping-list hidden="[[_hideGroupings]]"
-                                              grouping-list="[[_catalog.groupingList]]"
-                                              on-grouping-selection-change="_handleGroupingChange"
-                                              on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
-            <div class="buttons">
-                <paper-button dialog-dismiss>[[Close]]</paper-button>
-            </div>
-        </paper-dialog>
     </template>
 
     <style>
@@ -74,31 +66,26 @@
         :host .filtered_true .main alexandria-catalog-view-list {
             height: calc(100% - 24px);
         }
-        :host .clear {
+        :host .clear, :host .main alexandria-catalog-grouping-list-summary {
             position: static;
             right: 0;
             background: wheat;
             padding: 8px 10px;
             z-index: 1;
-            cursor: pointer;
             width: calc(100% - 20px);
             display: block;
             text-align: left;
             font-size: 10pt;
             color: var(--default-primary-color);
         }
-        :host #showGroupingsButton {
-            display: none;
-            background: var(--default-primary-color);
+        :host .clear {
             cursor: pointer;
-            width: 39px;
-            border-right: 1px solid white;
         }
-        :host #showGroupingsButton div {
-            transform: rotate(90deg);
-            background: transparent;
-            color: white;
-            width: 110px;
+        :host .main alexandria-catalog-grouping-list-summary {
+            display: none;
+            z-index: 2;
+            padding: 8px 23px;
+            width: calc(100% - 46px);
         }
         :host paper-dialog {
             background: white;
@@ -164,9 +151,6 @@
             margin-right: 10px;
         }
         @media screen and (max-width: 736px) {
-            :host #showGroupingsButton {
-                display: flex;
-            }
             :host #embeddedGroupings {
                 display: none;
             }
@@ -182,6 +166,17 @@
             :host #main > .main {
                 width: calc(100% - 40px);
             }
+            :host .main alexandria-catalog-view-list {
+                height: calc(100% - 24px);
+            }
+            :host .main alexandria-catalog-grouping-list-summary {
+                display: block;
+            }
+        }
+        @media all and (min-width: 600px) and (orientation: portrait) {
+            :host #embeddedGroupings {
+                display: none;
+            }
         }
     </style>
 
@@ -190,7 +185,6 @@
         const AlexandriaCatalogDictionary = {
             es: {
                 ClearFilter : "ver todos los elementos",
-                ShowGroupings : "filtrar catálogo",
                 Close : "cerrar",
                 Back : "< volver al catálogo",
                 ItemsArrival : "han llegado nuevos elementos",
@@ -198,7 +192,6 @@
             },
             en: {
                 ClearFilter : "view all items",
-                ShowGroupings : "filter catalog",
                 Close : "close",
                 Back : "< back to catalog",
                 ItemsArrival : "new items arrival",
@@ -219,20 +212,13 @@
                 AlexandriaCatalogBehaviors.NotifierListener ],
 
             properties : {
-                embedded: { type: Boolean, value: function() { return false; } },
-                _showLabel : Boolean
+                embedded: { type: Boolean, value: function() { return false; } }
             },
 
             attached : function() {
                 this.translate(AlexandriaCatalogDictionary);
                 this.listenToDisplay();
                 this.listenOpenEvents();
-            },
-
-            _refreshCatalog : function(catalog) {
-                this._catalog = catalog;
-                this._hideGroupings = this._catalog.hideGroupings;
-                this._showLabel = catalog.embedded && catalog.label !== "";
             },
 
             _handleDeleteGroupingGroup : function(event) {

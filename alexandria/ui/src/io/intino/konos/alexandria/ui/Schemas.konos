@@ -263,3 +263,7 @@ Schema CreatePanelParameters
 Schema OpenElementParameters
 	Attribute item as Text
 	Has(Reference, multiple=false) stamp
+
+Schema DisplayInfo
+	Attribute type as Text
+	Attribute elementType as Text
