@@ -19,7 +19,7 @@ Display alexandriaViewContainerPanel
 
 Display alexandriaViewContainerCatalog
 	displays = alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog
-	Notification displayType as Text
+	Notification displayInfo as Object(DisplayInfo)
 
 Display alexandriaViewContainerDisplay
 	Notification displayType as Text

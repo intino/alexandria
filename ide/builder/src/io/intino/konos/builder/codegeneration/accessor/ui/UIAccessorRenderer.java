@@ -181,7 +181,8 @@ public class UIAccessorRenderer {
 
 	private String typeOf(Display display) {
 		String type = display.getClass().getSimpleName();
-		if (type.equalsIgnoreCase("temporalCatalog")) return "temporal" + display.a$(TemporalCatalog.class).type().name() + "Catalog";
+		if (display.i$(Panel.class) && display.a$(Panel.class).isDesktop()) return "desktop";
+		else if (type.equalsIgnoreCase("temporalCatalog")) return "temporal" + display.a$(TemporalCatalog.class).type().name() + "Catalog";
 		else return type;
 	}
 

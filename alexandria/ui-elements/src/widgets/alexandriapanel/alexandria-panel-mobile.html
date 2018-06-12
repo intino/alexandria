@@ -1,0 +1,101 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../lib/paper-tabs/paper-tabs-icons.html">
+<link rel="import" href="../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../../lib/paper-toast/paper-toast.html">
+<link rel="import" href="../alexandriaviewcontainercatalog/alexandria-view-container-catalog-mobile.html">
+<link rel="import" href="../_common/alexandria-element-behavior.html">
+<link rel="import" href="../_common/alexandria-view-behavior.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-panel-mobile">
+
+    <template>
+        <iron-pages id="tabs-content" class$="flex" selected="{{_selectedView}}" attr-for-selected="name">
+            <template is="dom-repeat" items="[[_viewList]]" as="view">
+                <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                    <template is="dom-if" if="[[_isCatalogContainer(view)]]">
+                        <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalogMobile" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                    </template>
+                </template>
+            </template>
+        </iron-pages>
+    </template>
+
+    <style>
+        :host {
+            position: relative;
+        }
+        :host iron-pages, :host iron-pages > div {
+            height: 100%;
+        }
+        @media screen and (max-width: 736px) {
+        }
+        @media screen and (max-width: 540px) {
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaPanelMobileDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-panel-mobile',
+            lastView: null,
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.ElementBehavior,
+                AlexandriaBehaviors.ViewBehavior,
+                AlexandriaPanelBehaviors.Requester,
+                AlexandriaPanelBehaviors.NotifierListener ],
+
+            properties : {
+                _viewList : Array,
+                _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' },
+                _selectedPage : { type: Number, value: function () { return 0; } }
+            },
+
+            attached : function() {
+                this.translate(AlexandriaPanelMobileDictionary);
+                this.listenToDisplay();
+                this.listenOpenEvents();
+            },
+
+            _refreshViewList : function(viewList) {
+                this._viewList = viewList;
+            },
+
+            _refreshSelectedView : function(name) {
+                if (this._selectedView == name) return;
+                this._selectedView = name;
+            },
+
+            _isTabLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "tab";
+            },
+
+            _selectView : function(name) {
+                var element = this.querySelector("paper-tab[name='" + name + "']");
+                if (element == null) return;
+                if (this.lastView == name) return;
+                this.lastView = name;
+                this._openView({ detail : element.view.name });
+            }
+
+        });
+    </script>
+</dom-module>

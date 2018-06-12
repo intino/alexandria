@@ -18,6 +18,7 @@
 
         properties : {
             _itemList: { type: Array, observer: '_itemsLoaded' },
+            _noItems : Boolean,
             _itemTabList: Array,
             _openedItem : { type: String, observer: '_openItemByLabel' },
             _openedItemIndex: Number,
@@ -39,8 +40,12 @@
 
         _refreshItemList : function(itemList) {
             const countItems = itemList.length;
-            itemList.forEach((item) => item.type = this._itemProperty(item, "type").value);
+            itemList.forEach((item) => {
+                item.type = this._itemProperty(item, "type").value;
+            item.elementType = this._itemProperty(item, "elementType").value;
+        });
             this._itemList = itemList;
+            this._noItems = countItems <= 0;
             this._itemTabList = countItems > 0 ? this._arrayOf(itemList) : ['noItems'];
         },
 
