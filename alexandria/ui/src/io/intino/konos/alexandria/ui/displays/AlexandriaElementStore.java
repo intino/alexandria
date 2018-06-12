@@ -80,7 +80,7 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
 
     private <E extends AlexandriaElementDisplay> E addAndBuildDisplay(Element element, Item target, String label, String ownerId) {
         E display = buildDisplay(element, target, label);
-        display.personifyOnce(ownerId + normalize(label));
+        display.personify(ownerId + normalize(label));
         return display;
     }
 
