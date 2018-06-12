@@ -6,6 +6,7 @@
 <link rel="import" href="../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="../../lib/paper-toast/paper-toast.html">
 <link rel="import" href="_common/catalog/alexandria-catalog-grouping-list.html">
+<link rel="import" href="_common/catalog/alexandria-catalog-grouping-list-summary.html">
 <link rel="import" href="alexandria-time-navigator.html">
 <link rel="import" href="alexandriatimenavigator/alexandria-vertical-time-navigator.html">
 <link rel="import" href="alexandria-catalog-view-list.html">
@@ -29,6 +30,8 @@
                                               grouping-list="[[_catalog.groupingList]]"
                                               on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list>
             <div class$="main flex [[_navigatorLayout]]">
+                <alexandria-catalog-grouping-list-summary grouping-list="[[_catalog.groupingList]]"
+                                                          on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list-summary>
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilterr]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
                 <cotton-zombie id="navigator" display="AlexandriaTimeNavigator" widget$="Alexandria[[_navigatorLayout]]TimeNavigator" object$="[[display.id]]"></cotton-zombie>
@@ -76,18 +79,26 @@
         :host .filtered_true .main.Vertical alexandria-vertical-time-navigator {
             background: #ffffef;
         }
-        :host .clear {
+        :host .clear, :host .main alexandria-catalog-grouping-list-summary {
             position: static;
             right: 0;
             background: wheat;
             padding: 8px 10px;
             z-index: 1;
-            cursor: pointer;
             width: calc(100% - 20px);
             display: block;
             text-align: left;
             font-size: 10pt;
             color: var(--default-primary-color);
+        }
+        :host .clear {
+            cursor: pointer;
+        }
+        :host .main alexandria-catalog-grouping-list-summary {
+            display: none;
+            z-index: 2;
+            padding: 8px 23px;
+            width: calc(100% - 46px);
         }
         :host paper-dialog {
             background: white;
@@ -176,8 +187,17 @@
             :host #main .main {
                 width: calc(100% - 40px);
             }
+            :host .main alexandria-catalog-view-list {
+                height: calc(100% - 24px);
+            }
+            :host .main alexandria-catalog-grouping-list-summary {
+                display: block;
+            }
         }
-        @media screen and (max-width: 540px) {
+        @media all and (min-width: 600px) and (orientation: portrait) {
+            :host #embeddedGroupings {
+                display: none;
+            }
         }
     </style>
 

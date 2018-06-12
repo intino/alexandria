@@ -26,7 +26,7 @@
         <cotton-breadcrumbs class="breadcrumbs" items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class="layout vertical flex" style="height:100%;">
             <div class$="tabs tabs_[[_showTabs]]">
-                <paper-tabs selected="{{_selectedView}}" no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
+                <paper-tabs selected="{{_selectedView}}" scrollable no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
                     <template is="dom-repeat" items="[[_viewList]]" as="view">
                         <template is="dom-if" if="[[_isTabLayoutView(view)]]">
                             <paper-tab name$="[[view.name]]" view="[[view]]" hidden$="[[_isViewHidden(view)]]">[[view.label]]</paper-tab>
@@ -187,18 +187,13 @@
                 padding-bottom: 0;
             }
             :host .tabs.tabs_true {
-                margin-left: 40px;
-                width: calc(100% - 40px);
+                width: 100%;
                 min-height: 30px;
-                margin-top: 4px;
             }
         }
         @media screen and (max-width: 540px) {
             :host cotton-breadcrumbs {
                 margin-top: 5px;
-            }
-            :host .tabs.tabs_true {
-                margin-top: 12px;
             }
         }
     </style>

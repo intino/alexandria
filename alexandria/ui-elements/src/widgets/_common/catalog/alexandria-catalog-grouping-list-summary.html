@@ -62,16 +62,17 @@
 
             attached: function () {
                 this.translate(AlexandriaCatalogGroupingListSummaryDictionary);
+                this.hidden = true;
             },
 
             _refreshVisibility : function() {
                 window.setTimeout(() => {
                     var count = 0;
-                this.querySelectorAll("alexandria-catalog-grouping-summary").forEach((grouping) => {
-                    count += grouping.getSelectedGroups().length;
-            });
-                this.hidden = (count == 0);
-            }, 100);
+                    this.querySelectorAll("alexandria-catalog-grouping-summary").forEach((grouping) => {
+                        count += grouping.getSelectedGroups().length;
+                    });
+                    this.hidden = (count == 0);
+                }, 100);
             },
 
             _handleGroupingChange : function() {
