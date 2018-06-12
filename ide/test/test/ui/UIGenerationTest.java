@@ -16,7 +16,9 @@ public class UIGenerationTest {
 	private static final String konos = "testkonos";
 	private static final String ebar = "testebar";
 	private static final String octana = "octana";
+	private static final String marcet = "marcet";
 	private static final String octanaPackage = "io.intino.octana.box";
+	private static final String marcetPackage = "org.marcet.box";
 	private static final String cesarPackage = "io.intino.cesar.box";
 	private static final String editorPackage = "io.intino.editor.box";
 	private static final String DIR = "test-gen";
@@ -42,7 +44,6 @@ public class UIGenerationTest {
 		execute(new File(DIR, konos), konos, konos);
 	}
 
-
 	@Test
 	public void testEbar() throws Exception {
 		execute(new File(DIR, ebar), ebar, ebar);
@@ -51,6 +52,11 @@ public class UIGenerationTest {
 	@Test
 	public void testOctana() throws Exception {
 		execute(new File(DIR, octanaPackage.replace(".", File.separator)), octana, octanaPackage);
+	}
+
+	@Test
+	public void testMarcet() throws Exception {
+		execute(new File(DIR, marcetPackage.replace(".", File.separator)), marcet, marcetPackage);
 	}
 
 	@Test

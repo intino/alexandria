@@ -7,7 +7,7 @@
 <script src="requester.js"></script>
 <script src="notifier-listener.js"></script>
 
-<dom-module id="alexandria-view-container-catalog-mobile">
+<dom-module id="alexandria-view-container-catalog-drawer">
 
     <template>
         <div id="container"></div>
@@ -28,7 +28,7 @@
 
     <script>
 
-        const AlexandriaViewContainerCatalogMobileDictionary = {
+        const AlexandriaViewContainerCatalogDrawerDictionary = {
             es: {
             },
             en: {
@@ -36,7 +36,7 @@
         };
 
         Polymer({
-            is: 'alexandria-view-container-catalog-mobile',
+            is: 'alexandria-view-container-catalog-drawer',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
@@ -48,14 +48,14 @@
             },
 
             attached : function() {
-                this.translate(AlexandriaViewContainerCatalogMobileDictionary);
+                this.translate(AlexandriaViewContainerCatalogDrawerDictionary);
                 this.listenToDisplay();
             },
 
             _displayInfo : function(info) {
                 var zombie = document.createElement("cotton-zombie");
                 zombie.setAttribute("display", info.type);
-                zombie.setAttribute("widget", info.elementType + "Mobile");
+                zombie.setAttribute("widget", info.elementType + "Drawer");
                 zombie.setAttribute("object", this.display.id);
                 this.$.container.appendChild(zombie);
             }
