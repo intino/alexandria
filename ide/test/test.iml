@@ -79,6 +79,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.moandjiezana.toml:toml4j:0.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.tara:magritte:2.1.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.tara:language:1.0.8" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.tara:io:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:reflectasm:1.11.3" level="project" />

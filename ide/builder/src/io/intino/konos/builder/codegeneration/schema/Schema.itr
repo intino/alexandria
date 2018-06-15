@@ -7,7 +7,7 @@ def type(root)
 end
 
 def trigger(schema)
-	public $inner class $name+firstUpperCase implements java.io.Serializable {
+	public $inner class $name+firstUpperCase [extends $parent ]implements java.io.Serializable {
 
 		$attribute+declaration...[$NL]
 
