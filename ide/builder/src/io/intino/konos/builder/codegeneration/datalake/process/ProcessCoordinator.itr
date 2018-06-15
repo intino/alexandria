@@ -24,7 +24,7 @@ def type(processes)
 	public class ProcessCoordinator {
 		$process+field...[$NL]
 
-		public static void registerProcess($box+firstUppercase~Box box) {
+		public static void registerProcesses($box+firstUppercase~Box box) {
 			final String clientID = $clientId;
 			$process+assign...[$NL]
 			$process+subscribe...[$NL]
@@ -56,7 +56,7 @@ def type(tank) trigger(field)
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = box.datalake().add("$messageType");
+	$name+firstLowerCase = box.datalake().add("$messageType+lowerCase");
 	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
 end
 

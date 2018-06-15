@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import com.intellij.openapi.module.Module;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Process;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.ness.NessClient;
@@ -67,12 +68,20 @@ public class AbstractBoxRenderer {
 	private void dataLake(Frame root, String name) {
 		if (!graph.nessClientList().isEmpty()) {
 			final NessClient client = graph.nessClientList().get(0);
-			final Frame datalake = new Frame().addTypes("dataLake").addSlot("mode", graph.nessClient(0).mode().name()).addSlot("name", graph.nessClient(0).name$()).addSlot("package", packageName).addSlot("configuration", name);
+			final Frame datalake = new Frame().addTypes("dataLake").
+					addSlot("mode", graph.nessClient(0).mode().name()).
+					addSlot("name", graph.nessClient(0).name$()).
+					addSlot("package", packageName).addSlot("configuration", name);
 			datalake.addSlot("parameter", new Frame(isCustom(client.url()) ? "custom" : "standard").addSlot("value", client.url()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.user()) ? "custom" : "standard").addSlot("value", client.user()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.password()) ? "custom" : "standard").addSlot("value", client.password()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.clientID()) ? "custom" : "standard").addSlot("value", client.clientID()));
+			if (client.messageHandlerList().stream().anyMatch(h->h.i$(Process.class)))
+				datalake.addSlot("processCoordinator", new Frame().addSlot("package", packageName).addSlot("configuration", name));
+			if (hasModel)
+				datalake.addSlot("nessOperations", new Frame().addSlot("package", packageName).addSlot("configuration", name));
 			root.addSlot("dataLake", datalake);
+
 		}
 	}
 
