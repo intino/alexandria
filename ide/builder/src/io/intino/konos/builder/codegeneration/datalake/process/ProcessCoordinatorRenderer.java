@@ -62,8 +62,8 @@ public class ProcessCoordinatorRenderer {
 		return (datalake.domain().isEmpty() ? "" : datalake.domain() + ".") + subdomain(process) + name(process);
 	}
 
-	private String composedName(Process handler) {
-		return handler.subdomain().isEmpty() ? "" : handler.subdomain() + firstUpperCase(name(handler));
+	private String composedName(Process process) {
+		return (process.subdomain().isEmpty() ? "" : process.subdomain()) + firstUpperCase(name(process));
 	}
 
 	private String subdomain(Process process) {

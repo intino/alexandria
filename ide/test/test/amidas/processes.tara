@@ -1,0 +1,9 @@
+dsl Konos
+
+
+
+Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
+	Process(schema = Solicitud)
+	Process(schema = empty) soli2
+
+Schema Solicitud

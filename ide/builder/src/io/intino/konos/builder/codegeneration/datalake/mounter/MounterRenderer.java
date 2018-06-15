@@ -10,7 +10,9 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
 public class MounterRenderer {
@@ -40,13 +42,13 @@ public class MounterRenderer {
 			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "ness/mounters");
 			final String handlerName = name + "Mounter";
-			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
-					Formatters.customize(MounterTemplate.create()).format(frame));
+			if (!alreadyRendered(destination, handlerName))
+				writeFrame(destination, handlerName, customize(MounterTemplate.create()).format(frame));
 		}
 	}
 
 	private String composedName(MessageHandler handler) {
-		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".","_" ))) + firstUpperCase(name(handler)));
+		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".", "_"))) + firstUpperCase(name(handler)));
 	}
 
 	private String name(MessageHandler handler) {

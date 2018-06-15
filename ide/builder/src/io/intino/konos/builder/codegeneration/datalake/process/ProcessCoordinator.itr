@@ -94,6 +94,10 @@ def trigger(process) trigger(class)
 	}
 end
 
+def trigger(precondition)
+	if (!process.$name($messageType)) return;
+end
+
 def trigger(tankImport)
 	import $value+validPackage.process.*;
 end
