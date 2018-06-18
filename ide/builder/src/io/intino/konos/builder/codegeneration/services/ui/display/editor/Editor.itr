@@ -17,7 +17,7 @@ def type(editor)
     	}
 
     	@Override
-    	public void prepare(AmidasTestDialog dialog, io.intino.konos.alexandria.schema.Resource document, EditorService.Permission permission) {
+    	public void prepare($display+firstUpperCase dialog, io.intino.konos.alexandria.schema.Resource document, EditorService.Permission permission) {
     	}
 
     	@Override
