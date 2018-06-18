@@ -28,11 +28,13 @@
         },
 
         _itemsArrival : function() {
-            this.querySelector("paper-toast#itemsArrival").open();
+            var toast = this.querySelector("paper-toast#itemsArrival");
+            if (toast != null) toast.open();
         },
 
         _closeItemsArrival : function() {
-            this.querySelector("paper-toast#itemsArrival").close();
+            var toast = this.querySelector("paper-toast#itemsArrival");
+            if (toast != null) toast.close();
         },
 
         _refreshWithArrival : function() {
