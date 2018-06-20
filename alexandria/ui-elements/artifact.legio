@@ -23,7 +23,7 @@ Artifact(groupId = "io.intino.konos", version = "1.1.2") alexandria-ui-elements
 		WebComponent("https://bitbucket.org/cottons/cotton-timeline.git", "1.0.2") cotton-timeline
 		WebComponent("https://bitbucket.org/cottons/cotton-chip.git", "1.1.0") cotton-chip
 		WebComponent("https://bitbucket.org/cottons/cotton-loading.git", "1.1.0") cotton-loading
-		WebComponent("https://bitbucket.org/cottons/cotton-pdf-viewer.git", "1.0.2") cotton-pdf-viewer
+		WebComponent("https://bitbucket.org/cottons/cotton-pdf-viewer.git", "1.0.3") cotton-pdf-viewer
 
 		WebComponent("PolymerElements/app-layout", "2.0.0") app-layout
 		WebComponent("PolymerElements/iron-pages", "1.0.8") iron-pages
