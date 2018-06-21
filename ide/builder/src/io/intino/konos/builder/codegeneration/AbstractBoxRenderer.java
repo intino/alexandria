@@ -76,12 +76,11 @@ public class AbstractBoxRenderer {
 			datalake.addSlot("parameter", new Frame(isCustom(client.user()) ? "custom" : "standard").addSlot("value", client.user()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.password()) ? "custom" : "standard").addSlot("value", client.password()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.clientID()) ? "custom" : "standard").addSlot("value", client.clientID()));
-			if (client.messageHandlerList().stream().anyMatch(h->h.i$(Process.class)))
+			if (client.messageHandlerList().stream().anyMatch(h -> h.i$(Process.class)))
 				datalake.addSlot("processCoordinator", new Frame().addSlot("package", packageName).addSlot("configuration", name));
 			if (hasModel)
 				datalake.addSlot("nessOperations", new Frame().addSlot("package", packageName).addSlot("configuration", name));
 			root.addSlot("dataLake", datalake);
-
 		}
 	}
 

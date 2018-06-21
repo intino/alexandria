@@ -7,3 +7,7 @@ Client client as Ness(url = "", user = "", password = "", domain = "", clientID 
 	Process(schema = empty) soli2
 
 Schema Solicitud
+
+Schema OtraDocumentacion
+    Attribute descripcion as Text
+    Attribute(multiple=true) fichero as File
