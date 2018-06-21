@@ -18,6 +18,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -70,6 +71,8 @@ public class RESTResourceRenderer {
 		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
 		if (!resource.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+		final RESTService.AuthenticatedWithToken authenticated = resource.core$().ownerAs(RESTService.class).authenticatedWithToken();
+		if (authenticated != null) frame.addSlot("authenticationValidator", new Frame("authenticationValidator").addSlot("type", "Basic"));
 		return frame;
 	}
 
@@ -85,8 +88,10 @@ public class RESTResourceRenderer {
 	}
 
 	private String[] throwCodes(Operation resource) {
-		String[] throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).toArray(String[]::new);
-		return throwCodes.length == 0 ? new String[]{"Unknown"} : throwCodes;
+		final RESTService.AuthenticatedWithToken authenticated = resource.core$().ownerAs(RESTService.class).authenticatedWithToken();
+		List<String> throwCodes = resource.exceptionList().stream().map(r -> r.code().toString()).collect(Collectors.toList());
+		if (authenticated != null) throwCodes.add("Unauthorized");
+		return throwCodes.isEmpty() ? new String[]{"Unknown"} : throwCodes.toArray(new String[0]);
 	}
 
 	private Frame[] parameters(List<Parameter> parameters) {
