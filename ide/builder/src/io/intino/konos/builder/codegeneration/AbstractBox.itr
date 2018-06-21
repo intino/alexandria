@@ -73,7 +73,6 @@ def type(box)
 		[$hasUi+authService]
 		[$hasUi+editorService]
 		$dataLake+getter...[$NL$NL]
-
 		$task+getter...[$NL$NL]
 
 		private void initRESTServices() {
@@ -331,6 +330,7 @@ def trigger(editorService)
 		return this.editorService;
 	}
 end
+
 
 def trigger(registerSoul)
 	public java.util.List<Soul> souls() {
