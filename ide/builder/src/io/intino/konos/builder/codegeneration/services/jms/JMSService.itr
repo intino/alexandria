@@ -15,7 +15,7 @@ def type(jms)
 	import java.io.ByteArrayOutputStream;
 	import java.io.IOException;
 	import java.io.InputStream;
-	import java.util.logging.Logger;
+
 
 	public class $name+firstUpperCase~Service extends io.intino.konos.jms.Bus {
 
@@ -35,7 +35,7 @@ def type(jms)
 			try {
 				return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			} catch (JMSException e) {
-				Logger.getGlobal().severe(e.getMessage());
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 				return null;
 			}
 		}
@@ -51,7 +51,7 @@ def type(jms)
 				buffer.flush();
 				return buffer.toByteArray();
 			} catch (IOException e) {
-				Logger.getGlobal().severe(e.getMessage());
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 			return new byte$[0];
 		}
