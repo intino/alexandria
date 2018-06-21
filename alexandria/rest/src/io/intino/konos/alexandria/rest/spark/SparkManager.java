@@ -106,6 +106,11 @@ public class SparkManager {
 		return result;
 	}
 
+	public String basePath() {
+		String forwardedPath = request.raw().getHeader(XForwardedPath);
+		return forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath;
+	}
+
 	private void setUpMultipartConfiguration() {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);

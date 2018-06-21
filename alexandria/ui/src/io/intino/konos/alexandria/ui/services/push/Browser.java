@@ -2,6 +2,7 @@ package io.intino.konos.alexandria.ui.services.push;
 
 public class Browser {
     private String baseUrl;
+    private String basePath;
     private String homeUrl;
     private String userHomeUrl;
     private String language;
@@ -17,6 +18,14 @@ public class Browser {
 
     public void baseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public String basePath() {
+        return basePath;
+    }
+
+    public void basePath(String basePath) {
+        this.basePath = basePath;
     }
 
     public String homeUrl() {
