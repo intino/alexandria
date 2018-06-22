@@ -28,14 +28,12 @@ def type(accessor)
 		private static Gson gsonWriter = gsonWriter();
 		private RestfulAccessor accessor = new RestfulAccessor();[
 		$certificate~private URL certificate;][
-		$user~private String user;][
-		$auth~private String password;]
+		$token~private String token;]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$user, String user][$auth, String password]) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$token, String token]) {
 			this.url = url;[
 			$certificate~this.certificate = certificate;][
-			$user~this.user = user;][
-			$auth~this.password = password;]
+			$token~this.token = token;]
 		}
 
 		$resource...[$NL$NL]
@@ -210,7 +208,7 @@ def type(auth & cert & doInvoke)
 end
 
 def type(auth & doInvoke)
-	accessor.secure(this.url, this.user, this.password).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
+	accessor.secure(this.url, this.token).$type+firstLowerCase($relativePath[, $parameters][, Arrays.asList($resource...[,])])
 end
 
 def type(doInvoke)
