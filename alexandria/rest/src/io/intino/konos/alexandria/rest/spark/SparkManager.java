@@ -108,7 +108,7 @@ public class SparkManager {
 
 	public String basePath() {
 		String forwardedPath = request.raw().getHeader(XForwardedPath);
-		return forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath;
+		return forwardedPath == null || forwardedPath.equals("") || forwardedPath.equals("/") ? "" : forwardedPath;
 	}
 
 	private void setUpMultipartConfiguration() {
