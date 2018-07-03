@@ -5,6 +5,7 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import io.intino.konos.builder.helpers.Commons;
+import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Proteo;
 import io.intino.tara.dsl.Verso;
@@ -20,19 +21,19 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class BoxRenderer {
-
-
+	private final KonosGraph graph;
 	private final File destination;
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
 	private boolean isTara;
 
-	public BoxRenderer(File destination, String packageName, Module module, boolean isTara) {
+	public BoxRenderer(KonosGraph graph, File destination, String packageName, Module module, boolean isTara) {
+		this.graph = graph;
 		this.destination = destination;
 		this.packageName = packageName;
 		this.module = module;
-		configuration = module != null ? TaraUtil.configurationOf(module) : null;
+		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
 		this.isTara = isTara;
 	}
 
@@ -47,8 +48,14 @@ public class BoxRenderer {
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 			frame.addSlot("rest", name);
+
+		if (hasAuthenticatedApis()) frame.addSlot("authenticationValidator", new Frame().addSlot("type", "Basic"));
 		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(false);
 		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().format(frame));
+	}
+
+	private boolean hasAuthenticatedApis() {
+		return graph.rESTServiceList().stream().anyMatch(restService -> restService.authenticatedWithToken() != null);
 	}
 
 	private Frame fillTara() {

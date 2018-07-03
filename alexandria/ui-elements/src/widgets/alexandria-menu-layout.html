@@ -118,11 +118,19 @@
             width: 100%;
         }
         @media screen and (max-width: 736px) {
+            :host cotton-layout ::content .info {
+                margin-left: 43px;
+            }
             :host paper-menu {
                 display: none;
             }
             :host cotton-layout.fullscreen ::content > iron-pages {
                 height: calc(100% - 57px);
+            }
+        }
+        @media all and (min-width: 600px) and (orientation: portrait) {
+            :host cotton-layout ::content .info {
+                margin-left: 43px;
             }
         }
     </style>

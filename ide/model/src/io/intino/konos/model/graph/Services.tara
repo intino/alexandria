@@ -20,10 +20,7 @@ Facet REST on Service
 			var string storePassword
 			Concept AllowedUsers
 				var string[] certificate
-		sub AuthenticatedWithPassword
-			Concept:{1..*} AllowedUsers
-				var string user
-				var string password
+		sub AuthenticatedWithToken
 	Concept:{0..1} Info
 		var string title
 		var string version

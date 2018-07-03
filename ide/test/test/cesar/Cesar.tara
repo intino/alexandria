@@ -1,6 +1,7 @@
 dsl Konos
 
 Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath = "", port = "{port}")
+	AuthenticatedWithToken
 	Resource(path = "/systems") systems
 		Get(description = "List of systems")
 			Response as Text
@@ -24,8 +25,8 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 	Resource(path = "/snapshot/:id/opinions/download") downloadSnapshotOpinions
 		Get (description="Download opinions at some instant")
-			Parameter(in = path, isRequired = true) id as Text
-			Parameter(in = query, isRequired = true) username as Text
+			Parameter(in = path) id as Text
+			Parameter(in = query) username as Text
 			Parameter(in = query) date2 as Date
 			Parameter(in = query) date as DateTime
 			Parameter(in = query) language as Text

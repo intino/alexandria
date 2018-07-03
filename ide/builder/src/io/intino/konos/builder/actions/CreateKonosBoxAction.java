@@ -21,6 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
 import io.intino.plugin.project.LegioConfiguration;
@@ -43,7 +44,6 @@ import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
-import static io.intino.konos.builder.utils.GraphLoader.loadGraph;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
@@ -165,7 +165,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		}
 
 		private KonosGraph generate(String packageName, File gen, File src, File res) {
-			KonosGraph graph = loadGraph(module);
+			KonosGraph graph = new GraphLoader().loadGraph(module);
 			if (graph == null) {
 				notifyError("Models have errors");
 				return null;

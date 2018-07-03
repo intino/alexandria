@@ -4,8 +4,6 @@
 <link rel="import" href="../../../../lib/iron-icons/iron-icons.html">
 <link rel="import" href="../../../../lib/cotton-checkbox/cotton-checkbox.html">
 <link rel="import" href="../../../../lib/cotton-cookies/cotton-cookies.html">
-<link rel="import" href="../../alexandriatimenavigator/alexandria-pocket-time-navigator.html">
-<link rel="import" href="../../alexandriatimerangenavigator/alexandria-pocket-time-range-navigator.html">
 <link rel="import" href="alexandria-catalog-grouping.html">
 
 <script src="../../../../lib/cotton-cookies/cookies.js"></script>
@@ -23,18 +21,10 @@
                 <li class="empty layout vertical center center-justified">[[NoGroupings]]</li>
             </template>
             <template is="dom-repeat" items="[[groupingList]]" as="grouping">
-                <!--<template is="dom-if" if="[[grouping.temporal]]">-->
-                    <!--<li class="grouping">-->
-                        <!--<cotton-zombie display="AlexandriaTimeRangeNavigator" widget="AlexandriaPocketTimeRangeNavigator"></cotton-zombie>-->
-                        <!--<cotton-zombie display="AlexandriaTimeNavigator" widget="AlexandriaPocketTimeNavigator"></cotton-zombie>-->
-                    <!--</li>-->
-                <!--</template>-->
-                <!--<template is="dom-if" if="[[!grouping.temporal]]">-->
-                    <li class="grouping">
-                        <paper-icon-button icon="icons:check"></paper-icon-button>
-                        <alexandria-catalog-grouping grouping$="[[grouping]]" on-selection-change="_handleGroupingChange"></alexandria-catalog-grouping>
-                    </li>
-                <!--</template>-->
+                <li class="grouping">
+                    <paper-icon-button icon="icons:check"></paper-icon-button>
+                    <alexandria-catalog-grouping grouping$="[[grouping]]" on-selection-change="_handleGroupingChange"></alexandria-catalog-grouping>
+                </li>
             </template>
         </ul>
     </template>
@@ -59,12 +49,14 @@
             min-width: 300px;
             height: calc(100% - 31px);
             overflow: auto;
+            @apply(--grouping-list);
         }
         :host .groupings .grouping {
             border-bottom: 1px solid #ddd;
             padding: 0;
             cursor: pointer;
             position: relative;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
         }
         :host .groupings .grouping paper-icon-button {
             position: absolute;
@@ -165,8 +157,8 @@
             _refresh : function() {
                 this.querySelectorAll("alexandria-catalog-grouping").forEach((grouping) => {
                     if (this._checked) grouping.showCharts();
-                    else grouping.hideCharts();
-                });
+            else grouping.hideCharts();
+            });
                 this._toggleChartsLabel = this._checked ? this.HideCharts : this.ShowCharts;
             }
 

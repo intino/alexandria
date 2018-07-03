@@ -13,14 +13,17 @@ def type(resource)
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager manager;
+		private SparkManager manager;[
+		$authenticationValidator+field]
 
 		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
 			this.manager = manager;
+			$authenticationValidator+assign
 		}
 
-		public void execute() throws $throws...[, ] {
+		public void execute() throws $throws...[, ] {[
+			$authenticationValidator+validate]
 			[$returnType+writeCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
@@ -76,6 +79,18 @@ end
 
 def type(list) trigger(parameterType)
 	com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, $value.class).getType()
+end
+
+def type(authenticationValidator) trigger(field)
+	io.intino.konos.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator validator;
+end
+
+def type(authenticationValidator) trigger(assign)
+	this.validator = box.authenticationValidator();
+end
+
+def type(authenticationValidator) trigger(validate)
+	if (!validator.validate(manager.fromHeader("Authorization", String.class).replace("Basic ", ""))) throw new Unauthorized("Credential not found");
 end
 
 def trigger(parameterType)

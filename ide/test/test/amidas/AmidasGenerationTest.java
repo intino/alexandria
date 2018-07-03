@@ -11,10 +11,10 @@ import java.io.File;
 public class AmidasGenerationTest {
 
 	private static final String AMIDAS = "amidas";
-
+	private static final String PROCESSES = "processes";
 
 	@Test
-	public void testAmidas() throws Exception {
+	public void testAmidas() {
 		File gen = new File("test-gen", AMIDAS);
 		KonosGraph graph = new Graph().loadStashes("Amidas").as(KonosGraph.class);
 //		new FullRenderer(null, graph, gen, gen, gen, AMIDAS).execute();
@@ -22,7 +22,12 @@ public class AmidasGenerationTest {
 				new RESTAccessorRenderer(a, new File("test-gen/" + AMIDAS), AMIDAS).execute());
 	}
 
+
 	@Test
-	public void swaggerAccessorsCreator() throws Exception {
+	public void testProcesses() {
+		File gen = new File("test-gen", PROCESSES);
+		KonosGraph graph = new Graph().loadStashes("Processes").as(KonosGraph.class);
+		new FullRenderer(null, graph, gen, gen, gen, PROCESSES).execute();
 	}
+
 }

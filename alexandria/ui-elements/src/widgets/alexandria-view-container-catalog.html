@@ -16,8 +16,7 @@
     <style>
         :host #container {
             position: relative;
-            padding-top: 8px;
-            height: calc(100% - 8px);
+            height: 100%;
             overflow: hidden;
         }
         :host ::content alexandria-catalog ::content .main,
@@ -53,10 +52,10 @@
                 this.listenToDisplay();
             },
 
-            _displayType : function(type) {
+            _displayInfo : function(info) {
                 var zombie = document.createElement("cotton-zombie");
-                zombie.setAttribute("display", type);
-                zombie.setAttribute("widget", type);
+                zombie.setAttribute("display", info.type);
+                zombie.setAttribute("widget", info.type);
                 zombie.setAttribute("object", this.display.id);
                 this.$.container.appendChild(zombie);
             }
