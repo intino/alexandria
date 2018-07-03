@@ -57,7 +57,7 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 		ProgressManager.getInstance().run(new Task.Backgroundable(module.getProject(), "Publishing Konos Accessor", false) {
 			@Override
 			public void run(@NotNull ProgressIndicator indicator) {
-				final KonosGraph graph = GraphLoader.loadGraph(module);
+				final KonosGraph graph = new GraphLoader().loadGraph(module);
 				final Configuration configuration = TaraUtil.configurationOf(module);
 				String generationPackage = configuration != null ? configuration.workingPackage() : "konos";
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);

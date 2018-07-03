@@ -39,6 +39,7 @@
         },
 
         _createPanel : function(params) {
+            if (this.$.panel == null) return;
             var zombie = document.createElement("cotton-zombie");
             zombie.setAttribute("display", params.displayType);
             zombie.setAttribute("widget", params.displayType);
@@ -48,23 +49,27 @@
         },
 
         _showPanel : function() {
+            if (this.$.main == null || this.$.panel == null) return;
             $(this.$.main).addClass("hidden");
             $(this.$.panel).removeClass("hidden");
         },
 
         _hidePanel : function() {
+            if (this.$.main == null || this.$.panel == null) return;
             $(this.$.main).removeClass("hidden");
             $(this.$.panel).addClass("hidden");
             if (this._lastView != null) this.openView(this._lastView);
         },
 
         _notifyUser : function(message) {
+            if (this.$.notifyMessageToast == null) return;
             this._notifyMessage = message;
             this.$.notifyMessageToast.open();
         },
 
         _showDialogBox : function() {
-            this.querySelector("alexandria-dialog-box").open();
+            var dialogBox = this.querySelector("alexandria-dialog-box");
+            if (dialogBox != null) dialogBox.open();
         },
 
         _navigate : function(e) {

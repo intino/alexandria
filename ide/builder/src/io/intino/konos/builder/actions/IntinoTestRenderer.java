@@ -32,7 +32,7 @@ public class IntinoTestRenderer {
 	IntinoTestRenderer(Module module, PsiDirectory directory, String newName) {
 		this.directory = directory;
 		this.newName = newName;
-		this.graph = GraphLoader.loadGraph(module);
+		this.graph = new GraphLoader().loadGraph(module);
 	}
 
 

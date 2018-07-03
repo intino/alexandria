@@ -31,6 +31,7 @@ public interface RestfulApi {
     Response delete(URL url, String path, Map<String, String> parameters) throws RestfulFailure;
 
     RestfulSecureConnection secure(URL url, URL certificate, String password);
+    RestfulSecureConnection secure(URL url, String token);
 
     interface RestfulSecureConnection {
         Response get(String path) throws RestfulFailure;

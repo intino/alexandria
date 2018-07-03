@@ -55,10 +55,13 @@ public class SchemaRenderer {
 
 	private Frame createSchemaFrame(Schema schema, String packageName, Set<Schema> processed) {
 		Frame frame = new Frame("schema").addSlot("name", schema.name$()).addSlot("package", packageName);
-		if (schema.core$().owner().is(Schema.class)) frame.addSlot("inner","static");
+		if (schema.core$().owner().is(Schema.class)) frame.addSlot("inner", "static");
 		frame.addSlot("attribute", (AbstractFrame[]) processAttributes(schema.attributeList()));
 		frame.addSlot("attribute", (AbstractFrame[]) processSchemasAsAttribute(schema.schemaList(), rootPackage));
 		frame.addSlot("attribute", (AbstractFrame[]) processHasAsAttribute(schema.hasList(), rootPackage));
+		if (schema.isExtensionOf()) {
+			frame.addSlot("parent", schema.asExtensionOf().parent().name$());
+		}
 		if (schema.attributeMap() != null) frame.addSlot("attribute", render(schema.attributeMap()));
 		addReturningValueToAttributes(schema.name$(), frame.frames("attribute"));
 		final Frame[] innerSchemas = schema.schemaList().stream().filter(processed::add).map(s -> createSchemaFrame(s, packageName, processed)).toArray(Frame[]::new);
