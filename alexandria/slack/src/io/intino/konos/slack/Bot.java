@@ -10,15 +10,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.ullink.slack.simpleslackapi.impl.SlackSessionFactory.createWebSocketSlackSession;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 public abstract class Bot {
-	private static Logger logger = Logger.getGlobal();
 	protected Map<String, Context> usersContext = new LinkedHashMap<>();
 	private final String token;
 	private final Map<String, Command> commands = new LinkedHashMap<>();
@@ -84,7 +81,7 @@ public abstract class Bot {
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
 			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
 	}
