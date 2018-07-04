@@ -199,6 +199,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	private void fillBrowser(UISparkManager manager) {
 		Browser browser = manager.currentSession().browser();
 		browser.baseUrl(manager.baseUrl());
+		browser.basePath(manager.basePath());
 		browser.homeUrl(manager.baseUrl());
 		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
 		browser.language(manager.languageFromUrl());

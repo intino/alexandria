@@ -18,6 +18,7 @@ public class ParameterPublisher {
 
 	public void publish(Set<String> customParameters) {
 		final List<Parameter> parameters = safeList(() -> configuration.graph().artifact().parameterList());
-		configuration.addParameters(customParameters.stream().filter(p -> parameters.stream().noneMatch(param -> param.name().equals(p))).toArray(String[]::new));
+		if (configuration != null)
+			configuration.addParameters(customParameters.stream().filter(p -> parameters.stream().noneMatch(param -> param.name().equals(p))).toArray(String[]::new));
 	}
 }

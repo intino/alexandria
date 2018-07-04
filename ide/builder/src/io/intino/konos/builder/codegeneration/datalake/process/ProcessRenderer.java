@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.datalake.process;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Process;
 import org.siani.itrules.model.Frame;
 
@@ -10,6 +11,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
+import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
 
 public class ProcessRenderer {
@@ -28,7 +30,7 @@ public class ProcessRenderer {
 
 	public void execute() {
 		for (Process process : processes) {
-			final String name = process.schema() != null ? process.schema().name$() : process.name$();
+			final String name = composedName(process);
 			final Frame frame = new Frame().addTypes("process").
 					addSlot("box", boxName).
 					addSlot("package", packageName).
@@ -37,7 +39,7 @@ public class ProcessRenderer {
 				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
 			} else frame.addSlot("type", "message");
-			if (!process.postConditionList().isEmpty()) frame.addSlot("postcondition", postConditions(process.postConditionList()));
+
 			final File destination = new File(src, "ness/processes");
 			final String handlerName = Formatters.firstUpperCase(name) + "Process";
 			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
@@ -45,8 +47,12 @@ public class ProcessRenderer {
 		}
 	}
 
-	private Frame[] postConditions(List<Process.PostCondition> postConditions) {
-		return postConditions.stream().map(p -> new Frame("postCondition", p.getClass().getSimpleName())).toArray(Frame[]::new);
+	private String composedName(MessageHandler handler) {
+		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".", "_"))) + firstUpperCase(name(handler)));
+	}
+
+	private String name(MessageHandler handler) {
+		return handler.schema() == null ? handler.name$() : handler.schema().name$();
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

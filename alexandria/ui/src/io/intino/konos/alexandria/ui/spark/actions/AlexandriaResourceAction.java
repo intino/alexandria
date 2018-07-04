@@ -50,12 +50,11 @@ public abstract class AlexandriaResourceAction {
 		template = template.replace("$currentSession", sessionId);
 		template = template.replace("$client", clientId);
 		template = template.replace("$baseUrl", browser.baseUrl());
+		template = template.replace("$basePath", browser.basePath());
 		template = template.replace("$url", browser.baseUrl() + "/" + uiServiceName);
 		template = template.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language));
 		template = template.replace("$googleApiKey", googleApiKey);
-
-		if (favicon() != null)
-			template = template.replace("$favicon", Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString());
+		template = template.replace("$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
 
 		return template;
 	}

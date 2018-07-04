@@ -11,7 +11,7 @@
 <script src="requester.js"></script>
 <script src="notifier-listener.js"></script>
 
-<dom-module id="alexandria-catalog-mobile">
+<dom-module id="alexandria-catalog-drawer">
 
     <template>
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
@@ -44,7 +44,7 @@
 
     <script>
 
-        const AlexandriaCatalogMobileDictionary = {
+        const AlexandriaCatalogDrawerDictionary = {
             es: {
             },
             en: {
@@ -52,7 +52,7 @@
         };
 
         Polymer({
-            is: 'alexandria-catalog-mobile',
+            is: 'alexandria-catalog-drawer',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
@@ -64,7 +64,7 @@
                 AlexandriaCatalogBehaviors.NotifierListener ],
 
             attached : function() {
-                this.translate(AlexandriaCatalogMobileDictionary);
+                this.translate(AlexandriaCatalogDrawerDictionary);
                 this.listenToDisplay();
                 this.listenOpenEvents();
             },

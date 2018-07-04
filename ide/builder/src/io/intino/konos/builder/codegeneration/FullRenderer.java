@@ -139,7 +139,7 @@ public class FullRenderer {
 
 	private void box() {
 		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
-		new BoxRenderer(src, packageName, module, hasModel).execute();
+		new BoxRenderer(graph, src, packageName, module, hasModel).execute();
 		new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 	}
 
