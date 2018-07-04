@@ -7,7 +7,6 @@ import io.intino.konos.alexandria.ui.model.Item;
 import io.intino.konos.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.konos.alexandria.ui.schemas.DisplayInfo;
 
-
 public class AlexandriaViewContainerCatalog extends AlexandriaViewContainer<AlexandriaViewContainerCatalogNotifier> {
 
 	private AlexandriaAbstractCatalog catalogDisplay = null;

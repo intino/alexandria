@@ -14,7 +14,7 @@ def type(accessor)
 		private final Session session;
 		$custom+field...[$NL]
 
-		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(Session session, $custom+signature...[, ]) {
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(Session session[, $custom+signature...[, ]]) {
 			this.session = session;
 			$custom+assign...[$NL]
 		}
@@ -40,7 +40,7 @@ def type(accessor)
 				buffer.flush();
 				return buffer.toByteArray();
 			} catch (java.io.IOException e) {
-				e.printStackTrace();
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 			return new byte$[0];
 		}
@@ -57,7 +57,7 @@ def type(request & reply) trigger(interface)
 				$reply
 
 			} catch (JMSException e) {
-				e.printStackTrace();
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 		}
 	}

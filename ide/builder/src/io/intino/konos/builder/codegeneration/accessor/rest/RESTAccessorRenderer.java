@@ -61,7 +61,7 @@ public class RESTAccessorRenderer {
 	private void setupAuthentication(RESTService restService, Frame frame) {
 		if (restService.authenticated() != null) frame.addSlot("auth", "");
 		if (restService.authenticatedWithCertificate() != null) frame.addSlot("certificate", "");
-		else if (restService.authenticatedWithPassword() != null) frame.addSlot("user", "");
+		else if (restService.authenticatedWithToken() != null) frame.addSlot("token", "");
 	}
 
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {

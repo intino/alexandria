@@ -20,6 +20,7 @@ import io.intino.tara.StashBuilder;
 import io.intino.tara.compiler.shared.TaraBuildConstants;
 import io.intino.tara.io.Stash;
 import io.intino.tara.magritte.Graph;
+import io.intino.tara.magritte.loaders.ClassFinder;
 import tara.dsl.Konos;
 
 import java.io.ByteArrayOutputStream;
@@ -42,7 +43,8 @@ public class GraphLoader {
 	private static final Key<Object> PROBLEMS_VIEW_SESSION_ID_KEY = Key.create("ProblemsViewSessionKey");
 	private static final Key<Object> PROBLEMS_VIEW_FILES_KEY = Key.create("ProblemsViewFiles");
 
-	public static KonosGraph loadGraph(Module module) {
+	public KonosGraph loadGraph(Module module) {
+		ClassFinder.clear();
 		final Map<File, Charset> files = KonosUtils.findKonosFiles(module).stream().map(PsiFile::getVirtualFile).collect(Collectors.toMap(vf -> new File(vf.getPath()), VirtualFile::getCharset));
 		if (!files.isEmpty()) {
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -54,7 +56,7 @@ public class GraphLoader {
 		} else return loadGraph();
 	}
 
-	private static KonosGraph loadGraph(Stash... stashes) {
+	private KonosGraph loadGraph(Stash... stashes) {
 		final ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 		Thread.currentThread().setContextClassLoader(GraphLoader.class.getClassLoader());
 		final Graph graph = new Graph().loadStashes("Konos").loadStashes(stashes);
@@ -64,7 +66,7 @@ public class GraphLoader {
 		return konosGraph;
 	}
 
-	private static void processMessages(Project project, ByteArrayOutputStream stream) {
+	private void processMessages(Project project, ByteArrayOutputStream stream) {
 		try {
 			final String messages = stream.toString("UTF-8");
 			final CompilationMessageProcessor processor = new CompilationMessageProcessor(project);

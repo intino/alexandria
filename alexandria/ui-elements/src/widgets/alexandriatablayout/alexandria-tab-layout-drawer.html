@@ -6,16 +6,16 @@
 <link rel="import" href="../../../lib/cotton-layout/cotton-layout.html">
 <link rel="import" href="../_common/layout/alexandria-layout-behavior.html">
 <link rel="import" href="../_common/alexandria-item-selector-combo.html">
-<link rel="import" href="../alexandriapanel/alexandria-panel-mobile.html">
-<link rel="import" href="../alexandriacatalog/alexandria-catalog-mobile.html">
-<link rel="import" href="../alexandriatemporalrangecatalog/alexandria-temporal-range-catalog-mobile.html">
-<link rel="import" href="../alexandriatemporaltimecatalog/alexandria-temporal-time-catalog-mobile.html">
+<link rel="import" href="../alexandriapanel/alexandria-panel-drawer.html">
+<link rel="import" href="../alexandriacatalog/alexandria-catalog-drawer.html">
+<link rel="import" href="../alexandriatemporalrangecatalog/alexandria-temporal-range-catalog-drawer.html">
+<link rel="import" href="../alexandriatemporaltimecatalog/alexandria-temporal-time-catalog-drawer.html">
 
 <script src="requester.js"></script>
 <script src="notifier-listener.js"></script>
 <script src="../../../lib/cotton-delay-executor/DelayExecutor.js"></script>
 
-<dom-module id="alexandria-tab-layout-mobile">
+<dom-module id="alexandria-tab-layout-drawer">
 
     <template>
         <cotton-header id="layout" title="[[_title]]" subtitle="[[_subtitle]]" logo="[[_logo]]" on-logout="_logout" on-edit-profile="_editProfile">
@@ -24,7 +24,7 @@
         <iron-pages id="pages" class="flex" attr-for-selected="name" hidden$="[[_noItems]]" selected="[[_openedItem]]">
             <template is="dom-repeat" items="[[_itemList]]" as="item">
                 <div class="item" name$="[[item.label]]">
-                    <cotton-zombie display$="[[item.type]]" widget$="[[item.elementType]]Mobile" object$="[[display.id]][[item.label]]"></cotton-zombie>
+                    <cotton-zombie display$="[[item.type]]" widget$="[[item.elementType]]Drawer" object$="[[display.id]][[item.label]]"></cotton-zombie>
                 </div>
             </template>
         </iron-pages>
@@ -58,7 +58,7 @@
     </style>
 
     <script>
-        const AlexandriaTabLayoutMobileDictionary = {
+        const AlexandriaTabLayoutDrawerDictionary = {
             es: {
             },
             en: {
@@ -66,7 +66,7 @@
         };
 
         Polymer({
-            is: 'alexandria-tab-layout-mobile',
+            is: 'alexandria-tab-layout-drawer',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
@@ -76,7 +76,7 @@
                 AlexandriaBehaviors.LayoutBehavior ],
 
             attached : function() {
-                this.translate(AlexandriaTabLayoutMobileDictionary);
+                this.translate(AlexandriaTabLayoutDrawerDictionary);
                 this.translate(AlexandriaBehaviors.LayoutBehavior.Dictionary);
                 this.listenToDisplay();
             },

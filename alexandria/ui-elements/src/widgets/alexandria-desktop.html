@@ -9,8 +9,8 @@
 <link rel="import" href="../../lib/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="alexandria-tab-layout.html">
 <link rel="import" href="alexandria-menu-layout.html">
-<link rel="import" href="alexandriatablayout/alexandria-tab-layout-mobile.html">
-<link rel="import" href="alexandriamenulayout/alexandria-menu-layout-mobile.html">
+<link rel="import" href="alexandriatablayout/alexandria-tab-layout-drawer.html">
+<link rel="import" href="alexandriamenulayout/alexandria-menu-layout-drawer.html">
 
 <script src="alexandriadesktop/requester.js"></script>
 <script src="alexandriadesktop/notifier-listener.js"></script>
@@ -121,7 +121,7 @@
             },
 
             _displayType : function(type) {
-                this._createZombie(this.$.drawer, type, type + "Mobile");
+                this._createZombie(this.$.drawer, type, type + "Drawer");
                 this._createZombie(this.$.main, type, type);
             },
 

@@ -11,7 +11,7 @@
 <script src="requester.js"></script>
 <script src="notifier-listener.js"></script>
 
-<dom-module id="alexandria-temporal-range-catalog-mobile">
+<dom-module id="alexandria-temporal-range-catalog-drawer">
 
     <template>
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
@@ -44,7 +44,7 @@
 
     <script>
 
-        const AlexandriaTemporalRangeCatalogMobileDictionary = {
+        const AlexandriaTemporalRangeCatalogDrawerDictionary = {
             es: {
             },
             en: {
@@ -52,7 +52,7 @@
         };
 
         Polymer({
-            is: 'alexandria-temporal-range-catalog-mobile',
+            is: 'alexandria-temporal-range-catalog-drawer',
 
             behaviors: [ CottonBehaviors.CarrierBehavior,
                 CottonBehaviors.PushBehavior,
@@ -65,7 +65,7 @@
                 AlexandriaTemporalRangeCatalogBehaviors.NotifierListener ],
 
             attached : function() {
-                this.translate(AlexandriaTemporalRangeCatalogMobileDictionary);
+                this.translate(AlexandriaTemporalRangeCatalogDrawerDictionary);
                 this.listenToDisplay();
                 this.listenOpenEvents();
             },

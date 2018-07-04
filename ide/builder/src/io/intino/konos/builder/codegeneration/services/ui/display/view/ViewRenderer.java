@@ -199,6 +199,7 @@ public class ViewRenderer extends Renderer {
 		final Frame frame = baseFrame(item).addTypes("item");
 		final View view = item.view();
 		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
+		frame.addSlot("label", item.label());
 		frame.addSlot("view", builder.buildFrame());
 		return frame;
 	}

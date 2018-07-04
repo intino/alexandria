@@ -12,6 +12,10 @@
             return url;
         },
 
+        getBasePath: function() {
+            return this._getProperty("base-path");
+        },
+
         _getProperty: function(name) {
             var widget = this;
 

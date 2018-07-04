@@ -16,12 +16,6 @@ Concept:NamedIfNoSchema MessageHandler is component
 	var string subdomain = ""
 	sub Feeder
 	sub Mounter
-
-Concept:JobOrPostCondition:Named Process extends MessageHandler is component
-	Concept:{0..1}:Named PreCondition
-	Concept OnFinish
-		sub:{0..1} Job
-		sub:{0..*} PostCondition
-			var string type
+	sub Process
 
 Concept Client

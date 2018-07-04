@@ -4,6 +4,7 @@ import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.restful.RestfulApi;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -24,9 +25,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 
 public class RestfulAccessor implements RestfulApi {
 
@@ -208,6 +207,104 @@ public class RestfulAccessor implements RestfulApi {
 		};
 	}
 
+	@Override
+	public RestfulSecureConnection secure(URL url, String token) {
+		return new RestfulSecureConnection() {
+			@Override
+			public Response get(String path) throws RestfulFailure {
+				return get(path, emptyMap());
+			}
+
+			@Override
+			public Response get(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doGet(url, path, parametersToNameValuePairs(parameters), headers());
+			}
+
+			@Override
+			public Resource getResource(String path) throws RestfulFailure {
+				return doGetFile(url, path, emptyList(), headers());
+			}
+
+			@Override
+			public Resource getResource(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doGetFile(url, path, parametersToNameValuePairs(parameters), headers());
+			}
+
+			@Override
+			public Response post(String path) throws RestfulFailure {
+				return post(path, emptyMap());
+			}
+
+			@Override
+			public Response post(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doPost(url, path, entityOf(parameters), headers());
+			}
+
+			@Override
+			public Response post(String path, Resource resource) throws RestfulFailure {
+				return doPost(url, path, multipartEntityOf(emptyMap(), singletonList(resource)), headers());
+			}
+
+			@Override
+			public Response post(String path, List<Resource> resourceList) throws RestfulFailure {
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList), headers());
+			}
+
+			@Override
+			public Response post(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters), headers());
+				return doPost(url, path, multipartEntityOf(parameters, resourceList), headers());
+			}
+
+			@Override
+			public Response put(String path) throws RestfulFailure {
+				return put(path, emptyMap());
+			}
+
+			@Override
+			public Response put(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doPut(url, path, entityOf(parameters), headers());
+			}
+
+			@Override
+			public Response put(String path, List<Resource> resourceList) throws RestfulFailure {
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList), headers());
+			}
+
+			@Override
+			public Response put(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
+				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters), headers());
+				return doPost(url, path, multipartEntityOf(parameters, resourceList), headers());
+			}
+
+			@Override
+			public Response delete(String path) throws RestfulFailure {
+				return delete(path, emptyMap());
+			}
+
+			@Override
+			public Response delete(String path, Map<String, String> parameters) throws RestfulFailure {
+				return doDelete(url, path, parametersToNameValuePairs(parameters), headers());
+			}
+
+			private HttpEntity entityOf(Map<String, String> parameters) throws RestfulFailure {
+				try {
+					List<NameValuePair> entityParameters = parametersToNameValuePairs(parameters);
+					entityParameters.addAll(parametersToNameValuePairs(parameters));
+					return new UrlEncodedFormEntity(entityParameters, "UTF-8");
+				} catch (UnsupportedEncodingException exception) {
+					throw new RestfulFailure(exception.getMessage());
+				}
+			}
+
+			private Map<String, String> headers() {
+				return new HashMap<String, String>() {{
+					put(HttpHeaders.AUTHORIZATION, token);
+				}};
+			}
+		};
+	}
+
 	private String pathUrl(URL url, String path) {
 		String baseUrl = url.toString();
 
@@ -222,21 +319,31 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	private Response doGet(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
+		return doGet(url, path, parameters, emptyMap());
+	}
+
+	private Response doGet(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
-			return executeMethod(url, new HttpGet(uriBuilder.build().toURL().toString()));
+			return executeMethod(url, new HttpGet(uriBuilder.build().toURL().toString()), headers);
 		} catch (URISyntaxException | MalformedURLException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
 	}
 
 	private Resource doGetFile(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
+		return doGetFile(url, path, parameters, emptyMap());
+	}
+
+	private Resource doGetFile(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
 			HttpResponse response;
 
 			try {
-				response = client().execute(new HttpGet(uriBuilder.build().toURL().toString()));
+				HttpGet httpGet = new HttpGet(uriBuilder.build().toURL().toString());
+				headers.forEach(httpGet::setHeader);
+				response = client().execute(httpGet);
 			} catch (IOException exception) {
 				throw new RestfulFailure(exception.getMessage());
 			}
@@ -256,30 +363,43 @@ public class RestfulAccessor implements RestfulApi {
 	}
 
 	private Response doPost(URL url, String path, HttpEntity entity) throws RestfulFailure {
+		return doPost(url, path, entity, emptyMap());
+	}
+
+	private Response doPost(URL url, String path, HttpEntity entity, Map<String, String> headers) throws RestfulFailure {
 		HttpPost post = new HttpPost(pathUrl(url, path));
 		post.setEntity(entity);
-		return executeMethod(url, post);
+		return executeMethod(url, post, headers);
 	}
 
 	private Response doPut(URL url, String path, HttpEntity entity) throws RestfulFailure {
+		return doPut(url, path, entity, emptyMap());
+	}
+
+	private Response doPut(URL url, String path, HttpEntity entity, Map<String, String> headers) throws RestfulFailure {
 		HttpPut put = new HttpPut(pathUrl(url, path));
 		put.setEntity(entity);
-		return executeMethod(url, put);
+		return executeMethod(url, put, headers);
 	}
 
 	private Response doDelete(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
+		return doDelete(url, path, parameters, emptyMap());
+	}
+
+	private Response doDelete(URL url, String path, List<NameValuePair> parameters, Map<String, String> headers) throws RestfulFailure {
 		try {
 			URIBuilder uriBuilder = new URIBuilder(pathUrl(url, path)).setParameters(parameters);
-			return executeMethod(url, new HttpDelete(uriBuilder.build().toURL().toString()));
+			return executeMethod(url, new HttpDelete(uriBuilder.build().toURL().toString()), headers);
 		} catch (URISyntaxException | MalformedURLException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
 	}
 
-	private Response executeMethod(URL url, HttpRequestBase method) throws RestfulFailure {
+	private Response executeMethod(URL url, HttpRequestBase method, Map<String, String> headers) throws RestfulFailure {
 		HttpResponse response;
 
 		try {
+			headers.forEach(method::setHeader);
 			response = client().execute(method);
 		} catch (IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
