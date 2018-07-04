@@ -53,9 +53,11 @@ public class Parsers {
 		parsers.put(int.class, Integer::parseInt);
 		parsers.put(float.class, Float::parseFloat);
 		parsers.put(double.class, Double::parseDouble);
+		parsers.put(long.class, Long::parseLong);
 		parsers.put(Boolean.class, parsers.get(boolean.class));
 		parsers.put(Byte.class, parsers.get(byte.class));
 		parsers.put(Integer.class, parsers.get(int.class));
+		parsers.put(Long.class, parsers.get(long.class));
 		parsers.put(Float.class, parsers.get(float.class));
 		parsers.put(Double.class, parsers.get(double.class));
 		parsers.put(String.class, text -> text);
@@ -65,6 +67,7 @@ public class Parsers {
 		parsers.put(Byte[].class, ArrayParser.of(Byte.class)::parse);
 		parsers.put(Integer[].class, ArrayParser.of(Integer.class)::parse);
 		parsers.put(Float[].class, ArrayParser.of(Float.class)::parse);
+		parsers.put(Long[].class, ArrayParser.of(Long.class)::parse);
 		parsers.put(Double[].class, ArrayParser.of(Double.class)::parse);
 		parsers.put(String[].class, ArrayParser.of(String.class)::parse);
 		parsers.put(Instant[].class, ArrayParser.of(Instant.class)::parse);

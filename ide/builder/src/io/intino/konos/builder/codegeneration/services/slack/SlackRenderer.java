@@ -8,6 +8,7 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
 import org.jetbrains.annotations.NotNull;
+import org.siani.itrules.Formatter;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -68,9 +69,7 @@ public class SlackRenderer {
 	}
 
 	private Map<String, List<Request>> collectLevels(SlackBotService service) {
-		final List<Request> requests = service.requestList();
-		final Map<String, List<Request>> collect = collect(requests);
-		return collect;
+		return collect(service.requestList());
 	}
 
 	private LinkedHashMap<String, List<Request>> collect(List<Request> requests) {
@@ -81,14 +80,15 @@ public class SlackRenderer {
 	}
 
 	private String name(Request request) {
-		String name = "";
+		StringBuilder name = new StringBuilder();
 		Request r = request;
 		while (r.i$(Request.class)) {
-			name = Commons.firstUpperCase(r.name$()) + name;
+			name.insert(0, Commons.firstUpperCase(r.name$()) + "|");
 			if (!r.core$().owner().is(Request.class)) break;
 			r = r.core$().ownerAs(Request.class);
 		}
-		return name;
+		final String s = name.toString();
+		return s.endsWith("|") ? s.substring(0, s.length() - 1) : s;
 	}
 
 	@NotNull
@@ -127,7 +127,7 @@ public class SlackRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(SlackTemplate.create());
+		return Formatters.customize(SlackTemplate.create()).add("slashToCamelCase", o -> snakeCaseToCamelCase(o.toString().replace("|", "_")));
 	}
 
 	private boolean alreadyRendered(File destiny, String name) {

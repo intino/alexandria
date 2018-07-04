@@ -6,11 +6,9 @@ def type(slack & gen)
 	import io.intino.konos.slack.Bot;
 	import com.ullink.slack.simpleslackapi.SlackAttachment;
 	import java.io.IOException;
-	import java.util.logging.Level;
-	import java.util.logging.Logger;
+	import java.util.Arrays;
 
 	public class $name+firstUpperCase+snakeCaseToCamelCase~SlackBot extends Bot {
-		private static Logger LOG = Logger.getGlobal();
 		private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
 		$level+field...[$NL]
 
@@ -25,16 +23,18 @@ def type(slack & gen)
 				context.keySet().forEach((c) -> builder.append(formatCommand(c, context.get(c))).append("\\n"));
 				return builder.toString();
 			});
-			add("exit", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Exit from current directory", (properties, args) -> {
+			add("exit", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Exit from current level", (properties, args) -> {
 				final Context context = this.contexts().get(properties.username());
 				if (context != null) {
 					String command = context.command();
-					this.contexts().get(properties.username()).command("");
-					return command.isEmpty() ? "" : "Exited from " + command + " " + String.join(" ", java.util.Arrays.asList(context.getObjects()));
+					final String message = command.isEmpty() ? "" : "Exited from " + (command.contains("|") ? command.substring(command.lastIndexOf("|") + 1) : command) + " " + String.join(" ", Arrays.asList(context.getObjects()));
+					context.command(command.contains("|") ? command.substring(0, command.lastIndexOf("|")) : "");
+					context.objects(context.getObjects().length > 1 ? Arrays.copyOfRange(context.getObjects(), 0, context.getObjects().length - 1) : new String$[0$]);
+					return message;
 				}
 				return "";
 			});
-			add("where", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Shows the current directory", (properties, args) -> {
+			add("where", java.util.Collections.emptyList(), java.util.Collections.emptyList(), "Shows the current level", (properties, args) -> {
 				final Context context = this.contexts().get(properties.username());
 				return context != null ? context : "root";
 			});
@@ -44,7 +44,7 @@ def type(slack & gen)
 				this.$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session());
 				$level+init...[$NL]
 			} catch (IOException e) {
-				LOG.log(Level.SEVERE, e.getMessage(), e);
+				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 		}
 
@@ -86,19 +86,19 @@ end
 
 
 def type(level) trigger(field)
-	private $name+snakeCaseToCamelCase+firstUpperCase~Slack $name+snakeCaseToCamelCase+firstLowerCase~Slack;
+	private $name+slashToCamelCase+firstUpperCase~Slack $name+slashToCamelCase+firstLowerCase~Slack;
 end
 
 def type(level) trigger(constructor)
-	$name+snakeCaseToCamelCase+firstLowerCase~Slack = new $name+snakeCaseToCamelCase+firstUpperCase~Slack(box);
+	$name+slashToCamelCase+firstLowerCase~Slack = new $name+slashToCamelCase+firstUpperCase~Slack(box);
 end
 
 def type(level) trigger(init)
-	$name+snakeCaseToCamelCase+firstLowerCase~Slack.init(session());
+	$name+slashToCamelCase+firstLowerCase~Slack.init(session());
 end
 
 def type(request) trigger(add)
-	add("$name".toLowerCase(), "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+snakeCaseToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
+	add("$name+toLowerCase", "$context+lowercase", java.util.Arrays.asList($parameter+name...[, ]), java.util.Arrays.asList($component...[, ]), "$description", (properties, args) -> $type+slashToCamelCase+firstLowerCase~Slack.$name+snakeCaseToCamelCase+firstLowerCase(properties[, $parameter+cast...[, ]]));
 end
 
 def type(request & newMethod)
