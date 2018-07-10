@@ -8,7 +8,6 @@ import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
 import org.jetbrains.annotations.NotNull;
-import org.siani.itrules.Formatter;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -29,14 +28,16 @@ public class SlackRenderer {
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public SlackRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public SlackRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.services = graph.slackBotServiceList();
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -63,9 +64,11 @@ public class SlackRenderer {
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
 			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().format(createFrame(service.name$(), service.requestList(), false)));
 		Map<String, List<Request>> groups = collectLevels(service);
-		for (String requestContainer : groups.keySet())
+		for (String requestContainer : groups.keySet()) {
+			classes.put("Service#" + service.name$(), "slack." + requestContainer + "Slack");
 			if (!alreadyRendered(directory, requestContainer + "Slack"))
 				writeFrame(directory, requestContainer + "Slack", template().format(createFrame(requestContainer, groups.get(requestContainer), false)));
+		}
 	}
 
 	private Map<String, List<Request>> collectLevels(SlackBotService service) {

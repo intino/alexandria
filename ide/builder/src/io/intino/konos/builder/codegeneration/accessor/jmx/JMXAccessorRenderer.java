@@ -12,6 +12,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -28,7 +29,7 @@ public class JMXAccessorRenderer {
 	}
 
 	public void execute() {
-		new SchemaRenderer(service.graph(), destination, packageName).execute();
+		new SchemaRenderer(service.graph(), destination, packageName, new HashMap<>()).execute();
 		createInterface(service);
 		createService(service);
 	}

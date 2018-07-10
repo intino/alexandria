@@ -7,7 +7,9 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
+import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.KonosGraph.componentFor;
@@ -17,12 +19,14 @@ public class UIActionRenderer extends ActionRenderer {
 	private final UIService.Resource resource;
 	private final File gen;
 	private final UIService service;
+	private final Map<String, String> classes;
 
-	public UIActionRenderer(Project project, UIService.Resource resource, File src, File gen, String packageName, String boxName) {
+	public UIActionRenderer(Project project, UIService.Resource resource, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		super(project, src, packageName, boxName);
 		this.gen = gen;
 		this.resource = resource;
 		this.service = resource.core$().ownerAs(UIService.class);
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -39,7 +43,9 @@ public class UIActionRenderer extends ActionRenderer {
 		frame.addSlot("parameter", parameters());
 		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
 		else if (service.title() != null) frame.addSlot("title", service.title());
-		if (!alreadyRendered(destiny, resource.name$())) writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().format(frame));
+		classes.put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + "Action");
+		if (!alreadyRendered(destiny, resource.name$()))
+			writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().format(frame));
 		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(resource.name$()) + "Action", template().format(frame.addTypes("gen")));
 	}
 

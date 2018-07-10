@@ -9,9 +9,7 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -29,7 +27,7 @@ public class JMSAccessorRenderer {
 	}
 
 	public void execute() {
-		new SchemaRenderer(service.graph(), destination, packageName).execute();
+		new SchemaRenderer(service.graph(), destination, packageName, new HashMap<>()).execute();
 		processService(service);
 	}
 

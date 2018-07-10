@@ -1,13 +1,13 @@
 dsl Legio
 
 Artifact(groupId = "io.intino.konos", version = "1.1.0") alexandria-ui
-	Box(language = "Konos", version= "4.1.0", sdk = "4.1.0")
+	Box(language = "Konos", version= "4.1.3", sdk = "4.1.3")
 		targetPackage = ""
 	Code ("io.intino.konos.alexandria.ui")
 	Imports
 		Compile("io.intino.konos", "alexandria-rest", "2.2.1")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
-		Compile(groupId = "io.intino.konos", artifactId = "alexandria-ui", version = "1.0.0")
+		//Compile(groupId = "io.intino.konos", artifactId = "alexandria-ui", version = "1.0.0")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 

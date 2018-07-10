@@ -15,6 +15,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TaskerRenderer {
@@ -23,7 +24,7 @@ public class TaskerRenderer {
 	private final String packageName;
 	private final String boxName;
 
-	public TaskerRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public TaskerRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.tasks = graph.taskList();
 		this.gen = gen;
 		this.packageName = packageName;
