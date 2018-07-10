@@ -10,6 +10,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static java.util.stream.Collectors.toList;
@@ -24,14 +25,16 @@ public class ResourceRenderer {
 	private final String packageName;
 	private final String boxName;
 	private final List<UIService.Resource> resourceList;
+	private final Map<String, String> classes;
 
-	public ResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public ResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.resourceList = graph.core$().find(UIService.Resource.class);
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -53,7 +56,7 @@ public class ResourceRenderer {
 	}
 
 	private void createCorrespondingAction(UIService.Resource resource) {
-		new UIActionRenderer(project, resource, src, gen, packageName, boxName).execute();
+		new UIActionRenderer(project, resource, src, gen, packageName, boxName, classes).execute();
 	}
 
 	private Template template() {

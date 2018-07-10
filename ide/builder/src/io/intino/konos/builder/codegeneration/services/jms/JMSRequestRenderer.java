@@ -15,6 +15,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -26,14 +27,16 @@ public class JMSRequestRenderer {
 	private File src;
 	private String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public JMSRequestRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public JMSRequestRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.services = graph.jMSServiceList();
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -51,7 +54,7 @@ public class JMSRequestRenderer {
 	}
 
 	private void createCorrespondingAction(Request request) {
-		new JMSRequestActionRenderer(project, request, src, packageName, boxName).execute();
+		new JMSRequestActionRenderer(project, request, src, packageName, boxName, classes).execute();
 	}
 
 	private Frame fillRequestFrame(Request request) {
