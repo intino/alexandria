@@ -134,7 +134,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-rest</artifactId>
-            <version>2.2.1</version>
+            <version>LATEST</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

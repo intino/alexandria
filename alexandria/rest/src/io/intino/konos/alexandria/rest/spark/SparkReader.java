@@ -35,6 +35,4 @@ class SparkReader {
 	private static byte[] readBytes(String object) {
 		return object.getBytes(Charset.forName("UTF-8"));
 	}
-
-
 }
