@@ -10,6 +10,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
@@ -22,14 +23,16 @@ public class DialogRenderer {
 	private final String packageName;
 	private final List<Dialog> dialogs;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -50,6 +53,7 @@ public class DialogRenderer {
 		frame.addSlot("box", boxName);
 		processToolbar(frame, dialog.toolbar());
 		for (Tab tab : dialog.tabList()) processTab(frame, tab);
+		classes.put("Dialog#" + dialog.name$(), DIALOGS + "." + newDialog);
 		Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
 	}
 

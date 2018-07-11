@@ -2,6 +2,8 @@ package io.intino.konos.alexandria.rest.spark;
 
 import io.intino.konos.alexandria.exceptions.AlexandriaException;
 import io.intino.konos.alexandria.rest.AlexandriaSpark;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.Service;
@@ -81,7 +83,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			e.printStackTrace();
+			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
 		}
 	}
 
@@ -91,7 +93,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			return e.code();
+			return e.message();
 		}
 		return "OK";
 	}
@@ -101,7 +103,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			e.printStackTrace();
+			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
 		}
 	}
 

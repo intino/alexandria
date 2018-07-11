@@ -5,8 +5,16 @@ def type(main)
 
 	public class Main {
 		public static void main(String$[] args) {
-			Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args).open();
+			Box box = new $name+SnakeCaseToCamelCase+firstUpperCase~Box(args)[
+			$model
+			box.open();]
 			Runtime.getRuntime().addShutdownHook(new Thread(box::close));
 		}
 	}
+end
+
+
+def type(model) trigger(model)
+	io.intino.tara.magritte.Graph graph = new io.intino.tara.magritte.Graph().loadStashes("$name");
+	box.put(graph);
 end

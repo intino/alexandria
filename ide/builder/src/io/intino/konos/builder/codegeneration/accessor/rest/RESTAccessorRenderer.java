@@ -20,7 +20,9 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -38,7 +40,7 @@ public class RESTAccessorRenderer {
 	}
 
 	public void execute() {
-		new SchemaRenderer(service.graph(), destination, packageName).execute();
+		new SchemaRenderer(service.graph(), destination, packageName, new HashMap<>()).execute();
 		processService(service);
 	}
 
