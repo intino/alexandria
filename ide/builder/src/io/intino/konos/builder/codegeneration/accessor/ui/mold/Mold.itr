@@ -2,6 +2,8 @@ def type(mold)
 
 	<link rel="import" href="../../lib/polymer/polymer.html">
 	<link rel="import" href="../../lib/alexandria-ui-elements/_common/mold/alexandria-mold-behavior.html">
+	<link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+	<link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
 	<link rel="import" href="$name+lowercase/$name+camelCaseToSnakeCase~-layout.html">
 
 	<dom-module id="$name+CamelCaseToSnakeCase">
@@ -13,7 +15,7 @@ def type(mold)
 		<script>
 			Polymer({
 				is: '$name+camelCaseToSnakeCase',
-				behaviors: $[ AlexandriaBehaviors.MoldBehavior ],
+				behaviors: $[ AlexandriaBehaviors.MoldBehavior, CottonBehaviors.CarrierBehavior, CottonBehaviors.PushBehavior ],
 				properties : {
 					item : Object,
 					mode : String
