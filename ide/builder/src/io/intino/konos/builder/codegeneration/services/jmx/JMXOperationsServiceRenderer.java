@@ -16,6 +16,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class JMXOperationsServiceRenderer {
 
@@ -25,14 +26,16 @@ public class JMXOperationsServiceRenderer {
 	private final File gen;
 	private String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public JMXOperationsServiceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public JMXOperationsServiceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.services = graph.jMXServiceList();
 		this.src = src;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -67,7 +70,7 @@ public class JMXOperationsServiceRenderer {
 
 	private void createCorrespondingActions(List<Operation> operations) {
 		for (Operation operation : operations)
-			new JMXActionRenderer(project, operation, src, packageName, boxName).execute();
+			new JMXActionRenderer(project, operation, src, packageName, boxName, classes).execute();
 	}
 
 	private Frame frameOf(Operation operation) {

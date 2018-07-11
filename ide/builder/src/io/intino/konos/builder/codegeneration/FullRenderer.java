@@ -30,19 +30,24 @@ import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRende
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
-
 	@Nullable
 	private final Project project;
 	@Nullable
@@ -55,6 +60,7 @@ public class FullRenderer {
 	private final String boxName;
 	private final String parent;
 	private final boolean hasModel;
+	private final Map<String, String> classes;
 
 	public FullRenderer(@Nullable Module module, KonosGraph graph, File src, File gen, File res, String packageName) {
 		this.project = module == null ? null : module.getProject();
@@ -67,6 +73,7 @@ public class FullRenderer {
 		this.parent = parent();
 		this.hasModel = hasModel();
 		this.boxName = snakeCaseToCamelCase(boxName());
+		this.classes = new HashMap<>();
 	}
 
 	public void execute() {
@@ -82,10 +89,12 @@ public class FullRenderer {
 		ui();
 		box();
 		main();
+		InterfaceToJavaImplementation.nodeMap.clear();
+		InterfaceToJavaImplementation.nodeMap.putAll(classes);
 	}
 
 	private void schemas() {
-		new SchemaRenderer(graph, gen, packageName).execute();
+		new SchemaRenderer(graph, gen, packageName, classes).execute();
 	}
 
 	private void exceptions() {
@@ -93,47 +102,46 @@ public class FullRenderer {
 	}
 
 	private void rest() {
-		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName).execute();
+		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName, classes).execute();
 	}
 
 	private void jmx() {
-		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new JMXOperationsServiceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
 		new JMXServerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void jms() {
-		new JMSRequestRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
+		new JMSRequestRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
+		new JMSServiceRenderer(graph, gen, packageName, boxName, classes).execute();
 	}
 
 	private void tasks() {
-		new TaskRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new TaskerRenderer(graph, gen, packageName, boxName).execute();
+		new TaskRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
+		new TaskerRenderer(graph, gen, packageName, boxName, classes).execute();
 	}
 
 	private void bus() {
 		if (graph.nessClientList().isEmpty()) return;
-		new ProcessRenderer(graph, src, packageName, boxName).execute();
-		new ProcessCoordinatorRenderer(graph, gen, packageName, boxName).execute();
-
-		new MounterRenderer(graph, src, packageName, boxName).execute();
-		new TanksConnectorsRenderer(graph, gen, packageName, boxName).execute();
+		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
+		new ProcessCoordinatorRenderer(graph, gen, packageName, boxName, classes).execute();
+		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
+		new TanksConnectorsRenderer(graph, gen, packageName, boxName, classes).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
-			new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
+			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
 	}
 
 	private void slack() {
-		new SlackRenderer(project, graph, src, gen, packageName, boxName).execute();
+		new SlackRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
 	}
 
 	private void ui() {
-		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName).execute();
+		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName, classes).execute();
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
-		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
-		new DialogRenderer(graph, src, gen, packageName, boxName).execute();
-		new ResourceRenderer(project, graph, src, gen, packageName, boxName).execute();
-		new UIRenderer(graph, src, gen, packageName, boxName).execute();
+		new DisplaysRenderer(graph, gen, packageName, boxName, classes).execute();
+		new DialogRenderer(graph, src, gen, packageName, boxName, classes).execute();
+		new ResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
+		new UIRenderer(graph, gen, packageName, boxName, classes).execute();
 		new UIAccessorCreator(module, graph, parent).execute();
 	}
 
@@ -179,7 +187,19 @@ public class FullRenderer {
 	}
 
 	private void main() {
-		new MainRenderer(src, packageName, module).execute();
-//		new PackageParameterUpdater(module).execute();
+		new MainRenderer(src, hasModel, packageName, module).execute();
+		final File file = new File(res, "log4j.properties");
+		if (!file.exists()) {
+			try {
+				java.nio.file.Files.write(file.toPath(), getBytes());
+			} catch (IOException e) {
+				Logger.getRootLogger().error(e.getMessage(), e);
+			}
+		}
+	}
+
+	private byte[] getBytes() throws IOException {
+		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j.properties"));
+
 	}
 }

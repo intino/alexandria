@@ -188,7 +188,7 @@ def type(dataLake) trigger(init)
 		$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$processCoordinator
 		$nessOperations
-		logger.info("Ness connection: started!");
+		if (this.ness.session() != null) logger.info("Ness connection: started!");
 	}, "ness init");
 	try {
 		thread.start();

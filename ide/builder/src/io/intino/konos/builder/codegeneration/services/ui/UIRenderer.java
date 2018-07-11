@@ -10,6 +10,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -19,14 +20,12 @@ import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
 public class UIRenderer {
-	private final File src;
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 	private final List<UIService> uiServiceList;
 
-	public UIRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName) {
-		this.src = src;
+	public UIRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;

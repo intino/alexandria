@@ -18,16 +18,26 @@
             @apply(--alexandria-stamp-title);
         }
         :host .editable_true {
-            margin-top: -1px;
+            margin-top: 0;
             padding: 2px 0;
             border: 1px solid transparent;
             cursor: text;
             min-width: 10px;
+            width: calc(100% - 2px);
             min-height: 16px;
+            height: calc(100% - 6px);
         }
         :host .editable_true:hover {
             border-color: #ddd;
             background: #efefef;
+        }
+        :host #layer {
+            line-height: 26px;
+        }
+        :host alexandria-stamp-editor {
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            margin-top: 0;
         }
         :host.grid .value {
             max-width: 210px;

@@ -8,6 +8,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
@@ -21,7 +22,7 @@ public class DisplaysRenderer {
 	private final String boxName;
 	private final List<Display> displays;
 
-	public DisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public DisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.displays = graph.displayList().stream().filter(d -> !d.getClass().equals(Display.class)).collect(toList());

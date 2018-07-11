@@ -15,9 +15,10 @@
             margin-top: -1px;
         }
         :host paper-input {
+            height: 100%;
             --paper-input-container : {
-                padding: 3px 0;
-                height: 18px;
+                padding: 0;
+                height: 100%;
                 font-size: 12pt;
             };
             --paper-input-container-input : {
@@ -25,6 +26,7 @@
                 background: #efefef;
                 font-size: 11pt;
                 line-height: 19px;
+                height: 100%;
             };
             --paper-input-container-underline : {
                 display: none;
@@ -35,6 +37,9 @@
             --paper-input-container-underline-disabled : {
                 display: none;
             };
+        }
+        :host paper-input ::content .input-content, :host paper-input ::content .label-and-input-container {
+            height: 100%;
         }
     </style>
 

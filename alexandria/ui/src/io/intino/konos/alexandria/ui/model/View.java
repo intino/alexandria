@@ -8,7 +8,7 @@ public class View {
 	private String label;
 	private Layout layout = Layout.Tab;
 	private Hidden hidden = null;
-	private int width;
+	private int width = -1;
 	private Container container;
 
 	public enum Layout {

@@ -11,6 +11,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
@@ -22,7 +23,7 @@ public class ProcessCoordinatorRenderer {
 	private final String boxName;
 	private final List<Process> processes;
 
-	public ProcessCoordinatorRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public ProcessCoordinatorRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.datalake = graph.nessClientList().isEmpty() ? null : graph.nessClient(0);
 		this.processes = !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
 		this.gen = gen;

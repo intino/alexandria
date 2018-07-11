@@ -12,6 +12,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 public class JMSServiceRenderer {
 
@@ -20,7 +21,7 @@ public class JMSServiceRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public JMSServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public JMSServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.services = graph.jMSServiceList();
 		this.gen = gen;
 		this.packageName = packageName;
