@@ -27,6 +27,7 @@
 
         _updateClassName : function () {
             var properties = this.stamp.properties;
+            if (this.stamp.layout.toLowerCase().indexOf("flexible") != -1) $(this).addClass("flex");
             if (properties == null) return;
             if (this.stamp.properties.className == null) return;
             $(this).addClass(this.stamp.properties.className);
