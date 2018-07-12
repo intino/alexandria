@@ -446,9 +446,16 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	protected void executeItemTask(ExecuteItemTaskEvent event) {
 		notifyLoading(true);
-		currentItem(event.item().id());
+
+		currentItem(event.item() != null ? event.item().id() : null);
 		Item item = this.currentItem();
+
 		TaskOperation stamp = (TaskOperation) event.stamp();
+		if (stamp == null) {
+			notifyLoading(false);
+			return;
+		}
+
 		StampResult result = stamp.execute(item, event.self(), session());
 		StampResult.Refresh refresh = result != null ? result.refresh() : StampResult.none().refresh();
 		dirty(true);
