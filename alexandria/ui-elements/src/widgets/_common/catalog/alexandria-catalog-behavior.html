@@ -7,7 +7,8 @@
             _catalog: Object,
             _showLabel : Boolean,
             _filtered : { type: Boolean, value: function() { return false; }},
-            _hideGroupings: { type: Boolean, value: function() { return true; }}
+            _hideGroupings: { type: Boolean, value: function() { return true; }},
+            _itemsArrivalMessage : String
         },
 
         _refreshCatalog : function(catalog) {
@@ -27,9 +28,11 @@
             this.selectGrouping(e.detail);
         },
 
-        _itemsArrival : function() {
+        _itemsArrival : function(message) {
             var toast = this.querySelector("paper-toast#itemsArrival");
-            if (toast != null) toast.open();
+            if (toast == null) return;
+            this._itemsArrivalMessage = message != null && message != "" ? message : this.NewItemsArrival;
+            toast.open();
         },
 
         _closeItemsArrival : function() {

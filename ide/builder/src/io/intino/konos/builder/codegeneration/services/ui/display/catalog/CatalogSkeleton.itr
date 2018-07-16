@@ -44,6 +44,8 @@ def type(catalog)
 			$hasMagazineView
 			][
 			$range+created
+			][
+				$hasCustomItemsArrivalMessage
 			]
     		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
     			//return $type+shortType+firstLowerCase~.core$$().id();
@@ -129,6 +131,12 @@ def trigger(hasMagazineView)
 	}
 
 	public static $type default$type+shortType+firstUpperCase($box+firstUpperCase~Box box, String id[, $mode+timerange range], UISession session) {
+		return null;
+	}
+end
+
+def trigger(hasCustomItemsArrivalMessage)
+	public static String itemsArrivalMessage($box+firstUpperCase~Box box, int count, UISession session) {
 		return null;
 	}
 end

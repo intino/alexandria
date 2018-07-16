@@ -39,7 +39,7 @@
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
-        <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[ItemsArrival]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
+        <paper-toast class="layout horizontal center" id="itemsArrival" duration="0"><span>[[_itemsArrivalMessage]]</span><paper-button on-tap="_refreshWithArrival">[[RefreshItems]]</paper-button><paper-button on-tap="_closeItemsArrival">[[Close]]</paper-button></paper-toast>
         <paper-toast id="notifyMessageToast" class="fit-bottom message" text="[[_notifyMessage]]"></paper-toast>
     </template>
 
@@ -207,13 +207,13 @@
             es: {
                 ClearFilter : "ver todos los elementos",
                 Close : "cerrar",
-                ItemsArrival : "han llegado nuevos elementos",
+                DefaultItemsArrival : "han llegado nuevos elementos",
                 RefreshItems : "actualizar"
             },
             en: {
                 ClearFilter : "view all items",
                 Close : "close",
-                ItemsArrival : "new items arrival",
+                DefaultItemsArrival : "new items arrival",
                 RefreshItems : "refresh"
             }
         };

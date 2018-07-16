@@ -24,6 +24,7 @@ import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.legio.graph.Artifact.Imports.Dependency;
+import io.intino.plugin.IntinoException;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
 import io.intino.tara.compiler.shared.Configuration;
@@ -97,7 +98,12 @@ public class CreateKonosBoxAction extends KonosAction {
 	}
 
 	private boolean isOlder(Dependency dependency, String version) {
-		return new Version(dependency.effectiveVersion()).compareTo(new Version(version)) < 0;
+		try {
+			return new Version(dependency.effectiveVersion()).compareTo(new Version(version)) < 0;
+		} catch (IntinoException e) {
+			LOG.error(e);
+			return false;
+		}
 	}
 
 	private Dependency findDependency(List<Dependency> dependencies, String artifact) {
