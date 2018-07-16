@@ -41,6 +41,7 @@ public class CatalogRenderer extends DisplayRenderer {
 		if (catalog.label() != null) frame.addSlot("label", catalog.label());
 		if (catalog.events() != null) frame.addSlot("event", frameOf(catalog.events().onClickItem()));
 		if (catalog.toolbar() != null) frame.addSlot("toolbar", frameOf(catalog.toolbar()));
+		if (catalog.hasCustomItemsArrivalMessage()) frame.addSlot("hasCustomItemsArrivalMessage", baseFrame());
 		views(catalog, frame);
 		arrangements(catalog, frame);
 		return frame;

@@ -5,7 +5,7 @@
 <dom-module id="alexandria-stamp-title">
 
     <template>
-        <div id="layer" on-tap="_edit" class$="value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]"
+        <div id="layer" on-tap="_edit" class$="layout vertical center-justified value [[stamp.classes]] editable_[[stamp.editable]]" title$="[[stamp.value]]"
              style$="[[_style]]">[[stamp.value]]</div>
         <alexandria-stamp-editor id="editor" class$="title [[stamp.classes]]" label$="[[stamp.label]]" value$="{{stamp.value}}"
                                  hidden$="[[!stamp.editable]]" style="display:none;"
@@ -30,9 +30,6 @@
         :host .editable_true:hover {
             border-color: #ddd;
             background: #efefef;
-        }
-        :host #layer {
-            line-height: 26px;
         }
         :host alexandria-stamp-editor {
             width: calc(100% - 2px);

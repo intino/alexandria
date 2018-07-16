@@ -98,8 +98,8 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		}
 	}
 
-	public void itemsArrival() {
-		notifyItemsArrival();
+	public void itemsArrival(int count) {
+		notifyItemsArrival(element().itemsArrivalMessage(count, session()));
 	}
 
 	@Override
@@ -227,7 +227,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	protected abstract void sendCatalog();
 	protected abstract ItemList filteredItemList(Scope scope, String condition);
-	protected abstract void notifyItemsArrival();
+	protected abstract void notifyItemsArrival(String message);
 
 	protected boolean isGrouping(Map.Entry<String, GroupingSelection> entry) {
 		return groupingOf(entry.getKey()) != null;
