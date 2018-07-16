@@ -43,7 +43,7 @@ AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
         	widget._notifyUser(parameters.value);
         });
         this.when("itemsArrival").toSelf().execute(function(parameters) {
-        	widget._itemsArrival();
+        	widget._itemsArrival(parameters.value);
         });
         this.when("loadTimezoneOffset").toSelf().execute(function(parameters) {
         	widget._loadTimezoneOffset();

@@ -18,6 +18,7 @@ public class Catalog extends Element {
 	private ArrangementHistogramsMode arrangementHistogramsMode;
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
+	private ItemsArrivalMessageLoader itemsArrivalMessageLoader;
 	private Mode mode;
 	private Events events;
 
@@ -82,6 +83,15 @@ public class Catalog extends Element {
 		return this;
 	}
 
+	public String itemsArrivalMessage(int count, UISession session) {
+		return this.itemsArrivalMessageLoader != null ? itemsArrivalMessageLoader.load(count, session) : null;
+	}
+
+	public Catalog itemsArrivalMessageLoader(ItemsArrivalMessageLoader loader) {
+		this.itemsArrivalMessageLoader = loader;
+		return this;
+	}
+
 	public Mode mode() {
 		return mode;
 	}
@@ -140,6 +150,10 @@ public class Catalog extends Element {
 
 	public interface ArrangementFiltererLoader {
 		ArrangementFilterer load(UISession session);
+	}
+
+	public interface ItemsArrivalMessageLoader {
+		String load(int count, UISession session);
 	}
 
 	public interface ArrangementFilterer {
