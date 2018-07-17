@@ -62,8 +62,10 @@ public class DisplayRenderer {
 	}
 
 	private void processPrototype(Display display) {
+		classes.put(display.getClass().getSimpleName() + "#" + display.name$(), DISPLAYS + "." + snakeCaseToCamelCase(display.name$()));
 		if (display.i$(Editor.class)) new EditorRenderer(project, display.a$(Editor.class), packageName, boxName).write(src, gen);
-		else if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
+		else if (display.i$(Catalog.class))
+			new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
 		else if (display.i$(Panel.class)) {
 			Panel panel = display.a$(Panel.class);
 			if (panel.isDesktop()) {

@@ -90,7 +90,6 @@ public class AbstractDialogRenderer {
 
 	private Frame frameOf(Tab.Section section) {
 		final Frame frame = new Frame().addTypes("section");
-		if (!section.name$().isEmpty()) frame.addSlot("name", section.name$());
 		final List<Tab.Input> inputs = section.inputList();
 		for (Tab.Input input : inputs) processInput(frame, input);
 		addCommon(frame, section);
@@ -202,7 +201,7 @@ public class AbstractDialogRenderer {
 
 	private void addCommon(Frame frame, Tab.Input input) {
 		frame.addSlot("owner", input.core$().owner().name());
-		if (input.name$() != null) frame.addSlot("name", input.name$());
+		if (input.name$() != null && !input.name$().isEmpty()) frame.addSlot("name", input.name$());
 		frame.addSlot("label", input.label());
 		frame.addSlot("readonly", input.isReadonly());
 		frame.addSlot("required", input.isRequired());
