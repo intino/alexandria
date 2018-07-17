@@ -16,7 +16,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.intino.konos.jms.Consumer.textFrom;
@@ -36,7 +38,7 @@ public class JMSDatalake implements Datalake {
 	private Session session;
 	private Connection connection;
 	private Map<String, TopicProducer> topicProducers = new HashMap<>();
-
+	private List<String> registeredTanks;
 
 	public JMSDatalake(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -51,9 +53,16 @@ public class JMSDatalake implements Datalake {
 			createConnection();
 			final boolean transacted = args.length > 0 && args[0].equalsIgnoreCase("transacted");
 			this.session = connection.createSession(transacted, transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE);
+			this.registeredTanks = registeredTanks();
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private List<String> registeredTanks() {
+		TopicProducer producer = newProducer(ADMIN_PATH);
+		final String tanks = requestResponse(producer, createMessageFor("tanks"));
+		return Arrays.asList(tanks.split(";"));
 	}
 
 	public Session session() {
@@ -122,7 +131,9 @@ public class JMSDatalake implements Datalake {
 		try {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
-			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive());
+			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive());
+			producer.close();
+			return response;
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return "";
@@ -130,7 +141,7 @@ public class JMSDatalake implements Datalake {
 	}
 
 	public void add(String tank) {
-
+		if (!registeredTanks.contains(tank)) logger.warn("Tank " + tank + " is not registered in datalake");
 	}
 
 	public void disconnect() {
