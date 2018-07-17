@@ -6,6 +6,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Map;
 
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
@@ -16,7 +17,7 @@ public class NessJMXOperationsRenderer {
 	private final String boxName;
 
 
-	public NessJMXOperationsRenderer(File gen, File src, String packageName, String boxName) {
+	public NessJMXOperationsRenderer(File gen, File src, String packageName, String boxName, Map<String, String> classes) {
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;

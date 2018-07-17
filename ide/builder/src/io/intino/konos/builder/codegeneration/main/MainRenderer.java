@@ -11,14 +11,15 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 
 public class MainRenderer {
-
 	private final File destination;
+	private final boolean hasModel;
 	private final String packageName;
 	private final Module module;
 	private final Configuration configuration;
 
-	public MainRenderer(File destination, String packageName, Module module) {
+	public MainRenderer(File destination, boolean hasModel, String packageName, Module module) {
 		this.destination = destination;
+		this.hasModel = hasModel;
 		this.packageName = packageName;
 		this.module = module;
 		this.configuration = module != null ? TaraUtil.configurationOf(module) : null;
@@ -26,7 +27,9 @@ public class MainRenderer {
 
 	public void execute() {
 		if (configuration == null) return;
-		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name());
+		final String name = name();
+		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name);
+		if (hasModel) frame.addSlot("model", new Frame("model").addSlot("name", name));
 		if (!Commons.javaFile(destination, "Main").exists())
 			Commons.writeFrame(destination, "Main", template().format(frame));
 	}

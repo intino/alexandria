@@ -19,21 +19,20 @@ import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SchemaRenderer {
 	private final List<Schema> schemas;
-	private File destination;
+	private File gen;
 	private String rootPackage;
+	private final Map<String, String> classes;
 
-	public SchemaRenderer(KonosGraph graph, File destination, String rootPackage) {
+	public SchemaRenderer(KonosGraph graph, File gen, String rootPackage, Map<String, String> classes) {
 		schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(Collectors.toList());
-		this.destination = destination;
+		this.gen = gen;
 		this.rootPackage = rootPackage;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -43,9 +42,10 @@ public class SchemaRenderer {
 	private void processSchema(Schema schema) {
 		final Service service = schema.core$().ownerAs(Service.class);
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
-		final File packageFolder = new File(destination, subPackage);
+		final File packageFolder = new File(gen, subPackage);
 		final String packageName = subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
 		final Frame frame = createSchemaFrame(schema, packageName);
+		classes.put(Schema.class.getSimpleName() + "#" + schema.name$(), subPackage.replace(File.separator, ".") + "." + schema.name$());
 		Commons.writeFrame(packageFolder, schema.name$(), template().format(new Frame("root").addSlot("root", rootPackage).addSlot("package", packageName).addSlot("schema", frame)));
 	}
 

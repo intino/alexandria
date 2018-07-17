@@ -10,6 +10,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
@@ -20,12 +21,14 @@ public class ProcessRenderer {
 	private final File src;
 	private final String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public ProcessRenderer(KonosGraph graph, File src, String packageName, String boxName) {
+	public ProcessRenderer(KonosGraph graph, File src, String packageName, String boxName, Map<String, String> classes) {
 		this.processes = processes(graph);
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -42,6 +45,7 @@ public class ProcessRenderer {
 
 			final File destination = new File(src, "ness/processes");
 			final String handlerName = Formatters.firstUpperCase(name) + "Process";
+			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.processes." + handlerName);
 			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
 					Formatters.customize(ProcessTemplate.create()).format(frame));
 		}

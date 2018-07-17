@@ -1,10 +1,7 @@
 package io.intino.konos.alexandria.ui.displays;
 
 import io.intino.konos.alexandria.ui.Asset;
-import io.intino.konos.alexandria.ui.model.Catalog;
-import io.intino.konos.alexandria.ui.model.Element;
-import io.intino.konos.alexandria.ui.model.Panel;
-import io.intino.konos.alexandria.ui.model.TemporalCatalog;
+import io.intino.konos.alexandria.ui.model.*;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
 import java.net.URL;
@@ -208,6 +205,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         if (element instanceof Catalog) return AlexandriaCatalog.class.getSimpleName();
         if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Range) return AlexandriaTemporalRangeCatalog.class.getSimpleName();
         if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Time) return AlexandriaTemporalTimeCatalog.class.getSimpleName();
+        if (element instanceof Mold) return AlexandriaMold.class.getSimpleName();
         return null;
     }
 }

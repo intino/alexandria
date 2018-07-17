@@ -7,6 +7,7 @@ use Display
 
 Concept Catalog extends Display
 	var string itemClass
+	var boolean hasCustomItemsArrivalMessage = false
 
 	Concept:{0..1} Content
 		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = Disabled
