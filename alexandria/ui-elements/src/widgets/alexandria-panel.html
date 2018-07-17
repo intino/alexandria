@@ -59,19 +59,19 @@
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isTabLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]" style$="[[_viewStyle(view)]]"><cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isCatalogContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]" style$="[[_viewStyle(view)]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalog" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isPanelContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerPanel" widget="AlexandriaViewContainerPanel" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]" style$="[[_viewStyle(view)]]"><cotton-zombie display="AlexandriaViewContainerPanel" widget="AlexandriaViewContainerPanel" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isDisplayContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]" style$="[[_viewStyle(view)]]"><cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                         <template is="dom-if" if="[[_isSetContainer(view)]]">
-                            <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerSet" widget="AlexandriaViewContainerSet" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                            <div name$="[[view.name]]" style$="[[_viewStyle(view)]]"><cotton-zombie display="AlexandriaViewContainerSet" widget="AlexandriaViewContainerSet" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                         </template>
                     </template>
                 </template>
@@ -275,6 +275,20 @@
 
             _isViewHidden : function(view) {
                 return view.referencePropertyList[2].value == "true";
+            },
+
+            _viewStyle : function(view) {
+                return this._viewWidth(view) + ";" + this._viewMargin(view);
+            },
+
+            _viewWidth : function(view) {
+                var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
+                return "width:" + (width != "-1" ? width + "%" : "100%");
+            },
+
+            _viewMargin : function(view) {
+                var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
+                return width != "-1" ? "margin:0 auto" : "";
             },
 
             _selectView : function(name) {

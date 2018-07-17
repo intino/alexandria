@@ -18,6 +18,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -30,14 +31,16 @@ public class RESTResourceRenderer {
 	private File src;
 	private String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public RESTResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public RESTResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.services = graph.rESTServiceList();
 		this.gen = gen;
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -51,13 +54,14 @@ public class RESTResourceRenderer {
 	private void processResource(Resource resource) {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = fillResourceFrame(resource, operation);
-			Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource", template().format(frame));
+			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
+			Commons.writeFrame(new File(gen, RESOURCES), className, template().format(frame));
 			createCorrespondingAction(operation);
 		}
 	}
 
 	private void createCorrespondingAction(Operation operation) {
-		new RESTActionRenderer(project, operation, src, packageName, boxName).execute();
+		new RESTActionRenderer(project, operation, src, packageName, boxName, classes).execute();
 	}
 
 	private Frame fillResourceFrame(Resource resource, Operation operation) {

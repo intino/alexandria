@@ -65,3 +65,6 @@ Concept Response extends Data is component
 
 Facet ExtensionOf on Schema
 	var Schema parent
+//
+//Concept Message extends Schema
+//	has Message

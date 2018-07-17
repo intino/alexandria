@@ -15,6 +15,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
@@ -33,9 +34,10 @@ public class DisplayRenderer {
 	private final String packageName;
 	private final List<Display> displays;
 	private final String boxName;
+	private final Map<String, String> classes;
 	private final String parent;
 
-	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String parent, String boxName) {
+	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String parent, String boxName, Map<String, String> classes) {
 		this.project = project;
 		this.gen = gen;
 		this.src = src;
@@ -43,6 +45,7 @@ public class DisplayRenderer {
 		this.parent = parent;
 		this.displays = graph.displayList();
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -59,8 +62,10 @@ public class DisplayRenderer {
 	}
 
 	private void processPrototype(Display display) {
+		classes.put(display.getClass().getSimpleName() + "#" + display.name$(), DISPLAYS + "." + snakeCaseToCamelCase(display.name$()));
 		if (display.i$(Editor.class)) new EditorRenderer(project, display.a$(Editor.class), packageName, boxName).write(src, gen);
-		else if (display.i$(Catalog.class)) new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
+		else if (display.i$(Catalog.class))
+			new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
 		else if (display.i$(Panel.class)) {
 			Panel panel = display.a$(Panel.class);
 			if (panel.isDesktop()) {
@@ -72,6 +77,7 @@ public class DisplayRenderer {
 
 	private void writeDisplay(Display display, Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
+		classes.put("Display#" + display.name$(), DISPLAYS + "." + newDisplay);
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
 			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
 		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay), packageName).update();

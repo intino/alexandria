@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
@@ -32,13 +33,15 @@ public class RESTServiceRenderer {
 	private final File res;
 	private String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName) {
+	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Map<String, String> classes) {
 		services = graph.rESTServiceList();
 		this.gen = gen;
 		this.res = res;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -82,7 +85,9 @@ public class RESTServiceRenderer {
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store()).addSlot("password", secure.storePassword()));
-		Commons.writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "Resources", template().format(frame));
+		final String className = snakeCaseToCamelCase(service.name$()) + "Resources";
+		classes.put(service.getClass().getSimpleName() + "#" + service.name$(), className);
+		Commons.writeFrame(gen, className, template().format(frame));
 	}
 
 	private Frame[] processResources(List<Resource> resources) {
@@ -90,7 +95,7 @@ public class RESTServiceRenderer {
 		for (Resource resource : resources) {
 			list.addAll(processResource(resource, resource.operationList()));
 		}
-		return list.toArray(new Frame[list.size()]);
+		return list.toArray(new Frame[0]);
 	}
 
 	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
@@ -107,7 +112,6 @@ public class RESTServiceRenderer {
 		for (String parameter : Commons.extractParameters(path)) frame.addSlot("custom", parameter);
 		return frame;
 	}
-
 
 	private Template template() {
 		return Formatters.customize(RESTServiceTemplate.create());

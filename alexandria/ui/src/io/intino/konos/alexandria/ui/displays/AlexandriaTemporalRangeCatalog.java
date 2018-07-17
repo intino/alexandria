@@ -22,8 +22,8 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
-	public void notifyItemsArrival() {
-		notifier.itemsArrival();
+	public void notifyItemsArrival(String message) {
+		notifier.itemsArrival(message);
 	}
 
 	@Override

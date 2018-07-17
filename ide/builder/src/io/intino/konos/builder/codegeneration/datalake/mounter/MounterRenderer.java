@@ -5,10 +5,12 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Mounter;
+import io.intino.konos.model.graph.Process;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
@@ -21,12 +23,14 @@ public class MounterRenderer {
 	private final File src;
 	private final String packageName;
 	private final String boxName;
+	private final Map<String, String> classes;
 
-	public MounterRenderer(KonosGraph graph, File src, String packageName, String boxName) {
+	public MounterRenderer(KonosGraph graph, File src, String packageName, String boxName, Map<String, String> classes) {
 		this.mounters = graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Mounter.class)).map(h -> h.a$(Mounter.class)).collect(toList());
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.classes = classes;
 	}
 
 	public void execute() {
@@ -42,6 +46,7 @@ public class MounterRenderer {
 			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "ness/mounters");
 			final String handlerName = name + "Mounter";
+			classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "ness.mounters." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				writeFrame(destination, handlerName, customize(MounterTemplate.create()).format(frame));
 		}

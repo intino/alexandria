@@ -12,6 +12,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -25,7 +26,7 @@ public class TanksConnectorsRenderer {
 	private final String boxName;
 	private final Set<MessageHandler> handlers;
 
-	public TanksConnectorsRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public TanksConnectorsRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;

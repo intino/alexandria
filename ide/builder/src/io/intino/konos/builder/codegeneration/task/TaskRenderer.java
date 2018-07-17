@@ -16,6 +16,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TaskRenderer {
@@ -26,7 +27,7 @@ public class TaskRenderer {
 	private String packageName;
 	private final String boxName;
 
-	public TaskRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName) {
+	public TaskRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.scheduledTasks = graph.scheduledTaskList();
 		this.tasks = graph.taskList().stream().filter(t -> !t.isScheduled()).collect(Collectors.toList());
 		this.srcDestination = src;
