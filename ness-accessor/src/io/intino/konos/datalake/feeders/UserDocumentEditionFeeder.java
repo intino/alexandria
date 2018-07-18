@@ -2,12 +2,12 @@ package io.intino.konos.datalake.feeders;
 
 import io.intino.konos.datalake.Feeder;
 
-public class UserDocumentEdition extends Feeder {
+public abstract class UserDocumentEditionFeeder extends Feeder {
 	private final Mode mode;
 
 	public enum Mode { Offline, Online };
 
-	public UserDocumentEdition(String mode) {
+	public UserDocumentEditionFeeder(String mode) {
 		this.mode = Mode.valueOf(mode);
 	}
 
