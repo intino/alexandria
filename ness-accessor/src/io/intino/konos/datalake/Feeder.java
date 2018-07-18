@@ -1,4 +1,9 @@
 package io.intino.konos.datalake;
 
-public class Feeder {
+import java.util.List;
+
+public abstract class Feeder {
+
+	public abstract boolean fits(List<String> eventTypes);
+
 }

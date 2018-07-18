@@ -38,9 +38,9 @@ public interface Datalake {
 			return "feed." + name();
 		}
 
-		public void feed(io.intino.ness.inl.Message message);
+		void feed(io.intino.ness.inl.Message... message);
 
-		void drop(io.intino.ness.inl.Message message);
+		void drop(io.intino.ness.inl.Message... message);
 
 		TopicConsumer flow(String flowID);
 
