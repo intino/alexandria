@@ -127,7 +127,7 @@ public class FullRenderer {
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
 		new ProcedureRenderer(graph, gen, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
-		new FeederRenderer(graph, src, packageName, boxName, classes).execute();
+		new FeederRenderer(graph,gen, src, packageName, boxName, classes).execute();
 		new TanksConnectorsRenderer(graph, gen, packageName, boxName, classes).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();

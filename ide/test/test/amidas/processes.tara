@@ -9,8 +9,15 @@ Procedure(ness = client) RegistrarSolicitud
 
 
 Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
-	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) editor
+	Feeder(eventTypes = SolicitudCompletada) editor
 		Sensor dialog as DocumentEdition(mode = Online)
+	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) escrito
+		Sensor solicitud as Poll
+			Option("Requerir")
+			Option("Realizar escrito")
+			Option("Resolver con informe propuesta")
+			Option("Resolver sin informe propuesta")
+			Option("Archivar")
 
 Schema OtraDocumentacion
     Attribute descripcion as Text

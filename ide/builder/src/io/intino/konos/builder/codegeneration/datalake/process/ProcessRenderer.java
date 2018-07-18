@@ -46,7 +46,7 @@ public class ProcessRenderer {
 
 			final File destination = new File(src, "ness/processes");
 			final String handlerName = Formatters.firstUpperCase(name) + "Process";
-			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.processes." + handlerName);
+			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.processes_2." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
 		}

@@ -18,8 +18,8 @@ public class FeederTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "feeder"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".ness.feeders;\n\nimport io.intino.ness.inl.Message;\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\nimport java.io.InputStream;\nimport java.util.List;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Feeder extends Abstract")).add(mark("name", "firstUpperCase")).add(literal("Feeder {\n\tpublic ")).add(mark("box")).add(literal("Box box;\n\n\tpublic ")).add(mark("name", "firstUpperCase")).add(literal("Feeder(AmidasBox box) {\n\t\tthis.box = box;\n\t}\n\n\n\tpublic Message event(InputStream document) {\n\t\treturn null;//TODO\n\t}\n\n\t")).add(mark("feed")).add(literal("\n}")),
-			rule().add((condition("trigger", "sensor"))).add(literal("public Message ")).add(mark("name", "FirstUpperCase")).add(literal("(InputStream document) {\n\treturn null;//TODO\n}"))
+			rule().add((condition("type", "feeder"))).add(literal("package ")).add(mark("package", "validPackage")).add(literal(".ness.feeders;\n\nimport io.intino.ness.inl.Message;\nimport java.util.Arrays;\n\npublic class ")).add(mark("name", "FirstUpperCase")).add(literal("Feeder extends Abstract")).add(mark("name", "FirstUpperCase")).add(literal("Feeder {\n\tprivate final ")).add(mark("box", "FirstUpperCase")).add(literal("Box box;\n\n\tpublic ")).add(mark("name", "FirstUpperCase")).add(literal("Feeder(")).add(mark("box", "FirstUpperCase")).add(literal("Box box) {\n\t\tthis.box = box;\n\t}\n\t")).add(mark("sensor", "class")).add(literal("\n}")),
+			rule().add((condition("type", "sensor")), (condition("trigger", "class"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal("Sensor extends Abstract")).add(mark("name", "FirstUpperCase")).add(literal("Sensor {\n\n\tpublic ")).add(mark("name", "FirstUpperCase")).add(literal("Sensor() {\n\t}\n\n\tpublic Message get(Object... args) {\n\t\treturn null;\n\t}\n}"))
 		);
 		return this;
 	}
