@@ -19,11 +19,6 @@ Concept:NamedIfNoSchema Mounter is component
 	var Schema schema
 	var string subdomain = ""
 
-Concept Feeder is component
-	var string subdomain = ""
-	Concept Feed
-		var Schema schema
-
 Concept:Named Process is component
 	var string subdomain = ""
 	Concept:{1..1} Input
@@ -31,19 +26,23 @@ Concept:Named Process is component
 	Concept Output
 		var Schema schema
 
+Concept Feeder is component
+	var string subdomain = ""
+	Concept Feed
+		var Schema schema
+
 Facet UserEdition on Feeder.Feed
 	var string path
 
-Facet UserDocumentEdition on Feed
+Facet UserDocumentEdition on Feeder.Feed
 	var word:{Offline Online} mode = Online
 
-Facet UserDocumentSignature on Feeder
+Facet UserDocumentSignature on Feeder.Feed
 	var word:{Sign CoSign CounterSign} signType
 	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
 
-Facet UserDecision on Feeder
+Facet UserDecision on Feeder.Feed
 	var string defaultOption = empty
-
 	Concept Option
 		var string value
 		has Option

@@ -31,13 +31,13 @@ public class FSTank implements Tank {
 	}
 
 	@Override
-	public void feed(Message message) {
-		datalake.drop(name, message);
+	public void feed(Message[] messages) {
+		datalake.drop(name, messages);
 	}
 
 	@Override
-	public void drop(Message message) {
-		datalake.drop(name, message);
+	public void drop(Message[] messages) {
+		datalake.drop(name, messages);
 	}
 
 	@Override
