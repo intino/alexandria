@@ -1,15 +1,15 @@
-package io.intino.konos.datalake.feeders;
+package io.intino.konos.datalake.sensors;
 
-import io.intino.konos.datalake.Feeder;
+import io.intino.konos.datalake.Sensor;
 
-public abstract class UserDocumentSignatureFeeder extends Feeder {
+public abstract class DocumentSignatureSensor extends Sensor {
 	private final SignType signType;
 	private final SignFormat signFormat;
 
 	public enum SignType { Sign, CoSign, CounterSign };
 	public enum SignFormat { Pkcs7, XadesAttached, XadesDetached, CadesAttached, CadesDetached };
 
-	public UserDocumentSignatureFeeder(String signType, String signFormat) {
+	public DocumentSignatureSensor(String signType, String signFormat) {
 		this.signType = SignType.valueOf(signType);
 		this.signFormat = SignFormat.valueOf(signFormat);
 	}

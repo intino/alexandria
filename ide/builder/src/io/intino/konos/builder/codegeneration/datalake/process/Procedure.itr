@@ -1,4 +1,4 @@
-def type(processes)
+def type(procedure)
 	package $package+validPackage.ness;
 
 	import io.intino.konos.jms.TopicConsumer;
@@ -21,7 +21,7 @@ def type(processes)
     import java.util.Map;
     import java.util.HashMap;
 
-	public class ProcessCoordinator {
+	public class $name+FirstUpperCase~Procedure {
 		$process+field...[$NL]
 
 		public static void registerProcesses($box+firstUppercase~Box box) {
@@ -81,7 +81,6 @@ def trigger(process) trigger(class)
 				$name+snakeCaseToCamelCase+FirstUpperCase~Process process = new $name+snakeCaseToCamelCase+FirstUpperCase~Process();
 				process.box = box;
 				process.$type+typeName = $type+load;
-				$precondition
 				process.execute();
 			} catch(Throwable e) {
 				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);

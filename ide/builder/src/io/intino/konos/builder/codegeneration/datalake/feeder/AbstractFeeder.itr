@@ -1,0 +1,42 @@
+def type(feeder & Poll)
+	package $package+validPackage.ness.feeders;
+
+	import java.util.Arrays;
+
+	public class Abstract$name+FirstUpperCase~Feeder[ extends io.intino.konos.datalake.feeders.PollFeeder] {
+
+		public Abstract$name+FirstUpperCase~Feeder() {
+			super("$defaultOption", Arrays.asList($option+quoted...[, ]));
+		}
+
+		public boolean fits(List<String> eventTypes) {
+			return false;//TODO
+		}
+	}
+end
+
+def type(feeder)
+	package $package+validPackage.ness.feeders;
+
+	import java.util.Arrays;
+	import java.util.Collections;
+
+	public class Abstract$name+FirstUpperCase~Feeder[ extends io.intino.konos.datalake.Feeder] {
+
+		public Abstract$name+FirstUpperCase~Feeder() {
+			super("$defaultOption", Arrays.asList($option...[, ]));
+		}
+
+	}
+end
+
+def trigger(option)
+	new Option("$value", [$option?Collections.emptyList()])
+end
+
+
+
+def trigger(quoted)
+	"$value"
+end
+

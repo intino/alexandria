@@ -1,0 +1,12 @@
+dsl Proteo
+
+use DataTypes
+use Clients
+
+Concept:Named Procedure
+	var Ness ness
+	Concept:Named Process is component
+		Concept:{1..1}:NamedIfNoSchema Input extends EventHandler
+		Concept Output
+			var Schema schema
+
