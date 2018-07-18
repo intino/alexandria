@@ -277,7 +277,7 @@ def type(dataLake) trigger(getter)
 		return new $package.ness.TanksConnectors();
 	}
 
-	public $package.ness.TanksConnectors processes() {
+	public $package.ness.TanksConnectors processes_2() {
 		return new $package.ness.TanksConnectors();
 	}
 end

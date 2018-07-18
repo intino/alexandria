@@ -36,8 +36,11 @@ def type(tanks)
 		}
 
 		public static List<io.intino.konos.datalake.Datalake.Tank> byName(List<String> names) {
-			List<io.intino.konos.datalake.Datalake.Tank> tanks = all();
-			return tanks.stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
+			return all().stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
+		}
+
+		public static io.intino.konos.datalake.Datalake.Tank byName(String type) {
+			return all().stream().filter(t -> names.contains(t.name())).findFirst().orElse(null);
 		}
 
 		$tank+getter...[$NL$NL]

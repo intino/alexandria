@@ -17,31 +17,33 @@ Facet Ness on Client
 Concept:NamedIfNoSchema Mounter extends EventHandler is component
 
 Concept:Named Feeder is component
-	var string subdomain = ""
 	var Schema[] eventTypes
-	Concept:NamedIfNoSchema Sensor
+	var string subdomain = ""
+	has:Named Sensor
 
-Facet FormEdition on Feeder.Sensor
+Concept:Named Sensor is component
+
+Facet FormEdition on Sensor
 	var string path
 
-Facet DocumentEdition on Feeder.Sensor
+Facet DocumentEdition on Sensor
 	var word:{Offline Online} mode = Online
 
-Facet DocumentSignature on Feeder.Sensor
+Facet DocumentSignature on Sensor
 	var word:{Sign CoSign CounterSign} signType
 	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
 
-Facet Poll on Feeder.Sensor
+Facet Poll on Sensor
 	var string defaultOption = empty
 	Concept Option
 		var string value
 		has Option
 
-Facet Device on Feeder.Sensor
+Facet Device on Sensor
 
-//Facet Scrapper on Feeder.Sensor
+//Facet Scrapper on Sensor
 
 Concept EventHandler is abstract
-	var string name = 'self.schema()!= null ? self.schema().name$(): self.name$()' is private
+	var string name = 'self.schema()!= null ? self.schema().name$(): self.name$()' is private reactive
 	var Schema schema
 	var string subdomain = ""

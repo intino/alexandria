@@ -1,39 +1,62 @@
-def type(feeder & Poll)
+def type(feeder)
 	package $package+validPackage.ness.feeders;
 
-	import java.util.Arrays;
+	import $package+validPackage.ness.TanksConnectors;
+	import io.intino.konos.datalake.Feeder;
+	import io.intino.konos.datalake.Sensor;
+	import io.intino.ness.inl.Message;
 
-	public class Abstract$name+FirstUpperCase~Feeder[ extends io.intino.konos.datalake.feeders.PollFeeder] {
+	import java.util.Arrays;
+	import java.util.List;
+	import java.util.Collections;
+
+	public class Abstract$name+FirstUpperCase~Feeder extends io.intino.konos.datalake.Feeder {
+		protected List<Sensor> sensors;
 
 		public Abstract$name+FirstUpperCase~Feeder() {
-			super("$defaultOption", Arrays.asList($option+quoted...[, ]));
+			this.sensors = Arrays.asList($sensor+new...[, ]);
 		}
 
-		public boolean fits(List<String> eventTypes) {
-			return false;//TODO
+		public List<String> eventTypes() {
+			return Arrays.asList($eventType+quoted...[, ]);
+		}
+
+		public void feed(Message event) {
+			TanksConnectors.byName(["$domain" + ]event.type()).feed(event);
+		}
+
+		public List<Sensor> sensors() {
+			return sensors;
+		}
+
+		$sensor+class...[$NL]
+	}
+end
+
+def type(sensor) trigger(new)
+	new $feeder+FirstUpperCase~Feeder.$name+FirstUpperCase~Sensor()
+end
+
+def type(sensor) trigger(class)
+	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.konos.datalake.sensors.$type] {
+
+		public Abstract$name+FirstUpperCase~Sensor() {
+			$parent+super
 		}
 	}
 end
 
-def type(feeder)
-	package $package+validPackage.ness.feeders;
+def type(documentEdition) trigger(super)
+	super("$mode");
+end
 
-	import java.util.Arrays;
-	import java.util.Collections;
-
-	public class Abstract$name+FirstUpperCase~Feeder[ extends io.intino.konos.datalake.Feeder] {
-
-		public Abstract$name+FirstUpperCase~Feeder() {
-			super("$defaultOption", Arrays.asList($option...[, ]));
-		}
-
-	}
+def type(poll) trigger(super)
+	super("$defaultOption", Arrays.asList($option+quoted...[, ]));
 end
 
 def trigger(option)
 	new Option("$value", [$option?Collections.emptyList()])
 end
-
 
 
 def trigger(quoted)

@@ -2,28 +2,27 @@ def type(feeder)
 	package $package+validPackage.ness.feeders;
 
 	import io.intino.ness.inl.Message;
-	import $package+validPackage.$box+firstUpperCase~Box;
-	import java.io.InputStream;
-	import java.util.List;
+	import java.util.Arrays;
 
-	public class $name+firstUpperCase~Feeder extends Abstract$name+firstUpperCase~Feeder {
-		public $box~Box box;
+	public class $name+FirstUpperCase~Feeder extends Abstract$name+FirstUpperCase~Feeder {
+		private final $box+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Feeder(AmidasBox box) {
+		public $name+FirstUpperCase~Feeder($box+FirstUpperCase~Box box) {
 			this.box = box;
 		}
-
-
-		public Message event(InputStream document) {
-			return null;//TODO
-		}
-
-		$feed
+		$sensor+class
 	}
 end
 
-def trigger(sensor)
-	public Message $name+FirstUpperCase(InputStream document) {
-		return null;//TODO
+
+def type(sensor) trigger(class)
+	public static class $name+FirstUpperCase~Sensor extends Abstract$name+FirstUpperCase~Sensor {
+
+		public $name+FirstUpperCase~Sensor() {
+		}
+
+		public Message get(Object... args) {
+			return null;
+		}
 	}
 end
