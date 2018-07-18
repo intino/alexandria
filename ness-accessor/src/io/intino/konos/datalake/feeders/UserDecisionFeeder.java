@@ -4,7 +4,7 @@ import io.intino.konos.datalake.Feeder;
 
 import java.util.List;
 
-public class UserDecisionFeeder extends Feeder {
+public abstract class UserDecisionFeeder extends Feeder {
 	private final String defaultOption;
 	private final List<String> options;
 
