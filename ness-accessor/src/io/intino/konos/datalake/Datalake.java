@@ -4,6 +4,7 @@ import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
 public interface Datalake {
+	String ADMIN_PATH = "service.ness.admin";
 	String REFLOW_PATH = "service.ness.reflow";
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
