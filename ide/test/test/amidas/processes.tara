@@ -1,13 +1,84 @@
 dsl Konos
 
 
+Procedure(ness = client) RegistrarSolicitud
+	Process registrar
+		Input(Solicitud)
+	Process() soli2
+		Input(schema = empty) soli2
+
 
 Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
-	Process(schema = Solicitud)
-	Process(schema = empty) soli2
-
-Schema Solicitud
+	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) editor
+		Sensor dialog as DocumentEdition(mode = Online)
 
 Schema OtraDocumentacion
     Attribute descripcion as Text
     Attribute(multiple=true) fichero as File
+
+Schema Message
+	Attribute ts as DateTime
+
+Schema Solicitud as ExtensionOf(Message)
+	Attribute id as Text
+	Attribute asunto as Text
+	Attribute expone as Text
+	Attribute solicita as Text
+	Attribute modoPresentacion as Text // PorComparecenciaEnSede PapelPorCorreoCertificado
+
+	Has(DatosDelSolicitante, multiple=false)
+	Has(DatosDelRepresentante, multiple=false)
+	Has(SolicitudDocumento)
+
+Schema SolicitudCompletada as ExtensionOf(Message)
+	Has(Solicitud, multiple=false)
+	Attribute autor as Text
+
+Schema SolicitudRevisada as ExtensionOf(Message)
+	Attribute solicitud as Text
+	Attribute revision as Text
+	Attribute autor as Text
+
+Schema SolicitudArchivada as ExtensionOf(Message)
+	Attribute solicitud as Text
+	Attribute autor as Text
+
+Schema DatosDelSolicitante
+	Attribute tipoDeDocumento as Text
+	Attribute numeroDeDocumento as Text
+	Attribute primerApellido as Text
+	Attribute segundoApellido as Text
+	Attribute nombre as Text
+	Attribute razonSocial as Text
+	Attribute enCalidadDe as Text
+
+Schema DatosDelRepresentante
+	Attribute tipoDeDocumento as Text
+	Attribute numeroDeDocumento as Text
+	Attribute primerApellido as Text
+	Attribute segundoApellido as Text
+	Attribute nombre as Text
+	Attribute razonSocial as Text
+
+Schema SolicitudDocumento
+	Attribute descripcion as Text
+	Attribute fichero as File
+
+Schema RequerimientoSolicitado
+	Attribute ts as DateTime
+	Attribute solicitud as Text
+
+Schema RequerimientoCreado
+	Attribute ts as DateTime
+	Attribute solicitud as Text
+	Attribute tipo as Text
+
+Schema EscritoSolicitado
+	Attribute ts as DateTime
+	Attribute expediente as Text
+	Attribute persona as Text
+
+Schema InformePropuestaSolicitado
+	Attribute ts as DateTime
+	Attribute expediente as Text
+	Attribute persona as Text

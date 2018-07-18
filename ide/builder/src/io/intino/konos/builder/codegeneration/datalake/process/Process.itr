@@ -9,10 +9,6 @@ def type(process)
 		public $box+validName+firstUpperCase~Box box;
 		public $type+typeClass $type+typeName;
 
-		public boolean precondition($type+typeClass $type+typeName) {
-			return true;
-		}
-
     	public void execute() {
     	}
     }

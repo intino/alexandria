@@ -186,7 +186,7 @@ def type(dataLake) trigger(init)
 	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.ness.connect("$mode");
 		$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-		$processCoordinator
+		$procedure...[$NL]
 		$nessOperations
 		if (this.ness.session() != null) logger.info("Ness connection: started!");
 	}, "ness init");
@@ -198,8 +198,8 @@ def type(dataLake) trigger(init)
 	}
 end
 
-def trigger(processCoordinator)
-	$package.ness.ProcessCoordinator.registerProcesses(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+def trigger(processness)
+	$package.ness.$name~Procedure.registerProcesses(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 
