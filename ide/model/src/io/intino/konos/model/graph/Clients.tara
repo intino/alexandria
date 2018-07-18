@@ -2,6 +2,8 @@ dsl Proteo
 
 use DataTypes
 
+Concept Client
+
 Facet Ness on Client
 	var string url
 	var string user
@@ -9,13 +11,39 @@ Facet Ness on Client
 	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
-	has MessageHandler
+	has Mounter
+	has Feeder
+	has Process
 
-Concept:NamedIfNoSchema MessageHandler is component
+Concept:NamedIfNoSchema Mounter is component
 	var Schema schema
 	var string subdomain = ""
-	sub Feeder
-	sub Mounter
-	sub Process
 
-Concept Client
+Concept Feeder is component
+	var string subdomain = ""
+	Concept Feed
+		var Schema schema
+
+Concept:Named Process is component
+	var string subdomain = ""
+	Concept:{1..1} Input
+		var Schema schema
+	Concept Output
+		var Schema schema
+
+Facet UserEdition on Feeder.Feed
+	var string path
+
+Facet UserDocumentEdition on Feed
+	var word:{Offline Online} mode = Online
+
+Facet UserDocumentSignature on Feeder
+	var word:{Sign CoSign CounterSign} signType
+	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
+
+Facet UserDecision on Feeder
+	var string defaultOption = empty
+
+	Concept Option
+		var string value
+		has Option

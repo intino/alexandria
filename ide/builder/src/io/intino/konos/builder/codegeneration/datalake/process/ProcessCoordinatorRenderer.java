@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static java.util.stream.Collectors.toList;
 
 public class ProcessCoordinatorRenderer {
@@ -53,9 +52,10 @@ public class ProcessCoordinatorRenderer {
 				addSlot("box", boxName).
 				addSlot("name", composedName(process)).
 				addSlot("messageType", fullName(process));
-		if (process.schema() != null) {
-			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
-		} else frame.addSlot("type", "message");
+// TODO Octavio
+//		if (process.schema() != null) {
+//			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
+//		} else frame.addSlot("type", "message");
 		return frame;
 	}
 
@@ -64,15 +64,15 @@ public class ProcessCoordinatorRenderer {
 	}
 
 	private String composedName(Process process) {
-		return (process.subdomain().isEmpty() ? "" : process.subdomain()) + firstUpperCase(name(process));
+		return "";// TODO Octavio (process.subdomain().isEmpty() ? "" : process.subdomain()) + firstUpperCase(name(process));
 	}
 
 	private String subdomain(Process process) {
-		return process.subdomain().isEmpty() ? "" : process.subdomain() + ".";
+		return "";// TODO Octavio process.subdomain().isEmpty() ? "" : process.subdomain() + ".";
 	}
 
 	private String name(Process process) {
-		return process.schema() == null ? process.name$() : process.schema().name$();
+		return "";// TODO Octavio process.schema() == null ? process.name$() : process.schema().name$();
 	}
 
 	private boolean isCustom(String value) {

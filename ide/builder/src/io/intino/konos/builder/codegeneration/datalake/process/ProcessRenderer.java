@@ -33,15 +33,16 @@ public class ProcessRenderer {
 
 	public void execute() {
 		for (Process process : processes) {
-			final String name = composedName(process);
+			final String name = process.name$(); // TODO Octavio composedName(process);
 			final Frame frame = new Frame().addTypes("process").
 					addSlot("box", boxName).
 					addSlot("package", packageName).
 					addSlot("name", name);
-			if (process.schema() != null) {
-				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
-			} else frame.addSlot("type", "message");
+// TODO Octavio
+//			if (process.schema() != null) {
+//				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+//				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
+//			} else frame.addSlot("type", "message");
 
 			final File destination = new File(src, "ness/processes");
 			final String handlerName = Formatters.firstUpperCase(name) + "Process";
