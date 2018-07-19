@@ -91,7 +91,7 @@ def type(tank) trigger(getter)
 	}
 end
 
-def type(tank) type(mounter) trigger(subscribe)
+def type(tank) type(mounter | input) trigger(subscribe)
 	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
 	$name+firstLowerCase.flow(clientID != null ? clientID + "-$name+lowerCase" : null);
 end
