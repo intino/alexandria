@@ -14,7 +14,7 @@ Facet Ness on Client
 	has Mounter
 	has Feeder
 
-Concept:NamedIfNoSchema Mounter extends EventHandler is component
+Concept:NamedIfNoSchema Mounter extends EventSource is component
 
 Concept:Named Feeder is component
 	var Schema[] eventTypes
@@ -37,13 +37,14 @@ Facet Poll on Sensor
 	var string defaultOption = empty
 	Concept Option
 		var string value
+		var Schema event
 		has Option
 
 Facet Device on Sensor
 
 //Facet Scrapper on Sensor
 
-Concept EventHandler is abstract
-	var string name = 'self.schema()!= null ? self.schema().name$(): self.name$()' is private reactive
+Concept EventSource is abstract
+	var string name = 'self.schema() != null ? self.schema().name$(): self.name$()' is private reactive
 	var Schema schema
 	var string subdomain = ""

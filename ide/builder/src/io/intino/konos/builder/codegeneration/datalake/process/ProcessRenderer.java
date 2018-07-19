@@ -34,9 +34,11 @@ public class ProcessRenderer {
 
 	public void execute() {
 		for (Procedure.Process process : processes) {
+			final String procedure = process.core$().ownerAs(Procedure.class).name$();
 			final String name = composedName(process);
 			final Frame frame = new Frame().addTypes("process").
 					addSlot("box", boxName).
+					addSlot("procedure", procedure).
 					addSlot("package", packageName).
 					addSlot("name", name);
 			if (process.input().schema() != null) {
@@ -44,9 +46,9 @@ public class ProcessRenderer {
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.input().schema().name$()));
 			} else frame.addSlot("type", "message");
 
-			final File destination = new File(src, "ness/processes");
+			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
 			final String handlerName = Formatters.firstUpperCase(name) + "Process";
-			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.processes_2." + handlerName);
+			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.procedures." + procedure.toLowerCase() + "." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
 		}

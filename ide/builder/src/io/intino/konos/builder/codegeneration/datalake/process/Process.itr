@@ -1,5 +1,5 @@
 def type(process)
-	package $package+validPackage.ness.processes;
+	package $package+validPackage.procedures.$procedure+lowercase;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
     import io.intino.ness.inl.Message;

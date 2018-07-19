@@ -1,6 +1,8 @@
 def type(feeder)
 	package $package+validPackage.ness.feeders;
 
+	import $package+validPackage.$box+firstUpperCase~Box;
+
 	import io.intino.ness.inl.Message;
 	import java.util.Arrays;
 
@@ -10,6 +12,7 @@ def type(feeder)
 		public $name+FirstUpperCase~Feeder($box+FirstUpperCase~Box box) {
 			this.box = box;
 		}
+
 		$sensor+class
 	}
 end
@@ -21,8 +24,33 @@ def type(sensor) trigger(class)
 		public $name+FirstUpperCase~Sensor() {
 		}
 
-		public Message get(Object... args) {
-			return null;
-		}
+		$parent+get
+
+		$parent+methods
+	}
+end
+
+
+
+def type(poll) trigger(get)
+	public Message get(Object... args) {
+		String option = null; //TODO
+		return get(option, args);
+	}
+end
+
+def trigger(get)
+	public Message get(Object... args) {
+		return null;
+	}
+end
+
+def type(poll) trigger(methods)
+	$eventMethod...[$NL]
+end
+
+def trigger(eventMethod)
+	protected Object $value+firstLowerCase(java.util.List<Object> objects) {
+		//return null;
 	}
 end
