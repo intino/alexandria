@@ -203,6 +203,7 @@ Schema DecimalPlaces
 
 Schema Points
 	Attribute series as Object(SerieList)
+	Attribute series2 as Object(SerieList)
 	Attribute scale as Object(Scale)
 
 
@@ -217,6 +218,7 @@ Schema Histogram
 Schema Ticket
 	Attribute label as Text
 	Attribute values as Real List
+	Attribute valuesInt as Integer List
 
 	Schema Indicator
 		Attribute label as Text

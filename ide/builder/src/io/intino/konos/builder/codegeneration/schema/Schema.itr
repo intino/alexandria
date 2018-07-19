@@ -32,7 +32,7 @@ def type(multiple & member) trigger(declaration)
 end
 
 def type(multiple) trigger(declaration)
-	private java.util.List<$type> $name+firstLowerCase = new java.util.ArrayList<>();
+	private java.util.List<$type+FirstUpperCase> $name+firstLowerCase = new java.util.ArrayList<>();
 end
 
 def type(attributeMap) trigger(declaration)
@@ -58,7 +58,7 @@ def type(multiple & member) trigger(getter)
 end
 
 def type(multiple) trigger(getter)
-	public java.util.List<$type> $name+firstLowerCase() {
+	public java.util.List<$type+FirstUpperCase> $name+firstLowerCase() {
 		return this.$name+firstLowerCase;
 	}
 end
@@ -95,7 +95,7 @@ def type(multiple & member) trigger(setter)
 end
 
 def type(multiple) trigger(setter)
-	public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type> $name+firstLowerCase) {
+	public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type+FirstUpperCase> $name+firstLowerCase) {
 		this.$name+firstLowerCase = $name+firstLowerCase;
 		return this;
 	}
