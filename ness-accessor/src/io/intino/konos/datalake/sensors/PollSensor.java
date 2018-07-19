@@ -2,6 +2,7 @@ package io.intino.konos.datalake.sensors;
 
 import io.intino.konos.datalake.Sensor;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class PollSensor extends Sensor {
@@ -29,6 +30,11 @@ public abstract class PollSensor extends Sensor {
 		public Option(String value, List<Option> options) {
 			this.value = value;
 			this.options = options;
+		}
+
+		public Option(String value) {
+			this.value = value;
+			options = Collections.emptyList();
 		}
 
 		public String value() {

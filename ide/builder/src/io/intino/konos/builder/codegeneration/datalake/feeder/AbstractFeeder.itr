@@ -39,10 +39,13 @@ end
 
 def type(sensor) trigger(class)
 	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.konos.datalake.sensors.$type] {
+		$parent+field
 
-		public Abstract$name+FirstUpperCase~Sensor() {
+		public Abstract$name+FirstUpperCase~Sensor($parent+parameters) {
 			$parent+super
 		}
+
+		$parent+methods
 	}
 end
 
@@ -50,12 +53,61 @@ def type(documentEdition) trigger(super)
 	super("$mode");
 end
 
+
+def type(documentEdition) trigger(parameters)
+	String mode
+end
+
+def type(documentSignature) trigger(super)
+	super("$signType", "$signFormat");
+end
+
+
+def type(documentSignature) trigger(parameters)
+	String signType, String signFormat
+end
+
+
+def type(formEdition) trigger(super)
+	super("$path");
+end
+
+
+def type(formEdition) trigger(parameters)
+	String path
+end
+
+def type(poll) trigger(field)
+	private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();
+end
+
 def type(poll) trigger(super)
-	super("$defaultOption", Arrays.asList($option+quoted...[, ]));
+	super("$defaultOption", Arrays.asList($option...[, ]));
+	registerMessageBuilders();
+end
+
+def type(poll) trigger(methods)
+	private void registerMessageBuilders() {
+		$option+build...[$NL]
+	}
+
+	public Message get(String option, Object... args) {
+		return io.intino.konos.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
+	}
+
+	$eventMethod...[$NL$NL]
+end
+
+def trigger(build)
+	messageBuilders.put("$value", this::$event+firstLowerCase);
+end
+
+def trigger(eventMethod)
+	protected abstract Object $value+firstLowerCase(List<Object> objects);
 end
 
 def trigger(option)
-	new Option("$value", [$option?Collections.emptyList()])
+	new Option("$value"[, Arrays.asList($option...[,])])
 end
 
 

@@ -187,6 +187,7 @@ def type(dataLake) trigger(init)
 		this.ness.connect("$mode");
 		$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		$procedure...[$NL]
+		$procedure...[$NL]
 		$nessOperations
 		if (this.ness.session() != null) logger.info("Ness connection: started!");
 	}, "ness init");
@@ -198,7 +199,7 @@ def type(dataLake) trigger(init)
 	}
 end
 
-def trigger(processness)
+def trigger(procedure)
 	$package.ness.$name~Procedure.registerProcesses(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
@@ -269,15 +270,11 @@ def type(dataLake) trigger(getter)
 		return this.ness;
 	}
 
-	public $package.ness.TanksConnectors feeders() {
-		return new $package.ness.TanksConnectors();
-	}
-
 	public $package.ness.TanksConnectors mounters() {
 		return new $package.ness.TanksConnectors();
 	}
 
-	public $package.ness.TanksConnectors processes_2() {
+	public $package.ness.TanksConnectors processes() {
 		return new $package.ness.TanksConnectors();
 	}
 end

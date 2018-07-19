@@ -5,10 +5,16 @@ import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.Sensor;
+import io.intino.konos.model.graph.documentedition.DocumentEditionSensor;
+import io.intino.konos.model.graph.documentsignature.DocumentSignatureSensor;
+import io.intino.konos.model.graph.formedition.FormEditionSensor;
 import io.intino.konos.model.graph.ness.NessClient;
+import io.intino.konos.model.graph.poll.PollSensor;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,10 +71,43 @@ public class FeederRenderer {
 	}
 
 	private Frame parent(Sensor sensor) {
-		if (sensor.isPoll()) {
-			return new Frame("poll");
-		}
+		if (sensor.isPoll()) return poll(sensor.asPoll());
+		if (sensor.isFormEdition()) return formEdition(sensor.asFormEdition());
+		if (sensor.isDocumentEdition()) return documentEdition(sensor.asDocumentEdition());
+		if (sensor.isDocumentSignature()) return documentSignature(sensor.asDocumentSignature());
 		return new Frame();
+	}
+
+	private Frame poll(PollSensor sensor) {
+		return new Frame("poll").
+				addSlot("defaultOption", sensor.defaultOption()).
+				addSlot("eventMethod", sensor.core$().ownerAs(Feeder.class).eventTypes().stream().map(Layer::name$).toArray(String[]::new)).
+				addSlot("option", frameOf(sensor.optionList()));
+	}
+
+	private Frame[] frameOf(List<PollSensor.Option> options) {
+		List<Frame> frames = new ArrayList<>();
+		for (PollSensor.Option option : options) {
+			final Frame frame = new Frame("option").
+					addSlot("value", option.value()).
+					addSlot("event", option.event().name$());
+
+			if (!option.optionList().isEmpty()) frame.addSlot("option", frameOf(option.optionList()));
+			frames.add(frame);
+		}
+		return frames.toArray(new Frame[0]);
+	}
+
+	private Frame formEdition(FormEditionSensor sensor) {
+		return new Frame("formEdition").addSlot("path", sensor.path());
+	}
+
+	private Frame documentEdition(DocumentEditionSensor sensor) {
+		return new Frame("documentEdition").addSlot("mode", sensor.mode().name());
+	}
+
+	private Frame documentSignature(DocumentSignatureSensor sensor) {
+		return new Frame("documentSignature").addSlot("signType", sensor.signType().name()).addSlot("signFormat", sensor.signFormat().name());
 	}
 
 	private String composedType(Schema schema, String subdomain) {
