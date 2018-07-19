@@ -4,8 +4,10 @@ dsl Konos
 Procedure(ness = client) RegistrarSolicitud
 	Process registrar
 		Input(Solicitud)
-	Process() soli2
-		Input(schema = empty) soli2
+		Output(schema = OtraDocumentacion)
+			subdomain = "sss"
+	Process soli2
+		Input(schema = empty) soli2Input
 
 
 Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
@@ -13,11 +15,22 @@ Client client as Ness(url = "", user = "", password = "", domain = "", clientID 
 		Sensor dialog as DocumentEdition(mode = Online)
 	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) escrito
 		Sensor solicitud as Poll
-			Option("Requerir")
-			Option("Realizar escrito")
-			Option("Resolver con informe propuesta")
-			Option("Resolver sin informe propuesta")
-			Option("Archivar")
+			defaultOption ="aaa default"
+			Option("Requerir", RequerimientoSolicitado)
+			Option("Realizar escrito", EscritoSolicitado)
+			Option("Resolver con informe propuesta", InformePropuestaSolicitado)
+			Option("Resolver sin informe propuesta", InformePropuestaSolicitado)
+			Option("Archivar", SolicitudArchivada)
+	Feeder(eventTypes = RequerimientoSolicitado) Requerimiento
+		subdomain ="aabbb"
+		Sensor requerimiento as FormEdition(path = "/a/b")
+	Feeder(eventTypes = RequerimientoSolicitado) Requerimiento2
+		Sensor doc as DocumentEdition(mode = Offline)
+	Feeder(eventTypes = RequerimientoSolicitado) Requerimiento3
+		Sensor signature as DocumentSignature(signType = CoSign, signFormat = Pkcs7)
+
+
+
 
 Schema OtraDocumentacion
     Attribute descripcion as Text

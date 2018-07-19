@@ -10,7 +10,6 @@ import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer
 import io.intino.konos.builder.codegeneration.datalake.TanksConnectorsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datalake.process.ProcedureRenderer;
 import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
@@ -125,7 +124,6 @@ public class FullRenderer {
 	private void bus() {
 		if (graph.nessClientList().isEmpty()) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new ProcedureRenderer(graph, gen, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph,gen, src, packageName, boxName, classes).execute();
 		new TanksConnectorsRenderer(graph, gen, packageName, boxName, classes).execute();
