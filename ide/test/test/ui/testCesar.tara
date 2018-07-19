@@ -163,9 +163,9 @@ Schema deviceLoadMetrics
 Schema systemLoadMetrics
 	Attribute updateMinutesInterval as Integer(defaultValue = 15)
 	Attribute from as DateTime
-	Attribute(multiple = true) cpu as Real
-	Attribute(multiple = true) memory as Real
-	Attribute(multiple = true) threads as Integer
+	Attribute cpu as Real List
+	Attribute memory as Real List
+	Attribute threads as Integer List
 
 Schema deviceTimelineEvent
 	Attribute id as Text

@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.datalake.process;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Procedure;
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
 public class ProcessRenderer {
@@ -47,7 +47,7 @@ public class ProcessRenderer {
 			} else frame.addSlot("type", "message");
 
 			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
-			final String handlerName = Formatters.firstUpperCase(name) + "Process";
+			final String handlerName = firstUpperCase(name) + "Process";
 			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.procedures." + procedure.toLowerCase() + "." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
@@ -55,7 +55,7 @@ public class ProcessRenderer {
 	}
 
 	private String composedName(Procedure.Process process) {
-		return firstUpperCase((process.input().subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(process.input().subdomain().replace(".", "_"))) + firstUpperCase(process.input().name()));
+		return firstUpperCase((process.input().subdomain().isEmpty() ? "" : snakeCaseToCamelCase().format(process.input().subdomain().replace(".", "_"))) + firstUpperCase(process.name$()));
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

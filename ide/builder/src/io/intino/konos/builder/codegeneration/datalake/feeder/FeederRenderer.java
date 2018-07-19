@@ -80,7 +80,7 @@ public class FeederRenderer {
 
 	private Frame poll(PollSensor sensor) {
 		return new Frame("poll").
-				addSlot("defaultOption", sensor.defaultOption()).
+				addSlot("defaultOption", sensor.defaultOption() == null ? "" : sensor.defaultOption()).
 				addSlot("eventMethod", sensor.core$().ownerAs(Feeder.class).eventTypes().stream().map(Layer::name$).toArray(String[]::new)).
 				addSlot("option", frameOf(sensor.optionList()));
 	}

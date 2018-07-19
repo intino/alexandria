@@ -28,13 +28,19 @@ public class TanksConnectorsRenderer {
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.datalake = graph.nessClient(0);
-		this.eventSources = new TreeSet((Comparator<EventSource>) (o1, o2) -> namesake(o1, o2) ? 0 : -1);
-		this.eventSources.addAll(graph.core$().find(EventSource.class));
+		this.eventSources = new TreeSet((Comparator<EventSource>) (o1, o2) -> compare(o1, o2));
+		final List<EventSource> c = graph.core$().find(EventSource.class);
+		c.sort(inputFirst());
+		this.eventSources.addAll(c);
 		this.eventFeederSources = collectNewFeederSources(graph.nessClientList().stream().map(NessClient::feederList).flatMap(Collection::stream).collect(Collectors.toList()));
 	}
 
-	private boolean namesake(EventSource o1, EventSource o2) {
-		return fullName(o1).equalsIgnoreCase(fullName(o2));
+	private Comparator<? super EventSource> inputFirst() {
+		return (Comparator<EventSource>) (o1, o2) -> {
+			if (o1.i$(Input.class) && !o2.i$(Input.class)) return -1;
+			if (o2.i$(Input.class) && !o1.i$(Input.class)) return 1;
+			return 0;
+		};
 	}
 
 	public void execute() {
@@ -42,8 +48,7 @@ public class TanksConnectorsRenderer {
 				addSlot("package", packageName).
 				addSlot("name", datalake.name$()).
 				addSlot("box", boxName).
-				addSlot("tank", eventSources.stream().map(this::frameOf).toArray(Frame[]::new)).
-				addSlot("tank", eventFeederSources.stream().map(this::frameOf).toArray(Frame[]::new));
+				addSlot("tank", tanks());
 		frame.addSlot("clientId", new Frame(isCustom(datalake.clientID()) ? "custom" : "standard").addSlot("value", datalake.clientID()));
 		if (eventSources.stream().anyMatch(h -> h.i$(Mounter.class))) frame.addSlot("tankImport", packageName);
 		if (!datalake.graph().schemaList().isEmpty())
@@ -51,11 +56,19 @@ public class TanksConnectorsRenderer {
 		Commons.writeFrame(new File(gen, "ness"), "TanksConnectors", template().format(frame));
 	}
 
+	private Frame[] tanks() {
+		List<Frame> frames = new ArrayList<>();
+		frames.addAll(eventFeederSources.stream().map(this::frameOf).collect(Collectors.toList()));
+		frames.addAll(eventSources.stream().map(this::frameOf).collect(Collectors.toList()));
+		return frames.toArray(new Frame[0]);
+	}
+
 	private Frame frameOf(EventSource source) {
 		final Frame frame = new Frame().addTypes("tank", source.getClass().getSimpleName().toLowerCase()).
 				addSlot("name", composedName(source)).
 				addSlot("box", boxName).
 				addSlot("processPackage", source.i$(Input.class) ? packageName + ".procedures." + source.core$().ownerAs(Procedure.class).name$() : "").
+				addSlot("processName", source.i$(Input.class) ? source.core$().ownerAs(Procedure.Process.class).name$() : "").
 				addSlot("messageType", fullName(source));
 		if (source.schema() != null)
 			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.schema().name$()));
@@ -102,19 +115,31 @@ public class TanksConnectorsRenderer {
 
 
 	private Set<FeederEventSource> collectNewFeederSources(List<Feeder> feeders) {
-		Set<FeederEventSource> sources = new TreeSet((Comparator<FeederEventSource>) (o1, o2) -> namesake(o1, o2) ? 0 : -1);
-		for (Feeder feeder : feeders) {
+		Set<FeederEventSource> sources = new TreeSet((Comparator<FeederEventSource>) (o1, o2) -> compare(o1, o2));
+		feeders.forEach(feeder -> {
 			final String domain = feeder.core$().ownerAs(NessClient.class).domain();
-			for (Schema schema : feeder.eventTypes()) sources.add(new FeederEventSource(domain, feeder.subdomain(), schema.name$()));
-		}
+			for (Schema schema : feeder.eventTypes()) {
+				final FeederEventSource e = new FeederEventSource(domain, feeder.subdomain(), schema.name$());
+				if (!isInEventSources(e)) sources.add(e);
+			}
+		});
 		return sources;
 	}
 
-	private boolean namesake(FeederEventSource o1, FeederEventSource o2) {
-		return o1.fullName().equalsIgnoreCase(o2.fullName());
+	private boolean isInEventSources(FeederEventSource source) {
+		return eventSources.stream().anyMatch(eventSource -> fullName(eventSource).equals(source.fullName()));
+	}
+
+	private int compare(EventSource o1, EventSource o2) {
+		return fullName(o1).toLowerCase().compareTo(fullName(o2).toLowerCase());
+	}
+
+	private int compare(FeederEventSource o1, FeederEventSource o2) {
+		return o1.fullName().toLowerCase().compareTo(o2.fullName().toLowerCase());
 	}
 
 	private static class FeederEventSource {
+
 		String domain;
 		String subdomain;
 		String name;

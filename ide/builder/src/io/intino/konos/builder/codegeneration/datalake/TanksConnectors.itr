@@ -135,7 +135,7 @@ def type(tank & input) trigger(class)
 
 		public void handle(io.intino.ness.inl.Message m) {
 			try {
-				$processPackage+lowerCase.$name+snakeCaseToCamelCase+FirstUpperCase~Process process = new $processPackage+lowerCase.$name+snakeCaseToCamelCase+FirstUpperCase~Process();
+				$processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process process = new $processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process();
 				process.box = box;
 				process.$type+typeName = $type+load;
 				process.execute();
