@@ -72,7 +72,7 @@ public class SchemaRenderer {
 	}
 
 	private Frame[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.multiple())).toArray(value -> new Frame[schemas.size()]);
+		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$(), schema.multiple())).toArray(value -> new Frame[schemas.size()]);
 	}
 
 	private Frame processAttribute(Schema.Attribute attribute) {
@@ -84,7 +84,8 @@ public class SchemaRenderer {
 		else if (attribute.isDate()) return processAttribute(attribute.asDate());
 		else if (attribute.isFile()) return processAttribute(attribute.asFile());
 		else if (attribute.isLongInteger()) return processAttribute(attribute.asLongInteger());
-		else if (attribute.isObject()) return processSchemaAsAttribute(attribute.asObject().schema(), attribute.isList());
+		else if (attribute.isObject())
+			return processSchemaAsAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
 		return null;
 	}
 
@@ -142,9 +143,9 @@ public class SchemaRenderer {
 				.addSlot("type", attribute.type());
 	}
 
-	private Frame processSchemaAsAttribute(Schema schema, boolean multiple) {
+	private Frame processSchemaAsAttribute(Schema schema, String name, boolean multiple) {
 		return new Frame().addTypes(multiple ? "multiple" : "single", "member", schema.name$())
-				.addSlot("name", schema.name$())
+				.addSlot("name", name)
 				.addSlot("type", schema.name$())
 				.addSlot("list", "List")
 				.addSlot("package", packageOf(schema));
