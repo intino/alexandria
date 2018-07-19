@@ -459,19 +459,19 @@ Schema Simulacion
 	Attribute fechaInicio as DateTime
 	Attribute fechaFin as DateTime
 	Attribute escala as Text
-	Has(SimulacionPropiedad) capacidadList
-	Has(ConfiguracionSimuladorStock, multiple=false) configuracion
+	Attribute capacidadList as Object(SimulacionPropiedad) List
+	Attribute configuracion as Object(ConfiguracionSimuladorStock)
 
 Schema ResultadoSimulacion
 	Attribute name as Text
 	Attribute fechaInicio as DateTime
 	Attribute fechaFin as DateTime
 	Attribute escala as Text
-	Has(ConfiguracionSimuladorStock, multiple=false) configuracion
+	Attribute configuracion as Object(ConfiguracionSimuladorStock)
 
 Schema SimulacionPaso
 	Attribute fecha as DateTime
-	Has(SimulacionPropiedad) porcentajes
+	Attribute porcentajes as Object(SimulacionPropiedad) List
 
 Schema SimulacionPropiedad
 	Attribute regimen as Text
@@ -498,12 +498,12 @@ Schema ProtocoloScreening
 	Schema cambios
 		Attribute origen as Text
 		Attribute destino as Text
-		Has(ProtocoloScreeningPersona) personas
+		Attribute personas as Object(ProtocoloScreeningPersona) List
 
 	Schema traslados
 		Attribute origen as Text
 		Attribute destino as Text
-		Has(ProtocoloScreeningPersona) personas
+		Attribute personas as Object(ProtocoloScreeningPersona) List
 
 Schema ProtocoloScreeningPersona
 	Attribute nombreCompleto as Text

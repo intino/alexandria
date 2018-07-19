@@ -199,7 +199,7 @@ public class FullRenderer {
 	}
 
 	private byte[] getBytes() throws IOException {
-		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j.properties"));
+		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
 
 	}
 }

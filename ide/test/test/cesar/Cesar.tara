@@ -64,7 +64,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 	Schema SystemSchema
 		Attribute name as Text
 		Attribute artifact as Text
-		Has(reference = Parameter)
+		Attribute parameter as Object(Parameter) List
 		Schema artifactory
 			Attribute id as Text
 			Attribute url as Text
@@ -182,7 +182,7 @@ Schema InfrastructureOperation
 	Attribute user as Text
 	Attribute objectType as Text
 	Attribute objectID as Text
-	Attribute(multiple = true) parameters as Text
+	Attribute parameters as Text List
 
 
 Display cesarDesktop

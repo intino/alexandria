@@ -13,7 +13,7 @@ public abstract class Feeder {
 	public abstract void feed(Message event);
 
 	public boolean fits(List<String> eventTypes) {
-		return eventTypes.containsAll(eventTypes());
+		return eventTypes().containsAll(eventTypes);
 	}
 
 }

@@ -21,6 +21,7 @@ def type(feeder)
 			return Arrays.asList($eventType+quoted...[, ]);
 		}
 
+
 		public void feed(Message event) {
 			TanksConnectors.byName(["$domain" + ]event.type()).feed(event);
 		}
@@ -41,7 +42,7 @@ def type(sensor) trigger(class)
 	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.konos.datalake.sensors.$type] {
 		$parent+field
 
-		public Abstract$name+FirstUpperCase~Sensor($parent+parameters) {
+		public Abstract$name+FirstUpperCase~Sensor() {
 			$parent+super
 		}
 
@@ -54,17 +55,9 @@ def type(documentEdition) trigger(super)
 end
 
 
-def type(documentEdition) trigger(parameters)
-	String mode
-end
 
 def type(documentSignature) trigger(super)
 	super("$signType", "$signFormat");
-end
-
-
-def type(documentSignature) trigger(parameters)
-	String signType, String signFormat
 end
 
 
@@ -72,10 +65,6 @@ def type(formEdition) trigger(super)
 	super("$path");
 end
 
-
-def type(formEdition) trigger(parameters)
-	String path
-end
 
 def type(poll) trigger(field)
 	private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();
