@@ -198,5 +198,4 @@ Schema deviceIssues
 	Schema(multiple = true) Issue
 		Attribute ts as DateTime
 		Attribute issueType as Text
-		Attribute parameters as Text
-			multiple = true
+		Attribute parameters as Text List

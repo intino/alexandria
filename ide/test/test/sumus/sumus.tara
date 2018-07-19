@@ -112,7 +112,7 @@ Schema ScaleList
 
 Schema Alert
     Attribute active as Bool
-    Attribute(multiple=true) mailingList as Text
+    Attribute mailingList as Text List
 
 Schema Scale
 	Attribute name as LongInteger
@@ -188,7 +188,7 @@ Schema Points
 
 
 Schema NameList
-	Attribute(multiple=true) names as Text
+	Attribute names as Text List
 
 Schema Histogram
 	Attribute categoryView as Object(CategoryView) List
@@ -197,12 +197,12 @@ Schema Histogram
 
 Schema Ticket
 	Attribute label as Text
-	Attribute(multiple=true) values as Real
+	Attribute values as Real List
 
 	Schema Indicator
 		Attribute label as Text
 		Attribute color as Text
-		Attribute(multiple=true) values as Real
+		Attribute values as Real List
 
 		Attribute decimalPlaces as Object(DecimalPlaces)
 
