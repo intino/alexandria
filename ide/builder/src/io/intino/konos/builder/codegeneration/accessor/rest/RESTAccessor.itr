@@ -84,6 +84,10 @@ def type(parameter) trigger(invoke)
 	parameters
 end
 
+def type(parameter & query & list) trigger(declaration)
+	if ($name+SnakeCaseToCamelCase+firstLowerCase != null && !$name+SnakeCaseToCamelCase+firstLowerCase.isEmpty()) put("$name", String.valueOf(gsonWriter.toJson($name+SnakeCaseToCamelCase+firstLowerCase)));
+end
+
 def type(parameter & query & required) type(dateData)  trigger(declaration)
 	put("$name", String.valueOf($name+SnakeCaseToCamelCase+firstLowerCase.toInstant().toEpochMilli()));
 end
