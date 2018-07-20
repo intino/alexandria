@@ -21,10 +21,9 @@ Service setupV2 as REST(host = "", basePath = "", port = "")
 			Attribute hasChildren as Bool
 			Attribute askAfterContactProvided as Bool
 			Attribute type as Text
-			Attribute issueIds as Text
-				multiple = true
-			Attribute contactPatternIds as Text
-				multiple = true
+			Attribute issueIds as Text List
+
+			Attribute contactPatternIds as Text List
 
 			Attribute contactPatternId as Text
 
@@ -33,13 +32,13 @@ Service setupV2 as REST(host = "", basePath = "", port = "")
 				Attribute from as Text
 				Attribute to as Text
 
-			Has(Area)
+			Attribute area as Object(Area)
 
 		Schema Issue
 			Attribute key as Text
 			Attribute label as Text
 
-		Has (Resource)
+		Attribute file as Object(Resource)
 
 
 
@@ -66,12 +65,11 @@ Service setupV4 as REST(host = "", basePath = "v4", port = "")
 
 			Schema SurveyItem
 				Attribute type as Text
-				Attribute args as Text
-					multiple = true
+				Attribute args as Text List
 
-			Has(Area)
 
-		Has(Resource)
+			Attribute area as Object(Area)
+		Attribute file as Object(Resource)
 
 		Schema Job
 			Attribute command as Text

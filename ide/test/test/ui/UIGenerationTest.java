@@ -29,7 +29,7 @@ public class UIGenerationTest {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (UIService service : graph.uIServiceList()) new UIAccessorRenderer(gen, service).execute();
+//		for (UIService service : graph.uIServiceList()) new UIAccessorRenderer(gen, service).execute();
 	}
 
 	@Test

@@ -52,21 +52,14 @@ public class JMSTank implements Datalake.Tank {
 		return "feed." + name;
 	}
 
-	public void feed(io.intino.ness.inl.Message message) {
+	public void feed(io.intino.ness.inl.Message... messages) {
 		final TopicProducer producer = datalake.newProducer(feedChannel());
-		if (producer != null) producer.produce(fromInlMessage(message));
+		for (Message message : messages) producer.produce(fromInlMessage(message));
 	}
 
-	public void drop(io.intino.ness.inl.Message message) {
-		try {
-			final javax.jms.Message jmsMessage = fromInlMessage(message);
-			if (jmsMessage == null) return;
-			jmsMessage.setBooleanProperty(REGISTER_ONLY, true);
-			final TopicProducer producer = datalake.newProducer(dropChannel());
-			if (producer != null) producer.produce(jmsMessage);
-		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
-		}
+	public void drop(io.intino.ness.inl.Message... messages) {
+		final TopicProducer producer = datalake.newProducer(dropChannel());
+		for (Message m : messages) producer.produce(onlyRegister(fromInlMessage(m)));
 	}
 
 	public TopicConsumer flow(String flowID) {
@@ -80,5 +73,14 @@ public class JMSTank implements Datalake.Tank {
 	public void unregister() {
 		if (flow != null) flow.stop();
 		flow = null;
+	}
+
+	private javax.jms.Message onlyRegister(javax.jms.Message message) {
+		try {
+			message.setBooleanProperty(REGISTER_ONLY, true);
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+		}
+		return message;
 	}
 }

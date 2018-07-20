@@ -47,11 +47,6 @@ Concept Schema
 	!! Attribute of the member
 	Concept:Named Attribute extends Data
 		var boolean isRequired = true
-		var boolean multiple = false
-	Concept Has
-		var Schema reference
-		var boolean isRequired = false
-		var boolean multiple = true
 	has Schema
 
 Concept Exception extends Data

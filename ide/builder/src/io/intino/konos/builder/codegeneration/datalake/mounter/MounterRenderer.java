@@ -3,9 +3,7 @@ package io.intino.konos.builder.codegeneration.datalake.mounter;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.MessageHandler;
 import io.intino.konos.model.graph.Mounter;
-import io.intino.konos.model.graph.Process;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -15,10 +13,8 @@ import java.util.Map;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static java.util.stream.Collectors.toList;
 
 public class MounterRenderer {
-
 	private final List<Mounter> mounters;
 	private final File src;
 	private final String packageName;
@@ -26,7 +22,7 @@ public class MounterRenderer {
 	private final Map<String, String> classes;
 
 	public MounterRenderer(KonosGraph graph, File src, String packageName, String boxName, Map<String, String> classes) {
-		this.mounters = graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Mounter.class)).map(h -> h.a$(Mounter.class)).collect(toList());
+		this.mounters = graph.nessClient(0).mounterList();
 		this.src = src;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -52,16 +48,11 @@ public class MounterRenderer {
 		}
 	}
 
-	private String composedName(MessageHandler handler) {
-		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".", "_"))) + firstUpperCase(name(handler)));
-	}
-
-	private String name(MessageHandler handler) {
-		return handler.schema() == null ? handler.name$() : handler.schema().name$();
+	private String composedName(Mounter mounter) {
+		return firstUpperCase((mounter.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(mounter.subdomain().replace(".", "_"))) + firstUpperCase(mounter.name()));
 	}
 
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
 	}
-
 }
