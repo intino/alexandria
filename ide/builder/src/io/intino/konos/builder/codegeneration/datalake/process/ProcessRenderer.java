@@ -40,18 +40,24 @@ public class ProcessRenderer {
 					addSlot("box", boxName).
 					addSlot("procedure", procedure).
 					addSlot("package", packageName).
+					addSlot("output", process.outputList().stream().map(this::fullName).toArray(String[]::new)).
 					addSlot("name", name);
 			if (process.input().schema() != null) {
 				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.input().schema().name$()));
 			} else frame.addSlot("type", "message");
-
 			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
 			final String handlerName = firstUpperCase(name) + "Process";
 			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.procedures." + procedure.toLowerCase() + "." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
 		}
+	}
+
+	private String fullName(Procedure.Process.Output output) {
+		final String domain = output.core$().ownerAs(Procedure.class).ness().domain();
+		final String subdomain = output.subdomain();
+		return (domain.isEmpty() ? "" : domain + ".") + (subdomain.isEmpty() ? "" : subdomain + ".") + output.name();
 	}
 
 	private String composedName(Procedure.Process process) {

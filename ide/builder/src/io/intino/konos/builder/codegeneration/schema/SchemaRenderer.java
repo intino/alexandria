@@ -72,7 +72,7 @@ public class SchemaRenderer {
 	}
 
 	private Frame[] processSchemasAsAttribute(List<Schema> schemas) {
-		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$(), schema.multiple())).toArray(value -> new Frame[schemas.size()]);
+		return schemas.stream().map(schema -> processSchemaAsAttribute(schema, schema.name$() + (schema.multiple() ? "List" : ""), schema.multiple())).toArray(value -> new Frame[schemas.size()]);
 	}
 
 	private Frame processAttribute(Schema.Attribute attribute) {
@@ -147,7 +147,6 @@ public class SchemaRenderer {
 		return new Frame().addTypes(multiple ? "multiple" : "single", "member", schema.name$())
 				.addSlot("name", name)
 				.addSlot("type", schema.name$())
-				.addSlot("list", "List")
 				.addSlot("package", packageOf(schema));
 	}
 
