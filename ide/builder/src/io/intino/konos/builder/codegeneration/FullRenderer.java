@@ -8,8 +8,8 @@ import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.TanksConnectorsRenderer;
+import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
-import io.intino.konos.builder.codegeneration.datalake.process.ProcessCoordinatorRenderer;
 import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
 import io.intino.konos.builder.codegeneration.exception.ExceptionRenderer;
 import io.intino.konos.builder.codegeneration.main.MainRenderer;
@@ -124,8 +124,8 @@ public class FullRenderer {
 	private void bus() {
 		if (graph.nessClientList().isEmpty()) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
-		new ProcessCoordinatorRenderer(graph, gen, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
+		new FeederRenderer(graph,gen, src, packageName, boxName, classes).execute();
 		new TanksConnectorsRenderer(graph, gen, packageName, boxName, classes).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
@@ -169,7 +169,7 @@ public class FullRenderer {
 			final List<? extends Configuration.LanguageLibrary> languages = configuration.languages();
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
-			if (workingPackage != null && facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
+			if (facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
 				return workingPackage.toLowerCase() + ".box." + Formatters.firstUpperCase(languages.get(0).name());
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -199,7 +199,7 @@ public class FullRenderer {
 	}
 
 	private byte[] getBytes() throws IOException {
-		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j.properties"));
+		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
 
 	}
 }

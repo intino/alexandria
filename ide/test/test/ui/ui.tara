@@ -98,6 +98,15 @@ Display dashboard
 Display pivotTable
 Display error
 
+
+Schema ScaleList
+	Attribute scale as Object(Scale) List
+
+Schema Range
+	Attribute min as Real
+	Attribute max as Real
+
+
 Schema PlatformInfo
 	Attribute title as Text
 	Attribute subtitle as Text
@@ -115,21 +124,19 @@ Schema Timeline
 	Attribute min as Real
 	Attribute max as Real
 
+Schema Alert
+    Attribute active as Bool
+    Attribute mailingList as Text List
+
+Schema Scale
+	Attribute name as LongInteger
+	Attribute label as Text
+	Attribute symbol as Text
+
+
 Schema RequestRange
 	Attribute from as Real
 	Attribute to as Real
-
-Schema Range
-	Attribute min as Real
-	Attribute max as Real
-
-Schema ScaleList
-	Has(Scale)
-
-Schema Scale
-	Attribute name as Text
-	Attribute label as Text
-	Attribute symbol as Text
 
 Schema FilterList
 	Schema Filter
@@ -141,22 +148,23 @@ Schema FilterList
 			Attribute label as Text
 
 Schema CategorizationViewList
-	Has(CategorizationView)
+	Attribute categorizationView as Object(CategorizationView) List
 
 Schema CategorizationView
 	Attribute name as Text
 	Attribute label as Text
 
-	Has(CategoryView)
-	Has(CategorizationView, multiple=false) subCategorization
+	Attribute categorizationView as Object(CategorizationView) List
+	Attribute subCategorization as Object(CategorizationView)
+
 
 Schema CategoryViewList
-	Has(CategoryView)
+	Attribute categoryView as Object(CategoryView) List
 
 Schema CategoryView
 	Attribute name as Text
 	Attribute label as Text
-	Has(CategoryView)
+	Attribute categoryView as Object(CategoryView) List
 
 Schema FormatterList
 	Schema Formatter
@@ -166,12 +174,12 @@ Schema FormatterList
 Schema EventList
 	Schema Event
 		Attribute label as Text
-		Attribute dateInstant as Real
+		Attribute Instant as Real
 		Attribute render as Text
 		Attribute icon as Text
 
 Schema SerieList
-	Has(Serie)
+	Attribute serie as Object(Serie) List
 
 Schema Serie
 	Attribute label as Text
@@ -183,7 +191,8 @@ Schema Serie
 	Attribute min as Integer
 	Attribute max as Integer
 
-	Has(DecimalPlaces, multiple=false)
+	Attribute decimalPlaces as Object(DecimalPlaces)
+
 	Schema data
 		Attribute Instant as Real
 		Attribute value as Real
@@ -193,26 +202,30 @@ Schema DecimalPlaces
 	Attribute percentage as Integer
 
 Schema Points
-	Has(SerieList, multiple=false)
-	Has(Scale, multiple=false)
+	Attribute series as Object(SerieList)
+	Attribute series2 as Object(SerieList)
+	Attribute scale as Object(Scale)
+
 
 Schema NameList
-	Attribute(multiple=true) names as Text
+	Attribute names as Text List
 
 Schema Histogram
-	Has(CategoryView)
-	Has(Ticket)
+	Attribute categoryView as Object(CategoryView) List
+	Attribute ticket as Object(Ticket) List
+
 
 Schema Ticket
 	Attribute label as Text
-	Attribute(multiple=true) values as Real
+	Attribute values as Real List
+	Attribute valuesInt as Integer List
 
 	Schema Indicator
 		Attribute label as Text
 		Attribute color as Text
-		Attribute(multiple=true) values as Real
+		Attribute values as Real List
 
-		Has(DecimalPlaces, multiple=false)
+		Attribute decimalPlaces as Object(DecimalPlaces)
 
 Schema RequestCategory
 	Attribute name as Text

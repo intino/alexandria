@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -81,7 +80,7 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
+		return new Frame().addTypes("parameter", parameter.isList()? "list": "singlef",parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
 				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter));
 	}
@@ -125,7 +124,7 @@ public class RESTAccessorRenderer {
 				builder.append(" + \"/\" + ").append(asMethodParameter(pathPortion.substring(1)));
 			else builder.append(" + \"/").append(pathPortion).append("\"");
 		}
-			return builder.toString().substring(3);
+		return builder.toString().substring(3);
 	}
 
 	private String asMethodParameter(String parameter) {

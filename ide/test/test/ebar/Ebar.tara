@@ -11,7 +11,7 @@ Client (clientID = "{subscriberId}", domain = "ebar") as Ness(url = "{ness_url}"
 Schema AlertModified
 	Attribute alert as Text
 	Attribute active as Bool
-	Attribute mailingList as Text > multiple = true
+	Attribute mailingList as Text List
 	Attribute applyToAllStations as Bool
 
 Schema SensorChanged

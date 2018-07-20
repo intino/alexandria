@@ -1,23 +1,24 @@
 package io.intino.konos.builder.codegeneration.datalake.process;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
-import io.intino.konos.model.graph.MessageHandler;
-import io.intino.konos.model.graph.Process;
+import io.intino.konos.model.graph.Procedure;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
-import static java.util.stream.Collectors.toList;
 
 public class ProcessRenderer {
 
-	private final List<Process> processes;
+	private final List<Procedure.Process> processes;
 	private final File src;
 	private final String packageName;
 	private final String boxName;
@@ -32,40 +33,43 @@ public class ProcessRenderer {
 	}
 
 	public void execute() {
-		for (Process process : processes) {
-			final String name = process.name$(); // TODO Octavio composedName(process);
+		for (Procedure.Process process : processes) {
+			final String procedure = process.core$().ownerAs(Procedure.class).name$();
+			final String name = composedName(process);
 			final Frame frame = new Frame().addTypes("process").
 					addSlot("box", boxName).
+					addSlot("procedure", procedure).
 					addSlot("package", packageName).
+					addSlot("output", process.outputList().stream().map(this::fullName).toArray(String[]::new)).
 					addSlot("name", name);
-// TODO Octavio
-//			if (process.schema() != null) {
-//				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-//				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.schema().name$()));
-//			} else frame.addSlot("type", "message");
-
-			final File destination = new File(src, "ness/processes");
-			final String handlerName = Formatters.firstUpperCase(name) + "Process";
-			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.processes." + handlerName);
-			if (!alreadyRendered(destination, handlerName)) Commons.writeFrame(destination, handlerName,
-					Formatters.customize(ProcessTemplate.create()).format(frame));
+			if (process.input().schema() != null) {
+				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", process.input().schema().name$()));
+			} else frame.addSlot("type", "message");
+			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
+			final String handlerName = firstUpperCase(name) + "Process";
+			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.procedures." + procedure.toLowerCase() + "." + handlerName);
+			if (!alreadyRendered(destination, handlerName))
+				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
 		}
 	}
 
-	private String composedName(MessageHandler handler) {
-		return firstUpperCase((handler.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(handler.subdomain().replace(".", "_"))) + firstUpperCase(name(handler)));
+	private String fullName(Procedure.Process.Output output) {
+		final String domain = output.core$().ownerAs(Procedure.class).ness().domain();
+		final String subdomain = output.subdomain();
+		return (domain.isEmpty() ? "" : domain + ".") + (subdomain.isEmpty() ? "" : subdomain + ".") + output.name();
 	}
 
-	private String name(MessageHandler handler) {
-		return handler.schema() == null ? handler.name$() : handler.schema().name$();
+	private String composedName(Procedure.Process process) {
+		return firstUpperCase((process.input().subdomain().isEmpty() ? "" : snakeCaseToCamelCase().format(process.input().subdomain().replace(".", "_"))) + firstUpperCase(process.name$()));
 	}
 
 	private boolean alreadyRendered(File destination, String action) {
 		return Commons.javaFile(destination, action).exists();
 	}
 
-	private List<Process> processes(KonosGraph graph) {
+	private List<Procedure.Process> processes(KonosGraph graph) {
 		if (graph == null) return Collections.emptyList();
-		return !graph.nessClientList().isEmpty() ? graph.nessClient(0).messageHandlerList().stream().filter(h -> h.i$(Process.class)).map(h -> h.a$(Process.class)).collect(toList()) : Collections.emptyList();
+		return graph.procedureList().stream().map(Procedure::processList).flatMap(Collection::stream).collect(Collectors.toList());
 	}
 }
