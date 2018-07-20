@@ -23,7 +23,7 @@ def type(feeder)
 
 
 		public void feed(Message event) {
-			TanksConnectors.byName(["$domain" + ]event.type()).feed(event);
+			TanksConnectors.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
 		}
 
 		public List<Sensor> sensors() {
