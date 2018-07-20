@@ -25,8 +25,8 @@ public class FSDatalake implements Datalake {
 		datalake.scale(scaleOf(url));
 	}
 
-	public void drop(String name, Message message) {
-		datalake.tank(name).drop(message);
+	public void drop(String name, Message[] messages) {
+		for (Message message : messages) datalake.tank(name).drop(message);
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {

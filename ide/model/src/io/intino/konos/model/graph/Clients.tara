@@ -2,6 +2,8 @@ dsl Proteo
 
 use DataTypes
 
+Concept Client
+
 Facet Ness on Client
 	var string url
 	var string user
@@ -9,13 +11,40 @@ Facet Ness on Client
 	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
-	has MessageHandler
+	has Mounter
+	has Feeder
 
-Concept:NamedIfNoSchema MessageHandler is component
+Concept:NamedIfNoSchema Mounter extends EventSource is component
+
+Concept:Named Feeder is component
+	var Schema[] eventTypes
+	var string subdomain = ""
+	has:Named Sensor
+
+Concept:Named Sensor is component
+
+Facet FormEdition on Sensor
+	var string path
+
+Facet DocumentEdition on Sensor
+	var word:{Offline Online} mode = Online
+
+Facet DocumentSignature on Sensor
+	var word:{Sign CoSign CounterSign} signType
+	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
+
+Facet Poll on Sensor
+	var string defaultOption = empty
+	Concept Option
+		var string value
+		var Schema event
+		has Option
+
+Facet Device on Sensor
+
+//Facet Scrapper on Sensor
+
+Concept EventSource is abstract
+	var string name = 'self.schema() != null ? self.schema().name$(): self.name$()' is private reactive
 	var Schema schema
 	var string subdomain = ""
-	sub Feeder
-	sub Mounter
-	sub Process
-
-Concept Client

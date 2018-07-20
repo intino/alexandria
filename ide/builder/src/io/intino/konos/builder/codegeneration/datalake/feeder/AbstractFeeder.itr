@@ -1,0 +1,106 @@
+def type(feeder)
+	package $package+validPackage.ness.feeders;
+
+	import $package+validPackage.ness.TanksConnectors;
+	import io.intino.konos.datalake.Feeder;
+	import io.intino.konos.datalake.Sensor;
+	import io.intino.ness.inl.Message;
+
+	import java.util.Arrays;
+	import java.util.List;
+	import java.util.Collections;
+
+	public class Abstract$name+FirstUpperCase~Feeder extends io.intino.konos.datalake.Feeder {
+		protected List<Sensor> sensors;
+
+		public Abstract$name+FirstUpperCase~Feeder() {
+			this.sensors = Arrays.asList($sensor+new...[, ]);
+		}
+
+		public List<String> eventTypes() {
+			return Arrays.asList($eventType+quoted...[, ]);
+		}
+
+
+		public void feed(Message event) {
+			TanksConnectors.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
+		}
+
+		public List<Sensor> sensors() {
+			return sensors;
+		}
+
+		$sensor+class...[$NL]
+	}
+end
+
+def type(sensor) trigger(new)
+	new $feeder+FirstUpperCase~Feeder.$name+FirstUpperCase~Sensor()
+end
+
+def type(sensor) trigger(class)
+	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.konos.datalake.sensors.$type] {
+		$parent+field
+
+		public Abstract$name+FirstUpperCase~Sensor() {
+			$parent+super
+		}
+
+		$parent+methods
+	}
+end
+
+def type(documentEdition) trigger(super)
+	super("$mode");
+end
+
+
+
+def type(documentSignature) trigger(super)
+	super("$signType", "$signFormat");
+end
+
+
+def type(formEdition) trigger(super)
+	super("$path");
+end
+
+
+def type(poll) trigger(field)
+	private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();
+end
+
+def type(poll) trigger(super)
+	super("$defaultOption", Arrays.asList($option...[, ]));
+	registerMessageBuilders();
+end
+
+def type(poll) trigger(methods)
+	private void registerMessageBuilders() {
+		$option+build...[$NL]
+	}
+
+	public Message get(String option, Object... args) {
+		return io.intino.konos.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
+	}
+
+	$eventMethod...[$NL$NL]
+end
+
+def trigger(build)
+	messageBuilders.put("$value", this::$event+firstLowerCase);
+end
+
+def trigger(eventMethod)
+	protected abstract Object $value+firstLowerCase(List<Object> objects);
+end
+
+def trigger(option)
+	new Option("$value"[, Arrays.asList($option...[,])])
+end
+
+
+def trigger(quoted)
+	"$value"
+end
+

@@ -108,12 +108,11 @@ Schema Range
 	Attribute max as Real
 
 Schema ScaleList
-	Has(Scale)
-
+	Attribute scale as Object(Scale) List
 
 Schema Alert
     Attribute active as Bool
-    Attribute(multiple=true) mailingList as Text
+    Attribute mailingList as Text List
 
 Schema Scale
 	Attribute name as LongInteger
@@ -130,22 +129,23 @@ Schema FilterList
 			Attribute label as Text
 
 Schema CategorizationViewList
-	Has(CategorizationView)
+	Attribute categorizationView as Object(CategorizationView) List
 
 Schema CategorizationView
 	Attribute name as Text
 	Attribute label as Text
 
-	Has(CategoryView)
-	Has(CategorizationView, multiple=false) subCategorization
+	Attribute categorizationView as Object(CategorizationView) List
+	Attribute subCategorization as Object(CategorizationView)
+
 
 Schema CategoryViewList
-	Has(CategoryView)
+	Attribute categoryView as Object(CategoryView) List
 
 Schema CategoryView
 	Attribute name as Text
 	Attribute label as Text
-	Has(CategoryView)
+	Attribute categoryView as Object(CategoryView) List
 
 Schema FormatterList
 	Schema Formatter
@@ -160,7 +160,7 @@ Schema EventList
 		Attribute icon as Text
 
 Schema SerieList
-	Has(Serie)
+	Attribute serie as Object(Serie) List
 
 Schema Serie
 	Attribute label as Text
@@ -172,7 +172,8 @@ Schema Serie
 	Attribute min as Integer
 	Attribute max as Integer
 
-	Has(DecimalPlaces, multiple=false)
+	Attribute decimalPlaces as Object(DecimalPlaces)
+
 	Schema data
 		Attribute Instant as Real
 		Attribute value as Real
@@ -182,33 +183,29 @@ Schema DecimalPlaces
 	Attribute percentage as Integer
 
 Schema Points
-	Has(SerieList, multiple=false)
-	Has(Scale, multiple=false)
+	Attribute series as Object(SerieList)
+	Attribute scale as Object(Scale)
+
 
 Schema NameList
-	Attribute(multiple=true) names as Text
+	Attribute names as Text List
 
 Schema Histogram
-	Has(CategoryView)
-	Has(Ticket)
+	Attribute categoryView as Object(CategoryView) List
+	Attribute ticket as Object(Ticket) List
+
 
 Schema Ticket
 	Attribute label as Text
-	Attribute(multiple=true) values as Real
+	Attribute values as Real List
 
 	Schema Indicator
 		Attribute label as Text
 		Attribute color as Text
-		Attribute(multiple=true) values as Real
+		Attribute values as Real List
 
-		Has(DecimalPlaces, multiple=false)
+		Attribute decimalPlaces as Object(DecimalPlaces)
 
 Schema RequestCategory
 	Attribute name as Text
 	Attribute categorization as Text
-
-
-
-
-
-

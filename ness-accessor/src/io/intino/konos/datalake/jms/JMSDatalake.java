@@ -59,9 +59,10 @@ public class JMSDatalake implements Datalake {
 		}
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private List<String> registeredTanks() {
 		TopicProducer producer = newProducer(ADMIN_PATH);
-		final String tanks = requestResponse(producer, createMessageFor("tanks"));
+		final String tanks = requestResponseWithTimeout(producer, createMessageFor("tanks"), 1000);
 		return Arrays.asList(tanks.split(";"));
 	}
 
@@ -131,7 +132,20 @@ public class JMSDatalake implements Datalake {
 		try {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
-			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive());
+			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive(1000));
+			producer.close();
+			return response;
+		} catch (JMSException e) {
+			logger.error(e.getMessage(), e);
+			return "";
+		}
+	}
+
+	private String requestResponseWithTimeout(TopicProducer producer, Message message, int timeout) {
+		try {
+			message.setJMSReplyTo(this.session.createTemporaryQueue());
+			producer.produce(message);
+			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive(timeout));
 			producer.close();
 			return response;
 		} catch (JMSException e) {
