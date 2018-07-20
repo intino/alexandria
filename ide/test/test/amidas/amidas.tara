@@ -82,6 +82,6 @@ Schema RequestProperties
 	Attribute priority as Text
 
 Schema RequestPolicy
-	Attribute(multiple=true) workerGroups as Text
-	Attribute(multiple=true) capabilities as Text
-	Attribute(multiple=true) authorizations as Text
+	Attribute workerGroups as Text List
+	Attribute capabilities as Text List
+	Attribute authorizations as Text List

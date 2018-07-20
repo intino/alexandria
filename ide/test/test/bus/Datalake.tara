@@ -192,31 +192,31 @@ Schema TaskEditionRegister
 	Attribute ts as DateTime
 	Attribute document as Text
 	Attribute editorPath as Text
-	Has(TaskProperties, multiple=false) properties
+	Attribute properties as Object(TaskProperties)
 
 Schema TaskDocumentSignatureRegister
 	Attribute ts as DateTime
 	Attribute document as Text
 	Attribute signatureId as Text
-	Has(TaskProperties, multiple=false) properties
+	Attribute properties as Object(TaskProperties)
 
 Schema TaskDocumentEditionRegister
 	Attribute ts as DateTime
 	Attribute document as Text
-	Has(TaskProperties, multiple=false) properties
+	Attribute properties as Object(TaskProperties)
 
 Schema TaskDecisionRegister
 	Attribute ts as DateTime
 	Attribute document as Text
-	Has(TaskProperties, multiple=false) properties
+	Attribute properties as Object(TaskProperties)
 
 Schema TaskCoordinatorRegister
 	Attribute ts as DateTime
 	Attribute task as Text
-	Attribute(multiple=false) agent as Text
-	Attribute(multiple=true) workerGroups as Text
-	Attribute(multiple=true) capabilities as Text
-	Attribute(multiple=true) authorizations as Text
+	Attribute agent as Text
+	Attribute workerGroups as Text List
+	Attribute capabilities as Text List
+	Attribute authorizations as Text List
 
 Schema TaskProperties
 	Attribute ts as DateTime
@@ -227,7 +227,7 @@ Schema TaskProperties
 	Attribute thread as Text
 	Attribute priority as Text
 	Attribute wkt as Text
-	Attribute(multiple=true) tags as List Text
+	Attribute tags as List Text
 
 Schema TaskComplete
 	Attribute ts as DateTime
