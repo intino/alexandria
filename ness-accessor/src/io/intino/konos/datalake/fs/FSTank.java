@@ -41,6 +41,16 @@ public class FSTank implements Tank {
 	}
 
 	@Override
+	public Tank batchSession(int blockSize) {
+		return this;
+	}
+
+	@Override
+	public Tank endBatch() {
+		return this;
+	}
+
+	@Override
 	public TopicConsumer flow(String flowID) {
 		return null;
 	}
