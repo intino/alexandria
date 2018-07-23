@@ -75,10 +75,6 @@ public class UIAccessorCreator {
 		final File lib = new File(parent, "lib");
 		lib.mkdirs();
 		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(lib, true));
-		final File dist = new File(parent, "dist");
-		dist.mkdirs();
-		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(dist, true));
-
 	}
 
 	private String toSnakeCase(String name) {
