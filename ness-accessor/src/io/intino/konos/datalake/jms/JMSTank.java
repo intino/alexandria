@@ -62,6 +62,19 @@ public class JMSTank implements Datalake.Tank {
 		for (Message m : messages) producer.produce(onlyRegister(fromInlMessage(m)));
 	}
 
+	@Override
+	public Datalake.Tank batchSession(int blockSize) {
+		datalake.batch(name, blockSize);
+		return this;
+	}
+
+	@Override
+	public Datalake.Tank endBatch() {
+		datalake.endBatch(name);
+		return this;
+	}
+
+
 	public TopicConsumer flow(String flowID) {
 		if (datalake.session() == null) logger.error("Session is null");
 		this.flow = new TopicConsumer(datalake.session(), flowChannel());
