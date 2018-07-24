@@ -19,6 +19,24 @@ def trigger(schema)
 	}
 end
 
+def type(word & single) trigger(declaration)
+	private $type+FirstUpperCase $name+FirstLowerCase;
+
+	public enum $name+FirstUpperCase {
+		$words...[, ]
+	}
+
+end
+
+def type(word & multiple) trigger(declaration)
+	private java.util.List<$type+FirstUpperCase> $name+FirstLowerCase = new java.util.ArrayList<>();
+
+	public enum $name+FirstUpperCase {
+		$words...[, ]
+	}
+
+end
+
 def type(primitive & single) trigger(declaration)
 	private $type $name+firstLowerCase[ = $defaultValue];
 end
@@ -37,6 +55,18 @@ end
 
 def type(attributeMap) trigger(declaration)
 	private java.util.Map<String, String> $name = new java.util.HashMap<>();
+end
+
+def type(word & single) trigger(getter)
+	public $type+FirstUpperCase $name+FirstLowerCase() {
+		return $name+FirstLowerCase;
+	}
+end
+
+def type(word & multiple) trigger(getter)
+	public java.util.List<$type+FirstUpperCase> $name+FirstLowerCase() {
+		return $name+FirstLowerCase;
+	}
 end
 
 def type(primitive & single) trigger(getter)
@@ -70,6 +100,19 @@ def type(attributeMap) trigger(getter)
 
 	public String attributeValue(String key) {
 		return this.$name.get(key);
+	}
+end
+
+def type(word & single) trigger(setter)
+	public $element+firstUpperCase $name+firstLowerCase($type+FirstUpperCase $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
+	}
+end
+def type(word & multiple) trigger(setter)
+	public $element+firstUpperCase $name+firstLowerCase(java.util.List<$type+FirstUpperCase> $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+		return this;
 	}
 end
 
