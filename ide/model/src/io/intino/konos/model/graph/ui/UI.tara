@@ -7,6 +7,8 @@ use Services
 use DataTypes
 
 Facet UI on Service is decorable
+	Concept Use
+		var string className
 	var string port
 	var string title
 	var string favicon

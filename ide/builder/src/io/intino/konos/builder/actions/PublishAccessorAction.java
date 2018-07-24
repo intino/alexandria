@@ -11,20 +11,14 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
 import io.intino.konos.builder.KonosIcons;
 import io.intino.konos.builder.utils.GraphLoader;
-import io.intino.konos.builder.utils.KonosUtils;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PublishAccessorAction extends KonosAction implements DumbAware {
 	private static final Logger LOG = Logger.getInstance("Publish Accessor: publish");
@@ -59,7 +53,7 @@ public class PublishAccessorAction extends KonosAction implements DumbAware {
 			public void run(@NotNull ProgressIndicator indicator) {
 				final KonosGraph graph = new GraphLoader().loadGraph(module);
 				final Configuration configuration = TaraUtil.configurationOf(module);
-				String generationPackage = configuration != null ? configuration.workingPackage() : "konos";
+				String generationPackage = configuration != null ? configuration.workingPackage() + ".box" : "konos";
 				ProgressManager.getInstance().getProgressIndicator().setIndeterminate(true);
 				new AccessorsPublisher(module, graph, generationPackage).publish();
 			}

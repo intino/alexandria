@@ -15,6 +15,7 @@ import io.intino.konos.model.graph.longinteger.LongIntegerData;
 import io.intino.konos.model.graph.real.RealData;
 import io.intino.konos.model.graph.text.TextData;
 import io.intino.konos.model.graph.type.TypeData;
+import io.intino.konos.model.graph.word.WordData;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -84,6 +85,7 @@ public class SchemaRenderer {
 		else if (attribute.isDate()) return processAttribute(attribute.asDate());
 		else if (attribute.isFile()) return processAttribute(attribute.asFile());
 		else if (attribute.isLongInteger()) return processAttribute(attribute.asLongInteger());
+		else if (attribute.isWord()) return processAttribute(attribute.asWord());
 		else if (attribute.isObject())
 			return processSchemaAsAttribute(attribute.asObject().schema(), attribute.name$(), attribute.isList());
 		return null;
@@ -141,6 +143,14 @@ public class SchemaRenderer {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
 				.addSlot("type", attribute.type());
+	}
+
+	private Frame processAttribute(WordData attribute) {
+		final Schema.Attribute a = attribute.a$(Schema.Attribute.class);
+		return new Frame().addTypes("word", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", a.name$())
+				.addSlot("words", attribute.values().toArray(new String[0]))
+				.addSlot("type", a.name$());
 	}
 
 	private Frame processSchemaAsAttribute(Schema schema, String name, boolean multiple) {

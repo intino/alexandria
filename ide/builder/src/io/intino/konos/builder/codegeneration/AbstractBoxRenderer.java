@@ -128,6 +128,7 @@ public class AbstractBoxRenderer {
 			frame.addSlot("authentication", new Frame(isCustom(service.authentication().by()) ? "custom" : "standard").addSlot("value", service.authentication().by()));
 		if (service.edition() != null)
 			frame.addSlot("edition", new Frame(isCustom(service.edition().by()) ? "custom" : "standard").addSlot("value", service.edition().by()));
+		service.useList().forEach(use -> frame.addSlot("use", use.className()));
 		return frame;
 
 	}

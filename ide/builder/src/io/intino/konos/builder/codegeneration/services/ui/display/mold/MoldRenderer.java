@@ -133,7 +133,7 @@ public class MoldRenderer extends DisplayRenderer {
 
 	private void frameOf(Frame frame, EmbeddedDisplay stamp) {
 		frame.addSlot("displayBuilder", baseFrame(stamp).addTypes("displayBuilder"));
-		frame.addSlot("displayType", stamp.display().name$());
+		if (stamp.display() != null) frame.addSlot("displayType", stamp.display().name$());
 	}
 
 	private void frameOf(Frame frame, EmbeddedDialog stamp) {
@@ -182,7 +182,8 @@ public class MoldRenderer extends DisplayRenderer {
 		if (operation.i$(OpenDialogOperation.class)) {
 			OpenDialogOperation openDialogOperation = operation.a$(OpenDialogOperation.class);
 			Dialog dialog = openDialogOperation.dialog();
-			if (dialog != null) frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", dialog.name$()).addSlot("dialogBuilder", frame(openDialogOperation));
+			if (dialog != null)
+				frame.addSlot("width", openDialogOperation.width()).addSlot("dialogType", dialog.name$()).addSlot("dialogBuilder", frame(openDialogOperation));
 		} else if (operation.i$(OpenExternalDialogOperation.class)) {
 			OpenExternalDialogOperation openExternalDialogOperation = operation.a$(OpenExternalDialogOperation.class);
 			frame.addSlot("width", openExternalDialogOperation.width()).addSlot("dialogPathBuilder", baseFrame(openExternalDialogOperation)).addSlot("dialogTitleBuilder", baseFrame(openExternalDialogOperation));
