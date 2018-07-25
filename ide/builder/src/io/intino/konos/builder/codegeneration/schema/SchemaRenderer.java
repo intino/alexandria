@@ -94,14 +94,14 @@ public class SchemaRenderer {
 	private static Frame processAttribute(RealData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", !multiple(attribute) ? "double" : "java.lang.Double")
+				.addSlot("type", !multiple(attribute) ? "double" : attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
 	private static Frame processAttribute(IntegerData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
+				.addSlot("type", !multiple(attribute) ? "int" : attribute.type())
 				.addSlot("defaultValue", attribute.defaultValue());
 	}
 
