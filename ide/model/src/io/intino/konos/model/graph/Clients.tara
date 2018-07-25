@@ -12,7 +12,7 @@ Facet Ness on Client
 	var string domain
 	var string clientID
 	has Mounter
-	has Feeder
+	has:Named Feeder
 
 Concept:NamedIfNoSchema Mounter extends EventSource is component
 
