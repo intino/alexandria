@@ -159,4 +159,8 @@ public class SparkManager {
 		return Integer.valueOf(forwardedPort);
 	}
 
+	public void redirect(String location) {
+		response.redirect(location);
+	}
+
 }
