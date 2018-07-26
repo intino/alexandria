@@ -5,9 +5,14 @@ import io.intino.konos.alexandria.ui.services.auth.exceptions.*;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SessionAuthService implements AuthService {
 	protected UISparkManager manager;
+	private static final Map<String, String> requestTokenMap = new HashMap<>();
+	private static final Map<String, String> accessTokenMap = new HashMap<>();
 
 	public void inject(UISparkManager manager) {
 		this.manager = manager;
@@ -29,36 +34,43 @@ public class SessionAuthService implements AuthService {
 
 			@Override
 			public Token requestToken() throws CouldNotObtainRequestToken {
-				return null;
+				String token = requestTokenMap.getOrDefault(manager.currentSession().id(), null);
+				return token != null ? Token.build(token) : null;
 			}
 
 			@Override
 			public URL authenticationUrl(Token token) throws CouldNotObtainAuthorizationUrl {
+				requestTokenMap.put(manager.currentSession().id(), token.id());
 				return null;
 			}
 
 			@Override
 			public Token accessToken() {
-				return null;
+				String token = accessTokenMap.getOrDefault(manager.currentSession().id(), null);
+				return token != null ? Token.build(token) : null;
 			}
 
 			@Override
 			public Token accessToken(Verifier verifier) throws CouldNotObtainAccessToken {
-				return null;
+				Token result = Token.build(UUID.randomUUID().toString());
+				accessTokenMap.put(manager.currentSession().id(), result.id());
+				return result;
 			}
 
 			@Override
 			public void invalidate() throws CouldNotInvalidateAccessToken {
-			}
-
-			private void createPair() {
+				if (manager == null) return;
+				requestTokenMap.remove(manager.currentSession().id());
+				accessTokenMap.remove(manager.currentSession().id());
 			}
 		};
 	}
 
 	@Override
 	public boolean valid(Token token) {
-		return manager.currentSession().user() != null;
+		boolean valid = manager.currentSession().user() != null;
+		if (token != null) accessTokenMap.put(manager.currentSession().id(), token.id());
+		return valid;
 	}
 
 	@Override

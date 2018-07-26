@@ -45,13 +45,15 @@ public class AuthenticateCallbackResource extends Resource {
         if (!authentication.isPresent())
             return null;
 
+        manager.currentSession().authId(manager.fromQuery("authId", String.class));
+
         String oauthVerifier = manager.fromQuery("oauth_verifier", String.class);
         return authentication.get().accessToken(Verifier.build(oauthVerifier));
     }
 
     private void listenForLogOut(AuthenticateCallbackAction action) {
         try {
-            manager.authService().addPushListener(accessToken(), pushListener(action));
+            authService().addPushListener(accessToken(), pushListener(action));
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
         }
@@ -76,7 +78,7 @@ public class AuthenticateCallbackResource extends Resource {
 
     private UserInfo userInfo() {
         try {
-            return manager.authService().me(accessToken());
+            return authService().me(accessToken());
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
             throw new RuntimeException(error);

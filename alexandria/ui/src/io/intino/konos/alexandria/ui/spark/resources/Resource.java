@@ -8,6 +8,7 @@ import io.intino.konos.alexandria.ui.services.AuthService;
 import io.intino.konos.alexandria.ui.services.AuthService.Authentication;
 import io.intino.konos.alexandria.ui.services.auth.SessionAuthService;
 import io.intino.konos.alexandria.ui.services.auth.Space;
+import io.intino.konos.alexandria.ui.services.auth.Token;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotInvalidateAccessToken;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainAuthorizationUrl;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainRequestToken;
@@ -64,16 +65,16 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	}
 
 	protected boolean isLogged() {
+		String authId = manager.fromQuery("authId", String.class);
+		if (authId == null) authId = manager.currentSession().authId();
+		return isLogged(authId);
+	}
+
+	protected boolean isLogged(String authId) {
 		if (!isFederated()) return true;
 
-		AuthService authService = manager.authService();
+		AuthService authService = authService();
 
-		if (authService instanceof SessionAuthService) {
-			((SessionAuthService) authService).inject(manager);
-			return authService.valid(null);
-		}
-
-		String authId = manager.fromQuery("authId", String.class);
 		Authentication authentication = authenticationOf(authId).orElse(null);
 		return authentication != null && authService.valid(authentication.accessToken());
 	}
@@ -140,13 +141,23 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		return manager.baseUrl();
 	}
 
-	private Space space() {
+	AuthService authService() {
 		AuthService authService = manager.authService();
+
+		if (authService == null) return null;
+		if (authService instanceof SessionAuthService)
+			((SessionAuthService) authService).inject(manager);
+
+		return authService;
+	}
+
+	private Space space() {
+		AuthService authService = authService();
 		return authService != null ? authService.space() : null;
 	}
 
 	private boolean isFederated() {
-		return manager.authService() != null;
+		return authService() != null;
 	}
 
 	private void registerAuthentication(String authenticationId, Authentication authentication) {
@@ -169,7 +180,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	private Authentication createAuthentication(String authenticationId) {
 		try {
-			registerAuthentication(authenticationId, manager.authService().authenticate());
+			registerAuthentication(authenticationId, authService().authenticate());
 			return authenticationOf(authenticationId).get();
 		} catch (SpaceAuthCallbackUrlIsNull spaceAuthCallbackUrlIsNull) {
 			spaceAuthCallbackUrlIsNull.printStackTrace();
@@ -179,7 +190,9 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	private String authenticate(Authentication authentication) {
 		try {
-			URL url = authentication.authenticationUrl(authentication.requestToken());
+			Token token = authentication.requestToken();
+			if (token == null) return null;
+			URL url = authentication.authenticationUrl(token);
 			if (url == null) return null;
 			return RequestHelper.post(url).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {

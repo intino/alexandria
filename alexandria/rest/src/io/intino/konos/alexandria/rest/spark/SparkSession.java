@@ -13,6 +13,7 @@ public class SparkSession<C extends Client> implements Session<C> {
 	private ClientProvider<C> clientProvider;
 	private Function<String, String> loginListener;
 	private Consumer<Boolean> logoutListener;
+	private String authId = null;
 
 	public SparkSession(String id) {
 		this.id = id;
@@ -62,5 +63,14 @@ public class SparkSession<C extends Client> implements Session<C> {
 	public void logout() {
 		if (logoutListener != null)
 			logoutListener.accept(true);
+		authId(null);
+	}
+
+	public void authId(String id) {
+		this.authId = id;
+	}
+
+	public String authId() {
+		return this.authId;
 	}
 }
