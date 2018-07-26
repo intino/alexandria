@@ -1,6 +1,7 @@
 package io.intino.konos.builder.helpers;
 
 import com.intellij.openapi.diagnostic.Logger;
+import io.intino.konos.model.graph.Redirect;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.rest.RESTService;
@@ -96,7 +97,9 @@ public class Commons {
 	}
 
 	public static String returnType(Response response, String rootPackage) {
-		if (response == null || response.asType() == null) return "void";
+		if (response == null) return "void";
+		if (response.i$(Redirect.class)) return String.class.getName();
+		if (response.asType() == null) return "void";
 		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", rootPackage, "schemas.") : "";
 		String type = innerPackage + response.asType().type();
 		return response.isList() ? "List<" + type + ">" : type;
