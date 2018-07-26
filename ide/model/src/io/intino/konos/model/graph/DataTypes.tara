@@ -61,6 +61,9 @@ Concept Response extends Data is component
 	var string description = ""
 	var word:{html xml text} dataFormat = html
 
+Concept Redirect extends Response
+
+
 Facet ExtensionOf on Schema
 	var Schema parent
 //
