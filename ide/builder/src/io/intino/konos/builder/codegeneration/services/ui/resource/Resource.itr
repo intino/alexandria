@@ -53,6 +53,7 @@ def type(resource)
 					return false;
 
 				io.intino.konos.alexandria.ui.displays.Soul soul = action.prepareSoul(client);
+				soul.onRedirect((location) -> manager.redirect(location));
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier(action.session, client, display));
 					display.inject(action.session);
