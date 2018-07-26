@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static io.intino.konos.builder.helpers.Commons.returnType;
 import static java.util.Arrays.stream;
 
 
@@ -90,7 +91,7 @@ class ActionUpdater {
 
 	private void updateReturnType(PsiMethod psiMethod) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
-		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(response == null ? "void" : formatType(response.asType(), response.isList()), psiMethod)));
+		psiMethod.getReturnTypeElement().replace(elementFactory.createTypeElement(elementFactory.createTypeFromText(response == null ? "void" : returnType(response, packageName), psiMethod)));
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {

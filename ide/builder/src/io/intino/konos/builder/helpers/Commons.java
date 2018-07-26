@@ -96,11 +96,11 @@ public class Commons {
 		return response.isList() ? "List<" + response.asType().type() + ">" : response.asType().type();
 	}
 
-	public static String returnType(Response response, String rootPackage) {
+	public static String returnType(Response response, String packageName) {
 		if (response == null) return "void";
 		if (response.i$(Redirect.class)) return String.class.getName();
 		if (response.asType() == null) return "void";
-		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", rootPackage, "schemas.") : "";
+		String innerPackage = response.isObject() && response.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
 		String type = innerPackage + response.asType().type();
 		return response.isList() ? "List<" + type + ">" : type;
 	}
