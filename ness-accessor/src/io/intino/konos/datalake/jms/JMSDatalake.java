@@ -28,6 +28,7 @@ import static java.lang.Thread.sleep;
 import static java.util.Objects.requireNonNull;
 
 public class JMSDatalake implements Datalake {
+	private final String ADMIN_PATH = "service.ness.admin";
 	private static Logger logger = LoggerFactory.getLogger(JMSDatalake.class);
 
 	private final String url;
@@ -64,6 +65,16 @@ public class JMSDatalake implements Datalake {
 		TopicProducer producer = newProducer(ADMIN_PATH);
 		final String tanks = requestResponseWithTimeout(producer, createMessageFor("tanks"), 1000);
 		return Arrays.asList(tanks.split(";"));
+	}
+
+	public void batch(String tank, int blockSize) {
+		TopicProducer producer = newProducer(ADMIN_PATH);
+		producer.produce(createMessageFor("batch:"+ tank+ ":" + blockSize));
+	}
+
+	public void endBatch(String tank) {
+		TopicProducer producer = newProducer(ADMIN_PATH);
+		producer.produce(createMessageFor("endBatch:"+ tank));
 	}
 
 	public Session session() {
@@ -219,4 +230,5 @@ public class JMSDatalake implements Datalake {
 	private void consume(ReflowDispatcher dispatcher, javax.jms.Message m) {
 		dispatcher.dispatch(load(textFrom(m)));
 	}
+
 }

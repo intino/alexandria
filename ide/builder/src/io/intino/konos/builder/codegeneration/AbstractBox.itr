@@ -158,8 +158,13 @@ def type(service & ui) trigger(ui)
 	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
 	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
+	$use...[$NL]
 	sparkInstance.start();
 	logger.info("UI $name: started!");
+end
+
+def trigger(use)
+	$value.initDisplays(sparkInstance);
 end
 
 def type(service & jms) trigger(jms)

@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 
 abstract class ActionRenderer {
 	protected final Project project;
@@ -65,7 +66,7 @@ abstract class ActionRenderer {
 		for (Parameter parameter : parameters) {
 			final Frame parameterFrame = new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName());
 			if (parameter.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame.addSlot("name", parameter.name$()).addSlot("type", formatType(parameter.asType())));
+			frame.addSlot("parameter", parameterFrame.addSlot("name", snakeCaseToCamelCase().format(parameter.name$())).addSlot("type", formatType(parameter.asType())));
 		}
 	}
 

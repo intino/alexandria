@@ -40,7 +40,7 @@ def type(resource)
 			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
-			context.put("requestUrl", manager.request().url());
+			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
 			return context;
 		}
 	}
