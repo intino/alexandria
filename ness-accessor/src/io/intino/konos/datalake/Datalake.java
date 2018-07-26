@@ -4,7 +4,6 @@ import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
 public interface Datalake {
-	String ADMIN_PATH = "service.ness.admin";
 	String REFLOW_PATH = "service.ness.reflow";
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
@@ -41,6 +40,10 @@ public interface Datalake {
 		void feed(io.intino.ness.inl.Message... message);
 
 		void drop(io.intino.ness.inl.Message... message);
+
+		Tank batchSession(int blockSize);
+
+		Tank endBatch();
 
 		TopicConsumer flow(String flowID);
 

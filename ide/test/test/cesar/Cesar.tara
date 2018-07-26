@@ -9,7 +9,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 	Resource(path = "/systems/:system") System
 		Put(description = "Create new system version")
 			Parameter(in = path) system as Text
-			Parameter(in = query) version as Text
+			Parameter(in = query) system_version as Text
 			Response
 			Exception(BadRequest)
 		Post(description = "Update system")
@@ -42,7 +42,6 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Parameter(in = query) url as Text
 			Response as DateTime
 			Exception (BadRequest)
-
 	Resource(path = "/servers/:server") server
 		Get(description = "List of servers")
 			Parameter(in = path) server as Text
@@ -50,11 +49,11 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 		Post(description = "Update server")
 			Parameter(in = path) server as Text
-			Response
+			Response as Text
 			Exception(BadRequest)
 		Delete(description = "Delete server") deleteServer
 			Parameter(in = path) server as Text
-			Response
+			Redirect
 			Exception(BadRequest)
 	Resource(path = "/deploy") deploySystem
 		Post(description = "Deploy system") deploySystem
@@ -155,6 +154,7 @@ Service(title = "cesar", favicon = "/images/icon.png") cesarUi as UI(port = "900
 	Authentication(by = "{federationUrl}")
 	Resource("/") homePage as DisplayPage(cesarDesktop) Root Confidential
 	Resource("/error") errorPage as DisplayPage(errorDisplay)
+	Use("io.intino.amidas.box.PlatformUi")
 
 
 
@@ -183,7 +183,8 @@ Schema InfrastructureOperation
 	Attribute objectType as Text
 	Attribute objectID as Text
 	Attribute parameters as Text List
-
+	Attribute words as Word(values = "a" "b" "c") List
+	Attribute palabra as Word(values = "d" "e" "f")
 
 Display cesarDesktop
 Display errorDisplay
