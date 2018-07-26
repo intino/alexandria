@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.RESTActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Redirect;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.list.ListData;
 import io.intino.konos.model.graph.rest.RESTService;
@@ -81,11 +82,11 @@ public class RESTResourceRenderer {
 	}
 
 	private boolean hasResponse(Operation operation) {
-		return operation.response() != null && operation.response().isType();
+		return (operation.response() != null && operation.response().isType()) || operation.response().i$(Redirect.class);
 	}
 
 	private Frame frameOf(Response response) {
-		Frame frame = new Frame().addSlot("value", Commons.returnType(response, packageName));
+		Frame frame = new Frame(response.getClass().getSimpleName()).addSlot("value", Commons.returnType(response, packageName));
 		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
 			frame.addSlot("format", MimeTypes.get(response.dataFormat().toString()));
 		return frame;

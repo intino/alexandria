@@ -24,7 +24,7 @@ def type(resource)
 
 		public void execute() throws $throws...[, ] {[
 			$authenticationValidator+validate]
-			[$returnType+writeCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
+			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
 		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
@@ -34,22 +34,27 @@ def type(resource)
 			return action;
 		}
 		[
-		$returnType+write]
+		$returnType+method]
 
 		private io.intino.konos.alexandria.schema.Context context() {
 			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
-			context.put("requestUrl", manager.request().url());
+			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
 			return context;
 		}
 	}
 end
 
-def attribute(void) trigger(writeCall)
+def attribute(void) trigger(methodCall)
 end
 
-def trigger(writeCall)
+
+def type(redirect) trigger(methodCall)
+	redirect(
+end
+
+def type(response) trigger(methodCall)
 	write(
 end
 
@@ -63,7 +68,14 @@ end
 def attribute(void) trigger(write)
 end
 
-def trigger(write)
+
+def type(redirect) trigger(method)
+	private void redirect(String url) {
+		manager.redirect(url);
+	}
+end
+
+def type(response) trigger(method)
 	private void write($value+firstUpperCase+ReturnTypeFormatter object) {
 		manager.write(object[, "$format"]);
 	}

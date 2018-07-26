@@ -93,10 +93,6 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 		return languageOf(request.queryParams("language"));
 	}
 
-	public void redirect(String location) {
-		response.redirect(location);
-	}
-
 	private String languageOf(String language) {
 		if (language == null) return null;
 		return Locale.forLanguageTag(language).toString().replaceAll("_.*", "");

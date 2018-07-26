@@ -28,6 +28,9 @@ Facet Type on Data
 	sub DateTime
 		var string format = "dd/MM/yyyy HH:mm:ss"
 		var string type = "java.time.Instant" is reactive private
+	sub Word
+		var string type = "java.lang.Enum" is reactive private
+		var string[] values;
 	sub File
 		var string type = "io.intino.konos.alexandria.schema.Resource" is reactive private
 		var word:{body path form header query} in = form
@@ -57,6 +60,9 @@ Concept Response extends Data is component
 	var string code = "200"
 	var string description = ""
 	var word:{html xml text} dataFormat = html
+
+Concept Redirect extends Response
+
 
 Facet ExtensionOf on Schema
 	var Schema parent
