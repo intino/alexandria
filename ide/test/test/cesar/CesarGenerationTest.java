@@ -11,7 +11,7 @@ import java.io.File;
 
 public class CesarGenerationTest {
 
-	private static final String CESAR = "cesar";
+	private static final String CESAR = "cesar.box";
 	private static final String CONSUL = "consul";
 
 	@Test
@@ -21,7 +21,7 @@ public class CesarGenerationTest {
 		KonosGraph graph = new Graph().loadStashes("Cesar").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, CESAR).execute();
 		graph.rESTServiceList().forEach(a ->
-				new RESTAccessorRenderer(a, new File("test-gen/" + CESAR), CESAR).execute());
+				new RESTAccessorRenderer(a, new File("test-gen/accessor/" + CESAR), CESAR).execute());
 	}
 
 	@Test

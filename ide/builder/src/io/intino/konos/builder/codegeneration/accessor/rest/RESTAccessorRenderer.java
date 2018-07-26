@@ -80,7 +80,7 @@ public class RESTAccessorRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		return new Frame().addTypes("parameter", parameter.isList()? "list": "singlef",parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
+		return new Frame().addTypes("parameter", parameter.isList() ? "list" : "single", parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
 				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter));
 	}
