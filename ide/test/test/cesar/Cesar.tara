@@ -42,7 +42,6 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Parameter(in = query) url as Text
 			Response as DateTime
 			Exception (BadRequest)
-
 	Resource(path = "/servers/:server") server
 		Get(description = "List of servers")
 			Parameter(in = path) server as Text
@@ -50,11 +49,11 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 			Exception(BadRequest)
 		Post(description = "Update server")
 			Parameter(in = path) server as Text
-			Response
+			Response as Text
 			Exception(BadRequest)
 		Delete(description = "Delete server") deleteServer
 			Parameter(in = path) server as Text
-			Response
+			Redirect
 			Exception(BadRequest)
 	Resource(path = "/deploy") deploySystem
 		Post(description = "Deploy system") deploySystem
