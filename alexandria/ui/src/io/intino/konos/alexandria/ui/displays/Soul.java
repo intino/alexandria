@@ -15,8 +15,9 @@ import java.util.function.Consumer;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Soul implements DisplayRepository {
-    private final Map<String, AlexandriaDisplay> displays = new HashMap();
+    private final Map<String, AlexandriaDisplay> displays = new HashMap<>();
     private final List<Consumer<AlexandriaDisplay>> registerListeners = new ArrayList<>();
+    private Consumer<String> redirectListener = null;
     protected final UISession session;
     protected User user;
 
@@ -37,6 +38,15 @@ public abstract class Soul implements DisplayRepository {
     public void destroy() {
         displays.values().forEach(AlexandriaDisplay::die);
         displays.clear();
+    }
+
+    public void onRedirect(Consumer<String> listener) {
+        this.redirectListener = listener;
+    }
+
+    public void redirect(String url) {
+        if (this.redirectListener == null) return;
+        this.redirectListener.accept(url);
     }
 
     public URL baseAssetUrl() {
