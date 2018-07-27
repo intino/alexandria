@@ -55,6 +55,10 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 		return pushService.session(request.session().id());
 	}
 
+	public UISession session(String id) {
+		return pushService.session(id);
+	}
+
 	public UIClient client(String id) {
 		return pushService.client(id);
 	}
