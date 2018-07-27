@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class SparkManager {
@@ -26,6 +27,7 @@ public class SparkManager {
 		this.request = request;
 		this.response = response;
 		setUpMultipartConfiguration();
+		setUpSessionCookiePath();
 	}
 
 	public void write(Object object) {
@@ -114,6 +116,23 @@ public class SparkManager {
 	private void setUpMultipartConfiguration() {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(System.getProperty("java.io.tmpdir"));
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
+	}
+
+	private void setUpSessionCookiePath() {
+		Map<String, String> cookies = request.cookies();
+
+		String path = request.raw().getHeader(XForwardedPath);
+		if (path == null) path = "/";
+
+		if (cookies.containsKey("JSESSIONID")) {
+			String value = cookies.get("JSESSIONID");
+			response.removeCookie("JSESSIONID");
+			response.cookie(path, "JSESSIONID", value, 3600, false);
+		}
+		else {
+			response.cookie(path, "JSESSIONID", request.session().id(), 3600*3600, false);
+		}
+
 	}
 
 	private String generateBaseUrl() {

@@ -9,13 +9,12 @@ import io.intino.konos.alexandria.ui.services.AuthService.Authentication;
 import io.intino.konos.alexandria.ui.services.auth.SessionAuthService;
 import io.intino.konos.alexandria.ui.services.auth.Space;
 import io.intino.konos.alexandria.ui.services.auth.Token;
-import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotInvalidateAccessToken;
-import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainAuthorizationUrl;
-import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainRequestToken;
-import io.intino.konos.alexandria.ui.services.auth.exceptions.SpaceAuthCallbackUrlIsNull;
+import io.intino.konos.alexandria.ui.services.auth.UserInfo;
+import io.intino.konos.alexandria.ui.services.auth.exceptions.*;
 import io.intino.konos.alexandria.ui.services.push.UIClient;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 import io.intino.konos.alexandria.ui.services.push.Browser;
+import io.intino.konos.alexandria.ui.services.push.User;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 import io.intino.konos.alexandria.ui.utils.RequestHelper;
 import io.intino.konos.alexandria.exceptions.AlexandriaException;
@@ -65,18 +64,18 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	}
 
 	protected boolean isLogged() {
-		String authId = manager.fromQuery("authId", String.class);
-		if (authId == null) authId = manager.currentSession().authId();
-		return isLogged(authId);
-	}
-
-	protected boolean isLogged(String authId) {
 		if (!isFederated()) return true;
 
 		AuthService authService = authService();
 
+		String authId = manager.fromQuery("authId", String.class);
 		Authentication authentication = authenticationOf(authId).orElse(null);
 		return authentication != null && authService.valid(authentication.accessToken());
+	}
+
+	protected boolean isLogged(Token accessToken) {
+		if (!isFederated()) return true;
+		return authService().valid(accessToken);
 	}
 
 	protected synchronized void authenticate() {
@@ -95,6 +94,12 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 		return authenticate(authentication);
 	}
 
+	protected synchronized void authenticate(UISession session, Token accessToken) throws CouldNotObtainInfo {
+		UserInfo info = authService().me(accessToken);
+		session.user(userOf(info));
+		session.token(accessToken);
+	}
+
 	protected void logout() {
 		Optional<Authentication> authentication = authentication(this.manager.currentSession().id());
 
@@ -111,6 +116,21 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	protected AlexandriaDisplayNotifier notifier(UISession session, UIClient client, AlexandriaDisplay display) {
 		return notifierProvider.agent(display, carrier(session, client));
+	}
+
+	protected Token accessToken() {
+		return Token.build(manager.fromQuery("token", String.class));
+	}
+
+	protected void fillBrowser(UISparkManager manager, UISession session) {
+		Browser browser = session.browser();
+		browser.baseUrl(manager.baseUrl());
+		browser.basePath(manager.basePath());
+		browser.homeUrl(manager.baseUrl());
+		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
+		browser.language(manager.languageFromUrl());
+		browser.metadataLanguage(manager.languageFromHeader());
+		browser.metadataIpAddress(manager.ipAddressFromHeader());
 	}
 
 	Optional<Authentication> authentication() {
@@ -149,6 +169,20 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 			((SessionAuthService) authService).inject(manager);
 
 		return authService;
+	}
+
+	User userOf(UserInfo info) {
+		if (info == null) return null;
+
+		User user = new User();
+		user.username(info.username());
+		user.fullName(info.fullName());
+		user.email(info.email());
+		user.language(info.language());
+		user.photo(info.photo());
+		user.roles(info.roleList());
+
+		return user;
 	}
 
 	private Space space() {
@@ -190,9 +224,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 
 	private String authenticate(Authentication authentication) {
 		try {
-			Token token = authentication.requestToken();
-			if (token == null) return null;
-			URL url = authentication.authenticationUrl(token);
+			URL url = authentication.authenticationUrl(authentication.requestToken());
 			if (url == null) return null;
 			return RequestHelper.post(url).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
@@ -210,14 +242,7 @@ public abstract class Resource implements io.intino.konos.alexandria.rest.Resour
 	}
 
 	private void fillBrowser(UISparkManager manager) {
-		Browser browser = manager.currentSession().browser();
-		browser.baseUrl(manager.baseUrl());
-		browser.basePath(manager.basePath());
-		browser.homeUrl(manager.baseUrl());
-		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
-		browser.language(manager.languageFromUrl());
-		browser.metadataLanguage(manager.languageFromHeader());
-		browser.metadataIpAddress(manager.ipAddressFromHeader());
+		fillBrowser(manager, manager.currentSession());
 	}
 
 }
