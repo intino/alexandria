@@ -2,11 +2,13 @@ package io.intino.konos.alexandria.ui.services.push;
 
 import io.intino.konos.alexandria.rest.pushservice.Client;
 import io.intino.konos.alexandria.rest.spark.SparkSession;
+import io.intino.konos.alexandria.ui.services.auth.Token;
 
 public class UISession extends SparkSession<UIClient> {
     private User user;
     private Browser browser;
     private String device = null;
+    private Token token = null;
 
     public UISession(String id) {
         super(id);
@@ -59,4 +61,17 @@ public class UISession extends SparkSession<UIClient> {
         return user() != null ? user().language() : browser.languageFromMetadata();
     }
 
+    @Override
+    public void logout() {
+        super.logout();
+        token(null);
+    }
+
+    public void token(Token token) {
+        this.token = token;
+    }
+
+    public Token token() {
+        return this.token;
+    }
 }

@@ -63,4 +63,5 @@ public class SparkSession<C extends Client> implements Session<C> {
 		if (logoutListener != null)
 			logoutListener.accept(true);
 	}
+
 }

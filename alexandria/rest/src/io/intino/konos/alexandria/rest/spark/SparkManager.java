@@ -6,12 +6,14 @@ import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class SparkManager {
@@ -26,6 +28,7 @@ public class SparkManager {
 		this.request = request;
 		this.response = response;
 		setUpMultipartConfiguration();
+		setUpSessionCookiePath();
 	}
 
 	public void write(Object object) {
@@ -116,6 +119,23 @@ public class SparkManager {
 		request.raw().setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 	}
 
+	private void setUpSessionCookiePath() {
+		Map<String, String> cookies = request.cookies();
+
+		String path = request.raw().getHeader(XForwardedPath);
+		if (path == null) path = "/";
+
+		if (cookies.containsKey("JSESSIONID")) {
+			String value = cookies.get("JSESSIONID");
+			response.removeCookie("JSESSIONID");
+			response.cookie(path, "JSESSIONID", value, 3600, false);
+		}
+		else {
+			response.cookie(path, "JSESSIONID", request.session().id(), 3600*3600, false);
+		}
+
+	}
+
 	private String generateBaseUrl() {
 
 		try {
@@ -160,6 +180,8 @@ public class SparkManager {
 	}
 
 	public void redirect(String location) {
+		response.raw().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		response.raw().setHeader("Location", location);
 		response.redirect(location);
 	}
 

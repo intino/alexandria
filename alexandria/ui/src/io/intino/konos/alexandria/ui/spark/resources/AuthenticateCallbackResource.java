@@ -9,7 +9,6 @@ import io.intino.konos.alexandria.ui.services.auth.UserInfo;
 import io.intino.konos.alexandria.ui.services.auth.Verifier;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainAccessToken;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
-import io.intino.konos.alexandria.ui.services.push.User;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 import io.intino.konos.alexandria.ui.spark.actions.AuthenticateCallbackAction;
 
@@ -39,25 +38,27 @@ public class AuthenticateCallbackResource extends Resource {
         }
     }
 
-    private Token verifyAccessToken() throws CouldNotObtainAccessToken {
+    private void verifyAccessToken() throws CouldNotObtainAccessToken {
         Optional<Authentication> authentication = authenticationOf(manager.fromQuery("authId", String.class));
 
         if (!authentication.isPresent())
-            return null;
+            return;
 
         String oauthVerifier = manager.fromQuery("oauth_verifier", String.class);
-        return authentication.get().accessToken(Verifier.build(oauthVerifier));
+        Token accessToken = authentication.get().accessToken(Verifier.build(oauthVerifier));
+        manager.currentSession().token(accessToken);
     }
 
     private void listenForLogOut(AuthenticateCallbackAction action) {
         try {
-            manager.authService().addPushListener(accessToken(), pushListener(action));
+            authService().addPushListener(accessToken(), pushListener(action));
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
         }
     }
 
-    private Token accessToken() {
+    @Override
+    protected Token accessToken() {
         return authentication().orElse(null).accessToken();
     }
 
@@ -76,25 +77,11 @@ public class AuthenticateCallbackResource extends Resource {
 
     private UserInfo userInfo() {
         try {
-            return manager.authService().me(accessToken());
+            return authService().me(accessToken());
         } catch (CouldNotObtainInfo error) {
             error.printStackTrace();
             throw new RuntimeException(error);
         }
-    }
-
-    private User userOf(UserInfo info) {
-        if (info == null) return null;
-
-        User user = new User();
-        user.username(info.username());
-        user.fullName(info.fullName());
-        user.email(info.email());
-        user.language(info.language());
-        user.photo(info.photo());
-        user.roles(info.roleList());
-
-        return user;
     }
 
 }

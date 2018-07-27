@@ -1,8 +1,8 @@
 dsl Konos
 
 Schema Bounds
-	Has(NorthEast, multiple=false)
-	Has(SouthWest, multiple=false)
+	Attribute northEast as Object(NorthEast)
+	Attribute southWest as Object(SouthWest)
 
 Schema NorthEast
 	Attribute longitude as Real
@@ -19,9 +19,8 @@ Schema Catalog
 	Attribute hideGroupings as Bool
 	Attribute arrangementHistogramsMode as Text
 	Attribute mode as Text
-
-	Has(Grouping)
-	Has(Sorting)
+	Attribute groupingList as List Object(Grouping)
+	Attribute sortingList as List Object(Sorting)
 
 Schema Grouping
 	Attribute name as Text
@@ -29,8 +28,7 @@ Schema Grouping
 	Attribute label as Text
 	Attribute countItems as Integer
 	Attribute histogram as Text
-
-	Has(Group)
+	Attribute groupList as List Object(Group)
 
 Schema Group
 	Attribute name as Text
@@ -62,9 +60,9 @@ Schema DisplayReference
 	Attribute type as Text
 
 Schema DialogBoxSettings
-	Has(Position, multiple=false)
 	Attribute acceptButton as Bool
-	Has(Size, multiple=false) size
+	Attribute position as Object(Position)
+	Attribute size as Object(Size)
 
 Schema Size
 	Attribute width as Integer
@@ -86,7 +84,7 @@ Schema ElementOperationParameters
 	Attribute option as Text
 	Attribute from as DateTime
 	Attribute to as DateTime
-	Has(Position, multiple=false)
+	Attribute position as Object(Position)
 
 Schema ElementView
 	Attribute name as Text
@@ -98,13 +96,12 @@ Schema ElementView
 	Attribute canSearch as Bool
 	Attribute emptyMessage as Text
 	Attribute mold as Text
-
-	Has(Toolbar, multiple=false) toolbar
-	Has(Center, multiple=false) center
-	Has(Zoom, multiple=false) zoom
+	Attribute toolbar as Object(Toolbar)
+	Attribute center as Object(Center)
+	Attribute zoom as Object(Zoom)
 
 Schema Toolbar
-	Has(Operation)
+	Attribute operationList as List Object(Operation)
 
 Schema Operation
 	Attribute name as Text
@@ -114,8 +111,7 @@ Schema Operation
 	Attribute icon as Text
 	Attribute when as Text
 	Attribute confirmText as Text
-
-	Has(Property)
+	Attribute propertyList as List Object(Property)
 
 Schema Center
 	Attribute latitude as Real
@@ -142,12 +138,12 @@ Schema GroupingGroup
 
 Schema GroupingSelection
 	Attribute name as Text
-	Attribute(multiple=true) groups as Text
+	Attribute groups as List Text
 
 Schema ItemRefreshInfo
 	Attribute mold as Text
 	Attribute highlight as Bool
-	Has(Item, multiple=false)
+	Attribute item as Object(Item)
 
 Schema ItemValidationRefreshInfo
 	Attribute item as Text
@@ -158,15 +154,14 @@ Schema Item
 	Attribute name as Text
 	Attribute label as Text
 	Attribute group as DateTime
-
-	Has(ItemStamp)
-	Has(ItemBlock)
+	Attribute itemStampList as List Object(ItemStamp)
+	Attribute itemBlockList as List Object(ItemBlock)
 
 Schema ItemStamp
 	Attribute name as Text
-	Attribute(multiple=true) values as Text
+	Attribute values as List Text
 	Attribute className as Text
-	Has(Property)
+	Attribute propertyList as List Object(Property)
 
 Schema ItemBlock
 	Attribute name as Text
@@ -176,7 +171,7 @@ Schema ItemBlock
 Schema OpenItemParameters
 	Attribute item as Text
 	Attribute stamp as Text
-	Has(Position, multiple=false)
+	Attribute position as Object(Position)
 
 Schema Position
 	Attribute left as Real
@@ -210,8 +205,7 @@ Schema Range
 Schema Reference
 	Attribute name as Text
 	Attribute label as Text
-
-	Has(ReferenceProperty)
+	Attribute referencePropertyList as List Object(ReferenceProperty)
 
 Schema ReferenceProperty
 	Attribute name as Text
@@ -262,7 +256,7 @@ Schema CreatePanelParameters
 
 Schema OpenElementParameters
 	Attribute item as Text
-	Has(Reference, multiple=false) stamp
+	Attribute stamp as Object(Reference)
 
 Schema DisplayInfo
 	Attribute type as Text
