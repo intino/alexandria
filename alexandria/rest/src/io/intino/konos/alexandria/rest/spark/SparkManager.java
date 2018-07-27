@@ -6,6 +6,7 @@ import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
@@ -179,6 +180,8 @@ public class SparkManager {
 	}
 
 	public void redirect(String location) {
+		response.raw().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		response.raw().setHeader("Location", location);
 		response.redirect(location);
 	}
 
