@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
@@ -52,7 +53,7 @@ public class FeederRenderer {
 					addSlot("name", feeder.name$());
 			for (Sensor sensor : feeder.sensorList())
 				frame.addSlot("sensor", frameOf(sensor, feeder.name$()));
-			frame.addSlot("eventType", feeder.eventTypes().stream().map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
+			frame.addSlot("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
 			frame.addSlot("domain", fullDomain(feeder.subdomain()));
 			final String feederClassName = firstUpperCase(feeder.name$()) + "Feeder";
 			classes.put(feeder.getClass().getSimpleName() + "#" + feeder.name$(), "ness.feeders." + feederClassName);
