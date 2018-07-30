@@ -143,9 +143,7 @@ public class JMSDatalake implements Datalake {
 		try {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
-			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive(1000));
-			producer.close();
-			return response;
+			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive(1000));
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return "";
@@ -157,9 +155,7 @@ public class JMSDatalake implements Datalake {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
 			if (session.getTransacted()) session.commit();
-			final String response = textFrom(session.createConsumer(message.getJMSReplyTo()).receive(timeout));
-			producer.close();
-			return response;
+			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive(timeout));
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return "";
