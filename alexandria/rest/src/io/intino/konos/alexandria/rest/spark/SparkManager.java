@@ -6,14 +6,12 @@ import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class SparkManager {
@@ -120,20 +118,17 @@ public class SparkManager {
 	}
 
 	private void setUpSessionCookiePath() {
-		Map<String, String> cookies = request.cookies();
+		HttpServletRequest request = this.request.raw();
+		HttpSession session = request.getSession();
 
-		String path = request.raw().getHeader(XForwardedPath);
-		if (path == null) path = "/";
-
-		if (cookies.containsKey("JSESSIONID")) {
-			String value = cookies.get("JSESSIONID");
-			response.removeCookie("JSESSIONID");
-			response.cookie(path, "JSESSIONID", value, 3600, false);
+		if (request.getParameter("JSESSIONID") != null) {
+			Cookie userCookie = new Cookie("JSESSIONID", request.getParameter("JSESSIONID"));
+			response.raw().addCookie(userCookie);
+		} else {
+			String sessionId = session.getId();
+			Cookie userCookie = new Cookie("JSESSIONID", sessionId);
+			response.raw().addCookie(userCookie);
 		}
-		else {
-			response.cookie(path, "JSESSIONID", request.session().id(), 3600*3600, false);
-		}
-
 	}
 
 	private String generateBaseUrl() {
@@ -180,9 +175,7 @@ public class SparkManager {
 	}
 
 	public void redirect(String location) {
-		response.raw().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		response.raw().setHeader("Location", location);
-		response.redirect(location);
+		response.redirect(response.raw().encodeRedirectURL(location));
 	}
 
 }
