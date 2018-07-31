@@ -11,9 +11,13 @@ import java.util.Map;
 
 public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<N> {
     private final UISession session;
+    private final String appUrl;
+    private final String path;
 
-    public AlexandriaDelegateDisplay(UISession session) {
+    public AlexandriaDelegateDisplay(UISession session, String appUrl, String path) {
         this.session = session;
+        this.appUrl = appUrl;
+        this.path = path;
     }
 
     private static Map<String, String> errorMessages = new HashMap<String, String>() {{
@@ -21,17 +25,39 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
         put("en", "could not connect with %s");
     }};
 
-    protected void personifyElement(String appUrl, String path, Map<String, String> parameters) throws MalformedURLException, RestfulFailure {
-        URL amidasUrl = new URL(appUrl);
-        parameters.put("client", session.client().id());
-        parameters.put("session", session.id());
-        parameters.put("token", session.token().id());
-        new RestfulAccessor().post(amidasUrl, path, parameters);
+    protected abstract Map<String, String> parameters();
+    protected abstract void refreshError(String error);
+
+    @Override
+    protected void init() {
+        super.init();
+        try {
+            post("/personify", parameters());
+        } catch (RestfulFailure | MalformedURLException error) {
+            refreshError(errorMessage("amidas"));
+        }
+    }
+
+    @Override
+    public void refresh() {
+        try {
+            post("/?operation=refreshDelegate", parameters());
+        } catch (RestfulFailure | MalformedURLException error) {
+            refreshError(errorMessage("amidas"));
+        }
     }
 
     protected String errorMessage(String application) {
         String language = session().browser().language();
         if (!errorMessages.containsKey(language)) language = "en";
         return String.format(errorMessages.get(language), application);
+    }
+
+    private void post(String subPath, Map<String, String> parameters) throws MalformedURLException, RestfulFailure {
+        URL appUrl = new URL(this.appUrl);
+        parameters.put("client", session.client().id());
+        parameters.put("session", session.id());
+        parameters.put("token", session.token().id());
+        new RestfulAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
     }
 }
