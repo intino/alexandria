@@ -10,13 +10,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<N> {
-    private final UISession session;
+    private final String sessionId;
+    private final String clientId;
+    private final String token;
     private final String appUrl;
     private final String path;
     private String personifiedDisplayId;
 
     public AlexandriaDelegateDisplay(UISession session, String appUrl, String path) {
-        this.session = session;
+        this.sessionId = session.id();
+        this.clientId = session.client().id();
+        this.token = session.token().id();
         this.appUrl = appUrl;
         this.path = path;
     }
@@ -42,7 +46,8 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
     @Override
     public void refresh() {
         try {
-            post("/?operation=refreshPersonifiedDisplay", parameters());
+            if (personifiedDisplayId == null) return;
+            post("?operation=refreshPersonifiedDisplay", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
             refreshError(errorMessage("amidas"));
         }
@@ -60,9 +65,9 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
 
     private void post(String subPath, Map<String, String> parameters) throws MalformedURLException, RestfulFailure {
         URL appUrl = new URL(this.appUrl);
-        parameters.put("client", session.client().id());
-        parameters.put("session", session.id());
-        parameters.put("token", session.token().id());
+        parameters.put("client", clientId);
+        parameters.put("session", sessionId);
+        parameters.put("token", token);
         parameters.put("personifiedDisplay", personifiedDisplayId);
         new RestfulAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
     }
