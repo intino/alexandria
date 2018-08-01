@@ -13,6 +13,7 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
     private final UISession session;
     private final String appUrl;
     private final String path;
+    private String personifiedDisplayId;
 
     public AlexandriaDelegateDisplay(UISession session, String appUrl, String path) {
         this.session = session;
@@ -41,10 +42,14 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
     @Override
     public void refresh() {
         try {
-            post("/?operation=refreshDelegate", parameters());
+            post("/?operation=refreshPersonifiedDisplay", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
             refreshError(errorMessage("amidas"));
         }
+    }
+
+    public void registerPersonifiedDisplay(String id) {
+        this.personifiedDisplayId = id;
     }
 
     protected String errorMessage(String application) {
@@ -58,6 +63,7 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
         parameters.put("client", session.client().id());
         parameters.put("session", session.id());
         parameters.put("token", session.token().id());
+        parameters.put("personifiedDisplay", personifiedDisplayId);
         new RestfulAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
     }
 }

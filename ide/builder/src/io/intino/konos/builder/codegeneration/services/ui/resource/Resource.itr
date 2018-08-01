@@ -42,7 +42,8 @@ def type(resource)
 			action.box = box;
 			action.clientId = clientId;
 			action.googleApiKey = "$googleApiKey";
-			action.device = parameterValue("device");[
+			action.device = parameterValue("device");
+			action.token = parameterValue("token");[
 			$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
