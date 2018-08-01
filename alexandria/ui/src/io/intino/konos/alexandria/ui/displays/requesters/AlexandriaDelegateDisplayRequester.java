@@ -12,8 +12,8 @@ public abstract class AlexandriaDelegateDisplayRequester extends AlexandriaDispl
 	}
 
 	public <D extends AlexandriaDisplay> D personifiedDisplay() {
-		String displayId = manager.fromPath("personifiedDisplay", String.class);
-		UIClient client = manager.currentClient();
+		String displayId = manager.fromQuery("personifiedDisplay", String.class);
+		UIClient client = manager.client(manager.fromQuery("client", String.class));
 		return client == null ? null : client.soul().get(displayId);
 	}
 
