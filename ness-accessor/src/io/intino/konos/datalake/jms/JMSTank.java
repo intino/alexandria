@@ -44,8 +44,8 @@ public class JMSTank implements Datalake.Tank {
 		return "flow." + name;
 	}
 
-	public String dropChannel() {
-		return "drop." + name;
+	public String putChannel() {
+		return "put." + name;
 	}
 
 	public String feedChannel() {
@@ -57,8 +57,8 @@ public class JMSTank implements Datalake.Tank {
 		for (Message message : messages) producer.produce(fromInlMessage(message));
 	}
 
-	public void drop(io.intino.ness.inl.Message... messages) {
-		final TopicProducer producer = datalake.newProducer(dropChannel());
+	public void put(io.intino.ness.inl.Message... messages) {
+		final TopicProducer producer = datalake.newProducer(putChannel());
 		for (Message m : messages) producer.produce(onlyRegister(fromInlMessage(m)));
 	}
 

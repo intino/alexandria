@@ -1,9 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.ui.resource;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.action.UIActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
@@ -13,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static java.util.stream.Collectors.toList;
 
 public class ResourceRenderer {
 
@@ -26,6 +27,7 @@ public class ResourceRenderer {
 	private final String boxName;
 	private final List<UIService.Resource> resourceList;
 	private final Map<String, String> classes;
+	private final List<AccessibleDisplay> accessibleDisplays;
 
 	public ResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
@@ -34,18 +36,26 @@ public class ResourceRenderer {
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.resourceList = graph.core$().find(UIService.Resource.class);
+		this.accessibleDisplays = graph.accessibleDisplayList();
 		this.classes = classes;
 	}
 
 	public void execute() {
 		resourceList.forEach(this::processResource);
+		accessibleDisplays.forEach(this::processDisplay);
+	}
+
+	private void processDisplay(AccessibleDisplay display) {
+		Frame frame = new Frame().addTypes("resource", display.getClass().getSimpleName());
+		basicFrame(frame, display.name$());
+		frame.addSlot("parameter", parameters(display));
+		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(display.name$() + "ProxyResource"), template().format(frame));
+		createCorrespondingAction(display);
 	}
 
 	private void processResource(UIService.Resource resource) {
 		Frame frame = new Frame().addTypes("resource");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", resource.name$());
-		frame.addSlot("box", boxName);
+		basicFrame(frame, resource.name$());
 		frame.addSlot("parameter", parameters(resource));
 		if (resource.isEditorPage()) frame.addSlot("editor", "Editor");
 		if (resource.core$().ownerAs(UIService.class).googleApiKey() != null)
@@ -57,6 +67,10 @@ public class ResourceRenderer {
 
 	private void createCorrespondingAction(UIService.Resource resource) {
 		new UIActionRenderer(project, resource, src, gen, packageName, boxName, classes).execute();
+	}
+
+	private void createCorrespondingAction(AccessibleDisplay display) {
+		new AccessibleDisplayActionRenderer(project, display, src, packageName, boxName, classes).execute();
 	}
 
 	private Template template() {
@@ -73,9 +87,18 @@ public class ResourceRenderer {
 
 	private Frame[] parameters(UIService.Resource resource) {
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
-
 		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("name", parameter)).collect(toList()).toArray(new Frame[0]);
+				.addSlot("name", parameter)).toArray(Frame[]::new);
 	}
 
+	private Frame[] parameters(AccessibleDisplay display) {
+		return display.parameters().stream().map(parameter -> new Frame().addTypes("parameter")
+				.addSlot("name", parameter)).toArray(Frame[]::new);
+	}
+
+	private void basicFrame(Frame frame, String name) {
+		frame.addSlot("package", packageName);
+		frame.addSlot("name", name);
+		frame.addSlot("box", boxName);
+	}
 }

@@ -9,6 +9,7 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.Display.Request;
 
 import java.io.File;
+import java.util.Objects;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 
@@ -19,16 +20,16 @@ public class DisplayUpdater {
 	private Display display;
 	private String packageName;
 
-	public DisplayUpdater(Project project, Display display, File file, String packageName) {
+	DisplayUpdater(Project project, Display display, File file, String packageName) {
 		this.project = project;
 		this.factory = JavaPsiFacade.getElementFactory(project);
 		this.display = display;
 		this.packageName = packageName;
-		this.file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(file, true));
+		this.file = PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(file, true)));
 	}
 
 	public void update() {
-		if (file == null || !(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
+		if (!(file instanceof PsiJavaFile) || ((PsiJavaFile) file).getClasses()[0] == null) return;
 		PsiJavaFile javaFile = (PsiJavaFile) file;
 		final PsiClass psiClass = javaFile.getClasses()[0];
 		if (!ApplicationManager.getApplication().isWriteAccessAllowed())

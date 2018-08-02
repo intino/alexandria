@@ -31,9 +31,9 @@
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <outputDirectory>../out/production/datalake</outputDirectory>
-        <testOutputDirectory>../out/test/datalake</testOutputDirectory>
-        <directory>../out/build/datalake</directory>
+        <outputDirectory>../out/production/ness-accessor</outputDirectory>
+        <testOutputDirectory>../out/test/ness-accessor</testOutputDirectory>
+        <directory>../out/build/ness-accessor</directory>
         <finalName>${project.artifactId}-${project.version}</finalName>
 
         <plugins>

@@ -29,8 +29,8 @@ public interface Datalake {
 			return "flow." + name();
 		}
 
-		default String dropChannel() {
-			return "drop." + name();
+		default String putChannel() {
+			return "put." + name();
 		}
 
 		default String feedChannel() {
@@ -39,7 +39,7 @@ public interface Datalake {
 
 		void feed(io.intino.ness.inl.Message... message);
 
-		void drop(io.intino.ness.inl.Message... message);
+		void put(io.intino.ness.inl.Message... message);
 
 		Tank batchSession(int blockSize);
 
