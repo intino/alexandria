@@ -20,7 +20,7 @@ public class NessWrapper {
 
 	@Test
 	public void sendAttachment() {
-		final Ness ness = new Ness("file://./temp/attach", "user", "password", "");
+		final Ness ness = new Ness("file://./temp/../attach", "user", "password", "");
 		final Datalake.Tank tank = ness.add("happysense.dialog");
 		final Message message = new Message("dialog").set("name", "dialog1");
 		message.set("ts", Instant.now().toString());

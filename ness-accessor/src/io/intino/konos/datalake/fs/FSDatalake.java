@@ -6,12 +6,12 @@ import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.ness.datalake.ReflowMessageInputStream;
 import io.intino.ness.datalake.Scale;
 import io.intino.ness.datalake.graph.DatalakeGraph;
-import io.intino.ness.datalake.graph.Tank;
 import io.intino.ness.inl.Message;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class FSDatalake implements Datalake {
@@ -20,7 +20,7 @@ public class FSDatalake implements Datalake {
 
 	public FSDatalake(String url) {
 		datalake = new Graph(new ResourcesStore()).loadStashes("Datalake").as(DatalakeGraph.class);
-		final File store = new File(clean(url), "datalake");
+		final File store = datalakeDirectory(url);
 		store.mkdirs();
 		datalake.directory(store);
 		datalake.scale(scaleOf(url));
@@ -96,5 +96,13 @@ public class FSDatalake implements Datalake {
 
 	private Scale scaleOf(String url) {
 		return url.contains("?") ? Scale.valueOf(url.split("=")[1]) : Scale.Day;
+	}
+
+	private File datalakeDirectory(String url) {
+		try {
+			return new File(clean(url), "datalake").getCanonicalFile();
+		} catch (IOException e) {
+			return new File(clean(url), "datalake");
+		}
 	}
 }
