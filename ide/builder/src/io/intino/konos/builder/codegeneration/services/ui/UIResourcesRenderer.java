@@ -10,7 +10,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
@@ -19,13 +18,13 @@ import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
-public class UIRenderer {
+public class UIResourcesRenderer {
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
 	private final List<UIService> uiServiceList;
 
-	public UIRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public UIResourcesRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
@@ -73,13 +72,19 @@ public class UIRenderer {
 		Frame pathFrame = new Frame("path").addSlot("value", path).addSlot("name", resource.name$());
 		if (resource.isEditorPage()) pathFrame.addTypes("editor");
 		if (service.userHome() != null) pathFrame.addSlot("userHome", service.userHome().name$());
-		if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[custom.size()]));
+		if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[0]));
 		frame.addSlot("path", pathFrame);
 		return frame;
 	}
 
 	private Frame frameOf(Display display) {
-		final Frame frame = new Frame().addTypes("display");
+		final Frame frame = newDisplayFrame(display, new Frame("display"));
+		if (display.isAccessible())
+			frame.addTypes("accessible").addSlot("display", newDisplayFrame(display, new Frame("display", "proxy")));
+		return frame;
+	}
+
+	private Frame newDisplayFrame(Display display, Frame frame) {
 		frame.addSlot("name", display.name$()).addSlot("package", packageName);
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
@@ -91,7 +96,7 @@ public class UIRenderer {
 	}
 
 	private Template template() {
-		Template template = UITemplate.create();
+		Template template = UIResourcesTemplate.create();
 		addFormats(template);
 		return template;
 	}

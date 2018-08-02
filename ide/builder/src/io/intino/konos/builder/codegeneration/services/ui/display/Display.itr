@@ -1,3 +1,37 @@
+def type(display & accessible)
+	package $package.displays;
+
+    import $package.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaProxyDisplay;
+    import io.intino.konos.alexandria.ui.services.push.UISession;
+
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends AlexandriaProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
+        $parameter+field...[$NL]
+
+        public $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy(UISession session, String appUrl) {
+            super(session, appUrl, "/$name+SnakeCaseToCamelCase+lowercase~proxy");
+        }
+
+		$parameter+method...[$NL$NL]
+
+        @Override
+        protected Map<String, String> parameters() {
+            Map<String, String> result = new HashMap<>();
+            $parameter+map...[$NL]
+            return result;
+        }
+
+        @Override
+        protected void refreshError(String error) {
+            notifier.refreshError(error);
+        }
+
+    }
+end
+
 def type(display)
 	package $package.displays;
 
@@ -7,7 +41,6 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.ui.services.push.UISession;
     $parent+import
 
     public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~Notifier> {
@@ -26,17 +59,41 @@ def type(display)
 		}
 	]
 		$request...[$NL$NL]
+		$parameter+setter...[$NL$NL]
     }
 end
+
 def type(request & asset)
 	public io.intino.konos.alexandria.ui.spark.UIFile $name([$parameter value]) {
         return null;
 	}
 end
+
 def type(request)
 	public void $name([$parameter value]) {
 
 	}
+end
+
+def trigger(setter)
+	public void $value+firstLowerCase(String value) {
+
+	}
+end
+
+def trigger(field)
+	private String $value+firstLowerCase;
+end
+
+
+def trigger(map)
+	result.put("$value", $value+firstLowerCase);
+end
+
+def trigger(method)
+    public void $value+firstLowerCase(String value) {
+        this.$value+firstLowerCase = value;
+    }
 end
 
 def type(dateTime | date) type(list) trigger(parameter)

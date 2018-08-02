@@ -2,8 +2,8 @@ package io.intino.konos.alexandria.ui.spark.actions;
 
 import cottons.utils.StreamHelper;
 import io.intino.konos.alexandria.ui.Asset;
-import io.intino.konos.alexandria.ui.services.push.UISession;
 import io.intino.konos.alexandria.ui.services.push.Browser;
+import io.intino.konos.alexandria.ui.services.push.UISession;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +19,7 @@ public abstract class AlexandriaResourceAction {
 	public String clientId;
 	public String googleApiKey;
 	public String device;
+	public String token;
 
 	private static final String TemplateName = "/www/%s/%s.html";
 

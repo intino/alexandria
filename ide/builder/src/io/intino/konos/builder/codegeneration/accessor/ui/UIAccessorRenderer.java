@@ -161,6 +161,7 @@ public class UIAccessorRenderer {
 
 	private void createDisplayWidget(Display display) {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.isAccessible()) frame.addTypes("accessible");
 		if (display.parentDisplay() != null)
 			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
 		final boolean prototype = isPrototype(display);
@@ -213,8 +214,13 @@ public class UIAccessorRenderer {
 	}
 
 	private void writeWidget(Display display, Frame frame) {
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
+		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
 		if (!file.exists()) write(file.toPath(), customize(WidgetTemplate.create()).format(frame));
+		if (display.isAccessible()) {
+			frame.addTypes("accessible");
+			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-proxy.html");
+			write(file.toPath(), customize(WidgetTemplate.create()).format(frame));
+		}
 	}
 
 	private boolean isPrototype(Display display) {
@@ -230,16 +236,29 @@ public class UIAccessorRenderer {
 
 	private void createRequester(Display display) {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("request", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
+		if (display.isAccessible()) frame.addTypes("accessible");
+		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame));
+		if (display.isAccessible()) {
+			frame.addTypes("accessible");
+			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "proxy" + separator + "requester.js");
+			file.getParentFile().mkdirs();
+			write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame));
+		}
 	}
 
 	private void createNotifier(Display display) {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
-		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "notifier-listener.js");
+		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame));
+		if (display.isAccessible()) {
+			frame.addTypes("accessible");
+			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "proxy" + separator + "notifier-listener.js");
+			file.getParentFile().mkdirs();
+			write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame));
+		}
 	}
 
 	private Frame frameOf(Display.Notification n) {

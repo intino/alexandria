@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../out/production/datalake" />
-    <output-test url="file://$MODULE_DIR$/../out/test/datalake" />
+    <output url="file://$MODULE_DIR$/../out/production/ness-accessor" />
+    <output-test url="file://$MODULE_DIR$/../out/test/ness-accessor" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
@@ -21,7 +21,7 @@
     <orderEntry type="library" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.ness:datalake:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.ness:datalake:1.1.3" level="project" />
     <orderEntry type="library" name="Maven: io.intino.tara:magritte:2.1.8" level="project" />
     <orderEntry type="library" name="Maven: io.intino.tara:io:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware:kryo:4.0.0" level="project" />

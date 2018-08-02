@@ -1,3 +1,23 @@
+def type(widget & accessible)
+	var $name+FirstUpperCase~ProxyBehaviors = $name+FirstUpperCase~ProxyBehaviors || {};
+
+	$name+FirstUpperCase~ProxyBehaviors.NotifierListener = {
+
+		properties : {
+			_listeningToDisplay : { type: Boolean, value: function() { return false; } }
+		},
+
+		listenToDisplay : function() {
+			if (this.display == null || this._listeningToDisplay) return;
+			var widget = this;
+			this.when("refreshError").toSelf().execute(function(parameters) {
+				widget._refreshError(parameters.value);
+			});
+			this._listeningToDisplay = true;
+		}
+	};
+end
+
 def type(widget)
 	var $name+FirstUpperCase~Behaviors = $name+FirstUpperCase~Behaviors || {};
 
