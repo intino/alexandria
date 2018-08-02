@@ -130,7 +130,8 @@ end
 def type(service & ui) trigger(setup)
 	this.authService = [this.authService($authentication)?null];
 	this.editorService = [this.editorService($edition)?null];
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", this.authService, this.editorService);
+	[if($parameter != null)
+		]io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", this.authService, this.editorService);
 end
 
 def type(service & rest) trigger(setup)
@@ -155,6 +156,7 @@ def type(service & rest) trigger(rest)
 end
 
 def type(service & ui) trigger(ui)
+	[if ($parameter == null) return;]
 	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
 	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
