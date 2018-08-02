@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<N> {
+public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier> extends AlexandriaDisplay<N> {
     private final String sessionId;
     private final String clientId;
     private final String token;
@@ -17,7 +17,7 @@ public abstract class AlexandriaDelegateDisplay<N extends AlexandriaDisplayNotif
     private final String path;
     private String personifiedDisplayId;
 
-    public AlexandriaDelegateDisplay(UISession session, String appUrl, String path) {
+    public AlexandriaProxyDisplay(UISession session, String appUrl, String path) {
         this.sessionId = session.id();
         this.clientId = session.client().id();
         this.token = session.token().id();

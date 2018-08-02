@@ -5,9 +5,9 @@ import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.konos.alexandria.ui.services.push.UIClient;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 
-public abstract class AlexandriaDelegateDisplayRequester extends AlexandriaDisplayRequester {
+public abstract class AlexandriaProxyDisplayRequester extends AlexandriaDisplayRequester {
 
-	public AlexandriaDelegateDisplayRequester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public AlexandriaProxyDisplayRequester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 
