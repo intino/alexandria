@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.services.ui.display.editor.EditorR
 import io.intino.konos.builder.codegeneration.services.ui.display.mold.MoldRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.panel.PanelRenderer;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.desktop.DesktopPanel;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +61,7 @@ public class DisplayRenderer {
 		writeRequester(display, frame);
 		if (display.getClass().getSimpleName().equals(Display.class.getSimpleName())) writeDisplay(display, frame);
 		else processPrototype(display);
+		if (display.isAccessible()) writeDisplaysFor(display.asAccessible(), frame);
 	}
 
 	private void processPrototype(Display display) {
@@ -84,11 +87,20 @@ public class DisplayRenderer {
 	}
 
 	private void writeRequester(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + "Requester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
 	}
 
 	private void writeNotifier(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + "Notifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
+	}
+
+	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {
+		frame.addTypes("accessible");
+		final String name = snakeCaseToCamelCase(display.name$());
+		if (!javaFile(new File(src, DISPLAYS), name + "Proxy").exists())
+			writeFrame(new File(src, DISPLAYS), name + "Proxy", displayTemplate().format(frame.addTypes("accessible")));
+		writeNotifier(display.a$(Display.class), frame);
+		writeRequester(display.a$(Display.class), frame);
 	}
 
 	@NotNull
@@ -104,6 +116,8 @@ public class DisplayRenderer {
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
 		frame.addSlot("request", framesOfRequests(display.requestList()));
 		frame.addSlot("box", boxName);
+		if (display.isAccessible())
+			frame.addSlot("parameter", display.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
 		return frame;
 	}
 

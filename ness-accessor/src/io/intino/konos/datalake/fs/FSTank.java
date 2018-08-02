@@ -32,21 +32,23 @@ public class FSTank implements Tank {
 
 	@Override
 	public void feed(Message[] messages) {
-		datalake.drop(name, messages);
+		datalake.put(name, messages);
 	}
 
 	@Override
-	public void drop(Message[] messages) {
-		datalake.drop(name, messages);
+	public void put(Message[] messages) {
+		datalake.put(name, messages);
 	}
 
 	@Override
 	public Tank batchSession(int blockSize) {
+		datalake.tank(name).batch(blockSize);
 		return this;
 	}
 
 	@Override
 	public Tank endBatch() {
+		datalake.tank(name).endBatch();
 		return this;
 	}
 

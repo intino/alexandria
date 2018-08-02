@@ -1,3 +1,22 @@
+def type(display & accessible)
+	package $package+validPackage.displays.notifiers;
+
+	import io.intino.konos.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaProxyDisplayNotifier  {
+
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.displays.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		public void refreshError(String value) {
+			putToDisplay("refreshError", "value", value);
+		}
+    }
+end
+
 def type(display)
 	package $package+validPackage.displays.notifiers;
 
@@ -14,6 +33,7 @@ def type(display)
 		$notification...[$NL$NL]
     }
 end
+
 
 def attribute(display) trigger(type)
 	io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifier

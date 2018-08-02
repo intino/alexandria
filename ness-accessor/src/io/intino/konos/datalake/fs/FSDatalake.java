@@ -6,6 +6,7 @@ import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.ness.datalake.ReflowMessageInputStream;
 import io.intino.ness.datalake.Scale;
 import io.intino.ness.datalake.graph.DatalakeGraph;
+import io.intino.ness.datalake.graph.Tank;
 import io.intino.ness.inl.Message;
 import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.stores.ResourcesStore;
@@ -25,13 +26,17 @@ public class FSDatalake implements Datalake {
 		datalake.scale(scaleOf(url));
 	}
 
-	public void drop(String name, Message[] messages) {
-		for (Message message : messages) datalake.tank(name).drop(message);
+	public void put(String name, Message[] messages) {
+		for (Message message : messages) datalake.tank(name).put(message);
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
 		return reflow(reflow, dispatcher, () -> {
 		});
+	}
+
+	public io.intino.ness.datalake.graph.Tank tank(String name) {
+		return datalake.tank(name);
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, Runnable onFinish) {

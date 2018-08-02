@@ -19,6 +19,28 @@ def type(action) !type(ui)
 	}
 end
 
+def type(ui & accessibleDisplay)
+	package $package+validPackage.actions;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import $package+validPackage.displays.$display+snakecaseToCamelCase+firstUpperCase;
+	import io.intino.konos.alexandria.ui.displays.Soul;
+
+	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyAction extends io.intino.konos.alexandria.ui.spark.actions.AlexandriaProxyResourceAction {
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		$parameter+type...[$NL]
+		public Soul soul;
+
+		public void execute() {
+			$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
+			$parameter+methodCall...[$NL]
+			soul.register(display);
+			display.personify();
+			display.refresh();
+		}
+	}
+end
+
 def type(ui & action & gen)
 	package $package+validPackage.actions;
 
@@ -80,6 +102,10 @@ end
 
 def type(parameter) trigger(type)
 	public $type $name+snakecaseToCamelCase+FirstLowerCase;
+end
+
+def type(parameter) trigger(methodCall)
+	display.$name+snakecaseToCamelCase+FirstLowerCase($name+snakecaseToCamelCase+FirstLowerCase);
 end
 
 def type(editor) trigger(parameter)

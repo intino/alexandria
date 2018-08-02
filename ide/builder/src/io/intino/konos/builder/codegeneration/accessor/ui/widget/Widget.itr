@@ -1,3 +1,58 @@
+def type(widget & accessible)
+	<link rel="import" href="../../lib/polymer/polymer.html">
+    <link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">
+    <link rel="import" href="../../lib/cotton-carrier/cotton-carrier-behavior.html">
+    <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
+    <link rel="import" href="$name+camelCaseToSnakeCase.html">
+
+    <script src="$name+lowerCase/requester.js"></script>
+    <script src="$name+lowerCase/notifier-listener.js"></script>
+
+    <dom-module id="$name+camelCaseToSnakeCase~-proxy">
+
+        <template>
+            <div id="component"><cotton-zombie id="zombie" display="$name" widget="$name"></cotton-zombie></div>
+            <div class="layout horizontal center center-justified" style="height:100%;" hidden><div id="error" class="error">$[$[_error$]$]</div></div>
+        </template>
+
+        <style>
+            :host #component {
+                height: 100%;
+            }
+            :host .error {
+                display: none;
+                color: var(--accent-color);
+                font-size: 12pt;
+            }
+        </style>
+
+        <script>
+
+            Polymer({
+                is: '$name+camelCaseToSnakeCase~-proxy',
+
+                behaviors: $[ CottonBehaviors.CarrierBehavior,
+                    CottonBehaviors.PushBehavior,
+                    $name+firstuppercase~ProxyBehaviors.Requester,
+                    $name+firstuppercase~ProxyBehaviors.NotifierListener
+                ],
+
+                attached : function() {
+                    this.listenToDisplay();
+                    this.$$.zombie.whenPersonified().execute((widget) => this.registerPersonifiedDisplay(widget.display.id));
+                },
+
+                _refreshError : function(msg) {
+                    this.$$.component.style.display = "none";
+                    this.$$.error.style.display = "block";
+                    this.$$.error.innerHTML = msg;
+                }
+
+            });
+        </script>
+    </dom-module>
+end
+
 def type(widget)
 	<link rel="import" href="../../lib/polymer/polymer.html">
     <link rel="import" href="../../lib/cotton-push/cotton-push-behavior.html">

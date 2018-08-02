@@ -1,3 +1,15 @@
+def type(widget & accessible)
+	var $name+FirstUpperCase~ProxyBehaviors = $name+FirstUpperCase~ProxyBehaviors || {};
+
+	$name+FirstUpperCase~ProxyBehaviors.Requester = {
+
+		registerPersonifiedDisplay : function(value) {
+			this.carry("registerPersonifiedDisplay", { "value" : value });
+		}
+
+	};
+end
+
 def type(widget)
 	var $name+FirstUpperCase~Behaviors = $name+FirstUpperCase~Behaviors || {};
 
