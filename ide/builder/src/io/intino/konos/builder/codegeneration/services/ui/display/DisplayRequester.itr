@@ -1,4 +1,39 @@
-	def type(display)
+def type(display & accessible)
+	package $package+validPackage.displays.requesters;
+
+    import $package+validPackage.displays.$name+FirstUppercase;
+    import $package+validPackage.displays.$name+FirstUpperCase~Proxy;
+    import io.intino.konos.alexandria.exceptions.AlexandriaException;
+    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+    import io.intino.konos.alexandria.ui.displays.requesters.AlexandriaProxyDisplayRequester;
+    import io.intino.konos.alexandria.ui.spark.UISparkManager;
+
+    public class $name+FirstUpperCase~ProxyRequester extends AlexandriaProxyDisplayRequester {
+
+    	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+    		super(manager, notifierProvider);
+    	}
+
+    	@Override
+    	public void execute() throws AlexandriaException {
+    		String operation = operation();
+    		if (operation.equals("registerPersonifiedDisplay")) {
+    			$name+FirstUpperCase~Proxy display = display();
+    			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("value", String.class));
+    		}
+    		else if (operation.equals("refreshPersonifiedDisplay")) {
+    			$name+FirstUppercase display = personifiedDisplay();
+    			if (display != null) {
+    				$parameter...[$NL]
+    				display.refresh();
+    			}
+    		}
+    		else super.execute();
+    	}
+    }
+end
+
+def type(display)
 	package $package+validPackage.displays.requesters;
 
 	import $package+validPackage.displays.$name+FirstUpperCase;
@@ -46,6 +81,10 @@ def type(request) trigger(request)
 		display.$name($parameter);
 		return;
 	}
+end
+
+def type(parameter & accessible) trigger(parameter)
+    display.$value+firstLowercase(manager.fromQuery("$value", String.class));
 end
 
 def type(list) trigger(parameter)

@@ -11,6 +11,7 @@ import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class FSDatalake implements Datalake {
@@ -19,19 +20,23 @@ public class FSDatalake implements Datalake {
 
 	public FSDatalake(String url) {
 		datalake = new Graph(new ResourcesStore()).loadStashes("Datalake").as(DatalakeGraph.class);
-		final File store = new File(clean(url), "datalake");
+		final File store = datalakeDirectory(url);
 		store.mkdirs();
 		datalake.directory(store);
 		datalake.scale(scaleOf(url));
 	}
 
-	public void drop(String name, Message[] messages) {
-		for (Message message : messages) datalake.tank(name).drop(message);
+	public void put(String name, Message[] messages) {
+		for (Message message : messages) datalake.tank(name).put(message);
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
 		return reflow(reflow, dispatcher, () -> {
 		});
+	}
+
+	public io.intino.ness.datalake.graph.Tank tank(String name) {
+		return datalake.tank(name);
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, Runnable onFinish) {
@@ -91,5 +96,13 @@ public class FSDatalake implements Datalake {
 
 	private Scale scaleOf(String url) {
 		return url.contains("?") ? Scale.valueOf(url.split("=")[1]) : Scale.Day;
+	}
+
+	private File datalakeDirectory(String url) {
+		try {
+			return new File(clean(url), "datalake").getCanonicalFile();
+		} catch (IOException e) {
+			return new File(clean(url), "datalake");
+		}
 	}
 }

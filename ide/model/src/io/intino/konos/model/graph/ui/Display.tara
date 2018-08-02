@@ -19,6 +19,9 @@ Concept:Named Display extends Component
 		var Exception[] exceptionRefs = empty
 		has Exception
 
+Facet Accessible on Display
+	var string[] parameters
+
 Facet Addressable on Display.Request
 	var UI.Resource addressableResource
 	var boolean encoded = false

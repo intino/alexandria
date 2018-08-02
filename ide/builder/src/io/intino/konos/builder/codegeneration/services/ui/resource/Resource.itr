@@ -1,3 +1,89 @@
+def type(resource & accessibleDisplay)
+	package $package+validPackage.resources;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.actions.$name+firstUpperCase~ProxyAction;
+	import io.intino.konos.alexandria.exceptions.AlexandriaException;
+	import io.intino.konos.alexandria.exceptions.Unauthorized;
+	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.konos.alexandria.ui.displays.Soul;
+	import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
+	import io.intino.konos.alexandria.ui.services.push.UIClient;
+	import io.intino.konos.alexandria.ui.services.push.UISession;
+
+	import java.util.function.Function;
+
+	public class $name+firstUpperCase~ProxyResource extends io.intino.konos.alexandria.ui.spark.resources.ProxyResource {
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+			this.box = box;
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			fillBrowser(manager, session());
+			fillDeviceParameter();
+			try {
+				if (!isLogged(accessToken()))
+					throw new Unauthorized("user is not logged");
+
+				authenticate(session(), accessToken());
+				render();
+			} catch (CouldNotObtainInfo couldNotObtainInfo) {
+				throw new Unauthorized("user is not logged");
+			} catch (Throwable error) {
+				throw new Unauthorized("could not render component");
+			}
+		}
+
+		private void render() {
+			UIClient client = client();
+
+			$name+firstUpperCase~ProxyAction action = new $name+firstUpperCase~ProxyAction();
+			action.session = session();
+			action.session.whenLogin(new Function<String, String>() {
+				@Override
+				public String apply(String baseUrl) {
+					return $name+firstUpperCase~ProxyResource.this.authenticate(baseUrl);
+				}
+			});
+			action.session.whenLogout(b -> logout());
+			action.box = box;
+			action.clientId = client.id();
+			action.googleApiKey = "";
+			action.device = parameterValue("device");
+			$parameter...[$NL]
+
+			Soul soul = soul();
+			if (soul != null) {
+				action.soul = soul;
+				action.execute();
+				return;
+			}
+
+			soul = new Soul(action.session) {
+				@Override
+				public void personify() {
+					Soul soul = this;
+					addRegisterDisplayListener(display -> {
+						display.inject(notifier(action.session, client, display));
+						display.inject(action.session);
+						display.inject(soul);
+						display.inject(() -> soul);
+					});
+				}
+			};
+			client.soul(soul);
+			action.soul = soul;
+			action.execute();
+
+			manager.write("OK");
+		}
+	}
+end
+
 def type(resource)
 	package $package+validPackage.resources;
 
@@ -42,7 +128,8 @@ def type(resource)
 			action.box = box;
 			action.clientId = clientId;
 			action.googleApiKey = "$googleApiKey";
-			action.device = parameterValue("device");[
+			action.device = parameterValue("device");
+			action.token = parameterValue("token");[
 			$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {

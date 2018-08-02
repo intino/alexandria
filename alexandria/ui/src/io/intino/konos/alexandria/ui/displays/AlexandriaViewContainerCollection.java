@@ -44,7 +44,9 @@ public abstract class AlexandriaViewContainerCollection<N extends AlexandriaDisp
 				Object data = stamp.value(item, session());
 				if ((! (data instanceof List)) || ((List) data).size() != 1) return;
 				List<URL> values = (List<URL>)data;
-				stream = values.get(0).openStream();
+				URL url = values.get(0);
+				if (url == null) return;
+				stream = url.openStream();
 				byte[] pictureBytes = IOUtils.toByteArray(stream);
 				byte[] picture = Base64.getEncoder().encode(pictureBytes);
 				refreshPicture(PictureDataBuilder.build(item, name, "data:image/png;base64," + new String(picture)));
