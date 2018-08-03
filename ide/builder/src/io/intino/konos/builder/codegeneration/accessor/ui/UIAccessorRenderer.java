@@ -236,7 +236,6 @@ public class UIAccessorRenderer {
 
 	private void createRequester(Display display) {
 		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("request", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
-		if (display.isAccessible()) frame.addTypes("accessible");
 		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
 		write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame));
