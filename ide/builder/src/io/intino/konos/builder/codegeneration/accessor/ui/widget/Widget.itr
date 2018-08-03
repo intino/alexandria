@@ -5,8 +5,8 @@ def type(widget & accessible)
     <link rel="import" href="../../lib/cotton-zombie/cotton-zombie.html">
     <link rel="import" href="$name+camelCaseToSnakeCase.html">
 
-    <script src="$name+lowerCase/requester.js"></script>
-    <script src="$name+lowerCase/notifier-listener.js"></script>
+    <script src="$name+lowerCase~proxy/requester.js"></script>
+    <script src="$name+lowerCase~proxy/notifier-listener.js"></script>
 
     <dom-module id="$name+camelCaseToSnakeCase~-proxy">
 
