@@ -75,11 +75,13 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 
 	public void attachGrouping(String grouping) {
 		attachedGrouping = grouping;
+		refreshView();
 		refreshGrouping();
 	}
 
 	public void detachGrouping(String grouping) {
 		attachedGrouping = grouping;
+		refreshView();
 		refreshGrouping();
 	}
 
@@ -184,7 +186,6 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void refreshGrouping() {
-		refreshView();
 		refreshScope();
 		sendCatalog();
 	}

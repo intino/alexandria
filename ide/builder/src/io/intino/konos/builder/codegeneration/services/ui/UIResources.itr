@@ -54,7 +54,7 @@ def trigger(userHome)
 end
 
 def type(display & accessible) trigger(path)
-	spark.route("/$name~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute()); //AAA
+	spark.route("/$name+lowercase~proxy/:displayId/personify").post(manager -> new $name+firstUpperCase~ProxyResource(box, manager, notifierProvider()).execute()); //AAA
 end
 
 def type(display) trigger(path)
