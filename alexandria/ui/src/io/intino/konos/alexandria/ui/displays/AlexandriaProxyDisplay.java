@@ -1,5 +1,9 @@
 package io.intino.konos.alexandria.ui.displays;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import io.intino.konos.alexandria.rest.spark.ResponseAdapter;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 import io.intino.konos.restful.core.RestfulAccessor;
 import io.intino.konos.restful.exceptions.RestfulFailure;
@@ -16,6 +20,7 @@ public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier
     private final String appUrl;
     private final String path;
     private String personifiedDisplayId;
+    private static final JsonParser Parser = new JsonParser();
 
     public AlexandriaProxyDisplay(UISession session, String appUrl, String path) {
         this.sessionId = session.id();
@@ -53,6 +58,21 @@ public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier
         }
     }
 
+    protected void request(String operation) {
+        request(operation, null);
+    }
+
+    protected void request(String operation, Object object) {
+        try {
+            if (personifiedDisplayId == null) return;
+            Map<String, String> map = new HashMap<>();
+            if (object != null) map.put("value", serializeParameter(object).toString());
+            post("?operation=" + operation, map);
+        } catch (RestfulFailure | MalformedURLException error) {
+            refreshError(errorMessage("amidas"));
+        }
+    }
+
     public void registerPersonifiedDisplay(String id) {
         this.personifiedDisplayId = id;
     }
@@ -71,4 +91,15 @@ public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier
         parameters.put("personifiedDisplay", personifiedDisplayId);
         new RestfulAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
     }
+
+    private JsonElement serializeParameter(Object value) {
+        String result = ResponseAdapter.adapt(value);
+
+        try {
+            return Parser.parse(result);
+        } catch (Exception var4) {
+            return new JsonPrimitive(result);
+        }
+    }
+
 }

@@ -94,7 +94,10 @@ Display categorization
 	Request toggle as Object(RequestCategory)
 	Request refresh
 
-Display dashboard
+Display dashboard as Accessible("oooo")
+	Request open
+	Request close as Object(ScaleList)
+
 Display pivotTable
 Display error
 
