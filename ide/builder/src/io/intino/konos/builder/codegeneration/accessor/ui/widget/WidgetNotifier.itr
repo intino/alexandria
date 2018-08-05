@@ -10,6 +10,9 @@ def type(widget & accessible)
 		listenToDisplay : function() {
 			if (this.display == null || this._listeningToDisplay) return;
 			var widget = this;
+			this.when("refreshBaseUrl").toSelf().execute(function(parameters) {
+				widget._refreshBaseUrl(parameters.value);
+			});
 			this.when("refreshError").toSelf().execute(function(parameters) {
 				widget._refreshError(parameters.value);
 			});

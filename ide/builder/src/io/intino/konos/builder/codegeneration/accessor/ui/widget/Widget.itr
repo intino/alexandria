@@ -11,7 +11,7 @@ def type(widget & accessible)
     <dom-module id="$name+camelCaseToSnakeCase~-proxy">
 
         <template>
-            <div id="component"><cotton-zombie id="zombie" display="$name" widget="$name"></cotton-zombie></div>
+            <div id="component" base-url$$="$[$[_proxyBaseUrl]]"><cotton-zombie id="zombie" display="$name" widget="$name"></cotton-zombie></div>
             <div class="layout horizontal center center-justified" style="height:100%;" hidden><div id="error" class="error">$[$[_error$]$]</div></div>
         </template>
 
@@ -37,9 +37,17 @@ def type(widget & accessible)
                     $name+firstuppercase~ProxyBehaviors.NotifierListener
                 ],
 
+                properties : {
+                	_proxyBaseUrl: String
+                },
+
                 attached : function() {
                     this.listenToDisplay();
                     this.$$.zombie.whenPersonified().execute((widget) => this.registerPersonifiedDisplay(widget.display.id));
+                },
+
+                _refreshBaseUrl : function(url) {
+                	this._proxyBaseUrl = url;
                 },
 
                 _refreshError : function(msg) {

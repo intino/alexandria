@@ -69,8 +69,13 @@ def type(path)
 	spark.route("$value"[$custom...[]]).get(manager -> new $name+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
+def type(display & proxy) trigger(notifier)
+	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase~Proxy.class);
+end
+
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);
+	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);[
+	$display+notifier]
 end
 
 def type(dialog) trigger(notifier)
