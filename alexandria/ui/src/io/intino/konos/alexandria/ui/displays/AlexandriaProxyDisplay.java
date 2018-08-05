@@ -36,12 +36,14 @@ public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier
     }};
 
     protected abstract Map<String, String> parameters();
+    protected abstract void refreshBaseUrl(String appUrl);
     protected abstract void refreshError(String error);
 
     @Override
     protected void init() {
         super.init();
         try {
+            refreshBaseUrl(appUrl);
             post("/personify", parameters());
         } catch (RestfulFailure | MalformedURLException error) {
             refreshError(errorMessage("amidas"));
