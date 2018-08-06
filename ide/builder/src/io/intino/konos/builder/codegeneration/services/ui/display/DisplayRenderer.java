@@ -97,8 +97,7 @@ public class DisplayRenderer {
 	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {
 		frame.addTypes("accessible");
 		final String name = snakeCaseToCamelCase(display.name$());
-		if (!javaFile(new File(src, DISPLAYS), name + "Proxy").exists())
-			writeFrame(new File(src, DISPLAYS), name + "Proxy", displayTemplate().format(frame.addTypes("accessible")));
+		writeFrame(new File(src, DISPLAYS), name + "Proxy", displayTemplate().format(frame.addTypes("accessible")));
 		writeNotifier(display.a$(Display.class), frame);
 		writeRequester(display.a$(Display.class), frame);
 	}

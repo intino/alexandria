@@ -11,6 +11,10 @@ def type(display & accessible)
             super(display, carrier);
         }
 
+		public void refreshBaseUrl(String value) {
+			putToDisplay("refreshBaseUrl", "value", value);
+		}
+
 		public void refreshError(String value) {
 			putToDisplay("refreshError", "value", value);
 		}
