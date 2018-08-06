@@ -21,14 +21,17 @@ def type(display & accessible)
     			$name+FirstUpperCase~Proxy display = display();
     			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("value", String.class));
     		}
-    		else if (operation.equals("refreshPersonifiedDisplay")) {
-    			$name+FirstUppercase display = personifiedDisplay();
-    			if (display != null) {
-    				$parameter...[$NL]
-    				display.refresh();
-    			}
+    		else {
+				$name+FirstUppercase display = personifiedDisplay();
+				if (display == null) return;
+				if (operation.equals("refreshPersonifiedDisplay")) {
+					$parameter...[$NL]
+					display.refresh();
+					return;
+				}
+				[else $request...[$NL~else ]]
+				super.execute();
     		}
-    		else super.execute();
     	}
     }
 end

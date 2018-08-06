@@ -7,9 +7,9 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.indexing.FileBasedIndex;
+import com.intellij.util.indexing.ID;
 import io.intino.konos.builder.file.KonosFileType;
 import io.intino.tara.plugin.lang.psi.TaraModel;
 
@@ -27,7 +27,7 @@ public class KonosUtils {
 
 	private static List<PsiFile> konosFiles(Module module) {
 		List<PsiFile> konosFiles = new ArrayList<>();
-		Collection<VirtualFile> files = FileBasedIndex.getInstance().getContainingFiles(FileTypeIndex.NAME, KonosFileType.instance(), GlobalSearchScope.moduleScope(module));
+		Collection<VirtualFile> files = FileBasedIndex.getInstance().getContainingFiles(ID.create("filetypes"), KonosFileType.instance(), GlobalSearchScope.moduleScope(module));
 		files.stream().filter(Objects::nonNull).forEach(file -> {
 			TaraModel konosFile = (TaraModel) PsiManager.getInstance(module.getProject()).findFile(file);
 			if (konosFile != null) konosFiles.add(konosFile);

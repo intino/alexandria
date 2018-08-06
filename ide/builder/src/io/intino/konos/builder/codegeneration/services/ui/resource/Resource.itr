@@ -78,6 +78,7 @@ def type(resource & accessibleDisplay)
 			client.soul(soul);
 			action.soul = soul;
 			action.execute();
+			box.registerSoul(client.id(), soul);
 
 			manager.write("OK");
 		}

@@ -1,6 +1,6 @@
 dsl Konos
 
-Service Platform-Web as UI(title = "", favicon = "", port = "")
+Service Platform-Web as UI(title = "", favicon = "", port = "{port}")
 	Resource("/") homePage as DisplayPage(analytics) Root
 	Resource("/user") userHomePage as DisplayPage(analyze) Root Confidential
 	Resource("/analytics/:sample") analyticsPage as DisplayPage(analytics)
@@ -94,7 +94,10 @@ Display categorization
 	Request toggle as Object(RequestCategory)
 	Request refresh
 
-Display dashboard
+Display dashboard as Accessible("oooo")
+	Request open
+	Request close as Object(ScaleList)
+
 Display pivotTable
 Display error
 

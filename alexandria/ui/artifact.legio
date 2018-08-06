@@ -1,7 +1,7 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.1.5") alexandria-ui
-	Box(language = "Konos", version= "4.2.2", sdk = "4.2.2")
+Artifact(groupId = "io.intino.konos", version = "1.1.7") alexandria-ui
+	Box(language = "Konos", version= "4.2.3", sdk = "4.2.3")
 		targetPackage = ""
 	Code ("io.intino.konos.alexandria.ui")
 	Imports

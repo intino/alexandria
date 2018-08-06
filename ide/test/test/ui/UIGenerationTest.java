@@ -25,7 +25,7 @@ public class UIGenerationTest {
 
 
 	@Test
-	public void testActivityAndDisplays() throws Exception {
+	public void testUiAndDisplays() throws Exception {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
