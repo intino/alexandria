@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
+import spark.Route;
 import spark.Service;
 
 import java.util.function.Consumer;
@@ -31,7 +32,7 @@ public class SparkRouter<SM extends SparkManager> {
 	}
 
 	public void get(AlexandriaSpark.ResourceCaller<SM> caller) {
-		service.get(path, (rq, rs) -> execute(caller, manager(rq, rs)));
+		service.get(path, (rq, rs) -> SparkRouter.this.execute(caller, SparkRouter.this.manager(rq, rs)));
 	}
 
 	public void post(AlexandriaSpark.ResourceCaller<SM> caller) {
@@ -93,6 +94,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
+			manager.response.body();
 			return e.message();
 		}
 		return "OK";

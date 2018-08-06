@@ -27,6 +27,7 @@ import io.intino.legio.graph.Artifact.Imports.Dependency;
 import io.intino.plugin.IntinoException;
 import io.intino.plugin.project.LegioConfiguration;
 import io.intino.plugin.project.LibraryConflictResolver.Version;
+import io.intino.plugin.project.LibraryConflictResolver.VersionRange;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
 
 import static com.intellij.notification.NotificationType.ERROR;
 import static com.intellij.notification.NotificationType.INFORMATION;
+import static io.intino.plugin.project.LibraryConflictResolver.VersionRange.isRange;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.*;
 
 public class CreateKonosBoxAction extends KonosAction {
@@ -81,25 +83,27 @@ public class CreateKonosBoxAction extends KonosAction {
 	}
 
 	private void updateDependencies(Module module, Map<String, String> requiredLibraries) {
-		final LegioConfiguration configuration = (LegioConfiguration) TaraUtil.configurationOf(module);
-		final List<Dependency> dependencies = configuration.graph().artifact().imports().dependencyList();
-		configuration.addCompileDependencies(requiredLibraries.keySet().stream().
-				filter(dep -> findDependency(dependencies, dep) == null).
+		final LegioConfiguration conf = (LegioConfiguration) TaraUtil.configurationOf(module);
+		final List<Dependency> dependencies = conf.graph().artifact().imports().dependencyList();
+		conf.addCompileDependencies(requiredLibraries.keySet().stream().
+				filter(dep -> findDependency(dependencies, dep) == null || (conf.groupId() + ":" + conf.artifactId()).equals(dep)).
 				map(dep -> dep + ":" + requiredLibraries.get(dep)).
 				collect(Collectors.toList()));
-		configuration.updateCompileDependencies(requiredLibraries.keySet().stream().
+		conf.updateCompileDependencies(requiredLibraries.keySet().stream().
 				filter(dep -> {
 					final Dependency dependency = findDependency(dependencies, dep);
 					return dependency != null && isOlder(dependency, requiredLibraries.get(dep));
 				}).
 				map(dep -> dep + ":" + requiredLibraries.get(dep)).
 				collect(Collectors.toList()));
-		configuration.reload();
+		conf.reload();
 	}
 
 	private boolean isOlder(Dependency dependency, String version) {
 		try {
-			return new Version(dependency.effectiveVersion()).compareTo(new Version(version)) < 0;
+			final String dependencyVersion = dependency.effectiveVersion();
+			if (isRange(dependencyVersion)) return !VersionRange.isInRange(version, VersionRange.rangeValuesOf(dependencyVersion));
+			return new Version(dependencyVersion).compareTo(new Version(version)) < 0;
 		} catch (IntinoException e) {
 			LOG.error(e);
 			return false;
@@ -121,7 +125,10 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
 		if (konosGraph.nessClientList().isEmpty()) remove(dependencies, "ness-accessor");
 		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
-		if (konosGraph.rESTServiceList().isEmpty()) remove(dependencies, "rest");
+		if (konosGraph.rESTServiceList().isEmpty()) {
+			remove(dependencies, "rest");
+			remove(dependencies, "ui");
+		}
 		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		return dependencies;
 	}
