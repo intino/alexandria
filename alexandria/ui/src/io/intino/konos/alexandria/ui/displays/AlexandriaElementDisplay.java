@@ -49,6 +49,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	private TimeRange range;
 	private List<String> enabledViews = null;
 	private AlexandriaDialogBox dialogBox = null;
+	private AlexandriaPanel openedItemPanel = null;
 
 	public AlexandriaElementDisplay(Box box) {
 		super(box);
@@ -222,7 +223,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public <V extends AlexandriaElementView> Optional<V> currentView() {
-		return Optional.ofNullable((V) currentView);
+		return Optional.ofNullable((V)this.currentView);
 	}
 
 	public TimeScale scale() {
@@ -241,7 +242,12 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public void refresh(Item... objects) {
-		currentView().ifPresent(v -> v.refresh(ElementHelper.items(objects, this, baseAssetUrl())));
+		Optional<AlexandriaElementView> optionalView = currentView();
+
+		if (objects.length == 1 && openedItem != null && openedItem.name().equals(objects[0].name()))
+			optionalView = openedItemPanel.currentView();
+
+		optionalView.ifPresent(v -> v.refresh(ElementHelper.items(objects, this, baseAssetUrl())));
 	}
 
 	public void home() {
@@ -469,9 +475,13 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 	}
 
 	public AlexandriaPanel createPanelDisplay(OpenItemEvent event) {
-		AlexandriaPanel display = elementDisplayManager.createElement(event.panel(), event.item());
-		display.range(event.range());
-		return display;
+		openedItemPanel = elementDisplayManager.createElement(event.panel(), event.item());
+		openedItemPanel.range(event.range());
+		return openedItemPanel;
+	}
+
+	public boolean isItemPanelOpened() {
+		return openedItem != null && openedItemPanel != null;
 	}
 
 	public Item item(String key) {
