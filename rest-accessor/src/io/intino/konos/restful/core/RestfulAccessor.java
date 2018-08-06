@@ -17,6 +17,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.tika.io.IOUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -406,12 +407,16 @@ public class RestfulAccessor implements RestfulApi {
 		}
 
 		int status = response.getStatusLine().getStatusCode();
-		if (status < 200 || status >= 300) {
-			String errorMessage = response.containsHeader("error-message") ? response.getFirstHeader("error-message").getValue() : "";
-			final String format = String.format("%s => %d - %s", url, status, response.getStatusLine().getReasonPhrase() + ". " + errorMessage);
-			throw new RestfulFailure(String.valueOf(status), format);
-		}
+		if (status < 200 || status >= 300) throw new RestfulFailure(String.valueOf(status), getErrorMessage(response));
 		return responseOf(response);
+	}
+
+	private String getErrorMessage(HttpResponse response) {
+		try {
+			return new String(IOUtils.toByteArray(response.getEntity().getContent()));
+		} catch (IOException e) {
+			return "";
+		}
 	}
 
 	private HttpEntity entityOf(Map<String, String> parameters) throws RestfulFailure {
