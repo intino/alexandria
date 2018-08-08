@@ -43,28 +43,34 @@ def type(sensor) trigger(class)
 		$parent+field
 
 		public Abstract$name+FirstUpperCase~Sensor() {
-			$parent+super
+			$parent+super[
+			$width][
+			$height]
 		}
 
 		$parent+methods
 	}
 end
 
+def type(width)
+	width($value);
+end
+
+def type(height)
+	height($value);
+end
+
 def type(documentEdition) trigger(super)
 	super("$mode");
 end
-
-
 
 def type(documentSignature) trigger(super)
 	super("$signType", "$signFormat");
 end
 
-
 def type(formEdition) trigger(super)
 	super("$path");
 end
-
 
 def type(poll) trigger(field)
 	private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();
