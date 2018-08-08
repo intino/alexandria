@@ -15,6 +15,7 @@
             this._catalog = catalog;
             this._showLabel = catalog.embedded && catalog.label !== "";
             this._hideGroupings = this._catalog.hideGroupings;
+            if (!$(this.$.panel).hasClass("hidden")) $(this.$.main).addClass("hidden");
         },
 
         _refreshFiltered : function(value) {

@@ -10,6 +10,7 @@ import io.intino.konos.model.graph.documentsignature.DocumentSignatureSensor;
 import io.intino.konos.model.graph.formedition.FormEditionSensor;
 import io.intino.konos.model.graph.ness.NessClient;
 import io.intino.konos.model.graph.poll.PollSensor;
+import io.intino.konos.model.graph.usersensor.UserSensorSensor;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
@@ -64,11 +65,19 @@ public class FeederRenderer {
 	}
 
 	private Frame frameOf(Sensor sensor, String feeder) {
-		return new Frame("sensor").
+		Frame frame = new Frame("sensor").
 				addSlot("name", sensor.name$()).
 				addSlot("feeder", feeder).
-				addSlot("type", sensor.core$().conceptList().stream().map(c -> c.id().replaceAll("#.*", "")).toArray(String[]::new)).
+				addSlot("type", sensor.core$().conceptList().get(0).id().replaceAll("#.*", "") + "Sensor").
 				addSlot("parent", parent(sensor));
+
+		if (sensor.isUserSensor()) {
+			UserSensorSensor userSensor = sensor.asUserSensor();
+			if (userSensor.width() != 100) frame.addSlot("width", new Frame("width").addSlot("value", userSensor.width()));
+			if (userSensor.height() != 100) frame.addSlot("height", new Frame("height").addSlot("value", userSensor.height()));
+		}
+
+		return frame;
 	}
 
 	private Frame parent(Sensor sensor) {

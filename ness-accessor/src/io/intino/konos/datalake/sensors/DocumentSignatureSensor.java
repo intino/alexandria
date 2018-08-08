@@ -1,8 +1,6 @@
 package io.intino.konos.datalake.sensors;
 
-import io.intino.konos.datalake.Sensor;
-
-public abstract class DocumentSignatureSensor extends Sensor {
+public abstract class DocumentSignatureSensor extends UserSensor {
 	private final SignType signType;
 	private final SignFormat signFormat;
 
