@@ -152,7 +152,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		}
 
 		itemList.addAll(newItemList);
-		createGroupingManager(filteredItemList(new TimeRange(boundingRangeFrom, boundingRangeTo, moreItemsRange.scale()), defaultScope(),null));
+		createGroupingManager(filteredItemList(new TimeRange(boundingRangeFrom, boundingRangeTo, moreItemsRange != null ? moreItemsRange.scale() : range().scale()), defaultScope(),null));
 		reloadGroupings();
 	}
 

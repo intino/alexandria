@@ -17,7 +17,6 @@ def type(feeder)
 	}
 end
 
-
 def type(sensor) trigger(class)
 	public static class $name+FirstUpperCase~Sensor extends Abstract$name+FirstUpperCase~Sensor {
 
@@ -29,8 +28,6 @@ def type(sensor) trigger(class)
 		$parent+methods
 	}
 end
-
-
 
 def type(poll) trigger(get)
 	public Message get(Object... args) {
