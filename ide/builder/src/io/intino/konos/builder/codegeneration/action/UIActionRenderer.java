@@ -8,6 +8,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
@@ -41,6 +42,7 @@ public class UIActionRenderer extends ActionRenderer {
 		if (resource.isEditorPage()) frame.addSlot("editor", new Frame("editor"));
 		frame.addSlot("component", componentFrame());
 		frame.addSlot("parameter", parameters());
+		service.useList().stream().map(use -> frame.addSlot("usedAppUrl", new Frame("usedAppUrl", isCustom(use.url()) ? "custom" : "standard").addSlot("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
 		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
 		else if (service.title() != null) frame.addSlot("title", service.title());
 		classes.put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + "Action");
@@ -63,6 +65,14 @@ public class UIActionRenderer extends ActionRenderer {
 		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
 				.addSlot("type", "String")
 				.addSlot("name", parameter)).toArray(Frame[]::new);
+	}
+
+	private boolean isCustom(String value) {
+		return value != null && value.startsWith("{");
+	}
+
+	private String customValue(String value) {
+		return value != null ? value.substring(1, value.length() - 1) : "";
 	}
 
 }
