@@ -60,7 +60,7 @@ def type(resource)
             <script>
                 var configuration = {};
                 configuration.googleApiKey = "$$googleApiKey";
-                configuration.pushServiceUrl = "$$pushUrl";
+                configuration.pushServices = "$$pushUrls".split(",");
 
                 launchApplication(configuration);
             </script>
