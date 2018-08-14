@@ -147,7 +147,7 @@ def trigger(handler)
 	$processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process $processName+snakeCaseToCamelCase+FirstLowerCase = new $processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process();
 	$processName+snakeCaseToCamelCase+FirstLowerCase.box = box;
 	$processName+snakeCaseToCamelCase+FirstLowerCase.$type+typeName = $type+load;
-	$processName+snakeCaseToCamelCase+FirstLowerCase.outputs = java.util.Arrays.asList($output+quoted...[, ]);
+	$processName+snakeCaseToCamelCase+FirstLowerCase.outputs = java.util.Arrays.asList($output+quoted+lowercase...[, ]);
 	$processName+snakeCaseToCamelCase+FirstLowerCase.execute();
 end
 
