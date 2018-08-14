@@ -43,8 +43,8 @@
             attached : function() {
                 this.translate(AlexandriaViewContainerMoldDictionary);
                 this.listenToDisplay();
-                this.addEventListener("navigate-item", (e) => this.fire("open-item", e));
-                this.addEventListener("navigate-element", (e) => this.fire("open-element", e));
+                this.addEventListener("navigate-item", (e) => this.fire("open-item", e.detail));
+                this.addEventListener("navigate-element", (e) => this.fire("open-element", e.detail));
             }
 
         });
