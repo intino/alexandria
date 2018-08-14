@@ -103,7 +103,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private boolean viewContainsCatalogWithLabel(CatalogContainer container, String label) {
 		Catalog catalog = container.catalog();
-		return catalog.label() != null && catalog.label().equals(label);
+		return catalog.name().equals(label) || (catalog.label() != null && catalog.label().equals(label));
 	}
 
 	@Override
