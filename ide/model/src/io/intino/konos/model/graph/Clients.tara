@@ -8,9 +8,10 @@ Facet Ness on Client
 	var string url
 	var string user
 	var string password
-	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
+	var word:{Normal Transacted} mode = Normal
+	var boolean requireConnection = false
 	has Mounter
 	has:Named Feeder
 
@@ -23,17 +24,21 @@ Concept:Named Feeder is component
 
 Concept:Named Sensor is component
 
-Facet FormEdition on Sensor
+Facet UserSensor on Sensor
+	var integer:{%} width = 100%
+	var integer:{%} height = 100%
+
+Facet FormEdition extends UserSensor on Sensor
 	var string path
 
-Facet DocumentEdition on Sensor
+Facet DocumentEdition extends UserSensor on Sensor
 	var word:{Offline Online} mode = Online
 
-Facet DocumentSignature on Sensor
+Facet DocumentSignature extends UserSensor on Sensor
 	var word:{Sign CoSign CounterSign} signType
 	var word:{Pkcs7 XadesAttached XadesDetached CadesAttached CadesDetached} signFormat
 
-Facet Poll on Sensor
+Facet Poll extends UserSensor on Sensor
 	var string defaultOption = empty
 	Concept Option
 		var string value

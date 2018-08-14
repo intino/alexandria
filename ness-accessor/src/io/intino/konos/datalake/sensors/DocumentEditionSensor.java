@@ -1,8 +1,6 @@
 package io.intino.konos.datalake.sensors;
 
-import io.intino.konos.datalake.Sensor;
-
-public abstract class DocumentEditionSensor extends Sensor {
+public abstract class DocumentEditionSensor extends UserSensor {
 	private final Mode mode;
 
 	public enum Mode { Offline, Online };

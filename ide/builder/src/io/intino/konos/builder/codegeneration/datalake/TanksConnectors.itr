@@ -92,8 +92,7 @@ def type(tank) trigger(getter)
 end
 
 def type(tank) type(mounter | input) trigger(subscribe)
-	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box));
-	$name+firstLowerCase.flow(clientID != null ? clientID + "-$name+lowerCase" : null);
+	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box)).flow(clientID != null ? clientID + "-$name+lowerCase" : null);
 end
 
 def type(custom) trigger(replace)
@@ -135,15 +134,21 @@ def type(tank & input) trigger(class)
 
 		public void handle(io.intino.ness.inl.Message m) {
 			try {
-				$processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process process = new $processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process();
-				process.box = box;
-				process.$type+typeName = $type+load;
-				process.execute();
+				$handler...[$NL]
 			} catch(Throwable e) {
 				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			}
 		}
 	}
+end
+
+
+def trigger(handler)
+	$processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process $processName+snakeCaseToCamelCase+FirstLowerCase = new $processPackage+lowerCase.$processName+snakeCaseToCamelCase+FirstUpperCase~Process();
+	$processName+snakeCaseToCamelCase+FirstLowerCase.box = box;
+	$processName+snakeCaseToCamelCase+FirstLowerCase.$type+typeName = $type+load;
+	$processName+snakeCaseToCamelCase+FirstLowerCase.outputs = java.util.Arrays.asList($output+quoted...[, ]);
+	$processName+snakeCaseToCamelCase+FirstLowerCase.execute();
 end
 
 def trigger(replace)
@@ -168,4 +173,8 @@ end
 
 def trigger(typeName)
 	message
+end
+
+def trigger(quoted)
+	"$value"
 end

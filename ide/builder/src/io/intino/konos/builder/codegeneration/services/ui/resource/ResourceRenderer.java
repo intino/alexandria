@@ -54,12 +54,13 @@ public class ResourceRenderer {
 	}
 
 	private void processResource(UIService.Resource resource) {
+		UIService uiService = resource.core$().ownerAs(UIService.class);
 		Frame frame = new Frame().addTypes("resource");
 		basicFrame(frame, resource.name$());
 		frame.addSlot("parameter", parameters(resource));
 		if (resource.isEditorPage()) frame.addSlot("editor", "Editor");
-		if (resource.core$().ownerAs(UIService.class).googleApiKey() != null)
-			frame.addSlot("googleApiKey", resource.core$().ownerAs(UIService.class).googleApiKey());
+		if (uiService.googleApiKey() != null)
+			frame.addSlot("googleApiKey", uiService.googleApiKey());
 		if (resource.isConfidential()) frame.addSlot("confidential", "");
 		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(resource.name$() + "Resource"), template().format(frame));
 		createCorrespondingAction(resource);

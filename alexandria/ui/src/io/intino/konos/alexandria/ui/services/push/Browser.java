@@ -49,7 +49,11 @@ public class Browser {
     }
 
     public String pushUrl(String sessionId, String clientId, String language) {
-        String result = baseUrl().replace("https", "wss").replace("http", "ws");
+        return pushUrl(sessionId, clientId, language, baseUrl());
+    }
+
+    public String pushUrl(String sessionId, String clientId, String language, String url) {
+        String result = url.replace("https", "wss").replace("http", "ws");
         result += String.format(PushPath, clientId, sessionId, language);
         return result;
     }

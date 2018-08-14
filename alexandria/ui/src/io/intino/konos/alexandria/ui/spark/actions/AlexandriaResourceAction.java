@@ -8,6 +8,9 @@ import io.intino.konos.alexandria.ui.services.push.UISession;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -31,17 +34,21 @@ public abstract class AlexandriaResourceAction {
 	protected abstract URL favicon();
 
 	protected String template(String name) {
+		return template(name, Collections.emptyList());
+	}
+
+	protected String template(String name, List<String> usedAppsUrls) {
 		try {
 			byte[] templateBytes = StreamHelper.readBytes(AlexandriaResourceAction.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
 			String result = new String(templateBytes);
-			result = addTemplateVariables(result);
+			result = addTemplateVariables(result, usedAppsUrls);
 			return result;
 		} catch (IOException e) {
 			return "";
 		}
 	}
 
-	protected String addTemplateVariables(String template) {
+	protected String addTemplateVariables(String template, List<String> usedAppsUrls) {
 		String sessionId = session.id();
 		String language = session.discoverLanguage();
 		Browser browser = session.browser();
@@ -53,11 +60,17 @@ public abstract class AlexandriaResourceAction {
 		template = template.replace("$baseUrl", browser.baseUrl());
 		template = template.replace("$basePath", browser.basePath());
 		template = template.replace("$url", browser.baseUrl() + "/" + uiServiceName);
-		template = template.replace("$pushUrl", browser.pushUrl(sessionId, clientId, language));
+		template = template.replace("$pushUrls", String.join(",", pushUrls(usedAppsUrls, sessionId, language, browser)));
 		template = template.replace("$googleApiKey", googleApiKey);
 		template = template.replace("$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
 
 		return template;
+	}
+
+	private List<String> pushUrls(List<String> usedAppsUrls, String sessionId, String language, Browser browser) {
+		List<String> pushList = usedAppsUrls.stream().map(appUrl-> browser.pushUrl(sessionId, clientId, language, appUrl)).collect(Collectors.toList());
+		pushList.add(browser.pushUrl(sessionId, clientId, language));
+		return pushList;
 	}
 
 	private URL baseAssetUrl() {
