@@ -5,6 +5,6 @@
   "io.intino.konos:alexandria-scheduler": "1.0.6",
   "io.intino.konos:alexandria-slack": "1.0.12",
   "io.intino.konos:alexandria-ui": "1.1.7",
-  "io.intino.konos:alexandria-ness-accessor": "2.4.6",
+  "io.intino.konos:alexandria-ness-accessor": "2.4.7",
   "io.intino.konos:alexandria-rest-accessor-java": "1.1.7"
 }

@@ -8,9 +8,10 @@ Facet Ness on Client
 	var string url
 	var string user
 	var string password
-	var word:{Normal Transacted} mode = Normal
 	var string domain
 	var string clientID
+	var word:{Normal Transacted} mode = Normal
+	var boolean requireConnection = false
 	has Mounter
 	has:Named Feeder
 

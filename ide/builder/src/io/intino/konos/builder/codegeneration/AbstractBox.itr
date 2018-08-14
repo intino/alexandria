@@ -188,6 +188,16 @@ def type(service & jms) trigger(jms)
 	}
 end
 
+def type(dataLake & requireConnection) trigger(init)
+	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
+	this.ness.connect("$mode");
+	$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	registerFeeders();
+	$nessOperations
+	if (this.ness.session() != null) logger.info("Ness connection: started!");
+end
+
+
 def type(dataLake) trigger(init)
 	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
 	java.lang.Thread thread = new java.lang.Thread(() -> {

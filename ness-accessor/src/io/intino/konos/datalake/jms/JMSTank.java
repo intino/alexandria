@@ -2,6 +2,7 @@ package io.intino.konos.datalake.jms;
 
 import io.intino.konos.datalake.Datalake;
 import io.intino.konos.datalake.MessageHandler;
+import io.intino.konos.jms.Consumer;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import io.intino.ness.inl.Message;
@@ -12,6 +13,7 @@ import javax.jms.JMSException;
 
 import static io.intino.konos.datalake.Datalake.REGISTER_ONLY;
 import static io.intino.konos.datalake.MessageTranslator.fromInlMessage;
+import static io.intino.konos.datalake.MessageTranslator.toInlMessage;
 
 public class JMSTank implements Datalake.Tank {
 	private static Logger logger = LoggerFactory.getLogger(JMSTank.class);
@@ -27,8 +29,9 @@ public class JMSTank implements Datalake.Tank {
 	}
 
 	@Override
-	public void handler(MessageHandler handler) {
+	public Datalake.Tank handler(MessageHandler handler) {
 		this.handler = handler;
+		return this;
 	}
 
 	@Override
@@ -74,13 +77,16 @@ public class JMSTank implements Datalake.Tank {
 		return this;
 	}
 
-
 	public TopicConsumer flow(String flowID) {
 		if (datalake.session() == null) logger.error("Session is null");
 		this.flow = new TopicConsumer(datalake.session(), flowChannel());
-		if (flowID != null) this.flow.listen(handler, flowID);
-		else this.flow.listen(handler);
+		if (flowID != null) this.flow.listen(dispatcher(), flowID);
+		else this.flow.listen(dispatcher());
 		return this.flow;
+	}
+
+	private Consumer dispatcher() {
+		return m -> handler.handle(toInlMessage(m));
 	}
 
 	public void unregister() {
