@@ -191,6 +191,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	}
 
 	protected void refreshScope() {
+		if (isItemPanelOpened()) return;
 		currentView().ifPresent(viewDisplay -> {
 			if (viewDisplay instanceof AlexandriaViewContainerDisplay)
 				((AlexandriaViewContainerDisplay) viewDisplay).refresh(scopeWithAttachedGrouping());

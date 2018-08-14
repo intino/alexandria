@@ -1,11 +1,9 @@
 package io.intino.konos.datalake.sensors;
 
-import io.intino.konos.datalake.Sensor;
-
 import java.util.Collections;
 import java.util.List;
 
-public abstract class PollSensor extends Sensor {
+public abstract class PollSensor extends UserSensor {
 	private final String defaultOption;
 	private final List<Option> options;
 
