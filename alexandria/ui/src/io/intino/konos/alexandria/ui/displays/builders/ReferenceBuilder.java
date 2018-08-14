@@ -59,6 +59,7 @@ public class ReferenceBuilder {
 
         if (layout == View.Layout.Tab) return "tab";
         if (layout == View.Layout.LeftFixed) return "left-fixed";
+        if (layout == View.Layout.Summary) return "summary";
         if (layout == View.Layout.RightFixed) return "right-fixed";
 
         return "";

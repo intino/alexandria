@@ -25,6 +25,18 @@
     <template>
         <cotton-breadcrumbs class="breadcrumbs" items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class="layout vertical flex" style="height:100%;">
+            <div class="summary" hidden$="[[!_hasSummaryViews]]">
+                <template is="dom-repeat" items="[[_viewList]]" as="view">
+                    <template is="dom-if" if="[[_isSummaryLayoutView(view)]]">
+                        <template is="dom-if" if="[[_isMoldContainer(view)]]">
+                            <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                        </template>
+                        <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                            <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                        </template>
+                    </template>
+                </template>
+            </div>
             <div class$="tabs tabs_[[_showTabs]]">
                 <paper-tabs selected="{{_selectedView}}" scrollable no-bar hidden="[[!_showTabs]]" attr-for-selected="name">
                     <template is="dom-repeat" items="[[_viewList]]" as="view">
@@ -34,7 +46,7 @@
                     </template>
                 </paper-tabs>
             </div>
-            <div class="fixed left">
+            <div class="fixed left" hidden$="[[!_hasLeftFixedViews]]">
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
@@ -76,7 +88,7 @@
                     </template>
                 </template>
             </iron-pages>
-            <div class="fixed right">
+            <div class="fixed right" hidden$="[[!_hasRightFixedViews]]">
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
@@ -225,6 +237,7 @@
                 _showTabs : Boolean,
                 _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' },
                 _selectedPage : { type: Number, value: function () { return 0; } },
+                _hasSummaryViews : { type: Boolean, value: function() { return false; }},
                 _hasLeftFixedViews : { type: Boolean, value: function() { return false; }},
                 _hasRightFixedViews : { type: Boolean, value: function() { return false; }}
             },
@@ -238,6 +251,7 @@
             _refreshViewList : function(viewList) {
                 this._viewList = viewList;
                 this._showTabs = viewList.length > 1;
+                this._hasSummaryViews = this._countSummaryViews() > 0;
                 this._hasLeftFixedViews = this._countLeftFixedViews() > 0;
                 this._hasRightFixedViews = this._countRightFixedViews() > 0;
             },
@@ -245,6 +259,13 @@
             _refreshSelectedView : function(name) {
                 if (this._selectedView == name) return;
                 this._selectedView = name;
+            },
+
+            _countSummaryViews : function() {
+                var count = 0;
+                for (var i=0; i<this._viewList.length; i++)
+                    if (this._isSummaryLayoutView(this._viewList[i])) count++;
+                return count;
             },
 
             _countLeftFixedViews : function() {
@@ -259,6 +280,10 @@
                 for (var i=0; i<this._viewList.length; i++)
                     if (this._isRightFixedLayoutView(this._viewList[i])) count++;
                 return count;
+            },
+
+            _isSummaryLayoutView : function(view) {
+                return view.referencePropertyList[1].value == "summary";
             },
 
             _isLeftFixedLayoutView : function(view) {
