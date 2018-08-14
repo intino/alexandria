@@ -76,7 +76,8 @@ public class AbstractBoxRenderer {
 			datalake.addSlot("parameter", new Frame(isCustom(client.user()) ? "custom" : "standard").addSlot("value", client.user()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.password()) ? "custom" : "standard").addSlot("value", client.password()));
 			datalake.addSlot("parameter", new Frame(isCustom(client.clientID()) ? "custom" : "standard").addSlot("value", client.clientID()));
-			datalake.addSlot("feeder", client.feederList().stream().map(f -> frameOf(f)).toArray(Frame[]::new));
+			datalake.addSlot("feeder", client.feederList().stream().map(this::frameOf).toArray(Frame[]::new));
+			if (client.requireConnection()) datalake.addTypes("requireConnection");
 			if (!graph.procedureList().isEmpty())
 				datalake.addSlot("procedure", new Frame().addSlot("package", packageName).addSlot("configuration", name)); //TODO
 			if (hasModel)

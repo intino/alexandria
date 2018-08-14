@@ -2,6 +2,7 @@ package io.intino.konos.datalake.fs;
 
 import io.intino.konos.datalake.Datalake.Tank;
 import io.intino.konos.datalake.MessageHandler;
+import io.intino.konos.datalake.jms.JMSTank;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
@@ -16,8 +17,9 @@ public class FSTank implements Tank {
 	}
 
 	@Override
-	public void handler(MessageHandler handler) {
+	public Tank handler(MessageHandler handler) {
 		this.handler = handler;
+		return this;
 	}
 
 	@Override

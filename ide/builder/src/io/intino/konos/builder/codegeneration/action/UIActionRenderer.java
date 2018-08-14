@@ -74,5 +74,4 @@ public class UIActionRenderer extends ActionRenderer {
 	private String customValue(String value) {
 		return value != null ? value.substring(1, value.length() - 1) : "";
 	}
-
 }

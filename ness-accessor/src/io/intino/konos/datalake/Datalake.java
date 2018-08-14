@@ -1,5 +1,6 @@
 package io.intino.konos.datalake;
 
+import io.intino.konos.datalake.jms.JMSTank;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
@@ -19,7 +20,7 @@ public interface Datalake {
 	void connect(String... args);
 
 	interface Tank {
-		void handler(MessageHandler handler);
+		Tank handler(MessageHandler handler);
 
 		void handle(Message message);
 

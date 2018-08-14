@@ -20,27 +20,18 @@ public class TanksConnectorsRenderer {
 	private final File gen;
 	private final String packageName;
 	private final String boxName;
+	private final KonosGraph graph;
 	private final Set<EventSource> eventSources;
 	private final Set<FeederEventSource> eventFeederSources;
 
-	public TanksConnectorsRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public TanksConnectorsRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		this.graph = graph;
 		this.gen = gen;
 		this.packageName = packageName;
 		this.boxName = boxName;
 		this.datalake = graph.nessClient(0);
-		this.eventSources = new TreeSet((Comparator<EventSource>) (o1, o2) -> compare(o1, o2));
-		final List<EventSource> c = graph.core$().find(EventSource.class);
-		c.sort(inputFirst());
-		this.eventSources.addAll(c);
+		this.eventSources = collectEventSources(graph);
 		this.eventFeederSources = collectNewFeederSources(graph.nessClientList().stream().map(NessClient::feederList).flatMap(Collection::stream).collect(Collectors.toList()));
-	}
-
-	private Comparator<? super EventSource> inputFirst() {
-		return (Comparator<EventSource>) (o1, o2) -> {
-			if (o1.i$(Input.class) && !o2.i$(Input.class)) return -1;
-			if (o2.i$(Input.class) && !o1.i$(Input.class)) return 1;
-			return 0;
-		};
 	}
 
 	public void execute() {
@@ -64,18 +55,36 @@ public class TanksConnectorsRenderer {
 	}
 
 	private Frame frameOf(EventSource source) {
+		final String name = composedName(source);
 		final Frame frame = new Frame().addTypes("tank", source.getClass().getSimpleName().toLowerCase()).
-				addSlot("name", composedName(source)).
+				addSlot("name", name).
 				addSlot("box", boxName).
-				addSlot("processPackage", source.i$(Input.class) ? packageName + ".procedures." + source.core$().ownerAs(Procedure.class).name$() : "").
-				addSlot("processName", source.i$(Input.class) ? source.core$().ownerAs(Procedure.Process.class).name$() : "").
 				addSlot("messageType", fullName(source));
-		if (source.schema() != null)
-			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.schema().name$()));
-		else frame.addSlot("type", "message");
+		if (source.i$(Input.class)) frame.addSlot("handler", handlers(name));
+		type(source, frame);
 		return frame;
 	}
 
+	private Frame[] handlers(String name) {
+		final List<Input> inputs = graph.core$().find(Input.class).stream().filter(s -> composedName(s).equals(name)).collect(Collectors.toList());
+		List<Frame> frames = new ArrayList<>();
+		for (Input input : inputs) {
+			final Frame frame = new Frame("handler").
+					addSlot("box", boxName).
+					addSlot("processPackage", input.i$(Input.class) ? packageName + ".procedures." + input.core$().ownerAs(Procedure.class).name$() : "").
+					addSlot("output", input.core$().ownerAs(Procedure.Process.class).outputList().stream().map(this::fullName).toArray(String[]::new)).
+					addSlot("processName", input.i$(Input.class) ? input.core$().ownerAs(Procedure.Process.class).name$() : "");
+			type(input, frame);
+			frames.add(frame);
+		}
+		return frames.toArray(new Frame[0]);
+	}
+
+	private void type(EventSource source, Frame frame) {
+		if (source.schema() != null)
+			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.schema().name$()));
+		else frame.addSlot("type", "message");
+	}
 
 	private Frame frameOf(FeederEventSource source) {
 		final Frame frame = new Frame().addTypes("tank").
@@ -113,6 +122,11 @@ public class TanksConnectorsRenderer {
 		});
 	}
 
+	private String fullName(Procedure.Process.Output output) {
+		final String domain = output.core$().ownerAs(Procedure.class).ness().domain();
+		final String subdomain = output.subdomain();
+		return (domain.isEmpty() ? "" : domain + ".") + (subdomain.isEmpty() ? "" : subdomain + ".") + output.name();
+	}
 
 	private Set<FeederEventSource> collectNewFeederSources(List<Feeder> feeders) {
 		Set<FeederEventSource> sources = new TreeSet((Comparator<FeederEventSource>) (o1, o2) -> compare(o1, o2));
@@ -138,6 +152,22 @@ public class TanksConnectorsRenderer {
 		return o1.fullName().toLowerCase().compareTo(o2.fullName().toLowerCase());
 	}
 
+	private Set<EventSource> collectEventSources(KonosGraph graph) {
+		Set<EventSource> events = new TreeSet((Comparator<EventSource>) (o1, o2) -> compare(o1, o2));
+		final List<EventSource> c = graph.core$().find(EventSource.class);
+		c.sort(inputFirst());
+		events.addAll(c);
+		return events;
+	}
+
+	private Comparator<? super EventSource> inputFirst() {
+		return (Comparator<EventSource>) (o1, o2) -> {
+			if (o1.i$(Input.class) && !o2.i$(Input.class)) return -1;
+			if (o2.i$(Input.class) && !o1.i$(Input.class)) return 1;
+			return 0;
+		};
+	}
+
 	private static class FeederEventSource {
 
 		String domain;
@@ -153,7 +183,6 @@ public class TanksConnectorsRenderer {
 		private String fullName() {
 			return (domain.isEmpty() ? "" : domain + ".") + (subdomain.isEmpty() ? "" : subdomain + ".") + name;
 		}
-
 
 		private String composedName() {
 			return firstUpperCase((subdomain.isEmpty() ? "" : snakeCaseToCamelCase().format(subdomain.replace(".", "_"))) + firstUpperCase(name));

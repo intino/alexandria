@@ -10,7 +10,7 @@ Procedure(ness=client) gestionarSolicitud
 		Output(SolicitudRevisada)
 
 	Process decidirAccionParaSolicitud
-		Input(SolicitudRevisada)
+		Input(RequerimientoSolicitado)
 		Output(RequerimientoSolicitado)
 		Output(EscritoSolicitado)
 		Output(InformePropuestaSolicitado)
@@ -133,16 +133,12 @@ Procedure(ness=client) gestionarSolicitud
 Client client as Ness(url = "", user = "", password = "", domain = "", clientID = "")
 	Feeder(SolicitudCompletada) solicitudCompletada
 		Sensor defecto as FormEdition(path="/editor/solicitud/completar")
-			width = 10%
-			height = 50%
 
 	Feeder(SolicitudRevisada) solicitudRevisada
 		Sensor defecto as FormEdition(path="/editor/solicitud/revisar")
-			height = 50%
 
 	Feeder(RequerimientoSolicitado EscritoSolicitado InformePropuestaSolicitado SolicitudArchivada) decidirSolicitud
 		Sensor decidirSolicitud as Poll
-			height = 50%
 
 			Option("Requerir", RequerimientoSolicitado)
 			Option("Realizar escrito", EscritoSolicitado)
@@ -152,7 +148,6 @@ Client client as Ness(url = "", user = "", password = "", domain = "", clientID 
 
 	Feeder(RequerimientoCreado) tipoRequerimiento
 		Sensor decidirRequerimiento as Poll
-			height = 50%
 
 			Option("Requerimiento tipo 1", RequerimientoCreado)
 			Option("Requerimiento tipo 2", RequerimientoCreado)

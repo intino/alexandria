@@ -22,12 +22,10 @@ public class AmidasGenerationTest {
 				new RESTAccessorRenderer(a, new File("test-gen/" + AMIDAS), AMIDAS).execute());
 	}
 
-
 	@Test
 	public void testProcesses() {
 		File gen = new File("test-gen", PROCESSES);
 		KonosGraph graph = new Graph().loadStashes("Processes").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, PROCESSES).execute();
 	}
-
 }
