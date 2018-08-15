@@ -1,6 +1,13 @@
 package io.intino.konos.alexandria.ui.model.dialog;
 
-import io.intino.konos.alexandria.ui.schemas.Resource;
+import io.intino.konos.alexandria.schema.Resource;
+import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
+import io.intino.konos.alexandria.ui.schemas.DialogInputResourceFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public class Value {
     private Object value;
@@ -34,7 +41,11 @@ public class Value {
 
     public Resource asResource() {
         if (value == null) return null;
-        return (Resource) value;
+        if (value instanceof Resource) return (Resource) value;
+        DialogInputResourceFile fileValue = (DialogInputResourceFile)value;
+        String file = fileValue.data();
+        InputStream data = new ByteArrayInputStream(decodeBase64(file.split(",")[1].replace(" ", "+")));
+        return new Resource(fileValue.name()).data(data);
     }
 
     public Object asObject() {
@@ -49,7 +60,7 @@ public class Value {
     public String toString() {
         if (value == null) return "";
         if (value instanceof String) return (String) value;
-        if (value instanceof Resource) return ((Resource) value).value();
+        if (value instanceof DialogInputResource) return ((DialogInputResource) value).file().data();
         return String.valueOf(value);
     }
 

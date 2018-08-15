@@ -1,6 +1,8 @@
 package io.intino.konos.alexandria.ui.displays;
 
+import cottons.utils.StreamHelper;
 import io.intino.konos.alexandria.Box;
+import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.alexandria.ui.displays.builders.DialogBuilder;
 import io.intino.konos.alexandria.ui.displays.builders.ValidationBuilder;
 import io.intino.konos.alexandria.ui.model.Dialog;
@@ -8,19 +10,19 @@ import io.intino.konos.alexandria.ui.model.dialog.DialogResult;
 import io.intino.konos.alexandria.ui.schemas.DialogInput;
 import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
 import io.intino.konos.alexandria.ui.spark.UIFile;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.apache.commons.codec.binary.Base64.decodeBase64;
 
 public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogNotifier, Box> {
 	private int width;
@@ -130,18 +132,18 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	}
 
 	public UIFile downloadResource(String path) {
-		io.intino.konos.alexandria.ui.schemas.Resource resource = dialog.input(path).value().asResource();
+		Resource resource = dialog.input(path).value().asResource();
 
 		return new UIFile() {
 			@Override
 			public String label() {
-				return resource.name();
+				return resource.id();
 			}
 
 			@Override
 			public InputStream content() {
-				String value = resource.value();
-				return new ByteArrayInputStream(value == null || value.isEmpty() ? new byte[0] : decodeBase64(value.split(",")[1].replace(" ", "+")));
+				InputStream value = resource.data();
+				return value != null ? value : new ByteArrayInputStream(new byte[0]);
 			}
 		};
 	}
@@ -205,9 +207,16 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 	}
 
 	private DialogValidator.Result validateResource(FormInput formInput) {
-		Dialog.Tab.Resource resource = (Dialog.Tab.Resource)formInput.input();
-		List<io.intino.konos.alexandria.ui.schemas.Resource> resourceValues = formInput.input().values().asResource();
-		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(io.intino.konos.alexandria.ui.schemas.Resource::name, o -> Base64.decodeBase64(o.value())));
+		Dialog.Tab.Resource resource = (Dialog.Tab.Resource) formInput.input();
+		List<Resource> resourceValues = formInput.input().values().asResource();
+		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(Resource::id, r -> {
+			try {
+				return StreamHelper.readBytes(r.data());
+			} catch (IOException e) {
+				Logger.getGlobal().severe(e.getMessage());
+				return null;
+			}
+		}));
 
 		DialogValidator.Result result = resource.validateMaxSize(valuesMap);
 		if (result != null) return result;
