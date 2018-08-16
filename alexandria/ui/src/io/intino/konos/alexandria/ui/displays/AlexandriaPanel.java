@@ -103,7 +103,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 
 	private boolean viewContainsCatalogWithLabel(CatalogContainer container, String label) {
 		Catalog catalog = container.catalog();
-		return catalog.label() != null && catalog.label().equals(label);
+		return catalog.name().equals(label) || (catalog.label() != null && catalog.label().equals(label));
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		super.init();
 		createDialogContainer();
 		sendViewList();
-		buildFixedViews();
+		buildSummaryAndFixedViews();
 		selectDefaultView();
 	}
 
@@ -138,8 +138,8 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		return reference;
 	}
 
-	public void buildFixedViews() {
-		views().stream().filter(v -> v.layout() == View.Layout.LeftFixed || v.layout() == View.Layout.RightFixed).forEach(v -> buildView(v.name()).refresh());
+	public void buildSummaryAndFixedViews() {
+		views().stream().filter(v -> v.layout() == View.Layout.Summary || v.layout() == View.Layout.LeftFixed || v.layout() == View.Layout.RightFixed).forEach(v -> buildView(v.name()).refresh());
 	}
 
 	private AlexandriaViewContainer buildView(String name) {

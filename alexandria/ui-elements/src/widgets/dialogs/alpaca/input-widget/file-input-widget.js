@@ -29,9 +29,9 @@ var AlpacaFileInputWidget = function() {
         toBase64(files[0], function(base64File) {
             document.resourceManager.uploadResource({
                 path: document.pathOf(input),
-                file: {
+                file : {
                     name: files[0].name,
-                    value: base64File
+                    data: base64File
                 }
             });
         });
@@ -85,7 +85,7 @@ var AlpacaFileInputConverter = function() {
     function addEvents(alpacaInput, input) {
         return {
             change : function(event) {
-                AlpacaFileInputWidget.upload(input, event.target.files);
+                AlpacaFileInputWidget.upload(this, event.target.files);
             }
         }
     }

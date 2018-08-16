@@ -1,6 +1,6 @@
 package io.intino.konos.alexandria.ui.model.dialog;
 
-import io.intino.konos.alexandria.ui.schemas.Resource;
+import io.intino.konos.alexandria.schema.Resource;
 
 import java.util.ArrayList;
 import java.util.List;

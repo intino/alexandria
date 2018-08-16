@@ -53,7 +53,11 @@ Schema DialogInput
 
 Schema DialogInputResource
 	Attribute path as Text
-	Attribute file as File
+	Attribute file as Object(DialogInputResourceFile)
+
+Schema DialogInputResourceFile
+	Attribute name as Text
+	Attribute data as Text
 
 Schema DisplayReference
 	Attribute label as Text
@@ -214,10 +218,6 @@ Schema ReferenceProperty
 Schema RequestRange
 	Attribute from as DateTime
 	Attribute to as DateTime
-
-Schema Resource
-	Attribute name as Text
-	Attribute value as Text
 
 Schema ChangeItemParameters
 	Attribute stamp as Text
