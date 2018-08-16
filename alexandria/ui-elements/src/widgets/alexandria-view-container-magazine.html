@@ -41,8 +41,8 @@
                 this.translate(AlexandriaViewContainerMagazine);
                 this.translate(AlexandriaBehaviors.ViewBehavior.Dictionary);
                 this.listenToDisplay();
-                this.addEventListener("navigate-item", (e) => this.fire("open-item", e));
-                this.addEventListener("navigate-element", (e) => this.fire("open-element", e));
+                this.addEventListener("navigate-item", (e) => this.fire("open-item", e.detail));
+                this.addEventListener("navigate-element", (e) => this.fire("open-element", e.detail));
             }
         });
     </script>

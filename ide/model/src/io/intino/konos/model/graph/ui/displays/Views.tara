@@ -8,7 +8,7 @@ use Mold
 Concept View
 	var string label
 	var word:{HiddenEnabled HiddenDisabled} hidden = HiddenDisabled
-	var word:{Tab LeftFixed RightFixed} layout = Tab
+	var word:{Tab LeftFixed RightFixed Summary} layout = Tab
 	var integer:{%} width = 100%
 
 Facet Container on View is abstract

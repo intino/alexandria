@@ -12,7 +12,7 @@ public class View {
 	private Container container;
 
 	public enum Layout {
-		Tab, LeftFixed, RightFixed
+		Summary, Tab, LeftFixed, RightFixed
 	}
 
 	public String name() {

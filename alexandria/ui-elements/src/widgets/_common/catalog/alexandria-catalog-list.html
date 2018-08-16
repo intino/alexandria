@@ -95,6 +95,7 @@
     <style>
         :host .toolbar {
             padding: 10px 18px 8px;
+            @apply(--alexandria-catalog-toolbar);
         }
         :host .toolbar .search-box {
             border: 1px solid #ddd;
@@ -348,9 +349,9 @@
                 var height = -1;
                 list.querySelectorAll(".item.container").forEach(function(container) {
                     if (height == -1) height = $(container).height();
-                        $(container).height(height);
+                    $(container).height(height);
                 });
-                }, 100);
+            }, 100);
             },
 
             _listOffsetHeight : function() {
@@ -472,11 +473,11 @@
                 if (this.selectedItemList == null) return;
                 this._selectionChangeTimeout = window.setTimeout(() => {
                     this.$.items.fire("iron-resize");
-                    let items = this.selectionOf(this.$.items).items;
-                    this.fire("select-items", items);
-                    this._updateSizeForItems(items);
-                    this._updateCheckboxes(items);
-                }, 100);
+                let items = this.selectionOf(this.$.items).items;
+                this.fire("select-items", items);
+                this._updateSizeForItems(items);
+                this._updateCheckboxes(items);
+            }, 100);
             },
 
             _clearSelection : function() {
