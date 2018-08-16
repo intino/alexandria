@@ -1,12 +1,12 @@
 def type(desktop)
 	package $package.displays;
 
+	import io.intino.konos.alexandria.Base64;
 	import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
 	import io.intino.konos.alexandria.ui.displays.AlexandriaElementDisplay;
 	import io.intino.konos.alexandria.ui.model.Element;
 	import io.intino.konos.alexandria.ui.model.panel.Desktop;
 	import io.intino.konos.alexandria.ui.model.View;
-	import io.intino.konos.alexandria.ui.utils.Base64;
 	import io.intino.konos.alexandria.ui.utils.IOUtils;
 
 	import $package+validPackage.$box+firstUpperCase~Box;

@@ -1,4 +1,4 @@
-package io.intino.konos.alexandria.ui.utils;
+package io.intino.konos.alexandria;
 
 public class Base64 {
 	private Base64() {
