@@ -1,9 +1,10 @@
 package io.intino.konos.alexandria.ui.spark.resources;
 
+import io.intino.konos.alexandria.exceptions.AlexandriaException;
+import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifier;
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
-import io.intino.konos.alexandria.ui.displays.MessageCarrier;
 import io.intino.konos.alexandria.ui.services.AuthService;
 import io.intino.konos.alexandria.ui.services.AuthService.Authentication;
 import io.intino.konos.alexandria.ui.services.auth.SessionAuthService;
@@ -11,13 +12,12 @@ import io.intino.konos.alexandria.ui.services.auth.Space;
 import io.intino.konos.alexandria.ui.services.auth.Token;
 import io.intino.konos.alexandria.ui.services.auth.UserInfo;
 import io.intino.konos.alexandria.ui.services.auth.exceptions.*;
+import io.intino.konos.alexandria.ui.services.push.Browser;
 import io.intino.konos.alexandria.ui.services.push.UIClient;
 import io.intino.konos.alexandria.ui.services.push.UISession;
-import io.intino.konos.alexandria.ui.services.push.Browser;
 import io.intino.konos.alexandria.ui.services.push.User;
 import io.intino.konos.alexandria.ui.spark.UISparkManager;
 import io.intino.konos.alexandria.ui.utils.RequestHelper;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

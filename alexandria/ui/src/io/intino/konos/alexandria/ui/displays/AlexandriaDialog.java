@@ -107,7 +107,6 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 
 	public void removeValue(String path) {
 		dialog.unRegister(path);
-		refresh(dialog.input(path), path);
 	}
 
 	private void refresh(Dialog.Tab.Input input, String path) {

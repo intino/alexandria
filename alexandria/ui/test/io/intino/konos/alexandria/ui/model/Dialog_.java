@@ -14,7 +14,7 @@ public class Dialog_ {
     @Test
     public void should_load_section_values() throws Exception {
         Map<String, Object> paths = new HashMap() {{ put("Jobs.0.Tipo", "Screen On"); put("Jobs.1.Tipo", "Screen Off"); }};
-        Form form = Form.fromMap(paths, input -> "text");
+        Form form = Form.fromMap(paths, typeResolver());
         Dialog dialog = createTest1Dialog(form);
 
         assertEquals(dialog.input("Jobs").values().size(), 2);
@@ -28,7 +28,7 @@ public class Dialog_ {
     @Test
     public void should_load_deep_section_values() throws Exception {
         Map<String, Object> paths = new HashMap() {{ put("Section 1.0.Section 2.0.Campo 1", "A"); put("Section 1.0.Section 2.1.Campo 1", "B"); }};
-        Form form = Form.fromMap(paths, input -> "text");
+        Form form = Form.fromMap(paths, typeResolver());
         Dialog dialog = createTest2Dialog(form);
 
         assertEquals(dialog.input("Section 1").values().size(), 1);
@@ -80,6 +80,20 @@ public class Dialog_ {
         section2.createComboBox().source(input -> new ArrayList<String>() {{ add("A"); add("B"); }}).label("Campo 1");
         section.createText().label("Campo 2");
         return tab;
+    }
+
+    private Form.TypeResolver typeResolver() {
+        return new Form.TypeResolver() {
+            @Override
+            public String type(Form.Input input) {
+                return type(input.name());
+            }
+
+            @Override
+            public String type(String inputName) {
+                return inputName.contains("Jobs") || inputName.contains("Section") ? "section" : "text";
+            }
+        };
     }
 
 }

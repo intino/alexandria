@@ -1,9 +1,4 @@
-package io.intino.konos.alexandria.ui.displays;
-
-import io.intino.konos.alexandria.rest.pushservice.Client;
-import io.intino.konos.alexandria.rest.pushservice.Message;
-import io.intino.konos.alexandria.rest.pushservice.PushService;
-import io.intino.konos.alexandria.rest.pushservice.Session;
+package io.intino.konos.alexandria.rest.pushservice;
 
 import java.util.Map;
 
