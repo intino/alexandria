@@ -101,7 +101,7 @@ public class CreateKonosBoxAction extends KonosAction {
 
 	private boolean isOlder(Dependency dependency, String version) {
 		try {
-			final String dependencyVersion = dependency.effectiveVersion();
+			final String dependencyVersion = dependency.effectiveVersion().isEmpty() ? dependency.version() : dependency.effectiveVersion();
 			if (isRange(dependencyVersion)) return !VersionRange.isInRange(version, VersionRange.rangeValuesOf(dependencyVersion));
 			return new Version(dependencyVersion).compareTo(new Version(version)) < 0;
 		} catch (IntinoException e) {

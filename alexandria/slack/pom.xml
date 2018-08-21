@@ -6,7 +6,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-slack</artifactId>
     <name>Slack</name>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
 
 
     <repositories>
@@ -111,7 +111,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-core</artifactId>
-            <version>1.0.3</version>
+            <version>[1.0.3, 2.0.0)</version>
         </dependency>
     </dependencies>
 </project>
