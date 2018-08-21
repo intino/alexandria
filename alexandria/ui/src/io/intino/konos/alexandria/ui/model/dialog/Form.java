@@ -48,10 +48,6 @@ public class Form {
         return inputsMap.get(name).get(pos);
     }
 
-    private boolean exists(String name) {
-        return exists(name, 0);
-    }
-
     private boolean exists(String name, int pos) {
         name = normalizeName(name);
         return inputsMap.containsKey(name) && inputsMap.get(name).size() > pos && inputsMap.get(name).get(pos) != null;
@@ -72,7 +68,6 @@ public class Form {
         if (!exists(names[0], position)) register(names[0], position, Input.create(path, typeResolver));
 
         Input input = input(names[0], position);
-        if (!isMultiple(path)) input.clear();
         return input.register(Arrays.copyOfRange(names, isMultiple(names) ? 2 : 1, names.length), value);
     }
 
@@ -85,7 +80,18 @@ public class Form {
         }
 
         String parentPath = String.join(Dialog.PathSeparator, Arrays.copyOfRange(pathArray, 0, pathArray.length-1));
-        find(parentPath).remove(pathArray[pathArray.length-1], position(path));
+        if (inputsMap.containsKey(parentPath)) {
+            if (isMultiple(path)) {
+                inputsMap.get(parentPath).remove(position(path));
+                if (inputsMap.get(parentPath).size() <= 0)
+                    inputsMap.remove(parentPath);
+            }
+            else inputsMap.remove(parentPath);
+            return;
+        }
+
+        Input input = find(parentPath);
+        if (input != null) input.remove(pathArray[pathArray.length-1], position(path));
     }
 
     private void remove(String name, int pos) {
@@ -110,7 +116,7 @@ public class Form {
 
     public static class Input {
         private transient String name;
-        private Values values = new Values();
+        private Value value;
         protected transient TypeResolver typeResolver;
 
         public Input(String name, TypeResolver typeResolver) {
@@ -118,19 +124,17 @@ public class Form {
             this.typeResolver = typeResolver;
         }
 
-        public Input clear() {
-            this.values.clear();
-            return this;
-        }
-
         public Input register(String[] path, Object value) {
-            this.values.add(new Value(value));
+            this.value = new Value(value);
             return this;
         }
 
-        protected void register(List<Object> values) {
-            this.values.clear();
-            values.forEach(v -> values.add(new Value(v)));
+        protected void register(Object value) {
+            this.value = new Value(value);
+        }
+
+        public void remove(String name, int pos) {
+            this.value = null;
         }
 
         public String name() {
@@ -142,39 +146,26 @@ public class Form {
         }
 
         public Value value() {
-            return values.size() > 0 ? values.get(0) : null;
-        }
-
-        public Values values() {
-            return values;
+            return value;
         }
 
         public Input value(Object value) {
-            this.values.clear();
-            this.values.add(new Value(value));
-            return this;
-        }
-
-        public Input values(List<Object> values) {
-            register(values);
+            this.value = new Value(value);
             return this;
         }
 
         private static Input create(String path, TypeResolver resolver) {
             String[] names = path.split(Dialog.PathSeparatorRegExp);
-            return isSection(path) ? new Section(names[0], resolver) : new Input(names[0], resolver);
+            String type = resolver.type(names[0]);
+            return type.toLowerCase().equals("section") ? new Section(names[0], resolver) : new Input(names[0], resolver);
         }
 
         private static Input create(String[] path, TypeResolver resolver) {
-            return isSection(path) ? new Section(path[0], resolver) : new Input(path[0], resolver);
+            return create(String.join(Dialog.PathSeparator, path), resolver);
         }
 
         public Input find(String[] path) {
             return this;
-        }
-
-        public void remove(String name, int pos) {
-            values.remove(pos);
         }
     }
 
@@ -212,7 +203,8 @@ public class Form {
 
         @Override
         public Value value() {
-            return new Value(structure());
+            Structure structure = structure();
+            return structure.size() > 0 ? new Value(structure) : null;
         }
 
         private Structure structure() {
@@ -231,13 +223,12 @@ public class Form {
 
         @Override
         public Input register(String[] path, Object value) {
-            if (path.length == 0) return null;
+            if (path.length == 0) return this;
 
             int position = position(path);
             if (!exists(path[0], position)) register(path[0], position, Input.create(path, typeResolver));
 
             Input input = input(path[0], position);
-            if (!isMultiple(path)) input.clear();
             return input.register(Arrays.copyOfRange(path, isMultiple(path) ? 2 : 1, path.length), value);
         }
 
@@ -264,7 +255,7 @@ public class Form {
 
     private static int position(String path) {
         if (!isMultiple(path)) return 0;
-        if (!isSection(path)) return 0;
+        //if (!isSection(path)) return 0;
 
         Matcher matcher = Pattern.compile("^[^\\.]*\\.([0-9]+)").matcher(path);
         if (!matcher.find()) return 0;
@@ -273,7 +264,7 @@ public class Form {
     }
 
     private static int position(String[] path) {
-        return isSection(path) ? position(String.join(Dialog.PathSeparator, path)) : 0;
+        return position(String.join(Dialog.PathSeparator, path));
     }
 
     private static boolean isMultiple(String path) {
@@ -301,5 +292,6 @@ public class Form {
 
     public interface TypeResolver {
         String type(Input input);
+        String type(String inputName);
     }
 }
