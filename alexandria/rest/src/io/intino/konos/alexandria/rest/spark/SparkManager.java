@@ -34,8 +34,12 @@ public class SparkManager {
 		setUpSessionCookiePath();
 	}
 
-	public PushService pushService() {
-		return this.pushService;
+	public SparkPushService pushService() {
+		return (SparkPushService) this.pushService;
+	}
+
+	public SparkSession currentSession() {
+		return (SparkSession) pushService.session(request.session().id());
 	}
 
 	public void write(Object object) {
