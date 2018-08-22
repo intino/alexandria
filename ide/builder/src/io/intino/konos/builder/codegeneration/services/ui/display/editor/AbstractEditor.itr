@@ -1,8 +1,8 @@
 def type(editor & gen)
-	package $package.displays;
+	package $package.ui.displays;
 
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.*;
+    import $package+validPackage.ui.displays.*;
     import $package+validPackage.dialogs.*;
 	import io.intino.konos.alexandria.ui.displays.AlexandriaEditor;
 

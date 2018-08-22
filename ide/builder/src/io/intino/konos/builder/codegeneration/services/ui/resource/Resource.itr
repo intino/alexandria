@@ -1,5 +1,5 @@
 def type(resource & accessibleDisplay)
-	package $package+validPackage.resources;
+	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~ProxyAction;
@@ -86,7 +86,7 @@ def type(resource & accessibleDisplay)
 end
 
 def type(resource)
-	package $package+validPackage.resources;
+	package $package+validPackage.ui.resources;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;

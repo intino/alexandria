@@ -32,7 +32,7 @@ public class MessageFactory {
 		try {
 			if (object instanceof java.io.File || object instanceof byte[]) {
 				ActiveMQBytesMessage bytesMessage = new ActiveMQBytesMessage();
-				bytesMessage.writeBytes(object instanceof Byte[] ? (byte[]) object : Files.readAllBytes(((File) object).toPath()));
+				bytesMessage.writeBytes(object instanceof byte[] ? (byte[]) object : Files.readAllBytes(((File) object).toPath()));
 				return bytesMessage;
 			}
 			final ActiveMQTextMessage message = new ActiveMQTextMessage();

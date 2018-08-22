@@ -23,7 +23,7 @@ def type(ui & accessibleDisplay)
 	package $package+validPackage.actions;
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
-	import $package+validPackage.displays.$display+snakecaseToCamelCase+firstUpperCase;
+	import $package+validPackage.ui.displays.$display+snakecaseToCamelCase+firstUpperCase;
 	import io.intino.konos.alexandria.ui.displays.Soul;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyAction extends io.intino.konos.alexandria.ui.spark.actions.AlexandriaProxyResourceAction {

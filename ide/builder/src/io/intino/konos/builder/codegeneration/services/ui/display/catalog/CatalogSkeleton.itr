@@ -1,5 +1,5 @@
 def type(catalog)
-	package $package.displays;
+	package $package.ui.displays;
 
     import io.intino.konos.alexandria.ui.Resource;
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;

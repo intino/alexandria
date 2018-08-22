@@ -1,11 +1,13 @@
 package io.intino.konos.datalake;
 
+import io.intino.konos.datalake.Datalake.User;
 import io.intino.konos.datalake.fs.FSDatalake;
 import io.intino.konos.datalake.fs.FSTank;
 import io.intino.konos.datalake.jms.JMSDatalake;
 import io.intino.konos.datalake.jms.JMSTank;
 
 import javax.jms.Session;
+import java.util.List;
 
 import static io.intino.konos.datalake.Datalake.Tank;
 
@@ -42,4 +44,7 @@ public class Ness {
 		return datalake instanceof JMSDatalake ? new JMSTank(tank, ((JMSDatalake) datalake)) : new FSTank(tank, (FSDatalake) datalake);
 	}
 
+	public List<User> users() {
+		return datalake.users();
+	}
 }

@@ -15,7 +15,7 @@ import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
 public class DisplaysRenderer {
-	private static final String DISPLAYS = "displays";
+	private static final String DISPLAYS = "ui/displays";
 
 	private final File gen;
 	private final String packageName;

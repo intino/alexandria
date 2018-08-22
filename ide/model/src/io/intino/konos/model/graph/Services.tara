@@ -38,11 +38,11 @@ Facet REST on Service
 			var string url
 	Concept:CheckPath Resource
 		var string path
-		Concept:Named Parameter extends Parameter
-			var string description = ""
-			var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
-			//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
-			//TODO in debe ser form.
+		Concept:Named Parameter extends Parameter is component
+        	var string description = ""
+        	var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
+        	//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
+        	//TODO in debe ser form.
 		Concept:CheckFileParameter Operation
 			var string[] tags = empty
 			var string summary = ""
@@ -60,6 +60,13 @@ Facet REST on Service
 			has:{0..1} Response
 			var Exception[] exceptionRefs = empty
 			has Exception
+	Concept:Named Notification
+		var string path
+		Concept:Named Parameter extends Parameter is component
+        	var string description = ""
+        	var word:{body path form header query} in //TODO si body: requerido que este definido como "fomat"
+        	//TODO si no, debe ser cualquier otro y en caso de ser tipo file el consumes debe ser "multipart/form-data" y el
+        	//TODO in debe ser form.
 
 Facet JMX on Service
 	var string path = ""

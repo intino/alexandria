@@ -85,3 +85,9 @@ Schema RequestPolicy
 	Attribute workerGroups as Text List
 	Attribute capabilities as Text List
 	Attribute authorizations as Text List
+
+Schema Solicitud
+    Attribute solicitudDocumentoList as List Object(SolicitudDocumento)
+Schema SolicitudDocumento
+    Attribute descripcion as Text
+    Attribute fichero as File

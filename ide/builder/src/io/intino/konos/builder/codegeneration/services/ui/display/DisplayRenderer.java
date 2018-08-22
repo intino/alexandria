@@ -27,7 +27,7 @@ import static java.io.File.separator;
 
 @SuppressWarnings("Duplicates")
 public class DisplayRenderer {
-	private static final String DISPLAYS = "displays";
+	public static final String DISPLAYS = "ui/displays";
 	private static final String NOTIFIERS = "notifiers";
 	private static final String REQUESTERS = "requesters";
 	private final Project project;

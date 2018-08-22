@@ -1,5 +1,5 @@
 def type(desktop)
-	package $package.displays;
+	package $package.ui.displays;
 
 	import io.intino.konos.alexandria.Base64;
 	import io.intino.konos.alexandria.ui.displays.AlexandriaDesktop;
@@ -10,7 +10,7 @@ def type(desktop)
 	import io.intino.konos.alexandria.ui.utils.IOUtils;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.net.MalformedURLException;
     import java.net.URL;
@@ -95,7 +95,7 @@ def trigger(authentication)
 end
 
 def type(panel)
-	package $package.displays;
+	package $package.ui.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.ui.displays.AlexandriaPanel;
@@ -106,7 +106,7 @@ def type(panel)
     import io.intino.konos.alexandria.ui.model.View;
 
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
+    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.util.ArrayList;
     import java.util.List;
