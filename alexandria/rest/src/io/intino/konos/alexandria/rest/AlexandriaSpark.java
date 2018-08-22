@@ -60,9 +60,9 @@ public class AlexandriaSpark<R extends SparkRouter> {
 			}
 		});
 
-		router.whenValidate(new Function<SparkManager, Boolean>() {
+		router.whenValidate(new Function<SparkManager<?>, Boolean>() {
 			@Override
-			public Boolean apply(SparkManager manager) {
+			public Boolean apply(SparkManager<?> manager) {
 				return securityManager.check(manager.fromQuery("hash", String.class), manager.fromQuery("signature", String.class));
 			}
 		});
