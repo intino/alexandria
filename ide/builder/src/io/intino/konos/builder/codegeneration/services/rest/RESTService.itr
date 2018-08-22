@@ -2,15 +2,19 @@ def type(server)
 	package $package+ValidPackage;
 
 	import io.intino.konos.alexandria.rest.AlexandriaSpark;
-	import $package+ValidPackage.resources.*;
+	import $package+ValidPackage.rest.resources.*;
 	import io.intino.konos.alexandria.Box;
 	import io.intino.konos.alexandria.rest.security.DefaultSecurityManager;
+	import io.intino.konos.alexandria.rest.spark.SparkPushService;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
 			$secure
+			$hasNotifications
+			$notification...[$NL]
 			$resource...[$NL]
+
 			return server;
 		}
 	}
@@ -21,7 +25,7 @@ def type(secure)
 end
 
 def type(resource)
-	server.route($path+format).$method+firstlowerCase((manager) -> new $operation+firstUpperCase~$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
+	server.route($path+format).$method+firstlowerCase(manager -> new $name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
 end
 
 def type(path) trigger(format)
@@ -30,4 +34,13 @@ end
 
 def trigger(custom)
 	.replace("{$value}", box.configuration().get("$value"))
+end
+
+
+def trigger(notification)
+	server.route("/$path+format").post(manager -> new Post$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
+end
+
+def trigger(hasNotifications)
+	server.route("/push").push(new SparkPushService()); //solo una vez, con ui o con rest+notifications
 end

@@ -6,10 +6,10 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer.DISPLAYS;
 import static io.intino.konos.builder.helpers.Commons.*;
 
 public abstract class Renderer {
-	protected static final String DISPLAYS = "displays";
 	protected final String box;
 	protected final String packageName;
 	protected final String name;

@@ -9,6 +9,7 @@ import io.intino.konos.model.graph.datetime.DateTimeData;
 import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.list.ListData;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Notification;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
@@ -51,11 +52,19 @@ public class RESTAccessorRenderer {
 		if (!restService.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		List<Frame> resourceFrames = new ArrayList<>();
+		List<Frame> notificationFrames = new ArrayList<>();
 		for (Resource resource : restService.core$().findNode(Resource.class))
 			resourceFrames.addAll(resource.operationList().stream().
 					map(operation -> processOperation(operation, restService.authenticated() != null,
 							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
+
+		for (Notification notification : restService.notificationList()) {
+			Frame notificationFrame = new Frame("notification").addSlot("path", notification.path()).addSlot("name", notification.name$());
+			if (restService.authenticatedWithToken() != null) notificationFrame.addSlot("secure", "");
+			notificationFrames.add(notificationFrame);
+		}
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[0]));
+		frame.addSlot("notification", (AbstractFrame[]) notificationFrames.toArray(new AbstractFrame[0]));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 

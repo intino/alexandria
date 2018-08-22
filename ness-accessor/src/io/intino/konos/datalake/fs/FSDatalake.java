@@ -12,6 +12,8 @@ import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FSDatalake implements Datalake {
@@ -86,6 +88,11 @@ public class FSDatalake implements Datalake {
 	}
 
 	public void connect(String... args) {
+	}
+
+	@Override
+	public List<User> users() {
+		return Collections.emptyList();
 	}
 
 	private String clean(String url) {

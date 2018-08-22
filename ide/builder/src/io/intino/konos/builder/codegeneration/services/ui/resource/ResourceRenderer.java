@@ -19,7 +19,7 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 public class ResourceRenderer {
 
 
-	private static final String RESOURCES = "resources";
+	private static final String RESOURCES = "ui/resources";
 	private final Project project;
 	private final File src;
 	private final File gen;

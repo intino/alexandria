@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
@@ -67,14 +68,20 @@ public class JMSDatalake implements Datalake {
 		return Arrays.asList(tanks.split(";"));
 	}
 
+	public List<User> users() {
+		TopicProducer producer = newProducer(ADMIN_PATH);
+		final String users = requestResponseWithTimeout(producer, createMessageFor("users"), 1000);
+		return Arrays.stream(users.split(";")).map(u -> new User(u, null)).collect(Collectors.toList());
+	}
+
 	public void batch(String tank, int blockSize) {
 		TopicProducer producer = newProducer(ADMIN_PATH);
-		producer.produce(createMessageFor("batch:"+ tank+ ":" + blockSize));
+		producer.produce(createMessageFor("batch:" + tank + ":" + blockSize));
 	}
 
 	public void endBatch(String tank) {
 		TopicProducer producer = newProducer(ADMIN_PATH);
-		producer.produce(createMessageFor("endBatch:"+ tank));
+		producer.produce(createMessageFor("endBatch:" + tank));
 	}
 
 	public Session session() {

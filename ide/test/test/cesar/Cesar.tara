@@ -59,6 +59,7 @@ Service(description = "Cesar Ops Service") restCesar as REST(host = "", basePath
 		Post(description = "Deploy system") deploySystem
 			Parameter(in = body) system as Object(SystemSchema)
 			Response as Object(schema = Parameter)
+	Notification(path = "/log") log
 
 	Schema SystemSchema
 		Attribute name as Text
@@ -154,7 +155,7 @@ Service(title = "cesar", favicon = "/images/icon.png") cesarUi as UI(port = "900
 	Authentication(by = "{federationUrl}")
 	Resource("/") homePage as DisplayPage(cesarDesktop) Root Confidential
 	Resource("/error") errorPage as DisplayPage(errorDisplay)
-	Use("io.intino.amidas.box.PlatformUi")
+	Use("io.intino.amidas.box.PlatformUi", url = "")
 
 
 

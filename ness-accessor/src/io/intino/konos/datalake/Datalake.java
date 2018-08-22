@@ -1,8 +1,9 @@
 package io.intino.konos.datalake;
 
-import io.intino.konos.datalake.jms.JMSTank;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
+
+import java.util.List;
 
 public interface Datalake {
 	String REFLOW_PATH = "service.ness.reflow";
@@ -18,6 +19,8 @@ public interface Datalake {
 	void disconnect();
 
 	void connect(String... args);
+
+	List<User> users();
 
 	interface Tank {
 		Tank handler(MessageHandler handler);
@@ -60,5 +63,23 @@ public interface Datalake {
 		void play();
 
 		void pause();
+	}
+
+	class User {
+		String name;
+		String password;
+
+		public User(String name, String password) {
+			this.name = name;
+			this.password = password;
+		}
+
+		public String name() {
+			return name;
+		}
+
+		public String password() {
+			return password;
+		}
 	}
 }

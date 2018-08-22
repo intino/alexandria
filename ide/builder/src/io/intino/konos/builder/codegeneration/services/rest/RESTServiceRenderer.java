@@ -29,6 +29,8 @@ public class RESTServiceRenderer {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	private final List<RESTService> services;
+	@org.jetbrains.annotations.NotNull
+	private final KonosGraph graph;
 	private final File gen;
 	private final File res;
 	private String packageName;
@@ -36,7 +38,8 @@ public class RESTServiceRenderer {
 	private final Map<String, String> classes;
 
 	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Map<String, String> classes) {
-		services = graph.rESTServiceList();
+		this.services = graph.rESTServiceList();
+		this.graph = graph;
 		this.gen = gen;
 		this.res = res;
 		this.packageName = packageName;
@@ -81,7 +84,11 @@ public class RESTServiceRenderer {
 				addSlot("name", service.name$()).
 				addSlot("box", boxName).
 				addSlot("package", packageName).
-				addSlot("resource", (AbstractFrame[]) processResources(service.resourceList()));
+				addSlot("resource", (AbstractFrame[]) framesOf(service.resourceList()));
+		if (!service.notificationList().isEmpty()) {
+			frame.addSlot("notification", notificationsFrame(service.notificationList()));
+			if (graph.uIServiceList().isEmpty()) frame.addSlot("hasNotifications", notificationsFrame(service.notificationList()));
+		}
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store()).addSlot("password", secure.storePassword()));
@@ -90,11 +97,18 @@ public class RESTServiceRenderer {
 		Commons.writeFrame(gen, className, template().format(frame));
 	}
 
-	private Frame[] processResources(List<Resource> resources) {
+	private Frame[] notificationsFrame(List<RESTService.Notification> list) {
+		List<Frame> frames = new ArrayList<>();
+		for (RESTService.Notification notification : list)
+			frames.add(new Frame("notification").
+					addSlot("path", notification.path()).
+					addSlot("name", notification.name$()));
+		return frames.toArray(new Frame[0]);
+	}
+
+	private Frame[] framesOf(List<Resource> resources) {
 		List<Frame> list = new ArrayList<>();
-		for (Resource resource : resources) {
-			list.addAll(processResource(resource, resource.operationList()));
-		}
+		for (Resource resource : resources) list.addAll(processResource(resource, resource.operationList()));
 		return list.toArray(new Frame[0]);
 	}
 
