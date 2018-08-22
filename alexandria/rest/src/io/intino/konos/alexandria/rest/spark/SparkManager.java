@@ -17,8 +17,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @SuppressWarnings("unchecked")
-public class SparkManager {
-	protected final PushService pushService;
+public class SparkManager<P extends PushService> {
+	protected final P pushService;
 	protected final Request request;
 	protected final Response response;
 
@@ -26,7 +26,7 @@ public class SparkManager {
 	private static final String XForwardedPath = "X-Forwarded-Path";
 	private static final String XForwardedPort = "X-Forwarded-Port";
 
-	public SparkManager(PushService pushService, Request request, Response response) {
+	public SparkManager(P pushService, Request request, Response response) {
 		this.pushService = pushService;
 		this.request = request;
 		this.response = response;
@@ -34,8 +34,8 @@ public class SparkManager {
 		setUpSessionCookiePath();
 	}
 
-	public SparkPushService pushService() {
-		return (SparkPushService) this.pushService;
+	public P pushService() {
+		return this.pushService;
 	}
 
 	public SparkSession currentSession() {
