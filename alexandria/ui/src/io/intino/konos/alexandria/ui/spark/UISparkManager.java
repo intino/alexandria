@@ -11,7 +11,7 @@ import spark.Response;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkManager {
+public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkManager<io.intino.konos.alexandria.ui.services.push.PushService> {
 	private final AuthService authService;
 	private final EditorService editorService;
 	private final boolean hasUserHome;
@@ -23,10 +23,6 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 		this.authService = authService;
 		this.editorService = editorService;
 		this.hasUserHome = hasUserHome;
-	}
-
-	public io.intino.konos.alexandria.ui.services.push.PushService pushService() {
-		return (PushService) this.pushService;
 	}
 
 	public AuthService authService() {
