@@ -24,8 +24,12 @@ def type(secure)
 	server.secure(new DefaultSecurityManager(new java.io.File("$file"), "$password"));
 end
 
+def trigger(notification)
+	server.route("/$path+format").post(manager -> new $package.rest.notifications.$name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
+end
+
 def type(resource)
-	server.route($path+format).$method+firstlowerCase(manager -> new $name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
+	server.route($path+format).$method+firstlowerCase(manager -> new $operation+firstUpperCase~$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
 end
 
 def type(path) trigger(format)
@@ -37,9 +41,6 @@ def trigger(custom)
 end
 
 
-def trigger(notification)
-	server.route("/$path+format").post(manager -> new Post$name+firstUpperCase+SnakeCaseToCamelCase~Resource(box, manager).execute());
-end
 
 def trigger(hasNotifications)
 	server.route("/push").push(new SparkPushService()); //solo una vez, con ui o con rest+notifications

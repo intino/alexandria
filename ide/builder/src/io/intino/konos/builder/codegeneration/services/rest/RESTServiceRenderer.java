@@ -102,6 +102,7 @@ public class RESTServiceRenderer {
 		for (RESTService.Notification notification : list)
 			frames.add(new Frame("notification").
 					addSlot("path", notification.path()).
+					addSlot("package", packageName).
 					addSlot("name", notification.name$()));
 		return frames.toArray(new Frame[0]);
 	}
