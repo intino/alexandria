@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.catalog.CatalogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.desktop.DesktopRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.editor.EditorRenderer;
@@ -26,27 +27,21 @@ import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 import static java.io.File.separator;
 
 @SuppressWarnings("Duplicates")
-public class DisplayRenderer {
-	public static final String DISPLAYS = "ui/displays";
-	private static final String NOTIFIERS = "notifiers";
-	private static final String REQUESTERS = "requesters";
+public class DisplayRenderer extends UIRenderer {
 	private final Project project;
 	private final File gen;
 	private final File src;
-	private final String packageName;
 	private final List<Display> displays;
-	private final String boxName;
 	private final Map<String, String> classes;
 	private final String parent;
 
 	public DisplayRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String parent, String boxName, Map<String, String> classes) {
+		super(boxName, packageName);
 		this.project = project;
 		this.gen = gen;
 		this.src = src;
-		this.packageName = packageName;
 		this.parent = parent;
 		this.displays = graph.displayList();
-		this.boxName = boxName;
 		this.classes = classes;
 	}
 
@@ -66,16 +61,16 @@ public class DisplayRenderer {
 
 	private void processPrototype(Display display) {
 		classes.put(display.getClass().getSimpleName() + "#" + display.name$(), DISPLAYS + "." + snakeCaseToCamelCase(display.name$()));
-		if (display.i$(Editor.class)) new EditorRenderer(project, display.a$(Editor.class), packageName, boxName).write(src, gen);
+		if (display.i$(Editor.class)) new EditorRenderer(project, display.a$(Editor.class), packageName, box).write(src, gen);
 		else if (display.i$(Catalog.class))
-			new CatalogRenderer(project, display.a$(Catalog.class), packageName, boxName).write(src, gen);
+			new CatalogRenderer(project, display.a$(Catalog.class), packageName, box).write(src, gen);
 		else if (display.i$(Panel.class)) {
 			Panel panel = display.a$(Panel.class);
 			if (panel.isDesktop()) {
 				DesktopPanel desktop = display.a$(Panel.class).asDesktop();
-				new DesktopRenderer(project, desktop, packageName, boxName).write(src, gen);
-			} else new PanelRenderer(project, display.a$(Panel.class), packageName, boxName).write(src, gen);
-		} else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), packageName, boxName).write(src, gen);
+				new DesktopRenderer(project, desktop, packageName, box).write(src, gen);
+			} else new PanelRenderer(project, display.a$(Panel.class), packageName, box).write(src, gen);
+		} else if (display.i$(Mold.class)) new MoldRenderer(project, display.a$(Mold.class), packageName, box).write(src, gen);
 	}
 
 	private void writeDisplay(Display display, Frame frame) {
@@ -87,11 +82,11 @@ public class DisplayRenderer {
 	}
 
 	private void writeRequester(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + REQUESTERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen, REQUESTERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
 	}
 
 	private void writeNotifier(Display display, Frame frame) {
-		writeFrame(new File(gen, DISPLAYS + separator + NOTIFIERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen, NOTIFIERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
 	}
 
 	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {
@@ -114,7 +109,7 @@ public class DisplayRenderer {
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
 		frame.addSlot("request", framesOfRequests(display.requestList()));
-		frame.addSlot("box", boxName);
+		frame.addSlot("box", box);
 		if (display.isAccessible())
 			frame.addSlot("parameter", display.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
 		return frame;

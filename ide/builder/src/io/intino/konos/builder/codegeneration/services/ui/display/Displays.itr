@@ -1,5 +1,5 @@
 def type(Displays)
-	package $package.ui.displays;
+	package $package.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
     import io.intino.konos.alexandria.ui.displays.*;

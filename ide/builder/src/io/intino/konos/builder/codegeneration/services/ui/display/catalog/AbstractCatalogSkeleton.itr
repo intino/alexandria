@@ -1,5 +1,5 @@
 def type(catalog & gen)
-	package $package.ui.displays;
+	package $package.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaCatalog;
     import io.intino.konos.alexandria.ui.model.View;
@@ -15,7 +15,7 @@ def type(catalog & gen)
     import io.intino.konos.alexandria.ui.model.toolbar.*;
 
     import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
     import java.util.ArrayList;
     import java.util.List;

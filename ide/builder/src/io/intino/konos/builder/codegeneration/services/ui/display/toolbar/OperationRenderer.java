@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.toolbar;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIPrototypeRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.AbstractToolbar;
 import io.intino.konos.model.graph.AbstractToolbar.Operation;
@@ -14,7 +14,7 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-public class OperationRenderer extends Renderer {
+public class OperationRenderer extends UIPrototypeRenderer {
 	private final Operation operation;
 	private final Component owner;
 
@@ -26,8 +26,7 @@ public class OperationRenderer extends Renderer {
 
 	@Override
 	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		frame.addTypes("operation", operation.getClass().getSimpleName())
+		Frame frame = super.buildFrame().addTypes("operation", operation.getClass().getSimpleName())
 				.addSlot("title", operation.title())
 				.addSlot("owner", owner.name$())
 				.addSlot("ownerClass", owner.getClass().getSimpleName())
@@ -87,7 +86,8 @@ public class OperationRenderer extends Renderer {
 		frame.addSlot("position", openCatalog.position().toString());
 		frame.addSlot("openCatalog", openCatalog.catalog().name$());
 		frame.addSlot("view", openCatalog.views().stream().map(Layer::name$).toArray(String[]::new));
-		if (openCatalog.filtered()) frame.addSlot("openCatalogOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box));
+		if (openCatalog.filtered())
+			frame.addSlot("openCatalogOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box));
 	}
 
 	private void addOpenCatalogSelectionProperties(Frame frame) {
@@ -100,7 +100,8 @@ public class OperationRenderer extends Renderer {
 		frame.addSlot("openCatalog", openCatalogSelection.catalog().name$());
 		frame.addSlot("view", openCatalogSelection.views().stream().map(Layer::name$).toArray(String[]::new));
 		frame.addSlot("selection", openCatalogSelection.selection().toString());
-		if (openCatalogSelection.filtered()) frame.addSlot("openCatalogSelectionOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box).addSlot("itemClass", itemClass));
+		if (openCatalogSelection.filtered())
+			frame.addSlot("openCatalogSelectionOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box).addSlot("itemClass", itemClass));
 		frame.addSlot("openCatalogSelectionOperation", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box).addSlot("itemClass", itemClass));
 	}
 

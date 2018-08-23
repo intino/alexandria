@@ -18,16 +18,13 @@ import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
-public class UIResourcesRenderer {
+public class UIResourcesRenderer extends UIRenderer {
 	private final File gen;
-	private final String packageName;
-	private final String boxName;
 	private final List<UIService> uiServiceList;
 
 	public UIResourcesRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		super(boxName, packageName);
 		this.gen = gen;
-		this.packageName = packageName;
-		this.boxName = boxName;
 		this.uiServiceList = graph.uIServiceList();
 	}
 
@@ -38,10 +35,9 @@ public class UIResourcesRenderer {
 	private void processUIService(UIService service) {
 		final List<Dialog> dialogs = dialogsOf(service);
 		final List<Display> displays = displaysOf(service);
-		Frame frame = new Frame().addTypes("ui").
-				addSlot("package", packageName).
+		Frame frame = buildFrame().addTypes("ui").
 				addSlot("name", service.name$()).
-				addSlot("box", boxName).addSlot("resource", resourcesFrame(service.resourceList()));
+				addSlot("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) frame.addSlot("userHome", service.userHome().name$());
 		if (!dialogs.isEmpty())
 			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
