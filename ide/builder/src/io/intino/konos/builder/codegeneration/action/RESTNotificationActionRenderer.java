@@ -13,7 +13,7 @@ public class RESTNotificationActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public RESTNotificationActionRenderer(Project project, Notification notification, File destiny, String packageName, String boxName, Map<String, String> classes) {
-		super(project, destiny, packageName, boxName);
+		super(project, destiny, packageName, boxName, "notification");
 		this.notification = notification;
 		this.classes = classes;
 	}

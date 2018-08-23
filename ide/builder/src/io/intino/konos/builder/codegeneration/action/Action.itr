@@ -1,3 +1,27 @@
+def type(action & notification) !type(ui)
+	package $package+validPackage.actions;
+
+	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
+	import io.intino.konos.alexandria.exceptions.*;
+	import java.time.*;
+	import java.util.*;
+
+	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
+		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
+		public io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();[
+		$parameter+type...[$NL]]
+
+		public void onOpen() {
+			//register listener
+		}
+
+
+		public void onClose() {
+			//unregister listener
+		}
+	}
+end
+
 def type(action) !type(ui)
 	package $package+validPackage.actions;
 

@@ -13,7 +13,7 @@ public class RESTResourceActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public RESTResourceActionRenderer(Project project, Resource.Operation operation, File destiny, String packageName, String boxName, Map<String, String> classes) {
-		super(project, destiny, packageName, boxName);
+		super(project, destiny, packageName, boxName, "resource");
 		this.operation = operation;
 		this.classes = classes;
 	}
