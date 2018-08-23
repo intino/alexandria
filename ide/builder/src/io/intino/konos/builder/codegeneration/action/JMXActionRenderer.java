@@ -13,7 +13,7 @@ public class JMXActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public JMXActionRenderer(Project project, Operation operation, File destiny, String packageName, String boxName, Map<String, String> classes) {
-		super(project, destiny, packageName, boxName);
+		super(project, destiny, packageName, boxName, "jmx");
 		this.operation = operation;
 		this.classes = classes;
 	}
