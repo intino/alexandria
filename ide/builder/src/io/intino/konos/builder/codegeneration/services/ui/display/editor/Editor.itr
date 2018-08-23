@@ -1,5 +1,5 @@
 def type(editor)
-	package $package.ui.displays;
+	package $package.displays;
 
 	import cottons.utils.StreamHelper;
     import io.intino.konos.alexandria.ui.Resource;
@@ -9,7 +9,7 @@ def type(editor)
 	import io.intino.konos.alexandria.ui.services.EditorService;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.dialogs.*;
-    import $package+validPackage.ui.displays.*;
+    import $package+validPackage.displays.*;
 
     public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
     	public $name+FirstUpperCase($box+firstUpperCase~Box box) {

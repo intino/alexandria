@@ -72,16 +72,8 @@ Service(description = "Cesar DevOps Service") cesar-rest as REST(host = "{host}"
 			Exception(Forbidden)
 			Response
 	Notification(path = "/log") log
+		Parameter(in = query) project as Text
 
-	Schema SystemSchema
-		Attribute name as Text
-		Attribute artifact as Text
-		Attribute parameter as Object(Parameter) List
-		Schema artifactory
-			Attribute id as Text
-			Attribute url as Text
-			Attribute user as Text
-			Attribute password as Text
 
 
 Schema ServerStatus

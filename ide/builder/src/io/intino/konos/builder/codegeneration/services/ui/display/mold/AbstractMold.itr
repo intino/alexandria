@@ -1,5 +1,5 @@
 def type(mold)
-	package $package.ui.displays;
+	package $package.displays;
 
     import io.intino.konos.alexandria.ui.displays.AlexandriaMold;
     import io.intino.konos.alexandria.ui.model.Mold;
@@ -8,7 +8,7 @@ def type(mold)
     import io.intino.konos.alexandria.ui.model.mold.stamps.*;
 
     import $package+validPackage.$box+firstUpperCase~Box;
-	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public abstract class Abstract$name+FirstUpperCase extends AlexandriaMold<$name+FirstUpperCase~Notifier> {
 

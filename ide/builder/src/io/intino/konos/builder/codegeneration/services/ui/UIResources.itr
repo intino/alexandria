@@ -1,10 +1,10 @@
 def type(ui)
 	package $package+validPackage;
-	[import $dialogsImport+validPackage.ui.dialogs.*;]
-	[import $displaysImport+validPackage.ui.displays.*;]
-	[import $displaysImport+validPackage.ui.displays.notifiers.*;]
-	[import $displaysImport+validPackage.ui.displays.requesters.*;]
-	import $package+validPackage.ui.resources.*;
+	[import $dialogsImport+validPackage.dialogs.*;]
+	[import $displaysImport+validPackage.displays.*;]
+	[import $displaysImport+validPackage.displays.notifiers.*;]
+	[import $displaysImport+validPackage.displays.requesters.*;]
+	import $package+validPackage.resources.*;
 
 	import io.intino.konos.alexandria.ui.UIAlexandriaSpark;
 	import io.intino.konos.alexandria.ui.AssetResourceLoader;
@@ -70,11 +70,11 @@ def type(path)
 end
 
 def type(display & proxy) trigger(notifier)
-	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.$name+firstUpperCase~Proxy.class);
+	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase~Proxy.class);
 end
 
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.$name+firstUpperCase.class);[
+	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);[
 	$display+notifier]
 end
 

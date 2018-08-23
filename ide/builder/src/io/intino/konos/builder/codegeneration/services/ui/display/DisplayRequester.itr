@@ -1,8 +1,8 @@
 def type(display & accessible)
-	package $package+validPackage.ui.displays.requesters;
+	package $package+validPackage.displays.requesters;
 
-    import $package+validPackage.ui.displays.$name+FirstUppercase;
-    import $package+validPackage.ui.displays.$name+FirstUpperCase~Proxy;
+    import $package+validPackage.displays.$name+FirstUppercase;
+    import $package+validPackage.displays.$name+FirstUpperCase~Proxy;
     import io.intino.konos.alexandria.exceptions.AlexandriaException;
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
     import io.intino.konos.alexandria.ui.displays.requesters.AlexandriaProxyDisplayRequester;
@@ -37,14 +37,14 @@ def type(display & accessible)
 end
 
 def type(display)
-	package $package+validPackage.ui.displays.requesters;
+	package $package+validPackage.displays.requesters;
 
-	import $package+validPackage.ui.displays.$name+FirstUpperCase;
+	import $package+validPackage.displays.$name+FirstUpperCase;
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
 	$schemaImport
 
-	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+	import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
 	import io.intino.konos.alexandria.ui.displays.requesters.Alexandria[$type+class+FirstUpperCase]Requester;
 	import io.intino.konos.alexandria.exceptions.AlexandriaException;
 	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;

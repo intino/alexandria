@@ -1,5 +1,5 @@
 def type(display & accessible)
-	package $package.ui.displays;
+	package $package.displays;
 
     import $package.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
     import io.intino.konos.alexandria.ui.displays.AlexandriaProxyDisplay;
@@ -39,13 +39,13 @@ def type(display & accessible)
 end
 
 def type(display)
-	package $package.ui.displays;
+	package $package.displays;
 
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package.*;
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
+    import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
     import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
     $parent+import
 

@@ -1,5 +1,5 @@
 def type(display & accessible)
-	package $package+validPackage.ui.displays.notifiers;
+	package $package+validPackage.displays.notifiers;
 
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;
@@ -22,7 +22,7 @@ def type(display & accessible)
 end
 
 def type(display)
-	package $package+validPackage.ui.displays.notifiers;
+	package $package+validPackage.displays.notifiers;
 
 	import io.intino.konos.alexandria.exceptions.*;
 	import $package+validPackage.*;

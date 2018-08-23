@@ -6,25 +6,21 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
-import static io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer.DISPLAYS;
 import static io.intino.konos.builder.helpers.Commons.*;
 
-public abstract class Renderer {
-	protected final String box;
-	protected final String packageName;
-	protected final String name;
+public abstract class UIPrototypeRenderer extends UIRenderer {
+	private final String name;
 
-	protected Renderer(String name, String box, String packageName) {
+	protected UIPrototypeRenderer(String name, String box, String packageName) {
+		super(box, packageName);
 		this.name = name;
-		this.box = box;
-		this.packageName = packageName;
 	}
 
 	public Frame buildFrame() {
 		return new Frame()
 				.addSlot("box", box)
-				.addSlot("package", packageName)
-				.addSlot("name", name);
+				.addSlot("name", name)
+				.addSlot("package", packageName);
 	}
 
 	public final void write(File src, File gen) {

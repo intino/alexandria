@@ -1,7 +1,8 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.view;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.Renderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIPrototypeRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Component;
@@ -30,7 +31,7 @@ import java.util.List;
 
 import static io.intino.konos.model.graph.View.Hidden.HiddenEnabled;
 
-public class ViewRenderer extends Renderer {
+public class ViewRenderer extends UIPrototypeRenderer {
 	private final View view;
 	private final Component owner;
 	private final String box;

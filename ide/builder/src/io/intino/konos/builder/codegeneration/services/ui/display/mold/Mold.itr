@@ -1,5 +1,5 @@
 def type(mold)
-	package $package.ui.displays;
+	package $package.displays;
 
     import io.intino.konos.alexandria.ui.services.push.UISession;
     import $package+validPackage.$box+firstUpperCase~Box;
