@@ -173,7 +173,8 @@ def type(authenticationValidator) trigger(assign)
 end
 
 def type(authenticationValidator) trigger(validate)
-	if (!validator.validate(manager.fromHeader("Authorization", String.class).replace("Basic ", ""))) throw new Unauthorized("Credential not found");
+	String auth = manager.fromHeader("Authorization", String.class);
+	if (auth == null || !validator.validate(auth.replace("Basic ", ""))) throw new Unauthorized("Credential not found");
 end
 
 def trigger(parameterType)

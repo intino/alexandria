@@ -25,7 +25,7 @@ def type(secure)
 end
 
 def trigger(notification)
-	server.route("/$path+format").post(manager -> new $package.rest.notifications.$name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
+	server.route("$path+format").post(manager -> new $package.rest.notifications.$name+firstUpperCase+SnakeCaseToCamelCase~Notification(box, manager).execute());
 end
 
 def type(resource)

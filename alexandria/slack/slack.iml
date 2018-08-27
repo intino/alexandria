@@ -27,7 +27,7 @@
     <orderEntry type="library" name="Maven: io.intino.cottons:cotton-utils:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tika:tika-core:0.4" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: io.intino.ness:inl:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.security:xml-security-impl:1.0" level="project" />
   </component>
 </module>
