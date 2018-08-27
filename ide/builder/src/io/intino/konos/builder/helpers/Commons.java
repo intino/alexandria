@@ -5,6 +5,7 @@ import io.intino.konos.model.graph.Redirect;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Notification;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
@@ -56,12 +57,21 @@ public class Commons {
 		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
 	}
 
-	public static long queryParameters(Operation resource) {
-		return resource.parameterList().stream().filter(p -> p.in() == In.query).count();
+	public static long queryParameters(Operation operation) {
+		return operation.parameterList().stream().filter(p -> p.in() == In.query).count();
 	}
 
-	public static long bodyParameters(Operation resource) {
-		return resource.parameterList().stream().filter(p -> p.in() == In.body).count();
+	public static long bodyParameters(Operation operation) {
+		return operation.parameterList().stream().filter(p -> p.in() == In.body).count();
+	}
+
+
+	public static long queryParameters(Notification operation) {
+		return operation.parameterList().stream().filter(p -> p.in() == Notification.Parameter.In.query).count();
+	}
+
+	public static long bodyParameters(Notification operation) {
+		return operation.parameterList().stream().filter(p -> p.in() == Notification.Parameter.In.body).count();
 	}
 
 	public static String format(String path) {

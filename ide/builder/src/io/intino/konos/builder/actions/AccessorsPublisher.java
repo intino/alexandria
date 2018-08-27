@@ -18,8 +18,8 @@ import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Service;
-import io.intino.plugin.toolwindows.console.IntinoTopics;
-import io.intino.plugin.toolwindows.console.MavenListener;
+import io.intino.plugin.toolwindows.output.IntinoTopics;
+import io.intino.plugin.toolwindows.output.MavenListener;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.actions.utils.FileSystemUtils;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
