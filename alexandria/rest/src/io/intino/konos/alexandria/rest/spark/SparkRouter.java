@@ -107,5 +107,4 @@ public class SparkRouter<SM extends SparkManager> {
 			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
 		}
 	}
-
 }

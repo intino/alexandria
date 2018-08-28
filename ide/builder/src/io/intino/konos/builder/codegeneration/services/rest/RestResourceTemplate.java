@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class RestResourceTemplate extends Template {
 
@@ -33,7 +34,7 @@ public class RestResourceTemplate extends Template {
 			rule().add((condition("type", "list")), (condition("trigger", "parameterType"))).add(literal("com.google.gson.reflect.TypeToken.getParameterized(java.util.ArrayList.class, ")).add(mark("value")).add(literal(".class).getType()")),
 			rule().add((condition("type", "authenticationValidator")), (condition("trigger", "field"))).add(literal("io.intino.konos.alexandria.rest.security.")).add(mark("type", "FirstUpperCase")).add(literal("AuthenticationValidator validator;")),
 			rule().add((condition("type", "authenticationValidator")), (condition("trigger", "assign"))).add(literal("this.validator = box.authenticationValidator();")),
-			rule().add((condition("type", "authenticationValidator")), (condition("trigger", "validate"))).add(literal("if (!validator.validate(manager.fromHeader(\"Authorization\", String.class).replace(\"Basic \", \"\"))) throw new Unauthorized(\"Credential not found\");")),
+				rule().add((condition("type", "authenticationValidator")), (condition("trigger", "validate"))).add(literal("String auth = manager.fromHeader(\"Authorization\", String.class);\nif (auth == null || !validator.validate(auth.replace(\"Basic \", \"\"))) throw new Unauthorized(\"Credential not found\");")),
 			rule().add((condition("trigger", "parameterType"))).add(mark("value")).add(literal(".class")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
