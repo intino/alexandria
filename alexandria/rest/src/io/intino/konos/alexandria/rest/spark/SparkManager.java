@@ -188,7 +188,7 @@ public class SparkManager<P extends PushService> {
 	}
 
 	public void redirect(String location) {
-		response.redirect(response.raw().encodeRedirectURL(location));
+		response.redirect(location);
 	}
 
 }
