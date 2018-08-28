@@ -40,8 +40,6 @@ def trigger(custom)
 	.replace("{$value}", box.configuration().get("$value"))
 end
 
-
-
 def trigger(hasNotifications)
-	server.route("/push").push(new SparkPushService()); //solo una vez, con ui o con rest+notifications
+	if (!io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new SparkPushService());
 end

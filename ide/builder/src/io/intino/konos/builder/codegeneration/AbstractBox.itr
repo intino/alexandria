@@ -49,7 +49,7 @@ def type(box)
 		}
 
 		public io.intino.konos.alexandria.Box open() {
-			if(owner != null) owner.open();
+			if (owner != null) owner.open();
 			initLogger();
 			initUI();
 			initRESTServices();
@@ -130,12 +130,12 @@ end
 def type(service & ui) trigger(setup)
 	this.authService = [this.authService($authentication)?null];
 	this.editorService = [this.editorService($edition)?null];
-	[if($parameter != null)
-		]io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", this.authService, this.editorService);
+	[if($parameter != null && !$parameter.isEmpty())][io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setUI(true);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.setup(Integer.parseInt($parameter), "www/", null, null);
+	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
 end
 
 def type(service & jmx) trigger(jmx)
@@ -147,17 +147,18 @@ def type(service & slack) trigger(slack)
 	if ($parameter == null || $parameter.isEmpty()) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, $parameter);
 	logger.info("Slack service $name: started!");
-
 end
 
 def type(service & rest) trigger(rest)
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("REST service $name: started!");
 end
 
 def type(service & ui) trigger(ui)
 	[if ($parameter == null) return;]
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance();
+	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.konos.alexandria.ui.UIAlexandriaSpark) io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance();
+	sparkInstance.authService(authService);
+	sparkInstance.editorService(editorService);
 	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
 	$use...[$NL]
@@ -304,7 +305,7 @@ def type(service) trigger(getter)
 end
 
 def trigger(spark)
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark.instance().stop();
+	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
 end
 
 def type(service) type(jms) trigger(quit)

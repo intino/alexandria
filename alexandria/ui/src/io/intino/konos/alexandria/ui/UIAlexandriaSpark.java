@@ -6,11 +6,8 @@ import io.intino.konos.alexandria.ui.services.EditorService;
 import io.intino.konos.alexandria.ui.spark.UIRouter;
 
 public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
-	private final AuthService authService;
-	private final EditorService editorService;
-
-	private static Setup setup;
-	private static UIAlexandriaSpark instance;
+	private AuthService authService;
+	private EditorService editorService;
 
 	public UIAlexandriaSpark(int port, AuthService authService, EditorService editorService) {
 		this(port, WebDirectory, authService, editorService);
@@ -22,47 +19,31 @@ public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
 		this.editorService = editorService;
 	}
 
-	public static void setup(int port, String webDirectory, AuthService authService, EditorService editorService) {
-		setup = new Setup(port, webDirectory, authService, editorService);
+	public AuthService authService() {
+		return authService;
 	}
 
-	public static UIAlexandriaSpark instance() {
-		if (instance == null)
-			instance = new UIAlexandriaSpark(setup.port, setup.webDirectory, setup.authService, setup.editorService);
-		return instance;
+	public UIAlexandriaSpark editorService(io.intino.konos.alexandria.ui.services.EditorService editorService) {
+		this.editorService = editorService;
+		return this;
+	}
+
+	public UIAlexandriaSpark authService(io.intino.konos.alexandria.ui.services.AuthService authService) {
+		this.authService = authService;
+		return this;
+	}
+
+	public EditorService editorService() {
+		return editorService;
 	}
 
 	public UIAlexandriaSpark start() {
 		return (UIAlexandriaSpark) super.start();
 	}
 
-	public void stop() {
-		if (service != null) service.stop();
-		service = null;
-		instance = null;
-	}
-
 	@Override
 	protected UIRouter createRouter(String path) {
 		return new UIRouter(service, path, authService, editorService);
-	}
-
-	private static class Setup {
-		int port;
-		String webDirectory;
-		AuthService authService;
-		EditorService editorService;
-
-		public Setup(int port, String webDirectory, AuthService authService) {
-			this(port, webDirectory, authService, null);
-		}
-
-		public Setup(int port, String webDirectory, AuthService authService, EditorService editorService) {
-			this.port = port;
-			this.webDirectory = webDirectory;
-			this.authService = authService;
-			this.editorService = editorService;
-		}
 	}
 
 }
