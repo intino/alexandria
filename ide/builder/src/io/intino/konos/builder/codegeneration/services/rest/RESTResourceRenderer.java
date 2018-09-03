@@ -111,7 +111,7 @@ public class RESTResourceRenderer {
 	}
 
 	private boolean hasResponse(Operation operation) {
-		return (operation.response() != null && operation.response().isType()) || operation.response().i$(Redirect.class);
+		return (operation.response() != null && (operation.response().isType() || operation.response().i$(Redirect.class)));
 	}
 
 	private Frame frameOf(Response response) {
