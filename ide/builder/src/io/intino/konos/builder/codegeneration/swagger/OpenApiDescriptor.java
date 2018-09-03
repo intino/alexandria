@@ -68,10 +68,12 @@ public class OpenApiDescriptor {
 
 	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, Response response) {
 		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
-		swaggerResponse.description = response.description();
-		if (response.isObject())
-			swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name$());
-		responses.put(response.code(), swaggerResponse);
+		if (response != null) {
+			swaggerResponse.description = response.description();
+			if (response.isObject())
+				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name$());
+		}
+		responses.put(response == null ? "200" : response.code(), swaggerResponse);
 	}
 
 	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, List<Exception> exceptions) {
