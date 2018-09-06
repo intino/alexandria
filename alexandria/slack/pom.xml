@@ -6,7 +6,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-slack</artifactId>
     <name>Slack</name>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 
 
     <repositories>
@@ -71,6 +71,10 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-core</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.tyrus.bundles</groupId>
+                    <artifactId>tyrus-standalone-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -79,10 +83,16 @@
             <version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.tyrus.bundles</groupId>
-            <artifactId>tyrus-standalone-client</artifactId>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-client</artifactId>
             <version>1.8.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly-client</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
