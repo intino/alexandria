@@ -155,7 +155,7 @@ def type(service & rest) trigger(rest)
 end
 
 def type(service & ui) trigger(ui)
-	[if ($parameter == null) return;]
+	[if ($parameter == null || !io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
 	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.konos.alexandria.ui.UIAlexandriaSpark) io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance();
 	sparkInstance.authService(authService);
 	sparkInstance.editorService(editorService);

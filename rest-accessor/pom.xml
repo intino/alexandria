@@ -6,7 +6,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-rest-accessor-java</artifactId>
     <name>Rest Accessor</name>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -130,10 +130,14 @@
             <version>3.4</version>
         </dependency>
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-            <scope>provided</scope>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-client</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly-client</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

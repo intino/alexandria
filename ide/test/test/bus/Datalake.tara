@@ -49,7 +49,52 @@ Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", use
 	Mounter(schema=AuthorizationRegister)
 	Mounter(schema=AuthorizationSave)
 	Mounter(schema=AuthorizationDelete)
+	Feeder(eventTypes = dayAheadReport) dayAheadReportFeeder
+	Feeder(eventTypes = intradayReport) intradayReportFeeder
+	Feeder(eventTypes = eexMasterDataUnit) eexMasterDataUnitFeeder
+	Feeder(eventTypes = actualGeneration) actualGenerationFeeder
 
+
+
+
+Schema dayAheadReport
+	Attribute ts as DateTime
+	Attribute priceZone as Text
+	Attribute volume as Text
+	Attribute price as Text
+	Attribute type as Text
+
+Schema intradayReport
+	Attribute ts as DateTime
+	Attribute priceZone as Text
+	Attribute weightedPrice as Text
+	Attribute id3 as Text
+	Attribute type as Text
+
+Schema eexMasterDataUnit
+	Attribute ts as DateTime
+	Attribute unitID as Text
+	Attribute capacity as Text
+	Attribute unitName as Text
+	Attribute plantID as Text
+	Attribute plantName as Text
+	Attribute connectingArea as Text
+	Attribute source as Text
+	Attribute startDate as Text
+	Attribute endDate as Text
+	Attribute latitude as Text
+	Attribute longitude as Text
+	Attribute country as Text
+	Attribute reportReason as Text
+	Attribute companyName as Text
+	Attribute companyID as Text
+	Attribute commercialisation as Text
+
+Schema actualGeneration
+	Attribute ts as DateTime
+	Attribute unitID as Text
+	Attribute actualGeneration as Text
+	Attribute country as Text
 Schema IdentityRegister
 	Attribute ts as DateTime
 	Attribute name as Text
