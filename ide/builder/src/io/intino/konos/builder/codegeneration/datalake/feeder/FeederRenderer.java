@@ -51,17 +51,21 @@ public class FeederRenderer {
 			final Frame frame = new Frame().addTypes("feeder").
 					addSlot("box", boxName).
 					addSlot("package", packageName).
-					addSlot("name", feeder.name$());
+					addSlot("name", name(feeder));
 			for (Sensor sensor : feeder.sensorList())
-				frame.addSlot("sensor", frameOf(sensor, feeder.name$()));
+				frame.addSlot("sensor", frameOf(sensor, name(feeder)));
 			frame.addSlot("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
 			frame.addSlot("domain", fullDomain(feeder.subdomain()));
-			final String feederClassName = firstUpperCase(feeder.name$()) + "Feeder";
-			classes.put(feeder.getClass().getSimpleName() + "#" + feeder.name$(), "ness.feeders." + feederClassName);
+			final String feederClassName = firstUpperCase(name(feeder)) + "Feeder";
+			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "ness.feeders." + feederClassName);
 			writeFrame(new File(gen, "ness/feeders"), "Abstract" + feederClassName, customize(AbstractFeederTemplate.create()).format(frame));
 			if (!alreadyRendered(new File(src, "ness/feeders"), feederClassName))
 				writeFrame(new File(src, "ness/feeders"), feederClassName, customize(FeederTemplate.create()).format(frame));
 		}
+	}
+
+	private String name(Feeder feeder) {
+		return feeder.eventTypes().size() > 1 ? feeder.name$() : feeder.eventTypes().get(0).name$();
 	}
 
 	private Frame frameOf(Sensor sensor, String feeder) {
