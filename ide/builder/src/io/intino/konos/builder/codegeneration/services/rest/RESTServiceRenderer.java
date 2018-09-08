@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.swagger.IndexTemplate;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
 import io.intino.konos.builder.helpers.Commons;
@@ -23,6 +22,7 @@ import java.util.zip.ZipInputStream;
 
 import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer {
@@ -117,18 +117,11 @@ public class RESTServiceRenderer {
 		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.getClass().getSimpleName())
 				.addSlot("name", resource.name$())
 				.addSlot("operation", operation.getClass().getSimpleName())
-				.addSlot("path", customize(Commons.path(resource)))
+				.addSlot("path", customize("path", Commons.path(resource)))
 				.addSlot("method", operation.getClass().getSimpleName())).collect(Collectors.toList());
 	}
 
-	private Frame customize(String path) {
-		Frame frame = new Frame().addTypes("path");
-		frame.addSlot("name", path);
-		for (String parameter : Commons.extractParameters(path)) frame.addSlot("custom", parameter);
-		return frame;
-	}
-
 	private Template template() {
-		return Formatters.customize(RESTServiceTemplate.create());
+		return customize(RESTServiceTemplate.create());
 	}
 }

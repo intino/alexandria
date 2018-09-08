@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.services.jms;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Parameter;
@@ -13,6 +12,8 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 
 public class JMSServiceRenderer {
 
@@ -51,14 +52,7 @@ public class JMSServiceRenderer {
 		return new Frame().addTypes("request").
 				addSlot("name", request.name$()).
 				addSlot("model", subscriptionModel).
-				addSlot("queue", customize(request.path()));
-	}
-
-	private Frame customize(String queue) {
-		Frame frame = new Frame().addTypes("queue");
-		frame.addSlot("name", queue);
-		for (String parameter : Commons.extractParameters(queue)) frame.addSlot("custom", parameter);
-		return frame;
+				addSlot("queue", customize("queue", request.path()));
 	}
 
 	private Frame[] processNotifications(List<JMSService.Notification> notifications, String subscriptionModel) {
@@ -69,14 +63,14 @@ public class JMSServiceRenderer {
 		return new Frame().addTypes("notification").
 				addSlot("name", notification.name$()).
 				addSlot("package", packageName).
-				addSlot("queue", customize(notification.path())).
+				addSlot("queue", customize("queue", notification.path())).
 				addSlot("model", subscriptionModel).
 				addSlot("parameter", (AbstractFrame[]) parameters(notification.parameterList())).
 				addSlot("returnMessageType", messageType(notification.parameterList()));
 	}
 
 	private Template template() {
-		return Formatters.customize(JMSServiceTemplate.create());
+		return customize(JMSServiceTemplate.create());
 	}
 
 	private String messageType(List<Parameter> parameters) {

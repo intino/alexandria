@@ -128,7 +128,7 @@ def type(resource)
 			action.session.whenLogout(b -> logout());
 			action.box = box;
 			action.clientId = clientId;
-			action.googleApiKey = "$googleApiKey";
+			[action.googleApiKey = $googleApiKey+format;]
 			action.device = parameterValue("device");
 			action.token = parameterValue("token");[
 			$editor+parameters]
@@ -177,4 +177,12 @@ end
 
 def type(parameter)
 	action.$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+end
+
+def type(googleApiKey) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", box.configuration().get("$value"))
 end
