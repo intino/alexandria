@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 
 public class ResourceRenderer extends UIRenderer {
 	private final Project project;
@@ -51,7 +52,7 @@ public class ResourceRenderer extends UIRenderer {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 		Frame frame = buildFrame().addTypes("resource").addSlot("name", resource.name$()).addSlot("parameter", parameters(resource));
 		if (resource.isEditorPage()) frame.addSlot("editor", "Editor");
-		if (uiService.googleApiKey() != null) frame.addSlot("googleApiKey", uiService.googleApiKey());
+		if (uiService.googleApiKey() != null) frame.addSlot("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) frame.addSlot("confidential", "");
 		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(resource.name$() + "Resource"), template().format(frame));
 		createCorrespondingAction(resource);
