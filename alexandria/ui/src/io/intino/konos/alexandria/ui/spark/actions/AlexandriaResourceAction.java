@@ -61,7 +61,7 @@ public abstract class AlexandriaResourceAction {
 		template = template.replace("$basePath", browser.basePath());
 		template = template.replace("$url", browser.baseUrl() + "/" + uiServiceName);
 		template = template.replace("$pushUrls", String.join(",", pushUrls(usedAppsUrls, sessionId, language, browser)));
-		template = template.replace("$googleApiKey", googleApiKey);
+		template = template.replace("$googleApiKey", googleApiKey != null ? googleApiKey : "");
 		template = template.replace("$favicon", favicon() != null ? Asset.toResource(baseAssetUrl(), favicon()).toUrl().toString() : "");
 
 		return template;
