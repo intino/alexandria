@@ -1,0 +1,20 @@
+dsl Legio
+
+Artifact(groupId = "io.intino.konos", version = "1.2.1") alexandria-rest-accessor-java
+	Imports
+		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "1.0.4")
+		Compile(groupId = "org.bouncycastle", artifactId = "bcmail-jdk15", version = "1.45")
+		Compile(groupId = "org.bouncycastle", artifactId = "bcprov-jdk15", version = "1.45")
+		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpcore", version = "4.4.4")
+		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpmime", version = "4.5.1")
+		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.1")
+		Compile(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.4")
+		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-client", version = "1.8.3")
+		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-container-grizzly-client", version = "1.8.3")
+		Test(groupId = "junit", artifactId = "junit", version = "4.12")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+
+
+
+Repository(identifier = "intino-maven")
+	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")

@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
+import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Feeder;
 import io.intino.konos.model.graph.KonosGraph;
@@ -87,7 +88,7 @@ public class AbstractBoxRenderer {
 	}
 
 	private Frame frameOf(Feeder feeder) {
-		return new Frame("feeder").addSlot("package", packageName).addSlot("name", feeder.name$()).addSlot("box", name());
+		return new Frame("feeder").addSlot("package", packageName).addSlot("name", FeederRenderer.name(feeder)).addSlot("box", name());
 	}
 
 	private void services(Frame frame, String name) {
