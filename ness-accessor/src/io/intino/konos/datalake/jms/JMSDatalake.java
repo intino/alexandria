@@ -16,10 +16,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.jms.Consumer.textFrom;
@@ -52,26 +49,31 @@ public class JMSDatalake implements Datalake {
 	public void connect(String... args) {
 		try {
 			if (session != null && !((ActiveMQSession) session).isClosed()) return;
+			for (TopicProducer topicProducer : topicProducers.values()) topicProducer.close();
 			createConnection();
 			final boolean transacted = args.length > 0 && args[0].equalsIgnoreCase("transacted");
 			this.session = connection.createSession(transacted, transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE);
-			this.registeredTanks = registeredTanks();
+			if (registeredTanks.isEmpty()) this.registeredTanks = registeredTanks();
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	public boolean isConnected() {
+		return (session != null && !((ActiveMQSession) session).isClosed());
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	private List<String> registeredTanks() {
 		TopicProducer producer = newProducer(ADMIN_PATH);
 		final String tanks = requestResponseWithTimeout(producer, createMessageFor("tanks"), 1000);
-		return Arrays.asList(tanks.split(";"));
+		return tanks == null || tanks.isEmpty() ? Collections.emptyList() : Arrays.asList(tanks.split(";"));
 	}
 
 	public List<User> users() {
 		TopicProducer producer = newProducer(ADMIN_PATH);
 		final String users = requestResponseWithTimeout(producer, createMessageFor("users"), 1000);
-		return Arrays.stream(users.split(";")).map(u -> new User(u, null)).collect(Collectors.toList());
+		return users == null || users.isEmpty() ? Collections.emptyList() : Arrays.stream(users.split(";")).map(u -> new User(u, null)).collect(Collectors.toList());
 	}
 
 	public void batch(String tank, int blockSize) {
@@ -234,5 +236,4 @@ public class JMSDatalake implements Datalake {
 	private void consume(ReflowDispatcher dispatcher, javax.jms.Message m) {
 		dispatcher.dispatch(load(textFrom(m)));
 	}
-
 }

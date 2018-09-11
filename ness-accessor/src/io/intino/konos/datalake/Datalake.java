@@ -16,9 +16,11 @@ public interface Datalake {
 
 	void add(String tank);
 
+	void connect(String... args);
+
 	void disconnect();
 
-	void connect(String... args);
+	boolean isConnected();
 
 	List<User> users();
 

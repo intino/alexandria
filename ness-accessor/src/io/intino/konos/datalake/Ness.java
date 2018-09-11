@@ -27,6 +27,10 @@ public class Ness {
 		datalake.disconnect();
 	}
 
+	public boolean isConnected() {
+		return datalake.isConnected();
+	}
+
 	public Datalake.ReflowSession reflow(ReflowConfiguration configuration, ReflowDispatcher dispatcher) {
 		return datalake.reflow(configuration, dispatcher);
 	}
