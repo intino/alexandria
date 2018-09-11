@@ -88,6 +88,11 @@ public class FSDatalake implements Datalake {
 		datalake.tankList().forEach(io.intino.ness.datalake.graph.Tank::terminate);
 	}
 
+	@Override
+	public boolean isConnected() {
+		return true;
+	}
+
 	public void connect(String... args) {
 	}
 
