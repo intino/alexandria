@@ -41,9 +41,9 @@ public interface Datalake {
 			return "feed." + name();
 		}
 
-		void feed(io.intino.ness.inl.Message... message);
+		boolean feed(io.intino.ness.inl.Message message);
 
-		void put(io.intino.ness.inl.Message... message);
+		boolean put(io.intino.ness.inl.Message message);
 
 		Tank batchSession(int blockSize);
 

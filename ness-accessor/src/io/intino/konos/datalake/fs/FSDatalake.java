@@ -28,8 +28,9 @@ public class FSDatalake implements Datalake {
 		datalake.scale(scaleOf(url));
 	}
 
-	public void put(String name, Message[] messages) {
-		for (Message message : messages) datalake.tank(name).put(message);
+	public boolean put(String name, Message message) {
+		datalake.tank(name).put(message);
+		return true;
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {

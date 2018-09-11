@@ -55,14 +55,14 @@ public class JMSTank implements Datalake.Tank {
 		return "feed." + name;
 	}
 
-	public void feed(io.intino.ness.inl.Message... messages) {
+	public boolean feed(io.intino.ness.inl.Message message) {
 		final TopicProducer producer = datalake.newProducer(feedChannel());
-		for (Message message : messages) producer.produce(fromInlMessage(message));
+		return producer.produce(fromInlMessage(message));
 	}
 
-	public void put(io.intino.ness.inl.Message... messages) {
+	public boolean put(io.intino.ness.inl.Message message) {
 		final TopicProducer producer = datalake.newProducer(putChannel());
-		for (Message m : messages) producer.produce(onlyRegister(fromInlMessage(m)));
+		return producer.produce(onlyRegister(fromInlMessage(message)));
 	}
 
 	@Override

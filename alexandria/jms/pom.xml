@@ -6,7 +6,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>alexandria-jms</artifactId>
     <name>Jms</name>
-    <version>1.0.15</version>
+    <version>1.0.16</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
