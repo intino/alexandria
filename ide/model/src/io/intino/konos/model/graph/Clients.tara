@@ -13,11 +13,11 @@ Facet Ness on Client
 	var word:{Normal Transacted} mode = Normal
 	var boolean requireConnection = false
 	has Mounter
-	has:Named Feeder
+	has Feeder
 
 Concept:NamedIfNoSchema Mounter extends EventSource is component
 
-Concept:Named Feeder is component
+Concept Feeder is component
 	var Schema[] eventTypes
 	var string subdomain = ""
 	has:Named Sensor

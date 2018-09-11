@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
@@ -56,7 +57,7 @@ public class FeederRenderer {
 				frame.addSlot("sensor", frameOf(sensor, name(feeder)));
 			frame.addSlot("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
 			frame.addSlot("domain", fullDomain(feeder.subdomain()));
-			final String feederClassName = firstUpperCase(name(feeder)) + "Feeder";
+			final String feederClassName = firstUpperCase(name(feeder));
 			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "ness.feeders." + feederClassName);
 			writeFrame(new File(gen, "ness/feeders"), "Abstract" + feederClassName, customize(AbstractFeederTemplate.create()).format(frame));
 			if (!alreadyRendered(new File(src, "ness/feeders"), feederClassName))
@@ -64,8 +65,12 @@ public class FeederRenderer {
 		}
 	}
 
-	private String name(Feeder feeder) {
-		return feeder.eventTypes().size() > 1 ? feeder.name$() : feeder.eventTypes().get(0).name$();
+	public static String name(Feeder feeder) {
+		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
+	}
+
+	private static boolean isAnonymous(Feeder feeder) {
+		return feeder.name$().matches("/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/");
 	}
 
 	private Frame frameOf(Sensor sensor, String feeder) {
