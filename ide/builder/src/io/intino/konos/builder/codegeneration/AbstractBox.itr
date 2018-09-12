@@ -292,7 +292,7 @@ def type(dataLake) trigger(getter)
 end
 
 def trigger(feeder)
-	io.intino.konos.datalake.Feeders.get().register(new $package.ness.feeders.$name+FirstUpperCase~Feeder(($box+FirstUpperCase~Box)this));
+	io.intino.konos.datalake.Feeders.get().register(new $package.ness.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
 end
 
 def type(service & slack) trigger(getter)

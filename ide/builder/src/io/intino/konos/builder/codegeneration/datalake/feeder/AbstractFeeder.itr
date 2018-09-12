@@ -10,7 +10,7 @@ def type(feeder)
 	import java.util.List;
 	import java.util.Collections;
 
-	public class Abstract$name+FirstUpperCase~Feeder extends io.intino.konos.datalake.Feeder {
+	public class Abstract$name+FirstUpperCase extends io.intino.konos.datalake.Feeder {
 		protected List<Sensor> sensors;
 
 		public Abstract$name+FirstUpperCase~Feeder() {
