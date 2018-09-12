@@ -13,8 +13,11 @@ Artifact(groupId = "io.intino.konos", version = "1.2.1") alexandria-rest-accesso
 		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-container-grizzly-client", version = "1.8.3")
 		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
-
+	Distribution(release = intino.release)
 
 
 Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
+
+Repository(identifier = "intino-maven")intino
+	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release

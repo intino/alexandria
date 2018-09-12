@@ -37,7 +37,7 @@ public class JMSDatalake implements Datalake {
 	private Session session;
 	private Connection connection;
 	private Map<String, TopicProducer> topicProducers = new HashMap<>();
-	private List<String> registeredTanks;
+	private List<String> registeredTanks = new ArrayList<>();
 
 	public JMSDatalake(String url, String user, String password, String clientID) {
 		this.url = url;

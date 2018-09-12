@@ -7,8 +7,11 @@ Artifact(groupId = "io.intino.konos", version = "1.0.16") alexandria-jms
 		Compile(groupId = "org.apache.activemq", artifactId = "activemq-client", version = "5.15.2")
 		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
-
+	Distribution(release = intino.release)
 
 
 Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
+
+Repository(identifier = "intino-maven")intino
+	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
