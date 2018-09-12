@@ -8,8 +8,11 @@ Artifact(groupId = "io.intino.konos", version = "1.0.7") alexandria-scheduler
 		Compile(groupId = "org.quartz-scheduler", artifactId = "quartz-jobs", version = "2.2.1")
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "1.0.4")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
-
+	Distribution(release = intino.release)
 
 
 Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
+
+Repository(identifier = "intino-maven") intino
+	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release

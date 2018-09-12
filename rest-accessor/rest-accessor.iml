@@ -14,7 +14,6 @@
     <orderEntry type="library" name="Legio: org.apache.tika:tika-core:0.4" level="project" />
     <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
-    <orderEntry type="library" name="Legio: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
     <orderEntry type="library" name="Legio: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
     <orderEntry type="library" name="Legio: org.bouncycastle:bcprov-jdk15:1.45" level="project" />

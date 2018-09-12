@@ -7,10 +7,14 @@ Artifact(groupId = "io.intino.konos", version = "1.0.4") alexandria-jmx
 		Provided(groupId = "com.sun", artifactId = "tools", version = "1.8.0")
 		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution(release = intino.release)
 
 
+Repository(identifier = "intino-maven")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")
+
+Repository(identifier = "intino-maven") intino
+	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
 
 Repository(identifier = "maven2-repository.dev.java.net")
 	Release(url = "http://download.java.net/maven/2/")
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")

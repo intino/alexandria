@@ -13,7 +13,7 @@ def type(feeder)
 	public class Abstract$name+FirstUpperCase extends io.intino.konos.datalake.Feeder {
 		protected List<Sensor> sensors;
 
-		public Abstract$name+FirstUpperCase~Feeder() {
+		public Abstract$name+FirstUpperCase() {
 			this.sensors = Arrays.asList($sensor+new...[, ]);
 		}
 
