@@ -48,22 +48,15 @@ public class CatalogRenderer extends DisplayRenderer {
 	}
 
 	private Frame frameOf(TemporalCatalog catalog, TemporalCatalog.TemporalFilter filter) {
-		Frame frame = new Frame();
-
-		frame.addSlot("temporalFilterLayout", filter.layout().toString());
-
+		Frame frame = new Frame().addSlot("temporalFilterLayout", filter.layout().toString());
 		Frame enabledFrame = new Frame();
 		if (filter.enabled() == TemporalCatalog.TemporalFilter.Enabled.Conditional)
 			enabledFrame.addSlot("catalog", catalog.name$());
-
 		frame.addSlot("temporalFilterEnabled", enabledFrame.addSlot(filter.enabled().toString(), filter.enabled().toString()));
-
 		Frame visibleFrame = new Frame();
 		if (filter.visible() == TemporalCatalog.TemporalFilter.Visible.Conditional)
 			visibleFrame.addSlot("catalog", catalog.name$());
-
 		frame.addSlot("temporalFilterVisible", visibleFrame.addSlot(filter.visible().toString(), filter.visible().toString()));
-
 		return frame;
 	}
 

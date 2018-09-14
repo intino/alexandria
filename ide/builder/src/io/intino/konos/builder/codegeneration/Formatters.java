@@ -2,8 +2,10 @@ package io.intino.konos.builder.codegeneration;
 
 
 import cottons.utils.StringHelper;
+import io.intino.konos.builder.helpers.Commons;
 import org.siani.itrules.Formatter;
 import org.siani.itrules.Template;
+import org.siani.itrules.model.Frame;
 
 public class Formatters {
 
@@ -68,6 +70,14 @@ public class Formatters {
 			return s[s.length - 1];
 		};
 	}
+
+	public static Frame customize(String name,String value) {
+		Frame frame = new Frame().addTypes(name);
+		frame.addSlot("name", value);
+		for (String parameter : Commons.extractParameters(value)) frame.addSlot("custom", parameter);
+		return frame;
+	}
+
 
 	public static Template customize(Template template) {
 		template.add("validname", validName());

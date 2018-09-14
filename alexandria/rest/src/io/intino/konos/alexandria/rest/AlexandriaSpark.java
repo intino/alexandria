@@ -52,22 +52,13 @@ public class AlexandriaSpark<R extends SparkRouter> {
 	public R route(String path) {
 		R router = createRouter(path);
 		router.inject(pushService);
-
-		router.whenRegisterPushService(new Consumer<PushService>() {
-			@Override
-			public void accept(PushService pushService) {
-				AlexandriaSpark.this.pushService = pushService;
-			}
-		});
-
-		router.whenValidate(new Function<SparkManager, Boolean>() {
-			@Override
-			public Boolean apply(SparkManager manager) {
-				return securityManager.check(manager.fromQuery("hash", String.class), manager.fromQuery("signature", String.class));
-			}
-		});
-
+		router.whenRegisterPushService(pushServiceConsumer());
+		router.whenValidate((Function<SparkManager<?>, Boolean>) manager -> securityManager.check(manager.fromQuery("hash", String.class), manager.fromQuery("signature", String.class)));
 		return router;
+	}
+
+	private Consumer<PushService> pushServiceConsumer() {
+		return (pushService) -> AlexandriaSpark.this.pushService = pushService;
 	}
 
 	protected R createRouter(String path) {
@@ -86,5 +77,4 @@ public class AlexandriaSpark<R extends SparkRouter> {
 	private boolean isInClasspath(String path) {
 		return getClass().getClassLoader().getResourceAsStream(path) != null;
 	}
-
 }

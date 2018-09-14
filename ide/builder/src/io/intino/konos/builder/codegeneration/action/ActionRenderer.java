@@ -23,12 +23,14 @@ abstract class ActionRenderer {
 	protected final File destiny;
 	protected String packageName;
 	protected final String boxName;
+	private final String type;
 
-	ActionRenderer(Project project, File destiny, String packageName, String boxName) {
+	ActionRenderer(Project project, File destiny, String packageName, String boxName, String type) {
 		this.project = project;
 		this.destiny = destiny;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.type = type;
 	}
 
 	boolean alreadyRendered(File destiny, String action) {
@@ -49,7 +51,7 @@ abstract class ActionRenderer {
 	}
 
 	private void createNewClass(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
-		Frame frame = new Frame().addTypes("action");
+		Frame frame = new Frame().addTypes("action", this.type);
 		frame.addSlot("name", name);
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);

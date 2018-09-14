@@ -32,19 +32,23 @@ public abstract class Producer {
 		}
 	}
 
-	public void produce(Message message) {
+	public boolean produce(Message message) {
 		try {
 			producer.send(message);
+			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			return false;
 		}
 	}
 
-	public void produce(Message message, int messageExpirationSeconds) {
+	public boolean produce(Message message, int messageExpirationSeconds) {
 		try {
 			producer.send(message, NON_PERSISTENT, 4, messageExpirationSeconds * 1000);
+			return true;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
+			return false;
 		}
 	}
 

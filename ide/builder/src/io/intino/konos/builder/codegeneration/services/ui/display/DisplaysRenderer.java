@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
@@ -8,30 +9,24 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static java.util.stream.Collectors.toList;
 
-public class DisplaysRenderer {
-	private static final String DISPLAYS = "displays";
-
+public class DisplaysRenderer extends UIRenderer {
 	private final File gen;
-	private final String packageName;
-	private final String boxName;
 	private final List<Display> displays;
 
-	public DisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public DisplaysRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		super(boxName, packageName);
 		this.gen = gen;
-		this.packageName = packageName;
 		this.displays = graph.displayList().stream().filter(d -> !d.getClass().equals(Display.class)).collect(toList());
-		this.boxName = boxName;
 	}
 
 	public void execute() {
 		if (displays.isEmpty()) return;
-		Frame frame = createFrame();
+		Frame frame = buildFrame();
 		for (Display display : displays) frame.addSlot("display", displayFrame(display));
 		write(frame);
 	}
@@ -52,9 +47,7 @@ public class DisplaysRenderer {
 		return Formatters.customize(DisplaysTemplate.create());
 	}
 
-	private Frame createFrame() {
-		return new Frame("displays")
-				.addSlot("box", boxName)
-				.addSlot("package", packageName);
+	protected Frame buildFrame() {
+		return super.buildFrame().addTypes("displays");
 	}
 }

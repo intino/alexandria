@@ -103,6 +103,8 @@ public class CreateKonosBoxAction extends KonosAction {
 		try {
 			final String dependencyVersion = dependency.effectiveVersion().isEmpty() ? dependency.version() : dependency.effectiveVersion();
 			if (isRange(dependencyVersion)) return !VersionRange.isInRange(version, VersionRange.rangeValuesOf(dependencyVersion));
+			if (dependencyVersion.isEmpty()) return false;
+			if (version.isEmpty()) return true;
 			return new Version(dependencyVersion).compareTo(new Version(version)) < 0;
 		} catch (IntinoException e) {
 			LOG.error(e);

@@ -10,10 +10,10 @@ def type(feeder)
 	import java.util.List;
 	import java.util.Collections;
 
-	public class Abstract$name+FirstUpperCase~Feeder extends io.intino.konos.datalake.Feeder {
+	public class Abstract$name+FirstUpperCase extends io.intino.konos.datalake.Feeder {
 		protected List<Sensor> sensors;
 
-		public Abstract$name+FirstUpperCase~Feeder() {
+		public Abstract$name+FirstUpperCase() {
 			this.sensors = Arrays.asList($sensor+new...[, ]);
 		}
 
@@ -22,8 +22,8 @@ def type(feeder)
 		}
 
 
-		public void feed(Message event) {
-			TanksConnectors.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
+		public boolean feed(Message event) {
+			return TanksConnectors.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
 		}
 
 		public List<Sensor> sensors() {
@@ -35,7 +35,7 @@ def type(feeder)
 end
 
 def type(sensor) trigger(new)
-	new $feeder+FirstUpperCase~Feeder.$name+FirstUpperCase~Sensor()
+	new $feeder+FirstUpperCase.$name+FirstUpperCase~Sensor()
 end
 
 def type(sensor) trigger(class)

@@ -16,10 +16,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.jms.Consumer.textFrom;
 import static io.intino.konos.jms.MessageFactory.createMessageFor;
@@ -39,7 +37,7 @@ public class JMSDatalake implements Datalake {
 	private Session session;
 	private Connection connection;
 	private Map<String, TopicProducer> topicProducers = new HashMap<>();
-	private List<String> registeredTanks;
+	private List<String> registeredTanks = new ArrayList<>();
 
 	public JMSDatalake(String url, String user, String password, String clientID) {
 		this.url = url;
@@ -51,30 +49,41 @@ public class JMSDatalake implements Datalake {
 	public void connect(String... args) {
 		try {
 			if (session != null && !((ActiveMQSession) session).isClosed()) return;
+			for (TopicProducer topicProducer : topicProducers.values()) topicProducer.close();
 			createConnection();
 			final boolean transacted = args.length > 0 && args[0].equalsIgnoreCase("transacted");
 			this.session = connection.createSession(transacted, transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE);
-			this.registeredTanks = registeredTanks();
+			if (registeredTanks == null || registeredTanks.isEmpty()) this.registeredTanks = registeredTanks();
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	public boolean isConnected() {
+		return (session != null && !((ActiveMQSession) session).isClosed());
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	private List<String> registeredTanks() {
 		TopicProducer producer = newProducer(ADMIN_PATH);
 		final String tanks = requestResponseWithTimeout(producer, createMessageFor("tanks"), 1000);
-		return Arrays.asList(tanks.split(";"));
+		return tanks == null || tanks.isEmpty() ? Collections.emptyList() : Arrays.asList(tanks.split(";"));
+	}
+
+	public List<User> users() {
+		TopicProducer producer = newProducer(ADMIN_PATH);
+		final String users = requestResponseWithTimeout(producer, createMessageFor("users"), 1000);
+		return users == null || users.isEmpty() ? Collections.emptyList() : Arrays.stream(users.split(";")).map(u -> new User(u, null)).collect(Collectors.toList());
 	}
 
 	public void batch(String tank, int blockSize) {
 		TopicProducer producer = newProducer(ADMIN_PATH);
-		producer.produce(createMessageFor("batch:"+ tank+ ":" + blockSize));
+		producer.produce(createMessageFor("batch:" + tank + ":" + blockSize));
 	}
 
 	public void endBatch(String tank) {
 		TopicProducer producer = newProducer(ADMIN_PATH);
-		producer.produce(createMessageFor("endBatch:"+ tank));
+		producer.produce(createMessageFor("endBatch:" + tank));
 	}
 
 	public Session session() {
@@ -143,7 +152,8 @@ public class JMSDatalake implements Datalake {
 		try {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
-			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive(1000));
+			Message response = session.createConsumer(message.getJMSReplyTo()).receive(1000);
+			return response == null ? "" : textFrom(response);
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return "";
@@ -155,7 +165,8 @@ public class JMSDatalake implements Datalake {
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
 			if (session.getTransacted()) session.commit();
-			return textFrom(session.createConsumer(message.getJMSReplyTo()).receive(timeout));
+			Message receive = session.createConsumer(message.getJMSReplyTo()).receive(timeout);
+			return receive == null ? "" : textFrom(receive);
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 			return "";
@@ -227,5 +238,4 @@ public class JMSDatalake implements Datalake {
 	private void consume(ReflowDispatcher dispatcher, javax.jms.Message m) {
 		dispatcher.dispatch(load(textFrom(m)));
 	}
-
 }

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 import spark.Service;
 
 import java.util.function.Consumer;
@@ -72,7 +71,7 @@ public class SparkRouter<SM extends SparkManager> {
 	}
 
 	protected SM manager(Request rq, Response rs) {
-		return (SM) new SparkManager(rq, rs);
+		return (SM) new SparkManager(pushService, rq, rs);
 	}
 
 	private boolean validRequest(SparkManager manager) {
@@ -108,5 +107,4 @@ public class SparkRouter<SM extends SparkManager> {
 			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
 		}
 	}
-
 }

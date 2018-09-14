@@ -36,7 +36,7 @@ def type(view & map)
 end
 
 def type(view & magazine)
-	new io.intino.konos.alexandria.ui.model.View().container(new new io.intino.konos.alexandria.ui.model.view.container.MagazineContainer()[.noItemsMessage("$noItemsMessage")].mold((io.intino.konos.alexandria.ui.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element())).layout(View.Layout.$layout)[.width($width)].name("$name")[.label("$label")][$hidden+call]
+	new io.intino.konos.alexandria.ui.model.View().container(new io.intino.konos.alexandria.ui.model.view.container.MagazineContainer()[.noItemsMessage("$noItemsMessage")].mold((io.intino.konos.alexandria.ui.model.Mold) $package.displays.Displays.displayFor(box, "$mold").element())).layout(View.Layout.$layout)[.width($width)].name("$name")[.label("$label")][$hidden+call]
 end
 
 def trigger(catalogDisplayLoader)

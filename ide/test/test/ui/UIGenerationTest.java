@@ -19,7 +19,7 @@ public class UIGenerationTest {
 	private static final String marcet = "marcet";
 	private static final String octanaPackage = "io.intino.octana.box";
 	private static final String marcetPackage = "org.marcet.box";
-	private static final String cesarPackage = "io.intino.cesar.box";
+	private static final String cesarPackage = "io.intino.cesar.ui";
 	private static final String editorPackage = "io.intino.editor.box";
 	private static final String DIR = "test-gen";
 

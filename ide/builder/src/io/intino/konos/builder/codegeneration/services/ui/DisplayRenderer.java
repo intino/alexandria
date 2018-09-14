@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 import io.intino.konos.model.graph.Display;
 import org.siani.itrules.model.Frame;
 
-public abstract class DisplayRenderer extends Renderer {
+public abstract class DisplayRenderer extends UIPrototypeRenderer {
 	private final Display display;
 
 	protected DisplayRenderer(Display display, String box, String packageName) {
@@ -17,8 +17,6 @@ public abstract class DisplayRenderer extends Renderer {
 
 	@Override
 	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		frame.addTypes(display.getClass().getSimpleName().toLowerCase());
-		return frame;
+		return super.buildFrame().addTypes(display.getClass().getSimpleName().toLowerCase());
 	}
 }

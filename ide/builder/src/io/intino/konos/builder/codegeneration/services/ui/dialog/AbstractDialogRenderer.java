@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Dialog.Tab;
@@ -16,19 +17,15 @@ import java.util.List;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class AbstractDialogRenderer {
+public class AbstractDialogRenderer extends UIRenderer {
 
-	private static final String DIALOGS = "dialogs";
 	private final File gen;
-	private final String packageName;
 	private final List<Dialog> dialogs;
-	private final String boxName;
 
 	public AbstractDialogRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		super(boxName, packageName);
 		this.gen = gen;
-		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
-		this.boxName = boxName;
 	}
 
 	public void execute() {
@@ -39,7 +36,7 @@ public class AbstractDialogRenderer {
 		Frame frame = new Frame().addTypes("dialogDisplay");
 		frame.addSlot("package", packageName);
 		frame.addSlot("name", dialog.name$());
-		frame.addSlot("box", boxName);
+		frame.addSlot("box", box);
 		final Frame dialogFrame = new Frame().addTypes("dialog");
 		if (!dialog.label().isEmpty()) dialogFrame.addSlot("label", dialog.label());
 		if (!dialog.description().isEmpty()) dialogFrame.addSlot("description", dialog.description());
@@ -223,5 +220,4 @@ public class AbstractDialogRenderer {
 		Formatters.customize(template);
 		return template;
 	}
-
 }

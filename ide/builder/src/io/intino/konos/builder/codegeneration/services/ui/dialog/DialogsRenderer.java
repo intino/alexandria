@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.KonosGraph;
 import org.siani.itrules.Template;
@@ -8,29 +9,24 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
-public class DialogsRenderer {
-	private static final String DIALOGS = "dialogs";
+public class DialogsRenderer extends UIRenderer {
 
 	private final File gen;
-	private final String packageName;
-	private final String boxName;
 	private final List<Dialog> dialogs;
 
 	public DialogsRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+		super(boxName, packageName);
 		this.gen = gen;
-		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
-		this.boxName = boxName;
 	}
 
 	public void execute() {
 		if (dialogs.isEmpty()) return;
-		Frame frame = createFrame();
+		Frame frame = buildFrame();
 		for (Dialog dialog : dialogs) frame.addSlot("dialog", dialogFrame(dialog));
 		write(frame);
 	}
@@ -50,9 +46,7 @@ public class DialogsRenderer {
 		return Formatters.customize(DialogsTemplate.create());
 	}
 
-	private Frame createFrame() {
-		return new Frame("dialogs")
-				.addSlot("box", boxName)
-				.addSlot("package", packageName);
+	protected Frame buildFrame() {
+		return super.buildFrame().addTypes("dialogs");
 	}
 }

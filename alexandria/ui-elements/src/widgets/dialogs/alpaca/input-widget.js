@@ -83,7 +83,9 @@ var AlpacaInputConverter = function() {
             if (input.multiple == null) return input.value;
             var result = [];
             for (var i=0;i<input.value.length; i++) {
-                result.push(input.value[i]);
+                var value = input.value[i];
+                if (value[0] == "{" && value[value.length-1] == "}") value = JSON.parse(value);
+                result.push(value);
             }
             return result;
         },
@@ -94,6 +96,7 @@ var AlpacaInputConverter = function() {
             result.readonly = input.readonly != null ? input.readonly : false;
             result.required = input.required != null ? input.required : false;
             result.inputType = input.type;
+            result.inputName = input.name;
             return result;
         },
 

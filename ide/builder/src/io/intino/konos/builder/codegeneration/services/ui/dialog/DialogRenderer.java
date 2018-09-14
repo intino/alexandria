@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
 import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Dialog.Tab;
@@ -14,24 +15,19 @@ import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
-public class DialogRenderer {
-
-	private static final String DIALOGS = "dialogs";
+public class DialogRenderer extends UIRenderer {
 	private KonosGraph graph;
 	private final File gen;
 	private final File src;
-	private final String packageName;
 	private final List<Dialog> dialogs;
-	private final String boxName;
 	private final Map<String, String> classes;
 
 	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
+		super(boxName, packageName);
 		this.graph = graph;
 		this.gen = gen;
 		this.src = src;
-		this.packageName = packageName;
 		this.dialogs = graph.dialogList();
-		this.boxName = boxName;
 		this.classes = classes;
 	}
 
@@ -47,10 +43,7 @@ public class DialogRenderer {
 	private void renderDialog(Dialog dialog) {
 		final String newDialog = snakeCaseToCamelCase(dialog.name$());
 		if (Commons.javaFile(new File(src, DIALOGS), newDialog).exists()) return;
-		Frame frame = new Frame().addTypes("dialog");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", dialog.name$());
-		frame.addSlot("box", boxName);
+		Frame frame = buildFrame().addTypes("dialog").addSlot("name", dialog.name$());
 		processToolbar(frame, dialog.toolbar());
 		for (Tab tab : dialog.tabList()) processTab(frame, tab);
 		classes.put("Dialog#" + dialog.name$(), DIALOGS + "." + newDialog);
@@ -67,7 +60,7 @@ public class DialogRenderer {
 	}
 
 	private void processExecution(Frame frame, Dialog.Toolbar.Operation operation) {
-		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", boxName).addSlot("name", operation.name$()));
+		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", box).addSlot("name", operation.name$()));
 	}
 
 	private void processTab(Frame frame, Tab tab) {
@@ -83,16 +76,16 @@ public class DialogRenderer {
 
 	private void processSources(Frame frame, Tab.OptionBox optionBox) {
 		if (optionBox.source() != null && !optionBox.source().isEmpty())
-			frame.addSlot("source", new Frame().addTypes("source").addSlot("box", boxName).addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
+			frame.addSlot("source", new Frame().addTypes("source").addSlot("box", box).addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
 	}
 
 	private void processValidator(Frame frame, Tab.Input input) {
 		if (input.validator() != null && !input.validator().isEmpty())
-			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("box", boxName).addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
+			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("box", box).addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
 	}
 
 	private void renderDialogDisplay() {
-		new AbstractDialogRenderer(graph, gen, packageName, boxName).execute();
+		new AbstractDialogRenderer(graph, gen, packageName, box).execute();
 	}
 
 	private Template template() {
