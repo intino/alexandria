@@ -35,7 +35,7 @@ def type(feeder)
 end
 
 def type(sensor) trigger(new)
-	new $feeder+FirstUpperCase~Feeder.$name+FirstUpperCase~Sensor()
+	new $feeder+FirstUpperCase.$name+FirstUpperCase~Sensor()
 end
 
 def type(sensor) trigger(class)
