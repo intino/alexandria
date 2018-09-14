@@ -104,10 +104,11 @@ Facet SlackBot on Service
 	Concept Notification
 		var string channel
 	Concept:Named Request
+		var string description
 		Concept:Named Parameter
 			var word:{Boolean String Double Integer} type
 			var boolean multiple = false
 		var word:{Text Attachment} responseType = Text
-		var string description
+
 		has Request
 

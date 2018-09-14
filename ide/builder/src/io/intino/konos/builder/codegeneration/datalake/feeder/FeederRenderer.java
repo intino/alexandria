@@ -70,7 +70,7 @@ public class FeederRenderer {
 	}
 
 	private static boolean isAnonymous(Feeder feeder) {
-		return feeder.name$().matches("/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/");
+		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 	}
 
 	private Frame frameOf(Sensor sensor, String feeder) {
