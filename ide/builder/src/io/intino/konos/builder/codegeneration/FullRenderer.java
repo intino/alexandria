@@ -125,7 +125,7 @@ public class FullRenderer {
 		if (graph.nessClientList().isEmpty()) return;
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
-		new FeederRenderer(graph,gen, src, packageName, boxName, classes).execute();
+		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new TanksConnectorsRenderer(graph, gen, packageName, boxName).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
@@ -137,8 +137,8 @@ public class FullRenderer {
 
 	private void ui() {
 		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName, classes).execute();
+		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
-		new DisplaysRenderer(graph, gen, packageName, boxName, classes).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName, classes).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
 		new UIResourcesRenderer(graph, gen, packageName, boxName).execute();

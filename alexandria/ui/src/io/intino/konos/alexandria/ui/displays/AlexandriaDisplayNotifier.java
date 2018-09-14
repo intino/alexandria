@@ -1,5 +1,7 @@
 package io.intino.konos.alexandria.ui.displays;
 
+import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -8,6 +8,7 @@ def type(accessor)
 	import io.intino.konos.alexandria.exceptions.*;
 	import io.intino.konos.alexandria.schema.Resource;
 	import io.intino.konos.restful.core.RestfulAccessor;
+	import io.intino.konos.restful.core.RestfulNotifier;
 	import io.intino.konos.restful.exceptions.RestfulFailure;
 	import com.google.gson.Gson;
 	import com.google.gson.GsonBuilder;
@@ -26,7 +27,8 @@ def type(accessor)
 		private URL url;
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
-		private RestfulAccessor accessor = new RestfulAccessor();[
+		private RestfulAccessor accessor = new RestfulAccessor();
+		private RestfulNotifier notifier = new RestfulNotifier();[
 		$certificate~private URL certificate;][
 		$token~private String token;]
 
@@ -37,6 +39,8 @@ def type(accessor)
 		}
 
 		$resource...[$NL$NL]
+
+		$notification...[$NL$NL]
 
 		private String encode(String value) {
 			try {
@@ -72,6 +76,19 @@ def type(resource)
 			$invokeSentence
 		} catch (RestfulFailure e) {
 			$exceptionResponses+throws
+		}
+	}
+end
+
+def type(notification)
+	public void listen$name+SnakeCaseToCamelCase+firstUppercase([$parameter+signature...[, ], ]java.util.function.Consumer<String> listener) throws Unknown {
+		try {
+			[java.util.Map<String, String> parameters = new java.util.HashMap<String, String>() {{
+				$parameter+declaration...[$NL]
+			}};]
+			this.notifier.listen(listener, accessor.[$secure~secure(this.url, this.token)].post("$path"[, $parameters]).content());
+		} catch (RestfulFailure e) {
+			throw new Unknown(e.label());
 		}
 	}
 end

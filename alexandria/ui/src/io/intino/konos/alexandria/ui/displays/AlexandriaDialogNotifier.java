@@ -1,5 +1,6 @@
 package io.intino.konos.alexandria.ui.displays;
 
+import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.konos.alexandria.ui.schemas.Dialog;
 import io.intino.konos.alexandria.ui.schemas.Validation;
 

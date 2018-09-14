@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RESTActionRenderer extends ActionRenderer {
+public class RESTResourceActionRenderer extends ActionRenderer {
 	private final Resource.Operation operation;
 	private final Map<String, String> classes;
 
-	public RESTActionRenderer(Project project, Resource.Operation operation, File destiny, String packageName, String boxName, Map<String, String> classes) {
-		super(project, destiny, packageName, boxName);
+	public RESTResourceActionRenderer(Project project, Resource.Operation operation, File destiny, String packageName, String boxName, Map<String, String> classes) {
+		super(project, destiny, packageName, boxName, "resource");
 		this.operation = operation;
 		this.classes = classes;
 	}

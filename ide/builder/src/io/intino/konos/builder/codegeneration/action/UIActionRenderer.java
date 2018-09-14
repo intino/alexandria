@@ -23,7 +23,7 @@ public class UIActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public UIActionRenderer(Project project, UIService.Resource resource, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
-		super(project, src, packageName, boxName);
+		super(project, src, packageName, boxName, "ui");
 		this.gen = gen;
 		this.resource = resource;
 		this.service = resource.core$().ownerAs(UIService.class);

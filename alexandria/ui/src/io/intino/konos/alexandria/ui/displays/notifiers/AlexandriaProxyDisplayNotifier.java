@@ -2,7 +2,7 @@ package io.intino.konos.alexandria.ui.displays.notifiers;
 
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifier;
-import io.intino.konos.alexandria.ui.displays.MessageCarrier;
+import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
 
 public abstract class AlexandriaProxyDisplayNotifier extends AlexandriaDisplayNotifier {
 

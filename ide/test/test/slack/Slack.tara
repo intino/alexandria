@@ -1,6 +1,6 @@
 dsl Konos
 
-Service Nessie as SlackBot
+Service Nessie as SlackBot(token = "")
 	Request("Enter in the management area to add/remove channels or users and other management actions") manage
 		Request("Request all channels nessy is subscribed filtered by tags") add-user
 			Parameter(String) name

@@ -11,8 +11,7 @@ import spark.Response;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
-public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkManager {
-	private final PushService pushService;
+public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkManager<io.intino.konos.alexandria.ui.services.push.PushService> {
 	private final AuthService authService;
 	private final EditorService editorService;
 	private final boolean hasUserHome;
@@ -20,15 +19,10 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 	public static final String KonosUserHomePath = "/konos/user";
 
 	public UISparkManager(Request request, Response response, PushService pushService, AuthService authService, EditorService editorService, boolean hasUserHome) {
-		super(request, response);
-		this.pushService = pushService;
+		super(pushService, request, response);
 		this.authService = authService;
 		this.editorService = editorService;
 		this.hasUserHome = hasUserHome;
-	}
-
-	public PushService pushService() {
-		return this.pushService;
 	}
 
 	public AuthService authService() {
@@ -51,28 +45,28 @@ public class UISparkManager extends io.intino.konos.alexandria.rest.spark.SparkM
 		pushService.unRegister(client);
 	}
 
-	public UISession currentSession() {
-		return pushService.session(request.session().id());
-	}
-
-	public UISession session(String id) {
-		return pushService.session(id);
-	}
-
-	public UIClient client(String id) {
-		return pushService.client(id);
-	}
-
-	public UIClient currentClient() {
-		return pushService.currentClient();
-	}
-
 	public String userHomePath() {
 		return hasUserHome ? KonosUserHomePath : "";
 	}
 
 	public String requestUrl() {
 		return baseUrl() + this.request.raw().getPathInfo();
+	}
+
+	public UISession currentSession() {
+		return (UISession) pushService.session(request.session().id());
+	}
+
+	public UISession session(String id) {
+		return (UISession) pushService().session(id);
+	}
+
+	public UIClient client(String id) {
+		return (UIClient) pushService.client(id);
+	}
+
+	public UIClient currentClient() {
+		return (UIClient) pushService.currentClient();
 	}
 
 	public String languageFromHeader() {

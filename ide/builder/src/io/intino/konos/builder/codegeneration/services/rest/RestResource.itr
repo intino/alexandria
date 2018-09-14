@@ -1,5 +1,74 @@
+def type(notification)
+	package $package.rest.notifications;
+
+	import java.util.List;
+	import java.util.ArrayList;
+	import io.intino.konos.alexandria.exceptions.*;
+	import $package.*;
+	import io.intino.konos.alexandria.Box;
+	import io.intino.konos.alexandria.rest.Resource;
+	import io.intino.konos.alexandria.rest.pushservice.Client;
+	import io.intino.konos.alexandria.rest.pushservice.Session;
+	import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
+	import io.intino.konos.alexandria.rest.spark.SparkManager;
+	import io.intino.konos.alexandria.rest.spark.SparkNotifier;
+	import io.intino.konos.alexandria.rest.spark.SparkPushService;
+
+	$schemaImport
+
+	public class $name+firstUpperCase~Notification implements Resource {
+
+		private $box+FirstUpperCase~Box box;
+		private SparkManager<SparkPushService> manager;[
+		$authenticationValidator+field]
+
+		public $name+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
+			this.box = box;
+			this.manager = manager;
+			$authenticationValidator+assign
+		}
+
+		public void execute()[ throws $throws...[, ]] {
+			[$authenticationValidator+validate]
+			Session session = manager.currentSession();
+			String clientId = java.util.UUID.randomUUID().toString();
+			$package+validPackage.actions.$name+firstUpperCase~Action action = fill(new $package+validPackage.actions.$name+firstUpperCase~Action());
+			manager.pushService().onOpen(client -> {
+				action.onOpen(client, notifier(session, client));
+				return true;
+			});
+			manager.pushService().onClose(clientId).execute((java.util.function.Consumer<Client>) action::onClose);
+			[$returnType+methodCall]manager.baseUrl().replace("http", "ws") + "/push?id=" + clientId[$returnType+ending];
+		}
+
+		private $package+validPackage.actions.$name+firstUpperCase~Action fill($package+validPackage.actions.$name+firstUpperCase~Action action) {
+			action.box = this.box;
+			action.context = context();[
+			$parameter+assign...[$NL]]
+			return action;
+		}
+		[
+		$returnType+method]
+
+		private SparkNotifier notifier(Session session, Client client) {
+			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
+		}
+
+		private io.intino.konos.alexandria.schema.Context context() {
+			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
+			context.put("domain", manager.domain());
+			context.put("baseUrl", manager.baseUrl());
+			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
+			return context;
+		}
+	}
+
+
+end
+
+
 def type(resource)
-	package $package.resources;
+	package $package.rest.resources;
 
 	import java.util.List;
 	import java.util.ArrayList;
@@ -8,12 +77,14 @@ def type(resource)
 	import io.intino.konos.alexandria.Box;
 	import io.intino.konos.alexandria.rest.Resource;
 	import io.intino.konos.alexandria.rest.spark.SparkManager;
+	import io.intino.konos.alexandria.rest.spark.SparkPushService;
+
 	$schemaImport
 
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager manager;[
+		private SparkManager<SparkPushService> manager;[
 		$authenticationValidator+field]
 
 		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
@@ -102,7 +173,8 @@ def type(authenticationValidator) trigger(assign)
 end
 
 def type(authenticationValidator) trigger(validate)
-	if (!validator.validate(manager.fromHeader("Authorization", String.class).replace("Basic ", ""))) throw new Unauthorized("Credential not found");
+	String auth = manager.fromHeader("Authorization", String.class);
+	if (auth == null || !validator.validate(auth.replace("Basic ", ""))) throw new Unauthorized("Credential not found");
 end
 
 def trigger(parameterType)

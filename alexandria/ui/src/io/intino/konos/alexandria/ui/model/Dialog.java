@@ -11,10 +11,7 @@ import io.intino.konos.alexandria.ui.model.dialog.Value;
 import io.intino.konos.alexandria.ui.model.dialog.Values;
 import io.intino.konos.alexandria.ui.services.push.UISession;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -34,7 +31,18 @@ public class Dialog {
     public Dialog() {
         this.label = "";
         this.description = "";
-        this.form = new Form(input -> input(input.name()).getClass().getSimpleName().toLowerCase());
+        this.form = new Form(new Form.TypeResolver() {
+            @Override
+            public String type(Form.Input input) {
+                return type(input.name());
+            }
+
+            @Override
+            public String type(String inputName) {
+                Tab.Input input = inputs().stream().filter(i -> i.name().equals(inputName) || i.label().equals(inputName)).findFirst().orElse(null);
+                return input != null ? input.getClass().getSimpleName().toLowerCase() : null;
+            }
+        });
     }
 
     protected Dialog(Form form) {
@@ -150,10 +158,7 @@ public class Dialog {
 
     private Form.Input formInput(String path) {
         Form.Input input = form.input(path);
-        if (input == null) {
-            input = form.register(path, null);
-            input.clear();
-        }
+        if (input == null) input = form.register(path, null);
         return input;
     }
 
@@ -431,8 +436,15 @@ public class Dialog {
             }
 
             public Values values() {
-                Form.Input formInput = form.input(path());
-                return formInput != null ? formInput.values() : new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
+                List<Form.Input> formInputs = form.inputs(path());
+
+                if (formInputs == null || formInputs.size() == 0)
+                    return new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
+
+                Values values = new Values();
+                formInputs.stream().map(Form.Input::value).filter(Objects::nonNull).forEach(values::add);
+
+                return values;
             }
 
             public Input value(Object value) {
@@ -440,7 +452,6 @@ public class Dialog {
             }
 
             public Input values(List<Object> values) {
-                form.input(path()).clear();
                 for (int i=0; i<values.size(); i++)
                     form.register(path() + "." + i, values.get(i));
                 return this;
@@ -696,19 +707,6 @@ public class Dialog {
                 inputList.add(input);
                 return input;
             }
-
-            @Override
-            public Values values() {
-                List<Form.Input> formInputs = form.inputs(path());
-
-                if (formInputs == null || formInputs.size() == 0)
-                    return new Values() {{ if (defaultValue() != null) add(new Value(defaultValue())); }};
-
-                Values values = new Values();
-                formInputs.forEach(formInput -> values.add(formInput.value()));
-                return values;
-            }
-
         }
 
         public class Memo extends Input {

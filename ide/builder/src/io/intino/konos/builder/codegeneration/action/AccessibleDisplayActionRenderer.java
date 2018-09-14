@@ -17,7 +17,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public AccessibleDisplayActionRenderer(Project project, AccessibleDisplay display, File src, String packageName, String boxName, Map<String, String> classes) {
-		super(project, src, packageName, boxName);
+		super(project, src, packageName, boxName,"accessibleDisplay");
 		this.display = display;
 		this.classes = classes;
 	}

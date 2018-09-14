@@ -4,12 +4,9 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.intino.konos.alexandria.ui.model.dialog.Form;
-import io.intino.konos.alexandria.ui.model.dialog.Value;
 
 import java.io.IOException;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 public class FormAdapter extends TypeAdapter<Form> {
 
@@ -75,23 +72,25 @@ public class FormAdapter extends TypeAdapter<Form> {
     }
 
     private void writeValues(JsonWriter out, Form.Input input) throws IOException {
-        List<Object> values = input.values().stream().map(Value::asObject).collect(toList());
-        if (values.size() <= 0) return;
-
-        if (values.size() == 1) {
-            out.name("value").value(ValueAdapter.value(values.get(0)));
-            return;
-        }
-
-        out.name("values");
-        out.beginArray();
-        values.forEach(v -> {
-            try {
-                out.value(ValueAdapter.value(v));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        out.endArray();
+        Object value = input.value().asObject();
+        out.name("value").value(ValueAdapter.value(value));
+//        List<Object> values = input.values().stream().map(Value::asObject).collect(toList());
+//        if (values.size() <= 0) return;
+//
+//        if (values.size() == 1) {
+//            out.name("value").value(ValueAdapter.value(values.get(0)));
+//            return;
+//        }
+//
+//        out.name("values");
+//        out.beginArray();
+//        values.forEach(v -> {
+//            try {
+//                out.value(ValueAdapter.value(v));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        out.endArray();
     }
 }

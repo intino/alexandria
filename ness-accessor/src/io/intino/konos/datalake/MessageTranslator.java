@@ -3,13 +3,16 @@ package io.intino.konos.datalake;
 
 import io.intino.konos.jms.MessageFactory;
 import io.intino.ness.inl.Message;
+import io.intino.ness.inl.Message.Attachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -41,12 +44,19 @@ public class MessageTranslator {
 	}
 
 	public static javax.jms.Message fromInlMessage(Message message) {
-		if (!message.attachments().isEmpty()) {
+		List<Attachment> attachments = getAttachments(message);
+		if (!attachments.isEmpty()) {
 			javax.jms.Message result = MessageFactory.byteMessage();
-			addAttachments((BytesMessage) result, message);
+			addAttachments((BytesMessage) result, attachments);
 			addTextMessage(message, (BytesMessage) result);
 			return result;
 		} else return MessageFactory.createMessageFor(message.toString());
+	}
+
+	private static List<Attachment> getAttachments(Message message) {
+		List<Attachment> attachments = new ArrayList<>(message.attachments());
+		message.components().stream().map(MessageTranslator::getAttachments).forEach(attachments::addAll);
+		return attachments;
 	}
 
 	private static Map<String, Integer> loadAttachmentProperties(javax.jms.Message message) {
@@ -68,11 +78,11 @@ public class MessageTranslator {
 		}
 	}
 
-	private static void addAttachments(BytesMessage bytesMessage, Message message) {
+	private static void addAttachments(BytesMessage bytesMessage, List<Attachment> attachments) {
 		try {
-			bytesMessage.setStringProperty(ATTACHMENT_IDS, String.join(",", message.attachments().stream().map(Message.Attachment::id).toArray(String[]::new)));
-			bytesMessage.setStringProperty(ATTACHMENT_SIZES, String.join(",", message.attachments().stream().map(a -> a.data().length + "").toArray(String[]::new)));
-			for (Message.Attachment attachment : message.attachments()) bytesMessage.writeBytes(attachment.data());
+			bytesMessage.setStringProperty(ATTACHMENT_IDS, String.join(",", attachments.stream().map(Attachment::id).toArray(String[]::new)));
+			bytesMessage.setStringProperty(ATTACHMENT_SIZES, String.join(",", attachments.stream().map(a -> a.data().length + "").toArray(String[]::new)));
+			for (Attachment attachment : attachments) bytesMessage.writeBytes(attachment.data());
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 		}

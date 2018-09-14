@@ -6,7 +6,10 @@ import spark.Response;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -14,7 +17,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @SuppressWarnings("unchecked")
-public class SparkManager {
+public class SparkManager<P extends PushService> {
+	protected final P pushService;
 	protected final Request request;
 	protected final Response response;
 
@@ -22,11 +26,20 @@ public class SparkManager {
 	private static final String XForwardedPath = "X-Forwarded-Path";
 	private static final String XForwardedPort = "X-Forwarded-Port";
 
-	public SparkManager(Request request, Response response) {
+	public SparkManager(P pushService, Request request, Response response) {
+		this.pushService = pushService;
 		this.request = request;
 		this.response = response;
 		setUpMultipartConfiguration();
 		setUpSessionCookiePath();
+	}
+
+	public P pushService() {
+		return this.pushService;
+	}
+
+	public SparkSession currentSession() {
+		return (SparkSession) pushService.session(request.session().id());
 	}
 
 	public void write(Object object) {
@@ -175,7 +188,7 @@ public class SparkManager {
 	}
 
 	public void redirect(String location) {
-		response.redirect(response.raw().encodeRedirectURL(location));
+		response.redirect(location);
 	}
 
 }

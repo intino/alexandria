@@ -15,7 +15,7 @@ public class JMSRequestActionRenderer extends ActionRenderer {
 	private final Map<String, String> classes;
 
 	public JMSRequestActionRenderer(Project project, Request request, File destiny, String packageName, String boxName, Map<String, String> classes) {
-		super(project, destiny, packageName, boxName);
+		super(project, destiny, packageName, boxName,"jms");
 		this.request = request;
 		this.classes = classes;
 	}

@@ -9,11 +9,13 @@ import io.intino.konos.model.graph.datetime.DateTimeData;
 import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.list.ListData;
 import io.intino.konos.model.graph.rest.RESTService;
+import io.intino.konos.model.graph.rest.RESTService.Notification;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
 import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -51,11 +53,9 @@ public class RESTAccessorRenderer {
 		if (!restService.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 		List<Frame> resourceFrames = new ArrayList<>();
-		for (Resource resource : restService.core$().findNode(Resource.class))
-			resourceFrames.addAll(resource.operationList().stream().
-					map(operation -> processOperation(operation, restService.authenticated() != null,
-							restService.authenticatedWithCertificate() != null)).collect(Collectors.toList()));
+		restService.core$().findNode(Resource.class).stream().map(resource -> framesOf(restService, resource)).forEach(resourceFrames::addAll);
 		frame.addSlot("resource", (AbstractFrame[]) resourceFrames.toArray(new AbstractFrame[0]));
+		frame.addSlot("notification", (AbstractFrame[]) restService.notificationList().stream().map(notification -> frameOf(restService, frame, notification)).toArray(AbstractFrame[]::new));
 		writeFrame(destination, snakeCaseToCamelCase(restService.name$()) + "Accessor", template().format(frame));
 	}
 
@@ -63,6 +63,22 @@ public class RESTAccessorRenderer {
 		if (restService.authenticated() != null) frame.addSlot("auth", "");
 		if (restService.authenticatedWithCertificate() != null) frame.addSlot("certificate", "");
 		else if (restService.authenticatedWithToken() != null) frame.addSlot("token", "");
+	}
+
+	@NotNull
+	private List<Frame> framesOf(RESTService restService, Resource resource) {
+		return resource.operationList().stream().
+				map(operation -> processOperation(operation, restService.authenticated() != null,
+						restService.authenticatedWithCertificate() != null)).collect(Collectors.toList());
+	}
+
+	private Frame frameOf(RESTService restService, Frame frame, Notification notification) {
+		Frame notificationFrame = new Frame("notification").addSlot("path", notification.path()).addSlot("name", notification.name$());
+		if (restService.authenticatedWithToken() != null) notificationFrame.addSlot("secure", "");
+		if (Commons.queryParameters(notification) > 0 || Commons.bodyParameters(notification) > 0)
+			notificationFrame.addSlot("parameters", "parameters");
+		notificationFrame.addSlot("parameter", notificationParameters(notification.parameterList()));
+		return notificationFrame;
 	}
 
 	private Frame processOperation(Operation operation, boolean authenticated, boolean cert) {
@@ -79,7 +95,17 @@ public class RESTAccessorRenderer {
 		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
 	}
 
+	private Frame[] notificationParameters(List<Notification.Parameter> parameters) {
+		return parameters.stream().map(this::parameter).toArray(Frame[]::new);
+	}
+
 	private Frame parameter(Parameter parameter) {
+		return new Frame().addTypes("parameter", parameter.isList() ? "list" : "single", parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
+				.addSlot("name", parameter.name$())
+				.addSlot("parameterType", parameterType(parameter));
+	}
+
+	private Frame parameter(Notification.Parameter parameter) {
 		return new Frame().addTypes("parameter", parameter.isList() ? "list" : "single", parameter.in().toString(), (parameter.isRequired() ? "required" : "optional"), parameter.asType().getClass().getSimpleName())
 				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter));
@@ -90,6 +116,10 @@ public class RESTAccessorRenderer {
 		return parameter.i$(ListData.class) ? "List<" + value + ">" : value;
 	}
 
+	private String parameterType(Notification.Parameter parameter) {
+		String value = (parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "") + parameter.asType().type();
+		return parameter.i$(ListData.class) ? "List<" + value + ">" : value;
+	}
 
 	private Frame invokeSentence(Operation operation, boolean authenticated, boolean cert) {
 		Response response = operation.response();

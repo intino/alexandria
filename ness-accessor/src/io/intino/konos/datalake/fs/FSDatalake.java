@@ -12,6 +12,8 @@ import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class FSDatalake implements Datalake {
@@ -26,8 +28,9 @@ public class FSDatalake implements Datalake {
 		datalake.scale(scaleOf(url));
 	}
 
-	public void put(String name, Message[] messages) {
-		for (Message message : messages) datalake.tank(name).put(message);
+	public boolean put(String name, Message message) {
+		datalake.tank(name).put(message);
+		return true;
 	}
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
@@ -85,7 +88,17 @@ public class FSDatalake implements Datalake {
 		datalake.tankList().forEach(io.intino.ness.datalake.graph.Tank::terminate);
 	}
 
+	@Override
+	public boolean isConnected() {
+		return true;
+	}
+
 	public void connect(String... args) {
+	}
+
+	@Override
+	public List<User> users() {
+		return Collections.emptyList();
 	}
 
 	private String clean(String url) {

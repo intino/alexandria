@@ -1,6 +1,6 @@
 package io.intino.konos.restful;
 
-import io.intino.konos.alexandria.Resource;
+import io.intino.konos.alexandria.schema.Resource;
 import io.intino.konos.restful.core.RestfulAccessor;
 import io.intino.konos.restful.exceptions.RestfulFailure;
 import org.junit.Assert;
@@ -33,9 +33,9 @@ public class RestfulClient_ {
 	@Test
 	public void should_post_resource_encoded_with_utf8() throws IOException, RestfulFailure {
 		RestfulApi client = new RestfulAccessor();
-		Resource resource = new Resource("", "example", "application/octet-stream", new ByteArrayInputStream(new byte[0]));
-		resource.addParameter("param1", "holá");
-		resource.addParameter("param2", "adiós");
+		Resource resource = new Resource("example").data(new ByteArrayInputStream(new byte[0])).contentType("application/octet-stream");
+//		resource.addParameter("param1", "holá");
+//		resource.addParameter("param2", "adiós");
 		RestfulApi.Response post = client.post(localhost(), "/encoding", resource);
 		Assert.assertEquals("name: param1, value: holá;name: param2, value: adiós;filesCount: 1", post.content());
 	}

@@ -7,7 +7,7 @@ def type(display & accessible)
 
     public class $name+FirstUpperCase~ProxyNotifier extends io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaProxyDisplayNotifier  {
 
-        public $name+FirstUpperCase~ProxyNotifier(io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.displays.MessageCarrier carrier) {
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.rest.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
 
@@ -30,7 +30,7 @@ def type(display)
 
     public class $name+FirstUpperCase~Notifier extends $type {
 
-        public $name+FirstUpperCase~Notifier(io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.displays.MessageCarrier carrier) {
+        public $name+FirstUpperCase~Notifier(io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.rest.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
 
