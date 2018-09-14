@@ -53,7 +53,7 @@ public class JMSDatalake implements Datalake {
 			createConnection();
 			final boolean transacted = args.length > 0 && args[0].equalsIgnoreCase("transacted");
 			this.session = connection.createSession(transacted, transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE);
-			if (registeredTanks.isEmpty()) this.registeredTanks = registeredTanks();
+			if (registeredTanks == null || registeredTanks.isEmpty()) this.registeredTanks = registeredTanks();
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
 		}
