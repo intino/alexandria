@@ -4,6 +4,9 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
@@ -12,6 +15,7 @@ public class AlexandriaSparkBuilder {
 	private static int port;
 	private static String webDirectory;
 	private static boolean ui = false;
+	private static List<Object> objects = new ArrayList<>();
 
 	public static void setup(int port, String webDirectory) {
 		AlexandriaSparkBuilder.port = port;
@@ -30,6 +34,11 @@ public class AlexandriaSparkBuilder {
 		return instance == null ? instance = getInstance() : instance;
 	}
 
+
+	public static void addParameters(Object... objs) {
+		Collections.addAll(objects, objs);
+	}
+
 	private static AlexandriaSpark getInstance() {
 		return ui ? loadUISpark() : new AlexandriaSpark(port, webDirectory);
 	}
@@ -38,7 +47,7 @@ public class AlexandriaSparkBuilder {
 		try {
 			Class<?> aClass = Class.forName("io.intino.konos.alexandria.ui.UIAlexandriaSpark");
 			Constructor<?> constructor = aClass.getConstructors()[0].getParameterCount() == 4 ? aClass.getConstructors()[0] : aClass.getConstructors()[1];
-			return (AlexandriaSpark) constructor.newInstance(port, webDirectory, null, null);
+			return (AlexandriaSpark) constructor.newInstance(port, webDirectory, objects.get(0), objects.get(1));
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
