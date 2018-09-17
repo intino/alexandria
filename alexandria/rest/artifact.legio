@@ -12,7 +12,7 @@ Artifact(groupId = "io.intino.konos", version = "2.3.1") alexandria-rest
 		Compile(groupId = "org.bouncycastle", artifactId = "bcmail-jdk15", version = "1.45")
 		Compile(groupId = "org.bouncycastle", artifactId = "bcprov-jdk15", version = "1.45")
 		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.1")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 
 
