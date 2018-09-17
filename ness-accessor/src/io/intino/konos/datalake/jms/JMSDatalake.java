@@ -206,16 +206,12 @@ public class JMSDatalake implements Datalake {
 	}
 
 	TopicProducer newProducer(String tank) {
-		if (this.session() == null) {
-			logger.error("Session is null");
-			return null;
-		}
+		if (this.session() == null) return null;
 		try {
 			if (!topicProducers.containsKey(tank) || topicProducers.get(tank).isClosed())
 				topicProducers.put(tank, new TopicProducer(session, tank));
 			return topicProducers.get(tank);
 		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
