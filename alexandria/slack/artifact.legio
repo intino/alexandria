@@ -1,7 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.0.14") alexandria-slack
-
+Artifact(groupId = "io.intino.konos", version = "1.0.15") alexandria-slack
 	Imports
 		Compile(groupId = "com.ullink.slack", artifactId = "simpleslackapi", version = "0.6.0")
 		Compile(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.4")
@@ -10,9 +9,8 @@ Artifact(groupId = "io.intino.konos", version = "1.0.14") alexandria-slack
 		Compile(groupId = "com.googlecode.json-simple", artifactId = "json-simple", version = "1.1.1")
 		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.2")
 		Compile(groupId = "com.google.guava", artifactId = "guava", version = "18.0")
-		Compile(groupId = "commons-logging", artifactId = "commons-logging", version = "1.1.1")
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4, 2.0.0)")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 
 
