@@ -6,7 +6,7 @@ Artifact(groupId = "io.intino.konos", version = "1.0.4") alexandria-jmx
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4, 2.0.0)")
 		Provided(groupId = "com.sun", artifactId = "tools", version = "1.8.0")
 		Test(groupId = "junit", artifactId = "junit", version = "4.12")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 
 

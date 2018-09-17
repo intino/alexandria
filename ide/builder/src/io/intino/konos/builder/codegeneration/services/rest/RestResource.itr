@@ -59,6 +59,7 @@ def type(notification)
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
+			[$authenticationValidator+put]
 			return context;
 		}
 	}
@@ -112,6 +113,7 @@ def type(resource)
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
+			$authenticationValidator+put
 			return context;
 		}
 	}
@@ -175,6 +177,10 @@ end
 def type(authenticationValidator) trigger(validate)
 	String auth = manager.fromHeader("Authorization", String.class);
 	if (auth == null || !validator.validate(auth.replace("Basic ", ""))) throw new Unauthorized("Credential not found");
+end
+
+def type(authenticationValidator) trigger(put)
+	context.put("auth", manager.fromHeader("Authorization", String.class)replace("Basic ", ""));
 end
 
 def trigger(parameterType)

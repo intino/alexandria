@@ -33,9 +33,6 @@
     <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpclient:4.5.2" level="project" />
     <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpcore:4.4.4" level="project" />
     <orderEntry type="library" name="Legio: com.google.code.findbugs:jsr305:1.3.9" level="project" />
-    <orderEntry type="library" name="Legio: log4j:log4j:1.2.12" level="project" />
-    <orderEntry type="library" name="Legio: logkit:logkit:1.0.1" level="project" />
-    <orderEntry type="library" name="Legio: avalon-framework:avalon-framework:4.1.3" level="project" />
     <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Legio: io.intino.cottons:cotton-utils:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: org.apache.tika:tika-core:0.4" level="project" />
