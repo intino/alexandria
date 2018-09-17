@@ -67,16 +67,9 @@ public abstract class Bot {
 		try {
 			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
 			final String messageContent = message.getSlackFile() != null ? messageContent(message) : unescapeHtml4(message.getMessageContent());
-			String[] content = Arrays.stream(messageContent.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
+
 			String userName = message.getSender().getUserName();
-			CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
-			final String context = commandInfo != null ? commandInfo.context : "";
-			final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
-			Command command = commandNotFound();
-			if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
-				command = commands.get(commandKey);
-			else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
-			final Object response = command.execute(createMessageProperties(message), content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
+			Object response = talk(userName, messageContent, createMessageProperties(message));
 			if (response == null || (response instanceof String && response.toString().isEmpty())) return;
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
 			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
@@ -84,6 +77,19 @@ public abstract class Bot {
 			org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
+	}
+
+	public Object talk(String userName, String message, MessageProperties properties) {
+		String[] content = Arrays.stream(message.split(" ")).filter(s -> !s.trim().isEmpty()).toArray(String[]::new);
+		CommandInfo commandInfo = commandsInfo.get((contexts().get(userName).command.isEmpty() || isBundledCommand(content[0].toLowerCase()) ? "" : contexts().get(userName).command + "$") + content[0].toLowerCase());
+		final String context = commandInfo != null ? commandInfo.context : "";
+		final String commandKey = (context.isEmpty() ? "" : context + "$") + content[0].toLowerCase();
+		Command command = commandNotFound();
+		if (commandInfo != null && commands.containsKey(commandKey) && isInContext(commandKey, userName))
+			command = commands.get(commandKey);
+		else if (commands.containsKey(commandKey) && Objects.equals(context, "")) command = commands.get(commandKey);
+		return command.execute(properties, content.length > 1 ? Arrays.copyOfRange(content, 1, content.length) : new String[0]);
+
 	}
 
 	private String messageContent(SlackMessagePosted message) {
