@@ -1,7 +1,5 @@
 package io.intino.konos.builder.actions;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.intellij.notification.Notification;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -20,6 +18,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.PsiTestUtil;
 import io.intino.konos.builder.KonosIcons;
+import io.intino.konos.builder.Manifest;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.utils.GraphLoader;
 import io.intino.konos.model.graph.KonosGraph;
@@ -36,10 +35,6 @@ import org.jetbrains.jps.model.java.JavaSourceRootType;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -117,11 +112,7 @@ public class CreateKonosBoxAction extends KonosAction {
 	}
 
 	private Map<String, String> requiredDependencies(Module module, KonosGraph konosGraph) {
-		Type typeOfHashMap = new TypeToken<Map<String, String>>() {
-		}.getType();
-		final InputStream resourceAsStream = this.getClass().getResourceAsStream("/versions.json");
-		if (resourceAsStream == null) return Collections.emptyMap();
-		Map<String, String> dependencies = new Gson().fromJson(new InputStreamReader(resourceAsStream), typeOfHashMap);
+		Map<String, String> dependencies = Manifest.load().dependencies;
 		if (!hasModel(module) && konosGraph.jMXServiceList().isEmpty()) remove(dependencies, "jmx");
 		if (konosGraph.jMSServiceList().isEmpty()) remove(dependencies, "jms");
 		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
