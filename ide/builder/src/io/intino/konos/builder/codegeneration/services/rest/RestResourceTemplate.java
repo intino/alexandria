@@ -35,7 +35,7 @@ public class RestResourceTemplate extends Template {
 			rule().add((condition("type", "authenticationValidator")), (condition("trigger", "field"))).add(literal("io.intino.konos.alexandria.rest.security.")).add(mark("type", "FirstUpperCase")).add(literal("AuthenticationValidator validator;")),
 			rule().add((condition("type", "authenticationValidator")), (condition("trigger", "assign"))).add(literal("this.validator = box.authenticationValidator();")),
 				rule().add((condition("type", "authenticationValidator")), (condition("trigger", "validate"))).add(literal("String auth = manager.fromHeader(\"Authorization\", String.class);\nif (auth == null || !validator.validate(auth.replace(\"Basic \", \"\"))) throw new Unauthorized(\"Credential not found\");")),
-				rule().add((condition("type", "authenticationValidator")), (condition("trigger", "put"))).add(literal("context.put(\"auth\", manager.fromHeader(\"Authorization\", String.class)replace(\"Basic \", \"\"));")),
+				rule().add((condition("type", "authenticationValidator")), (condition("trigger", "put"))).add(literal("context.put(\"auth\", manager.fromHeader(\"Authorization\", String.class).replace(\"Basic \", \"\"));")),
 			rule().add((condition("trigger", "parameterType"))).add(mark("value")).add(literal(".class")),
 			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
 		);
