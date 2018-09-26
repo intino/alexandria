@@ -6,7 +6,7 @@ def type(feeder)
 	import io.intino.ness.inl.Message;
 	import java.util.Arrays;
 
-	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase~Feeder {
+	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {
 		private final $box+FirstUpperCase~Box box;
 
 		public $name+FirstUpperCase($box+FirstUpperCase~Box box) {
