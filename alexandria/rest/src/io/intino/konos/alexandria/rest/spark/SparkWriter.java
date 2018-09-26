@@ -76,7 +76,7 @@ class SparkWriter {
 		response.setContentType(contentType != null ? contentType : "text/html; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PrintWriter writer = response.getWriter();
-		writer.println(content);
+		writer.print(content);
 		writer.close();
 	}
 

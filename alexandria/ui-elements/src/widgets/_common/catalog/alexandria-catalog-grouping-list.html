@@ -145,6 +145,7 @@
                 var mode = this.histogramsMode;
 
                 if (mode === "Disabled") {
+                    this._checked = false;
                     this.$.toolbar.hidden = true;
                     return;
                 }

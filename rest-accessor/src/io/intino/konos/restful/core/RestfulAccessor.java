@@ -18,8 +18,12 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.tika.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -27,8 +31,10 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import static java.util.Collections.*;
+import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RestfulAccessor implements RestfulApi {
+	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	@Override
 	public Response get(URL url, String path) throws RestfulFailure {
@@ -525,10 +531,7 @@ public class RestfulAccessor implements RestfulApi {
 			@Override
 			public String content() {
 				try {
-					if (response == null)
-						return null;
-
-					return stringContentOf(response.getEntity().getContent());
+					return response == null ? null : stringContentOf(response.getEntity().getContent());
 				} catch (IOException e) {
 					return null;
 				}
@@ -537,36 +540,19 @@ public class RestfulAccessor implements RestfulApi {
 			@Override
 			public InputStream contentAsStream() {
 				try {
-					if (response == null)
-						return null;
-
-					return response.getEntity().getContent();
+					return response == null ? null : response.getEntity().getContent();
 				} catch (IOException e) {
 					return null;
 				}
 			}
 
 			private String stringContentOf(InputStream input) {
-				BufferedReader buffer = null;
-				StringBuilder sb = new StringBuilder();
-				String line;
-
 				try {
-					buffer = new BufferedReader(new InputStreamReader(input));
-					while ((line = buffer.readLine()) != null) sb.append(line);
+					return IOUtils.toString(input);
 				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					if (buffer != null) {
-						try {
-							buffer.close();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
+					logger.error(e.getMessage(), e);
+					return null;
 				}
-
-				return sb.toString();
 			}
 		};
 	}
