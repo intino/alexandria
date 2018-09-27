@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
@@ -36,7 +35,8 @@ public class AlexandriaSparkBuilder {
 
 
 	public static void addParameters(Object... objs) {
-		Collections.addAll(objects, objs);
+		for (int i=0; i<objs.length; i++)
+			if (objs[i] != null) objects.add(objs[i]);
 	}
 
 	private static AlexandriaSpark getInstance() {
@@ -47,7 +47,7 @@ public class AlexandriaSparkBuilder {
 		try {
 			Class<?> aClass = Class.forName("io.intino.konos.alexandria.ui.UIAlexandriaSpark");
 			Constructor<?> constructor = aClass.getConstructors()[0].getParameterCount() == 4 ? aClass.getConstructors()[0] : aClass.getConstructors()[1];
-			return (AlexandriaSpark) constructor.newInstance(port, webDirectory, objects.get(0), objects.get(1));
+			return (AlexandriaSpark) constructor.newInstance(port, webDirectory, objects.size() > 0 ? objects.get(0) : null, objects.size() > 1 ? objects.get(1) : null);
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
 			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
 		}
