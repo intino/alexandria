@@ -109,6 +109,12 @@
         </dependency>
         <dependency>
             <groupId>io.intino.konos</groupId>
+            <artifactId>alexandria-rest</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.konos</groupId>
             <artifactId>alexandria-rest-accessor-java</artifactId>
             <version>LATEST</version>
             <scope>test</scope>

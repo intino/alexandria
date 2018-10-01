@@ -56,7 +56,7 @@ Facet REST on Service
 			sub Head
 			sub Options
 			sub Patch
-			has Parameter
+			has:RequiresFacet Parameter
 			has:{0..1} Response
 			var Exception[] exceptionRefs = empty
 			has Exception
