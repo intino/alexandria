@@ -68,7 +68,7 @@ def type(routes)
 end
 
 def trigger(onChanged)
-	else if (this._isRoute(path, this._path + "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
+	else if (!this._samePath(path) && this._isRoute(path, this._path + "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
 end
 
 def type(parameter) trigger(function)
