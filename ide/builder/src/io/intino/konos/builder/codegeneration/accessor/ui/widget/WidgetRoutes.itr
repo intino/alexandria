@@ -47,7 +47,7 @@ def type(routes)
                         window.clearTimeout(this.timeout);
 
                     this.timeout = window.setTimeout(() => {
-                        if (path == "/") this.routeShowHome(this.display);
+                        if (path == "/" && this.routeShowHome != null) this.routeShowHome(this.display);
                         $route+onChanged...[$NL]
                     }, 50);
                 },
@@ -68,7 +68,7 @@ def type(routes)
 end
 
 def trigger(onChanged)
-	else if (this._isRoute(path, this._path + "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
+	else if (!this._samePath(path) && this._isRoute(path, this._path + "$value+subpath")) this.route$request+FirstUpperCase(this.display, $routePath+call);
 end
 
 def type(parameter) trigger(function)
