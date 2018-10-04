@@ -363,6 +363,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.personifyOnce();
 	}
 
+	protected Item openedItem() {
+		return openedItem;
+	}
+
 	protected void openItem(OpenItemEvent event) {
 		removePanelDisplay();
 		openedItem = Item.createFrom(event.item()).label(event.label());
