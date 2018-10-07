@@ -452,6 +452,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (openedItem == null) return;
 		elementDisplayManager.removeElement(openedItem);
 		remove(AlexandriaPanel.class);
+		openedItem = null;
 	}
 
 	protected void executeItemTask(ExecuteItemTaskEvent event) {

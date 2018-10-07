@@ -297,6 +297,9 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		View view = displayView.view();
 		OnClickItem onClickItem = onClickItemEvent();
 		Item item = item(new String(Base64.getDecoder().decode(value)));
+		Item openedItem = openedItem();
+
+		if (openedItem != null && item.id().equals(openedItem.id())) return;
 
 		displayView.refreshSelection(singletonList(value));
 		if (onClickItem == null) return;
@@ -307,6 +310,8 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 			openItemCatalog(ElementHelper.openItemCatalogEvent(item, this, view, onClickItem, session()));
 		else if (onClickItem.openDialog() != null)
 			openItemDialog(ElementHelper.openItemDialogEvent(item, this, view, onClickItem, session()));
+
+		currentItem = value;
 	}
 
 	@Override
