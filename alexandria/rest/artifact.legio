@@ -1,7 +1,6 @@
 dsl Legio
 
 Artifact(groupId = "io.intino.konos", version = "2.3.2") alexandria-rest
-
 	Imports
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4,2.0.0)")
 		Compile(groupId = "com.sparkjava", artifactId = "spark-core", version = "2.7.2")
