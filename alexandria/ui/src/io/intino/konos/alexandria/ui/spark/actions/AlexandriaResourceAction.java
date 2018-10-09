@@ -68,7 +68,9 @@ public abstract class AlexandriaResourceAction {
 	}
 
 	private List<String> pushUrls(List<String> usedAppsUrls, String sessionId, String language, Browser browser) {
-		List<String> pushList = usedAppsUrls.stream().map(appUrl-> browser.pushUrl(sessionId, clientId, language, appUrl)).collect(Collectors.toList());
+		List<String> pushList = usedAppsUrls.stream().filter(appUrl -> appUrl != null && !appUrl.isEmpty())
+											.map(appUrl-> browser.pushUrl(sessionId, clientId, language, appUrl))
+											.collect(Collectors.toList());
 		pushList.add(browser.pushUrl(sessionId, clientId, language));
 		return pushList;
 	}

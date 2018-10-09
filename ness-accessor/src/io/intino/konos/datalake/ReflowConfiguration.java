@@ -44,6 +44,7 @@ public class ReflowConfiguration implements java.io.Serializable {
 
 		private String name = "";
 		private java.time.Instant from = Instant.MIN;
+		private java.time.Instant to = Instant.MAX;
 
 		public String name() {
 			return this.name;
@@ -59,6 +60,11 @@ public class ReflowConfiguration implements java.io.Serializable {
 		}
 
 		public Tank from(java.time.Instant from) {
+			this.from = from;
+			return this;
+		}
+
+		public Tank to(java.time.Instant from) {
 			this.from = from;
 			return this;
 		}

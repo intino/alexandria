@@ -180,7 +180,7 @@ def type(authenticationValidator) trigger(validate)
 end
 
 def type(authenticationValidator) trigger(put)
-	context.put("auth", manager.fromHeader("Authorization", String.class)replace("Basic ", ""));
+	context.put("auth", manager.fromHeader("Authorization", String.class).replace("Basic ", ""));
 end
 
 def trigger(parameterType)
