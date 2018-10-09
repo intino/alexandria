@@ -24,7 +24,7 @@
 
     <template>
         <cotton-breadcrumbs class="breadcrumbs" items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
-        <div id="main" class="layout vertical flex" style="height:100%;">
+        <div id="main" class="layout vertical flex with_summary_[[_hasSummaryViews]]" style="height:100%;">
             <div class="summary" hidden$="[[!_hasSummaryViews]]">
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isSummaryLayoutView(view)]]">
@@ -67,7 +67,7 @@
                     </template>
                 </template>
             </div>
-            <iron-pages id="tabs-content" class$="flex left_fixed_[[_hasLeftFixedViews]] right_fixed_[[_hasRightFixedViews]]" selected="{{_selectedView}}" attr-for-selected="name">
+            <iron-pages id="tabs-content" class$="flex with_summary_[[_hasSummaryViews]] left_fixed_[[_hasLeftFixedViews]] right_fixed_[[_hasRightFixedViews]]" selected="{{_selectedView}}" attr-for-selected="name">
                 <template is="dom-repeat" items="[[_viewList]]" as="view">
                     <template is="dom-if" if="[[_isTabLayoutView(view)]]">
                         <template is="dom-if" if="[[_isMoldContainer(view)]]">
@@ -144,6 +144,9 @@
             height: calc(100% - 30px);
             overflow: auto;
         }
+        :host #tabs-content.with_summary_true {
+            overflow: hidden !important;
+        }
         :host #panel {
             display: block;
             margin: 0 6px;
@@ -152,6 +155,9 @@
         }
         :host #main {
             position: relative;
+        }
+        :host #main .with_summary_true {
+            overflow: auto;
         }
         :host #main.hidden, :host #panel.hidden {
             position: absolute;

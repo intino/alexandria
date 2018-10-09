@@ -47,7 +47,7 @@ def type(routes)
                         window.clearTimeout(this.timeout);
 
                     this.timeout = window.setTimeout(() => {
-                        if (path == "/") this.routeShowHome(this.display);
+                        if (path == "/" && this.routeShowHome != null) this.routeShowHome(this.display);
                         $route+onChanged...[$NL]
                     }, 50);
                 },
