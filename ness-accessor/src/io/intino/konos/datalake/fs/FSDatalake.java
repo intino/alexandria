@@ -12,9 +12,13 @@ import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toMap;
 
 public class FSDatalake implements Datalake {
 
@@ -44,7 +48,7 @@ public class FSDatalake implements Datalake {
 
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, Runnable onFinish) {
 		return new ReflowSession() {
-			final ReflowMessageInputStream stream = new ReflowMessageInputStream(reflow.tankList().stream().collect(Collectors.toMap(t -> datalake.tank(t.name()), ReflowConfiguration.Tank::from)));
+			final ReflowMessageInputStream stream = new ReflowMessageInputStream(map(reflow));
 			int messages = 0;
 
 			public void next() {
@@ -75,6 +79,10 @@ public class FSDatalake implements Datalake {
 			public void pause() {
 			}
 		};
+	}
+
+	private Map<io.intino.ness.datalake.graph.Tank, Map.Entry<Instant, Instant>> map(ReflowConfiguration reflow) {
+		return reflow.tankList().stream().collect(toMap(t -> datalake.tank(t.name()), t -> new SimpleEntry<>(t.from() == null ? Instant.MIN : t.from(), t.to() == null ? Instant.MAX : t.to())));
 	}
 
 	public void commit() {
