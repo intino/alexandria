@@ -5,7 +5,7 @@ Artifact(groupId = "io.intino.konos", version = "2.4.11") alexandria-ness-access
 	Imports
 		Compile(groupId = "io.intino.konos", artifactId = "alexandria-jms", version = "1.0.16")
 		Compile(groupId = "commons-io", artifactId = "commons-io", version = "2.4")
-		Compile(groupId = "io.intino.ness", artifactId = "datalake", version = "1.1.5")
+		Compile(groupId = "io.intino.ness", artifactId = "datalake", version = "1.1.6")
 		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
