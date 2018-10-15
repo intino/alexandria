@@ -1,0 +1,63 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+
+<script src="../../../../../lib/highcharts/highcharts.js"></script>
+<script src="../../../../../lib/highcharts/highcharts-more.js"></script>
+
+<dom-module id="alexandria-stamp-pie">
+
+    <template>
+        <div class="container"></div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+        :host .container {
+            height: 100%;
+            width: 100%;
+            margin-top: 0 !important;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-pie',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior ],
+
+            _render : function() {
+                window.setTimeout(() => this._renderChart(this.stamp.properties.chartData), 100);
+            },
+
+            _renderChart : function(pie) {
+                var container = this.querySelector(".container");
+                var data = this._mapData(pie.values);
+                Highcharts.chart(container, {
+                    chart: { plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: 'pie' },
+                    title: { text: '' },
+                    tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
+                    plotOptions: { pie: { allowPointSelect: false, dataLabels: { enabled: false } } },
+                    series: [ { name: pie.title, colorByPoint: true, data: data }],
+                    credits: { enabled: false }
+                });
+            },
+
+            _mapData : function(values) {
+                var result = [];
+                for (var i=0; i<values.length; i++) {
+                    let value = values[i];
+                    let name = value.name != null ? value.name : "";
+                    let valueData = { name: name, y: value.value };
+                    if (value.color != null) valueData.put(value.color);
+                    result.push(valueData);
+                }
+                return result;
+            }
+        });
+    </script>
+
+</dom-module>

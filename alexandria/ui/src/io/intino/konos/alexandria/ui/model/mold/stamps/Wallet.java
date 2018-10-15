@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Wallet {
-	private List<Card> cards = new ArrayList();
+	private List<Card> cards = new ArrayList<>();
 
 	public List<Card> items() {
 		return this.cards;
@@ -17,7 +17,7 @@ public class Wallet {
 
 	public static class Card {
 		private String label;
-		private List<String> lines = new ArrayList();
+		private List<String> lines = new ArrayList<>();
 
 		public String label() {
 			return this.label;
