@@ -11,8 +11,9 @@ Facet REST on Service
 	var string host
 	var string port
 	var string description = ""
-	var string basePath
+	var string basePath = "/api"
 	var string logo = empty
+	var string color = empty
 	var word[]:{http https ws wss} protocols = https
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
