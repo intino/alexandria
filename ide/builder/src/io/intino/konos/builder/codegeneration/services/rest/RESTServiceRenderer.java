@@ -1,7 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import io.intino.konos.builder.codegeneration.swagger.IndexTemplate;
-import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.rest.RESTService;
@@ -49,25 +48,16 @@ public class RESTServiceRenderer {
 
 	public void execute() {
 		services.forEach((service) -> processService(service.a$(RESTService.class), gen));
-		if (!services.isEmpty()) generateDoc();
+		if (!services.isEmpty()) generateApiPortal();
 	}
 
-	private void generateDoc() {
-		final File www = new File(res, "www" + File.separator + "developer");
-		new SwaggerGenerator(services, www).execute();
-		createIndex(www);
-		copyAssets(www);
-	}
-
-	private void createIndex(File www) {
-		Frame doc = new Frame().addTypes("index");
-		for (RESTService service : services)
-			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name$()).addSlot("description", service.description()));
-		writeIndex(www, doc);
-	}
-
-	private void writeIndex(File www, Frame doc) {
-		Commons.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc));
+	private void generateApiPortal() {
+		final File api = new File(res, "www" + File.separator + "api");
+		copyAssets(api);
+		File data = new File(api, "data");
+		data.mkdirs();
+		new SwaggerProfileGenerator(services, data).execute();
+		createConfigFile();
 	}
 
 	private void copyAssets(File www) {
@@ -76,6 +66,10 @@ public class RESTServiceRenderer {
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private void createConfigFile() {
+
 	}
 
 	private void processService(RESTService service, File gen) {
