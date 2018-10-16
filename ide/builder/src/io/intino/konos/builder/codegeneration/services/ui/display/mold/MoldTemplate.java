@@ -60,6 +60,7 @@ public class MoldTemplate extends Template {
 			rule().add((condition("attribute", "CardWallet")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.ui.model.mold.stamps.Wallet")),
 			rule().add((condition("attribute", "Timeline")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.ui.model.mold.stamps.Timeline")),
 			rule().add((condition("attribute", "Pie")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.ui.model.mold.stamps.Pie")),
+			rule().add((condition("attribute", "Histogram")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.ui.model.mold.stamps.Histogram")),
 			rule().add((condition("attribute", "ItemLinks")), (condition("trigger", "valueType"))).add(literal("io.intino.konos.alexandria.ui.model.mold.stamps.Links")),
 			rule().add((condition("attribute", "Picture")), (condition("trigger", "valueType"))).add(literal("java.util.List<java.net.URL>")),
 			rule().add((condition("attribute", "Rating")), (condition("trigger", "valueType"))).add(literal("java.lang.Double")),

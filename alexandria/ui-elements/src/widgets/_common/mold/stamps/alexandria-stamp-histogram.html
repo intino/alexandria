@@ -25,7 +25,7 @@
 
     <script>
         Polymer({
-            is: 'alexandria-stamp-pie',
+            is: 'alexandria-stamp-histogram',
 
             behaviors: [ AlexandriaBehaviors.StampBehavior ],
 
@@ -33,10 +33,10 @@
                 window.setTimeout(() => this._renderChart(this.stamp.properties.chartData), 100);
             },
 
-            _renderChart : function(pie) {
+            _renderChart : function(histogram) {
                 var container = this.querySelector(".container");
-                if (pie == null || pie.values == null) return;
-                var data = this._mapData(pie.values);
+                if (histogram == null || histogram.values == null) return;
+                var data = this._mapData(histogram.values);
                 Highcharts.chart(container, {
                     chart: { plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: 'pie' },
                     title: { text: '' },

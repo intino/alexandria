@@ -324,6 +324,10 @@ def attribute(Pie) trigger(valueType)
 	io.intino.konos.alexandria.ui.model.mold.stamps.Pie
 end
 
+def attribute(Histogram) trigger(valueType)
+	io.intino.konos.alexandria.ui.model.mold.stamps.Histogram
+end
+
 def attribute(ItemLinks) trigger(valueType)
 	io.intino.konos.alexandria.ui.model.mold.stamps.Links
 end
