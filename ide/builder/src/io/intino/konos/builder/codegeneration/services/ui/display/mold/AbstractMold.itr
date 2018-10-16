@@ -70,6 +70,10 @@ def type(stamp & pie)
 	.add(new io.intino.konos.alexandria.ui.model.mold.stamps.Pie()$common)
 end
 
+def type(stamp & histogram)
+	.add(new io.intino.konos.alexandria.ui.model.mold.stamps.Histogram()$common)
+end
+
 def type(stamp & timeline)
 	.add(new io.intino.konos.alexandria.ui.model.mold.stamps.Timeline()$common)
 end

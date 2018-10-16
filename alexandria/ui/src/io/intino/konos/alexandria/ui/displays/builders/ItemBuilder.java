@@ -123,7 +123,7 @@ public class ItemBuilder {
             return wallet != null ? new Gson().toJson(wallet) : "";
         }
 
-        if (stamp instanceof Pie || stamp instanceof Timeline) {
+        if (stamp instanceof Pie || stamp instanceof Timeline || stamp instanceof Histogram) {
             ChartData data = (ChartData) value;
             return data != null ? new Gson().toJson(data) : "";
         }

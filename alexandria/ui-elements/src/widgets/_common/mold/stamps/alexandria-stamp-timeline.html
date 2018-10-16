@@ -35,6 +35,7 @@
 
             _renderChart : function(timeline) {
                 var container = this.querySelector(".container");
+                if (timline == null || timeline.series == null) return;
                 var series = this._mapSeries(timeline.series);
                 Highcharts.chart(container, {
                     chart: { zoomType: 'xy' },

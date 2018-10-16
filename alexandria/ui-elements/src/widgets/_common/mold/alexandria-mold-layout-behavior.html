@@ -209,7 +209,7 @@
         },
 
         _initChartProperties : function(stamp) {
-            if (stamp.type !== "timeline" && stamp.type !== "pie") return;
+            if (stamp.type !== "timeline" && stamp.type !== "pie" && stamp.type !== "histogram") return;
             var value = this._parseFunctions(this._valueOf(stamp));
             stamp.properties.chartData = (value != "") ? JSON.parse(value) : null;
         },
