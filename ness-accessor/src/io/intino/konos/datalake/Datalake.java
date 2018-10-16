@@ -14,7 +14,9 @@ public interface Datalake {
 
 	void commit();
 
-	void add(String tank);
+	void addTank(String tank);
+
+	void addSetTank(String tank);
 
 	void connect(String... args);
 
