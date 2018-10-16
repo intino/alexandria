@@ -34,10 +34,9 @@
             },
 
             _renderChart : function(pie) {
-                var container = this.querySelector(".container");
                 if (pie == null || pie.values == null) return;
                 var data = this._mapData(pie.values);
-                Highcharts.chart(container, {
+                Highcharts.chart(this.querySelector(".container"), {
                     chart: { plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: 'pie' },
                     title: { text: '' },
                     tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
