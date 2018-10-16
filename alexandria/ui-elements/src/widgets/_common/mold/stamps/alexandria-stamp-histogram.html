@@ -4,7 +4,7 @@
 <script src="../../../../../lib/highcharts/highcharts.js"></script>
 <script src="../../../../../lib/highcharts/highcharts-more.js"></script>
 
-<dom-module id="alexandria-stamp-pie">
+<dom-module id="alexandria-stamp-histogram">
 
     <template>
         <div class="container"></div>
@@ -34,25 +34,27 @@
             },
 
             _renderChart : function(histogram) {
-                var container = this.querySelector(".container");
                 if (histogram == null || histogram.values == null) return;
-                var data = this._mapData(histogram.values);
-                Highcharts.chart(container, {
-                    chart: { plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: 'pie' },
+                var series = this._series(histogram.values);
+                Highcharts.chart(this.querySelector(".container"), {
+                    chart: { type: 'column' },
                     title: { text: '' },
-                    tooltip: { pointFormat: '{series.name}: <b>{point.y}</b>' },
-                    plotOptions: { pie: { allowPointSelect: false, dataLabels: { enabled: false } } },
-                    series: [ { name: pie.title, colorByPoint: true, data: data }],
-                    credits: { enabled: false }
+                    subtitle: { text: '' },
+                    xAxis: { visible: false },
+                    yAxis: { visible: false },
+                    plotOptions: { column: { pointPadding: 0.1, borderWidth: 0 } },
+                    credits : { enabled : false },
+                    legend : { enabled : false },
+                    series: series
                 });
             },
 
-            _mapData : function(values) {
+            _series : function(values) {
                 var result = [];
                 for (var i=0; i<values.length; i++) {
                     let value = values[i];
                     let name = value.name != null ? value.name : "";
-                    let valueData = { name: name, y: value.value };
+                    let valueData = { name: name, data: [ value.value ] };
                     if (value.color != null) valueData.put(value.color);
                     result.push(valueData);
                 }
