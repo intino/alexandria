@@ -103,7 +103,7 @@ public class FullRenderer {
 
 	private void rest() {
 		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName, classes).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName,module, classes).execute();
 	}
 
 	private void jmx() {
