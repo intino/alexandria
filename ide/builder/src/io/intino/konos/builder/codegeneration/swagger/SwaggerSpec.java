@@ -1,9 +1,6 @@
 package io.intino.konos.builder.codegeneration.swagger;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SwaggerSpec {
 
@@ -16,10 +13,10 @@ public class SwaggerSpec {
 	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
-
+	public Map<String, SecurityDefinition> securityDefinitions = securityDefinitions();
+	public List<SecuritySchema> security;
 
 	public static class Info {
-
 		public String version;
 		public String title;
 		public String description;
@@ -92,7 +89,7 @@ public class SwaggerSpec {
 			}
 
 			public static class Response {
-				public String description;
+				public String description = "";
 				public Schema schema;
 				public List<Header> headers;
 				public List<Example> examples;
@@ -110,6 +107,38 @@ public class SwaggerSpec {
 
 				}
 			}
+		}
+	}
+
+	public static class SecurityDefinition {
+		public String name;
+		public String type;
+		public String in;
+
+		public SecurityDefinition name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public SecurityDefinition type(String type) {
+			this.type = type;
+			return this;
+		}
+
+		public SecurityDefinition in(String in) {
+			this.in = in;
+			return this;
+		}
+	}
+
+	public static class SecurityRequirement {
+		public String name;
+		public List<String> scopes;
+		public Map<String, List<String>> requirements;
+
+		public SecurityRequirement name(String name) {
+			this.name = name;
+			return this;
 		}
 	}
 
@@ -137,5 +166,20 @@ public class SwaggerSpec {
 		}
 	}
 
+	public static Map<String, SecurityDefinition> securityDefinitions() {
+		HashMap<String, SecurityDefinition> map = new HashMap<>();
+		map.put("basic", new SecurityDefinition().type("basic"));
+		map.put("api_key", new SecurityDefinition().name("api_key").type("apiKey").in("header"));
+		return map;
+	}
 
+	public static class SecuritySchema {
+		List<String> basic = null;
+		List<String> api_key = null;
+
+		public SecuritySchema basic() {
+			basic = new ArrayList<>();
+			return this;
+		}
+	}
 }

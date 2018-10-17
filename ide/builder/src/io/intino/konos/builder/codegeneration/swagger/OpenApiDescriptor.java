@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.swagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
@@ -22,11 +23,11 @@ import java.util.stream.Collectors;
 
 public class OpenApiDescriptor {
 
-	private final RESTService restService;
+	private final RESTService service;
 	private final List<Schema> schemas;
 
-	public OpenApiDescriptor(RESTService restService) {
-		this.restService = restService;
+	public OpenApiDescriptor(RESTService service) {
+		this.service = service;
 		this.schemas = new ArrayList<>();
 	}
 
@@ -37,14 +38,18 @@ public class OpenApiDescriptor {
 
 	private SwaggerSpec create() {
 		SwaggerSpec spec = new SwaggerSpec();
-		spec.basePath = restService.basePath().isEmpty() ? "/" : restService.basePath();
-		spec.host = restService.host().contains("{") ? "www.example.org" : restService.host();
-		spec.schemes = restService.protocols().stream().map(Enum::name).collect(Collectors.toList());
+		spec.basePath = service.basePath().isEmpty() ? "/" : service.basePath();
+		spec.host = service.host().contains("{") ? "www.example.org" : service.host();
+		spec.schemes = service.protocols().stream().map(Enum::name).collect(Collectors.toList());
 		spec.paths = new LinkedHashMap<>();
-		spec.info = createInfo(restService.info());
-		for (Resource resource : restService.resourceList())
+		spec.info = createInfo(service.info());
+		for (Resource resource : service.resourceList())
 			spec.paths.put(resource.path(), createPath(resource));
 		spec.definitions = createDefinitions();
+		if (service.authenticatedWithToken() != null) {
+			spec.security = new ArrayList<>();
+			spec.security.add(new SwaggerSpec.SecuritySchema().basic());
+		}
 		return spec;
 	}
 
@@ -57,7 +62,7 @@ public class OpenApiDescriptor {
 	private SwaggerSpec.Path createPath(Resource resource) {
 		SwaggerSpec.Path path = new SwaggerSpec.Path();
 		for (Resource.Operation op : resource.operationList()) {
-			SwaggerSpec.Path.Operation operation = new SwaggerSpec.Path.Operation();
+			Operation operation = new Operation();
 			operation.description = op.description().isEmpty() ? null : op.description();
 			operation.summary = op.summary().isEmpty() ? null : op.summary();
 			operation.operationId = op.name$();
@@ -70,8 +75,8 @@ public class OpenApiDescriptor {
 		return path;
 	}
 
-	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, Response response) {
-		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+	private void addResponse(Map<String, Operation.Response> responses, Response response) {
+		Operation.Response swaggerResponse = new Operation.Response();
 		if (response != null) {
 			swaggerResponse.description = response.description();
 			if (response.isObject()) {
@@ -82,9 +87,9 @@ public class OpenApiDescriptor {
 		responses.put(response == null ? "200" : response.code(), swaggerResponse);
 	}
 
-	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, List<Exception> exceptions) {
+	private void addResponse(Map<String, Operation.Response> responses, List<Exception> exceptions) {
 		for (Exception exception : exceptions) {
-			SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+			Operation.Response swaggerResponse = new Operation.Response();
 			swaggerResponse.description = exception.description();
 			if (exception.isObject()) {
 				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
@@ -94,7 +99,7 @@ public class OpenApiDescriptor {
 		}
 	}
 
-	private void addOperationToPath(SwaggerSpec.Path path, SwaggerSpec.Path.Operation operation, String name) {
+	private void addOperationToPath(SwaggerSpec.Path path, Operation operation, String name) {
 		switch (name) {
 			case "Get":
 				path.get = operation;
@@ -117,10 +122,10 @@ public class OpenApiDescriptor {
 		}
 	}
 
-	private List<SwaggerSpec.Path.Operation.Parameter> createParameters(List<Resource.Parameter> parameters) {
-		List<SwaggerSpec.Path.Operation.Parameter> list = new ArrayList<>();
+	private List<Operation.Parameter> createParameters(List<Resource.Parameter> parameters) {
+		List<Operation.Parameter> list = new ArrayList<>();
 		for (Resource.Parameter parameter : parameters) {
-			SwaggerSpec.Path.Operation.Parameter swaggerParameter = new SwaggerSpec.Path.Operation.Parameter();
+			Operation.Parameter swaggerParameter = new Operation.Parameter();
 			swaggerParameter.description = parameter.description();
 			swaggerParameter.in = parameter.in().name();
 			swaggerParameter.name = parameter.name$();
@@ -141,7 +146,7 @@ public class OpenApiDescriptor {
 		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
 		if (typeData.i$(ObjectData.class)) {
-			if (in == In.body) return "object";
+			if (in == In.body) return null;
 			return "string";
 		}
 		return type.toLowerCase();
