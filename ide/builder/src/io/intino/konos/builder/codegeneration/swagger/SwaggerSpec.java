@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.swagger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SwaggerSpec {
 
@@ -85,6 +88,7 @@ public class SwaggerSpec {
 				public String format;
 				public Map<String, String> items;
 				public String collectionFormat;
+				public Schema schema;
 			}
 
 			public static class Response {
@@ -92,16 +96,6 @@ public class SwaggerSpec {
 				public Schema schema;
 				public List<Header> headers;
 				public List<Example> examples;
-
-				public static class Schema {
-					public String type;
-					public String $ref;
-
-					public Schema(String type, String $ref) {
-						this.type = type;
-						this.$ref = $ref;
-					}
-				}
 
 				public static class Header {
 					public String description;
@@ -116,6 +110,16 @@ public class SwaggerSpec {
 
 				}
 			}
+		}
+	}
+
+	public static class Schema {
+		public String type;
+		public String $ref;
+
+		public Schema(String type, String $ref) {
+			this.type = type;
+			this.$ref = $ref;
 		}
 	}
 

@@ -5,8 +5,12 @@ import com.google.gson.GsonBuilder;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.longinteger.LongIntegerData;
+import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
+import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +27,7 @@ public class OpenApiDescriptor {
 
 	public OpenApiDescriptor(RESTService restService) {
 		this.restService = restService;
-		this.schemas = restService.graph().schemaList();
+		this.schemas = new ArrayList<>();
 	}
 
 	public String createJSONDescriptor() {
@@ -33,14 +37,14 @@ public class OpenApiDescriptor {
 
 	private SwaggerSpec create() {
 		SwaggerSpec spec = new SwaggerSpec();
-		spec.basePath = restService.basePath();
-		spec.definitions = createDefinitions();
-		spec.host = restService.host();
+		spec.basePath = restService.basePath().isEmpty() ? "/" : restService.basePath();
+		spec.host = restService.host().contains("{") ? "www.example.org" : restService.host();
 		spec.schemes = restService.protocols().stream().map(Enum::name).collect(Collectors.toList());
 		spec.paths = new LinkedHashMap<>();
 		spec.info = createInfo(restService.info());
 		for (Resource resource : restService.resourceList())
 			spec.paths.put(resource.path(), createPath(resource));
+		spec.definitions = createDefinitions();
 		return spec;
 	}
 
@@ -70,8 +74,10 @@ public class OpenApiDescriptor {
 		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
 		if (response != null) {
 			swaggerResponse.description = response.description();
-			if (response.isObject())
-				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name$());
+			if (response.isObject()) {
+				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + response.asObject().schema().name$());
+				this.schemas.add(response.asObject().schema());
+			}
 		}
 		responses.put(response == null ? "200" : response.code(), swaggerResponse);
 	}
@@ -81,7 +87,8 @@ public class OpenApiDescriptor {
 			SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
 			swaggerResponse.description = exception.description();
 			if (exception.isObject()) {
-				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
+				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
+				this.schemas.add(exception.asObject().schema());
 			}
 			responses.put(exception.code().value(), swaggerResponse);
 		}
@@ -117,11 +124,35 @@ public class OpenApiDescriptor {
 			swaggerParameter.description = parameter.description();
 			swaggerParameter.in = parameter.in().name();
 			swaggerParameter.name = parameter.name$();
-			swaggerParameter.type = parameter.asType().type().toLowerCase();
-			swaggerParameter.required = parameter.isRequired();
+			swaggerParameter.type = parameterType(parameter.in(), parameter.asType());
+			swaggerParameter.required = parameter.in() == In.path || parameter.isRequired();
+			if (parameter.isObject()) {
+				this.schemas.add(parameter.asObject().schema());
+				if (parameter.in() == In.body)
+					swaggerParameter.schema = new SwaggerSpec.Schema(null, "#/definitions/" + parameter.asObject().schema().name$());
+			}
 			list.add(swaggerParameter);
 		}
 		return list.isEmpty() ? null : list;
+	}
+
+	private String parameterType(In in, TypeData typeData) {
+		String type = typeData.type();
+		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
+		if (typeData.i$(ObjectData.class)) {
+			if (in == In.body) return "object";
+			return "string";
+		}
+		return type.toLowerCase();
+	}
+
+	private String transform(TypeData typeData) {
+		String type = typeData.type();
+		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
+		if (typeData.i$(ObjectData.class)) return "object";
+		return type.toLowerCase();
 	}
 
 	private Map<String, SwaggerSpec.Definition> createDefinitions() {
@@ -144,7 +175,7 @@ public class OpenApiDescriptor {
 	@NotNull
 	private SwaggerSpec.Definition.Property propertyFrom(Schema.Attribute attribute) {
 		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
-		property.type = attribute.asType().type().toLowerCase();
+		property.type = transform(attribute.asType());
 		return property;
 	}
 
