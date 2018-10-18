@@ -79,7 +79,9 @@ public class Commons {
 	}
 
 	public static String path(Resource resource) {
-		String basePath = cleanPath(resource.core$().ownerAs(RESTService.class).basePath());
+		RESTService service = resource.core$().ownerAs(RESTService.class);
+		String basePath = cleanPath(service.basePath());
+		if (service.info() != null && service.info().version() != null) basePath = basePath + "/" + service.info().version();
 		String resourcePath = cleanPath(resource.path());
 		return format(basePath) + resourcePath;
 	}

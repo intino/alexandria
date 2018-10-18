@@ -13,6 +13,8 @@ Facet REST on Service
 	var string description = ""
 	var string basePath = "/api"
 	var string logo = empty
+	var string favicon = empty
+	var string backgroundColor = empty
 	var string color = empty
 	var word[]:{http https ws wss} protocols = https
 	Concept:{0..1} Authenticated

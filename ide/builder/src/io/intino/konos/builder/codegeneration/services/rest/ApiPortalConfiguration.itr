@@ -1,21 +1,16 @@
 def type(api)
 	{
-      "url": $url+single,
-      ["urls": $[
-        $urls+multiple...[$NL]
-      $],]
-      "headerText": "API Portal",
-      "headerColor": "",
+      "urls": $[
+        $url...[$NL]
+      $],
+      "title": "$title",
+      "background": "$background",
+      "color": "$color",
       "selectorBorderColor": ""
     }
 end
 
-
-def trigger(single)
-	"./data/$value.json"
-end
-
-def trigger(urls)
+def trigger(url)
 	{
 	  "url": "./data/$value.json",
 	  "name": "$value"

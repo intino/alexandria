@@ -13,7 +13,7 @@ public class SwaggerSpec {
 	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
-	public Map<String, SecurityDefinition> securityDefinitions = securityDefinitions();
+	public Map<String, SecurityDefinition> securityDefinitions;
 	public List<SecuritySchema> security;
 
 	public static class Info {
@@ -164,13 +164,6 @@ public class SwaggerSpec {
 			public Integer minimum;
 			public Integer maximum;
 		}
-	}
-
-	public static Map<String, SecurityDefinition> securityDefinitions() {
-		HashMap<String, SecurityDefinition> map = new HashMap<>();
-		map.put("basic", new SecurityDefinition().type("basic"));
-		map.put("api_key", new SecurityDefinition().name("api_key").type("apiKey").in("header"));
-		return map;
 	}
 
 	public static class SecuritySchema {
