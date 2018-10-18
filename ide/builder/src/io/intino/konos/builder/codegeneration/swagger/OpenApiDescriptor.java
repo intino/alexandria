@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.swagger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefinition;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
@@ -15,10 +16,7 @@ import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OpenApiDescriptor {
@@ -38,7 +36,7 @@ public class OpenApiDescriptor {
 
 	private SwaggerSpec create() {
 		SwaggerSpec spec = new SwaggerSpec();
-		spec.basePath = service.basePath().isEmpty() ? "/" : service.basePath();
+		spec.basePath = service.basePath().isEmpty() ? "/" : service.basePath() + version();
 		spec.host = service.host().contains("{") ? "www.example.org" : service.host();
 		spec.schemes = service.protocols().stream().map(Enum::name).collect(Collectors.toList());
 		spec.paths = new LinkedHashMap<>();
@@ -47,10 +45,18 @@ public class OpenApiDescriptor {
 			spec.paths.put(resource.path(), createPath(resource));
 		spec.definitions = createDefinitions();
 		if (service.authenticatedWithToken() != null) {
+			spec.securityDefinitions = new HashMap<>();
+			spec.securityDefinitions.put("basic", new SecurityDefinition().type("basic"));
 			spec.security = new ArrayList<>();
 			spec.security.add(new SwaggerSpec.SecuritySchema().basic());
 		}
 		return spec;
+	}
+
+	@NotNull
+	private String version() {
+		if (service.info() == null || service.info().version() == null) return "";
+		return "/" + service.info().version();
 	}
 
 	private SwaggerSpec.Info createInfo(RESTService.Info info) {

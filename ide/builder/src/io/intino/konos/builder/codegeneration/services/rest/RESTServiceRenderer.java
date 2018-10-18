@@ -7,6 +7,8 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.tara.magritte.Layer;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +35,7 @@ public class RESTServiceRenderer {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	private final List<RESTService> services;
-	@org.jetbrains.annotations.NotNull
+	@NotNull
 	private final KonosGraph graph;
 	private final File gen;
 	private final File res;
@@ -76,12 +79,14 @@ public class RESTServiceRenderer {
 
 	private void createConfigFile(File api) {
 		Template template = customize(ApiPortalConfigurationTemplate.create());
-		Frame frame = new Frame("api");
-		for (RESTService service : services) {
-			frame.addSlot(services.size() > 1 ? "urls" : "url", service.name$());
-			frame.addSlot("color", service.color());
-			if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
-		}
+		Frame frame = new Frame("api").addSlot("url", services.stream().map(Layer::name$).toArray(String[]::new));
+		RESTService service = services.get(0);
+		if (service.color() != null) frame.addSlot("color", service.color());
+		if (service.backgroundColor() != null) frame.addSlot("background", service.backgroundColor());
+		if (service.description() != null) frame.addSlot("title", service.description());
+		else frame.addSlot("title", "API Portal");
+		if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
+		if (service.favicon() != null) copyFaviconToImages(new File(api, "images"), service.favicon());
 		try {
 			Files.write(new File(api, "config.json").toPath(), template.format(frame).getBytes());
 		} catch (IOException e) {
@@ -89,10 +94,21 @@ public class RESTServiceRenderer {
 		}
 	}
 
+	private void copyFaviconToImages(File images, String logo) {
+		File resource = findResource(logo);
+		if (resource == null) return;
+		try {
+			Files.copy(resource.toPath(), new File(images, "favicon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
 	private void copyLogoToImages(File images, String logo) {
 		File resource = findResource(logo);
+		if (resource == null) return;
 		try {
-			Files.copy(resource.toPath(), new File(images, "logo.png").toPath());
+			Files.copy(resource.toPath(), new File(images, "logo.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
