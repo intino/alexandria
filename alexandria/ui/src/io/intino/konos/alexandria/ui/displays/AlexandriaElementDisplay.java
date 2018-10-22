@@ -239,6 +239,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 
 	public void refreshView() {
 		currentView().ifPresent(AlexandriaElementView::refresh);
+		if (openedItemPanel != null) openedItemPanel.refresh();
 	}
 
 	public void refresh(Item... objects) {
