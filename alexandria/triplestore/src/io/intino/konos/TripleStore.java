@@ -1,5 +1,8 @@
 package io.intino.konos;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Iterator;
@@ -14,10 +17,17 @@ import static java.util.stream.StreamSupport.stream;
 public class TripleStore {
 	private final File file;
 	private final List<String[]> triples;
+	private final BufferedReader reader;
 
 	public TripleStore(File file) {
 		this.file = file;
-		this.triples = readerOf(file).lines().map(this::triple).collect(toList());
+		reader = readerOf(file);
+		this.triples = reader.lines().map(this::triple).collect(toList());
+		try {
+			reader.close();
+		} catch (IOException e) {
+			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+		}
 	}
 
 	public void put(String subject, String predicate, Object value) {

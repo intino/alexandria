@@ -3,6 +3,7 @@ dsl Legio
 Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-triplestore
 	Imports
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+		Compile(groupId = "org.slf4j", artifactId = "slf4j-api", version = "1.7.7")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)
 	Distribution(release = intino.release)
