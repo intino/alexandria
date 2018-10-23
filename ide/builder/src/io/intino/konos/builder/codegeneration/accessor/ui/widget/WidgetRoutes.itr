@@ -74,7 +74,7 @@ end
 def type(parameter) trigger(function)
 	 $request : function(value) {
 		var path = $routePath+register;
-		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, path);
+		if (this._samePath(path)) this.route$request+FirstUpperCase(this.display, value);
 		this.set("route.path", path);
 	}
 end
