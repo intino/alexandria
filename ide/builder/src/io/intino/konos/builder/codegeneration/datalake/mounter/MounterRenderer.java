@@ -40,9 +40,9 @@ public class MounterRenderer {
 				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", mounter.schema().name$()));
 			} else frame.addSlot("type", "message");
-			final File destination = new File(src, "ness/mounters");
+			final File destination = new File(src, "datalake/mounters");
 			final String handlerName = name + "Mounter";
-			classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "ness.mounters." + handlerName);
+			classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datalake.mounters." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				writeFrame(destination, handlerName, customize(MounterTemplate.create()).format(frame));
 		}

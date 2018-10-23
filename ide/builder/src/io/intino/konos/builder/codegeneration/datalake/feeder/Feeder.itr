@@ -1,5 +1,5 @@
 def type(feeder)
-	package $package+validPackage.ness.feeders;
+	package $package+validPackage.datalake.feeders;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 

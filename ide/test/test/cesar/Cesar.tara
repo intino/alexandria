@@ -1,6 +1,7 @@
 dsl Konos
 
 Service(description = "Cesar DevOps Service") cesar-rest as REST(host = "{host}", basePath = "", port = "9000")
+	color = "#FFFFFF"
 	AuthenticatedWithToken
 	Resource(path = "/projects") projects
 		Get(description = "List of projects")

@@ -6,8 +6,8 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
+import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
-import io.intino.konos.builder.codegeneration.datalake.TanksConnectorsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
 import io.intino.konos.builder.codegeneration.datalake.mounter.MounterRenderer;
 import io.intino.konos.builder.codegeneration.datalake.process.ProcessRenderer;
@@ -103,7 +103,7 @@ public class FullRenderer {
 
 	private void rest() {
 		new RESTResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new RESTServiceRenderer(graph, gen, res, packageName, boxName, classes).execute();
+		new RESTServiceRenderer(graph, gen, res, packageName, boxName,module, classes).execute();
 	}
 
 	private void jmx() {
@@ -126,7 +126,7 @@ public class FullRenderer {
 		new ProcessRenderer(graph, src, packageName, boxName, classes).execute();
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
-		new TanksConnectorsRenderer(graph, gen, packageName, boxName).execute();
+		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
 			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
 	}

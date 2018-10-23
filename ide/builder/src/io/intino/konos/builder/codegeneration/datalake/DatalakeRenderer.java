@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 
-public class TanksConnectorsRenderer {
+public class DatalakeRenderer {
 	private final NessClient datalake;
 	private final File gen;
 	private final String packageName;
@@ -24,7 +24,7 @@ public class TanksConnectorsRenderer {
 	private final Set<EventSource> eventSources;
 	private final Set<FeederEventSource> eventFeederSources;
 
-	public TanksConnectorsRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public DatalakeRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.graph = graph;
 		this.gen = gen;
 		this.packageName = packageName;
@@ -44,7 +44,7 @@ public class TanksConnectorsRenderer {
 		if (eventSources.stream().anyMatch(h -> h.i$(Mounter.class))) frame.addSlot("tankImport", packageName);
 		if (!datalake.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(new File(gen, "ness"), "TanksConnectors", template().format(frame));
+		Commons.writeFrame(new File(gen, "datalake"), "Datalake", template().format(frame));
 	}
 
 	private Frame[] tanks() {
@@ -116,7 +116,7 @@ public class TanksConnectorsRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(TanksConnectorsTemplate.create()).add("shortPath", value -> {
+		return Formatters.customize(DatalakeTemplate.create()).add("shortPath", value -> {
 			String[] names = value.toString().split("\\.");
 			return names[names.length - 1];
 		});

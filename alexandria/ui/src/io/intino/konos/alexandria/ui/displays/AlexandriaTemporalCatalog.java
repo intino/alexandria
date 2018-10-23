@@ -148,7 +148,11 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			else boundingRangeFrom = from;
 
 			moreItemsRange = new TimeRange(from, to, currentRange.scale());
-			newItemList.addAll(filteredItemList(moreItemsRange, scopeWithAttachedGrouping(), condition));
+
+			ItemList itemList = filteredItemList(moreItemsRange, scopeWithAttachedGrouping(), condition);
+			if (itemList.size() <= 0) break;
+
+			newItemList.addAll(itemList);
 		}
 
 		itemList.addAll(newItemList);

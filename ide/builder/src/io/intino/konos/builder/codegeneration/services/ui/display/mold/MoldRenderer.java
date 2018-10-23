@@ -70,6 +70,9 @@ public class MoldRenderer extends DisplayRenderer {
 		else if (stamp.i$(Icon.class)) frameOf(frame, stamp.a$(Icon.class));
 		else if (stamp.i$(ItemLinks.class)) frameOf(frame, stamp.a$(ItemLinks.class));
 		else if (stamp.i$(CardWallet.class)) frameOf(frame, stamp.a$(CardWallet.class));
+		else if (stamp.i$(Timeline.class)) frameOf(frame, stamp.a$(Timeline.class));
+		else if (stamp.i$(Pie.class)) frameOf(frame, stamp.a$(Pie.class));
+		else if (stamp.i$(Histogram.class)) frameOf(frame, stamp.a$(Histogram.class));
 		else if (stamp.i$(Map.class)) frameOf(frame, stamp.a$(Map.class));
 
 		return frame;
@@ -152,6 +155,18 @@ public class MoldRenderer extends DisplayRenderer {
 	}
 
 	private void frameOf(Frame frame, CardWallet stamp) {
+		frame.addSlot("title", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Timeline stamp) {
+		frame.addSlot("title", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Pie stamp) {
+		frame.addSlot("title", baseFrame(stamp));
+	}
+
+	private void frameOf(Frame frame, Histogram stamp) {
 		frame.addSlot("title", baseFrame(stamp));
 	}
 

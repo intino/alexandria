@@ -40,7 +40,7 @@ public class CatalogSkeletonTemplate extends Template {
 			rule().add((condition("trigger", "openCatalogFilter"))).add(literal("public static boolean onOpenCatalogFilter(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, ")).add(mark("type")).add(literal(" ")).add(mark("type", "shortType", "firstLowerCase")).add(literal(", Object item, UISession session) {\n\treturn true;\n}")),
 			rule().add((condition("trigger", "toolbar"))).add(literal("public static class Toolbar {\n\t")).add(mark("operation").multiple("\n\n")).add(literal("\n}")),
 			rule().add((condition("type", "arrangement & grouping"))).add(literal("public static java.util.List<io.intino.konos.alexandria.ui.model.catalog.arrangement.Group> ")).add(mark("name", "firstLowerCase")).add(literal("(")).add(mark("box", "firstUpperCase")).add(literal("Box box, java.util.List<")).add(mark("type")).add(literal("> items, UISession session) {\n\treturn emptyList(); //TODO\n}")),
-			rule().add((condition("type", "arrangement & sorting"))).add(literal("public static int ")).add(mark("name", "firstLowerCase")).add(literal("Comparator(")).add(mark("type")).add(literal(" item1, ")).add(mark("type")).add(literal(" item2) {\n\treturn 0; //TODO\n}"))
+			rule().add((condition("type", "arrangement & sorting"))).add(literal("public static int ")).add(mark("name", "firstLowerCase")).add(literal("Comparator(")).add(mark("box", "firstUpperCase")).add(literal("Box box, ")).add(mark("type")).add(literal(" item1, ")).add(mark("type")).add(literal(" item2) {\n\treturn 0; //TODO\n}"))
 		);
 		return this;
 	}

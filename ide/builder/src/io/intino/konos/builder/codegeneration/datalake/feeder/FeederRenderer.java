@@ -58,10 +58,10 @@ public class FeederRenderer {
 			frame.addSlot("eventType", feeder.eventTypes().stream().filter(Objects::nonNull).map(s -> composedType(s, feeder.subdomain())).toArray(String[]::new));
 			frame.addSlot("domain", fullDomain(feeder.subdomain()));
 			final String feederClassName = firstUpperCase(name(feeder));
-			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "ness.feeders." + feederClassName);
-			writeFrame(new File(gen, "ness/feeders"), "Abstract" + feederClassName, customize(AbstractFeederTemplate.create()).format(frame));
-			if (!alreadyRendered(new File(src, "ness/feeders"), feederClassName))
-				writeFrame(new File(src, "ness/feeders"), feederClassName, customize(FeederTemplate.create()).format(frame));
+			classes.put(feeder.getClass().getSimpleName() + "#" + name(feeder), "datalake.feeders." + feederClassName);
+			writeFrame(new File(gen, "datalake/feeders"), "Abstract" + feederClassName, customize(AbstractFeederTemplate.create()).format(frame));
+			if (!alreadyRendered(new File(src, "datalake/feeders"), feederClassName))
+				writeFrame(new File(src, "datalake/feeders"), feederClassName, customize(FeederTemplate.create()).format(frame));
 		}
 	}
 

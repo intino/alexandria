@@ -2,7 +2,7 @@ package swagger;
 
 
 import io.intino.konos.builder.codegeneration.swagger.OpenApiDescriptor;
-import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
@@ -10,7 +10,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Files;
 
 @Ignore
 public class SwaggerApiGeneratorTest {
@@ -35,7 +34,7 @@ public class SwaggerApiGeneratorTest {
 	@Test
 	public void testApiCreation() throws Exception {
 		KonosGraph graph = new Graph().loadStashes("Petstore").as(KonosGraph.class);
-		SwaggerGenerator generator = new SwaggerGenerator(graph.rESTServiceList(), SWAGGER);
+		SwaggerProfileGenerator generator = new SwaggerProfileGenerator(graph.rESTServiceList(), SWAGGER);
 		generator.execute();
 	}
 }

@@ -13,10 +13,10 @@ public class SwaggerSpec {
 	public List<String> produces = Arrays.asList("text/plain; charset=utf-8", " application/json", "multipart/form-data");
 	public Map<String, Path> paths;
 	public Map<String, Definition> definitions;
-
+	public Map<String, SecurityDefinition> securityDefinitions;
+	public List<SecuritySchema> security;
 
 	public static class Info {
-
 		public String version;
 		public String title;
 		public String description;
@@ -85,23 +85,14 @@ public class SwaggerSpec {
 				public String format;
 				public Map<String, String> items;
 				public String collectionFormat;
+				public Schema schema;
 			}
 
 			public static class Response {
-				public String description;
+				public String description = "";
 				public Schema schema;
 				public List<Header> headers;
 				public List<Example> examples;
-
-				public static class Schema {
-					public String type;
-					public String $ref;
-
-					public Schema(String type, String $ref) {
-						this.type = type;
-						this.$ref = $ref;
-					}
-				}
 
 				public static class Header {
 					public String description;
@@ -119,6 +110,48 @@ public class SwaggerSpec {
 		}
 	}
 
+	public static class SecurityDefinition {
+		public String name;
+		public String type;
+		public String in;
+
+		public SecurityDefinition name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public SecurityDefinition type(String type) {
+			this.type = type;
+			return this;
+		}
+
+		public SecurityDefinition in(String in) {
+			this.in = in;
+			return this;
+		}
+	}
+
+	public static class SecurityRequirement {
+		public String name;
+		public List<String> scopes;
+		public Map<String, List<String>> requirements;
+
+		public SecurityRequirement name(String name) {
+			this.name = name;
+			return this;
+		}
+	}
+
+	public static class Schema {
+		public String type;
+		public String $ref;
+
+		public Schema(String type, String $ref) {
+			this.type = type;
+			this.$ref = $ref;
+		}
+	}
+
 	public static class Definition {
 		public String type;
 		public List<String> required;
@@ -133,5 +166,13 @@ public class SwaggerSpec {
 		}
 	}
 
+	public static class SecuritySchema {
+		List<String> basic = null;
+		List<String> api_key = null;
 
+		public SecuritySchema basic() {
+			basic = new ArrayList<>();
+			return this;
+		}
+	}
 }

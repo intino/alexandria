@@ -316,6 +316,18 @@ def attribute(CardWallet) trigger(valueType)
 	io.intino.konos.alexandria.ui.model.mold.stamps.Wallet
 end
 
+def attribute(Timeline) trigger(valueType)
+	io.intino.konos.alexandria.ui.model.mold.stamps.Timeline
+end
+
+def attribute(Pie) trigger(valueType)
+	io.intino.konos.alexandria.ui.model.mold.stamps.Pie
+end
+
+def attribute(Histogram) trigger(valueType)
+	io.intino.konos.alexandria.ui.model.mold.stamps.Histogram
+end
+
 def attribute(ItemLinks) trigger(valueType)
 	io.intino.konos.alexandria.ui.model.mold.stamps.Links
 end
