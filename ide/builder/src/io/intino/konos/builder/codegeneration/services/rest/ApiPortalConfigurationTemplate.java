@@ -19,8 +19,8 @@ public class ApiPortalConfigurationTemplate extends Template {
 
 	public Template define() {
 		add(
-				rule().add((condition("type", "api"))).add(literal("{\n  \"urls\": [\n    ")).add(mark("url").multiple("\n")).add(literal("\n  ],\n  \"title\": \"")).add(mark("title")).add(literal("\",\n  \"background\": \"")).add(mark("background")).add(literal("\",\n  \"color\": \"")).add(mark("color")).add(literal("\",\n  \"selectorBorderColor\": \"\"\n}")),
-				rule().add((condition("trigger", "url"))).add(literal("{\n  \"url\": \"./data/")).add(mark("value")).add(literal(".json\",\n  \"name\": \"")).add(mark("value")).add(literal("\"\n}"))
+			rule().add((condition("type", "api"))).add(literal("{\n  \"urls\": [\n    ")).add(mark("url").multiple("\n")).add(literal("\n  ],\n  \"title\": \"")).add(mark("title")).add(literal("\",\n  \"subtitle\": \"")).add(mark("subtitle")).add(literal("\",\n  \"background\": \"")).add(mark("background")).add(literal("\",\n  \"color\": \"")).add(mark("color")).add(literal("\",\n  \"selectorBorderColor\": \"\"\n}")),
+			rule().add((condition("trigger", "url"))).add(literal("{\n  \"url\": \"./data/")).add(mark("value")).add(literal(".json\",\n  \"name\": \"")).add(mark("value")).add(literal("\"\n}"))
 		);
 		return this;
 	}
