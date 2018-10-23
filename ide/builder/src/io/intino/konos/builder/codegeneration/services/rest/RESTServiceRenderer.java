@@ -83,7 +83,8 @@ public class RESTServiceRenderer {
 		RESTService service = services.get(0);
 		if (service.color() != null) frame.addSlot("color", service.color());
 		if (service.backgroundColor() != null) frame.addSlot("background", service.backgroundColor());
-		if (service.description() != null) frame.addSlot("title", service.description());
+		if (service.title() != null) frame.addSlot("title", service.title());
+		if (service.subtitle() != null) frame.addSlot("subtitle", service.subtitle());
 		else frame.addSlot("title", "API Portal");
 		if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
 		if (service.favicon() != null) copyFaviconToImages(new File(api, "images"), service.favicon());

@@ -10,7 +10,8 @@ Facet REST on Service
 	var string swagger = "2.0" is private
 	var string host
 	var string port
-	var string description = ""
+	var string title = ""
+	var string subtitle = ""
 	var string basePath = "/api"
 	var string logo = empty
 	var string favicon = empty

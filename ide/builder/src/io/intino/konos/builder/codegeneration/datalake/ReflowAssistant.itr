@@ -1,5 +1,5 @@
 def type(operations)
-	package $package+validPackage.ness;
+	package $package+validPackage.datalake;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.tara.magritte.Graph;

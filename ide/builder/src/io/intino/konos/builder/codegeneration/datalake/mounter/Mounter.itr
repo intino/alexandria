@@ -1,5 +1,5 @@
 def type(mounter)
-	package $package+validPackage.ness.mounters;
+	package $package+validPackage.datalake.mounters;
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 	$schemaImport
