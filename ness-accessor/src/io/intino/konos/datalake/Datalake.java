@@ -14,9 +14,7 @@ public interface Datalake {
 
 	void commit();
 
-	void addTank(String tank);
-
-	void addSetTank(String tank);
+	void add(String tank);
 
 	void connect(String... args);
 
@@ -49,23 +47,11 @@ public interface Datalake {
 
 		boolean put(io.intino.ness.inl.Message message);
 
-		TopicConsumer flow(String flowID);
-
 		Tank batchSession(int blockSize);
 
 		Tank endBatch();
 
-		void unregister();
-	}
-
-	interface SetTank {
-		String name();
-
-		boolean put(long id);
-
-		SetTank startBulk();
-
-		SetTank commitBulk();
+		TopicConsumer flow(String flowID);
 
 		void unregister();
 	}

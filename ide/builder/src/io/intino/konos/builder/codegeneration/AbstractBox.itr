@@ -191,7 +191,7 @@ end
 def type(dataLake & requireConnection) trigger(init)
 	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
 	this.ness.connect("$mode");
-	$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
 	if (this.ness.session() != null) logger.info("Ness connection: started!");
@@ -202,7 +202,7 @@ def type(dataLake) trigger(init)
 	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
 	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.ness.connect("$mode");
-		$package.ness.TanksConnectors.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		registerFeeders();
 		$nessOperations
 		if (this.ness.session() != null) logger.info("Ness connection: started!");
@@ -216,7 +216,7 @@ def type(dataLake) trigger(init)
 end
 
 def trigger(nessOperations)
-	$package.ness.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	$package+validPackage.datalake.NessOperations.init(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(custom) trigger(parameter)
@@ -291,7 +291,7 @@ def type(dataLake) trigger(getter)
 end
 
 def trigger(feeder)
-	io.intino.konos.datalake.Feeders.get().register(new $package.ness.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
+	io.intino.konos.datalake.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
 end
 
 def type(service & slack) trigger(getter)

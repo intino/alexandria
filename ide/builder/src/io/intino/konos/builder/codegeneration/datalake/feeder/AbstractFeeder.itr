@@ -1,7 +1,7 @@
 def type(feeder)
-	package $package+validPackage.ness.feeders;
+	package $package+validPackage.datalake.feeders;
 
-	import $package+validPackage.ness.TanksConnectors;
+	import $package+validPackage.datalake.Datalake;
 	import io.intino.konos.datalake.Feeder;
 	import io.intino.konos.datalake.Sensor;
 	import io.intino.ness.inl.Message;
@@ -23,7 +23,7 @@ def type(feeder)
 
 
 		public boolean feed(Message event) {
-			return TanksConnectors.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
+			return Datalake.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
 		}
 
 		public List<Sensor> sensors() {
