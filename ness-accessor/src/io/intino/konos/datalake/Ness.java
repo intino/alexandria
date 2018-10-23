@@ -1,54 +1,47 @@
 package io.intino.konos.datalake;
 
-import io.intino.konos.datalake.Datalake.User;
-import io.intino.konos.datalake.fs.FSDatalake;
-import io.intino.konos.datalake.fs.FSTank;
-import io.intino.konos.datalake.jms.JMSDatalake;
-import io.intino.konos.datalake.jms.JMSTank;
+import io.intino.konos.datalake.EventDatalake.User;
+import io.intino.konos.datalake.fs.FSEventDatalake;
+import io.intino.konos.datalake.jms.JMSEventDatalake;
+import io.intino.sezzet.SetStore;
+import io.intino.sezzet.SezzetStore;
 
-import javax.jms.Session;
 import java.util.List;
 
-import static io.intino.konos.datalake.Datalake.Tank;
+import static io.intino.konos.datalake.Helper.*;
 
 public class Ness {
 
-	private final Datalake datalake;
+	private final EventDatalake eventDatalake;
+	private final SetStore setDatalake;
 
 	public Ness(String url, String user, String password, String clientID) {
-		this.datalake = (url.startsWith("file://")) ? new FSDatalake(url) : new JMSDatalake(url, user, password, clientID);
+		this.eventDatalake = (url.startsWith("file://")) ? new FSEventDatalake(eventDatalakeDirectory(url), scaleOf(url)) : new JMSEventDatalake(url, user, password, clientID);
+		setDatalake = (url.startsWith("file://")) ? new SezzetStore(setDatalakeDirectory(url), setScaleOf(url)) : null;
 	}
 
 	public void connect(String... args) {
-		datalake.connect(args);
+		eventDatalake.connect(args);
 	}
 
 	public void disconnect() {
-		datalake.disconnect();
+		eventDatalake.disconnect();
 	}
 
 	public boolean isConnected() {
-		return datalake.isConnected();
+		return eventDatalake.isConnected();
 	}
 
-	public Datalake.ReflowSession reflow(ReflowConfiguration configuration, ReflowDispatcher dispatcher) {
-		return datalake.reflow(configuration, dispatcher);
+	public EventDatalake eventDatalake() {
+		return eventDatalake;
 	}
 
-	public Session session() {
-		return datalake instanceof JMSDatalake ? ((JMSDatalake) datalake).session() : null;
-	}
-
-	public void commit() {
-		datalake.commit();
-	}
-
-	public Tank add(String tank) {
-		datalake.add(tank);
-		return datalake instanceof JMSDatalake ? new JMSTank(tank, ((JMSDatalake) datalake)) : new FSTank(tank, (FSDatalake) datalake);
+	public SetStore setDatalake() {
+		return setDatalake;
 	}
 
 	public List<User> users() {
-		return datalake.users();
+		return eventDatalake.users();
 	}
+
 }

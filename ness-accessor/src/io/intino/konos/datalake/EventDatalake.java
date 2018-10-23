@@ -5,16 +5,16 @@ import io.intino.ness.inl.Message;
 
 import java.util.List;
 
-public interface Datalake {
+public interface EventDatalake {
 	String REFLOW_PATH = "service.ness.reflow";
 	String FLOW_PATH = "flow.ness.reflow";
 	String REGISTER_ONLY = "registerOnly";
 
 	ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher);
 
-	void commit();
+	BulkSession bulk();
 
-	void add(String tank);
+	Tank add(String tank);
 
 	void connect(String... args);
 
@@ -47,17 +47,32 @@ public interface Datalake {
 
 		boolean put(io.intino.ness.inl.Message message);
 
+		TopicConsumer flow(String flowID);
+
 		Tank batchSession(int blockSize);
 
 		Tank endBatch();
 
-		TopicConsumer flow(String flowID);
-
 		void unregister();
 	}
 
-	interface ReflowSession {
+	interface BulkSession {
+		void append(String tank, List<Message> messages);
 
+		default void append(Tank tank, List<Message> messages) {
+			append(tank.name(), messages);
+		}
+
+		void append(String tank, Message... messages);
+
+		default void append(Tank tank, Message... messages) {
+			append(tank.name(), messages);
+		}
+
+		void finish();
+	}
+
+	interface ReflowSession {
 		void next();
 
 		void finish();
