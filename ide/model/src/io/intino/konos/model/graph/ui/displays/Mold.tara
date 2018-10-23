@@ -90,6 +90,10 @@ Concept Mold extends Display
 				var integer max = 5
 			sub Snippet
 			sub CardWallet
+			sub Chart
+				sub Pie
+				sub Histogram
+				sub Timeline
 			sub Title
 			sub Map
 				var integer zoom

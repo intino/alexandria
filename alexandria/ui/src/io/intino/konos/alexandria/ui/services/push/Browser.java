@@ -1,5 +1,10 @@
 package io.intino.konos.alexandria.ui.services.push;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class Browser {
     private String baseUrl;
     private String basePath;
@@ -9,6 +14,7 @@ public class Browser {
     private String metadataLanguage;
     private String metadataIpAddress;
     private int timezoneOffset = 0;
+    private Map<String, String> preferences = new HashMap<>();
 
     private static final String PushPath = "/push?id=%s&currentSession=%s&language=%s";
 
@@ -88,5 +94,18 @@ public class Browser {
 
     public void timezoneOffset(int timezoneOffset) {
         this.timezoneOffset = timezoneOffset;
+    }
+
+    public List<String> preferences() {
+        return preferences.values().stream().collect(Collectors.toList());
+    }
+
+    public String preference(String name) {
+        return preferences.get(name);
+    }
+
+    public Browser add(String preference, String value) {
+        preferences.put(preference, value);
+        return this;
     }
 }

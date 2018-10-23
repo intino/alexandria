@@ -140,6 +140,7 @@
             this._initItemLinksProperties(stamp);
             this._initLocationProperties(stamp);
             this._initCardWalletProperties(stamp);
+            this._initChartProperties(stamp);
             this._initCatalogLinkProperties(stamp);
         },
 
@@ -205,6 +206,12 @@
             if (stamp.type !== "card-wallet") return;
             var value = this._parseFunctions(this._valueOf(stamp));
             stamp.properties.wallet = (value != "") ? JSON.parse(value) : { cards: [] };
+        },
+
+        _initChartProperties : function(stamp) {
+            if (stamp.type !== "timeline" && stamp.type !== "pie" && stamp.type !== "histogram") return;
+            var value = this._parseFunctions(this._valueOf(stamp));
+            stamp.properties.chartData = (value != "") ? JSON.parse(value) : null;
         },
 
         _initCatalogLinkProperties : function(stamp) {

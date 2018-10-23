@@ -1,5 +1,5 @@
 def type(interface)
-	package $package+validPackage.ness;
+	package $package+validPackage.datalake;
 
 	import io.intino.konos.jmx.Description;
 	import io.intino.konos.jmx.Parameters;
@@ -24,7 +24,7 @@ def type(interface)
 end
 
 def type(operations) !type(interface)
-	package $package+validPackage.ness;
+	package $package+validPackage.datalake;
 
 	import io.intino.konos.datalake.MessageHandler;
 	import io.intino.konos.datalake.ReflowDispatcher;
@@ -35,7 +35,6 @@ def type(operations) !type(interface)
 	import io.intino.tara.magritte.stores.FileSystemStore;
 	import org.apache.commons.io.FileUtils;
 	import $package+validPackage.$box+FirstUpperCase~Box;
-	import $package+validPackage.ness.TanksConnectors;
 	import org.slf4j.Logger;
 	import org.slf4j.LoggerFactory;
 
@@ -55,7 +54,7 @@ def type(operations) !type(interface)
 
 		public NessOperations($box+firstUpperCase~Box box) {
 			this.box = box;
-			this.assistant = new $package+validPackage.ness.ReflowAssistant(box);
+			this.assistant = new $package+validPackage.datalake.ReflowAssistant(box);
 		}
 
 		public java.util.List<String> help() {
@@ -83,8 +82,8 @@ def type(operations) !type(interface)
 		private boolean reflow(ReflowConfiguration configuration) {
 			logger.info("Starting Reflow...");
 			assistant.before();
-			TanksConnectors.unregister();
-			this.session = box.datalake().reflow(configuration, new ReflowDispatcher(TanksConnectors.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
+			$package+validPackage.datalake.Datalake.unregister();
+			this.session = box.datalake().reflow(configuration, new ReflowDispatcher($package+validPackage.datalake.Datalake.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
 			final Graph graph = assistant.graph();
 			try {
 				if (graph.store() instanceof FileSystemStore && configuration.cleanStore())
@@ -108,7 +107,7 @@ def type(operations) !type(interface)
 				final Graph graph = new Graph(NessOperations.this.graph.store());
 				allowWriting(graph, true);
 				box.put(graph.loadStashes(assistant.coreStashes()));
-				TanksConnectors.registerTanks(box);
+				$package+validPackage.datalake.Datalake.registerTanks(box);
 				assistant.after();
 				logger.info("Reflow finished - " + m.get("count") + " messages processed");
 			};
@@ -138,7 +137,7 @@ def type(operations) !type(interface)
 
 
 		public static JMXServer init($box+FirstUpperCase~Box box) {
-			JMXServer server = new JMXServer(Collections.singletonMap("$package.ness.NessOperations", new Object$[]{box}));
+			JMXServer server = new JMXServer(Collections.singletonMap("$package+validPackage.datalake.NessOperations", new Object$[]{box}));
 			server.init();
 			return server;
 		}

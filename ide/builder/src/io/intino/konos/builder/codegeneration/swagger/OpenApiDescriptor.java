@@ -2,28 +2,31 @@ package io.intino.konos.builder.codegeneration.swagger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.Path.Operation;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefinition;
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.longinteger.LongIntegerData;
+import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter.In;
+import io.intino.konos.model.graph.type.TypeData;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class OpenApiDescriptor {
 
-	private final RESTService restService;
+	private final RESTService service;
 	private final List<Schema> schemas;
 
-	public OpenApiDescriptor(RESTService restService) {
-		this.restService = restService;
-		this.schemas = restService.graph().schemaList();
+	public OpenApiDescriptor(RESTService service) {
+		this.service = service;
+		this.schemas = new ArrayList<>();
 	}
 
 	public String createJSONDescriptor() {
@@ -33,15 +36,27 @@ public class OpenApiDescriptor {
 
 	private SwaggerSpec create() {
 		SwaggerSpec spec = new SwaggerSpec();
-		spec.basePath = restService.basePath();
-		spec.definitions = createDefinitions();
-		spec.host = restService.host();
-		spec.schemes = restService.protocols().stream().map(Enum::name).collect(Collectors.toList());
+		spec.basePath = service.basePath().isEmpty() ? "/" : service.basePath() + version();
+		spec.host = service.host().contains("{") ? "www.example.org" : service.host();
+		spec.schemes = service.protocols().stream().map(Enum::name).collect(Collectors.toList());
 		spec.paths = new LinkedHashMap<>();
-		spec.info = createInfo(restService.info());
-		for (Resource resource : restService.resourceList())
+		spec.info = createInfo(service.info());
+		for (Resource resource : service.resourceList())
 			spec.paths.put(resource.path(), createPath(resource));
+		spec.definitions = createDefinitions();
+		if (service.authenticatedWithToken() != null) {
+			spec.securityDefinitions = new HashMap<>();
+			spec.securityDefinitions.put("basic", new SecurityDefinition().type("basic"));
+			spec.security = new ArrayList<>();
+			spec.security.add(new SwaggerSpec.SecuritySchema().basic());
+		}
 		return spec;
+	}
+
+	@NotNull
+	private String version() {
+		if (service.info() == null || service.info().version() == null) return "";
+		return "/" + service.info().version();
 	}
 
 	private SwaggerSpec.Info createInfo(RESTService.Info info) {
@@ -53,7 +68,7 @@ public class OpenApiDescriptor {
 	private SwaggerSpec.Path createPath(Resource resource) {
 		SwaggerSpec.Path path = new SwaggerSpec.Path();
 		for (Resource.Operation op : resource.operationList()) {
-			SwaggerSpec.Path.Operation operation = new SwaggerSpec.Path.Operation();
+			Operation operation = new Operation();
 			operation.description = op.description().isEmpty() ? null : op.description();
 			operation.summary = op.summary().isEmpty() ? null : op.summary();
 			operation.operationId = op.name$();
@@ -66,28 +81,31 @@ public class OpenApiDescriptor {
 		return path;
 	}
 
-	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, Response response) {
-		SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+	private void addResponse(Map<String, Operation.Response> responses, Response response) {
+		Operation.Response swaggerResponse = new Operation.Response();
 		if (response != null) {
 			swaggerResponse.description = response.description();
-			if (response.isObject())
-				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + response.asObject().schema().name$());
+			if (response.isObject()) {
+				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + response.asObject().schema().name$());
+				this.schemas.add(response.asObject().schema());
+			}
 		}
 		responses.put(response == null ? "200" : response.code(), swaggerResponse);
 	}
 
-	private void addResponse(Map<String, SwaggerSpec.Path.Operation.Response> responses, List<Exception> exceptions) {
+	private void addResponse(Map<String, Operation.Response> responses, List<Exception> exceptions) {
 		for (Exception exception : exceptions) {
-			SwaggerSpec.Path.Operation.Response swaggerResponse = new SwaggerSpec.Path.Operation.Response();
+			Operation.Response swaggerResponse = new Operation.Response();
 			swaggerResponse.description = exception.description();
 			if (exception.isObject()) {
-				swaggerResponse.schema = new SwaggerSpec.Path.Operation.Response.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
+				swaggerResponse.schema = new SwaggerSpec.Schema(null, "#/definitions/" + exception.asObject().schema().name$());
+				this.schemas.add(exception.asObject().schema());
 			}
 			responses.put(exception.code().value(), swaggerResponse);
 		}
 	}
 
-	private void addOperationToPath(SwaggerSpec.Path path, SwaggerSpec.Path.Operation operation, String name) {
+	private void addOperationToPath(SwaggerSpec.Path path, Operation operation, String name) {
 		switch (name) {
 			case "Get":
 				path.get = operation;
@@ -110,18 +128,42 @@ public class OpenApiDescriptor {
 		}
 	}
 
-	private List<SwaggerSpec.Path.Operation.Parameter> createParameters(List<Resource.Parameter> parameters) {
-		List<SwaggerSpec.Path.Operation.Parameter> list = new ArrayList<>();
+	private List<Operation.Parameter> createParameters(List<Resource.Parameter> parameters) {
+		List<Operation.Parameter> list = new ArrayList<>();
 		for (Resource.Parameter parameter : parameters) {
-			SwaggerSpec.Path.Operation.Parameter swaggerParameter = new SwaggerSpec.Path.Operation.Parameter();
+			Operation.Parameter swaggerParameter = new Operation.Parameter();
 			swaggerParameter.description = parameter.description();
 			swaggerParameter.in = parameter.in().name();
 			swaggerParameter.name = parameter.name$();
-			swaggerParameter.type = parameter.asType().type().toLowerCase();
-			swaggerParameter.required = parameter.isRequired();
+			swaggerParameter.type = parameterType(parameter.in(), parameter.asType());
+			swaggerParameter.required = parameter.in() == In.path || parameter.isRequired();
+			if (parameter.isObject()) {
+				this.schemas.add(parameter.asObject().schema());
+				if (parameter.in() == In.body)
+					swaggerParameter.schema = new SwaggerSpec.Schema(null, "#/definitions/" + parameter.asObject().schema().name$());
+			}
 			list.add(swaggerParameter);
 		}
 		return list.isEmpty() ? null : list;
+	}
+
+	private String parameterType(In in, TypeData typeData) {
+		String type = typeData.type();
+		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
+		if (typeData.i$(ObjectData.class)) {
+			if (in == In.body) return null;
+			return "string";
+		}
+		return type.toLowerCase();
+	}
+
+	private String transform(TypeData typeData) {
+		String type = typeData.type();
+		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
+		if (typeData.i$(ObjectData.class)) return "object";
+		return type.toLowerCase();
 	}
 
 	private Map<String, SwaggerSpec.Definition> createDefinitions() {
@@ -144,7 +186,7 @@ public class OpenApiDescriptor {
 	@NotNull
 	private SwaggerSpec.Definition.Property propertyFrom(Schema.Attribute attribute) {
 		final SwaggerSpec.Definition.Property property = new SwaggerSpec.Definition.Property();
-		property.type = attribute.asType().type().toLowerCase();
+		property.type = transform(attribute.asType());
 		return property;
 	}
 

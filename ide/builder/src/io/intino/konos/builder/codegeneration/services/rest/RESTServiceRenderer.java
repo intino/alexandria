@@ -1,11 +1,14 @@
 package io.intino.konos.builder.codegeneration.services.rest;
 
-import io.intino.konos.builder.codegeneration.swagger.IndexTemplate;
-import io.intino.konos.builder.codegeneration.swagger.SwaggerGenerator;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
+import io.intino.tara.magritte.Layer;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.AbstractFrame;
 import org.siani.itrules.model.Frame;
@@ -14,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,51 +28,45 @@ import java.util.zip.ZipInputStream;
 import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer {
 	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	private final List<RESTService> services;
-	@org.jetbrains.annotations.NotNull
+	@NotNull
 	private final KonosGraph graph;
 	private final File gen;
 	private final File res;
 	private String packageName;
 	private final String boxName;
+	private final Module module;
 	private final Map<String, String> classes;
 
-	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Map<String, String> classes) {
+	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Module module, Map<String, String> classes) {
 		this.services = graph.rESTServiceList();
 		this.graph = graph;
 		this.gen = gen;
 		this.res = res;
 		this.packageName = packageName;
 		this.boxName = boxName;
+		this.module = module;
 		this.classes = classes;
 	}
 
 	public void execute() {
 		services.forEach((service) -> processService(service.a$(RESTService.class), gen));
-		if (!services.isEmpty()) generateDoc();
+		if (!services.isEmpty()) generateApiPortal();
 	}
 
-	private void generateDoc() {
-		final File www = new File(res, "www" + File.separator + "developer");
-		new SwaggerGenerator(services, www).execute();
-		createIndex(www);
-		copyAssets(www);
-	}
-
-	private void createIndex(File www) {
-		Frame doc = new Frame().addTypes("index");
-		for (RESTService service : services)
-			doc.addSlot("service", new Frame().addTypes("service").addSlot("name", service.name$()).addSlot("description", service.description()));
-		writeIndex(www, doc);
-	}
-
-	private void writeIndex(File www, Frame doc) {
-		Commons.write(new File(www, "index.html").toPath(), IndexTemplate.create().format(doc));
+	private void generateApiPortal() {
+		final File api = new File(res, "www" + File.separator + "api");
+		copyAssets(api);
+		File data = new File(api, "data");
+		data.mkdirs();
+		new SwaggerProfileGenerator(services, data).execute();
+		createConfigFile(api);
 	}
 
 	private void copyAssets(File www) {
@@ -76,6 +75,57 @@ public class RESTServiceRenderer {
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
+	}
+
+	private void createConfigFile(File api) {
+		Template template = customize(ApiPortalConfigurationTemplate.create());
+		Frame frame = new Frame("api").addSlot("url", services.stream().map(Layer::name$).toArray(String[]::new));
+		RESTService service = services.get(0);
+		if (service.color() != null) frame.addSlot("color", service.color());
+		if (service.backgroundColor() != null) frame.addSlot("background", service.backgroundColor());
+		if (service.title() != null) frame.addSlot("title", service.title());
+		if (service.subtitle() != null) frame.addSlot("subtitle", service.subtitle());
+		else frame.addSlot("title", "API Portal");
+		if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
+		if (service.favicon() != null) copyFaviconToImages(new File(api, "images"), service.favicon());
+		try {
+			Files.write(new File(api, "config.json").toPath(), template.format(frame).getBytes());
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private void copyFaviconToImages(File images, String logo) {
+		File resource = findResource(logo);
+		if (resource == null) return;
+		try {
+			Files.copy(resource.toPath(), new File(images, "favicon.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private void copyLogoToImages(File images, String logo) {
+		File resource = findResource(logo);
+		if (resource == null) return;
+		try {
+			Files.copy(resource.toPath(), new File(images, "logo.png").toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private File findResource(String logo) {
+		VirtualFile resRoot = getResRoot(module);
+		if (resRoot == null) return null;
+		File file = new File(resRoot.getPath(), logo);
+		return file.exists() ? file : null;
+	}
+
+	private VirtualFile getResRoot(Module module) {
+		for (VirtualFile file : getSourceRoots(module))
+			if (file.isDirectory() && "res".equals(file.getName())) return file;
+		return null;
 	}
 
 	private void processService(RESTService service, File gen) {

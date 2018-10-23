@@ -69,5 +69,8 @@ public class ReflowConfiguration implements java.io.Serializable {
 			return this;
 		}
 
+		public Instant to() {
+			return to;
+		}
 	}
 }

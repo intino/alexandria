@@ -13,6 +13,7 @@
       <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="konos" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="alexandria" />
     </modules>

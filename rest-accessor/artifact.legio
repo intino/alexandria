@@ -12,7 +12,7 @@ Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-rest-accesso
 		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
 		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.8.3")
 		Test("junit", "junit", "4.12")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources= true)
 	Distribution(release = intino.release)
 
 Repository(identifier = "intino-maven")

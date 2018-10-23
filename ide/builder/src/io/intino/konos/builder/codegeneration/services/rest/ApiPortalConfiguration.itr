@@ -1,0 +1,19 @@
+def type(api)
+	{
+      "urls": $[
+        $url...[$NL]
+      $],
+      "title": "$title",
+      "subtitle": "$subtitle",
+      "background": "$background",
+      "color": "$color",
+      "selectorBorderColor": ""
+    }
+end
+
+def trigger(url)
+	{
+	  "url": "./data/$value.json",
+	  "name": "$value"
+	}
+end
