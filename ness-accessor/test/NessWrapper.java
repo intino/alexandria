@@ -1,5 +1,6 @@
-import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.EventDatalake;
 import io.intino.konos.datalake.Ness;
+import io.intino.konos.datalake.jms.JMSEventDatalake;
 import io.intino.ness.inl.Message;
 import org.junit.Test;
 
@@ -11,9 +12,9 @@ public class NessWrapper {
 	public void shouldStartNess() throws Exception {
 		final Ness ness = new Ness("failover:(tcp://localhost:63000)", "feeder", "UHH7G+Nszp", "feeder-adq");
 		ness.connect("Transacted");
-		final Datalake.Tank tank = ness.add("adquiver.advertiser");
+		final EventDatalake.Tank tank = ness.eventDatalake().add("adquiver.advertiser");
 		tank.put(new Message("advertiser").set("ts", Instant.now().toString()));
-		ness.session().commit();
+		((JMSEventDatalake) ness.eventDatalake()).session().commit();
 		Thread.sleep(10000);
 	}
 
@@ -21,7 +22,7 @@ public class NessWrapper {
 	@Test
 	public void sendAttachment() {
 		final Ness ness = new Ness("file://./temp/../attach", "user", "password", "");
-		final Datalake.Tank tank = ness.add("happysense.dialog");
+		final EventDatalake.Tank tank = ness.eventDatalake().add("happysense.dialog");
 		final Message message = new Message("dialog").set("name", "dialog1");
 		message.set("ts", Instant.now().toString());
 		message.set("value", "txt", "example".getBytes());

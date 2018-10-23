@@ -1,6 +1,6 @@
 package io.intino.konos.datalake.jms;
 
-import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.EventDatalake;
 import io.intino.konos.datalake.MessageHandler;
 import io.intino.konos.jms.Consumer;
 import io.intino.konos.jms.TopicConsumer;
@@ -11,25 +11,25 @@ import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 
-import static io.intino.konos.datalake.Datalake.REGISTER_ONLY;
+import static io.intino.konos.datalake.EventDatalake.REGISTER_ONLY;
 import static io.intino.konos.datalake.MessageTranslator.fromInlMessage;
 import static io.intino.konos.datalake.MessageTranslator.toInlMessage;
 
-public class JMSTank implements Datalake.Tank {
+public class JMSTank implements EventDatalake.Tank {
 	private static Logger logger = LoggerFactory.getLogger(JMSTank.class);
 
 	private String name;
-	private JMSDatalake datalake;
+	private JMSEventDatalake datalake;
 	private TopicConsumer flow;
 	private MessageHandler handler;
 
-	public JMSTank(String name, JMSDatalake datalake) {
+	public JMSTank(String name, JMSEventDatalake datalake) {
 		this.name = name;
 		this.datalake = datalake;
 	}
 
 	@Override
-	public Datalake.Tank handler(MessageHandler handler) {
+	public EventDatalake.Tank handler(MessageHandler handler) {
 		this.handler = handler;
 		return this;
 	}
@@ -70,13 +70,13 @@ public class JMSTank implements Datalake.Tank {
 	}
 
 	@Override
-	public Datalake.Tank batchSession(int blockSize) {
+	public EventDatalake.Tank batchSession(int blockSize) {
 		datalake.batch(name, blockSize);
 		return this;
 	}
 
 	@Override
-	public Datalake.Tank endBatch() {
+	public EventDatalake.Tank endBatch() {
 		datalake.endBatch(name);
 		return this;
 	}

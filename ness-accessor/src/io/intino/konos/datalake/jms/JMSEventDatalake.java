@@ -1,9 +1,9 @@
 package io.intino.konos.datalake.jms;
 
-import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.EventDatalake;
 import io.intino.konos.datalake.ReflowConfiguration;
 import io.intino.konos.datalake.ReflowDispatcher;
-import io.intino.konos.datalake.fs.FSDatalake;
+import io.intino.konos.datalake.fs.FSEventDatalake;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.konos.jms.TopicProducer;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -25,21 +25,21 @@ import static io.intino.ness.inl.Message.load;
 import static java.lang.Thread.sleep;
 import static java.util.Objects.requireNonNull;
 
-public class JMSDatalake implements Datalake {
+public class JMSEventDatalake implements EventDatalake {
 	private final String ADMIN_PATH = "service.ness.admin";
-	private static Logger logger = LoggerFactory.getLogger(JMSDatalake.class);
+	private static Logger logger = LoggerFactory.getLogger(JMSEventDatalake.class);
 
 	private final String url;
 	private final String user;
 	private final String password;
 	private final String clientID;
 
-	private Session session;
+	private javax.jms.Session session;
 	private Connection connection;
 	private Map<String, TopicProducer> topicProducers = new HashMap<>();
 	private List<String> registeredTanks = new ArrayList<>();
 
-	public JMSDatalake(String url, String user, String password, String clientID) {
+	public JMSEventDatalake(String url, String user, String password, String clientID) {
 		this.url = url;
 		this.user = user;
 		this.password = password;
@@ -52,7 +52,7 @@ public class JMSDatalake implements Datalake {
 			for (TopicProducer topicProducer : topicProducers.values()) topicProducer.close();
 			createConnection();
 			final boolean transacted = args.length > 0 && args[0].equalsIgnoreCase("transacted");
-			this.session = connection.createSession(transacted, transacted ? Session.SESSION_TRANSACTED : Session.AUTO_ACKNOWLEDGE);
+			this.session = connection.createSession(transacted, transacted ? javax.jms.Session.SESSION_TRANSACTED : javax.jms.Session.AUTO_ACKNOWLEDGE);
 			if (registeredTanks == null || registeredTanks.isEmpty()) this.registeredTanks = registeredTanks();
 		} catch (JMSException e) {
 			logger.error(e.getMessage(), e);
@@ -91,6 +91,11 @@ public class JMSDatalake implements Datalake {
 		return session;
 	}
 
+
+	public BulkSession bulk() {
+		return null;
+	}
+
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
 		TopicProducer producer = newProducer(REFLOW_PATH);
 		String quickURL = tryWithQuickReflow(producer);
@@ -101,7 +106,7 @@ public class JMSDatalake implements Datalake {
 	}
 
 	private ReflowSession fsReflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher, TopicProducer producer, String quickURL) {
-		final FSDatalake fsDatalake = new FSDatalake(quickURL);
+		final FSEventDatalake fsDatalake = new FSEventDatalake(quickURL);
 		dispatcher.tanks().forEach(t -> fsDatalake.add(t.name()));
 		return fsDatalake.reflow(reflow, dispatcher, () -> producer.produce(createMessageFor("finish")));
 	}
@@ -173,8 +178,9 @@ public class JMSDatalake implements Datalake {
 		}
 	}
 
-	public void add(String tank) {
+	public Tank add(String tank) {
 		if (!registeredTanks.contains(tank)) logger.warn("Tank " + tank + " is not registered in datalake");
+		return new JMSTank(tank, this);
 	}
 
 	public void disconnect() {
