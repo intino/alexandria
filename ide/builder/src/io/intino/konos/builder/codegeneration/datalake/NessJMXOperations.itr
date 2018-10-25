@@ -65,7 +65,6 @@ def type(operations) !type(interface)
 			return operations;
 		}
 
-
 		public boolean reflow() {
 			return reflow(new ReflowConfiguration().blockSize(assistant.defaultBlockSize()).tankList(assistant.defaultTanks().stream().map(t -> new ReflowConfiguration.Tank().name(t.name()).from(Instant.MIN)).collect(java.util.stream.Collectors.toList())));
 		}

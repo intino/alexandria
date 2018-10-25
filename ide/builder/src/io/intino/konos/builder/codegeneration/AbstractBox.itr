@@ -194,7 +194,7 @@ def type(dataLake & requireConnection) trigger(init)
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
-	if (this.ness.session() != null) logger.info("Ness connection: started!");
+	if (((io.intino.konos.datalake.jms.JMSEventDatalake) ness.eventDatalake()).session() != null) logger.info("Ness connection: started!");
 end
 
 
