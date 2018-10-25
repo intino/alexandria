@@ -1,6 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.*;
@@ -13,6 +14,7 @@ import io.intino.konos.model.graph.type.TypeData;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
 import static io.intino.konos.builder.helpers.Commons.returnType;
@@ -34,7 +36,7 @@ class ActionUpdater {
 		this.parameters = parameters;
 		this.exceptions = exceptions;
 		this.response = response;
-		file = PsiManager.getInstance(project).findFile(VfsUtil.findFileByIoFile(destiny, true));
+		file = PsiManager.getInstance(project).findFile(Objects.requireNonNull(VfsUtil.findFileByIoFile(destiny, true)));
 	}
 
 	void update() {
@@ -62,6 +64,11 @@ class ActionUpdater {
 	}
 
 	private void updateFields(PsiClass psiClass) {
+		if (DumbService.isDumb(project)) DumbService.getInstance(project).smartInvokeLater(() -> doUpdateFields(psiClass));
+		else doUpdateFields(psiClass);
+	}
+
+	private void doUpdateFields(PsiClass psiClass) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
 		parameters.stream().
 				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> parameter.name$().equalsIgnoreCase(f.getName()))).
