@@ -49,7 +49,7 @@ def type(operations) !type(interface)
 		private final $box+firstUpperCase~Box box;
 		private final ReflowAssistant assistant;
 		private int processed = 0;
-		private io.intino.konos.datalake.Datalake.ReflowSession session;
+		private io.intino.konos.datalake.EventDatalake.ReflowSession session;
 		private Graph graph;
 
 		public NessOperations($box+firstUpperCase~Box box) {
@@ -83,7 +83,7 @@ def type(operations) !type(interface)
 			logger.info("Starting Reflow...");
 			assistant.before();
 			$package+validPackage.datalake.Datalake.unregister();
-			this.session = box.datalake().reflow(configuration, new ReflowDispatcher($package+validPackage.datalake.Datalake.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
+			this.session = box.datalake().eventDatalake().reflow(configuration, new ReflowDispatcher($package+validPackage.datalake.Datalake.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
 			final Graph graph = assistant.graph();
 			try {
 				if (graph.store() instanceof FileSystemStore && configuration.cleanStore())
