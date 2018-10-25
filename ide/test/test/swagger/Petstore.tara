@@ -1,6 +1,6 @@
 dsl Konos
 
-Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http, port = "")
+Service(title = "Cesar Ops Service", basePath = "/v1") cesar as REST(host = "petstore.swagger.io", protocols = http, port = "")
 	Info(title = "Swagger Petstore", version = "1.0.0")
 		License MIT
 	Resource(path = "/pets") pets
@@ -26,7 +26,7 @@ Service(description = "Cesar Ops Service", basePath = "/v1") cesar as REST(host 
 
 
 
-Service(description = "Cesar Ops Service2", basePath = "/v1") cesar2 as REST(host = "petstore.swagger.io", protocols = http, port = "")
+Service(title = "Cesar Ops Service2", basePath = "/v1") cesar2 as REST(host = "petstore.swagger.io", protocols = http, port = "")
 	Info(title = "Swagger Petstore", version = "1.0.0")
 		License MIT
 	Resource(path = "/pets") pets

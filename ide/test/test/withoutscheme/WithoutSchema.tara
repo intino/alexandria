@@ -1,6 +1,6 @@
 dsl Konos
 
-Service (description = "Interface for recovering all dashboard information", basePath = "/dashboard") dashboard as REST(host = "")
+Service(title = "Interface for recovering all dashboard information", basePath = "/dashboard") dashboard as REST(host = "", port = "")
 	Resource(path = "/today") today
 		Get(description = "Opinions Today")
 			Response as Text
