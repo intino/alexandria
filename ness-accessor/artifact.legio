@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "3.0.0") alexandria-ness-accessor
+Artifact("io.intino.konos", "3.0.0") alexandria-ness-accessor
 	Imports
 		Compile("io.intino.konos", "alexandria-jms", "1.0.16")
 		Compile("io.intino.ness", "datalake", "[1.1.7, 2.0.0)")
@@ -8,7 +8,7 @@ Artifact(groupId = "io.intino.konos", version = "3.0.0") alexandria-ness-accesso
 		Compile("commons-io", "commons-io", "2.4")
 		Test("junit", "junit", "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(release = intino.release)
+	Distribution(intino.release)
 
 
 Repository("intino-maven")
