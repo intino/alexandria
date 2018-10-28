@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static io.intino.konos.datalake.Helper.*;
-import static io.intino.konos.datalake.NessAccessor.Stage.Type.*;
+import static io.intino.konos.datalake.NessAccessor.Stage.Type.set;
 
 public class NessAccessor {
 	private final EventDatalake eventDatalake;
@@ -24,7 +24,7 @@ public class NessAccessor {
 	}
 
 	public static EventSession createEventSession(FileStage stage) {
-		return new EventSession(stage.start(event));
+		return new EventSession(stage.start(Stage.Type.event));//TODO
 	}
 
 	public NessAccessor(String url, String user, String password, String clientID) {
@@ -57,14 +57,17 @@ public class NessAccessor {
 	}
 
 	public interface Stage {
+		enum Type {event, set}
 
 		Stream<Session> sessions();
 
 		interface Session {
-			Type type();
-			//TODO Lo que se necesite para hacer el commit
-		}
 
-		enum Type {event, set}
+			Type type();
+
+			void commit();
+			//TODO Lo que se necesite para hacer el commit
+
+		}
 	}
 }

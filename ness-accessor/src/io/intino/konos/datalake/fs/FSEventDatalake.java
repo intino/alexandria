@@ -51,8 +51,8 @@ public class FSEventDatalake implements EventDatalake {
 	}
 
 	@Override
-	public BulkSession bulk() {
-		return new FSBulkSession(datalake.tankList(), datalake.scale());
+	public EventSession createEventSession() {
+		return new FSEventSession(datalake.tankList(), datalake.scale());
 	}
 
 	public io.intino.ness.datalake.graph.Tank tank(String name) {
