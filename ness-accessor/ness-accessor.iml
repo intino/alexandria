@@ -34,11 +34,9 @@
     <orderEntry type="library" name="Legio: org.objenesis:objenesis:2.2" level="project" />
     <orderEntry type="library" name="Legio: io.intino.konos:alexandria-triplestore:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.sezzet:operators:1.0.1" level="project" />
-    <orderEntry type="library" name="Legio: org.antlr:antlr4-runtime:4.7" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.sezzet:sezzet:1.0.1" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.tara:magritte:2.1.11" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.tara:language:1.0.11" level="project" />
     <orderEntry type="library" name="Legio: io.intino.ness:datalake:1.1.7" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.sezzet:store:1.0.8" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.ness:set-store:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.tara:magritte:2.1.8" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.tara:language:1.0.8" level="project" />
   </component>
 </module>

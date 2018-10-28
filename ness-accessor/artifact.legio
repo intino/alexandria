@@ -4,7 +4,7 @@ Artifact(groupId = "io.intino.konos", version = "3.0.0") alexandria-ness-accesso
 	Imports
 		Compile("io.intino.konos", "alexandria-jms", "1.0.16")
 		Compile("io.intino.ness", "datalake", "[1.1.7, 2.0.0)")
-		Compile("io.intino.sezzet", "store", "[1.0.7, 2.0.0)")
+		Compile("io.intino.ness", "set-store", "[1.0.0, 2.0.0)")
 		Compile("commons-io", "commons-io", "2.4")
 		Test("junit", "junit", "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)

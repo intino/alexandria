@@ -32,7 +32,7 @@ public class Helper {
 		return url.contains("?") ? Scale.valueOf(url.split("=")[1]) : Scale.Day;
 	}
 
-	static io.intino.sezzet.model.graph.rules.Scale setScaleOf(String url) {
-		return url.contains("?") ? io.intino.sezzet.model.graph.rules.Scale.valueOf(url.split("=")[1]) : io.intino.sezzet.model.graph.rules.Scale.Day;
+	static io.intino.ness.setstore.Scale setScaleOf(String url) {
+		return url.contains("?") ? io.intino.ness.setstore.Scale.valueOf(url.split("=")[1]) : io.intino.ness.setstore.Scale.Day;
 	}
 }

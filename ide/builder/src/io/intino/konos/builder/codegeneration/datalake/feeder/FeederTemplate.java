@@ -1,11 +1,10 @@
 package io.intino.konos.builder.codegeneration.datalake.feeder;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
+import org.siani.itrules.*;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.LF;
+import static org.siani.itrules.LineSeparator.*;
 
 public class FeederTemplate extends Template {
 

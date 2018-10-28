@@ -3,7 +3,7 @@ def type(tanks)
 
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
-	import io.intino.konos.datalake.Ness;
+	import io.intino.konos.datalake.NessAccessor;
 	import io.intino.konos.jms.Consumer;
 	import io.intino.konos.jms.Bus;
     import org.apache.activemq.ActiveMQConnection;
