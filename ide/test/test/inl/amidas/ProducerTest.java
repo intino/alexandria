@@ -4,7 +4,7 @@ import inl.amidas.schemas.Solicitud;
 import io.intino.konos.alexandria.Inl;
 import io.intino.konos.alexandria.Json;
 import io.intino.konos.datalake.EventDatalake;
-import io.intino.konos.datalake.Ness;
+import io.intino.konos.datalake.NessAccessor;
 import io.intino.konos.jms.TopicProducer;
 import io.intino.ness.inl.Message;
 import org.junit.Before;
@@ -45,9 +45,9 @@ public class ProducerTest {
 	@Test
 	@Ignore
 	public void sendAttachment() {
-		final Ness ness = new Ness(url, user, password, "");
-		ness.connect();
-		final EventDatalake.Tank tank = ness.eventDatalake().add(topic);
+		final NessAccessor nessAccessor = new NessAccessor(url, user, password, "");
+		nessAccessor.connect();
+		final EventDatalake.Tank tank = nessAccessor.eventDatalake().add(topic);
 		Solicitud solicitud = Json.fromString(jsonSolicitud, Solicitud.class);
 		Message message = Inl.toMessage(solicitud);
 		tank.feed(message);
