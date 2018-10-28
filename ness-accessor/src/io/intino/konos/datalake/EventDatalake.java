@@ -12,7 +12,7 @@ public interface EventDatalake {
 
 	ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher);
 
-	BulkSession bulk();
+	EventSession createEventSession();
 
 	Tank add(String tank);
 
@@ -56,7 +56,7 @@ public interface EventDatalake {
 		void unregister();
 	}
 
-	interface BulkSession {
+	interface EventSession {
 		void append(String tank, List<Message> messages);
 
 		default void append(Tank tank, List<Message> messages) {
@@ -69,7 +69,7 @@ public interface EventDatalake {
 			append(tank.name(), messages);
 		}
 
-		void finish();
+		void close();
 	}
 
 	interface ReflowSession {

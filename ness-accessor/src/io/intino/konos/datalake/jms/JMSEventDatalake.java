@@ -92,7 +92,7 @@ public class JMSEventDatalake implements EventDatalake {
 	}
 
 
-	public BulkSession bulk() {
+	public EventSession createEventSession() {
 		return null;
 	}
 

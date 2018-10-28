@@ -14,59 +14,62 @@ import static java.util.UUID.randomUUID;
 import static java.util.stream.Stream.empty;
 
 public class FileStage implements NessAccessor.Stage {
-    public static final String Extension = "Session";
-    private final File root;
+	public static final String Extension = "Session";
+	private final File root;
 
-    public FileStage(File root) throws FileNotFoundException {
-        if (!root.exists()) throw new FileNotFoundException();
-        this.root = root;
-    }
+	public FileStage(File root) throws FileNotFoundException {
+		if (!root.exists()) throw new FileNotFoundException();
+		this.root = root;
+	}
 
-    public OutputStream start(NessAccessor.Stage.Type type) {
-        try {
-            return new FileOutputStream(file(type));
-        } catch (FileNotFoundException e) {
-            return null;
-        }
-    }
+	public OutputStream start(NessAccessor.Stage.Type type) {
+		try {
+			return new FileOutputStream(file(type));
+		} catch (FileNotFoundException e) {
+			return null;
+		}
+	}
 
-    private File file(Type type) {
-        return new File(root, randomUUID().toString() + extensionOf(type));
-    }
+	private File file(Type type) {
+		return new File(root, randomUUID().toString() + extensionOf(type));
+	}
 
-    public Stream<Session> sessions() {
-        return files().map(FileSession::new);
-    }
+	public Stream<Session> sessions() {
+		return files().map(FileSession::new);
+	}
 
-    private Stream<File> files() {
-        File[] files = root.listFiles(this::sessions);
-        return files == null ? empty() : stream(files);
-    }
+	private Stream<File> files() {
+		File[] files = root.listFiles(this::sessions);
+		return files == null ? empty() : stream(files);
+	}
 
-    private boolean sessions(File dir, String name) {
-        return name.endsWith(Extension);
-    }
+	private boolean sessions(File dir, String name) {
+		return name.endsWith(Extension);
+	}
 
-    private static String extensionOf(Type type) {
-        return "." + type.name() + Extension;
-    }
-    private static class FileSession implements Session {
+	private static String extensionOf(Type type) {
+		return "." + type.name() + Extension;
+	}
 
-        private File file;
+	private static class FileSession implements Session {
+		private File file;
 
-        public FileSession(File file) {
-            this.file = file;
-        }
+		public FileSession(File file) {
+			this.file = file;
+		}
 
-        @Override
-        public Type type() {
-            return stream(Type.values()).filter(this::test).findFirst().orElse(null);
-        }
+		@Override
+		public Type type() {
+			return stream(Type.values()).filter(this::test).findFirst().orElse(null);
+		}
 
-        private boolean test(Type type) {
-            return file.getName().endsWith(extensionOf(type));
-        }
+		private boolean test(Type type) {
+			return file.getName().endsWith(extensionOf(type));
+		}
 
-        //TODO
-    }
+		@Override
+		public void commit() {
+			//TODO
+		}
+	}
 }

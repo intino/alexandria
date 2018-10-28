@@ -18,14 +18,14 @@ import java.util.Map;
 
 import static io.intino.ness.datalake.graph.Tank.fileFromInstant;
 
-public class FSBulkSession implements EventDatalake.BulkSession {
+public class FSEventSession implements EventDatalake.EventSession {
 	public static final String INL = ".inl";
-	private static Logger logger = LoggerFactory.getLogger(FSBulkSession.class);
+	private static Logger logger = LoggerFactory.getLogger(FSEventSession.class);
 	private final List<Tank> tankList;
 	private final Map<String, TankWriter> writers = new HashMap<>();
 	private File directory;
 
-	public FSBulkSession(List<Tank> tankList, Scale scale) {
+	public FSEventSession(List<Tank> tankList, Scale scale) {
 		this.tankList = tankList;
 		try {
 			directory = Files.createTempDirectory("bulk_session").toFile();
@@ -50,7 +50,7 @@ public class FSBulkSession implements EventDatalake.BulkSession {
 	}
 
 	@Override
-	public void finish() {
+	public void close() {
 		for (Tank tank : tankList) {
 			tank.putBulk(loadBulk(tank));
 		}
