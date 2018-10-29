@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="core" />
+    <orderEntry type="module" module-name="framework" />
     <orderEntry type="library" name="Legio: com.ullink.slack:simpleslackapi:0.6.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Legio: org.glassfish.tyrus.bundles:tyrus-standalone-client:1.13" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Legio: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
@@ -40,5 +40,6 @@
     <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
     <orderEntry type="library" name="Legio: org.slf4j:slf4j-api:1.7.13" level="project" />
     <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="module" module-name="commons" />
   </component>
 </module>

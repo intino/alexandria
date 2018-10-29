@@ -1,16 +1,15 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "2.3.2") alexandria-rest
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") rest
 	Imports
-		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4,2.0.0)")
+		Compile(groupId = "io.intino.alexandria", artifactId = "commons", version = "[1.0.0,2.0.0)")
 		Compile(groupId = "com.sparkjava", artifactId = "spark-core", version = "2.7.2")
-		Compile(groupId = "io.intino.cottons", artifactId = "cotton-utils", version = "1.0.0")
-		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 		Compile(groupId = "org.apache.tika", artifactId = "tika-core", version = "0.4")
 		Compile(groupId = "commons-codec", artifactId = "commons-codec", version = "1.10")
 		Compile(groupId = "org.bouncycastle", artifactId = "bcmail-jdk15", version = "1.45")
 		Compile(groupId = "org.bouncycastle", artifactId = "bcprov-jdk15", version = "1.45")
 		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.1")
+		Test(groupId = "junit", artifactId = "junit", version = "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 

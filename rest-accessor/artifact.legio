@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-rest-accessor-java
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") rest-accessor
 	Imports
-		Compile("io.intino.konos", "alexandria-core", "[1.0.4, 2.0.0)")
+		Compile("io.intino.alexandria", "commons", "[1.0.0, 2.0.0)")
 		Compile("org.bouncycastle", "bcmail-jdk15", "1.45")
 		Compile("org.bouncycastle", "bcprov-jdk15", "1.45")
 		Compile("org.apache.httpcomponents", "httpcore", "4.4.4")

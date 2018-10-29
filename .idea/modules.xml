@@ -3,13 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/commons/commons.iml" filepath="$PROJECT_DIR$/alexandria/commons/commons.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/framework/framework.iml" filepath="$PROJECT_DIR$/alexandria/framework/framework.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/jms/jms.iml" filepath="$PROJECT_DIR$/alexandria/jms/jms.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/jmx/jmx.iml" filepath="$PROJECT_DIR$/alexandria/jmx/jmx.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/model/model.iml" filepath="$PROJECT_DIR$/ide/model/model.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/ness-accessor/ness-accessor.iml" group="accessor" />
+      <module fileurl="file://$PROJECT_DIR$/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/ness-accessor/ness-accessor.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/rest-accessor/rest-accessor.iml" group="accessor" />
+      <module fileurl="file://$PROJECT_DIR$/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/rest-accessor/rest-accessor.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="alexandria" />
       <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="konos" />
