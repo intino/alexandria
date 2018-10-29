@@ -28,6 +28,7 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	private List<Consumer<Boolean>> logoutListeners = new ArrayList<>();
 	protected Map<Class<? extends Container>, Function<View, LayoutItem>> itemProviders = new HashMap<>();
 	private Settings settings;
+	private Consumer<String> onOpenItem = null;
 
 	public static final String AvatarColor = "#3F51B5";
 
@@ -40,6 +41,10 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	public AlexandriaLayout settings(Settings settings) {
 		this.settings = settings;
 		return this;
+	}
+
+	public void onOpenItem(Consumer<String> listener) {
+		this.onOpenItem = listener;
 	}
 
 	public void onLoading(Consumer<Boolean> listener) {
@@ -121,7 +126,9 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	}
 
 	public void openItem(String key) {
-		openElement(itemWithKey(key).label());
+		LayoutItem layoutItem = itemWithKey(key);
+		openElement(layoutItem.label());
+		if (this.onOpenItem != null) this.onOpenItem.accept(layoutItem.name());
 	}
 
 	protected Reference schemaItemOf(LayoutItem item) {
