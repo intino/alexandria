@@ -6,6 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -25,18 +26,14 @@
     <orderEntry type="library" name="Legio: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
     <orderEntry type="library" name="Legio: commons-net:commons-net:3.6" level="project" />
     <orderEntry type="library" name="Legio: javax.jmdns:jmdns:3.4.1" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.konos:alexandria-core:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.tara:magritte:2.1.11" level="project" />
     <orderEntry type="library" name="Legio: io.intino.tara:io:1.0" level="project" />
     <orderEntry type="library" name="Legio: com.esotericsoftware:kryo:4.0.0" level="project" />
     <orderEntry type="library" name="Legio: com.esotericsoftware:reflectasm:1.11.3" level="project" />
     <orderEntry type="library" name="Legio: org.ow2.asm:asm:5.0.4" level="project" />
     <orderEntry type="library" name="Legio: com.esotericsoftware:minlog:1.3.0" level="project" />
     <orderEntry type="library" name="Legio: org.objenesis:objenesis:2.2" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.konos:alexandria-triplestore:1.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.sezzet:operators:1.0.1" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.ness:datalake:1.1.7" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.ness:set-store:1.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.tara:magritte:2.1.8" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.tara:language:1.0.8" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.tara:language:1.0.11" level="project" />
+    <orderEntry type="module" module-name="commons" />
   </component>
 </module>

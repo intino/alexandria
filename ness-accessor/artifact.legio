@@ -1,10 +1,10 @@
 dsl Legio
 
-Artifact("io.intino.konos", "3.0.0") alexandria-ness-accessor
+Artifact("io.intino.alexandria", "1.0.0") ness-accessor
 	Imports
-		Compile("io.intino.konos", "alexandria-jms", "1.0.16")
-		Compile("io.intino.ness", "datalake", "[1.1.7, 2.0.0)")
-		Compile("io.intino.ness", "set-store", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "commons", "1.0.0")
+		Compile("io.intino.alexandria", "jms", "1.0.0")
+		Compile("io.intino.tara", "magritte", "LATEST")
 		Compile("commons-io", "commons-io", "2.4")
 		Test("junit", "junit", "4.12")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
