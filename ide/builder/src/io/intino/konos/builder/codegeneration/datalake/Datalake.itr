@@ -1,9 +1,9 @@
 def type(tanks)
-	package $package+validPackage.ness;
+	package $package+validPackage.datalake;
 
 	import io.intino.konos.jms.TopicConsumer;
 	import io.intino.konos.jms.TopicProducer;
-	import io.intino.konos.datalake.Ness;
+	import io.intino.konos.datalake.NessAccessor;
 	import io.intino.konos.jms.Consumer;
 	import io.intino.konos.jms.Bus;
     import org.apache.activemq.ActiveMQConnection;
@@ -20,7 +20,7 @@ def type(tanks)
     import java.util.Map;
     import java.util.HashMap;
 
-	public class TanksConnectors {
+	public class Datalake {
 		$tank+field...[$NL]
 
 		public static void registerTanks($box+firstUppercase~Box box) {
@@ -29,17 +29,17 @@ def type(tanks)
 			$tank+subscribe...[$NL]
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> all() {
-			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
+		public static List<io.intino.konos.datalake.EventDatalake.Tank> all() {
+			List<io.intino.konos.datalake.EventDatalake.Tank> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> byName(List<String> names) {
+		public static List<io.intino.konos.datalake.EventDatalake.Tank> byName(List<String> names) {
 			return all().stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
 		}
 
-		public static io.intino.konos.datalake.Datalake.Tank byName(String type) {
+		public static io.intino.konos.datalake.EventDatalake.Tank byName(String type) {
 			return all().stream().filter(t -> type.equals(t.name())).findFirst().orElse(null);
 		}
 
@@ -53,7 +53,7 @@ def type(tanks)
 
 		private static boolean isRegisterOnly(Message message) {
 			try {
-				return message.getBooleanProperty(io.intino.konos.datalake.Datalake.REGISTER_ONLY);
+				return message.getBooleanProperty(io.intino.konos.datalake.EventDatalake.REGISTER_ONLY);
 			} catch (JMSException e) {
 				return false;
 			}
@@ -74,20 +74,20 @@ def type(tank) trigger(unregister)
 end
 
 def type(tank) trigger(field)
-	private static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase;
+	private static io.intino.konos.datalake.EventDatalake.Tank $name+firstLowerCase;
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = box.datalake().add("$messageType+lowerCase");
+	$name+firstLowerCase = box.datalake().eventDatalake().add("$messageType+lowerCase");
 end
 
 def type(tank) trigger(add)
-	tanks.add(TanksConnectors.$name+firstLowerCase);
+	tanks.add(Datalake.$name+firstLowerCase);
 end
 
 def type(tank) trigger(getter)
-	public static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase() {
-		return TanksConnectors.$name+firstLowerCase;
+	public static io.intino.konos.datalake.EventDatalake.Tank $name+firstLowerCase() {
+		return Datalake.$name+firstLowerCase;
 	}
 end
 
@@ -156,7 +156,7 @@ def trigger(replace)
 end
 
 def trigger(tankImport)
-	import $value+validPackage.ness.mounters.*;
+	import $value+validPackage.datalake.mounters.*;
 end
 
 def type(schema) trigger(load)

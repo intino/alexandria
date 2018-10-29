@@ -1,0 +1,12 @@
+dsl Legio
+
+Artifact("io.intino.konos", "1.0.0") alexandria-triplestore
+	Imports
+		Compile("org.slf4j", "slf4j-api", "1.7.7")
+		Test("junit", "junit", "LATEST")
+
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Distribution(intino.release)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries")release

@@ -1,6 +1,6 @@
 package io.intino.konos.datalake.fs;
 
-import io.intino.konos.datalake.Datalake;
+import io.intino.konos.datalake.EventDatalake;
 import io.intino.konos.datalake.ReflowConfiguration;
 import io.intino.konos.datalake.ReflowDispatcher;
 import io.intino.ness.datalake.ReflowMessageInputStream;
@@ -11,22 +11,30 @@ import io.intino.tara.magritte.Graph;
 import io.intino.tara.magritte.stores.ResourcesStore;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.konos.datalake.Helper.eventDatalakeDirectory;
+import static io.intino.konos.datalake.Helper.scaleOf;
 import static java.util.stream.Collectors.toMap;
 
-public class FSDatalake implements Datalake {
+public class FSEventDatalake implements EventDatalake {
 
 	private final DatalakeGraph datalake;
 
-	public FSDatalake(String url) {
+	public FSEventDatalake(File directory, Scale scale) {
 		datalake = new Graph(new ResourcesStore()).loadStashes("Datalake").as(DatalakeGraph.class);
-		final File store = datalakeDirectory(url);
+		directory.mkdirs();
+		datalake.directory(directory);
+		datalake.scale(scale);
+	}
+
+	public FSEventDatalake(String url) {
+		datalake = new Graph(new ResourcesStore()).loadStashes("Datalake").as(DatalakeGraph.class);
+		final File store = eventDatalakeDirectory(url);
 		store.mkdirs();
 		datalake.directory(store);
 		datalake.scale(scaleOf(url));
@@ -40,6 +48,11 @@ public class FSDatalake implements Datalake {
 	public ReflowSession reflow(ReflowConfiguration reflow, ReflowDispatcher dispatcher) {
 		return reflow(reflow, dispatcher, () -> {
 		});
+	}
+
+	@Override
+	public EventSession createEventSession() {
+		return new FSEventSession(datalake.tankList(), datalake.scale());
 	}
 
 	public io.intino.ness.datalake.graph.Tank tank(String name) {
@@ -88,8 +101,9 @@ public class FSDatalake implements Datalake {
 	public void commit() {
 	}
 
-	public void add(String tank) {
-		datalake.add(clean(tank));
+	public Tank add(String tank) {
+		datalake.add(tank);
+		return new FSTank(tank, this);
 	}
 
 	public void disconnect() {
@@ -101,6 +115,7 @@ public class FSDatalake implements Datalake {
 		return true;
 	}
 
+
 	public void connect(String... args) {
 	}
 
@@ -109,21 +124,4 @@ public class FSDatalake implements Datalake {
 		return Collections.emptyList();
 	}
 
-	private String clean(String url) {
-		final int index = url.indexOf("?");
-		if (index != -1) url = url.substring(0, index);
-		return url.replace("file://", "");
-	}
-
-	private Scale scaleOf(String url) {
-		return url.contains("?") ? Scale.valueOf(url.split("=")[1]) : Scale.Day;
-	}
-
-	private File datalakeDirectory(String url) {
-		try {
-			return new File(clean(url), "datalake").getCanonicalFile();
-		} catch (IOException e) {
-			return new File(clean(url), "datalake");
-		}
-	}
 }

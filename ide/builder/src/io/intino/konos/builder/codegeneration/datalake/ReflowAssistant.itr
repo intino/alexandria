@@ -1,9 +1,9 @@
 def type(operations)
-	package $package+validPackage.ness;
+	package $package+validPackage.datalake;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.tara.magritte.Graph;
-	import io.intino.konos.datalake.Datalake;
+	import io.intino.konos.datalake.EventDatalake;
 	import io.intino.tara.magritte.Store;
 
 	import java.util.List;
@@ -24,7 +24,7 @@ def type(operations)
 			return Integer.MAX_VALUE;
 		}
 
-		List<Datalake.Tank> defaultTanks() {
+		List<EventDatalake.Tank> defaultTanks() {
 		 	return java.util.Collections.emptyList(); //TODO
 		}
 

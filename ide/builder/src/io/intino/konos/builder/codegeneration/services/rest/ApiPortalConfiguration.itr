@@ -4,6 +4,7 @@ def type(api)
         $url...[$NL]
       $],
       "title": "$title",
+      "subtitle": "$subtitle",
       "background": "$background",
       "color": "$color",
       "selectorBorderColor": ""

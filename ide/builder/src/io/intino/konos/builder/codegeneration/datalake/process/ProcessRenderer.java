@@ -47,7 +47,7 @@ public class ProcessRenderer {
 			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "procedures" + File.separator + procedure.toLowerCase());
 			final String handlerName = firstUpperCase(name) + "Process";
-			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "ness.procedures." + procedure.toLowerCase() + "." + handlerName);
+			classes.put(process.getClass().getSimpleName() + "#" + process.name$(), "procedures." + procedure.toLowerCase() + "." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				Commons.writeFrame(destination, handlerName, customize(ProcessTemplate.create()).format(frame));
 		}
