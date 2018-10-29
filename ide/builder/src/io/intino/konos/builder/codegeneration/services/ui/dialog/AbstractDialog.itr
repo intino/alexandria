@@ -2,10 +2,10 @@ def type(dialogDisplay)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+firstUpperCase~Box;
-	import io.intino.konos.alexandria.ui.model.Dialog;
-	import io.intino.konos.alexandria.ui.displays.DialogValidator;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDialog;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDialogNotifier;
+	import io.intino.alexandria.ui.model.Dialog;
+	import io.intino.alexandria.ui.displays.DialogValidator;
+    import io.intino.alexandria.ui.displays.AlexandriaDialog;
+    import io.intino.alexandria.ui.displays.AlexandriaDialogNotifier;
 
     import java.util.Arrays;
 

@@ -2,10 +2,10 @@ def type(dialog)
 	package $package.dialogs;
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
-	import io.intino.konos.alexandria.ui.model.Dialog;
-	import io.intino.konos.alexandria.ui.displays.DialogValidator;
+	import io.intino.alexandria.ui.model.Dialog;
+	import io.intino.alexandria.ui.displays.DialogValidator;
 
-	import static io.intino.konos.alexandria.ui.model.dialog.DialogResult;
+	import static io.intino.alexandria.ui.model.dialog.DialogResult;
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends Abstract$name+SnakeCaseToCamelCase+FirstUpperCase {
 
@@ -32,7 +32,7 @@ def type(dialog)
 end
 
 def type(execution)
-	public static DialogResult $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.konos.alexandria.ui.services.push.UISession session) {
+	public static DialogResult $name($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.alexandria.ui.services.push.UISession session) {
 		return DialogResult.none();
 	}
 
