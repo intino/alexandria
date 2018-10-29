@@ -65,7 +65,7 @@ public class Browser {
     }
 
     public String language() {
-        return language;
+        return language != null ? language : languageFromMetadata();
     }
 
     public void language(String language) {
