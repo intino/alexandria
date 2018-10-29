@@ -1,16 +1,16 @@
 package io.intino.konos.datalake.fs;
 
-import io.intino.konos.datalake.Datalake.Tank;
+import io.intino.konos.datalake.EventDatalake.Tank;
 import io.intino.konos.datalake.MessageHandler;
 import io.intino.konos.jms.TopicConsumer;
 import io.intino.ness.inl.Message;
 
 public class FSTank implements Tank {
 	private final String name;
-	private final FSDatalake datalake;
+	private final FSEventDatalake datalake;
 	private MessageHandler handler;
 
-	public FSTank(String name, FSDatalake datalake) {
+	public FSTank(String name, FSEventDatalake datalake) {
 		this.name = name;
 		this.datalake = datalake;
 	}

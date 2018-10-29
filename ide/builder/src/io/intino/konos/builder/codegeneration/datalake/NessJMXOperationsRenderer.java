@@ -28,10 +28,10 @@ public class NessJMXOperationsRenderer {
 		Frame frame = new Frame("operations").
 				addSlot("package", packageName).
 				addSlot("box", boxName);
-		writeFrame(new File(gen, "ness"), "NessOperations", operationsTemplate().format(frame));
-		writeFrame(new File(gen, "ness"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
-		if (!Commons.javaFile(new File(src, "ness"), "ReflowAssistant").exists())
-			writeFrame(new File(src, "ness"), "ReflowAssistant", providerTemplate().format(frame));
+		writeFrame(new File(gen, "datalake"), "NessOperations", operationsTemplate().format(frame));
+		writeFrame(new File(gen, "datalake"), "NessOperationsMBean", operationsTemplate().format(frame.addTypes("interface")));
+		if (!Commons.javaFile(new File(src, "datalake"), "ReflowAssistant").exists())
+			writeFrame(new File(src, "datalake"), "ReflowAssistant", providerTemplate().format(frame));
 	}
 
 	private Template operationsTemplate() {
