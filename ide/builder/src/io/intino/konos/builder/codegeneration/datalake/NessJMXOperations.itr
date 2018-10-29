@@ -75,7 +75,7 @@ def type(operations) !type(interface)
 		}
 
 		public boolean customReflow(String reflowConfiguration) {
-			return reflow(io.intino.konos.alexandria.Inl.fromMessage(io.intino.ness.inl.Message.load(reflowConfiguration), ReflowConfiguration.class));
+			return reflow(io.intino.alexandria.Inl.fromMessage(io.intino.ness.inl.Message.load(reflowConfiguration), ReflowConfiguration.class));
 		}
 
 		private boolean reflow(ReflowConfiguration configuration) {

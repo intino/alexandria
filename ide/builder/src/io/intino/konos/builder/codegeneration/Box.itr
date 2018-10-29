@@ -12,12 +12,12 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.konos.alexandria.Box put(Object o) {
+		public io.intino.alexandria.Box put(Object o) {
 			super.put(o);
 			return this;
 		}
 
-		public io.intino.konos.alexandria.Box open() {
+		public io.intino.alexandria.Box open() {
 			return super.open();
 		}
 
@@ -38,19 +38,19 @@ def trigger(quoted)
 end
 
 def trigger(rest)
-	protected io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
+	protected io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl) {
 		//TODO add your authService
 		return null;
 	}	
 
-	protected io.intino.konos.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl) {
+	protected io.intino.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl) {
 		//TODO add your editorService
 		return null;
 	}
 end
 
 def trigger(authenticationValidator)
-	public io.intino.konos.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator() {
+	public io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator authenticationValidator() {
 		return token -> false;
 	}
 end

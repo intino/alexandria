@@ -5,8 +5,8 @@ def type(accessor)
     import java.util.ArrayList;
     import java.util.Arrays;
 	import java.net.URL;
-	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.schema.Resource;
+	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.schema.Resource;
 	import io.intino.konos.restful.core.RestfulAccessor;
 	import io.intino.konos.restful.core.RestfulNotifier;
 	import io.intino.konos.restful.exceptions.RestfulFailure;
