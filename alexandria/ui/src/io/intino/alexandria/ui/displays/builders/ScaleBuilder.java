@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.TimeScale;
-import io.intino.konos.alexandria.ui.schemas.Scale;
+import io.intino.alexandria.ui.schemas.Scale;
 
 import java.util.List;
 

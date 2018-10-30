@@ -4,8 +4,8 @@ import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.Element;
 import io.intino.alexandria.ui.model.View;
 import io.intino.alexandria.ui.model.view.container.*;
-import io.intino.konos.alexandria.ui.schemas.Reference;
-import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
+import io.intino.alexandria.ui.schemas.Reference;
+import io.intino.alexandria.ui.schemas.ReferenceProperty;
 
 import java.util.List;
 

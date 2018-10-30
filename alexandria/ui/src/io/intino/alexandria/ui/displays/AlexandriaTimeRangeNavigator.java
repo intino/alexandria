@@ -4,10 +4,10 @@ import io.intino.alexandria.ui.model.TimeScale;
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.RangeBuilder;
 import io.intino.alexandria.ui.displays.builders.ScaleBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaTimeRangeNavigatorNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaTimeRangeNavigatorNotifier;
 import io.intino.alexandria.ui.helpers.TimeScaleHandler;
 import io.intino.alexandria.ui.model.TimeRange;
-import io.intino.konos.alexandria.ui.schemas.RequestRange;
+import io.intino.alexandria.ui.schemas.RequestRange;
 
 import java.time.Instant;
 import java.util.ArrayList;

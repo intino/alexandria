@@ -2,10 +2,10 @@ package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.ui.model.Item;
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaTabLayoutNotifier;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
-import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
-import io.intino.konos.alexandria.ui.schemas.UserInfo;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaTabLayoutNotifier;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.PlatformInfo;
+import io.intino.alexandria.ui.schemas.UserInfo;
 
 import java.util.List;
 

@@ -6,10 +6,10 @@ import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.PlatformInfoBuilder;
 import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.model.panel.Desktop;
-import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
-import io.intino.konos.alexandria.ui.schemas.Reference;
-import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
-import io.intino.konos.alexandria.ui.schemas.UserInfo;
+import io.intino.alexandria.ui.schemas.PlatformInfo;
+import io.intino.alexandria.ui.schemas.Reference;
+import io.intino.alexandria.ui.schemas.ReferenceProperty;
+import io.intino.alexandria.ui.schemas.UserInfo;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
 

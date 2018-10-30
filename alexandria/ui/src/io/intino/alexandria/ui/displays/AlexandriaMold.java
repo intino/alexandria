@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaMoldNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaMoldNotifier;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Mold;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 
 public abstract class AlexandriaMold<DN extends AlexandriaMoldNotifier> extends AlexandriaElementDisplay<Mold, DN> {
 

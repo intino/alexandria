@@ -3,8 +3,8 @@ package io.intino.alexandria.ui.displays;
 import io.intino.alexandria.ui.model.View;
 import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerMoldNotifier;
-import io.intino.konos.alexandria.ui.schemas.Item;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerMoldNotifier;
+import io.intino.alexandria.ui.schemas.Item;
 
 import static io.intino.alexandria.ui.helpers.ElementHelper.itemDisplayProvider;
 

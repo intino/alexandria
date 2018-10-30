@@ -11,7 +11,7 @@ import io.intino.alexandria.ui.model.TimeRange;
 import io.intino.alexandria.ui.model.mold.Block;
 import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.alexandria.ui.schemas.ElementOperationParameters;
 
 import java.net.URL;
 import java.util.List;

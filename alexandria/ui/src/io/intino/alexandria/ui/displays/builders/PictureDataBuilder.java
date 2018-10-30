@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.schemas.PictureData;
+import io.intino.alexandria.ui.schemas.PictureData;
 
 import java.util.Base64;
 

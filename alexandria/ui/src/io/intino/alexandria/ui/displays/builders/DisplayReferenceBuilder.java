@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays.builders;
 
-import io.intino.konos.alexandria.ui.schemas.DisplayReference;
+import io.intino.alexandria.ui.schemas.DisplayReference;
 
 public class DisplayReferenceBuilder {
 

@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.factory.DisplayViewFactory;
 import io.intino.alexandria.ui.model.View;
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaCatalogViewListNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogViewListNotifier;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
 

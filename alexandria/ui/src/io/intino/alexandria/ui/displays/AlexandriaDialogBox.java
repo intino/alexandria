@@ -2,10 +2,10 @@ package io.intino.alexandria.ui.displays;
 
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.DisplayReferenceBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaDialogBoxNotifier;
-import io.intino.konos.alexandria.ui.schemas.DialogBoxSettings;
-import io.intino.konos.alexandria.ui.schemas.Position;
-import io.intino.konos.alexandria.ui.schemas.Size;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDialogBoxNotifier;
+import io.intino.alexandria.ui.schemas.DialogBoxSettings;
+import io.intino.alexandria.ui.schemas.Position;
+import io.intino.alexandria.ui.schemas.Size;
 
 import java.util.ArrayList;
 import java.util.List;

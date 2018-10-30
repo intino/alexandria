@@ -8,9 +8,9 @@ import io.intino.alexandria.ui.model.Mold;
 import io.intino.alexandria.ui.model.TimeRange;
 import io.intino.alexandria.ui.model.mold.Block;
 import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.alexandria.ui.schemas.ChangeItemParameters;
-import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.ui.schemas.ValidateItemParameters;
+import io.intino.alexandria.ui.schemas.ChangeItemParameters;
+import io.intino.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.alexandria.ui.schemas.ValidateItemParameters;
 
 import java.util.List;
 

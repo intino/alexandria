@@ -24,10 +24,10 @@ import io.intino.alexandria.ui.model.mold.stamps.Tree;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.TaskOperation;
 import io.intino.alexandria.ui.model.view.container.DisplayContainer;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
-import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
-import io.intino.konos.alexandria.ui.schemas.Position;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.alexandria.ui.schemas.OpenElementParameters;
+import io.intino.alexandria.ui.schemas.Position;
 import io.intino.alexandria.ui.services.push.UISession;
 
 import java.util.*;
@@ -513,7 +513,7 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		if (dynamicFilter != null) itemList.filter(dynamicFilter);
 	}
 
-	private io.intino.konos.alexandria.ui.schemas.Item currentItem_() {
+	private io.intino.alexandria.ui.schemas.Item currentItem_() {
 		Item item = this.currentItem();
 		return item != null ? ElementHelper.item(item, this, baseAssetUrl()) : null;
 	}
