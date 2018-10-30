@@ -5,10 +5,10 @@ import io.intino.alexandria.ui.model.catalog.arrangement.Group;
 import io.intino.alexandria.ui.model.catalog.arrangement.Grouping;
 import io.intino.alexandria.ui.model.catalog.arrangement.GroupingManager;
 import io.intino.alexandria.ui.model.catalog.arrangement.Sorting;
-import io.intino.konos.alexandria.ui.schemas.Catalog;
-import io.intino.konos.alexandria.ui.schemas.Group;
-import io.intino.konos.alexandria.ui.schemas.Grouping;
-import io.intino.konos.alexandria.ui.schemas.Sorting;
+import io.intino.alexandria.ui.schemas.Catalog;
+import io.intino.alexandria.ui.schemas.Group;
+import io.intino.alexandria.ui.schemas.Grouping;
+import io.intino.alexandria.ui.schemas.Sorting;
 
 import java.util.List;
 import java.util.Objects;

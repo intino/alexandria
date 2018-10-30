@@ -16,8 +16,8 @@ import io.intino.alexandria.ui.model.catalog.arrangement.Group;
 import io.intino.alexandria.ui.model.catalog.arrangement.GroupMap;
 import io.intino.alexandria.ui.model.catalog.arrangement.Grouping;
 import io.intino.alexandria.ui.model.catalog.arrangement.GroupingManager;
-import io.intino.konos.alexandria.ui.schemas.GroupingGroup;
-import io.intino.konos.alexandria.ui.schemas.GroupingSelection;
+import io.intino.alexandria.ui.schemas.GroupingGroup;
+import io.intino.alexandria.ui.schemas.GroupingSelection;
 
 import java.util.*;
 import java.util.function.Consumer;

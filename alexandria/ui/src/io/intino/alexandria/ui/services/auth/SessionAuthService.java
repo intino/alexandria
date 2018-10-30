@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.services.auth;
 import io.intino.alexandria.ui.services.auth.exceptions.*;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.services.AuthService;
-import io.intino.konos.alexandria.ui.services.auth.exceptions.*;
+import io.intino.alexandria.ui.services.auth.exceptions.*;
 
 import java.net.URL;
 

@@ -5,7 +5,7 @@ import io.intino.alexandria.ui.spark.AssetLoader;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.spark.resources.exceptions.AssetNotFoundException;
 import io.intino.alexandria.ui.utils.StreamUtil;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.exceptions.AlexandriaException;
 import spark.utils.IOUtils;
 
 import java.io.IOException;

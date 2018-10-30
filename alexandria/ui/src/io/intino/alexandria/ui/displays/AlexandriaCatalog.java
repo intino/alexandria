@@ -4,12 +4,12 @@ import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.ItemList;
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.CatalogBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier;
 import io.intino.alexandria.ui.model.catalog.Scope;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
-import io.intino.konos.alexandria.ui.schemas.GroupingGroup;
-import io.intino.konos.alexandria.ui.schemas.GroupingSelection;
-import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.GroupingGroup;
+import io.intino.alexandria.ui.schemas.GroupingSelection;
+import io.intino.alexandria.ui.schemas.OpenElementParameters;
 
 public class AlexandriaCatalog<DN extends AlexandriaCatalogNotifier> extends AlexandriaAbstractCatalog<Catalog, DN> {
 

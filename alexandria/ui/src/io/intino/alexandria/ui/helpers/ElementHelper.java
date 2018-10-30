@@ -14,7 +14,7 @@ import io.intino.alexandria.ui.model.catalog.events.OnClickItem;
 import io.intino.alexandria.ui.model.catalog.events.OpenPanel;
 import io.intino.alexandria.ui.model.mold.Block;
 import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.alexandria.ui.displays.*;
+import io.intino.alexandria.ui.displays.*;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.displays.providers.ItemDisplayProvider;
@@ -24,7 +24,7 @@ import io.intino.alexandria.ui.model.mold.stamps.Title;
 import io.intino.alexandria.ui.model.mold.stamps.Tree;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenDialogOperation;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.services.push.UISession;
 
 import java.net.URL;
@@ -35,11 +35,11 @@ import java.util.stream.Stream;
 
 public class ElementHelper {
 
-	public static io.intino.konos.alexandria.ui.schemas.Item[] items(Item[] items, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
-		return Stream.of(items).map(r -> item(r, provider, baseAssetUrl)).toArray(io.intino.konos.alexandria.ui.schemas.Item[]::new);
+	public static io.intino.alexandria.ui.schemas.Item[] items(Item[] items, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
+		return Stream.of(items).map(r -> item(r, provider, baseAssetUrl)).toArray(io.intino.alexandria.ui.schemas.Item[]::new);
 	}
 
-	public static io.intino.konos.alexandria.ui.schemas.Item item(Item item, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
+	public static io.intino.alexandria.ui.schemas.Item item(Item item, ItemBuilder.ItemBuilderProvider provider, URL baseAssetUrl) {
 		return ItemBuilder.build(item, item.id(), provider, baseAssetUrl);
 	}
 

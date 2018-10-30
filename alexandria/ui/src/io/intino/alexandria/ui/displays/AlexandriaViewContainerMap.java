@@ -8,8 +8,8 @@ import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.ElementViewBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerMapNotifier;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerMapNotifier;
+import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.util.ArrayList;

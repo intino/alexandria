@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.adapters.gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.ui.model.dialog.Structure;
-import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
+import io.intino.alexandria.ui.schemas.DialogInputResource;
 
 public class ValueAdapter {
 

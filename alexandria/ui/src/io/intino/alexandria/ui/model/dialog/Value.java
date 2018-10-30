@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.model.dialog;
 
-import io.intino.konos.alexandria.schema.Resource;
-import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
-import io.intino.konos.alexandria.ui.schemas.DialogInputResourceFile;
+import io.intino.alexandria.schema.Resource;
+import io.intino.alexandria.ui.schemas.DialogInputResource;
+import io.intino.alexandria.ui.schemas.DialogInputResourceFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

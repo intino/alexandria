@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerDisplayNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerDisplayNotifier;
 import io.intino.alexandria.ui.model.catalog.Scope;
 import io.intino.alexandria.ui.model.view.container.DisplayContainer;
 

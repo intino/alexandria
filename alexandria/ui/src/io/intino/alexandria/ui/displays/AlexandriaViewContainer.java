@@ -41,22 +41,22 @@ public abstract class AlexandriaViewContainer<DN extends AlexandriaDisplayNotifi
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item... items) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item... items) {
 		refresh();
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item) {
 		refresh();
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight) {
 		refresh();
 	}
 
 	@Override
-	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item) {
 	}
 
 	void notifyOpenItem(OpenItemEvent event) {
