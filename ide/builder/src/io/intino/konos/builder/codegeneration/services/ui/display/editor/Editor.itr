@@ -2,11 +2,11 @@ def type(editor)
 	package $package.displays;
 
 	import cottons.utils.StreamHelper;
-    import io.intino.konos.alexandria.ui.Resource;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaEditor;
-    import io.intino.konos.alexandria.ui.model.Element;
-    import io.intino.konos.alexandria.ui.services.push.UISession;
-	import io.intino.konos.alexandria.ui.services.EditorService;
+    import io.intino.alexandria.ui.Resource;
+    import io.intino.alexandria.ui.displays.AlexandriaEditor;
+    import io.intino.alexandria.ui.model.Element;
+    import io.intino.alexandria.ui.services.push.UISession;
+	import io.intino.alexandria.ui.services.EditorService;
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.dialogs.*;
     import $package+validPackage.displays.*;
@@ -17,7 +17,7 @@ def type(editor)
     	}
 
     	@Override
-    	public void prepare($display+firstUpperCase dialog, io.intino.konos.alexandria.schema.Resource document, EditorService.Permission permission) {
+    	public void prepare($display+firstUpperCase dialog, io.intino.alexandria.schema.Resource document, EditorService.Permission permission) {
     	}
 
     	@Override

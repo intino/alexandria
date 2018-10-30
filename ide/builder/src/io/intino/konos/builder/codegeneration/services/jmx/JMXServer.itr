@@ -3,7 +3,7 @@ def type(jmxserver)
 
 	import io.intino.konos.jmx.JMXServer;
 
-	import io.intino.konos.alexandria.Box;
+	import io.intino.alexandria.Box;
 	import java.util.HashMap;
 	import java.util.Map;
 

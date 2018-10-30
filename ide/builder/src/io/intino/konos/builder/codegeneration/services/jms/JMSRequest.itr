@@ -1,10 +1,10 @@
 def type(request)
 	package $package.requests;
 
-	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import $package.*;
 	import com.google.gson.Gson;
-	import io.intino.konos.alexandria.Box;
+	import io.intino.alexandria.Box;
 	import io.intino.konos.jms.RequestConsumer;
 
 	import javax.jms.*;

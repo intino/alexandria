@@ -4,7 +4,7 @@ def type(boxConfiguration)
 	import java.util.Map;
 	import java.util.HashMap;
 
-	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.konos.alexandria.BoxConfiguration] {
+	public class $name+SnakeCaseToCamelCase+firstUpperCase~Configuration extends [$parent~Configuration?io.intino.alexandria.BoxConfiguration] {
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
 			super(args);
