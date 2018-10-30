@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/test-res" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -35,5 +36,7 @@
     <orderEntry type="library" name="Legio: org.objenesis:objenesis:2.2" level="project" />
     <orderEntry type="library" name="Legio: io.intino.tara:language:1.0.11" level="project" />
     <orderEntry type="module" module-name="commons" />
+    <orderEntry type="module" module-name="triplestore" />
+    <orderEntry type="library" name="Legio: io.intino.sezzet:operators:1.0.1" level="project" />
   </component>
 </module>
