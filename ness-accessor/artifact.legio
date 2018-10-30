@@ -3,6 +3,8 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.0") ness-accessor
 	Imports
 		Compile("io.intino.alexandria", "commons", "1.0.0")
+		Compile("io.intino.alexandria", "triplestore", "1.0.0")
+		Compile("io.intino.sezzet", "operators", "1.0.1")
 		Compile("io.intino.alexandria", "jms", "1.0.0")
 		Compile("io.intino.tara", "magritte", "LATEST")
 		Compile("commons-io", "commons-io", "2.4")

@@ -3,8 +3,7 @@ package inl.amidas;
 import inl.amidas.schemas.Solicitud;
 import io.intino.konos.alexandria.Inl;
 import io.intino.konos.alexandria.Json;
-import io.intino.alexandria.nessaccesoroctavio.EventStore;
-import io.intino.alexandria.nessaccesoroctavio.NessAccessor;
+import io.intino.alexandria.nessaccesor.NessAccessor;
 import io.intino.konos.jms.TopicProducer;
 import io.intino.ness.inl.Message;
 import org.junit.Before;
@@ -47,7 +46,7 @@ public class ProducerTest {
 	public void sendAttachment() {
 		final NessAccessor nessAccessor = new NessAccessor(url, user, password, "");
 		nessAccessor.connect();
-		final EventStore.Tank tank = nessAccessor.eventStore().add(topic);
+		final NessAccessor.EventStore.Tank tank = nessAccessor.eventStore().add(topic);
 		Solicitud solicitud = Json.fromString(jsonSolicitud, Solicitud.class);
 		Message message = Inl.toMessage(solicitud);
 		tank.feed(message);
