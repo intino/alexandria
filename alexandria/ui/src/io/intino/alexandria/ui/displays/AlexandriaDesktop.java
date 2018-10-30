@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.ui.UIBox;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Settings;
 import io.intino.alexandria.ui.model.panel.Desktop;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 
 import java.net.URL;
 

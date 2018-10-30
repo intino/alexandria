@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.TimeRange;
 import io.intino.alexandria.ui.helpers.ZoomRange;
-import io.intino.konos.alexandria.ui.schemas.Range;
+import io.intino.alexandria.ui.schemas.Range;
 
 import java.time.Instant;
 

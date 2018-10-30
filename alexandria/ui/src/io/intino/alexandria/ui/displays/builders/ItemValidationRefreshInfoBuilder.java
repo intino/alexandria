@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.alexandria.ui.schemas.Item;
-import io.intino.konos.alexandria.ui.schemas.ItemValidationRefreshInfo;
+import io.intino.alexandria.ui.schemas.Item;
+import io.intino.alexandria.ui.schemas.ItemValidationRefreshInfo;
 
 public class ItemValidationRefreshInfoBuilder {
 

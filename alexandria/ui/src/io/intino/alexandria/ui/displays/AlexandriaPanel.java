@@ -9,17 +9,17 @@ import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.View;
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaPanelNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaPanelNotifier;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.helpers.ElementHelper;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Panel;
 import io.intino.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.alexandria.ui.model.view.container.Container;
-import io.intino.konos.alexandria.ui.schemas.CreatePanelParameters;
-import io.intino.konos.alexandria.ui.schemas.OpenElementParameters;
-import io.intino.konos.alexandria.ui.schemas.Reference;
-import io.intino.konos.alexandria.ui.schemas.ReferenceProperty;
+import io.intino.alexandria.ui.schemas.CreatePanelParameters;
+import io.intino.alexandria.ui.schemas.OpenElementParameters;
+import io.intino.alexandria.ui.schemas.Reference;
+import io.intino.alexandria.ui.schemas.ReferenceProperty;
 import io.intino.alexandria.ui.services.push.UISession;
 
 import java.util.HashMap;
@@ -48,7 +48,7 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	@Override
 	public void refresh(Item... objects) {
 		super.refresh();
-		io.intino.konos.alexandria.ui.schemas.Item[] items = ElementHelper.items(objects, this, this.baseAssetUrl());
+		io.intino.alexandria.ui.schemas.Item[] items = ElementHelper.items(objects, this, this.baseAssetUrl());
 		views().stream().filter(v -> !v.layout().equals(View.Layout.Tab) && viewDisplayMap.containsKey(v.name())).forEach(v -> viewDisplayMap.get(v.name()).refresh(items));
 	}
 

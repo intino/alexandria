@@ -10,13 +10,13 @@ import io.intino.alexandria.ui.displays.builders.CatalogSortingBuilder;
 import io.intino.alexandria.ui.displays.builders.ElementViewBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerListNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerListNotifier;
 import io.intino.alexandria.ui.displays.providers.AlexandriaStampProvider;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedCatalog;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.util.*;
@@ -40,7 +40,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 	public void reset() {
 	}
 
-	public void selectSorting(io.intino.konos.alexandria.ui.schemas.Sorting sorting) {
+	public void selectSorting(io.intino.alexandria.ui.schemas.Sorting sorting) {
 		this.sorting = sortingOf(sorting);
 		sendSelectedSorting();
 		sendClear();
@@ -62,7 +62,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 	}
 
 	@Override
-	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item) {
 		notifier.refreshItemValidation(ItemValidationRefreshInfoBuilder.build(validationMessage, stamp, item));
 	}
 
@@ -193,12 +193,12 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item) {
 		refresh(item, true);
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight) {
 		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(highlight));
 		if (recordDisplaysMap.containsKey(item.name()))
 			recordDisplaysMap.get(item.name()).forEach(AlexandriaDisplay::refresh);
@@ -256,7 +256,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 		return nullableMap.entrySet().stream().filter(e -> e.getValue() != null).collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 	}
 
-	private ElementViewDisplayProvider.Sorting sortingOf(io.intino.konos.alexandria.ui.schemas.Sorting sorting) {
+	private ElementViewDisplayProvider.Sorting sortingOf(io.intino.alexandria.ui.schemas.Sorting sorting) {
 		return sortingOf(sorting.name(), sorting.mode());
 	}
 
@@ -311,7 +311,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 		super.changeItem(params);
 	}
 
-	public void validateItem(io.intino.konos.alexandria.ui.schemas.ValidateItemParameters params) {
+	public void validateItem(io.intino.alexandria.ui.schemas.ValidateItemParameters params) {
 		super.validateItem(params);
 	}
 

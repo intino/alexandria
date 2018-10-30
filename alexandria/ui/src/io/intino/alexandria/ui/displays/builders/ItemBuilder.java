@@ -12,10 +12,10 @@ import io.intino.alexandria.ui.model.mold.stamps.operations.OpenExternalDialogOp
 import io.intino.alexandria.ui.model.mold.stamps.operations.PreviewOperation;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.utils.AvatarUtil;
-import io.intino.konos.alexandria.ui.schemas.Item;
-import io.intino.konos.alexandria.ui.schemas.ItemBlock;
-import io.intino.konos.alexandria.ui.schemas.ItemStamp;
-import io.intino.konos.alexandria.ui.schemas.Property;
+import io.intino.alexandria.ui.schemas.Item;
+import io.intino.alexandria.ui.schemas.ItemBlock;
+import io.intino.alexandria.ui.schemas.ItemStamp;
+import io.intino.alexandria.ui.schemas.Property;
 
 import java.net.URL;
 import java.time.Instant;

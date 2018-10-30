@@ -5,7 +5,7 @@ import io.intino.alexandria.ui.displays.builders.PictureDataBuilder;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.mold.stamps.Picture;
-import io.intino.konos.alexandria.ui.schemas.PictureData;
+import io.intino.alexandria.ui.schemas.PictureData;
 import io.intino.alexandria.ui.utils.StreamUtil;
 import spark.utils.IOUtils;
 

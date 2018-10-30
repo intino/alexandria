@@ -9,8 +9,8 @@ import io.intino.alexandria.ui.model.view.container.CollectionContainer;
 import io.intino.alexandria.ui.model.view.container.Container;
 import io.intino.alexandria.ui.model.view.container.MapContainer;
 import io.intino.alexandria.ui.model.toolbar.GroupingSelection;
-import io.intino.konos.alexandria.ui.schemas.*;
-import io.intino.konos.alexandria.ui.schemas.Operation;
+import io.intino.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.schemas.Operation;
 
 import java.util.ArrayList;
 import java.util.Collections;

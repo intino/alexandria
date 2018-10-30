@@ -1,9 +1,9 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.ui.spark.UIFile;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
-import io.intino.konos.alexandria.ui.schemas.DialogInput;
-import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
+import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.ui.schemas.DialogInput;
+import io.intino.alexandria.ui.schemas.DialogInputResource;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.displays.requesters.AlexandriaDisplayRequester;
 

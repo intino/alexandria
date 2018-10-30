@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.builders;
 import com.google.gson.JsonArray;
 import io.intino.alexandria.ui.displays.DialogValidator;
 import io.intino.alexandria.ui.model.Dialog;
-import io.intino.konos.alexandria.ui.schemas.Validation;
+import io.intino.alexandria.ui.schemas.Validation;
 
 import java.util.List;
 
