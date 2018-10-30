@@ -3,10 +3,10 @@ package io.intino.alexandria.ui.displays;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.alexandria.ui.model.Catalog;
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerCatalogNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerCatalogNotifier;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.view.container.CatalogContainer;
-import io.intino.konos.alexandria.ui.schemas.DisplayInfo;
+import io.intino.alexandria.ui.schemas.DisplayInfo;
 
 public class AlexandriaViewContainerCatalog extends AlexandriaViewContainer<AlexandriaViewContainerCatalogNotifier> {
 

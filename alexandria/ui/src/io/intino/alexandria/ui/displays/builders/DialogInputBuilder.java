@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.ui.displays.adapters.*;
 import io.intino.alexandria.ui.displays.adapters.gson.ValueAdapter;
 import io.intino.alexandria.ui.model.Dialog;
-import io.intino.konos.alexandria.ui.displays.adapters.*;
+import io.intino.alexandria.ui.displays.adapters.*;
 import io.intino.alexandria.ui.model.dialog.Value;
 
 public class DialogInputBuilder {

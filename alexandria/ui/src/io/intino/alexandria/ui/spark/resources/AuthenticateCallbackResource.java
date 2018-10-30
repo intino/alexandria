@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.spark.resources;
 import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.spark.actions.AuthenticateCallbackAction;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
 import io.intino.alexandria.ui.services.auth.Token;

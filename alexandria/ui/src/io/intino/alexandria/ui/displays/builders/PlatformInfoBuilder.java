@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.Settings;
-import io.intino.konos.alexandria.ui.schemas.PlatformInfo;
+import io.intino.alexandria.ui.schemas.PlatformInfo;
 
 public class PlatformInfoBuilder {
 

@@ -11,7 +11,7 @@ import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.mold.stamps.CatalogLink;
 import io.intino.alexandria.ui.model.mold.stamps.operations.DownloadOperation;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.InputStream;
@@ -72,13 +72,13 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		notifyLoading(false);
 	}
 
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item... items) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item... items) {
 		Stream.of(items).forEach(this::refresh);
 	}
 
-	abstract void refresh(io.intino.konos.alexandria.ui.schemas.Item item);
-	abstract void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight);
-	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item);
+	abstract void refresh(io.intino.alexandria.ui.schemas.Item item);
+	abstract void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight);
+	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item);
 
 	public void reset() {
 	}
@@ -184,7 +184,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		provider().changeItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}
 
-	void validateItem(io.intino.konos.alexandria.ui.schemas.ValidateItemParameters params) {
+	void validateItem(io.intino.alexandria.ui.schemas.ValidateItemParameters params) {
 		Item item = itemOf(params.item());
 		provider().validateItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}

@@ -7,11 +7,11 @@ import io.intino.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaViewContainerMagazineNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerMagazineNotifier;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.alexandria.ui.model.view.container.CollectionContainer;
-import io.intino.konos.alexandria.ui.schemas.ElementOperationParameters;
-import io.intino.konos.alexandria.ui.schemas.PictureData;
+import io.intino.alexandria.ui.schemas.ElementOperationParameters;
+import io.intino.alexandria.ui.schemas.PictureData;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.util.List;
@@ -49,23 +49,23 @@ public class AlexandriaViewContainerMagazine extends AlexandriaViewContainerColl
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item... items) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item... items) {
 		if (items.length <= 0) return;
 		refresh(items[0]);
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item) {
 		child(AlexandriaItem.class).refresh(item);
 	}
 
 	@Override
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight) {
 		child(AlexandriaItem.class).refresh(item, highlight);
 	}
 
 	@Override
-	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item) {
 		child(AlexandriaItem.class).refreshValidation(validationMessage, stamp, item);
 	}
 

@@ -12,7 +12,7 @@ import io.intino.alexandria.ui.model.mold.stamps.*;
 import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaItemNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaItemNotifier;
 import io.intino.alexandria.ui.displays.providers.AlexandriaStampProvider;
 import io.intino.alexandria.ui.displays.providers.ItemDisplayProvider;
 import io.intino.alexandria.ui.helpers.ElementHelper;
@@ -21,7 +21,7 @@ import io.intino.alexandria.ui.model.mold.stamps.operations.ExportOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
 import io.intino.alexandria.ui.model.mold.stamps.pages.ExternalPage;
 import io.intino.alexandria.ui.model.mold.stamps.pages.InternalPage;
-import io.intino.konos.alexandria.ui.schemas.*;
+import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UIFile;
 
@@ -116,15 +116,15 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		sendInfo();
 	}
 
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item) {
 		sendInfo(item, true);
 	}
 
-	public void refresh(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+	public void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight) {
 		sendInfo(item, highlight);
 	}
 
-	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.konos.alexandria.ui.schemas.Item item) {
+	public void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item) {
 		notifier.refreshValidation(ItemValidationRefreshInfoBuilder.build(validationMessage, stamp, item));
 	}
 
@@ -310,7 +310,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		}));
 	}
 
-	private void sendInfo(io.intino.konos.alexandria.ui.schemas.Item item, boolean highlight) {
+	private void sendInfo(io.intino.alexandria.ui.schemas.Item item, boolean highlight) {
 		notifier.refresh(new ItemRefreshInfo().mold(mold.type()).item(item).highlight(highlight));
 	}
 

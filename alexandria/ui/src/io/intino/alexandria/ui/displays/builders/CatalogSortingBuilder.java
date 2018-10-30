@@ -2,7 +2,7 @@ package io.intino.alexandria.ui.displays.builders;
 
 import io.intino.alexandria.ui.model.catalog.arrangement.Sorting;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
-import io.intino.konos.alexandria.ui.schemas.Sorting;
+import io.intino.alexandria.ui.schemas.Sorting;
 
 import java.util.List;
 

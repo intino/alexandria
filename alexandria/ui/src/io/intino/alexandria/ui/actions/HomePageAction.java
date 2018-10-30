@@ -4,9 +4,9 @@ import io.intino.alexandria.ui.displays.AlexandriaDesktop;
 import io.intino.alexandria.ui.displays.Soul;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.konos.alexandria.exceptions.*;
+import io.intino.alexandria.exceptions.*;
 
-import io.intino.konos.alexandria.ui.displays.*;
+import io.intino.alexandria.ui.displays.*;
 
 public class HomePageAction extends AbstractHomePageAction {
 

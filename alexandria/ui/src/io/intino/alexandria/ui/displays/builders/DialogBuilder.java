@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.ui.model.Dialog;
-import io.intino.konos.alexandria.ui.schemas.Dialog;
+import io.intino.alexandria.ui.schemas.Dialog;
 
 import java.util.List;
 

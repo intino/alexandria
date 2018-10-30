@@ -3,12 +3,12 @@ package io.intino.alexandria.ui.displays;
 import cottons.utils.StreamHelper;
 import io.intino.alexandria.ui.model.Dialog;
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.schema.Resource;
+import io.intino.alexandria.schema.Resource;
 import io.intino.alexandria.ui.displays.builders.DialogBuilder;
 import io.intino.alexandria.ui.displays.builders.ValidationBuilder;
 import io.intino.alexandria.ui.model.dialog.DialogResult;
-import io.intino.konos.alexandria.ui.schemas.DialogInput;
-import io.intino.konos.alexandria.ui.schemas.DialogInputResource;
+import io.intino.alexandria.ui.schemas.DialogInput;
+import io.intino.alexandria.ui.schemas.DialogInputResource;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.ByteArrayInputStream;

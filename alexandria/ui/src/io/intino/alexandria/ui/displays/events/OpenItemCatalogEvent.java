@@ -3,7 +3,7 @@ package io.intino.alexandria.ui.displays.events;
 import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.alexandria.ui.model.Item;
-import io.intino.konos.alexandria.ui.schemas.Position;
+import io.intino.alexandria.ui.schemas.Position;
 
 public interface OpenItemCatalogEvent {
 	Item item();

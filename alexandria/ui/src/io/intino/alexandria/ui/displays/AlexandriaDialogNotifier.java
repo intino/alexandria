@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
-import io.intino.konos.alexandria.ui.schemas.Dialog;
-import io.intino.konos.alexandria.ui.schemas.Validation;
+import io.intino.alexandria.ui.schemas.Dialog;
+import io.intino.alexandria.ui.schemas.Validation;
 
 public class AlexandriaDialogNotifier extends AlexandriaDisplayNotifier {
 
@@ -22,7 +22,7 @@ public class AlexandriaDialogNotifier extends AlexandriaDisplayNotifier {
 		putToDisplay("notifyUser", "value", value);
 	}
 
-	public void upload(io.intino.konos.alexandria.schema.Resource value) {
+	public void upload(io.intino.alexandria.schema.Resource value) {
 		putToDisplay("upload", "value", value);
 	}
 

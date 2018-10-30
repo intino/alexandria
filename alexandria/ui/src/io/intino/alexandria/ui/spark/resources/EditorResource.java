@@ -15,10 +15,10 @@ public abstract class EditorResource extends Resource {
 		super(manager, notifierProvider);
 	}
 
-	protected io.intino.konos.alexandria.schema.Resource loadDocument() {
+	protected io.intino.alexandria.schema.Resource loadDocument() {
 		String documentId = documentId();
 		if (documentId == null) return null;
-		return new io.intino.konos.alexandria.schema.Resource(documentId()).data(content());
+		return new io.intino.alexandria.schema.Resource(documentId()).data(content());
 	}
 
 	protected Permission loadPermission() {
@@ -28,7 +28,7 @@ public abstract class EditorResource extends Resource {
 	}
 
 	protected InputStream content() {
-		io.intino.konos.alexandria.schema.Resource document = manager.fromForm(DocumentParameter, io.intino.konos.alexandria.schema.Resource.class);
+		io.intino.alexandria.schema.Resource document = manager.fromForm(DocumentParameter, io.intino.alexandria.schema.Resource.class);
 
 		if (document == null)
 			return manager.editorService() != null ? manager.editorService().loadDocument(documentId()) : null;
@@ -39,7 +39,7 @@ public abstract class EditorResource extends Resource {
 	protected void saveDocument(InputStream document, boolean completed) {
 		if (manager.editorService() == null) return;
 		String documentId = manager.fromQuery(DocumentParameter, String.class);
-		io.intino.konos.alexandria.schema.Resource documentResource = new io.intino.konos.alexandria.schema.Resource(documentId).data(document);
+		io.intino.alexandria.schema.Resource documentResource = new io.intino.alexandria.schema.Resource(documentId).data(document);
 		manager.editorService().saveDocument(documentId, documentResource, completed);
 	}
 

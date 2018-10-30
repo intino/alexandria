@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.konos.framework.Box;
-import io.intino.konos.alexandria.ui.displays.notifiers.AlexandriaPageContainerNotifier;
-import io.intino.konos.alexandria.ui.schemas.PageLocation;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaPageContainerNotifier;
+import io.intino.alexandria.ui.schemas.PageLocation;
 
 public class AlexandriaPageContainer extends ActivityDisplay<AlexandriaPageContainerNotifier, Box> {
     private PageLocation location;
