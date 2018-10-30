@@ -160,7 +160,7 @@ def trigger(tankImport)
 end
 
 def type(schema) trigger(load)
-	io.intino.konos.alexandria.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
+	io.intino.alexandria.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
 end
 
 def trigger(load)

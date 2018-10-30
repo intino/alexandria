@@ -87,7 +87,7 @@ def type(poll) trigger(methods)
 	}
 
 	public Message get(String option, Object... args) {
-		return io.intino.konos.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
+		return io.intino.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
 	}
 
 	$eventMethod...[$NL$NL]

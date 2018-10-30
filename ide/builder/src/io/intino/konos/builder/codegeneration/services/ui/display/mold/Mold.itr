@@ -1,7 +1,7 @@
 def type(mold)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.ui.services.push.UISession;
+    import io.intino.alexandria.ui.services.push.UISession;
     import $package+validPackage.$box+firstUpperCase~Box;
 
     import java.net.URL;
@@ -77,7 +77,7 @@ def type(stamp & downloadOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.ui.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, UISession session) {
+		public static io.intino.alexandria.ui.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String option, UISession session) {
 			return null;//TODO
 		}
 	}
@@ -97,8 +97,8 @@ def type(stamp & taskOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.ui.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, UISession session) {
-			return io.intino.konos.alexandria.ui.model.mold.StampResult.none();
+		public static io.intino.alexandria.ui.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String selfId, UISession session) {
+			return io.intino.alexandria.ui.model.mold.StampResult.none();
 		}
 	}
 end
@@ -107,7 +107,7 @@ def type(stamp & exportOperation)
 	public static class $name+FirstUpperCase {
 		$common
 
-		public static io.intino.konos.alexandria.ui.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, UISession session) {
+		public static io.intino.alexandria.ui.Resource execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, java.time.Instant from, java.time.Instant to, String option, UISession session) {
 			return null;//TODO
 		}
 	}
@@ -248,14 +248,14 @@ def trigger(className)
 end
 
 def trigger(catalogFilter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.ui.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, UISession session) {
+	public static boolean filter($box~Box box, io.intino.alexandria.ui.model.Element element, $moldClass $moldClass+shortType+firstLowerCase, Object target, UISession session) {
 		return true;//TODO
 	}
 end
 
 def trigger(openCatalogOperationExecution)
-	public static io.intino.konos.alexandria.ui.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, UISession session) {
-		return io.intino.konos.alexandria.ui.model.mold.StampResult.none();
+	public static io.intino.alexandria.ui.model.mold.StampResult execute($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, List<Object> selection, UISession session) {
+		return io.intino.alexandria.ui.model.mold.StampResult.none();
 	}
 end
 
@@ -272,13 +272,13 @@ def trigger(itemLoader)
 end
 
 def trigger(displayBuilder)
-	public static io.intino.konos.alexandria.ui.displays.AlexandriaStamp buildDisplay($box~Box box, String name, UISession session) {
+	public static io.intino.alexandria.ui.displays.AlexandriaStamp buildDisplay($box~Box box, String name, UISession session) {
 		return null;//TODO
 	}
 end
 
 def trigger(editable)
-	public static io.intino.konos.alexandria.ui.model.mold.StampResult onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, UISession session) {
+	public static io.intino.alexandria.ui.model.mold.StampResult onChange($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, UISession session) {
 		return StampResult.none();
 	}
 	public static String onValidate($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, String value, UISession session) {
@@ -293,13 +293,13 @@ def trigger(valueMethod)
 end
 
 def trigger(color)
-	public static io.intino.konos.alexandria.ui.model.mold.Stamp.Color color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, UISession session) {
+	public static io.intino.alexandria.ui.model.mold.Stamp.Color color($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, UISession session) {
 		return null;//TODO
 	}
 end
 
 def trigger(avatarProperties)
-	public static io.intino.konos.alexandria.ui.model.mold.stamps.Picture.AvatarProperties avatarProperties($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, UISession session) {
+	public static io.intino.alexandria.ui.model.mold.stamps.Picture.AvatarProperties avatarProperties($box~Box box, $moldClass $moldClass+shortType+firstLowerCase, UISession session) {
 		return null;//TODO
 	}
 end
@@ -309,27 +309,27 @@ def attribute(resource) trigger(valueType)
 end
 
 def attribute(Breadcrumbs) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Tree
+	io.intino.alexandria.ui.model.mold.stamps.Tree
 end
 
 def attribute(CardWallet) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Wallet
+	io.intino.alexandria.ui.model.mold.stamps.Wallet
 end
 
 def attribute(Timeline) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Timeline
+	io.intino.alexandria.ui.model.mold.stamps.Timeline
 end
 
 def attribute(Pie) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Pie
+	io.intino.alexandria.ui.model.mold.stamps.Pie
 end
 
 def attribute(Histogram) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Histogram
+	io.intino.alexandria.ui.model.mold.stamps.Histogram
 end
 
 def attribute(ItemLinks) trigger(valueType)
-	io.intino.konos.alexandria.ui.model.mold.stamps.Links
+	io.intino.alexandria.ui.model.mold.stamps.Links
 end
 
 def attribute(Picture) trigger(valueType)
