@@ -25,6 +25,7 @@ Facet Accessible on Display
 Facet Addressable on Display.Request
 	var UI.Resource addressableResource
 	var boolean encoded = false
+	var boolean listenForChanges = true
 
 Concept Toolbar is decorable component
 	var boolean canSearch = true
