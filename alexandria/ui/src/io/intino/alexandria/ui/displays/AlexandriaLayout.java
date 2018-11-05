@@ -43,10 +43,6 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		return this;
 	}
 
-	public void onOpenItem(Consumer<String> listener) {
-		this.onOpenItem = listener;
-	}
-
 	public void onLoading(Consumer<Boolean> listener) {
 		loadingListeners.add(listener);
 	}
@@ -128,7 +124,6 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 	public void openItem(String key) {
 		LayoutItem layoutItem = itemWithKey(key);
 		openElement(layoutItem.label());
-		if (this.onOpenItem != null) this.onOpenItem.accept(layoutItem.name());
 	}
 
 	protected Reference schemaItemOf(LayoutItem item) {
