@@ -7,7 +7,7 @@ def type(server)
 	import io.intino.alexandria.rest.security.DefaultSecurityManager;
 	import io.intino.alexandria.rest.spark.SparkPushService;
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
+	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Service {
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
 			$secure

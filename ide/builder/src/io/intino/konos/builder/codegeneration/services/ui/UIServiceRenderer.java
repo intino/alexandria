@@ -18,11 +18,11 @@ import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
 import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
-public class UIResourcesRenderer extends UIRenderer {
+public class UIServiceRenderer extends UIRenderer {
 	private final File gen;
 	private final List<UIService> uiServiceList;
 
-	public UIResourcesRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	public UIServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		super(boxName, packageName);
 		this.gen = gen;
 		this.uiServiceList = graph.uIServiceList();
@@ -44,7 +44,7 @@ public class UIResourcesRenderer extends UIRenderer {
 		if (!displays.isEmpty())
 			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName);
 		if (service.authentication() != null) frame.addSlot("auth", service.authentication().by());
-		writeFrame(gen, snakeCaseToCamelCase(service.name$()), template().format(frame));
+		writeFrame(gen, snakeCaseToCamelCase(service.name$() + "Service"), template().format(frame));
 	}
 
 	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {
@@ -92,7 +92,7 @@ public class UIResourcesRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		Template template = UIResourcesTemplate.create();
+		Template template = UIServiceTemplate.create();
 		addFormats(template);
 		return template;
 	}

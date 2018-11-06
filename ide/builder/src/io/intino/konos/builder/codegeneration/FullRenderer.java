@@ -21,7 +21,7 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.UIResourcesRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
@@ -141,7 +141,7 @@ public class FullRenderer {
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName, classes).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new UIResourcesRenderer(graph, gen, packageName, boxName).execute();
+		new UIServiceRenderer(graph, gen, packageName, boxName).execute();
 		new UIAccessorCreator(module, graph, parent).execute();
 	}
 

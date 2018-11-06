@@ -158,7 +158,7 @@ end
 def type(service & ui) trigger(ui)
 	[if ($parameter == null || !io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
 	io.intino.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.alexandria.ui.UIAlexandriaSpark) io.intino.alexandria.rest.AlexandriaSparkBuilder.instance();
-	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	io.intino.alexandria.ui.UiElements.initDisplays(sparkInstance);
 	$use...[$NL]
 	sparkInstance.start();
