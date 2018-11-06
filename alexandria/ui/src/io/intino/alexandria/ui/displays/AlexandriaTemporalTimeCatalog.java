@@ -1,12 +1,12 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.ItemList;
-import io.intino.alexandria.ui.model.TimeScale;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.CatalogBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier;
 import io.intino.alexandria.ui.helpers.TimeScaleHandler;
+import io.intino.alexandria.ui.model.ItemList;
 import io.intino.alexandria.ui.model.TimeRange;
+import io.intino.alexandria.ui.model.TimeScale;
 import io.intino.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.alexandria.ui.schemas.GroupingSelection;

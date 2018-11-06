@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays;
 
 import com.google.gson.Gson;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.Resource;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
@@ -28,7 +29,6 @@ import io.intino.alexandria.ui.schemas.ElementOperationParameters;
 import io.intino.alexandria.ui.schemas.OpenElementParameters;
 import io.intino.alexandria.ui.schemas.Position;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.konos.framework.Box;
 
 import java.util.*;
 import java.util.function.Consumer;

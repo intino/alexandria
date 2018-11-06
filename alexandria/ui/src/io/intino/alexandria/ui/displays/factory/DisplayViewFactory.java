@@ -1,10 +1,9 @@
 package io.intino.alexandria.ui.displays.factory;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.*;
 import io.intino.alexandria.ui.model.View;
 import io.intino.alexandria.ui.model.view.container.*;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.*;
 
 import java.util.HashMap;
 import java.util.Map;

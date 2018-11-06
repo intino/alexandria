@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.EditorService;
 
@@ -16,12 +17,12 @@ public class UiBox extends AbstractBox {
 	}
 
 	@Override
-	public io.intino.konos.framework.Box put(Object o) {
+	public Box put(Object o) {
 		super.put(o);
 		return this;
 	}
 
-	public io.intino.konos.framework.Box open() {
+	public Box open() {
 		return super.open();
 	}
 

@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.Resource;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
@@ -11,7 +12,6 @@ import io.intino.alexandria.ui.model.mold.stamps.CatalogLink;
 import io.intino.alexandria.ui.model.mold.stamps.operations.DownloadOperation;
 import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
-import io.intino.konos.framework.Box;
 
 import java.io.InputStream;
 import java.util.ArrayList;

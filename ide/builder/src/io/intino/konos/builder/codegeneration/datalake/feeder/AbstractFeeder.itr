@@ -2,18 +2,19 @@ def type(feeder)
 	package $package+validPackage.datalake.feeders;
 
 	import $package+validPackage.datalake.Datalake;
-	import io.intino.konos.framework.Feeder;
-	import io.intino.konos.framework.Sensor;
+	import io.intino.alexandria.core.Feeder;
+	import io.intino.alexandria.core.Sensor;
 	import io.intino.ness.inl.Message;
 
 	import java.util.Arrays;
 	import java.util.List;
 	import java.util.Collections;
 
-	public class Abstract$name+FirstUpperCase extends io.intino.konos.framework.Feeder {
+	public class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;
 
-		public Abstract$name+FirstUpperCase() {
+		public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
 			this.sensors = Arrays.asList($sensor+new...[, ]);
 		}
 
@@ -23,7 +24,7 @@ def type(feeder)
 
 
 		public boolean feed(Message event) {
-			return Datalake.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
+			box.nessAccesor().push()
 		}
 
 		public List<Sensor> sensors() {

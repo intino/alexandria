@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.Item;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaMenuLayoutNotifier;
+import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.alexandria.ui.schemas.PlatformInfo;
 import io.intino.alexandria.ui.schemas.UserInfo;

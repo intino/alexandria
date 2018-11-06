@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.model.Item;
 
 import java.util.ArrayList;

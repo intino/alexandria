@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
-import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Panel;
+import io.intino.alexandria.ui.model.mold.Stamp;
 
 import java.util.ArrayList;
 import java.util.List;

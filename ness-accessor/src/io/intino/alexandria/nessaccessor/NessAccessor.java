@@ -1,4 +1,4 @@
-package io.intino.alexandria.nessaccesor;
+package io.intino.alexandria.nessaccessor;
 
 import io.intino.ness.core.Datalake;
 import io.intino.ness.core.Stage;

@@ -1,11 +1,11 @@
 def type(tanks)
 	package $package+validPackage.datalake;
 
-	import io.intino.konos.jms.TopicConsumer;
-	import io.intino.konos.jms.TopicProducer;
-	import io.intino.konos.datalake.NessAccessor;
-	import io.intino.konos.jms.Consumer;
-	import io.intino.konos.jms.Bus;
+	import io.intino.alexandria.jms.TopicConsumer;
+	import io.intino.alexandria.jms.TopicProducer;
+	import io.intino.alexandria.nessaccessor.NessAccessor;
+	import io.intino.alexandria.jms.Consumer;
+	import io.intino.alexandria.jms.Bus;
     import org.apache.activemq.ActiveMQConnection;
     import org.apache.activemq.advisory.DestinationListener;
 	import org.apache.activemq.advisory.DestinationSource;
@@ -29,17 +29,17 @@ def type(tanks)
 			$tank+subscribe...[$NL]
 		}
 
-		public static List<io.intino.konos.datalake.EventDatalake.Tank> all() {
-			List<io.intino.konos.datalake.EventDatalake.Tank> tanks = new ArrayList<>();
+		public static List<io.intino.ness.core.Datalake.EventStore.Tank> all() {
+			List<io.intino.ness.core.Datalake.EventStore.Tank> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
 		}
 
-		public static List<io.intino.konos.datalake.EventDatalake.Tank> byName(List<String> names) {
+		public static List<io.intino.ness.core.Datalake.EventStore.Tank> byName(List<String> names) {
 			return all().stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
 		}
 
-		public static io.intino.konos.datalake.EventDatalake.Tank byName(String type) {
+		public static io.intino.ness.core.Datalake.EventStore.Tank byName(String type) {
 			return all().stream().filter(t -> type.equals(t.name())).findFirst().orElse(null);
 		}
 
@@ -47,16 +47,8 @@ def type(tanks)
 
 		$tank+class...[$NL$NL]
 
-		public static void unregister() {
-			$tank+unregister...[$NL]
-		}
-
-		private static boolean isRegisterOnly(Message message) {
-			try {
-				return message.getBooleanProperty(io.intino.konos.datalake.EventDatalake.REGISTER_ONLY);
-			} catch (JMSException e) {
-				return false;
-			}
+		public static void unsubscribeAll(NessAccessor accessor) {
+			$tank+unsubscribe...[$NL]
 		}
 	}
 end
@@ -69,16 +61,16 @@ def trigger(clientId)
 	"$value"
 end
 
-def type(tank) trigger(unregister)
-	$name+firstLowerCase.unregister();
+def type(tank) trigger(unsubscribe)
+	accessor.eventStore().unsubscribe($name+firstLowerCase);
 end
 
 def type(tank) trigger(field)
-	private static io.intino.konos.datalake.EventDatalake.Tank $name+firstLowerCase;
+	private static io.intino.ness.core.Datalake.EventStore.Tank $name+firstLowerCase;
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = box.datalake().eventDatalake().add("$messageType+lowerCase");
+	$name+firstLowerCase = box.nessAccessor().eventStore().tank("$messageType+lowerCase");
 end
 
 def type(tank) trigger(add)
@@ -86,13 +78,13 @@ def type(tank) trigger(add)
 end
 
 def type(tank) trigger(getter)
-	public static io.intino.konos.datalake.EventDatalake.Tank $name+firstLowerCase() {
+	public static io.intino.ness.core.Datalake.EventStore.Tank $name+firstLowerCase() {
 		return Datalake.$name+firstLowerCase;
 	}
 end
 
 def type(tank) type(mounter | input) trigger(subscribe)
-	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box)).flow(clientID != null ? clientID + "-$name+lowerCase" : null);
+	box.nessAccessor().eventStore().subscribe($name+firstLowerCase).using(clientID != null ? clientID + "-$name+lowerCase" : null, new AgentDeleteHandler(box));
 end
 
 def type(custom) trigger(replace)
@@ -104,14 +96,14 @@ def trigger(formatMessage)
 end
 
 def type(tank & mounter) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
+	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
 		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
-		public void handle(io.intino.ness.inl.Message m) {
+		public void handle(io.intino.alexandria.inl.Message m) {
 			try {
 				$name+snakeCaseToCamelCase+FirstUpperCase~Mounter mounter = new $name+snakeCaseToCamelCase+FirstUpperCase~Mounter();
 				mounter.box = box;
@@ -125,14 +117,14 @@ def type(tank & mounter) trigger(class)
 end
 
 def type(tank & input) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
+	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
 		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
-		public void handle(io.intino.ness.inl.Message m) {
+		public void handle(io.intino.alexandria.inl.Message m) {
 			try {
 				$handler...[$NL]
 			} catch(Throwable e) {
@@ -160,7 +152,7 @@ def trigger(tankImport)
 end
 
 def type(schema) trigger(load)
-	io.intino.alexandria.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
+	io.intino.alexandria.inl.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
 end
 
 def trigger(load)

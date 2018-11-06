@@ -1,11 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.Catalog;
-import io.intino.alexandria.ui.model.Item;
-import io.intino.alexandria.ui.model.View;
-import io.intino.alexandria.ui.model.catalog.arrangement.Sorting;
-import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.CatalogSortingBuilder;
 import io.intino.alexandria.ui.displays.builders.ElementViewBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
@@ -13,6 +8,11 @@ import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilde
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerListNotifier;
 import io.intino.alexandria.ui.displays.providers.AlexandriaStampProvider;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
+import io.intino.alexandria.ui.model.Catalog;
+import io.intino.alexandria.ui.model.Item;
+import io.intino.alexandria.ui.model.View;
+import io.intino.alexandria.ui.model.catalog.arrangement.Sorting;
+import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedCatalog;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
