@@ -13,7 +13,7 @@ public class ZimWriter {
 	private final ZipOutputStream os;
 
 	public ZimWriter(File file) throws IOException {
-		file.getParentFile().mkdir();
+		file.getParentFile().mkdirs();
 		this.os = new ZipOutputStream(new FileOutputStream(file));
 		this.os.putNextEntry(new ZipEntry("events.inl"));
 	}
