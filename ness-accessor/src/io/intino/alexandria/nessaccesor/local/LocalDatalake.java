@@ -13,6 +13,21 @@ public class LocalDatalake implements Datalake {
 	}
 
 	@Override
+	public Connection connection() {
+		return new Connection() {
+			@Override
+			public void connect() {
+
+			}
+
+			@Override
+			public void disconnect() {
+
+			}
+		};
+	}
+
+	@Override
 	public EventStore eventStore() {
 		return datalake.eventStore();
 	}

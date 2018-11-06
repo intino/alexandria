@@ -1,8 +1,6 @@
 dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") exceptions
-	Imports
-		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
