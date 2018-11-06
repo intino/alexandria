@@ -10,12 +10,11 @@ import io.intino.alexandria.ui.model.mold.stamps.*;
 import io.intino.alexandria.ui.model.mold.stamps.icons.ResourceIcon;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenExternalDialogOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.PreviewOperation;
-import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.ui.utils.AvatarUtil;
-import io.intino.alexandria.ui.schemas.Item;
 import io.intino.alexandria.ui.schemas.ItemBlock;
 import io.intino.alexandria.ui.schemas.ItemStamp;
 import io.intino.alexandria.ui.schemas.Property;
+import io.intino.alexandria.ui.services.push.UISession;
+import io.intino.alexandria.ui.utils.AvatarUtil;
 
 import java.net.URL;
 import java.time.Instant;
@@ -25,27 +24,25 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static io.intino.alexandria.ui.Asset.toResource;
-import static io.intino.alexandria.ui.utils.AvatarUtil.generateAvatar;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class ItemBuilder {
 
-    public static Item build(Item item, String id, ItemBuilderProvider provider, URL baseAssetUrl) {
-        return new Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
+    public static io.intino.alexandria.ui.schemas.Item build(Item item, String id, ItemBuilderProvider provider, URL baseAssetUrl) {
+        return new io.intino.alexandria.ui.schemas.Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
                 .group(group(item, provider.scale()))
                 .label(label(item, provider))
                 .itemBlockList(itemBlockList(item, provider, baseAssetUrl))
                 .itemStampList(itemStampList(item, provider, baseAssetUrl));
     }
 
-    public static Item buildOnlyLocation(Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
+    public static io.intino.alexandria.ui.schemas.Item buildOnlyLocation(Item item, ItemBuilderProvider provider, URL baseAssetUrl) {
         try {
             String id = item != null ? item.id() : UUID.randomUUID().toString();
 
-            return new Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
+            return new io.intino.alexandria.ui.schemas.Item().name(new String(Base64.getEncoder().encode(id.getBytes())))
                     .group(group(item, provider.scale()))
                     .label(label(item, provider))
                     .itemBlockList(emptyList())
@@ -57,11 +54,11 @@ public class ItemBuilder {
         }
     }
 
-    public static List<Item> buildList(List<Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
+    public static List<io.intino.alexandria.ui.schemas.Item> buildList(List<Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
         return itemList.stream().map(item -> ItemBuilder.build(item, item.id(), provider, baseAssetUrl)).collect(toList());
     }
 
-    public static List<Item> buildListOnlyLocation(List<Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
+    public static List<io.intino.alexandria.ui.schemas.Item> buildListOnlyLocation(List<Item> itemList, ItemBuilderProvider provider, URL baseAssetUrl) {
         return itemList.stream().map(item -> ItemBuilder.buildOnlyLocation(item, provider, baseAssetUrl)).collect(toList());
     }
 
