@@ -9,4 +9,4 @@ Artifact("io.intino.alexandria", "1.0.0") triplestore
 	Distribution(intino.release)
 
 Repository("intino-maven") intino
-	Release("https://artifactory.intino.io/artifactory/release-libraries")release
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release

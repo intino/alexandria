@@ -11,7 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/alexandria/json/json.iml" filepath="$PROJECT_DIR$/alexandria/json/json.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/logger/logger.iml" filepath="$PROJECT_DIR$/alexandria/logger/logger.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/ide/model/model.iml" filepath="$PROJECT_DIR$/ide/model/model.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ness/ness.iml" filepath="$PROJECT_DIR$/alexandria/ness/ness.iml" group="alexandria/framework" />
       <module fileurl="file://$PROJECT_DIR$/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/ness-accessor/ness-accessor.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/primitives/primitives.iml" filepath="$PROJECT_DIR$/alexandria/primitives/primitives.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="alexandria/lib" />

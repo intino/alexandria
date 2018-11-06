@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.services;
 
-import io.intino.alexandria.schema.Resource;
+import io.intino.alexandria.Resource;
 
 import java.io.InputStream;
 

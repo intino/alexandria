@@ -1,15 +1,16 @@
 package io.intino.alexandria.ui.displays;
 
-import cottons.utils.StreamHelper;
-import io.intino.alexandria.ui.model.Dialog;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.schema.Resource;
+import io.intino.alexandria.Resource;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.builders.DialogBuilder;
 import io.intino.alexandria.ui.displays.builders.ValidationBuilder;
+import io.intino.alexandria.ui.model.Dialog;
 import io.intino.alexandria.ui.model.dialog.DialogResult;
 import io.intino.alexandria.ui.schemas.DialogInput;
 import io.intino.alexandria.ui.schemas.DialogInputResource;
 import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.alexandria.ui.utils.StreamUtil;
+import io.intino.konos.framework.Box;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -176,7 +176,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 
 	private DialogValidator.Result validateText(FormInput formInput) {
 		List<String> values = formInput.input().values().asString();
-		Dialog.Tab.Text text = (Dialog.Tab.Text)formInput.input();
+		Dialog.Tab.Text text = (Dialog.Tab.Text) formInput.input();
 
 		DialogValidator.Result result = text.validateEmail(values);
 		if (result != null) return result;
@@ -197,7 +197,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 
 	private DialogValidator.Result validatePassword(FormInput formInput) {
 		List<String> values = formInput.input().values().asString();
-		Dialog.Tab.Password password = (Dialog.Tab.Password)formInput.input();
+		Dialog.Tab.Password password = (Dialog.Tab.Password) formInput.input();
 		return password.validateLength(values);
 	}
 
@@ -210,9 +210,9 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 		List<Resource> resourceValues = formInput.input().values().asResource();
 		Map<String, byte[]> valuesMap = resourceValues.stream().collect(toMap(Resource::id, r -> {
 			try {
-				return StreamHelper.readBytes(r.data());
+				return StreamUtil.readBytes(r.data());
 			} catch (IOException e) {
-				Logger.getGlobal().severe(e.getMessage());
+				Logger.error(e);
 				return null;
 			}
 		}));
@@ -250,6 +250,7 @@ public abstract class AlexandriaDialog extends ActivityDisplay<AlexandriaDialogN
 
 	interface FormInput {
 		Dialog.Tab.Input input();
+
 		String path();
 	}
 }

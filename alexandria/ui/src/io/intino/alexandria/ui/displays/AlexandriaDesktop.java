@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.UIBox;
+import io.intino.alexandria.ui.UiBox;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Settings;
@@ -11,9 +11,9 @@ import java.net.URL;
 
 import static io.intino.alexandria.ui.model.Panel.Layout.Tab;
 
-public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop,DN> {
+public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
 
-	public AlexandriaDesktop(UIBox box) {
+	public AlexandriaDesktop(UiBox box) {
 		super(box);
 	}
 

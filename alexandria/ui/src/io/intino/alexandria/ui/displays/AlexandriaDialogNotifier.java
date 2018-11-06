@@ -22,7 +22,7 @@ public class AlexandriaDialogNotifier extends AlexandriaDisplayNotifier {
 		putToDisplay("notifyUser", "value", value);
 	}
 
-	public void upload(io.intino.alexandria.schema.Resource value) {
+	public void upload(io.intino.alexandria.Resource value) {
 		putToDisplay("upload", "value", value);
 	}
 

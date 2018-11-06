@@ -3,6 +3,7 @@ package io.intino.alexandria.inl;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.inl.helpers.Fields;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -18,7 +19,7 @@ import static java.util.Objects.isNull;
 
 public class Inl {
 	public static Message toMessage(Object object) throws IOException {
-		return ObjectToMessage.toMessage(object);
+		return object instanceof String ? new InlReader(new ByteArrayInputStream(object.toString().getBytes())).next() : ObjectToMessage.toMessage(object);
 	}
 
 	public static <T> T fromMessage(Message object, Class<T> t) throws IllegalAccessException {
@@ -37,9 +38,7 @@ public class Inl {
 				if (isAttachment(field)) convertAttachment(message, field, value);
 				else if (isAttribute(field)) convertAttribute(message, field, value);
 				else {
-					if (isList(field) || isArray(field)) {
-						for (Object v : valuesOf(field, object)) message.add(toMessage(v));
-					}
+					if (isList(field) || isArray(field)) for (Object v : valuesOf(field, object)) message.add(toMessage(v));
 					else message.add(toMessage(value));
 				}
 			}

@@ -22,7 +22,7 @@ def type(ui)
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends io.intino.alexandria.ui.UI {
 
 		public static void init(UIAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
-			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = box.configuration();
+			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
 			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());[
