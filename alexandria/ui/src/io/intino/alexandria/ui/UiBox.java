@@ -12,7 +12,7 @@ public class UiBox extends AbstractBox {
 		super(args);
 	}
 
-	public UiBox(UiConfiguration configuration) {
+	public UiBox(UiFrameworkConfiguration configuration) {
 		super(configuration);
 	}
 
