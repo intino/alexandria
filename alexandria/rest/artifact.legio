@@ -10,7 +10,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") rest
 		Compile("org.bouncycastle", "bcmail-jdk15", "1.45")
 		Compile("org.bouncycastle", "bcprov-jdk15", "1.45")
 		Test("junit", "junit", "4.12")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 
 

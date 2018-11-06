@@ -1,20 +1,17 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") jmx
+Artifact("io.intino.alexandria", "1.0.0") jmx
 
 	Imports
-		Compile(groupId = "io.intino.alexandria", artifactId = "logger", version = "[1.0.0, 2.0.0)")
-		Provided(groupId = "com.sun", artifactId = "tools", version = "1.8.0") // TODO OCTAVIO
-		Test(groupId = "junit", artifactId = "junit", version = "4.12")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(release = intino.release)
+		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
+		Provided("com.sun", "tools", "1.8.0")
+		Test("junit", "junit", "4.12")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
 
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release
 
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
-
-Repository(identifier = "maven2-repository.dev.java.net")
-	Release(url = "http://download.java.net/maven/2/")
+Repository("maven2-repository.dev.java.net")
+	Release("http://download.java.net/maven/2/")

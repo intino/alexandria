@@ -4,7 +4,7 @@ Artifact("io.intino.alexandria", "1.0.0") zet
 	Imports
 		Compile("io.intino.alexandria", "logger", "1.0.0")
 		Test("junit", "junit", "LATEST")
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 Repository(identifier = "intino-maven") intino
