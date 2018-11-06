@@ -327,6 +327,10 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		});
 	}
 
+	public void closeCurrentItem() {
+		home();
+	}
+
 	private AlexandriaAbstractCatalog catalogDisplayOf(CatalogInstantBlock block) {
 		if (!this.element.name().equals(block.catalog()) && !this.element.label().equals(block.catalog()))
 			return openElement(block.catalog());
@@ -443,10 +447,6 @@ public abstract class AlexandriaElementDisplay<E extends Element, DN extends Ale
 		dialogBox.settings(dialog.width(), dialog.height());
 		dialogBox.refresh();
 		showDialogBox();
-	}
-
-	protected void closeCurrentItem() {
-		home();
 	}
 
 	protected void removePanelDisplay() {
