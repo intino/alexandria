@@ -59,5 +59,6 @@
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-framework:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http-server:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
+    <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
   </component>
 </module>
