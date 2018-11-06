@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.datalake.feeder;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class AbstractFeederTemplate extends Template {
 
@@ -28,7 +29,7 @@ public class AbstractFeederTemplate extends Template {
 			rule().add((condition("type", "formEdition")), (condition("trigger", "super"))).add(literal("super(\"")).add(mark("path")).add(literal("\");")),
 			rule().add((condition("type", "poll")), (condition("trigger", "field"))).add(literal("private java.util.Map<String, java.util.function.Function<List<Object>, Object>> messageBuilders = new java.util.HashMap<>();")),
 			rule().add((condition("type", "poll")), (condition("trigger", "super"))).add(literal("super(\"")).add(mark("defaultOption")).add(literal("\", Arrays.asList(")).add(mark("option").multiple(", ")).add(literal("));\nregisterMessageBuilders();")),
-			rule().add((condition("type", "poll")), (condition("trigger", "methods"))).add(literal("private void registerMessageBuilders() {\n\t")).add(mark("option", "build").multiple("\n")).add(literal("\n}\n\npublic Message get(String option, Object... args) {\n\treturn io.intino.konos.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));\n}\n\n")).add(mark("eventMethod").multiple("\n\n")),
+				rule().add((condition("type", "poll")), (condition("trigger", "methods"))).add(literal("private void registerMessageBuilders() {\n\t")).add(mark("option", "build").multiple("\n")).add(literal("\n}\n\npublic Message get(String option, Object... args) {\n\treturn io.intino.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));\n}\n\n")).add(mark("eventMethod").multiple("\n\n")),
 			rule().add((condition("trigger", "build"))).add(literal("messageBuilders.put(\"")).add(mark("value")).add(literal("\", this::")).add(mark("event", "firstLowerCase")).add(literal(");")),
 			rule().add((condition("trigger", "eventMethod"))).add(literal("protected abstract Object ")).add(mark("value", "firstLowerCase")).add(literal("(List<Object> objects);")),
 			rule().add((condition("trigger", "option"))).add(literal("new Option(\"")).add(mark("value")).add(literal("\"")).add(expression().add(literal(", Arrays.asList(")).add(mark("option").multiple(",")).add(literal(")"))).add(literal(")")),

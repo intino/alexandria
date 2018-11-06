@@ -1,21 +1,21 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.ui.Resource;
+import io.intino.alexandria.ui.displays.builders.ItemBuilder;
+import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
-import io.intino.alexandria.ui.model.*;
-import io.intino.alexandria.ui.model.mold.Block;
-import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.alexandria.ui.model.mold.stamps.*;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.builders.ItemBuilder;
-import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaItemNotifier;
 import io.intino.alexandria.ui.displays.providers.AlexandriaStampProvider;
 import io.intino.alexandria.ui.displays.providers.ItemDisplayProvider;
 import io.intino.alexandria.ui.helpers.ElementHelper;
+import io.intino.alexandria.ui.model.*;
+import io.intino.alexandria.ui.model.Item;
+import io.intino.alexandria.ui.model.mold.Block;
+import io.intino.alexandria.ui.model.mold.Stamp;
+import io.intino.alexandria.ui.model.mold.stamps.*;
 import io.intino.alexandria.ui.model.mold.stamps.operations.DownloadOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.ExportOperation;
 import io.intino.alexandria.ui.model.mold.stamps.operations.OpenCatalogOperation;
@@ -24,6 +24,7 @@ import io.intino.alexandria.ui.model.mold.stamps.pages.InternalPage;
 import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.konos.framework.Box;
 
 import java.io.InputStream;
 import java.util.*;

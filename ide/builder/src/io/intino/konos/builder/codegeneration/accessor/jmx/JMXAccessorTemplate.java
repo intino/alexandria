@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.accessor.jmx;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class JMXAccessorTemplate extends Template {
 
@@ -18,7 +19,7 @@ public class JMXAccessorTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "accessor"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(";\n\nimport java.util.List;\nimport java.util.ArrayList;\nimport io.intino.konos.alexandria.exceptions.*;\nimport ")).add(mark("package", "ValidPackage")).add(literal(".jmx.")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean;\nimport io.intino.konos.jmx.JMXClient;\n\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor {\n\n\tprivate final JMXClient.JMXConnection connection;\n\tprivate ")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean bean;\n\n\tpublic ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor(String url, int port) throws java.io.IOException {\n\t\tJMXClient server = new JMXClient(url, port);\n\t\tconnection = server.connect();\n\t\tbean = connection.mBean(")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean.class);\n\t}\n\n\tpublic void closeJMXConnection() {\n\t\tconnection.close();\n\t}\n\n\t")).add(mark("operation").multiple("\n\n")).add(literal("\n}")),
+				rule().add((condition("type", "accessor"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(";\n\nimport java.util.List;\nimport java.util.ArrayList;\nimport io.intino.alexandria.exceptions.*;\nimport ")).add(mark("package", "ValidPackage")).add(literal(".jmx.")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean;\nimport io.intino.konos.jmx.JMXClient;\n\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor {\n\n\tprivate final JMXClient.JMXConnection connection;\n\tprivate ")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean bean;\n\n\tpublic ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor(String url, int port) throws java.io.IOException {\n\t\tJMXClient server = new JMXClient(url, port);\n\t\tconnection = server.connect();\n\t\tbean = connection.mBean(")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean.class);\n\t}\n\n\tpublic void closeJMXConnection() {\n\t\tconnection.close();\n\t}\n\n\t")).add(mark("operation").multiple("\n\n")).add(literal("\n}")),
 			rule().add((condition("type", "operation"))).add(literal("public ")).add(mark("returnType", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" ")).add(mark("name", "validName", "firstLowerCase")).add(literal("(")).add(mark("parameter", "signature").multiple(", ")).add(literal(") {\n\treturn bean != null ? bean.")).add(mark("name", "validName", "firstLowerCase")).add(literal("(")).add(mark("parameter", "name").multiple(", ")).add(literal(") : null;\n}")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "signature"))).add(mark("type")).add(literal(" ")).add(mark("name", "validName", "firstLowerCase")),
 			rule().add((condition("type", "parameter")), (condition("trigger", "name"))).add(mark("name", "validName", "firstLowerCase")),

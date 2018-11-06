@@ -8,9 +8,10 @@ import io.intino.alexandria.ui.model.toolbar.*;
 import io.intino.alexandria.ui.model.view.container.CollectionContainer;
 import io.intino.alexandria.ui.model.view.container.Container;
 import io.intino.alexandria.ui.model.view.container.MapContainer;
-import io.intino.alexandria.ui.model.toolbar.GroupingSelection;
-import io.intino.alexandria.ui.schemas.*;
-import io.intino.alexandria.ui.schemas.Operation;
+import io.intino.alexandria.ui.schemas.Center;
+import io.intino.alexandria.ui.schemas.ElementView;
+import io.intino.alexandria.ui.schemas.Property;
+import io.intino.alexandria.ui.schemas.Zoom;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,15 +47,14 @@ public class ElementViewBuilder {
         return message != null ? message : "";
     }
 
-    private static Toolbar buildToolbar(Toolbar toolbar) {
-        Toolbar result = new Toolbar();
+    private static io.intino.alexandria.ui.schemas.Toolbar buildToolbar(Toolbar toolbar) {
+        io.intino.alexandria.ui.schemas.Toolbar result = new io.intino.alexandria.ui.schemas.Toolbar();
         toolbar.operations().forEach(op -> result.operationList().add(buildOperation(op)));
         return result;
     }
 
-    private static Operation buildOperation(Operation operation) {
-        Operation result = new Operation().title(operation.title()).name(operation.name());
-
+    private static io.intino.alexandria.ui.schemas.Operation buildOperation(Operation operation) {
+        io.intino.alexandria.ui.schemas.Operation result = new io.intino.alexandria.ui.schemas.Operation().title(operation.title()).name(operation.name());
         result.type(type(operation));
         result.mode(operation.mode().toString());
         result.icon(operation.alexandriaIcon());
