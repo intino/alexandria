@@ -1,5 +1,6 @@
 dsl Konos
 
+use UI
 use Panel
 use Schemas
 use Catalog
@@ -10,6 +11,9 @@ Display alexandriaDesktop
 	Notification displayType as Text
 	Notification(Client) loading as Bool
 	Notification(Client) loaded
+
+	Request home
+	Request openItem as Text
 
 Display alexandriaTabLayout
 	displays = alexandriaPanel alexandriaCatalog alexandriaTemporalRangeCatalog alexandriaTemporalTimeCatalog

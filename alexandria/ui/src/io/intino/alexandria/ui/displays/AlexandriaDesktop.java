@@ -81,6 +81,14 @@ public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends Ale
 		return (T) child(AlexandriaLayout.class);
 	}
 
+	public void home() {
+		child(AlexandriaLayout.class).home();
+	}
+
+	public void openItem(String key) {
+		child(AlexandriaLayout.class).openItem(key);
+	}
+
 	@Override
 	protected void showDialogBox() {
 	}
