@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact(groupId = "io.intino.alexandria", version = "1.0.0") slack
 	Imports
-		Compile(groupId = "io.intino.alexandria", artifactId = "commons", version = "[1.0.0, 2.0.0)")
+		Compile(groupId = "io.intino.alexandria", artifactId = "logger", version = "[1.0.0, 2.0.0)")
 		Compile(groupId = "com.ullink.slack", artifactId = "simpleslackapi", version = "0.6.0")
 		Compile(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.4")
 		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-client", version = "1.8.3")

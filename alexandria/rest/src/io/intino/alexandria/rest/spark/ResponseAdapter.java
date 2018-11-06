@@ -1,7 +1,7 @@
 package io.intino.alexandria.rest.spark;
 
 import com.google.gson.*;
-import io.intino.alexandria.Error;
+import io.intino.alexandria.exceptions.AlexandriaError;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -12,7 +12,7 @@ public class ResponseAdapter {
 
 
 	public static String adapt(Object object) {
-		if (object instanceof Error) return adaptError((Error) object);
+		if (object instanceof AlexandriaError) return adaptError((AlexandriaError) object);
 		if (object instanceof Collection) return jsonArray((Collection<Object>) object);
 		if (object instanceof String) return (String) object;
 		return toJson(object).toString();
@@ -32,7 +32,7 @@ public class ResponseAdapter {
 		return gsonBuilder.create().toJsonTree(value);
 	}
 
-	private static String adaptError(Error error) {
+	private static String adaptError(AlexandriaError error) {
 		JsonObject object = new JsonObject();
 		object.addProperty("code", error.code());
 		object.addProperty("label", error.label());

@@ -1,9 +1,8 @@
 package io.intino.alexandria.filesproxy.core;
 
-import cottons.utils.MimeTypes;
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.filesproxy.FilesApi;
 import io.intino.alexandria.filesproxy.exceptions.FilesApiFailure;
-import io.intino.konos.alexandria.schema.Resource;
 import io.intino.alexandria.restful.RestfulApi;
 import io.intino.alexandria.restful.core.RestfulAccessor;
 import io.intino.alexandria.restful.exceptions.RestfulFailure;
@@ -99,7 +98,7 @@ public class FilesAccessor implements FilesApi {
 
 			private Resource resourceOf(InputStream content, String contentType, Map<String, String> parameters) {
 				//				parameters.entrySet().forEach(entry -> resource.addParameter(entry.getKey(), entry.getValue()));
-				return new Resource("resource." + MimeTypes.getExtension(contentType)).contentType(contentType).data(content);
+				return new Resource("resource." + Resource.getExtension(contentType)).contentType(contentType).data(content);
 			}
 
 			private String pathOf(String path) {

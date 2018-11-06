@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") triplestore
 	Imports
-		Compile("org.slf4j", "slf4j-api", "1.7.7")
+		Compile("io.intino.alexandria", "logger", "1.0.0")
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesLinkedByManifest)

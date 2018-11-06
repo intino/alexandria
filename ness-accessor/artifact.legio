@@ -2,13 +2,14 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") ness-accessor
 	Imports
-		Compile("io.intino.alexandria", "commons", "1.0.0")
+		Compile("io.intino.alexandria", "logger", version = "1.0.0")
 		Compile("io.intino.alexandria", "triplestore", "1.0.0")
-		Compile("io.intino.sezzet", "operators", "1.0.1")
 		Compile("io.intino.alexandria", "jms", "1.0.0")
-		Compile("io.intino.tara", "magritte", "LATEST")
+		Compile("io.intino.ness", "core", "1.2.0")
 		Compile("commons-io", "commons-io", "2.4")
 		Test("junit", "junit", "4.12")
+		Test("org.assertj", "assertj-core", "3.11.1")
+		Test("org.slf4j", "slf4j-log4j12", "1.7.7")
 	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 

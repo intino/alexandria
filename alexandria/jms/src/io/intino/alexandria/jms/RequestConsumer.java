@@ -1,7 +1,7 @@
 package io.intino.alexandria.jms;
 
 import com.google.gson.Gson;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.exceptions.AlexandriaException;
 
 import javax.jms.*;
 import java.io.ByteArrayInputStream;

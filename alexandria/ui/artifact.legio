@@ -5,6 +5,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") ui
 		targetPackage = ""
 	Code ("io.intino.alexandria.ui")
 	Imports
+		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "rest", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "rest-accessor", "[1.0.0, 2.0.0)")
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")

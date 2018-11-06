@@ -3,20 +3,27 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/commons/commons.iml" filepath="$PROJECT_DIR$/alexandria/commons/commons.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/framework/framework.iml" filepath="$PROJECT_DIR$/alexandria/framework/framework.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/jms/jms.iml" filepath="$PROJECT_DIR$/alexandria/jms/jms.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/jmx/jmx.iml" filepath="$PROJECT_DIR$/alexandria/jmx/jmx.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="alexandria/framework" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/inl/inl.iml" filepath="$PROJECT_DIR$/alexandria/inl/inl.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/jms/jms.iml" filepath="$PROJECT_DIR$/alexandria/jms/jms.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/jmx/jmx.iml" filepath="$PROJECT_DIR$/alexandria/jmx/jmx.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/json/json.iml" filepath="$PROJECT_DIR$/alexandria/json/json.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/logger/logger.iml" filepath="$PROJECT_DIR$/alexandria/logger/logger.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/ide/model/model.iml" filepath="$PROJECT_DIR$/ide/model/model.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/ness-accessor/ness-accessor.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/rest-accessor/rest-accessor.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/ness/ness.iml" filepath="$PROJECT_DIR$/alexandria/ness/ness.iml" group="alexandria/framework" />
+      <module fileurl="file://$PROJECT_DIR$/ness-accessor/ness-accessor.iml" filepath="$PROJECT_DIR$/ness-accessor/ness-accessor.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/primitives/primitives.iml" filepath="$PROJECT_DIR$/alexandria/primitives/primitives.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/rest-accessor/rest-accessor.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" filepath="$PROJECT_DIR$/alexandria/scheduler/scheduler.iml" group="alexandria/framework" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/slack/slack.iml" filepath="$PROJECT_DIR$/alexandria/slack/slack.iml" group="alexandria/framework" />
       <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="konos" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="alexandria" />
-      <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="alexandria" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="alexandria/framework" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="alexandria/framework" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/zet/zet.iml" filepath="$PROJECT_DIR$/alexandria/zet/zet.iml" group="alexandria/lib" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/zim/zim.iml" filepath="$PROJECT_DIR$/alexandria/zim/zim.iml" group="alexandria/lib" />
     </modules>
   </component>
 </project>

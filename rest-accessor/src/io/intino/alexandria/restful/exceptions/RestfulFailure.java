@@ -1,12 +1,12 @@
 package io.intino.alexandria.restful.exceptions;
 
-import io.intino.alexandria.Error;
+import io.intino.alexandria.exceptions.AlexandriaError;
 
 import java.util.Map;
 
-public class RestfulFailure extends Exception implements Error {
-	private String code = "err:rff";
+public class RestfulFailure extends Exception implements AlexandriaError {
 	private final String message;
+	private String code = "err:rff";
 
 	public RestfulFailure(String message) {
 		this.message = message;

@@ -1,8 +1,6 @@
 package io.intino.alexandria.jmx;
 
-import com.sun.tools.attach.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.intino.alexandria.logger.Logger;
 
 import javax.management.*;
 import javax.management.openmbean.CompositeDataSupport;
@@ -17,11 +15,8 @@ import java.net.MalformedURLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-
 
 public class JMXClient {
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 	private static final String CONNECTOR_ADDRESS = "com.sun.management.jmxremote.localConnectorAddress";
 	private JMXServiceURL url = null;
 
@@ -30,7 +25,7 @@ public class JMXClient {
 		try {
 			url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + serverDirection + ":" + port + "/jmxrmi");
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -38,7 +33,7 @@ public class JMXClient {
 		try {
 			this.url = new JMXServiceURL(url);
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e);
 		}
 	}
 
@@ -84,7 +79,7 @@ public class JMXClient {
 			try {
 				this.beans = new ArrayList<>(this.connection.queryNames(null, null));
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
+				Logger.error(e);
 				this.beans = new ArrayList<>();
 			}
 		}
@@ -95,7 +90,7 @@ public class JMXClient {
 
 		public <T> T mBean(Class<T> mbClass, ObjectName objectName) {
 			if (objectName == null) {
-				logger.error("ObjectName is null");
+				Logger.error("ObjectName is null");
 				return null;
 			}
 			return JMX.isMXBeanInterface(mbClass) ?
