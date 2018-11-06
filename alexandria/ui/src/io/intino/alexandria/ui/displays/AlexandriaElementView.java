@@ -4,15 +4,14 @@ import io.intino.alexandria.ui.Resource;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemDialogEvent;
+import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.model.View;
 import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
-import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.mold.stamps.CatalogLink;
 import io.intino.alexandria.ui.model.mold.stamps.operations.DownloadOperation;
 import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.konos.framework.Box;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -72,18 +71,20 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		notifyLoading(false);
 	}
 
-	public void refresh(io.intino.alexandria.ui.schemas.Item... items) {
+	public void refresh(Item... items) {
 		Stream.of(items).forEach(this::refresh);
 	}
 
-	abstract void refresh(io.intino.alexandria.ui.schemas.Item item);
-	abstract void refresh(io.intino.alexandria.ui.schemas.Item item, boolean highlight);
-	abstract void refreshValidation(String validationMessage, Stamp stamp, io.intino.alexandria.ui.schemas.Item item);
+	abstract void refresh(Item item);
+
+	abstract void refresh(Item item, boolean highlight);
+
+	abstract void refreshValidation(String validationMessage, Stamp stamp, Item item);
 
 	public void reset() {
 	}
 
-	Item itemOf(String id) {
+	io.intino.alexandria.ui.model.Item itemOf(String id) {
 		return provider.item(new String(Base64.getDecoder().decode(id)));
 	}
 
@@ -109,7 +110,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		};
 	}
 
-	UIFile downloadOperation(ElementOperationParameters value, List<Item> selection) {
+	UIFile downloadOperation(ElementOperationParameters value, List<io.intino.alexandria.ui.model.Item> selection) {
 		Resource resource = provider().downloadOperation(value, selection);
 		return new UIFile() {
 			@Override
@@ -155,14 +156,14 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		CatalogLink catalogLinkStamp = (CatalogLink)stamp;
 		AlexandriaAbstractCatalog display = provider.openElement(catalogLinkStamp.catalog().name());
 
-		Item source = itemOf(params.item());
+		io.intino.alexandria.ui.model.Item source = itemOf(params.item());
 		if (display instanceof AlexandriaTemporalCatalog && provider.range() != null)
 			((AlexandriaTemporalCatalog) display).selectRange(provider.range());
 
 		if (catalogLinkStamp.openItemOnLoad()) display.openItem(catalogLinkStamp.item(source, session()));
 		else {
 			if (catalogLinkStamp.filtered())
-				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (Item) item, session()));
+				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (io.intino.alexandria.ui.model.Item) item, session()));
 			display.refresh();
 		}
 	}
@@ -175,17 +176,17 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		executeItemTaskListeners.forEach(l -> l.accept(event));
 	}
 
-	void executeOperation(ElementOperationParameters params, List<Item> selection) {
+	void executeOperation(ElementOperationParameters params, List<io.intino.alexandria.ui.model.Item> selection) {
 		provider().executeOperation(params, selection);
 	}
 
 	void changeItem(ChangeItemParameters params) {
-		Item item = itemOf(params.item());
+		io.intino.alexandria.ui.model.Item item = itemOf(params.item());
 		provider().changeItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}
 
 	void validateItem(io.intino.alexandria.ui.schemas.ValidateItemParameters params) {
-		Item item = itemOf(params.item());
+		io.intino.alexandria.ui.model.Item item = itemOf(params.item());
 		provider().validateItem(item, provider().stamp(view.mold(), params.stamp()), params.value());
 	}
 }

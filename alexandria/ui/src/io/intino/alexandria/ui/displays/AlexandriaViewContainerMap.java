@@ -1,16 +1,15 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.Catalog;
-import io.intino.alexandria.ui.model.Item;
-import io.intino.alexandria.ui.model.View;
-import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.builders.ElementViewBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerMapNotifier;
+import io.intino.alexandria.ui.model.Catalog;
+import io.intino.alexandria.ui.model.View;
+import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
+import io.intino.konos.framework.Box;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -129,7 +128,7 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 
 	public void loadItem(String id) {
 		String decodedId = new String(Base64.getDecoder().decode(id));
-		Item modelItem = provider().item(decodedId);
+		io.intino.alexandria.ui.model.Item modelItem = provider().item(decodedId);
 		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), view()), provider().baseAssetUrl());
 		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(true));
 		renderExpandedPictures(id);
