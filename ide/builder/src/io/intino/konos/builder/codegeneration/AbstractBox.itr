@@ -189,8 +189,8 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor = new import io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
-	this.nessAccessor.connect("$mode");
+	this.nessAccessor = new io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
+	this.nessAccessor.connection().connect("$mode");
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
@@ -199,7 +199,7 @@ end
 
 
 def type(dataLake) trigger(init)
-	this.nessAccessor = new import io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
+	this.nessAccessor = new io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
 	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.nessAccessor.connect("$mode");
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
@@ -267,7 +267,7 @@ def type(task) trigger(field)
 end
 
 def type(dataLake) trigger(field)
-	private import io.intino.alexandria.nessaccesor.NessAccessor nessAccessor;
+	private io.intino.alexandria.nessaccesor.NessAccessor nessAccessor;
 end
 
 def type(service & jms) trigger(getter)
@@ -277,12 +277,12 @@ def type(service & jms) trigger(getter)
 end
 
 def type(dataLake) trigger(getter)
-	public import io.intino.alexandria.nessaccesor.NessAccessor nessAccessor() {
+	public io.intino.alexandria.nessaccesor.NessAccessor nessAccessor() {
 		return this.nessAccessor;
 	}
 
-	public io.intino.konos.datalake.Feeders feeders() {
-		return io.intino.konos.datalake.Feeders.get();
+	public io.intino.konos.framework.Feeders feeders() {
+		return io.intino.konos.framework.Feeders.get();
 	}
 
 	public void registerFeeders() {
@@ -312,7 +312,7 @@ def type(service) type(jms) trigger(quit)
 end
 
 def type(dataLake) trigger(quit)
-	if (nessAccessor != null) nessAccessor.disconnect();
+	if (nessAccessor != null) nessAccessor.connection().disconnect();
 end
 
 def type(service) trigger(quit)

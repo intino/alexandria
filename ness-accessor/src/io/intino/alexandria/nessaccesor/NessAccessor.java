@@ -24,5 +24,7 @@ public class NessAccessor {
 		return datalake.setStore();
 	}
 
-
+	public Datalake.Connection connection() {
+		return datalake.connection();
+	}
 }
