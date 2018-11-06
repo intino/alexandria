@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.Catalog;
-import io.intino.alexandria.ui.model.ItemList;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.CatalogBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier;
+import io.intino.alexandria.ui.model.Catalog;
+import io.intino.alexandria.ui.model.ItemList;
 import io.intino.alexandria.ui.model.catalog.Scope;
 import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.alexandria.ui.schemas.GroupingGroup;

@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.*;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.providers.TemporalCatalogViewDisplayProvider;
 import io.intino.alexandria.ui.helpers.Bounds;
 import io.intino.alexandria.ui.helpers.TimeScaleHandler;
+import io.intino.alexandria.ui.model.*;
 import io.intino.alexandria.ui.model.catalog.Scope;
 import io.intino.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDialog;

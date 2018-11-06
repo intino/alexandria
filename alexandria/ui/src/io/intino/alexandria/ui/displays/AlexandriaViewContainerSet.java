@@ -1,14 +1,14 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.Element;
-import io.intino.alexandria.ui.model.view.set.item.Item;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerSetNotifier;
+import io.intino.alexandria.ui.model.Element;
 import io.intino.alexandria.ui.model.view.container.Container;
 import io.intino.alexandria.ui.model.view.container.SetContainer;
 import io.intino.alexandria.ui.model.view.set.AbstractItem;
 import io.intino.alexandria.ui.model.view.set.item.Group;
+import io.intino.alexandria.ui.model.view.set.item.Item;
 import io.intino.alexandria.ui.model.view.set.item.Items;
 import io.intino.alexandria.ui.schemas.Reference;
 import io.intino.alexandria.ui.schemas.ReferenceProperty;

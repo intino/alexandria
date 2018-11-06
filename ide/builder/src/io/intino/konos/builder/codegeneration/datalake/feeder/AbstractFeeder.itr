@@ -13,7 +13,8 @@ def type(feeder)
 	public class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;
 
-		public Abstract$name+FirstUpperCase() {
+		public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
+			this.box = box;
 			this.sensors = Arrays.asList($sensor+new...[, ]);
 		}
 
@@ -23,7 +24,7 @@ def type(feeder)
 
 
 		public boolean feed(Message event) {
-			return Datalake.byName(["$domain+lowerCase" + ]event.type().toLowerCase()).feed(event);
+			box.nessAccesor().push()
 		}
 
 		public List<Sensor> sensors() {

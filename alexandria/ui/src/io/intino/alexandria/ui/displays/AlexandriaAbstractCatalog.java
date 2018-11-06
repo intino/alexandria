@@ -1,21 +1,21 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.OpenElementEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
+import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
+import io.intino.alexandria.ui.helpers.ElementHelper;
 import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.ItemList;
 import io.intino.alexandria.ui.model.View;
-import io.intino.alexandria.ui.model.catalog.events.OnClickItem;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
-import io.intino.alexandria.ui.helpers.ElementHelper;
 import io.intino.alexandria.ui.model.catalog.Events;
 import io.intino.alexandria.ui.model.catalog.Scope;
 import io.intino.alexandria.ui.model.catalog.arrangement.Group;
 import io.intino.alexandria.ui.model.catalog.arrangement.GroupMap;
 import io.intino.alexandria.ui.model.catalog.arrangement.Grouping;
 import io.intino.alexandria.ui.model.catalog.arrangement.GroupingManager;
+import io.intino.alexandria.ui.model.catalog.events.OnClickItem;
 import io.intino.alexandria.ui.schemas.GroupingGroup;
 import io.intino.alexandria.ui.schemas.GroupingSelection;
 
