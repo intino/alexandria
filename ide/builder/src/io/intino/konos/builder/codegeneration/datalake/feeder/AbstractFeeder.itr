@@ -2,15 +2,15 @@ def type(feeder)
 	package $package+validPackage.datalake.feeders;
 
 	import $package+validPackage.datalake.Datalake;
-	import io.intino.konos.datalake.Feeder;
-	import io.intino.konos.datalake.Sensor;
+	import io.intino.konos.framework.Feeder;
+	import io.intino.konos.framework.Sensor;
 	import io.intino.ness.inl.Message;
 
 	import java.util.Arrays;
 	import java.util.List;
 	import java.util.Collections;
 
-	public class Abstract$name+FirstUpperCase extends io.intino.konos.datalake.Feeder {
+	public class Abstract$name+FirstUpperCase extends io.intino.konos.framework.Feeder {
 		protected List<Sensor> sensors;
 
 		public Abstract$name+FirstUpperCase() {

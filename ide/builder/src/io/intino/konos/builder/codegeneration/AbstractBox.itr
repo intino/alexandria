@@ -189,7 +189,7 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor = new io.intino.konos.datalake.NessAccessor($parameter...[, ]);
+	this.nessAccessor = new import io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
 	this.nessAccessor.connect("$mode");
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
@@ -199,7 +199,7 @@ end
 
 
 def type(dataLake) trigger(init)
-	this.nessAccessor = new io.intino.konos.datalake.NessAccessor($parameter...[, ]);
+	this.nessAccessor = new import io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
 	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.nessAccessor.connect("$mode");
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
@@ -267,7 +267,7 @@ def type(task) trigger(field)
 end
 
 def type(dataLake) trigger(field)
-	private io.intino.konos.datalake.NessAccessor nessAccessor;
+	private import io.intino.alexandria.nessaccesor.NessAccessor nessAccessor;
 end
 
 def type(service & jms) trigger(getter)
@@ -277,7 +277,7 @@ def type(service & jms) trigger(getter)
 end
 
 def type(dataLake) trigger(getter)
-	public io.intino.konos.datalake.NessAccessor datalake() {
+	public import io.intino.alexandria.nessaccesor.NessAccessor nessAccessor() {
 		return this.nessAccessor;
 	}
 
