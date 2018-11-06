@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui;
 
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 
 public class AssetResourceLoader {
 	private final Box box;

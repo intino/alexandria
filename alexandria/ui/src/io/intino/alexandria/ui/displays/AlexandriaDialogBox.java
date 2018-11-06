@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.DisplayReferenceBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaDialogBoxNotifier;
 import io.intino.alexandria.ui.schemas.DialogBoxSettings;

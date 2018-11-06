@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.PictureDataBuilder;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
