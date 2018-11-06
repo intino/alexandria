@@ -56,7 +56,7 @@ public interface ZimStream {
 		}
 
 		private long tsOf(int i) {
-			return current[i].instant().toEpochMilli();
+			return current[i] != null ? current[i].instant().toEpochMilli() : Long.MAX_VALUE;
 		}
 
 		@Override

@@ -1,7 +1,5 @@
 package io.intino.alexandria.zet;
 
-import io.intino.alexandria.zet.ZetStream;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -10,7 +8,7 @@ import java.util.stream.Stream;
 
 public class SourceZetStream implements ZetStream {
 	private final Iterator<Long> iterator;
-	private long current = - 1;
+	private long current = -1;
 
 	public SourceZetStream(File file) {
 		this(iteratorOf(inputStream(file)));
