@@ -1,4 +1,4 @@
-package io.intino.alexandria.nessaccesor;
+package io.intino.alexandria.nessaccessor;
 
 
 import io.intino.alexandria.inl.Message;

@@ -1,15 +1,15 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.alexandria.ui.displays.factory.DisplayViewFactory;
-import io.intino.alexandria.ui.model.View;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogViewListNotifier;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
 import io.intino.alexandria.ui.model.Item;
+import io.intino.alexandria.ui.model.View;
 
 import java.util.ArrayList;
 import java.util.HashMap;

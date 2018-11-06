@@ -1,8 +1,8 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.TimeScale;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.helpers.TimeScaleHandler;
+import io.intino.alexandria.ui.model.TimeScale;
 
 import java.util.List;
 

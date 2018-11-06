@@ -2,8 +2,8 @@ package inl.amidas;
 
 import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.jms.TopicProducer;
-import io.intino.alexandria.nessaccesor.NessAccessor;
-import io.intino.alexandria.nessaccesor.tcp.TcpDatalake;
+import io.intino.alexandria.nessaccessor.NessAccessor;
+import io.intino.alexandria.nessaccessor.tcp.TcpDatalake;
 import io.intino.alexandria.zim.ZimReader;
 import org.junit.Before;
 import org.junit.Ignore;

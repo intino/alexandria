@@ -1,11 +1,11 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.*;
-import io.intino.alexandria.ui.model.view.container.*;
-import io.intino.konos.framework.Box;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.builders.PlatformInfoBuilder;
 import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
+import io.intino.alexandria.ui.model.*;
 import io.intino.alexandria.ui.model.panel.Desktop;
+import io.intino.alexandria.ui.model.view.container.*;
 import io.intino.alexandria.ui.schemas.PlatformInfo;
 import io.intino.alexandria.ui.schemas.Reference;
 import io.intino.alexandria.ui.schemas.ReferenceProperty;

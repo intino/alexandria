@@ -1,12 +1,12 @@
 package io.intino.alexandria.ui.displays;
 
 import io.intino.alexandria.Resource;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaEditorNotifier;
 import io.intino.alexandria.ui.model.Editor;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.schemas.CreatePanelParameters;
 import io.intino.alexandria.ui.services.EditorService;
-import io.intino.konos.framework.Box;
 
 public abstract class AlexandriaEditor<T extends AlexandriaDisplay> extends AlexandriaElementDisplay<Editor, AlexandriaEditorNotifier> {
 	private Resource document;

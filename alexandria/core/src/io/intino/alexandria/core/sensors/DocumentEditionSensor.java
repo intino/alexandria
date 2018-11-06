@@ -1,4 +1,4 @@
-package io.intino.konos.framework.sensors;
+package io.intino.alexandria.core.sensors;
 
 public abstract class DocumentEditionSensor extends UserSensor {
 	private final Mode mode;

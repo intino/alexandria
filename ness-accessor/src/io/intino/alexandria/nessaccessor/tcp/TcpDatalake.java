@@ -1,10 +1,11 @@
-package io.intino.alexandria.nessaccesor.tcp;
+package io.intino.alexandria.nessaccessor.tcp;
 
 import io.intino.ness.core.Datalake;
 import io.intino.ness.core.Stage;
 
-public class TcpDatalake implements Datalake {
+import javax.jms.Session;
 
+public class TcpDatalake implements Datalake {
 	private final Connection connection;
 
 	public TcpDatalake(String uri, String username, String password, String clientId) {
@@ -50,13 +51,17 @@ public class TcpDatalake implements Datalake {
 		}
 
 		@Override
-		public void connect() {
+		public void connect(String... args) {
 
 		}
 
 		@Override
 		public void disconnect() {
 
+		}
+
+		public Session session() {
+			return null;
 		}
 	}
 }

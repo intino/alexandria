@@ -1,4 +1,4 @@
-package io.intino.konos.framework;
+package io.intino.alexandria.core;
 
 import java.util.ArrayList;
 import java.util.List;

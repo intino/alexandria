@@ -16,7 +16,7 @@ def type(box)
 	$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;][
     $hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
 
-	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.konos.framework.Box] {
+	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
@@ -43,12 +43,12 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.konos.framework.Box put(Object o) {
+		public io.intino.alexandria.core.Box put(Object o) {
 			[$hasParent~owner.put(o);]
 			return this;
 		}
 
-		public io.intino.konos.framework.Box open() {
+		public io.intino.alexandria.core.Box open() {
 			if (owner != null) owner.open();
 			initLogger();
 			initUI();
@@ -95,11 +95,16 @@ def type(box)
 		private void initUI() {
 			$service+ui...[$NL]
 		}
-
+		[
 		private void initDataLake() {
 			$dataLake+init...[$NL]
 		}
 
+		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
+			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new io.intino.ness.core.fs.FSDatalake(new java.io.File(nessUrl.replace("file://", ""))));
+			return new io.intino.alexandria.nessaccessor.tcp.TcpDatalake(nessUrl, nessUser, nessPassword, clientId);
+		}
+		]
 		private void initTasks() {
 			$task+init...[$NL]
 		}
@@ -189,23 +194,25 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor = new io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
+	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 	this.nessAccessor.connection().connect("$mode");
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
-	if (((io.intino.konos.datalake.jms.JMSEventDatalake) nessAccessor.eventDatalake()).session() != null) logger.info("Ness connection: started!");
+	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection) nessAccessor.connection()).session() != null)
+		logger.info("Ness connection: started!");
 end
 
 
 def type(dataLake) trigger(init)
-	this.nessAccessor = new io.intino.alexandria.nessaccesor.NessAccessor($parameter...[, ]);
+	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 	java.lang.Thread thread = new java.lang.Thread(() -> {
-		this.nessAccessor.connect("$mode");
+		this.nessAccessor.connection().connect("$mode");
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		registerFeeders();
 		$nessOperations
-		if (((io.intino.konos.datalake.jms.JMSEventDatalake) nessAccessor.eventDatalake()).session() != null) logger.info("Ness connection: started!");
+		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection) nessAccessor.connection()).session() != null)
+			logger.info("Ness connection: started!");
 	}, "ness accessor init");
 	try {
 		thread.start();
@@ -267,7 +274,7 @@ def type(task) trigger(field)
 end
 
 def type(dataLake) trigger(field)
-	private io.intino.alexandria.nessaccesor.NessAccessor nessAccessor;
+	private io.intino.alexandria.nessaccessor.NessAccessor nessAccessor;
 end
 
 def type(service & jms) trigger(getter)
@@ -277,12 +284,12 @@ def type(service & jms) trigger(getter)
 end
 
 def type(dataLake) trigger(getter)
-	public io.intino.alexandria.nessaccesor.NessAccessor nessAccessor() {
+	public io.intino.alexandria.nessaccessor.NessAccessor nessAccessor() {
 		return this.nessAccessor;
 	}
 
-	public io.intino.konos.framework.Feeders feeders() {
-		return io.intino.konos.framework.Feeders.get();
+	public io.intino.alexandria.core.Feeders feeders() {
+		return io.intino.alexandria.core.Feeders.get();
 	}
 
 	public void registerFeeders() {
@@ -291,7 +298,7 @@ def type(dataLake) trigger(getter)
 end
 
 def trigger(feeder)
-	io.intino.konos.datalake.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
+	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
 end
 
 def type(service & slack) trigger(getter)
