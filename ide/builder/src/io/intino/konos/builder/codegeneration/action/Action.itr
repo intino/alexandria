@@ -8,7 +8,7 @@ def type(action & notification) !type(ui)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.schema.Context context = new io.intino.alexandria.schema.Context();[
+		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();[
 		$parameter+type...[$NL]]
 
 		public void onOpen(Client client, SparkNotifier notifier) {
@@ -34,7 +34,7 @@ def type(action) !type(ui)
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.schema.Context context = new io.intino.alexandria.schema.Context();[
+		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();[
 		$parameter+type...[$NL]]
 
 		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
