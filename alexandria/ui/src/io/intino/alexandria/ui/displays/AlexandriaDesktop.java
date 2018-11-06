@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.UiBox;
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Settings;
@@ -13,7 +13,7 @@ import static io.intino.alexandria.ui.model.Panel.Layout.Tab;
 
 public class AlexandriaDesktop<DN extends AlexandriaDesktopNotifier> extends AlexandriaElementDisplay<Desktop, DN> {
 
-	public AlexandriaDesktop(UiBox box) {
+	public AlexandriaDesktop(Box box) {
 		super(box);
 	}
 
