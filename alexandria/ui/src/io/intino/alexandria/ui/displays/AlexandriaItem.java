@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.Resource;
 import io.intino.alexandria.ui.displays.builders.ItemBuilder;
 import io.intino.alexandria.ui.displays.builders.ItemValidationRefreshInfoBuilder;
@@ -24,7 +25,6 @@ import io.intino.alexandria.ui.model.mold.stamps.pages.InternalPage;
 import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UIFile;
-import io.intino.konos.framework.Box;
 
 import java.io.InputStream;
 import java.util.*;

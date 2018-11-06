@@ -1,9 +1,9 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
-import io.intino.alexandria.ui.model.Catalog;
-import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerCatalogNotifier;
+import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.alexandria.ui.schemas.DisplayInfo;

@@ -1,14 +1,14 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
-import io.intino.alexandria.ui.model.Item;
-import io.intino.alexandria.ui.model.mold.Stamp;
-import io.intino.konos.framework.Box;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaViewContainerMagazineNotifier;
 import io.intino.alexandria.ui.displays.providers.CatalogViewDisplayProvider;
+import io.intino.alexandria.ui.model.Item;
+import io.intino.alexandria.ui.model.mold.Stamp;
 import io.intino.alexandria.ui.model.view.container.CollectionContainer;
 import io.intino.alexandria.ui.schemas.ElementOperationParameters;
 import io.intino.alexandria.ui.schemas.PictureData;

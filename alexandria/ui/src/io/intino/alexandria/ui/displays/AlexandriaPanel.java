@@ -1,19 +1,19 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.displays.events.ExecuteItemTaskEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemCatalogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemDialogEvent;
 import io.intino.alexandria.ui.displays.events.OpenItemEvent;
 import io.intino.alexandria.ui.displays.factory.DisplayViewFactory;
-import io.intino.alexandria.ui.model.Catalog;
-import io.intino.alexandria.ui.model.View;
-import io.intino.konos.framework.Box;
-import io.intino.alexandria.ui.displays.builders.ReferenceBuilder;
 import io.intino.alexandria.ui.displays.notifiers.AlexandriaPanelNotifier;
 import io.intino.alexandria.ui.displays.providers.ElementViewDisplayProvider;
 import io.intino.alexandria.ui.helpers.ElementHelper;
+import io.intino.alexandria.ui.model.Catalog;
 import io.intino.alexandria.ui.model.Item;
 import io.intino.alexandria.ui.model.Panel;
+import io.intino.alexandria.ui.model.View;
 import io.intino.alexandria.ui.model.view.container.CatalogContainer;
 import io.intino.alexandria.ui.model.view.container.Container;
 import io.intino.alexandria.ui.schemas.CreatePanelParameters;
