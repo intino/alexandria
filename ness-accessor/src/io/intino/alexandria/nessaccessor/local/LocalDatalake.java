@@ -1,4 +1,4 @@
-package io.intino.alexandria.nessaccesor.local;
+package io.intino.alexandria.nessaccessor.local;
 
 import io.intino.ness.core.Datalake;
 import io.intino.ness.core.Stage;
@@ -12,11 +12,12 @@ public class LocalDatalake implements Datalake {
 		this.datalake = datalake;
 	}
 
+
 	@Override
 	public Connection connection() {
 		return new Connection() {
 			@Override
-			public void connect() {
+			public void connect(String... args) {
 
 			}
 

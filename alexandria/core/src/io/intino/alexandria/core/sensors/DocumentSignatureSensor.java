@@ -1,4 +1,4 @@
-package io.intino.konos.framework.sensors;
+package io.intino.alexandria.core.sensors;
 
 public abstract class DocumentSignatureSensor extends UserSensor {
 	private final SignType signType;

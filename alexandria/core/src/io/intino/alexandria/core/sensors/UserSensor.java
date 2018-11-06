@@ -1,6 +1,6 @@
-package io.intino.konos.framework.sensors;
+package io.intino.alexandria.core.sensors;
 
-import io.intino.konos.framework.Sensor;
+import io.intino.alexandria.core.Sensor;
 
 public abstract class UserSensor extends Sensor {
 	private int width = 100;

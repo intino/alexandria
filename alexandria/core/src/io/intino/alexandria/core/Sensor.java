@@ -1,4 +1,4 @@
-package io.intino.konos.framework;
+package io.intino.alexandria.core;
 
 import io.intino.ness.inl.Message;
 

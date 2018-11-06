@@ -1,4 +1,4 @@
-package io.intino.konos.framework.sensors;
+package io.intino.alexandria.core.sensors;
 
 import java.util.Collections;
 import java.util.List;
