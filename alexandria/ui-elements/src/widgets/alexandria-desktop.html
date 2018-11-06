@@ -130,7 +130,19 @@
                 zombie.setAttribute("display", type);
                 zombie.setAttribute("widget", widget);
                 container.appendChild(zombie);
+                zombie.whenPersonified().execute(widget => {
+                    widget.addEventListener("home", this._home.bind(this));
+                    widget.addEventListener("open-item", this._openItem.bind(this));
+                });
                 return zombie;
+            },
+
+            _home : function() {
+                this.home();
+            },
+
+            _openItem : function(e) {
+                this.openItem(e.detail);
             },
 
             _loading : function(withMessage) {
