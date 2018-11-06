@@ -12,12 +12,12 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.alexandria.Box put(Object o) {
+		public io.intino.alexandria.core.Box put(Object o) {
 			super.put(o);
 			return this;
 		}
 
-		public io.intino.alexandria.Box open() {
+		public io.intino.alexandria.core.Box open() {
 			return super.open();
 		}
 

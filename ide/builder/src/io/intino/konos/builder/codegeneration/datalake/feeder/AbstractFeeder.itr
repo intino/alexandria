@@ -12,6 +12,7 @@ def type(feeder)
 
 	public class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;
+		private final $box+FirstUpperCase~Box box;
 
 		public Abstract$name+FirstUpperCase($box+FirstUpperCase~Box box) {
 			this.box = box;
@@ -24,7 +25,7 @@ def type(feeder)
 
 
 		public boolean feed(Message event) {
-			box.nessAccesor().push()
+			//box.nessAccesor().push();
 		}
 
 		public List<Sensor> sensors() {
