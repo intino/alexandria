@@ -39,5 +39,7 @@
     <orderEntry type="library" name="Legio: io.intino.alexandria:triplestore:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:logger:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
   </component>
 </module>

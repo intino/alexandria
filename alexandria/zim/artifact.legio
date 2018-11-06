@@ -7,7 +7,7 @@ Artifact (groupId = "io.intino.alexandria", version = "1.0.0") zim
 		Compile("io.intino.alexandria", "logger", "1.0.0")
 		Test("junit", "junit", "4.12")
 
-	Package(LibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
 
 Repository("intino-maven") intino

@@ -1,10 +1,7 @@
 package io.intino.alexandria.nessaccesor.tcp;
 
-
-import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
-
-import java.util.stream.Stream;
+import io.intino.ness.core.Stage;
 
 public class TcpDatalake implements Datalake {
 
@@ -32,7 +29,7 @@ public class TcpDatalake implements Datalake {
 	}
 
 	@Override
-	public void push(Stream<Blob> stream) {
+	public void push(Stage stage) {
 
 	}
 

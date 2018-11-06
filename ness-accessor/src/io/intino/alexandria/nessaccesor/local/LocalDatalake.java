@@ -1,11 +1,8 @@
 package io.intino.alexandria.nessaccesor.local;
 
-
-import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
+import io.intino.ness.core.Stage;
 import io.intino.ness.core.fs.FSDatalake;
-
-import java.util.stream.Stream;
 
 public class LocalDatalake implements Datalake {
 
@@ -26,8 +23,8 @@ public class LocalDatalake implements Datalake {
 	}
 
 	@Override
-	public void push(Stream<Blob> blobs) {
-		datalake.push(blobs);
+	public void push(Stage stage) {
+		datalake.push(stage);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class AsemedGenerationTest {
 	private static final String ASEMED = "asemed";
 
 	@Test
-	public void testDatalakeGeneration() throws Exception {
+	public void testDatalakeGeneration() {
 		File gen = new File("test-gen", ASEMED);
 		KonosGraph graph = new Graph().loadStashes("Datalake").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, ASEMED).execute();
