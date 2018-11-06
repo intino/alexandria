@@ -1,7 +1,7 @@
 package io.intino.alexandria.filesproxy;
 
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.filesproxy.exceptions.FilesApiFailure;
-import io.intino.konos.alexandria.schema.Resource;
 
 import java.io.InputStream;
 import java.net.URL;

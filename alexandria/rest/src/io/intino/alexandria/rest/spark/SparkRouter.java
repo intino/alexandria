@@ -1,7 +1,7 @@
 package io.intino.alexandria.rest.spark;
 
+import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.rest.AlexandriaSpark;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -12,14 +12,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class SparkRouter<SM extends SparkManager> {
+	private static final int OneDay = 24 * 60 * 60 * 1000;
+	private final String path;
+	protected PushService pushService;
 	private Function<SparkManager, Boolean> validator = null;
 	private Consumer<PushService> pushServiceConsumer = null;
-	protected PushService pushService;
-
-	private static final int OneDay = 24 * 60 * 60 * 1000;
-
 	private Service service;
-	private final String path;
 
 	public SparkRouter(Service service, String path) {
 		this.service = service;

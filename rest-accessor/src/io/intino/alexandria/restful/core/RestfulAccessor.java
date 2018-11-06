@@ -1,8 +1,9 @@
 package io.intino.alexandria.restful.core;
 
+import io.intino.alexandria.Resource;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.restful.RestfulApi;
 import io.intino.alexandria.restful.exceptions.RestfulFailure;
-import io.intino.konos.alexandria.schema.Resource;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -17,9 +18,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.tika.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sun.misc.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,10 +30,12 @@ import java.nio.charset.Charset;
 import java.util.*;
 
 import static java.util.Collections.*;
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RestfulAccessor implements RestfulApi {
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
+
+	private static String toString(InputStream content) throws IOException {
+		return new String(IOUtils.readFully(content, 0, false));
+	}
 
 	@Override
 	public Response get(URL url, String path) throws RestfulFailure {
@@ -419,7 +420,8 @@ public class RestfulAccessor implements RestfulApi {
 
 	private String getErrorMessage(HttpResponse response) {
 		try {
-			return new String(IOUtils.toByteArray(response.getEntity().getContent()));
+			InputStream content = response.getEntity().getContent();
+			return RestfulAccessor.this.toString(content);
 		} catch (IOException e) {
 			return "";
 		}
@@ -481,10 +483,6 @@ public class RestfulAccessor implements RestfulApi {
 		parameterList.forEach((key, value) -> addParameter(builder, key, value));
 	}
 
-	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
-		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
-	}
-
 //	private void addSecureParameters(URL certificate, String password, MultipartEntityBuilder entityBuilder, Resource resource) throws RestfulFailure {
 //		if (certificate == null)
 //			return;
@@ -505,6 +503,10 @@ public class RestfulAccessor implements RestfulApi {
 //			resource.parameters().forEach(this::put);
 //		}};
 //	}
+
+	private void addParameter(MultipartEntityBuilder builder, String key, String value) {
+		builder.addPart(key, new StringBody(value, ContentType.APPLICATION_JSON));
+	}
 
 	private Map<String, String> secureParameters(Map<String, String> parameters, URL certificate, String password) throws RestfulFailure {
 		if (certificate == null)
@@ -548,13 +550,12 @@ public class RestfulAccessor implements RestfulApi {
 
 			private String stringContentOf(InputStream input) {
 				try {
-					return IOUtils.toString(input);
+					return RestfulAccessor.toString(input);
 				} catch (IOException e) {
-					logger.error(e.getMessage(), e);
+					Logger.error(e);
 					return null;
 				}
 			}
 		};
 	}
-
 }

@@ -1,7 +1,6 @@
 package io.intino.alexandria;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,23 +9,46 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
+import static java.util.stream.Stream.empty;
 import static java.util.stream.StreamSupport.stream;
 
 public class TripleStore {
 	private final File file;
 	private final List<String[]> triples;
-	private final BufferedReader reader;
+
+	public TripleStore() {
+		this.file = null;
+		this.triples = emptyList();
+	}
 
 	public TripleStore(File file) {
 		this.file = file;
-		reader = readerOf(file);
-		this.triples = reader.lines().map(this::triple).collect(toList());
-		try {
-			reader.close();
+		this.triples = contentOf(file).map(this::triple).collect(toList());
+	}
+
+	public static String[] valuePatternOf(String[] triple) {
+		return new String[]{triple[0], triple[1], null};
+	}
+
+	private static String lineOf(String... triple) {
+		return triple[0] + ";" + triple[1] + ";" + triple[2] + "\n";
+	}
+
+	public File file() {
+		return file;
+	}
+
+	private Stream<String> contentOf(File file) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+			return reader.lines().collect(toList()).stream();
+		} catch (FileNotFoundException e) {
+			return empty();
 		} catch (IOException e) {
-			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
+			return empty();
 		}
 	}
 
@@ -41,10 +63,6 @@ public class TripleStore {
 
 	private void remove(int index) {
 		triples.remove(index);
-	}
-
-	public static String[] valuePatternOf(String[] triple) {
-		return new String[]{triple[0], triple[1], null};
 	}
 
 	public Stream<String[]> all() {
@@ -90,33 +108,48 @@ public class TripleStore {
 
 	}
 
-	public void save() throws IOException {
+	public void save() {
+		if (file == null) return;
+		file.getParentFile().mkdirs();
 		try (BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
 			for (String[] triple : triples) writer.write(lineOf(triple));
+		} catch (IOException e) {
+			Logger.error(e);
 		}
-	}
-
-	private String lineOf(String[] triple) {
-		return triple[0] + ";" + triple[1] + ";" + triple[2] + "\n";
 	}
 
 	private String[] triple(String line) {
 		return line.split(";");
 	}
 
-	private BufferedReader readerOf(File file) {
-		return new BufferedReader(file.exists() ? fileReaderOf(file) : emptyReader());
-	}
+	public static class Builder {
+		private OutputStream os;
 
-	private Reader fileReaderOf(File file) {
-		try {
-			return new FileReader(file);
-		} catch (FileNotFoundException e) {
-			return emptyReader();
+		public Builder(OutputStream os) {
+			this.os = new BufferedOutputStream(os);
+		}
+
+		private static byte[] bytesOf(String subject, String predicate, Object value) {
+			return lineOf(subject, predicate, value.toString()).getBytes();
+		}
+
+		public Builder put(String subject, String predicate, Object value) {
+			try {
+				os.write(bytesOf(subject, predicate, value));
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+			return this;
+		}
+
+
+		public void close() {
+			try {
+				os.close();
+			} catch (IOException e) {
+				Logger.error(e);
+			}
 		}
 	}
 
-	private Reader emptyReader() {
-		return new InputStreamReader(new ByteArrayInputStream(new byte[0]));
-	}
 }

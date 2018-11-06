@@ -1,7 +1,7 @@
 package io.intino.alexandria.rest;
 
 import io.intino.alexandria.rest.spark.PushService;
-import io.intino.konos.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.rest.security.AlexandriaSecurityManager;
 import io.intino.alexandria.rest.security.NullSecurityManager;
 import io.intino.alexandria.rest.spark.SparkManager;

@@ -2,6 +2,7 @@ package io.intino.alexandria.slack;
 
 import com.ullink.slack.simpleslackapi.*;
 import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
+import io.intino.alexandria.logger.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,12 +17,12 @@ import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 public abstract class Bot {
-	protected Map<String, Context> usersContext = new LinkedHashMap<>();
 	private final String token;
 	private final Map<String, Command> commands = new LinkedHashMap<>();
 	private final Map<String, CommandInfo> commandsInfo = new LinkedHashMap<>();
-	private SlackSession session;
 	private final Set<String> processedMessages = new LinkedHashSet<>();
+	protected Map<String, Context> usersContext = new LinkedHashMap<>();
+	private SlackSession session;
 
 	public Bot(String token) {
 		this.token = token;
@@ -74,7 +75,7 @@ public abstract class Bot {
 			if (response instanceof String) session.sendMessage(message.getChannel(), response.toString());
 			else if (response instanceof SlackAttachment) session.sendMessage(message.getChannel(), "", (SlackAttachment) response);
 		} catch (Throwable e) {
-			org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e);
 			session.sendMessage(message.getChannel(), "Command Error. Try `help` to see the options");
 		}
 	}

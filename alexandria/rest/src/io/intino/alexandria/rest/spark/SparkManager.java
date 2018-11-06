@@ -1,6 +1,6 @@
 package io.intino.alexandria.rest.spark;
 
-import io.intino.konos.alexandria.schema.Resource;
+import io.intino.alexandria.Resource;
 import spark.Request;
 import spark.Response;
 
@@ -18,13 +18,12 @@ import java.net.URL;
 
 @SuppressWarnings("unchecked")
 public class SparkManager<P extends PushService> {
-	protected final P pushService;
-	protected final Request request;
-	protected final Response response;
-
 	private static final String XForwardedProto = "X-Forwarded-Proto";
 	private static final String XForwardedPath = "X-Forwarded-Path";
 	private static final String XForwardedPort = "X-Forwarded-Port";
+	protected final P pushService;
+	protected final Request request;
+	protected final Response response;
 
 	public SparkManager(P pushService, Request request, Response response) {
 		this.pushService = pushService;

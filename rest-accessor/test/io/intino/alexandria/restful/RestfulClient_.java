@@ -1,7 +1,6 @@
 package io.intino.alexandria.restful;
 
-import io.intino.alexandria.restful.RestfulApi;
-import io.intino.konos.alexandria.schema.Resource;
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.restful.core.RestfulAccessor;
 import io.intino.alexandria.restful.exceptions.RestfulFailure;
 import org.junit.Assert;

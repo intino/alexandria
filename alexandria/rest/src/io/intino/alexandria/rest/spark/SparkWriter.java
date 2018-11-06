@@ -1,8 +1,8 @@
 package io.intino.alexandria.rest.spark;
 
 import cottons.utils.MimeTypes;
-import io.intino.alexandria.inl.Resource;
-import io.intino.alexandria.Error;
+import io.intino.alexandria.Resource;
+import io.intino.alexandria.exceptions.AlexandriaError;
 import spark.Response;
 import spark.utils.IOUtils;
 
@@ -28,7 +28,7 @@ class SparkWriter {
 	}
 
 	void write(Object object, String name, boolean embedded) {
-		if (object instanceof Error) writeError((Error) object, adapt(object));
+		if (object instanceof AlexandriaError) writeError((AlexandriaError) object, adapt(object));
 		else if (object instanceof File) writeFile((File) object, embedded);
 		else if (object instanceof Resource) writeResource((Resource) object, embedded);
 		else if (object instanceof InputStream) writeStream((InputStream) object, name, embedded);
@@ -44,7 +44,7 @@ class SparkWriter {
 		}
 	}
 
-	private void writeError(Error response, String message) {
+	private void writeError(AlexandriaError response, String message) {
 		try {
 			writeResponseError(response.code(), message, this.response.raw());
 		} catch (IOException e) {
@@ -83,7 +83,7 @@ class SparkWriter {
 
 	private void writeResponse(File file, boolean embedded, HttpServletResponse response) {
 		try {
-			response.setContentType(MimeTypes.getFromFile(file));
+			response.setContentType(MimeTypes.getFromFile(file)); // TODO octavio quitar dependencia con cottons
 			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + file.getName());
 			writeResponse(readFile(file), response);
 		} catch (IOException e) {

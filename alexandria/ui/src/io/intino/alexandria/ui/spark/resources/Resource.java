@@ -1,12 +1,10 @@
 package io.intino.alexandria.ui.spark.resources;
 
+import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
 import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
-import io.intino.alexandria.ui.services.auth.exceptions.*;
-import io.intino.alexandria.ui.spark.UISparkManager;
-import io.intino.alexandria.exceptions.AlexandriaException;
-import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
 import io.intino.alexandria.ui.services.auth.SessionAuthService;
@@ -18,20 +16,18 @@ import io.intino.alexandria.ui.services.push.Browser;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
+import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.utils.RequestHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
 public abstract class Resource implements io.intino.alexandria.rest.Resource {
-	private final AlexandriaDisplayNotifierProvider notifierProvider;
-	protected final UISparkManager manager;
-
 	static final Map<String, String> authenticationIdMap = new HashMap<>();
 	static final Map<String, Authentication> authenticationMap = new HashMap<>();
+	protected final UISparkManager manager;
+	private final AlexandriaDisplayNotifierProvider notifierProvider;
 
 	public Resource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 		this.manager = manager;
@@ -58,8 +54,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 				return new String(Base64.getDecoder().decode(value.replace("enc:", "")));
 			else
 				return value;
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			return value;
 		}
 	}
