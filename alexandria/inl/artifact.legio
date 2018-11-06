@@ -4,10 +4,9 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") inl
 	Imports
 		Compile("io.intino.alexandria", "primitives", "1.0.0")
 		Test("junit", "junit", "LATEST")
-		Compile("commons-io", "commons-io", "2.6")
+		Test("commons-io", "commons-io", "2.6")
 
-
-	Package(LibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
 
 Repository("intino-maven") intino
