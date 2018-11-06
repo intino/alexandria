@@ -19,7 +19,7 @@ def type(ui)
 	import java.net.MalformedURLException;
 	import java.net.URL;
 
-	public class $name+SnakeCaseToCamelCase+FirstUpperCase extends io.intino.alexandria.ui.UI {
+	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Service extends io.intino.alexandria.ui.UI {
 
 		public static void init(UIAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
