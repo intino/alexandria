@@ -55,7 +55,7 @@ def type(box)
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
-			initDataLake();
+			initDatalake();
 			initTasks();
 			initSlackBots();
 			return this;
@@ -95,11 +95,11 @@ def type(box)
 		private void initUI() {
 			$service+ui...[$NL]
 		}
-		[
-		private void initDataLake() {
+
+		private void initDatalake() {
 			$dataLake+init...[$NL]
 		}
-
+		[$datalake+hide
 		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new io.intino.ness.core.fs.FSDatalake(new java.io.File(nessUrl.replace("file://", ""))));
 			return new io.intino.alexandria.nessaccessor.tcp.TcpDatalake(nessUrl, nessUser, nessPassword, clientId);
@@ -164,7 +164,7 @@ def type(service & ui) trigger(ui)
 	[if ($parameter == null || !io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
 	io.intino.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.alexandria.ui.UIAlexandriaSpark) io.intino.alexandria.rest.AlexandriaSparkBuilder.instance();
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	io.intino.alexandria.ui.UiElements.initDisplays(sparkInstance);
+	io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance);
 	$use...[$NL]
 	sparkInstance.start();
 	logger.info("UI $name: started!");
