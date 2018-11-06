@@ -1,11 +1,10 @@
 package inl.amidas;
 
-import inl.amidas.schemas.Solicitud;
-import io.intino.konos.alexandria.Inl;
-import io.intino.konos.alexandria.Json;
+import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.nessaccesor.NessAccessor;
-import io.intino.konos.jms.TopicProducer;
-import io.intino.ness.inl.Message;
+import io.intino.alexandria.nessaccesor.tcp.TcpDatalake;
+import io.intino.alexandria.zim.ZimReader;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,12 +17,12 @@ import java.io.File;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import static inl.amidas.CheckObjectToMessage.jsonSolicitud;
-import static io.intino.konos.jms.MessageFactory.createMessageFor;
+import static io.intino.alexandria.jms.MessageFactory.createMessageFor;
 import static java.lang.Thread.sleep;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 import static org.apache.activemq.ActiveMQConnection.makeConnection;
@@ -44,19 +43,21 @@ public class ProducerTest {
 	@Test
 	@Ignore
 	public void sendAttachment() {
-		final NessAccessor nessAccessor = new NessAccessor(url, user, password, "");
-		nessAccessor.connect();
-		final NessAccessor.EventStore.Tank tank = nessAccessor.eventStore().add(topic);
-		Solicitud solicitud = Json.fromString(jsonSolicitud, Solicitud.class);
-		Message message = Inl.toMessage(solicitud);
-		tank.feed(message);
+		final NessAccessor nessAccessor = new NessAccessor(new TcpDatalake(url, user, password, ""));
+//		final NessAccessor.EventStore.Tank tank = nessAccessor.eventStore().add(topic);
+//		Solicitud solicitud = Json.fromString(jsonSolicitud, Solicitud.class);
+//		Message message = Inl.toMessage(solicitud);
+//		tank.feed(message);TODO
 	}
 
 	@Test
 	@Ignore
 	public void produceDialogs() {
 		try {
-			final List<Message> messages = Inl.load(new String(Files.readAllBytes(new File("/Users/oroncal/workspace/ness/application/test/dialogs.inl").toPath())));
+			String text = new String(Files.readAllBytes(new File("/Users/oroncal/workspace/ness/application/test/dialogs.inl").toPath()));
+			ZimReader zimReader = new ZimReader(text);
+			List<Message> messages = new ArrayList<>();
+			while (zimReader.hasNext()) messages.add(zimReader.next());
 			messages.sort(Comparator.comparing(m -> Instant.parse(m.get("instant"))));
 			messages.forEach(this::produceMessage);
 		} catch (Exception ignored) {
@@ -67,7 +68,10 @@ public class ProducerTest {
 	@Ignore
 	public void produceSurveys() {
 		try {
-			final List<Message> messages = Inl.load(new String(Files.readAllBytes(new File("/Users/oroncal/workspace/ness/application/test/surveys.inl").toPath())));
+			String text = new String(Files.readAllBytes(new File("/Users/oroncal/workspace/ness/application/test/surveys.inl").toPath()));
+			ZimReader zimReader = new ZimReader(text);
+			List<Message> messages = new ArrayList<>();
+			while (zimReader.hasNext()) messages.add(zimReader.next());
 			messages.sort(Comparator.comparing(m -> Instant.parse(m.get("ts"))));
 			messages.forEach(this::produceMessage);
 		} catch (Exception ignored) {
@@ -104,7 +108,7 @@ public class ProducerTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		initSession();
 		random = new Random(2123132);
 	}
