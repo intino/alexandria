@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.AlexandriaDisplay;
 import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
@@ -224,7 +225,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 			if (url == null) return null;
 			return RequestHelper.post(url).toString();
 		} catch (CouldNotObtainAuthorizationUrl | CouldNotObtainRequestToken | IOException e) {
-			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e);
 			return null;
 		}
 	}

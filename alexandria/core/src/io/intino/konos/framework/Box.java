@@ -14,4 +14,6 @@ public abstract class Box {
 		return owner;
 	}
 
+
+	public abstract BoxConfiguration configuration();
 }

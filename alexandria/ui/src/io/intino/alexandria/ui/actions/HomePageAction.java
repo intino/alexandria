@@ -1,16 +1,13 @@
 package io.intino.alexandria.ui.actions;
 
+import io.intino.alexandria.ui.UiBox;
 import io.intino.alexandria.ui.displays.AlexandriaDesktop;
 import io.intino.alexandria.ui.displays.Soul;
 import io.intino.alexandria.ui.services.push.UIClient;
-import io.intino.alexandria.ui.AlexandriaUiBox;
-import io.intino.alexandria.exceptions.*;
-
-import io.intino.alexandria.ui.displays.*;
 
 public class HomePageAction extends AbstractHomePageAction {
 
-	public AlexandriaUiBox box;
+	public UiBox box;
 
 
 	public Soul prepareSoul(UIClient client) {

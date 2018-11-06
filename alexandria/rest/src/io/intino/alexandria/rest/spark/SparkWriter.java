@@ -1,6 +1,6 @@
 package io.intino.alexandria.rest.spark;
 
-import cottons.utils.MimeTypes;
+import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaError;
 import spark.Response;
@@ -83,7 +83,7 @@ class SparkWriter {
 
 	private void writeResponse(File file, boolean embedded, HttpServletResponse response) {
 		try {
-			response.setContentType(MimeTypes.getFromFile(file)); // TODO octavio quitar dependencia con cottons
+			response.setContentType(MimeTypes.getFromFile(file));
 			response.setHeader("Content-Disposition", (embedded ? "inline" : "attachment") + ";filename=" + file.getName());
 			writeResponse(readFile(file), response);
 		} catch (IOException e) {

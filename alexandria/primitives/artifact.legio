@@ -1,10 +1,12 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") primitives
+Artifact("io.intino.alexandria", "1.0.0") primitives
 	Imports
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
-
-
+		Test("junit", "junit", "LATEST")
+		Compile("eu.medsea.mimeutil", "mime-util", "2.1.1")
+			Exclude("org.slf4j", "slf4j-api")
+			Exclude("org.slf4j", "slf4j-log4j12")
+			Exclude("log4j", "log4j")
 	Package(LibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
 

@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.model.dialog;
 
-import io.intino.alexandria.schema.Resource;
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.ui.schemas.DialogInputResource;
 import io.intino.alexandria.ui.schemas.DialogInputResourceFile;
 

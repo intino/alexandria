@@ -18,5 +18,46 @@
     <orderEntry type="module" module-name="rest-accessor" />
     <orderEntry type="module" module-name="framework" />
     <orderEntry type="module" module-name="commons" />
+    <orderEntry type="module" module-name="exceptions" />
+    <orderEntry type="library" name="Legio: com.sparkjava:spark-core:2.7.2" level="project" />
+    <orderEntry type="library" name="Legio: org.slf4j:slf4j-api:1.7.13" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-http:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-util:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-io:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-webapp:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-xml:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-security:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty.websocket:websocket-server:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty.websocket:websocket-common:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty.websocket:websocket-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty:jetty-client:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty.websocket:websocket-servlet:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: org.eclipse.jetty.websocket:websocket-api:9.4.8.v20171121" level="project" />
+    <orderEntry type="library" name="Legio: commons-codec:commons-codec:1.10" level="project" />
+    <orderEntry type="library" name="Legio: org.bouncycastle:bcmail-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Legio: org.bouncycastle:bcprov-jdk15:1.45" level="project" />
+    <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Legio: eu.medsea.mimeutil:mime-util:2.1.1" level="project" />
+    <orderEntry type="module" module-name="core" />
+    <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
+    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="module" module-name="primitives" />
+    <orderEntry type="module" module-name="logger" />
+    <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpcore:4.4.4" level="project" />
+    <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpmime:4.5.1" level="project" />
+    <orderEntry type="library" name="Legio: org.apache.httpcomponents:httpclient:4.5.1" level="project" />
+    <orderEntry type="library" name="Legio: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Legio: org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.tyrus:tyrus-client:1.8.3" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.tyrus:tyrus-core:1.8.3" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.tyrus:tyrus-spi:1.8.3" level="project" />
+    <orderEntry type="library" name="Legio: javax.websocket:javax.websocket-api:1.1" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.tyrus:tyrus-container-grizzly-client:1.8.3" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-framework:2.3.15-gfa" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http-server:2.3.15-gfa" level="project" />
+    <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
   </component>
 </module>

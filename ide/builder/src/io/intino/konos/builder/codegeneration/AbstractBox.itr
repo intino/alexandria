@@ -16,14 +16,14 @@ def type(box)
 	$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;][
     $hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
 
-	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.Box] {
+	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.konos.framework.Box] {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
         $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
-	    $hasUi+hide~private java.util.List<io.intino.alexandria.ui.UIBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
+	    $hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
 		$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;][
 		$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
 
@@ -43,12 +43,12 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.alexandria.Box put(Object o) {
+		public io.intino.konos.framework.Box put(Object o) {
 			[$hasParent~owner.put(o);]
 			return this;
 		}
 
-		public io.intino.alexandria.Box open() {
+		public io.intino.konos.framework.Box open() {
 			if (owner != null) owner.open();
 			initLogger();
 			initUI();
@@ -108,7 +108,7 @@ def type(box)
 			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
-			handler.setFormatter(new io.intino.alexandria.LogFormatter("log"));
+			handler.setFormatter(new io.intino.alexandria.logger.Formatter("log"));
 			logger.setUseParentHandlers(false);
 			logger.addHandler(handler);
 		}
@@ -124,7 +124,7 @@ def type(box)
 end
 
 def trigger(uiBox)
-	io.intino.alexandria.ui.UIBox
+	io.intino.alexandria.ui.AlexandriaUiBox
 end
 
 def type(service & ui) trigger(setup)
@@ -364,7 +364,7 @@ def trigger(registerSoul)
 			if (uiSouls.size() <= 0) notifySoulsClosed();
 		}
 
-		public void onSoulsClosed(io.intino.alexandria.ui.UIBox.SoulsClosed listener) {
+		public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
 			[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
 			this.soulsClosedListeners.add(listener);
 		}

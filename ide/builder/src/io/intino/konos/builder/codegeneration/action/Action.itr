@@ -133,7 +133,7 @@ def type(parameter) trigger(methodCall)
 end
 
 def type(editor) trigger(parameter)
-	public io.intino.alexandria.schema.Resource document;
+	public io.intino.alexandria.Resource document;
 	public io.intino.alexandria.ui.services.EditorService.Permission permission;
 end
 

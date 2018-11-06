@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
 
-class Formatter extends java.util.logging.Formatter {
+public class Formatter extends java.util.logging.Formatter {
 	private String path;
 
 	public Formatter(String path) {

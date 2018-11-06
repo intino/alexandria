@@ -1,6 +1,7 @@
 package schemas;
 
-import io.intino.konos.alexandria.schema.Resource;
+
+import io.intino.alexandria.Resource;
 
 import java.time.Instant;
 import java.util.Arrays;

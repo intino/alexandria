@@ -1,9 +1,9 @@
 package io.intino.alexandria.ui.spark.actions;
 
-import cottons.utils.StreamHelper;
 import io.intino.alexandria.ui.Asset;
 import io.intino.alexandria.ui.services.push.Browser;
 import io.intino.alexandria.ui.services.push.UISession;
+import io.intino.alexandria.ui.utils.StreamUtil;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -39,7 +39,7 @@ public abstract class AlexandriaResourceAction {
 
 	protected String template(String name, List<String> usedAppsUrls) {
 		try {
-			byte[] templateBytes = StreamHelper.readBytes(AlexandriaResourceAction.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
+			byte[] templateBytes = StreamUtil.readBytes(AlexandriaResourceAction.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
 			String result = new String(templateBytes);
 			result = addTemplateVariables(result, usedAppsUrls);
 			return result;
