@@ -4,14 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.ui.model.Dialog;
-import io.intino.alexandria.ui.schemas.Dialog;
 
 import java.util.List;
 
 public class DialogBuilder {
 
-    public static Dialog build(Dialog dialog) {
-        return new Dialog().label(dialog.label())
+    public static io.intino.alexandria.ui.schemas.Dialog build(Dialog dialog) {
+        return new io.intino.alexandria.ui.schemas.Dialog().label(dialog.label())
                            .description(dialog.description())
                            .definition(jsonDefinitionOf(dialog).toString());
     }

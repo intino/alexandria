@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.datalake;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class DatalakeTemplate extends Template {
 
@@ -34,7 +35,7 @@ public class DatalakeTemplate extends Template {
 			rule().add((condition("trigger", "handler"))).add(mark("processPackage", "lowerCase")).add(literal(".")).add(mark("processName", "snakeCaseToCamelCase", "FirstUpperCase")).add(literal("Process ")).add(mark("processName", "snakeCaseToCamelCase", "FirstLowerCase")).add(literal(" = new ")).add(mark("processPackage", "lowerCase")).add(literal(".")).add(mark("processName", "snakeCaseToCamelCase", "FirstUpperCase")).add(literal("Process();\n")).add(mark("processName", "snakeCaseToCamelCase", "FirstLowerCase")).add(literal(".box = box;\n")).add(mark("processName", "snakeCaseToCamelCase", "FirstLowerCase")).add(literal(".")).add(mark("type", "typeName")).add(literal(" = ")).add(mark("type", "load")).add(literal(";\n")).add(mark("processName", "snakeCaseToCamelCase", "FirstLowerCase")).add(literal(".outputs = java.util.Arrays.asList(")).add(mark("output", "quoted", "lowercase").multiple(", ")).add(literal(");\n")).add(mark("processName", "snakeCaseToCamelCase", "FirstLowerCase")).add(literal(".execute();")),
 			rule().add((condition("trigger", "replace"))).add(literal(".replace(\"{")).add(mark("value")).add(literal("}\", configuration().")).add(mark("conf", "firstLowerCase")).add(literal("Configuration.")).add(mark("value", "validname", "firstLowerCase")).add(literal(")")),
 			rule().add((condition("trigger", "tankImport"))).add(literal("import ")).add(mark("value", "validPackage")).add(literal(".datalake.mounters.*;")),
-			rule().add((condition("type", "schema")), (condition("trigger", "load"))).add(literal("io.intino.konos.alexandria.Inl.fromMessage(m, ")).add(mark("package")).add(literal(".schemas.")).add(mark("name", "FirstUpperCase")).add(literal(".class)")),
+				rule().add((condition("type", "schema")), (condition("trigger", "load"))).add(literal("io.intino.alexandria.Inl.fromMessage(m, ")).add(mark("package")).add(literal(".schemas.")).add(mark("name", "FirstUpperCase")).add(literal(".class)")),
 			rule().add((condition("trigger", "load"))).add(literal("m")),
 			rule().add((condition("type", "schema")), (condition("trigger", "typeName"))).add(mark("name", "firstLowerCase")),
 			rule().add((condition("trigger", "typeName"))).add(literal("message")),
