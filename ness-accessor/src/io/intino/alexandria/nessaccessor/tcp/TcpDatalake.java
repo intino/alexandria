@@ -5,12 +5,10 @@ import io.intino.alexandria.jms.MessageFactory;
 import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.nessaccessor.MessageTranslator;
-import io.intino.alexandria.nessaccessor.NessSender;
 import io.intino.alexandria.zim.ZimReader;
 import io.intino.alexandria.zim.ZimStream;
 import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
-import io.intino.ness.core.Stage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
 
@@ -18,6 +16,7 @@ import javax.jms.JMSException;
 import javax.jms.Session;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static io.intino.ness.core.Blob.Type.event;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
@@ -54,27 +53,13 @@ public class TcpDatalake implements Datalake {
 	}
 
 	@Override
-	public void push(Stage stage) {
-		if (stage instanceof NessSender.FeedMemoryStage) {
-			stage.blobs().filter(b -> b.type().equals(event)).forEach(b -> feed(read(b), b.name()));
-		} else
-			stage.blobs().filter(b -> b.type().equals(event)).forEach(b -> send(read(b), b.name()));
-	}
-
-	private void feed(ZimStream stream, String blob) {
-		while (stream.hasNext()) {
-			send(stream.next(), feedTopicOf(blob));
-		}
+	public void push(Stream<Blob> blobs) {
+		blobs.filter(b -> b.type().equals(event)).forEach(b -> send(read(b), b.name()));
 	}
 
 	private void send(ZimStream stream, String blob) {
 		while (stream.hasNext()) send(stream.next(), putTopicOf(blob));
 	}
-
-	private String feedTopicOf(String name) {
-		return "feed." + tankName(name);
-	}
-
 
 	private String putTopicOf(String name) {
 		return "put." + tankName(name);
@@ -144,6 +129,10 @@ public class TcpDatalake implements Datalake {
 				Logger.error(e);
 				return null;
 			}
+		}
+
+		public Session session() {
+			return session;
 		}
 
 		@Override

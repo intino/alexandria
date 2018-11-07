@@ -1,7 +1,6 @@
 package io.intino.alexandria.nessaccessor;
 
 import io.intino.ness.core.Datalake;
-import io.intino.ness.core.Stage;
 
 public class NessAccessor {
 	private Datalake datalake;
@@ -11,7 +10,7 @@ public class NessAccessor {
 	}
 
 	public void push(Stage stage) {
-		datalake.push(stage);
+		datalake.push(stage.blobs());
 		datalake.seal();
 		stage.clear();
 	}

@@ -1,7 +1,7 @@
 package io.intino.alexandria.nessaccessor.stages;
 
+import io.intino.alexandria.nessaccessor.Stage;
 import io.intino.ness.core.Blob;
-import io.intino.ness.core.Stage;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
