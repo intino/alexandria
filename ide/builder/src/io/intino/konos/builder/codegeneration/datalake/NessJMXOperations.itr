@@ -1,8 +1,8 @@
 def type(interface)
 	package $package+validPackage.datalake;
 
-	import io.intino.konos.jmx.Description;
-	import io.intino.konos.jmx.Parameters;
+	import io.intino.alexandria.jmx.Description;
+	import io.intino.alexandria.jmx.Parameters;
 
 	public interface NessOperationsMBean {
 		@Description("Shows information about the available operations")
@@ -12,49 +12,37 @@ def type(interface)
     	@Description("Starts reflow mode to reproduce events coming from datalake")
 		@Parameters({})
     	boolean reflow();
-
-    	@Description("Starts reflow mode to reproduce events coming from datalake since instant parameter")
-		@Parameters({})
-		boolean reflow(String fromInstant);
-
-		@Description("Starts reflow mode to reproduce events coming from datalake based on reflow configuration. This configuration is coded on INL with io.intino.konos.datalake.ReflowConfiguration schema")
-		@Parameters({})
-		boolean customReflow(String reflowConfiguration);
     }
 end
 
 def type(operations) !type(interface)
 	package $package+validPackage.datalake;
 
-	import io.intino.konos.datalake.MessageHandler;
-	import io.intino.konos.datalake.ReflowDispatcher;
-	import io.intino.konos.datalake.ReflowConfiguration;
-	import io.intino.konos.jmx.JMXServer;
-	import io.intino.tara.magritte.Graph;
-	import io.intino.tara.magritte.RemounterGraph;
-	import io.intino.tara.magritte.stores.FileSystemStore;
-	import org.apache.commons.io.FileUtils;
-	import $package+validPackage.$box+FirstUpperCase~Box;
-	import org.slf4j.Logger;
-	import org.slf4j.LoggerFactory;
 
-	import java.io.IOException;
-	import java.time.Instant;
+	import io.intino.alexandria.inl.Message;
+	import io.intino.alexandria.logger.Logger;
+	import io.intino.konos.jmx.JMXServer;
+	import io.intino.ness.core.Datalake.EventStore.MessageHandler;
+	import io.intino.tara.magritte.Graph;
+	import mx.cfe.asemed.screener.box.ScreenerBox;
+	import org.apache.commons.logging.Log;
+
 	import java.util.Collections;
 
-	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
+	import static io.intino.ness.core.Datalake.EventStore.Reflow.Filter;
+
+
 
 	public class NessOperations implements NessOperationsMBean {
-		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-		private final $box+firstUpperCase~Box box;
+		private final ScreenerBox box;
 		private final ReflowAssistant assistant;
 		private int processed = 0;
-		private io.intino.konos.datalake.EventDatalake.ReflowSession session;
+		private io.intino.ness.core.Datalake.EventStore.Reflow session;
 		private Graph graph;
 
-		public NessOperations($box+firstUpperCase~Box box) {
+		public NessOperations(ScreenerBox box) {
 			this.box = box;
-			this.assistant = new $package+validPackage.datalake.ReflowAssistant(box);
+			this.assistant = new mx.cfe.asemed.screener.box.datalake.ReflowAssistant(box);
 		}
 
 		public java.util.List<String> help() {
@@ -66,79 +54,49 @@ def type(operations) !type(interface)
 		}
 
 		public boolean reflow() {
-			return reflow(new ReflowConfiguration().blockSize(assistant.defaultBlockSize()).tankList(assistant.defaultTanks().stream().map(t -> new ReflowConfiguration.Tank().name(t.name()).from(Instant.MIN)).collect(java.util.stream.Collectors.toList())));
+			return reflow(assistant.filter());
 		}
 
-		public boolean reflow(String from) {
-			Instant instant = Instant.parse(from);
-			return reflow(new ReflowConfiguration().blockSize(assistant.defaultBlockSize()).tankList(assistant.defaultTanks().stream().map(t -> new ReflowConfiguration.Tank().name(t.name()).from(instant)).collect(java.util.stream.Collectors.toList())));
-		}
-
-		public boolean customReflow(String reflowConfiguration) {
-			return reflow(io.intino.alexandria.Inl.fromMessage(io.intino.ness.inl.Message.load(reflowConfiguration), ReflowConfiguration.class));
-		}
-
-		private boolean reflow(ReflowConfiguration configuration) {
-			logger.info("Starting Reflow...");
+		private boolean reflow(Filter filter) {
+			Logger.info("Starting Reflow...");
 			assistant.before();
-			$package+validPackage.datalake.Datalake.unregister();
-			this.session = box.datalake().eventDatalake().reflow(configuration, new ReflowDispatcher($package+validPackage.datalake.Datalake.byName(configuration.tankList().stream().map(t -> t.name()).collect(java.util.stream.Collectors.toList())), onBlock(), onFinish()));
-			final Graph graph = assistant.graph();
-			try {
-				if (graph.store() instanceof FileSystemStore && configuration.cleanStore())
-					FileUtils.deleteDirectory(((FileSystemStore) graph.store()).directory());
-				final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
-				allowWriting(original, false);
-				this.graph = original.realClone();
-				box.put(this.graph);
-				this.session.next();
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-				return false;
-			}
+			mx.cfe.asemed.screener.box.datalake.Datalake.unsubscribeAll(box.nessAccessor());
+			this.session = box.nessAccessor().eventStore().reflow(filter);
+			this.session.next(assistant.defaultBlockSize(), messageHandler());
 			return true;
 		}
 
-		private MessageHandler onFinish() {
-			return m -> {
-				doWrite();
-				session.finish();
-				final Graph graph = new Graph(NessOperations.this.graph.store());
-				allowWriting(graph, true);
-				box.put(graph.loadStashes(assistant.coreStashes()));
-				$package+validPackage.datalake.Datalake.registerTanks(box);
-				assistant.after();
-				logger.info("Reflow finished - " + m.get("count") + " messages processed");
-			};
+		private MessageHandler messageHandler() {
+			return new ReflowHandler();
 		}
 
-		private MessageHandler onBlock() {
-			return m -> {
-				doWrite();
-				logger.info("Block processed - " + m.get("count") + " messages processed");
-				session.next();
-			};
-		}
-
-		private void doWrite() {
-			session.pause();
-			allowWriting(graph, true);
-			assistant.saveGraph(graph);
-			this.graph = new RemounterGraph(graph.store()).loadStashes(assistant.coreStashes());
-			allowWriting(graph, false);
-			box.put(graph);
-			session.play();
-		}
-
-		private void allowWriting(Graph original, boolean flag) {
-			if (original.store() instanceof FileSystemStore) ((FileSystemStore) original.store()).allowWriting(flag);
-		}
-
-
-		public static JMXServer init($box+FirstUpperCase~Box box) {
-			JMXServer server = new JMXServer(Collections.singletonMap("$package+validPackage.datalake.NessOperations", new Object$[]{box}));
+		public static JMXServer init(ScreenerBox box) {
+			JMXServer server = new JMXServer(Collections.singletonMap("mx.cfe.asemed.screener.box.datalake.NessOperations", new Object$[]{box}));
 			server.init();
 			return server;
+		}
+
+		private class ReflowHandler implements MessageHandler, io.intino.ness.core.Datalake.EventStore.ReflowHandler {
+
+			@Override
+			public void handle(Message message) {
+				// TODO dispatch
+			}
+
+			@Override
+			public void onBlock(int processedMessages) {
+				assistant.onBlock();
+				Logger.info("Block processed - " + processedMessages + " messages processed");
+				session.next(assistant.defaultBlockSize(), this);
+			}
+
+			@Override
+			public void onFinish(int processedMessages) {
+				//session.finish();
+				assistant.onFinish();
+				Datalake.registerTanks(box);
+				Logger.info("Reflow finished - " + processedMessages + " messages processed");
+			}
 		}
 	}
 end

@@ -1,4 +1,86 @@
-def type(operations)
+def type(assistant & graph)
+	package $package+validPackage.datalake;
+
+	import $package+validPackage.$box+FirstUpperCase~Box;
+	import io.intino.tara.magritte.Graph;
+	import io.intino.konos.datalake.EventDatalake;
+	import io.intino.tara.magritte.Store;
+
+	import java.util.List;
+
+	public class ReflowAssistant {
+		private final $box+FirstUpperCase~Box box;
+		private boolean cleanDirectory = true;
+
+		ReflowAssistant($box+FirstUpperCase~Box box) {
+			this.box = box;
+		}
+
+		int defaultBlockSize() {
+			return Integer.MAX_VALUE;
+		}
+
+		Reflow.Filter filter() {
+			return new Reflow.Filter() {
+				@Override
+				public boolean allow(Datalake.EventStore.Tank tank) {
+					return true;
+				}
+
+				@Override
+				public boolean allow(Datalake.EventStore.Tank tank, Timetag timetag) {
+					return true;
+				}
+			};
+		}
+
+		void onStart() {
+			final Graph graph = graph();
+			if (graph.store() instanceof FileSystemStore && cleanDirectory)
+				deleteDirectory(((FileSystemStore) graph.store()).directory());
+			final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(coreStashes());
+			allowWriting(original, false);
+			box.put(graph);
+		}
+
+		void onBlock() {
+			allowWriting(graph(), true);
+			graph().saveAll("Model");
+			Graph graph = new RemounterGraph(graph().store()).loadStashes(coreStashes());
+			allowWriting(graph, false);
+			box.put(graph);
+		}
+
+		void onFinsh() {
+			final Graph graph = new Graph(graph().store());
+			allowWriting(graph, true);
+			box.put(graph.loadStashes(coreStashes()));
+		}
+
+		private String$[] coreStashes() {
+			return new String$[]{"Model"};
+		}
+
+		private Graph graph() {
+			return null;
+			//return box.graph().core$();
+		}
+
+		private void deleteDirectory(File directory) {
+			try {
+				FileUtils.deleteDirectory(directory);
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
+
+		private void allowWriting(Graph original, boolean flag) {
+			if (original.store() instanceof FileSystemStore) ((FileSystemStore) original.store()).allowWriting(flag);
+		}
+	}
+end
+
+def type(assistant)
 	package $package+validPackage.datalake;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
@@ -16,7 +98,16 @@ def type(operations)
 			this.box = box;
 		}
 
-		void before() {
+		void onStart() {
+
+		}
+
+		void onBlock() {
+
+		}
+
+
+		void onFinish() {
 
 		}
 
@@ -24,25 +115,19 @@ def type(operations)
 			return Integer.MAX_VALUE;
 		}
 
-		List<EventDatalake.Tank> defaultTanks() {
-		 	return java.util.Collections.emptyList(); //TODO
+		Reflow.Filter filter() {
+			return new Reflow.Filter() {
+				@Override
+				public boolean allow(Datalake.EventStore.Tank tank) {
+					return true;
+				}
+
+				@Override
+				public boolean allow(Datalake.EventStore.Tank tank, Timetag timetag) {
+					return true;
+				}
+			};
 		}
 
-		Graph graph() {
-			return null;
-			//return box.graph().core$$();
-		}
-
-		String$[] coreStashes() {
-			return new String$[]{"Model"};
-		}
-
-		void saveGraph(Graph graph) {
-			graph.saveAll("Model");
-		}
-
-		void after() {
-
-		}
 	}
 end
