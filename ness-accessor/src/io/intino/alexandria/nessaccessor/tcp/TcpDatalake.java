@@ -57,8 +57,16 @@ public class TcpDatalake implements Datalake {
 		blobs.filter(b -> b.type().equals(event)).forEach(b -> send(read(b), b.name()));
 	}
 
+	public void feed(String tank, Message... messages) {
+		for (Message message : messages) send(message, feedTopicOf(tank));
+	}
+
 	private void send(ZimStream stream, String blob) {
 		while (stream.hasNext()) send(stream.next(), putTopicOf(blob));
+	}
+
+	private String feedTopicOf(String name) {
+		return "feed." + tankName(name);
 	}
 
 	private String putTopicOf(String name) {
@@ -129,10 +137,6 @@ public class TcpDatalake implements Datalake {
 				Logger.error(e);
 				return null;
 			}
-		}
-
-		public Session session() {
-			return session;
 		}
 
 		@Override
