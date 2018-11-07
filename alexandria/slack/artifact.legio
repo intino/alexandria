@@ -3,6 +3,7 @@ dsl Legio
 Artifact("io.intino.alexandria", "1.0.0") slack-framework
 	Imports
 		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "core-framework", "[1.0.0,2.0.0)")
 		Compile("com.ullink.slack", "simpleslackapi", "0.6.0")
 		Compile("org.apache.commons", "commons-lang3", "3.4")
 		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
@@ -10,7 +11,7 @@ Artifact("io.intino.alexandria", "1.0.0") slack-framework
 		Compile("com.googlecode.json-simple", "json-simple", "1.1.1")
 		Compile("org.apache.httpcomponents", "httpclient", "4.5.2")
 		Compile("com.google.guava", "guava", "18.0")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)
 
 
