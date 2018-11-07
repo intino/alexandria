@@ -18,11 +18,9 @@ public class InlFormatters {
 		formatters.put(aClass, formatter);
 	}
 
-
 	public interface Formatter {
 		String format(Object value);
 	}
-
 
 	private static class ArrayFormatter {
 		private Formatter formatter;
@@ -72,7 +70,6 @@ public class InlFormatters {
 		if (o == null) return NullValue;
 		return "@" + o.toString();
 	}
-
 
 
 }
