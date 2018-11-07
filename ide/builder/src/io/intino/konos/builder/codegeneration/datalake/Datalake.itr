@@ -1,21 +1,13 @@
 def type(tanks)
 	package $package+validPackage.datalake;
 
-	import io.intino.alexandria.jms.TopicConsumer;
-	import io.intino.alexandria.jms.TopicProducer;
 	import io.intino.alexandria.nessaccessor.NessAccessor;
-	import io.intino.alexandria.jms.Consumer;
-	import io.intino.alexandria.jms.Bus;
 	import io.intino.alexandria.logger.Logger;
-    import org.apache.activemq.ActiveMQConnection;
-    import org.apache.activemq.advisory.DestinationListener;
-	import org.apache.activemq.advisory.DestinationSource;
-	import org.apache.activemq.command.ActiveMQTopic;
 	import $package+validPackage.$box+firstUpperCase~Box;
+	import io.intino.alexandria.nessaccessor.sessions.EventSession;
+	import io.intino.ness.core.Timetag;
 	import $package+validPackage.$box+firstUpperCase~Configuration;
 	[$tankImport]
-	import javax.jms.JMSException;
-	import javax.jms.Message;
     import java.util.ArrayList;
     import java.util.List;
     import java.util.Map;
@@ -50,12 +42,43 @@ def type(tanks)
 			return tanks().stream().filter(t -> type.equals(t.name())).findFirst().orElse(null);
 		}
 
+		public static void unsubscribeAll(NessAccessor accessor) {
+			$tank+unsubscribe...[$NL]
+		}
+
+		public static void put(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+			new NessSender(datalake, timetag).send(tank, messages);
+		}
+
+		public static void feed(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+			new NessSender(datalake, timetag).feed(tank, messages);
+		}
+
 		$tank+getter...[$NL$NL]
 
 		$tank+class...[$NL$NL]
 
-		public static void unsubscribeAll(NessAccessor accessor) {
-			$tank+unsubscribe...[$NL]
+		public static class NessSender {
+			private final io.intino.ness.core.Datalake datalake;
+			private final io.intino.ness.core.Timetag timetag;
+
+			public NessSender(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Timetag timetag) {
+				this.datalake = datalake;
+				this.timetag = timetag;
+			}
+
+			public void feed(io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.inl.Message... messages) {
+				if (datalake instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake)
+					((io.intino.alexandria.nessaccessor.tcp.TcpDatalake) datalake).feed(tank.name(), messages);
+			}
+
+			public void send(io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.inl.Message... messages) {
+				io.intino.alexandria.nessaccessor.stages.MemoryStage stage = new io.intino.alexandria.nessaccessor.stages.MemoryStage();
+				EventSession session = stage.createEventSession();
+				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, messages);
+				datalake.push(stage.blobs());
+				session.close();
+			}
 		}
 	}
 end
