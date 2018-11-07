@@ -3,7 +3,7 @@ def type(server)
 
 	import io.intino.alexandria.rest.AlexandriaSpark;
 	import $package+ValidPackage.rest.resources.*;
-	import io.intino.alexandria.Box;
+	import io.intino.alexandria.core.Box;
 	import io.intino.alexandria.rest.security.DefaultSecurityManager;
 	import io.intino.alexandria.rest.spark.SparkPushService;
 
