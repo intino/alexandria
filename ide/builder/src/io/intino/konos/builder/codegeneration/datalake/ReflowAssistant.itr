@@ -1,11 +1,18 @@
-def type(assistant & graph)
+def type(operations & graph)
 	package $package+validPackage.datalake;
 
-	import $package+validPackage.$box+FirstUpperCase~Box;
-	import io.intino.tara.magritte.Graph;
-	import io.intino.konos.datalake.EventDatalake;
-	import io.intino.tara.magritte.Store;
 
+	import io.intino.alexandria.logger.Logger;
+	import io.intino.ness.core.Timetag;
+	import io.intino.tara.magritte.RemounterGraph;
+	import $package+validPackage.$box+FirstUpperCase~Box;
+	import io.intino.tara.magritte.stores.FileSystemStore;
+	import io.intino.ness.core.Datalake;
+	import io.intino.tara.magritte.Graph;
+	import org.apache.commons.io.FileUtils;
+
+	import java.io.File;
+	import java.io.IOException;
 	import java.util.List;
 
 	public class ReflowAssistant {
@@ -20,8 +27,8 @@ def type(assistant & graph)
 			return Integer.MAX_VALUE;
 		}
 
-		Reflow.Filter filter() {
-			return new Reflow.Filter() {
+		Datalake.EventStore.Reflow.Filter filter() {
+			return new Datalake.EventStore.Reflow.Filter() {
 				@Override
 				public boolean allow(Datalake.EventStore.Tank tank) {
 					return true;
@@ -51,7 +58,7 @@ def type(assistant & graph)
 			box.put(graph);
 		}
 
-		void onFinsh() {
+		void onFinish() {
 			final Graph graph = new Graph(graph().store());
 			allowWriting(graph, true);
 			box.put(graph.loadStashes(coreStashes()));
@@ -63,7 +70,7 @@ def type(assistant & graph)
 
 		private Graph graph() {
 			return null;
-			//return box.graph().core$();
+			//return box.graph().core$$();
 		}
 
 		private void deleteDirectory(File directory) {
@@ -80,13 +87,11 @@ def type(assistant & graph)
 	}
 end
 
-def type(assistant)
+def type(operations)
 	package $package+validPackage.datalake;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
-	import io.intino.tara.magritte.Graph;
-	import io.intino.konos.datalake.EventDatalake;
-	import io.intino.tara.magritte.Store;
+	import io.intino.ness.core.Datalake;
 
 	import java.util.List;
 

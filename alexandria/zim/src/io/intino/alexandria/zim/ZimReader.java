@@ -22,11 +22,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	public ZimReader(InputStream is) {
-		try {
-			this.source = new InlReader(is);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+		this.source = new InlReader(is);
 	}
 
 	private static InputStream streamOf(File file) {
@@ -56,12 +52,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	private Message nextMessageFromSource() {
-		try {
-			return source.next();
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
-		}
+		return source.next();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public class TaskerRenderer {
 
 	public void execute() {
 		if (tasks.isEmpty()) return;
-		Frame frame = new Frame().addTypes("tasker");
+		Frame frame = new Frame().addTypes("scheduler");
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
 		frame.addSlot("task", (AbstractFrame[]) processTasks(tasks));
@@ -80,6 +80,6 @@ public class TaskerRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(TaskerTemplate.create());
+		return Formatters.customize(SchedulerTemplate.create());
 	}
 }
