@@ -1,7 +1,7 @@
 def type(main)
 	package $package;
 
-	import io.intino.alexandria.Box;
+	import io.intino.alexandria.core.Box;
 
 	public class Main {
 		public static void main(String$[] args) {
