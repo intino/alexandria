@@ -1,25 +1,23 @@
-package io.intino.alexandria.zet;
+package io.intino.alexandria.zim;
 
+import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.logger.Logger;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @SuppressWarnings("unused")
-public class ZetBuilder {
+public class ZimBuilder {
 	private final File source;
 
-	public ZetBuilder(File file) {
+	public ZimBuilder(File file) {
 		this.source = file;
 		file.getParentFile().mkdirs();
 	}
 
-	public void put(long... data) {
+	public void put(Message... data) {
 		try {
 			Files.move(merge(data).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
@@ -27,11 +25,11 @@ public class ZetBuilder {
 		}
 	}
 
-	private File merge(long[] data) {
+	private File merge(Message[] data) {
 		File file = tempFile();
-		try (DataOutputStream os = new DataOutputStream(new FileOutputStream(file))) {
-			ZetStream stream = mergeFileWith(data);
-			while (stream.hasNext()) os.writeLong(stream.next());
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
+			ZimStream stream = mergeFileWith(data);
+			while (stream.hasNext()) writer.write(stream.next() + "\n\n");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -47,8 +45,8 @@ public class ZetBuilder {
 		}
 	}
 
-	private ZetStream mergeFileWith(long[] data) {
-		return new ZetStream.Union(new ZetReader(source), new ZetReader(data));
+	private ZimStream mergeFileWith(Message[] data) {
+		return new ZimStream.Merge(new ZimReader(source), new ZimReader(data));
 	}
 
 }

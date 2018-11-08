@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class ZimWriter {
 
 	private final ZipOutputStream os;
@@ -25,6 +26,11 @@ public class ZimWriter {
 
 	public void write(Message message) throws IOException {
 		write(message.toString());
+	}
+
+
+	public void write(ZimStream stream) throws IOException {
+		while (stream.hasNext()) write(stream.next());
 	}
 
 	public void close() throws IOException {
