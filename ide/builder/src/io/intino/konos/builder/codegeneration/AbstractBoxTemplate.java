@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class AbstractBoxTemplate extends Template {
 
@@ -42,7 +43,7 @@ public class AbstractBoxTemplate extends Template {
 			rule().add((condition("type", "service & jmx")), (condition("trigger", "field"))).add(literal("private io.intino.konos.jmx.JMXServer ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(";")),
 			rule().add((condition("type", "service & slack")), (condition("trigger", "field"))).add(literal("private io.intino.konos.slack.Bot ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(";")),
 			rule().add((condition("type", "service & jms")), (condition("trigger", "field"))).add(literal("private ")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Service ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(";")),
-			rule().add((condition("type", "task")), (condition("trigger", "field"))).add(literal("private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();")),
+				rule().add((condition("type", "task")), (condition("trigger", "field"))).add(literal("private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();")),
 			rule().add((condition("type", "dataLake")), (condition("trigger", "field"))).add(literal("private io.intino.alexandria.nessaccessor.NessAccessor nessAccessor;")),
 			rule().add((condition("type", "service & jms")), (condition("trigger", "getter"))).add(literal("public ")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Service ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal("() {\n\treturn ")).add(mark("name", "SnakeCaseToCamelCase", "firstlowerCase")).add(literal(";\n}")),
 			rule().add((condition("type", "dataLake")), (condition("trigger", "getter"))).add(literal("public io.intino.alexandria.nessaccessor.NessAccessor nessAccessor() {\n\treturn this.nessAccessor;\n}\n\npublic io.intino.alexandria.core.Feeders feeders() {\n\treturn io.intino.alexandria.core.Feeders.get();\n}\n\npublic void registerFeeders() {\n\t")).add(mark("feeder").multiple("\n")).add(literal("\n}")),
@@ -54,8 +55,8 @@ public class AbstractBoxTemplate extends Template {
 			rule().add((condition("type", "dataLake")), (condition("trigger", "quit"))).add(literal("if (nessAccessor != null) nessAccessor.connection().disconnect();")),
 			rule().add((condition("type", "service")), (condition("trigger", "quit"))),
 			rule().add((condition("type", "service"))),
-			rule().add((condition("type", "task")), (condition("trigger", "init"))).add(literal("Tasks.init(this.tasker, (")).add(mark("configuration", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box) this);")),
-			rule().add((condition("type", "task")), (condition("trigger", "getter"))).add(literal("public io.intino.konos.scheduling.KonosTasker tasker() {\n\treturn this.tasker;\n}")),
+				rule().add((condition("type", "task")), (condition("trigger", "init"))).add(literal("Tasks.init(this.scheduler, (")).add(mark("configuration", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box) this);")),
+				rule().add((condition("type", "task")), (condition("trigger", "getter"))).add(literal("public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {\n\treturn this.scheduler;\n}")),
 			rule().add((condition("trigger", "authservice"))).add(literal("protected abstract io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);")),
 			rule().add((condition("trigger", "editorService"))).add(literal("protected abstract io.intino.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);\n\npublic io.intino.alexandria.ui.services.EditorService editorService() {\n\treturn this.editorService;\n}")),
 			rule().add((condition("trigger", "registerSoul"))).add(literal("public java.util.List<Soul> souls() {\n\treturn new java.util.ArrayList<>(uiSouls.values());\n}\n\n\tpublic java.util.Optional<Soul> soul(String clientId) {\n\t\treturn java.util.Optional.ofNullable(uiSouls.get(clientId));\n\t}\n\n\tpublic void registerSoul(String clientId, Soul soul) {\n\t\t")).add(expression().add(literal("if (owner != null) ((")).add(mark("parent")).add(literal("Box) owner).registerSoul(clientId, soul);"))).add(literal("\n\t\tuiSouls.put(clientId, soul);\n\t}\n\n\tpublic void unRegisterSoul(String clientId) {\n\t\t")).add(expression().add(literal("if (owner != null) ((")).add(mark("parent")).add(literal("Box) owner).unRegisterSoul(clientId);"))).add(literal("\n\t\tuiSouls.remove(clientId);\n\t\tif (uiSouls.size() <= 0) notifySoulsClosed();\n\t}\n\n\tpublic void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {\n\t\t")).add(expression().add(literal("if (owner != null) ((")).add(mark("parent")).add(literal("Box) owner).onSoulsClosed(listener);"))).add(literal("\n\t\tthis.soulsClosedListeners.add(listener);\n\t}\n\n\tprivate void notifySoulsClosed() {\n\t\tsoulsClosedListeners.forEach(l -> l.accept());\n\t}")),

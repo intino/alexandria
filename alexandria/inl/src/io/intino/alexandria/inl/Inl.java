@@ -18,7 +18,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 
 public class Inl {
-	public static Message toMessage(Object object) throws IOException {
+	public static Message toMessage(Object object) {
 		return object instanceof String ? new InlReader(new ByteArrayInputStream(object.toString().getBytes())).next() : ObjectToMessage.toMessage(object);
 	}
 
@@ -27,9 +27,7 @@ public class Inl {
 	}
 
 	public static class ObjectToMessage {
-
-
-		public static Message toMessage(Object object) throws IOException {
+		public static Message toMessage(Object object) {
 			final Message message = new Message(object instanceof List ? collectionType((List) object) : object.getClass().getSimpleName());
 			for (Field field : Fields.of(object).asList()) {
 				if (!isConvertible(field)) continue;
@@ -45,10 +43,17 @@ public class Inl {
 			return message;
 		}
 
-		private static void convertAttachment(Message message, Field field, Object value) throws IOException {
+		private static void convertAttachment(Message message, Field field, Object value) {
 			Resource resource = (Resource) value;
 			message.set(field.getName(), resource.id(), resource.type(), resource.data());
-			resource.data().reset();
+			reset(resource);
+		}
+
+		private static void reset(Resource resource) {
+			try {
+				resource.data().reset();
+			} catch (IOException ignored) {
+			}
 		}
 
 		@SuppressWarnings("unchecked")

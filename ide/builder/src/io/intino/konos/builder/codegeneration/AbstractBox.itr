@@ -270,7 +270,7 @@ def type(service & jms) trigger(field)
 end
 
 def type(task) trigger(field)
-	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
+	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
 def type(dataLake) trigger(field)
@@ -329,12 +329,12 @@ def type(service)
 end
 
 def type(task) trigger(init)
-	Tasks.init(this.tasker, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(task) trigger(getter)
-	public io.intino.konos.scheduling.KonosTasker tasker() {
-		return this.tasker;
+	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
+		return this.scheduler;
 	}
 end
 
