@@ -139,6 +139,10 @@ public class TcpDatalake implements Datalake {
 			}
 		}
 
+		public Session session() {
+			return session;
+		}
+
 		@Override
 		public void disconnect() {
 			if (session != null && !((ActiveMQSession) session).isClosed()) {
