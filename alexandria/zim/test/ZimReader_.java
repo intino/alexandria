@@ -11,7 +11,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class SourceZimStream_ {
+public class ZimReader_ {
 
 	@Before
 	public void setUp() {

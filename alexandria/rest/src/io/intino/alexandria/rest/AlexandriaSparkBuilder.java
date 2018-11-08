@@ -45,7 +45,7 @@ public class AlexandriaSparkBuilder {
 
 	private static AlexandriaSpark loadUISpark() {
 		try {
-			Class<?> aClass = Class.forName("io.intino.konos.alexandria.ui.UIAlexandriaSpark");
+			Class<?> aClass = Class.forName("io.intino.alexandria.ui.UIAlexandriaSpark");
 			Constructor<?> constructor = aClass.getConstructors()[0].getParameterCount() == 4 ? aClass.getConstructors()[0] : aClass.getConstructors()[1];
 			return (AlexandriaSpark) constructor.newInstance(port, webDirectory, objects.size() > 0 ? objects.get(0) : null, objects.size() > 1 ? objects.get(1) : null);
 		} catch (ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
