@@ -61,12 +61,7 @@ public class ZimReader implements ZimStream {
 			}
 
 			private Message nextMessageFromSource() {
-				try {
-					return source != null ? source.next() : null;
-				} catch (IOException e) {
-					Logger.error(e);
-					return null;
-				}
+				return source.next();
 			}
 
 			@Override
@@ -80,7 +75,7 @@ public class ZimReader implements ZimStream {
 
 			void close() {
 				try {
-					if (source != null) source.close();
+					source.close();
 				} catch (IOException e) {
 					Logger.error(e);
 				}
@@ -90,16 +85,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	private static InlReader readerOf(InputStream is) {
-		try {
-			return new InlReader(is);
-		} catch (IOException e) {
-			Logger.error(e);
-			try {
-				return new InlReader(new ByteArrayInputStream(new byte[0]));
-			} catch (IOException ignored) {
-				return null;
-			}
-		}
+		return new InlReader(is);
 	}
 
 	private static InputStream inputStream(File file) {
