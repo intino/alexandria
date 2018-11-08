@@ -12,6 +12,7 @@ public interface ZetStream {
 
 	boolean hasNext();
 
+	@SuppressWarnings({"WeakerAccess", "unused"})
 	class Difference implements ZetStream {
 
 		private final List<ZetStream> streams;
@@ -81,6 +82,75 @@ public interface ZetStream {
 
 	}
 
+	@SuppressWarnings({"WeakerAccess", "unused"})
+	class SymmetricDifference implements ZetStream {
+
+		private final List<ZetStream> streams;
+		private long current = -1;
+		private long next = -1;
+
+		public SymmetricDifference(List<ZetStream> streams) {
+			this.streams = streams;
+			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
+		}
+
+		public SymmetricDifference(ZetStream... streams) {
+			this(asList(streams));
+		}
+
+		@Override
+		public long current() {
+			return current;
+		}
+
+		@Override
+		public long next() {
+			if (current == next) hasNext();
+			current = next;
+			return current;
+		}
+
+		private long getNextValue() {
+			long value = Long.MAX_VALUE;
+			for (ZetStream zetStream : streams) {
+				if (zetStream.current() > value || zetStream.current() == -1) continue;
+				value = zetStream.current();
+			}
+			return value;
+		}
+
+		@Override
+		public boolean hasNext() {
+			if (current != next) return true;
+			advanceStreamsWith(current);
+			long value = getNextValue();
+			if (value == Long.MAX_VALUE) {
+				next = -1;
+				return false;
+			}
+			while (!isValid(value)) {
+				advanceStreamsWith(value);
+				value = getNextValue();
+				if (value == Long.MAX_VALUE) {
+					next = -1;
+					return false;
+				}
+			}
+			next = value;
+			return true;
+		}
+
+		private void advanceStreamsWith(long value) {
+			for (ZetStream stream : streams) if (stream.current() == value) stream.next();
+		}
+
+		private boolean isValid(long value) {
+			return streams.stream().filter(s -> s.current() == value).count() == 1;
+		}
+
+	}
+
+	@SuppressWarnings({"WeakerAccess", "unused"})
 	class Intersection implements ZetStream {
 
 		private final List<ZetStream> streams;
@@ -150,12 +220,13 @@ public interface ZetStream {
 
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	class Union implements ZetStream {
 
 		private final List<ZetStream> streams;
 		private final int minFrequency;
 		private final int maxFrequency;
-		private final int recencyIndex;
+		private final boolean consecutives;
 		private long current = -1;
 		private long next = -1;
 
@@ -163,7 +234,7 @@ public interface ZetStream {
 			this.streams = streams;
 			this.minFrequency = 0;
 			this.maxFrequency = Integer.MAX_VALUE;
-			this.recencyIndex = 0;
+			this.consecutives = false;
 			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
 		}
 
@@ -171,11 +242,11 @@ public interface ZetStream {
 			this(asList(streams));
 		}
 
-		public Union(List<ZetStream> streams, int minFrequency, int maxFrequency, int recencyIndex) {
+		public Union(List<ZetStream> streams, int minFrequency, int maxFrequency, boolean consecutives) {
 			this.streams = streams;
 			this.minFrequency = minFrequency;
 			this.maxFrequency = maxFrequency;
-			this.recencyIndex = recencyIndex;
+			this.consecutives = consecutives;
 		}
 
 		@Override
@@ -230,13 +301,21 @@ public interface ZetStream {
 
 		private boolean isValid(long value) {
 			int freq = 0;
-			int lastIndex = 0;
-			for (int i = 0; i < streams.size(); i++) {
-				if (streams.get(i).current() != value) continue;
-				freq++;
-				lastIndex = i;
+			int consecutives = 0;
+			int maxConsecutives = 0;
+			for (ZetStream stream : streams) {
+				if (stream.current() != value) {
+					maxConsecutives = consecutives;
+					consecutives = 0;
+				} else {
+					freq++;
+					consecutives++;
+				}
 			}
-			return freq >= minFrequency && freq <= maxFrequency && lastIndex >= recencyIndex;
+			maxConsecutives = Math.max(maxConsecutives, consecutives);
+			return this.consecutives ?
+					maxConsecutives >= maxFrequency :
+					freq >= minFrequency && freq <= maxFrequency;
 		}
 
 	}

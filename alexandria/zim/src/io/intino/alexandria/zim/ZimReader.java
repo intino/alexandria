@@ -5,36 +5,108 @@ import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 import java.util.zip.ZipInputStream;
 
+import static java.util.Arrays.stream;
+import static java.util.Comparator.comparing;
+
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class ZimReader implements ZimStream {
 	public static final String ZimExtension = ".zim";
-	private InlReader source;
+	private final Iterator<Message> iterator;
 	private Message current;
-	private Message next;
 
 	public ZimReader(File file) {
-		this(streamOf(file));
-	}
-
-	public ZimReader(String text) {
-		this(new ByteArrayInputStream(text.getBytes()));
+		this(iteratorOf(inputStream(file)));
 	}
 
 	public ZimReader(InputStream is) {
+		this(iteratorOf(is));
+	}
+
+	public ZimReader(String text) {
+		this(iteratorOf(new ByteArrayInputStream(text.getBytes())));
+	}
+
+	public ZimReader(Message... messages) {
+		this(stream(messages));
+	}
+
+	public ZimReader(List<Message> messages) {
+		this(messages.stream());
+	}
+
+	public ZimReader(Stream<Message> stream) {
+		this(stream.sorted(comparing(m -> m.asEvent().instant())).iterator());
+	}
+
+	public ZimReader(Iterator<Message> iterator) {
+		this.iterator = iterator;
+	}
+
+	private static Iterator<Message> iteratorOf(InputStream is) {
+		InlReader source = readerOf(is);
+		return new Iterator<Message>() {
+			private Message current;
+			private Message next;
+
+			@Override
+			public Message next() {
+				if (current == next) hasNext();
+				current = next;
+				return current;
+			}
+
+			private Message nextMessageFromSource() {
+				try {
+					return source != null ? source.next() : null;
+				} catch (IOException e) {
+					Logger.error(e);
+					return null;
+				}
+			}
+
+			@Override
+			public boolean hasNext() {
+				if (current != next) return true;
+				next = nextMessageFromSource();
+				boolean hasNext = next != null;
+				if (!hasNext) close();
+				return hasNext;
+			}
+
+			void close() {
+				try {
+					if (source != null) source.close();
+				} catch (IOException e) {
+					Logger.error(e);
+				}
+			}
+
+		};
+	}
+
+	private static InlReader readerOf(InputStream is) {
 		try {
-			this.source = new InlReader(is);
+			return new InlReader(is);
 		} catch (IOException e) {
 			Logger.error(e);
+			try {
+				return new InlReader(new ByteArrayInputStream(new byte[0]));
+			} catch (IOException ignored) {
+				return null;
+			}
 		}
 	}
 
-	private static InputStream streamOf(File file) {
+	private static InputStream inputStream(File file) {
 		try {
 			return isZim(file) ? zipStreamOf(file) : new FileInputStream(file);
 		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
 
@@ -48,36 +120,20 @@ public class ZimReader implements ZimStream {
 		return zipStream;
 	}
 
+
 	@Override
-	public Message next() {
-		if (current == next) hasNext();
-		current = next;
+	public Message current() {
 		return current;
 	}
 
-	private Message nextMessageFromSource() {
-		try {
-			return source.next();
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
-		}
+	@Override
+	public Message next() {
+		return current = iterator.hasNext() ? iterator.next() : null;
 	}
 
 	@Override
 	public boolean hasNext() {
-		if (current != next) return true;
-		next = nextMessageFromSource();
-		return next != null;
-	}
-
-	@Override
-	public void close() {
-		try {
-			source.close();
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+		return iterator.hasNext();
 	}
 
 }
