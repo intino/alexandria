@@ -10,7 +10,7 @@ public class InlReader {
 	private Message current;
 	private Message next;
 
-	public InlReader(InputStream is) throws IOException {
+	public InlReader(InputStream is) {
 		this.reader = new BufferedReader(new InputStreamReader(is), 65536);
 		this.current = createMessage(typeIn(nextLine()), null);
 	}
@@ -29,7 +29,7 @@ public class InlReader {
 		return line.contains(".") ? line.split("\\.") : new String[]{line};
 	}
 
-	public Message next() throws IOException {
+	public Message next() {
 		if (current == null) return null;
 		String attribute = "";
 		Message scope = current;
@@ -89,8 +89,12 @@ public class InlReader {
 		return result;
 	}
 
-	private String nextLine() throws IOException {
-		return normalize(reader.readLine());
+	private String nextLine() {
+		try {
+			return normalize(reader.readLine());
+		} catch (IOException ignored) {
+			return null;
+		}
 	}
 
 	private String normalize(String line) {

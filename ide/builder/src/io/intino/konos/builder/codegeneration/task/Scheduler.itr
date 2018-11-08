@@ -1,8 +1,8 @@
-def type(tasker)
+def type(scheduler)
 	package $package+ValidPackage;
 
 	import $package+ValidPackage.$box+FirstUpperCase~Box;
-	import io.intino.konos.scheduling.KonosTasker;
+	import io.intino.alexandria.scheduler.AlexandriaScheduler;
 	import $package+ValidPackage.scheduling.*;
 	import org.quartz.*;
 	import java.util.LinkedHashSet;
@@ -23,7 +23,7 @@ def type(tasker)
 
 		}
 
-		public static void init(KonosTasker tasker, $box+FirstUpperCase~Box box) {
+		public static void init(AlexandriaScheduler tasker, $box+FirstUpperCase~Box box) {
 			JobDetail job;
 			try {
 				$task+init...[$NL]

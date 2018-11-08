@@ -3,7 +3,6 @@ package io.intino.alexandria.logger;
 
 import io.intino.alexandria.inl.Inl;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
@@ -26,12 +25,7 @@ public class Formatter extends java.util.logging.Formatter {
 	}
 
 	private String format(Log log) {
-		try {
-			return Inl.toMessage(log) + "\n\n";
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
-		}
+		return Inl.toMessage(log) + "\n\n";
 	}
 
 	private String stackTrace(Throwable thrown) {
