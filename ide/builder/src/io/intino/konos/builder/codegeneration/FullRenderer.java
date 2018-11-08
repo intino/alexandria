@@ -128,7 +128,7 @@ public class FullRenderer {
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
 		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
-			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
+			new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
 	}
 
 	private void slack() {

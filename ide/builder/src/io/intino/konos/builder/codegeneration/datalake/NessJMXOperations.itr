@@ -18,29 +18,25 @@ end
 def type(operations) !type(interface)
 	package $package+validPackage.datalake;
 
-
 	import io.intino.alexandria.inl.Message;
-	import io.intino.alexandria.logger.Logger;
-	import io.intino.konos.jmx.JMXServer;
-	import io.intino.ness.core.Datalake.EventStore.MessageHandler;
-	import io.intino.tara.magritte.Graph;
-	import mx.cfe.asemed.screener.box.ScreenerBox;
-	import org.apache.commons.logging.Log;
+    import io.intino.alexandria.jmx.JMXServer;
+    import io.intino.alexandria.logger.Logger;
+    import io.intino.ness.core.Datalake.EventStore.MessageHandler;
+    import io.intino.tara.magritte.Graph;
+	import $package+validPackage.$box+FirstUpperCase~Box;
 
 	import java.util.Collections;
 
 	import static io.intino.ness.core.Datalake.EventStore.Reflow.Filter;
 
-
-
 	public class NessOperations implements NessOperationsMBean {
-		private final ScreenerBox box;
+		private final $box+FirstUpperCase~Box box;
 		private final ReflowAssistant assistant;
 		private int processed = 0;
 		private io.intino.ness.core.Datalake.EventStore.Reflow session;
 		private Graph graph;
 
-		public NessOperations(ScreenerBox box) {
+		public NessOperations($box+FirstUpperCase~Box box) {
 			this.box = box;
 			this.assistant = new mx.cfe.asemed.screener.box.datalake.ReflowAssistant(box);
 		}
@@ -59,7 +55,7 @@ def type(operations) !type(interface)
 
 		private boolean reflow(Filter filter) {
 			Logger.info("Starting Reflow...");
-			assistant.before();
+			assistant.onStart();
 			mx.cfe.asemed.screener.box.datalake.Datalake.unsubscribeAll(box.nessAccessor());
 			this.session = box.nessAccessor().eventStore().reflow(filter);
 			this.session.next(assistant.defaultBlockSize(), messageHandler());
@@ -70,7 +66,7 @@ def type(operations) !type(interface)
 			return new ReflowHandler();
 		}
 
-		public static JMXServer init(ScreenerBox box) {
+		public static JMXServer init($box+FirstUpperCase~Box box) {
 			JMXServer server = new JMXServer(Collections.singletonMap("mx.cfe.asemed.screener.box.datalake.NessOperations", new Object$[]{box}));
 			server.init();
 			return server;
@@ -80,7 +76,7 @@ def type(operations) !type(interface)
 
 			@Override
 			public void handle(Message message) {
-				// TODO dispatch
+				Datalake.handlers().get(message.type().toLowerCase()).handle(message);
 			}
 
 			@Override
