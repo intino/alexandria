@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class ZetBuilder {
 	private final File source;
 
@@ -33,7 +33,7 @@ public class ZetBuilder {
 		put(new ZetReader(stream));
 	}
 
-	private void put(ZetReader stream) {
+	public void put(ZetReader stream) {
 		try {
 			Files.move(merge(stream).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {

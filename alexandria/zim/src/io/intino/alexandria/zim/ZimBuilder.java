@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class ZimBuilder {
 	private final File source;
 
@@ -31,9 +31,9 @@ public class ZimBuilder {
 		put(new ZimReader(stream));
 	}
 
-	private void put(ZimReader zimReader) {
+	public void put(ZimStream zimStream) {
 		try {
-			Files.move(merge(zimReader).toPath(), source.toPath(), REPLACE_EXISTING);
+			Files.move(merge(zimStream).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
