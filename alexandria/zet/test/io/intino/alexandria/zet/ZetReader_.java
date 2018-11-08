@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class SourceZetStream_ {
+public class ZetReader_ {
 
 	public static void main(String[] args) {
 		Random random = new Random();
@@ -24,7 +24,7 @@ public class SourceZetStream_ {
 
 	@Test
 	public void should_read_1000_longs() {
-		SourceZetStream reader = new SourceZetStream(new File("test-res/testsets/filereader.zet"));
+		ZetReader reader = new ZetReader(new File("test-res/testsets/filereader.zet"));
 		int count = 0;
 		while (reader.hasNext()) {
 			reader.next();

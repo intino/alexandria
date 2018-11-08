@@ -1,36 +1,43 @@
 package io.intino.alexandria.zet;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SourceZetStream implements ZetStream {
+import static java.util.Arrays.stream;
+
+@SuppressWarnings({"WeakerAccess", "unused"})
+public class ZetReader implements ZetStream {
 	private final Iterator<Long> iterator;
 	private long current = -1;
 
-	public SourceZetStream(File file) {
+	public ZetReader(File file) {
 		this(iteratorOf(inputStream(file)));
 	}
 
-	public SourceZetStream(long... ids) {
-		this(Arrays.stream(ids).boxed().iterator());
+	public ZetReader(InputStream is) {
+		this(iteratorOf(is));
 	}
 
-	public SourceZetStream(List<Long> ids) {
-		this(ids.iterator());
+	public ZetReader(long... ids) {
+		this(stream(ids).boxed());
 	}
 
-	public SourceZetStream(Iterator<Long> iterator) {
+	public ZetReader(List<Long> ids) {
+		this(ids.stream());
+	}
+
+	public ZetReader(Stream<Long> stream) {
+		this(stream.sorted().iterator());
+	}
+
+	public ZetReader(Iterator<Long> iterator) {
 		this.iterator = iterator;
 	}
 
-	public SourceZetStream(Stream<Long> stream) {
-		this.iterator = stream.iterator();
-	}
-
-	private static Iterator<Long> iteratorOf(DataInputStream stream) {
+	private static Iterator<Long> iteratorOf(InputStream is) {
+		DataInputStream stream = new DataInputStream(new BufferedInputStream(is));
 		return new Iterator<Long>() {
 			private long current = -1;
 			private long next = -1;
@@ -65,11 +72,11 @@ public class SourceZetStream implements ZetStream {
 		};
 	}
 
-	private static DataInputStream inputStream(File file) {
+	private static InputStream inputStream(File file) {
 		try {
-			return new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+			return new FileInputStream(file);
 		} catch (FileNotFoundException e) {
-			return new DataInputStream(new ByteArrayInputStream(new byte[0]));
+			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
 
@@ -80,7 +87,7 @@ public class SourceZetStream implements ZetStream {
 
 	@Override
 	public long next() {
-		return current = iterator.next();
+		return current = iterator.hasNext() ? iterator.next() : -1L;
 	}
 
 	@Override
