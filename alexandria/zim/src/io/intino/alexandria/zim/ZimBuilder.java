@@ -5,6 +5,8 @@ import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -17,15 +19,27 @@ public class ZimBuilder {
 		file.getParentFile().mkdirs();
 	}
 
-	public void put(Message... data) {
+	public void put(Message... messages) {
+		put(new ZimReader(messages));
+	}
+
+	public void put(List<Message> messages) {
+		put(new ZimReader(messages));
+	}
+
+	public void put(Stream<Message> stream) {
+		put(new ZimReader(stream));
+	}
+
+	private void put(ZimReader zimReader) {
 		try {
-			Files.move(merge(data).toPath(), source.toPath(), REPLACE_EXISTING);
+			Files.move(merge(zimReader).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private File merge(Message[] data) {
+	private File merge(ZimStream data) {
 		File file = tempFile();
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
 			ZimStream stream = mergeFileWith(data);
@@ -45,8 +59,8 @@ public class ZimBuilder {
 		}
 	}
 
-	private ZimStream mergeFileWith(Message[] data) {
-		return new ZimStream.Merge(new ZimReader(source), new ZimReader(data));
+	private ZimStream mergeFileWith(ZimStream data) {
+		return new ZimStream.Merge(new ZimReader(source), data);
 	}
 
 }
