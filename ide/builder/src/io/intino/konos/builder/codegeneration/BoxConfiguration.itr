@@ -8,20 +8,11 @@ def type(boxConfiguration)
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration(String$[] args) {
 			super(args);
-			[if (store == null) {
-				if (this.args.get("graph_store") != null)
-					$tara+empty~store = new java.io.File(this.args.get("graph_store"));
-				else $tara+empty~store = new java.io.File("./store");
-			}]
 		}
 
 		public String get(String key) {
 			return args.get(key);
 		}
-
-		[$tara+empty~public java.io.File store() {
-			return this.store;
-		}]
 
 		public static java.net.URL url(String url) {
 			try {

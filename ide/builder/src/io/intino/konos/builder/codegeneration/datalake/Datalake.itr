@@ -92,34 +92,34 @@ def trigger(clientId)
 end
 
 def type(tank) trigger(unsubscribe)
-	accessor.eventStore().unsubscribe($name+firstLowerCase);
+	accessor.eventStore().unsubscribe($messageType+firstLowerCase);
 end
 
 def type(tank) trigger(field)
-	private static io.intino.ness.core.Datalake.EventStore.Tank $name+firstLowerCase;
+	private static io.intino.ness.core.Datalake.EventStore.Tank $messageType+firstLowerCase;
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = eventStore.tank("$messageType+lowerCase");
+	$messageType+firstLowerCase = eventStore.tank("$name");
 end
 
 def type(tank) trigger(add)
-	tanks.add(Datalake.$name+firstLowerCase);
+	tanks.add(Datalake.$messageType+firstLowerCase);
 end
 
 def type(tank) trigger(addHandler)
-	tanks.put("$name+firstLowerCase", new $name+snakeCaseToCamelCase+FirstUpperCase~Handler(box));
+	tanks.put("$name", new $name+snakeCaseToCamelCase+FirstUpperCase~Handler(box));
 end
 
 def type(tank) trigger(getter)
-	public static io.intino.ness.core.Datalake.EventStore.Tank $name+firstLowerCase() {
-		return Datalake.$name+firstLowerCase;
+	public static io.intino.ness.core.Datalake.EventStore.Tank $messageType+firstLowerCase() {
+		return Datalake.$messageType+firstLowerCase;
 	}
 end
 
 def type(tank) type(mounter | input) trigger(subscribe)
-	handlers.put("$name+lowercase", new AjusteHandler(box));
-	eventStore.subscribe($name+firstLowerCase).using(clientID != null ? clientID + "-$name+lowerCase" : null, handlers.get("$name+lowercase"));
+	handlers.put("$messageType", new $messageType+firstUpperCase~Handler(box));
+	eventStore.subscribe($messageType+firstLowerCase).using(clientID != null ? clientID + "-$messageType" : null, handlers.get("$messageType"));
 end
 
 def type(custom) trigger(replace)
@@ -131,16 +131,16 @@ def trigger(formatMessage)
 end
 
 def type(tank & mounter) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
+	public static class $messageType+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
-		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
+		public $messageType+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
 		public void handle(io.intino.alexandria.inl.Message m) {
 			try {
-				$name+snakeCaseToCamelCase+FirstUpperCase~Mounter mounter = new $name+snakeCaseToCamelCase+FirstUpperCase~Mounter();
+				$messageType+snakeCaseToCamelCase+FirstUpperCase~Mounter mounter = new $messageType+snakeCaseToCamelCase+FirstUpperCase~Mounter();
 				mounter.box = box;
 				mounter.$type+typeName = $type+load;
 				mounter.execute();
@@ -152,10 +152,10 @@ def type(tank & mounter) trigger(class)
 end
 
 def type(tank & input) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
+	public static class $messageType+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.ness.core.Datalake.EventStore.MessageHandler {
 		private final $box+firstUppercase~Box box;
 
-		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
+		public $messageType+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
 			this.box = box;
 		}
 
