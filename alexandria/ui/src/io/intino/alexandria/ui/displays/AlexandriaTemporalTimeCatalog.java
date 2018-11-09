@@ -26,6 +26,11 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
+	protected void openDefaultItem(String item) {
+		notifier.openDefaultItem(item);
+	}
+
+	@Override
 	public void notifyUser(String message) {
 		notifier.notifyUser(message);
 	}

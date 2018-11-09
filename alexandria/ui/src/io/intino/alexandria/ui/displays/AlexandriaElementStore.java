@@ -69,6 +69,7 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
     protected abstract void refreshOpened(String label);
     protected abstract void refreshLoading(boolean withMessage);
     protected abstract void refreshLoaded();
+    protected abstract String itemNameWithKey(String key);
     protected abstract Element elementWithKey(String key);
     protected abstract Item targetWithKey(String key);
     protected abstract String normalize(String key);
@@ -99,8 +100,9 @@ public abstract class AlexandriaElementStore<E extends Element, DN extends Alexa
 
     private <E extends AlexandriaElementDisplay> E buildDisplayFor(Element element, Item target, String label) {
         AlexandriaElementDisplay display = newDisplay(element, target);
+        String itemName = itemNameWithKey(normalize(label));
 
-        display.route(routeSubPath());
+        if (itemName.equals(routePath())) display.route(routeSubPath());
         display.label(label);
         display.element(element);
         display.target(target);

@@ -36,6 +36,10 @@
             toast.open();
         },
 
+        _openDefaultItem : function(name) {
+            this.openItem(name);
+        },
+
         _closeItemsArrival : function() {
             var toast = this.querySelector("paper-toast#itemsArrival");
             if (toast != null) toast.close();

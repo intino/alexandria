@@ -125,6 +125,11 @@ public abstract class AlexandriaLayout<DN extends AlexandriaDisplayNotifier> ext
 		).findFirst().orElse(null);
 	}
 
+	protected String itemNameWithKey(String key) {
+		LayoutItem layoutItem = itemWithKey(key);
+		return layoutItem != null ? layoutItem.name() : key;
+	}
+
 	public void openItem(String key) {
 		LayoutItem layoutItem = itemWithKey(key);
 		openElement(layoutItem.label());

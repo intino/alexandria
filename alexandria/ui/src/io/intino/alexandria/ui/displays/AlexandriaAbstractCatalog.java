@@ -209,6 +209,13 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		buildViewList();
 		sendCatalog();
 		createItemDisplay();
+		openRouteItem();
+	}
+
+	protected void openRouteItem() {
+		String routePath = routePath();
+		if (routePath == null || routePath.isEmpty()) return;
+		openDefaultItem(routePath);
 	}
 
 	protected void createGroupingManager(ItemList itemList) {
@@ -233,6 +240,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 	protected abstract void sendCatalog();
 	protected abstract ItemList filteredItemList(Scope scope, String condition);
 	protected abstract void notifyItemsArrival(String message);
+	protected abstract void openDefaultItem(String item);
 
 	protected boolean isGrouping(Map.Entry<String, GroupingSelection> entry) {
 		return groupingOf(entry.getKey()) != null;
