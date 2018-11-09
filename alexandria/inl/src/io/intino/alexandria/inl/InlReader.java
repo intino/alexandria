@@ -9,10 +9,27 @@ public class InlReader {
 	private BufferedReader reader;
 	private Message current;
 	private Message next;
+	private boolean hasNext = true;
 
 	public InlReader(InputStream is) {
 		this.reader = new BufferedReader(new InputStreamReader(is), 65536);
-		this.current = createMessage(typeIn(nextLine()), null);
+		try {
+			this.current = createMessage(typeIn(nextLine()), null);
+		} catch (Throwable e) {
+			hasNext = false;
+		}
+	}
+
+	public boolean hasNext() {
+		return hasNext;
+	}
+
+	public void close() throws IOException {
+		reader.close();
+	}
+
+	public Message next() {
+		return read();
 	}
 
 	private static boolean isAttributeIn(String line) {
@@ -29,7 +46,7 @@ public class InlReader {
 		return line.contains(".") ? line.split("\\.") : new String[]{line};
 	}
 
-	public Message next() {
+	private Message read() {
 		if (current == null) return null;
 		String attribute = "";
 		Message scope = current;
@@ -73,14 +90,6 @@ public class InlReader {
 
 	private boolean isMultilineIn(String line) {
 		return line.startsWith("\t");
-	}
-
-	public boolean hasNext() {
-		return true;
-	}
-
-	public void close() throws IOException {
-		reader.close();
 	}
 
 	private Message swap(Message message) {
