@@ -46,12 +46,12 @@ def type(tanks)
 			$tank+unsubscribe...[$NL]
 		}
 
-		public static void put(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
-			new NessSender(datalake, timetag).send(tank, messages);
+		public static void put(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+			new NessSender(accessor, timetag).send(tank, messages);
 		}
 
-		public static void feed(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
-			new NessSender(datalake, timetag).feed(tank, messages);
+		public static void feed(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+			new NessSender(accessor, timetag).feed(tank, messages);
 		}
 
 		$tank+getter...[$NL$NL]
@@ -59,24 +59,24 @@ def type(tanks)
 		$tank+class...[$NL$NL]
 
 		public static class NessSender {
-			private final io.intino.ness.core.Datalake datalake;
+			private final NessAccessor accessor;
 			private final io.intino.ness.core.Timetag timetag;
 
-			public NessSender(io.intino.ness.core.Datalake datalake, io.intino.ness.core.Timetag timetag) {
-				this.datalake = datalake;
+			public NessSender(NessAccessor accessor, io.intino.ness.core.Timetag timetag) {
+				this.accessor = accessor;
 				this.timetag = timetag;
 			}
 
 			public void feed(io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.inl.Message... messages) {
-				if (datalake instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake)
-					((io.intino.alexandria.nessaccessor.tcp.TcpDatalake) datalake).feed(tank.name(), messages);
+				if (accessor.eventStore() instanceof io.intino.alexandria.nessaccessor.tcp.TCPEventStore)
+					((io.intino.alexandria.nessaccessor.tcp.TCPEventStore) accessor.eventStore()).feed(tank.name(), messages);
 			}
 
 			public void send(io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.inl.Message... messages) {
 				io.intino.alexandria.nessaccessor.stages.MemoryStage stage = new io.intino.alexandria.nessaccessor.stages.MemoryStage();
 				EventSession session = stage.createEventSession();
 				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, messages);
-				datalake.push(stage.blobs());
+				accessor.push(stage);
 				session.close();
 			}
 		}
