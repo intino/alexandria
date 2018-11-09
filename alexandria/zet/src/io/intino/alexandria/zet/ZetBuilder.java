@@ -33,7 +33,7 @@ public class ZetBuilder {
 		put(new ZetReader(stream));
 	}
 
-	public void put(ZetReader stream) {
+	public void put(ZetStream stream) {
 		try {
 			Files.move(merge(stream).toPath(), source.toPath(), REPLACE_EXISTING);
 		} catch (IOException e) {
