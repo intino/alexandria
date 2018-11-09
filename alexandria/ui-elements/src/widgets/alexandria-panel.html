@@ -263,6 +263,13 @@
                 this._hasRightFixedViews = this._countRightFixedViews() > 0;
             },
 
+            _refreshViewListVisibility : function(viewList) {
+                viewList.forEach(v => {
+                    var view = this.querySelector("paper-tab[name='" + v.name + "']");
+                    if (view != null) view.hidden = this._isViewHidden(v);
+                });
+            },
+
             _refreshSelectedView : function(name) {
                 if (this._selectedView == name) return;
                 this._selectedView = name;
