@@ -12,18 +12,20 @@ import static java.util.stream.IntStream.range;
 
 public interface ZimStream {
 
+	@SuppressWarnings("unused")
+	Message current();
+
 	Message next();
 
 	boolean hasNext();
 
-	void close();
-
+	@SuppressWarnings("unused")
 	class Merge implements ZimStream {
-
+		private Message currentMessage;
 		private ZimStream[] inputs;
 		private Event[] current;
 
-		public Merge(ZimStream[] inputs) {
+		public Merge(ZimStream... inputs) {
 			this.inputs = inputs;
 			this.current = stream(inputs).map(this::next).toArray(Event[]::new);
 		}
@@ -33,14 +35,24 @@ public interface ZimStream {
 		}
 
 		@Override
+		public Message current() {
+			return currentMessage;
+		}
+
+		@Override
 		public Message next() {
-			return next(minIndex());
+			return currentMessage = next(minIndex());
 		}
 
 		private Message next(int index) {
 			Message message = current[index];
 			current[index] = next(inputs[index]);
 			return message;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return !stream(current).allMatch(Objects::isNull);
 		}
 
 		private Event next(ZimStream input) {
@@ -59,22 +71,14 @@ public interface ZimStream {
 			return current[i] != null ? current[i].instant().toEpochMilli() : Long.MAX_VALUE;
 		}
 
-		@Override
-		public boolean hasNext() {
-			return !stream(current).allMatch(Objects::isNull);
-		}
-
-		@Override
-		public void close() {
-			stream(inputs).forEach(ZimStream::close);
-		}
 	}
 
 	class Sequence implements ZimStream {
 		private final Iterator<ZimStream> iterator;
+		private Message currentMessage;
 		private ZimStream current;
 
-		private Sequence(ZimStream[] inputs) {
+		private Sequence(ZimStream... inputs) {
 			this.iterator = streamOf(inputs).iterator();
 			this.current = this.iterator.next();
 		}
@@ -96,27 +100,26 @@ public interface ZimStream {
 		}
 
 		@Override
+		public Message current() {
+			return currentMessage;
+		}
+
+		@Override
+		public Message next() {
+			return currentMessage = current.next();
+		}
+
+		@Override
 		public boolean hasNext() {
 			return current.hasNext() || restHasNext();
 		}
 
 		private boolean restHasNext() {
 			while (iterator.hasNext()) {
-				close();
 				current = iterator.next();
 				if (current.hasNext()) return true;
 			}
 			return false;
-		}
-
-		@Override
-		public Message next() {
-			return current.next();
-		}
-
-		@Override
-		public void close() {
-			if (current != null) current.close();
 		}
 
 	}
@@ -124,8 +127,8 @@ public interface ZimStream {
 	class Empty implements ZimStream {
 
 		@Override
-		public boolean hasNext() {
-			return false;
+		public Message current() {
+			return null;
 		}
 
 		@Override
@@ -134,8 +137,8 @@ public interface ZimStream {
 		}
 
 		@Override
-		public void close() {
-
+		public boolean hasNext() {
+			return false;
 		}
 
 	}
