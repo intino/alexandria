@@ -4,14 +4,15 @@ import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
 import io.intino.ness.core.fs.FSDatalake;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 public class LocalDatalake implements Datalake {
 
 	private final FSDatalake datalake;
 
-	public LocalDatalake(FSDatalake datalake) {
-		this.datalake = datalake;
+	public LocalDatalake(File root) {
+		this.datalake = new FSDatalake(root);
 	}
 
 
