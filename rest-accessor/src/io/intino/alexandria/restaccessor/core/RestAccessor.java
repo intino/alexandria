@@ -1,9 +1,8 @@
-package io.intino.alexandria.restful.core;
+package io.intino.alexandria.restaccessor.core;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.restful.RestfulApi;
-import io.intino.alexandria.restful.exceptions.RestfulFailure;
+import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -31,7 +30,7 @@ import java.util.*;
 
 import static java.util.Collections.*;
 
-public class RestfulAccessor implements RestfulApi {
+public class RestAccessor implements io.intino.alexandria.restaccessor.RestAccessor {
 
 	private static String toString(InputStream content) throws IOException {
 		return new String(IOUtils.readFully(content, 0, false));
@@ -421,7 +420,7 @@ public class RestfulAccessor implements RestfulApi {
 	private String getErrorMessage(HttpResponse response) {
 		try {
 			InputStream content = response.getEntity().getContent();
-			return RestfulAccessor.this.toString(content);
+			return RestAccessor.this.toString(content);
 		} catch (IOException e) {
 			return "";
 		}
@@ -550,7 +549,7 @@ public class RestfulAccessor implements RestfulApi {
 
 			private String stringContentOf(InputStream input) {
 				try {
-					return RestfulAccessor.toString(input);
+					return RestAccessor.toString(input);
 				} catch (IOException e) {
 					Logger.error(e);
 					return null;

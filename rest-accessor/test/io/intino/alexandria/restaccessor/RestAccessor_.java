@@ -1,29 +1,28 @@
-package io.intino.alexandria.restful;
+package io.intino.alexandria.restaccessor;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.restful.core.RestfulAccessor;
-import io.intino.alexandria.restful.exceptions.RestfulFailure;
+import io.intino.alexandria.restaccessor.core.RestAccessor;
+import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-public class RestfulClient_ {
+public class RestAccessor_ {
 	private static final String BaseUrl = "http://localhost:8080";
 
 	@BeforeClass
-	public static void setUpClass() throws Exception {
+	public static void setUpClass() {
 	}
 
 	@Test
-	public void should_post_data_encoded_with_utf8() throws IOException, RestfulFailure {
-		RestfulApi client = new RestfulAccessor();
-		RestfulApi.Response post = client.post(localhost(), "/encoding", new HashMap<String, String>() {{
+	public void should_post_data_encoded_with_utf8() throws RestfulFailure {
+		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
+		io.intino.alexandria.restaccessor.RestAccessor.Response post = client.post(localhost(), "/encoding", new HashMap<String, String>() {{
 			put("param1", "holá");
 			put("param2", "adiós");
 		}});
@@ -31,12 +30,12 @@ public class RestfulClient_ {
 	}
 
 	@Test
-	public void should_post_resource_encoded_with_utf8() throws IOException, RestfulFailure {
-		RestfulApi client = new RestfulAccessor();
+	public void should_post_resource_encoded_with_utf8() throws RestfulFailure {
+		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
 		Resource resource = new Resource("example").data(new ByteArrayInputStream(new byte[0])).contentType("application/octet-stream");
 //		resource.addParameter("param1", "holá");
 //		resource.addParameter("param2", "adiós");
-		RestfulApi.Response post = client.post(localhost(), "/encoding", resource);
+		io.intino.alexandria.restaccessor.RestAccessor.Response post = client.post(localhost(), "/encoding", resource);
 		Assert.assertEquals("name: param1, value: holá;name: param2, value: adiós;filesCount: 1", post.content());
 	}
 
