@@ -47,6 +47,7 @@ public class ZimBuilder {
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
 			ZimStream stream = mergeFileWith(data);
 			while (stream.hasNext()) writer.write(stream.next() + "\n\n");
+			writer.close();
 			out.closeEntry();
 			out.close();
 		} catch (IOException e) {
