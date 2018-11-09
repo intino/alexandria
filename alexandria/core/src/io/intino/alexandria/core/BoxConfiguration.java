@@ -6,10 +6,19 @@ import java.util.Map;
 public abstract class BoxConfiguration {
 
 	protected Map<String, String> args;
-	protected File store;
+	protected File workspace;
 
 	public BoxConfiguration(String[] args) {
 		this.args = argsToMap(args);
+		if (workspace == null) {
+			if (this.args.get("workspace") != null)
+				workspace = new java.io.File(this.args.get("workspace"));
+			else workspace = new java.io.File("./workspace");
+		}
+	}
+
+	public java.io.File workspace() {
+		return this.workspace;
 	}
 
 	private Map<String, String> argsToMap(String[] args) {
