@@ -13,7 +13,6 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.0") rest
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(release = intino.release)
 
-
 Repository(identifier = "intino-maven")
 	Release(url = "https://artifactory.intino.io/artifactory/releases")
 

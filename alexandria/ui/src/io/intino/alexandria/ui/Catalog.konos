@@ -17,6 +17,7 @@ Display alexandriaCatalog
 	Notification hidePanel
 	Notification notifyUser as Text
 	Notification itemsArrival as Text
+	Notification openDefaultItem as Text
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request deleteGroupingGroup as Object(GroupingGroup)
@@ -44,6 +45,7 @@ Display alexandriaTemporalRangeCatalog
 	Notification notifyUser as Text
 	Notification itemsArrival as Text
 	Notification loadTimezoneOffset
+	Notification openDefaultItem as Text
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter
@@ -71,6 +73,7 @@ Display alexandriaTemporalTimeCatalog
 	Notification notifyUser as Text
 	Notification itemsArrival as Text
 	Notification loadTimezoneOffset
+	Notification openDefaultItem as Text
 
 	Request selectGrouping as Object(GroupingSelection)
 	Request clearFilter
