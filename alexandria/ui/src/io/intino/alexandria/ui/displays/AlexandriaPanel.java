@@ -42,12 +42,14 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 	@Override
 	public void refresh() {
 		super.refresh();
+		refreshVisibility();
 		views().stream().filter(v -> !v.layout().equals(View.Layout.Tab) && viewDisplayMap.containsKey(v.name())).forEach(v -> viewDisplayMap.get(v.name()).refresh());
 	}
 
 	@Override
 	public void refresh(Item... objects) {
 		super.refresh();
+		refreshVisibility();
 		io.intino.alexandria.ui.schemas.Item[] items = ElementHelper.items(objects, this, this.baseAssetUrl());
 		views().stream().filter(v -> !v.layout().equals(View.Layout.Tab) && viewDisplayMap.containsKey(v.name())).forEach(v -> viewDisplayMap.get(v.name()).refresh(items));
 	}
@@ -221,6 +223,10 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		updateCurrentView(viewDisplay);
 		notifier.refreshSelectedView(view.name());
 		return viewDisplay;
+	}
+
+	private void refreshVisibility() {
+		notifier.refreshViewListVisibility(views().stream().map(this::referenceOf).collect(toList()));
 	}
 
 }
