@@ -1,4 +1,4 @@
-package io.intino.alexandria.restful.core;
+package io.intino.alexandria.restaccessor.core;
 
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;

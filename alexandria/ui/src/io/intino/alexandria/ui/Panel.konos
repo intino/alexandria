@@ -9,6 +9,7 @@ Display alexandriaPanel
 	displays = alexandriaViewContainerMold alexandriaViewContainerCatalog alexandriaViewContainerDisplay alexandriaViewContainerSet alexandriaViewContainerPanel alexandriaDialogBox alexandriaMold
 
 	Notification refreshViewList as List Object(Reference)
+	Notification refreshViewListVisibility as List Object(Reference)
 	Notification refreshSelectedView as Text
 	Notification refreshBreadcrumbs as Text
 	Notification createPanel as Object(CreatePanelParameters)

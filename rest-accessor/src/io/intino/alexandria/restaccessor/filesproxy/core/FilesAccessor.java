@@ -1,11 +1,10 @@
-package io.intino.alexandria.filesproxy.core;
+package io.intino.alexandria.restaccessor.filesproxy.core;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.filesproxy.FilesApi;
-import io.intino.alexandria.filesproxy.exceptions.FilesApiFailure;
-import io.intino.alexandria.restful.RestfulApi;
-import io.intino.alexandria.restful.core.RestfulAccessor;
-import io.intino.alexandria.restful.exceptions.RestfulFailure;
+import io.intino.alexandria.restaccessor.core.RestAccessor;
+import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
+import io.intino.alexandria.restaccessor.filesproxy.FilesApi;
+import io.intino.alexandria.restaccessor.filesproxy.exceptions.FilesApiFailure;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -16,7 +15,7 @@ import static java.util.Collections.emptyMap;
 
 public class FilesAccessor implements FilesApi {
 	private final String basePath;
-	private RestfulApi client;
+	private io.intino.alexandria.restaccessor.RestAccessor client;
 
 	public FilesAccessor() {
 		this("/file");
@@ -24,7 +23,7 @@ public class FilesAccessor implements FilesApi {
 
 	public FilesAccessor(String basePath) {
 		this.basePath = normalize(basePath);
-		this.client = new RestfulAccessor();
+		this.client = new RestAccessor();
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class FilesAccessor implements FilesApi {
 	@Override
 	public Connection connect(String url, URL certificate, String password) {
 		return new Connection() {
-			private RestfulApi.RestfulSecureConnection connection = null;
+			private io.intino.alexandria.restaccessor.RestAccessor.RestfulSecureConnection connection = null;
 
 			@Override
 			public String upload(Resource resource) throws FilesApiFailure {
@@ -45,7 +44,7 @@ public class FilesAccessor implements FilesApi {
 			@Override
 			public String upload(String path, Resource resource) throws FilesApiFailure {
 				try {
-					RestfulApi.Response response = secure().post(pathOf(path), resource);
+					io.intino.alexandria.restaccessor.RestAccessor.Response response = secure().post(pathOf(path), resource);
 					return response.content();
 				} catch (RestfulFailure error) {
 					throw new FilesApiFailure(error.getMessage());
@@ -86,7 +85,7 @@ public class FilesAccessor implements FilesApi {
 				}
 			}
 
-			private RestfulApi.RestfulSecureConnection secure() throws FilesApiFailure {
+			private io.intino.alexandria.restaccessor.RestAccessor.RestfulSecureConnection secure() throws FilesApiFailure {
 				try {
 					if (connection == null)
 						connection = client.secure(new URL(url), certificate, password);

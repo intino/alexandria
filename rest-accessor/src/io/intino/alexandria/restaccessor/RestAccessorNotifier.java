@@ -1,7 +1,7 @@
-package io.intino.alexandria.restful;
+package io.intino.alexandria.restaccessor;
 
 import java.util.function.Consumer;
 
-public interface RestfulNotifier {
+public interface RestAccessorNotifier {
     void listen(Consumer<String> listener, String webSocketUri);
 }
