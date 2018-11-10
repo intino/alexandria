@@ -1,4 +1,4 @@
-package io.intino.alexandria.restful.exceptions;
+package io.intino.alexandria.restaccessor.exceptions;
 
 import io.intino.alexandria.exceptions.AlexandriaError;
 

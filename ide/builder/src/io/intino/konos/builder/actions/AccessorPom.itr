@@ -104,24 +104,24 @@ end
 
 def type(rest) trigger(dependency)
 	<dependency>
-		<groupId>io.intino.konos</groupId>
-		<artifactId>alexandria-rest-accessor-java</artifactId>
+		<groupId>io.intino.alexandria</groupId>
+		<artifactId>rest-accessor</artifactId>
 		<version>$[1.0.0, 2.0.0)</version>
 	</dependency>
 end
 
 def type(jmx) trigger(dependency)
 	<dependency>
-		<groupId>io.intino.konos</groupId>
-		<artifactId>alexandria-jmx</artifactId>
+		<groupId>io.intino.alexandria</groupId>
+		<artifactId>jmx</artifactId>
 		<version>$[1.0.0, 2.0.0)</version>
 	</dependency>
 end
 
 def type(jms) trigger(dependency)
 	<dependency>
-		<groupId>io.intino.konos</groupId>
-		<artifactId>alexandria-jms</artifactId>
+		<groupId>io.intino.alexandria</groupId>
+		<artifactId>jms</artifactId>
 		<version>$[1.0.0, 2.0.0)</version>
 	</dependency>
 end
