@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import io.intino.alexandria.rest.spark.ResponseAdapter;
+import io.intino.alexandria.restaccessor.core.RestAccessor;
+import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 import io.intino.alexandria.ui.services.push.UISession;
-import io.intino.alexandria.restful.core.RestfulAccessor;
-import io.intino.alexandria.restful.exceptions.RestfulFailure;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -95,7 +95,7 @@ public abstract class AlexandriaProxyDisplay<N extends AlexandriaDisplayNotifier
         parameters.put("session", sessionId);
         parameters.put("token", token);
         parameters.put("personifiedDisplay", personifiedDisplayId);
-        new RestfulAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
+        new RestAccessor().post(appUrl, path + "/" + id() + subPath, parameters);
     }
 
     private JsonElement serializeParameter(Object value) {
