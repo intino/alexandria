@@ -38,7 +38,7 @@ public class Json {
 
 	private static byte[] toByteArray(InputStream inputStream) {
 		try {
-			return IOUtils.readFully(inputStream, 0 , false);
+			return IOUtils.readFully(inputStream, -1 , false);
 		} catch (IOException e) {
 			return new byte[0];
 		}
