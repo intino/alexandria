@@ -1,3 +1,5 @@
+package io.intino.alexandria.inl;
+
 import io.intino.alexandria.inl.Inl;
 import org.junit.Test;
 import schemas.*;
@@ -61,13 +63,6 @@ public class Serializer_ {
 		teacher.add(new Phone("+150512101402", new Country("USA")));
 		teacher.add(new Phone("+521005101402", new Country("Mexico")));
 		assertThat(Inl.toMessage(teacher).toString(), is(MultiLineMessage));
-	}
-
-	@Test
-	public void should_serialize_a_list_of_objects() throws IOException {
-		Status status1 = new Status().battery(78.0).cpuUsage(11.95).isPlugged(true).isScreenOn(false).temperature(29.0).created("2017-03-22T12:56:18Z");
-		Status status2 = new Status().battery(78.0).cpuUsage(11.95).isPlugged(true).isScreenOn(true).temperature(29.0).created("2017-03-22T12:56:18Z");
-		assertThat(Inl.toMessage(asList(status1, status2)).toString(), is(StatusMessage.replaceAll(" = ", "=")));
 	}
 
 	@Test

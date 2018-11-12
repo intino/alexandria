@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.zip.ZipInputStream;
+import java.util.zip.GZIPInputStream;
 
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparing;
@@ -90,20 +90,14 @@ public class ZimReader implements ZimStream {
 
 	private static InputStream inputStream(File file) {
 		try {
-			return isZim(file) ? zipStreamOf(file) : new FileInputStream(file);
+			return zipStreamOf(file);
 		} catch (IOException e) {
 			return new ByteArrayInputStream(new byte[0]);
 		}
 	}
 
-	private static boolean isZim(File file) {
-		return file.getName().endsWith(ZimExtension);
-	}
-
 	private static InputStream zipStreamOf(File file) throws IOException {
-		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(file));
-		zipStream.getNextEntry();
-		return zipStream;
+		return new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)));
 	}
 
 

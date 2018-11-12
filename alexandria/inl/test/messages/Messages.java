@@ -240,7 +240,7 @@ public class Messages {
 					"\n" +
 					"[CredentialLogin.Parameter]\n" +
 					"name: token\n" +
-					"value: abcdedgrd";
+					"value: abcdedgrd\n";
 
 	public static String infrastructureOperation =
 			"[InfrastructureOperation]\n" +
@@ -252,7 +252,7 @@ public class Messages {
 					"parameters:\n" +
 					"\tjosejuanhernandez\n" +
 					"\tU0CU1BD7E\n" +
-					"\tjosejuanhernandez@siani.es";
+					"\tjosejuanhernandez@siani.es\n";
 
 	private static String indent(String text) {
 		return "\t" + text.replaceAll("\\n", "\n\t");

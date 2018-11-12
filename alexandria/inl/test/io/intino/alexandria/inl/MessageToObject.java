@@ -1,13 +1,18 @@
+package io.intino.alexandria.inl;
+
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.ResourceStore;
 import io.intino.alexandria.inl.Inl;
 import io.intino.alexandria.inl.InlDeserializer;
+import io.intino.alexandria.inl.Message;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import schemas.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -30,7 +35,8 @@ public class MessageToObject {
 
 	@Test
 	public void should_deserialize_messages_in_a_class_with_parent() throws IOException, IllegalAccessException {
-		Teacher teacher = Inl.fromMessage(Inl.toMessage(MessageWithParentClass), Teacher.class);
+		Message message = Inl.toMessage(MessageWithParentClass);
+		Teacher teacher = Inl.fromMessage(message, Teacher.class);
 		assertThat(teacher.name, is("Jose"));
 		assertThat(teacher.money, is(50.0));
 		assertThat(teacher.birthDate, is(instant(2016, 10, 4, 20, 10, 12)));
@@ -204,7 +210,12 @@ public class MessageToObject {
 
 			@Override
 			public Resource get(String id) {
-				return new Resource(id);
+				return new Resource(id){
+					@Override
+					public InputStream data() {
+						return new ByteArrayInputStream(id.getBytes());
+					}
+				};
 			}
 
 			@Override

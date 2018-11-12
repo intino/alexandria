@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -43,28 +44,17 @@ public class ZimBuilder {
 
 	private File merge(ZimStream data) {
 		File file = tempFile();
-		ZipOutputStream out = zipStream(file);
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(zipStream(file)))) {
 			ZimStream stream = mergeFileWith(data);
-			while (stream.hasNext()) writer.write(stream.next() + "\n\n");
-			writer.close();
-			out.closeEntry();
-			out.close();
+			while (stream.hasNext()) writer.write(stream.next() + "\n");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 		return file;
 	}
 
-	private ZipOutputStream zipStream(File file) {
-		try {
-			ZipOutputStream os = new ZipOutputStream(new FileOutputStream(file));
-			os.putNextEntry(new ZipEntry("events.inl"));
-			return os;
-		} catch (IOException e) {
-			Logger.error(e);
-			return null;
-		}
+	private GZIPOutputStream zipStream(File file) throws IOException {
+		return new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 	}
 
 

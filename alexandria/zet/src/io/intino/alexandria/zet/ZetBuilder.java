@@ -2,13 +2,13 @@ package io.intino.alexandria.zet;
 
 import io.intino.alexandria.logger.Logger;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -43,13 +43,18 @@ public class ZetBuilder {
 
 	private File merge(ZetStream data) {
 		File file = tempFile();
-		try (DataOutputStream os = new DataOutputStream(new FileOutputStream(file))) {
+		try (DataOutputStream os = new DataOutputStream(zipStream(file))) {
 			ZetStream stream = mergeFileWith(data);
 			while (stream.hasNext()) os.writeLong(stream.next());
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 		return file;
+	}
+
+
+	private OutputStream zipStream(File file) throws IOException {
+		return new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 	}
 
 	private File tempFile() {

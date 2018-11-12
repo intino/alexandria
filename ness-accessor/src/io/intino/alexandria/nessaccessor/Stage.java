@@ -30,13 +30,8 @@ public interface Stage {
 		return new EventSession(this);
 	}
 
-
 	default String name(String prefix) {
-		return prefix + name();
-	}
-
-	default String name() {
-		return "#" + randomUUID().toString();
+		return prefix + "#" + randomUUID().toString();
 	}
 
 	void clear();

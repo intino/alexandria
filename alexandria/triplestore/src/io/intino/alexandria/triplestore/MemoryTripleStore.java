@@ -1,9 +1,8 @@
-package io.intino.alexandria;
+package io.intino.alexandria.triplestore;
 
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.IntPredicate;
@@ -15,43 +14,31 @@ import static java.util.stream.IntStream.range;
 import static java.util.stream.Stream.empty;
 import static java.util.stream.StreamSupport.stream;
 
-public class TripleStore {
-	private final File file;
+public class MemoryTripleStore implements TripleStore {
 	private final List<String[]> triples;
 
-	public TripleStore() {
-		this.file = null;
+	public MemoryTripleStore() {
 		this.triples = emptyList();
 	}
 
-	public TripleStore(File file) {
-		this.file = file;
-		this.triples = contentOf(file).map(this::triple).collect(toList());
+	public MemoryTripleStore(InputStream is) {
+		this.triples = contentOf(is).map(this::triple).collect(toList());
 	}
 
-	public static String[] valuePatternOf(String[] triple) {
+	private static String[] valuePatternOf(String[] triple) {
 		return new String[]{triple[0], triple[1], null};
 	}
 
-	private static String lineOf(String... triple) {
-		return triple[0] + ";" + triple[1] + ";" + triple[2] + "\n";
-	}
-
-	public File file() {
-		return file;
-	}
-
-	private Stream<String> contentOf(File file) {
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+	private Stream<String> contentOf(InputStream is) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 			return reader.lines().collect(toList()).stream();
-		} catch (FileNotFoundException e) {
-			return empty();
 		} catch (IOException e) {
 			Logger.error(e.getMessage(), e);
 			return empty();
 		}
 	}
 
+	@Override
 	public void put(String subject, String predicate, Object value) {
 		put(new String[]{subject, predicate, value.toString()});
 	}
@@ -65,10 +52,12 @@ public class TripleStore {
 		triples.remove(index);
 	}
 
+	@Override
 	public Stream<String[]> all() {
 		return triples.stream();
 	}
 
+	@Override
 	public Stream<String[]> matches(String... pattern) {
 		return stream(find(normalize(pattern)).spliterator(), false).map(triples::get);
 	}
@@ -108,47 +97,15 @@ public class TripleStore {
 
 	}
 
-	public void save() {
-		if (file == null) return;
-		file.getParentFile().mkdirs();
-		try (BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
-			for (String[] triple : triples) writer.write(lineOf(triple));
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-	}
-
 	private String[] triple(String line) {
 		return line.split(";");
 	}
 
-	public static class Builder {
-		private OutputStream os;
-
-		public Builder(OutputStream os) {
-			this.os = new BufferedOutputStream(os);
-		}
-
-		private static byte[] bytesOf(String subject, String predicate, Object value) {
-			return lineOf(subject, predicate, value.toString()).getBytes();
-		}
-
-		public Builder put(String subject, String predicate, Object value) {
-			try {
-				os.write(bytesOf(subject, predicate, value));
-			} catch (IOException e) {
-				Logger.error(e);
-			}
-			return this;
-		}
-
-
-		public void close() {
-			try {
-				os.close();
-			} catch (IOException e) {
-				Logger.error(e);
-			}
+	public void save(OutputStream outputStream) {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+			for (String[] triple : triples) writer.write(TripleStore.lineOf(triple));
+		} catch (IOException e) {
+			Logger.error(e);
 		}
 	}
 

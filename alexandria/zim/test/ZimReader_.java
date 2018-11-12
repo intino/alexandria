@@ -72,20 +72,7 @@ public class ZimReader_ {
 		assertThat(message.components("country").get(0).type(), is("Country"));
 		assertThat(message.components("country").get(0).read("name").as(String.class), is("Spain"));
 		assertThat(message.components("phone").size(), is(2));
-		assertThat(message.toString(), is(Messages.MultipleComponentMessage.trim()));
-	}
-
-	@Test
-	public void should_parse_message_in_old_format() throws Exception {
-		Message message = new ZimReader(Messages.OldFormatMessage).next();
-		assertThat(message.type(), is("Teacher"));
-		assertThat(message.read("name").as(String.class), is("Jose"));
-		assertThat(message.components("country").size(), is(1));
-		assertThat(message.components("country").get(0).type(), is("Country"));
-		assertThat(message.components("country").get(0).read("name").as(String.class), is("Spain"));
-
-		message.type("Teacher");
-		assertThat(message.toString(), is(Messages.MessageWithParentClass.trim()));
+		assertThat(message.toString(), is(Messages.MultipleComponentMessage));
 	}
 
 }

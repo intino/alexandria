@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.0") inl
+Artifact(groupId = "io.intino.alexandria", version = "1.0.1") inl
 	Imports
 		Compile("io.intino.alexandria", "primitives", "1.0.0")
 		Test("junit", "junit", "LATEST")

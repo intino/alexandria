@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipInputStream;
 
 import static java.util.Arrays.stream;
 
@@ -74,8 +76,8 @@ public class ZetReader implements ZetStream {
 
 	private static InputStream inputStream(File file) {
 		try {
-			return new FileInputStream(file);
-		} catch (FileNotFoundException e) {
+			return new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)));
+		} catch (IOException e) {
 			return new ByteArrayInputStream(new byte[0]);
 		}
 	}

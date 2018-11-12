@@ -8,11 +8,13 @@ import io.intino.ness.core.sessions.Fingerprint;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
 
 import static io.intino.ness.core.Blob.Type.event;
 
@@ -42,7 +44,16 @@ public class EventSession {
 	}
 
 	private BufferedWriter createWriter(Fingerprint fingerprint) {
-		return new BufferedWriter(new OutputStreamWriter(stage.start(fingerprint.name(), event)));
+		return new BufferedWriter(new OutputStreamWriter(zipStream(stage.start(fingerprint.name(), event))));
+	}
+
+	private GZIPOutputStream zipStream(OutputStream outputStream) {
+		try {
+			return new GZIPOutputStream(outputStream);
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	public void put(String tank, Timetag timetag, Message... messages) {

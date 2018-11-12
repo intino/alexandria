@@ -27,7 +27,7 @@ public class UnionTest {
 	@Test
 	public void should_read_three_sorted_files_without_duplicates() {
 		ZetStream.Union union = new ZetStream.Union(asList(
-				new ZetReader(new File("test-res/testsets/norep1.set")),
+				new ZetReader(new File("test-res/testsets/norep1.zet")),
 				new ZetReader(new File("test-res/testsets/norep2.zet")),
 				new ZetReader(new File("test-res/testsets/norep3.zet"))));
 

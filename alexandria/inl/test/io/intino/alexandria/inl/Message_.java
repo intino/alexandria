@@ -8,32 +8,33 @@ import static org.junit.Assert.assertThat;
 
 public class Message_ {
 
-	private Message message;
-
-	@Before
-	public void setUp() {
-		message = new Message("Status");
+	@Test
+	public void should_override_and_create_new_attributes() {
+		Message message = new Message("Status");
 		message.set("battery", 78.0);
 		message.set("cpuUsage", 11.95);
 		message.set("isPlugged", true);
 		message.set("isScreenOn", false);
 		message.set("temperature", 29.0);
 		message.set("created", "2017-03-22T12:56:18Z");
-	}
-
-
-
-	@Test
-	public void should_override_and_create_new_attributes() {
 		message.set("battery", 80.0);
 		message.set("taps", 100);
+
 		assertThat(message.read("battery").as(Double.class), is(80.0));
 		assertThat(message.read("taps").as(Integer.class), is(100));
-		assertThat(message.toString(), is("[Status]\nbattery: 80.0\ncpuUsage: 11.95\nisPlugged: true\nisScreenOn: false\ntemperature: 29.0\ncreated: 2017-03-22T12:56:18Z\ntaps: 100"));
+		String expected = "[Status]\nbattery: 80.0\ncpuUsage: 11.95\nisPlugged: true\nisScreenOn: false\ntemperature: 29.0\ncreated: 2017-03-22T12:56:18Z\ntaps: 100\n";
+		assertThat(message.toString(), is(expected));
 	}
 
 	@Test
 	public void should_remove_attributes() {
+		Message message = new Message("Status");
+		message.set("battery", 78.0);
+		message.set("cpuUsage", 11.95);
+		message.set("isPlugged", true);
+		message.set("isScreenOn", false);
+		message.set("temperature", 29.0);
+		message.set("created", "2017-03-22T12:56:18Z");
 		message.remove("battery");
 		message.remove("isscreenon");
 		assertThat(message.contains("battery"), is(false));
@@ -43,6 +44,13 @@ public class Message_ {
 
 	@Test
 	public void should_rename_attributes() {
+		Message message = new Message("Status");
+		message.set("battery", 78.0);
+		message.set("cpuUsage", 11.95);
+		message.set("isPlugged", true);
+		message.set("isScreenOn", false);
+		message.set("temperature", 29.0);
+		message.set("created", "2017-03-22T12:56:18Z");
 		message
 				.rename("isPlugged", "plugged")
 				.rename("battery", "b");
@@ -54,6 +62,13 @@ public class Message_ {
 
 	@Test
 	public void should_change_type() {
+		Message message = new Message("Status");
+		message.set("battery", 78.0);
+		message.set("cpuUsage", 11.95);
+		message.set("isPlugged", true);
+		message.set("isScreenOn", false);
+		message.set("temperature", 29.0);
+		message.set("created", "2017-03-22T12:56:18Z");
 		message.type("sensor");
 		assertThat(message.is("sensor"), is(true));
 		assertThat(message.contains("battery"), is(true));
@@ -63,34 +78,32 @@ public class Message_ {
 	public void should_handle_document_list_attributes() {
 		Message message = new Message("Document");
 		message.set("name", "my file");
-		message.write("file", "png", data(20));
-		message.write("file", "png", data(30));
-		message.set("file", "png", data(40));
-		message.write("file", "png", data(80));
-		assertThat(message.attachments().size(), is(2));
-		assertThat(message.attachments().size(), is(2));
-		assertThat(message.attachment(message.get("file").split("\n")[0]).type(), is("png"));
-		assertThat(message.attachment(message.get("file").split("\n")[0]).data().length, is(40));
+		message.attach("file1", "png", data(20));
+		message.attach("file1", "png", data(30));
+		message.attach("file2", "png", data(40));
+		message.attach("file2", "png", data(80));
+		assertThat(message.attachments().size(), is(4));
+		assertThat(message.attachment(message.get("file1").split("\n")[0]).type(), is("png"));
+		assertThat(message.attachment(message.get("file2").split("\n")[0]).data().length, is(40));
 	}
 
 	@Test
 	public void should_handle_document_attributes() {
 		Message message = new Message("Document");
 		message.set("name", "my file");
-		message.set("file", "png", data(64));
-		message.set("file", "png", data(128));
-		assertThat(message.attachments().size(), is(1));
-		assertThat(message.attachment(message.get("file")).type(), is("png"));
-		assertThat(message.attachment(message.get("file")).data().length, is(128));
+		message.attach("file", "png", data(64));
+		message.attach("file", "png", data(128));
+		assertThat(message.attachments().size(), is(2));
+		assertThat(message.attachment(message.get("file").split("\n")[0]).type(), is("png"));
+		assertThat(message.attachment(message.get("file").split("\n")[1]).data().length, is(128));
 	}
 
 	@Test
 	public void should_update_documents() {
 		Message message = new Message("Document");
-		message.write("file", "png", data(0));
-		for (Message.Attachment attachment : message.attachments()) {
+		message.attach("file", "png", data(0));
+		for (Message.Attachment attachment : message.attachments())
 			attachment.data(data(128));
-		}
 		assertThat(message.attachments().size(), is(1));
 		assertThat(message.attachment(message.get("file")).type(), is("png"));
 		assertThat(message.attachment(message.get("file")).data().length, is(128));
@@ -99,15 +112,15 @@ public class Message_ {
 	@Test
 	public void should_handle_multi_line_attributes() {
 		Message message = new Message("Multiline");
-		message.write("name", "John");
-		message.write("age", 30);
-		message.write("age", 20);
-		message.write("comment", "hello");
-		message.write("comment", "world");
-		message.write("comment", "!!!");
+		message.append("name", "John");
+		message.append("age", 30);
+		message.append("age", 20);
+		message.append("comment", "hello");
+		message.append("comment", "world");
+		message.append("comment", "!!!");
 		assertThat(message.get("age"), is("30\n20"));
 		assertThat(message.get("comment"), is("hello\nworld\n!!!"));
-		assertThat(message.toString(), is("[Multiline]\nname: John\nage:\n\t30\n\t20\ncomment:\n\thello\n\tworld\n\t!!!"));
+		assertThat(message.toString(), is("[Multiline]\nname: John\nage:\n\t30\n\t20\ncomment:\n\thello\n\tworld\n\t!!!\n"));
 	}
 
 	private byte[] data(int size) {

@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class Event extends Message {
-	public static final String TS = "ts";
+	static final String TS = "ts";
 	private Message message;
 	private Instant instant;
 
@@ -23,110 +23,6 @@ public class Event extends Message {
 	@Override
 	public Event asEvent() {
 		return this;
-	}
-
-	@Override
-	public String type() {
-		return message.type();
-	}
-
-	public Instant instant() {
-		return instant;
-	}
-
-	@Override
-	public boolean is(String type) {
-		return message.is(type);
-	}
-
-	@Override
-	public void type(String type) {
-		message.type(type);
-	}
-
-	@Override
-	public String get(String attribute) {
-		return message.get(attribute);
-	}
-
-	@Override
-	public Value read(String attribute) {
-		return message.read(attribute);
-	}
-
-	@Override
-	public Message set(String attribute, String value) {
-		return message.set(attribute, value);
-	}
-
-	@Override
-	public Message set(String attribute, Boolean value) {
-		return message.set(attribute, value);
-	}
-
-	@Override
-	public Message set(String attribute, Integer value) {
-		return message.set(attribute, value);
-	}
-
-	@Override
-	public Message set(String attribute, Double value) {
-		return message.set(attribute, value);
-	}
-
-	@Override
-	public Message set(String attribute, String type, InputStream is) {
-		return message.set(attribute, type, is);
-	}
-
-	@Override
-	public Message set(String attribute, String id, String type, InputStream is) {
-		return message.set(attribute, id, type, is);
-	}
-
-	@Override
-	public Message set(String attribute, String type, byte[] content) {
-		return message.set(attribute, type, content);
-	}
-
-	@Override
-	public Message set(String attribute, String id, String type, byte[] content) {
-		return message.set(attribute, id, type, content);
-	}
-
-	@Override
-	public Message write(String attribute, String value) {
-		return message.write(attribute, value);
-	}
-
-	@Override
-	public Message write(String attribute, Boolean value) {
-		return message.write(attribute, value);
-	}
-
-	@Override
-	public Message write(String attribute, Integer value) {
-		return message.write(attribute, value);
-	}
-
-	@Override
-	public Message write(String attribute, Double value) {
-		return message.write(attribute, value);
-	}
-
-	@Override
-	public Message write(String attribute, String type, InputStream is) {
-		return message.write(attribute, type, is);
-	}
-
-	@Override
-	public Message write(String attribute, String type, byte[] content) {
-		return message.write(attribute, type, content);
-	}
-
-	@Override
-	public List<Attachment> attachments() {
-		return message.attachments();
 	}
 
 	@Override
@@ -192,5 +88,99 @@ public class Event extends Message {
 	@Override
 	public boolean contains(String attribute) {
 		return message.contains(attribute);
+	}
+
+	public Instant instant() {
+		return instant;
+	}
+
+	@Override
+	public String type() {
+		return message.type();
+	}
+
+	@Override
+	public boolean is(String type) {
+		return message.is(type);
+	}
+
+	@Override
+	public void type(String type) {
+		message.type(type);
+	}
+
+	@Override
+	public String get(String attribute) {
+		return message.get(attribute);
+	}
+
+	@Override
+	public Value read(String attribute) {
+		return message.read(attribute);
+	}
+
+	@Override
+	public Message set(String attribute, String value) {
+		return message.set(attribute, value);
+	}
+
+	@Override
+	public Message set(String attribute, Boolean value) {
+		return message.set(attribute, value);
+	}
+
+	@Override
+	public Message set(String attribute, Integer value) {
+		return message.set(attribute, value);
+	}
+
+	@Override
+	public Message set(String attribute, Double value) {
+		return message.set(attribute, value);
+	}
+
+	@Override
+	public Message attach(String attribute, String type, InputStream is) {
+		return message.attach(attribute, type, is);
+	}
+
+	@Override
+	public Message attach(String attribute, String id, String type, InputStream is) {
+		return message.attach(attribute, id, type, is);
+	}
+
+	@Override
+	public Message attach(String attribute, String type, byte[] content) {
+		return message.attach(attribute, type, content);
+	}
+
+	@Override
+	public Message attach(String attribute, String id, String type, byte[] content) {
+		return message.attach(attribute, id, type, content);
+	}
+
+	@Override
+	public Message append(String attribute, Boolean value) {
+		return message.append(attribute, value);
+	}
+
+	@Override
+	public Message append(String attribute, Integer value) {
+		return message.append(attribute, value);
+	}
+
+	@Override
+	public Message append(String attribute, Double value) {
+		return message.append(attribute, value);
+	}
+
+	@Override
+	public Message append(String attribute, String value) {
+		return message.append(attribute, value);
+	}
+
+	@Override
+	public List<Attachment> attachments() {
+		return message.attachments();
 	}
 }
