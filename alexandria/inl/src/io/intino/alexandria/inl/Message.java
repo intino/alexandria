@@ -1,6 +1,8 @@
 package io.intino.alexandria.inl;
 
 
+import com.sun.xml.internal.ws.api.message.Attachment;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,50 +13,21 @@ import static io.intino.alexandria.inl.Event.TS;
 public class Message {
 	private String type;
 	private Message owner;
+	private Event event;
 	private Map<String, Attribute> attributes;
 	private List<Message> components;
-	private Map<String, Attachment> attachments;
+	private List<Attachment> attachments;
 
 	public Message(String type) {
-		this.type = type;
-		this.owner = null;
-		this.attributes = new LinkedHashMap<>();
-		this.attachments = new HashMap<>();
-		this.components = null;
+		this(type, null);
 	}
 
 	public Message(String type, Message owner) {
 		this.type = type;
 		this.owner = owner;
 		this.attributes = new LinkedHashMap<>();
-		this.attachments = new HashMap<>();
-		this.components = new ArrayList<>();
-	}
-
-	private static String indent(String text) {
-		return "\n\t" + text.replaceAll("\\n", "\n\t");
-	}
-
-	private static byte[] contentOf(InputStream is) {
-		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-			int length;
-			byte[] data = new byte[16384];
-			while ((length = is.read(data, 0, data.length)) != -1)
-				os.write(data, 0, length);
-			os.flush();
-			return os.toByteArray();
-
-		} catch (IOException e) {
-			return new byte[0];
-		}
-	}
-
-	public boolean isEvent() {
-		return this.attributes.containsKey(TS);
-	}
-
-	public Event asEvent() {
-		return isEvent() ? new Event(this) : null;
+		this.attachments = null;
+		this.components = null;
 	}
 
 	public String type() {
@@ -102,53 +75,92 @@ public class Message {
 		return set(attribute, value.toString());
 	}
 
-	public Message set(String attribute, String type, InputStream is) {
-		return set(attribute, type, contentOf(is));
+	public Message attach(String attribute, String type, InputStream is) {
+		return attach(attribute, randomId(), type, contentOf(is));
 	}
 
-	public Message set(String attribute, String id, String type, InputStream is) {
-		return set(attribute, id, type, contentOf(is));
+	public Message attach(String attribute, String id, String type, InputStream is) {
+		return attach(attribute, id, type, contentOf(is));
 	}
 
-	public Message set(String attribute, String type, byte[] content) {
-		if (attributes.containsKey(attribute)) detach(get(attribute));
-		return set(attribute, "@" + attach(type, content));
+	public Message attach(String attribute, String type, byte[] content) {
+		return attach(attribute, randomId(), type, content);
 	}
 
-	public Message set(String attribute, String id, String type, byte[] content) {
-		if (attributes.containsKey(attribute)) detach(get(attribute));
-		return set(attribute, "@" + attach(id, type, content));
+	public Message attach(String attribute, String id, String type, byte[] content) {
+		return append(use(attribute), "@" + putAttachment(id + "." + type, content));
 	}
 
-	public Message write(String attribute, String value) {
-		if (value == null) return this;
-		Attribute a = use(attribute);
-		a.value = a.value == null ? value : a.value + "\n" + value;
+	public Message append(String attribute, Boolean value) {
+		return append(use(attribute), value.toString());
+	}
+
+	public Message append(String attribute, Integer value) {
+		return append(use(attribute), value.toString());
+	}
+
+	public Message append(String attribute, Double value) {
+		return append(use(attribute), value.toString());
+	}
+
+	public Message append(String attribute, String value) {
+		return append(use(attribute), value);
+	}
+
+	private Message append(Attribute attribute, String value) {
+		attribute.value =
+				(attribute.value == null ? "" : attribute.value + "\n") +
+				(value == null ? "\0" : value);
 		return this;
 	}
 
-	public Message write(String attribute, Boolean value) {
-		return write(attribute, value.toString());
-	}
-
-	public Message write(String attribute, Integer value) {
-		return write(attribute, value.toString());
-	}
-
-	public Message write(String attribute, Double value) {
-		return write(attribute, value.toString());
-	}
-
-	public Message write(String attribute, String type, InputStream is) {
-		return write(attribute, type, contentOf(is));
-	}
-
-	public Message write(String attribute, String type, byte[] content) {
-		return write(attribute, "@" + attach(type, content));
-	}
-
 	public List<Attachment> attachments() {
-		return new ArrayList<>(attachments.values());
+		return attachments != null ? attachments : (attachments = new ArrayList<>());
+	}
+
+	private String randomId() {
+		return UUID.randomUUID().toString();
+	}
+
+	private String putAttachment(String id, byte[] bytes) {
+		attachments().add(new Attachment(id, bytes));
+		return id;
+	}
+
+	private void detach(String id) {
+		if (id.contains("@")) attachments().remove(id.substring(1));
+	}
+
+
+
+	public boolean isEvent() {
+		return this.attributes.containsKey(TS);
+	}
+
+	public Event asEvent() {
+		return isEvent() ? event() : null;
+	}
+
+	private static String indent(String text) {
+		return "\n\t" + text.replaceAll("\\n", "\n\t");
+	}
+
+	private static byte[] contentOf(InputStream is) {
+		try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+			int length;
+			byte[] data = new byte[16384];
+			while ((length = is.read(data, 0, data.length)) != -1)
+				os.write(data, 0, length);
+			os.flush();
+			return os.toByteArray();
+
+		} catch (IOException e) {
+			return new byte[0];
+		}
+	}
+
+	private Event event() {
+		return event != null ? event : (event = new Event(this));
 	}
 
 	public Message rename(String attribute, String newName) {
@@ -205,9 +217,9 @@ public class Message {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder("[" + path() + "]");
-		for (Attribute attribute : attributes.values()) result.append("\n").append(stringOf(attribute));
-		for (Message component : components()) result.append("\n\n").append(component.toString());
+		StringBuilder result = new StringBuilder("[" + path() + "]\n");
+		for (Attribute attribute : attributes.values()) result.append(stringOf(attribute)).append("\n");
+		for (Message component : components()) result.append("\n").append(component.toString());
 		return result.toString();
 	}
 
@@ -217,28 +229,6 @@ public class Message {
 
 	private boolean isMultiline(String value) {
 		return value != null && value.contains("\n");
-	}
-
-	public String attach(String type, byte[] bytes) {
-		String id = UUID.randomUUID().toString() + "." + type;
-		attachments.put(id.toLowerCase(), new Attachment(id, bytes));
-		return id;
-	}
-
-	public String attach(String id, String type, byte[] bytes) {
-		attachments.put(id.toLowerCase(), new Attachment(id, bytes));
-		return id;
-	}
-
-	private Message attach(List<String> ids) {
-		for (String id : ids)
-			attachments.put(id.toLowerCase(), new Attachment(id, new byte[0]));
-		return this;
-	}
-
-	private void detach(String ids) {
-		for (String id : ids.split("\n"))
-			if (id.contains("@")) attachments.remove(id.substring(1));
 	}
 
 	private String path() {
@@ -255,7 +245,12 @@ public class Message {
 
 	public Attachment attachment(String id) {
 		if (id.startsWith("@")) id = id.substring(1);
-		return attachments.containsKey(id) ? attachments.get(id.toLowerCase()) : null;
+		for (Attachment a : attachments()) {
+			if (a.id().equals(id)) {
+				return a;
+			}
+		}
+		return null;
 	}
 
 	public boolean contains(String attribute) {

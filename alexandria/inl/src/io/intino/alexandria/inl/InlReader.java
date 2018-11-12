@@ -6,13 +6,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class InlReader {
+	private boolean hasNext = true;
 	private BufferedReader reader;
 	private Message current;
 	private Message next;
 
 	public InlReader(InputStream is) {
 		this.reader = new BufferedReader(new InputStreamReader(is), 65536);
-		this.current = createMessage(typeIn(nextLine()), null);
+		try {
+			this.current = createMessage(typeIn(nextLine()), null);
+		} catch (Throwable e) {
+			hasNext = false;
+		}
 	}
 
 	private static boolean isAttributeIn(String line) {
@@ -29,6 +34,48 @@ public class InlReader {
 		return line.contains(".") ? line.split("\\.") : new String[]{line};
 	}
 
+	private static String normalize(String line) {
+		return line == null ? null : isEmpty(line) ? "" : isTrimRequired(line) ? trim(line) : line;
+	}
+
+	private static boolean isTrimRequired(String line) {
+		return !isMultiline(line) && !isHeaderIn(line);
+	}
+
+	private static boolean isMultiline(String line) {
+		return line.charAt(0) == '\t';
+	}
+
+	private static boolean isHeaderIn(String line) {
+		return !isEmpty(line) && line.charAt(0) == '[';
+	}
+
+	private static boolean isEmpty(String line) {
+		char[] chars = charsOf(line);
+		if (chars.length > 0 && chars[0] == '\t') return false;
+		for (char c : chars)
+			if (c != ' ' && c != '\t') return false;
+		return true;
+	}
+
+	private static char[] charsOf(String line) {
+		return line == null ? new char[0] : line.toCharArray();
+	}
+
+	private static String trim(String line) {
+		int[] index = splitIndex(line.toCharArray());
+		return line.substring(0, index[0] + 1) + ":" + line.substring(index[1]);
+	}
+
+	private static int[] splitIndex(char[] data) {
+		int index = -1;
+		while (++index < data.length) if (data[index] == ':') break;
+		int[] result = new int[]{index, index};
+		while (--result[0] >= 0 && data[result[0]] == ' ') ;
+		while (++result[1] < data.length && data[result[1]] == ' ') ;
+		return result;
+	}
+
 	public Message next() {
 		if (current == null) return null;
 		String attribute = "";
@@ -36,7 +83,7 @@ public class InlReader {
 		while (true) {
 			String line = nextLine();
 			if (line == null) return swap(null);
-			else if (isMultilineIn(line)) scope.write(attribute, line.substring(1));
+			else if (isMultilineIn(line)) scope.append(attribute, line.substring(1));
 			else if (isAttributeIn(line)) {
 				String value = valueOf(line);
 				scope.set(attribute = attributeOf(line), value);
@@ -55,10 +102,6 @@ public class InlReader {
 		return value.startsWith("@");
 	}
 
-	private boolean isHeaderIn(String line) {
-		return line.startsWith("[");
-	}
-
 	private String attributeOf(String line) {
 		return line.substring(0, line.indexOf(":"));
 	}
@@ -72,11 +115,11 @@ public class InlReader {
 	}
 
 	private boolean isMultilineIn(String line) {
-		return line.startsWith("\t");
+		return !isEmpty(line) && line.charAt(0) == '\t';
 	}
 
 	public boolean hasNext() {
-		return true;
+		return hasNext;
 	}
 
 	public void close() throws IOException {
@@ -97,14 +140,6 @@ public class InlReader {
 		}
 	}
 
-	private String normalize(String line) {
-		if (line == null) return null;
-		if (line.startsWith("\t")) return line;
-		line = line.trim();
-		if (line.isEmpty()) return line;
-		if (line.startsWith("[")) return line;
-		return line.replaceAll("(\\w*)\\s*[:=]\\s*(.*)", "$1:$2");//TODO improve performance
-	}
 
 	private Message createMessage(String type, Message owner) {
 		Message message = new Message(type, owner);

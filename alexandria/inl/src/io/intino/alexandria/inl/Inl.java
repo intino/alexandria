@@ -18,17 +18,23 @@ import static java.util.Collections.emptyList;
 import static java.util.Objects.isNull;
 
 public class Inl {
-	public static Message toMessage(Object object) {
-		return object instanceof String ? new InlReader(new ByteArrayInputStream(object.toString().getBytes())).next() : ObjectToMessage.toMessage(object);
+	public static Message toMessage(String data) {
+		return new InlReader(new ByteArrayInputStream(data.getBytes())).next();
 	}
 
-	public static <T> T fromMessage(Message object, Class<T> t) throws IllegalAccessException {
-		return MessageToObject.fromMessage(object, t);
+	public static Message toMessage(Object object) {
+		return new ObjectToMessage().get(object);
+	}
+
+	public static <T> T fromMessage(Message message, Class<T> t) throws IllegalAccessException {
+		return new MessageToObject(message).of(t);
 	}
 
 	public static class ObjectToMessage {
-		public static Message toMessage(Object object) {
-			final Message message = new Message(object instanceof List ? collectionType((List) object) : object.getClass().getSimpleName());
+
+
+		public Message get(Object object) {
+			final Message message = new Message(object.getClass().getSimpleName());
 			for (Field field : Fields.of(object).asList()) {
 				if (!isConvertible(field)) continue;
 				Object value = valueOf(field, object);
@@ -43,9 +49,11 @@ public class Inl {
 			return message;
 		}
 
+
+
 		private static void convertAttachment(Message message, Field field, Object value) {
 			Resource resource = (Resource) value;
-			message.set(field.getName(), resource.id(), resource.type(), resource.data());
+			message.attach(field.getName(), resource.id(), resource.type(), resource.data());
 			reset(resource);
 		}
 
@@ -73,10 +81,10 @@ public class Inl {
 
 		private static void writeAttribute(Message message, Field field, Object value) {
 			final String name = field.getName();
-			if (value instanceof Double) message.write(name, (Double) value);
-			else if (value instanceof Boolean) message.write(name, (Boolean) value);
-			else if (value instanceof Integer) message.write(name, (Integer) value);
-			else message.write(name, value == null ? null : value.toString());
+			if (value instanceof Double) message.append(name, (Double) value);
+			else if (value instanceof Boolean) message.append(name, (Boolean) value);
+			else if (value instanceof Integer) message.append(name, (Integer) value);
+			else message.append(name, value == null ? null : value.toString());
 		}
 
 		private static boolean isConvertible(Field field) {
@@ -97,45 +105,44 @@ public class Inl {
 			final Object o = valueOf(field, object);
 			return o == null ? emptyList() : o instanceof List ? (List<Object>) o : Arrays.asList((Object[]) o);
 		}
-
-		private static String collectionType(List object) {
-			final String typeName = ((ParameterizedType) (object).getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
-			return typeName.contains("") ? typeName.substring(typeName.lastIndexOf("") + 1) : typeName;
-		}
-
 	}
 
 	@SuppressWarnings("unchecked")
 	public static class MessageToObject {
 		private static Map<Class, String> classNames = new HashMap<>();
 		private static Map<String, Field> fields = new HashMap<>();
+		private Message message;
 
-		public static <T> T fromMessage(Message message, Class<T> aClass) throws IllegalAccessException {
+		public MessageToObject(Message message) {
+			this.message = message;
+		}
+
+		public <T> T of(Class<T> aClass) throws IllegalAccessException {
 			return (T) fillObject(message, aClass, create(aClass));
 		}
 
-		private static <T> Object fillObject(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
-			attributes(message, aClass, object);
-			components(message, aClass, object);
+		private static  <T> Object fillObject(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+			fillAttributes(message, aClass, object);
+			fillComponents(message, aClass, object);
 			return object;
 		}
 
-		private static <T> void attributes(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
-			for (String attr : message.attributes()) {
-				Field field = fieldByName(aClass, attr);
-				if (field != null) setField(field, object, valueOf(message, attr, field));
+		private static <T> void fillAttributes(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+			for (String attribute : message.attributes()) {
+				Field field = fieldByName(aClass, attribute);
+				if (field != null) setField(field, object, valueOf(message, attribute, field));
 			}
 		}
 
-		private static Object valueOf(Message message, String attr, Field field) {
+		private static Object valueOf(Message message, String attribute, Field field) {
 			if (field.getType().isAssignableFrom(Resource.class)) {
-				Message.Attachment attachment = message.attachment(message.get(attr));
+				Message.Attachment attachment = message.attachment(message.get(attribute));
 				return new Resource(attachment.id()).data(attachment.data());
 			}
-			return parserOf(field).parse(message.get(attr));
+			return parserOf(field).parse(message.get(attribute));
 		}
 
-		private static <T> void components(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+		private static <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 			for (Message component : message.components()) {
 				Field field = fieldByName(aClass, component.type());
 				if (field != null)

@@ -1,28 +1,31 @@
 package io.intino.alexandria.nessaccessor.stages;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.nessaccessor.Stage;
 import io.intino.ness.core.Blob;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class MemoryStage implements Stage {
-	private List<MyOutputStream> streams = new ArrayList<>();
+	private List<MemoryOutputStream> streams = new ArrayList<>();
 
 	@Override
 	public OutputStream start(Blob.Type type) {
-		return start(name(), type);
+		return start("", type);
 	}
 
 	@Override
 	public OutputStream start(String prefix, Blob.Type type) {
-		streams.add(0, new MyOutputStream(name(prefix), type));
-		return streams.get(0);
+		try {
+			streams.add(0, new MemoryOutputStream(name(prefix), type));
+			return streams.get(0);
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	@Override
@@ -51,11 +54,11 @@ public class MemoryStage implements Stage {
 		streams.clear();
 	}
 
-	private class MyOutputStream extends ByteArrayOutputStream {
+	private class MemoryOutputStream extends ByteArrayOutputStream {
 		private final String name;
 		private final Blob.Type type;
 
-		public MyOutputStream(String name, Blob.Type type) {
+		public MemoryOutputStream(String name, Blob.Type type) throws IOException {
 			this.name = name;
 			this.type = type;
 		}
@@ -67,5 +70,6 @@ public class MemoryStage implements Stage {
 		public Blob.Type type() {
 			return type;
 		}
+
 	}
 }

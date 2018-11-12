@@ -6,6 +6,7 @@ import io.intino.ness.core.Blob;
 
 import java.io.*;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Stream.empty;
@@ -25,18 +26,14 @@ public class FileStage implements Stage {
 
 	@Override
 	public OutputStream start(Blob.Type type) {
-		try {
-			return new FileOutputStream(fileOf(type));
-		} catch (FileNotFoundException e) {
-			return null;
-		}
+		return start("", type);
 	}
 
 	@Override
 	public OutputStream start(String prefix, Blob.Type type) {
 		try {
 			return new FileOutputStream(fileOf(prefix, type));
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			return null;
 		}
 	}
@@ -53,10 +50,6 @@ public class FileStage implements Stage {
 	private Stream<File> files() {
 		File[] files = root.listFiles(this::blobs);
 		return files == null ? empty() : stream(files);
-	}
-
-	private File fileOf(Blob.Type type) {
-		return new File(root, withExtension(name(), type));
 	}
 
 	private File fileOf(String name, Blob.Type type) {

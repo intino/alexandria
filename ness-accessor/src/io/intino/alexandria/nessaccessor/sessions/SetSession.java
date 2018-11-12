@@ -1,6 +1,7 @@
 package io.intino.alexandria.nessaccessor.sessions;
 
-import io.intino.alexandria.TripleStore;
+import io.intino.alexandria.triplestore.MemoryTripleStore;
+import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.nessaccessor.Stage;
 import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
@@ -8,12 +9,15 @@ import io.intino.ness.core.Timetag;
 import io.intino.ness.core.sessions.Fingerprint;
 import io.intino.ness.core.sessions.SetSessionFileWriter;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import java.util.zip.GZIPOutputStream;
 
 public class SetSession {
 	private final SetSessionFileWriter writer;
-	private final TripleStore.Builder tripleStore;
+	private final MemoryTripleStore.Builder tripleStore;
 	private final int maxSize;
 	private int count = 0;
 
@@ -22,9 +26,18 @@ public class SetSession {
 	}
 
 	public SetSession(Stage stage, int autoFlushSize) {
-		this.writer = new SetSessionFileWriter(stage.start(Blob.Type.set));
-		this.tripleStore = new TripleStore.Builder(stage.start(Blob.Type.setMetadata));
+		this.writer = new SetSessionFileWriter(zipStream(stage.start(Blob.Type.set)));
+		this.tripleStore = new MemoryTripleStore.Builder(zipStream(stage.start(Blob.Type.setMetadata)));
 		this.maxSize = autoFlushSize;
+	}
+
+	private OutputStream zipStream(OutputStream outputStream) {
+		try {
+			return new GZIPOutputStream(outputStream);
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
 	}
 
 	public void put(String tank, Timetag timetag, String set, Stream<Long> ids) {

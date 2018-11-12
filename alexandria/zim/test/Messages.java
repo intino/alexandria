@@ -22,17 +22,6 @@ public class Messages {
         "name: Spain\n" +
         "continent:\n";
 
-    public static String OldFormatMessage =
-        "[Teacher]\n" +
-        "name = \"Jose\"\n" +
-        "money=50.0\n" +
-        "birthDate= 2016-10-04T20:10:12Z\n" +
-        "university = ULPGC\n" +
-        "\n" +
-        "[Teacher.Country]\n" +
-        "name=\"Spain\"\n" +
-        "continent=\n";
-
     public static String MultipleComponentMessage =
         "[Teacher]\n" +
         "name: Jose\n" +
