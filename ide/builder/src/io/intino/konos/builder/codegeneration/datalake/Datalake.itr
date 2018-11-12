@@ -76,8 +76,8 @@ def type(tanks)
 				io.intino.alexandria.nessaccessor.stages.MemoryStage stage = new io.intino.alexandria.nessaccessor.stages.MemoryStage();
 				EventSession session = stage.createEventSession();
 				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, messages);
-				accessor.push(stage);
 				session.close();
+				accessor.push(stage);
 			}
 		}
 	}

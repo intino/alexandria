@@ -63,6 +63,6 @@
     <orderEntry type="library" name="Legio: io.intino.alexandria:inl:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:core-framework:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
-    <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.1" level="project" />
   </component>
 </module>

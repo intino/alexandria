@@ -118,10 +118,7 @@ public class CreateKonosBoxAction extends KonosAction {
 		if (konosGraph.taskList().isEmpty()) remove(dependencies, "scheduler");
 		if (konosGraph.nessClientList().isEmpty()) remove(dependencies, "ness-accessor");
 		if (konosGraph.uIServiceList().isEmpty()) remove(dependencies, "ui");
-		if (konosGraph.rESTServiceList().isEmpty()) {
-			remove(dependencies, "rest");
-			remove(dependencies, "ui");
-		}
+		if (konosGraph.rESTServiceList().isEmpty() || !konosGraph.uIServiceList().isEmpty()) remove(dependencies, "rest");
 		if (konosGraph.slackBotServiceList().isEmpty()) remove(dependencies, "slack");
 		return dependencies;
 	}
