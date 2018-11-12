@@ -36,6 +36,7 @@ def type(box)
 			this.configuration = configuration;[
 			initLogger();
 			$service+setup...[$NL]]
+			$datalake+setup
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -101,7 +102,7 @@ def type(box)
 		}
 		[$datalake+hide
 		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
-			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new io.intino.ness.core.fs.FSDatalake(new java.io.File(nessUrl.replace("file://", ""))));
+			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
 			return new io.intino.alexandria.nessaccessor.tcp.TcpDatalake(nessUrl, nessUser, nessPassword, clientId);
 		}
 		]
@@ -142,6 +143,10 @@ end
 
 def type(service & rest) trigger(setup)
 	io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+end
+
+def type(datalake) trigger(setup)
+	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 end
 
 def type(service & jmx) trigger(jmx)
@@ -194,7 +199,6 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake & requireConnection) trigger(init)
-	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 	this.nessAccessor.connection().connect("$mode");
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
@@ -205,7 +209,6 @@ end
 
 
 def type(dataLake) trigger(init)
-	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 	java.lang.Thread thread = new java.lang.Thread(() -> {
 		this.nessAccessor.connection().connect("$mode");
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
