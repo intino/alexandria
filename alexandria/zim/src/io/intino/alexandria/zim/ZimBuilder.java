@@ -7,6 +7,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -41,14 +43,30 @@ public class ZimBuilder {
 
 	private File merge(ZimStream data) {
 		File file = tempFile();
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
+		ZipOutputStream out = zipStream(file);
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
 			ZimStream stream = mergeFileWith(data);
 			while (stream.hasNext()) writer.write(stream.next() + "\n\n");
+			writer.close();
+			out.closeEntry();
+			out.close();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 		return file;
 	}
+
+	private ZipOutputStream zipStream(File file) {
+		try {
+			ZipOutputStream os = new ZipOutputStream(new FileOutputStream(file));
+			os.putNextEntry(new ZipEntry("events.inl"));
+			return os;
+		} catch (IOException e) {
+			Logger.error(e);
+			return null;
+		}
+	}
+
 
 	private File tempFile() {
 		try {

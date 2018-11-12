@@ -1,11 +1,11 @@
-package io.intino.alexandria.restful.core;
+package io.intino.alexandria.restaccessor.core;
 
 import javax.websocket.*;
 import java.net.URI;
 import java.util.function.Consumer;
 
 @ClientEndpoint
-public class RestfulNotifier implements io.intino.alexandria.restful.RestfulNotifier {
+public class RestAccessorNotifier implements io.intino.alexandria.restaccessor.RestAccessorNotifier {
 	private String webSocketUri;
 	private Session session;
 	private Consumer<String> listener;
