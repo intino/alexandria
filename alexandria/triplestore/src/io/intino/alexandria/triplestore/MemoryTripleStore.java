@@ -3,6 +3,7 @@ package io.intino.alexandria.triplestore;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.IntPredicate;
@@ -18,7 +19,7 @@ public class MemoryTripleStore implements TripleStore {
 	private final List<String[]> triples;
 
 	public MemoryTripleStore() {
-		this.triples = emptyList();
+		this.triples = new ArrayList<>();
 	}
 
 	public MemoryTripleStore(InputStream is) {
