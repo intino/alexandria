@@ -1,4 +1,4 @@
-package io.intino.alexandria.filesproxy.exceptions;
+package io.intino.alexandria.restaccessor.filesproxy.exceptions;
 
 import io.intino.alexandria.exceptions.AlexandriaError;
 

@@ -1,14 +1,14 @@
-package io.intino.alexandria.restful;
+package io.intino.alexandria.restaccessor;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.restful.exceptions.RestfulFailure;
+import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-public interface RestfulApi {
+public interface RestAccessor {
 	Response get(URL url, String path) throws RestfulFailure;
 
 	Response get(URL url, String path, Map<String, String> parameters) throws RestfulFailure;

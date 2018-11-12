@@ -1,7 +1,7 @@
-package io.intino.alexandria.filesproxy;
+package io.intino.alexandria.restaccessor.filesproxy;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.filesproxy.exceptions.FilesApiFailure;
+import io.intino.alexandria.restaccessor.filesproxy.exceptions.FilesApiFailure;
 
 import java.io.InputStream;
 import java.net.URL;
