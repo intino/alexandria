@@ -33,7 +33,7 @@ import static java.util.Collections.*;
 public class RestAccessor implements io.intino.alexandria.restaccessor.RestAccessor {
 
 	private static String toString(InputStream content) throws IOException {
-		return new String(IOUtils.readFully(content, 0, false));
+		return new String(IOUtils.readFully(content, -1, false));
 	}
 
 	@Override
