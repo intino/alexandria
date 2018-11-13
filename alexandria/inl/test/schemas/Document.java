@@ -7,11 +7,11 @@ import java.time.Instant;
 public class Document {
 
 	private Instant ts;
-	private Resource file;
+	private Resource attachment;
 
-	public Document(Instant ts, Resource file) {
+	public Document(Instant ts, Resource attachment) {
 		this.ts = ts;
-		this.file = file;
+		this.attachment = attachment;
 	}
 
 	public Document() {
@@ -21,7 +21,7 @@ public class Document {
 		return ts;
 	}
 
-	public Resource file() {
-		return file;
+	public Resource attachment() {
+		return attachment;
 	}
 }

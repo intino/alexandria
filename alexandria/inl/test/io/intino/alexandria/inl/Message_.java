@@ -77,7 +77,7 @@ public class Message_ {
 	@Test
 	public void should_handle_document_list_attributes() {
 		Message message = new Message("Document");
-		message.set("name", "my file");
+		message.set("name", "my attachment");
 		message.attach("file1", "png", data(20));
 		message.attach("file1", "png", data(30));
 		message.attach("file2", "png", data(40));
@@ -90,23 +90,23 @@ public class Message_ {
 	@Test
 	public void should_handle_document_attributes() {
 		Message message = new Message("Document");
-		message.set("name", "my file");
-		message.attach("file", "png", data(64));
-		message.attach("file", "png", data(128));
+		message.set("name", "my attachment");
+		message.attach("attachment", "png", data(64));
+		message.attach("attachment", "png", data(128));
 		assertThat(message.attachments().size(), is(2));
-		assertThat(message.attachment(message.get("file").split("\n")[0]).type(), is("png"));
-		assertThat(message.attachment(message.get("file").split("\n")[1]).data().length, is(128));
+		assertThat(message.attachment(message.get("attachment").split("\n")[0]).type(), is("png"));
+		assertThat(message.attachment(message.get("attachment").split("\n")[1]).data().length, is(128));
 	}
 
 	@Test
 	public void should_update_documents() {
 		Message message = new Message("Document");
-		message.attach("file", "png", data(0));
+		message.attach("attachment", "png", data(0));
 		for (Message.Attachment attachment : message.attachments())
 			attachment.data(data(128));
 		assertThat(message.attachments().size(), is(1));
-		assertThat(message.attachment(message.get("file")).type(), is("png"));
-		assertThat(message.attachment(message.get("file")).data().length, is(128));
+		assertThat(message.attachment(message.get("attachment")).type(), is("png"));
+		assertThat(message.attachment(message.get("attachment")).data().length, is(128));
 	}
 
 	@Test
