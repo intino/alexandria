@@ -1,8 +1,8 @@
 package io.intino.alexandria.nessaccessor.stages;
 
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.nessaccessor.Stage;
 import io.intino.ness.core.Blob;
+import io.intino.ness.core.Stage;
 
 import java.io.*;
 import java.util.ArrayList;

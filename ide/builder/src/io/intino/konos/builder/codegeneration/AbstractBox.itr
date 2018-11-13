@@ -261,11 +261,11 @@ def trigger(mode)
 end
 
 def type(service & jmx) trigger(field)
-	private io.intino.konos.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+	private io.intino.alexandria.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & slack) trigger(field)
-	private io.intino.konos.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+	private io.intino.alexandria.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(field)
