@@ -2,7 +2,6 @@ package io.intino.alexandria.zim;
 
 import io.intino.alexandria.inl.InlReader;
 import io.intino.alexandria.inl.Message;
-import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.util.Iterator;
@@ -74,11 +73,7 @@ public class ZimReader implements ZimStream {
 			}
 
 			void close() {
-				try {
-					source.close();
-				} catch (IOException e) {
-					Logger.error(e);
-				}
+				source.close();
 			}
 
 		};
