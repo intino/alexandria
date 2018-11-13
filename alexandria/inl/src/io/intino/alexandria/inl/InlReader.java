@@ -4,161 +4,242 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.*;
 
-public class InlReader {
-	private boolean hasNext = true;
-	private BufferedReader reader;
-	private Message current;
+public class InlReader implements Iterable<Message>, Iterator<Message> {
+	private Parser parser;
 	private Message next;
 
 	public InlReader(InputStream is) {
-		this.reader = new BufferedReader(new InputStreamReader(is), 65536);
+		this.parser = new Parser(new BufferedReader(new InputStreamReader(is)));
+		this.next = parser.read();
+	}
+
+	@Override
+	public Iterator<Message> iterator() {
+		return this;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return next != null;
+	}
+
+	@Override
+	public Message next() {
+		Message current = next;
+		next = parser.read();
+		return current;
+	}
+
+	public void close() {
 		try {
-			this.current = createMessage(typeIn(nextLine()), null);
-		} catch (Throwable e) {
-			hasNext = false;
+			parser.close();
+		} catch (IOException ignored) {
 		}
 	}
 
-	private static boolean isAttributeIn(String line) {
-		return line.contains(":");
-	}
+	private static class Parser {
 
-	private static String typeIn(String line) {
-		String[] path = pathOf(line);
-		return path[path.length - 1];
-	}
+		private final BufferedReader reader;
+		private final List<Message> scopes;
+		private String line;
 
-	private static String[] pathOf(String line) {
-		line = line.substring(1, line.length() - 1);
-		return line.contains(".") ? line.split("\\.") : new String[]{line};
-	}
+		Parser(BufferedReader reader) {
+			this.reader = reader;
+			this.scopes = new ArrayList<>();
+			this.line = nextLine();
+		}
 
-	private static String normalize(String line) {
-		return line == null ? null : isEmpty(line) ? "" : isTrimRequired(line) ? trim(line) : line;
-	}
+		Message read() {
+			return parse(blocks());
+		}
 
-	private static boolean isTrimRequired(String line) {
-		return !isMultiline(line) && !isHeaderIn(line);
-	}
+		private Message parse(List<Block> blocks) {
+			scopes.clear();
+			for (Block block : blocks) {
+				scopes.add(createMessage(block));
+			}
+			return scopes.isEmpty() ? null : scopes.get(0);
+		}
 
-	private static boolean isMultiline(String line) {
-		return line.charAt(0) == '\t';
-	}
+		private Message createMessage(Block block) {
+			Message owner = scopeOf(block);
+			Message component = create(block);
+			if (owner != null) owner.add(component);
+			return component;
+		}
 
-	private static boolean isHeaderIn(String line) {
-		return !isEmpty(line) && line.charAt(0) == '[';
-	}
+		private Message scopeOf(Block block) {
+			int depth = depthOf(block.header) - 1;
+			scopes.subList(depth + 1, scopes.size()).clear();
+			return depth >= 0 ? scopes.get(depth) : null;
+		}
 
-	private static boolean isEmpty(String line) {
-		char[] chars = charsOf(line);
-		if (chars.length > 0 && chars[0] == '\t') return false;
-		for (char c : chars)
-			if (c != ' ' && c != '\t') return false;
-		return true;
-	}
+		private int depthOf(String header) {
+			int count = 0;
+			for (char c : header.toCharArray())
+				if (c == '.') count++;
+			return count;
+		}
 
-	private static char[] charsOf(String line) {
-		return line == null ? new char[0] : line.toCharArray();
-	}
+		private static Message create(Block block) {
+			Message message = new Message(typeIn(block.header));
+			for (String[] data : block) {
+				message.set(data[0], isMultiline(data[1]) ? data[1].substring(1) : data[1]);
+				if (isAttachment(data[1])) message.attach(attachmentName(data[1]), attachmentType(data[1]), new byte[0]);
+			}
+			return message;
+		}
 
-	private static String trim(String line) {
-		int[] index = splitIndex(line.toCharArray());
-		return line.substring(0, index[0] + 1) + ":" + line.substring(index[1]);
-	}
+		private static String attachmentName(String value) {
+			return value.substring(1);
+		}
 
-	private static int[] splitIndex(char[] data) {
-		int index = -1;
-		while (++index < data.length) if (data[index] == ':') break;
-		int[] result = new int[]{index, index};
-		while (--result[0] >= 0 && data[result[0]] == ' ') ;
-		while (++result[1] < data.length && data[result[1]] == ' ') ;
-		return result;
-	}
+		private static String attachmentType(String value) {
+			return value.contains(".") ? value.split("\\.")[1] : "";
+		}
 
-	public Message next() {
-		if (current == null) return null;
-		String attribute = "";
-		Message scope = current;
-		while (true) {
-			String line = nextLine();
-			if (line == null) return swap(null);
-			else if (isMultilineIn(line)) scope.append(attribute, line.substring(1));
-			else if (isAttributeIn(line)) {
-				String value = valueOf(line);
-				scope.set(attribute = attributeOf(line), value);
-				if (value != null && isAttachment(value))
-					scope.attach(value.substring(1), value.contains(".") ? value.split("\\.")[1] : "", new byte[0]);
-			} else if (isHeaderIn(line)) {
-				Message owner = ownerIn(line);
-				Message message = createMessage(typeIn(line), owner);
-				if (owner == null) return swap(message);
-				else scope = message;
+		private List<Block> blocks() {
+			List<Block> blocks = new ArrayList<>();
+			Block block = new Block("");
+			while (line != null) {
+				if (isHeaderIn(line))
+					blocks.add(block = new Block(stripBrackets(line)));
+				else
+					block.add(line);
+				line = nextLine();
+				if (line == null || isMainHeaderIn(line)) break;
+			}
+			return blocks;
+		}
+
+		private static class Block implements Iterable<String[]> {
+			private final String header;
+			private final Stack<String> lines;
+
+			Block(String header) {
+				this.header = header;
+				this.lines = new Stack<>();
+			}
+
+			void add(String line) {
+				if (line.isEmpty()) return;
+				lines.push(ifMultilineMerge(line));
+			}
+
+			private String ifMultilineMerge(String line) {
+				return line.startsWith("\t") ? previous() + line.substring(1) : line;
+			}
+
+			private String previous() {
+				String pop = lines.pop();
+				return pop + (pop.endsWith(":") ? "": "\n");
+			}
+
+			boolean isChildOf(String type) {
+				return header.startsWith(type + ".");
+			}
+
+			@Override
+			public Iterator<String[]> iterator() {
+				return new Iterator<String[]>() {
+					Iterator<String> iterator = lines.iterator();
+
+					@Override
+					public boolean hasNext() {
+						return iterator.hasNext();
+					}
+
+					@Override
+					public String[] next() {
+						String line = iterator.next();
+						int idx = line.indexOf(':');
+						return new String[]{line.substring(0, idx), idx == line.length() - 1 ? "" : line.substring(idx + 1)};
+					}
+				};
 			}
 		}
-	}
 
-	private boolean isAttachment(String value) {
-		return value.startsWith("@");
-	}
-
-	private String attributeOf(String line) {
-		return line.substring(0, line.indexOf(":"));
-	}
-
-	private String valueOf(String line) {
-		return line.indexOf(":") + 1 < line.length() ? unwrap(line.substring(line.indexOf(":") + 1)) : null;
-	}
-
-	private String unwrap(String value) {
-		return value.startsWith("\"") && value.endsWith("\"") ? value.substring(1, value.length() - 1) : value;
-	}
-
-	private boolean isMultilineIn(String line) {
-		return !isEmpty(line) && line.charAt(0) == '\t';
-	}
-
-	public boolean hasNext() {
-		return hasNext;
-	}
-
-	public void close() throws IOException {
-		reader.close();
-	}
-
-	private Message swap(Message message) {
-		Message result = this.current;
-		this.current = message;
-		return result;
-	}
-
-	private String nextLine() {
-		try {
-			return normalize(reader.readLine());
-		} catch (IOException ignored) {
-			return null;
+		private boolean isMainHeaderIn(String line) {
+			return isHeaderIn(line) && !isInnerBlockIn(line);
 		}
-	}
 
-
-	private Message createMessage(String type, Message owner) {
-		Message message = new Message(type, owner);
-		if (owner != null) owner.add(message);
-		return message;
-	}
-
-	private Message ownerIn(String line) {
-		if (!line.contains(".")) return null;
-		Message result = current;
-		for (int i = 1; i < pathOf(line).length - 1; i++) {
-			assert result != null;
-			result = lastComponentOf(current);
+		private boolean isInnerBlockIn(String line) {
+			return line.contains(".");
 		}
-		return result;
-	}
 
-	private Message lastComponentOf(Message message) {
-		return message.components().isEmpty() ? null : message.components().get(message.components().size() - 1);
-	}
+		private String nextLine() {
+			try {
+				return normalize(reader.readLine());
+			} catch (IOException ignored) {
+				return null;
+			}
+		}
 
+		private static String typeIn(String line) {
+			String[] path = typesIn(line);
+			return path[path.length - 1];
+		}
+
+		private static String[] typesIn(String line) {
+			return line.split("\\.");
+		}
+
+		private String stripBrackets(String line) {
+			return line.substring(1, line.length() - 1);
+		}
+
+		public void close() throws IOException {
+			reader.close();
+		}
+
+		private static String normalize(String line) {
+			return line == null ? null : isEmpty(line) ? "" : isTrimRequired(line) ? trim(line) : line;
+		}
+
+		private static boolean isTrimRequired(String line) {
+			return !isMultiline(line) && !isHeaderIn(line);
+		}
+
+		private static boolean isMultiline(String line) {
+			return line.length() > 0 && line.charAt(0) == '\t';
+		}
+
+		private static boolean isHeaderIn(String line) {
+			return !isEmpty(line) && line.charAt(0) == '[';
+		}
+
+		private static boolean isEmpty(String line) {
+			char[] chars = charsOf(line);
+			if (chars.length > 0 && chars[0] == '\t') return false;
+			for (char c : chars)
+				if (c != ' ' && c != '\t') return false;
+			return true;
+		}
+
+		private static char[] charsOf(String line) {
+			return line == null ? new char[0] : line.toCharArray();
+		}
+
+		private static String trim(String line) {
+			int[] index = splitIndex(line.toCharArray());
+			return line.substring(0, index[0] + 1) + ":" + line.substring(index[1]);
+		}
+
+		private static int[] splitIndex(char[] data) {
+			int index = -1;
+			while (++index < data.length) if (data[index] == ':') break;
+			int[] result = new int[]{index, index};
+			while (--result[0] >= 0 && data[result[0]] == ' ') ;
+			while (++result[1] < data.length && data[result[1]] == ' ') ;
+			return result;
+		}
+
+		private static boolean isAttachment(String value) {
+			return value.startsWith("@");
+		}
+
+
+	}
 }

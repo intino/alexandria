@@ -1,8 +1,6 @@
 package io.intino.alexandria.inl;
 
 
-import com.sun.xml.internal.ws.api.message.Attachment;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +17,8 @@ public class Message {
 	private List<Attachment> attachments;
 
 	public Message(String type) {
-		this(type, null);
-	}
-
-	public Message(String type, Message owner) {
 		this.type = type;
-		this.owner = owner;
+		this.owner = null;
 		this.attributes = new LinkedHashMap<>();
 		this.attachments = null;
 		this.components = null;
@@ -43,18 +37,18 @@ public class Message {
 	}
 
 	public String get(String attribute) {
-		return use(attribute).value;
+		return contains(attribute) ? use(attribute).value : null;
 	}
 
 	public Value read(final String attribute) {
-		return new Value() {
+		return contains(attribute) ? new Value() {
 			@Override
 			@SuppressWarnings("unchecked")
 			public <T> T as(Class<T> type) {
 				String value = use(attribute).value;
 				return value != null ? (T) InlParsers.get(type).parse(value) : null;
 			}
-		};
+		} : null;
 	}
 
 	public Message set(String attribute, String value) {
@@ -127,14 +121,8 @@ public class Message {
 		return id;
 	}
 
-	private void detach(String id) {
-		if (id.contains("@")) attachments().remove(id.substring(1));
-	}
-
-
-
 	public boolean isEvent() {
-		return this.attributes.containsKey(TS);
+		return contains(TS);
 	}
 
 	public Event asEvent() {
@@ -217,7 +205,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder("[" + path() + "]\n");
+		StringBuilder result = new StringBuilder("[" + qualifiedType() + "]\n");
 		for (Attribute attribute : attributes.values()) result.append(stringOf(attribute)).append("\n");
 		for (Message component : components()) result.append("\n").append(component.toString());
 		return result.toString();
@@ -231,8 +219,8 @@ public class Message {
 		return value != null && value.contains("\n");
 	}
 
-	private String path() {
-		return owner != null ? owner.path() + "." + type : type;
+	public String qualifiedType() {
+		return owner != null ? owner.qualifiedType() + "." + type : type;
 	}
 
 	public int length() {

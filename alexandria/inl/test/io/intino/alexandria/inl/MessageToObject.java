@@ -2,9 +2,6 @@ package io.intino.alexandria.inl;
 
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.ResourceStore;
-import io.intino.alexandria.inl.Inl;
-import io.intino.alexandria.inl.InlDeserializer;
-import io.intino.alexandria.inl.Message;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -153,8 +150,8 @@ public class MessageToObject {
 	public void should_deserialize_message_with_resource() throws IOException {
 		Document document = InlDeserializer.deserialize(DocumentMessage, resourceStore()).next(Document.class);
 		assertThat(document.ts().toString(), is("2017-03-21T07:39:00Z"));
-		assertThat(document.file().id(), is("4444-444-44-44444.png"));
-		assertThat(IOUtils.toString(document.file().data()).length(), is("4444-444-44-44444.png".length()));
+		assertThat(document.attachment().id(), is("4444-444-44-44444.png"));
+		assertThat(IOUtils.toString(document.attachment().data()).length(), is("4444-444-44-44444.png".length()));
 	}
 
 	@Test

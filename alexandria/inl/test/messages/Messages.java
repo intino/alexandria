@@ -30,8 +30,7 @@ public class Messages {
 					"university: ULPGC\n" +
 					"\n" +
 					"[Person.Country]\n" +
-					"name: Spain\n" +
-					"continent:\n";
+					"name: Spain\n";
 
 	public static String OldFormatMessage =
 			"[Teacher]\n" +
@@ -210,7 +209,7 @@ public class Messages {
 	public static String DocumentMessage =
 			"[Document]\n" +
 					"ts: 2017-03-21T07:39:00Z\n" +
-					"file: @4444-444-44-44444.png\n";
+					"attachment: @4444-444-44-44444.png\n";
 
 	public static String DocumentListMessage =
 			"[DocumentList]\n" +
