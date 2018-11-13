@@ -1,7 +1,7 @@
-import io.intino.alexandria.nessaccessor.sessions.SetSession;
-import io.intino.alexandria.nessaccessor.stages.FileStage;
+import io.intino.alexandria.nessaccessor.stages.LocalStage;
 import io.intino.ness.core.Datalake;
 import io.intino.ness.core.Timetag;
+import io.intino.ness.core.sessions.SetSession;
 import org.junit.Test;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class SetSession_ {
 	public void should_create_set_blobs() {
 		File temp = new File("temp");
 		deleteDirectory(temp);
-		FileStage stage = new FileStage(temp);
+		LocalStage stage = new LocalStage(temp);
 		SetSession session = stage.createSetSession();
 		Timetag timetag = new Timetag("201809");
 		session.define("tank1", timetag, "set1", new Datalake.SetStore.Variable("var", 10));
