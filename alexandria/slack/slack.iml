@@ -38,8 +38,6 @@
     <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
-    <orderEntry type="library" name="Legio: org.slf4j:slf4j-api:1.7.13" level="project" />
-    <orderEntry type="library" name="Legio: com.sun.xml.security:xml-security-impl:1.0" level="project" />
+    <orderEntry type="library" name="Legio: org.slf4j:slf4j-api:1.7.7" level="project" />
   </component>
 </module>

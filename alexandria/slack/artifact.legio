@@ -4,6 +4,7 @@ Artifact("io.intino.alexandria", "1.0.0") slack-framework
 	Imports
 		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "core-framework", "[1.0.0,2.0.0)")
+
 		Compile("com.ullink.slack", "simpleslackapi", "0.6.0")
 		Compile("org.apache.commons", "commons-lang3", "3.4")
 		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
