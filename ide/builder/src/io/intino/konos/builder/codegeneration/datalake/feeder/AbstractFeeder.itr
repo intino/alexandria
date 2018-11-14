@@ -41,7 +41,7 @@ def type(sensor) trigger(new)
 end
 
 def type(sensor) trigger(class)
-	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.konos.datalake.sensors.$type] {
+	static abstract class Abstract$name+FirstUpperCase~Sensor[ extends io.intino.alexandria.core.sensors.$type] {
 		$parent+field
 
 		public Abstract$name+FirstUpperCase~Sensor() {

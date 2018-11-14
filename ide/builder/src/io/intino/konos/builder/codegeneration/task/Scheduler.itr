@@ -53,7 +53,7 @@ def type(task) type(DirectorySentinelTask) trigger(init)
 end
 
 def trigger(fullPath)
-	io.intino.konos.scheduling.directory.KonosDirectorySentinel.Event.$value
+	io.intino.alexandria.scheduler.directory.KonosDirectorySentinel.Event.$value
 end
 def type(task) trigger(init)
 	job = newJob($name+SnakeCaseToCamelCase~Task.class).withIdentity("$name").build();

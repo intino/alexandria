@@ -2,7 +2,7 @@ def type(accessor)
 	package $package+validPackage;
 
 	import io.intino.alexandria.exceptions.*;
-	import io.intino.konos.jms.QueueProducer;
+	import io.intino.alexandria.jms.QueueProducer;
 	import com.google.gson.Gson;
 
 	import java.util.List;
