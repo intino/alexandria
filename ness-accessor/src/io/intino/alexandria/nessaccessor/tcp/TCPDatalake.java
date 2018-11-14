@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 import static io.intino.ness.core.Blob.Type.event;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
 
-public class TcpDatalake implements Datalake {
+public class TCPDatalake implements Datalake {
 	private final Connection connection;
 	private TCPEventStore tcpEventStore;
 
-	public TcpDatalake(String uri, String username, String password, String clientId) {
-		this.connection = new Connection(uri, username, password, clientId, onClose());
-		this.tcpEventStore = new TCPEventStore(connection.session);
+	public TCPDatalake(String uri, String username, String password, String clientId) {
+		this.connection = new Connection(uri, username, password, clientId, onOpen(), onClose());
+		this.tcpEventStore = new TCPEventStore(connection);
 	}
 
 	@Override
@@ -49,8 +49,8 @@ public class TcpDatalake implements Datalake {
 		blobs.filter(b -> b.type().equals(event)).forEach(b -> tcpEventStore.put(read(b), b.name()));
 	}
 
-	private ZimStream read(Blob b) {
-		return new ZimReader(b.inputStream());
+	private CallBack onOpen() {
+		return () -> tcpEventStore.open();
 	}
 
 	private CallBack onClose() {
@@ -59,25 +59,32 @@ public class TcpDatalake implements Datalake {
 		});
 	}
 
+	private ZimStream read(Blob b) {
+		return new ZimReader(b.inputStream());
+	}
+
 	public static class Connection implements Datalake.Connection {
 		private final String uri;
 		private final String username;
 		private final String password;
 		private final String clientId;
 		private Session session;
-		private final TcpDatalake.CallBack onClose;
+		private final CallBack onOpen;
+		private final TCPDatalake.CallBack onClose;
 
-		Connection(String uri, String username, String password, String clientId, CallBack onClose) {
+		Connection(String uri, String username, String password, String clientId, CallBack onOpen, CallBack onClose) {
 			this.uri = uri;
 			this.username = username;
 			this.password = password;
 			this.clientId = clientId;
+			this.onOpen = onOpen;
 			this.onClose = onClose;
 		}
 
 		@Override
 		public void connect(String... args) {
-			session = createSession(args[0]);
+			session = createSession(args.length > 0 ? args[0] : "");
+			onOpen.execute();
 		}
 
 		private Session createSession(String arg) {
