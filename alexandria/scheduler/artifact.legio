@@ -4,7 +4,7 @@ Artifact("io.intino.alexandria", "1.0.0") scheduler-framework
 	Imports
 		Compile("org.quartz-scheduler", "quartz", "2.3.0")
 		Compile("org.quartz-scheduler", "quartz-jobs", "2.2.1")
-		Compile("io.intino.alexandria", "core-framework", "[1.0.0,2.0.0)")
+		Compile("io.intino.alexandria", "core-framework", "[1.0.0, 2.0.0)")
 		Test("junit", "junit", "4.12")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)

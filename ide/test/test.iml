@@ -15,8 +15,6 @@
     <orderEntry type="module" module-name="rest-accessor" scope="TEST" />
     <orderEntry type="module" module-name="ness-accessor" scope="TEST" />
     <orderEntry type="module" module-name="core" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:rest-accessor:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:ness-accessor:1.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:core:1.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:zim:1.0.1" level="project" />
