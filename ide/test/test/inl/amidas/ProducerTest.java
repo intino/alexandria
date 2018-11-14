@@ -3,7 +3,7 @@ package inl.amidas;
 import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.nessaccessor.NessAccessor;
-import io.intino.alexandria.nessaccessor.tcp.TcpDatalake;
+import io.intino.alexandria.nessaccessor.tcp.TCPDatalake;
 import io.intino.alexandria.zim.ZimReader;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -43,7 +43,7 @@ public class ProducerTest {
 	@Test
 	@Ignore
 	public void sendAttachment() {
-		final NessAccessor nessAccessor = new NessAccessor(new TcpDatalake(url, user, password, ""));
+		final NessAccessor nessAccessor = new NessAccessor(new TCPDatalake(url, user, password, ""));
 //		final NessAccessor.EventStore.Tank tank = nessAccessor.eventStore().add(topic);
 //		Solicitud solicitud = Json.fromString(jsonSolicitud, Solicitud.class);
 //		Message message = Inl.toMessage(solicitud);

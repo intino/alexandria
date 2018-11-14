@@ -5,6 +5,7 @@ import io.intino.alexandria.jms.TopicConsumer;
 import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.nessaccessor.MessageTranslator;
+import io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection;
 import io.intino.alexandria.zim.ZimStream;
 import io.intino.alexandria.zim.ZimStream.Merge;
 import io.intino.ness.core.Datalake;
@@ -19,17 +20,22 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class TCPEventStore implements Datalake.EventStore {
-	private final Session session;
 	private final Map<String, TCPEventTank> tanks;
 	private final Map<String, TopicConsumer> consumers;
 	private final Map<String, TopicProducer> producers;
-	private final AdminService adminService;
+	private final Connection connection;
+	private AdminService adminService;
+	private Session session;
 
-	public TCPEventStore(Session session) {
-		this.session = session;
+	public TCPEventStore(Connection connection) {
+		this.connection = connection;
 		this.tanks = new HashMap<>();
 		this.consumers = new HashMap<>();
 		this.producers = new HashMap<>();
+	}
+
+	public void open() {
+		this.session = connection.session();
 		this.adminService = new AdminService(session);
 	}
 
@@ -46,7 +52,7 @@ public class TCPEventStore implements Datalake.EventStore {
 	}
 
 	public void feed(String tank, Message... messages) {
-		for (Message message : messages) put(message, feedTopicOf(tank));
+		for (Message message : messages) put(message, feedProbe(tank));
 	}
 
 	@Override
@@ -100,7 +106,7 @@ public class TCPEventStore implements Datalake.EventStore {
 	}
 
 	void put(ZimStream stream, String blob) {
-		while (stream.hasNext()) put(stream.next(), putTopicOf(blob));
+		while (stream.hasNext()) put(stream.next(), putProbe(blob));
 	}
 
 	private void put(Message message, String topic) {
@@ -115,16 +121,12 @@ public class TCPEventStore implements Datalake.EventStore {
 		for (MessageHandler handler : messageHandlers) handler.handle(MessageTranslator.toInlMessage(message));
 	}
 
-	private String tankName(String name) {
-		return name.substring(0, name.indexOf("-"));
+	private String feedProbe(String name) {
+		return "feed." + name;
 	}
 
-	private String feedTopicOf(String name) {
-		return "feed." + tankName(name);
-	}
-
-	private String putTopicOf(String name) {
-		return "put." + tankName(name);
+	private String putProbe(String name) {
+		return "put." + name;
 	}
 
 	private TopicProducer producer(String topic) {
@@ -137,7 +139,6 @@ public class TCPEventStore implements Datalake.EventStore {
 			return null;
 		}
 	}
-
 
 	private static class ReflowBlock {
 		private final ZimStream is;
