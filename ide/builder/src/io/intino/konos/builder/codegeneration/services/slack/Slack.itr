@@ -3,7 +3,7 @@ def type(slack & gen)
 
 	import $package+ValidPackage.slack.*;
 
-	import io.intino.konos.slack.Bot;
+	import io.intino.alexandria.slack.Bot;
 	import com.ullink.slack.simpleslackapi.SlackAttachment;
 	import java.io.IOException;
 	import java.util.Arrays;
@@ -63,8 +63,8 @@ def type(slack & actions)
 
 	import $package+ValidPackage.$box+validname+FirstUpperCase~Box;
 	import $package+ValidPackage.slack.*;
-	import io.intino.konos.slack.Bot;
-	import io.intino.konos.slack.Bot.MessageProperties;
+	import io.intino.alexandria.slack.Bot;
+	import io.intino.alexandria.slack.Bot.MessageProperties;
 
 	import java.util.Map;
 
