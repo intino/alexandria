@@ -103,7 +103,7 @@ def type(box)
 		[$datalake+hide
 		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
 			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
-			return new io.intino.alexandria.nessaccessor.tcp.TcpDatalake(nessUrl, nessUser, nessPassword, clientId);
+			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
 		}
 		]
 		private void initTasks() {
@@ -203,7 +203,7 @@ def type(dataLake & requireConnection) trigger(init)
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
-	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection) nessAccessor.connection()).session() != null)
+	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
 		logger.info("Ness connection: started!");
 end
 
@@ -214,7 +214,7 @@ def type(dataLake) trigger(init)
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		registerFeeders();
 		$nessOperations
-		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TcpDatalake.Connection) nessAccessor.connection()).session() != null)
+		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
 			logger.info("Ness connection: started!");
 	}, "ness accessor init");
 	try {
