@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.toList;
 public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends AlexandriaElementDisplay<Panel, DN> implements ElementViewDisplayProvider {
 	private Map<String, AlexandriaViewContainer> viewDisplayMap = new HashMap<>();
 	private static final String ViewId = "%s%s";
+	private String selectedView = null;
 
 	public AlexandriaPanel(Box box) {
 		super(box);
@@ -219,9 +220,11 @@ public class AlexandriaPanel<DN extends AlexandriaPanelNotifier> extends Alexand
 		View view = viewOf(key);
 		if (view == null) return null;
 		AlexandriaViewContainer viewDisplay = buildView(view.name());
+		if (key.equals(selectedView)) return viewDisplay;
 		viewDisplay.refresh();
 		updateCurrentView(viewDisplay);
 		notifier.refreshSelectedView(view.name());
+		selectedView = key;
 		return viewDisplay;
 	}
 
