@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/alexandria/assa/assa.iml" filepath="$PROJECT_DIR$/alexandria/assa/assa.iml" group="alexandria/lib" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="alexandria/framework" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" filepath="$PROJECT_DIR$/alexandria/exceptions/exceptions.iml" group="alexandria/lib" />
