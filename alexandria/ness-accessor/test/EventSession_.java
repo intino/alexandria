@@ -1,10 +1,14 @@
 import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.nessaccessor.stages.LocalStage;
+import io.intino.alexandria.zim.ZimReader;
 import io.intino.ness.core.Timetag;
+import io.intino.ness.core.fs.FSDatalake;
 import io.intino.ness.core.sessions.EventSession;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Instant;
 
 import static org.junit.Assert.assertTrue;
@@ -33,6 +37,24 @@ public class EventSession_ {
 
 		assertTrue(temp.listFiles().length == 1);
 	}
+
+	@Test
+	public void stage() throws IOException {
+		File file = new File("/Volumes/ASEMED 1/stagenoborrar");
+		Files.list(file.toPath()).filter(p -> p.toFile().getName().endsWith("event.blob")).forEach(p -> read(p.toFile()));
+	}
+
+	@Test
+	public void seal() {
+		new FSDatalake(new File("/Volumes/ASEMED 1/datalake/")).seal();
+	}
+
+	private void read(File file) {
+		ZimReader zimReader = new ZimReader(file);
+		System.out.println(file.getName());
+		while (zimReader.hasNext()) zimReader.next();
+	}
+
 
 	private Message message(Instant instant, int index) {
 		return new Message("tank1").set("ts", instant.toString()).set("index", index);

@@ -157,7 +157,7 @@ public class ExternalSignatureCMSSignedDataGenerator {
 	 * @throws CMSException
 	 */
 	public void addCertificatesAndCRLs(CertStore certStore)
-		throws CertStoreException, CMSException {
+			throws CertStoreException, CMSException {
 		//
 		// divide up the certs and crls.
 		//
@@ -168,7 +168,7 @@ public class ExternalSignatureCMSSignedDataGenerator {
 				X509Certificate c = (X509Certificate) it.next();
 
 				certs.add(new X509CertificateStructure((ASN1Sequence) makeObj(c
-					.getEncoded())));
+						.getEncoded())));
 			}
 		} catch (IOException e) {
 			throw new CMSException("error processing certs", e);
@@ -183,7 +183,7 @@ public class ExternalSignatureCMSSignedDataGenerator {
 				X509CRL c = (X509CRL) it.next();
 
 				crls.add(new CertificateList((ASN1Sequence) makeObj(c
-					.getEncoded())));
+						.getEncoded())));
 			}
 		} catch (IOException e) {
 			throw new CMSException("error processing crls", e);
@@ -215,17 +215,17 @@ public class ExternalSignatureCMSSignedDataGenerator {
 	 * @param params Eventual algorithm parameters; null if no parameter is
 	 *               required.
 	 * @return the <code>org.bouncycastle.asn1.x509.AlgoriyhmIdentifier</code>
-	 *         for the given OIDs and parameters.
+	 * for the given OIDs and parameters.
 	 * @throws IOException
 	 */
 	private AlgorithmIdentifier makeAlgId(String oid, byte[] params)
-		throws IOException {
+			throws IOException {
 		if (params != null) {
 			return new AlgorithmIdentifier(new DERObjectIdentifier(oid),
-				makeObj(params));
+					makeObj(params));
 		} else {
 			return new AlgorithmIdentifier(new DERObjectIdentifier(oid),
-				new DERNull());
+					new DERNull());
 		}
 	}
 
@@ -251,14 +251,14 @@ public class ExternalSignatureCMSSignedDataGenerator {
 	@SuppressWarnings({"deprecation"})
 	public CMSSignedData generate(CMSProcessable content, boolean encapsulate)
 
-		throws NoSuchAlgorithmException, NoSuchProviderException, CMSException,
-		InvalidAlgorithmParameterException, CertStoreException {
+			throws NoSuchAlgorithmException, NoSuchProviderException, CMSException,
+			InvalidAlgorithmParameterException, CertStoreException {
 
 		DEREncodableVector signerInfos = new DEREncodableVector();
 		DEREncodableVector digestAlgs = new DEREncodableVector();
 
 		DERObjectIdentifier contentTypeOID = new DERObjectIdentifier(
-			CMSSignedDataGenerator.DATA);
+				CMSSignedDataGenerator.DATA);
 
 		ASN1Set certificates = null;
 
@@ -273,10 +273,10 @@ public class ExternalSignatureCMSSignedDataGenerator {
 		while (it.hasNext()) {
 			AlgorithmIdentifier digAlgId;
 			ExternalSignatureSignerInfoGenerator externalSigner = (ExternalSignatureSignerInfoGenerator) it
-				.next();
+					.next();
 			try {
 				digAlgId = makeAlgId(externalSigner.getDigestAlgOID(),
-					externalSigner.getDigestAlgParams());
+						externalSigner.getDigestAlgParams());
 
 				digestAlgs.add(digAlgId);
 
@@ -332,7 +332,7 @@ public class ExternalSignatureCMSSignedDataGenerator {
 			}
 
 			ASN1OctetString octs = new BERConstructedOctetString(bOut
-				.toByteArray());
+					.toByteArray());
 
 			encInfo = new ContentInfo(contentTypeOID, octs);
 
@@ -341,10 +341,10 @@ public class ExternalSignatureCMSSignedDataGenerator {
 		}
 
 		SignedData sd = new SignedData(new DERSet(digestAlgs), encInfo,
-			certificates, certrevlist, new DERSet(signerInfos));
+				certificates, certrevlist, new DERSet(signerInfos));
 
 		ContentInfo contentInfo = new ContentInfo(
-			PKCSObjectIdentifiers.signedData, sd);
+				PKCSObjectIdentifiers.signedData, sd);
 
 		return new CMSSignedData(content, contentInfo);
 	}
