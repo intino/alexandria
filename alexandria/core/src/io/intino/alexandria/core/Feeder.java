@@ -11,7 +11,7 @@ public abstract class Feeder {
 
 	public abstract List<Sensor> sensors();
 
-	public abstract boolean feed(Message event);
+	public abstract void feed(Message event);
 
 	public boolean fits(List<String> eventTypes) {
 		return eventTypes().containsAll(eventTypes);
