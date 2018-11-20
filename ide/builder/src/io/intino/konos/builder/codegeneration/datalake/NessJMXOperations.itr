@@ -38,7 +38,7 @@ def type(operations) !type(interface)
 
 		public NessOperations($box+FirstUpperCase~Box box) {
 			this.box = box;
-			this.assistant = new mx.cfe.asemed.screener.box.datalake.ReflowAssistant(box);
+			this.assistant = new $package+validPackage.datalake.ReflowAssistant(box);
 		}
 
 		public java.util.List<String> help() {
@@ -56,7 +56,7 @@ def type(operations) !type(interface)
 		private boolean reflow(Filter filter) {
 			Logger.info("Starting Reflow...");
 			assistant.onStart();
-			mx.cfe.asemed.screener.box.datalake.Datalake.unsubscribeAll(box.nessAccessor());
+			$package+validPackage.datalake.Datalake.unsubscribeAll(box.nessAccessor());
 			this.session = box.nessAccessor().eventStore().reflow(filter);
 			this.session.next(assistant.defaultBlockSize(), messageHandler());
 			return true;
@@ -67,7 +67,7 @@ def type(operations) !type(interface)
 		}
 
 		public static JMXServer init($box+FirstUpperCase~Box box) {
-			JMXServer server = new JMXServer(Collections.singletonMap("mx.cfe.asemed.screener.box.datalake.NessOperations", new Object$[]{box}));
+			JMXServer server = new JMXServer(Collections.singletonMap("$package+validPackage.datalake.NessOperations", new Object$[]{box}));
 			server.init();
 			return server;
 		}
