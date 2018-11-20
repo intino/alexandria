@@ -53,7 +53,7 @@ class Signer {
 	private byte[] createSignature(byte[] hash, String privateKeyAlias, KeyStore keyStore, X509Certificate[] chain, char[] password) throws Exception {
 		ExternalSignatureCMSSignedDataGenerator generator = new ExternalSignatureCMSSignedDataGenerator();
 		ExternalSignatureSignerInfoGenerator si = new ExternalSignatureSignerInfoGenerator(CMSSignedDataGenerator.DIGEST_SHA1,
-			CMSSignedDataGenerator.ENCRYPTION_RSA);
+				CMSSignedDataGenerator.ENCRYPTION_RSA);
 
 		byte[] signedBytes = signMessage(hash, keyStore, privateKeyAlias, password);
 

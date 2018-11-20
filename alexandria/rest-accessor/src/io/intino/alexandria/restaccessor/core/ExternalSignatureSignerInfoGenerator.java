@@ -203,7 +203,7 @@ public class ExternalSignatureSignerInfoGenerator {
 		if (CMSSignedDataGenerator.ENCRYPTION_DSA.equals(encryptionAlgOID)) {
 			return "DSA";
 		} else if (CMSSignedDataGenerator.ENCRYPTION_RSA
-			.equals(encryptionAlgOID)) {
+				.equals(encryptionAlgOID)) {
 			return "RSA";
 		} else {
 			return encryptionAlgOID;
@@ -215,7 +215,7 @@ public class ExternalSignatureSignerInfoGenerator {
 	 * This method has to be called after setting {@link #cert} {@link #signedBytes}.
 	 *
 	 * @return the <code>org.bouncycastle.asn1.cms.SignerInfo</code> object for
-	 *         a signer.
+	 * a signer.
 	 * @throws CertificateEncodingException
 	 * @throws IOException
 	 */
@@ -225,15 +225,15 @@ public class ExternalSignatureSignerInfoGenerator {
 		AlgorithmIdentifier encAlgId = null;
 
 		digAlgId = new AlgorithmIdentifier(new DERObjectIdentifier(this
-			.getDigestAlgOID()), new DERNull());
+				.getDigestAlgOID()), new DERNull());
 
 		if (this.getEncryptionAlgOID().equals(
-			CMSSignedDataGenerator.ENCRYPTION_DSA)) {
+				CMSSignedDataGenerator.ENCRYPTION_DSA)) {
 			encAlgId = new AlgorithmIdentifier(new DERObjectIdentifier(this
-				.getEncryptionAlgOID()));
+					.getEncryptionAlgOID()));
 		} else {
 			encAlgId = new AlgorithmIdentifier(new DERObjectIdentifier(this
-				.getEncryptionAlgOID()), new DERNull());
+					.getEncryptionAlgOID()), new DERNull());
 		}
 
 
@@ -241,16 +241,16 @@ public class ExternalSignatureSignerInfoGenerator {
 
 		X509Certificate cert = this.getCertificate();
 		ByteArrayInputStream bIn = new ByteArrayInputStream(cert
-			.getTBSCertificate());
+				.getTBSCertificate());
 		ASN1InputStream aIn = new ASN1InputStream(bIn);
 		DERObject derObject = aIn.readObject();
 		aIn.close();
 		TBSCertificateStructure tbs = TBSCertificateStructure.getInstance(derObject);
 		IssuerAndSerialNumber encSid = new IssuerAndSerialNumber(tbs
-			.getIssuer(), cert.getSerialNumber());
+				.getIssuer(), cert.getSerialNumber());
 
 		return new SignerInfo(new SignerIdentifier(encSid), digAlgId,
-			signedAttr, encAlgId, encDigest, unsignedAttr);
+				signedAttr, encAlgId, encDigest, unsignedAttr);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class ExternalSignatureSignerInfoGenerator {
 	 * </ul>
 	 *
 	 * @param contentType the <code>org.bouncycastle.asn1.DERObjectIdentifier</code> of the content.
-	 * @param hash     the content to be signed.
+	 * @param hash        the content to be signed.
 	 * @param sigProvider the cryptographic provider to use for calculating the digest of the content.
 	 * @return a <code>byte[]</code> containing the raw bytes to be signed.
 	 * @throws IOException
@@ -286,10 +286,10 @@ public class ExternalSignatureSignerInfoGenerator {
 	 */
 	@SuppressWarnings({"deprecation"})
 	public byte[] getBytesToSign(DERObjectIdentifier contentType,
-	                             byte[] hash, String sigProvider) throws IOException,
-		SignatureException, InvalidKeyException, NoSuchProviderException,
-		NoSuchAlgorithmException, CertificateEncodingException,
-		CMSException {
+								 byte[] hash, String sigProvider) throws IOException,
+			SignatureException, InvalidKeyException, NoSuchProviderException,
+			NoSuchAlgorithmException, CertificateEncodingException,
+			CMSException {
 
 		AttributeTable attr = this.getSignedAttributes();
 
@@ -298,20 +298,20 @@ public class ExternalSignatureSignerInfoGenerator {
 
 			if (attr.get(CMSAttributes.contentType) == null) {
 				v.add(new Attribute(CMSAttributes.contentType, new DERSet(
-					contentType)));
+						contentType)));
 			} else {
 				v.add(attr.get(CMSAttributes.contentType));
 			}
 
 			if (attr.get(CMSAttributes.signingTime) == null) {
 				v.add(new Attribute(CMSAttributes.signingTime, new DERSet(
-					new Time(new Date()))));
+						new Time(new Date()))));
 			} else {
 				v.add(attr.get(CMSAttributes.signingTime));
 			}
 
 			v.add(new Attribute(CMSAttributes.messageDigest, new DERSet(
-				new DEROctetString(hash))));
+					new DEROctetString(hash))));
 
 			Hashtable<?, ?> ats = attr.toHashtable();
 
@@ -330,13 +330,13 @@ public class ExternalSignatureSignerInfoGenerator {
 			DEREncodableVector v = new DEREncodableVector();
 
 			v.add(new Attribute(CMSAttributes.contentType, new DERSet(
-				contentType)));
+					contentType)));
 
 			v.add(new Attribute(CMSAttributes.signingTime, new DERSet(
-				new DERUTCTime(new Date()))));
+					new DERUTCTime(new Date()))));
 
 			v.add(new Attribute(CMSAttributes.messageDigest, new DERSet(
-				new DEROctetString(hash))));
+					new DEROctetString(hash))));
 
 			signedAttr = new DERSet(v);
 
