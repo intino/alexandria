@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import static java.util.stream.Stream.empty;
@@ -40,8 +39,26 @@ public class MemoryTripleStore implements TripleStore {
 	}
 
 	@Override
-	public void put(String subject, String predicate, Object value) {
+	public Stream<String[]> all() {
+		return triples.stream();
+	}
+
+	@Override
+	public Stream<String[]> matches(String... pattern) {
+		return stream(find(normalize(pattern)).spliterator(), false).map(triples::get);
+	}
+
+	@Override
+	public synchronized void put(String subject, String predicate, Object value) {
 		put(new String[]{subject, predicate, value.toString()});
+	}
+
+	public synchronized void save(OutputStream outputStream) {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
+			for (String[] triple : triples) writer.write(TripleStore.lineOf(triple));
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	private void put(String... triple) {
@@ -51,16 +68,6 @@ public class MemoryTripleStore implements TripleStore {
 
 	private void remove(int index) {
 		triples.remove(index);
-	}
-
-	@Override
-	public Stream<String[]> all() {
-		return triples.stream();
-	}
-
-	@Override
-	public Stream<String[]> matches(String... pattern) {
-		return stream(find(normalize(pattern)).spliterator(), false).map(triples::get);
 	}
 
 	private String[] normalize(String[] pattern) {
@@ -100,14 +107,6 @@ public class MemoryTripleStore implements TripleStore {
 
 	private String[] triple(String line) {
 		return line.split(";");
-	}
-
-	public void save(OutputStream outputStream) {
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
-			for (String[] triple : triples) writer.write(TripleStore.lineOf(triple));
-		} catch (IOException e) {
-			Logger.error(e);
-		}
 	}
 
 }

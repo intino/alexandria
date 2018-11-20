@@ -1,6 +1,7 @@
 package io.intino.alexandria.assa.loaders;
 
 import io.intino.alexandria.assa.Assa;
+import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
 import java.lang.reflect.Array;
@@ -17,7 +18,7 @@ public class InputStreamAssa<T extends Serializable> implements Assa<T> {
 		try {
 			return new InputStreamAssa<>(type, new DataInputStream(input));
 		} catch (ClassNotFoundException e) {
-			//TODO Logger.log(e);
+			Logger.error(e);
 			return new InputStreamAssa<>(type);
 		}
 	}

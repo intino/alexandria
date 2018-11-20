@@ -26,7 +26,7 @@ public class FileTripleStore extends MemoryTripleStore {
 		return file;
 	}
 
-	public void save() {
+	public synchronized void save() {
 		try {
 			save(new FileOutputStream(this.file));
 		} catch (FileNotFoundException e) {
