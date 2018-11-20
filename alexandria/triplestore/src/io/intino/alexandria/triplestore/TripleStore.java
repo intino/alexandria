@@ -19,7 +19,7 @@ public interface TripleStore {
 
 	Stream<String[]> matches(String... pattern);
 
-	public static class Builder {
+	class Builder {
 		private OutputStream os;
 
 		public Builder(OutputStream os) {
