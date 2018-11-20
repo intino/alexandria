@@ -41,7 +41,7 @@ public class FileMap {
 		return index.isEmpty();
 	}
 
-	public boolean containsKey(String key) {
+	public synchronized boolean containsKey(String key) {
 		return index.containsKey(key);
 	}
 
