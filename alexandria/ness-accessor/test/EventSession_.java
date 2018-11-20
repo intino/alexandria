@@ -40,13 +40,13 @@ public class EventSession_ {
 
 	@Test
 	public void stage() throws IOException {
-		File file = new File("/Volumes/ASEMED 1/stagenoborrar");
+		File file = new File("/Users/oroncal/Downloads/data");
 		Files.list(file.toPath()).filter(p -> p.toFile().getName().endsWith("event.blob")).forEach(p -> read(p.toFile()));
 	}
 
 	@Test
 	public void seal() {
-		new FSDatalake(new File("/Volumes/ASEMED 1/datalake/")).seal();
+		new FSDatalake(new File("/Users/oroncal/Downloads/data/")).seal();
 	}
 
 	private void read(File file) {

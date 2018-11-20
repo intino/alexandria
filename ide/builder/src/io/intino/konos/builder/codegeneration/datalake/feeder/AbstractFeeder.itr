@@ -2,15 +2,16 @@ def type(feeder)
 	package $package+validPackage.datalake.feeders;
 
 	import $package+validPackage.datalake.Datalake;
+	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.alexandria.core.Feeder;
 	import io.intino.alexandria.core.Sensor;
-	import io.intino.ness.inl.Message;
+	import io.intino.alexandria.inl.Message;
 
 	import java.util.Arrays;
 	import java.util.List;
 	import java.util.Collections;
 
-	public class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
+	public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.core.Feeder {
 		protected List<Sensor> sensors;
 		private final $box+FirstUpperCase~Box box;
 
@@ -24,8 +25,9 @@ def type(feeder)
 		}
 
 
-		public boolean feed(Message event) {
-			//box.nessAccesor().push();
+		public void feed(Message event) {
+			//box.nessAccesor().push(); TODO
+
 		}
 
 		public List<Sensor> sensors() {
@@ -89,7 +91,7 @@ def type(poll) trigger(methods)
 	}
 
 	public Message get(String option, Object... args) {
-		return io.intino.alexandria.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
+		return io.intino.alexandria.inl.Inl.toMessage(messageBuilders.get(option).apply(Arrays.asList(args)));
 	}
 
 	$eventMethod...[$NL$NL]
