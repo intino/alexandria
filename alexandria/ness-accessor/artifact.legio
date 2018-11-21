@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.2") ness-accessor
 	Imports
-		Compile("io.intino.alexandria", "logger", version = "1.0.0")
+		Compile("io.intino.alexandria", "logger", "1.0.0")
 		Compile("io.intino.alexandria", "jms", "1.0.0")
 		Compile("io.intino.ness", "core", "1.0.2")
 		Compile("commons-io", "commons-io", "2.4")

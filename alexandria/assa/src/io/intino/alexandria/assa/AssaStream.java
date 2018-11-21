@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingLong;
 
@@ -30,19 +29,14 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 	}
 
 	class Merge {
-		public static <T extends Serializable> AssaStream<T> of(AssaStream<T>... streams) {
-			return of(asList(streams));
-		}
-
-		private static <T extends Serializable> AssaStream<T> of(List<AssaStream<T>> streams) {
+		public static <T extends Serializable> AssaStream of(List<AssaStream<T>> streams) {
 			return new AssaStream<T>() {
 				private Item[] items = items();
-				private Item<T> next = next();
+				private Item<T> next = advancing(current());
 
 				@Override
-				@SuppressWarnings("unchecked")
 				public Item<T> next() {
-					Item current = this.next;
+					Item<T> current = this.next;
 					this.next = advancing(current());
 					return current;
 				}
@@ -62,11 +56,12 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 							.toArray(Item[]::new);
 				}
 
-				private Item advancing(Item current) {
+				@SuppressWarnings("unchecked")
+				private Item<T> advancing(Item current) {
 					for (int i = 0; i < items.length; i++) {
 						Item cursor = items[i];
 						if (cursor == null || cursor.key() != current.key()) continue;
-						items[i] = streams.get(i).next();
+						items[i] = streams.get(i).hasNext() ? streams.get(i).next() : null;
 					}
 					return current;
 				}
