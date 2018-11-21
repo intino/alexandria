@@ -9,18 +9,21 @@ import static java.util.Comparator.comparing;
 
 public class AssaWriter {
 	private final File file;
-	private final Map<Object, Integer> map;
+	private final Map<Object, Integer> objects;
 
 	public AssaWriter(File file) {
 		this.file = file;
-		this.map = new HashMap<>();
+		this.objects = new HashMap<>();
 	}
 
 	public void save(String name, AssaStream input) throws IOException {
-		DataOutputStream output = output();
-		output.writeUTF(name);
-		writeItems(input, output);
-		writeObjects(objectOutputStream(output));
+		try (DataOutputStream output = output()) {
+			output.writeUTF(name);
+			output.writeInt(input.size());
+			writeItems(input, output);
+			output.writeInt(objects.size());
+			writeObjects(objectOutputStream(output));
+		}
 	}
 
 	private DataOutputStream output() throws FileNotFoundException {
@@ -28,8 +31,7 @@ public class AssaWriter {
 	}
 
 	private void writeItems(AssaStream input, DataOutputStream output) throws IOException {
-		output.writeInt(input.size());
-		while (true) {
+		while (input.hasNext()) {
 			AssaStream.Item item = input.next();
 			if (item == null) break;
 			output.writeLong(item.key());
@@ -38,12 +40,7 @@ public class AssaWriter {
 	}
 
 	private void writeObjects(ObjectOutputStream output) {
-		try {
-			output.writeInt(map.size());
-			objects().forEach(o -> writeObject(output, o));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		objects().forEach(o -> writeObject(output, o));
 	}
 
 	private void writeObject(ObjectOutputStream output, Object object) {
@@ -55,13 +52,13 @@ public class AssaWriter {
 	}
 
 	private int map(Object object) {
-		if (map.containsKey(object)) return map.get(object);
-		map.put(object, map.size());
-		return map.size() - 1;
+		if (objects.containsKey(object)) return objects.get(object);
+		objects.put(object, objects.size());
+		return objects.size() - 1;
 	}
 
 	private Stream<Object> objects() {
-		return map.entrySet()
+		return objects.entrySet()
 				.stream()
 				.sorted(comparing(Map.Entry::getValue))
 				.map(Map.Entry::getKey);

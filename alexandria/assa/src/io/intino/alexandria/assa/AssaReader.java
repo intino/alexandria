@@ -3,19 +3,35 @@ package io.intino.alexandria.assa;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssaReader<T extends Serializable> implements AssaStream<T> {
-	private ObjectInputStream inputStream = null;
-	private int size;
-	private int current = 0;
-	private Item<T> next = null;
+	private final DataInputStream inputStream;
+	private final String name;
+	private final int size;
+	private final List<T> objects;
+	private int index;
 
-	public AssaReader(File file) {
-		try {
-			seek(new DataInputStream(new FileInputStream(file)));
-		} catch (IOException e) {
-			Logger.error(e);
-		}
+	public AssaReader(File file) throws IOException, ClassNotFoundException {
+		this.inputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
+		this.name = inputStream.readUTF();
+		this.size = inputStream.readInt();
+		if (size == 0) close();
+		this.objects = size != 0 ? readObjects(dataInputStream(new RandomAccessFile(file, "r"))) : null;
+		this.index = 0;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<T> readObject(ObjectInputStream objectInputStream, int count) throws IOException, ClassNotFoundException {
+		List<T> objects = new ArrayList<>(count);
+		for (int i = 0; i < count; i++)
+			objects.add((T) objectInputStream.readObject());
+		return objects;
 	}
 
 	@Override
@@ -24,48 +40,66 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 	}
 
 	@Override
-	public Item<T> next() {
-		if (this.next == null) return null;
-		Item<T> current = this.next;
-		this.next = nextItem();
-		return current;
+	public boolean hasNext() {
+		return this.index < size;
 	}
 
 	@Override
-	public boolean hasNext() {
-		if (current > size) {
-			close();
-			return false;
-		}
-		return true;
+	public Item<T> next() {
+		return closingIfLastItemIs(index++ < size ? nextItem() : null);
 	}
 
-	private void seek(DataInputStream stream) throws IOException {
-		readHeader(stream);
-		this.inputStream = new ObjectInputStream(stream);
-		this.next = nextItem();
+
+	private DataInputStream dataInputStream(RandomAccessFile file) throws IOException {
+		file.seek(Integer.BYTES + name.length() + Long.BYTES + size * (Long.BYTES + Integer.BYTES));
+		return new DataInputStream(new InputStream() {
+			@Override
+			public int read() throws IOException {
+				return file.read();
+			}
+
+			@Override
+			public int read(byte[] b) throws IOException {
+				return file.read(b);
+			}
+		});
 	}
 
-	private void readHeader(DataInputStream stream) throws IOException {
-		stream.readUTF();
-		int size = stream.readInt();
-		stream.skipBytes(8 * size + 4 * size);
-		this.size = stream.readInt();
+	private List<T> readObjects(DataInputStream inputStream) throws IOException, ClassNotFoundException {
+		int count = inputStream.readInt();
+		return readObject(new ObjectInputStream(inputStream), count);
 	}
 
-	private AssaItem nextItem() {
+	private Item<T> closingIfLastItemIs(Item<T> next) {
+		if (index == size) close();
+		return next;
+	}
+
+	private Item<T> nextItem() {
 		try {
-			if (current == size) return null;
-			return new AssaItem(current++, readObject());
-		} catch (IOException | ClassNotFoundException e) {
+			return assaItem(inputStream.readLong(), inputStream.readInt());
+		} catch (IOException e) {
 			Logger.error(e);
 			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private T readObject() throws IOException, ClassNotFoundException {
-		return (T) inputStream.readObject();
+	private Item<T> assaItem(long key, int value) {
+		return new Item<T>() {
+			@Override
+			public long key() {
+				return key;
+			}
+
+			@Override
+			public T object() {
+				return getObject(value);
+			}
+		};
+	}
+
+	private T getObject(int value) {
+		return objects.get(value);
 	}
 
 	private void close() {
@@ -76,23 +110,4 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		}
 	}
 
-	public class AssaItem implements Item<T> {
-		private final long id;
-		private final T object;
-
-		AssaItem(long id, T item) {
-			this.id = id;
-			this.object = item;
-		}
-
-		@Override
-		public long key() {
-			return id;
-		}
-
-		@Override
-		public T object() {
-			return object;
-		}
-	}
 }
