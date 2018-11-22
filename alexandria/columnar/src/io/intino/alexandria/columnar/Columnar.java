@@ -1,6 +1,5 @@
 package io.intino.alexandria.columnar;
 
-import com.opencsv.CSVWriter;
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.assa.AssaReader;
 import io.intino.alexandria.assa.AssaStream;
@@ -10,21 +9,17 @@ import io.intino.alexandria.triplestore.FileTripleStore;
 import io.intino.alexandria.zet.ZetReader;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import static java.lang.String.valueOf;
+import static java.util.stream.Collectors.toList;
 
 public class Columnar {
-
 	private static final String ASSA_FILE = ".assa";
-	private static final String CSV_NULL_VALUE = "NULL";
 	private File root;
 
 	public Columnar(File root) {
@@ -67,22 +62,7 @@ public class Columnar {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void intoCSV(File file) throws IOException {
-				CSVWriter csvWriter = new CSVWriter(new FileWriter(file), ';');
-				csvWriter.writeNext(headers(assas));
-				AssaMerger merger = new AssaMerger(assas, filters);
-				while (merger.hasNext()) {
-					String[] next = merger.next();
-					if (next == null) break;
-					csvWriter.writeNext(next);
-				}
-				csvWriter.close();
-			}
-
-			private String[] headers(List<AssaReader<String>> assas) {
-				List<String> header = new ArrayList<>();
-				header.add("id");
-				header.addAll(assas.stream().map(AssaReader::name).collect(Collectors.toList()));
-				return header.toArray(new String[0]);
+				new CSVExporter(assas, filters).export(file);
 			}
 		};
 	}
@@ -90,7 +70,7 @@ public class Columnar {
 	private List<AssaStream<String>> toAssa(File directory) {
 		return Arrays.stream(zetFilesIn(directory))
 				.map(this::assaStream)
-				.collect(Collectors.toList());
+				.collect(toList());
 	}
 
 	private AssaStream<String> assaStream(File file) {
@@ -166,88 +146,6 @@ public class Columnar {
 
 		interface IntoCSV {
 			void intoCSV(File file) throws IOException;
-		}
-	}
-
-	private static class AssaMerger {
-		private final List<TemporalReader> readers;
-		private final List<Select.ColumnFilter> filters;
-
-		AssaMerger(List<AssaReader<String>> readers, List<Select.ColumnFilter> filters) {
-			this.readers = readers.stream().map(TemporalReader::new).collect(Collectors.toList());
-			this.filters = filters;
-		}
-
-		String[] next() {
-			TemporalReader lowest = getFilteredActiveCandidate();
-			if (lowest == null) return null;
-			String[] fields = new String[readers.size() + 1];
-			long lowestKey = lowest.current.key();
-			fields[0] = valueOf(lowestKey);
-			for (int i = 0; i < readers.size(); i++) {
-				TemporalReader reader = readers.get(i);
-				if (reader.current != null && reader.current.key() == lowestKey) {
-					fields[i + 1] = reader.current.object().toString();
-					reader.next();
-				} else fields[i + 1] = CSV_NULL_VALUE;
-			}
-			return fields;
-		}
-
-		boolean hasNext() {
-			return readers.stream().anyMatch(TemporalReader::hasNext);
-		}
-
-		private TemporalReader getFilteredActiveCandidate() {
-			TemporalReader candidate;
-			while (!satisfies(candidate = getCandidate())) {
-				if (candidate == null) break;
-				candidate.next();
-			}
-			return candidate;
-		}
-
-		private boolean satisfies(TemporalReader candidate) {
-			return candidate != null && filters.stream().allMatch(filter -> filter.test(candidate.current.key()));
-		}
-
-		private TemporalReader getCandidate() {
-			List<TemporalReader> readers = getActiveCandidates();
-			if (readers.isEmpty()) return null;
-			long reference = readers.get(0).current.key();
-			TemporalReader candidate = readers.get(0);
-			for (int i = 1; i < readers.size(); i++) {
-				if (readers.get(i).current == null) continue;
-				long newId = readers.get(i).current.key();
-				if (newId < reference) {
-					reference = newId;
-					candidate = readers.get(i);
-				}
-			}
-			return candidate;
-		}
-
-		private List<TemporalReader> getActiveCandidates() {
-			return readers.stream().filter(TemporalReader::hasNext).collect(Collectors.toList());
-		}
-
-		private class TemporalReader {
-
-			private final AssaReader reader;
-			private AssaStream.Item current;
-
-			TemporalReader(AssaReader reader) {
-				this.reader = reader;
-				current = reader.next();
-			}
-
-			void next() {
-				this.current = reader.next();
-			}
-
-			public boolean hasNext() {
-				return reader.hasNext();
-			}
 		}
 	}
 
