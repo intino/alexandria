@@ -11,38 +11,51 @@ import static java.util.Comparator.comparingLong;
 public class FileMap {
 	private Index index;
 	private Data data;
+	private final Object object = new Object();
 
 	public FileMap() {
 		this.index = new Index();
 		this.data = new Data();
 	}
 
-	public synchronized void put(String key, String value) {
-		index.put(key, data.put(value));
+	public void put(String key, String value) {
+		synchronized (object) {
+			index.put(key, data.put(value));
+		}
 	}
 
-	public synchronized String get(String key) {
-		return data.get(index.get(key));
+	public String get(String key) {
+		synchronized (object) {
+			return data.get(index.get(key));
+		}
 	}
 
-	public synchronized String getOrDefault(String key, String defaultValue) {
-		return containsKey(key) ? data.get(index.get(key)) : defaultValue;
+	public String getOrDefault(String key, String defaultValue) {
+		synchronized (object) {
+			return containsKey(key) ? data.get(index.get(key)) : defaultValue;
+		}
+	}
+
+	public int size() {
+		synchronized (object) {
+			return index.size();
+		}
+	}
+
+	public boolean isEmpty() {
+		synchronized (object) {
+			return index.isEmpty();
+		}
+	}
+
+	public boolean containsKey(String key) {
+		synchronized (object) {
+			return index.containsKey(key);
+		}
 	}
 
 	public void close() {
 		data.close();
-	}
-
-	public synchronized int size() {
-		return index.size();
-	}
-
-	public synchronized boolean isEmpty() {
-		return index.isEmpty();
-	}
-
-	public synchronized boolean containsKey(String key) {
-		return index.containsKey(key);
 	}
 
 	private static class Index {

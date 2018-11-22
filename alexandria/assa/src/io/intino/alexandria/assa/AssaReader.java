@@ -18,20 +18,12 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		this.name = inputStream.readUTF();
 		this.size = inputStream.readInt();
 		if (size == 0) close();
-		this.objects = size != 0 ? readObjects(dataInputStream(new RandomAccessFile(file, "r"))) : null;
+		this.objects = size != 0 ? readObjects(new DataInputStream((new BufferedInputStream(new FileInputStream(file))))) : null;
 		this.index = 0;
 	}
 
 	public String name() {
 		return name;
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<T> readObject(ObjectInputStream objectInputStream, int count) throws IOException, ClassNotFoundException {
-		List<T> objects = new ArrayList<>(count);
-		for (int i = 0; i < count; i++)
-			objects.add((T) objectInputStream.readObject());
-		return objects;
 	}
 
 	@Override
@@ -50,24 +42,18 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 	}
 
 
-	private DataInputStream dataInputStream(RandomAccessFile file) throws IOException {
-		file.seek(Integer.BYTES + name.length() + Long.BYTES + size * (Long.BYTES + Integer.BYTES));
-		return new DataInputStream(new InputStream() {
-			@Override
-			public int read() throws IOException {
-				return file.read();
-			}
-
-			@Override
-			public int read(byte[] b) throws IOException {
-				return file.read(b);
-			}
-		});
+	private List<T> readObjects(DataInputStream stream) throws IOException, ClassNotFoundException {
+		stream.skipBytes(Character.BYTES + name.length() + Integer.BYTES + size * (Long.BYTES + Integer.BYTES));
+		int count = stream.readInt();
+		return readObject(new ObjectInputStream(stream), count);
 	}
 
-	private List<T> readObjects(DataInputStream inputStream) throws IOException, ClassNotFoundException {
-		int count = inputStream.readInt();
-		return readObject(new ObjectInputStream(inputStream), count);
+	@SuppressWarnings("unchecked")
+	private List<T> readObject(ObjectInputStream objectInputStream, int count) throws IOException, ClassNotFoundException {
+		List<T> objects = new ArrayList<>(count);
+		for (int i = 0; i < count; i++)
+			objects.add((T) objectInputStream.readObject());
+		return objects;
 	}
 
 	private Item<T> closingIfLastItemIs(Item<T> next) {
@@ -95,6 +81,11 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 			public T object() {
 				return getObject(value);
 			}
+
+			@Override
+			public String toString() {
+				return key + "";
+			}
 		};
 	}
 
@@ -110,4 +101,8 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
