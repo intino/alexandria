@@ -73,15 +73,15 @@ public class Message {
 		return attach(attribute, randomId(), type, contentOf(is));
 	}
 
-	public Message attach(String attribute, String id, String type, InputStream is) {
-		return attach(attribute, id, type, contentOf(is));
-	}
-
 	public Message attach(String attribute, String type, byte[] content) {
 		return attach(attribute, randomId(), type, content);
 	}
 
-	public Message attach(String attribute, String id, String type, byte[] content) {
+	Message attach(String attribute, String id, String type, InputStream is) {
+		return attach(attribute, randomId() + "#" + id, type, contentOf(is));
+	}
+
+	Message attach(String attribute, String id, String type, byte[] content) {
 		return append(use(attribute), "@" + putAttachment(id + "." + type, content));
 	}
 
