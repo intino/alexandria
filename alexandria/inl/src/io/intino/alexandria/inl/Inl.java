@@ -137,9 +137,15 @@ public class Inl {
 		private static Object valueOf(Message message, String attribute, Field field) {
 			if (field.getType().isAssignableFrom(Resource.class)) {
 				Message.Attachment attachment = message.attachment(message.get(attribute));
-				return new Resource(attachment.id()).data(attachment.data());
+				return new Resource(idOf(attachment)).data(attachment.data());
 			}
 			return parserOf(field).parse(message.get(attribute));
+		}
+
+		private static String idOf(Message.Attachment attachment) {
+			String id = attachment.id();
+			if (id.contains("#")) id = id.substring(id.indexOf("#") + 1);
+			return id;
 		}
 
 		private static <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
