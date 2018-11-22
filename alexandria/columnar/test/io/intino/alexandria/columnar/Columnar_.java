@@ -1,17 +1,11 @@
 package io.intino.alexandria.columnar;
 
 import io.intino.alexandria.Timetag;
-import io.intino.alexandria.assa.Assa;
-import io.intino.alexandria.assa.loaders.FileLazyAssa;
-import io.intino.alexandria.zet.Zet;
-import io.intino.alexandria.zet.ZetReader;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class Columnar_ {
 	private Columnar columnar;
@@ -19,49 +13,53 @@ public class Columnar_ {
 
 
 	@Before
-	public void setUp() throws Exception {
-		columnar = new Columnar(new File("test-res/columnar"));
-		result = new File("test-res/result");
+	public void setUp() {
+		File columnarFile = new File("temp/columnar");
+		columnarFile.mkdirs();
+		columnar = new Columnar(columnarFile);
+		result = new File("temp/csv");
+		result.mkdirs();
 	}
-
 
 	@Test
 	public void should_load_assa_from_one_zet() throws IOException {
-		columnar.load("single").from(new File("test-res/zets/single"));
+		columnar.load("A").from(new File("test-res/zets/A"));
+		columnar.load("C").from(new File("test-res/zets/C"));
+		columnar.load("E").from(new File("test-res/zets/E"));
+		columnar.load("F").from(new File("test-res/zets/F"));
+	}
+
+	@Test
+	public void should_load_assa_from_multiple_zets() throws IOException {
+		columnar.load("B").from(new File("test-res/zets/B"));
+		columnar.load("D").from(new File("test-res/zets/D"));
 	}
 
 	@Test
 	public void should_export_column_to_csv() throws IOException, ClassNotFoundException {
-		columnar.select("single").from(new Timetag("201810")).intoCSV(new File(result, "201810.csv"));
+		columnar.select("A").from(new Timetag("201810")).intoCSV(new File(result, "A_201810.csv"));
 	}
-
-
-//	AssaStream.Merge.of(zetsOf(directory)).save("single", new File("single.assa"));
-//	Assa<String> assa = FileLazyAssa.of(new File("single.assa"), String.class);
-//	Zet zet = new Zet(new ZetReader(new File(directory, "one.zet")));
-//	assertThat(assa.name()).isEqualTo("single");
-//	assertThat(assa.size()).isEqualTo(zet.size());
-//	assertThat(assa.get(1200404L)).isNull();
-//		for (long id : zet.ids()) {
-//		assertThat(assa.get(id)).isNotNull();
-//		assertThat(assa.get(id)).isEqualTo("one");
-//	}
 
 	@Test
-	public void should_build_assa_from_multiple_zets() throws IOException, ClassNotFoundException {
-		File directory = new File("test-res/zets/multiple");
-//		AssaStream.Merge.of(zetsOf(directory)).save("multiple", new File("multiple.assa"));
-		Assa<String> assa = FileLazyAssa.of(new File("multiple.assa"), String.class);
-		assertThat(assa.name()).isEqualTo("multiple");
-		assertThat(assa.size()).isEqualTo(7943);
-		for (String name : new String[]{"one", "two"}) {
-			Zet zet = new Zet(new ZetReader(new File(directory, name + ".zet")));
-			for (long id : zet.ids()) {
-				assertThat(assa.get(id)).isNotNull();
-				assertThat(assa.get(id)).isEqualTo(name);
-			}
-		}
+	public void should_export_multivalued_column_to_csv() throws IOException, ClassNotFoundException {
+		columnar.select("B").from(new Timetag("201810")).intoCSV(new File(result, "B_201810.csv"));
 	}
 
+	@Test
+	public void should_build_assa_from_multiple_onevalue_columns() throws IOException, ClassNotFoundException {
+		columnar.select("A", "C").from(new Timetag("201810")).intoCSV(new File(result, "AC_201810.csv"));
+		columnar.select("E", "F").from(new Timetag("201810")).intoCSV(new File(result, "EF_201810.csv"));
+	}
 
+	@Test
+	public void should_build_assa_from_multiple_multivalued_columns() throws IOException, ClassNotFoundException {
+		columnar.select("B", "D").from(new Timetag("201810")).intoCSV(new File(result, "BD_201810.csv"));
+	}
+
+	@Test
+	public void should_export_filtered_column_to_csv() throws IOException, ClassNotFoundException {
+		columnar.select("A").from(new Timetag("201810")).filtered(id -> id == 264100603869L).intoCSV(new File(result, "A_filtered_201810.csv"));
+		columnar.select("A").from(new Timetag("201810")).filtered(id -> id >= 264100701879L).intoCSV(new File(result, "A_filtered2_201810.csv"));
+		columnar.select("A", "C").from(new Timetag("201810")).filtered(id -> id >= 264100701879L).intoCSV(new File(result, "AC_filtered_201810.csv"));
+	}
 }
