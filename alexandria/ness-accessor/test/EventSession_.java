@@ -14,6 +14,8 @@ import java.time.Instant;
 
 import static org.junit.Assert.assertTrue;
 
+// TODO octavio
+@Ignore
 public class EventSession_ {
 	private static boolean deleteDirectory(File directoryToBeDeleted) {
 		File[] allContents = directoryToBeDeleted.listFiles();
