@@ -14,7 +14,7 @@ import java.time.Instant;
 
 import static org.junit.Assert.assertTrue;
 
-// TODO octavio
+
 @Ignore
 public class EventSession_ {
 	private static boolean deleteDirectory(File directoryToBeDeleted) {
@@ -43,14 +43,14 @@ public class EventSession_ {
 
 	@Test
 	public void stage() throws IOException {
-		File file = new File("/Users/oroncal/Downloads/data");
+		File file = new File("stage/");
 		Files.list(file.toPath()).filter(p -> p.toFile().getName().endsWith("event.blob")).forEach(p -> read(p.toFile()));
 	}
 
 	@Test
 	@Ignore
 	public void seal() {
-		new FSDatalake(new File("/Users/oroncal/Downloads/data/")).seal();
+		new FSDatalake(new File("stage/")).seal();
 	}
 
 	private void read(File file) {
