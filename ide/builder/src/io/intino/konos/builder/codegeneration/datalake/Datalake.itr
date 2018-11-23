@@ -5,7 +5,7 @@ def type(tanks)
 	import io.intino.alexandria.logger.Logger;
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import io.intino.ness.core.sessions.EventSession;
-	import io.intino.ness.core.Timetag;
+	import io.intino.alexandria.Timetag;
 	import $package+validPackage.$box+firstUpperCase~Configuration;
 	[$tankImport]
     import java.util.ArrayList;
@@ -46,11 +46,11 @@ def type(tanks)
 			$tank+unsubscribe...[$NL]
 		}
 
-		public static void put(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+		public static void put(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
 			new NessSender(accessor, timetag).send(tank, messages);
 		}
 
-		public static void feed(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.ness.core.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+		public static void feed(NessAccessor accessor, io.intino.ness.core.Datalake.EventStore.Tank tank, io.intino.alexandria.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
 			new NessSender(accessor, timetag).feed(tank, messages);
 		}
 
@@ -60,9 +60,9 @@ def type(tanks)
 
 		public static class NessSender {
 			private final NessAccessor accessor;
-			private final io.intino.ness.core.Timetag timetag;
+			private final io.intino.alexandria.Timetag timetag;
 
-			public NessSender(NessAccessor accessor, io.intino.ness.core.Timetag timetag) {
+			public NessSender(NessAccessor accessor, io.intino.alexandria.Timetag timetag) {
 				this.accessor = accessor;
 				this.timetag = timetag;
 			}
