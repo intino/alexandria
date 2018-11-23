@@ -1,9 +1,9 @@
 package io.intino.alexandria.nessaccessor.tcp;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.zim.ZimReader;
 import io.intino.alexandria.zim.ZimStream;
 import io.intino.ness.core.Datalake;
-import io.intino.ness.core.Timetag;
 import io.intino.ness.core.fs.FS;
 
 import java.io.File;

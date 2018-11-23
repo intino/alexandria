@@ -1,9 +1,10 @@
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.nessaccessor.stages.LocalStage;
 import io.intino.alexandria.zim.ZimReader;
-import io.intino.ness.core.Timetag;
 import io.intino.ness.core.fs.FSDatalake;
 import io.intino.ness.core.sessions.EventSession;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -45,6 +46,7 @@ public class EventSession_ {
 	}
 
 	@Test
+	@Ignore
 	public void seal() {
 		new FSDatalake(new File("/Users/oroncal/Downloads/data/")).seal();
 	}

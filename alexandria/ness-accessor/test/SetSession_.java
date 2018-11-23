@@ -1,6 +1,6 @@
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.nessaccessor.stages.LocalStage;
 import io.intino.ness.core.Datalake;
-import io.intino.ness.core.Timetag;
 import io.intino.ness.core.sessions.SetSession;
 import org.junit.Test;
 
