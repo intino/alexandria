@@ -1,6 +1,7 @@
 package io.intino.alexandria.zet;
 
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -45,6 +46,7 @@ class ZInputStream extends InputStream {
 
 	private void readLevel() throws IOException {
 		int level = input.read();
+		if (level < 0) throw new EOFException();
 		this.base = this.base >> (level << 3);
 		for (int i = 1; i <= level; i++)
 			this.base = (this.base << 8) | (input.readByte() & 0xFF);
