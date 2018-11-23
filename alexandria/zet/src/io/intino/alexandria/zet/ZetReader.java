@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipInputStream;
 
 import static java.util.Arrays.stream;
 
@@ -15,11 +13,11 @@ public class ZetReader implements ZetStream {
 	private long current = -1;
 
 	public ZetReader(File file) {
-		this(iteratorOf(inputStream(file)));
+		this(iteratorOf(zipStream(inputStream(file))));
 	}
 
 	public ZetReader(InputStream is) {
-		this(iteratorOf(is));
+		this(iteratorOf(zipStream(is)));
 	}
 
 	public ZetReader(long... ids) {
@@ -38,8 +36,7 @@ public class ZetReader implements ZetStream {
 		this.iterator = iterator;
 	}
 
-	private static Iterator<Long> iteratorOf(InputStream is) {
-		DataInputStream stream = new DataInputStream(new BufferedInputStream(is));
+	private static Iterator<Long> iteratorOf(ZInputStream stream) {
 		return new Iterator<Long>() {
 			private long current = -1;
 			private long next = -1;
@@ -76,10 +73,14 @@ public class ZetReader implements ZetStream {
 
 	private static InputStream inputStream(File file) {
 		try {
-			return new GZIPInputStream(new BufferedInputStream(new FileInputStream(file)));
+			return new BufferedInputStream(new FileInputStream(file));
 		} catch (IOException e) {
 			return new ByteArrayInputStream(new byte[0]);
 		}
+	}
+
+	private static ZInputStream zipStream(InputStream inputStream) {
+		return new ZInputStream(inputStream);
 	}
 
 	@Override
