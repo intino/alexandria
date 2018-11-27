@@ -33,6 +33,10 @@ public class Columnar {
 		return Objects.requireNonNull(directory.listFiles(File::isDirectory));
 	}
 
+	public String[] columns() {
+		return root.list((f, n) -> f.isDirectory());
+	}
+
 	public Import load(String column) {
 		return directory -> {
 			for (File timetag : directoriesIn(directory))
@@ -151,9 +155,7 @@ public class Columnar {
 
 	public interface Import {
 		void from(File directory) throws IOException;
-
 	}
-
 
 	public interface Select {
 		Select from(Timetag timetag) throws IOException, ClassNotFoundException;
@@ -165,7 +167,6 @@ public class Columnar {
 		}
 
 		interface ColumnFilter extends Predicate<Long> {
-
 		}
 
 		interface Into {

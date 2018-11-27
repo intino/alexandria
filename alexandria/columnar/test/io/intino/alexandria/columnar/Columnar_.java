@@ -78,10 +78,10 @@ public class Columnar_ {
 
 	private ColumnTypes types() {
 		return new ColumnTypes().
-				put("A", new Nominal("one", "two")).
-				put("B", new Nominal("one", "two")).
-				put("D", new Nominal("DL10A", "DL10B")).
-				put("E", new Nominal("Chrome")).
-				put("F", new Nominal("Safary"));
+				put("A", new Nominal(new String[]{"one", "two"})).
+				put("B", new Nominal(new String[]{"one", "two"})).
+				put("D", new Nominal(new String[]{"DL10A", "DL10B"})).
+				put("E", new Nominal(new String[]{"Chrome"})).
+				put("F", new Nominal(new String[]{"Safary"}));
 	}
 }

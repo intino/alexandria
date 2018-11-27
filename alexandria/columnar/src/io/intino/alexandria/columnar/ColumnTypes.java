@@ -32,7 +32,7 @@ public class ColumnTypes {
 		public static class Nominal extends ColumnType {
 			private final java.lang.String[] values;
 
-			public Nominal(java.lang.String... values) {
+			public Nominal(java.lang.String[] values) {
 				this.values = values;
 			}
 
