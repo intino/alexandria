@@ -5,7 +5,6 @@ import io.intino.alexandria.logger.Logger;
 import java.io.*;
 
 public class FileTripleStore extends MemoryTripleStore {
-
 	private final File file;
 
 	public FileTripleStore(File file) {
@@ -33,5 +32,4 @@ public class FileTripleStore extends MemoryTripleStore {
 			Logger.error(e);
 		}
 	}
-
 }
