@@ -119,14 +119,14 @@
         :host .breadcrumbs paper-button {
             background: white;
             color: black;
-            border: 1px solid var(--default-primary-color);
+            border: 1px solid #388e3b;
             padding: 0 25px;
             border-radius: 30px;
             height: 31px;
             margin-top: 7px;
         }
         :host .breadcrumbs paper-button:hover {
-            background: var(--default-primary-color);
+            background: #388e3b;
             opacity: 0.9;
             color: white;
         }
@@ -157,8 +157,12 @@
             :host .breadcrumbs paper-button {
                 display: none;
             }
+            :host .breadcrumbs {
+                @apply(--alexandria-catalog-breadcrumbs-drawer);
+            }
             :host cotton-breadcrumbs {
-                margin-left: 30px;
+                padding-left: 15px;
+                margin-left: 0;
                 margin-top: 5px;
                 margin-bottom: 0;
                 padding-bottom: 0;
@@ -171,6 +175,9 @@
             }
             :host .main alexandria-catalog-grouping-list-summary {
                 display: block;
+            }
+            :host #panel {
+                @apply(--alexandria-catalog-panels-drawer);
             }
         }
         @media all and (min-width: 600px) and (orientation: portrait) {

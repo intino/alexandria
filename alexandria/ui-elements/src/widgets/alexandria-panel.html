@@ -14,6 +14,7 @@
 <link rel="import" href="alexandria-view-container-set.html">
 <link rel="import" href="alexandria-dialog-box.html">
 <link rel="import" href="_common/alexandria-breadcrumbs-behavior.html">
+<link rel="import" href="alexandriapanel/alexandria-panel-behavior.html">
 <link rel="import" href="_common/alexandria-element-behavior.html">
 <link rel="import" href="_common/alexandria-view-behavior.html">
 
@@ -209,6 +210,13 @@
                 width: 100%;
                 min-height: 30px;
             }
+            :host .fixed.right, :host .fixed.left {
+                display: none;
+            }
+            :host #panel {
+                width: calc(100% - 12px) !important;
+                @apply(--alexandria-panel-panels-drawer);
+            }
         }
         @media screen and (max-width: 540px) {
             :host cotton-breadcrumbs {
@@ -234,19 +242,15 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.PanelBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaBehaviors.ViewBehavior,
                 AlexandriaPanelBehaviors.Requester,
                 AlexandriaPanelBehaviors.NotifierListener ],
 
             properties : {
-                _viewList : Array,
                 _showTabs : Boolean,
-                _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' },
-                _selectedPage : { type: Number, value: function () { return 0; } },
-                _hasSummaryViews : { type: Boolean, value: function() { return false; }},
-                _hasLeftFixedViews : { type: Boolean, value: function() { return false; }},
-                _hasRightFixedViews : { type: Boolean, value: function() { return false; }}
+                _selectedPage : { type: Number, value: function () { return 0; } }
             },
 
             attached : function() {
@@ -263,79 +267,8 @@
                 this._hasRightFixedViews = this._countRightFixedViews() > 0;
             },
 
-            _refreshViewListVisibility : function(viewList) {
-                viewList.forEach(v => {
-                    var view = this.querySelector("paper-tab[name='" + v.name + "']");
-                    if (view != null) view.hidden = this._isViewHidden(v);
-                });
-            },
-
-            _refreshSelectedView : function(name) {
-                if (this._selectedView == name) return;
-                this._selectedView = name;
-            },
-
-            _countSummaryViews : function() {
-                var count = 0;
-                for (var i=0; i<this._viewList.length; i++)
-                    if (this._isSummaryLayoutView(this._viewList[i])) count++;
-                return count;
-            },
-
-            _countLeftFixedViews : function() {
-                var count = 0;
-                for (var i=0; i<this._viewList.length; i++)
-                    if (this._isLeftFixedLayoutView(this._viewList[i])) count++;
-                return count;
-            },
-
-            _countRightFixedViews : function() {
-                var count = 0;
-                for (var i=0; i<this._viewList.length; i++)
-                    if (this._isRightFixedLayoutView(this._viewList[i])) count++;
-                return count;
-            },
-
-            _isSummaryLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "summary";
-            },
-
-            _isLeftFixedLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "left-fixed";
-            },
-
-            _isTabLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "tab";
-            },
-
-            _isRightFixedLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "right-fixed";
-            },
-
-            _isViewHidden : function(view) {
-                return view.referencePropertyList[2].value == "true";
-            },
-
             _viewStyle : function(view) {
                 return this._viewWidth(view) + ";" + this._viewMargin(view);
-            },
-
-            _viewWidth : function(view) {
-                var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
-                return "width:" + (width != "-1" ? width + "%" : "100%");
-            },
-
-            _viewMargin : function(view) {
-                var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
-                return width != "-1" ? "margin:0 auto" : "";
-            },
-
-            _selectView : function(name) {
-                var element = this.querySelector("paper-tab[name='" + name + "']");
-                if (element == null) return;
-                if (this.lastView == name) return;
-                this.lastView = name;
-                this._openView({ detail : element.view.name });
             }
 
         });

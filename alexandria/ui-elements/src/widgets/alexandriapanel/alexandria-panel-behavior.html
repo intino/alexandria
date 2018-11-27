@@ -1,0 +1,93 @@
+<script>
+    'use strict';
+
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.PanelBehavior = {
+
+        properties : {
+            _viewList : Array,
+            _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' }
+        },
+
+        _refreshViewList : function(viewList) {
+            this._viewList = viewList;
+            this._hasSummaryViews = this._countSummaryViews() > 0;
+            this._hasLeftFixedViews = this._countLeftFixedViews() > 0;
+            this._hasRightFixedViews = this._countRightFixedViews() > 0;
+        },
+
+        _refreshViewListVisibility : function(viewList) {
+            viewList.forEach(v => {
+                var view = this.querySelector("paper-tab[name='" + v.name + "']");
+                if (view != null) view.hidden = this._isViewHidden(v);
+            });
+        },
+
+        _refreshSelectedView : function(name) {
+            if (this._selectedView == name) return;
+            this._selectedView = name;
+        },
+
+        _countSummaryViews : function() {
+            var count = 0;
+            for (var i=0; i<this._viewList.length; i++)
+                if (this._isSummaryLayoutView(this._viewList[i])) count++;
+            return count;
+        },
+
+        _countLeftFixedViews : function() {
+            var count = 0;
+            for (var i=0; i<this._viewList.length; i++)
+                if (this._isLeftFixedLayoutView(this._viewList[i])) count++;
+            return count;
+        },
+
+        _countRightFixedViews : function() {
+            var count = 0;
+            for (var i=0; i<this._viewList.length; i++)
+                if (this._isRightFixedLayoutView(this._viewList[i])) count++;
+            return count;
+        },
+
+        _isSummaryLayoutView : function(view) {
+            return view.referencePropertyList[1].value == "summary";
+        },
+
+        _isLeftFixedLayoutView : function(view) {
+            return view.referencePropertyList[1].value == "left-fixed";
+        },
+
+        _isTabLayoutView : function(view) {
+            return view.referencePropertyList[1].value == "tab";
+        },
+
+        _isRightFixedLayoutView : function(view) {
+            return view.referencePropertyList[1].value == "right-fixed";
+        },
+
+        _isViewHidden : function(view) {
+            return view.referencePropertyList[2].value == "true";
+        },
+
+        _viewWidth : function(view) {
+            var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
+            return "width:" + (width != "-1" ? width + "%" : "100%");
+        },
+
+        _viewMargin : function(view) {
+            var width = view.referencePropertyList.length > 3 ? view.referencePropertyList[3].value : "-1";
+            return width != "-1" ? "margin:0 auto" : "";
+        },
+
+        _selectView : function(name) {
+            var element = this.querySelector("paper-tab[name='" + name + "']");
+            if (element == null) return;
+            if (this.lastView == name) return;
+            this.lastView = name;
+            this._openView({ detail : element.view.name });
+        }
+
+    };
+
+</script>
