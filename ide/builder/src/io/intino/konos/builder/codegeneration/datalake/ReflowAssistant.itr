@@ -3,7 +3,7 @@ def type(operations & graph)
 
 
 	import io.intino.alexandria.logger.Logger;
-	import io.intino.ness.core.Timetag;
+	import io.intino.alexandria.Timetag;
 	import io.intino.tara.magritte.RemounterGraph;
 	import $package+validPackage.$box+FirstUpperCase~Box;
 	import io.intino.tara.magritte.stores.FileSystemStore;

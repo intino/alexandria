@@ -12,4 +12,3 @@ Artifact("io.intino.alexandria", "1.0.0") assa
 
 Repository("intino-maven") intino
 	Release("https://artifactory.intino.io/artifactory/release-libraries") release
-	Release("https://artifactory.intino.io/artifactory/releases")
