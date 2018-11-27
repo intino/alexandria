@@ -3,10 +3,7 @@ package io.intino.alexandria.zet;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class UnionTest {
-
-	public static void main(String[] args) {
-		try (DataOutputStream stream = new DataOutputStream(new FileOutputStream("test-res/testsets/rep3.zet"))) {
-			for (Long l : asList(2L, 4L)) stream.writeLong(l);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Test
 	public void should_read_three_sorted_files_without_duplicates() {
@@ -93,6 +82,16 @@ public class UnionTest {
 
 		Assert.assertEquals(1, longs.size());
 		Assert.assertEquals((Long) 2L, longs.get(0));
+	}
+
+	public static void main(String[] args) throws IOException {
+		ZOutputStream test = new ZOutputStream(new FileOutputStream("test"));
+		for (int i = 1; i <= 20; i++) {
+			test.writeLong((long)i);
+		}
+		test.close();
+		Zet test1 = new Zet(new ZetReader(new File("test")));
+		System.out.println("AAA");
 	}
 
 //	@Test // TODO TEST CONSECUTIVES

@@ -1,9 +1,10 @@
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.nessaccessor.stages.LocalStage;
 import io.intino.alexandria.zim.ZimReader;
-import io.intino.ness.core.Timetag;
 import io.intino.ness.core.fs.FSDatalake;
 import io.intino.ness.core.sessions.EventSession;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,6 +14,8 @@ import java.time.Instant;
 
 import static org.junit.Assert.assertTrue;
 
+
+@Ignore
 public class EventSession_ {
 	private static boolean deleteDirectory(File directoryToBeDeleted) {
 		File[] allContents = directoryToBeDeleted.listFiles();
@@ -40,13 +43,14 @@ public class EventSession_ {
 
 	@Test
 	public void stage() throws IOException {
-		File file = new File("/Users/oroncal/Downloads/data");
+		File file = new File("stage/");
 		Files.list(file.toPath()).filter(p -> p.toFile().getName().endsWith("event.blob")).forEach(p -> read(p.toFile()));
 	}
 
 	@Test
+	@Ignore
 	public void seal() {
-		new FSDatalake(new File("/Users/oroncal/Downloads/data/")).seal();
+		new FSDatalake(new File("stage/")).seal();
 	}
 
 	private void read(File file) {

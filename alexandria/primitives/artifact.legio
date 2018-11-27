@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.1") primitives
+Artifact("io.intino.alexandria", "1.0.2") primitives
 	Imports
 		Compile("eu.medsea.mimeutil", "mime-util", "2.1.1")
 			Exclude("org.slf4j", "slf4j-api")

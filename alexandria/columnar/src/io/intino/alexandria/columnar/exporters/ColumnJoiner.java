@@ -1,18 +1,22 @@
-package io.intino.alexandria.columnar;
+package io.intino.alexandria.columnar.exporters;
 
+import io.intino.alexandria.Timetag;
 import io.intino.alexandria.assa.AssaReader;
 import io.intino.alexandria.assa.AssaStream;
+import io.intino.alexandria.columnar.Columnar;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.valueOf;
 
-class AssaMerger {
+class ColumnJoiner {
+	private final Timetag timetag;
 	private final List<TemporalReader> readers;
 	private final List<Columnar.Select.ColumnFilter> filters;
 
-	AssaMerger(List<AssaReader<String>> readers, List<Columnar.Select.ColumnFilter> filters) {
+	ColumnJoiner(Timetag timetag, List<AssaReader<String>> readers, List<Columnar.Select.ColumnFilter> filters) {
+		this.timetag = timetag;
 		this.readers = readers.stream().map(TemporalReader::new).collect(Collectors.toList());
 		this.filters = filters;
 	}
@@ -22,7 +26,7 @@ class AssaMerger {
 		if (lowest == null) return null;
 		String[] fields = new String[readers.size() + 1];
 		long lowestKey = lowest.current.key();
-		fields[0] = valueOf(lowestKey);
+		fields[0] = timetag.value();
 		for (int i = 0; i < readers.size(); i++) {
 			TemporalReader reader = readers.get(i);
 			if (reader.current != null && reader.current.key() == lowestKey) {
