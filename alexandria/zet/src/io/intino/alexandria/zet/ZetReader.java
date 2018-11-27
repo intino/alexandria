@@ -1,5 +1,7 @@
 package io.intino.alexandria.zet;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.*;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +28,21 @@ public class ZetReader implements ZetStream {
 
 	public ZetReader(List<Long> ids) {
 		this(ids.stream());
+	}
+
+	@Override
+	public long current() {
+		return current;
+	}
+
+	@Override
+	public long next() {
+		return current = iterator.hasNext() ? iterator.next() : -1L;
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iterator.hasNext();
 	}
 
 	public ZetReader(Stream<Long> stream) {
@@ -65,7 +82,7 @@ public class ZetReader implements ZetStream {
 				try {
 					stream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Logger.error(e);
 				}
 			}
 		};
@@ -81,20 +98,5 @@ public class ZetReader implements ZetStream {
 
 	private static ZInputStream zipStream(InputStream inputStream) {
 		return new ZInputStream(inputStream);
-	}
-
-	@Override
-	public long current() {
-		return current;
-	}
-
-	@Override
-	public long next() {
-		return current = iterator.hasNext() ? iterator.next() : -1L;
-	}
-
-	@Override
-	public boolean hasNext() {
-		return iterator.hasNext();
 	}
 }

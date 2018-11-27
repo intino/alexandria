@@ -7,7 +7,8 @@ import io.intino.alexandria.assa.AssaStream.Merge;
 import io.intino.alexandria.columnar.Columnar.Select.FilterOrGet;
 import io.intino.alexandria.columnar.exporters.ARFFExporter;
 import io.intino.alexandria.columnar.exporters.CSVExporter;
-import io.intino.alexandria.triplestore.FileTripleStore;
+import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.zet.ZFile;
 import io.intino.alexandria.zet.ZetReader;
 
 import java.io.File;
@@ -39,8 +40,13 @@ public class Columnar {
 
 	public Import load(String column) {
 		return directory -> {
-			for (File timetag : directoriesIn(directory))
-				Merge.of(toAssa(timetag)).save(column, assaFile(timetag, column));
+			for (File timetag : directoriesIn(directory)) {
+				File file = assaFile(timetag, column);
+				if (file.exists()) continue;
+				AssaStream of = Merge.of(toAssa(timetag));
+				of.save(column, file);
+				of.close();
+			}
 		};
 	}
 
@@ -130,21 +136,29 @@ public class Columnar {
 			public boolean hasNext() {
 				return reader.hasNext();
 			}
+
+			@Override
+			public void close() {
+				reader.hasNext();
+			}
 		};
 	}
 
 	private int sizeOf(File file) {
-		FileTripleStore tripleStore = new FileTripleStore(new File(file.getParentFile(), ".metadata"));
-		String[] triple = tripleStore.matches(nameOf(file), "_size_").findFirst().orElse(null);
-		return triple != null ? Integer.parseInt(triple[2]) : 0;
+		try {
+			return (int) new ZFile(file).size();
+		} catch (IOException e) {
+			Logger.error(e);
+			return 0;
+		}
 	}
 
 	private String nameOf(File file) {
 		return file.getName().substring(0, file.getName().lastIndexOf('.'));
 	}
 
-	private File assaFile(File root, String column) {
-		return new File(columnDirectory(column), root.getName() + ASSA_FILE);
+	private File assaFile(File timetag, String column) {
+		return new File(columnDirectory(column), timetag.getName() + ASSA_FILE);
 	}
 
 	private File columnDirectory(String column) {
