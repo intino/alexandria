@@ -75,12 +75,16 @@ public class Timetag {
 		};
 	}
 
-	private boolean isAfter(Timetag timetag) {
+	public boolean isAfter(Timetag timetag) {
 		return datetime().isAfter(timetag.datetime());
 	}
 
-	private boolean isBefore(Timetag timetag) {
+	public boolean isBefore(Timetag timetag) {
 		return datetime().isBefore(timetag.datetime());
+	}
+
+	public int compare(Timetag timetag) {
+		return this.datetime().compareTo(timetag.datetime());
 	}
 
 	private LocalDateTime calculate(int amount) {

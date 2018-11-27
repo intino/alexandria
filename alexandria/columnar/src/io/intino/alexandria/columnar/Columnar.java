@@ -5,15 +5,14 @@ import io.intino.alexandria.assa.AssaReader;
 import io.intino.alexandria.assa.AssaStream;
 import io.intino.alexandria.assa.AssaStream.Merge;
 import io.intino.alexandria.columnar.Columnar.Select.FilterOrGet;
+import io.intino.alexandria.columnar.exporters.ARFFExporter;
+import io.intino.alexandria.columnar.exporters.CSVExporter;
 import io.intino.alexandria.triplestore.FileTripleStore;
 import io.intino.alexandria.zet.ZetReader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -42,15 +41,29 @@ public class Columnar {
 	}
 
 	public Select select(String... columns) {
-		return timetag -> {
-			List<AssaReader<String>> assas = new ArrayList<>();
-			for (String column : columns)
-				assas.add(new AssaReader<>(assaFile(new File(root, timetag.value()), column)));
-			return filter(assas);
+		return new Select() {
+			private Timetag from;
+
+			@Override
+			public Select from(Timetag timetag) {
+				this.from = timetag;
+				return this;
+			}
+
+			@Override
+			public FilterOrGet to(Timetag to) throws IOException, ClassNotFoundException {
+				Map<Timetag, List<AssaReader<String>>> assas = new HashMap<>();
+				for (Timetag timetag : from.iterateTo(to)) {
+					assas.put(timetag, new ArrayList<>());
+					for (String column : columns)
+						assas.get(timetag).add(new AssaReader<>(assaFile(new File(root, to.value()), column)));
+				}
+				return filter(assas);
+			}
 		};
 	}
 
-	private FilterOrGet filter(List<AssaReader<String>> assas) {
+	private FilterOrGet filter(Map<Timetag, List<AssaReader<String>>> assas) {
 		List<Select.ColumnFilter> filters = new ArrayList<>();
 		return new FilterOrGet() {
 			@Override
@@ -59,10 +72,19 @@ public class Columnar {
 				return this;
 			}
 
-			@SuppressWarnings("deprecation")
+			@Override
+			public void intoCSV(File file, ColumnTypes columnTypes) throws IOException {
+				new CSVExporter(assas, filters, columnTypes).export(file);
+			}
+
 			@Override
 			public void intoCSV(File file) throws IOException {
-				new CSVExporter(assas, filters).export(file);
+				new CSVExporter(assas, filters, new ColumnTypes()).export(file);
+			}
+
+			@Override
+			public void intoARFF(File file, ColumnTypes columnTypes) throws IOException {
+				new ARFFExporter(assas, filters, columnTypes).export(file);
 			}
 		};
 	}
@@ -134,9 +156,11 @@ public class Columnar {
 
 
 	public interface Select {
-		FilterOrGet from(Timetag timetag) throws IOException, ClassNotFoundException;
+		Select from(Timetag timetag) throws IOException, ClassNotFoundException;
 
-		interface FilterOrGet extends IntoCSV {
+		FilterOrGet to(Timetag timetag) throws IOException, ClassNotFoundException;
+
+		interface FilterOrGet extends Into {
 			FilterOrGet filtered(ColumnFilter timetag);
 		}
 
@@ -144,8 +168,12 @@ public class Columnar {
 
 		}
 
-		interface IntoCSV {
+		interface Into {
+			void intoCSV(File file, ColumnTypes types) throws IOException;
+
 			void intoCSV(File file) throws IOException;
+
+			void intoARFF(File file, ColumnTypes types) throws IOException;
 		}
 	}
 

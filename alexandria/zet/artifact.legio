@@ -8,6 +8,4 @@ Artifact("io.intino.alexandria", "1.0.2") zet
 	Distribution(intino.release)
 
 Repository(identifier = "intino-maven") intino
-	Language(url = "https://artifactory.intino.io/artifactory/releases")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
 	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
