@@ -13,11 +13,11 @@ public class FileTripleStore extends MemoryTripleStore {
 	}
 
 	private static InputStream inputStreamOf(File file) {
+		if (!file.exists()) return new ByteArrayInputStream(new byte[0]);
 		try {
 			return new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			Logger.error(e);
-			return new ByteArrayInputStream(new byte[0]);
+		} catch (FileNotFoundException ignored) {
+			return null;
 		}
 	}
 
@@ -27,6 +27,7 @@ public class FileTripleStore extends MemoryTripleStore {
 
 	public synchronized void save() {
 		try {
+			file.getParentFile().mkdirs();
 			save(new FileOutputStream(this.file));
 		} catch (FileNotFoundException e) {
 			Logger.error(e);
