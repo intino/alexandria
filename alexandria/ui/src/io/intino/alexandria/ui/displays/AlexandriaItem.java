@@ -281,7 +281,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 		openItemListeners.forEach(l -> l.accept(new OpenItemEvent() {
 			@Override
 			public String itemId() {
-				return new String(Base64.getDecoder().decode(reference.name()));
+				return new String(decodedId(reference.name()));
 			}
 
 			@Override
@@ -375,7 +375,7 @@ public class AlexandriaItem extends ActivityDisplay<AlexandriaItemNotifier, Box>
 	}
 
 	private Item itemOf(String item) {
-		return provider.item(new String(Base64.getDecoder().decode(item)));
+		return provider.item(decodedId(item));
 	}
 
 	private void createEmbeddedDisplays(String id) {

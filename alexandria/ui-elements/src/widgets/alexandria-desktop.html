@@ -78,13 +78,7 @@
         :host paper-icon-button.toggle {
             display: none;
         }
-        @media screen and (max-width: 736px) {
-            :host paper-icon-button.toggle, :host paper-drawer-panel ::content #drawer {
-                display: block;
-            }
-        }
-        /* tablet-small */
-        @media all and (min-width: 600px) and (orientation: portrait) {
+        @media screen and (max-width: 736px), all and (min-width: 600px) and (orientation: portrait) {
             :host paper-icon-button.toggle, :host paper-drawer-panel ::content #drawer {
                 display: block;
             }

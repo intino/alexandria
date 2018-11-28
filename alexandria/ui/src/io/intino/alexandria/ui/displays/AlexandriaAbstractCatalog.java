@@ -307,7 +307,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		AlexandriaViewContainerCollection displayView = optionalView.get();
 		View view = displayView.view();
 		OnClickItem onClickItem = onClickItemEvent();
-		Item item = item(new String(Base64.getDecoder().decode(value)));
+		Item item = item(decodedId(value));
 		Item openedItem = openedItem();
 
 		if (openedItem != null && item.id().equals(openedItem.id())) return;
