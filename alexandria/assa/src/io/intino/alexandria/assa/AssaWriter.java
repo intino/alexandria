@@ -1,5 +1,7 @@
 package io.intino.alexandria.assa;
 
+import io.intino.alexandria.logger.Logger;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +24,8 @@ public class AssaWriter {
 			output.writeInt(input.size());
 			writeItems(input, output);
 			output.writeInt(objects.size());
-			writeObjects(objectOutputStream(output));
+			ObjectOutputStream objectOutputStream = objectOutputStream(output);
+			writeObjects(objectOutputStream);
 		}
 	}
 
@@ -47,7 +50,7 @@ public class AssaWriter {
 		try {
 			output.writeObject(object);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.error(e);
 		}
 	}
 
