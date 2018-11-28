@@ -2,8 +2,8 @@ def type(display & accessible)
 	package $package.displays;
 
     import $package.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaProxyDisplay;
-    import io.intino.konos.alexandria.ui.services.push.UISession;
+    import io.intino.alexandria.ui.displays.AlexandriaProxyDisplay;
+    import io.intino.alexandria.ui.services.push.UISession;
 
     import java.util.HashMap;
     import java.util.Map;
@@ -41,12 +41,12 @@ end
 def type(display)
 	package $package.displays;
 
-	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import $package.*;
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.alexandria.ui.displays.AlexandriaDisplay;
     $parent+import
 
     public class $name+firstUpperCase extends AlexandriaDisplay<$name+firstUpperCase~Notifier> {
@@ -70,7 +70,7 @@ def type(display)
 end
 
 def type(request & asset)
-	public io.intino.konos.alexandria.ui.spark.UIFile $name([$parameter value]) {
+	public io.intino.alexandria.ui.spark.UIFile $name([$parameter value]) {
         return null;
 	}
 end

@@ -1,8 +1,8 @@
 def type(Dialogs)
 	package $package.dialogs;
 
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.ui.displays.*;
+    import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.alexandria.ui.displays.*;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
     import java.lang.reflect.Constructor;

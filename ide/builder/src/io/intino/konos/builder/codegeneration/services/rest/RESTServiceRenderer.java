@@ -142,7 +142,7 @@ public class RESTServiceRenderer {
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
 			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store()).addSlot("password", secure.storePassword()));
-		final String className = snakeCaseToCamelCase(service.name$()) + "Resources";
+		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes.put(service.getClass().getSimpleName() + "#" + service.name$(), className);
 		Commons.writeFrame(gen, className, template().format(frame));
 	}

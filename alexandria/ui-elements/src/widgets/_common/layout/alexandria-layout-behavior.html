@@ -103,10 +103,14 @@
             if (this._openItemTimeout != null) window.clearTimeout(this._openItemTimeout);
             this._openItemTimeout = window.setTimeout(() => {
                 if (name == "noItems") return;
-            if (!this._defaultItemReceived) return;
-            if (this._openedItemIndex == this._indexOf(name)) return;
-            this.openItem(name);
-        }, 100);
+                if (!this._defaultItemReceived) return;
+                if (this._openedItemIndex == this._indexOf(name)) return;
+                this.fire("open-item", name);
+            }, 100);
+        },
+
+        _home : function() {
+            this.fire("home");
         },
 
         _refreshOpened : function(opened) {
