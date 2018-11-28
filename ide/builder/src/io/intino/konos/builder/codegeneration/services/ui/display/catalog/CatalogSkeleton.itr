@@ -1,15 +1,15 @@
 def type(catalog)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.ui.Resource;
-    import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
-    import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
-    import io.intino.konos.alexandria.ui.model.Catalog;
-    import io.intino.konos.alexandria.ui.model.Element;
-    import io.intino.konos.alexandria.ui.model.catalog.Scope;
-    import io.intino.konos.alexandria.ui.model.catalog.arrangement.Group;
-    import io.intino.konos.alexandria.ui.model.toolbar.TaskSelection;
-    import io.intino.konos.alexandria.ui.services.push.UISession;
+    import io.intino.alexandria.ui.Resource;
+    import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+    import io.intino.alexandria.ui.displays.CatalogInstantBlock;
+    import io.intino.alexandria.ui.model.Catalog;
+    import io.intino.alexandria.ui.model.Element;
+    import io.intino.alexandria.ui.model.catalog.Scope;
+    import io.intino.alexandria.ui.model.catalog.arrangement.Group;
+    import io.intino.alexandria.ui.model.toolbar.TaskSelection;
+    import io.intino.alexandria.ui.services.push.UISession;
     import $package+validPackage.$box+firstUpperCase~Box;
 
     import java.io.ByteArrayInputStream;
@@ -33,7 +33,7 @@ def type(catalog)
 		$toolbar
     	]
     	public static class Source {
-    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.catalog.Scope scope, String condition[, $mode+timerange range], UISession session) {
+    		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.catalog.Scope scope, String condition[, $mode+timerange range], UISession session) {
     			return java.util.Collections.emptyList();//TODO
     		}
 
@@ -84,7 +84,7 @@ end
 
 def trigger(range)
 	public static class Temporal {
-		public static io.intino.konos.alexandria.ui.model.TimeRange range($box+firstUpperCase~Box box, UISession session) {
+		public static io.intino.alexandria.ui.model.TimeRange range($box+firstUpperCase~Box box, UISession session) {
 			return null;
 		}
 	}
@@ -101,7 +101,7 @@ def attribute(always) trigger(temporalFilterEnabled)
 end
 
 def attribute(conditional) trigger(temporalFilterEnabled)
-	public static boolean enable($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.TemporalCatalog catalog, io.intino.konos.alexandria.ui.model.catalog.Scope scope, UISession session) {
+	public static boolean enable($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.TemporalCatalog catalog, io.intino.alexandria.ui.model.catalog.Scope scope, UISession session) {
 		return true;
 	}
 end
@@ -113,7 +113,7 @@ def attribute(always) trigger(temporalFilterVisible)
 end
 
 def attribute(conditional) trigger(temporalFilterVisible)
-	public static boolean visible($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.TemporalCatalog catalog, io.intino.konos.alexandria.ui.model.catalog.Scope scope, UISession session) {
+	public static boolean visible($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.TemporalCatalog catalog, io.intino.alexandria.ui.model.catalog.Scope scope, UISession session) {
 		return true;
 	}
 end
@@ -122,7 +122,7 @@ def attribute(never) trigger(temporalFilterVisible)
 end
 
 def trigger(timerange)
-	io.intino.konos.alexandria.ui.model.TimeRange
+	io.intino.alexandria.ui.model.TimeRange
 end
 
 def trigger(hasMagazineView)
@@ -142,13 +142,13 @@ def trigger(hasCustomItemsArrivalMessage)
 end
 
 def trigger(groupingSelection)
-	public static void createGroup($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, String grouping, io.intino.konos.alexandria.ui.model.catalog.arrangement.Group group, UISession session) {
+	public static void createGroup($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Catalog catalog, String grouping, io.intino.alexandria.ui.model.catalog.arrangement.Group group, UISession session) {
 
 	}
 end
 
 def trigger(hasArrangements)
-	public static io.intino.konos.alexandria.ui.model.Catalog.ArrangementFilterer filterer($box+firstUpperCase~Box box, UISession session) {
+	public static io.intino.alexandria.ui.model.Catalog.ArrangementFilterer filterer($box+firstUpperCase~Box box, UISession session) {
 		return null;
 	}
 end
@@ -158,7 +158,7 @@ def type(openPanel)
 end
 
 def trigger(breadcrumbs)
-	public static io.intino.konos.alexandria.ui.model.mold.stamps.Tree onOpenPanelBreadcrumbs($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase, UISession session) {
+	public static io.intino.alexandria.ui.model.mold.stamps.Tree onOpenPanelBreadcrumbs($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase, UISession session) {
 		return null; //return breadcrumbs
 	}
 end
@@ -169,13 +169,13 @@ def type(openCatalog)
 end
 
 def trigger(openCatalogLoader)
-	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, UISession session) {
+	public static String onOpenCatalog($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, UISession session) {
 		return null; //return item id to show when catalog is opened
 	}
 end
 
 def trigger(openCatalogFilter)
-	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, UISession session) {
+	public static boolean onOpenCatalogFilter($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Catalog catalog, $type $type+shortType+firstLowerCase, Object item, UISession session) {
 		return true;
 	}
 end
@@ -187,7 +187,7 @@ def trigger(toolbar)
 end
 
 def type(arrangement & grouping)
-	public static java.util.List<io.intino.konos.alexandria.ui.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, UISession session) {
+	public static java.util.List<io.intino.alexandria.ui.model.catalog.arrangement.Group> $name+firstLowerCase($box+firstUpperCase~Box box, java.util.List<$type> items, UISession session) {
 		return emptyList(); //TODO
 	}
 end

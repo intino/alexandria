@@ -36,6 +36,9 @@ AlexandriaCatalogBehaviors.NotifierListener = {
         this.when("itemsArrival").toSelf().execute(function(parameters) {
         	widget._itemsArrival(parameters.value);
         });
+        this.when("openDefaultItem").toSelf().execute(function(parameters) {
+        	widget._openDefaultItem(parameters.value);
+        });
         this._listeningToDisplay = true;
     }
 };

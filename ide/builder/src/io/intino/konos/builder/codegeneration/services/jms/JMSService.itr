@@ -3,9 +3,9 @@ def type(jms)
 	package $package;
 
 	import $package.requests.*;
-	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.jms.$model~Consumer;
-	import io.intino.konos.jms.$model~Producer;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.jms.$model~Consumer;
+	import io.intino.alexandria.jms.$model~Producer;
 
 	import javax.jms.BytesMessage;
 	import javax.jms.JMSException;
@@ -17,7 +17,7 @@ def type(jms)
 	import java.io.InputStream;
 
 
-	public class $name+firstUpperCase~Service extends io.intino.konos.jms.Bus {
+	public class $name+firstUpperCase~Service extends io.intino.alexandria.jms.Bus {
 
 		private $box+firstUpperCase~Configuration configuration;
 

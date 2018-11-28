@@ -12,6 +12,9 @@ AlexandriaPanelBehaviors.NotifierListener = {
         this.when("refreshViewList").toSelf().execute(function(parameters) {
         	widget._refreshViewList(parameters.value);
         });
+        this.when("refreshViewListVisibility").toSelf().execute(function(parameters) {
+        	widget._refreshViewListVisibility(parameters.value);
+        });
         this.when("refreshSelectedView").toSelf().execute(function(parameters) {
         	widget._refreshSelectedView(parameters.value);
         });

@@ -1,0 +1,20 @@
+def type(arff)
+	@RELATION relation
+
+	$attribute...[$NL]
+
+	@DATA
+
+end
+
+def trigger(attribute)
+	@ATTRIBUTE $name $type
+end
+
+def type(Nominal) trigger(type)
+	{$value...[,]}
+end
+
+def type(Date) trigger(type)
+	DATE "$format"
+end

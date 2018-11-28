@@ -15,10 +15,13 @@
 
     <template>
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
-        <alexandria-catalog-grouping-list grouping-list="[[_catalog.groupingList]]"
-                                          histograms-mode="[[_catalog.arrangementHistogramsMode]]"
-                                          on-grouping-selection-change="_handleGroupingChange"
-                                          on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+        <div id="main">
+            <alexandria-catalog-grouping-list grouping-list="[[_catalog.groupingList]]"
+                                              histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                              on-grouping-selection-change="_handleGroupingChange"
+                                              on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+        </div>
+        <div id="panel" name="panel" class="layout vertical flex hidden"></div>
     </template>
 
     <style>
@@ -27,6 +30,16 @@
         }
         :host > h3 {
             margin: 0 0 0 22px;
+        }
+        :host #panel {
+            display: block;
+            margin: 0px 6px;
+            width: calc(100% - 12px);
+            @apply(--alexandria-catalog-panels);
+        }
+        :host #main.hidden, :host #panel.hidden {
+            position: absolute;
+            left: -10000px;
         }
         :host alexandria-catalog-grouping-list {
             display: block;
@@ -71,6 +84,16 @@
 
             _handleDeleteGroupingGroup : function(event) {
                 this.deleteGroupingGroup(event.detail);
+            },
+
+            _createPanel : function(params) {
+                if (this.$.panel == null) return;
+                var zombie = document.createElement("cotton-zombie");
+                zombie.setAttribute("display", params.displayType);
+                zombie.setAttribute("widget", "AlexandriaPanelDrawer");
+                zombie.setAttribute("object", params.item);
+                this.$.panel.innerHTML = "";
+                this.$.panel.appendChild(zombie);
             }
 
         });

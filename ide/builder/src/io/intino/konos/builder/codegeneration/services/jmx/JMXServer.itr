@@ -1,9 +1,9 @@
 def type(jmxserver)
 	package $package+ValidPackage;
 
-	import io.intino.konos.jmx.JMXServer;
+	import io.intino.alexandria.jmx.JMXServer;
 
-	import io.intino.konos.alexandria.Box;
+	import io.intino.alexandria.core.Box;
 	import java.util.HashMap;
 	import java.util.Map;
 
@@ -26,8 +26,8 @@ end
 def type(jmx) type(interface)
 	package $package+ValidPackage.jmx;
 
-	import io.intino.konos.jmx.Description;
-    import io.intino.konos.jmx.Parameters;
+	import io.intino.alexandria.jmx.Description;
+    import io.intino.alexandria.jmx.Parameters;
 
 	import java.util.*;
 	import java.time.*;

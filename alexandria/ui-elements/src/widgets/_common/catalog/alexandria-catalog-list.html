@@ -21,7 +21,6 @@
         <div class="toolbar" hidden$="[[_toolbarHidden]]">
             <div class="layout horizontal" hidden$="[[_selectionPanelVisible]]">
                 <div class="sorting-box layout horizontal center" hidden$="[[!sortingList.length]]">
-                    <div class="label">[[Sortings]]</div>
                     <alexandria-catalog-sorting selected-sorting$="[[selectedSorting]]"
                                                 sorting-list="[[sortingList]]"></alexandria-catalog-sorting>
                 </div>
@@ -137,14 +136,7 @@
         }
         :host .toolbar .sorting-box {
             width: 50%;
-            padding: 7px 7px 0;
-        }
-        :host .toolbar .sorting-box .label {
-            color: #888;
-            font-size: 9pt;
-            margin-right: 10px;
-            margin-top: 3px;
-            white-space: nowrap;
+            padding: 0 7px 0;
         }
         :host .group-header {
             margin: 10px 13px;
@@ -264,7 +256,6 @@
     <script>
         const AlexandriaCatalogListDictionary = {
             es: {
-                Sortings : "mostrar primero",
                 Search : "búsqueda",
                 NoItems : "no hay elementos",
                 Deselect : "quitar",
@@ -274,7 +265,6 @@
                 RemoveSelection : "quitar"
             },
             en: {
-                Sortings : "show first",
                 Search : "search",
                 NoItems : "no elements",
                 Deselect : "deselect",

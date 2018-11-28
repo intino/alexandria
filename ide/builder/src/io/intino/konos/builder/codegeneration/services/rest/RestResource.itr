@@ -3,16 +3,16 @@ def type(notification)
 
 	import java.util.List;
 	import java.util.ArrayList;
-	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import $package.*;
-	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.alexandria.rest.Resource;
-	import io.intino.konos.alexandria.rest.pushservice.Client;
-	import io.intino.konos.alexandria.rest.pushservice.Session;
-	import io.intino.konos.alexandria.rest.pushservice.MessageCarrier;
-	import io.intino.konos.alexandria.rest.spark.SparkManager;
-	import io.intino.konos.alexandria.rest.spark.SparkNotifier;
-	import io.intino.konos.alexandria.rest.spark.SparkPushService;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.rest.Resource;
+	import io.intino.alexandria.rest.pushservice.Client;
+	import io.intino.alexandria.rest.pushservice.Session;
+	import io.intino.alexandria.rest.pushservice.MessageCarrier;
+	import io.intino.alexandria.rest.spark.SparkManager;
+	import io.intino.alexandria.rest.spark.SparkNotifier;
+	import io.intino.alexandria.rest.spark.SparkPushService;
 
 	$schemaImport
 
@@ -54,8 +54,8 @@ def type(notification)
 			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
 		}
 
-		private io.intino.konos.alexandria.schema.Context context() {
-			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
+		private io.intino.alexandria.core.Context context() {
+			io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
@@ -73,12 +73,12 @@ def type(resource)
 
 	import java.util.List;
 	import java.util.ArrayList;
-	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import $package.*;
-	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.alexandria.rest.Resource;
-	import io.intino.konos.alexandria.rest.spark.SparkManager;
-	import io.intino.konos.alexandria.rest.spark.SparkPushService;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.rest.Resource;
+	import io.intino.alexandria.rest.spark.SparkManager;
+	import io.intino.alexandria.rest.spark.SparkPushService;
 
 	$schemaImport
 
@@ -108,8 +108,8 @@ def type(resource)
 		[
 		$returnType+method]
 
-		private io.intino.konos.alexandria.schema.Context context() {
-			io.intino.konos.alexandria.schema.Context context = new io.intino.konos.alexandria.schema.Context();
+		private io.intino.alexandria.core.Context context() {
+			io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
 			context.put("domain", manager.domain());
 			context.put("baseUrl", manager.baseUrl());
 			context.put("requestUrl", manager.baseUrl() + manager.request().pathInfo());
@@ -167,7 +167,7 @@ def type(list) trigger(parameterType)
 end
 
 def type(authenticationValidator) trigger(field)
-	io.intino.konos.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator validator;
+	io.intino.alexandria.rest.security.$type+FirstUpperCase~AuthenticationValidator validator;
 end
 
 def type(authenticationValidator) trigger(assign)

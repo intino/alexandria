@@ -1,10 +1,11 @@
 package io.intino.konos.builder.actions;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class AccessorPomTemplate extends Template {
 
@@ -24,9 +25,9 @@ public class AccessorPomTemplate extends Template {
 			rule().add((condition("type", "repository")), not(condition("type", "distribution")), (condition("trigger", "release"))).add(literal("<repository>\n\t<id>")).add(mark("name")).add(literal("-")).add(mark("random")).add(literal("</id>\n\t<url>")).add(mark("url")).add(literal("</url>\n</repository>")),
 			rule().add((condition("type", "GPL")), (condition("trigger", "license"))).add(literal("<license>\n\t<name>The GNU General Public License v3.0</name>\n\t<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>\n</license>")),
 			rule().add((condition("type", "BSD")), (condition("trigger", "license"))).add(literal("<license>\n\t<name>BSD 3-Clause License</name>\n\t<url>https://opensource.org/licenses/BSD-3-Clause</url>\n</license>")),
-			rule().add((condition("type", "rest")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.konos</groupId>\n\t<artifactId>alexandria-rest-accessor-java</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>")),
-			rule().add((condition("type", "jmx")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.konos</groupId>\n\t<artifactId>alexandria-jmx</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>")),
-			rule().add((condition("type", "jms")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.konos</groupId>\n\t<artifactId>alexandria-jms</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>"))
+				rule().add((condition("type", "rest")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.alexandria</groupId>\n\t<artifactId>rest-accessor</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>")),
+				rule().add((condition("type", "jmx")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.alexandria</groupId>\n\t<artifactId>jmx</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>")),
+				rule().add((condition("type", "jms")), (condition("trigger", "dependency"))).add(literal("<dependency>\n\t<groupId>io.intino.alexandria</groupId>\n\t<artifactId>jms</artifactId>\n\t<version>[1.0.0, 2.0.0)</version>\n</dependency>"))
 		);
 		return this;
 	}

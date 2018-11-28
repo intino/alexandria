@@ -8,6 +8,7 @@
 <link rel="import" href="../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
 <link rel="import" href="../../../lib/paper-toast/paper-toast.html">
 <link rel="import" href="../alexandriaviewcontainercatalog/alexandria-view-container-catalog-drawer.html">
+<link rel="import" href="alexandria-panel-behavior.html">
 <link rel="import" href="../_common/alexandria-element-behavior.html">
 <link rel="import" href="../_common/alexandria-view-behavior.html">
 
@@ -17,27 +18,43 @@
 <dom-module id="alexandria-panel-drawer">
 
     <template>
-        <iron-pages id="tabs-content" class$="flex" selected="{{_selectedView}}" attr-for-selected="name">
-            <template is="dom-repeat" items="[[_viewList]]" as="view">
-                <template is="dom-if" if="[[_isTabLayoutView(view)]]">
-                    <template is="dom-if" if="[[_isMoldContainer(view)]]">
-                        <div name$="[[view.name]]"><div class="layout horizontal center center-justified" style="height:100%">[[NoDrawer]]</div></div>
-                    </template>
-                    <template is="dom-if" if="[[_isCatalogContainer(view)]]">
-                        <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalogDrawer" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
-                    </template>
-                    <template is="dom-if" if="[[_isPanelContainer(view)]]">
-                        <div name$="[[view.name]]"><div class="layout horizontal center center-justified" style="height:100%">[[NoDrawer]]</div></div>
-                    </template>
-                    <template is="dom-if" if="[[_isDisplayContainer(view)]]">
-                        <div name$="[[view.name]]"><div class="layout horizontal center center-justified" style="height:100%">[[NoDrawer]]</div></div>
-                    </template>
-                    <template is="dom-if" if="[[_isSetContainer(view)]]">
-                        <div name$="[[view.name]]"><div class="layout horizontal center center-justified" style="height:100%">[[NoDrawer]]</div></div>
-                    </template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]">
+                    <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalogDrawer" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
                 </template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
             </template>
-        </iron-pages>
+        </template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
+            </template>
+        </template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
+            </template>
+        </template>
     </template>
 
     <style>
@@ -72,14 +89,13 @@
                 CottonBehaviors.PushBehavior,
                 CottonBehaviors.TranslatorBehavior,
                 AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.PanelBehavior,
                 AlexandriaBehaviors.ElementBehavior,
                 AlexandriaBehaviors.ViewBehavior,
                 AlexandriaPanelBehaviors.Requester,
                 AlexandriaPanelBehaviors.NotifierListener ],
 
             properties : {
-                _viewList : Array,
-                _selectedView : { type: String, value: function() { return null; }, observer: '_selectView' },
                 _selectedPage : { type: Number, value: function () { return 0; } }
             },
 
@@ -93,21 +109,7 @@
                 this._viewList = viewList;
             },
 
-            _refreshSelectedView : function(name) {
-                if (this._selectedView == name) return;
-                this._selectedView = name;
-            },
-
-            _isTabLayoutView : function(view) {
-                return view.referencePropertyList[1].value == "tab";
-            },
-
-            _selectView : function(name) {
-                var element = this.querySelector("paper-tab[name='" + name + "']");
-                if (element == null) return;
-                if (this.lastView == name) return;
-                this.lastView = name;
-                this._openView({ detail : element.view.name });
+            _refreshViewListVisibility : function(viewList) {
             }
 
         });

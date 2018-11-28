@@ -2,7 +2,7 @@ def type(view & display)
 	public static class $name+firstUpperCase {
 		[$catalogScope
 		]
-		public static AlexandriaDisplay display($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.konos.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {
+		public static AlexandriaDisplay display($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {
 			return null;//TODO
 		}
 
@@ -51,19 +51,19 @@ end
 def type(items)
 	public static class $name+FirstUpperCase {
 
-		public static java.util.List<io.intino.konos.alexandria.ui.model.Item> items($box+firstUpperCase~Box box, UISession session) {
+		public static java.util.List<io.intino.alexandria.ui.model.Item> items($box+firstUpperCase~Box box, UISession session) {
 			return java.util.Collections.emptyList();
 		}
 
-		public static String label($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
+		public static String label($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
 			return null;
 		}
 
-		public static String icon($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
+		public static String icon($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
 			return null;
 		}
 
-		public static Integer bubble($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
+		public static Integer bubble($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.Element element, $itemClass $itemClass+shortType+firstLowerCase) {
 			return null;
 		}
 
@@ -88,12 +88,12 @@ def type(hidden)
 end
 
 def type(filter)
-	public static boolean filter($box~Box box, io.intino.konos.alexandria.ui.model.Catalog catalog, io.intino.konos.alexandria.ui.model.Element context, Object target, $itemClass object, UISession session) {
+	public static boolean filter($box~Box box, io.intino.alexandria.ui.model.Catalog catalog, io.intino.alexandria.ui.model.Element context, Object target, $itemClass object, UISession session) {
 		return true;//TODO
 	}
 def
 
 def type(catalogScope)
-	public static void scope($box+firstUpperCase~Box box, io.intino.konos.alexandria.ui.displays.AlexandriaDisplay display, io.intino.konos.alexandria.ui.model.catalog.Scope scope) {
+	public static void scope($box+firstUpperCase~Box box, io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.ui.model.catalog.Scope scope) {
 	}
 end
