@@ -41,6 +41,14 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		return closingIfLastItemIs(index++ < size ? nextItem() : null);
 	}
 
+	@Override
+	public void close() {
+		try {
+			inputStream.close();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
 
 	private List<T> readObjects(DataInputStream stream) throws IOException, ClassNotFoundException {
 		stream.skipBytes(Character.BYTES + name.length() + Integer.BYTES + size * (Long.BYTES + Integer.BYTES));
@@ -91,14 +99,6 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 
 	private T getObject(int value) {
 		return objects.get(value);
-	}
-
-	private void close() {
-		try {
-			inputStream.close();
-		} catch (IOException e) {
-			Logger.error(e);
-		}
 	}
 
 	@Override

@@ -18,14 +18,16 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 
 	boolean hasNext();
 
+	void close();
+
+	default void save(String name, File file) throws IOException {
+		new AssaWriter(file).save(name, this);
+	}
+
 	interface Item<T> {
 		long key();
 
 		T object();
-	}
-
-	default void save(String name, File file) throws IOException {
-		new AssaWriter(file).save(name, this);
 	}
 
 	class Merge {
@@ -44,6 +46,11 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 				@Override
 				public boolean hasNext() {
 					return next != null;
+				}
+
+				@Override
+				public void close() {
+					streams.forEach(AssaStream::close);
 				}
 
 				public int size() {
@@ -72,7 +79,6 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 							.min(comparingLong(Item::key))
 							.orElse(null);
 				}
-
 			};
 		}
 

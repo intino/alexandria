@@ -58,4 +58,9 @@ class ZInputStream extends InputStream {
 		index = 0;
 		input.read(data, 0, this.count);
 	}
+
+	@Override
+	public void close() throws IOException {
+		input.close();
+	}
 }
