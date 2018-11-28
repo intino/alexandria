@@ -15,7 +15,6 @@ import io.intino.alexandria.ui.spark.UIFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -85,7 +84,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 	}
 
 	io.intino.alexandria.ui.model.Item itemOf(String id) {
-		return provider.item(new String(Base64.getDecoder().decode(id)));
+		return provider.item(decodedId(id));
 	}
 
 	void notifyLoading(boolean value) {

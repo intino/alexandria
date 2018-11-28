@@ -150,7 +150,7 @@
         :host #itemsArrival span {
             margin-right: 10px;
         }
-        @media screen and (max-width: 736px) {
+        @media screen and (max-width: 736px), all and (min-width: 600px) and (orientation: portrait) {
             :host #embeddedGroupings {
                 display: none;
             }
@@ -178,11 +178,6 @@
             }
             :host #panel {
                 @apply(--alexandria-catalog-panels-drawer);
-            }
-        }
-        @media all and (min-width: 600px) and (orientation: portrait) {
-            :host #embeddedGroupings {
-                display: none;
             }
         }
     </style>

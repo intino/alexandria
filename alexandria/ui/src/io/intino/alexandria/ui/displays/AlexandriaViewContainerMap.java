@@ -12,7 +12,6 @@ import io.intino.alexandria.ui.schemas.*;
 import io.intino.alexandria.ui.spark.UIFile;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import static io.intino.alexandria.ui.helpers.ElementHelper.itemBuilderProvider;
@@ -127,7 +126,7 @@ public class AlexandriaViewContainerMap extends AlexandriaViewContainerCollectio
 	}
 
 	public void loadItem(String id) {
-		String decodedId = new String(Base64.getDecoder().decode(id));
+		String decodedId = decodedId(id);
 		io.intino.alexandria.ui.model.Item modelItem = provider().item(decodedId);
 		Item item = ItemBuilder.build(modelItem, modelItem.id(), itemBuilderProvider(provider(), view()), provider().baseAssetUrl());
 		notifier.refreshItem(new ItemRefreshInfo().item(item).highlight(true));

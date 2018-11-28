@@ -7,6 +7,7 @@ import io.intino.alexandria.ui.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Base64;
 
 public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier, B extends Box> extends AlexandriaDisplay<DN> {
     protected B box;
@@ -40,6 +41,10 @@ public abstract class ActivityDisplay<DN extends AlexandriaDisplayNotifier, B ex
 
     public void timezoneOffset(int value) {
         session().browser().timezoneOffset(value/60);
+    }
+
+    protected String decodedId(String id) {
+        return new String(Base64.getDecoder().decode(id));
     }
 
 }

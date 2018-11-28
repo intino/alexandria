@@ -10,6 +10,7 @@ import io.intino.alexandria.ui.model.catalog.TemporalFilter;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDialog;
 import io.intino.alexandria.ui.model.mold.stamps.EmbeddedDisplay;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		TimeScale referenceScale = (scale.ordinal() > TimeScale.Day.ordinal()) ? scale : TimeScale.Day;
 		Instant from = range.from();
 		Instant to = referenceScale.addTo(range.to(), 1);
-		TimeRange bounds = element().range(session());
+		TimeRange bounds = elementRange();
 
 		if (from.isBefore(bounds.from())) from = bounds.to();
 		if (to.isAfter(bounds.to())) to = bounds.to();
@@ -203,7 +204,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		Map<TimeScale, Bounds.Zoom> zoomMap = new HashMap<>();
 
 		bounds.rangeLoader(() -> {
-			TimeRange range = element().range(session());
+			TimeRange range = elementRange();
 			return new TimeRange(range.from(), range.to(), TimeScale.Second);
 		});
 		bounds.mode(Bounds.Mode.ToTheLast);
@@ -213,7 +214,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 		TimeScaleHandler timeScaleHandler = new TimeScaleHandler(bounds, scales, scales.get(0));
 		timeScaleHandler.availableScales(scales);
-		configureTimeScaleHandler(timeScaleHandler, element().range(session()), scales);
+		configureTimeScaleHandler(timeScaleHandler, elementRange(), scales);
 
 		return timeScaleHandler;
 	}
@@ -253,6 +254,16 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 		applyFilter(itemList);
 		filterTimezone(itemList, range);
 		return itemList;
+	}
+
+	private TimeRange elementRange() {
+		TimeRange range = element().range(session());
+		return range != null ? range : defaultElementRange();
+	}
+
+	private TimeRange defaultElementRange() {
+		Instant now = Instant.now(Clock.systemUTC());
+		return new TimeRange(now, now, TimeScale.Second);
 	}
 
 }

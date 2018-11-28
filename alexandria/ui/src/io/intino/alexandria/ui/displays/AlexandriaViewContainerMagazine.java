@@ -42,6 +42,8 @@ public class AlexandriaViewContainerMagazine extends AlexandriaViewContainerColl
 
 	@Override
 	public void refreshSelection(List<String> items) {
+		if (items.size() <= 0) return;
+		selectRecord(decodedId(items.get(0)));
 	}
 
 	@Override
@@ -111,7 +113,11 @@ public class AlexandriaViewContainerMagazine extends AlexandriaViewContainerColl
 	}
 
 	public void selectRecord(OpenItemEvent params) {
-		currentItem = params.itemId();
+		selectRecord(params.itemId());
+	}
+
+	public void selectRecord(String record) {
+		currentItem = record;
 		refresh();
 	}
 
