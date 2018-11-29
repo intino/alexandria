@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.5") ness-accessor
+Artifact("io.intino.alexandria", "1.0.6") ness-accessor
 	Imports
 		Compile("io.intino.alexandria", "logger", "1.0.0")
 		Compile("io.intino.alexandria", "jms", "1.0.0")
 		Compile("io.intino.alexandria", "primitives", "1.0.2")
-		Compile("io.intino.ness", "core", "1.0.4")
+		Compile("io.intino.ness", "core", "1.0.5")
 		Compile("commons-io", "commons-io", "2.6")
 		Test("junit", "junit", "4.12")
 		Test("org.assertj", "assertj-core", "3.11.1")

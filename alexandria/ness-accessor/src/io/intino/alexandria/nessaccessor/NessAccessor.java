@@ -13,7 +13,7 @@ public class NessAccessor {
 	public void push(Stage stage) {
 		datalake.push(stage.blobs());
 		datalake.seal();
-		stage.clear();
+		stage.discard();
 	}
 
 	public Datalake.EventStore eventStore() {
