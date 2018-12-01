@@ -1,5 +1,6 @@
 package io.intino.alexandria.zet;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -220,7 +221,7 @@ public interface ZetStream {
 
 	}
 
-	@SuppressWarnings("WeakerAccess")
+	@SuppressWarnings("WeakerAccess") //FIXME
 	class Union implements ZetStream {
 
 		private final List<ZetStream> streams;
@@ -261,15 +262,6 @@ public interface ZetStream {
 			return current;
 		}
 
-		private long getNextValue() {
-			long value = Long.MAX_VALUE;
-			for (ZetStream zetStream : streams) {
-				if (zetStream.current() > value || zetStream.current() == -1) continue;
-				value = zetStream.current();
-			}
-			return value;
-		}
-
 		@Override
 		public boolean hasNext() {
 			if (current != next) return true;
@@ -289,6 +281,15 @@ public interface ZetStream {
 			}
 			next = value;
 			return true;
+		}
+
+		private long getNextValue() {
+			long value = Long.MAX_VALUE;
+			for (ZetStream zetStream : streams) {
+				if (zetStream.current() > value || zetStream.current() == -1) continue;
+				value = zetStream.current();
+			}
+			return value;
 		}
 
 		private void advanceStreamsWith(long value) {
@@ -316,6 +317,50 @@ public interface ZetStream {
 			return this.consecutives ?
 					maxConsecutives >= maxFrequency :
 					freq >= minFrequency && freq <= maxFrequency;
+		}
+	}
+
+
+	class Join implements ZetStream {
+		private final List<ZetStream> streams;
+		private long current;
+
+		public Join(List<ZetStream> streams) {
+			this.streams = streams;
+			this.current = -1;
+			this.streams.stream().forEach(ZetStream::next);
+		}
+
+		public Join(ZetStream... streams) {
+			this(Arrays.asList(streams));
+		}
+
+		public long current() {
+			return this.current;
+		}
+
+		public long next() {
+			return this.current = getNextValue();
+		}
+
+		private long getNextValue() {
+			int index = -1;
+			long min = Long.MAX_VALUE;
+			for (int i = 0; i < streams.size(); i++) {
+				ZetStream stream = streams.get(i);
+				if (stream.current() == -1 || stream.current() > min) continue;
+				min = stream.current();
+				index = i;
+			}
+			if (index < 0) return -1;
+			streams.get(index).next();
+			return min;
+		}
+
+		public boolean hasNext() {
+			for (ZetStream stream : streams)
+				if (stream.hasNext()) return true;
+			return false;
 		}
 
 	}
