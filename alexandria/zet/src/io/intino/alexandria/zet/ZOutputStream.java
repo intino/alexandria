@@ -4,7 +4,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class ZOutputStream extends OutputStream {
+public class ZOutputStream extends OutputStream {
 	private DataOutputStream output;
 	private long base = 0;
 	private byte[] data = new byte[256];
