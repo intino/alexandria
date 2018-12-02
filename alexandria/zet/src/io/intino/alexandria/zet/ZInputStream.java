@@ -5,7 +5,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 
-class ZInputStream extends InputStream {
+public class ZInputStream extends InputStream {
 	private final DataInputStream input;
 	private long base = 0;
 	private byte[] data = new byte[256];
