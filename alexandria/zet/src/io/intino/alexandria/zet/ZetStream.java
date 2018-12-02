@@ -155,12 +155,13 @@ public interface ZetStream {
 	class Intersection implements ZetStream {
 
 		private final List<ZetStream> streams;
-		private long current = -1;
-		private long next = -1;
+		private long next;
+		private long current;
 
 		public Intersection(List<ZetStream> streams) {
 			this.streams = streams;
-			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
+			this.next = nextValue(advancing());
+			this.current = 0;
 		}
 
 		public Intersection(ZetStream... streams) {
@@ -174,54 +175,44 @@ public interface ZetStream {
 
 		@Override
 		public long next() {
-			if (current == next) hasNext();
-			current = next;
-			return current;
+			this.current = this.next;
+			this.next = nextValue(advancing());
+			return this.current;
 		}
 
-		private long getNextValue() {
-			long value = Long.MAX_VALUE;
-			for (ZetStream zetStream : streams) {
-				if (zetStream.current() > value || zetStream.current() == -1) continue;
-				value = zetStream.current();
-			}
-			return value;
+		private long advancing() {
+			long max = Long.MIN_VALUE;
+			for (ZetStream stream : streams)
+				max = Math.max(max, stream.hasNext() ? stream.next() : -1);
+			return max;
 		}
+
+
+		private long nextValue(long max) {
+			for (int i = 0; i < streams.size(); i++) {
+				ZetStream stream = streams.get(i);
+				while (stream.current() < max) {
+					if (!stream.hasNext()) return -1;
+					stream.next();
+				}
+				if (stream.current() == max) continue;
+				max = stream.current();
+				i = 0;
+			}
+			return max;
+		}
+
 
 		@Override
 		public boolean hasNext() {
-			if (current != next) return true;
-			advanceStreamsWith(current);
-			long value = getNextValue();
-			if (value == Long.MAX_VALUE) {
-				next = -1;
-				return false;
-			}
-			while (!isValid(value)) {
-				advanceStreamsWith(value);
-				value = getNextValue();
-				if (value == Long.MAX_VALUE) {
-					next = -1;
-					return false;
-				}
-			}
-			next = value;
-			return true;
+			return next != -1;
 		}
 
-		private void advanceStreamsWith(long value) {
-			for (ZetStream stream : streams) if (stream.current() == value) stream.next();
-		}
-
-		private boolean isValid(long value) {
-			int freq = 0;
-			for (ZetStream stream : streams) if (stream.current() == value) freq++;
-			return freq == streams.size();
-		}
 
 	}
 
-	@SuppressWarnings("WeakerAccess") //FIXME
+	@SuppressWarnings("WeakerAccess")
+			//FIXME
 	class Union implements ZetStream {
 
 		private final List<ZetStream> streams;
