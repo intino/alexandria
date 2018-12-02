@@ -1,12 +1,12 @@
 package io.intino.alexandria.zet;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 
 public interface ZetStream {
-
 	long current();
 
 	long next();
@@ -17,12 +17,15 @@ public interface ZetStream {
 	class Difference implements ZetStream {
 
 		private final List<ZetStream> streams;
+		private final ZetStream stream;
+		private long next;
 		private long current = -1;
-		private long next = -1;
 
 		public Difference(List<ZetStream> streams) {
-			this.streams = streams;
-			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
+			this.stream = streams.size() > 0 ? streams.get(0) : null;
+			this.streams = new ArrayList<>(streams.subList(1, streams.size()));
+			this.streams.forEach(ZetStream::next);
+			this.next = streams.size() > 0 ? nextValue() : -1;
 		}
 
 		public Difference(ZetStream... streams) {
@@ -36,63 +39,45 @@ public interface ZetStream {
 
 		@Override
 		public long next() {
-			if (current == next) hasNext();
 			current = next;
+			next = nextValue();
 			return current;
 		}
 
-		private long getNextValue() {
-			long value = Long.MAX_VALUE;
-			for (ZetStream zetStream : streams) {
-				if (zetStream.current() > value || zetStream.current() == -1) continue;
-				value = zetStream.current();
+		private long nextValue() {
+			while (stream.hasNext()) {
+				long value = stream.next();
+				boolean ignore = false;
+				for (ZetStream zetStream : streams) {
+					while (zetStream.current() != -1 && zetStream.current() < value) zetStream.next();
+					if (zetStream.current() == value) {
+						ignore = true;
+						break;
+					}
+				}
+				if (!ignore) return value;
 			}
-			return value;
+			return -1;
 		}
 
 		@Override
 		public boolean hasNext() {
-			if (current != next) return true;
-			advanceStreamsWith(current);
-			long value = getNextValue();
-			if (value == Long.MAX_VALUE) {
-				next = -1;
-				return false;
-			}
-			while (!isValid(value)) {
-				advanceStreamsWith(value);
-				value = getNextValue();
-				if (value == Long.MAX_VALUE) {
-					next = -1;
-					return false;
-				}
-			}
-			next = value;
-			return true;
+			return this.next != -1;
 		}
-
-		private void advanceStreamsWith(long value) {
-			for (ZetStream stream : streams) if (stream.current() == value) stream.next();
-		}
-
-		private boolean isValid(long value) {
-			if (streams.get(0).current() != value) return false;
-			for (int i = 1; i < streams.size(); i++) if (streams.get(i).current() == value) return false;
-			return true;
-		}
-
 	}
 
 	@SuppressWarnings({"WeakerAccess", "unused"})
 	class SymmetricDifference implements ZetStream {
 
 		private final List<ZetStream> streams;
-		private long current = -1;
-		private long next = -1;
+		private long next;
+		private long current;
 
 		public SymmetricDifference(List<ZetStream> streams) {
 			this.streams = streams;
-			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
+			this.streams.forEach(ZetStream::next);
+			this.next = nextValue();
+			this.current = 0;
 		}
 
 		public SymmetricDifference(ZetStream... streams) {
@@ -106,49 +91,49 @@ public interface ZetStream {
 
 		@Override
 		public long next() {
-			if (current == next) hasNext();
-			current = next;
-			return current;
+			this.current = this.next;
+			this.next = nextValue();
+			return this.current;
 		}
 
-		private long getNextValue() {
-			long value = Long.MAX_VALUE;
-			for (ZetStream zetStream : streams) {
-				if (zetStream.current() > value || zetStream.current() == -1) continue;
-				value = zetStream.current();
-			}
-			return value;
+		private long nextValue() {
+			boolean duplicated;
+			int index;
+			long min;
+			do {
+				index = -1;
+				min = Long.MAX_VALUE;
+				duplicated = false;
+				for (int i = 0; i < streams.size(); i++) {
+					ZetStream stream = streams.get(i);
+					if (stream.current() == -1 || stream.current() > min) continue;
+					if (stream.current() == min) {
+						duplicated = true;
+						advance(index);
+						advance(i);
+						for (int j = i + 1; j < streams.size(); j++)
+							if (streams.get(j).current() == min) advance(j);
+						break;
+					} else {
+						min = stream.current();
+						index = i;
+					}
+				}
+				if (index < 0) return -1;
+			} while (duplicated);
+			advance(index);
+			return min;
+		}
+
+		private void advance(int i) {
+			if (streams.get(i).hasNext()) streams.get(i).next();
+			else streams.set(i, new ZetReader());
 		}
 
 		@Override
 		public boolean hasNext() {
-			if (current != next) return true;
-			advanceStreamsWith(current);
-			long value = getNextValue();
-			if (value == Long.MAX_VALUE) {
-				next = -1;
-				return false;
-			}
-			while (!isValid(value)) {
-				advanceStreamsWith(value);
-				value = getNextValue();
-				if (value == Long.MAX_VALUE) {
-					next = -1;
-					return false;
-				}
-			}
-			next = value;
-			return true;
+			return next != -1;
 		}
-
-		private void advanceStreamsWith(long value) {
-			for (ZetStream stream : streams) if (stream.current() == value) stream.next();
-		}
-
-		private boolean isValid(long value) {
-			return streams.stream().filter(s -> s.current() == value).count() == 1;
-		}
-
 	}
 
 	@SuppressWarnings({"WeakerAccess", "unused"})
@@ -207,38 +192,33 @@ public interface ZetStream {
 		public boolean hasNext() {
 			return next != -1;
 		}
-
-
 	}
 
 	@SuppressWarnings("WeakerAccess")
-			//FIXME
 	class Union implements ZetStream {
-
 		private final List<ZetStream> streams;
 		private final int minFrequency;
 		private final int maxFrequency;
-		private final boolean consecutives;
-		private long current = -1;
-		private long next = -1;
+		private final boolean recency;
+		private long current;
+		private long next;
 
 		public Union(List<ZetStream> streams) {
-			this.streams = streams;
-			this.minFrequency = 0;
-			this.maxFrequency = Integer.MAX_VALUE;
-			this.consecutives = false;
-			streams.stream().filter(s -> s.current() == -1 && s.hasNext()).forEach(ZetStream::next);
+			this(streams, 1, Integer.MAX_VALUE, false);
 		}
 
 		public Union(ZetStream... streams) {
 			this(asList(streams));
 		}
 
-		public Union(List<ZetStream> streams, int minFrequency, int maxFrequency, boolean consecutives) {
+		public Union(List<ZetStream> streams, int minFrequency, int maxFrequency, boolean recency) {
 			this.streams = streams;
 			this.minFrequency = minFrequency;
 			this.maxFrequency = maxFrequency;
-			this.consecutives = consecutives;
+			this.recency = recency;
+			this.streams.forEach(ZetStream::next);
+			this.next = nextValue();
+			this.current = 0;
 		}
 
 		@Override
@@ -248,66 +228,45 @@ public interface ZetStream {
 
 		@Override
 		public long next() {
-			if (current == next) hasNext();
-			current = next;
-			return current;
+			this.current = this.next;
+			this.next = nextValue();
+			return this.current;
 		}
 
 		@Override
 		public boolean hasNext() {
-			if (current != next) return true;
-			advanceStreamsWith(current);
-			long value = getNextValue();
-			if (value == Long.MAX_VALUE) {
-				next = -1;
-				return false;
-			}
-			while (!isValid(value)) {
-				advanceStreamsWith(value);
-				value = getNextValue();
-				if (value == Long.MAX_VALUE) {
-					next = -1;
-					return false;
-				}
-			}
-			next = value;
-			return true;
+			return next != -1;
 		}
 
-		private long getNextValue() {
-			long value = Long.MAX_VALUE;
-			for (ZetStream zetStream : streams) {
-				if (zetStream.current() > value || zetStream.current() == -1) continue;
-				value = zetStream.current();
-			}
-			return value;
+		private long nextValue() {
+			long min;
+			do {
+				min = Long.MAX_VALUE;
+				int count = 0;
+				for (ZetStream zetStream : streams) {
+					if (zetStream.current() != -1 && zetStream.current() < min) {
+						min = zetStream.current();
+						count = 1;
+					} else if (zetStream.current() == min) count++;
+					else if (recency) count = 0;
+				}
+				if (min == Long.MAX_VALUE) return -1;
+				advanceStreamsWith(min);
+				if ((count >= minFrequency) && (count <= maxFrequency)) break;
+			} while (true);
+			return min;
 		}
 
 		private void advanceStreamsWith(long value) {
-			for (ZetStream stream : streams)
-				while (stream.current() == value) {
-					stream.next();
-					if (stream.current() == -1) break;
-				}
-		}
-
-		private boolean isValid(long value) {
-			int freq = 0;
-			int consecutives = 0;
-			int maxConsecutives = 0;
+			int i = -1;
 			for (ZetStream stream : streams) {
-				if (stream.current() != value) {
-					maxConsecutives = consecutives;
-					consecutives = 0;
-				} else {
-					freq++;
-					consecutives++;
-				}
+				i++;
+				if (stream.current() != value) continue;
+				if (stream.hasNext())
+					stream.next();
+				else
+					streams.set(i, new ZetReader());
 			}
-			maxConsecutives = Math.max(maxConsecutives, consecutives);
-			return this.consecutives ?
-					maxConsecutives >= maxFrequency :
-					freq >= minFrequency && freq <= maxFrequency;
 		}
 	}
 
@@ -353,6 +312,5 @@ public interface ZetStream {
 				if (stream.hasNext()) return true;
 			return false;
 		}
-
 	}
 }

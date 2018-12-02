@@ -1,19 +1,88 @@
 package io.intino.alexandria.zet;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class UnionTest {
+
+	@Test
+	public void should_read_three_sorted_streams_without_duplicates() {
+		ZetStream.Union union = new ZetStream.Union(asList(
+				new ZetReader(1, 3, 5),
+				new ZetReader(2, 6, 8, 10),
+				new ZetReader(4, 7, 9)));
+		for (int i = 1; i <= 10; i++)
+			assertEquals(i, union.next());
+		assertFalse(union.hasNext());
+		assertEquals(-1, union.next());
+	}
+
+	@Test
+	public void should_make_a_union_of_streams_without_repeated_values() {
+		ZetStream.Union union = new ZetStream.Union(asList(
+				new ZetReader(1, 2, 3, 5),
+				new ZetReader(2, 5, 6, 8, 10),
+				new ZetReader(4, 6, 7, 9)));
+		for (int i = 1; i <= 10; i++)
+			assertEquals(i, union.next());
+		assertFalse(union.hasNext());
+		assertEquals(-1, union.next());
+	}
+
+	@Test
+	public void should_read_streams_with_duplicates_imposing_freq_between_2_and_5() {
+		ZetStream.Union union = new ZetStream.Union(asList(
+				new ZetReader(1, 2, 3, 5),
+				new ZetReader(2, 6, 8, 10),
+				new ZetReader(2, 6, 8, 10),
+				new ZetReader(2, 6, 8, 10),
+				new ZetReader(2, 4, 7, 9),
+				new ZetReader(2, 4, 7, 9),
+				new ZetReader(2, 4, 7, 9)
+		), 2, 5, false);
+
+		List<Long> longs = new ArrayList<>();
+		while (union.hasNext()) longs.add(union.next());
+
+		Assert.assertEquals(6, longs.size());
+		Assert.assertEquals((Long) 4L, longs.get(0));
+		Assert.assertEquals((Long) 6L, longs.get(1));
+		Assert.assertEquals((Long) 7L, longs.get(2));
+		Assert.assertEquals((Long) 8L, longs.get(3));
+		Assert.assertEquals((Long) 9L, longs.get(4));
+		Assert.assertEquals((Long) 10L, longs.get(5));
+	}
+
+
+	@Test
+	public void should_read_streams_with_duplicates_with_recency_between_2_and_5() {
+		ZetStream.Union union = new ZetStream.Union(asList(
+				new ZetReader(1, 2, 3, 5),
+				new ZetReader(2, 6, 8, 10),
+				new ZetReader(6, 8, 10),
+				new ZetReader(6, 8, 10),
+				new ZetReader(2, 4, 7, 9),
+				new ZetReader(2, 4, 7, 9),
+				new ZetReader(2, 4, 7, 9)
+		), 2, 5, true);
+
+		List<Long> longs = new ArrayList<>();
+		while (union.hasNext()) longs.add(union.next());
+
+		Assert.assertEquals(4, longs.size());
+		Assert.assertEquals((Long) 2L, longs.get(0));
+		Assert.assertEquals((Long) 4L, longs.get(1));
+		Assert.assertEquals((Long) 7L, longs.get(2));
+		Assert.assertEquals((Long) 9L, longs.get(3));
+	}
 
 	@Test
 	public void should_read_three_sorted_files_without_duplicates() {
@@ -40,7 +109,6 @@ public class UnionTest {
 	}
 
 	@Test
-	@Ignore
 	public void should_make_a_join_of_three_files_without_repeated_values() {
 		ZetStream.Union union = new ZetStream.Union(asList(
 				new ZetReader(new File("test-res/testsets/rep1.zet")),
@@ -56,14 +124,12 @@ public class UnionTest {
 		assertEquals(-1, union.next());
 	}
 
-	@Test@Ignore
+	@Test
 	public void should_read_three_sorted_files_with_duplicates_imposing_freq_over_1() {
-		ZetReader r = new ZetReader(new File("test-res/testsets/rep3.zet"));
 		ZetStream.Union union = new ZetStream.Union(asList(
+				new ZetReader(new File("test-res/testsets/rep1.zet")),
 				new ZetReader(new File("test-res/testsets/rep2.zet")),
 				new ZetReader(new File("test-res/testsets/rep3.zet"))), 2, 5, false);
-
-		while (r.hasNext()) System.out.println(r.next());
 
 		List<Long> longs = new ArrayList<>();
 		while (union.hasNext()) longs.add(union.next());
@@ -76,7 +142,6 @@ public class UnionTest {
 	}
 
 	@Test
-	@Ignore
 	public void should_read_three_sorted_files_with_duplicates_imposing_freq_over_2() {
 		ZetStream.Union union = new ZetStream.Union(asList(
 				new ZetReader(new File("test-res/testsets/rep1.zet")),
@@ -89,29 +154,4 @@ public class UnionTest {
 		Assert.assertEquals(1, longs.size());
 		Assert.assertEquals((Long) 2L, longs.get(0));
 	}
-
-	public static void main(String[] args) throws IOException {
-		ZOutputStream test = new ZOutputStream(new FileOutputStream("test"));
-		for (int i = 1; i <= 20; i++) {
-			test.writeLong((long)i);
-		}
-		test.close();
-		Zet test1 = new Zet(new ZetReader(new File("test")));
-		System.out.println("AAA");
-	}
-
-//	@Test // TODO TEST CONSECUTIVES
-//	public void should_read_three_sorted_files_with_duplicates_imposing_freq_over_2_and_recency() {
-//		ZetStream.Union union = new ZetStream.Union(asList(
-//				new SourceZetStream(new File("test-res/testsets/rep1.zet")),
-//				new SourceZetStream(new File("test-res/testsets/rep2.zet")),
-//				new SourceZetStream(new File("test-res/testsets/rep3.zet"))), 2, 5, 2);
-//
-//		List<Long> longs = new ArrayList<>();
-//		while (union.hasNext()) longs.add(union.next());
-//
-//		Assert.assertEquals(2, longs.size());
-//		Assert.assertEquals((Long) 2L, longs.get(0));
-//		Assert.assertEquals((Long) 4L, longs.get(1));
-//	}
 }

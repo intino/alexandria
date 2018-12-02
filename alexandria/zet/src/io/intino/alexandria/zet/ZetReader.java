@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ZetReader implements ZetStream {
 	private final Iterator<Long> iterator;
-	private long current;
+	private long current = -1;
 
 	public ZetReader(File file) {
 		this(iteratorOf(zipStream(inputStream(file))));
