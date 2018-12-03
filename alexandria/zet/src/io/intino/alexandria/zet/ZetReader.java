@@ -14,11 +14,11 @@ public class ZetReader implements ZetStream {
 	private long current = -1;
 
 	public ZetReader(File file) {
-		this(iteratorOf(zipStream(inputStream(file))));
+		this(iteratorOf(inputStream(file)));
 	}
 
 	public ZetReader(InputStream is) {
-		this(iteratorOf(zipStream(is)));
+		this(iteratorOf(zInputStream(is)));
 	}
 
 	public ZetReader(long... ids) {
@@ -83,15 +83,15 @@ public class ZetReader implements ZetStream {
 		};
 	}
 
-	private static InputStream inputStream(File file) {
+	private static ZInputStream inputStream(File file) {
 		try {
-			return new BufferedInputStream(new FileInputStream(file));
-		} catch (IOException var2) {
-			return new ByteArrayInputStream(new byte[0]);
+			return zInputStream(new BufferedInputStream(new FileInputStream(file)));
+		} catch (IOException e) {
+			return zInputStream(new ByteArrayInputStream(new byte[0]));
 		}
 	}
 
-	private static ZInputStream zipStream(InputStream inputStream) {
+	private static ZInputStream zInputStream(InputStream inputStream) {
 		return new ZInputStream(inputStream);
 	}
 }

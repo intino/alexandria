@@ -20,7 +20,7 @@ public class ZInputStream extends InputStream {
 
 	private void init() {
 		try {
-			readData();
+			readBlock();
 		} catch (IOException ignored) {
 		}
 	}
@@ -40,12 +40,13 @@ public class ZInputStream extends InputStream {
 	}
 
 	private void readBlock() throws IOException {
-		readLevel();
+		readBase();
 		readData();
 	}
 
-	private void readLevel() throws IOException {
+	private void readBase() throws IOException {
 		int level = input.read();
+		if (level == 0) level = input.read(); //FIXME
 		if (level < 0) throw new EOFException();
 		this.base = this.base >> (level << 3);
 		for (int i = 1; i <= level; i++)
@@ -53,10 +54,11 @@ public class ZInputStream extends InputStream {
 	}
 
 	private void readData() throws IOException {
-		count = input.readByte();
+		count = input.readByte() & 0xFF;
+		if (count == 0) count = 256;
 		size += count;
 		index = 0;
-		input.read(data, 0, this.count);
+		input.read(data, 0, count);
 	}
 
 	@Override
