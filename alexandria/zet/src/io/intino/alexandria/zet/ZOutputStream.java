@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 public class ZOutputStream extends OutputStream {
 	private DataOutputStream output;
-	private long base = 0;
+	private long base = -1;
 	private byte[] data = new byte[256];
 	private int count = 0;
 	private int size = 0;
@@ -33,14 +33,14 @@ public class ZOutputStream extends OutputStream {
 		try {
 			if (this.base == base) return;
 			writeData();
-			writeLevel(base);
+			writeBase(base);
 			this.base = base;
 		} catch (IOException e) {
 		}
 	}
 
-	private void writeLevel(long base) throws IOException {
-		int level = level(base, this.base);
+	private void writeBase(long base) throws IOException {
+		int level = this.base >= 0 ? level(base, this.base) : 3;
 		output.writeByte(level);
 		for (int i = level - 1; i >= 0; i--) {
 			byte b = (byte) (base >> (i << 3));
@@ -53,6 +53,7 @@ public class ZOutputStream extends OutputStream {
 	}
 
 	private void writeData() throws IOException {
+		if (base < 0) return;
 		output.writeByte(count);
 		for (int i = 0; i < count; i++) output.writeByte(data[i]);
 		count = 0;
