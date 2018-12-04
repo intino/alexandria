@@ -46,7 +46,6 @@ public class ZInputStream extends InputStream {
 
 	private void readBase() throws IOException {
 		int level = input.read();
-		if (level == 0) level = input.read(); //FIXME
 		if (level < 0) throw new EOFException();
 		this.base = this.base >> (level << 3);
 		for (int i = 1; i <= level; i++)
