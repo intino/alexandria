@@ -274,19 +274,19 @@ public interface ZetStream {
 	}
 
 
-	class Join implements ZetStream {
+	class Merge implements ZetStream {
 		private final List<ZetStream> streams;
 		private long current;
 		private long next;
 
-		public Join(List<ZetStream> streams) {
+		public Merge(List<ZetStream> streams) {
 			this.streams = streams;
 			this.current = -1;
 			this.streams.forEach(ZetStream::next);
 			this.next = nextValue();
 		}
 
-		public Join(ZetStream... streams) {
+		public Merge(ZetStream... streams) {
 			this(Arrays.asList(streams));
 		}
 
