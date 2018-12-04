@@ -6,10 +6,9 @@ import io.intino.alexandria.logger.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -60,10 +59,10 @@ public class ZimBuilder {
 
 	private File tempFile() {
 		try {
-			return File.createTempFile("merge", "zim");
+			return File.createTempFile("builder#", ".zim");
 		} catch (IOException e) {
 			Logger.error(e);
-			return new File("merge");
+			return new File("builder#" + UUID.randomUUID().toString() + ".zim");
 		}
 	}
 
