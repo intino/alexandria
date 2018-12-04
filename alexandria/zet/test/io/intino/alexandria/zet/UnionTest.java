@@ -63,7 +63,7 @@ public class UnionTest {
 
 
 	@Test
-	public void should_read_streams_with_duplicates_with_recency_between_2_and_5() {
+	public void should_read_streams_with_duplicates_consecutive_between_2_and_5() {
 		ZetStream.Union union = new ZetStream.Union(asList(
 				new ZetReader(1, 2, 3, 5),
 				new ZetReader(2, 6, 8, 10),
@@ -77,11 +77,12 @@ public class UnionTest {
 		List<Long> longs = new ArrayList<>();
 		while (union.hasNext()) longs.add(union.next());
 
-		Assert.assertEquals(4, longs.size());
+		Assert.assertEquals(5, longs.size());
 		Assert.assertEquals((Long) 2L, longs.get(0));
 		Assert.assertEquals((Long) 4L, longs.get(1));
 		Assert.assertEquals((Long) 7L, longs.get(2));
 		Assert.assertEquals((Long) 9L, longs.get(3));
+		Assert.assertEquals((Long) 10L, longs.get(4));
 	}
 
 	@Test

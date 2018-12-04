@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class IntersectionTest {
 	@Test
-	public void should_make_an_intersection_of_three_files_without_repeated_values() {
+	public void should_make_an_intersection_of_three_streams_without_repeated_values() {
 		ZetStream.Intersection intersection = new ZetStream.Intersection(asList(
 				new ZetReader(1, 2, 3, 4, 5),
 				new ZetReader(1, 2, 3),
@@ -25,9 +25,20 @@ public class IntersectionTest {
 		ZetStream.Intersection intersection = new ZetStream.Intersection(asList(
 				new ZetReader(1, 2, 3, 4, 5),
 				new ZetReader(1, 2, 3),
-				new ZetReader(4),
-				new ZetReader(new File("test-res/testsets/rep1.zet"))));
+				new ZetReader(4)));
 		Assert.assertFalse(intersection.hasNext());
 		assertEquals(-1, intersection.next());
 	}
+
+	@Test
+	public void should_make_an_intersection_of_three_files_without_repeated_values() {
+		ZetStream.Intersection intersection = new ZetStream.Intersection(asList(
+				new ZetReader(new File("test-res/testsets/rep1.zet")),
+				new ZetReader(new File("test-res/testsets/rep2.zet")),
+				new ZetReader(new File("test-res/testsets/rep3.zet"))));
+		assertEquals(2, intersection.next());
+		Assert.assertFalse(intersection.hasNext());
+		assertEquals(-1, intersection.next());
+	}
+
 }
