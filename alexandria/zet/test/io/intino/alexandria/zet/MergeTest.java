@@ -8,7 +8,7 @@ import java.io.File;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class JoinTest {
+public class MergeTest {
 
 	@Test
 	public void should_read_three_sorted_files_without_duplicates() {
