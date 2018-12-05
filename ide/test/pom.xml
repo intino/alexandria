@@ -34,7 +34,7 @@
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>5.0.0</version>
+            <version>5.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -130,7 +130,7 @@
         <dependency>
             <groupId>io.intino.alexandria</groupId>
             <artifactId>rest-accessor</artifactId>
-            <version>LATEST</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
