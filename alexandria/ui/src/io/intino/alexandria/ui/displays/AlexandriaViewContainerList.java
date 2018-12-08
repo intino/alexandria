@@ -278,7 +278,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 
 			@Override
 			public int comparator(Item item1, Item item2) {
-				return provider().sorting(name).compare(item1, item2);
+				return provider().sorting(name).compare(item1, item2, session());
 			}
 		};
 	}

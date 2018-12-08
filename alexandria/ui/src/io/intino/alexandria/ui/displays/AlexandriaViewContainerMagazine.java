@@ -125,17 +125,9 @@ public class AlexandriaViewContainerMagazine extends AlexandriaViewContainerColl
 		CatalogViewDisplayProvider provider = provider();
 		int count = provider.countItems(condition);
 		List<Item> items = provider.items(0, count, condition);
-		item = currentItem != null ? provider.item(nameOf(currentItem)) : provider.rootItem(items);
+		item = currentItem != null ? provider.item(currentItem) : provider.rootItem(items);
 		currentItem = item != null ? item.id() : currentItem;
-		item = item != null ? item : provider.defaultItem(nameOf(currentItem));
-	}
-
-	private String nameOf(String currentRecord) {
-		if (currentRecord == null) return null;
-		String shortName = currentRecord.contains(".") ? currentRecord.substring(currentRecord.lastIndexOf(".") + 1) : currentRecord;
-		shortName = shortName.contains("#") ? shortName.substring(shortName.lastIndexOf("#") + 1) : shortName;
-		shortName = shortName.contains("$") ? shortName.substring(shortName.lastIndexOf("$") + 1) : shortName;
-		return shortName;
+		item = item != null ? item : provider.defaultItem(currentItem);
 	}
 
 	public void openItemDialogOperation(OpenItemDialogEvent event) {

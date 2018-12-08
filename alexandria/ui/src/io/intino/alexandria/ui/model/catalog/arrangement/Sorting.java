@@ -1,13 +1,14 @@
 package io.intino.alexandria.ui.model.catalog.arrangement;
 
 import io.intino.alexandria.ui.model.Item;
+import io.intino.alexandria.ui.services.push.UISession;
 
 public class Sorting extends Arrangement {
 	private Comparator comparator;
 	private boolean visible = true;
 
-	public int compare(Item item1, Item item2) {
-		return comparator != null ? comparator.compare(item1.object(), item2.object()) : 0;
+	public int compare(Item item1, Item item2, UISession session) {
+		return comparator != null ? comparator.compare(item1.object(), item2.object(), session) : 0;
 	}
 
 	public Sorting comparator(Comparator comparator) {
@@ -25,7 +26,7 @@ public class Sorting extends Arrangement {
 	}
 
 	public interface Comparator {
-		int compare(Object item1, Object item2);
+		int compare(Object item1, Object item2, UISession session);
 	}
 
 }
