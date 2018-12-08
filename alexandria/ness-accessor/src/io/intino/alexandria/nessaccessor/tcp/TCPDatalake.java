@@ -63,14 +63,18 @@ public class TCPDatalake implements Datalake {
 		return new ZimReader(b.inputStream());
 	}
 
+	private interface CallBack {
+		void execute();
+	}
+
 	public static class Connection implements Datalake.Connection {
 		private final String uri;
 		private final String username;
 		private final String password;
 		private final String clientId;
-		private Session session;
 		private final CallBack onOpen;
 		private final TCPDatalake.CallBack onClose;
+		private Session session;
 
 		Connection(String uri, String username, String password, String clientId, CallBack onOpen, CallBack onClose) {
 			this.uri = uri;
@@ -91,6 +95,7 @@ public class TCPDatalake implements Datalake {
 			try {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(uri);
 				javax.jms.Connection connection = connectionFactory.createConnection(username, password);
+				if (clientId != null) connection.setClientID(clientId);
 				connection.start();
 				return connection.createSession(arg != null && arg.equals("Transacted"), AUTO_ACKNOWLEDGE);
 			} catch (JMSException e) {
@@ -114,9 +119,5 @@ public class TCPDatalake implements Datalake {
 				}
 			}
 		}
-	}
-
-	private interface CallBack {
-		void execute();
 	}
 }

@@ -50,6 +50,6 @@ Facet Device on Sensor
 //Facet Scrapper on Sensor
 
 Concept EventSource is abstract
-	var string name = 'self.schema() != null ? self.schema().name$(): self.name$()' is private reactive
+	var string name = 'io.intino.konos.model.graph.Utils.isUUID(self.name$()) && self.schema() != null ? self.schema().name$() : self.name$()' is private reactive
 	var Schema schema
 	var string subdomain = ""

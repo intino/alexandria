@@ -82,7 +82,7 @@ public class TCPEventStore implements Datalake.EventStore {
 	@Override
 	public Subscription subscribe(Tank tank) {
 		return (clientId, messageHandlers) -> {
-			TopicConsumer topicConsumer = new TopicConsumer(session, "flow" + tank.name());
+			TopicConsumer topicConsumer = new TopicConsumer(session, flowProbe(tank.name()));
 			if (clientId != null) {
 				topicConsumer.listen(message -> handle(message, messageHandlers), clientId);
 			} else topicConsumer.listen(message -> handle(message, messageHandlers));
@@ -123,6 +123,10 @@ public class TCPEventStore implements Datalake.EventStore {
 
 	private String feedProbe(String name) {
 		return "feed." + name;
+	}
+
+	private String flowProbe(String name) {
+		return "flow." + name;
 	}
 
 	private String putProbe(String name) {
