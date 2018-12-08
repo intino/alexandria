@@ -193,7 +193,7 @@ def type(arrangement & grouping)
 end
 
 def type(arrangement & sorting)
-	public static int $name+firstLowerCase~Comparator($box+firstUpperCase~Box box, $type item1, $type item2) {
+	public static int $name+firstLowerCase~Comparator($box+firstUpperCase~Box box, $type item1, $type item2, UISession session) {
 		return 0; //TODO
 	}
 end
