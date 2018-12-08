@@ -29,7 +29,7 @@ public class Zet {
 		return Arrays.binarySearch(ids, id) >= 0;
 	}
 
-	public int size(){
+	public int size() {
 		return ids.length;
 	}
 }

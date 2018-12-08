@@ -11,10 +11,14 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.zet.ZFile;
 import io.intino.alexandria.zet.ZetReader;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,28 +30,26 @@ public class Columnar {
 		this.root = root;
 	}
 
-	private static File[] zetFilesIn(File directory) {
-		return Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".zet")));
-	}
-
-	private static File[] directoriesIn(File directory) {
-		return Objects.requireNonNull(directory.listFiles(File::isDirectory));
-	}
-
 	public String[] columns() {
 		return root.list((f, n) -> f.isDirectory());
 	}
 
 	public Import load(String column) {
-		return directory -> {
-			for (File timetag : directoriesIn(directory)) {
-				File file = assaFile(timetag, column);
-				if (file.exists()) continue;
-				AssaStream of = Merge.of(toAssa(timetag));
-				of.save(column, file);
-				of.close();
-			}
-		};
+		return directory -> Arrays.stream(directoriesIn(directory)).parallel().forEach(timetag -> {
+			File file = assaFile(timetag, column);
+			if (file.exists()) return;
+			toAssa(column, timetag, file);
+		});
+	}
+
+	private void toAssa(String column, File timetag, File file) {
+		try {
+			AssaStream of = Merge.of(toAssa(timetag));
+			of.save(column, file);
+			of.close();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	public Select select(String... columns) {
@@ -100,20 +102,18 @@ public class Columnar {
 	}
 
 	private List<AssaStream<String>> toAssa(File directory) {
-		return Arrays.stream(zetFilesIn(directory))
+		return zetInfos(directory).stream()
 				.map(this::assaStream)
 				.collect(toList());
 	}
 
-	private AssaStream<String> assaStream(File file) {
+	private AssaStream<String> assaStream(ZetInfo zet) {
 		return new AssaStream<String>() {
-			ZetReader reader = new ZetReader(file);
-			String name = nameOf(file);
-			int size = sizeOf(file);
+			ZetReader reader = new ZetReader(zet.inputStream());
 
 			@Override
 			public int size() {
-				return size;
+				return zet.size;
 			}
 
 			@Override
@@ -127,7 +127,7 @@ public class Columnar {
 
 					@Override
 					public String object() {
-						return name;
+						return zet.name;
 					}
 				};
 			}
@@ -144,18 +144,15 @@ public class Columnar {
 		};
 	}
 
-	private int sizeOf(File file) {
-		try {
-			return (int) new ZFile(file).size();
-		} catch (IOException e) {
-			Logger.error(e);
-			return 0;
-		}
+
+	private List<ZetInfo> zetInfos(File directory) {
+		return Arrays.stream(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".zet")))).map(ZetInfo::new).collect(Collectors.toList());
 	}
 
-	private String nameOf(File file) {
-		return file.getName().substring(0, file.getName().lastIndexOf('.'));
+	private File[] directoriesIn(File directory) {
+		return Objects.requireNonNull(directory.listFiles(File::isDirectory));
 	}
+
 
 	private File assaFile(File timetag, String column) {
 		return new File(columnDirectory(column), timetag.getName() + ASSA_FILE);
@@ -168,6 +165,7 @@ public class Columnar {
 	}
 
 	public interface Import {
+
 		void from(File directory) throws IOException;
 	}
 
@@ -190,6 +188,40 @@ public class Columnar {
 
 			void intoARFF(File file, ColumnTypes types) throws IOException;
 		}
+	}
+
+	private static class ZetInfo {
+		final int size;
+		final String name;
+		InputStream inputStream;
+
+		public ZetInfo(File file) {
+			this.name = nameOf(file);
+			this.size = sizeOf(file);
+			try {
+				inputStream = new ByteArrayInputStream(Files.readAllBytes(file.toPath()));
+			} catch (IOException e) {
+				Logger.error(e);
+			}
+		}
+
+		InputStream inputStream() {
+			return inputStream;
+		}
+
+		private int sizeOf(File file) {
+			try {
+				return (int) new ZFile(file).size();
+			} catch (IOException e) {
+				Logger.error(e);
+				return 0;
+			}
+		}
+
+		private String nameOf(File file) {
+			return file.getName().substring(0, file.getName().lastIndexOf('.'));
+		}
+
 	}
 
 }
