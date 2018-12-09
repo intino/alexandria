@@ -2,13 +2,14 @@
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
 <link rel="import" href="../../../../lib/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../lib/iron-resizable/iron-resizable-behavior.html">
 
 <dom-module id="alexandria-catalog-sorting">
 
     <template>
-        <div id="sortingList" class="layout horizontal center">
+        <div class="layout horizontal center">
             <div class="title">[[Sortings]]</div>
-            <ul class="layout horizontal sortings">
+            <ul id="sortingList" class="layout horizontal sortings">
                 <template is="dom-repeat" items="[[sortingList]]" as="sorting">
                     <li name$="[[sorting.name]]" mode$="[[sorting.mode]]" class$="layout horizontal sorting [[sorting.name]]">
                         <a class="label" on-tap="_selectSorting">[[sorting.label]]</a>
@@ -17,27 +18,30 @@
                     </li>
                 </template>
             </ul>
+            <paper-dropdown-menu id="sortingListCombo" placeholder="[[SelectSorting]]" no-label-float>
+                <paper-listbox class="dropdown-content" selected="{{selectedSorting.name}}" attr-for-selected="name">
+                    <template is="dom-repeat" items="[[sortingList]]" as="sorting">
+                        <paper-item name$="[[sorting.name]]" mode="Ascendant" class$="sorting [[sorting.name]]" on-tap="_selectSorting">[[sorting.label]]</paper-item>
+                    </template>
+                </paper-listbox>
+            </paper-dropdown-menu>
         </div>
-        <paper-dropdown-menu id="sortingListCombo" placeholder="[[SelectSorting]]" no-label-float>
-            <paper-listbox class="dropdown-content" selected="{{selectedSorting.name}}" attr-for-selected="name">
-                <template is="dom-repeat" items="[[sortingList]]" as="sorting">
-                    <paper-item name$="[[sorting.name]]" mode="Ascendant" class$="sorting [[sorting.name]]" on-tap="_selectSorting">[[sorting.label]]</paper-item>
-                </template>
-            </paper-listbox>
-        </paper-dropdown-menu>
     </template>
 
     <style>
+        :host {
+            display: block;
+            width: 100%;
+        }
         :host .title {
             color: #888;
             font-size: 9pt;
-            margin-right: 10px;
-            margin-top: 3px;
+            margin-left: 13px;
             white-space: nowrap;
         }
         :host .sortings {
-            margin: 0;
             padding: 0;
+            margin: 0 0 0 15px;
             list-style: none;
         }
         :host .sorting {
@@ -106,12 +110,17 @@
         :host paper-item {
             font-size: 10pt;
         }
-        @media screen and (max-width: 736px) {
+        @media screen and (max-width: 1024px) {
             :host #sortingList {
                 display: none;
             }
             :host #sortingListCombo {
                 display: block;
+            }
+        }
+        @media screen and (max-width: 512px) {
+            :host .title {
+                display: none;
             }
         }
     </style>
@@ -140,7 +149,9 @@
                 selectedSorting: { type: Object, observer: '_refreshSelected' }
             },
 
-            behaviors: [CottonBehaviors.TranslatorBehavior],
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            listeners : { 'iron-resize' : '_refreshVisibleSelector' },
 
             attached: function () {
                 this.translate(AlexandriaCatalogSortingDictionary);
@@ -149,10 +160,11 @@
             _refreshSelected : function() {
                 window.setTimeout(() => {
                     this.querySelectorAll(".sorting").forEach(sorting => sorting.removeAttribute("active"));
-                if (this.selectedSorting == null) return;
-                var selected = this.querySelector(".sorting." + this.selectedSorting.name);
-                if (selected != null) selected.setAttribute("active", "true");
-            }, 100);
+                    if (this.selectedSorting == null) return;
+                    var selected = this.querySelector(".sorting." + this.selectedSorting.name);
+                    if (selected != null) selected.setAttribute("active", "true");
+                }, 100);
+                this._refreshVisibleSelector();
             },
 
             _selectSorting : function(event) {
@@ -163,6 +175,12 @@
                 else mode = "Ascendant";
                 element.setAttribute("mode", mode);
                 this.fire("select-sorting", { name: name, mode: mode });
+            },
+
+            _refreshVisibleSelector : function() {
+                let notEnoughSpace = $(this).width() <= this.sortingList.length * 135;
+                this.$.sortingList.style.display = notEnoughSpace ? "none" : "flex";
+                this.$.sortingListCombo.style.display = notEnoughSpace ? "block" : "none";
             }
 
         });

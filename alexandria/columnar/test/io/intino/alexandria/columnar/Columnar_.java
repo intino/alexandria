@@ -23,6 +23,11 @@ public class Columnar_ {
 	}
 
 	@Test
+	public void should_load_assa_from_several_zets() throws IOException {
+		columnar.load("Adscripcion.Ruta").from(new File("datalake/sets/Adscripcion.Ruta"));
+	}
+
+	@Test
 	public void should_load_assa_from_one_zet() throws IOException {
 		columnar.load("A").from(new File("test-res/zets/A"));
 		columnar.load("C").from(new File("test-res/zets/C"));

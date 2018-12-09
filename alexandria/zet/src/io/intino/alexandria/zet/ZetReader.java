@@ -3,11 +3,10 @@ package io.intino.alexandria.zet;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.stream;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 public class ZetReader implements ZetStream {
@@ -15,34 +14,31 @@ public class ZetReader implements ZetStream {
 	private long current = -1;
 
 	public ZetReader(File file) {
-		this(iteratorOf(zipStream(inputStream(file))));
+		this(iteratorOf(inputStream(file)));
 	}
 
 	public ZetReader(InputStream is) {
-		this(iteratorOf(zipStream(is)));
+		this(iteratorOf(zInputStream(is)));
 	}
 
 	public ZetReader(long... ids) {
-		this(stream(ids).boxed());
+		this(Arrays.stream(ids).boxed());
 	}
 
 	public ZetReader(List<Long> ids) {
 		this(ids.stream());
 	}
 
-	@Override
 	public long current() {
-		return current;
+		return this.current;
 	}
 
-	@Override
 	public long next() {
-		return current = iterator.hasNext() ? iterator.next() : -1L;
+		return this.current = this.iterator.next();
 	}
 
-	@Override
 	public boolean hasNext() {
-		return iterator.hasNext();
+		return this.iterator.hasNext();
 	}
 
 	public ZetReader(Stream<Long> stream) {
@@ -53,28 +49,26 @@ public class ZetReader implements ZetStream {
 		this.iterator = iterator;
 	}
 
-	private static Iterator<Long> iteratorOf(ZInputStream stream) {
+	private static Iterator<Long> iteratorOf(final ZInputStream stream) {
 		return new Iterator<Long>() {
-			private long current = -1;
-			private long next = -1;
+			private long next = read();
 
-			@Override
 			public Long next() {
-				if (current == next) hasNext();
-				current = next;
-				return current;
+				long next = this.next;
+				this.next = read();
+				return next;
 			}
 
-			@Override
 			public boolean hasNext() {
-				if (current != next) return true;
+				return this.next != -1;
+			}
+
+			private long read() {
 				try {
-					next = stream.readLong();
-					return true;
+					return stream.readLong();
 				} catch (IOException e) {
-					next = -1;
-					close();
-					return false;
+					this.close();
+					return -1;
 				}
 			}
 
@@ -84,19 +78,20 @@ public class ZetReader implements ZetStream {
 				} catch (IOException e) {
 					Logger.error(e);
 				}
+
 			}
 		};
 	}
 
-	private static InputStream inputStream(File file) {
+	private static ZInputStream inputStream(File file) {
 		try {
-			return new BufferedInputStream(new FileInputStream(file));
+			return zInputStream(new BufferedInputStream(new FileInputStream(file)));
 		} catch (IOException e) {
-			return new ByteArrayInputStream(new byte[0]);
+			return zInputStream(new ByteArrayInputStream(new byte[0]));
 		}
 	}
 
-	private static ZInputStream zipStream(InputStream inputStream) {
+	private static ZInputStream zInputStream(InputStream inputStream) {
 		return new ZInputStream(inputStream);
 	}
 }

@@ -96,13 +96,13 @@ public class ProducerTest {
 	}
 
 	private void produceMessage() {
-		final String value = new Message("example.message").write("ts", Instant.now().toString()).write("value", random.nextInt()).toString();
+		final String value = new Message("example.message").set("ts", Instant.now().toString()).set("value", random.nextInt()).toString();
 		topicProducer.produce(createMessageFor(value));
 		System.out.println("message sent to " + topic + " ->  " + value);
 	}
 
 	private void produceOldMessage() {
-		final String value = new Message("example.message").write("ts", Instant.now().minus(2, ChronoUnit.HOURS).toString()).write("value", random.nextInt()).toString();
+		final String value = new Message("example.message").set("ts", Instant.now().minus(2, ChronoUnit.HOURS).toString()).set("value", random.nextInt()).toString();
 		topicProducer.produce(createMessageFor(value));
 		System.out.println("message sent to " + topic + " ->  " + value);
 	}
