@@ -169,7 +169,7 @@ def trigger(openCatalogFilter)
 end
 
 def type(sorting) trigger(add)
-	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Sorting().comparator((object1, object2, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(box, ($type)object1, ($type)object2), session).visible($visible).name("$name").label("$label"));
+	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Sorting().comparator((object1, object2, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(box, ($type)object1, ($type)object2, session)).visible($visible).name("$name").label("$label"));
 end
 
 def type(grouping) trigger(add)
