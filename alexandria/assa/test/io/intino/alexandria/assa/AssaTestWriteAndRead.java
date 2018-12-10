@@ -12,7 +12,7 @@ import static junit.framework.TestCase.assertFalse;
 public class AssaTestWriteAndRead {
 
 	@org.junit.Test
-	public void name() throws IOException, ClassNotFoundException {
+	public void simple_test() throws IOException, ClassNotFoundException {
 		File file = new File("test.assa");
 		AssaBuilder<String> test = new AssaBuilder<>("test");
 		test.put(1L, "test1");
@@ -34,15 +34,16 @@ public class AssaTestWriteAndRead {
 		assertEquals("test1", item.object());
 
 		assertFalse(reader.hasNext());
+		file.delete();
 	}
 
 	@Test
-	public void test() throws IOException, ClassNotFoundException {
+	public void load_test() throws IOException, ClassNotFoundException {
 		AssaBuilder<Serializable> test = new AssaBuilder<>("test");
 		for (int i = 0; i < 2000000; i++) {
 			test.put(i, "test" + i / 10000);
 		}
-		File file = new File("bigTest.zet");
+		File file = new File("bigTest.assa");
 		test.save(file);
 
 		AssaReader<String> reader = new AssaReader<>(file);
@@ -52,5 +53,25 @@ public class AssaTestWriteAndRead {
 			assertEquals("test" + i / 10000, next.object());
 		}
 		assertFalse(reader.hasNext());
+		file.delete();
+	}
+
+	@Test
+	public void many_values() throws IOException, ClassNotFoundException {
+		AssaBuilder<Serializable> test = new AssaBuilder<>("test");
+		for (int i = 0; i < 50000; i++) {
+			test.put(i, "test" + i);
+		}
+		File file = new File("many_values.assa");
+		test.save(file);
+
+		AssaReader<String> reader = new AssaReader<>(file);
+		for (int i = 0; i < 50000; i++) {
+			AssaStream.Item<String> next = reader.next();
+			assertEquals(i, next.key());
+			assertEquals("test" + i, next.object());
+		}
+		assertFalse(reader.hasNext());
+		file.delete();
 	}
 }
