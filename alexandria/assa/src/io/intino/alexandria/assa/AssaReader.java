@@ -18,7 +18,7 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		this.name = inputStream.readUTF();
 		this.size = inputStream.readInt();
 		if (size == 0) close();
-		this.objects = size != 0 ? readObjects(new DataInputStream((new BufferedInputStream(new FileInputStream(file))))) : null;
+		this.objects = size != 0 ? readObjects(new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) : null;
 		this.index = 0;
 	}
 
