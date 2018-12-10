@@ -87,7 +87,7 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 
 			@Override
 			public T object() {
-				return getObject(value);
+				return getObject(value & 0xFFFF);
 			}
 
 			@Override
