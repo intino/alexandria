@@ -3,11 +3,10 @@ package io.intino.alexandria.assa;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
-import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingLong;
 
 public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.Item<T>> {
@@ -31,53 +30,35 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 	}
 
 	class Merge {
-		public static <T extends Serializable> AssaStream of(List<AssaStream<T>> streams) {
+		public static <T extends Serializable> AssaStream of(List<AssaStream<T>> cursors) {
 			return new AssaStream<T>() {
-				private Item[] items = items();
-				private Item<T> next = advancing(current());
+				private List<Item<T>> items = new ArrayList<>();
+				private int index = 0;
+
+				{
+					for (AssaStream<T> cursor : cursors) {
+						while (cursor.hasNext()) items.add(cursor.next());
+						cursor.close();
+					}
+					items.sort(comparingLong(Item::key));
+				}
 
 				@Override
 				public Item<T> next() {
-					Item<T> current = this.next;
-					this.next = advancing(current());
-					return current;
+					return items.get(index++);
 				}
 
 				@Override
 				public boolean hasNext() {
-					return next != null;
+					return index < items.size() - 1;
 				}
 
 				@Override
 				public void close() {
-					streams.forEach(AssaStream::close);
 				}
 
 				public int size() {
-					return streams.stream().mapToInt(AssaStream::size).sum();
-				}
-
-				private Item[] items() {
-					return streams.stream()
-							.map(AssaStream::next)
-							.toArray(Item[]::new);
-				}
-
-				@SuppressWarnings("unchecked")
-				private Item<T> advancing(Item current) {
-					for (int i = 0; i < items.length; i++) {
-						Item cursor = items[i];
-						if (cursor == null || cursor.key() != current.key()) continue;
-						items[i] = streams.get(i).hasNext() ? streams.get(i).next() : null;
-					}
-					return current;
-				}
-
-				private Item current() {
-					return stream(items)
-							.filter(Objects::nonNull)
-							.min(comparingLong(Item::key))
-							.orElse(null);
+					return items.size();
 				}
 			};
 		}
