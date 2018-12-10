@@ -50,7 +50,7 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 
 				@Override
 				public boolean hasNext() {
-					return index < items.size() - 1;
+					return index < items.size();
 				}
 
 				@Override
