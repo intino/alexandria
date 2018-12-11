@@ -44,7 +44,7 @@ public class Columnar {
 
 	private void processDirectory(String column, File f) {
 		Arrays.stream(directoriesIn(f)).parallel().forEach(timetag -> {
-			File assaFile = assaFile(timetag, column);
+			File assaFile = assaFile(column, timetag.getName());
 			if (assaFile.exists()) return;
 			toAssa(column, timetag, assaFile);
 		});
@@ -55,9 +55,10 @@ public class Columnar {
 			Logger.error("File incompatible");
 			return;
 		}
-		File assaFile = assaFile(setFile.getName().replace(".zet", ""), column);
+		File timetag = setFile.getParentFile();
+		File assaFile = assaFile(column, timetag.getName());
 		if (assaFile.exists()) return;
-		toAssa(column, setFile, assaFile);
+		toAssa(column, timetag, assaFile);
 	}
 
 	private void toAssa(String column, File source, File destination) {
@@ -86,7 +87,7 @@ public class Columnar {
 				for (Timetag timetag : from.iterateTo(to)) {
 					assas.put(timetag, new ArrayList<>());
 					for (String column : columns)
-						assas.get(timetag).add(new AssaReader<>(assaFile(new File(root, to.value()), column)));
+						assas.get(timetag).add(new AssaReader<>(assaFile(column, new File(root, to.value()).getName())));
 				}
 				return filter(assas);
 			}
@@ -172,11 +173,7 @@ public class Columnar {
 	}
 
 
-	private File assaFile(File timetag, String column) {
-		return assaFile(timetag.getName(), column);
-	}
-
-	private File assaFile(String name, String column) {
+	private File assaFile(String column, String name) {
 		return new File(columnDirectory(column), name + ASSA_FILE);
 	}
 
@@ -189,7 +186,7 @@ public class Columnar {
 
 	public interface Import {
 
-		void from(File directory) throws IOException;
+		void from(File directory);
 	}
 
 	public interface Select {
