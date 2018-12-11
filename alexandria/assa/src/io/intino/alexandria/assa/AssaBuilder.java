@@ -49,6 +49,51 @@ public class AssaBuilder<T extends Serializable> {
 		writeObjects(objectOutputStream(dos));
 	}
 
+	private void writeObjects(ObjectOutputStream output) {
+		objects().forEach(o -> writeObject(output, o));
+	}
+
+	private void writeObject(ObjectOutputStream output, T object) {
+		try {
+			output.writeObject(object);
+		} catch (IOException e) {
+			Logger.error(e);
+		}
+	}
+
+	private Stream<T> objects() {
+		return map.entrySet().stream()
+				.sorted(comparing(Map.Entry::getValue))
+				.map(Map.Entry::getKey);
+	}
+
+	private void put(long[] keys, int value) {
+		stream(keys).forEach(k -> index.put(k, value));
+	}
+
+	private int map(T object) {
+		if (map.containsKey(object)) return map.get(object);
+		map.put(object, map.size());
+		return map.size() - 1;
+	}
+
+	private ObjectOutputStream objectOutputStream(DataOutputStream output) throws IOException {
+		return new ObjectOutputStream(new OutputStream() {
+
+			@Override
+			public void write(int b) throws IOException {
+				output.write(b);
+			}
+
+			@SuppressWarnings("NullableProblems")
+			@Override
+			public void write(byte[] b, int off, int len) throws IOException {
+				output.write(b, off, len);
+			}
+
+		});
+	}
+
 	public class IndexToByteArray {
 		private long base = -1;
 		private AssaEntry[] data = new AssaEntry[256];
@@ -106,57 +151,18 @@ public class AssaBuilder<T extends Serializable> {
 			stream.writeByte(count);
 			for (int i = 0; i < count; i++) {
 				stream.writeByte((byte) data[i].id);
-				stream.writeShort(data[i].value);
+				writeValue(stream, data[i].value);
 			}
 			count = 0;
 		}
 
-
-	}
-
-	private void writeObjects(ObjectOutputStream output) {
-		objects().forEach(o -> writeObject(output, o));
-	}
-
-	private void writeObject(ObjectOutputStream output, T object) {
-		try {
-			output.writeObject(object);
-		} catch (IOException e) {
-			Logger.error(e);
+		private void writeValue(OutputStream stream, long value) throws IOException {
+			while (value >= 0x80) {
+				stream.write((byte) (0x80 | (value & 0x7F)));
+				value = value >> 7;
+			}
+			stream.write((byte) value);
 		}
-	}
-
-	private Stream<T> objects() {
-		return map.entrySet().stream()
-				.sorted(comparing(Map.Entry::getValue))
-				.map(Map.Entry::getKey);
-	}
-
-	private void put(long[] keys, int value) {
-		stream(keys).forEach(k -> index.put(k, value));
-	}
-
-	private int map(T object) {
-		if (map.containsKey(object)) return map.get(object);
-		map.put(object, map.size());
-		return map.size() - 1;
-	}
-
-	private ObjectOutputStream objectOutputStream(DataOutputStream output) throws IOException {
-		return new ObjectOutputStream(new OutputStream() {
-
-			@Override
-			public void write(int b) throws IOException {
-				output.write(b);
-			}
-
-			@SuppressWarnings("NullableProblems")
-			@Override
-			public void write(byte[] b, int off, int len) throws IOException {
-				output.write(b, off, len);
-			}
-
-		});
 	}
 
 	private class Index {

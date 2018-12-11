@@ -2,10 +2,10 @@ package io.intino.alexandria.assa;
 
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
+import java.util.Arrays;
 
+import static java.util.Arrays.copyOf;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 
@@ -129,10 +129,51 @@ public class AssaTestWriteAndRead {
 	}
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException {
-		AssaReader<Serializable> reader = new AssaReader<>(new File("D:/201811.assa"));
-		while(reader.hasNext()){
-			AssaStream.Item<Serializable> next = reader.next();
-			System.out.println(next.key() + ";" + next.object());
+		assertEquals((byte) 1,  compress(1).length);
+		assertEquals((byte) 1, compress(1)[0]);
+		assertEquals((byte) 2  ,compress(128).length);
+		assertEquals((byte) 0x80, compress(128)[0]);
+		assertEquals((byte) 0x01, compress(128)[1]);
+		assertEquals((byte) 5 ,compress(0x205B9EA3).length);
+		assertEquals((byte) 0xA3, compress(0x205B9EA3)[0]);
+		assertEquals((byte) 0xBD, compress(0x205B9EA3)[1]);
+		assertEquals((byte) 0xEE, compress(0x205B9EA3)[2]);
+		assertEquals((byte) 0x82, compress(0x205B9EA3)[3]);
+		assertEquals((byte) 0x2, compress(0x205B9EA3)[4]);
+
+		assertEquals(0x205B9EA3, decompress(compress(0x205B9EA3)));
+		byte[] compress = compress(0x8D8FD8F5DFD5ADAL);
+		assertEquals(0x8D8FD8F5DFD5ADAL, decompress(compress));
+	}
+
+	private static long decompress(byte[] bytes) throws IOException {
+		return decompress(new ByteArrayInputStream(bytes));
+	}
+
+	private static byte[] compress(long value) throws IOException {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		compress(value, stream);
+		return stream.toByteArray();
+	}
+
+
+	private static void compress(long value, OutputStream stream) throws IOException {
+		while (value >= 0x80) {
+			stream.write((byte) (0x80 | (value & 0x7F)));
+			value = value >> 7;
 		}
+		stream.write((byte) value);
+	}
+
+	private static long decompress(InputStream stream) throws IOException {
+		long result = 0;
+		byte read;
+		int shift = 0;
+		do {
+			read = (byte) stream.read();
+			result += (read & 0x7FL) << shift;
+			shift += 7;
+		} while (read < 0);
+		return result;
 	}
 }

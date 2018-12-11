@@ -78,7 +78,7 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		return assaItem(entry.id, entry.value);
 	}
 
-	private Item<T> assaItem(long key, short value) {
+	private Item<T> assaItem(long key, int value) {
 		return new Item<T>() {
 			@Override
 			public long key() {
@@ -160,8 +160,20 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 			index = 0;
 			for (int i = 0; i < count; i++) {
 				byte readByte = input.readByte();
-				data[i] = new AssaEntry((this.base << 8) | (readByte & 0xFF), input.readShort());
+				data[i] = new AssaEntry((this.base << 8) | (readByte & 0xFF), readValue());
 			}
+		}
+
+		private int readValue() throws IOException {
+			long result = 0;
+			byte read;
+			int shift = 0;
+			do {
+				read = (byte) input.read();
+				result += (read & 0x7FL) << shift;
+				shift += 7;
+			} while (read < 0);
+			return (int) result;
 		}
 	}
 }
