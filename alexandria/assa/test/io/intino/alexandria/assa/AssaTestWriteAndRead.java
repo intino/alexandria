@@ -74,4 +74,65 @@ public class AssaTestWriteAndRead {
 		assertFalse(reader.hasNext());
 		file.delete();
 	}
+
+	@Test
+	public void test_assa_writer() throws IOException, ClassNotFoundException {
+		File file = new File("output.assa");
+		AssaWriter<String> writer = new AssaWriter<>(file);
+		writer.save("output", new AssaStream<String>() {
+			int i = 1;
+			@Override
+			public int size() {
+				return 3;
+			}
+
+			@Override
+			public Item<String> next() {
+				return new Item<String>() {
+					@Override
+					public long key() {
+						return i;
+					}
+
+					@Override
+					public String object() {
+						return "test" + i++;
+					}
+				};
+			}
+
+			@Override
+			public boolean hasNext() {
+				return i <= size();
+			}
+
+			@Override
+			public void close() {
+			}
+		});
+
+		AssaReader<String> reader = new AssaReader<>(file);
+		AssaStream.Item<String> item = reader.next();
+		assertEquals(1L, item.key());
+		assertEquals("test1", item.object());
+
+		item = reader.next();
+		assertEquals(2L, item.key());
+		assertEquals("test2", item.object());
+
+		item = reader.next();
+		assertEquals(3L, item.key());
+		assertEquals("test3", item.object());
+
+		assertFalse(reader.hasNext());
+		file.delete();
+	}
+
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		AssaReader<Serializable> reader = new AssaReader<>(new File("D:/201811.assa"));
+		while(reader.hasNext()){
+			AssaStream.Item<Serializable> next = reader.next();
+			System.out.println(next.key() + ";" + next.object());
+		}
+	}
 }

@@ -23,9 +23,8 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 		new AssaWriter(file).save(name, this);
 	}
 
-	interface Item<T> {
+	interface Item<T extends Serializable> {
 		long key();
-
 		T object();
 	}
 
