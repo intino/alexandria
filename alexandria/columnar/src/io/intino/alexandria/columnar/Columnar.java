@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 
 public class Columnar {
 	private static final String ASSA_FILE = ".assa";
-	private File root;
+	private final File root;
 
 	public Columnar(File root) {
 		this.root = root;
@@ -32,43 +32,6 @@ public class Columnar {
 
 	public String[] columns() {
 		return root.list((f, n) -> f.isDirectory());
-	}
-
-	public Import load(String column) {
-		return f -> {
-			if (f.isDirectory()) {
-				processDirectory(column, f);
-			} else processSet(column, f);
-		};
-	}
-
-	private void processDirectory(String column, File f) {
-		Arrays.stream(directoriesIn(f)).parallel().forEach(timetag -> {
-			File assaFile = assaFile(column, timetag.getName());
-			if (assaFile.exists()) return;
-			toAssa(column, timetag, assaFile);
-		});
-	}
-
-	private void processSet(String column, File setFile) {
-		if (!setFile.getName().endsWith(".zet")) {
-			Logger.error("File incompatible");
-			return;
-		}
-		File timetag = setFile.getParentFile();
-		File assaFile = assaFile(column, timetag.getName());
-		if (assaFile.exists()) return;
-		toAssa(column, timetag, assaFile);
-	}
-
-	private void toAssa(String column, File source, File destination) {
-		try {
-			AssaStream of = source.isDirectory() ? Merge.of(toAssa(source)) : assaStream(new ZetInfo(source));
-			of.save(column, destination);
-			of.close();
-		} catch (IOException e) {
-			Logger.error(e);
-		}
 	}
 
 	public Select select(String... columns) {
@@ -87,11 +50,51 @@ public class Columnar {
 				for (Timetag timetag : from.iterateTo(to)) {
 					assas.put(timetag, new ArrayList<>());
 					for (String column : columns)
-						assas.get(timetag).add(new AssaReader<>(assaFile(column, new File(root, to.value()).getName())));
+						assas.get(timetag).add(new AssaReader<>(assaFile(new File(root, to.value()), column)));
 				}
 				return filter(assas);
 			}
 		};
+	}
+
+	public Import load(String column) {
+		return new Import() {
+			@Override
+			public void from(File file) throws IOException {
+				if (file.isDirectory())
+					Columnar.this.processDirectory(column, file);
+				else
+					Columnar.this.processSet(column, file);
+			}
+		};
+	}
+
+	private void processDirectory(String column, File f) {
+		Arrays.stream(directoriesIn(f)).parallel().forEach(timetag -> {
+			File assaFile = assaFile(timetag, column);
+			if (assaFile.exists()) return;
+			toAssa(column, timetag, assaFile);
+		});
+	}
+
+	private void processSet(String column, File setFile) {
+		if (!setFile.getName().endsWith(".zet")) {
+			Logger.error("File incompatible");
+			return;
+		}
+		File assaFile = assaFile(setFile.getName().replace(".zet", ""), column);
+		if (assaFile.exists()) return;
+		toAssa(column, setFile, assaFile);
+	}
+
+	private void toAssa(String column, File source, File destination) {
+		try {
+			AssaStream of = source.isDirectory() ? Merge.of(toAssa(source)) : assaStream(new ZetInfo(source));
+			of.save(column, destination);
+			of.close();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	private FilterOrGet filter(Map<Timetag, List<AssaReader<String>>> assas) {
@@ -173,7 +176,11 @@ public class Columnar {
 	}
 
 
-	private File assaFile(String column, String name) {
+	private File assaFile(File timetag, String column) {
+		return assaFile(timetag.getName(), column);
+	}
+
+	private File assaFile(String name, String column) {
 		return new File(columnDirectory(column), name + ASSA_FILE);
 	}
 
@@ -186,7 +193,7 @@ public class Columnar {
 
 	public interface Import {
 
-		void from(File directory);
+		void from(File directory) throws IOException;
 	}
 
 	public interface Select {
