@@ -6,28 +6,24 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssaReader<T extends Serializable> implements AssaStream<T> {
+public class AssaReader implements AssaStream {
 	private final DataInputStream inputStream;
-	private final String name;
-	private final int size;
-	private final int bytesLength;
-	private final List<T> objects;
-	private final IndexReader indexReader;
 	private int index;
+	final int size;
+	final List<String> values ;
+	final EntryReader entryReader;
 
-	public AssaReader(File file) throws IOException, ClassNotFoundException {
-		this.inputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(file)));
-		this.name = inputStream.readUTF();
-		this.size = inputStream.readInt();
-		this.bytesLength = inputStream.readInt();
-		if (size == 0) close();
-		this.indexReader = new IndexReader(inputStream);
-		this.objects = size != 0 ? readObjects(new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) : null;
-		this.index = 0;
+	public AssaReader(File file) throws IOException {
+		this(new FileInputStream(file));
 	}
 
-	public String name() {
-		return name;
+	public AssaReader(InputStream inputStream) throws IOException {
+		this.inputStream = new DataInputStream(new BufferedInputStream(inputStream));
+		this.values = readValues();
+		this.index = 0;
+		this.size = this.inputStream.readInt();
+		this.entryReader = new EntryReader();
+		if (size == 0) close();
 	}
 
 	@Override
@@ -37,12 +33,14 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 
 	@Override
 	public boolean hasNext() {
-		return this.index < size;
+		return index < size;
 	}
 
 	@Override
-	public Item<T> next() {
-		return closingIfLastItemIs(index++ < size ? nextItem() : null);
+	public Item next() {
+		AssaEntry entry = entryReader.readEntry();
+		if (++index >= size) close();
+		return assaItem(entry);
 	}
 
 	@Override
@@ -54,68 +52,39 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		}
 	}
 
-	private List<T> readObjects(DataInputStream stream) throws IOException, ClassNotFoundException {
-		stream.skipBytes(Character.BYTES + name.length() + 2 * Integer.BYTES + bytesLength);
-		int count = stream.readInt();
-		return readObject(new ObjectInputStream(stream), count);
+	private List<String> readValues() throws IOException {
+		ArrayList<String> values = new ArrayList<>();
+		int count = inputStream.readInt();
+		for (int i = 0; i < count; i++) values.add(inputStream.readUTF());
+		return values;
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<T> readObject(ObjectInputStream objectInputStream, int count) throws IOException, ClassNotFoundException {
-		List<T> objects = new ArrayList<>(count);
-		for (int i = 0; i < count; i++)
-			objects.add((T) objectInputStream.readObject());
-		return objects;
-	}
-
-	private Item<T> closingIfLastItemIs(Item<T> next) {
-		if (index == size) close();
-		return next;
-	}
-
-	private Item<T> nextItem() {
-		AssaEntry entry = indexReader.readEntry();
-		return assaItem(entry.id, entry.value);
-	}
-
-	private Item<T> assaItem(long key, short value) {
-		return new Item<T>() {
+	private Item assaItem(AssaEntry entry) {
+		return new Item() {
 			@Override
 			public long key() {
-				return key;
+				return entry.key;
 			}
 
 			@Override
-			public T object() {
-				return getObject(value & 0xFFFF);
+			public String value() {
+				return values.get(entry.value);
 			}
 
 			@Override
 			public String toString() {
-				return key + "";
+				return entry + "";
 			}
 		};
 	}
 
-	private T getObject(int value) {
-		return objects.get(value);
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
-	class IndexReader {
-		private final DataInputStream input;
-		private long base = 0;
+	class EntryReader {
 		private AssaEntry[] data = new AssaEntry[256];
-		private int count = 0;
+		private long base = 0;
 		private int index = 0;
-		private int size = 0;
+		private int count = 0;
 
-		IndexReader(DataInputStream inputStream) {
-			this.input = inputStream;
+		EntryReader() {
 			this.init();
 		}
 
@@ -124,10 +93,6 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 				readBlock();
 			} catch (IOException ignored) {
 			}
-		}
-
-		public int size() {
-			return size;
 		}
 
 		AssaEntry readEntry() {
@@ -143,25 +108,38 @@ public class AssaReader<T extends Serializable> implements AssaStream<T> {
 		private void readBlock() throws IOException {
 			readBase();
 			readData();
+			index = 0;
 		}
 
 		private void readBase() throws IOException {
-			int level = input.read();
+			int level = inputStream.read();
 			if (level < 0) throw new EOFException();
 			this.base = this.base >> (level << 3);
 			for (int i = 1; i <= level; i++)
-				this.base = (this.base << 8) | (input.readByte() & 0xFF);
+				this.base = (this.base << 8) | (inputStream.readByte() & 0xFF);
 		}
 
 		private void readData() throws IOException {
-			count = input.readByte() & 0xFF;
+			count = inputStream.readByte() & 0xFF;
 			if (count == 0) count = 256;
-			size += count;
-			index = 0;
 			for (int i = 0; i < count; i++) {
-				byte readByte = input.readByte();
-				data[i] = new AssaEntry((this.base << 8) | (readByte & 0xFF), input.readShort());
+				byte readByte = inputStream.readByte();
+				data[i] = new AssaEntry((this.base << 8) | (readByte & 0xFF), readValue());
 			}
 		}
+
+		private int readValue() throws IOException {
+			long result = 0;
+			byte read;
+			int shift = 0;
+			do {
+				read = (byte) inputStream.read();
+				result += (read & 0x7FL) << shift;
+				shift += 7;
+			} while (read < 0);
+			return (int) result;
+		}
+
+
 	}
 }
