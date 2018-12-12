@@ -1,11 +1,11 @@
 package io.intino.alexandria.assa;
 
 public class AssaEntry {
-	long id;
+	long key;
 	int value;
 
-	AssaEntry(long id, int value) {
-		this.id = id;
+	AssaEntry(long key, int value) {
+		this.key = key;
 		this.value = value;
 	}
 }

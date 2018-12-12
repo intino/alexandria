@@ -1,41 +1,35 @@
 package io.intino.alexandria.assa;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Comparator.comparingLong;
 
-public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.Item<T>> {
+public interface AssaStream extends Iterator<AssaStream.Item> {
 
 	int size();
 
-	Item<T> next();
+	Item next();
 
 	boolean hasNext();
 
 	void close();
 
-	default void save(String name, File file) throws IOException {
-		new AssaWriter(file).save(name, this);
-	}
-
-	interface Item<T extends Serializable> {
+	interface Item {
 		long key();
-		T object();
+
+		String value();
 	}
 
 	class Merge {
-		public static <T extends Serializable> AssaStream of(List<AssaStream<T>> cursors) {
-			return new AssaStream<T>() {
-				private List<Item<T>> items = new ArrayList<>();
+		public static AssaStream of(List<AssaStream> cursors) {
+			return new AssaStream() {
+				private List<Item> items = new ArrayList<>();
 				private int index = 0;
 
 				{
-					for (AssaStream<T> cursor : cursors) {
+					for (AssaStream cursor : cursors) {
 						while (cursor.hasNext()) items.add(cursor.next());
 						cursor.close();
 					}
@@ -43,7 +37,7 @@ public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.
 				}
 
 				@Override
-				public Item<T> next() {
+				public Item next() {
 					return items.get(index++);
 				}
 

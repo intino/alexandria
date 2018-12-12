@@ -1,35 +1,40 @@
 package io.intino.alexandria.assa;
 
-import io.intino.alexandria.logger.Logger;
-
 import java.io.*;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
-import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingLong;
 
 @SuppressWarnings("WeakerAccess")
-public class AssaBuilder<T extends Serializable> {
-	private final String name;
+public class AssaBuilder {
 	private Index index = new Index();
-	private Map<T, Integer> map = new HashMap<>();
+	private Map<String, Integer> map = new HashMap<>();
 
-	public AssaBuilder(String name) {
-		this.name = name;
+	public AssaBuilder() {
 	}
 
-	public void put(long key, T value) {
+	public AssaBuilder(List<String> values) {
+		values.forEach(this::map);
+	}
+
+	public void put(long key, String value) {
 		index.put(key, map(value));
 	}
 
-	public void put(long[] keys, T value) {
+	public void put(long[] keys, String value) {
 		put(keys, map(value));
 	}
 
 	public void save(File file) throws IOException {
 		save(new FileOutputStream(file));
+	}
+
+	private int map(String object) {
+		if (map.containsKey(object)) return map.get(object);
+		map.put(object, map.size());
+		return map.size() - 1;
 	}
 
 	public void save(OutputStream output) throws IOException {
@@ -40,58 +45,26 @@ public class AssaBuilder<T extends Serializable> {
 	}
 
 	private void write(DataOutputStream dos) throws IOException {
-		dos.writeUTF(name);
-		byte[] keyBytes = new IndexToByteArray(index).getByteArray();
-		dos.writeInt(index.size());
-		dos.writeInt(keyBytes.length);
-		dos.write(keyBytes);
 		dos.writeInt(map.size());
-		writeObjects(objectOutputStream(dos));
+		for (String value : values()) dos.writeUTF(value);
+		dos.writeInt(index.size());
+		dos.write(new IndexToByteArray(index).getByteArray());
 	}
 
-	private void writeObjects(ObjectOutputStream output) {
-		objects().forEach(o -> writeObject(output, o));
-	}
-
-	private void writeObject(ObjectOutputStream output, T object) {
-		try {
-			output.writeObject(object);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-	}
-
-	private Stream<T> objects() {
-		return map.entrySet().stream()
-				.sorted(comparing(Map.Entry::getValue))
-				.map(Map.Entry::getKey);
+	private List<String> values() {
+		return map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 
 	private void put(long[] keys, int value) {
 		stream(keys).forEach(k -> index.put(k, value));
 	}
 
-	private int map(T object) {
-		if (map.containsKey(object)) return map.get(object);
-		map.put(object, map.size());
-		return map.size() - 1;
+	public void put(AssaStream stream) {
+		while (stream.hasNext()) put(stream.next());
 	}
 
-	private ObjectOutputStream objectOutputStream(DataOutputStream output) throws IOException {
-		return new ObjectOutputStream(new OutputStream() {
-
-			@Override
-			public void write(int b) throws IOException {
-				output.write(b);
-			}
-
-			@SuppressWarnings("NullableProblems")
-			@Override
-			public void write(byte[] b, int off, int len) throws IOException {
-				output.write(b, off, len);
-			}
-
-		});
+	public void put(AssaStream.Item item) {
+		put(item.key(), item.value());
 	}
 
 	public class IndexToByteArray {
@@ -114,13 +87,13 @@ public class AssaBuilder<T extends Serializable> {
 		}
 
 		private void writeEntry(DataOutputStream stream, AssaEntry entry) {
-			this.base(stream, entry.id >> 8);
-			if (isRepeated((byte) entry.id)) return;
+			this.base(stream, entry.key >> 8);
+			if (isRepeated((byte) entry.key)) return;
 			this.data[this.count++] = entry;
 		}
 
 		private boolean isRepeated(byte b) {
-			return count > 0 && ((byte) this.data[this.count - 1].id) == b;
+			return count > 0 && ((byte) this.data[this.count - 1].key) == b;
 		}
 
 		private void base(DataOutputStream stream, long base) {
@@ -150,7 +123,7 @@ public class AssaBuilder<T extends Serializable> {
 			if (base < 0) return;
 			stream.writeByte(count);
 			for (int i = 0; i < count; i++) {
-				stream.writeByte((byte) data[i].id);
+				stream.writeByte((byte) data[i].key);
 				writeValue(stream, data[i].value);
 			}
 			count = 0;
@@ -166,11 +139,11 @@ public class AssaBuilder<T extends Serializable> {
 	}
 
 	private class Index {
-		private final Comparator<AssaEntry> comparator = comparingLong(o -> o.id);
+		private final Comparator<AssaEntry> comparator = comparingLong(o -> o.key);
 		private final List<AssaEntry> ids = new ArrayList<>();
 
 		void put(long key, int value) {
-			ids.add(new AssaEntry(key, (short) value));
+			ids.add(new AssaEntry(key, value));
 		}
 
 		private void sort() {
