@@ -184,7 +184,7 @@ public interface ZetStream {
 				}
 				if (stream.current() == max) continue;
 				max = stream.current();
-				i = 0;
+				i = -1;
 			}
 			return max;
 		}
