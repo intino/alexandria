@@ -1,83 +1,57 @@
 package io.intino.alexandria.assa;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
-import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingLong;
 
-public interface AssaStream<T extends Serializable> extends Iterator<AssaStream.Item<T>> {
+public interface AssaStream extends Iterator<AssaStream.Item> {
 
 	int size();
 
-	Item<T> next();
+	Item next();
 
 	boolean hasNext();
 
 	void close();
 
-	default void save(String name, File file) throws IOException {
-		new AssaWriter(file).save(name, this);
-	}
-
-	interface Item<T> {
+	interface Item {
 		long key();
 
-		T object();
+		String value();
 	}
 
 	class Merge {
-		public static <T extends Serializable> AssaStream of(List<AssaStream<T>> streams) {
-			return new AssaStream<T>() {
-				private Item[] items = items();
-				private Item<T> next = advancing(current());
+		public static AssaStream of(List<AssaStream> cursors) {
+			return new AssaStream() {
+				private List<Item> items = new ArrayList<>();
+				private int index = 0;
+
+				{
+					for (AssaStream cursor : cursors) {
+						while (cursor.hasNext()) items.add(cursor.next());
+						cursor.close();
+					}
+					items.sort(comparingLong(Item::key));
+				}
 
 				@Override
-				public Item<T> next() {
-					Item<T> current = this.next;
-					this.next = advancing(current());
-					return current;
+				public Item next() {
+					return items.get(index++);
 				}
 
 				@Override
 				public boolean hasNext() {
-					return next != null;
+					return index < items.size();
 				}
 
 				@Override
 				public void close() {
-					streams.forEach(AssaStream::close);
 				}
 
 				public int size() {
-					return streams.stream().mapToInt(AssaStream::size).sum();
-				}
-
-				private Item[] items() {
-					return streams.stream()
-							.map(AssaStream::next)
-							.toArray(Item[]::new);
-				}
-
-				@SuppressWarnings("unchecked")
-				private Item<T> advancing(Item current) {
-					for (int i = 0; i < items.length; i++) {
-						Item cursor = items[i];
-						if (cursor == null || cursor.key() != current.key()) continue;
-						items[i] = streams.get(i).hasNext() ? streams.get(i).next() : null;
-					}
-					return current;
-				}
-
-				private Item current() {
-					return stream(items)
-							.filter(Objects::nonNull)
-							.min(comparingLong(Item::key))
-							.orElse(null);
+					return items.size();
 				}
 			};
 		}
