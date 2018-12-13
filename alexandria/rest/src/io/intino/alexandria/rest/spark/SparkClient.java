@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toMap;
 
 public class SparkClient implements Client {
-	private final Session session;
+	private Session session;
 	private final Map<String, String> queryString;
 	private String language = null;
 	private List<String> messagesQueue = new ArrayList<>();
@@ -22,6 +22,16 @@ public class SparkClient implements Client {
 		this.runQueueManager();
 	}
 
+	public SparkClient session(Session session) {
+		this.session = session;
+		return this;
+	}
+
+	public static String clientId(Session session) {
+		Map<String, String> queryString = parseQueryString(session.getUpgradeRequest().getRequestURI().getQuery());
+		return queryString.get("currentSession");
+	}
+
 	@Override
 	public String id() {
 		return queryString.get("id");
@@ -29,7 +39,7 @@ public class SparkClient implements Client {
 
 	@Override
 	public String sessionId() {
-		return queryString.get("currentSession");
+		return clientId(session);
 	}
 
 	@Override
@@ -77,7 +87,7 @@ public class SparkClient implements Client {
 		return obj instanceof SparkClient && id().equals(((SparkClient) obj).id());
 	}
 
-	private Map<String, String> parseQueryString(String queryString) {
+	private static Map<String, String> parseQueryString(String queryString) {
 		return Stream.of(queryString.split("&"))
 				.map(param -> param.split("="))
 				.collect(toMap(p -> p[0], p -> p[1]));
