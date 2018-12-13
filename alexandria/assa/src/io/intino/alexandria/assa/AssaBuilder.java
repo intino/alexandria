@@ -1,30 +1,29 @@
 package io.intino.alexandria.assa;
 
-import io.intino.alexandria.logger.Logger;
-
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
-import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingLong;
 
-public class AssaBuilder<T extends Serializable> {
-	private final String name;
+@SuppressWarnings("WeakerAccess")
+public class AssaBuilder {
 	private Index index = new Index();
-	private Map<T, Integer> map = new HashMap<>();
+	private Map<String, Integer> map = new HashMap<>();
 
-	public AssaBuilder(String name) {
-		this.name = name;
+	public AssaBuilder() {
 	}
 
-	public void put(long key, T value) {
+	public AssaBuilder(List<String> values) {
+		values.forEach(this::map);
+	}
+
+	public void put(long key, String value) {
 		index.put(key, map(value));
 	}
 
-	public void put(long[] keys, T value) {
+	public void put(long[] keys, String value) {
 		put(keys, map(value));
 	}
 
@@ -32,96 +31,128 @@ public class AssaBuilder<T extends Serializable> {
 		save(new FileOutputStream(file));
 	}
 
+	private int map(String object) {
+		if (map.containsKey(object)) return map.get(object);
+		map.put(object, map.size());
+		return map.size() - 1;
+	}
+
 	public void save(OutputStream output) throws IOException {
 		index.sort();
-		try (DataOutputStream target = outputStreamOf(output)) {
-			write(target);
-		}
+		DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(output));
+		write(dos);
+		dos.close();
 	}
 
-	private DataOutputStream outputStreamOf(OutputStream output) {
-		return new DataOutputStream(new BufferedOutputStream(output));
+	private void write(DataOutputStream dos) throws IOException {
+		dos.writeInt(map.size());
+		for (String value : values()) dos.writeUTF(value);
+		dos.writeInt(index.size());
+		dos.write(new IndexToByteArray(index).getByteArray());
 	}
 
-	private void write(DataOutputStream output) throws IOException {
-		output.writeUTF(name);
-		output.writeInt(index.size());
-		writeKeyValues(output);
-		output.writeInt(map.size());
-		writeObjects(objectOutputStream(output));
-	}
-
-	private void writeKeyValues(DataOutputStream output) {
-		index.tuples.forEach(t -> writeKeyValue(output, t));
-	}
-
-	private void writeKeyValue(DataOutputStream output, long[] key) {
-		try {
-			output.writeLong(key[0]);
-			output.writeInt((int) key[1]);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-	}
-
-	private void writeObjects(ObjectOutputStream output) {
-		objects().forEach(o -> writeObject(output, o));
-	}
-
-	private void writeObject(ObjectOutputStream output, T object) {
-		try {
-			output.writeObject(object);
-		} catch (IOException e) {
-			Logger.error(e);
-		}
-	}
-
-	private Stream<T> objects() {
-		return map.entrySet().stream()
-				.sorted(comparing(Entry::getValue))
-				.map(Entry::getKey);
+	private List<String> values() {
+		return map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).map(Map.Entry::getKey).collect(Collectors.toList());
 	}
 
 	private void put(long[] keys, int value) {
 		stream(keys).forEach(k -> index.put(k, value));
 	}
 
-	private int map(T object) {
-		if (map.containsKey(object)) return map.get(object);
-		map.put(object, map.size());
-		return map.size() - 1;
+	public void put(AssaStream stream) {
+		while (stream.hasNext()) put(stream.next());
+	}
+
+	public void put(AssaStream.Item item) {
+		put(item.key(), item.value());
+	}
+
+	public class IndexToByteArray {
+		private long base = -1;
+		private AssaEntry[] data = new AssaEntry[256];
+		private int count = 0;
+		private Index index;
+
+		public IndexToByteArray(Index index) {
+			this.index = index;
+		}
+
+		private byte[] getByteArray() throws IOException {
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			DataOutputStream dos = new DataOutputStream(stream);
+			index.ids.forEach(entry -> writeEntry(dos, entry));
+			writeData(dos);
+			dos.close();
+			return stream.toByteArray();
+		}
+
+		private void writeEntry(DataOutputStream stream, AssaEntry entry) {
+			this.base(stream, entry.key >> 8);
+			if (isRepeated((byte) entry.key)) return;
+			this.data[this.count++] = entry;
+		}
+
+		private boolean isRepeated(byte b) {
+			return count > 0 && ((byte) this.data[this.count - 1].key) == b;
+		}
+
+		private void base(DataOutputStream stream, long base) {
+			try {
+				if (this.base == base) return;
+				writeData(stream);
+				writeBase(stream, base);
+				this.base = base;
+			} catch (IOException ignored) {
+			}
+		}
+
+		private void writeBase(DataOutputStream stream, long base) throws IOException {
+			int level = this.base >= 0 ? level(base, this.base) : 3;
+			stream.writeByte(level);
+			for (int i = level - 1; i >= 0; i--) {
+				byte b = (byte) (base >> (i << 3));
+				stream.writeByte(b);
+			}
+		}
+
+		private int level(long a, long b) {
+			return a != b ? level(a >> 8, b >> 8) + 1 : (byte) 0;
+		}
+
+		private void writeData(DataOutputStream stream) throws IOException {
+			if (base < 0) return;
+			stream.writeByte(count);
+			for (int i = 0; i < count; i++) {
+				stream.writeByte((byte) data[i].key);
+				writeValue(stream, data[i].value);
+			}
+			count = 0;
+		}
+
+		private void writeValue(OutputStream stream, long value) throws IOException {
+			while (value >= 0x80) {
+				stream.write((byte) (0x80 | (value & 0x7F)));
+				value = value >> 7;
+			}
+			stream.write((byte) value);
+		}
 	}
 
 	private class Index {
-		private final Comparator<long[]> comparator = comparingLong(o -> o[0]);
-		private List<long[]> tuples = new ArrayList<>();
+		private final Comparator<AssaEntry> comparator = comparingLong(o -> o.key);
+		private final List<AssaEntry> ids = new ArrayList<>();
 
-		void put(long key, long value) {
-			tuples.add(new long[]{key, value});
+		void put(long key, int value) {
+			ids.add(new AssaEntry(key, value));
 		}
 
 		private void sort() {
-			tuples.sort(comparator);
+			ids.sort(comparator);
 		}
 
 		public int size() {
-			return tuples.size();
+			return ids.size();
 		}
-	}
 
-	private ObjectOutputStream objectOutputStream(DataOutputStream output) throws IOException {
-		return new ObjectOutputStream(new OutputStream() {
-
-			@Override
-			public void write(int b) throws IOException {
-				output.write(b);
-			}
-
-			@Override
-			public void write(byte[] b, int off, int len) throws IOException {
-				output.write(b, off, len);
-			}
-
-		});
 	}
 }

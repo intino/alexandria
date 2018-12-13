@@ -55,13 +55,22 @@ public class DatalakeRenderer {
 	}
 
 	private Frame frameOf(EventSource source) {
-		final String messageType = composedName(source);
+		final String messageType = messageType(source);
 		final Frame frame = new Frame().addTypes("tank", source.getClass().getSimpleName().toLowerCase()).
 				addSlot("messageType", messageType).
 				addSlot("box", boxName).
 				addSlot("name", fullName(source));
 		if (source.i$(Input.class)) frame.addSlot("handler", handlers(messageType));
 		type(source, frame);
+		return frame;
+	}
+
+	private Frame frameOf(FeederEventSource source) {
+		final Frame frame = new Frame().addTypes("tank").
+				addSlot("messageType", source.composedName()).
+				addSlot("box", boxName).
+				addSlot("name", source.fullName());
+		frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.name));
 		return frame;
 	}
 
@@ -86,17 +95,12 @@ public class DatalakeRenderer {
 		else frame.addSlot("type", "message");
 	}
 
-	private Frame frameOf(FeederEventSource source) {
-		final Frame frame = new Frame().addTypes("tank").
-				addSlot("messageType", source.composedName()).
-				addSlot("box", boxName).
-				addSlot("name", source.fullName());
-		frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.name));
-		return frame;
-	}
-
 	private String fullName(EventSource source) {
 		return domain() + subdomain(source) + source.name();
+	}
+
+	private String messageType(EventSource source) {
+		return source.schema() != null ? source.schema().name$() : source.name();
 	}
 
 	private String domain() {
@@ -104,7 +108,7 @@ public class DatalakeRenderer {
 	}
 
 	private String composedName(EventSource source) {
-		return firstUpperCase((source.subdomain().isEmpty() ? "" : snakeCaseToCamelCase().format(source.subdomain().replace(".", "_"))) + firstUpperCase(source.name()));
+		return firstUpperCase((source.subdomain().isEmpty() ? "" : snakeCaseToCamelCase().format(source.subdomain().replace(".", "_"))) + source.name());
 	}
 
 	private String subdomain(EventSource source) {
