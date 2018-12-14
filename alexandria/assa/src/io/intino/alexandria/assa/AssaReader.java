@@ -8,22 +8,32 @@ import java.util.List;
 
 public class AssaReader implements AssaStream {
 	private final DataInputStream inputStream;
+	private final String name;
 	private int index;
 	final int size;
 	final List<String> values ;
 	final EntryReader entryReader;
 
 	public AssaReader(File file) throws IOException {
-		this(new FileInputStream(file));
+		this(name(file), new FileInputStream(file));
 	}
 
-	public AssaReader(InputStream inputStream) throws IOException {
+	private static String name(File file) {
+		return file.getParentFile() != null ? file.getParentFile().getName() : file.getName();
+	}
+
+	public AssaReader(String name, InputStream inputStream) throws IOException {
 		this.inputStream = new DataInputStream(new BufferedInputStream(inputStream));
+		this.name = name;
 		this.values = readValues();
 		this.index = 0;
 		this.size = this.inputStream.readInt();
 		this.entryReader = new EntryReader();
 		if (size == 0) close();
+	}
+
+	public String name() {
+		return name;
 	}
 
 	@Override

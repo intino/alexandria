@@ -18,3 +18,11 @@ end
 def type(Date) trigger(type)
 	DATE "$format"
 end
+
+def type(Numeric) trigger(type)
+	NUMERIC
+end
+
+def type(String) trigger(type)
+	string
+end

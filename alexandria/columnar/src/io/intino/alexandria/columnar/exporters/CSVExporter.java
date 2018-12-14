@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 
 public class CSVExporter implements Exporter {
 	private static final String NULL_VALUE = "";
-	private final Map<Timetag, List<AssaReader<String>>> readers;
+	private final Map<Timetag, List<AssaReader>> readers;
 	private final List<Columnar.Select.ColumnFilter> filters;
 	private final ColumnTypes columnTypes;
 
-	public CSVExporter(Map<Timetag, List<AssaReader<String>>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
+	public CSVExporter(Map<Timetag, List<AssaReader>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
 		this.readers = readers;
 		this.filters = filters;
 		this.columnTypes = columnTypes;
@@ -46,7 +46,7 @@ public class CSVExporter implements Exporter {
 		return next;
 	}
 
-	private String[] headers(List<AssaReader<String>> assas) {
+	private String[] headers(List<AssaReader> assas) {
 		List<String> header = new ArrayList<>();
 		header.add("id");
 		header.add("timetag");
