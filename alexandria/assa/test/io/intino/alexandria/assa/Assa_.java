@@ -74,7 +74,7 @@ public class Assa_ {
 	}
 
 	private Assa assa() throws IOException {
-		return new Assa(new AssaReader(input()));
+		return new Assa(new AssaReader("test", input()));
 	}
 
 	private InputStream input() {
