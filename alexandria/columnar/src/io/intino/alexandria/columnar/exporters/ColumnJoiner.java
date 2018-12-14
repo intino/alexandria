@@ -8,14 +8,12 @@ import io.intino.alexandria.columnar.Columnar;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.String.valueOf;
-
 class ColumnJoiner {
 	private final Timetag timetag;
 	private final List<TemporalReader> readers;
 	private final List<Columnar.Select.ColumnFilter> filters;
 
-	ColumnJoiner(Timetag timetag, List<AssaReader<String>> readers, List<Columnar.Select.ColumnFilter> filters) {
+	ColumnJoiner(Timetag timetag, List<AssaReader> readers, List<Columnar.Select.ColumnFilter> filters) {
 		this.timetag = timetag;
 		this.readers = readers.stream().map(TemporalReader::new).collect(Collectors.toList());
 		this.filters = filters;
@@ -24,15 +22,16 @@ class ColumnJoiner {
 	String[] next() {
 		TemporalReader lowest = getFilteredActiveCandidate();
 		if (lowest == null) return null;
-		String[] fields = new String[readers.size() + 1];
+		String[] fields = new String[readers.size() + 2];
 		long lowestKey = lowest.current.key();
-		fields[0] = timetag.value();
+		fields[0] = lowestKey + "";
+		fields[1] = timetag.value();
 		for (int i = 0; i < readers.size(); i++) {
 			TemporalReader reader = readers.get(i);
 			if (reader.current != null && reader.current.key() == lowestKey) {
-				fields[i + 1] = reader.current.object().toString();
+				fields[i + 2] = reader.current.value();
 				reader.next();
-			} else fields[i + 1] = null;
+			} else fields[i + 2] = null;
 		}
 		return fields;
 	}

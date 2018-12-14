@@ -1,6 +1,7 @@
 package io.intino.alexandria.columnar;
 
 import io.intino.alexandria.Timetag;
+import io.intino.alexandria.assa.AssaBuilder;
 import io.intino.alexandria.assa.AssaReader;
 import io.intino.alexandria.assa.AssaStream;
 import io.intino.alexandria.assa.AssaStream.Merge;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
 public class Columnar {
@@ -28,10 +30,6 @@ public class Columnar {
 
 	public Columnar(File root) {
 		this.root = root;
-	}
-
-	public String[] columns() {
-		return root.list((f, n) -> f.isDirectory());
 	}
 
 	public Select select(String... columns) {
@@ -45,59 +43,42 @@ public class Columnar {
 			}
 
 			@Override
-			public FilterOrGet to(Timetag to) throws IOException, ClassNotFoundException {
-				Map<Timetag, List<AssaReader<String>>> assas = new HashMap<>();
+			public FilterOrGet to(Timetag to) throws IOException {
+				Map<Timetag, List<AssaReader>> assas = new HashMap<>();
 				for (Timetag timetag : from.iterateTo(to)) {
 					assas.put(timetag, new ArrayList<>());
 					for (String column : columns)
-						assas.get(timetag).add(new AssaReader<>(assaFile(new File(root, to.value()), column)));
+						assas.get(timetag).add(new AssaReader(assaFile(column, new File(root, to.value()).getName())));
 				}
 				return filter(assas);
 			}
 		};
 	}
 
-	public Import load(String column) {
-		return new Import() {
-			@Override
-			public void from(File file) throws IOException {
-				if (file.isDirectory())
-					Columnar.this.processDirectory(column, file);
-				else
-					Columnar.this.processSet(column, file);
-			}
-		};
+	public void importColumn(File file) {
+		stream(directoriesIn(file)).parallel().forEach(this::build);
 	}
 
-	private void processDirectory(String column, File f) {
-		Arrays.stream(directoriesIn(f)).parallel().forEach(timetag -> {
-			File assaFile = assaFile(timetag, column);
-			if (assaFile.exists()) return;
-			toAssa(column, timetag, assaFile);
-		});
-	}
-
-	private void processSet(String column, File setFile) {
-		if (!setFile.getName().endsWith(".zet")) {
-			Logger.error("File incompatible");
-			return;
-		}
-		File assaFile = assaFile(setFile.getName().replace(".zet", ""), column);
-		if (assaFile.exists()) return;
-		toAssa(column, setFile, assaFile);
-	}
-
-	private void toAssa(String column, File source, File destination) {
+	private void build(File source) {
 		try {
-			AssaStream of = source.isDirectory() ? Merge.of(toAssa(source)) : assaStream(new ZetInfo(source));
-			of.save(column, destination);
-			of.close();
+			List<ZetInfo> zets = streamOf(source);
+			AssaBuilder builder = new AssaBuilder(zets.stream().map(z -> z.name).collect(toList()));
+			builder.put(Merge.of(zets.stream().map(this::assaStream).collect(toList())));
+			builder.save(destinationOf(source));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private FilterOrGet filter(Map<Timetag, List<AssaReader<String>>> assas) {
+	private File destinationOf(File source) {
+		String timetag = source.getName();
+		String tank = source.getParentFile().getName();
+		File file = new File(root, tank + "/" + timetag + ".assa");
+		file.getParentFile().mkdirs();
+		return file;
+	}
+
+	private FilterOrGet filter(Map<Timetag, List<AssaReader>> assas) {
 		List<Select.ColumnFilter> filters = new ArrayList<>();
 		return new FilterOrGet() {
 			@Override
@@ -123,14 +104,14 @@ public class Columnar {
 		};
 	}
 
-	private List<AssaStream<String>> toAssa(File directory) {
+	private List<ZetInfo> streamOf(File directory) {
 		return zetInfos(directory).stream()
-				.map(this::assaStream)
+				.sorted(Comparator.comparing(s -> s.size))
 				.collect(toList());
 	}
 
-	private AssaStream<String> assaStream(ZetInfo zet) {
-		return new AssaStream<String>() {
+	private AssaStream assaStream(ZetInfo zet) {
+		return new AssaStream() {
 			ZetReader reader = new ZetReader(zet.inputStream());
 
 			@Override
@@ -139,16 +120,16 @@ public class Columnar {
 			}
 
 			@Override
-			public Item<String> next() {
+			public Item next() {
 				long key = reader.next();
-				return new Item<String>() {
+				return new Item() {
 					@Override
 					public long key() {
 						return key;
 					}
 
 					@Override
-					public String object() {
+					public String value() {
 						return zet.name;
 					}
 				};
@@ -161,14 +142,13 @@ public class Columnar {
 
 			@Override
 			public void close() {
-				reader.hasNext();
 			}
 		};
 	}
 
 
 	private List<ZetInfo> zetInfos(File directory) {
-		return Arrays.stream(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".zet")))).map(ZetInfo::new).collect(Collectors.toList());
+		return stream(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".zet")))).map(ZetInfo::new).collect(Collectors.toList());
 	}
 
 	private File[] directoriesIn(File directory) {
@@ -176,11 +156,7 @@ public class Columnar {
 	}
 
 
-	private File assaFile(File timetag, String column) {
-		return assaFile(timetag.getName(), column);
-	}
-
-	private File assaFile(String name, String column) {
+	private File assaFile(String column, String name) {
 		return new File(columnDirectory(column), name + ASSA_FILE);
 	}
 
@@ -191,24 +167,23 @@ public class Columnar {
 		return file;
 	}
 
-	public interface Import {
-
-		void from(File directory) throws IOException;
-	}
-
 	public interface Select {
+
 		Select from(Timetag timetag) throws IOException, ClassNotFoundException;
 
 		FilterOrGet to(Timetag timetag) throws IOException, ClassNotFoundException;
 
 		interface FilterOrGet extends Into {
+
 			FilterOrGet filtered(ColumnFilter timetag);
 		}
 
 		interface ColumnFilter extends Predicate<Long> {
+
 		}
 
 		interface Into {
+
 			void intoCSV(File file, ColumnTypes types) throws IOException;
 
 			void intoCSV(File file) throws IOException;
@@ -218,6 +193,7 @@ public class Columnar {
 	}
 
 	private static class ZetInfo {
+
 		final int size;
 		final String name;
 		InputStream inputStream;

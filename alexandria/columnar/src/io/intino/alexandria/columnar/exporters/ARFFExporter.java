@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 
 public class ARFFExporter {
 	private static final String NULL_VALUE = "?";
-	private final Map<Timetag, List<AssaReader<String>>> readers;
+	private final Map<Timetag, List<AssaReader>> readers;
 	private final List<Columnar.Select.ColumnFilter> filters;
 	private final ColumnType[] columnTypes;
 
-	public ARFFExporter(Map<Timetag, List<AssaReader<String>>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
+	public ARFFExporter(Map<Timetag, List<AssaReader>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
 		this.readers = readers;
 		this.filters = filters;
 		this.columnTypes = extractColumnTypes(columnTypes, readers.values().iterator().next());
@@ -46,13 +46,13 @@ public class ARFFExporter {
 		for (int i = 2; i < next.length; i++)
 			if (next[i] == null) next[i] = NULL_VALUE;
 			else {
-				if (columnTypes[i - 1] instanceof ColumnType.String) next[i] = "'" + next[i] + "'";
-				else if (columnTypes[i - 1] instanceof ColumnType.Date) next[i] = "\"" + next[i] + "\"";
+				if (columnTypes[i - 2] instanceof ColumnType.String) next[i] = "'" + next[i] + "'";
+				else if (columnTypes[i - 2] instanceof ColumnType.Date) next[i] = "\"" + next[i] + "\"";
 			}
 		return next;
 	}
 
-	private Frame[] attributes(List<AssaReader<String>> readers) {
+	private Frame[] attributes(List<AssaReader> readers) {
 		List<Frame> headers = new ArrayList<>();
 		headers.add(new Frame("attribute").addSlot("name", "id").addSlot("type", new Frame("Numeric")));
 		headers.add(new Frame("attribute").addSlot("name", "timetag").addSlot("type", new Frame("Date").addSlot("format", "yyyyMMddhhmmss")));
@@ -62,7 +62,7 @@ public class ARFFExporter {
 		return headers.toArray(new Frame[0]);
 	}
 
-	private ColumnType[] extractColumnTypes(ColumnTypes columnTypes, List<AssaReader<String>> readers) {
+	private ColumnType[] extractColumnTypes(ColumnTypes columnTypes, List<AssaReader> readers) {
 		ColumnType[] types = new ColumnType[readers.size()];
 		for (int i = 0; i < readers.size(); i++) types[i] = columnTypes.getOrDefault(readers.get(i).name(), new ColumnType.String());
 		return types;
