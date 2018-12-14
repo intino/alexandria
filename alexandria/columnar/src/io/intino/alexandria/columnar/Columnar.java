@@ -32,6 +32,10 @@ public class Columnar {
 		this.root = root;
 	}
 
+	public String[] columns() {
+		return root.list((f, n) -> f.isDirectory());
+	}
+
 	public Select select(String... columns) {
 		return new Select() {
 			private Timetag from;
@@ -61,10 +65,12 @@ public class Columnar {
 
 	private void build(File source) {
 		try {
+			File destinationFile = destinationOf(source);
+			if (destinationFile.exists()) return;
 			List<ZetInfo> zets = streamOf(source);
 			AssaBuilder builder = new AssaBuilder(zets.stream().map(z -> z.name).collect(toList()));
 			builder.put(Merge.of(zets.stream().map(this::assaStream).collect(toList())));
-			builder.save(destinationOf(source));
+			builder.save(destinationFile);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
