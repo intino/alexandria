@@ -3,7 +3,7 @@ def type(feeder)
 
 	import $package+validPackage.$box+firstUpperCase~Box;
 
-	import io.intino.ness.inl.Message;
+	import io.intino.alexandria.inl.Message;
 	import java.util.Arrays;
 
 	public class $name+FirstUpperCase extends Abstract$name+FirstUpperCase {

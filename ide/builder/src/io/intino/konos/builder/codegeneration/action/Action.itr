@@ -117,7 +117,7 @@ def type(ui & action) !type(gen)
 end
 
 def type(parameter & fileData) trigger(type)
-	public java.io.InputStream $name+snakecaseToCamelCase+FirstLowerCase;
+	public io.intino.alexandria.Resource $name+snakecaseToCamelCase+FirstLowerCase;
 end
 
 def type(parameter & list) trigger(type)
