@@ -59,7 +59,8 @@ public class DatalakeRenderer {
 		final Frame frame = new Frame().addTypes("tank", source.getClass().getSimpleName().toLowerCase()).
 				addSlot("messageType", messageType).
 				addSlot("box", boxName).
-				addSlot("name", fullName(source));
+				addSlot("name", source.name()).
+				addSlot("fullname", fullName(source));
 		if (source.i$(Input.class)) frame.addSlot("handler", handlers(messageType));
 		type(source, frame);
 		return frame;
@@ -69,7 +70,8 @@ public class DatalakeRenderer {
 		final Frame frame = new Frame().addTypes("tank").
 				addSlot("messageType", source.composedName()).
 				addSlot("box", boxName).
-				addSlot("name", source.fullName());
+				addSlot("name", source.name).
+				addSlot("fullname", source.fullName());
 		frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.name));
 		return frame;
 	}

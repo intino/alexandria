@@ -28,7 +28,7 @@ Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", use
 	Mounter(schema = empty) survey
 	Mounter(schema = empty) revocation
 	Mounter(schema = AddGoal) addgoal
-	Mounter(schema = RemoveGoal) removegoal
+	Mounter(schema = RemoveGoal) removeGoal
 
 
 
