@@ -129,7 +129,7 @@ public class AssaBuilder {
 			count = 0;
 		}
 
-		private void writeValue(OutputStream stream, long value) throws IOException {
+		private void writeValue(DataOutputStream stream, long value) throws IOException {
 			while (value >= 0x80) {
 				stream.write((byte) (0x80 | (value & 0x7F)));
 				value = value >> 7;
@@ -148,6 +148,18 @@ public class AssaBuilder {
 
 		private void sort() {
 			ids.sort(comparator);
+			removeDuplicates();
+		}
+
+		private void removeDuplicates() {
+			long lastValue = -1;
+			for (int index = 0; index < ids.size(); index++) {
+				if(lastValue == ids.get(index).key){
+					ids.remove(ids.get(index));
+					index--;
+				}
+				lastValue = ids.get(index).key;
+			}
 		}
 
 		public int size() {
