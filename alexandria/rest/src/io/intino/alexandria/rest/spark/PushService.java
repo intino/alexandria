@@ -175,5 +175,4 @@ public abstract class PushService<S extends Session<C>, C extends Client> implem
 		registerSession(client.sessionId());
 		sessionManager.register(client);
 	}
-
 }
