@@ -1,6 +1,9 @@
 package io.intino.alexandria.restaccessor.core;
 
+import io.intino.alexandria.logger.Logger;
+
 import javax.websocket.*;
+import java.io.IOException;
 import java.net.URI;
 import java.util.function.Consumer;
 
@@ -15,6 +18,14 @@ public class RestAccessorNotifier implements io.intino.alexandria.restaccessor.R
 		this.webSocketUri = webSocketUri;
 		this.listener = listener;
 		this.connect();
+	}
+
+	public void close() {
+		try {
+			session.close();
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 	}
 
 	@OnOpen
@@ -39,13 +50,10 @@ public class RestAccessorNotifier implements io.intino.alexandria.restaccessor.R
 
 	private void connect() {
 		if (session != null) return;
-
 		try {
-			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-			container.connectToServer(this, new URI(webSocketUri));
+			this.session = ContainerProvider.getWebSocketContainer().connectToServer(this, new URI(webSocketUri));
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			Logger.error(e);
 		}
 	}
-
 }

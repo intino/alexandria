@@ -91,6 +91,10 @@ def type(notification)
 			throw new Unknown(e.label());
 		}
 	}
+
+	public void stopListen$name+SnakeCaseToCamelCase+firstUppercase() {
+		this.notifier.close();
+	}
 end
 
 def type(parameter) trigger(signature)
