@@ -29,7 +29,7 @@ class ColumnJoiner {
 		for (int i = 0; i < readers.size(); i++) {
 			TemporalReader reader = readers.get(i);
 			if (reader.current != null && reader.current.key() == lowestKey) {
-				fields[i + 2] = reader.current.value();
+				fields[i + 2] = reader.current.value().get(0); // TODO value selector for multivalued?
 				reader.next();
 			} else fields[i + 2] = null;
 		}

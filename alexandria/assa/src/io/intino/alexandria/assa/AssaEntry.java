@@ -8,4 +8,9 @@ public class AssaEntry {
 		this.key = key;
 		this.value = value;
 	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(key);
+	}
 }
