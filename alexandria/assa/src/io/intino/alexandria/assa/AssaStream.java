@@ -50,9 +50,9 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 
 				private List<Item> itemsWith(long key) {
 					List<Item> items = new ArrayList<>();
-					for (AssaStreamWithCurrent stream1 : streams) {
-						if (stream1.current.key() != key) break;
-						items.add(stream1.current);
+					for (AssaStreamWithCurrent stream : streams) {
+						if (stream.current.key() != key) break;
+						items.add(stream.current);
 					}
 					return items;
 				}
