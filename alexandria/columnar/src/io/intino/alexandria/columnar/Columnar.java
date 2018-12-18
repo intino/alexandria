@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 public class Columnar {
@@ -121,11 +122,6 @@ public class Columnar {
 			ZetReader reader = new ZetReader(zet.inputStream());
 
 			@Override
-			public int size() {
-				return zet.size;
-			}
-
-			@Override
 			public Item next() {
 				long key = reader.next();
 				return new Item() {
@@ -135,8 +131,8 @@ public class Columnar {
 					}
 
 					@Override
-					public String value() {
-						return zet.name;
+					public List<String> value() {
+						return singletonList(zet.name);
 					}
 				};
 			}
@@ -151,7 +147,6 @@ public class Columnar {
 			}
 		};
 	}
-
 
 	private List<ZetInfo> zetInfos(File directory) {
 		return stream(Objects.requireNonNull(directory.listFiles(f -> f.getName().endsWith(".zet")))).map(ZetInfo::new).collect(Collectors.toList());
@@ -175,9 +170,9 @@ public class Columnar {
 
 	public interface Select {
 
-		Select from(Timetag timetag) throws IOException, ClassNotFoundException;
+		Select from(Timetag timetag) throws IOException;
 
-		FilterOrGet to(Timetag timetag) throws IOException, ClassNotFoundException;
+		FilterOrGet to(Timetag timetag) throws IOException;
 
 		interface FilterOrGet extends Into {
 

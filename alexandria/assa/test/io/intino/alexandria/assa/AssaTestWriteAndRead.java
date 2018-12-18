@@ -22,15 +22,18 @@ public class AssaTestWriteAndRead {
 		AssaReader reader = new AssaReader(file);
 		AssaStream.Item item = reader.next();
 		assertEquals(1L, item.key());
-		assertEquals("test1", item.value());
+		assertEquals(1, item.value().size());
+		assertEquals("test1", item.value().get(0));
 
 		item = reader.next();
 		assertEquals(2L, item.key());
-		assertEquals("test2", item.value());
+		assertEquals(1, item.value().size());
+		assertEquals("test2", item.value().get(0));
 
 		item = reader.next();
 		assertEquals(3L, item.key());
-		assertEquals("test1", item.value());
+		assertEquals(1, item.value().size());
+		assertEquals("test1", item.value().get(0));
 
 		assertFalse(reader.hasNext());
 		file.delete();
@@ -49,7 +52,7 @@ public class AssaTestWriteAndRead {
 		for (int i = 0; i < 2000000; i++) {
 			AssaStream.Item next = reader.next();
 			assertEquals(i, next.key());
-			assertEquals("test" + i / 10000, next.value());
+			assertEquals("test" + i / 10000, next.value().get(0));
 		}
 		assertFalse(reader.hasNext());
 //		file.delete();
@@ -68,10 +71,34 @@ public class AssaTestWriteAndRead {
 		for (int i = 0; i < 50000; i++) {
 			AssaStream.Item next = reader.next();
 			assertEquals(i, next.key());
-			assertEquals("test" + i, next.value());
+			assertEquals("test" + i, next.value().get(0));
 		}
 		assertFalse(reader.hasNext());
 		file.delete();
 	}
 
+	@Test
+	public void should_work_well_with_multivalued_ids() throws IOException {
+		File file = new File("test.assa");
+		AssaBuilder test = new AssaBuilder();
+		test.put(1L, "test1", "test2");
+		test.put(2L, "test2", "test1");
+		test.save(file);
+
+		AssaReader reader = new AssaReader(file);
+		AssaStream.Item item = reader.next();
+		assertEquals(1L, item.key());
+		assertEquals(2, item.value().size());
+		assertEquals("test1", item.value().get(0));
+		assertEquals("test2", item.value().get(1));
+
+		item = reader.next();
+		assertEquals(2L, item.key());
+		assertEquals(2, item.value().size());
+		assertEquals("test2", item.value().get(0));
+		assertEquals("test1", item.value().get(1));
+
+		assertFalse(reader.hasNext());
+		file.delete();
+	}
 }

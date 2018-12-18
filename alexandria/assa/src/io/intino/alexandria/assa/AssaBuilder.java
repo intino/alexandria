@@ -19,12 +19,32 @@ public class AssaBuilder {
 		values.forEach(this::map);
 	}
 
-	public void put(long key, String value) {
-		index.put(key, map(value));
+	public void put(long key, String... value) {
+		index.put(key, map(String.join("\n", value)));
 	}
 
-	public void put(long[] keys, String value) {
-		put(keys, map(value));
+	public void put(long[] keys, String... value) {
+		put(keys, map(String.join("\n", value)));
+	}
+
+	public void put(long key, List<String> value) {
+		index.put(key, map(String.join("\n", value)));
+	}
+
+	public void put(long[] keys, List<String> value) {
+		put(keys, map(String.join("\n", value)));
+	}
+
+	private void put(long[] keys, int value) {
+		stream(keys).forEach(k -> index.put(k, value));
+	}
+
+	public void put(AssaStream stream) {
+		while (stream.hasNext()) put(stream.next());
+	}
+
+	public void put(AssaStream.Item item) {
+		index.put(item.key(), map(String.join("\n", item.value())));
 	}
 
 	public void save(File file) throws IOException {
@@ -53,18 +73,6 @@ public class AssaBuilder {
 
 	private List<String> values() {
 		return map.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getValue)).map(Map.Entry::getKey).collect(Collectors.toList());
-	}
-
-	private void put(long[] keys, int value) {
-		stream(keys).forEach(k -> index.put(k, value));
-	}
-
-	public void put(AssaStream stream) {
-		while (stream.hasNext()) put(stream.next());
-	}
-
-	public void put(AssaStream.Item item) {
-		put(item.key(), item.value());
 	}
 
 	public class IndexToByteArray {
@@ -148,18 +156,6 @@ public class AssaBuilder {
 
 		private void sort() {
 			ids.sort(comparator);
-			removeDuplicates();
-		}
-
-		private void removeDuplicates() {
-			long lastValue = -1;
-			for (int index = 0; index < ids.size(); index++) {
-				if(lastValue == ids.get(index).key){
-					ids.remove(ids.get(index));
-					index--;
-				}
-				lastValue = ids.get(index).key;
-			}
 		}
 
 		public int size() {

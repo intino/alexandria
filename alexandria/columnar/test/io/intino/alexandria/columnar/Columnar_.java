@@ -33,7 +33,7 @@ public class Columnar_ {
 
 	@Test
 	public void should_export_column_to_csv() throws IOException, ClassNotFoundException {
-		columnar.select("Activos").from(new Timetag("201812")).to(new Timetag("201812")).intoCSV(new File(result, "Alta_201812.csv"));
+		columnar.select("Activos").from(new Timetag("201812")).to(new Timetag("201812")).intoCSV(new File(result, "Activos  _201812.csv"));
 	}
 
 	@Test

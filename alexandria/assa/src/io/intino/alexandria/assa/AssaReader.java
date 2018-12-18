@@ -6,20 +6,19 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 public class AssaReader implements AssaStream {
+	final int size;
+	final List<String> values;
+	final EntryReader entryReader;
 	private final DataInputStream inputStream;
 	private final String name;
 	private int index;
-	final int size;
-	final List<String> values ;
-	final EntryReader entryReader;
 
 	public AssaReader(File file) throws IOException {
 		this(name(file), new FileInputStream(file));
-	}
-
-	private static String name(File file) {
-		return file.getParentFile() != null ? file.getParentFile().getName() : file.getName();
 	}
 
 	public AssaReader(String name, InputStream inputStream) throws IOException {
@@ -32,11 +31,14 @@ public class AssaReader implements AssaStream {
 		if (size == 0) close();
 	}
 
+	private static String name(File file) {
+		return file.getParentFile() != null ? file.getParentFile().getName() : file.getName();
+	}
+
 	public String name() {
 		return name;
 	}
 
-	@Override
 	public int size() {
 		return size;
 	}
@@ -77,8 +79,9 @@ public class AssaReader implements AssaStream {
 			}
 
 			@Override
-			public String value() {
-				return values.get(entry.value);
+			public List<String> value() {
+				String value = values.get(entry.value);
+				return value.contains("\n") ? asList(value.split("\n")) : singletonList(value);
 			}
 
 			@Override
