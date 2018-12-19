@@ -22,7 +22,10 @@ public class RestAccessorNotifier implements io.intino.alexandria.restaccessor.R
 
 	public void close() {
 		try {
-			session.close();
+			if (session != null) {
+				session.close();
+				session = null;
+			}
 		} catch (IOException e) {
 			Logger.error(e);
 		}
