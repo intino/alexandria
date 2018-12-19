@@ -1,75 +1,66 @@
 package io.intino.alexandria.columnar.exporters;
 
-import io.intino.alexandria.Timetag;
-import io.intino.alexandria.assa.AssaReader;
-import io.intino.alexandria.columnar.ColumnTypes;
-import io.intino.alexandria.columnar.ColumnTypes.ColumnType;
+import io.intino.alexandria.columnar.Column;
+import io.intino.alexandria.columnar.Column.ColumnType;
 import io.intino.alexandria.columnar.Columnar;
+import io.intino.alexandria.columnar.Row;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ARFFExporter {
 	private static final String NULL_VALUE = "?";
-	private final Map<Timetag, List<AssaReader>> readers;
-	private final List<Columnar.Select.ColumnFilter> filters;
-	private final ColumnType[] columnTypes;
+	private final Iterator<Row> iterator;
+	private final List<Column> columns;
+	private final Columnar.Select.RowFilter filter;
 
-	public ARFFExporter(Map<Timetag, List<AssaReader>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
-		this.readers = readers;
-		this.filters = filters;
-		this.columnTypes = extractColumnTypes(columnTypes, readers.values().iterator().next());
+	public ARFFExporter(Iterator<Row> iterator, List<Column> columns, Columnar.Select.RowFilter filter) {
+		this.iterator = iterator;
+		this.columns = columns;
+		this.filter = filter;
 	}
 
 	public void export(File file) throws IOException {
-		StringBuilder builder = new StringBuilder(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes(readers.values().iterator().next()))));
-		for (Timetag timetag : readers.keySet()) {
-			ColumnJoiner merger = new ColumnJoiner(timetag, readers.get(timetag), filters);
-			while (merger.hasNext()) {
-				String[] next = merger.next();
-				if (next == null) break;
-				String[] values = format(next);
-				builder.append(String.join(",", values)).append("\n");
-			}
+		StringBuilder builder = new StringBuilder(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes())));
+		while (iterator.hasNext()) {
+			Row row = iterator.next();
+			if (!filter.test(row)) continue;
+			builder.append(String.join(",", format(row))).append("\n");
 		}
 		Files.write(file.toPath(), builder.toString().getBytes());
 	}
 
-	private String[] format(String[] next) {
-		next[1] = next[1] = "\"" + next[1] + "\"";
-		for (int i = 2; i < next.length; i++)
-			if (next[i] == null) next[i] = NULL_VALUE;
-			else {
-				if (columnTypes[i - 2] instanceof ColumnType.String) next[i] = "'" + next[i] + "'";
-				else if (columnTypes[i - 2] instanceof ColumnType.Date) next[i] = "\"" + next[i] + "\"";
-			}
-		return next;
+	private List<String> format(Row row) {
+		List<String> values = new ArrayList<>();
+		values.add(row.id() + "");
+		values.add(row.timetag().value());
+		values.addAll(columns.stream().map(column -> format(column, row.get(column.name()))).collect(Collectors.toList()));
+		return values;
 	}
 
-	private Frame[] attributes(List<AssaReader> readers) {
+	private String format(Column column, String value) {
+		if (value == null) return NULL_VALUE;
+		if (column.type() instanceof ColumnType.String) return "'" + value + "'";
+		else if (column.type() instanceof ColumnType.Date) return "\"" + value + "\"";
+		return value;
+	}
+
+	private Frame[] attributes() {
 		List<Frame> headers = new ArrayList<>();
 		headers.add(new Frame("attribute").addSlot("name", "id").addSlot("type", new Frame("Numeric")));
 		headers.add(new Frame("attribute").addSlot("name", "timetag").addSlot("type", new Frame("Date").addSlot("format", "yyyyMMddhhmmss")));
-		List<String> columns = readers.stream().map(AssaReader::name).collect(Collectors.toList());
-		for (int i = 0; i < columns.size(); i++)
-			headers.add(new Frame("attribute").addSlot("name", columns.get(i)).addSlot("type", columnType(i)));
+		for (Column column : columns)
+			headers.add(new Frame("attribute").addSlot("name", column).addSlot("type", columnType(column.type())));
 		return headers.toArray(new Frame[0]);
 	}
 
-	private ColumnType[] extractColumnTypes(ColumnTypes columnTypes, List<AssaReader> readers) {
-		ColumnType[] types = new ColumnType[readers.size()];
-		for (int i = 0; i < readers.size(); i++) types[i] = columnTypes.getOrDefault(readers.get(i).name(), new ColumnType.String());
-		return types;
-	}
-
-	private Frame columnType(int i) {
-		ColumnType type = columnTypes[i];
+	private Frame columnType(ColumnType type) {
 		if (type instanceof ColumnType.Numeric) return new Frame("Numeric");
 		if (type instanceof ColumnType.Date) return new Frame("Date").addSlot("format", ((ColumnType.Date) type).format());
 		if (type instanceof ColumnType.Nominal) return new Frame("Nominal").addSlot("value", ((ColumnType.Nominal) type).values());

@@ -48,7 +48,7 @@ Concept Schema
 	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
 	Concept:{0..1} AttributeMap
 	!! Attribute of the member
-	Concept:Named Attribute extends Data
+	Concept:Named:RequiresFacet Attribute extends Data
 		var boolean isRequired = true
 	has Schema
 

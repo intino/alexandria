@@ -1,56 +1,61 @@
 package io.intino.alexandria.columnar.exporters;
 
 import com.opencsv.CSVWriter;
-import io.intino.alexandria.Timetag;
-import io.intino.alexandria.assa.AssaReader;
-import io.intino.alexandria.columnar.ColumnTypes;
+import io.intino.alexandria.columnar.Column;
 import io.intino.alexandria.columnar.Columnar;
 import io.intino.alexandria.columnar.Exporter;
+import io.intino.alexandria.columnar.Row;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.opencsv.CSVWriter.NO_QUOTE_CHARACTER;
 
 public class CSVExporter implements Exporter {
 	private static final String NULL_VALUE = "";
-	private final Map<Timetag, List<AssaReader>> readers;
-	private final List<Columnar.Select.ColumnFilter> filters;
-	private final ColumnTypes columnTypes;
+	private final Iterator<Row> iterator;
+	private final List<Column> columns;
+	private final Columnar.Select.RowFilter filter;
 
-	public CSVExporter(Map<Timetag, List<AssaReader>> readers, List<Columnar.Select.ColumnFilter> filters, ColumnTypes columnTypes) {
-		this.readers = readers;
-		this.filters = filters;
-		this.columnTypes = columnTypes;
+	public CSVExporter(Iterator<Row> iterator, List<Column> columns, Columnar.Select.RowFilter filter) {
+		this.iterator = iterator;
+		this.columns = columns;
+		this.filter = filter;
 	}
 
 	public void export(File file) throws IOException {
-		CSVWriter csvWriter = new CSVWriter(new FileWriter(file), ';');
-		csvWriter.writeNext(headers(readers.values().iterator().next()));
-		for (Timetag timetag : readers.keySet()) {
-			ColumnJoiner merger = new ColumnJoiner(timetag, readers.get(timetag), filters);
-			while (merger.hasNext()) {
-				String[] next = merger.next();
-				if (next == null) break;
-				csvWriter.writeNext(replaceNulls(next));
-			}
+		CSVWriter csvWriter = new CSVWriter(new FileWriter(file), ';', NO_QUOTE_CHARACTER);
+		csvWriter.writeNext(headers());
+		while (iterator.hasNext()) {
+			Row row = iterator.next();
+			if (!filter.test(row)) continue;
+			csvWriter.writeNext(format(row));
 		}
 		csvWriter.close();
 	}
 
-	private String[] replaceNulls(String[] next) {
-		for (int i = 0; i < next.length; i++) if (next[i] == null) next[i] = NULL_VALUE;
-		return next;
+	private String[] format(Row row) {
+		List<String> values = new ArrayList<>();
+		values.add(row.id() + "");
+		values.add(row.timetag().value());
+		values.addAll(columns.stream().map(column -> format(row.get(column.name()))).collect(Collectors.toList()));
+		return values.toArray(new String[0]);
 	}
 
-	private String[] headers(List<AssaReader> assas) {
+	private String format(String value) {
+		return value == null ? NULL_VALUE : value;
+	}
+
+	private String[] headers() {
 		List<String> header = new ArrayList<>();
 		header.add("id");
 		header.add("timetag");
-		header.addAll(assas.stream().map(AssaReader::name).collect(Collectors.toList()));
+		header.addAll(columns.stream().map(Column::name).collect(Collectors.toList()));
 		return header.toArray(new String[0]);
 	}
 }

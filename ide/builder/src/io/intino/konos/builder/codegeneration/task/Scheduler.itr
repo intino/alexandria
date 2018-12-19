@@ -10,14 +10,13 @@ def type(scheduler)
 	import java.util.Set;
 	import java.time.ZoneId;
 	import java.util.TimeZone;
-	import java.util.logging.Logger;
+	import io.intino.alexandria.logger.Logger;
 
 	import static org.quartz.JobBuilder.newJob;
 	import static org.quartz.CronScheduleBuilder.*;
 	import static org.quartz.TriggerBuilder.newTrigger;
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase~Tasks {
-		private static final Logger logger = Logger.getGlobal();
 
 		private $name+firstUpperCase+SnakeCaseToCamelCase~Tasks() {
 
@@ -29,7 +28,7 @@ def type(scheduler)
 				$task+init...[$NL]
 				tasker.startSchedules();
 			} catch (Exception e) {
-				logger.severe(e.getMessage());
+				Logger.error(e.getMessage());
 			}
 		}
 
