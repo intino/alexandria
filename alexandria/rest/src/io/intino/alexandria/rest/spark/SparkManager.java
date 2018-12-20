@@ -54,26 +54,41 @@ public class SparkManager<P extends PushService> {
 	}
 
 	public <T> T fromHeader(String name, Class<T> type) {
-		return SparkReader.read(request.headers(name), type);
+		return request.headers(name) == null ? null : SparkReader.read(request.headers(name), type);
+	}
+
+	public <T> T fromHeaderOrDefault(String name, Class<T> type, String defaultValue) {
+		return request.headers(name) == null ? defaultValue(defaultValue, type) : SparkReader.read(request.headers(name), type);
 	}
 
 	public <T> T fromQuery(String name, Class<T> type) {
-		return SparkReader.read(request.queryParams(name), type);
+		return request.queryParams(name) == null ? null : SparkReader.read(request.queryParams(name), type);
+	}
+
+	public <T> T fromQueryOrDefault(String name, Class<T> type, String defaultValue) {
+		return request.queryParams(name) == null ? defaultValue(defaultValue, type) : SparkReader.read(request.queryParams(name), type);
 	}
 
 	public <T> T fromQuery(String name, Type type) {
-		return SparkReader.read(request.queryParams(name), type);
+		return request.queryParams(name) == null ? null : SparkReader.read(request.queryParams(name), type);
 	}
 
 	public <T> T fromPath(String name, Class<T> type) {
-		return SparkReader.read(request.params(name), type);
+		return request.params(name) == null ? null : SparkReader.read(request.params(name), type);
+	}
+
+	public <T> T fromPathOrDefault(String name, Class<T> type, String value) {
+		return request.params(name) == null ? defaultValue(value, type) : SparkReader.read(request.params(name), type);
+	}
+
+	private <T> T defaultValue(String defaultValue, Class<T> type) {
+		return SparkReader.read(defaultValue, type);
 	}
 
 	public <T> T fromBody(String name, Class<T> type) {
 		try {
 			if (type.isAssignableFrom(Resource.class) || type.isAssignableFrom(InputStream.class))
 				return (T) new Resource(name).data(request.raw().getInputStream());
-
 			return SparkReader.read(request.body(), type);
 		} catch (IOException e) {
 			return null;
