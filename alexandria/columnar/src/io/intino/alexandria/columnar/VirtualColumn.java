@@ -12,6 +12,12 @@ public class VirtualColumn extends Column {
 		this.provider = provider;
 	}
 
+
+	public VirtualColumn(String name, ColumnType type, Mapper mapper, AssaStreamProvider provider) {
+		super(name, type, mapper);
+		this.provider = provider;
+	}
+
 	public AssaStream streamOf(Timetag timetag) {
 		return provider.streamOf(timetag);
 	}

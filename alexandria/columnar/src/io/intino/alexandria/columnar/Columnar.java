@@ -5,7 +5,6 @@ import io.intino.alexandria.assa.AssaBuilder;
 import io.intino.alexandria.assa.AssaReader;
 import io.intino.alexandria.assa.AssaStream;
 import io.intino.alexandria.assa.AssaStream.Merge;
-import io.intino.alexandria.columnar.Columnar.Select.FilterOrGet;
 import io.intino.alexandria.columnar.exporters.ARFFExporter;
 import io.intino.alexandria.columnar.exporters.CSVExporter;
 import io.intino.alexandria.logger.Logger;
@@ -37,7 +36,7 @@ public class Columnar {
 		return root.list((f, n) -> f.isDirectory());
 	}
 
-	public Select select(String... columns) {
+	public Select select(Column... columns) {
 		return new Select() {
 			private Timetag from;
 
@@ -48,16 +47,27 @@ public class Columnar {
 			}
 
 			@Override
-			public FilterOrGet to(Timetag to) throws IOException {
-				Map<Timetag, List<AssaReader>> assas = new HashMap<>();
+			public Into to(Timetag to) throws IOException {
+				Map<Timetag, List<AssaStream>> assas = new LinkedHashMap<>();
 				for (Timetag timetag : from.iterateTo(to)) {
 					assas.put(timetag, new ArrayList<>());
-					for (String column : columns)
-						assas.get(timetag).add(new AssaReader(assaFile(column, new File(root, to.value()).getName())));
+					for (Column column : columns) {
+						if (column instanceof VirtualColumn) assas.get(timetag).add(((VirtualColumn) column).streamOf(timetag));
+						else if (column instanceof CompositeColumn)
+							assas.get(timetag).add(compositeStream((CompositeColumn) column, timetag));
+						else assas.get(timetag).add(new AssaReader(assaFile(column.name(), new File(root, timetag.value()).getName())));
+					}
 				}
-				return filter(assas);
+				return into(Arrays.asList(columns), assas);
 			}
 		};
+	}
+
+	private AssaStream compositeStream(CompositeColumn composite, Timetag timetag) throws IOException {
+		List<AssaStream> streams = new ArrayList<>();
+		for (Column c : composite.columns())
+			streams.add(new AssaReader(assaFile(c.name(), new File(root, timetag.value()).getName())));
+		return Merge.of(streams);
 	}
 
 	public void importColumn(File file) {
@@ -80,33 +90,53 @@ public class Columnar {
 	private File destinationOf(File source) {
 		String timetag = source.getName();
 		String tank = source.getParentFile().getName();
-		File file = new File(root, tank + "/" + timetag + ".assa");
+		File file = new File(root, tank + "/" + timetag + ASSA_FILE);
 		file.getParentFile().mkdirs();
 		return file;
 	}
 
-	private FilterOrGet filter(Map<Timetag, List<AssaReader>> assas) {
-		List<Select.ColumnFilter> filters = new ArrayList<>();
-		return new FilterOrGet() {
+	private Select.Into into(List<Column> columns, Map<Timetag, List<AssaStream>> assas) {
+		return new Select.Into() {
 			@Override
-			public FilterOrGet filtered(Select.ColumnFilter filter) {
-				filters.add(filter);
-				return this;
-			}
+			public Iterator<Row> toIterator() {
+				return new Iterator<Row>() {
+					Timetag current = assas.keySet().iterator().next();
+					RowIterator currentIterator = new RowIterator(current, assas.get(current), columns);
 
-			@Override
-			public void intoCSV(File file, ColumnTypes columnTypes) throws IOException {
-				new CSVExporter(assas, filters, columnTypes).export(file);
+					@Override
+					public boolean hasNext() {
+						if (currentIterator.hasNext()) return true;
+						current = current.next();
+						if (!assas.containsKey(current)) return false;
+						currentIterator = new RowIterator(current, assas.get(current), columns);
+						return currentIterator.hasNext();
+					}
+
+					@Override
+					public Row next() {
+						return currentIterator.next();
+					}
+				};
 			}
 
 			@Override
 			public void intoCSV(File file) throws IOException {
-				new CSVExporter(assas, filters, new ColumnTypes()).export(file);
+				new CSVExporter(toIterator(), columns, r -> true).export(file);
 			}
 
 			@Override
-			public void intoARFF(File file, ColumnTypes columnTypes) throws IOException {
-				new ARFFExporter(assas, filters, columnTypes).export(file);
+			public void intoCSV(File file, Select.RowFilter filter) throws IOException {
+				new CSVExporter(toIterator(), columns, filter).export(file);
+			}
+
+			@Override
+			public void intoARFF(File file) throws IOException {
+				new ARFFExporter(toIterator(), columns, r -> true).export(file);
+			}
+
+			@Override
+			public void intoARFF(File file, Select.RowFilter filter) throws IOException {
+				new ARFFExporter(toIterator(), columns, filter).export(file);
 			}
 		};
 	}
@@ -172,24 +202,23 @@ public class Columnar {
 
 		Select from(Timetag timetag) throws IOException;
 
-		FilterOrGet to(Timetag timetag) throws IOException;
+		Into to(Timetag timetag) throws IOException;
 
-		interface FilterOrGet extends Into {
 
-			FilterOrGet filtered(ColumnFilter timetag);
-		}
-
-		interface ColumnFilter extends Predicate<Long> {
-
+		interface RowFilter extends Predicate<Row> {
 		}
 
 		interface Into {
 
-			void intoCSV(File file, ColumnTypes types) throws IOException;
+			Iterator<Row> toIterator();
 
 			void intoCSV(File file) throws IOException;
 
-			void intoARFF(File file, ColumnTypes types) throws IOException;
+			void intoCSV(File file, Select.RowFilter filter) throws IOException;
+
+			void intoARFF(File file) throws IOException;
+
+			void intoARFF(File file, Select.RowFilter filter) throws IOException;
 		}
 	}
 
@@ -225,7 +254,6 @@ public class Columnar {
 		private String nameOf(File file) {
 			return file.getName().substring(0, file.getName().lastIndexOf('.'));
 		}
-
 	}
 
 }

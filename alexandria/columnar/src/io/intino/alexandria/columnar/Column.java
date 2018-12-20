@@ -33,7 +33,8 @@ public class Column {
 	}
 
 	public String map(List<String> values) {
-		return mapper.map(values).toString();
+		Object object = mapper.map(values);
+		return object != null ? object.toString() : null;
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class Column {
 		return name;
 	}
 
-	interface Mapper {
+	public interface Mapper {
 		Object map(List<String> values);
 	}
 

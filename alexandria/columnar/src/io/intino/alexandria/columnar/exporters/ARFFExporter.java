@@ -46,7 +46,7 @@ public class ARFFExporter {
 
 	private String format(Column column, String value) {
 		if (value == null) return NULL_VALUE;
-		if (column.type() instanceof ColumnType.String) return "'" + value + "'";
+		if (column.type() instanceof ColumnType.String || column.type() instanceof ColumnType.Nominal) return "'" + value + "'";
 		else if (column.type() instanceof ColumnType.Date) return "\"" + value + "\"";
 		return value;
 	}
@@ -54,7 +54,7 @@ public class ARFFExporter {
 	private Frame[] attributes() {
 		List<Frame> headers = new ArrayList<>();
 		headers.add(new Frame("attribute").addSlot("name", "id").addSlot("type", new Frame("Numeric")));
-		headers.add(new Frame("attribute").addSlot("name", "timetag").addSlot("type", new Frame("Date").addSlot("format", "yyyyMMddhhmmss")));
+		headers.add(new Frame("attribute").addSlot("name", "timetag").addSlot("type", new Frame("Date").addSlot("format", "yyyyMM")));
 		for (Column column : columns)
 			headers.add(new Frame("attribute").addSlot("name", column).addSlot("type", columnType(column.type())));
 		return headers.toArray(new Frame[0]);
