@@ -31,6 +31,7 @@ import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
+import io.intino.plugin.project.LegioConfiguration;
 import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
 
 public class FullRenderer {
@@ -125,7 +127,7 @@ public class FullRenderer {
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
-		new NessJMXOperationsRenderer(gen, src, packageName, boxName).execute();
+		new NessJMXOperationsRenderer(gen, src, packageName, boxName, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
 	}
 
 	private void slack() {
