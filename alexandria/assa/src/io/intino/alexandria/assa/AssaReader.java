@@ -18,7 +18,7 @@ public class AssaReader implements AssaStream {
 	private int index;
 
 	public AssaReader(File file) throws IOException {
-		this(name(file), new FileInputStream(file));
+		this(name(file), file.exists() ? new FileInputStream(file) : emptyAssaFile());
 	}
 
 	public AssaReader(String name, InputStream inputStream) throws IOException {
@@ -29,6 +29,10 @@ public class AssaReader implements AssaStream {
 		this.size = this.inputStream.readInt();
 		this.entryReader = new EntryReader();
 		if (size == 0) close();
+	}
+
+	private static ByteArrayInputStream emptyAssaFile() {
+		return new ByteArrayInputStream(new byte[]{0, 0, 0, 0, 0, 0, 0, 0});
 	}
 
 	private static String name(File file) {
@@ -92,9 +96,11 @@ public class AssaReader implements AssaStream {
 	}
 
 	class EntryReader {
+
 		private AssaEntry[] data = new AssaEntry[256];
 		private long base = 0;
 		private int index = 0;
+
 		private int count = 0;
 
 		EntryReader() {

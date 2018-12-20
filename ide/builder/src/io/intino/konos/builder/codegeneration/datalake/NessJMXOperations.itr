@@ -22,7 +22,7 @@ def type(operations) !type(interface)
     import io.intino.alexandria.jmx.JMXServer;
     import io.intino.alexandria.logger.Logger;
     import io.intino.ness.core.Datalake.EventStore.MessageHandler;
-    import io.intino.tara.magritte.Graph;
+
 	import $package+validPackage.$box+FirstUpperCase~Box;
 
 	import java.util.Collections;
@@ -34,7 +34,6 @@ def type(operations) !type(interface)
 		private final ReflowAssistant assistant;
 		private int processed = 0;
 		private io.intino.ness.core.Datalake.EventStore.Reflow session;
-		private Graph graph;
 
 		public NessOperations($box+FirstUpperCase~Box box) {
 			this.box = box;

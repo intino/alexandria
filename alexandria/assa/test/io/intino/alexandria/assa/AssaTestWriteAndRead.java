@@ -5,12 +5,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.*;
 
 public class AssaTestWriteAndRead {
 
-	@org.junit.Test
+	@Test
 	public void simple_test() throws IOException {
 		File file = new File("test.assa");
 		AssaBuilder test = new AssaBuilder();
@@ -37,6 +36,12 @@ public class AssaTestWriteAndRead {
 
 		assertFalse(reader.hasNext());
 		file.delete();
+	}
+
+	@Test
+	public void read_not_exiting_file() throws IOException {
+		AssaReader reader = new AssaReader(new File("foo"));
+		assertTrue(!reader.hasNext());
 	}
 
 	@Test

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+
 class RowIterator implements Iterator<Row> {
 	private final Timetag timetag;
 	private final Map<Column, TemporalReader> columns;
@@ -22,9 +24,12 @@ class RowIterator implements Iterator<Row> {
 		long lowestKey = lowestKey();
 		Row row = new Row(lowestKey, timetag);
 		for (Map.Entry<Column, TemporalReader> entry : columns.entrySet()) {
-			if (entry.getValue().current == null || entry.getValue().current.key() != lowestKey) continue;
-			row.put(entry.getKey().name(), entry.getKey().map(entry.getValue().current.value()) + "");
-			entry.getValue().next();
+			if (entry.getValue().current == null || entry.getValue().current.key() != lowestKey)
+				row.put(entry.getKey().name(), entry.getKey().map(emptyList()));
+			else {
+				row.put(entry.getKey().name(), entry.getKey().map(entry.getValue().current.value()));
+				entry.getValue().next();
+			}
 		}
 		advanceReadersWith(lowestKey);
 		return row;
@@ -52,7 +57,7 @@ class RowIterator implements Iterator<Row> {
 
 		TemporalReader(AssaStream reader) {
 			this.reader = reader;
-			current = reader.next();
+			next();
 		}
 
 		void next() {
@@ -64,7 +69,7 @@ class RowIterator implements Iterator<Row> {
 
 				@Override
 				public List<String> value() {
-					return null;
+					return emptyList();
 				}
 			};
 		}
