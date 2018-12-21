@@ -13,19 +13,19 @@ def type(box)
 	import java.util.logging.Level;
 	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
-	$hasREST~import io.intino.konos.alexandria.rest.AlexandriaSpark;][
-    $hasUi+hide~import io.intino.konos.alexandria.ui.displays.Soul;]
+	$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;][
+    $hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
 
-	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.konos.alexandria.Box] {
+	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
 		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
 		$task+field][
         $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
-	    $hasUi+hide~private java.util.List<io.intino.konos.alexandria.ui.UIBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
-		$hasUi+hide~private io.intino.konos.alexandria.ui.services.AuthService authService;][
-		$hasUi+hide~private io.intino.konos.alexandria.ui.services.EditorService editorService;]
+	    $hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
+		$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;][
+		$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -36,6 +36,7 @@ def type(box)
 			this.configuration = configuration;[
 			initLogger();
 			$service+setup...[$NL]]
+			$datalake+setup
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -43,19 +44,19 @@ def type(box)
 		}
 
 		@Override
-		public io.intino.konos.alexandria.Box put(Object o) {
+		public io.intino.alexandria.core.Box put(Object o) {
 			[$hasParent~owner.put(o);]
 			return this;
 		}
 
-		public io.intino.konos.alexandria.Box open() {
+		public io.intino.alexandria.core.Box open() {
 			if (owner != null) owner.open();
 			initLogger();
 			initUI();
 			initRESTServices();
 			initJMXServices();
 			initJMSServices();
-			initDataLake();
+			initDatalake();
 			initTasks();
 			initSlackBots();
 			return this;
@@ -96,10 +97,15 @@ def type(box)
 			$service+ui...[$NL]
 		}
 
-		private void initDataLake() {
+		private void initDatalake() {
 			$dataLake+init...[$NL]
 		}
-
+		[$datalake+hide
+		private io.intino.ness.core.Datalake datalakeFrom(String nessUrl, String nessUser, String nessPassword, String clientId) {
+			if (nessUrl.startsWith("file://")) return new io.intino.alexandria.nessaccessor.local.LocalDatalake(new java.io.File(nessUrl.replace("file://", "")));
+			return new io.intino.alexandria.nessaccessor.tcp.TCPDatalake(nessUrl, nessUser, nessPassword, clientId);
+		}
+		]
 		private void initTasks() {
 			$task+init...[$NL]
 		}
@@ -108,7 +114,7 @@ def type(box)
 			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
-			handler.setFormatter(new io.intino.konos.alexandria.LogFormatter("log"));
+			handler.setFormatter(new io.intino.alexandria.logger.Formatter("log"));
 			logger.setUseParentHandlers(false);
 			logger.addHandler(handler);
 		}
@@ -124,19 +130,23 @@ def type(box)
 end
 
 def trigger(uiBox)
-	io.intino.konos.alexandria.ui.UIBox
+	io.intino.alexandria.ui.AlexandriaUiBox
 end
 
 def type(service & ui) trigger(setup)
 	this.authService = [this.authService($authentication)?null];
 	this.editorService = [this.editorService($edition)?null];
-	[if($parameter != null && !$parameter.isEmpty())][io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
-	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setUI(true);
-	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.addParameters(this.authService, this.editorService);
+	[if($parameter != null && !$parameter.isEmpty())][io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/")];
+	io.intino.alexandria.rest.AlexandriaSparkBuilder.setUI(true);
+	io.intino.alexandria.rest.AlexandriaSparkBuilder.addParameters(this.authService, this.editorService);
 end
 
 def type(service & rest) trigger(setup)
-	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+	io.intino.alexandria.rest.AlexandriaSparkBuilder.setup(Integer.parseInt($parameter), "www/");
+end
+
+def type(datalake) trigger(setup)
+	this.nessAccessor = new io.intino.alexandria.nessaccessor.NessAccessor(datalakeFrom($parameter...[, ]));
 end
 
 def type(service & jmx) trigger(jmx)
@@ -151,15 +161,15 @@ def type(service & slack) trigger(slack)
 end
 
 def type(service & rest) trigger(rest)
-	$name+SnakeCaseToCamelCase+FirstUpperCase~Resources.setup(io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.rest.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
 	logger.info("REST service $name: started!");
 end
 
 def type(service & ui) trigger(ui)
-	[if ($parameter == null || !io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
-	io.intino.konos.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.konos.alexandria.ui.UIAlexandriaSpark) io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance();
-	$name+SnakeCaseToCamelCase+FirstUpperCase~.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-	io.intino.konos.alexandria.ui.UiElements.initDisplays(sparkInstance);
+	[if ($parameter == null || !io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) return;]
+	io.intino.alexandria.ui.UIAlexandriaSpark sparkInstance = (io.intino.alexandria.ui.UIAlexandriaSpark) io.intino.alexandria.rest.AlexandriaSparkBuilder.instance();
+	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.init(sparkInstance, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance);
 	$use...[$NL]
 	sparkInstance.start();
 	logger.info("UI $name: started!");
@@ -189,24 +199,24 @@ def type(service & jms) trigger(jms)
 end
 
 def type(dataLake & requireConnection) trigger(init)
-	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
-	this.ness.connect("$mode");
+	this.nessAccessor.connection().connect("$mode");
 	$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 	registerFeeders();
 	$nessOperations
-	if (this.ness.session() != null) logger.info("Ness connection: started!");
+	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
+		logger.info("Ness connection: started!");
 end
 
 
 def type(dataLake) trigger(init)
-	this.ness = new io.intino.konos.datalake.Ness($parameter...[, ]);
 	java.lang.Thread thread = new java.lang.Thread(() -> {
-		this.ness.connect("$mode");
+		this.nessAccessor.connection().connect("$mode");
 		$package+validPackage.datalake.Datalake.registerTanks(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 		registerFeeders();
 		$nessOperations
-		if (this.ness.session() != null) logger.info("Ness connection: started!");
-	}, "ness init");
+		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
+			logger.info("Ness connection: started!");
+	}, "ness accessor init");
 	try {
 		thread.start();
 		thread.join(10000);
@@ -251,11 +261,11 @@ def trigger(mode)
 end
 
 def type(service & jmx) trigger(field)
-	private io.intino.konos.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
+	private io.intino.alexandria.jmx.JMXServer $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & slack) trigger(field)
-	private io.intino.konos.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
+	private io.intino.alexandria.slack.Bot $name+SnakeCaseToCamelCase+firstlowerCase;
 end
 
 def type(service & jms) trigger(field)
@@ -263,11 +273,11 @@ def type(service & jms) trigger(field)
 end
 
 def type(task) trigger(field)
-	private io.intino.konos.scheduling.KonosTasker tasker = new io.intino.konos.scheduling.KonosTasker();
+	private io.intino.alexandria.scheduler.AlexandriaScheduler scheduler = new io.intino.alexandria.scheduler.AlexandriaScheduler();
 end
 
 def type(dataLake) trigger(field)
-	private io.intino.konos.datalake.Ness ness;
+	private io.intino.alexandria.nessaccessor.NessAccessor nessAccessor;
 end
 
 def type(service & jms) trigger(getter)
@@ -277,12 +287,12 @@ def type(service & jms) trigger(getter)
 end
 
 def type(dataLake) trigger(getter)
-	public io.intino.konos.datalake.Ness datalake() {
-		return this.ness;
+	public io.intino.alexandria.nessaccessor.NessAccessor nessAccessor() {
+		return this.nessAccessor;
 	}
 
-	public io.intino.konos.datalake.Feeders feeders() {
-		return io.intino.konos.datalake.Feeders.get();
+	public io.intino.alexandria.core.Feeders feeders() {
+		return io.intino.alexandria.core.Feeders.get();
 	}
 
 	public void registerFeeders() {
@@ -291,7 +301,7 @@ def type(dataLake) trigger(getter)
 end
 
 def trigger(feeder)
-	io.intino.konos.datalake.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
+	io.intino.alexandria.core.Feeders.get().register(new $package+validPackage.datalake.feeders.$name+FirstUpperCase(($box+FirstUpperCase~Box)this));
 end
 
 def type(service & slack) trigger(getter)
@@ -304,7 +314,7 @@ def type(service) trigger(getter)
 end
 
 def trigger(spark)
-	io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
+	io.intino.alexandria.rest.AlexandriaSparkBuilder.instance().stop();
 end
 
 def type(service) type(jms) trigger(quit)
@@ -312,7 +322,7 @@ def type(service) type(jms) trigger(quit)
 end
 
 def type(dataLake) trigger(quit)
-	if (ness != null) ness.disconnect();
+	if (nessAccessor != null) nessAccessor.connection().disconnect();
 end
 
 def type(service) trigger(quit)
@@ -322,23 +332,23 @@ def type(service)
 end
 
 def type(task) trigger(init)
-	Tasks.init(this.tasker, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
+	Tasks.init(this.scheduler, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
 end
 
 def type(task) trigger(getter)
-	public io.intino.konos.scheduling.KonosTasker tasker() {
-		return this.tasker;
+	public io.intino.alexandria.scheduler.AlexandriaScheduler scheduler() {
+		return this.scheduler;
 	}
 end
 
 def trigger(authservice)
-	protected abstract io.intino.konos.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
+	protected abstract io.intino.alexandria.ui.services.AuthService authService(java.net.URL authServiceUrl);
 end
 
 def trigger(editorService)
-	protected abstract io.intino.konos.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);
+	protected abstract io.intino.alexandria.ui.services.EditorService editorService(java.net.URL editorServiceUrl);
 
-	public io.intino.konos.alexandria.ui.services.EditorService editorService() {
+	public io.intino.alexandria.ui.services.EditorService editorService() {
 		return this.editorService;
 	}
 end
@@ -364,7 +374,7 @@ def trigger(registerSoul)
 			if (uiSouls.size() <= 0) notifySoulsClosed();
 		}
 
-		public void onSoulsClosed(io.intino.konos.alexandria.ui.UIBox.SoulsClosed listener) {
+		public void onSoulsClosed(io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed listener) {
 			[if (owner != null) (($parent~Box) owner).onSoulsClosed(listener);]
 			this.soulsClosedListeners.add(listener);
 		}

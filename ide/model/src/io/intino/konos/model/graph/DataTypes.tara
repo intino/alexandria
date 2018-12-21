@@ -32,7 +32,7 @@ Facet Type on Data
 		var string type = "java.lang.Enum" is reactive private
 		var string[] values;
 	sub File
-		var string type = "io.intino.konos.alexandria.schema.Resource" is reactive private
+		var string type = "io.intino.alexandria.Resource" is reactive private
 		var word:{body path form header query} in = form
 	sub Object
 		var Schema schema
@@ -48,7 +48,7 @@ Concept Schema
 	!! AttributeMap is able to gather all parameters that are unknown when defining the schema. This can be consulted on runtime in the Action classes
 	Concept:{0..1} AttributeMap
 	!! Attribute of the member
-	Concept:Named Attribute extends Data
+	Concept:Named:RequiresFacet Attribute extends Data
 		var boolean isRequired = true
 	has Schema
 

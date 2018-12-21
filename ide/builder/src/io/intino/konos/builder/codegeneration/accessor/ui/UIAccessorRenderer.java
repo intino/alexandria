@@ -199,6 +199,7 @@ public class UIAccessorRenderer {
 		if (r.isType()) frame.addTypes("parameter");
 		if (r.isAddressable()) {
 			AddressableRequest addressableRequest = r.asAddressable();
+			if (addressableRequest.listenForChanges()) frame.addTypes("listenForChanges");
 			frame.addSlot("routePath", routePathFrame(r));
 			frame.addSlot("value", addressableRequest.addressableResource().path());
 		}

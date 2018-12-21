@@ -1,10 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
-import org.siani.itrules.*;
+import org.siani.itrules.LineSeparator;
+import org.siani.itrules.Template;
 
 import java.util.Locale;
 
-import static org.siani.itrules.LineSeparator.*;
+import static org.siani.itrules.LineSeparator.LF;
 
 public class AbstractDialogTemplate extends Template {
 
@@ -18,7 +19,7 @@ public class AbstractDialogTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "dialogDisplay"))).add(literal("package ")).add(mark("package")).add(literal(".dialogs;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box;\nimport io.intino.konos.alexandria.ui.model.Dialog;\nimport io.intino.konos.alexandria.ui.displays.DialogValidator;\nimport io.intino.konos.alexandria.ui.displays.AlexandriaDialog;\nimport io.intino.konos.alexandria.ui.displays.AlexandriaDialogNotifier;\n\nimport java.util.Arrays;\n\npublic abstract class Abstract")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal(" extends AlexandriaDialog {\n\n\tpublic Abstract")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box box) {\n        super(box, buildDialog(box));\n    }\n\n    private static Dialog buildDialog(")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box box) {\n        Dialog dialog = new Dialog();\n        ")).add(mark("dialog")).add(literal("\n        return dialog;\n    }\n}")),
+				rule().add((condition("type", "dialogDisplay"))).add(literal("package ")).add(mark("package")).add(literal(".dialogs;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box;\nimport io.intino.alexandria.ui.model.Dialog;\nimport io.intino.alexandria.ui.displays.DialogValidator;\nimport io.intino.alexandria.ui.displays.AlexandriaDialog;\nimport io.intino.alexandria.ui.displays.AlexandriaDialogNotifier;\n\nimport java.util.Arrays;\n\npublic abstract class Abstract")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal(" extends AlexandriaDialog {\n\n\tpublic Abstract")).add(mark("name", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box box) {\n        super(box, buildDialog(box));\n    }\n\n    private static Dialog buildDialog(")).add(mark("box", "SnakeCaseToCamelCase", "firstUpperCase")).add(literal("Box box) {\n        Dialog dialog = new Dialog();\n        ")).add(mark("dialog")).add(literal("\n        return dialog;\n    }\n}")),
 			rule().add((condition("type", "dialog"))).add(expression().add(literal("dialog.name(\"")).add(mark("name")).add(literal("\");"))).add(literal("\n")).add(expression().add(literal("dialog.label(\"")).add(mark("label")).add(literal("\");"))).add(literal("\n")).add(expression().add(literal("dialog.description(\"")).add(mark("description")).add(literal("\");"))).add(expression().add(literal("\n")).add(mark("operation").multiple("\n"))).add(literal("\n")).add(mark("tab").multiple("\n")),
 			rule().add((condition("type", "tab"))).add(literal("Dialog.Tab w")).add(mark("name", "SnakeCaseToCamelCase")).add(literal(" = dialog.createTab(\"")).add(mark("label")).add(literal("\");\n")).add(mark("input").multiple("\n")),
 			rule().add((condition("trigger", "operation"))).add(literal("dialog.toolbar().createOperation().name(\"")).add(mark("name")).add(literal("\")")).add(expression().add(literal(".label(\"")).add(mark("label")).add(literal("\")"))).add(literal(".closeAfterExecution(")).add(mark("closeAfterExecution")).add(literal(").execute((operation, session) -> ")).add(mark("dialog", "FirstUpperCase")).add(literal(".Toolbar.")).add(mark("execution")).add(literal("(box, dialog, operation, session));")),

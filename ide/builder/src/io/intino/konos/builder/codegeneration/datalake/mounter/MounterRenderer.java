@@ -1,6 +1,5 @@
 package io.intino.konos.builder.codegeneration.datalake.mounter;
 
-import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
-import static io.intino.konos.builder.helpers.Commons.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class MounterRenderer {
@@ -31,25 +29,20 @@ public class MounterRenderer {
 
 	public void execute() {
 		for (Mounter mounter : mounters) {
-			final String name = composedName(mounter);
 			final Frame frame = new Frame().addTypes("mounter").
 					addSlot("box", boxName).
 					addSlot("package", packageName).
-					addSlot("name", name);
+					addSlot("name", mounter.name());
 			if (mounter.schema() != null) {
 				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
 				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", mounter.schema().name$()));
 			} else frame.addSlot("type", "message");
 			final File destination = new File(src, "datalake/mounters");
-			final String handlerName = name + "Mounter";
+			final String handlerName = mounter.name() + "Mounter";
 			classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datalake.mounters." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
 				writeFrame(destination, handlerName, customize(MounterTemplate.create()).format(frame));
 		}
-	}
-
-	private String composedName(Mounter mounter) {
-		return firstUpperCase((mounter.subdomain().isEmpty() ? "" : Formatters.snakeCaseToCamelCase().format(mounter.subdomain().replace(".", "_"))) + firstUpperCase(mounter.name()));
 	}
 
 	private boolean alreadyRendered(File destination, String action) {

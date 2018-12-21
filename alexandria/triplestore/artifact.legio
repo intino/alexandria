@@ -1,11 +1,12 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.0.0") alexandria-triplestore
+Artifact("io.intino.alexandria", "1.0.3") triplestore
 	Imports
-		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+		Compile("io.intino.alexandria", "logger", "1.0.0")
+		Test("junit", "junit", "LATEST")
 
-	Package(mode = ModulesAndLibrariesLinkedByManifest)
-	Distribution(release = intino.release)
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
 
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-libraries") release

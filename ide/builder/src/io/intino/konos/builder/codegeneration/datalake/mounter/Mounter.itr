@@ -19,7 +19,7 @@ def type(schemaImport)
 end
 
 def attribute(message) trigger(typeClass)
-	io.intino.ness.inl.Message
+	io.intino.alexandria.inl.Message
 end
 
 def type(schema) trigger(typeClass)

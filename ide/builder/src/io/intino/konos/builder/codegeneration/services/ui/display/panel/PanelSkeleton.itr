@@ -1,9 +1,9 @@
 def type(panel)
 	package $package.displays;
 
-	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplay;
-	import io.intino.konos.alexandria.ui.displays.CatalogInstantBlock;
-    import io.intino.konos.alexandria.ui.services.push.UISession;
+	import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+	import io.intino.alexandria.ui.displays.CatalogInstantBlock;
+    import io.intino.alexandria.ui.services.push.UISession;
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import java.util.function.Consumer;

@@ -1,0 +1,13 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.3") zim
+	Imports
+		Compile("io.intino.alexandria", "inl", "1.0.3")
+		Compile("io.intino.alexandria", "logger", "1.0.0")
+		Test("junit", "junit", "4.12")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.releases)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-libraries") releases

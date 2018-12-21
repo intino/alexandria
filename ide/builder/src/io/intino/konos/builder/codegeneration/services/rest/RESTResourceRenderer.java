@@ -143,10 +143,18 @@ public class RESTResourceRenderer {
 	private Frame parameter(Parameter parameter) {
 		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
 		if (parameter.isList()) parameterFrame.addTypes("List");
-		return parameterFrame
+		parameterFrame
 				.addSlot("name", parameter.name$())
 				.addSlot("parameterType", parameterType(parameter))
 				.addSlot("in", parameter.in().name());
+		if (parameter.isRequired()) return parameterFrame;
+		if (parameter.isBool()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asBool().defaultValue());
+		else if (parameter.isText()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asText().defaultValue());
+		else if (parameter.isReal()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asReal().defaultValue());
+		else if (parameter.isInteger()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asInteger().defaultValue());
+		else if (parameter.isLongInteger())
+			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asLongInteger().defaultValue());
+		return parameterFrame;
 	}
 
 	private Frame parameter(Notification.Parameter parameter) {

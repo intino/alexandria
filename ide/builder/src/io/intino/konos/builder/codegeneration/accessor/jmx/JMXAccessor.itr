@@ -3,9 +3,9 @@ def type(accessor)
 
     import java.util.List;
     import java.util.ArrayList;
-	import io.intino.konos.alexandria.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.jmx.JMXClient;
 	import $package+ValidPackage.jmx.$name+validName+firstUpperCase~MBean;
-    import io.intino.konos.jmx.JMXClient;
 
 	$schemaImport
 

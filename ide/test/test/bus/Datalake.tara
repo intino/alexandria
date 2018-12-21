@@ -9,36 +9,6 @@ Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", use
 	Mounter(schema=IdentityEnableManager)
 	Mounter(schema=IdentityDisableManager)
 
-	Mounter(schema=BusinessUnitApprove)
-	Mounter(schema=BusinessUnitReject)
-
-	Mounter(schema=WorkerRegister)
-	Mounter(schema=AgentDelete)
-
-	Mounter(schema=CredentialRegister)
-	Mounter(schema=CredentialDelete)
-	Mounter(schema=CredentialApprove)
-	Mounter(schema=CredentialReject)
-	Mounter(schema=CredentialRemember)
-	Mounter(schema=CredentialRememberApprove)
-	Mounter(schema=CredentialRememberReject)
-	Mounter(schema=CredentialSave)
-	Mounter(schema=CredentialSavePassword)
-	Mounter(schema=CredentialLogin)
-	Mounter(schema=CredentialLoginUsingToken)
-	Mounter(schema=CredentialLogout)
-
-	Mounter(schema=TaskEditionRegister)
-	Mounter(schema=TaskDocumentSignatureRegister)
-	Mounter(schema=TaskDocumentEditionRegister)
-	Mounter(schema=TaskDecisionRegister)
-	Mounter(schema=TaskCoordinatorRegister)
-	Mounter(schema=TaskComplete)
-	Mounter(schema=TaskAllocate)
-	Mounter(schema=TaskRelease)
-	Mounter(schema=TaskCancel)
-	Mounter(schema=TaskPriority)
-	Mounter(schema=TaskSign)
 
 	Mounter(schema=CapabilityAssign)
 	Mounter(schema=CapabilityRelease)
@@ -54,7 +24,22 @@ Client(clientID = "amidas", domain = "amidas.v4") as Ness(url = "{nessUrl}", use
 	Feeder(eexMasterDataUnit)
 	Feeder(actualGeneration)
 
+	Mounter(schema = empty) dialog
+	Mounter(schema = empty) survey
+	Mounter(schema = empty) revocation
+	Mounter(schema = AddGoal) addgoal
+	Mounter(schema = RemoveGoal) removeGoal
 
+
+
+Schema AddGoal
+	Attribute ts as DateTime
+	Attribute area as Text
+	Attribute goal as Real
+
+Schema RemoveGoal
+	Attribute ts as DateTime
+	Attribute area as Text
 
 
 Schema dayAheadReport

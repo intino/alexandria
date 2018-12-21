@@ -1,4 +1,4 @@
-import io.intino.konos.jmx.JMXServer;
+import io.intino.alexandria.jmx.JMXServer;
 
 import java.util.Collections;
 

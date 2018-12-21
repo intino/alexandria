@@ -21,7 +21,7 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.UIResourcesRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
@@ -127,8 +127,7 @@ public class FullRenderer {
 		new MounterRenderer(graph, src, packageName, boxName, classes).execute();
 		new FeederRenderer(graph, gen, src, packageName, boxName, classes).execute();
 		new DatalakeRenderer(graph, gen, packageName, boxName).execute();
-		if (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)
-			new NessJMXOperationsRenderer(gen, src, packageName, boxName, classes).execute();
+		new NessJMXOperationsRenderer(gen, src, packageName, boxName, (module != null && safe(() -> ((LegioConfiguration) configurationOf(module)).graph().artifact().asLevel().model()) != null)).execute();
 	}
 
 	private void slack() {
@@ -141,7 +140,7 @@ public class FullRenderer {
 		new DialogsRenderer(graph, gen, packageName, boxName).execute();
 		new DialogRenderer(graph, src, gen, packageName, boxName, classes).execute();
 		new ResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new UIResourcesRenderer(graph, gen, packageName, boxName).execute();
+		new UIServiceRenderer(graph, gen, packageName, boxName).execute();
 		new UIAccessorCreator(module, graph, parent).execute();
 	}
 

@@ -3,20 +3,20 @@ def type(resource & accessibleDisplay)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~ProxyAction;
-	import io.intino.konos.alexandria.exceptions.AlexandriaException;
-	import io.intino.konos.alexandria.exceptions.Unauthorized;
-	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
-	import io.intino.konos.alexandria.ui.displays.Soul;
-	import io.intino.konos.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
-	import io.intino.konos.alexandria.ui.services.push.UIClient;
-	import io.intino.konos.alexandria.ui.services.push.UISession;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.exceptions.Unauthorized;
+	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.Soul;
+	import io.intino.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
+	import io.intino.alexandria.ui.services.push.UIClient;
+	import io.intino.alexandria.ui.services.push.UISession;
 
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~ProxyResource extends io.intino.konos.alexandria.ui.spark.resources.ProxyResource {
+	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -90,18 +90,18 @@ def type(resource)
 
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.actions.$name+firstUpperCase~Action;
-	import io.intino.konos.alexandria.exceptions.AlexandriaException;
-	import io.intino.konos.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
 
 	import java.util.Base64;
 	import java.util.UUID;
 	import java.util.function.Consumer;
 	import java.util.function.Function;
 
-	public class $name+firstUpperCase~Resource extends io.intino.konos.alexandria.ui.spark.resources.[$editor]Resource {
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.konos.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -140,7 +140,7 @@ def type(resource)
 				if (client.soul() != null)
 					return false;
 
-				io.intino.konos.alexandria.ui.displays.Soul soul = action.prepareSoul(client);
+				io.intino.alexandria.ui.displays.Soul soul = action.prepareSoul(client);
 				soul.onRedirect((location) -> manager.redirect(location));
 				soul.addRegisterDisplayListener(display -> {
 					display.inject(notifier(action.session, client, display));
@@ -155,9 +155,9 @@ def type(resource)
 				return true;
 			});
 
-			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.konos.alexandria.ui.services.push.UIClient>() {
+			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.alexandria.ui.services.push.UIClient>() {
 				@Override
-				public void accept(io.intino.konos.alexandria.ui.services.push.UIClient client) {
+				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
 					box.soul(client.id()).ifPresent(s -> s.destroy());
 					box.unRegisterSoul(client.id());
 					manager.unRegister(client);

@@ -1,25 +1,47 @@
 <link rel="import" href="../../../../lib/polymer/polymer.html">
 <link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
 <link rel="import" href="../../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../../lib/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../../lib/iron-resizable/iron-resizable-behavior.html">
 
 <dom-module id="alexandria-catalog-sorting">
 
     <template>
-        <ul class="layout horizontal sortings">
-            <template is="dom-repeat" items="[[sortingList]]" as="sorting">
-                <li name$="[[sorting.name]]" mode$="[[sorting.mode]]" class$="layout horizontal sorting [[sorting.name]]">
-                    <a class="label" on-tap="_selectSorting">[[sorting.label]]</a>
-                    <iron-icon class="Ascendant" icon="arrow-drop-up"></iron-icon>
-                    <iron-icon class="Descendant" icon="arrow-drop-down"></iron-icon>
-                </li>
-            </template>
-        </ul>
+        <div class="layout horizontal center">
+            <div class="title">[[Sortings]]</div>
+            <ul id="sortingList" class="layout horizontal sortings">
+                <template is="dom-repeat" items="[[sortingList]]" as="sorting">
+                    <li name$="[[sorting.name]]" mode$="[[sorting.mode]]" class$="layout horizontal sorting [[sorting.name]]">
+                        <a class="label" on-tap="_selectSorting">[[sorting.label]]</a>
+                        <iron-icon class="Ascendant" icon="arrow-drop-up"></iron-icon>
+                        <iron-icon class="Descendant" icon="arrow-drop-down"></iron-icon>
+                    </li>
+                </template>
+            </ul>
+            <paper-dropdown-menu id="sortingListCombo" placeholder="[[SelectSorting]]" no-label-float>
+                <paper-listbox class="dropdown-content" selected="{{selectedSorting.name}}" attr-for-selected="name">
+                    <template is="dom-repeat" items="[[sortingList]]" as="sorting">
+                        <paper-item name$="[[sorting.name]]" mode="Ascendant" class$="sorting [[sorting.name]]" on-tap="_selectSorting">[[sorting.label]]</paper-item>
+                    </template>
+                </paper-listbox>
+            </paper-dropdown-menu>
+        </div>
     </template>
 
     <style>
+        :host {
+            display: block;
+            width: 100%;
+        }
+        :host .title {
+            color: #888;
+            font-size: 9pt;
+            margin-left: 13px;
+            white-space: nowrap;
+        }
         :host .sortings {
-            margin: 0;
             padding: 0;
+            margin: 0 0 0 15px;
             list-style: none;
         }
         :host .sorting {
@@ -53,13 +75,69 @@
         :host .sorting[mode=Ascendant] a, :host .sorting[mode=Descendant] a {
             padding: 4px 0 4px 10px;
         }
+        :host .mode {
+            font-size: 7pt;
+            margin-left: 4px;
+            margin-top: 8px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        :host paper-dropdown-menu {
+            display: none;
+            margin-left: 20px;
+            width: calc(100% - 20px);
+            --paper-input-container : {
+                padding: 0;
+                width: 100%;
+            };
+            --paper-input-container-input : {
+                font-size: 10pt;
+            };
+            --paper-input-container-underline: { display: none; };
+            --paper-input-container-underline-disabled: { display: none; };
+            --paper-input-container-underline-focus: { display: none; };
+            --paper-dropdown-menu-ripple : {
+                height: 100%;
+                top: 0 !important;
+            };
+        }
+        :host paper-listbox {
+            background: white;
+            height: 200px;
+            overflow: auto;
+            width: 250px;
+        }
+        :host paper-item {
+            font-size: 10pt;
+        }
+        @media screen and (max-width: 1024px) {
+            :host #sortingList {
+                display: none;
+            }
+            :host #sortingListCombo {
+                display: block;
+            }
+        }
+        @media screen and (max-width: 512px) {
+            :host .title {
+                display: none;
+            }
+        }
     </style>
 
     <script>
         const AlexandriaCatalogSortingDictionary = {
             es: {
+                Sortings : "mostrar primero",
+                SelectSorting : "mostrar primero...",
+                Ascendant : "ascendente",
+                Descendant : "descendente"
             },
             en: {
+                Sortings : "show first",
+                SelectSorting : "show first...",
+                Ascendant : "ascendant",
+                Descendant : "descendant"
             }
         };
 
@@ -71,7 +149,9 @@
                 selectedSorting: { type: Object, observer: '_refreshSelected' }
             },
 
-            behaviors: [CottonBehaviors.TranslatorBehavior],
+            behaviors: [ CottonBehaviors.TranslatorBehavior, Polymer.IronResizableBehavior ],
+
+            listeners : { 'iron-resize' : '_refreshVisibleSelector' },
 
             attached: function () {
                 this.translate(AlexandriaCatalogSortingDictionary);
@@ -80,20 +160,27 @@
             _refreshSelected : function() {
                 window.setTimeout(() => {
                     this.querySelectorAll(".sorting").forEach(sorting => sorting.removeAttribute("active"));
-                if (this.selectedSorting == null) return;
-                var selected = this.querySelector(".sorting." + this.selectedSorting.name);
-                if (selected != null) selected.setAttribute("active", "true");
-            }, 100);
+                    if (this.selectedSorting == null) return;
+                    var selected = this.querySelector(".sorting." + this.selectedSorting.name);
+                    if (selected != null) selected.setAttribute("active", "true");
+                }, 100);
+                this._refreshVisibleSelector();
             },
 
             _selectSorting : function(event) {
-                var element = $(event.target).parent(".sorting").get(0);
+                var element = $(event.target).hasClass("sorting") ? event.target : $(event.target).parent(".sorting").get(0);
                 var name = element.getAttribute("name");
                 var mode = element.getAttribute("mode");
                 if (mode == "Ascendant" || mode == "") mode = "Descendant";
                 else mode = "Ascendant";
                 element.setAttribute("mode", mode);
                 this.fire("select-sorting", { name: name, mode: mode });
+            },
+
+            _refreshVisibleSelector : function() {
+                let notEnoughSpace = $(this).width() <= this.sortingList.length * 135;
+                this.$.sortingList.style.display = notEnoughSpace ? "none" : "flex";
+                this.$.sortingListCombo.style.display = notEnoughSpace ? "block" : "none";
             }
 
         });

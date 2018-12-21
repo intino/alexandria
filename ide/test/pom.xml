@@ -22,24 +22,19 @@
         <directory>../../out/build/builder-test</directory>
     </build>
 
+    <repositories>
+        <repository>
+            <id>intino-maven</id>
+            <name>intino-maven-releases</name>
+            <url>https://artifactory.intino.io/artifactory/releases</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>io.intino.konos</groupId>
             <artifactId>builder</artifactId>
-            <version>[4.1.7, 5.0.0]</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>model</artifactId>
-            <scope>test</scope>
-            <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>5.0.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -52,7 +47,7 @@
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
             <scope>test</scope>
-            <version>2.1.8</version>
+            <version>2.1.9</version>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware</groupId>
@@ -73,50 +68,69 @@
         </dependency>
         <dependency>
             <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-ui</artifactId>
-            <version>[1.0.0,2.0.0)</version>
+            <artifactId>model</artifactId>
+            <scope>test</scope>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-jmx</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-scheduler</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-jms</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-ness-accessor</artifactId>
-            <version>[2.0.0, 3.0.0)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-slack</artifactId>
-            <version>[1.0.0, 2.0.0)</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-rest</artifactId>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>ui-framework</artifactId>
             <version>LATEST</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.intino.konos</groupId>
-            <artifactId>alexandria-rest-accessor-java</artifactId>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>jmx</artifactId>
             <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>core-framework</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>scheduler-framework</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>jms</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>ness-accessor</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>slack-framework</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>rest</artifactId>
+            <version>LATEST</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.intino.alexandria</groupId>
+            <artifactId>rest-accessor</artifactId>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

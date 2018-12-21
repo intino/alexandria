@@ -1,9 +1,10 @@
 def type(scheduled)
 	package $package+ValidPackage.scheduling;
 
-	import org.quartz.*;
+	import org.quartz.JobExecutionContext;
+    import org.quartz.JobExecutionException;
 	import $package+ValidPackage.$box+FirstUpperCase~Box;
-	import io.intino.konos.scheduling.ScheduledTrigger;
+	import io.intino.alexandria.scheduler.ScheduledTrigger;
 
 	public class $name+firstUpperCase~Task implements ScheduledTrigger {
 
