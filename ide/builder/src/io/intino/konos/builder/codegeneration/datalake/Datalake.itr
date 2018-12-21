@@ -1,61 +1,90 @@
 def type(tanks)
 	package $package+validPackage.datalake;
 
-	import io.intino.konos.jms.TopicConsumer;
-	import io.intino.konos.jms.TopicProducer;
-	import io.intino.konos.datalake.Ness;
-	import io.intino.konos.jms.Consumer;
-	import io.intino.konos.jms.Bus;
-    import org.apache.activemq.ActiveMQConnection;
-    import org.apache.activemq.advisory.DestinationListener;
-	import org.apache.activemq.advisory.DestinationSource;
-	import org.apache.activemq.command.ActiveMQTopic;
-	import $package+validPackage.$box+firstUpperCase~Box;
-	import $package+validPackage.$box+firstUpperCase~Configuration;
+	import io.intino.alexandria.logger.Logger;
+    import io.intino.alexandria.nessaccessor.NessAccessor;
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import io.intino.ness.core.Datalake.EventStore.MessageHandler;
+
 	[$tankImport]
-	import javax.jms.JMSException;
-	import javax.jms.Message;
+
     import java.util.ArrayList;
+    import java.util.HashMap;
     import java.util.List;
     import java.util.Map;
-    import java.util.HashMap;
+    import java.util.function.Predicate;
 
 	public class Datalake {
+		private static Map<String, MessageHandler> handlers = new HashMap<>();
 		$tank+field...[$NL]
 
 		public static void registerTanks($box+firstUppercase~Box box) {
 			final String clientID = $clientId;
+			io.intino.ness.core.Datalake.EventStore eventStore = box.nessAccessor().eventStore();
 			$tank+assign...[$NL]
 			$tank+subscribe...[$NL]
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> all() {
-			List<io.intino.konos.datalake.Datalake.Tank> tanks = new ArrayList<>();
+		public static List<TankAccessor> tanks() {
+			List<TankAccessor> tanks = new ArrayList<>();
 			$tank+add...[$NL]
 			return tanks;
 		}
 
-		public static List<io.intino.konos.datalake.Datalake.Tank> byName(List<String> names) {
-			return all().stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
+		public static Map<String, io.intino.ness.core.Datalake.EventStore.MessageHandler> handlers() {
+			return handlers;
 		}
 
-		public static io.intino.konos.datalake.Datalake.Tank byName(String type) {
-			return all().stream().filter(t -> type.equals(t.name())).findFirst().orElse(null);
+		public static List<TankAccessor> byName(List<String> names) {
+			return tanks().stream().filter(t -> names.contains(t.name())).collect(java.util.stream.Collectors.toList());
+		}
+
+		public static TankAccessor byName(String type) {
+			return tanks().stream().filter(t -> type.equals(t.name())).findFirst().orElse(null);
+		}
+
+		public static void unsubscribeAll(NessAccessor accessor) {
+			$tank+unsubscribe...[$NL]
 		}
 
 		$tank+getter...[$NL$NL]
 
 		$tank+class...[$NL$NL]
 
-		public static void unregister() {
-			$tank+unregister...[$NL]
-		}
+		public static class TankAccessor {
+			protected final $box+firstUppercase~Box box;
+			private final NessAccessor accessor;
+			private final io.intino.ness.core.Datalake.EventStore.Tank tank;
 
-		private static boolean isRegisterOnly(Message message) {
-			try {
-				return message.getBooleanProperty(io.intino.konos.datalake.Datalake.REGISTER_ONLY);
-			} catch (JMSException e) {
-				return false;
+			TankAccessor($box+firstUppercase~Box box, io.intino.ness.core.Datalake.EventStore.Tank tank) {
+				this.box = box;
+				this.accessor = box.nessAccessor();
+				this.tank = tank;
+			}
+
+			public String name() {
+				return tank.name();
+			}
+
+			public io.intino.alexandria.zim.ZimStream content() {
+				return tank.content();
+			}
+
+			public io.intino.alexandria.zim.ZimStream content(Predicate<io.intino.alexandria.Timetag> predicate) {
+				return tank.content(predicate);
+			}
+
+			public void feed(io.intino.alexandria.inl.Message... messages) {
+				if (accessor.eventStore() instanceof io.intino.alexandria.nessaccessor.tcp.TCPEventStore)
+					((io.intino.alexandria.nessaccessor.tcp.TCPEventStore) accessor.eventStore()).feed(tank.name(), messages);
+			}
+
+			public void send(io.intino.alexandria.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
+				io.intino.ness.core.memory.MemoryStage stage = new io.intino.ness.core.memory.MemoryStage();
+				io.intino.ness.core.sessions.EventSession session = stage.createEventSession();
+				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, messages);
+				session.close();
+				accessor.push(stage);
 			}
 		}
 	}
@@ -69,30 +98,35 @@ def trigger(clientId)
 	"$value"
 end
 
-def type(tank) trigger(unregister)
-	$name+firstLowerCase.unregister();
-end
-
 def type(tank) trigger(field)
-	private static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase;
+	private static TankAccessor $name+firstLowerCase~Accessor;
 end
 
 def type(tank) trigger(assign)
-	$name+firstLowerCase = box.datalake().add("$messageType+lowerCase");
-end
-
-def type(tank) trigger(add)
-	tanks.add(Datalake.$name+firstLowerCase);
-end
-
-def type(tank) trigger(getter)
-	public static io.intino.konos.datalake.Datalake.Tank $name+firstLowerCase() {
-		return Datalake.$name+firstLowerCase;
-	}
+	$name+firstLowerCase~Accessor = new $name+firstUpperCase~Accessor(box, eventStore.tank("$fullname"));
 end
 
 def type(tank) type(mounter | input) trigger(subscribe)
-	$name+firstLowerCase.handler(new $name+FirstUpperCase~Handler(box)).flow(clientID != null ? clientID + "-$name+lowerCase" : null);
+	handlers.put("$messageType", (MessageHandler) $name+firstLowerCase~Accessor);
+	eventStore.subscribe($name+firstLowerCase~Accessor.tank).using(clientID != null ? clientID + "-$messageType" : null, handlers.get("$messageType"));
+end
+
+def type(tank) trigger(unsubscribe)
+	accessor.eventStore().unsubscribe($name+firstLowerCase~Accessor.tank);
+end
+
+def type(tank) trigger(add)
+	tanks.add(Datalake.$name+firstLowerCase~Accessor);
+end
+
+def type(tank) trigger(addHandler)
+	tanks.put("$name", new $name+snakeCaseToCamelCase+FirstUpperCase~Handler(box));
+end
+
+def type(tank) trigger(getter)
+	public static TankAccessor $name+firstLowerCase() {
+		return Datalake.$name+firstLowerCase~Accessor;
+	}
 end
 
 def type(custom) trigger(replace)
@@ -104,40 +138,47 @@ def trigger(formatMessage)
 end
 
 def type(tank & mounter) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
-		private final $box+firstUppercase~Box box;
+	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Accessor extends TankAccessor implements MessageHandler {
 
-		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
-			this.box = box;
+		public $name+snakeCaseToCamelCase+FirstUpperCase~Accessor($box+firstUppercase~Box box, io.intino.ness.core.Datalake.EventStore.Tank tank) {
+			super(box, tank);
 		}
 
-		public void handle(io.intino.ness.inl.Message m) {
+		public void handle(io.intino.alexandria.inl.Message m) {
 			try {
 				$name+snakeCaseToCamelCase+FirstUpperCase~Mounter mounter = new $name+snakeCaseToCamelCase+FirstUpperCase~Mounter();
 				mounter.box = box;
 				mounter.$type+typeName = $type+load;
 				mounter.execute();
 			} catch(Throwable e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				Logger.error(e);
 			}
 		}
 	}
 end
 
 def type(tank & input) trigger(class)
-	public static class $name+snakeCaseToCamelCase+FirstUpperCase~Handler implements io.intino.konos.datalake.MessageHandler {
-		private final $box+firstUppercase~Box box;
+	public static class $messageType+snakeCaseToCamelCase+FirstUpperCase~Accessor extends TankAccessor implements MessageHandler {
 
-		public $name+snakeCaseToCamelCase+FirstUpperCase~Handler($box+firstUppercase~Box box) {
-			this.box = box;
+		public $messageType+snakeCaseToCamelCase+FirstUpperCase~Accessor($box+firstUppercase~Box box, io.intino.ness.core.Datalake.EventStore.Tank tank) {
+			super(box, tank);
 		}
 
-		public void handle(io.intino.ness.inl.Message m) {
+		public void handle(io.intino.alexandria.inl.Message m) {
 			try {
 				$handler...[$NL]
 			} catch(Throwable e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				Logger.error(e);
 			}
+		}
+	}
+end
+
+def type(tank) trigger(class)
+	public static class $messageType+snakeCaseToCamelCase+FirstUpperCase~Accessor  extends TankAccessor {
+
+		public $messageType+snakeCaseToCamelCase+FirstUpperCase~Accessor($box+firstUppercase~Box box, io.intino.ness.core.Datalake.EventStore.Tank tank) {
+			super(box, tank);
 		}
 	}
 end
@@ -160,7 +201,7 @@ def trigger(tankImport)
 end
 
 def type(schema) trigger(load)
-	io.intino.konos.alexandria.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
+	io.intino.alexandria.inl.Inl.fromMessage(m, $package.schemas.$name+FirstUpperCase.class)
 end
 
 def trigger(load)

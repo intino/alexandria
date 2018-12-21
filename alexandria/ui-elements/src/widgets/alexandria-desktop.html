@@ -78,13 +78,7 @@
         :host paper-icon-button.toggle {
             display: none;
         }
-        @media screen and (max-width: 736px) {
-            :host paper-icon-button.toggle, :host paper-drawer-panel ::content #drawer {
-                display: block;
-            }
-        }
-        /* tablet-small */
-        @media all and (min-width: 600px) and (orientation: portrait) {
+        @media screen and (max-width: 736px), all and (min-width: 600px) and (orientation: portrait) {
             :host paper-icon-button.toggle, :host paper-drawer-panel ::content #drawer {
                 display: block;
             }
@@ -130,7 +124,19 @@
                 zombie.setAttribute("display", type);
                 zombie.setAttribute("widget", widget);
                 container.appendChild(zombie);
+                zombie.whenPersonified().execute(widget => {
+                    widget.addEventListener("home", this._home.bind(this));
+                    widget.addEventListener("open-item", this._openItem.bind(this));
+                });
                 return zombie;
+            },
+
+            _home : function() {
+                this.home();
+            },
+
+            _openItem : function(e) {
+                this.openItem(e.detail);
             },
 
             _loading : function(withMessage) {

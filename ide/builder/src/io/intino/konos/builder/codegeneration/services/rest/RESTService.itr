@@ -1,13 +1,13 @@
 def type(server)
 	package $package+ValidPackage;
 
-	import io.intino.konos.alexandria.rest.AlexandriaSpark;
+	import io.intino.alexandria.rest.AlexandriaSpark;
 	import $package+ValidPackage.rest.resources.*;
-	import io.intino.konos.alexandria.Box;
-	import io.intino.konos.alexandria.rest.security.DefaultSecurityManager;
-	import io.intino.konos.alexandria.rest.spark.SparkPushService;
+	import io.intino.alexandria.core.Box;
+	import io.intino.alexandria.rest.security.DefaultSecurityManager;
+	import io.intino.alexandria.rest.spark.SparkPushService;
 
-	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Resources {
+	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Service {
 
 		public static AlexandriaSpark setup(AlexandriaSpark server, $box+FirstUpperCase~Box box) {
 			$secure
@@ -41,5 +41,5 @@ def trigger(custom)
 end
 
 def trigger(hasNotifications)
-	if (!io.intino.konos.alexandria.rest.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new SparkPushService());
+	if (!io.intino.alexandria.rest.AlexandriaSparkBuilder.isUI()) server.route("/push").push(new SparkPushService());
 end

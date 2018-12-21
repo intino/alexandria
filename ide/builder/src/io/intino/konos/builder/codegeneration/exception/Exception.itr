@@ -1,11 +1,11 @@
 def type(exception)
     package $package.exceptions;
 
-	import io.intino.konos.exceptions.*;
+	import io.intino.alexandria.exceptions.*;
 	import java.util.Map;
 	import java.util.LinkedHashMap;
 
-	public class $name+firstUpperCase extends  io.intino.konos.exceptions.$code {
+	public class $name+firstUpperCase extends  io.intino.alexandria.exceptions.$code {
 
 	    public $name+firstUpperCase(String message) {
 	        super(message);

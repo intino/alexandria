@@ -1,18 +1,18 @@
 def type(catalog & gen)
 	package $package.displays;
 
-    import io.intino.konos.alexandria.ui.displays.AlexandriaCatalog;
-    import io.intino.konos.alexandria.ui.model.View;
-    import io.intino.konos.alexandria.ui.model.Catalog;
-    import io.intino.konos.alexandria.ui.model.TemporalCatalog;
-    import io.intino.konos.alexandria.ui.model.Mold;
-    import io.intino.konos.alexandria.ui.model.Toolbar;
-    import io.intino.konos.alexandria.ui.model.catalog.arrangement.Arrangement;
-    import io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping;
-    import io.intino.konos.alexandria.ui.model.catalog.events.OnClickItem;
-    import io.intino.konos.alexandria.ui.model.View;
-    import io.intino.konos.alexandria.ui.model.TimeScale;
-    import io.intino.konos.alexandria.ui.model.toolbar.*;
+    import io.intino.alexandria.ui.displays.AlexandriaCatalog;
+    import io.intino.alexandria.ui.model.View;
+    import io.intino.alexandria.ui.model.Catalog;
+    import io.intino.alexandria.ui.model.TemporalCatalog;
+    import io.intino.alexandria.ui.model.Mold;
+    import io.intino.alexandria.ui.model.Toolbar;
+    import io.intino.alexandria.ui.model.catalog.arrangement.Arrangement;
+    import io.intino.alexandria.ui.model.catalog.arrangement.Grouping;
+    import io.intino.alexandria.ui.model.catalog.events.OnClickItem;
+    import io.intino.alexandria.ui.model.View;
+    import io.intino.alexandria.ui.model.TimeScale;
+    import io.intino.alexandria.ui.model.toolbar.*;
 
     import $package+validPackage.$box+firstUpperCase~Box;
     import $package+validPackage.displays.notifiers.$name+firstUpperCase~Notifier;
@@ -20,22 +20,22 @@ def type(catalog & gen)
     import java.util.ArrayList;
     import java.util.List;
 
-    public abstract class Abstract$name+FirstUpperCase extends io.intino.konos.alexandria.ui.displays.Alexandria[Temporal$mode]Catalog<$name+FirstUpperCase~Notifier> {
+    public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.ui.displays.Alexandria[Temporal$mode]Catalog<$name+FirstUpperCase~Notifier> {
 
     	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     		element(buildCatalog(box));
     	}
 
-    	private static [io.intino.konos.alexandria.ui.model.Temporal$mode+empty]Catalog buildCatalog($box+firstUpperCase~Box box) {
-    		io.intino.konos.alexandria.ui.model.[Temporal$mode+empty]Catalog catalog = new io.intino.konos.alexandria.ui.model.[Temporal$mode+empty]Catalog();
+    	private static [io.intino.alexandria.ui.model.Temporal$mode+empty]Catalog buildCatalog($box+firstUpperCase~Box box) {
+    		io.intino.alexandria.ui.model.[Temporal$mode+empty]Catalog catalog = new io.intino.alexandria.ui.model.[Temporal$mode+empty]Catalog();
 			catalog.objectsLoader((scope, condition[, $mode+timerange], session) -> (java.util.List<Object>)(Object) $name+firstUpperCase.Source.$type+shortType+firstLowerCase~List(box, scope, condition[, $mode+timerange], session));[
 			$mode+setMode][
             $temporalFilter][
 			$range][
 			catalog.scales(new ArrayList<TimeScale>() {{ $scale+scaleAdd...[; ] }});][
 			$hasMagazineView][
-			catalog.events(new io.intino.konos.alexandria.ui.model.catalog.Events().onClickItem(new OnClickItem().$event));][
+			catalog.events(new io.intino.alexandria.ui.model.catalog.Events().onClickItem(new OnClickItem().$event));][
 			$hasGroupings][
 			$hasCustomItemsArrivalMessage][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
@@ -72,7 +72,7 @@ def trigger(setMode)
 end
 
 def trigger(temporalFilter)
-	catalog.temporalFilter(new io.intino.konos.alexandria.ui.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible).layout("$temporalFilterLayout"));
+	catalog.temporalFilter(new io.intino.alexandria.ui.model.catalog.TemporalFilter().enabledLoader($temporalFilterEnabled).visibilityLoader($temporalFilterVisible).layout("$temporalFilterLayout"));
 end
 
 def attribute(conditional) trigger(temporalFilterEnabled)
@@ -127,8 +127,8 @@ def trigger(hasCustomItemsArrivalMessage)
 end
 
 def trigger(toolbar)
-	private static io.intino.konos.alexandria.ui.model.Toolbar buildToolbar($box+firstUpperCase~Box box) {
-		io.intino.konos.alexandria.ui.model.Toolbar result = new Toolbar();
+	private static io.intino.alexandria.ui.model.Toolbar buildToolbar($box+firstUpperCase~Box box) {
+		io.intino.alexandria.ui.model.Toolbar result = new Toolbar();
 		result.canSearch($canSearch);
 		$operation+add...[$NL]
 		return result;
@@ -136,24 +136,24 @@ def trigger(toolbar)
 end
 
 def type(openDialog) trigger(event)
-	openDialog(new io.intino.konos.alexandria.ui.model.catalog.events.OpenDialog()[.height($height)][.width($width)].dialogType("$dialog").dialogBuilder((item, session) -> {
-		io.intino.konos.alexandria.ui.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
+	openDialog(new io.intino.alexandria.ui.model.catalog.events.OpenDialog()[.height($height)][.width($width)].dialogType("$dialog").dialogBuilder((item, session) -> {
+		io.intino.alexandria.ui.displays.AlexandriaDialog dialog = $package+validPackage.dialogs.Dialogs.dialogFor(box, "$dialog");
 		dialog.target(item);
 		return dialog;
 	}))
 end
 
 def type(openPanel) trigger(event)
-	openPanel(new io.intino.konos.alexandria.ui.model.catalog.events.OpenPanel()
+	openPanel(new io.intino.alexandria.ui.model.catalog.events.OpenPanel()
 		[.breadcrumbs($breadCrumbs)]
-		.panel((io.intino.konos.alexandria.ui.model.Panel) Displays.displayFor(box, "$panel").element()))
+		.panel((io.intino.alexandria.ui.model.Panel) Displays.displayFor(box, "$panel").element()))
 end
 
 def type(openCatalog) trigger(event)
-	openCatalog(new io.intino.konos.alexandria.ui.model.catalog.events.OpenCatalog()
+	openCatalog(new io.intino.alexandria.ui.model.catalog.events.OpenCatalog()
 		[.itemLoader($openCatalogLoader)]
 		[.filter($openCatalogFilter)]
-		.catalog((io.intino.konos.alexandria.ui.model.Catalog) Displays.displayFor(box, "$catalog").element()))
+		.catalog((io.intino.alexandria.ui.model.Catalog) Displays.displayFor(box, "$catalog").element()))
 end
 
 def trigger(breadCrumbs)
@@ -169,11 +169,11 @@ def trigger(openCatalogFilter)
 end
 
 def type(sorting) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.ui.model.catalog.arrangement.Sorting().comparator((object1, object2) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(box, ($type)object1, ($type)object2)).visible($visible).name("$name").label("$label"));
+	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Sorting().comparator((object1, object2, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase~Comparator(box, ($type)object1, ($type)object2, session)).visible($visible).name("$name").label("$label"));
 end
 
 def type(grouping) trigger(add)
-	arrangements.add(new io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping()[.histogram(io.intino.konos.alexandria.ui.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, session)).name("$name")[.label("$label")]);
+	arrangements.add(new io.intino.alexandria.ui.model.catalog.arrangement.Grouping()[.histogram(io.intino.alexandria.ui.model.catalog.arrangement.Grouping.Histogram.$histogram)].groups((objects, session) -> $catalog+FirstUpperCase.Arrangements.$name+FirstLowerCase(box, (List<$type>)(Object)objects, session)).name("$name")[.label("$label")]);
 end
 
 def trigger(add)

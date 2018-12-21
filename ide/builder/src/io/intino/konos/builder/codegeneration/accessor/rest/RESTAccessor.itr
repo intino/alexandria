@@ -5,11 +5,11 @@ def type(accessor)
     import java.util.ArrayList;
     import java.util.Arrays;
 	import java.net.URL;
-	import io.intino.konos.alexandria.exceptions.*;
-	import io.intino.konos.alexandria.schema.Resource;
-	import io.intino.konos.restful.core.RestfulAccessor;
-	import io.intino.konos.restful.core.RestfulNotifier;
-	import io.intino.konos.restful.exceptions.RestfulFailure;
+	import io.intino.alexandria.exceptions.*;
+	import io.intino.alexandria.Resource;
+	import io.intino.alexandria.restaccessor.core.RestAccessor;
+	import io.intino.alexandria.restaccessor.core.RestAccessorNotifier;
+	import io.intino.alexandria.restaccessor.exceptions.RestfulFailure;
 	import com.google.gson.Gson;
 	import com.google.gson.GsonBuilder;
 	import com.google.gson.reflect.TypeToken;
@@ -27,8 +27,8 @@ def type(accessor)
 		private URL url;
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
-		private RestfulAccessor accessor = new RestfulAccessor();
-		private RestfulNotifier notifier = new RestfulNotifier();[
+		private RestAccessor accessor = new RestAccessor();
+		private RestAccessorNotifier notifier = new RestAccessorNotifier();[
 		$certificate~private URL certificate;][
 		$token~private String token;]
 
@@ -90,6 +90,10 @@ def type(notification)
 		} catch (RestfulFailure e) {
 			throw new Unknown(e.label());
 		}
+	}
+
+	public void stopListen$name+SnakeCaseToCamelCase+firstUppercase() {
+		this.notifier.close();
 	}
 end
 

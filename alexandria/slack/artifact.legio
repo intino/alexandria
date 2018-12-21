@@ -1,21 +1,21 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.0.15") alexandria-slack
+Artifact("io.intino.alexandria", "1.0.0") slack-framework
 	Imports
-		Compile(groupId = "com.ullink.slack", artifactId = "simpleslackapi", version = "0.6.0")
-		Compile(groupId = "org.apache.commons", artifactId = "commons-lang3", version = "3.4")
-		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-client", version = "1.8.3")
-		Compile(groupId = "org.glassfish.tyrus", artifactId = "tyrus-container-grizzly-client", version = "1.8.3")
-		Compile(groupId = "com.googlecode.json-simple", artifactId = "json-simple", version = "1.1.1")
-		Compile(groupId = "org.apache.httpcomponents", artifactId = "httpclient", version = "4.5.2")
-		Compile(groupId = "com.google.guava", artifactId = "guava", version = "18.0")
-		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4, 2.0.0)")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(release = intino.release)
+		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "core-framework", "[1.0.0,2.0.0)")
+
+		Compile("com.ullink.slack", "simpleslackapi", "0.6.0") > Exclude("ch.qos.logback","logback-classic")
+		Compile("org.apache.commons", "commons-lang3", "3.4")
+		Compile("org.glassfish.tyrus", "tyrus-client", "1.8.3")
+		Compile("org.glassfish.tyrus", "tyrus-container-grizzly-client", "1.8.3")
+		Compile("com.googlecode.json-simple", "json-simple", "1.1.1")
+		Compile("org.apache.httpcomponents", "httpclient", "4.5.2")
+		Compile("com.google.guava", "guava", "18.0")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
 
 
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-frameworks") release

@@ -1,17 +1,14 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.0.7") alexandria-scheduler
+Artifact("io.intino.alexandria", "1.0.0") scheduler-framework
 	Imports
-		Test(groupId = "junit", artifactId = "junit", version = "4.12")
-		Compile(groupId = "org.quartz-scheduler", artifactId = "quartz", version = "2.3.0")
-		Compile(groupId = "org.quartz-scheduler", artifactId = "quartz-jobs", version = "2.2.1")
-		Compile(groupId = "io.intino.konos", artifactId = "alexandria-core", version = "[1.0.4, 2.0.0)")
-	Package(mode = ModulesAndLibrariesLinkedByManifest, attachSources = true)
-	Distribution(release = intino.release)
+		Compile("org.quartz-scheduler", "quartz", "2.3.0")
+		Compile("org.quartz-scheduler", "quartz-jobs", "2.2.1")
+		Compile("io.intino.alexandria", "core-framework", "[1.0.0, 2.0.0)")
+		Test("junit", "junit", "4.12")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
 
-
-Repository(identifier = "intino-maven")
-	Release(url = "https://artifactory.intino.io/artifactory/releases")
-
-Repository(identifier = "intino-maven") intino
-	Release(url = "https://artifactory.intino.io/artifactory/release-libraries")release
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/release-frameworks")release
+	Release("https://artifactory.intino.io/artifactory/releases")

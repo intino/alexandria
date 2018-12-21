@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-ui-elements
+Artifact(groupId = "io.intino.alexandria", version = "1.0.3") ui-framework-elements
 
 	WebImports
 		WebComponent("Polymer/polymer", "1.9 - 2") polymer
@@ -12,7 +12,7 @@ Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-ui-elements
 		WebComponent("highcharts", "6.1.3") highcharts
 
 		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.2.1") cotton-carrier
-		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.1.2") cotton-push
+		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.1.3") cotton-push
 		WebComponent("https://bitbucket.org/cottons/cotton-translator.git", "1.1.2") cotton-translator
 		WebComponent("https://bitbucket.org/cottons/cotton-zombie.git", "1.3.3") cotton-zombie
 		WebComponent("https://bitbucket.org/cottons/cotton-checkbox.git", "1.0.6") cotton-checkbox
@@ -21,7 +21,7 @@ Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-ui-elements
 		WebComponent("https://bitbucket.org/cottons/cotton-breadcrumbs.git", "1.1.0") cotton-breadcrumbs
 		WebComponent("https://bitbucket.org/cottons/cotton-layout.git", "1.2.1") cotton-layout
 		WebComponent("https://bitbucket.org/cottons/cotton-delay-executor.git", "1.0.0") cotton-delay-executor
-		WebComponent("https://bitbucket.org/cottons/cotton-timeline.git", "1.0.2") cotton-timeline
+		WebComponent("https://bitbucket.org/cottons/cotton-timeline.git", "1.0.3") cotton-timeline
 		WebComponent("https://bitbucket.org/cottons/cotton-chip.git", "1.1.0") cotton-chip
 		WebComponent("https://bitbucket.org/cottons/cotton-loading.git", "1.1.0") cotton-loading
 		WebComponent("https://bitbucket.org/cottons/cotton-pdf-viewer.git", "1.0.3") cotton-pdf-viewer
@@ -48,6 +48,7 @@ Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-ui-elements
 		WebComponent("PolymerElements/iron-selector", "1.5.2") iron-selector
 		WebComponent("PolymerElements/paper-toast", "1.3.1") paper-toast
 		WebComponent("PolymerElements/app-route", "1.0.1") app-route
+		WebComponent("PolymerElements/paper-dropdown-menu", "1.5.1") paper-dropdown-menu
 
 		WebComponent("GoogleWebComponents/google-map", "1.2.0") google-map
 		WebComponent("timeu/google-map-markerclusterer", "1.0.2") google-map-markerclusterer
@@ -72,7 +73,7 @@ Artifact(groupId = "io.intino.konos", version = "1.2.2") alexandria-ui-elements
 		Resolution("paper-styles", "1.1.5")
 		Resolution("iron-image", "2.1.1")
 		Resolution("cotton-translator", "1.1.2")
-		Resolution("cotton-push", "2.1.2")
+		Resolution("cotton-push", "2.1.3")
 		Resolution("cotton-loading", "1.1.0")
 
 	Package(LibrariesLinkedByManifest)

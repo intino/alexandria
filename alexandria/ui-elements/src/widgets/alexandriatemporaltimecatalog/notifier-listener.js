@@ -48,6 +48,9 @@ AlexandriaTemporalTimeCatalogBehaviors.NotifierListener = {
         this.when("loadTimezoneOffset").toSelf().execute(function(parameters) {
         	widget._loadTimezoneOffset();
         });
+        this.when("openDefaultItem").toSelf().execute(function(parameters) {
+        	widget._openDefaultItem(parameters.value);
+        });
         this._listeningToDisplay = true;
     }
 };
