@@ -91,9 +91,9 @@ def type(operations)
 	package $package+validPackage.datalake;
 
 	import $package+validPackage.$box+FirstUpperCase~Box;
-	import io.intino.ness.core.Datalake;
-
-	import java.util.List;
+	import io.intino.alexandria.Timetag;
+    import io.intino.ness.core.Datalake;
+    import io.intino.ness.core.Datalake.EventStore.Reflow;
 
 	class ReflowAssistant {
 
