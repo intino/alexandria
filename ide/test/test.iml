@@ -94,7 +94,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:inl:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:primitives:1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:exceptions:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:rest:1.0.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:rest:1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.sparkjava:spark-core:2.7.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.jetty:jetty-server:9.4.8.v20171121" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
