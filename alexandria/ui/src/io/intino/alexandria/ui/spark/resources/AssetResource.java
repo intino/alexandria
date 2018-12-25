@@ -39,8 +39,11 @@ public class AssetResource extends Resource {
                 byte[] content = IOUtils.toByteArray(inputStream);
                 manager.write(new String(content, "UTF-8"), contentType);
             }
-            else
-                manager.write(inputStream, manager.fromQuery("label", String.class), manager.fromQuery("embedded", Boolean.class));
+            else {
+                String label = manager.fromQueryOrDefault("label", String.class, "");
+                Boolean embedded = manager.fromQueryOrDefault("embedded", Boolean.class, "false");
+                manager.write(inputStream, label, embedded);
+            }
         } catch (IOException e) {
             manager.write(new AssetNotFoundException());
         }
