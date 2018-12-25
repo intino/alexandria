@@ -318,7 +318,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 		if (baseUrl.endsWith("/"))
 			baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
 
-		return baseUrl + (path.startsWith("/") ? path : "/" + path);
+		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
 	private HttpClient client() {
