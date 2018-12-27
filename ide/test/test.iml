@@ -14,7 +14,8 @@
     <orderEntry type="module" module-name="rest-accessor" scope="TEST" />
     <orderEntry type="module" module-name="ness-accessor" scope="TEST" />
     <orderEntry type="module" module-name="core" scope="TEST" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.konos:builder:5.0.3" level="project" />
+    <orderEntry type="module" module-name="builder" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Maven: tara.dsl:konos:1.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-codegen:2.1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-parser:1.0.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.swagger:swagger-compat-spec-parser:1.0.15" level="project" />
@@ -129,8 +130,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.fusesource.hawtbuf:hawtbuf:1.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:ness-accessor:1.0.7" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:core:1.0.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:ness-accessor:1.0.8" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: io.intino.ness:core:1.0.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:zim:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:zet:1.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.intino.alexandria:triplestore:1.0.3" level="project" />
