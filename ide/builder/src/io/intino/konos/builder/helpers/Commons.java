@@ -80,14 +80,14 @@ public class Commons {
 
 	public static String path(Resource resource) {
 		RESTService service = resource.core$().ownerAs(RESTService.class);
-		String basePath = cleanPath(service.basePath());
-		if (service.info() != null && service.info().version() != null) basePath = basePath + "/" + service.info().version();
-		String resourcePath = cleanPath(resource.path());
-		return format(basePath) + resourcePath;
+		String basePath = basePath(service.basePath());
+		if (service.info() != null && service.info().version() != null) basePath = basePath + service.info().version() + "/";
+		String resourcePath = resource.path();
+		return (basePath + resourcePath).replace("//", "/");
 	}
 
-	private static String cleanPath(String path) {
-		path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
+	private static String basePath(String path) {
+		path = !path.isEmpty() && !path.endsWith("/") ? path + "/" : path;
 		return path.startsWith("/") ? path.substring(1) : path;
 	}
 
