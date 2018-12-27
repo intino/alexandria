@@ -155,18 +155,18 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 			@Override
 			public Response post(String path, Resource resource) throws RestfulFailure {
-				return doPost(url, path, multipartEntityOf(emptyMap(), singletonList(resource)));
+				return doPost(url, path, multipartEntityOf(emptyMap(), singletonList(resource), certificate, password));
 			}
 
 			@Override
 			public Response post(String path, List<Resource> resourceList) throws RestfulFailure {
-				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList));
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList, certificate, password));
 			}
 
 			@Override
 			public Response post(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
 				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
-				return doPost(url, path, multipartEntityOf(parameters, resourceList));
+				return doPost(url, path, multipartEntityOf(parameters, resourceList, certificate, password));
 			}
 
 			@Override
@@ -181,13 +181,13 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 			@Override
 			public Response put(String path, List<Resource> resourceList) throws RestfulFailure {
-				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList));
+				return doPost(url, path, multipartEntityOf(emptyMap(), resourceList, certificate, password));
 			}
 
 			@Override
 			public Response put(String path, Map<String, String> parameters, List<Resource> resourceList) throws RestfulFailure {
 				if (resourceList.size() <= 0) return doPost(url, path, entityOf(parameters));
-				return doPost(url, path, multipartEntityOf(parameters, resourceList));
+				return doPost(url, path, multipartEntityOf(parameters, resourceList, certificate, password));
 			}
 
 			@Override
@@ -318,7 +318,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 		if (baseUrl.endsWith("/"))
 			baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
 
-		return baseUrl + (path.startsWith("/") ? path : "/" + path);
+		return path.isEmpty() ? baseUrl : baseUrl + (path.startsWith("/") ? path : "/" + path);
 	}
 
 	private HttpClient client() {
@@ -447,7 +447,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 		addResources(entityBuilder, resourceList);
 		addParameters(entityBuilder, parameters);
-//		addSecureParameters(certificate, password, entityBuilder, resource);
+		addParameters(entityBuilder, secureParameters(parameters, certificate, password));
 
 		return entityBuilder.build();
 	}
