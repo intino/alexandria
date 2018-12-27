@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.returnType;
 import static java.util.Arrays.stream;
 
@@ -102,7 +103,7 @@ class ActionUpdater {
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
-		PsiField field = elementFactory.createField(parameter.name$(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
+		PsiField field = elementFactory.createField(snakeCaseToCamelCase().format(parameter.name$()).toString(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
 		if (field.getModifierList() == null) return field;
 		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
 		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);

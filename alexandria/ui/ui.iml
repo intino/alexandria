@@ -55,13 +55,12 @@
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-framework:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http-server:2.3.15-gfa" level="project" />
     <orderEntry type="library" name="Legio: org.glassfish.grizzly:grizzly-http:2.3.15-gfa" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:json:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:logger:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:core-framework:1.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.1" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:inl:1.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-1" level="project" />
+    <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.0" level="project" />
   </component>
 </module>

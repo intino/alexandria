@@ -15,12 +15,15 @@ Service(title = "Cesar DevOps Service") cesar-rest as REST(host = "{host}", base
 		Get(description = "List of processes")
 			Parameter(in = path) project as Text
 			Response as Object(ProcessInfo) List
-	Resource(path = "/projects/:project/processes/:process") process
+	Resource(path = "/projects/:project/processes/:process/") process
 		Get(description = "A process of specific version")
 			Parameter(in = path) project as Text
 			Parameter(in = path) process as Text
+			Parameter(in = query) pr-a as Text
+			Parameter(in = body, isRequired = true) nombre as Text > description = "Nombre de la imagen a añadir"
 			Response as Object(ProcessInfo)
 			Exception(BadRequest)
+
 	Resource(path = "/projects/:project/processes/:process/status") processStatus
 		Get(description = "Information of a process")
 			Parameter(in = path) project as Text
