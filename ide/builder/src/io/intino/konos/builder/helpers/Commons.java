@@ -87,7 +87,7 @@ public class Commons {
 	}
 
 	private static String cleanPath(String path) {
-		path = path.endsWith("/") ? path.substring(path.length() - 1) : path;
+		path = path.endsWith("/") ? path.substring(0, path.length() - 1) : path;
 		return path.startsWith("/") ? path.substring(1) : path;
 	}
 
