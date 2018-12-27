@@ -11,12 +11,14 @@ import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
 import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAction;
+import static io.intino.konos.builder.codegeneration.Formatters.firstLowerCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.returnType;
 import static java.util.Arrays.stream;
@@ -72,7 +74,7 @@ class ActionUpdater {
 	private void doUpdateFields(PsiClass psiClass) {
 		final PsiElementFactory elementFactory = JavaPsiFacade.getElementFactory(project);
 		parameters.stream().
-				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> parameter.name$().equalsIgnoreCase(f.getName()))).
+				filter(parameter -> stream(psiClass.getAllFields()).noneMatch(f -> nameOf(parameter).equalsIgnoreCase(f.getName()))).
 				forEach(parameter -> psiClass.addAfter(createField(psiClass, elementFactory, parameter), psiClass.getLBrace().getNextSibling()));
 		if (stream(psiClass.getAllFields()).noneMatch(f -> "box".equalsIgnoreCase(f.getName())))
 			psiClass.addAfter(createGraphField(psiClass, elementFactory), psiClass.getLBrace().getNextSibling());
@@ -103,11 +105,16 @@ class ActionUpdater {
 	}
 
 	private PsiField createField(PsiClass psiClass, PsiElementFactory elementFactory, Parameter parameter) {
-		PsiField field = elementFactory.createField(snakeCaseToCamelCase().format(parameter.name$()).toString(), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
+		PsiField field = elementFactory.createField(nameOf(parameter), elementFactory.createTypeFromText(formatType(parameter.asType(), parameter.isList()), psiClass));
 		if (field.getModifierList() == null) return field;
 		field.getModifierList().setModifierProperty(PsiModifier.PUBLIC, true);
 		field.getModifierList().setModifierProperty(PsiModifier.PRIVATE, false);
 		return field;
+	}
+
+	@NotNull
+	private String nameOf(Parameter parameter) {
+		return firstLowerCase(snakeCaseToCamelCase().format(parameter.name$()).toString());
 	}
 
 	private PsiField createGraphField(PsiClass psiClass, PsiElementFactory elementFactory) {
