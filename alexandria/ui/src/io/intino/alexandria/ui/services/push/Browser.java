@@ -10,6 +10,7 @@ public class Browser {
     private String basePath;
     private String homeUrl;
     private String userHomeUrl;
+    private String requestUrl;
     private String language;
     private String metadataLanguage;
     private String metadataIpAddress;
@@ -48,6 +49,14 @@ public class Browser {
 
     public void userHomeUrl(String userHomeUrl) {
         this.userHomeUrl = userHomeUrl;
+    }
+
+    public void requestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+    }
+
+    public String requestUrl() {
+        return this.requestUrl;
     }
 
     public String baseAssetUrl() {
