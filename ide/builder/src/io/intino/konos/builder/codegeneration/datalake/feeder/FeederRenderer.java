@@ -47,6 +47,10 @@ public class FeederRenderer {
 		this.classes = classes;
 	}
 
+	public String name(Feeder feeder) {
+		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
+	}
+
 	public void execute() {
 		for (Feeder feeder : feeders) {
 			final Frame frame = new Frame().addTypes("feeder").
@@ -65,14 +69,6 @@ public class FeederRenderer {
 		}
 	}
 
-	public static String name(Feeder feeder) {
-		return isAnonymous(feeder) ? feeder.eventTypes().stream().map(s -> firstUpperCase(s.name$())).collect(Collectors.joining()) + "Feeder" : feeder.name$();
-	}
-
-	private static boolean isAnonymous(Feeder feeder) {
-		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
-	}
-
 	private Frame frameOf(Sensor sensor, String feeder) {
 		Frame frame = new Frame("sensor").
 				addSlot("name", sensor.name$()).
@@ -87,6 +83,10 @@ public class FeederRenderer {
 		}
 
 		return frame;
+	}
+
+	private boolean isAnonymous(Feeder feeder) {
+		return feeder.name$().matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
 	}
 
 	private Frame parent(Sensor sensor) {
