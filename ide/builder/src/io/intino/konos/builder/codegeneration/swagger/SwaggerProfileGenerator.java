@@ -24,7 +24,7 @@ public class SwaggerProfileGenerator {
 	}
 
 	public void execute() {
-		services.forEach(service -> writeFile(service, new OpenApiDescriptor(service).createJSONDescriptor()));
+		services.stream().filter(RESTService::generateDocs).forEach(service -> writeFile(service, new OpenApiDescriptor(service).createJSONDescriptor()));
 	}
 
 	private void writeFile(RESTService service, String json) {

@@ -7,6 +7,7 @@ import io.intino.konos.builder.codegeneration.swagger.SwaggerSpec.SecurityDefini
 import io.intino.konos.model.graph.Exception;
 import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
+import io.intino.konos.model.graph.file.FileData;
 import io.intino.konos.model.graph.longinteger.LongIntegerData;
 import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.rest.RESTService;
@@ -150,6 +151,7 @@ public class OpenApiDescriptor {
 	private String parameterType(In in, TypeData typeData) {
 		String type = typeData.type();
 		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(FileData.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
 		if (typeData.i$(ObjectData.class)) {
 			if (in == In.body) return null;
@@ -161,6 +163,7 @@ public class OpenApiDescriptor {
 	private String transform(TypeData typeData) {
 		String type = typeData.type();
 		if (typeData.i$(LongIntegerData.class) || type.equals("java.time.Instant") || type.equalsIgnoreCase("double")) return "number";
+		if (typeData.i$(FileData.class) || type.endsWith("Resource")) return "file";
 		if (type.equalsIgnoreCase("java.lang.enum")) return "string";
 		if (typeData.i$(ObjectData.class)) return "object";
 		return type.toLowerCase();
