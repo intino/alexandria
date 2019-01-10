@@ -39,10 +39,10 @@ public class RESTServiceRenderer {
 	private final KonosGraph graph;
 	private final File gen;
 	private final File res;
-	private String packageName;
 	private final String boxName;
 	private final Module module;
 	private final Map<String, String> classes;
+	private String packageName;
 
 	public RESTServiceRenderer(KonosGraph graph, File gen, File res, String packageName, String boxName, Module module, Map<String, String> classes) {
 		this.services = graph.rESTServiceList();
@@ -57,7 +57,7 @@ public class RESTServiceRenderer {
 
 	public void execute() {
 		services.forEach((service) -> processService(service.a$(RESTService.class), gen));
-		if (!services.isEmpty()) generateApiPortal();
+		if (services.stream().anyMatch(RESTService::generateDocs)) generateApiPortal();
 	}
 
 	private void generateApiPortal() {
@@ -79,7 +79,7 @@ public class RESTServiceRenderer {
 
 	private void createConfigFile(File api) {
 		Template template = customize(ApiPortalConfigurationTemplate.create());
-		Frame frame = new Frame("api").addSlot("url", services.stream().map(Layer::name$).toArray(String[]::new));
+		Frame frame = new Frame("api").addSlot("url", services.stream().filter(RESTService::generateDocs).map(Layer::name$).toArray(String[]::new));
 		RESTService service = services.get(0);
 		if (service.color() != null) frame.addSlot("color", service.color());
 		if (service.backgroundColor() != null) frame.addSlot("background", service.backgroundColor());

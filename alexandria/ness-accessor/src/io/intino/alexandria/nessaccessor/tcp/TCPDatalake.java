@@ -10,7 +10,10 @@ import org.apache.activemq.ActiveMQSession;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 
 import static io.intino.ness.core.Blob.Type.event;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
@@ -60,7 +63,12 @@ public class TCPDatalake implements Datalake {
 	}
 
 	private ZimStream read(Blob b) {
-		return new ZimReader(b.inputStream());
+		try {
+			return new ZimReader(new GZIPInputStream(b.inputStream()));
+		} catch (IOException e) {
+			Logger.error(e);
+			return new ZimReader(new ByteArrayInputStream(new byte[0]));
+		}
 	}
 
 	private interface CallBack {

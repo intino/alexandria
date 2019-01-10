@@ -82,7 +82,7 @@ def type(tanks)
 			public void send(io.intino.alexandria.Timetag timetag, io.intino.alexandria.inl.Message... messages) {
 				io.intino.ness.core.memory.MemoryStage stage = new io.intino.ness.core.memory.MemoryStage();
 				io.intino.ness.core.sessions.EventSession session = stage.createEventSession();
-				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, messages);
+				for (io.intino.alexandria.inl.Message message : messages) session.put(tank.name(), timetag, message);
 				session.close();
 				accessor.push(stage);
 			}
