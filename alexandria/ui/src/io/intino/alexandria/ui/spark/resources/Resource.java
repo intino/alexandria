@@ -125,7 +125,6 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		browser.basePath(manager.basePath());
 		browser.homeUrl(manager.baseUrl());
 		browser.userHomeUrl(manager.baseUrl() + manager.userHomePath());
-		browser.requestUrl(manager.requestUrl());
 		browser.language(manager.languageFromUrl());
 		browser.metadataLanguage(manager.languageFromHeader());
 		browser.metadataIpAddress(manager.ipAddressFromHeader());
