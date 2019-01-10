@@ -17,6 +17,7 @@ Facet REST on Service
 	var string favicon = empty
 	var string backgroundColor = empty
 	var string color = empty
+	var boolean generateDocs = true
 	var word[]:{http https ws wss} protocols = https
 	Concept:{0..1} Authenticated
 		sub AuthenticatedWithCertificate
