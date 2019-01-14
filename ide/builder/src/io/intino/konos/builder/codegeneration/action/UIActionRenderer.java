@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static io.intino.konos.model.graph.KonosGraph.componentFor;
+import static io.intino.konos.model.graph.KonosGraph.elementFor;
 
 public class UIActionRenderer extends ActionRenderer {
 
@@ -52,7 +52,7 @@ public class UIActionRenderer extends ActionRenderer {
 	}
 
 	private Frame componentFrame() {
-		Frame result = new Frame("component").addSlot("value", componentFor(resource).name$());
+		Frame result = new Frame("component").addSlot("value", elementFor(resource).name$());
 		if (resource.isEditorPage()) {
 			Component display = resource.asEditorPage().editor().display();
 			result.addSlot("editor", new Frame("editor").addSlot("display", display.name$()));

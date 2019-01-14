@@ -150,10 +150,11 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return children(clazz).stream().findFirst().map(clazz::cast).orElse(null);
     }
 
-    public void add(AlexandriaDisplay child) {
+    public <T extends AlexandriaDisplay> T add(T child) {
         child.owner(this);
         repository.register(child);
         this.children.add(child);
+        return child;
     }
 
     public <T extends AlexandriaDisplay> T owner() {
@@ -170,7 +171,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return parent(display.owner(), type);
     }
 
-    private void owner(AlexandriaDisplay owner) {
+    protected void owner(AlexandriaDisplay owner) {
         this.owner = owner;
     }
 
