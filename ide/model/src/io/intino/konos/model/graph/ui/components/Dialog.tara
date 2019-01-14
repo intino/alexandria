@@ -1,0 +1,18 @@
+dsl Proteo
+
+use Component
+use Display
+use UI
+
+Facet Dialog is abstract
+	var string title
+
+Facet AlertDialog extends Dialog on Block
+Facet DecisionDialog extends Dialog on Block
+	Concept Option
+		var string label
+		var string value
+
+Facet Fullscreen on Dialog
+Facet Mobile on Dialog
+Facet Draggable on Dialog

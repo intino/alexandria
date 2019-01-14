@@ -23,21 +23,10 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return service.graph().core$().find(Display.class);
 	}
 
-	public static List<Dialog> dialogsOf(UIService service) {
-		return service.graph().core$().find(Dialog.class);
-	}
-
-	public static Component componentFor(UIService.Resource resource) {
-		if (resource.isDisplayPage()) return resource.asDisplayPage().display();
-		if (resource.isEditorPage()) return resource.asEditorPage().editor();
-		return resource.asDialogPage().dialog();
-	}
-
-	public static List<Component> componentsOf(UIService service) {
-		List<Component> components = new ArrayList<>();
-		components.addAll(displaysOf(service));
-		components.addAll(dialogsOf(service));
-		return components;
+	public static Element elementFor(UIService.Resource resource) {
+		if (resource.isDesktopPage()) return resource.asDesktopPage().desktop();
+		if (resource.isDocumentPage()) return resource.asDocumentPage().document();
+		return resource.asEditorPage().editor();
 	}
 
 	public Set<String> findCustomParameters(JMSService service) {

@@ -1,8 +1,8 @@
 dsl Proteo
 
 use Dialog
+use Component
 use Display
-use Editor
 use Services
 use DataTypes
 
@@ -27,11 +27,30 @@ Facet UI on Service is decorable
 Facet Root on UI.Resource
 Facet Confidential on UI.Resource
 
-Facet DisplayPage on UI.Resource
-	var Display display
-Facet DialogPage on UI.Resource
+Facet Page on UI.Resource is abstract
+
+Facet DesktopPage extends Page
+	var Desktop desktop
+
+Facet DocumentPage extends Page
+	var Document document
+
+// deprecated
+Facet DialogPage extends Page
 	var Dialog dialog
-Facet EditorPage on UI.Resource
+
+Facet EditorPage extends Page
 	var Editor editor
 
-Concept Component is abstract
+Concept Element is abstract
+
+Facet AbstractDrawerNavigable is abstract
+	var word:{Left Right Top Bottom} direction = Left
+	var word:{Normal Modal} mode = Normal
+	var boolean hasMiniVariant = false
+	var boolean underAppBar = false
+
+Facet DrawerNavigable extends AbstractDrawerNavigable on Page
+
+Facet Responsible on DrawerNavigable
+Facet Persistent on DrawerNavigable

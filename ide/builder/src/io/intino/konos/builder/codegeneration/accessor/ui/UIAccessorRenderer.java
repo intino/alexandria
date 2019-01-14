@@ -35,8 +35,8 @@ import static cottons.utils.StringHelper.camelCaseToSnakeCase;
 import static io.intino.konos.builder.codegeneration.Formatters.camelCaseToSnakeCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.konos.builder.helpers.Commons.write;
-import static io.intino.konos.model.graph.KonosGraph.componentFor;
-import static io.intino.konos.model.graph.KonosGraph.componentsOf;
+import static io.intino.konos.model.graph.KonosGraph.elementFor;
+import static io.intino.konos.model.graph.KonosGraph.elementsFor;
 import static java.io.File.separator;
 import static java.nio.file.Files.exists;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
@@ -109,7 +109,7 @@ public class UIAccessorRenderer {
 	}
 
 	private Frame resourceFrame(UIService.Resource resource) {
-		Component uses = componentFor(resource);
+		Component uses = elementFor(resource);
 		Frame result = new Frame().addTypes("resource").addSlot("uses", uses.name$()).addSlot("name", resource.name$());
 		result.addSlot("polymer", polymerFrame(resource));
 		return result;
@@ -123,7 +123,7 @@ public class UIAccessorRenderer {
 
 	private void createWidgets() {
 		Frame widgets = new Frame().addTypes("widgets");
-		for (Component component : componentsOf(service)) {
+		for (Component component : elementsFor(service)) {
 			if (component.i$(Mold.class)) createMold(component.a$(Mold.class));
 			if (component.i$(Display.class) && !component.i$(Mold.class)) createDisplay(component.a$(Display.class));
 			if (component.i$(Dialog.class)) createDialog(component.a$(Dialog.class));

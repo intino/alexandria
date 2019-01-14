@@ -1,0 +1,61 @@
+dsl Proteo
+
+use Component
+use Display
+use Catalog
+
+Concept View
+	var string label
+
+Facet Container on View is abstract
+
+Facet AbstractCatalogContainer is abstract
+	var Catalog catalog
+	var boolean filtered = false
+
+Facet CatalogContainer extends AbstractCatalogContainer on Tab
+//Facet CatalogContainer extends AbstractCatalogContainer on View
+//Facet CatalogContainer extends AbstractCatalogContainer on Tab.Content
+
+Facet CollectionContainer extends Container is abstract
+	var string noItemsMessage = empty
+	var Target target
+Facet DetailContainer extends CollectionContainer on Tab.Content
+//Facet DetailContainer extends CollectionContainer on Catalog.Layout.Content
+Facet ListContainer extends CollectionContainer on Catalog.Layout.Content
+//Facet ListContainer extends CollectionContainer on Tab.Content
+Facet GridContainer extends CollectionContainer on Tab.Content
+//Facet GridContainer extends CollectionContainer on Catalog.Layout.Content
+Facet MapContainer extends CollectionContainer on Tab.Content
+//Facet MapContainer extends CollectionContainer on Catalog.Layout.Content
+	Concept:{0..1} Center
+		var double latitude
+		var double longitude
+
+	Concept:{1..1} Zoom
+		var integer defaultZoom
+		var integer min
+		var integer max
+
+Facet AbstractBlockContainer is abstract
+	var Block block
+Facet BlockContainer extends AbstractBlockContainer on Tab
+//Facet BlockContainer extends AbstractBlockContainer on View
+//Facet BlockContainer extends AbstractBlockContainer on Column
+//Facet BlockContainer extends AbstractBlockContainer on Item
+//Facet BlockContainer extends AbstractBlockContainer on Catalog.Layout.Content
+//Facet BlockContainer extends AbstractBlockContainer on Tab.Header
+//Facet BlockContainer extends AbstractBlockContainer on Tab.Content
+
+Facet AbstractTableContainer is abstract
+	has Column
+//Facet TableContainer extends AbstractTableContainer on Tab.Content
+//Facet TableContainer extends AbstractTableContainer on Catalog.Layout.Content
+
+Concept Column is component
+	var string label
+
+Facet Sortable on Column
+	var Sorting sorting
+
+Concept Item is component

@@ -1,0 +1,66 @@
+dsl Proteo
+
+use Component
+use Display
+use UI
+
+Facet Input is abstract
+	var string isRequired = ""
+	var string isReadonly = ""
+	var string placeHolder = ""
+	var string defaultValue = ""
+	var string validator = ""
+
+Facet Multiple on Input
+	var integer min= -1
+	var integer max= -1
+
+Facet Input on TextD
+	var word:{Normal Email Url} edition = Normal
+
+	Concept:{0..1} Validation
+		var string[] allowedValues = empty
+		var string[] disallowedValues = empty
+		var boolean disallowEmptySpaces = false
+		var string mask = ""
+			//a - Represents an alpha character (A-Z,a-z)
+			//9 - Represents a numeric character (0-9)
+			//* - Represents an alphanumeric character (A-Z,a-z,0-9)
+		Concept:{0..1} Length
+			var integer min
+			var integer max
+
+Facet Memo on TextD with Input
+	var word:{Raw Rich} mode = Raw
+	var integer height = 5
+
+Facet Password on TextD with Input
+	Concept:{0..1} Validation
+		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
+		Concept:{1..1} Length
+			var integer min
+			var integer max
+
+Facet Input on Number
+
+Facet Input on FileD
+	var boolean showPreview = false
+
+	Concept:{0..1} Validation
+		var double:{kbytes} maxSize
+		var string[] allowedExtensions = empty
+
+Facet Input on Image
+	var boolean showPreview = false
+
+	Concept:{0..1} Validation
+		var double:{kbytes} maxSize
+		var string[] allowedExtensions = empty
+
+Facet Input on DateD
+Facet Input on DateTimeD
+
+Facet RadioBox extends Input on ListD
+Facet Checkbox extends Input on ListD
+
+Facet Selector on ListD
