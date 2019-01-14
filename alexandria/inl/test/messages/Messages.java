@@ -21,6 +21,23 @@ public class Messages {
 					"[Teacher.Country]\n" +
 					"name: Spain\n";
 
+	public static String HappyMessage =
+			"[dialog]\n" +
+					"instant = \"2019-01-14T13:34:09.742Z\"\n" +
+					"opinion = \"Satisfied\"\n" +
+					"cancelled = false\n" +
+					"contactSet = false\n" +
+					"contactData = \"\"\n" +
+					"wantsToBeContacted = false\n" +
+					"area = \"MockChainHotelReception\"\n" +
+					"eventId = \"\"\n" +
+					"eventLabel = \"\"\n" +
+					"issueId = \"\"\n" +
+					"touchCounter = 1\n" +
+					"sensorId = \"3C15C2CBFF020000\"\n" +
+					"apkVersion = \"3.0.21\"\n" +
+					"fingerSizes = \"0\"\n" +
+					"hearts = 1";
 
 	public static String EmptyAttributeMessage =
 			"[Teacher]\n" +
@@ -116,30 +133,6 @@ public class Messages {
 					"app: io.intino.consul\n" +
 					"deviceId: b367172b0c6fe726\n" +
 					"stack:\n" + indent(Stack) + "\n";
-
-	private static String Status1 =
-			"[Status]\n" +
-					"battery: 78.0\n" +
-					"cpuUsage: 11.95\n" +
-					"isPlugged: true\n" +
-					"isScreenOn: false\n" +
-					"temperature: 29.0\n" +
-					"created: 2017-03-22T12:56:18Z\n";
-
-	private static String Status2 =
-			"[Status]\n" +
-					"battery: 78.0\n" +
-					"cpuUsage: 11.95\n" +
-					"isPlugged: true\n" +
-					"isScreenOn: true\n" +
-					"temperature: 29.0\n" +
-					"created: 2017-03-22T12:56:18Z\n";
-
-
-	public static String StatusMessage =
-			Status1 + "\n" + Status2;
-
-
 	public static String MenuMessage =
 			"[Menu]\n" +
 					"meals:\n" +
@@ -155,7 +148,6 @@ public class Messages {
 					"availability:\n" +
 					"\ttrue\n" +
 					"\tfalse\n";
-
 	public static String MenuWithOnePriceMessage =
 			"[Menu]\n" +
 					"meals:\n" +
@@ -168,14 +160,11 @@ public class Messages {
 					"availability:\n" +
 					"\ttrue\n" +
 					"\tfalse\n";
-
 	public static String EmptyMenuMessage =
 			"[Menu]\n" +
 					"availability:\n" +
 					"\ttrue\n" +
 					"\tfalse\n";
-
-
 	public static String NullValueMenuMessage =
 			"[Menu]\n" +
 					"meals:\n" +
@@ -191,7 +180,6 @@ public class Messages {
 					"availability:\n" +
 					"\ttrue\n" +
 					"\tfalse\n";
-
 	public static String SkipingNullMenuMessage =
 			"[Menu]\n" +
 					"meals:\n" +
@@ -205,26 +193,22 @@ public class Messages {
 					"availability:\n" +
 					"\ttrue\n" +
 					"\tfalse\n";
-
 	public static String DocumentMessage =
 			"[Document]\n" +
 					"ts: 2017-03-21T07:39:00Z\n" +
 					"attachment: @4444-444-44-44444.png\n";
-
 	public static String DocumentListMessage =
 			"[DocumentList]\n" +
 					"ts: 2017-03-21T07:39:00Z\n" +
 					"files:\n" +
 					"\t@4444-444-44-44444.png\n" +
 					"\t@5555-555-55.jpeg\n";
-
 	public static String DocumentArrayMessage =
 			"[DocumentArray]\n" +
 					"ts: 2017-03-21T07:39:00Z\n" +
 					"files:\n" +
 					"\t@4444-444-44-44444.png\n" +
 					"\t@5555-555-55.jpeg\n";
-
 	public static String CredentialLoginSchema =
 			"[CredentialLogin]\n" +
 					"authentication: open\n" +
@@ -240,7 +224,6 @@ public class Messages {
 					"[CredentialLogin.Parameter]\n" +
 					"name: token\n" +
 					"value: abcdedgrd\n";
-
 	public static String infrastructureOperation =
 			"[InfrastructureOperation]\n" +
 					"ts: 2018-05-22T11:17:20.895Z\n" +
@@ -252,6 +235,24 @@ public class Messages {
 					"\tjosejuanhernandez\n" +
 					"\tU0CU1BD7E\n" +
 					"\tjosejuanhernandez@siani.es\n";
+	private static String Status1 =
+			"[Status]\n" +
+					"battery: 78.0\n" +
+					"cpuUsage: 11.95\n" +
+					"isPlugged: true\n" +
+					"isScreenOn: false\n" +
+					"temperature: 29.0\n" +
+					"created: 2017-03-22T12:56:18Z\n";
+	private static String Status2 =
+			"[Status]\n" +
+					"battery: 78.0\n" +
+					"cpuUsage: 11.95\n" +
+					"isPlugged: true\n" +
+					"isScreenOn: true\n" +
+					"temperature: 29.0\n" +
+					"created: 2017-03-22T12:56:18Z\n";
+	public static String StatusMessage =
+			Status1 + "\n" + Status2;
 
 	private static String indent(String text) {
 		return "\t" + text.replaceAll("\\n", "\n\t");

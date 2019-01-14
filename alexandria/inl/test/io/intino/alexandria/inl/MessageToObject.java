@@ -42,6 +42,12 @@ public class MessageToObject {
 	}
 
 	@Test
+	public void should_deserialize_happy_message() throws IOException, IllegalAccessException {
+		Message message = Inl.toMessage(HappyMessage);
+		System.out.println(message);
+	}
+
+	@Test
 	public void should_deserialize_message_with_empty_attributes() throws IOException, IllegalAccessException {
 		Teacher teacher = Inl.fromMessage(Inl.toMessage(EmptyAttributeMessage), Teacher.class);
 		assertThat(teacher.name, is("Jose"));

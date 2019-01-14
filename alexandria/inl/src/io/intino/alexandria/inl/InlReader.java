@@ -113,7 +113,7 @@ public class InlReader implements Iterable<Message>, Iterator<Message> {
 
 		private static int[] splitIndex(char[] data) {
 			int index = -1;
-			while (++index < data.length) if (data[index] == ':') break;
+			while (++index < data.length) if (data[index] == ':' || data[index] == '=') break;
 			int[] result = new int[]{index, index};
 			while (--result[0] >= 0 && data[result[0]] == ' ') ;
 			while (++result[1] < data.length && data[result[1]] == ' ') ;
