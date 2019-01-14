@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.3") inl
+Artifact("io.intino.alexandria", "1.0.4") inl
 	Imports
-		Compile("io.intino.alexandria", "primitives", "1.0.1")
+		Compile("io.intino.alexandria", "primitives", "1.0.2")
 		Test("junit", "junit", "LATEST")
 		Test("commons-io", "commons-io", "2.6")
 
