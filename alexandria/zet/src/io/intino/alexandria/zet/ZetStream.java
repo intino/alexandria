@@ -259,17 +259,17 @@ public interface ZetStream {
 			}
 		}
 
-		private boolean isValid(List<ZetStreamWithIndex> items) {
-			if (!consecutive && items.size() >= minFrequency && items.size() <= maxFrequency) return true;
-			items.sort(Comparator.comparing(i -> i.index));
+		private boolean isValid(List<ZetStreamWithIndex> streams) {
+			if (!consecutive) return streams.size() >= minFrequency && streams.size() <= maxFrequency;
+			streams.sort(Comparator.comparing(i -> i.index));
 			int count = 0;
 			int lastIndex = -2;
-			for (ZetStreamWithIndex item : items) {
-				if (item.index - lastIndex != 1) {
+			for (ZetStreamWithIndex stream : streams) {
+				if (stream.index - lastIndex != 1) {
 					if (count >= minFrequency && count <= maxFrequency) return true;
 					count = 0;
 				} else count++;
-				lastIndex = item.index;
+				lastIndex = stream.index;
 			}
 			return count >= minFrequency && count <= maxFrequency;
 		}
