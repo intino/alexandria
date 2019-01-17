@@ -1,8 +1,6 @@
 package io.intino.alexandria.zet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -198,12 +196,13 @@ public interface ZetStream {
 
 	@SuppressWarnings("WeakerAccess")
 	class Union implements ZetStream {
-		private final List<ZetStream> streams;
+		private final List<ZetStreamWithIndex> streams = new ArrayList<>();
 		private final int minFrequency;
 		private final int maxFrequency;
 		private final boolean consecutive;
-		private long current;
-		private long next;
+		private Comparator<ZetStreamWithIndex> comparator = Comparator.comparing(a -> a.stream.current());
+		private long current = -1;
+		private long next = -1;
 
 		public Union(List<ZetStream> streams) {
 			this(streams, 1, Integer.MAX_VALUE, false);
@@ -214,63 +213,76 @@ public interface ZetStream {
 		}
 
 		public Union(List<ZetStream> streams, int minFrequency, int maxFrequency, boolean consecutive) {
-			this.streams = streams;
+			for (int i = 0; i < streams.size(); i++) this.streams.add(new ZetStreamWithIndex(streams.get(i), i));
+			this.streams.forEach(s -> s.stream.next());
+			this.streams.sort(comparator);
 			this.minFrequency = minFrequency;
 			this.maxFrequency = maxFrequency;
 			this.consecutive = consecutive;
-			this.streams.forEach(ZetStream::next);
-			this.next = nextValue();
-			this.current = 0;
 		}
 
 		@Override
 		public long current() {
-			return current;
+			return this.streams.get(0).stream.current();
 		}
 
 		@Override
 		public long next() {
-			this.current = this.next;
-			this.next = nextValue();
-			return this.current;
+			if (current == next) hasNext();
+			current = next;
+			return current;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return next != -1;
-		}
-
-		private long nextValue() {
-			long min;
-			do {
-				min = Long.MAX_VALUE;
-				int count = 0;
-				for (ZetStream zetStream : streams) {
-					if (zetStream.current() == -1) continue;
-					if (zetStream.current() < min) {
-						min = zetStream.current();
-						count = 1;
-					} else if (zetStream.current() == min) count++;
-					else if (consecutive) count = 0;
+			if (current != next) return true;
+			while (true) {
+				next = !this.streams.isEmpty() ? this.streams.get(0).stream.current() : -1;
+				if (next == -1) return false;
+				List<ZetStreamWithIndex> streams = itemsWith(next);
+				if (isValid(streams)){
+					updateStreams(streams);
+					return true;
 				}
-				if (min == Long.MAX_VALUE) return -1;
-				advanceStreamsWith(min);
-				if ((count >= minFrequency) && (count <= maxFrequency)) break;
-			} while (true);
-			return min;
-		}
-
-		private void advanceStreamsWith(long value) {
-			int i = -1;
-			for (ZetStream stream : streams) {
-				i++;
-				if (stream.current() != value) continue;
-				if (stream.hasNext())
-					stream.next();
-				else
-					streams.set(i, Empty.instance);
+				updateStreams(streams);
 			}
 		}
+
+		private void updateStreams(List<ZetStreamWithIndex> items) {
+			for (int i = 0; i < items.size(); i++) {
+				ZetStreamWithIndex stream = streams.remove(0);
+				if(!stream.stream.hasNext()) continue;
+				stream.stream.next();
+				int index = Collections.binarySearch(streams, stream, comparator);
+				index = index < 0 ? (index + 1) * -1 : index;
+				streams.add(index, stream);
+			}
+		}
+
+		private boolean isValid(List<ZetStreamWithIndex> items) {
+			if (!consecutive && items.size() >= minFrequency && items.size() <= maxFrequency) return true;
+			items.sort(Comparator.comparing(i -> i.index));
+			int count = 0;
+			int lastIndex = -2;
+			for (ZetStreamWithIndex item : items) {
+				if (item.index - lastIndex != 1) {
+					if (count >= minFrequency && count <= maxFrequency) return true;
+					count = 0;
+				} else count++;
+				lastIndex = item.index;
+			}
+			return count >= minFrequency && count <= maxFrequency;
+		}
+
+		private List<ZetStreamWithIndex> itemsWith(long key) {
+			List<ZetStreamWithIndex> streams = new ArrayList<>();
+			for (ZetStreamWithIndex stream : this.streams) {
+				if (stream.stream.current() != key) break;
+				streams.add(stream);
+			}
+			return streams;
+		}
+
 	}
 
 
@@ -338,5 +350,14 @@ public interface ZetStream {
 		}
 	}
 
+	class ZetStreamWithIndex {
+		private final ZetStream stream;
+		private final int index;
+
+		public ZetStreamWithIndex(ZetStream stream, int index) {
+			this.stream = stream;
+			this.index = index;
+		}
+	}
 
 }
