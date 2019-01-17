@@ -223,7 +223,7 @@ public interface ZetStream {
 
 		@Override
 		public long current() {
-			return this.streams.get(0).stream.current();
+			return current;
 		}
 
 		@Override
