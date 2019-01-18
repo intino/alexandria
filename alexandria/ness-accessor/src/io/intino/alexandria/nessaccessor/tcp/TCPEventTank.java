@@ -42,11 +42,10 @@ public class TCPEventTank implements Datalake.EventStore.Tank {
 		String root = service.request("quickReflow");//TODO change message
 		File directory = directory(root);
 		if (!directory.exists()) return new ZimStream[0];
-		ZimStream[] zimStreams = FS.allFilesIn(directory, f -> f.getName().endsWith(EventExtension))
+		return FS.allFilesIn(directory, f -> f.getName().endsWith(EventExtension)).sorted()
 				.filter(f -> filter.test(timetagOf(f)))
 				.map(ZimReader::new)
 				.toArray(ZimStream[]::new);
-		return zimStreams;
 	}
 
 	private File directory(String value) {

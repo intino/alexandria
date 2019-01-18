@@ -47,7 +47,7 @@ def type(operations & graph)
 				deleteDirectory(((FileSystemStore) graph.store()).directory());
 			final RemounterGraph original = (RemounterGraph) new RemounterGraph(graph.store()).loadStashes(coreStashes());
 			allowWriting(original, false);
-			box.put(graph);
+			box.put(original);
 		}
 
 		void onBlock() {
@@ -59,6 +59,7 @@ def type(operations & graph)
 		}
 
 		void onFinish() {
+			this.onBlock();
 			final Graph graph = new Graph(graph().store());
 			allowWriting(graph, true);
 			box.put(graph.loadStashes(coreStashes()));

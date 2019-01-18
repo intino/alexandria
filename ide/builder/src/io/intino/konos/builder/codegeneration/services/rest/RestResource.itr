@@ -159,8 +159,8 @@ def type(parameter) trigger(type)
 end
 
 
-def type(parameter & defaultValue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultValue");
+def type(parameter & defaultvalue) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultvalue");
 end
 
 def type(parameter) trigger(assign)
