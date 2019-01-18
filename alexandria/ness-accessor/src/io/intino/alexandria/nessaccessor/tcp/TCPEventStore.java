@@ -132,7 +132,8 @@ public class TCPEventStore implements Datalake.EventStore {
 	}
 
 	private String putProbe(String name) {
-		return "put." + name;
+		String fingerprint = name.substring(0, name.indexOf("#"));
+		return "put." + fingerprint.substring(0, fingerprint.lastIndexOf("-"));
 	}
 
 	private TopicProducer producer(String topic) {
