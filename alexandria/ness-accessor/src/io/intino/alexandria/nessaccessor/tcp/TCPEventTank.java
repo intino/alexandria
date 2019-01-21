@@ -39,7 +39,7 @@ public class TCPEventTank implements Datalake.EventStore.Tank {
 	}
 
 	private ZimStream[] zimStreams(Predicate<Timetag> filter) {
-		String root = service.request("quickReflow");//TODO change message
+		String root = service.request("quickReflow");
 		File directory = directory(root);
 		if (!directory.exists()) return new ZimStream[0];
 		return FS.allFilesIn(directory, f -> f.getName().endsWith(EventExtension)).sorted()

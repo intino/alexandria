@@ -59,6 +59,8 @@ public class TCPEventStore implements Datalake.EventStore {
 
 	@Override
 	public Reflow reflow(Reflow.Filter filter) {
+		String response = adminService.request("seal", 30 * 60 * 1000);
+		if (!response.equals("sealed")) return null;
 		return new Reflow() {
 			private ZimStream is = new Merge(tankInputStreams());
 
@@ -77,7 +79,6 @@ public class TCPEventStore implements Datalake.EventStore {
 			public void next(int blockSize, MessageHandler... messageHandlers) {
 				new ReflowBlock(is, messageHandlers).reflow(blockSize);
 			}
-
 		};
 	}
 
