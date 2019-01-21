@@ -83,6 +83,7 @@ public class TCPDatalake implements Datalake {
 		private final CallBack onOpen;
 		private final TCPDatalake.CallBack onClose;
 		private Session session;
+		private String[] args;
 
 		Connection(String uri, String username, String password, String clientId, CallBack onOpen, CallBack onClose) {
 			this.uri = uri;
@@ -95,8 +96,9 @@ public class TCPDatalake implements Datalake {
 
 		@Override
 		public void connect(String... args) {
-			session = createSession(args.length > 0 ? args[0] : "");
-			onOpen.execute();
+			this.args = args;
+			this.session = createSession(args.length > 0 ? args[0] : "");
+			this.onOpen.execute();
 		}
 
 		private Session createSession(String arg) {
@@ -113,6 +115,7 @@ public class TCPDatalake implements Datalake {
 		}
 
 		public Session session() {
+			if (session == null || ((ActiveMQSession) session).isClosed()) connect(args);
 			return session;
 		}
 
