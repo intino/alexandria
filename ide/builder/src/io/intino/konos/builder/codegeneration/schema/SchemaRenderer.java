@@ -26,15 +26,57 @@ import java.util.stream.Collectors;
 
 public class SchemaRenderer {
 	private final List<Schema> schemas;
+	private final Map<String, String> classes;
 	private File gen;
 	private String rootPackage;
-	private final Map<String, String> classes;
 
 	public SchemaRenderer(KonosGraph graph, File gen, String rootPackage, Map<String, String> classes) {
 		schemas = graph.core$().find(Schema.class).stream().filter(s -> !s.core$().owner().is(Schema.class)).collect(Collectors.toList());
 		this.gen = gen;
 		this.rootPackage = rootPackage;
 		this.classes = classes;
+	}
+
+	private static Frame processAttribute(RealData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
+				.addSlot("type", !multiple(attribute) ? "double" : attribute.type())
+				.addSlot("defaultValue", attribute.defaultValue());
+	}
+
+	private static Frame processAttribute(IntegerData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
+				.addSlot("type", !multiple(attribute) ? "int" : attribute.type())
+				.addSlot("defaultValue", attribute.defaultValue());
+	}
+
+	private static Frame processAttribute(LongIntegerData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
+				.addSlot("type", attribute.type())
+				.addSlot("defaultValue", attribute.defaultValue() + "L");
+	}
+
+	private static Frame processAttribute(FileData attribute) {
+		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
+				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
+				.addSlot("type", attribute.type());
+	}
+
+	private static Frame render(Schema.AttributeMap map) {
+		return new Frame().addTypes("attributeMap").addSlot("name", map.name$());
+	}
+
+	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {
+		while (attributes.hasNext()) {
+			final Frame next = (Frame) attributes.next();
+			next.addSlot("element", elementName);
+		}
+	}
+
+	private static boolean multiple(TypeData attribute) {
+		return attribute.i$(ListData.class);
 	}
 
 	public void execute() {
@@ -91,34 +133,6 @@ public class SchemaRenderer {
 		return null;
 	}
 
-	private static Frame processAttribute(RealData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", "double")
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", !multiple(attribute) ? "double" : attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue());
-	}
-
-	private static Frame processAttribute(IntegerData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", !multiple(attribute) ? "int" : attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue());
-	}
-
-	private static Frame processAttribute(LongIntegerData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", attribute.defaultValue() + "L");
-	}
-
-
-	private static Frame processAttribute(FileData attribute) {
-		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
-				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type());
-	}
-
 	private Frame processAttribute(BoolData attribute) {
 		return new Frame().addTypes("primitive", multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
@@ -127,10 +141,12 @@ public class SchemaRenderer {
 	}
 
 	private Frame processAttribute(TextData attribute) {
-		return new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
+		Frame frame = new Frame().addTypes(multiple(attribute) ? "multiple" : "single", attribute.type())
 				.addSlot("name", attribute.a$(Schema.Attribute.class).name$())
-				.addSlot("type", attribute.type())
-				.addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+				.addSlot("type", attribute.type());
+		if (attribute.defaultValue() != null) frame.addSlot("defaultValue", "\"" + attribute.defaultValue() + "\"");
+		return frame;
+
 	}
 
 	private Frame processAttribute(DateTimeData attribute) {
@@ -164,21 +180,6 @@ public class SchemaRenderer {
 		final Service service = schema.core$().ownerAs(Service.class);
 		String subPackage = "schemas" + (service != null ? File.separator + service.name$().toLowerCase() : "");
 		return subPackage.isEmpty() ? rootPackage : rootPackage + "." + subPackage.replace(File.separator, ".");
-	}
-
-	private static Frame render(Schema.AttributeMap map) {
-		return new Frame().addTypes("attributeMap").addSlot("name", map.name$());
-	}
-
-	private static void addReturningValueToAttributes(String elementName, Iterator<AbstractFrame> attributes) {
-		while (attributes.hasNext()) {
-			final Frame next = (Frame) attributes.next();
-			next.addSlot("element", elementName);
-		}
-	}
-
-	private static boolean multiple(TypeData attribute) {
-		return attribute.i$(ListData.class);
 	}
 
 	private Template template() {
