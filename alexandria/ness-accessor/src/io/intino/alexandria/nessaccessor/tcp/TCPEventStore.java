@@ -59,6 +59,8 @@ public class TCPEventStore implements Datalake.EventStore {
 
 	@Override
 	public Reflow reflow(Reflow.Filter filter) {
+		String response = adminService.request("seal", 30 * 60 * 1000);
+		if (!response.equals("sealed")) return null;
 		return new Reflow() {
 			private ZimStream is = new Merge(tankInputStreams());
 
@@ -77,7 +79,6 @@ public class TCPEventStore implements Datalake.EventStore {
 			public void next(int blockSize, MessageHandler... messageHandlers) {
 				new ReflowBlock(is, messageHandlers).reflow(blockSize);
 			}
-
 		};
 	}
 
@@ -132,7 +133,8 @@ public class TCPEventStore implements Datalake.EventStore {
 	}
 
 	private String putProbe(String name) {
-		return "put." + name;
+		String fingerprint = name.substring(0, name.indexOf("#"));
+		return "put." + fingerprint.substring(0, fingerprint.lastIndexOf("-"));
 	}
 
 	private TopicProducer producer(String topic) {

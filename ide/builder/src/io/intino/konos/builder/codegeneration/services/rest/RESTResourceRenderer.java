@@ -31,11 +31,11 @@ public class RESTResourceRenderer {
 	private static final String NOTIFICATIONS_PACKAGE = "rest/notifications";
 	private final Project project;
 	private final List<RESTService> services;
+	private final String boxName;
+	private final Map<String, String> classes;
 	private File gen;
 	private File src;
 	private String packageName;
-	private final String boxName;
-	private final Map<String, String> classes;
 
 	public RESTResourceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
@@ -149,9 +149,11 @@ public class RESTResourceRenderer {
 				.addSlot("in", parameter.in().name());
 		if (parameter.isRequired()) return parameterFrame;
 		if (parameter.isBool()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asBool().defaultValue());
-		else if (parameter.isText()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asText().defaultValue());
+		else if (parameter.isText() && parameter.asText().defaultValue() != null)
+			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asText().defaultValue());
 		else if (parameter.isReal()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asReal().defaultValue());
-		else if (parameter.isInteger()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asInteger().defaultValue());
+		else if (parameter.isInteger())
+			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asInteger().defaultValue());
 		else if (parameter.isLongInteger())
 			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asLongInteger().defaultValue());
 		return parameterFrame;

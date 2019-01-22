@@ -183,13 +183,11 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	protected void refresh(Instant instant) {
-		dirty(true);
-		refresh();
+		forceRefresh();
 	}
 
 	protected void refresh(TimeRange range) {
-		dirty(true);
-		refresh();
+		forceRefresh();
 	}
 
 	private void buildNavigatorDisplay(TimeScaleHandler timeScaleHandler) {

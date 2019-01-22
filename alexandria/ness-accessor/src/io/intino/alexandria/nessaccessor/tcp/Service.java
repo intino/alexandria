@@ -18,13 +18,17 @@ public abstract class Service {
 	}
 
 	String request(String query) {
+		return request(query, 1000);
+	}
+
+	String request(String query, long timeout) {
 		try {
 			TopicProducer producer = newProducer();
 			if (producer == null) return "";
 			Message message = MessageFactory.createMessageFor(query);
 			message.setJMSReplyTo(this.session.createTemporaryQueue());
 			producer.produce(message);
-			Message response = session.createConsumer(message.getJMSReplyTo()).receive(1000);
+			Message response = session.createConsumer(message.getJMSReplyTo()).receive(timeout);
 			return response == null ? "" : textFrom(response);
 		} catch (JMSException e) {
 			Logger.error(e);
