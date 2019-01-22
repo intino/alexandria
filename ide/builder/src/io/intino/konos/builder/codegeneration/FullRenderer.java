@@ -22,17 +22,13 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.dialog.DialogsRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.display.DisplayRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.display.DisplaysRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.displays.DisplayListRenderer;
+import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.project.LegioConfiguration;
-import io.intino.tara.compiler.shared.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -135,13 +131,14 @@ public class FullRenderer {
 	}
 
 	private void ui() {
-		new DisplayRenderer(project, graph, src, gen, packageName, parent, boxName, classes).execute();
-		new DisplaysRenderer(graph, gen, packageName, boxName).execute();
-		new DialogsRenderer(graph, gen, packageName, boxName).execute();
-		new DialogRenderer(graph, src, gen, packageName, boxName, classes).execute();
-		new ResourceRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new UIServiceRenderer(graph, gen, packageName, boxName).execute();
-		new UIAccessorCreator(module, graph, parent).execute();
+		Settings settings = settings();
+
+		new UIAccessorCreator(settings, graph).execute();
+		new UIServiceRenderer(settings, graph).execute();
+
+		new ResourceListRenderer(settings, graph).execute();
+		new DisplayListRenderer(settings, graph).execute();
+//		new DisplaysClassRenderer(settings, graph).execute();
 	}
 
 	private void box() {
@@ -152,7 +149,7 @@ public class FullRenderer {
 
 	private String boxName() {
 		if (module != null) {
-			final Configuration configuration = configurationOf(module);
+			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
 			if (configuration == null) return "";
 			final String dsl = configuration.outDSL();
 			if (dsl == null || dsl.isEmpty()) return module.getName();
@@ -164,8 +161,8 @@ public class FullRenderer {
 		try {
 			if (module == null) return null;
 			final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
-			final Configuration configuration = configurationOf(module);
-			final List<? extends Configuration.LanguageLibrary> languages = configuration.languages();
+			final io.intino.tara.compiler.shared.Configuration configuration = configurationOf(module);
+			final List<? extends io.intino.tara.compiler.shared.Configuration.LanguageLibrary> languages = configuration.languages();
 			if (languages.isEmpty() || languages.get(0).generationPackage() == null) return null;
 			final String workingPackage = languages.get(0).generationPackage().replace(".graph", "");
 			if (facade.findClass(workingPackage + ".box." + Formatters.firstUpperCase(languages.get(0).name()) + "Box", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
@@ -181,7 +178,7 @@ public class FullRenderer {
 		return module != null && configurationOf(module) != null && hasModel(configurationOf(module));
 	}
 
-	private boolean hasModel(Configuration configuration) {
+	private boolean hasModel(io.intino.tara.compiler.shared.Configuration configuration) {
 		return !configuration.languages().isEmpty();
 	}
 
@@ -201,4 +198,11 @@ public class FullRenderer {
 		return IOUtils.toByteArray(this.getClass().getResourceAsStream("/log4j_model.properties"));
 
 	}
+
+	private Settings settings() {
+		return new Settings().project(project).module(module).parent(parent)
+							      .src(src).gen(gen).boxName(boxName).packageName(packageName)
+								  .classes(classes);
+	}
+
 }

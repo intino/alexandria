@@ -18,14 +18,14 @@ import java.util.List;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamelCase;
 
-abstract class ActionRenderer {
+public abstract class ActionRenderer {
 	protected final Project project;
 	protected final File destiny;
 	protected String packageName;
 	protected final String boxName;
 	private final String type;
 
-	ActionRenderer(Project project, File destiny, String packageName, String boxName, String type) {
+	public ActionRenderer(Project project, File destiny, String packageName, String boxName, String type) {
 		this.project = project;
 		this.destiny = destiny;
 		this.packageName = packageName;
@@ -33,11 +33,11 @@ abstract class ActionRenderer {
 		this.type = type;
 	}
 
-	boolean alreadyRendered(File destiny, String action) {
-		return Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + "Action").exists();
+	protected boolean alreadyRendered(File destiny, String action) {
+		return Commons.javaFile(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(action)) + suffix()).exists();
 	}
 
-	File destinyPackage(File destiny) {
+	protected File destinyPackage(File destiny) {
 		return new File(destiny, "actions");
 	}
 
@@ -45,9 +45,13 @@ abstract class ActionRenderer {
 		if (!alreadyRendered(destiny, name)) {
 			createNewClass(name, response, parameters, exceptions, schemas);
 		} else {
-			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(snakeCaseToCamelCase(name)) + "Action");
+			File destiny = Commons.javaFile(destinyPackage(this.destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix());
 			new ActionUpdater(project, destiny, packageName, parameters, exceptions, response).update();
 		}
+	}
+
+	protected String suffix() {
+		return "Action";
 	}
 
 	private void createNewClass(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
@@ -62,7 +66,7 @@ abstract class ActionRenderer {
 			frame.addSlot("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + "Action", template().format(frame));
+		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().format(frame));
 	}
 
 	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {

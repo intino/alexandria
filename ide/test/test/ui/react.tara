@@ -1,0 +1,11 @@
+dsl Konos
+
+Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
+	Resource("/") home as BlankPage(homeDocument) Main
+
+Display example
+
+Root homeDocument
+	components = component1
+
+Component component1

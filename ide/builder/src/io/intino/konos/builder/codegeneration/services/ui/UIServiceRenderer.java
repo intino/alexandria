@@ -1,7 +1,8 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
-import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
@@ -14,17 +15,14 @@ import java.util.Set;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
-import static io.intino.konos.model.graph.KonosGraph.dialogsOf;
 import static io.intino.konos.model.graph.KonosGraph.displaysOf;
+import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
 public class UIServiceRenderer extends UIRenderer {
-	private final File gen;
 	private final List<UIService> uiServiceList;
 
-	public UIServiceRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
-		super(boxName, packageName);
-		this.gen = gen;
+	public UIServiceRenderer(Settings settings, KonosGraph graph) {
+		super(settings);
 		this.uiServiceList = graph.uIServiceList();
 	}
 
@@ -33,18 +31,15 @@ public class UIServiceRenderer extends UIRenderer {
 	}
 
 	private void processUIService(UIService service) {
-		final List<Dialog> dialogs = dialogsOf(service);
 		final List<Display> displays = displaysOf(service);
-		Frame frame = buildFrame().addTypes("ui").
+		Frame frame = baseFrame().addTypes("ui").
 				addSlot("name", service.name$()).
 				addSlot("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) frame.addSlot("userHome", service.userHome().name$());
-		if (!dialogs.isEmpty())
-			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
 		if (!displays.isEmpty())
-			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName);
+			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName());
 		if (service.authentication() != null) frame.addSlot("auth", service.authentication().by());
-		writeFrame(gen, snakeCaseToCamelCase(service.name$() + "Service"), template().format(frame));
+		writeFrame(new File(gen(), UI), snakeCaseToCamelCase(service.name$() + "Service"), template().format(frame));
 	}
 
 	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {
@@ -53,10 +48,6 @@ public class UIServiceRenderer extends UIRenderer {
 
 	private Frame[] displaysFrame(List<Display> displays) {
 		return displays.stream().map(this::frameOf).toArray(Frame[]::new);
-	}
-
-	private Frame[] dialogsFrame(List<Dialog> dialogs) {
-		return dialogs.stream().map(this::frameOf).toArray(Frame[]::new);
 	}
 
 	private Frame frameOf(UIService.Resource resource) {
@@ -75,31 +66,22 @@ public class UIServiceRenderer extends UIRenderer {
 
 	private Frame frameOf(Display display) {
 		final Frame frame = newDisplayFrame(display, new Frame("display"));
+		String type = typeOf(display);
+		if (!type.equals("display")) frame.addSlot("type", typeOf(display));
 		if (display.isAccessible())
 			frame.addTypes("accessible").addSlot("display", newDisplayFrame(display, new Frame("display", "proxy")));
 		return frame;
 	}
 
 	private Frame newDisplayFrame(Display display, Frame frame) {
-		frame.addSlot("name", display.name$()).addSlot("package", packageName);
+		frame.addSlot("name", display.name$()).addSlot("package", packageName());
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
 		return frame;
 	}
 
-	private Frame frameOf(Dialog dialog) {
-		return new Frame().addTypes("dialog").addSlot("name", dialog.name$()).addSlot("package", packageName);
-	}
-
 	private Template template() {
-		Template template = UIServiceTemplate.create();
-		addFormats(template);
-		return template;
+		return addFormats(UIServiceTemplate.create());
 	}
 
-	private void addFormats(Template template) {
-		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
-		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
-		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
-	}
 }

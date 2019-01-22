@@ -1,0 +1,20 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.4") ui-framework
+	Box("Konos", "5.0.0") > targetPackage = ""
+	Code("io.intino.alexandria.ui")
+	Imports
+		Compile("io.intino.alexandria", "core-framework", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "primitives", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "rest", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "rest-accessor", "[1.0.0, 2.0.0)")
+		Test("junit", "junit", "LATEST")
+		Compile(groupId = "io.intino.alexandria", artifactId = "ui-framework", version = "1.0.0")
+
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.dist)
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-frameworks") dist

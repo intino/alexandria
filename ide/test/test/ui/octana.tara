@@ -1,510 +1,510 @@
 dsl Konos
 
-Service (title = "", favicon = "") octana as UI(port = "")
-	Resource("/") home as DisplayPage(octanaDesktop) Root
-
-Panel(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath = "favicon.png") octanaDesktop as Desktop
-	layout = Menu
-
-	Views
-		View("dashboard", hidden=HiddenEnabled) dashboard as PanelContainer(octanaDashboardPanel)
-		View("centros") as CatalogContainer(octanaCenterCatalog)
-		View("personas") as CatalogContainer(octanaPersonCatalog)
-		View("análisis") as PanelContainer(octanaAnalysisPanel)
-
-Panel octanaDashboardPanel
-	Toolbar > OpenDialog("abrir", dialog=dialog1) abrir
-	Views > View("overview") overview as MoldContainer(octanaDashboardMold)
-
-Mold(modelClass="Octana") octanaDashboardMold
-	Block ocBlock
-		hidden = HiddenEnabled
-		Title sss
-		EmbeddedDialog(dialog = dialog1) embeddedDialog
-
-Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
-	Block(Flexible)
-		Block > style = "margin-bottom:10px;"
-			Title nombreApellidosAlias > defaultStyle = "font-size:14pt !important;margin-top:2px;"
-			Description estadoSituacion > defaultStyle = "color:black;margin-left:2px;font-size:11pt;"
-		Block(Horizontal)
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Base64) iconoNacionalidad > defaultStyle = "margin-top:22px;margin-bottom:17px;height:33px;width:50px;box-shadow:2px 2px 10px 0px rgba(0,0,0,0.2);"
-				Title tituloNacionalidad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionNacionalidad > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Resource) iconoGenero > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
-				Title tituloGenero > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionGenero > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Resource) iconoEdad > defaultStyle = "height:44px;width:44px;margin-bottom:11px;margin-top:16px;"
-				Title tituloEdad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionEdad > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) bloqueDuracionCondena > style = "margin:0 15px";
-				hidden = HiddenEnabled
-				Icon(source = Resource) iconoDuracionCondena > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
-				Title tituloDuracionCondena > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionDuracionCondena > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) bloqueFianza > style = "margin:0 15px";
-				hidden = HiddenEnabled
-				Icon(source = Resource) iconoFianza > defaultStyle = "height:52px;width:52px;margin-bottom:8px;margin-top:11px;"
-				Title tituloFianza > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				CatalogLink(catalog = octanaHistorico) descripcionFianza > defaultStyle = "font-size:12pt;color:black;"
-					filtered = true
-
-		Block bloqueMedidasSeguridadInterno > hidden = HiddenEnabled
-			Title cabeceraMedidasSeguridadInterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet medidasSeguridadInterno
-
-		Block bloquePrivaciones > hidden = HiddenEnabled
-			Title cabeceraPrivaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet privaciones
-
-		Block bloqueRiesgos > hidden = HiddenEnabled
-			Title cabeceraRiesgos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet riesgos
-
-		Block bloqueContactosAutorizados > hidden = HiddenEnabled
-			Title cabeceraContactosAutorizados > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet contactosAutorizados
-
-		Block bloqueMedidasSeguridadExterno > hidden = HiddenEnabled
-			Title cabeceraMedidasSeguridadExterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet medidasSeguridadExterno
-
-		Block bloqueProhibiciones > hidden = HiddenEnabled
-			Title cabeceraProhibiciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet prohibiciones
-
-		Block bloqueAlojamientos > hidden = HiddenEnabled
-			Title cabeceraAlojamientos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet alojamientos
-
-		Block bloqueClasificaciones > hidden = HiddenEnabled
-			Title cabeceraClasificaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet clasificaciones
-
-Dialog(url = "", label = "", description = "") dialog1
-
-Catalog(itemClass = "io.intino.octana.graph.Center") octanaCenterCatalog
-	Toolbar
-		OpenDialog("abrir", dialog=dialog1)
-		Task(title = "ss") task
-		Download(title = "") down
-
-//	Events > OnClickRecord > OpenDialog(dialog1)
-	Events > OnClickItem > OpenCatalog(octanaPersonCatalog, filtered=true)
-	Views
-		View("lista", mold = octanaCenterMold) as ListContainer
-
-Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
-
-Catalog(itemClass = "io.intino.octana.graph.Person") octanaPersonCatalog
-	Views
-		View("lista", mold = octanaPersonMold) as ListContainer
-
-Mold(modelClass="io.intino.octana.graph.Person") octanaPersonMold
-
-Panel octanaAnalysisPanel
-	Views
-		View("análisis", hidden=HiddenEnabled) analisis as DisplayContainer("olapDisplay")
-
-Catalog(itemClass = "io.intino.octana.graph.Persona", label = "población") octanaPoblacion
-	Events > OnClickItem > OpenPanel(panel = octanaPanelPersona)
-	Views
-		View("listado", mold = octanaMoldePersona, noItemsMessage = "no hay personas registradas") as ListContainer
-		View("mapa", mold = octanaMoldePersonaUbicacion) as MapContainer
-			noItemsMessage = "no hay personas con cercas registradas"
-			Zoom(10, 1, 20)
-			Center(latitude=19.2643486, longitude=-99.2086771)
-
-	Content
-		Sorting("recién llegados") fechaIngreso
-		Sorting("más peligrosos") gradoInsercion
-		Sorting("mayor condena") duracionCondena
-
-		Grouping("situación") situacionCategorizacion
-		Grouping("tiempo en prisión") tiempoEnPrisionCategorizacion
-		Grouping("duración de la condena") duracionDeLaCondenaCategorizacion
-		Grouping("género") generoCategorizacion
-		Grouping("nacionalidad") nacionalidadCategorizacion
-		Grouping("riesgos") riesgoCategorizacion
-		Grouping("medidas de seguridad de interno") medidasSeguridadInternoCategorizacion
-		Grouping("medidas de seguridad de externo") medidasSeguridadExternoCategorizacion
-		Grouping("privaciones") privacionesCategorizacion
-		Grouping("delitos") delitosCategorizacion
-
-Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersona
-	Block(Horizontal)
-		Block
-			Highlight status > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
-			Picture foto > defaultStyle = "height:100px;width:80px;"
-			Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
-		Block(Flexible)
-			Block(Horizontal) > Title nombreApellidosAlias > defaultStyle = "margin-left:0;"
-			Description estadoSituacion > defaultStyle = "margin-bottom:5px;"
-			Description(label="Número de identificación") numeroIdentificacion
-			Description(label="Nacionalidad") nacionalidad
-			Description(label="Fecha de ingreso") fechaIngreso
-			Description(label="Duración de la condena") duracionCondena
-
-Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaUbicacion
-	Block(Horizontal)
-		Block
-			Block
-				Highlight status > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
-				Picture foto > defaultStyle = "height:100px;width:80px;"
-				Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
-			Block(Flexible)
-		Block(Flexible)
-			Block(Horizontal) > Title nombreApellidosAlias > defaultStyle = "margin-left:0;"
-			Location ubicacionActual
-			Description estadoSituacion > defaultStyle = "margin-bottom:5px;"
-			Description(label="Número de identificación") numeroIdentificacion
-			Description(label="Nacionalidad") nacionalidad
-			Description(label="Fecha de ingreso") fechaIngreso
-			Description(label="Duración de la condena") duracionCondena
-			ItemLinks abrirPersona > defaultStyle = "font-size:10pt;margin:3px 6px 0 0;padding:0px;background:none;display:block;"
-
-Panel octanaPanelPersona
-	Views
-		View("resumen", layout=LeftFixed) as MoldContainer(octanaMoldePersonaResumen)
-		View("ficha") as MoldContainer(octanaMoldePersonaCompleto)
-		View("causas", hidden = HiddenEnabled) causas as CatalogContainer(octanaCausas) > filtered = true
-		View("condenas", hidden = HiddenEnabled) condenas as CatalogContainer(octanaCondenas) > filtered = true
-		View("histórico") historico as CatalogContainer(octanaHistorico) > filtered = true
-		View("tracking", hidden = HiddenEnabled) tracking as DisplayContainer("octanaTracking")
-
-Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaResumen
-	Block
-		Block
-			Highlight status > defaultStyle = "height:22px;width:6px;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:4px;margin-top:4px;"
-			Picture foto > defaultStyle = "height:280px;width:200px;"
-			Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:6px;margin-bottom:6px;opacity:0.8;"
-		Block
-			Block bloqueDetenido > hidden = HiddenEnabled;
-				Title detenido > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
-				Description("desde") detenidoDesde > defaultStyle = "margin-top:2px;"
-				Description("fecha máx.") detenidoFechaMaxima
-				Description("delitos") detenidoDelitos
-				DownloadOperation("ver orden") verDetenidoOrden > mode = Link
-			Block bloqueFugado > hidden = HiddenEnabled;
-				Title fugado > defaultStyle = "margin-top:10px;font-size:12pt !important;"
-				Description("desde") fugadoDesde
-			Block bloquePrisionEludible > hidden = HiddenEnabled
-				Title prisionEludible > defaultStyle = "margin-top:10px;font-size:12pt !important;"
-				Description("desde") prisionEludibleDesde
-				Description("fianza") fianza
-			Block bloquePrisionIncondicional > hidden = HiddenEnabled
-				Title prisionIncondicional > defaultStyle = "margin-top:10px;font-size:12pt !important;"
-				Description("desde") prisionIncondicionalDesde
-			Block bloquePrisionInterno > hidden = HiddenEnabled
-				Title tituloPrisionInterno > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
-				Snippet prisionInterno > defaultStyle = "margin-top:2px;"
-				DownloadOperation("ver auto ingreso") verPrisionInternoAutoIngreso > mode = Link
-			Block bloqueMapa > hidden = HiddenEnabled
-				Map(zoom = 5, latitude=19.2643486, longitude=-99.2086771) mapa > defaultStyle = "margin-top:10px;width:200px;height:200px"
-			Block bloquePermiso > hidden = HiddenEnabled
-				Title tituloPermiso > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
-				Snippet permiso > defaultStyle = "margin-top:2px;"
-				DownloadOperation("ver permiso") verPermiso > mode = Link
-			Block bloqueCausas > hidden = HiddenEnabled
-				Snippet causas > defaultStyle = "margin-top:10px;"
-				CatalogLink(catalog=octanaCausas) verCausas > defaultStyle = "font-size:10pt;padding:0;background:none;"
-			Block bloqueCondenas > hidden = HiddenEnabled
-				Snippet condenas > defaultStyle = "margin-top:10px;"
-				CatalogLink(catalog=octanaCondenas) verCondenas > defaultStyle = "font-size:10pt;padding:0;background:none;"
-			Block bloqueEvolucionGradoInsercion > hidden = HiddenEnabled
-				EmbeddedDisplay(display = octanaEvolucionGradoInsercion) evolucionGradoInsercion
-
-Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
-	Block(Flexible)
-		Block > style = "margin-bottom:10px;"
-			Title nombreApellidosAlias > defaultStyle = "font-size:14pt !important;margin-top:2px;"
-			Description estadoSituacion > defaultStyle = "color:black;margin-left:2px;font-size:11pt;"
-		Block(Horizontal)
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Base64) iconoNacionalidad > defaultStyle = "margin-top:22px;margin-bottom:17px;height:33px;width:50px;box-shadow:2px 2px 10px 0px rgba(0,0,0,0.2);"
-				Title tituloNacionalidad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionNacionalidad > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Resource) iconoGenero > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
-				Title tituloGenero > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionGenero > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) > style = "margin:0 15px";
-				Icon(source = Resource) iconoEdad > defaultStyle = "height:44px;width:44px;margin-bottom:11px;margin-top:16px;"
-				Title tituloEdad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionEdad > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) bloqueDuracionCondena > style = "margin:0 15px";
-				hidden = HiddenEnabled
-				Icon(source = Resource) iconoDuracionCondena > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
-				Title tituloDuracionCondena > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				Description descripcionDuracionCondena > defaultStyle = "font-size:12pt;color:black;"
-			Block(Vertical Center) bloqueFianza > style = "margin:0 15px";
-				hidden = HiddenEnabled
-				Icon(source = Resource) iconoFianza > defaultStyle = "height:52px;width:52px;margin-bottom:8px;margin-top:11px;"
-				Title tituloFianza > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
-				CatalogLink(catalog = octanaHistorico) descripcionFianza > defaultStyle = "font-size:12pt;color:black;"
-					filtered = true
-
-		Block bloqueMedidasSeguridadInterno > hidden = HiddenEnabled
-			Title cabeceraMedidasSeguridadInterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet medidasSeguridadInterno
-
-		Block bloquePrivaciones > hidden = HiddenEnabled
-			Title cabeceraPrivaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet privaciones
-
-		Block bloqueRiesgos > hidden = HiddenEnabled
-			Title cabeceraRiesgos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet riesgos
-
-		Block bloqueContactosAutorizados > hidden = HiddenEnabled
-			Title cabeceraContactosAutorizados > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet contactosAutorizados
-
-		Block bloqueMedidasSeguridadExterno > hidden = HiddenEnabled
-			Title cabeceraMedidasSeguridadExterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet medidasSeguridadExterno
-
-		Block bloqueProhibiciones > hidden = HiddenEnabled
-			Title cabeceraProhibiciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet prohibiciones
-
-		Block bloqueAlojamientos > hidden = HiddenEnabled
-			Title cabeceraAlojamientos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet alojamientos
-
-		Block bloqueClasificaciones > hidden = HiddenEnabled
-			Title cabeceraClasificaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
-			Snippet clasificaciones
-
-TemporalCatalog(itemClass = "io.intino.octana.graph.Causa", type=Range, scales = Day) octanaCausas
-	label = "causas"
-	Toolbar > canSearch = false
-	Views > View("listado", mold = octanaMoldeCausa, noItemsMessage = "no tiene causas") as ListContainer
-	TemporalFilter(enabled=Never, visible=Never)
-
-Mold(modelClass = "io.intino.octana.graph.Causa") octanaMoldeCausa
-	Block(Horizontal)
-		Block
-			Title hora > defaultStyle = "width:40px;"
-		Block
-			Block
-				Title delito
-				Description tipoDelito
-				Snippet condenaAbsolucion
-			Block > style = "margin-top:10px;"
-				Description("lugar") lugar
-			Block > Description informacionTribunal > defaultStyle = "margin-top:3px;"
-			Block(Horizontal) > style = "margin-top:10px;"
-				Highlight estado
-
-TemporalCatalog(itemClass = "io.intino.octana.graph.Condena", type=Range, scales = Day) octanaCondenas
-	label = "condenas"
-	Toolbar > canSearch = false
-	Views > View("listado", mold = octanaMoldeCondena, noItemsMessage = "no tiene condenas") as ListContainer
-	TemporalFilter(enabled=Never, visible=Never)
-
-Mold(modelClass = "io.intino.octana.graph.Condena") octanaMoldeCondena
-	Block(Horizontal)
-		Block
-			Title hora > defaultStyle = "width:40px;"
-		Block
-			Block
-				Title causa
-				Description duracionCondena > defaultStyle = "color:black;"
-			Block > style = "margin-top:10px;"
-				Description("fecha de resolución") fechaResolucion
-			Block > Description informacionTribunal > defaultStyle = "margin-top:3px;"
-			Block > DownloadOperation("ver sentencia") verSentencia > defaultStyle = "margin-top:3px;"; mode = Link
-
-TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type=Range, scales = Day) octanaHistorico
-	label = "histórico" // TODO Octavio... el label es obligatorio si está vinculado con un link a un stamp
-	Toolbar > canSearch = false
-	Views > View("lista", mold = octanaMoldeEventoHistorico, noItemsMessage = "no hay eventos") as ListContainer
-	TemporalFilter(enabled=Never, visible=Never)
-
-Display octanaTracking
-	Notification actualiza as Object(Tracking)
-
-Mold(modelClass = "io.intino.octana.graph.Evento") octanaMoldeEventoHistorico
-	Block(Horizontal)
-		Block
-			Title hora > defaultStyle = "width:40px;"
-		Block
-			Block
-				Snippet titulo > defaultStyle = "font-size:11pt"
-				Description descripcion
-// TODO JE -> implementar permiso
-//			Block(hidden=HiddenEnabled) bloqueOrdenSalida
-//				DownloadOperation("ver permiso") verPermiso > mode=Link
-
-Display octanaEvolucionGradoInsercion
-	Notification actualiza as List Object(DatoEvolucion)
-
-	Request cambiaEscala as Text
-
-Schema DatoEvolucion
-	Attribute fecha as Text
-	Attribute valor as Real
-
-Schema Tracking
-	Attribute valor as Text
-	Attribute cercaInclusion as Text
-	Attribute cercaExclusion as Text
-
-TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type = Range, scales = Day) octanaEventos
-	label = "cronología"
-	TemporalFilter > enabled = Always; visible = Always; layout = Vertical
-	Views > View("lista", mold = octanaMoldeEvento, noItemsMessage = "no hay eventos") as ListContainer
-
-//	Events > OnClickRecord > OpenCatalog(octanaPoblacion, filtered=true)
-
-	Content
-		Sorting(label = "los más recientes") fecha
-
-		Grouping("tipo de evento") tipoEventoCategorizacion
-
-Mold(modelClass = "io.intino.octana.graph.Evento") octanaMoldeEvento
-	Block(Horizontal)
-		Block
-			Title hora > defaultStyle = "width:40px;"
-		Block(Flexible Horizontal) b
-			Block
-				Block > Title titulo
-				Block(hidden=HiddenEnabled) bloqueCirculoAmistad
-					Snippet reosCirculoAmistad
-					TaskOperation("prohibir visitas") prohibirVisitas > defaultStyle = "width:180px"
-				Block(hidden=HiddenEnabled) bloqueQuebrantamientoCondena
-					Description("fecha estimada de regreso") fechaEstimadaRegresoQuebrantamientoCondena
-					TaskOperation("emitir orden de captura") emitirOrdenCaptura > defaultStyle = "width:180px"
-				Block(hidden=HiddenEnabled) bloqueSolicitudPermiso
-					Description("fecha de salida") desdeSolicitudPermiso
-					Description("fecha de regreso") hastaSolicitudPermiso
-					TaskOperation("generar permiso") generarPermiso > defaultStyle = "width:180px"
-				Block(hidden=HiddenEnabled) bloqueClasificacionRegimen
-					Description("propuesto por") origenClasificacionRegimen
-					TaskOperation("cambiar de régimen") gestionarCambio > defaultStyle = "width:180px"
-				Block(hidden=HiddenEnabled) bloquePelea
-					Snippet internosPelea
-					TaskOperation("abrir expediente") abrirExpedientePelea > defaultStyle = "width:180px"
-				Block(hidden=HiddenEnabled) bloqueAmotinamiento
-					Snippet internosAmotinamiento
-					TaskOperation("abrir expediente") abrirExpedienteAmotinamiento > defaultStyle = "width:180px"
-
-	Block(layout=Horizontal, mode=Expanded, hidden=HiddenEnabled) bloquePersona > style="margin-top:20px;margin-left:53px;margin-bottom:20px;"
-		Block
-			Highlight personaStatus > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
-			Picture personaFoto > defaultStyle = "height:100px;width:80px;"
-			Highlight personaGradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
-		Block(Flexible)
-			Block
-				Block(Horizontal) > Title personaNombreApellidosAlias > defaultStyle = "margin-left:0;"
-				Description personaEstadoSituacion > defaultStyle = "margin-bottom:5px;"
-				Description(label="Número de identificación") personaNumeroIdentificacion
-				Description(label="Nacionalidad") personaNacionalidad
-				Description(label="Fecha de ingreso") personaFechaIngreso
-				Description(label="Duración de la condena") personaDuracionCondena
-			Block(Horizontal)
-				Block > CatalogLink(catalog=octanaPoblacion, filtered=true, openItem=true) abrirPersona > defaultStyle = "font-size:10pt;margin:3px 6px 0 0;padding:0px;background:none;display:block;"
-// TODO JE -> implementar permiso
-//				Block(hidden=HiddenEnabled) bloqueOrdenSalida
-//					DownloadOperation("ver permiso") verPermiso
-//						defaultStyle = "margin:3px 6px 0 0;"
-//						mode = Link
-
-	Block(mode=Expanded, hidden=HiddenEnabled) bloqueScreeningAprobado > style = "margin-left:52px;"
-		Block > style = "background:#efefef;padding:10px;"
-			Snippet cambiosScreeningAprobado
-			Snippet trasladosScreeningAprobado
-		Block > TaskOperation("ejecutar") ejecutarScreeningAprobado > defaultStyle = "width:180px"
-
-Panel octanaProtocolos
-	Views > View("overview") overview as DisplayContainer("octanaDashboardProtocolos")
-
-Display octanaDashboardProtocolos
-	displays = octanaSimuladorStock
-
-	Notification muestraProtocolo as Text
-	Notification muestraProtocoloScreening as Object(ProtocoloScreening)
-
-	Request abrirProtocolo as Text
-
-// --------------------------------------------------------------------------
-// Protocolo Simulación
-// --------------------------------------------------------------------------
-Display octanaSimuladorStock
-	Notification prepara as Object(Simulacion)
-	Notification muestraConfiguracion
-	Notification muestraSimulacion
-	Notification actualiza as Object(SimulacionPaso)
-	Notification actualizaConfiguracion as Object(ConfiguracionSimuladorStock)
-	Notification actualizaCapacidades as List Object(SimulacionPropiedad)
-	Notification actualizaSimulaciones as List Object(ResultadoSimulacion)
-	Notification simulacionIniciada
-	Notification simulacionParada
-
-	Request inicia
-	Request para
-	Request seleccionaRegimen as Text
-	Request cambiaFechaInicio as DateTime
-	Request cambiaFechaFin as DateTime
-	Request cambiaCapacidad as Object(Capacidad)
-	Request cambiaConfiguracion as Object(ConfiguracionSimuladorStock)
-	Request eliminaSimulacion as Text
-	Request aplicaSimulacion as Text
-
-Schema Simulacion
-	Attribute fechaInicio as DateTime
-	Attribute fechaFin as DateTime
-	Attribute escala as Text
-	Attribute capacidadList as Object(SimulacionPropiedad) List
-	Attribute configuracion as Object(ConfiguracionSimuladorStock)
-
-Schema ResultadoSimulacion
-	Attribute name as Text
-	Attribute fechaInicio as DateTime
-	Attribute fechaFin as DateTime
-	Attribute escala as Text
-	Attribute configuracion as Object(ConfiguracionSimuladorStock)
-
-Schema SimulacionPaso
-	Attribute fecha as DateTime
-	Attribute porcentajes as Object(SimulacionPropiedad) List
-
-Schema SimulacionPropiedad
-	Attribute regimen as Text
-	Attribute valor as Real
-	Attribute porcentaje as Real
-
-Schema ConfiguracionSimuladorStock
-	Attribute entradaProvisional as Real
-	Attribute salidaProvisional as Real
-	Attribute salidaProvisionalAAbsuelto as Real
-	Attribute salidaProvisionalAOrdinario as Real
-	Attribute provisionalAOrdinario as Real
-	Attribute entradaOrdinario as Real
-	Attribute recursosOrdinarioAAbierto as Integer
-	Attribute recursosAbiertoAVigilada as Integer
-	Attribute recursosEspecialACerrado as Integer
-	Attribute recursosCerradoAOrdinario as Integer
-
-Schema Capacidad
-	Attribute regimen as Text
-	Attribute valor as Integer
-
-Schema ProtocoloScreening
-	Schema cambios
-		Attribute origen as Text
-		Attribute destino as Text
-		Attribute personas as Object(ProtocoloScreeningPersona) List
-
-	Schema traslados
-		Attribute origen as Text
-		Attribute destino as Text
-		Attribute personas as Object(ProtocoloScreeningPersona) List
-
-Schema ProtocoloScreeningPersona
-	Attribute nombreCompleto as Text
-	Attribute foto as Text
+//Service (title = "", favicon = "") octana as UI(port = "")
+//	Resource("/") home as DisplayPage(octanaDesktop) Root
+//
+//Panel(title = "Octana", subTitle = "Octana", logoPath = "logo.png", faviconPath = "favicon.png") octanaDesktop as Desktop
+//	layout = Menu
+//
+//	Views
+//		View("dashboard", hidden=HiddenEnabled) dashboard as PanelContainer(octanaDashboardPanel)
+//		View("centros") as CatalogContainer(octanaCenterCatalog)
+//		View("personas") as CatalogContainer(octanaPersonCatalog)
+//		View("análisis") as PanelContainer(octanaAnalysisPanel)
+//
+//Panel octanaDashboardPanel
+//	Toolbar > OpenDialog("abrir", dialog=dialog1) abrir
+//	Views > View("overview") overview as MoldContainer(octanaDashboardMold)
+//
+//Mold(modelClass="Octana") octanaDashboardMold
+//	Block ocBlock
+//		hidden = HiddenEnabled
+//		Title sss
+//		EmbeddedDialog(dialog = dialog1) embeddedDialog
+//
+//Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
+//	Block(Flexible)
+//		Block > style = "margin-bottom:10px;"
+//			Title nombreApellidosAlias > defaultStyle = "font-size:14pt !important;margin-top:2px;"
+//			Description estadoSituacion > defaultStyle = "color:black;margin-left:2px;font-size:11pt;"
+//		Block(Horizontal)
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Base64) iconoNacionalidad > defaultStyle = "margin-top:22px;margin-bottom:17px;height:33px;width:50px;box-shadow:2px 2px 10px 0px rgba(0,0,0,0.2);"
+//				Title tituloNacionalidad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionNacionalidad > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Resource) iconoGenero > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+//				Title tituloGenero > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionGenero > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Resource) iconoEdad > defaultStyle = "height:44px;width:44px;margin-bottom:11px;margin-top:16px;"
+//				Title tituloEdad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionEdad > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) bloqueDuracionCondena > style = "margin:0 15px";
+//				hidden = HiddenEnabled
+//				Icon(source = Resource) iconoDuracionCondena > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+//				Title tituloDuracionCondena > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionDuracionCondena > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) bloqueFianza > style = "margin:0 15px";
+//				hidden = HiddenEnabled
+//				Icon(source = Resource) iconoFianza > defaultStyle = "height:52px;width:52px;margin-bottom:8px;margin-top:11px;"
+//				Title tituloFianza > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				CatalogLink(catalog = octanaHistorico) descripcionFianza > defaultStyle = "font-size:12pt;color:black;"
+//					filtered = true
+//
+//		Block bloqueMedidasSeguridadInterno > hidden = HiddenEnabled
+//			Title cabeceraMedidasSeguridadInterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet medidasSeguridadInterno
+//
+//		Block bloquePrivaciones > hidden = HiddenEnabled
+//			Title cabeceraPrivaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet privaciones
+//
+//		Block bloqueRiesgos > hidden = HiddenEnabled
+//			Title cabeceraRiesgos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet riesgos
+//
+//		Block bloqueContactosAutorizados > hidden = HiddenEnabled
+//			Title cabeceraContactosAutorizados > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet contactosAutorizados
+//
+//		Block bloqueMedidasSeguridadExterno > hidden = HiddenEnabled
+//			Title cabeceraMedidasSeguridadExterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet medidasSeguridadExterno
+//
+//		Block bloqueProhibiciones > hidden = HiddenEnabled
+//			Title cabeceraProhibiciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet prohibiciones
+//
+//		Block bloqueAlojamientos > hidden = HiddenEnabled
+//			Title cabeceraAlojamientos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet alojamientos
+//
+//		Block bloqueClasificaciones > hidden = HiddenEnabled
+//			Title cabeceraClasificaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet clasificaciones
+//
+//Dialog(url = "", label = "", description = "") dialog1
+//
+//Catalog(itemClass = "io.intino.octana.graph.Center") octanaCenterCatalog
+//	Toolbar
+//		OpenDialog("abrir", dialog=dialog1)
+//		Task(title = "ss") task
+//		Download(title = "") down
+//
+////	Events > OnClickRecord > OpenDialog(dialog1)
+//	Events > OnClickItem > OpenCatalog(octanaPersonCatalog, filtered=true)
+//	Views
+//		View("lista", mold = octanaCenterMold) as ListContainer
+//
+//Mold(modelClass="io.intino.octana.graph.Center") octanaCenterMold
+//
+//Catalog(itemClass = "io.intino.octana.graph.Person") octanaPersonCatalog
+//	Views
+//		View("lista", mold = octanaPersonMold) as ListContainer
+//
+//Mold(modelClass="io.intino.octana.graph.Person") octanaPersonMold
+//
+//Panel octanaAnalysisPanel
+//	Views
+//		View("análisis", hidden=HiddenEnabled) analisis as DisplayContainer("olapDisplay")
+//
+//Catalog(itemClass = "io.intino.octana.graph.Persona", label = "población") octanaPoblacion
+//	Events > OnClickItem > OpenPanel(panel = octanaPanelPersona)
+//	Views
+//		View("listado", mold = octanaMoldePersona, noItemsMessage = "no hay personas registradas") as ListContainer
+//		View("mapa", mold = octanaMoldePersonaUbicacion) as MapContainer
+//			noItemsMessage = "no hay personas con cercas registradas"
+//			Zoom(10, 1, 20)
+//			Center(latitude=19.2643486, longitude=-99.2086771)
+//
+//	Content
+//		Sorting("recién llegados") fechaIngreso
+//		Sorting("más peligrosos") gradoInsercion
+//		Sorting("mayor condena") duracionCondena
+//
+//		Grouping("situación") situacionCategorizacion
+//		Grouping("tiempo en prisión") tiempoEnPrisionCategorizacion
+//		Grouping("duración de la condena") duracionDeLaCondenaCategorizacion
+//		Grouping("género") generoCategorizacion
+//		Grouping("nacionalidad") nacionalidadCategorizacion
+//		Grouping("riesgos") riesgoCategorizacion
+//		Grouping("medidas de seguridad de interno") medidasSeguridadInternoCategorizacion
+//		Grouping("medidas de seguridad de externo") medidasSeguridadExternoCategorizacion
+//		Grouping("privaciones") privacionesCategorizacion
+//		Grouping("delitos") delitosCategorizacion
+//
+//Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersona
+//	Block(Horizontal)
+//		Block
+//			Highlight status > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
+//			Picture foto > defaultStyle = "height:100px;width:80px;"
+//			Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
+//		Block(Flexible)
+//			Block(Horizontal) > Title nombreApellidosAlias > defaultStyle = "margin-left:0;"
+//			Description estadoSituacion > defaultStyle = "margin-bottom:5px;"
+//			Description(label="Número de identificación") numeroIdentificacion
+//			Description(label="Nacionalidad") nacionalidad
+//			Description(label="Fecha de ingreso") fechaIngreso
+//			Description(label="Duración de la condena") duracionCondena
+//
+//Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaUbicacion
+//	Block(Horizontal)
+//		Block
+//			Block
+//				Highlight status > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
+//				Picture foto > defaultStyle = "height:100px;width:80px;"
+//				Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
+//			Block(Flexible)
+//		Block(Flexible)
+//			Block(Horizontal) > Title nombreApellidosAlias > defaultStyle = "margin-left:0;"
+//			Location ubicacionActual
+//			Description estadoSituacion > defaultStyle = "margin-bottom:5px;"
+//			Description(label="Número de identificación") numeroIdentificacion
+//			Description(label="Nacionalidad") nacionalidad
+//			Description(label="Fecha de ingreso") fechaIngreso
+//			Description(label="Duración de la condena") duracionCondena
+//			ItemLinks abrirPersona > defaultStyle = "font-size:10pt;margin:3px 6px 0 0;padding:0px;background:none;display:block;"
+//
+//Panel octanaPanelPersona
+//	Views
+//		View("resumen", layout=LeftFixed) as MoldContainer(octanaMoldePersonaResumen)
+//		View("ficha") as MoldContainer(octanaMoldePersonaCompleto)
+//		View("causas", hidden = HiddenEnabled) causas as CatalogContainer(octanaCausas) > filtered = true
+//		View("condenas", hidden = HiddenEnabled) condenas as CatalogContainer(octanaCondenas) > filtered = true
+//		View("histórico") historico as CatalogContainer(octanaHistorico) > filtered = true
+//		View("tracking", hidden = HiddenEnabled) tracking as DisplayContainer("octanaTracking")
+//
+//Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaResumen
+//	Block
+//		Block
+//			Highlight status > defaultStyle = "height:22px;width:6px;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:4px;margin-top:4px;"
+//			Picture foto > defaultStyle = "height:280px;width:200px;"
+//			Highlight gradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:6px;margin-bottom:6px;opacity:0.8;"
+//		Block
+//			Block bloqueDetenido > hidden = HiddenEnabled;
+//				Title detenido > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
+//				Description("desde") detenidoDesde > defaultStyle = "margin-top:2px;"
+//				Description("fecha máx.") detenidoFechaMaxima
+//				Description("delitos") detenidoDelitos
+//				DownloadOperation("ver orden") verDetenidoOrden > mode = Link
+//			Block bloqueFugado > hidden = HiddenEnabled;
+//				Title fugado > defaultStyle = "margin-top:10px;font-size:12pt !important;"
+//				Description("desde") fugadoDesde
+//			Block bloquePrisionEludible > hidden = HiddenEnabled
+//				Title prisionEludible > defaultStyle = "margin-top:10px;font-size:12pt !important;"
+//				Description("desde") prisionEludibleDesde
+//				Description("fianza") fianza
+//			Block bloquePrisionIncondicional > hidden = HiddenEnabled
+//				Title prisionIncondicional > defaultStyle = "margin-top:10px;font-size:12pt !important;"
+//				Description("desde") prisionIncondicionalDesde
+//			Block bloquePrisionInterno > hidden = HiddenEnabled
+//				Title tituloPrisionInterno > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
+//				Snippet prisionInterno > defaultStyle = "margin-top:2px;"
+//				DownloadOperation("ver auto ingreso") verPrisionInternoAutoIngreso > mode = Link
+//			Block bloqueMapa > hidden = HiddenEnabled
+//				Map(zoom = 5, latitude=19.2643486, longitude=-99.2086771) mapa > defaultStyle = "margin-top:10px;width:200px;height:200px"
+//			Block bloquePermiso > hidden = HiddenEnabled
+//				Title tituloPermiso > defaultStyle = "margin-left:0;margin-top:10px;font-size:12pt !important;"
+//				Snippet permiso > defaultStyle = "margin-top:2px;"
+//				DownloadOperation("ver permiso") verPermiso > mode = Link
+//			Block bloqueCausas > hidden = HiddenEnabled
+//				Snippet causas > defaultStyle = "margin-top:10px;"
+//				CatalogLink(catalog=octanaCausas) verCausas > defaultStyle = "font-size:10pt;padding:0;background:none;"
+//			Block bloqueCondenas > hidden = HiddenEnabled
+//				Snippet condenas > defaultStyle = "margin-top:10px;"
+//				CatalogLink(catalog=octanaCondenas) verCondenas > defaultStyle = "font-size:10pt;padding:0;background:none;"
+//			Block bloqueEvolucionGradoInsercion > hidden = HiddenEnabled
+//				EmbeddedDisplay(display = octanaEvolucionGradoInsercion) evolucionGradoInsercion
+//
+//Mold(modelClass="io.intino.octana.graph.Persona") octanaMoldePersonaCompleto
+//	Block(Flexible)
+//		Block > style = "margin-bottom:10px;"
+//			Title nombreApellidosAlias > defaultStyle = "font-size:14pt !important;margin-top:2px;"
+//			Description estadoSituacion > defaultStyle = "color:black;margin-left:2px;font-size:11pt;"
+//		Block(Horizontal)
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Base64) iconoNacionalidad > defaultStyle = "margin-top:22px;margin-bottom:17px;height:33px;width:50px;box-shadow:2px 2px 10px 0px rgba(0,0,0,0.2);"
+//				Title tituloNacionalidad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionNacionalidad > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Resource) iconoGenero > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+//				Title tituloGenero > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionGenero > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) > style = "margin:0 15px";
+//				Icon(source = Resource) iconoEdad > defaultStyle = "height:44px;width:44px;margin-bottom:11px;margin-top:16px;"
+//				Title tituloEdad > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionEdad > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) bloqueDuracionCondena > style = "margin:0 15px";
+//				hidden = HiddenEnabled
+//				Icon(source = Resource) iconoDuracionCondena > defaultStyle = "height:64px;width:64px;margin-bottom:2px;margin-top:5px;"
+//				Title tituloDuracionCondena > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				Description descripcionDuracionCondena > defaultStyle = "font-size:12pt;color:black;"
+//			Block(Vertical Center) bloqueFianza > style = "margin:0 15px";
+//				hidden = HiddenEnabled
+//				Icon(source = Resource) iconoFianza > defaultStyle = "height:52px;width:52px;margin-bottom:8px;margin-top:11px;"
+//				Title tituloFianza > defaultStyle = "color:#888;font-size:10pt !important;margin-bottom:3px;"
+//				CatalogLink(catalog = octanaHistorico) descripcionFianza > defaultStyle = "font-size:12pt;color:black;"
+//					filtered = true
+//
+//		Block bloqueMedidasSeguridadInterno > hidden = HiddenEnabled
+//			Title cabeceraMedidasSeguridadInterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet medidasSeguridadInterno
+//
+//		Block bloquePrivaciones > hidden = HiddenEnabled
+//			Title cabeceraPrivaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet privaciones
+//
+//		Block bloqueRiesgos > hidden = HiddenEnabled
+//			Title cabeceraRiesgos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet riesgos
+//
+//		Block bloqueContactosAutorizados > hidden = HiddenEnabled
+//			Title cabeceraContactosAutorizados > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet contactosAutorizados
+//
+//		Block bloqueMedidasSeguridadExterno > hidden = HiddenEnabled
+//			Title cabeceraMedidasSeguridadExterno > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet medidasSeguridadExterno
+//
+//		Block bloqueProhibiciones > hidden = HiddenEnabled
+//			Title cabeceraProhibiciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet prohibiciones
+//
+//		Block bloqueAlojamientos > hidden = HiddenEnabled
+//			Title cabeceraAlojamientos > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet alojamientos
+//
+//		Block bloqueClasificaciones > hidden = HiddenEnabled
+//			Title cabeceraClasificaciones > defaultStyle = "margin-top:20px;margin-bottom:10px;padding:10px 0 2px;font-size:12pt !important;border-top:1px solid #dfdfdf;"
+//			Snippet clasificaciones
+//
+//TemporalCatalog(itemClass = "io.intino.octana.graph.Causa", type=Range, scales = Day) octanaCausas
+//	label = "causas"
+//	Toolbar > canSearch = false
+//	Views > View("listado", mold = octanaMoldeCausa, noItemsMessage = "no tiene causas") as ListContainer
+//	TemporalFilter(enabled=Never, visible=Never)
+//
+//Mold(modelClass = "io.intino.octana.graph.Causa") octanaMoldeCausa
+//	Block(Horizontal)
+//		Block
+//			Title hora > defaultStyle = "width:40px;"
+//		Block
+//			Block
+//				Title delito
+//				Description tipoDelito
+//				Snippet condenaAbsolucion
+//			Block > style = "margin-top:10px;"
+//				Description("lugar") lugar
+//			Block > Description informacionTribunal > defaultStyle = "margin-top:3px;"
+//			Block(Horizontal) > style = "margin-top:10px;"
+//				Highlight estado
+//
+//TemporalCatalog(itemClass = "io.intino.octana.graph.Condena", type=Range, scales = Day) octanaCondenas
+//	label = "condenas"
+//	Toolbar > canSearch = false
+//	Views > View("listado", mold = octanaMoldeCondena, noItemsMessage = "no tiene condenas") as ListContainer
+//	TemporalFilter(enabled=Never, visible=Never)
+//
+//Mold(modelClass = "io.intino.octana.graph.Condena") octanaMoldeCondena
+//	Block(Horizontal)
+//		Block
+//			Title hora > defaultStyle = "width:40px;"
+//		Block
+//			Block
+//				Title causa
+//				Description duracionCondena > defaultStyle = "color:black;"
+//			Block > style = "margin-top:10px;"
+//				Description("fecha de resolución") fechaResolucion
+//			Block > Description informacionTribunal > defaultStyle = "margin-top:3px;"
+//			Block > DownloadOperation("ver sentencia") verSentencia > defaultStyle = "margin-top:3px;"; mode = Link
+//
+//TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type=Range, scales = Day) octanaHistorico
+//	label = "histórico" // TODO Octavio... el label es obligatorio si está vinculado con un link a un stamp
+//	Toolbar > canSearch = false
+//	Views > View("lista", mold = octanaMoldeEventoHistorico, noItemsMessage = "no hay eventos") as ListContainer
+//	TemporalFilter(enabled=Never, visible=Never)
+//
+//Display octanaTracking
+//	Notification actualiza as Object(Tracking)
+//
+//Mold(modelClass = "io.intino.octana.graph.Evento") octanaMoldeEventoHistorico
+//	Block(Horizontal)
+//		Block
+//			Title hora > defaultStyle = "width:40px;"
+//		Block
+//			Block
+//				Snippet titulo > defaultStyle = "font-size:11pt"
+//				Description descripcion
+//// TODO JE -> implementar permiso
+////			Block(hidden=HiddenEnabled) bloqueOrdenSalida
+////				DownloadOperation("ver permiso") verPermiso > mode=Link
+//
+//Display octanaEvolucionGradoInsercion
+//	Notification actualiza as List Object(DatoEvolucion)
+//
+//	Request cambiaEscala as Text
+//
+//Schema DatoEvolucion
+//	Attribute fecha as Text
+//	Attribute valor as Real
+//
+//Schema Tracking
+//	Attribute valor as Text
+//	Attribute cercaInclusion as Text
+//	Attribute cercaExclusion as Text
+//
+//TemporalCatalog(itemClass = "io.intino.octana.graph.Evento", type = Range, scales = Day) octanaEventos
+//	label = "cronología"
+//	TemporalFilter > enabled = Always; visible = Always; layout = Vertical
+//	Views > View("lista", mold = octanaMoldeEvento, noItemsMessage = "no hay eventos") as ListContainer
+//
+////	Events > OnClickRecord > OpenCatalog(octanaPoblacion, filtered=true)
+//
+//	Content
+//		Sorting(label = "los más recientes") fecha
+//
+//		Grouping("tipo de evento") tipoEventoCategorizacion
+//
+//Mold(modelClass = "io.intino.octana.graph.Evento") octanaMoldeEvento
+//	Block(Horizontal)
+//		Block
+//			Title hora > defaultStyle = "width:40px;"
+//		Block(Flexible Horizontal) b
+//			Block
+//				Block > Title titulo
+//				Block(hidden=HiddenEnabled) bloqueCirculoAmistad
+//					Snippet reosCirculoAmistad
+//					TaskOperation("prohibir visitas") prohibirVisitas > defaultStyle = "width:180px"
+//				Block(hidden=HiddenEnabled) bloqueQuebrantamientoCondena
+//					Description("fecha estimada de regreso") fechaEstimadaRegresoQuebrantamientoCondena
+//					TaskOperation("emitir orden de captura") emitirOrdenCaptura > defaultStyle = "width:180px"
+//				Block(hidden=HiddenEnabled) bloqueSolicitudPermiso
+//					Description("fecha de salida") desdeSolicitudPermiso
+//					Description("fecha de regreso") hastaSolicitudPermiso
+//					TaskOperation("generar permiso") generarPermiso > defaultStyle = "width:180px"
+//				Block(hidden=HiddenEnabled) bloqueClasificacionRegimen
+//					Description("propuesto por") origenClasificacionRegimen
+//					TaskOperation("cambiar de régimen") gestionarCambio > defaultStyle = "width:180px"
+//				Block(hidden=HiddenEnabled) bloquePelea
+//					Snippet internosPelea
+//					TaskOperation("abrir expediente") abrirExpedientePelea > defaultStyle = "width:180px"
+//				Block(hidden=HiddenEnabled) bloqueAmotinamiento
+//					Snippet internosAmotinamiento
+//					TaskOperation("abrir expediente") abrirExpedienteAmotinamiento > defaultStyle = "width:180px"
+//
+//	Block(layout=Horizontal, mode=Expanded, hidden=HiddenEnabled) bloquePersona > style="margin-top:20px;margin-left:53px;margin-bottom:20px;"
+//		Block
+//			Highlight personaStatus > defaultStyle = "height:17px;width:0;border-radius:18px;position:absolute;top:0;z-index:1;opacity:0.7;margin-left:2px;margin-top:1px;"
+//			Picture personaFoto > defaultStyle = "height:100px;width:80px;"
+//			Highlight personaGradoInsercion > defaultStyle = "position:absolute;right:0;bottom:0;margin-right:4px;margin-bottom:4px;opacity:0.8;"
+//		Block(Flexible)
+//			Block
+//				Block(Horizontal) > Title personaNombreApellidosAlias > defaultStyle = "margin-left:0;"
+//				Description personaEstadoSituacion > defaultStyle = "margin-bottom:5px;"
+//				Description(label="Número de identificación") personaNumeroIdentificacion
+//				Description(label="Nacionalidad") personaNacionalidad
+//				Description(label="Fecha de ingreso") personaFechaIngreso
+//				Description(label="Duración de la condena") personaDuracionCondena
+//			Block(Horizontal)
+//				Block > CatalogLink(catalog=octanaPoblacion, filtered=true, openItem=true) abrirPersona > defaultStyle = "font-size:10pt;margin:3px 6px 0 0;padding:0px;background:none;display:block;"
+//// TODO JE -> implementar permiso
+////				Block(hidden=HiddenEnabled) bloqueOrdenSalida
+////					DownloadOperation("ver permiso") verPermiso
+////						defaultStyle = "margin:3px 6px 0 0;"
+////						mode = Link
+//
+//	Block(mode=Expanded, hidden=HiddenEnabled) bloqueScreeningAprobado > style = "margin-left:52px;"
+//		Block > style = "background:#efefef;padding:10px;"
+//			Snippet cambiosScreeningAprobado
+//			Snippet trasladosScreeningAprobado
+//		Block > TaskOperation("ejecutar") ejecutarScreeningAprobado > defaultStyle = "width:180px"
+//
+//Panel octanaProtocolos
+//	Views > View("overview") overview as DisplayContainer("octanaDashboardProtocolos")
+//
+//Display octanaDashboardProtocolos
+//	displays = octanaSimuladorStock
+//
+//	Notification muestraProtocolo as Text
+//	Notification muestraProtocoloScreening as Object(ProtocoloScreening)
+//
+//	Request abrirProtocolo as Text
+//
+//// --------------------------------------------------------------------------
+//// Protocolo Simulación
+//// --------------------------------------------------------------------------
+//Display octanaSimuladorStock
+//	Notification prepara as Object(Simulacion)
+//	Notification muestraConfiguracion
+//	Notification muestraSimulacion
+//	Notification actualiza as Object(SimulacionPaso)
+//	Notification actualizaConfiguracion as Object(ConfiguracionSimuladorStock)
+//	Notification actualizaCapacidades as List Object(SimulacionPropiedad)
+//	Notification actualizaSimulaciones as List Object(ResultadoSimulacion)
+//	Notification simulacionIniciada
+//	Notification simulacionParada
+//
+//	Request inicia
+//	Request para
+//	Request seleccionaRegimen as Text
+//	Request cambiaFechaInicio as DateTime
+//	Request cambiaFechaFin as DateTime
+//	Request cambiaCapacidad as Object(Capacidad)
+//	Request cambiaConfiguracion as Object(ConfiguracionSimuladorStock)
+//	Request eliminaSimulacion as Text
+//	Request aplicaSimulacion as Text
+//
+//Schema Simulacion
+//	Attribute fechaInicio as DateTime
+//	Attribute fechaFin as DateTime
+//	Attribute escala as Text
+//	Attribute capacidadList as Object(SimulacionPropiedad) List
+//	Attribute configuracion as Object(ConfiguracionSimuladorStock)
+//
+//Schema ResultadoSimulacion
+//	Attribute name as Text
+//	Attribute fechaInicio as DateTime
+//	Attribute fechaFin as DateTime
+//	Attribute escala as Text
+//	Attribute configuracion as Object(ConfiguracionSimuladorStock)
+//
+//Schema SimulacionPaso
+//	Attribute fecha as DateTime
+//	Attribute porcentajes as Object(SimulacionPropiedad) List
+//
+//Schema SimulacionPropiedad
+//	Attribute regimen as Text
+//	Attribute valor as Real
+//	Attribute porcentaje as Real
+//
+//Schema ConfiguracionSimuladorStock
+//	Attribute entradaProvisional as Real
+//	Attribute salidaProvisional as Real
+//	Attribute salidaProvisionalAAbsuelto as Real
+//	Attribute salidaProvisionalAOrdinario as Real
+//	Attribute provisionalAOrdinario as Real
+//	Attribute entradaOrdinario as Real
+//	Attribute recursosOrdinarioAAbierto as Integer
+//	Attribute recursosAbiertoAVigilada as Integer
+//	Attribute recursosEspecialACerrado as Integer
+//	Attribute recursosCerradoAOrdinario as Integer
+//
+//Schema Capacidad
+//	Attribute regimen as Text
+//	Attribute valor as Integer
+//
+//Schema ProtocoloScreening
+//	Schema cambios
+//		Attribute origen as Text
+//		Attribute destino as Text
+//		Attribute personas as Object(ProtocoloScreeningPersona) List
+//
+//	Schema traslados
+//		Attribute origen as Text
+//		Attribute destino as Text
+//		Attribute personas as Object(ProtocoloScreeningPersona) List
+//
+//Schema ProtocoloScreeningPersona
+//	Attribute nombreCompleto as Text
+//	Attribute foto as Text

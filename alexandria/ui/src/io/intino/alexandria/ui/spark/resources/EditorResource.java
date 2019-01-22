@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.spark.resources;
 
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
 import io.intino.alexandria.ui.services.EditorService.Permission;
 import io.intino.alexandria.ui.spark.UISparkManager;
 

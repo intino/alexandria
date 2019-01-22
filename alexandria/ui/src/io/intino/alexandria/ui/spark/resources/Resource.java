@@ -4,8 +4,8 @@ import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.AlexandriaDisplay;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
 import io.intino.alexandria.ui.services.auth.SessionAuthService;
@@ -112,7 +112,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	}
 
 	protected AlexandriaDisplayNotifier notifier(UISession session, UIClient client, AlexandriaDisplay display) {
-		return notifierProvider.agent(display, carrier(session, client));
+		return notifierProvider.notifier(display, carrier(session, client));
 	}
 
 	protected Token accessToken() {

@@ -1,24 +1,10 @@
 dsl Proteo
 
-use Component
-use UI
 use DataTypes
+use UI
+use Component
 
-Concept Desktop extends Display
-	has:{1..1} AppBar
-	has:{1..1} Tabs
-
-Concept Document extends Display
-	has Block
-
-Concept Editor extends Display
-	has Block
-
-Concept:Named Display extends Element is abstract
-	var string label = empty
-	var Display[] components = empty
-	var string parentComponent = empty
-
+Concept:Named PassiveView is abstract
 	Concept Request extends Data
 		var word:{Asset Void} responseType = Void
 		var Exception[] exceptionRefs = empty
@@ -28,6 +14,31 @@ Concept:Named Display extends Element is abstract
 		var word:{All Client Display} to = Display
 		var Exception[] exceptionRefs = empty
 		has Exception
+
+Concept:Named Display extends PassiveView
+	var string label = empty
+	var Component[] components = empty
+	var string parentDisplay = empty
+
+	has Block
+
+Concept PageDisplay extends Display
+
+Concept Desktop extends PageDisplay
+	has:{1..1} AppBar
+	has:{1..1} Tabs
+
+Concept Root extends PageDisplay
+	has Component
+
+Facet DrawerNavigable on Desktop
+	var word:{Left Right Top Bottom} direction = Left
+	var word:{Normal Modal} mode = Normal
+	var boolean hasMiniVariant = false
+	var boolean underAppBar = false
+
+Concept Editor extends PageDisplay
+	has Block
 
 Facet Accessible on Display
 	var string[] parameters

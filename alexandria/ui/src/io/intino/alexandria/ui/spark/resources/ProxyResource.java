@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.spark.resources;
 
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
-import io.intino.alexandria.ui.displays.Soul;
-import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.Soul;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UISession;
+import io.intino.alexandria.ui.spark.UISparkManager;
 
 public abstract class ProxyResource extends Resource {
 

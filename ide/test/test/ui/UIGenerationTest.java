@@ -1,5 +1,6 @@
 package ui;
 
+import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorRenderer;
 import io.intino.konos.model.graph.KonosGraph;
@@ -21,6 +22,7 @@ public class UIGenerationTest {
 	private static final String marcetPackage = "org.marcet.box";
 	private static final String cesarPackage = "io.intino.cesar.ui";
 	private static final String editorPackage = "io.intino.editor.box";
+	private static final String reactPackage = "io.intino.react.box";
 	private static final String DIR = "test-gen";
 
 
@@ -67,6 +69,17 @@ public class UIGenerationTest {
 	@Test
 	public void testEditor() throws Exception {
 		execute(new File(DIR, editorPackage.replace(".", File.separator)), "editor", editorPackage);
+	}
+
+	@Test
+	public void testReact() throws Exception {
+		cleanTestDirectory("react");
+		execute(new File(DIR, reactPackage.replace(".", File.separator)), "react", reactPackage);
+	}
+
+	private void cleanTestDirectory(String react) {
+		File directory = new File(DIR, reactPackage.replace(".", File.separator));
+		if (directory.exists()) Files.removeDir(directory);
 	}
 
 	private void execute(File gen, String stash, String workingPackage) {

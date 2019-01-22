@@ -1,5 +1,7 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+
 import java.util.List;
 import java.util.function.Consumer;
 
