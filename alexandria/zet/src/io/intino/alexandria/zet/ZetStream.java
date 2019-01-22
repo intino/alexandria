@@ -240,7 +240,7 @@ public interface ZetStream {
 				next = !this.streams.isEmpty() ? this.streams.get(0).stream.current() : -1;
 				if (next == -1) return false;
 				List<ZetStreamWithIndex> streams = itemsWith(next);
-				if (isValid(streams)){
+				if (current != next && isValid(streams)){
 					updateStreams(streams);
 					return true;
 				}
@@ -284,7 +284,6 @@ public interface ZetStream {
 		}
 
 	}
-
 
 	class Merge implements ZetStream {
 		private final List<ZetStream> streams;
