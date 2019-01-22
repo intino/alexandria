@@ -1,0 +1,111 @@
+def type(display & accessible)
+	package $package+validPackage.ui.displays.notifiers;
+
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.AlexandriaProxyDisplayNotifier  {
+
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		public void refreshBaseUrl(String value) {
+			putToDisplay("refreshBaseUrl", "value", value);
+		}
+
+		public void refreshError(String value) {
+			putToDisplay("refreshError", "value", value);
+		}
+    }
+end
+
+def type(display)
+	package $package+validPackage.ui.displays.notifiers;
+
+	import io.intino.alexandria.exceptions.*;
+	import $package+validPackage.*;
+	$schemaImport
+
+    public class $name+FirstUpperCase~Notifier extends $parentType {
+
+        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+            super(display, carrier);
+        }
+
+		$notification...[$NL$NL]
+    }
+end
+
+def attribute(root) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaRootNotifier
+end
+
+def attribute(editor) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaEditorNotifier
+end
+
+def attribute(desktop) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier
+end
+
+def attribute(catalog) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier
+end
+
+def attribute(temporalTimeCatalog) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier
+end
+
+def attribute(temporalRangeCatalog) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier
+end
+
+def attribute(component) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaComponentNotifier
+end
+
+def attribute(display) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier
+end
+
+def attribute(MenuLayout) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaMenuLayoutNotifier
+end
+
+def attribute(TabLayout) trigger(parentType)
+	io.intino.alexandria.ui.displays.notifiers.AlexandriaTabLayoutNotifier
+end
+
+def type(notification) trigger(notification)
+	public void $name+firstLowercase([$parameter value]) {
+		put[$target]("$name+firstLowercase"[, "value", $parameter+empty~value]);
+	}
+end
+
+def type(parameter) trigger(empty)
+end
+
+def type(list) trigger(parameter)
+    java.util.List<$value>
+end
+
+def trigger(parameter)
+    $value
+end
+
+def type(schemaImport)
+	import $package.schemas.*;
+end
+
+def attribute(All) trigger(target)
+	ToAll
+end
+
+def attribute(Display) trigger(target)
+	ToDisplay
+end
+
+def attribute(Client) trigger(target)
+end

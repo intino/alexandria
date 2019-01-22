@@ -2,8 +2,8 @@ package io.intino.alexandria.ui;
 
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.AlexandriaDisplay;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

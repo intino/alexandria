@@ -23,9 +23,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return service.graph().core$().find(Display.class);
 	}
 
-	public static Element elementFor(UIService.Resource resource) {
+	public static Display displayFor(UIService.Resource resource) {
 		if (resource.isDesktopPage()) return resource.asDesktopPage().desktop();
-		if (resource.isDocumentPage()) return resource.asDocumentPage().document();
+		if (resource.isBlankPage()) return resource.asBlankPage().display();
 		return resource.asEditorPage().editor();
 	}
 

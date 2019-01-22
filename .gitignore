@@ -11,3 +11,4 @@ dependency-reduced-pom.xml
 alexandria/activity-elements-activity/gulpFile.js
 alexandria/activity-elements-activity/package.json
 gulpFile.js
+ide/builder/src-old

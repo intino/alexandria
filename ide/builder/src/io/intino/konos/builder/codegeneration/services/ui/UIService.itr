@@ -1,15 +1,16 @@
 def type(ui)
-	package $package+validPackage;
-	[import $dialogsImport+validPackage.dialogs.*;]
-	[import $displaysImport+validPackage.displays.*;]
-	[import $displaysImport+validPackage.displays.notifiers.*;]
-	[import $displaysImport+validPackage.displays.requesters.*;]
-	import $package+validPackage.resources.*;
+	package $package+validPackage.ui;
+	[import $displaysImport+validPackage.UiFrameworkBox;]
+	[import $displaysImport+validPackage.UiFrameworkConfiguration;]
+	[import $displaysImport+validPackage.ui.displays.*;]
+	[import $displaysImport+validPackage.ui.displays.notifiers.*;]
+	[import $displaysImport+validPackage.ui.displays.requesters.*;]
+	import $package+validPackage.ui.resources.*;
 
 	import io.intino.alexandria.ui.UIAlexandriaSpark;
-	import io.intino.alexandria.ui.AssetResourceLoader;
-	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier;
-	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
+	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.resources.AssetResourceLoader;
 	import io.intino.alexandria.ui.services.push.PushService;
 	import io.intino.alexandria.ui.spark.resources.AfterDisplayRequest;
 	import io.intino.alexandria.ui.spark.resources.AssetResource;
@@ -34,13 +35,11 @@ def type(ui)
 
 		public static void initDisplays(UIAlexandriaSpark spark) {
 			$display...[$NL]
-			$dialog...[$NL]
 			registerNotifiers();
 		}
 
 		private static void registerNotifiers() {
 			$display+notifier...[$NL]
-			$dialog+notifier...[$NL]
 		}
 	}
 end
@@ -70,16 +69,12 @@ def type(path)
 end
 
 def type(display & proxy) trigger(notifier)
-	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase~Proxy.class);
+	register($name+firstUpperCase~ProxyNotifier.class).forDisplay($package+validPackage.ui.displays.$name+firstUpperCase~Proxy.class);
 end
 
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);[
+	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.ui.displays.[$type~s.]$name+firstUpperCase.class);[
 	$display+notifier]
-end
-
-def type(dialog) trigger(notifier)
-	register(io.intino.alexandria.ui.displays.AlexandriaDialogNotifier.class).forDisplay($package+validPackage.dialogs.$name+firstUpperCase.class);
 end
 
 def trigger(custom)
@@ -98,13 +93,6 @@ def type(display)
 	$asset]
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 	$display+proxy
-end
-
-def type(dialog)
-	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());
-	spark.route("/$name+lowercase/:displayId").post(manager -> new io.intino.alexandria.ui.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase/:displayId").get(manager -> new io.intino.alexandria.ui.displays.AlexandriaDialogRequester(manager, notifierProvider()).execute());
-	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
 def trigger(asset)

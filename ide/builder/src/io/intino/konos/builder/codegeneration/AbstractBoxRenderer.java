@@ -124,8 +124,11 @@ public class AbstractBoxRenderer {
 	}
 
 	private Frame uiServiceFrame(UIService service, String name) {
-		final Frame frame = new Frame().addTypes("service", "ui").addSlot("name", service.name$()).addSlot("configuration", name)
-				.addSlot("parameter", new Frame(isCustom(service.port()) ? "custom" : "standard").addSlot("value", service.port()));
+		final Frame frame = new Frame().addTypes("service", "ui");
+		frame.addSlot("name", service.name$());
+		frame.addSlot("package", packageName);
+		frame.addSlot("configuration", name);
+		frame.addSlot("parameter", new Frame(isCustom(service.port()) ? "custom" : "standard").addSlot("value", service.port()));
 		if (service.authentication() != null)
 			frame.addSlot("authentication", new Frame(isCustom(service.authentication().by()) ? "custom" : "standard").addSlot("value", service.authentication().by()));
 		if (service.edition() != null)

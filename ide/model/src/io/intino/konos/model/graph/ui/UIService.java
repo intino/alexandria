@@ -19,6 +19,6 @@ public class UIService extends AbstractUIService {
 	}
 
 	private List<Resource> homeList() {
-		return resourceList.stream().filter(Resource::isRoot).collect(toList());
+		return resourceList.stream().filter(Resource::isMain).collect(toList());
 	}
 }

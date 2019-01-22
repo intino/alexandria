@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Catalog
 use Dialog
 use Component
 use Display
@@ -24,7 +25,7 @@ Facet UI on Service is decorable
 	Concept:Named Resource
 		var string path
 
-Facet Root on UI.Resource
+Facet Main on UI.Resource
 Facet Confidential on UI.Resource
 
 Facet Page on UI.Resource is abstract
@@ -32,25 +33,15 @@ Facet Page on UI.Resource is abstract
 Facet DesktopPage extends Page
 	var Desktop desktop
 
-Facet DocumentPage extends Page
-	var Document document
+Facet BlankPage extends Page
+	var Root display
 
 // deprecated
-Facet DialogPage extends Page
-	var Dialog dialog
+//Facet DialogPage extends Page
+//	var Block block
 
 Facet EditorPage extends Page
 	var Editor editor
-
-Concept Element is abstract
-
-Facet AbstractDrawerNavigable is abstract
-	var word:{Left Right Top Bottom} direction = Left
-	var word:{Normal Modal} mode = Normal
-	var boolean hasMiniVariant = false
-	var boolean underAppBar = false
-
-Facet DrawerNavigable extends AbstractDrawerNavigable on Page
 
 Facet Responsible on DrawerNavigable
 Facet Persistent on DrawerNavigable

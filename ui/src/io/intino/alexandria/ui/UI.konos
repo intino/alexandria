@@ -1,0 +1,12 @@
+dsl Konos
+
+use Displays
+
+Service(title = "", favicon = "") UiElements as UI(port = "")
+	Resource("/") homePage as DisplayPage(alexandriaDesktop) Root
+
+Display alexandriaEditor
+	Notification displayType as Text
+	Notification saved
+
+	Request save

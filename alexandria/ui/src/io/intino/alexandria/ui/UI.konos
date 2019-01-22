@@ -1,12 +1,21 @@
 dsl Konos
 
-use Displays
-
 Service(title = "", favicon = "") UiElements as UI(port = "")
-	Resource("/") homePage as DisplayPage(alexandriaDesktop) Root
+	Resource("/") home as BlankPage(components) Main
 
+Display alexandriaRoot
+Display alexandriaDesktop
 Display alexandriaEditor
-	Notification displayType as Text
-	Notification saved
+Display alexandriaComponent
 
-	Request save
+Root components
+	components = alexandriaText alexandriaFile alexandriaImage
+
+Component alexandriaText
+	Notification update as Text
+
+Component alexandriaFile
+	Notification update as Text
+
+Component alexandriaImage
+	Notification update as Text

@@ -1,7 +1,10 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.ui.model.*;
-import io.intino.alexandria.ui.Asset;
+import io.intino.alexandria.ui.International;
+import io.intino.alexandria.ui.Soul;
+import io.intino.alexandria.ui.SoulProvider;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
+import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.UISession;
 
 import java.net.URL;
@@ -150,11 +153,10 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return children(clazz).stream().findFirst().map(clazz::cast).orElse(null);
     }
 
-    public <T extends AlexandriaDisplay> T add(T child) {
+    public void add(AlexandriaDisplay child) {
         child.owner(this);
         repository.register(child);
         this.children.add(child);
-        return child;
     }
 
     public <T extends AlexandriaDisplay> T owner() {
@@ -171,7 +173,7 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return parent(display.owner(), type);
     }
 
-    protected void owner(AlexandriaDisplay owner) {
+    private void owner(AlexandriaDisplay owner) {
         this.owner = owner;
     }
 
@@ -201,12 +203,4 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
         return index != -1 ? name.substring(0, index) : name;
     }
 
-    public String typeOf(Element element) {
-        if (element instanceof Panel) return AlexandriaPanel.class.getSimpleName();
-        if (element instanceof Catalog) return AlexandriaCatalog.class.getSimpleName();
-        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Range) return AlexandriaTemporalRangeCatalog.class.getSimpleName();
-        if (element instanceof TemporalCatalog && ((TemporalCatalog)element).type() == TemporalCatalog.Type.Time) return AlexandriaTemporalTimeCatalog.class.getSimpleName();
-        if (element instanceof Mold) return AlexandriaMold.class.getSimpleName();
-        return null;
-    }
 }

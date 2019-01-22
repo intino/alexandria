@@ -1,100 +1,100 @@
 dsl Konos
 
-Service (title = "", favicon = "") testKonos as UI(port = "")
-	Resource("/") homePage as DisplayPage(testHome) Root
-
-Display Drillwise
-
-Panel testHome as Desktop
-	layout = Menu
-	title = "Ejemplo"
-	subTitle = "Ejemplo de proyecto hecho con Konos"
-	logoPath = "logo.png"
-	faviconPath = "icon.png"
-
-	Views
-		View("infrastructure") infrastructure as CatalogContainer(testInfrastructure)
-		View("análisis") infrastructure as PanelContainer(testAnalisis)
-
-Panel(label = "Análisis") testAnalisis
-	Views
-		View(label = "olap") olap as CatalogContainer(testInfrastructure)
-			filtered = true
-
-Catalog("Infraestructura", itemClass = "io.intino.test.konos.graph.Station") testInfrastructure
-	Toolbar
-		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
-		Download("download", polymerIcon = "file-download")
-		DownloadSelection("download assets info", polymerIcon = "file-download")
-		Export("export", polymerIcon = "archive")
-		ExportSelection("export selection", polymerIcon = "archive")
-
-	Events
-		OnClickItem
-			OpenPanel(panel = testAnalisis) openDialog
-				hasBreadcrumbs =true
-
-	Views
-		View("List", mold=testInfrastructureMold, width = 90%) as ListContainer
-		View("Grid", mold=testInfrastructureMold, width = 90%) as GridContainer
-		View("Charts") as DisplayContainer("olapDisplay")
-		View("mapa", mold = testInfrastructureMold) as MapContainer
-			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-			Zoom(14, min=1, max=18)
-
-	Content
-		Grouping(label="units") units
-		Grouping(label="status") status
-		Sorting(label="date") date
-
-Display olapDisplay
-
-Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
-	Block a1
-		Location("coordinates")coordinates
-			hasCustomStyle =true
-			defaultStyle = "laallala"
-			height = 10%
-			editable = true
-			suffix = "suffix"
-			layout = Fixed
-//		Breadcrumbs breadcrumbs
-//		CatalogLink(catalog = testInfrastructure) catalogLink
-//			filtered =true
-//		Description description
-//		Display display
-//		EmbeddedCatalog(catalog = testInfrastructure) embeddedCatalog
+//Service (title = "", favicon = "") testKonos as UI(port = "")
+//	Resource("/") homePage as DisplayPage(testHome) Root
+//
+//Display Drillwise
+//
+//Panel testHome as Desktop
+//	layout = Menu
+//	title = "Ejemplo"
+//	subTitle = "Ejemplo de proyecto hecho con Konos"
+//	logoPath = "logo.png"
+//	faviconPath = "icon.png"
+//
+//	Views
+//		View("infrastructure") infrastructure as CatalogContainer(testInfrastructure)
+//		View("análisis") infrastructure as PanelContainer(testAnalisis)
+//
+//Panel(label = "Análisis") testAnalisis
+//	Views
+//		View(label = "olap") olap as CatalogContainer(testInfrastructure)
 //			filtered = true
-//		Highlight highlight
-//		Icon icon1
-//			source = Resource
-//		Icon icon2
-//			source = Base64
-//		Icon icon3
-//			source = Polymer
-//		ItemLinks itemLinks
-
-	Block(mode = Expanded) a2
-		Block b1
-			DownloadOperation download
-				options = "a" "b"
-			ExportOperation export
-				from = "2011-12-03T10:15:30Z"
-				to = "2011-12-03T10:15:31Z"
-				options = "a" "b"
-			TaskOperation task
-//			Title("label") label
-//			Description("description") description
-//		Block(layout = Horizontal)b2
-			Picture("chart") chart
-				defaultStyle = "margin-top:6px;"
-				defaultPicture ="/logo.png"
-			Rating rating
-				polymerIcon = "stars"
-//			Snippet("sequencia") secuencia
-//				layout = Flexible
-//				defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-////		Block b3
-//			Snippet() snipet2
-
-Schema Station
+//
+//Catalog("Infraestructura", itemClass = "io.intino.test.konos.graph.Station") testInfrastructure
+//	Toolbar
+//		TaskSelection("remove elements", polymerIcon = "remove-circle-outline")
+//		Download("download", polymerIcon = "file-download")
+//		DownloadSelection("download assets info", polymerIcon = "file-download")
+//		Export("export", polymerIcon = "archive")
+//		ExportSelection("export selection", polymerIcon = "archive")
+//
+//	Events
+//		OnClickItem
+//			OpenPanel(panel = testAnalisis) openDialog
+//				hasBreadcrumbs =true
+//
+//	Views
+//		View("List", mold=testInfrastructureMold, width = 90%) as ListContainer
+//		View("Grid", mold=testInfrastructureMold, width = 90%) as GridContainer
+//		View("Charts") as DisplayContainer("olapDisplay")
+//		View("mapa", mold = testInfrastructureMold) as MapContainer
+//			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+//			Zoom(14, min=1, max=18)
+//
+//	Content
+//		Grouping(label="units") units
+//		Grouping(label="status") status
+//		Sorting(label="date") date
+//
+//Display olapDisplay
+//
+//Mold(modelClass = "io.intino.test.konos.graph.Station") testInfrastructureMold
+//	Block a1
+//		Location("coordinates")coordinates
+//			hasCustomStyle =true
+//			defaultStyle = "laallala"
+//			height = 10%
+//			editable = true
+//			suffix = "suffix"
+//			layout = Fixed
+////		Breadcrumbs breadcrumbs
+////		CatalogLink(catalog = testInfrastructure) catalogLink
+////			filtered =true
+////		Description description
+////		Display display
+////		EmbeddedCatalog(catalog = testInfrastructure) embeddedCatalog
+////			filtered = true
+////		Highlight highlight
+////		Icon icon1
+////			source = Resource
+////		Icon icon2
+////			source = Base64
+////		Icon icon3
+////			source = Polymer
+////		ItemLinks itemLinks
+//
+//	Block(mode = Expanded) a2
+//		Block b1
+//			DownloadOperation download
+//				options = "a" "b"
+//			ExportOperation export
+//				from = "2011-12-03T10:15:30Z"
+//				to = "2011-12-03T10:15:31Z"
+//				options = "a" "b"
+//			TaskOperation task
+////			Title("label") label
+////			Description("description") description
+////		Block(layout = Horizontal)b2
+//			Picture("chart") chart
+//				defaultStyle = "margin-top:6px;"
+//				defaultPicture ="/logo.png"
+//			Rating rating
+//				polymerIcon = "stars"
+////			Snippet("sequencia") secuencia
+////				layout = Flexible
+////				defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+//////		Block b3
+////			Snippet() snipet2
+//
+//Schema Station

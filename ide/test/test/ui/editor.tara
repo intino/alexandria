@@ -1,15 +1,15 @@
 dsl Konos
 
-Service testUi as UI(port = "9000", title = "Task sample", favicon = "")
-	Authentication(by="{amidas}")
-	Edition(by="{test}")
-	Resource(path = "/test/dialog1") dialogPage as EditorPage(amidasTestEditor)
-
-Editor amidasTestEditor
-	display = amidasTestDialog
-
-Dialog(url = "", label = "Diálogo 1", description = "Esto es una descripción del diálogo") amidasTestDialog
-	mode = Tabs
-
-	Tab(label = "Información general")
-		Text("campo de prueba") campo1
+//Service testUi as UI(port = "9000", title = "Task sample", favicon = "")
+//	Authentication(by="{amidas}")
+//	Edition(by="{test}")
+//	Resource(path = "/test/dialog1") dialogPage as EditorPage(amidasTestEditor)
+//
+//Editor amidasTestEditor
+//	display = amidasTestDialog
+//
+//Dialog(url = "", label = "Diálogo 1", description = "Esto es una descripción del diálogo") amidasTestDialog
+//	mode = Tabs
+//
+//	Tab(label = "Información general")
+//		Text("campo de prueba") campo1

@@ -1,9 +1,9 @@
 package io.intino.alexandria.ui.displays.requesters;
 
 import io.intino.alexandria.ui.displays.AlexandriaDisplay;
-import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
-import io.intino.alexandria.ui.spark.UISparkManager;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
 import io.intino.alexandria.ui.services.push.UIClient;
+import io.intino.alexandria.ui.spark.UISparkManager;
 
 public abstract class AlexandriaProxyDisplayRequester extends AlexandriaDisplayRequester {
 

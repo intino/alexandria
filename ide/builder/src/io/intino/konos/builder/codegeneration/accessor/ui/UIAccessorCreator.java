@@ -14,6 +14,8 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.UIRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
 import org.jetbrains.annotations.NotNull;
@@ -24,16 +26,17 @@ import java.util.List;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
 
-public class UIAccessorCreator {
+public class UIAccessorCreator extends UIRenderer {
 
 	private final Project project;
 	private final Module javaModule;
 	private final List<UIService> serviceList;
 	private String parent;
 
-	public UIAccessorCreator(Module module, KonosGraph graph, String parent) {
-		this.project = module == null ? null : module.getProject();
-		this.javaModule = module;
+	public UIAccessorCreator(Settings configuration, KonosGraph graph) {
+		super(configuration);
+		this.javaModule = configuration.module();
+		this.project = javaModule == null ? null : javaModule.getProject();
 		this.serviceList = graph.uIServiceList();
 		this.parent = parent;
 	}
