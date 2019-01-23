@@ -17,16 +17,17 @@ public class DisplayRenderer<D extends Display> extends BaseDisplayRenderer<D> {
 
 	@Override
 	protected Template srcTemplate() {
+		if (!element.isDecorated()) return null;
 		return setup(DisplayTemplate.create());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return null;
+		return setup(AbstractDisplayTemplate.create());
 	}
 
 	@Override
 	protected Updater updater(String displayName, File sourceFile) {
-		return new DisplayUpdater(settings, display, sourceFile);
+		return new DisplayUpdater(settings, element, sourceFile);
 	}
 }

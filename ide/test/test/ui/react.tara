@@ -1,11 +1,169 @@
 dsl Konos
 
 Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
-	Resource("/") home as BlankPage(homeDocument) Main
+	Resource("/") home as DesktopPage(desktop) Main
 
-Display example
+Desktop desktop as DrawerNavigable(Left, mode=Modal)
+	AppBar
+		Image logo
+		Block cabecera as Horizontal
+			TextD titulo as Title1
+			TextD subtitulo as Title2
+		ListD(values=divisiones) divisiones as Selector
+		ListD(values=zonas) zonas as Selector
+		Block as Horizontal
+			Image photo as Avatar
+			Block
+				TextD fullName
+				TaskOperation(label="logout") logout as Link Capitalize
+	Tabs
+		Tab dashboard
+			Header as BlockContainer(badgeBlock)
+			Content as BlockContainer(dashboardBlock)
+		Tab(label="criterios")
+			Content as CatalogContainer(criteriosCatalog)
+//		Tab("características")
+//			Content as CatalogContainer(caracteristicasCatalog)
 
-Root homeDocument
-	components = component1
+Block badgeBlock as Parameterizable Decorated
+	Param title as TextType
+	Param count as NumberType
+	Block as Horizontal
+		TextD title as Title1
+		Block custom
+		Badge count
 
-Component component1
+InlineOptions divisiones
+	InlineOption("División 1") división1
+	InlineOption("División 2") división2
+
+InlineOptions zonas
+	InlineOption("Zona 1") zona1
+	InlineOption("Zona 2") zona2
+
+
+
+Block dashboardBlock as Decorated
+	Block as Horizontal
+		Block as Paper("criterios técnicos") Horizontal Center CenterJustified
+			Block tecnicosEnEjecucion as Instance(criterioBlock)
+			Block tecnicosDeshabilitados as Instance(criterioBlock)
+			Block tecnicosAspirantes as Instance(criterioBlock)
+		Block as Paper("criterios contables") Horizontal Center CenterJustified
+			Block contables as InstanceCollection(criterioBlock)
+		Block as Paper("criterios de datos")
+			Block deDatos as InstanceCollection(criterioBlock)
+	Block
+		Block as Paper("operaciones")
+			Block operacionesUltimoMes as Instance(panelEstadisticas)
+			Block operacionesDesdeCreacion as Instance(panelEstadisticas)
+			Block > Chart evolucionOperaciones
+		Block as Paper("resultados")
+			Block resultadosUltimoMes as Instance(panelEstadisticas)
+			Block resultadosDesdeCreacion as Instance(panelEstadisticas)
+			Block > Chart evolucionResultados
+		Block as Paper("rendimiento")
+			Block rendimientoUltimoMes as Instance(panelEstadisticas)
+			Block rendimientoDesdeCreacion as Instance(panelEstadisticas)
+			Block > Chart evolucionRendimiento
+
+Block criterioBlock as Vertical Center Parameterizable
+	Param value as NumberType
+	Param label as TextType
+
+	TextD value as Title1
+	TextD label as Title2
+
+Block indicatorBlock as Vertical Center Parameterizable
+	Param value as NumberType
+	Param label as TextType
+	Param trend as WordType("PositivoMejor" "PositivoPeor")
+
+	Block as Horizontal Center
+		TextD value as Title1
+		Icon(alexandriaIcon="remove") trend
+	TextD label as Title2
+
+Block panelEstadisticas as Parameterizable
+	Param label as TextType
+	Param instances as ObjectType(indicatorBlock) //List
+
+	TextD label as Title1
+	Block as Horizontal
+		Block instances as InstanceCollection(indicatorBlock)
+
+
+
+
+Catalog("criterios") criteriosCatalog as Decorated
+//	displays = criterioDialog
+	targetClass = "io.intino.example.graph.Criterio"
+	noItemsMessage = "No se han definido criterios"
+
+	Events > OnClick > Open(criterioPanel)
+
+	Layout layout //as Horizontal
+		Content
+			Block drawerBlock as Instance(criteriosArrangement) Drawer
+			Block mainBlock as Instance(criteriosArrangement)
+			Block
+				Block as Horizontal
+					TaskOperation(label="Añadir criterio") addCriterio as IconButton("add")
+					SearchOperation(label="buscar") searchCriterios as IconButton("search")
+
+				Tabs
+					Tab(label="operaciones") > Content as ListContainer(target=criterioOperativoBlock)
+					Tab(label="resultados") > Content as ListContainer(target=criterioResultadosBlock)
+					Tab(label="rendimiento") > Content as ListContainer(target=criterioRendimientoBlock)
+
+//	Layout layout
+//		Sorting rankingSorting
+//
+//		Content as ListContainer(target=criterioOperativoBlock)
+//		Content as GridContainer(target=criterioOperativoBlock)
+//		Content as MapContainer(target=criterioOperativoBlock)
+//		Content as TableContainer
+//			Column("ranking") ranking as BlockContainer(rankingBlock) Sortable(criteriosCatalog.layout.rankingSorting)
+//			Column("titulo") titulo as BlockContainer(tituloBlock)
+//
+Block criteriosArrangement
+	Block selector as Selector
+		Sorting(label="mejores") rankingSorting
+		Sorting(label="recientes") fechaCreacionSorting
+		Sorting(label="potencial") potencialSorting
+
+	Grouping(label="tipo") tipo
+	Grouping(label="filtro inteligente") filtroInteligente
+	Grouping(label="estado") estado
+	Grouping(label="división") division
+	Grouping(label="total sospechosos") sospechoso
+	Grouping(label="total despachados") despachado
+	Grouping(label="total positivos") positivo
+	Grouping(label="total resueltos") resuelto
+	Grouping(label="costo total") costo
+	Grouping(label="retorno total") retorno
+	Grouping(label="impacto total") impacto
+
+Block criterioOperativoBlock as Target("io.intino.example.graph.Criterio")
+	Block as Horizontal
+		Block main as Flexible
+			TextD titulo as Title1
+			TextD descripcion as Title2
+			Tabs
+				Tab(label="consulta") > Content as BlockContainer(consultaBlock)
+				Tab(label="balance") > Content as BlockContainer(balanceBlock)
+		Block left as AbsoluteSized(width=300px)
+
+Block criterioResultadosBlock as Target("io.intino.example.graph.Criterio")
+Block criterioRendimientoBlock as Target("io.intino.example.graph.Criterio")
+
+Block criterioPanel
+Block criterioDialog as Dialog(title = "Añadir criterio")
+
+Block consultaBlock
+Block balanceBlock
+Block rankingBlock
+Block tituloBlock
+
+Catalog(targetClass = "") caracteristicasCatalog
+	Layout layout

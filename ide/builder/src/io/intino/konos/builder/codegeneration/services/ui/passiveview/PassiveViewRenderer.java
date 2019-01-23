@@ -17,12 +17,23 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.PassiveView.Request.ResponseType.Asset;
 
-public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer {
-	protected final C element;
+public abstract class PassiveViewRenderer<C extends PassiveView> extends ElementRenderer<C> {
 
 	protected PassiveViewRenderer(Settings settings, C element) {
-		super(settings, element.name$());
-		this.element = element;
+		super(settings, element);
+	}
+
+	@Override
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
+		String type = type();
+		frame.addSlot("type", type);
+		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
+		frame.addSlot("parentType", parentType());
+		frame.addSlot("name", clean(element.name$()));
+		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
+		frame.addSlot("request", framesOfRequests(element.requestList()));
+		return frame;
 	}
 
 	protected void createPassiveViewFiles(Frame frame) {
@@ -54,25 +65,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return setup(PassiveViewNotifierTemplate.create());
 	}
 
-	@Override
-	protected Frame baseFrame() {
-		Frame frame = super.baseFrame();
-		String type = type();
-		frame.addSlot("type", type);
-		if (!type.equals("display")) frame.addSlot("packageType", type);
-		frame.addSlot("parentType", parentType());
-		frame.addSlot("name", element.name$());
-		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
-		frame.addSlot("request", framesOfRequests(element.requestList()));
-		return frame;
-	}
-
 	private String type() {
 		return typeOf(element.a$(Display.class));
 	}
 
 	private Frame parentType() {
-		return new Frame().addSlot(type(),"");
+		return new Frame().addSlot(type(),"").addSlot("value", type());
 	}
 
 	private Frame[] framesOfNotifications(List<Notification> notifications) {

@@ -45,23 +45,17 @@ def type(display)
 	import $package.*;
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
-    import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
-    import io.intino.alexandria.ui.displays.Alexandria~$type+firstUpperCase;
-    $parent+import
+	import $package+validPackage.ui.displays[.$packageType~s].Abstract$name+firstUpperCase;
 
-    public class $name+firstUpperCase extends Alexandria$type+firstUpperCase<$name+firstUpperCase~Notifier> {
+    public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
         private $box+firstUpperCase~Box box;
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {
-            super();
-            this.box = box;
+            super(box);
         }
 		[
         @Override
-		protected void init() {
-			super.init();
-			$parent
-			$component...[$NL]
+		protected void render() {
 		}
 	]
 		$request...[$NL$NL]
@@ -133,13 +127,5 @@ def type(schemaImport)
 end
 
 def trigger(import)
-	import $package.displays.*;
-end
-
-def trigger(parent)
-	addAndPersonify(new $value+firstUpperCase(($dsl~Box) box.owner()));
-end
-
-def trigger(component)
-	addAndPersonify(new $value+firstUpperCase((box)));
+	import $package.ui.displays.*;
 end

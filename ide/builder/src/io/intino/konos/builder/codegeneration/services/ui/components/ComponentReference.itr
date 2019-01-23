@@ -1,0 +1,25 @@
+def type(reference) trigger(declaration)
+	protected Alexandria$type+firstUpperCase $name;
+end
+
+def type(block & reference) trigger(child)
+	$value
+end
+
+def type(reference) trigger(child)
+	Alexandria$type+firstUpperCase $value
+end
+
+def type(reference) trigger(add)
+	$parent.add($name);
+end
+
+def type(block & reference)
+	$component+child...[$NL]
+	[Alexandria$addType+firstUpperCase ]$name = new Alexandria$type+firstUpperCase();
+	$component+add...[$NL]
+end
+
+def type(component & reference)
+	$name = new Alexandria$type+firstUpperCase();
+end

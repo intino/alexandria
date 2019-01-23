@@ -27,6 +27,10 @@ public abstract class UIRenderer {
 
 	public abstract void execute();
 
+	public Frame buildFrame() {
+		return new Frame().addSlot("box", boxName()).addSlot("package", settings.packageName());
+	}
+
 	public Project project() {
 		return settings.project();
 	}
@@ -55,17 +59,13 @@ public abstract class UIRenderer {
 		return settings.classes();
 	}
 
-	protected Frame baseFrame() {
-		return new Frame().addSlot("box", boxName()).addSlot("package", settings.packageName());
-	}
-
 	protected Template setup(Template template) {
 		return addFormats(template);
 	}
 
 	protected String path(io.intino.konos.model.graph.Display display) {
 		String type = typeOf(display);
-		return type.equals("display") ? Displays : String.format(DisplaysType, type).toLowerCase();
+		return type.equalsIgnoreCase("display") ? Displays : String.format(DisplaysType, type).toLowerCase();
 	}
 
 	protected Template addFormats(Template template) {
@@ -73,8 +73,13 @@ public abstract class UIRenderer {
 		return template;
 	}
 
+	protected String clean(String name) {
+		name = name.replaceAll("-", "");
+		return Character.isDigit(name.charAt(0)) ? "_" + name : name;
+	}
+
 	protected String typeOf(Display element) {
-		String type = element.getClass().getSimpleName().toLowerCase();
+		String type = element.getClass().getSimpleName();
 		boolean temporalCatalog = type.equalsIgnoreCase("temporalCatalog");
 		return temporalCatalog ? "temporal" + element.a$(TemporalCatalog.class).type().name() + "Catalog" : type;
 	}
