@@ -32,7 +32,7 @@ public class UIServiceRenderer extends UIRenderer {
 
 	private void processUIService(UIService service) {
 		final List<Display> displays = displaysOf(service);
-		Frame frame = baseFrame().addTypes("ui").
+		Frame frame = buildFrame().addTypes("ui").
 				addSlot("name", service.name$()).
 				addSlot("resource", resourcesFrame(service.resourceList()));
 		if (service.userHome() != null) frame.addSlot("userHome", service.userHome().name$());
@@ -67,7 +67,7 @@ public class UIServiceRenderer extends UIRenderer {
 	private Frame frameOf(Display display) {
 		final Frame frame = newDisplayFrame(display, new Frame("display"));
 		String type = typeOf(display);
-		if (!type.equals("display")) frame.addSlot("type", typeOf(display));
+		if (!type.equalsIgnoreCase("display")) frame.addSlot("type", typeOf(display));
 		if (display.isAccessible())
 			frame.addTypes("accessible").addSlot("display", newDisplayFrame(display, new Frame("display", "proxy")));
 		return frame;

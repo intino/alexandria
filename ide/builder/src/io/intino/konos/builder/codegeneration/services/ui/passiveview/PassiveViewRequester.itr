@@ -67,6 +67,7 @@ def type(display)
 		}
 	}
 end
+
 def attribute(Display) trigger(class)
 	Display
 end

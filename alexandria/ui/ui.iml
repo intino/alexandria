@@ -61,6 +61,14 @@
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-1" level="project" />
     <orderEntry type="library" name="Legio: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:inl:1.0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest:1.0.2" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.2" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.cottons:cotton-utils:1.0.0" level="project" />
+    <orderEntry type="library" name="Legio: org.apache.tika:tika-core:0.4" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.ness:inl:1.1.1" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.konos:alexandria-core:1.0.4" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.2" level="project" />
   </component>
 </module>

@@ -20,7 +20,7 @@ public class AccessibleDisplayRenderer extends UIRenderer {
 	}
 
 	public void execute() {
-		Frame frame = baseFrame().addSlot("name", display.name$()).addTypes("resource", display.getClass().getSimpleName());
+		Frame frame = buildFrame().addSlot("name", display.name$()).addTypes("resource", display.getClass().getSimpleName());
 
 		frame.addSlot("parameter", parameters(display));
 		Commons.writeFrame(new File(gen(), Resources), snakeCaseToCamelCase(display.name$() + "ProxyResource"), setup(ResourceTemplate.create()).format(frame));

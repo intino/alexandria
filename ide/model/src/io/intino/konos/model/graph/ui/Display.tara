@@ -48,4 +48,4 @@ Facet Addressable on Display.Request
 	var boolean encoded = false
 	var boolean listenForChanges = true
 
-Facet Decorated on Component
+Facet Decorated on Display

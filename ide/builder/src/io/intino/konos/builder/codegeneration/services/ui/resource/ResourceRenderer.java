@@ -23,7 +23,7 @@ public class ResourceRenderer extends UIRenderer {
 	public void execute() {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 
-		Frame frame = baseFrame().addTypes("resource").addSlot("name", resource.name$()).addSlot("parameter", parameters(resource));
+		Frame frame = buildFrame().addTypes("resource").addSlot("name", resource.name$()).addSlot("parameter", parameters(resource));
 		if (resource.isEditorPage()) frame.addSlot("editor", "Editor");
 		if (uiService.googleApiKey() != null) frame.addSlot("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
 		if (resource.isConfidential()) frame.addSlot("confidential", "");

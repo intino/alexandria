@@ -1,21 +1,28 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "")
-	Resource("/") home as BlankPage(components) Main
 
-Display alexandriaRoot
-Display alexandriaDesktop
-Display alexandriaEditor
-Display alexandriaComponent
+Display alexandriaRoot as Decorated
+Display alexandriaDesktop as Decorated
+Display alexandriaEditor as Decorated
+Display alexandriaComponent as Decorated
 
-Root components
-	components = alexandriaText alexandriaFile alexandriaImage
+Component alexandriaBlock as Decorated
+Component alexandriaCatalog as Decorated
+Component alexandriaBadge as Decorated
+Component alexandriaChart as Decorated
+Component alexandriaSorting as Decorated
+Component alexandriaGrouping as Decorated
+Component alexandriaTabs as Decorated
+Component alexandriaTab as Decorated
+Component alexandriaIcon as Decorated
+Component alexandriaTaskOperation as Decorated
 
-Component alexandriaText
+Component alexandriaText as Decorated
 	Notification update as Text
 
-Component alexandriaFile
+Component alexandriaFile as Decorated
 	Notification update as Text
 
-Component alexandriaImage
+Component alexandriaImage as Decorated
 	Notification update as Text

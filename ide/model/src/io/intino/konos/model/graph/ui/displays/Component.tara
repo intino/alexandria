@@ -59,7 +59,7 @@ Concept AppBar extends Component
 Concept Tabs extends Component
 	has Tab
 
-Concept Tab is component
+Concept Tab extends Component is component
 	var string label = empty
 	Concept:{0..1} Header
 	has:{1..1} Content
