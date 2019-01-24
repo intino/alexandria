@@ -1,5 +1,5 @@
 def type(reference) trigger(declaration)
-	protected Alexandria$type+firstUpperCase $name;
+	protected Alexandria$type+firstUpperCase<$abstractBox+type> $name;
 end
 
 def type(block & reference) trigger(child)
@@ -7,7 +7,7 @@ def type(block & reference) trigger(child)
 end
 
 def type(reference) trigger(child)
-	Alexandria$type+firstUpperCase $value
+	Alexandria$type+firstUpperCase<$abstractBox+type> $value
 end
 
 def type(reference) trigger(add)
@@ -16,10 +16,10 @@ end
 
 def type(block & reference)
 	$component+child...[$NL]
-	[Alexandria$addType+firstUpperCase ]$name = new Alexandria$type+firstUpperCase();
+	[Alexandria$addType+firstUpperCase ]$name = new Alexandria$type+firstUpperCase<>(box());
 	$component+add...[$NL]
 end
 
 def type(component & reference)
-	$name = new Alexandria$type+firstUpperCase();
+	$name = new Alexandria$type+firstUpperCase<>(box());
 end

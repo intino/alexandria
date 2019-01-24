@@ -1,24 +1,17 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.ui.displays.AlexandriaComponent;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaComponentNotifier;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaValueNotifier;
 
-public abstract class AlexandriaValue<DN extends AlexandriaComponentNotifier, T> extends AlexandriaComponent<DN> {
-    private T value;
+public class AlexandriaValue<B extends Box> extends AlexandriaValueContainer<AlexandriaValueNotifier, String, B> {
 
-    @Override
-    protected void init() {
-        super.init();
-        notifyValue(value);
-    }
+	public AlexandriaValue(B box) {
+		super(box);
+	}
 
-    protected abstract void notifyValue(T value);
+	@Override
+	protected void notifyValue(String value) {
+		notifier.update(value);
+	}
 
-    public T value() {
-        return this.value;
-    }
-
-    public void value(T value) {
-        this.value = value;
-    }
 }

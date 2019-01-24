@@ -1,22 +1,11 @@
-package io.intino.alexandria.ui.displays.Components;
+package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.Components.AbstractAlexandriaChart;
+public class AlexandriaChart<B extends Box> extends AbstractAlexandriaChart<B> {
 
-public class AlexandriaChart extends AbstractAlexandriaChart {
-    private UiFrameworkBox box;
-
-    public AlexandriaChart(UiFrameworkBox box) {
+    public AlexandriaChart(B box) {
         super(box);
     }
-
-    @Override
-	protected void render() {
-	}
-
-
 
 }

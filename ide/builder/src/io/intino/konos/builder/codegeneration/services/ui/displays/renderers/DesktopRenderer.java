@@ -36,12 +36,12 @@ public class DesktopRenderer extends BaseDisplayRenderer<Desktop> {
 	}
 
 	private Frame componentFrame(Component component) {
-		return new ComponentRenderer(settings, component, true).buildFrame();
+		return new ComponentRenderer(settings, component, true, element.isDecorated()).buildFrame();
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		if (element.isDecorated()) return null;
+		if (!element.isDecorated()) return null;
 		return setup(DisplayTemplate.create());
 	}
 

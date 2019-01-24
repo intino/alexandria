@@ -1,22 +1,15 @@
-package io.intino.alexandria.ui.displays.Components;
+package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.Components.AbstractAlexandriaTaskOperation;
+public class AlexandriaTaskOperation<B extends Box> extends AbstractAlexandriaTaskOperation<B> {
 
-public class AlexandriaTaskOperation extends AbstractAlexandriaTaskOperation {
-    private UiFrameworkBox box;
-
-    public AlexandriaTaskOperation(UiFrameworkBox box) {
+    public AlexandriaTaskOperation(B box) {
         super(box);
     }
 
     @Override
-	protected void render() {
+	protected void init() {
 	}
-
-
 
 }

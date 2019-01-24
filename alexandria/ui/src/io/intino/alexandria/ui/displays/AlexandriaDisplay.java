@@ -1,5 +1,6 @@
 package io.intino.alexandria.ui.displays;
 
+import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.International;
 import io.intino.alexandria.ui.Soul;
 import io.intino.alexandria.ui.SoulProvider;
@@ -16,7 +17,8 @@ import java.util.UUID;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
-public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
+public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier, B extends Box> {
+    private final B box;
     private final String id;
     private final List<AlexandriaDisplay> children = new ArrayList<>();
     protected DisplayRepository repository;
@@ -27,8 +29,13 @@ public class AlexandriaDisplay<N extends AlexandriaDisplayNotifier> {
     private Boolean dirty = null;
     private List<String> route = new ArrayList<>();
 
-    public AlexandriaDisplay() {
+    public AlexandriaDisplay(B box) {
+        this.box = box;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public B box() {
+        return box;
     }
 
     public void inject(UISession session) {

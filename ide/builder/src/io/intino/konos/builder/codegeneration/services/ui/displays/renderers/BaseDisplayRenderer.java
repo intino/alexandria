@@ -33,7 +33,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
-		if (element.isDecorated()) frame.addSlot("abstract", "Abstract");
+		addDecoratedFrames(frame);
 		frame.addSlot("component", element.components().stream().map(Layer::name$).toArray(String[]::new));
 		if (element.parentDisplay() != null) addParent(element, frame);
 		if (!element.graph().schemaList().isEmpty())
@@ -41,6 +41,18 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.isAccessible())
 			frame.addSlot("parameter", element.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
 		return frame;
+	}
+
+	protected void addDecoratedFrames(Frame frame) {
+		addDecoratedFrames(frame, element.isDecorated());
+	}
+
+	protected void addDecoratedFrames(Frame frame, boolean decorated) {
+		if (decorated) frame.addSlot("abstract", "Abstract");
+		Frame abstractBoxFrame = new Frame().addTypes("box");
+		if (decorated) abstractBoxFrame.addTypes("decorated");
+		abstractBoxFrame.addSlot("box", boxName());
+		frame.addSlot("abstractBox", abstractBoxFrame);
 	}
 
 	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {

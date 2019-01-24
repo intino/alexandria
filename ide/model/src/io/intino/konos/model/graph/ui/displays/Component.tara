@@ -15,20 +15,20 @@ Concept Menu extends Component
 Concept Tooltip extends Component
 Concept User extends Component
 Concept Chart extends Component
-Concept TextD extends Component
-Concept FileD extends Component
-Concept Image extends Component
+Concept Value extends Component
+Concept FileValue extends Component
+Concept ImageValue extends Component
 Concept Icon extends Component
 	var string alexandriaIcon
 Concept Number extends Component
 
-Concept DateD extends Component
+Concept DateValue extends Component
 	var string format = "dd/MM/yyyy"
 
-Concept DateTimeD extends Component
+Concept DateTimeValue extends Component
 	var string format = "dd/MM/yyyy HH:mm:ss"
 
-Concept ListD extends Component
+Concept OptionList extends Component
 	var Options values
 Concept Snackbar extends Component
 	var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
@@ -68,12 +68,12 @@ Concept Content extends Component
 	has Component
 
 // TEXT FACETS
-Facet Title1 on TextD
-Facet Title2 on TextD
-Facet Title3 on TextD
-Facet Uppercase on TextD
-Facet Lowercase on TextD
-Facet Capitalize on TextD
+Facet Title1 on Value
+Facet Title2 on Value
+Facet Title3 on Value
+Facet Uppercase on Value
+Facet Lowercase on Value
+Facet Capitalize on Value
 
 // OPERATION FACETS
 Facet Button on Operation
@@ -86,7 +86,7 @@ Facet Lowercase on Operation
 Facet Capitalize on Operation
 
 // IMAGE FACETS
-Facet Avatar on Image
+Facet Avatar on ImageValue
 
 // LIST OPTIONS
 Concept Options

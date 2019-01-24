@@ -47,15 +47,14 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
 	import $package+validPackage.ui.displays[.$packageType~s].Abstract$name+firstUpperCase;
 
-    public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
-        private $box+firstUpperCase~Box box;
+    public class $name+firstUpperCase extends Abstract$name+firstUpperCase<$box+firstUpperCase~Box> {
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {
             super(box);
         }
 		[
         @Override
-		protected void render() {
+		protected void init() {
 		}
 	]
 		$request...[$NL$NL]

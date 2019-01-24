@@ -5,16 +5,16 @@ Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
 
 Desktop desktop as DrawerNavigable(Left, mode=Modal)
 	AppBar
-		Image logo
+		ImageValue logo
 		Block cabecera as Horizontal
-			TextD titulo as Title1
-			TextD subtitulo as Title2
-		ListD(values=divisiones) divisiones as Selector
-		ListD(values=zonas) zonas as Selector
+			Value titulo as Title1
+			Value subtitulo as Title2
+		OptionList(values=divisiones) divisiones as Selector
+		OptionList(values=zonas) zonas as Selector
 		Block as Horizontal
-			Image photo as Avatar
+			ImageValue photo as Avatar
 			Block
-				TextD fullName
+				Value fullName
 				TaskOperation(label="logout") logout as Link Capitalize
 	Tabs
 		Tab dashboard
@@ -29,7 +29,7 @@ Block badgeBlock as Parameterizable Decorated
 	Param title as TextType
 	Param count as NumberType
 	Block as Horizontal
-		TextD title as Title1
+		Value title as Title1
 		Block custom
 		Badge count
 
@@ -71,8 +71,8 @@ Block criterioBlock as Vertical Center Parameterizable
 	Param value as NumberType
 	Param label as TextType
 
-	TextD value as Title1
-	TextD label as Title2
+	Value value as Title1
+	Value label as Title2
 
 Block indicatorBlock as Vertical Center Parameterizable
 	Param value as NumberType
@@ -80,15 +80,15 @@ Block indicatorBlock as Vertical Center Parameterizable
 	Param trend as WordType("PositivoMejor" "PositivoPeor")
 
 	Block as Horizontal Center
-		TextD value as Title1
+		Value value as Title1
 		Icon(alexandriaIcon="remove") trend
-	TextD label as Title2
+	Value label as Title2
 
 Block panelEstadisticas as Parameterizable
 	Param label as TextType
 	Param instances as ObjectType(indicatorBlock) //List
 
-	TextD label as Title1
+	Value label as Title1
 	Block as Horizontal
 		Block instances as InstanceCollection(indicatorBlock)
 
@@ -147,8 +147,8 @@ Block criteriosArrangement
 Block criterioOperativoBlock as Target("io.intino.example.graph.Criterio")
 	Block as Horizontal
 		Block main as Flexible
-			TextD titulo as Title1
-			TextD descripcion as Title2
+			Value titulo as Title1
+			Value descripcion as Title2
 			Tabs
 				Tab(label="consulta") > Content as BlockContainer(consultaBlock)
 				Tab(label="balance") > Content as BlockContainer(balanceBlock)

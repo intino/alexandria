@@ -15,7 +15,7 @@ Facet Multiple on Input
 	var integer min= -1
 	var integer max= -1
 
-Facet Input on TextD
+Facet Input on Value
 	var word:{Normal Email Url} edition = Normal
 
 	Concept:{0..1} Validation
@@ -30,11 +30,11 @@ Facet Input on TextD
 			var integer min
 			var integer max
 
-Facet Memo on TextD with Input
+Facet Memo on Value with Input
 	var word:{Raw Rich} mode = Raw
 	var integer height = 5
 
-Facet Password on TextD with Input
+Facet Password on Value with Input
 	Concept:{0..1} Validation
 		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
 		Concept:{1..1} Length
@@ -43,24 +43,24 @@ Facet Password on TextD with Input
 
 Facet Input on Number
 
-Facet Input on FileD
+Facet Input on FileValue
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on Image
+Facet Input on ImageValue
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on DateD
-Facet Input on DateTimeD
+Facet Input on DateValue
+Facet Input on DateTimeValue
 
-Facet RadioBox extends Input on ListD
-Facet Checkbox extends Input on ListD
+Facet RadioBox extends Input on OptionList
+Facet Checkbox extends Input on OptionList
 
-Facet Selector on ListD
+Facet Selector on OptionList

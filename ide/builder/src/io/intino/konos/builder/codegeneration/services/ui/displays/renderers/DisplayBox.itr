@@ -1,0 +1,14 @@
+def type(box & decorated) trigger(extension)
+	<B extends Box>
+end
+
+def type(box) trigger(extension)
+end
+
+def type(box & decorated) trigger(type)
+	B
+end
+
+def type(box) trigger(type)
+	$box+firstUpperCase~Box
+end

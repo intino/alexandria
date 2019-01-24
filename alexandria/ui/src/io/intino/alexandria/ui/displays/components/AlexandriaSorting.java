@@ -1,22 +1,15 @@
-package io.intino.alexandria.ui.displays.Components;
+package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.Components.AbstractAlexandriaSorting;
+public class AlexandriaSorting<B extends Box> extends AbstractAlexandriaSorting<B> {
 
-public class AlexandriaSorting extends AbstractAlexandriaSorting {
-    private UiFrameworkBox box;
-
-    public AlexandriaSorting(UiFrameworkBox box) {
+    public AlexandriaSorting(B box) {
         super(box);
     }
 
     @Override
-	protected void render() {
+	protected void init() {
 	}
-
-
 
 }
