@@ -40,7 +40,7 @@ def type(accessor)
 				buffer.flush();
 				return buffer.toByteArray();
 			} catch (java.io.IOException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
 			return new byte$[0];
 		}
@@ -57,7 +57,7 @@ def type(request & reply) trigger(interface)
 				$reply
 
 			} catch (JMSException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
 		}
 	}
