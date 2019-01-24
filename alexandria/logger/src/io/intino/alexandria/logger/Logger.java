@@ -84,7 +84,7 @@ public class Logger {
 	}
 
 	private static String format(Level level, String message) {
-		return pattern.replace("%level", level.name()).replace("%date", Instant.now().toString()).replace("%C", caller()).replace("%m", formatMessage(message));
+		return pattern.replace("%level", level.name()).replace("%date", Instant.now().toString()).replace("%C", caller()).replace("%m", formatMessage(message)) + "\n";
 	}
 
 	private static String formatMessage(String message, Throwable e) {
