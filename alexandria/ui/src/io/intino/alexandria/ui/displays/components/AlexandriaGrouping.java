@@ -1,22 +1,15 @@
-package io.intino.alexandria.ui.displays.Components;
+package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.Components.AbstractAlexandriaGrouping;
+public class AlexandriaGrouping<B extends Box> extends AbstractAlexandriaGrouping<B> {
 
-public class AlexandriaGrouping extends AbstractAlexandriaGrouping {
-    private UiFrameworkBox box;
-
-    public AlexandriaGrouping(UiFrameworkBox box) {
+    public AlexandriaGrouping(B box) {
         super(box);
     }
 
     @Override
-	protected void render() {
+	protected void init() {
 	}
-
-
 
 }

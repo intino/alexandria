@@ -1,11 +1,11 @@
 def type(ui)
 	package $package+validPackage.ui;
-	[import $displaysImport+validPackage.UiFrameworkBox;]
-	[import $displaysImport+validPackage.UiFrameworkConfiguration;]
 	[import $displaysImport+validPackage.ui.displays.*;]
 	[import $displaysImport+validPackage.ui.displays.notifiers.*;]
 	[import $displaysImport+validPackage.ui.displays.requesters.*;]
 	import $package+validPackage.ui.resources.*;
+	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;]
+	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration;]
 
 	import io.intino.alexandria.ui.UIAlexandriaSpark;
 	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;

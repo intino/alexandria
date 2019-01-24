@@ -20,6 +20,7 @@ public class AbstractDisplayTemplate extends Template {
 	public Template define() {
 		add(AbstractDisplaySkeletonTemplate.create().rules());
 		add(ComponentReferenceTemplate.create().rules());
+		add(DisplayBoxTemplate.create().rules());
 		return this;
 	}
 }

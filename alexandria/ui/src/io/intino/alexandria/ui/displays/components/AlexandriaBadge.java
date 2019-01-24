@@ -1,22 +1,16 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.AlexandriaBadgeNotifier;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractAlexandriaBadge;
+public class AlexandriaBadge<B extends Box> extends AlexandriaValueContainer<AlexandriaBadgeNotifier, String, B> {
 
-public class AlexandriaBadge extends AbstractAlexandriaBadge {
-    private UiFrameworkBox box;
-
-    public AlexandriaBadge(UiFrameworkBox box) {
-        super(box);
-    }
-
-    @Override
-	protected void render() {
+	public AlexandriaBadge(B box) {
+		super(box);
 	}
 
-
+	@Override
+	protected void notifyValue(String value) {
+	}
 
 }

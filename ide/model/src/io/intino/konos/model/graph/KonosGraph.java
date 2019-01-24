@@ -20,7 +20,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	}
 
 	public static List<Display> displaysOf(UIService service) {
-		return service.graph().core$().find(Display.class);
+		return service.graph().displayList();
 	}
 
 	public static Display displayFor(UIService.Resource resource) {

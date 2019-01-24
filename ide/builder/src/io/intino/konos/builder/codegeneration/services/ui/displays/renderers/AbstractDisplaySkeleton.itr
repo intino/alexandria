@@ -1,6 +1,7 @@
 def type(display)
 	package $package.ui.displays[.$packageType~s];
 
+	import io.intino.alexandria.core.Box;
 	import io.intino.alexandria.exceptions.*;
 	import io.intino.alexandria.ui.displays.components.*;
 	import $package.ui.*;
@@ -8,19 +9,16 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
-    import io.intino.alexandria.ui.displays.Alexandria~$type+firstUpperCase;
 
-    public class [$abstract]$name+firstUpperCase extends Alexandria~$type+firstUpperCase<$name+firstUpperCase~Notifier> {
-    	private $box+firstUpperCase~Box box;
+    public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.Alexandria~$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
     	$component+declaration...[$NL]
 
-        public [$abstract]$name+firstUpperCase($box+firstUpperCase~Box box) {
-            super();
-            this.box = box;
+        public [$abstract]$name+firstUpperCase($abstractBox+type box) {
+            super(box);
         }
 
         @Override
-		protected void render() {
+		protected void init() {
 			$component...[$NL]
 		}
 	}

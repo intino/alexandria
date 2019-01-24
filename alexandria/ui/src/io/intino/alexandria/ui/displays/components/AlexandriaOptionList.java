@@ -2,9 +2,9 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 
-public class AlexandriaIcon<B extends Box> extends AbstractAlexandriaIcon<B> {
+public class AlexandriaOptionList<B extends Box> extends AbstractAlexandriaOptionList<B> {
 
-    public AlexandriaIcon(B box) {
+    public AlexandriaOptionList(B box) {
         super(box);
     }
 

@@ -17,12 +17,15 @@ Component alexandriaTabs as Decorated
 Component alexandriaTab as Decorated
 Component alexandriaIcon as Decorated
 Component alexandriaTaskOperation as Decorated
-
-Component alexandriaText as Decorated
+Component alexandriaOptionList as Decorated
+Component alexandriaValue as Decorated
 	Notification update as Text
-
-Component alexandriaFile as Decorated
+Component alexandriaFileValue as Decorated
 	Notification update as Text
+Component alexandriaImageValue as Decorated
+	Properties
+		Attribute source as Text
+		Attribute alt as Text
 
-Component alexandriaImage as Decorated
-	Notification update as Text
+	Notification refreshImage as Text
+	Request update as File

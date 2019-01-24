@@ -67,14 +67,14 @@ public class UIServiceRenderer extends UIRenderer {
 	private Frame frameOf(Display display) {
 		final Frame frame = newDisplayFrame(display, new Frame("display"));
 		String type = typeOf(display);
-		if (!type.equalsIgnoreCase("display")) frame.addSlot("type", typeOf(display));
+		if (!type.equalsIgnoreCase("display")) frame.addSlot("type", typeOf(display).toLowerCase());
 		if (display.isAccessible())
 			frame.addTypes("accessible").addSlot("display", newDisplayFrame(display, new Frame("display", "proxy")));
 		return frame;
 	}
 
 	private Frame newDisplayFrame(Display display, Frame frame) {
-		frame.addSlot("name", display.name$()).addSlot("package", packageName());
+		frame.addSlot("name", clean(display.name$())).addSlot("package", packageName());
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
 		return frame;

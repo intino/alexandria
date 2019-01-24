@@ -11,14 +11,20 @@ import java.util.List;
 @SuppressWarnings("Duplicates")
 public class ComponentRenderer extends DisplayRenderer<Component> {
 	private final boolean buildReferences;
+	private final boolean decorated;
 
 	public ComponentRenderer(Settings settings, Component component) {
-		this(settings, component, false);
+		this(settings, component, false, component.isDecorated());
 	}
 
 	public ComponentRenderer(Settings settings, Component component, boolean buildReferences) {
+		this(settings, component, buildReferences, component.isDecorated());
+	}
+
+	public ComponentRenderer(Settings settings, Component component, boolean buildReferences, boolean decorated) {
 		super(settings, component);
 		this.buildReferences = buildReferences;
+		this.decorated = decorated;
 	}
 
 	@Override
@@ -27,6 +33,11 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 		if (buildReferences) frame.addTypes("reference");
 		addComponents(frame);
 		return frame;
+	}
+
+	@Override
+	protected void addDecoratedFrames(Frame frame) {
+		addDecoratedFrames(frame, decorated);
 	}
 
 	private void addComponents(Frame frame) {
@@ -39,7 +50,7 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 	}
 
 	private Frame componentFrame(Component component) {
-		return new ComponentRenderer(settings, component, true).buildFrame();
+		return new ComponentRenderer(settings, component, true, decorated).buildFrame();
 	}
 
 	private Frame referenceFrame(Component component) {
@@ -48,7 +59,8 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 		result.addSlot("name", clean(component.name$()));
 		result.addSlot("parent", clean(element.name$()));
 		result.addSlot("type", typeOf(component));
-		result.addSlot("value", new ComponentRenderer(settings, component, true).buildFrame().addSlot("addType", typeOf(component)));
+		result.addSlot("value", new ComponentRenderer(settings, component, true, decorated).buildFrame().addSlot("addType", typeOf(component)));
+		addDecoratedFrames(result, decorated);
 		return result;
 	}
 
