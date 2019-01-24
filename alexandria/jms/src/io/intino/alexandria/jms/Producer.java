@@ -1,21 +1,17 @@
 package io.intino.alexandria.jms;
 
 
+import io.intino.alexandria.logger.Logger;
 import org.apache.activemq.ActiveMQSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.*;
 
 import static javax.jms.DeliveryMode.NON_PERSISTENT;
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public abstract class Producer {
-	private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	protected final Session session;
 	private MessageProducer producer = null;
-
 
 	public Producer(Session session, Destination destination) {
 		this(session, destination, 0);
@@ -28,7 +24,7 @@ public abstract class Producer {
 			this.producer.setTimeToLive(messageExpirationSeconds * 1000);
 			this.producer.setDeliveryMode(NON_PERSISTENT);
 		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -37,7 +33,7 @@ public abstract class Producer {
 			producer.send(message);
 			return true;
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -47,7 +43,7 @@ public abstract class Producer {
 			producer.send(message, NON_PERSISTENT, 4, messageExpirationSeconds * 1000);
 			return true;
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -57,7 +53,7 @@ public abstract class Producer {
 			producer.close();
 			producer = null;
 		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 
