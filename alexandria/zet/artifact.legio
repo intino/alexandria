@@ -1,8 +1,8 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.3") zet
+Artifact("io.intino.alexandria", "1.0.4") zet
 	Imports
-		Compile("io.intino.alexandria", "logger", "1.0.0")
+		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.release)

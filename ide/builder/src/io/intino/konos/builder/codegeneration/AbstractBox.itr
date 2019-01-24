@@ -7,17 +7,14 @@ def type(box)
 	import java.util.HashMap;
     import java.util.Map;
 	]
-	import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
+	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
-	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 	[
 	$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;][
     $hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
-		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
 		$service+field...[$NL]][
 		$dataLake+field...[$NL]][
@@ -34,7 +31,7 @@ def type(box)
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[owner = new $parent~Box(configuration);]
 			this.configuration = configuration;[
-			initLogger();
+			initJavaLogger();
 			$service+setup...[$NL]]
 			$datalake+setup
 		}
@@ -51,7 +48,6 @@ def type(box)
 
 		public io.intino.alexandria.core.Box open() {
 			if (owner != null) owner.open();
-			initLogger();
 			initUI();
 			initRESTServices();
 			initJMXServices();
@@ -110,13 +106,13 @@ def type(box)
 			$task+init...[$NL]
 		}
 
-		private void initLogger() {
-			final java.util.logging.Logger logger = java.util.logging.Logger.getGlobal();
+		private void initJavaLogger() {
+			final java.util.logging.Logger Logger = java.util.logging.Logger.getGlobal();
 			final ConsoleHandler handler = new ConsoleHandler();
 			handler.setLevel(Level.INFO);
-			handler.setFormatter(new io.intino.alexandria.logger.Formatter("log"));
-			logger.setUseParentHandlers(false);
-			logger.addHandler(handler);
+			handler.setFormatter(new io.intino.alexandria.Logger.Formatter());
+			Logger.setUseParentHandlers(false);
+			Logger.addHandler(handler);
 		}
 
 		private static java.net.URL url(String url) {
@@ -151,18 +147,18 @@ end
 
 def type(service & jmx) trigger(jmx)
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new JMX$name+SnakeCaseToCamelCase+FirstUpperCase().init((($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this));
-	logger.info("JMX service $name: started!");
+	Logger.info("JMX service $name: started!");
 end
 
 def type(service & slack) trigger(slack)
 	if ($parameter == null || $parameter.isEmpty()) return;
 	this.$name+SnakeCaseToCamelCase+FirstLowerCase = new $name+SnakeCaseToCamelCase+FirstUpperCase~SlackBot(($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this, $parameter);
-	logger.info("Slack service $name: started!");
+	Logger.info("Slack service $name: started!");
 end
 
 def type(service & rest) trigger(rest)
 	$name+SnakeCaseToCamelCase+FirstUpperCase~Service.setup(io.intino.alexandria.rest.AlexandriaSparkBuilder.instance(), ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this).start();
-	logger.info("REST service $name: started!");
+	Logger.info("REST service $name: started!");
 end
 
 def type(service & ui) trigger(ui)
@@ -172,7 +168,7 @@ def type(service & ui) trigger(ui)
 	io.intino.alexandria.ui.UiElementsService.initDisplays(sparkInstance);
 	$use...[$NL]
 	sparkInstance.start();
-	logger.info("UI $name: started!");
+	Logger.info("UI $name: started!");
 end
 
 def trigger(use)
@@ -186,15 +182,15 @@ def type(service & jms) trigger(jms)
 			try {
 				connection.start();
 				this.$name+SnakeCaseToCamelCase+firstLowerCase = new $name+SnakeCaseToCamelCase+firstUpperCase~Service(connection, ($configuration+SnakeCaseToCamelCase+FirstUpperCase~Box) this);
-				logger.info("JMS service $name: started!");
+				Logger.info("JMS service $name: started!");
 			} catch (javax.jms.JMSException e) {
-				logger.error(e.getMessage());
+				Logger.error(e.getMessage());
 			}
 		}, "jms init");
 		thread.start();
 		thread.join(10000);
 	} catch (javax.jms.JMSException | InterruptedException e) {
-		logger.error(e.getMessage());
+		Logger.error(e.getMessage());
 	}
 end
 
@@ -204,7 +200,7 @@ def type(dataLake & requireConnection) trigger(init)
 	registerFeeders();
 	$nessOperations
 	if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-		logger.info("Ness connection: started!");
+		Logger.info("Ness connection: started!");
 end
 
 
@@ -215,13 +211,13 @@ def type(dataLake) trigger(init)
 		registerFeeders();
 		$nessOperations
 		if (nessAccessor.connection() instanceof io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection && ((io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection) nessAccessor.connection()).session() != null)
-			logger.info("Ness connection: started!");
+			Logger.info("Ness connection: started!");
 	}, "ness accessor init");
 	try {
 		thread.start();
 		thread.join(10000);
 	} catch (InterruptedException e) {
-		logger.error(e.getMessage());
+		Logger.error(e.getMessage());
 	}
 end
 

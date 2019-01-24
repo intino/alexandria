@@ -52,7 +52,7 @@ def type(operations & graph)
 
 		void onBlock() {
 			allowWriting(graph(), true);
-			graph().saveAll("Model");
+			graph().saveAll(coreStashes());
 			Graph graph = new RemounterGraph(graph().store()).loadStashes(coreStashes());
 			allowWriting(graph, false);
 			box.put(graph);
