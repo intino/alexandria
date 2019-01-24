@@ -1,9 +1,7 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.0") logger
+Artifact("io.intino.alexandria", "2.0.0") logger
 	Imports
-		Compile("io.intino.alexandria", "inl", "[1.0.4, 2.0.0)")
-		Compile("org.slf4j", "slf4j-api", "1.7.7")
 		Test("junit", "junit", "LATEST")
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
