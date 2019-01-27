@@ -23,9 +23,5 @@ Component alexandriaValue as Decorated
 Component alexandriaFileValue as Decorated
 	Notification update as Text
 Component alexandriaImageValue as Decorated
-	Properties
-		Attribute source as Text
-		Attribute alt as Text
-
 	Notification refreshImage as Text
 	Request update as File
