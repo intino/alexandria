@@ -1,71 +1,29 @@
 def type(resource)
 	<!DOCTYPE html>
-    <html>
-        <head>
+	<html>
+		<head>
             <title>$$title</title>
 
-            <meta charset="utf-8"/>
+			<meta charset="utf-8"/>
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
             <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
 
 	        <link rel="icon" href-absolute="$$favicon">
 
-            <script src="lib/jquery/dist/jquery.min.js"></script>
-            <script src="lib/cotton-push/PushService.js"></script>
-            <script src="lib/moment/min/moment-with-locales.min.js"></script>
-            <script src="lib/webcomponentsjs/webcomponents-lite.min.js"></script> <!-- fix paper-calendar.html import bug -->
-            <script src="lib/numeral/min/numeral.min.js"></script>
-            <script src="lib/numeral/min/languages.min.js"></script>
+		</head>
 
-            <script src="main.js"></script>
+		<body>
+			<div id="$uses" base-url="$$baseUrl" base-path="$$basePath" url="$$url" client="$$client" language="$$language"></div>
+		</body>
 
-            <link rel="import" href="components.html">
-            <link rel="import" href="styles/app-theme.html">
-            <script src="lib/moment/min/moment-with-locales.min.js"></script> <!-- fix paper-calendar.html import bug -->
+		<script>
+			var configuration = {};
+			configuration.googleApiKey = "$$googleApiKey";
+			configuration.pushServices = "$$pushUrls".split(",");
 
-			<style>
-				html {
-					height: 100%;
-				}
-				body {
-					height: calc(100% - 16px);
-				}
-			</style>
-        </head>
-
-        <body unresolved class="fullbleed">
-            <template is="dom-bind" id="app">
-                <page-body base-url="$$baseUrl" base-path="$$basePath" url="$$url" client="$$client" language="$$language"></page-body>
-            </template>
-
-            <dom-module id="page-body">
-
-                <template>
-                    <cotton-zombie id="root" display="$uses" widget="$uses" language="$$language"></cotton-zombie>
-                </template>
-
-                <style>
-                    :host {
-                        height: 100%;
-                    }
-                </style>
-
-                <script>
-					HTMLImports.whenReady(function() {
-						$polymer
-					});
-                </script>
-            </dom-module>
-
-            <script>
-                var configuration = {};
-                configuration.googleApiKey = "$$googleApiKey";
-                configuration.pushServices = "$$pushUrls".split(",");
-
-                launchApplication(configuration);
-            </script>
-        </body>
-    </html>
+			launchApplication(configuration);
+		</script>
+	</html>
 end
 
 def type(polymer & editor)
@@ -90,11 +48,5 @@ def type(polymer & editor)
 				}
 			});
 		}
-	});
-end
-
-def type(polymer)
-	Polymer({
-		is: 'page-body'
 	});
 end
