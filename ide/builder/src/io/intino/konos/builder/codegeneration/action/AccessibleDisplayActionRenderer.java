@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.UIRenderer;
+import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import org.siani.itrules.model.Frame;
 
@@ -42,7 +42,7 @@ public class AccessibleDisplayActionRenderer extends ActionRenderer {
 
 	@Override
 	protected File destinyPackage(File destiny) {
-		return new File(destiny, UIRenderer.Pages);
+		return new File(destiny, UIRenderer.format(UIRenderer.Pages, UIRenderer.Target.Service));
 	}
 
 	@Override

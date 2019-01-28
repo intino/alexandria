@@ -1,14 +1,19 @@
 package ui;
 
+import com.intellij.openapi.module.Module;
 import cottons.utils.Files;
 import io.intino.konos.builder.codegeneration.FullRenderer;
-import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorRenderer;
+import io.intino.konos.builder.codegeneration.Settings;
+import io.intino.konos.builder.codegeneration.accessor.ui.ServiceRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Graph;
 import org.junit.Test;
 
 import java.io.File;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UIGenerationTest {
 
@@ -22,7 +27,8 @@ public class UIGenerationTest {
 	private static final String marcetPackage = "org.marcet.box";
 	private static final String cesarPackage = "io.intino.cesar.ui";
 	private static final String editorPackage = "io.intino.editor.box";
-	private static final String reactPackage = "io.intino.react.box";
+	private static final String asemedPackage = "io.intino.asemed.box";
+	private static final String passiveViewPackage = "io.intino.passiveview.box";
 	private static final String DIR = "test-gen";
 
 
@@ -31,7 +37,7 @@ public class UIGenerationTest {
 		File gen = new File(DIR, UI);
 		KonosGraph graph = new Graph().loadStashes("ui").as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, UI).execute();
-		for (UIService service : graph.uIServiceList()) new UIAccessorRenderer(gen, service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().src(gen).gen(gen), service).execute();
 	}
 
 	@Test
@@ -72,22 +78,32 @@ public class UIGenerationTest {
 	}
 
 	@Test
-	public void testReact() throws Exception {
-		cleanTestDirectory("react");
-		execute(new File(DIR, reactPackage.replace(".", File.separator)), "react", reactPackage);
+	public void testPassiveView() throws Exception {
+		execute(new File(DIR, passiveViewPackage.replace(".", File.separator)), "passiveview", passiveViewPackage);
 	}
 
-	private void cleanTestDirectory(String react) {
-		File directory = new File(DIR, reactPackage.replace(".", File.separator));
-		if (directory.exists()) Files.removeDir(directory);
+	@Test
+	public void testAsemed() throws Exception {
+		execute(new File(DIR, asemedPackage.replace(".", File.separator)), "asemed", asemedPackage);
 	}
 
 	private void execute(File gen, String stash, String workingPackage) {
-		cottons.utils.Files.removeDir(gen);
+		cleanTestDirectory();
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (UIService service : graph.uIServiceList()) new UIAccessorRenderer(gen, service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().webModule(webModule()).src(gen).gen(gen), service).execute();
+	}
+
+	private void cleanTestDirectory() {
+		File directory = new File(DIR);
+		if (directory.exists()) Files.removeDir(directory);
+	}
+
+	private Module webModule() {
+		Module mock = mock(Module.class);
+		when(mock.getModuleFilePath()).thenReturn(new File(DIR).getPath() + "/web/parent");
+		return mock;
 	}
 
 }

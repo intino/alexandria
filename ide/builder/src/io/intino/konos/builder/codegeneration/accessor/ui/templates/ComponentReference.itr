@@ -1,0 +1,23 @@
+def type(reference) trigger(declaration)
+end
+
+def type(block & reference) trigger(child)
+	$value
+end
+
+def type(reference) trigger(child)
+	$value
+end
+
+def type(reference) trigger(add)
+end
+
+def type(block & reference)
+	<$type+firstUpperCase id="$name">[
+		$component+child...[$NL]
+	]</$type+firstUpperCase>
+end
+
+def type(component & reference)
+	<$type+firstUpperCase id="$name"/>
+end

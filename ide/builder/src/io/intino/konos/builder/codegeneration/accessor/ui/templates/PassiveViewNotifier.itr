@@ -1,0 +1,49 @@
+def type(display & accessible)
+import Notifier from "./Notifier";
+
+export default class $name+firstUpperCase~Notifier extends Notifier {
+
+    constructor(element) {
+        super(element);
+        this.setup();
+    };
+
+    setup = () => {
+        this.pushService.listen((message) => {
+        	if (message.target !== this.element.id) return;
+			if (message.operation === "refreshBaseUrl")
+				this.refreshBaseUrl(message.parameters.value);
+			else if (message.operation === "refreshError")
+				this.refreshError(message.parameters.value);
+        });
+    };
+}
+end
+
+def type(display)
+import Notifier from "./Notifier";
+
+export default class $name+firstUpperCase~Notifier extends Notifier {
+
+    constructor(element) {
+        super(element);
+        this.setup();
+    };
+
+    setup = () => {
+        this.pushService.listen((message) => {
+        	if (message.target !== this.element.id) return;
+        	$notification...[$NL]
+        });
+    };
+}
+end
+
+def trigger(notification)
+	if (message.operation === "$name")
+		this.$name([$parameter]);
+end
+
+def trigger(parameter)
+	message.parameters.value
+end

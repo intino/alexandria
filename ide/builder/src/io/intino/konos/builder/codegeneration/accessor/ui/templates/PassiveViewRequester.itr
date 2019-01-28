@@ -1,0 +1,55 @@
+def type(display & accessible)
+import Requester from "./Requester";
+
+export default class $name+firstUpperCase~Requester extends Requester {
+
+    constructor(element) {
+        super(element);
+    };
+
+	registerPersonifiedDisplay = function(value) {
+		this.pushService.send({ code: "registerPersonifiedTemplate", target: this.element.id, value: value});
+	}
+}
+end
+
+def type(display)
+import Requester from "./Requester";
+
+export default class $name+firstUpperCase~Requester extends Requester {
+
+    constructor(element) {
+        super(element);
+    };
+
+	$request...[$NL]
+}
+end
+
+def type(parameter) trigger(request)
+	$name = function(value) {
+		$method({ code: "$name", target: this.element.id, value: value});
+	}
+end
+
+def trigger(request)
+    $name = ([$parameterSignature]) => {
+        $method({ code: "$name", target: this.element.id[, value: $parameter]});
+    };
+end
+
+def trigger(parameter)
+	value
+end
+
+def attribute(upload) trigger(method)
+	this.fileService.upload
+end
+
+def attribute(download) trigger(method)
+	this.fileService.download
+end
+
+def trigger(method)
+	this.pushService.send
+end
