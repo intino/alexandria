@@ -1,0 +1,18 @@
+def type(notifier)
+	export default class Notifier {
+    	constructor(element) {
+            this.element = element;
+            this.pushService = Application.services.pushService;
+        };
+    }
+end
+
+def type(requester)
+	export default class Requester {
+		constructor(element) {
+			this.element = element;
+			this.pushService = Application.services.pushService;
+			this.fileService = Application.services.fileService;
+		};
+    }
+end

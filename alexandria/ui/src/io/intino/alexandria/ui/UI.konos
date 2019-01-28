@@ -2,26 +2,30 @@ dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "")
 
-Display alexandriaRoot as Decorated
-Display alexandriaDesktop as Decorated
-Display alexandriaEditor as Decorated
-Display alexandriaComponent as Decorated
+Display root as Decorated
+Display desktop as Decorated
+Display editor as Decorated
+Display page as Decorated
+Display pageDisplay as Decorated
+Display passiveView as Decorated
+//Display component as Decorated
 
-Component alexandriaBlock as Decorated
-Component alexandriaCatalog as Decorated
-Component alexandriaBadge as Decorated
-Component alexandriaChart as Decorated
-Component alexandriaSorting as Decorated
-Component alexandriaGrouping as Decorated
-Component alexandriaTabs as Decorated
-Component alexandriaTab as Decorated
-Component alexandriaIcon as Decorated
-Component alexandriaTaskOperation as Decorated
-Component alexandriaOptionList as Decorated
-Component alexandriaValue as Decorated
+Component block as Decorated
+Component catalog as Decorated
+Component badge as Decorated
+Component chart as Decorated
+Component sorting as Decorated
+Component grouping as Decorated
+Component appBar as Decorated
+Component tabs as Decorated
+Component tab as Decorated
+Component icon as Decorated
+Component taskOperation as Decorated
+Component optionList as Decorated
+Component value as Decorated
 	Notification update as Text
-Component alexandriaFileValue as Decorated
+Component fileValue as Decorated
 	Notification update as Text
-Component alexandriaImageValue as Decorated
+Component imageValue as Decorated
 	Notification refreshImage as Text
 	Request update as File

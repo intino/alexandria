@@ -50,11 +50,11 @@ public class Commons {
 	}
 
 	public static File javaFile(File packageFolder, String name) {
-		return new File(packageFolder, prepareName(name) + ".java");
+		return preparedFile(packageFolder, name, "java");
 	}
 
-	private static String prepareName(String name) {
-		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+	public static File javascriptFile(File packageFolder, String name) {
+		return preparedFile(packageFolder, name, "js");
 	}
 
 	public static long queryParameters(Operation operation) {
@@ -124,4 +124,13 @@ public class Commons {
 	public static String firstUpperCase(String value) {
 		return value.isEmpty() ? "" : value.substring(0, 1).toUpperCase() + value.substring(1);
 	}
+
+	private static File preparedFile(File packageFolder, String name, String extension) {
+		return new File(packageFolder, prepareName(name) + "." + extension);
+	}
+
+	private static String prepareName(String name) {
+		return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+	}
+
 }

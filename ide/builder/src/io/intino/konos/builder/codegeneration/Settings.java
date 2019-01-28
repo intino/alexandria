@@ -4,17 +4,19 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Settings {
 	private Project project;
 	private Module module;
+	private Module webModule;
 	private String parent;
 	private File src;
 	private File gen;
 	private String packageName;
 	private String boxName;
-	private Map<String, String> classes;
+	private Map<String, String> classes = new HashMap<>();
 
 	public Project project() {
 		return project;
@@ -31,6 +33,15 @@ public class Settings {
 
 	public Settings module(Module module) {
 		this.module = module;
+		return this;
+	}
+
+	public Module webModule() {
+		return this.webModule;
+	}
+
+	public Settings webModule(Module module) {
+		this.webModule = module;
 		return this;
 	}
 

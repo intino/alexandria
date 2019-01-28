@@ -5,7 +5,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
 import cottons.utils.Files;
-import io.intino.konos.builder.codegeneration.accessor.ui.UIAccessorCreator;
 import io.intino.konos.builder.codegeneration.datalake.DatalakeRenderer;
 import io.intino.konos.builder.codegeneration.datalake.NessJMXOperationsRenderer;
 import io.intino.konos.builder.codegeneration.datalake.feeder.FeederRenderer;
@@ -21,9 +20,6 @@ import io.intino.konos.builder.codegeneration.services.jmx.JMXServerRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTResourceRenderer;
 import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.UIServiceRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.displays.DisplayListRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.resource.ResourceListRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
 import io.intino.konos.model.graph.KonosGraph;
@@ -132,13 +128,8 @@ public class FullRenderer {
 
 	private void ui() {
 		Settings settings = settings();
-
-		new UIAccessorCreator(settings, graph).execute();
-		new UIServiceRenderer(settings, graph).execute();
-
-		new ResourceListRenderer(settings, graph).execute();
-		new DisplayListRenderer(settings, graph).execute();
-//		new DisplaysClassRenderer(settings, graph).execute();
+		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings, graph).execute();
+		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings, graph).execute();
 	}
 
 	private void box() {
@@ -201,8 +192,8 @@ public class FullRenderer {
 
 	private Settings settings() {
 		return new Settings().project(project).module(module).parent(parent)
-							      .src(src).gen(gen).boxName(boxName).packageName(packageName)
-								  .classes(classes);
+							 .src(src).gen(gen).boxName(boxName).packageName(packageName)
+							 .classes(classes);
 	}
 
 }

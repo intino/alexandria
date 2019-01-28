@@ -24,9 +24,8 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	}
 
 	public static Display displayFor(UIService.Resource resource) {
-		if (resource.isDesktopPage()) return resource.asDesktopPage().desktop();
-		if (resource.isBlankPage()) return resource.asBlankPage().display();
-		return resource.asEditorPage().editor();
+		UIService uiService = resource.core$().ownerAs(UIService.class);
+		return uiService.display(resource);
 	}
 
 	public Set<String> findCustomParameters(JMSService service) {

@@ -1,0 +1,13 @@
+dsl Konos
+
+Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
+
+Block passiveViewBlock
+	Notification notificacion1 as Text
+	Notification notificacion2
+
+	Request request1 as Text
+	Request(Asset) request2 as Text
+	Request request3 as File
+	Request(Asset) request4
+	Request request5
