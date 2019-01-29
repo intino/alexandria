@@ -26,15 +26,9 @@ def type(resource & html)
 
 		<body>
 			<div id="$name+firstUpperCase" base-url="$$baseUrl" base-path="$$basePath" url="$$url" client="$$client" language="$$language"></div>
+			<div id="GoogleApiKey" hidden>$$googleApiKey</div>
+			<div id="PushServices" hidden>$$pushUrls</div>
 		</body>
-
-		<script>
-			var configuration = {};
-			configuration.googleApiKey = "$$googleApiKey";
-			configuration.pushServices = "$$pushUrls".split(",");
-
-			launchApplication(configuration);
-		</script>
 	</html>
 end
 

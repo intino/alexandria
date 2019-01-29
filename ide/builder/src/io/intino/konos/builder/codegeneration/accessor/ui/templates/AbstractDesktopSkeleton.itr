@@ -1,6 +1,6 @@
 def type(desktop)
 	import React from "react";
-	import { AppBar, Tabs } from "../../../lib/alexandria-ui-elements/Alexandria";
+	import * as Alexandria from "../../../lib/alexandria-ui-elements/Alexandria";
 	import AlexandriaDesktop from "../../../lib/alexandria-ui-elements/src/displays/Desktop";[
 	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
 	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
@@ -16,14 +16,18 @@ def type(desktop)
 		render() {
 			return (
 				<React.Fragment>
-					<AppBar id="appBar">
+					<Alexandria.AppBar id="appBar">
 						$component...[$NL]
-					</AppBar>
-					<Tabs>
+					</Alexandria.AppBar>
+					<Alexandria.Tabs id="tabBar">
 						$tabs...[$NL]
-					</Tabs>
+					</Alexandria.Tabs>
 				</React.Fragment>
 			);
 		}
 	}
+end
+
+def attribute(componentType)
+	$value
 end

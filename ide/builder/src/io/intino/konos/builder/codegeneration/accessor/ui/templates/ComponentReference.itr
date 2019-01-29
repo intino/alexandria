@@ -13,11 +13,11 @@ def type(reference) trigger(add)
 end
 
 def type(block & reference)
-	<$type+firstUpperCase id="$name">[
+	<Alexandria.$type+firstUpperCase id="$name">[
 		$component+child...[$NL]
-	]</$type+firstUpperCase>
+	]</Alexandria.$type+firstUpperCase>
 end
 
 def type(component & reference)
-	<$type+firstUpperCase id="$name"/>
+	<Alexandria.$type+firstUpperCase id="$name"/>
 end

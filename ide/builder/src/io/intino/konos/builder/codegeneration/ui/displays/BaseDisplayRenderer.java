@@ -36,6 +36,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
 		addDecoratedFrames(frame);
 		frame.addSlot("component", element.components().stream().map(Layer::name$).toArray(String[]::new));
+		frame.addSlot("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new Frame().addSlot("componentType", type)).toArray(Frame[]::new));
 		if (element.parentDisplay() != null) addParent(element, frame);
 		if (!element.graph().schemaList().isEmpty())
 			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName()));

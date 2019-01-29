@@ -27,14 +27,18 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 
 	private void writeHtml(Frame frame) {
 		frame.addTypes("html");
-		write(new File(accessorRoot() + File.separator + resource.name$() + ".html").toPath(), setup(PageTemplate.create()).format(frame));
+		File file = new File(accessorRoot() + File.separator + resource.name$() + ".html");
+		if (file.exists()) return;
+		write(file.toPath(), setup(PageTemplate.create()).format(frame));
 	}
 
 	private void writeJavascript(Frame frame) {
 		frame.addTypes("js");
 		frame.addSlot("id", UUID.randomUUID().toString());
 		File destiny = createIfNotExists(new File(accessorSrc() + File.separator + "pages" + File.separator));
-		write(new File(destiny + File.separator + firstUpperCase(resource.name$()) + ".js").toPath(), setup(PageTemplate.create()).format(frame));
+		File file = new File(destiny + File.separator + firstUpperCase(resource.name$()) + ".js");
+		if (file.exists()) return;
+		write(file.toPath(), setup(PageTemplate.create()).format(frame));
 	}
 
 	@Override
