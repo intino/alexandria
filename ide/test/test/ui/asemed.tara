@@ -2,6 +2,7 @@ dsl Konos
 
 Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
 	Resource("/") home as DesktopPage(desktop) Main
+	Resource("/error") error as BlankPage(root) Main
 
 Desktop desktop as DrawerNavigable(Left, mode=Modal)
 	AppBar
@@ -24,6 +25,8 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 			Content as CatalogContainer(criteriosCatalog)
 //		Tab("características")
 //			Content as CatalogContainer(caracteristicasCatalog)
+
+Root root
 
 Block badgeBlock as Parameterizable Decorated
 	Param title as TextType

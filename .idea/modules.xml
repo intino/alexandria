@@ -23,7 +23,6 @@
       <module fileurl="file://$PROJECT_DIR$/ide/test/test.iml" filepath="$PROJECT_DIR$/ide/test/test.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/alexandria/triplestore/triplestore.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/ui/ui.iml" filepath="$PROJECT_DIR$/alexandria/ui/ui.iml" group="alexandria/framework" />
-      <module fileurl="file://$PROJECT_DIR$/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/ui-elements/ui-elements.iml" group="alexandria/framework" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/alexandria/ui-elements/ui-elements.iml" group="alexandria/framework" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/zet/zet.iml" filepath="$PROJECT_DIR$/alexandria/zet/zet.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/zim/zim.iml" filepath="$PROJECT_DIR$/alexandria/zim/zim.iml" group="alexandria/library" />

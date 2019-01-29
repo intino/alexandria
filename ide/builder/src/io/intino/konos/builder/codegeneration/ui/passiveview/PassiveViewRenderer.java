@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.passiveview;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.PassiveView.Notification;
@@ -28,6 +29,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		Frame frame = super.buildFrame();
 		String type = type();
 		frame.addSlot("type", type);
+		addAccessorType(frame);
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
 		frame.addSlot("packageTypeRelativeDirectory", type.equalsIgnoreCase("display") ? "" : "../");
 		frame.addSlot("parentType", parentType());
@@ -120,6 +122,12 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private Template requesterTemplate() {
 		return templateProvider.requesterTemplate(element);
+	}
+
+	private void addAccessorType(Frame frame) {
+		Frame accessorType = new Frame().addSlot("value", type());
+		if (element.i$(Component.class)) accessorType.addSlot("component", "");
+		frame.addSlot("accessorType", accessorType);
 	}
 
 }
