@@ -1,10 +1,6 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractValue;
 
 public class Value extends AbstractValue<UiFrameworkBox> {
 
@@ -15,7 +11,5 @@ public class Value extends AbstractValue<UiFrameworkBox> {
     @Override
 	protected void init() {
 	}
-
-
 
 }

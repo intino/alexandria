@@ -1,28 +1,45 @@
 def type(app)
 	import React from "react";
-    import ReactDOM from "react-dom";
+	import ReactDOM from "react-dom";
     $page+import...[$NL]
+	import PushService from "../lib/alexandria-ui-elements/src/services/PushService";
+	import FileService from "../lib/alexandria-ui-elements/src/services/FileService";
 
-	var launchApplication = function (configuration) {
+	var launchApplication = function () {
+		var configuration = loadConfiguration();
 
-		window.Application = (function (configuration) {
+		window.Application = (function(configuration) {
 			var self = {};
 
 			self.configuration = configuration;
-			self.services = { pushService: PushService, uploadService: UploadService };
+			self.services = { pushService: PushService, fileService: FileService };
 
 			return self;
 		})(configuration);
 
-		window.addEventListener('WebComponentsReady', function () {
-			renderApp();
-			PushService.openConnection(configuration.pushServiceUrl);
-		});
+		renderApplication();
+        for (var i=0; i<configuration.pushServices.length; i++)
+            PushService.openConnection(configuration.pushServices[i]);
 
-		function renderApp() {
+		function loadConfiguration() {
+			var configuration = {};
+			configuration.googleApiKey = variable("GoogleApiKey");
+			configuration.pushServices = variable("PushServices").split(",");
+			return configuration;
+		}
+
+		function variable(name) {
+			var result = document.getElementById(name).innerHTML;
+			document.body.removeChild(document.getElementById(name));
+			return result;
+		}
+
+		function renderApplication() {
 			$page+render...[$NL$NL]
 		}
 	};
+
+	launchApplication();
 end
 
 def type(page) trigger(import)
@@ -31,5 +48,5 @@ end
 
 def type(page) trigger(render)
     const $value+firstLowerCase = document.getElementById("$value+firstUpperCase");
-    if ($value+firstLowerCase) ReactDOM.render(<$value+firstUpperCase />, homePage);
+    if ($value+firstLowerCase) ReactDOM.render(<$value+firstUpperCase />, $value+firstLowerCase);
 end
