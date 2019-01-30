@@ -1,14 +1,14 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.ui.Soul;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.spark.UISparkManager;
 
 public abstract class ProxyResource extends Resource {
 
-	public ProxyResource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public ProxyResource(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 

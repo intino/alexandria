@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
 import io.intino.alexandria.ui.services.auth.Token;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class AuthenticateCallbackResource extends Resource {
 
-    public AuthenticateCallbackResource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+    public AuthenticateCallbackResource(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
         super(manager, notifierProvider);
     }
 

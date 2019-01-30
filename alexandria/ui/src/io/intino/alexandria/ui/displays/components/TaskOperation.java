@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractTaskOperation;
+public class TaskOperation<B extends Box> extends AbstractTaskOperation<B> {
 
-public class TaskOperation extends AbstractTaskOperation<UiFrameworkBox> {
-
-    public TaskOperation(UiFrameworkBox box) {
+    public TaskOperation(B box) {
         super(box);
     }
 

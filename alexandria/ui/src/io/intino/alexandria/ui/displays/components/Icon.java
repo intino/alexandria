@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractIcon;
+public class Icon<B extends Box> extends AbstractIcon<B> {
 
-public class Icon extends AbstractIcon<UiFrameworkBox> {
-
-    public Icon(UiFrameworkBox box) {
+    public Icon(B box) {
         super(box);
     }
 

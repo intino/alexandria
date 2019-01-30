@@ -4,13 +4,12 @@ def type(display & accessible)
     import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUppercase;
     import $package+validPackage.ui.displays.[$packageType~s.]$name+FirstUpperCase~Proxy;
     import io.intino.alexandria.exceptions.AlexandriaException;
-    import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
-    import io.intino.alexandria.ui.displays.requesters.AlexandriaProxyDisplayRequester;
+    import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
     import io.intino.alexandria.ui.spark.UISparkManager;
 
-    public class $name+FirstUpperCase~ProxyRequester extends AlexandriaProxyDisplayRequester {
+    public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.ProxyDisplayRequester {
 
-    	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+    	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
     		super(manager, notifierProvider);
     	}
 
@@ -45,14 +44,13 @@ def type(display)
 	$schemaImport
 
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
-	import io.intino.alexandria.ui.displays.requesters.Alexandria[$type+class+FirstUpperCase]Requester;
 	import io.intino.alexandria.exceptions.AlexandriaException;
-	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.spark.UISparkManager;
 
-	public class $name+firstUpperCase~Requester extends [Alexandria$type+class+FirstUpperCase]~Requester {
+	public class $name+firstUpperCase~Requester extends io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~Requester {
 
-		public $name+firstUpperCase~Requester(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Requester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 		}
 

@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.spark.resources;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.spark.AssetLoader;
 import io.intino.alexandria.ui.spark.UISparkManager;
 import io.intino.alexandria.ui.spark.resources.exceptions.AssetNotFoundException;
@@ -17,7 +17,7 @@ import java.util.Base64;
 public class AssetResource extends Resource {
     private final AssetLoader loader;
 
-    public AssetResource(AssetLoader loader, UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+    public AssetResource(AssetLoader loader, UISparkManager manager, DisplayNotifierProvider notifierProvider) {
         super(manager, notifierProvider);
         this.loader = loader;
     }

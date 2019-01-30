@@ -2,13 +2,13 @@ def type(display & accessible)
 	package $package.ui.displays[.$packageType~s];
 
     import $package.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
-    import io.intino.alexandria.ui.displays.AlexandriaProxyDisplay;
+    import io.intino.alexandria.ui.displays.ProxyDisplay;
     import io.intino.alexandria.ui.services.push.UISession;
 
     import java.util.HashMap;
     import java.util.Map;
 
-    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends AlexandriaProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
+    public class $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy extends ProxyDisplay<$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier> {
         $parameter+field...[$NL]
 
         public $name+SnakeCaseToCamelCase+FirstUpperCase~Proxy(UISession session, String appUrl) {

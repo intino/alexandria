@@ -50,7 +50,7 @@ def type(ui & accessibleDisplay)
 	import $package+validPackage.displays.$display+snakecaseToCamelCase+firstUpperCase;
 	import io.intino.alexandria.ui.Soul;
 
-	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.AlexandriaProxyPage {
+	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyPage extends io.intino.alexandria.ui.spark.pages.ProxyPage {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 		$parameter+type...[$NL]
 		public Soul soul;
@@ -70,10 +70,9 @@ def type(ui & action & gen)
 
 	import $package+validPackage.$box+snakecaseToCamelCase+firstUpperCase~Box;
 	import io.intino.alexandria.exceptions.*;
-	import io.intino.alexandria.ui.spark.pages.AlexandriaPage;
 	import java.util.*;
 
-	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Page extends AlexandriaPage {
+	public abstract class Abstract$name+snakecaseToCamelCase+firstUpperCase~Page extends io.intino.alexandria.ui.spark.pages.Page {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
 
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Page() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }

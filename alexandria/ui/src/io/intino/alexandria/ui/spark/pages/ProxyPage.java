@@ -3,9 +3,9 @@ package io.intino.alexandria.ui.spark.pages;
 import java.net.URL;
 
 
-public abstract class AlexandriaProxyPage extends AlexandriaPage {
+public abstract class ProxyPage extends Page {
 
-	public AlexandriaProxyPage() {
+	public ProxyPage() {
 		super(null);
 	}
 

@@ -1,21 +1,12 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.RootNotifier;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.AbstractRoot;
+public class Root<DN extends RootNotifier, B extends Box> extends Display<DN, B> {
 
-public class Root extends AbstractRoot<UiFrameworkBox> {
-
-    public Root(UiFrameworkBox box) {
-        super(box);
-    }
-
-    @Override
-	protected void init() {
+	public Root(B box) {
+		super(box);
 	}
-
-
 
 }

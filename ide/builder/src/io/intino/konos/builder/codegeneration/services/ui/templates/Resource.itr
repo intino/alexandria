@@ -6,7 +6,7 @@ def type(resource & accessibleDisplay)
 	import io.intino.alexandria.exceptions.AlexandriaException;
 	import io.intino.alexandria.exceptions.Unauthorized;
 	import io.intino.alexandria.ui.Soul;
-	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
 	import io.intino.alexandria.ui.services.push.UIClient;
 	import io.intino.alexandria.ui.services.push.UISession;
@@ -16,7 +16,7 @@ def type(resource & accessibleDisplay)
 	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}
@@ -92,7 +92,7 @@ def type(resource)
 	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
 	import $package+validPackage.ui.pages.$name+firstUpperCase~Page;
 	import io.intino.alexandria.exceptions.AlexandriaException;
-	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 
 	import java.util.Base64;
 	import java.util.UUID;
@@ -102,7 +102,7 @@ def type(resource)
 	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
 		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
 
-		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
 			this.box = box;
 		}

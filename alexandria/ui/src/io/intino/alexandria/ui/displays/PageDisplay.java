@@ -1,21 +1,12 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.PageDisplayNotifier;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.AbstractPageDisplay;
+public class PageDisplay<DN extends PageDisplayNotifier, B extends Box> extends Display<DN, B> {
 
-public class PageDisplay extends AbstractPageDisplay<UiFrameworkBox> {
-
-    public PageDisplay(UiFrameworkBox box) {
-        super(box);
-    }
-
-    @Override
-	protected void init() {
+	public PageDisplay(B box) {
+		super(box);
 	}
-
-
 
 }

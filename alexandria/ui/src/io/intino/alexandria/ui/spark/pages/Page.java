@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 
-public abstract class AlexandriaPage {
+public abstract class Page {
 	private final String uiServiceName;
 
 	public UISession session;
@@ -26,7 +26,7 @@ public abstract class AlexandriaPage {
 
 	private static final String TemplateName = "/www/%s/%s.html";
 
-	public AlexandriaPage(String uiServiceName) {
+	public Page(String uiServiceName) {
 		this.uiServiceName = uiServiceName;
 	}
 
@@ -39,7 +39,7 @@ public abstract class AlexandriaPage {
 
 	protected String template(String name, List<String> usedAppsUrls) {
 		try {
-			byte[] templateBytes = StreamUtil.readBytes(AlexandriaPage.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
+			byte[] templateBytes = StreamUtil.readBytes(Page.class.getResourceAsStream(format(TemplateName, uiServiceName, name)));
 			String result = new String(templateBytes);
 			result = addTemplateVariables(result, usedAppsUrls);
 			return result;

@@ -1,10 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.core.Box;
 
-public class Value extends AbstractValue<UiFrameworkBox> {
+public class Value<B extends Box> extends AbstractValue<B> {
 
-    public Value(UiFrameworkBox box) {
+    public Value(B box) {
         super(box);
     }
 

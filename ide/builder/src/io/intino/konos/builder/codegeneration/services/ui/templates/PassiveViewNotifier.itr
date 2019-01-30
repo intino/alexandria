@@ -5,9 +5,9 @@ def type(display & accessible)
 	import $package+validPackage.*;
 	$schemaImport
 
-    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.AlexandriaProxyDisplayNotifier  {
+    public class $name+FirstUpperCase~ProxyNotifier extends io.intino.alexandria.ui.displays.notifiers.ProxyDisplayNotifier  {
 
-        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+        public $name+FirstUpperCase~ProxyNotifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
 
@@ -30,7 +30,7 @@ def type(display)
 
     public class $name+FirstUpperCase~Notifier extends $parentType {
 
-        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
+        public $name+FirstUpperCase~Notifier(io.intino.alexandria.ui.displays.Display display, io.intino.alexandria.rest.pushservice.MessageCarrier carrier) {
             super(display, carrier);
         }
 
@@ -39,27 +39,27 @@ def type(display)
 end
 
 def attribute(catalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier
+	io.intino.alexandria.ui.displays.notifiers.CatalogNotifier
 end
 
 def attribute(temporalTimeCatalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier
+	io.intino.alexandria.ui.displays.notifiers.TemporalTimeCatalogNotifier
 end
 
 def attribute(temporalRangeCatalog) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier
+	io.intino.alexandria.ui.displays.notifiers.TemporalRangeCatalogNotifier
 end
 
 def attribute(MenuLayout) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.AlexandriaMenuLayoutNotifier
+	io.intino.alexandria.ui.displays.notifiers.MenuLayoutNotifier
 end
 
 def attribute(TabLayout) trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.AlexandriaTabLayoutNotifier
+	io.intino.alexandria.ui.displays.notifiers.TabLayoutNotifier
 end
 
 def trigger(parentType)
-	io.intino.alexandria.ui.displays.notifiers.Alexandria$value+FirstUpperCase~Notifier
+	io.intino.alexandria.ui.displays.notifiers.$value+FirstUpperCase~Notifier
 end
 
 def type(notification) trigger(notification)

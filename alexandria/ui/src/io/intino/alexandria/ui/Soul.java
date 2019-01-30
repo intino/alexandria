@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui;
 
-import io.intino.alexandria.ui.displays.AlexandriaDesktop;
-import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+import io.intino.alexandria.ui.displays.Desktop;
+import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.DisplayRepository;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 import static java.util.stream.Collectors.toList;
 
 public abstract class Soul implements DisplayRepository {
-    private final Map<String, AlexandriaDisplay> displays = new HashMap<>();
-    private final List<Consumer<AlexandriaDisplay>> registerListeners = new ArrayList<>();
+    private final Map<String, Display> displays = new HashMap<>();
+    private final List<Consumer<Display>> registerListeners = new ArrayList<>();
     private Consumer<String> redirectListener = null;
     protected final UISession session;
     protected User user;
@@ -38,7 +38,7 @@ public abstract class Soul implements DisplayRepository {
     }
 
     public void destroy() {
-        displays.values().forEach(AlexandriaDisplay::die);
+        displays.values().forEach(Display::die);
         displays.clear();
     }
 
@@ -59,36 +59,36 @@ public abstract class Soul implements DisplayRepository {
         }
     }
 
-    public <T extends AlexandriaDisplay> List<T> displays(Class<T> clazz) {
+    public <T extends Display> List<T> displays(Class<T> clazz) {
         return displays.values().stream().filter(c -> clazz.isAssignableFrom(c.getClass())).map(clazz::cast).collect(toList());
     }
 
-    public <T extends AlexandriaDisplay> T displayWithId(String id) {
+    public <T extends Display> T displayWithId(String id) {
         return displays.containsKey(id) ? (T) displays.get(id) : null;
     }
 
-    public <T extends AlexandriaDesktop> T desktop() {
-        return (T) displays.values().stream().filter(d -> d instanceof AlexandriaDesktop).findFirst().orElse(null);
+    public <T extends Desktop> T desktop() {
+        return (T) displays.values().stream().filter(d -> d instanceof Desktop).findFirst().orElse(null);
     }
 
     @Override
-    public List<AlexandriaDisplay> getAll() {
+    public List<Display> getAll() {
         return new ArrayList<>(this.displays.values());
     }
 
     @Override
-    public <T extends AlexandriaDisplay> T get(String id) {
+    public <T extends Display> T get(String id) {
         return (T) this.displays.get(id);
     }
 
     @Override
-    public <T extends AlexandriaDisplay> void register(T display) {
+    public <T extends Display> void register(T display) {
         this.displays.put(display.id(), display);
         registerListeners.forEach(listener -> listener.accept(display));
     }
 
     @Override
-    public void addRegisterDisplayListener(Consumer<AlexandriaDisplay> consumer) {
+    public void addRegisterDisplayListener(Consumer<Display> consumer) {
         registerListeners.add(consumer);
     }
 

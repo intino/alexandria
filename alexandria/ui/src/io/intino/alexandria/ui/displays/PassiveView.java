@@ -1,21 +1,12 @@
 package io.intino.alexandria.ui.displays;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.PassiveViewNotifier;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.AbstractPassiveView;
+public class PassiveView<DN extends PassiveViewNotifier, B extends Box> extends Display<DN, B> {
 
-public class PassiveView extends AbstractPassiveView<UiFrameworkBox> {
-
-    public PassiveView(UiFrameworkBox box) {
-        super(box);
-    }
-
-    @Override
-	protected void init() {
+	public PassiveView(B box) {
+		super(box);
 	}
-
-
 
 }
