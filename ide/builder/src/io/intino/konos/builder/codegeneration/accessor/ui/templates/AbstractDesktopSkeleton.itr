@@ -27,7 +27,3 @@ def type(desktop)
 		}
 	}
 end
-
-def attribute(componentType)
-	$value
-end
