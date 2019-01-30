@@ -183,7 +183,7 @@
             _refreshGrouping : function() {
                 let count = this.grouping.groupList.length;
                 this._refreshInternalGrouping();
-                this._groupsDisabled = count <= 0;
+                this._groupsDisabled = count == 1;
                 this._enoughGroups = count > AlexandriaCatalogGroupingMaxItems;
                 this._selectedCount = this.getSelectedGroups().length;
                 this._count = count;

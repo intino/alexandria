@@ -25,7 +25,7 @@ AlexandriaTemporalRangeCatalogBehaviors.NotifierListener = {
         	widget._showDialogBox();
         });
         this.when("showTimeRangeNavigator").toSelf().execute(function(parameters) {
-        	widget._showTimeRangeNavigator(parameters.value);
+        	widget._showTimeRangeNavigator();
         });
         this.when("hideTimeRangeNavigator").toSelf().execute(function(parameters) {
         	widget._hideTimeRangeNavigator();
