@@ -1,18 +1,18 @@
 package io.intino.alexandria.ui.displays.notifiers;
 
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplay;
+import io.intino.alexandria.ui.displays.Display;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
 
-public class AlexandriaDisplayNotifier {
-    AlexandriaDisplay display;
+public class DisplayNotifier {
+    Display display;
     MessageCarrier carrier;
 
-    public AlexandriaDisplayNotifier(AlexandriaDisplay display, MessageCarrier carrier) {
+    public DisplayNotifier(Display display, MessageCarrier carrier) {
         this.display = display;
         this.carrier = carrier;
     }

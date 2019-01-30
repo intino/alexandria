@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractImageValue;
+public class ImageValue<B extends Box> extends AbstractImageValue<B> {
 
-public class ImageValue extends AbstractImageValue<UiFrameworkBox> {
-
-    public ImageValue(UiFrameworkBox box) {
+    public ImageValue(B box) {
         super(box);
     }
 

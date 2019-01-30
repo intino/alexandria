@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractBadge;
+public class Badge<B extends Box> extends AbstractBadge<B> {
 
-public class Badge extends AbstractBadge<UiFrameworkBox> {
-
-    public Badge(UiFrameworkBox box) {
+    public Badge(B box) {
         super(box);
     }
 

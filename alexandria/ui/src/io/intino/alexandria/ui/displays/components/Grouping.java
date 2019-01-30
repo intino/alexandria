@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractGrouping;
+public class Grouping<B extends Box> extends AbstractGrouping<B> {
 
-public class Grouping extends AbstractGrouping<UiFrameworkBox> {
-
-    public Grouping(UiFrameworkBox box) {
+    public Grouping(B box) {
         super(box);
     }
 

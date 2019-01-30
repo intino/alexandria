@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractOptionList;
+public class OptionList<B extends Box> extends AbstractOptionList<B> {
 
-public class OptionList extends AbstractOptionList<UiFrameworkBox> {
-
-    public OptionList(UiFrameworkBox box) {
+    public OptionList(B box) {
         super(box);
     }
 

@@ -3,9 +3,9 @@ package io.intino.alexandria.ui.spark.resources;
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
-import io.intino.alexandria.ui.displays.AlexandriaDisplay;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.AuthService.Authentication;
 import io.intino.alexandria.ui.services.auth.SessionAuthService;
@@ -28,9 +28,9 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 	static final Map<String, String> authenticationIdMap = new HashMap<>();
 	static final Map<String, Authentication> authenticationMap = new HashMap<>();
 	protected final UISparkManager manager;
-	private final AlexandriaDisplayNotifierProvider notifierProvider;
+	private final DisplayNotifierProvider notifierProvider;
 
-	public Resource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public Resource(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 		this.manager = manager;
 		this.notifierProvider = notifierProvider;
 	}
@@ -111,7 +111,7 @@ public abstract class Resource implements io.intino.alexandria.rest.Resource {
 		}
 	}
 
-	protected AlexandriaDisplayNotifier notifier(UISession session, UIClient client, AlexandriaDisplay display) {
+	protected DisplayNotifier notifier(UISession session, UIClient client, Display display) {
 		return notifierProvider.notifier(display, carrier(session, client));
 	}
 

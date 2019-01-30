@@ -5,15 +5,15 @@ import io.intino.alexandria.ui.spark.UIRouter;
 import io.intino.alexandria.ui.services.AuthService;
 import io.intino.alexandria.ui.services.EditorService;
 
-public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
+public class UISpark extends AlexandriaSpark<UIRouter> {
 	private AuthService authService;
 	private EditorService editorService;
 
-	public UIAlexandriaSpark(int port, AuthService authService, EditorService editorService) {
+	public UISpark(int port, AuthService authService, EditorService editorService) {
 		this(port, WebDirectory, authService, editorService);
 	}
 
-	public UIAlexandriaSpark(int port, String webDirectory, AuthService authService, EditorService editorService) {
+	public UISpark(int port, String webDirectory, AuthService authService, EditorService editorService) {
 		super(port, webDirectory);
 		this.authService = authService;
 		this.editorService = editorService;
@@ -23,12 +23,12 @@ public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
 		return authService;
 	}
 
-	public UIAlexandriaSpark editorService(EditorService editorService) {
+	public UISpark editorService(EditorService editorService) {
 		this.editorService = editorService;
 		return this;
 	}
 
-	public UIAlexandriaSpark authService(AuthService authService) {
+	public UISpark authService(AuthService authService) {
 		this.authService = authService;
 		return this;
 	}
@@ -37,8 +37,8 @@ public class UIAlexandriaSpark extends AlexandriaSpark<UIRouter> {
 		return editorService;
 	}
 
-	public UIAlexandriaSpark start() {
-		return (UIAlexandriaSpark) super.start();
+	public UISpark start() {
+		return (UISpark) super.start();
 	}
 
 	@Override

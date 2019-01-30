@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.spark.resources;
 
-import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.EditorService.Permission;
 import io.intino.alexandria.ui.spark.UISparkManager;
 
@@ -11,7 +11,7 @@ import static io.intino.alexandria.ui.services.EditorService.PermissionParameter
 
 public abstract class EditorResource extends Resource {
 
-	public EditorResource(UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+	public EditorResource(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 

@@ -7,9 +7,9 @@ def type(ui)
 	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;]
 	[import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration;]
 
-	import io.intino.alexandria.ui.UIAlexandriaSpark;
-	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifier;
-	import io.intino.alexandria.ui.displays.notifiers.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.UISpark;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
+	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.resources.AssetResourceLoader;
 	import io.intino.alexandria.ui.services.push.PushService;
 	import io.intino.alexandria.ui.spark.resources.AfterDisplayRequest;
@@ -22,7 +22,7 @@ def type(ui)
 
 	public class $name+SnakeCaseToCamelCase+FirstUpperCase~Service extends io.intino.alexandria.ui.UI {
 
-		public static void init(UIAlexandriaSpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
+		public static void init(UISpark spark, $box+SnakeCaseToCamelCase+FirstUpperCase~Box box) {
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
@@ -33,7 +33,7 @@ def type(ui)
 			initDisplays(spark);
 		}
 
-		public static void initDisplays(UIAlexandriaSpark spark) {
+		public static void initDisplays(UISpark spark) {
 			$display...[$NL]
 			registerNotifiers();
 		}

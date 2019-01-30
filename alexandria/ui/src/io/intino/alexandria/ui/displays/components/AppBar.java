@@ -1,14 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
+import io.intino.alexandria.core.Box;
 
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractAppBar;
+public class AppBar<B extends Box> extends AbstractAppBar<B> {
 
-public class AppBar extends AbstractAppBar<UiFrameworkBox> {
-
-    public AppBar(UiFrameworkBox box) {
+    public AppBar(B box) {
         super(box);
     }
 
