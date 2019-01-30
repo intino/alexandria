@@ -92,8 +92,8 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
-	protected void showNavigator() {
-		notifier.showTimeRangeNavigator();
+	protected void showNavigator(boolean alwaysVisible) {
+		notifier.showTimeRangeNavigator(alwaysVisible);
 	}
 
 	@Override
