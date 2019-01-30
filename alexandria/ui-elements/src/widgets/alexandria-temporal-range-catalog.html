@@ -130,25 +130,20 @@
             height: calc(100% - 57px);
             visibility: hidden;
             opacity:0;
-            z-index: -1;
-            transition: opacity 0.5s linear, visibility 4s linear, z-index 1s;
+            transition: opacity 0.5s linear, visibility 4s linear;
         }
         :host alexandria-vertical-time-range-navigator.visible {
             visibility: visible;
             opacity: 0.8;
-            z-index: 1;
-            transition: opacity 0.5s linear, visibility 4s linear, z-index 0.5s;
+            transition: opacity 0.5s linear, visibility 4s linear;
         }
         :host alexandria-vertical-time-range-navigator.visible-always {
             visibility: visible !important;
-            z-index: 1;
             opacity: 1 !important;
         }
         :host alexandria-vertical-time-range-navigator:hover {
             opacity: 1;
-            z-index: 1;
             visibility: visible;
-            transition-delay: 5s;
         }
         :host .filtered_true alexandria-vertical-time-range-navigator {
             margin-top: 87px;
@@ -247,14 +242,11 @@
                 this.$.navigator.whenPersonified().execute((widget) => this._addListeners(widget));
             },
 
-            _showTimeRangeNavigator : function(alwaysVisible) {
+            _showTimeRangeNavigator : function() {
                 var navigator = this.querySelector("alexandria-time-range-navigator");
                 if (navigator != null) navigator.hidden = false;
                 navigator = this.querySelector("alexandria-vertical-time-range-navigator");
                 if (navigator != null) navigator.isVisible = true;
-
-                if (alwaysVisible) this._showRangeNavigatorAlways();
-                else this._hideRangeNavigatorAlways();
 
                 if (this._navigatorLayout != null && this._navigatorLayout == "Vertical") $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
                 else $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");
