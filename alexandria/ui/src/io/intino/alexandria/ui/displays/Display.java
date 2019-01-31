@@ -160,6 +160,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return children(clazz).stream().findFirst().map(clazz::cast).orElse(null);
 	}
 
+	public <T extends Display> T child(String id) {
+		return (T) children().stream().filter(d -> d.id().equals(id)).findFirst().orElse(null);
+	}
+
 	public void add(Display child) {
 		child.owner(this);
 		repository.register(child);
