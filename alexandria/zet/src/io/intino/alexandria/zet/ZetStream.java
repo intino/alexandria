@@ -216,6 +216,7 @@ public interface ZetStream {
 			for (int i = 0; i < streams.size(); i++) this.streams.add(new ZetStreamWithIndex(streams.get(i), i));
 			this.streams.forEach(s -> s.stream.next());
 			this.streams.sort(comparator);
+			while (!this.streams.isEmpty() && this.streams.get(0).stream.current() == -1) this.streams.remove(0);
 			this.minFrequency = minFrequency;
 			this.maxFrequency = maxFrequency;
 			this.consecutive = consecutive;
@@ -240,7 +241,7 @@ public interface ZetStream {
 				next = !this.streams.isEmpty() ? this.streams.get(0).stream.current() : -1;
 				if (next == -1) return false;
 				List<ZetStreamWithIndex> streams = itemsWith(next);
-				if (current != next && isValid(streams)){
+				if (current != next && isValid(streams)) {
 					updateStreams(streams);
 					return true;
 				}
@@ -251,7 +252,7 @@ public interface ZetStream {
 		private void updateStreams(List<ZetStreamWithIndex> items) {
 			for (int i = 0; i < items.size(); i++) {
 				ZetStreamWithIndex stream = streams.remove(0);
-				if(!stream.stream.hasNext()) continue;
+				if (!stream.stream.hasNext()) continue;
 				stream.stream.next();
 				int index = Collections.binarySearch(streams, stream, comparator);
 				index = index < 0 ? (index + 1) * -1 : index;
