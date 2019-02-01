@@ -1,25 +1,20 @@
-def type(reference) trigger(declaration)
-	protected $type+firstUpperCase<$abstractBox+type> $name;
+def type(component & reference) trigger(declaration)
+	public $name+firstUpperCase $name;
 end
 
-def type(block & reference) trigger(child)
-	$value
-end
+def type(component & reference) trigger(class)
+	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase<$abstractBox+type> {
+		[$component+declaration...[$NL]
 
-def type(reference) trigger(child)
-	$type+firstUpperCase<$abstractBox+type> $value
-end
+		]public $name+firstUpperCase($abstractBox+type box) {
+			super(box);[
+			$component+reference...[$NL]]
+		}[
 
-def type(reference) trigger(add)
-	$parent.add($name);
-end
-
-def type(block & reference)
-	$component+child...[$NL]
-	[$addType+firstUpperCase ]$name = new $type+firstUpperCase<>(box());
-	$component+add...[$NL]
+		$component+class...[$NL]]
+	}
 end
 
 def type(component & reference)
-	$name = new $type+firstUpperCase<>(box());
+	$name = new $name+firstUpperCase(box());
 end

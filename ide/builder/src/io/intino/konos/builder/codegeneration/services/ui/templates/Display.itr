@@ -51,13 +51,9 @@ def type(display)
 
         public $name+firstUpperCase($box+firstUpperCase~Box box) {
             super(box);
-        }
-		[
-        @Override
-		protected void init() {
-		}
-	]
-		$request...[$NL$NL]
+        }[
+
+		]$request...[$NL$NL]
 		$parameter+setter...[$NL$NL]
     }
 end

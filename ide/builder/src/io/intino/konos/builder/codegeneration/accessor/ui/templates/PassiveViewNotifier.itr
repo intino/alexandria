@@ -9,13 +9,10 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
     };
 
     setup = () => {
-        this.pushService.listen((message) => {
-        	if (message.target !== this.element.id) return;
-			if (message.operation === "refreshBaseUrl")
-				this.refreshBaseUrl(message.parameters.value);
-			else if (message.operation === "refreshError")
-				this.refreshError(message.parameters.value);
-        });
+		if (this.element == null || this.pushLinked) return;
+		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.refreshBaseUrl(parameters.value));
+		this.when("refreshError").toSelf().execute((parameters) => this.refreshError(parameters.value));
+		this.pushLinked = true;
     };
 }
 end
@@ -31,19 +28,28 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
     };
 
     setup = () => {
-        this.pushService.listen((message) => {
-        	if (message.target !== this.element.id) return;
-        	$notification...[$NL]
-        });
+		if (this.element == null || this.pushLinked) return;
+		$notification...[$NL]
+		this.pushLinked = true;
     };
 }
 end
 
 def trigger(notification)
-	if (message.operation === "$name")
-		this.$name([$parameter]);
+	this.when("$name")[$target].execute(([$parameter+call]) => this.$name([$parameter+value]));
 end
 
-def trigger(parameter)
-	message.parameters.value
+def type(parameter) trigger(call)
+	parameters
+end
+
+def type(parameter) trigger(value)
+	parameters.value
+end
+
+def attribute(Display) trigger(target)
+	.toSelf()
+end
+
+def trigger(target)
 end
