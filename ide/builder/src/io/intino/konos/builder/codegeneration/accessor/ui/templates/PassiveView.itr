@@ -3,7 +3,43 @@ def type(notifier)
     	constructor(element) {
             this.element = element;
             this.pushService = Application.services.pushService;
+            this.pushRegistrations = $[$];
+    		this.pushLinked = false;
         };
+
+		when = (message) => {
+			var register = _register.bind(this);
+			var element = this.element;
+			return {
+				toSelf: function () {
+					return {
+						execute: function (action) {
+							register(PushService.registerCallback(message, function (parameters) {
+								if (parameters.id === element.id) {
+									action(parameters);
+								}
+							}));
+						}
+					}
+				},
+				execute: function (action) {
+					register(PushService.registerCallback(message, function(parameters) {
+						if (parameters.name === element.name) {
+							action(parameters);
+						}
+					}));
+				}
+			};
+
+			function _register(registration) {
+				this.pushRegistrations.push(registration);
+			}
+		};
+
+		detached = () => {
+			this.pushRegistrations.forEach((registrations) => registrations.deregister());
+			this.pushRegistrations.splice(0, this.pushRegistrations.length);
+		};
     }
 end
 

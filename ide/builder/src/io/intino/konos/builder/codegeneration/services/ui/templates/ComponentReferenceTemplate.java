@@ -18,12 +18,9 @@ public class ComponentReferenceTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "reference")), (condition("trigger", "declaration"))).add(literal("protected ")).add(mark("type", "firstUpperCase")).add(literal("<")).add(mark("abstractBox", "type")).add(literal("> ")).add(mark("name")).add(literal(";")),
-			rule().add((condition("type", "block & reference")), (condition("trigger", "child"))).add(mark("value")),
-			rule().add((condition("type", "reference")), (condition("trigger", "child"))).add(mark("type", "firstUpperCase")).add(literal("<")).add(mark("abstractBox", "type")).add(literal("> ")).add(mark("value")),
-			rule().add((condition("type", "reference")), (condition("trigger", "add"))).add(mark("parent")).add(literal(".add(")).add(mark("name")).add(literal(");")),
-			rule().add((condition("type", "block & reference"))).add(mark("component", "child").multiple("\n")).add(literal("\n")).add(expression().add(mark("addType", "firstUpperCase")).add(literal(" "))).add(mark("name")).add(literal(" = new ")).add(mark("type", "firstUpperCase")).add(literal("<>(box());\n")).add(mark("component", "add").multiple("\n")),
-			rule().add((condition("type", "component & reference"))).add(mark("name")).add(literal(" = new ")).add(mark("type", "firstUpperCase")).add(literal("<>(box());"))
+			rule().add((condition("type", "component & reference")), (condition("trigger", "declaration"))).add(literal("public ")).add(mark("name", "firstUpperCase")).add(literal(" ")).add(mark("name")).add(literal(";")),
+			rule().add((condition("type", "component & reference")), (condition("trigger", "class"))).add(literal("public class ")).add(mark("name", "firstUpperCase")).add(literal(" extends io.intino.alexandria.ui.displays.components.")).add(mark("type", "firstUpperCase")).add(literal("<")).add(mark("abstractBox", "type")).add(literal("> {\n\t")).add(expression().add(mark("component", "declaration").multiple("\n")).add(literal("\n")).add(literal("\n")).add(literal("\t"))).add(literal("public ")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("abstractBox", "type")).add(literal(" box) {\n\t\tsuper(box);")).add(expression().add(literal("\n")).add(literal("\t\t")).add(mark("component", "reference").multiple("\n"))).add(literal("\n\t}")).add(expression().add(literal("\n")).add(literal("\n")).add(literal("\t")).add(mark("component", "class").multiple("\n"))).add(literal("\n}")),
+			rule().add((condition("type", "component & reference"))).add(mark("name")).add(literal(" = new ")).add(mark("name", "firstUpperCase")).add(literal("(box());"))
 		);
 		return this;
 	}

@@ -12,7 +12,8 @@ def type(desktop)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
-    	$component+declaration...[$NL]
+    	public $name+firstUpperCase~AppBar appBar;
+    	public $name+firstUpperCase~Tabs tabs;
 
         public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
@@ -20,16 +21,32 @@ def type(desktop)
 
         @Override
 		protected void init() {
-			addAppBar();
-			addTabs();
+			super.init();
+			appBar = new $name+firstUpperCase~AppBar(box());
+			tabs = new $name+firstUpperCase~Tabs(box());
 		}
 
-		private void addAppBar() {
-			$component...[$NL]
+		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {
+		[	$component+declaration...[$NL]
+
+			]public $name+firstUpperCase~AppBar$abstractBox+extension($abstractBox+type box) {
+				super(box);
+			}
+
+			@Override
+			protected void init() {[
+				super.init();
+				$component+reference...[$NL]]
+			}[
+
+			$component+class...[$NL]]
 		}
 
-		private void addTabs() {
-			$tabs...[$NL]
+		public class $name+firstUpperCase~Tabs$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
+			public $name+firstUpperCase~Tabs$abstractBox+extension($abstractBox+type box) {
+        		super(box);
+        		$tabs...[$NL]
+        	}
 		}
     }
 end
