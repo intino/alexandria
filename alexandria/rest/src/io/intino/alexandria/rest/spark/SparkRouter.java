@@ -2,14 +2,14 @@ package io.intino.alexandria.rest.spark;
 
 import io.intino.alexandria.exceptions.AlexandriaException;
 import io.intino.alexandria.rest.AlexandriaSpark;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import spark.Request;
 import spark.Response;
 import spark.Service;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import static io.intino.alexandria.logger.Logger.error;
 
 public class SparkRouter<SM extends SparkManager> {
 	private static final int OneDay = 24 * 60 * 60 * 1000;
@@ -81,7 +81,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
+			error(e.message(), e);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class SparkRouter<SM extends SparkManager> {
 			caller.call((SM) manager);
 		} catch (AlexandriaException e) {
 			manager.response.status(Integer.parseInt(e.code()));
-			LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME).error(e.message(), e);
+			error(e.message(), e);
 		}
 	}
 }
