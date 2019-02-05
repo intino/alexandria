@@ -1,9 +1,9 @@
 package io.intino.alexandria.jms;
 
+import io.intino.alexandria.logger.Logger;
 import org.apache.activemq.command.ActiveMQBytesMessage;
 import org.apache.activemq.command.ActiveMQObjectMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class MessageFactory {
 
@@ -39,7 +38,7 @@ public class MessageFactory {
 			message.setText(object instanceof String ? object.toString() : new com.google.gson.Gson().toJson(object));
 			return message;
 		} catch (JMSException | IOException e) {
-			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 		return null;
 	}
