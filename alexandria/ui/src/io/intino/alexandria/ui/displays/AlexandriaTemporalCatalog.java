@@ -108,6 +108,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			groupingManager.items(filteredItemList(defaultScope(), null).items());
 			refreshGroupingsSelection();
 			filterGroupingManager();
+			sendCatalog();
 		}
 
 		if (!isNavigatorVisible()) hideNavigator();
