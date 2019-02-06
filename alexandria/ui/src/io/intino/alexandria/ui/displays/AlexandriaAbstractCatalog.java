@@ -66,6 +66,7 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 		if (selection.groups().size() <= 0 ||
 				(abstractGrouping.histogram() == Grouping.Histogram.Absolute && selection.groups().size() <= 0)) {
 			groupingSelectionMap.remove(selection.name());
+			createGroupingManager(filteredItemList(defaultScope(),null));
 			refreshGroupingsSelection();
 		}
 		else
@@ -372,8 +373,6 @@ public abstract class AlexandriaAbstractCatalog<E extends Catalog, DN extends Al
 				Grouping grouping = groupingOf(selection);
 				if (grouping != null) groupingManager.filter(grouping.name(), groupsNames(selection.groups()));
 			});
-
-		sendCatalog();
 	}
 
 	@Override
