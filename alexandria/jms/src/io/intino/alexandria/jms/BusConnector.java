@@ -1,12 +1,10 @@
 package io.intino.alexandria.jms;
 
+import io.intino.alexandria.logger.Logger;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
-
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class BusConnector {
 
@@ -14,7 +12,7 @@ public class BusConnector {
 		try {
 			return new ActiveMQConnectionFactory(user, password, brokerURL).createConnection();
 		} catch (JMSException e) {
-			LoggerFactory.getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 			return null;
 		}
 	}

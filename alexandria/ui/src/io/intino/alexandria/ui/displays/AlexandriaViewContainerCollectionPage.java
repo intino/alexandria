@@ -16,6 +16,7 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
     private List<String> selection = new ArrayList<>();
 
     protected static final int PageSize = 20;
+    protected static final int Offset = 21;
 
     public AlexandriaViewContainerCollectionPage(Box box) {
         super(box);
@@ -53,8 +54,8 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
         if (isNearToEnd()) {
             int count = countItems();
             notifyNearToEnd();
-            if (count < PageSize && countItems() >= PageSize) refresh();
-            else sendCount(countItems());
+            sendCount(countItems());
+            if (countItems() != count) this.sendItems(count > 0 ? count+1 : 0, limit()-(count-page*limit()));
         }
     }
 

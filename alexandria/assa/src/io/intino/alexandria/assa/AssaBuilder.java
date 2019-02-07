@@ -115,7 +115,7 @@ public class AssaBuilder {
 		}
 
 		private void writeBase(DataOutputStream stream, long base) throws IOException {
-			int level = this.base >= 0 ? level(base, this.base) : 3;
+			int level = this.base >= 0 ? level(base, this.base) : level(base);
 			stream.writeByte(level);
 			for (int i = level - 1; i >= 0; i--) {
 				byte b = (byte) (base >> (i << 3));
@@ -123,8 +123,12 @@ public class AssaBuilder {
 			}
 		}
 
+		private int level(long base) {
+			return base != 0 ? level(base >> 8) + 1 : 0;
+		}
+
 		private int level(long a, long b) {
-			return a != b ? level(a >> 8, b >> 8) + 1 : (byte) 0;
+			return a != b ? level(a >> 8, b >> 8) + 1 : 0;
 		}
 
 		private void writeData(DataOutputStream stream) throws IOException {

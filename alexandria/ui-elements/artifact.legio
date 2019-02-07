@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino.alexandria", version = "1.0.4") ui-framework-elements
+Artifact(groupId = "io.intino.alexandria", version = "1.0.5") ui-framework-elements
 
 	WebImports
 		WebComponent("Polymer/polymer", "1.9 - 2") polymer
@@ -9,7 +9,7 @@ Artifact(groupId = "io.intino.alexandria", version = "1.0.4") ui-framework-eleme
 		WebComponent("bendavis78/moment-element", "1.1.1") moment-element
 		WebComponent("numeraljs", "1.5.6") numeral
 		WebComponent("sortable.js", "1.4.2") Sortable
-		WebComponent("highcharts", "6.1.3") highcharts
+		WebComponent("highcharts", "4.2.7") highcharts
 
 		WebComponent("https://bitbucket.org/cottons/cotton-carrier.git", "1.2.1") cotton-carrier
 		WebComponent("https://bitbucket.org/cottons/cotton-push.git", "2.1.3") cotton-push

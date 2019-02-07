@@ -75,7 +75,7 @@ def type(operations) !type(interface)
 
 			@Override
 			public void handle(Message message) {
-				Datalake.handlers().get(message.type().toLowerCase()).handle(message);
+				Datalake.handlers().get(message.type()).handle(message);
 			}
 
 			@Override

@@ -38,9 +38,9 @@
     "io.intino.alexandria:scheduler-framework": "1.0.0",
     "io.intino.alexandria:slack-framework": "1.0.0",
     "io.intino.alexandria:ui-framework": "1.0.0",
-    "io.intino.alexandria:rest": "1.0.0",
+    "io.intino.alexandria:rest": "1.0.3",
     "io.intino.alexandria:jms": "1.0.0",
-    "io.intino.alexandria:jmx": "1.0.0",
-    "io.intino.alexandria:ness-accessor": "1.0.0"
+    "io.intino.alexandria:jmx": "1.0.1",
+    "io.intino.alexandria:ness-accessor": "1.0.11"
   }
 }

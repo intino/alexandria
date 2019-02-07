@@ -10,7 +10,10 @@ import org.apache.activemq.ActiveMQSession;
 
 import javax.jms.JMSException;
 import javax.jms.Session;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
 
 import static io.intino.ness.core.Blob.Type.event;
 import static javax.jms.Session.AUTO_ACKNOWLEDGE;
@@ -60,7 +63,12 @@ public class TCPDatalake implements Datalake {
 	}
 
 	private ZimStream read(Blob b) {
-		return new ZimReader(b.inputStream());
+		try {
+			return new ZimReader(new GZIPInputStream(b.inputStream()));
+		} catch (IOException e) {
+			Logger.error(e);
+			return new ZimReader(new ByteArrayInputStream(new byte[0]));
+		}
 	}
 
 	private interface CallBack {
@@ -75,6 +83,7 @@ public class TCPDatalake implements Datalake {
 		private final CallBack onOpen;
 		private final TCPDatalake.CallBack onClose;
 		private Session session;
+		private String[] args;
 
 		Connection(String uri, String username, String password, String clientId, CallBack onOpen, CallBack onClose) {
 			this.uri = uri;
@@ -87,8 +96,9 @@ public class TCPDatalake implements Datalake {
 
 		@Override
 		public void connect(String... args) {
-			session = createSession(args.length > 0 ? args[0] : "");
-			onOpen.execute();
+			this.args = args;
+			this.session = createSession(args.length > 0 ? args[0] : "");
+			this.onOpen.execute();
 		}
 
 		private Session createSession(String arg) {
@@ -105,6 +115,7 @@ public class TCPDatalake implements Datalake {
 		}
 
 		public Session session() {
+			if (session == null || ((ActiveMQSession) session).isClosed()) connect(args);
 			return session;
 		}
 

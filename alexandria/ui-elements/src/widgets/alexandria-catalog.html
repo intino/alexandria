@@ -25,17 +25,26 @@
             <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate"></cotton-breadcrumbs>
         </div>
         <div id="main" class$="layout horizontal embedded_[[_catalog.embedded]]">
-            <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
-                                              histograms-mode="[[_catalog.arrangementHistogramsMode]]"
-                                              grouping-list="[[_catalog.groupingList]]"
-                                              on-grouping-selection-change="_handleGroupingChange"
-                                              on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+            <template is="dom-if" if="[[_groupingsLeft]]">
+                <alexandria-catalog-grouping-list class="left" id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                                  histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                                  grouping-list="[[_catalog.groupingList]]"
+                                                  on-grouping-selection-change="_handleGroupingChange"
+                                                  on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+            </template>
             <div class="main flex">
                 <alexandria-catalog-grouping-list-summary grouping-list="[[_catalog.groupingList]]"
                                                           on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list-summary>
                 <a class="clear" hidden$="[[!_filtered]]" on-tap="clearFilter">[[ClearFilter]]</a>
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
             </div>
+            <template is="dom-if" if="[[!_groupingsLeft]]">
+                <alexandria-catalog-grouping-list class="right" id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                                  histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                                  grouping-list="[[_catalog.groupingList]]"
+                                                  on-grouping-selection-change="_handleGroupingChange"
+                                                  on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+            </template>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
@@ -65,6 +74,12 @@
         }
         :host .filtered_true .main alexandria-catalog-view-list {
             height: calc(100% - 24px);
+        }
+        :host alexandria-catalog-grouping-list.left {
+            border-right: 1px solid #ddd;
+        }
+        :host alexandria-catalog-grouping-list.right {
+            border-left: 1px solid #ddd;
         }
         :host .clear, :host .main alexandria-catalog-grouping-list-summary {
             position: static;

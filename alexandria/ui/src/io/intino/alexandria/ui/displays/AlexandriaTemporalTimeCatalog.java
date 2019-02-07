@@ -86,7 +86,7 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
-	protected void showNavigator() {
+	protected void showNavigator(boolean alwaysVisible) {
 		notifier.showTimeNavigator();
 	}
 

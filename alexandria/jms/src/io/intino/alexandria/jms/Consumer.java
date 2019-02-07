@@ -1,17 +1,14 @@
 package io.intino.alexandria.jms;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import io.intino.alexandria.logger.Logger;
 
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
 
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-
 public interface Consumer {
-	Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
 
 	void consume(Message message);
 
@@ -23,7 +20,7 @@ public interface Consumer {
 				return new String(data);
 			} else return ((TextMessage) message).getText();
 		} catch (JMSException e) {
-			logger.error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 			return "";
 		}
 	}

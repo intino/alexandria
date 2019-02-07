@@ -1,11 +1,11 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.2") rest-accessor
+Artifact("io.intino.alexandria", "1.0.3") rest-accessor
 	Imports
 		Compile("io.intino.alexandria", "exceptions", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "primitives", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "json", "[1.0.0, 2.0.0)")
-		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Compile("org.bouncycastle", "bcmail-jdk15", "1.45")
 		Compile("org.bouncycastle", "bcprov-jdk15", "1.45")
 		Compile("org.apache.httpcomponents", "httpcore", "4.4.4")

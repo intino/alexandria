@@ -6,7 +6,9 @@ import io.intino.alexandria.columnar.Columnar;
 import io.intino.alexandria.columnar.Row;
 import org.siani.itrules.model.Frame;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -27,13 +29,14 @@ public class ARFFExporter {
 	}
 
 	public void export(File file) throws IOException {
-		StringBuilder builder = new StringBuilder(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes())));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		writer.write(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes())));
 		while (iterator.hasNext()) {
 			Row row = iterator.next();
 			if (!filter.test(row)) continue;
-			builder.append(String.join(",", format(row))).append("\n");
+			writer.write(String.join(",", format(row)) + "\n");
 		}
-		Files.write(file.toPath(), builder.toString().getBytes());
+		writer.close();
 	}
 
 	private List<String> format(Row row) {

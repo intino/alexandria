@@ -8,10 +8,12 @@
             _showLabel : Boolean,
             _filtered : { type: Boolean, value: function() { return false; }},
             _hideGroupings: { type: Boolean, value: function() { return true; }},
-            _itemsArrivalMessage : String
+            _itemsArrivalMessage : String,
+            _groupingsLeft : { type: Boolean, value: function() { return true; } }
         },
 
         _refreshCatalog : function(catalog) {
+            this._groupingsLeft = catalog.arrangementPosition === "Left";
             this._catalog = catalog;
             this._showLabel = catalog.embedded && catalog.label !== "";
             this._hideGroupings = this._catalog.hideGroupings;

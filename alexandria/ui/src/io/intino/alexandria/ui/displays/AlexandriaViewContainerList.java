@@ -151,7 +151,7 @@ public class AlexandriaViewContainerList extends AlexandriaViewContainerCollecti
 
 	@Override
 	protected void notifyNearToEnd() {
-		provider().loadMoreItems(condition, sorting, PageSize);
+		provider().loadMoreItems(condition, sorting, PageSize+Offset);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ Concept Catalog extends Display
 
 	Concept:{0..1} Content
 		var word:{EnabledAndVisible EnabledButHidden Disabled} histograms = Disabled
+		var word:{Left Right} groupingsPosition = Left
 
 		Concept:Named Grouping
 			var string label

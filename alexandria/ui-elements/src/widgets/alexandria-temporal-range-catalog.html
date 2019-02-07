@@ -25,10 +25,13 @@
         <h3 hidden$="[[!_showLabel]]">[[_catalog.label]]</h3>
         <cotton-breadcrumbs items="[[_breadcrumbs]]" on-item-selected="_navigate" hidden$="[[!_breadcrumbs.length]]"></cotton-breadcrumbs>
         <div id="main" class$="layout horizontal filtered_[[_filtered]] embedded_[[_catalog.embedded]]">
-            <alexandria-catalog-grouping-list id="embeddedGroupings" hidden="[[_hideGroupings]]"
-                                              histograms-mode="[[_catalog.arrangementHistogramsMode]]"
-                                              grouping-list="[[_catalog.groupingList]]"
-                                              on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list>
+            <template is="dom-if" if="[[_groupingsLeft]]">
+                <alexandria-catalog-grouping-list class="left" id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                                  histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                                  grouping-list="[[_catalog.groupingList]]"
+                                                  on-grouping-selection-change="_handleGroupingChange"
+                                                  on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+            </template>
             <div class$="main flex [[_navigatorLayout]]">
                 <alexandria-catalog-grouping-list-summary grouping-list="[[_catalog.groupingList]]"
                                                           on-grouping-selection-change="_handleGroupingChange"></alexandria-catalog-grouping-list-summary>
@@ -36,6 +39,13 @@
                 <cotton-zombie display="AlexandriaCatalogViewList" widget="AlexandriaCatalogViewList"></cotton-zombie>
                 <cotton-zombie id="navigator" display="AlexandriaTimeRangeNavigator" widget$="Alexandria[[_navigatorLayout]]TimeRangeNavigator" object$="[[display.id]]"></cotton-zombie>
             </div>
+            <template is="dom-if" if="[[!_groupingsLeft]]">
+                <alexandria-catalog-grouping-list class="right" id="embeddedGroupings" hidden="[[_hideGroupings]]"
+                                                  histograms-mode="[[_catalog.arrangementHistogramsMode]]"
+                                                  grouping-list="[[_catalog.groupingList]]"
+                                                  on-grouping-selection-change="_handleGroupingChange"
+                                                  on-delete-grouping-group="_handleDeleteGroupingGroup"></alexandria-catalog-grouping-list>
+            </template>
         </div>
         <div id="panel" name="panel" class="layout vertical flex hidden" style="height:calc(100% - 60px);"></div>
         <cotton-zombie display="AlexandriaDialogBox" widget="AlexandriaDialogBox"></cotton-zombie>
@@ -79,6 +89,12 @@
         :host .filtered_true alexandria-catalog-view-list,
         :host .filtered_true .main.Vertical alexandria-vertical-time-range-navigator {
             background: #ffffef;
+        }
+        :host alexandria-catalog-grouping-list.left {
+            border-right: 1px solid #ddd;
+        }
+        :host alexandria-catalog-grouping-list.right {
+            border-left: 1px solid #ddd;
         }
         :host .clear, :host .main alexandria-catalog-grouping-list-summary {
             position: static;
@@ -130,20 +146,25 @@
             height: calc(100% - 57px);
             visibility: hidden;
             opacity:0;
-            transition: opacity 0.5s linear, visibility 4s linear;
+            z-index: -1;
+            transition: opacity 0.5s linear, visibility 4s linear, z-index 1s;
         }
         :host alexandria-vertical-time-range-navigator.visible {
             visibility: visible;
             opacity: 0.8;
-            transition: opacity 0.5s linear, visibility 4s linear;
+            z-index: 1;
+            transition: opacity 0.5s linear, visibility 4s linear, z-index 0.5s;
         }
         :host alexandria-vertical-time-range-navigator.visible-always {
             visibility: visible !important;
+            z-index: 1;
             opacity: 1 !important;
         }
         :host alexandria-vertical-time-range-navigator:hover {
             opacity: 1;
+            z-index: 1;
             visibility: visible;
+            transition-delay: 5s;
         }
         :host .filtered_true alexandria-vertical-time-range-navigator {
             margin-top: 87px;
@@ -242,11 +263,14 @@
                 this.$.navigator.whenPersonified().execute((widget) => this._addListeners(widget));
             },
 
-            _showTimeRangeNavigator : function() {
+            _showTimeRangeNavigator : function(alwaysVisible) {
                 var navigator = this.querySelector("alexandria-time-range-navigator");
                 if (navigator != null) navigator.hidden = false;
                 navigator = this.querySelector("alexandria-vertical-time-range-navigator");
                 if (navigator != null) navigator.isVisible = true;
+
+                if (alwaysVisible) this._showRangeNavigatorAlways();
+                else this._hideRangeNavigatorAlways();
 
                 if (this._navigatorLayout != null && this._navigatorLayout == "Vertical") $(this.querySelector("alexandria-catalog-view-list")).addClass("full");
                 else $(this.querySelector("alexandria-catalog-view-list")).removeClass("full");

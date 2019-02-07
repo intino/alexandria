@@ -37,7 +37,7 @@ Display alexandriaTemporalRangeCatalog
 	Notification refreshBreadcrumbs as Text
 	Notification refreshNavigatorLayout as Text
 	Notification showDialogBox
-	Notification showTimeRangeNavigator
+	Notification showTimeRangeNavigator as Bool
 	Notification hideTimeRangeNavigator
 	Notification createPanel as Object(CreatePanelParameters)
 	Notification showPanel
