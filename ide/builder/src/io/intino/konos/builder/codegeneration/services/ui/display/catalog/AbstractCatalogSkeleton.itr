@@ -120,6 +120,7 @@ end
 def trigger(hasGroupings)
 	catalog.arrangementFiltererLoader((session) -> $name+firstUpperCase.Arrangements.filterer(box, session));
 	catalog.arrangementHistogramsMode("$histogramsMode");
+	catalog.arrangementPosition("$position");
 end
 
 def trigger(hasCustomItemsArrivalMessage)
