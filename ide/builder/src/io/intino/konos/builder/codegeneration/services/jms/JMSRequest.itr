@@ -26,7 +26,7 @@ def type(request)
 				$call
 			} $exception+catch
 			catch (Throwable e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
 		}
 
@@ -36,7 +36,7 @@ def type(request)
 			try {
 				$parameter+assign...[$NL]
 			} catch (JMSException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}]
 			return action;
 		}
@@ -48,7 +48,7 @@ def type(request)
 				$returnMessageType+return
 				return message;
 			} catch (JMSException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 				return null;
 			}
 		}]

@@ -25,6 +25,7 @@ public class TCPEventStore implements Datalake.EventStore {
 	private final Map<String, TopicProducer> producers;
 	private final Connection connection;
 	private AdminService adminService;
+	private ReflowService reflowService;
 	private Session session;
 
 	public TCPEventStore(Connection connection) {
@@ -37,6 +38,7 @@ public class TCPEventStore implements Datalake.EventStore {
 	public void open() {
 		this.session = connection.session();
 		this.adminService = new AdminService(session);
+		this.reflowService = new ReflowService(session);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class TCPEventStore implements Datalake.EventStore {
 
 	@Override
 	public Tank tank(String name) {
-		TCPEventTank tank = new TCPEventTank(name, adminService);
+		TCPEventTank tank = new TCPEventTank(name, reflowService);
 		tanks.put(name, tank);
 		return tank;
 	}
@@ -57,6 +59,8 @@ public class TCPEventStore implements Datalake.EventStore {
 
 	@Override
 	public Reflow reflow(Reflow.Filter filter) {
+		String response = adminService.request("seal", 30 * 60 * 1000);
+		if (!response.equals("sealed")) return null;
 		return new Reflow() {
 			private ZimStream is = new Merge(tankInputStreams());
 
@@ -75,7 +79,6 @@ public class TCPEventStore implements Datalake.EventStore {
 			public void next(int blockSize, MessageHandler... messageHandlers) {
 				new ReflowBlock(is, messageHandlers).reflow(blockSize);
 			}
-
 		};
 	}
 
@@ -130,7 +133,8 @@ public class TCPEventStore implements Datalake.EventStore {
 	}
 
 	private String putProbe(String name) {
-		return "put." + name;
+		String fingerprint = name.substring(0, name.indexOf("#"));
+		return "put." + fingerprint.substring(0, fingerprint.lastIndexOf("-"));
 	}
 
 	private TopicProducer producer(String topic) {
@@ -167,15 +171,15 @@ public class TCPEventStore implements Datalake.EventStore {
 		}
 
 		private void terminate(int reflowedMessages) {
-			Arrays.stream(messageHandlers).forEach(mh -> mh.handle(controlMessage(reflowedMessages)));
+			Arrays.stream(messageHandlers)
+					.filter(m -> m instanceof ReflowHandler)
+					.map(m -> (ReflowHandler) m)
+					.forEach(m -> terminate(m, reflowedMessages));
 		}
 
-		private Message controlMessage(int processedMessagesCount) {
-			return new Message(type()).set("count", processedMessagesCount);
-		}
-
-		private String type() {
-			return is.hasNext() ? "endBlock" : "endReflow";
+		private void terminate(ReflowHandler reflowHandler, int reflowedMessages) {
+			if (is.hasNext()) reflowHandler.onBlock(reflowedMessages);
+			else reflowHandler.onFinish(reflowedMessages);
 		}
 	}
 

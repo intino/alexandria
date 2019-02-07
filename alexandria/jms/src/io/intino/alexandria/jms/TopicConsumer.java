@@ -1,9 +1,8 @@
 package io.intino.alexandria.jms;
 
-import javax.jms.*;
+import io.intino.alexandria.logger.Logger;
 
-import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-import static org.slf4j.LoggerFactory.getLogger;
+import javax.jms.*;
 
 public class TopicConsumer {
 
@@ -24,7 +23,7 @@ public class TopicConsumer {
 			consumer.setMessageListener(message -> listener.consume(session, message));
 			return this;
 		} catch (Exception e) {
-			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -36,7 +35,7 @@ public class TopicConsumer {
 			if (subscriberID != null) session.unsubscribe(subscriberID);
 		} catch (InvalidDestinationException ignored) {
 		} catch (JMSException e) {
-			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -46,7 +45,7 @@ public class TopicConsumer {
 			consumer = session.createConsumer(session.createTopic(topic));
 			consumer.setMessageListener(reader::consume);
 		} catch (Exception e) {
-			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -57,7 +56,7 @@ public class TopicConsumer {
 			consumer.setMessageListener(reader::consume);
 			this.subscriberID = subscriberID;
 		} catch (Exception e) {
-			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -69,7 +68,7 @@ public class TopicConsumer {
 			if (message != null) messageConsumer.consume(message);
 			consumer.close();
 		} catch (JMSException e) {
-			getLogger(ROOT_LOGGER_NAME).error(e.getMessage(), e);
+			Logger.error(e.getMessage(), e);
 		}
 	}
 }

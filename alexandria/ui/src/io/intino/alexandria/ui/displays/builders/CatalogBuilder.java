@@ -20,6 +20,7 @@ public class CatalogBuilder {
                 .groupingList(buildGroupingList(catalog, manager))
                 .sortingList(buildSortingList(catalog))
                 .arrangementHistogramsMode(catalog.arrangementHistogramsMode().toString())
+                .arrangementPosition(catalog.arrangementPosition().toString())
                 .mode(catalog.mode().toString());
     }
 

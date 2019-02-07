@@ -2,7 +2,6 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.0") slack-framework
 	Imports
-		Compile("io.intino.alexandria", "logger", "[1.0.0, 2.0.0)")
 		Compile("io.intino.alexandria", "core-framework", "[1.0.0,2.0.0)")
 
 		Compile("com.ullink.slack", "simpleslackapi", "0.6.0") > Exclude("ch.qos.logback","logback-classic")

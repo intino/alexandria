@@ -163,6 +163,7 @@ public abstract class AlexandriaElementView<N extends AlexandriaDisplayNotifier,
 		else {
 			if (catalogLinkStamp.filtered())
 				display.filterAndNotify(item -> catalogLinkStamp.filter(source, (io.intino.alexandria.ui.model.Item) item, session()));
+			display.target(source);
 			display.refresh();
 		}
 	}

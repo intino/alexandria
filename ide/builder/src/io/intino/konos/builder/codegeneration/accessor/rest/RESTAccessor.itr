@@ -13,17 +13,10 @@ def type(accessor)
 	import com.google.gson.Gson;
 	import com.google.gson.GsonBuilder;
 	import com.google.gson.reflect.TypeToken;
-	import org.slf4j.Logger;
-	import org.slf4j.LoggerFactory;
-
-	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-
-
+	
 	$schemaImport
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
-		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-
 		private URL url;
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
@@ -46,7 +39,7 @@ def type(accessor)
 			try {
 				return java.net.URLEncoder.encode(value, "UTF-8");
 			} catch (java.io.UnsupportedEncodingException e) {
-				logger.error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 				return "";
 			}
 		}

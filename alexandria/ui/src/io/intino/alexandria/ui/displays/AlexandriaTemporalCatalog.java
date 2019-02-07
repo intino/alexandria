@@ -92,7 +92,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			if (view != null && view.hideNavigator())
 				hideNavigator();
 			else if (isNavigatorVisible())
-				showNavigator();
+				showNavigator(isNavigatorAlwaysVisible());
 		});
 	}
 
@@ -108,6 +108,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			groupingManager.items(filteredItemList(defaultScope(), null).items());
 			refreshGroupingsSelection();
 			filterGroupingManager();
+			sendCatalog();
 		}
 
 		if (!isNavigatorVisible()) hideNavigator();
@@ -136,28 +137,24 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	@Override
 	public synchronized void loadMoreItems(String condition, Sorting sorting, int minCount) {
 		ItemList newItemList = new ItemList();
-		Instant boundingRangeTo = range().from();
-		Instant boundingRangeFrom = range().to();
+		TimeRange currentRange = moreItemsRange != null ? moreItemsRange : new TimeRange(range().from(), range().to(), range().scale());
+		TimeScale scale = currentRange.scale();
+		long movement = scale.instantsBetween(currentRange.from(), currentRange.to());
+		Instant from = scale.addTo(currentRange.from(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
+		Instant to = scale.addTo(currentRange.to(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
 
-		while(newItemList.size() < minCount && this.timeScaleHandler().boundsRange().from().isBefore(this.timeScaleHandler().range().from())) {
-			TimeRange currentRange = moreItemsRange != null ? moreItemsRange : new TimeRange(range().from(), range().to(), range().scale());
-			long movement = currentRange.scale().instantsBetween(currentRange.from(), currentRange.to());
-			Instant from = currentRange.scale().addTo(currentRange.from(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
-			Instant to = currentRange.scale().addTo(currentRange.to(), sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
-
-			if (sorting != null && sorting.mode() == Sorting.Mode.Descendant) boundingRangeTo = to;
-			else boundingRangeFrom = from;
-
-			moreItemsRange = new TimeRange(from, to, currentRange.scale());
+		while(newItemList.size() < minCount && this.timeScaleHandler().boundsRange().from().isBefore(from)) {
+			moreItemsRange = new TimeRange(from, to, scale);
 
 			ItemList itemList = filteredItemList(moreItemsRange, scopeWithAttachedGrouping(), condition);
-			if (itemList.size() <= 0) break;
-
 			newItemList.addAll(itemList);
+
+			from = scale.addTo(from, sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
+			to = scale.addTo(to, sorting != null && sorting.mode() == Sorting.Mode.Descendant ? movement : -movement);
 		}
 
 		itemList.addAll(newItemList);
-		createGroupingManager(filteredItemList(new TimeRange(boundingRangeFrom, boundingRangeTo, moreItemsRange != null ? moreItemsRange.scale() : range().scale()), defaultScope(),null));
+		createGroupingManager(itemList);
 		reloadGroupings();
 	}
 
@@ -176,20 +173,18 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 			refreshNavigatorLayout(element().temporalFilterLayout());
 
 		navigatorDisplay.personifyOnce(id());
-		if (isNavigatorVisible()) showNavigator();
+		if (isNavigatorVisible()) showNavigator(isNavigatorAlwaysVisible());
 		else hideNavigator();
 
 		loadTimezoneOffset();
 	}
 
 	protected void refresh(Instant instant) {
-		dirty(true);
-		refresh();
+		forceRefresh();
 	}
 
 	protected void refresh(TimeRange range) {
-		dirty(true);
-		refresh();
+		forceRefresh();
 	}
 
 	private void buildNavigatorDisplay(TimeScaleHandler timeScaleHandler) {
@@ -235,7 +230,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void filterTimezone(ItemList itemList, TimeRange range);
 	protected abstract TimeRange queryRange(TimeRange range);
 	protected abstract TimeScaleHandler timeScaleHandler();
-	protected abstract void showNavigator();
+	protected abstract void showNavigator(boolean isAlwaysVisible);
 	protected abstract void hideNavigator();
 	protected abstract void loadTimezoneOffset();
 	protected abstract void refreshNavigatorLayout(TemporalFilter.Layout layout);
@@ -264,6 +259,11 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	private TimeRange defaultElementRange() {
 		Instant now = Instant.now(Clock.systemUTC());
 		return new TimeRange(now, now, TimeScale.Second);
+	}
+
+	private boolean isNavigatorAlwaysVisible() {
+		if (showAll()) return false;
+		return this.itemList.size() < AlexandriaViewContainerCollectionPage.PageSize;
 	}
 
 }

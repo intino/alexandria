@@ -117,7 +117,7 @@ public class CatalogRenderer extends DisplayRenderer {
 	private void arrangements(Catalog catalog, Frame frame) {
 		Catalog.Content content = catalog.content();
 		boolean existsGroupings = content != null && !content.groupingList().isEmpty();
-		if (existsGroupings) frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", content.histograms().toString()));
+		if (existsGroupings) frame.addSlot("hasGroupings", baseFrame().addSlot("histogramsMode", content.histograms().toString()).addSlot("position", content.groupingsPosition().toString()));
 		if (content == null) return;
 		content.groupingList().forEach(grouping -> frame.addSlot("arrangement", frameOf(grouping, catalog, this.box, this.itemClass)));
 		content.sortingList().forEach(sorting -> frame.addSlot("arrangement", frameOf(sorting, catalog, this.box, this.itemClass)));

@@ -19,6 +19,7 @@ public class Catalog extends Element {
 	private DefaultObjectLoader defaultObjectLoader;
 	private ScopeChangeEvent scopeChangeEvent;
 	private ArrangementHistogramsMode arrangementHistogramsMode;
+	private ArrangementPosition arrangementPosition;
 	private List<Arrangement> arrangementList = new ArrayList<>();
 	private ArrangementFiltererLoader arrangementFiltererLoader;
 	private ItemsArrivalMessageLoader itemsArrivalMessageLoader;
@@ -27,6 +28,7 @@ public class Catalog extends Element {
 
 	public Catalog() {
 		arrangementHistogramsMode = ArrangementHistogramsMode.Disabled;
+		arrangementPosition = ArrangementPosition.Left;
 		mode = Mode.Normal;
 	}
 
@@ -34,6 +36,10 @@ public class Catalog extends Element {
 
 	public enum ArrangementHistogramsMode {
 		EnabledAndVisible, EnabledButHidden, Disabled
+	}
+
+	public enum ArrangementPosition {
+		Left, Right
 	}
 
 	public Item rootItem(List<Item> itemList, UISession session) {
@@ -123,6 +129,19 @@ public class Catalog extends Element {
 
 	public Catalog arrangementHistogramsMode(ArrangementHistogramsMode mode) {
 		this.arrangementHistogramsMode = mode;
+		return this;
+	}
+
+	public ArrangementPosition arrangementPosition() {
+		return arrangementPosition;
+	}
+
+	public Catalog arrangementPosition(String position) {
+		return arrangementPosition(ArrangementPosition.valueOf(position));
+	}
+
+	public Catalog arrangementPosition(ArrangementPosition position) {
+		this.arrangementPosition = position;
 		return this;
 	}
 
