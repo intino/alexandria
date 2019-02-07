@@ -18,6 +18,7 @@ Schema Catalog
 	Attribute embedded as Bool
 	Attribute hideGroupings as Bool
 	Attribute arrangementHistogramsMode as Text
+	Attribute arrangementPosition as Text
 	Attribute mode as Text
 	Attribute groupingList as List Object(Grouping)
 	Attribute sortingList as List Object(Sorting)
