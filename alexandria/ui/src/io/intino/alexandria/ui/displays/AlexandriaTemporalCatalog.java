@@ -136,6 +136,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 
 	@Override
 	public synchronized void loadMoreItems(String condition, Sorting sorting, int minCount) {
+		if (showAll() || !allowLoadingMoreItems()) return;
+
 		ItemList newItemList = new ItemList();
 		TimeRange currentRange = moreItemsRange != null ? moreItemsRange : new TimeRange(range().from(), range().to(), range().scale());
 		TimeScale scale = currentRange.scale();
@@ -234,6 +236,7 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	protected abstract void hideNavigator();
 	protected abstract void loadTimezoneOffset();
 	protected abstract void refreshNavigatorLayout(TemporalFilter.Layout layout);
+	protected abstract boolean allowLoadingMoreItems();
 
 	private boolean isNavigatorVisible() {
 		return element().temporalFilterVisible(defaultScope(), session());
