@@ -22,8 +22,8 @@ public class ComponentReferenceTemplate extends Template {
 			rule().add((condition("type", "block & reference")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "reference")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "reference")), (condition("trigger", "add"))),
-			rule().add((condition("type", "block & reference"))).add(literal("<Alexandria.")).add(mark("type", "firstUpperCase")).add(literal(" id=\"")).add(mark("name")).add(literal("\">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n")).add(literal("\n"))).add(literal("</Alexandria.")).add(mark("type", "firstUpperCase")).add(literal(">")),
-			rule().add((condition("type", "component & reference"))).add(literal("<Alexandria.")).add(mark("type", "firstUpperCase")).add(literal(" id=\"")).add(mark("name")).add(literal("\"/>"))
+			rule().add((condition("type", "block & reference"))).add(literal("<Ui.")).add(mark("type", "firstUpperCase")).add(literal(" id=\"")).add(mark("name")).add(literal("\">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n")).add(literal("\n"))).add(literal("</Ui.")).add(mark("type", "firstUpperCase")).add(literal(">")),
+			rule().add((condition("type", "component & reference"))).add(literal("<Ui.")).add(mark("type", "firstUpperCase")).add(literal(" id=\"")).add(mark("name")).add(literal("\"/>"))
 		);
 		return this;
 	}
