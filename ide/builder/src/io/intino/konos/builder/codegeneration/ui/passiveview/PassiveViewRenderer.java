@@ -8,6 +8,7 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
+import io.intino.konos.model.graph.decorated.DecoratedDisplay;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -127,6 +128,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private void addAccessorType(Frame frame) {
 		Frame accessorType = new Frame().addSlot("value", type());
 		if (element.i$(Component.class)) accessorType.addSlot("component", "");
+		if (element.i$(DecoratedDisplay.class)) accessorType.addSlot("abstract", "");
 		frame.addSlot("accessorType", accessorType);
 	}
 

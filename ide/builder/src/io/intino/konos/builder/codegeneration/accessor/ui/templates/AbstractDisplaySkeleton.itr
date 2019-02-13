@@ -1,11 +1,12 @@
 def type(display)
 	import React from "react";
-	import * as Alexandria from "../../../lib/alexandria-ui-elements/Alexandria";
+	import * as UiCore from "../../../lib/alexandria-ui-elements-core/UIElementsCore";
+	import * as Ui from "../../../lib/alexandria-ui-elements/UIElements";
 	$accessorType+import;[
 	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
 	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
 
-	export default class [$abstract]$name+firstUpperCase extends Alexandria~$type+firstUpperCase {
+	export default class [$abstract]$name+firstUpperCase extends Ui~$type+firstUpperCase {
 
 		constructor(props) {
 			super(props);[
@@ -15,18 +16,22 @@ def type(display)
 
 		render() {
 			return (
-				<React.Fragment>
+				<React.Fragment>[
 					$component...[$NL]
-				</React.Fragment>
+				]</React.Fragment>
 			);
 		}
 	}
 end
 
 def attribute(component) trigger(import)
-	import Alexandria$value+firstUpperCase from "../../../lib/alexandria-ui-elements/src/displays/components/$value+firstUpperCase"
+	import Ui$value+firstUpperCase from "../../../lib/alexandria-ui-elements/src/displays/components/$value+firstUpperCase"
+end
+
+def attribute(abstract) trigger(import)
+	import Ui$value+firstUpperCase from "../../lib/alexandria-ui-elements/src/displays/$value+firstUpperCase"
 end
 
 def trigger(import)
-	import Alexandria$value+firstUpperCase from "../../../lib/alexandria-ui-elements/src/displays/$value+firstUpperCase"
+	import Ui$value+firstUpperCase from "../../../lib/alexandria-ui-elements/src/displays/$value+firstUpperCase"
 end
