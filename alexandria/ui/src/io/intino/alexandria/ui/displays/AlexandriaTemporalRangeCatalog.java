@@ -112,6 +112,11 @@ public class AlexandriaTemporalRangeCatalog<DN extends AlexandriaTemporalRangeCa
 	}
 
 	@Override
+	protected boolean allowLoadingMoreItems() {
+		return true;
+	}
+
+	@Override
 	protected TimeRange queryRange(TimeRange range) {
 		int offset = timezoneOffset();
 		range = range != null ? range : timeScaleHandler().range();

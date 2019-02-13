@@ -106,6 +106,11 @@ public class AlexandriaTemporalTimeCatalog<DN extends AlexandriaTemporalTimeCata
 	}
 
 	@Override
+	protected boolean allowLoadingMoreItems() {
+		return false;
+	}
+
+	@Override
 	protected void filterTimezone(ItemList itemList, TimeRange range) {
 	}
 

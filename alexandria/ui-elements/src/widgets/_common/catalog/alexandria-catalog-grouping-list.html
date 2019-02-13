@@ -108,10 +108,10 @@
             },
 
             _load : function() {
-                var showCharts = true;
+                var showCharts = false;
                 try {
                     var value = Cookies.get("alexandria-catalog-groupings-charts");
-                    showCharts = value == null || (value != null && value === "true") ? true : false;
+                    showCharts = value != null && value === "true" ? true : false;
                 }
                 catch (exception) {
                 }
@@ -155,8 +155,8 @@
             _refresh : function() {
                 this.querySelectorAll("alexandria-catalog-grouping").forEach((grouping) => {
                     if (this._checked) grouping.showCharts();
-            else grouping.hideCharts();
-            });
+                    else grouping.hideCharts();
+                });
                 this._toggleChartsLabel = this._checked ? this.HideCharts : this.ShowCharts;
             }
 
