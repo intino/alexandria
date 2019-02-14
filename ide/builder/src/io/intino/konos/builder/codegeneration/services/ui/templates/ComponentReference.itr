@@ -7,7 +7,12 @@ def type(component & reference) trigger(class)
 		[$component+declaration...[$NL]
 
 		]public $name+firstUpperCase($abstractBox+type box) {
-			super(box);[
+			super(box);
+		}
+
+		@Override
+		public void init() {
+			super.init();[
 			$component+reference...[$NL]]
 		}[
 
@@ -16,5 +21,5 @@ def type(component & reference) trigger(class)
 end
 
 def type(component & reference)
-	$name = new $name+firstUpperCase(box());
+	$name = addAndPersonify(new $name+firstUpperCase(box()));
 end

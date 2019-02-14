@@ -1,7 +1,7 @@
 import React from "react";
 import AbstractPageDisplay from "../../gen/displays/AbstractPageDisplay";
-import PageDisplayNotifier from "../../../gen/displays/notifiers/PageDisplayNotifier";
-import PageDisplayRequester from "../../../gen/displays/requesters/PageDisplayRequester";
+import PageDisplayNotifier from "../../gen/displays/notifiers/PageDisplayNotifier";
+import PageDisplayRequester from "../../gen/displays/requesters/PageDisplayRequester";
 
 export default class PageDisplay extends AbstractPageDisplay {
 

@@ -1,8 +1,8 @@
 def type(display)
 	import React from "react";
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
-	import $name+firstUpperCase~Notifier from "../../../gen/displays/notifiers/$name+firstUpperCase~Notifier";
-	import $name+firstUpperCase~Requester from "../../../gen/displays/requesters/$name+firstUpperCase~Requester";
+	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
+	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 
 	export default class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 

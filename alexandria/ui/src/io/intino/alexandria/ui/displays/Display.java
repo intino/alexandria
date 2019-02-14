@@ -55,22 +55,22 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public final void personify() {
-		notifier.personify(id, name());
+//		notifier.personify(id, name());
 		init();
 	}
 
 	public final void personify(String object) {
-		notifier.personify(id, name(), object);
+//		notifier.personify(id, name(), object);
 		init();
 	}
 
 	public final void personifyOnce() {
-		notifier.personifyOnce(id, name());
+//		notifier.personifyOnce(id, name());
 		init();
 	}
 
 	public final void personifyOnce(String object) {
-		notifier.personifyOnce(id, name(), object);
+//		notifier.personifyOnce(id, name(), object);
 		init();
 	}
 
@@ -188,9 +188,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		this.owner = owner;
 	}
 
-	public void addAndPersonify(Display child) {
+	public <D extends Display> D addAndPersonify(D child) {
 		add(child);
 		child.personify();
+		return child;
 	}
 
 	public void remove(Class<? extends Display> clazz) {

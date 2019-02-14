@@ -19,19 +19,10 @@ def type(app)
 
 		renderApplication();
         for (var i=0; i<configuration.pushServices.length; i++)
-            PushService.openConnection(configuration.pushServices[i]);
+            PushService.openConnection(configuration.pushServices$[i$]);
 
 		function loadConfiguration() {
-			var configuration = {};
-			configuration.googleApiKey = variable("GoogleApiKey");
-			configuration.pushServices = variable("PushServices").split(",");
-			return configuration;
-		}
-
-		function variable(name) {
-			var result = document.getElementById(name).innerHTML;
-			document.body.removeChild(document.getElementById(name));
-			return result;
+			return document.configuration;
 		}
 
 		function renderApplication() {
