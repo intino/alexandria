@@ -1,5 +1,5 @@
 import React from "react";
-import PassiveView from "PassiveView";
+import PassiveView from "./PassiveView";
 
 export default class Display extends PassiveView {
 

@@ -13,8 +13,7 @@ export default class AppBar extends AbstractAppBar {
 
 	render() {
 		return (
-			<React.Fragment>
-			</React.Fragment>
+			<React.Fragment>{this.props.children}</React.Fragment>
 		);
 	};
 

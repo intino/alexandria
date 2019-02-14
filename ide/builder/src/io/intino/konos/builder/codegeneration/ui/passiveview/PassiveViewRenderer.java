@@ -32,7 +32,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		frame.addSlot("type", type);
 		addAccessorType(frame);
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
-		frame.addSlot("packageTypeRelativeDirectory", type.equalsIgnoreCase("display") ? "" : "../");
+		frame.addSlot("packageTypeRelativeDirectory", !element.getClass().getSimpleName().equalsIgnoreCase("display") ? "" : "../");
 		frame.addSlot("parentType", parentType());
 		frame.addSlot("name", clean(element.name$()));
 		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
@@ -127,6 +127,8 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private void addAccessorType(Frame frame) {
 		Frame accessorType = new Frame().addSlot("value", type());
+		if (element.getClass().getSimpleName().equalsIgnoreCase("display")) accessorType.addSlot("baseDisplay", "");
+		if (element.getClass().getSimpleName().equalsIgnoreCase("component")) accessorType.addSlot("baseComponent", "");
 		if (element.i$(Component.class)) accessorType.addSlot("component", "");
 		if (element.i$(DecoratedDisplay.class)) accessorType.addSlot("abstract", "");
 		frame.addSlot("accessorType", accessorType);

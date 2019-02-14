@@ -22,14 +22,14 @@ def type(desktop)
         @Override
 		protected void init() {
 			super.init();
-			appBar = new $name+firstUpperCase~AppBar(box());
-			tabs = new $name+firstUpperCase~Tabs(box());
+			appBar = addAndPersonify(new $name+firstUpperCase~AppBar(box()));
+			tabs = addAndPersonify(new $name+firstUpperCase~Tabs(box()));
 		}
 
 		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {
 		[	$component+declaration...[$NL]
 
-			]public $name+firstUpperCase~AppBar$abstractBox+extension($abstractBox+type box) {
+			]public $name+firstUpperCase~AppBar($abstractBox+type box) {
 				super(box);
 			}
 
@@ -43,7 +43,7 @@ def type(desktop)
 		}
 
 		public class $name+firstUpperCase~Tabs$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
-			public $name+firstUpperCase~Tabs$abstractBox+extension($abstractBox+type box) {
+			public $name+firstUpperCase~Tabs($abstractBox+type box) {
         		super(box);
         		$tabs...[$NL]
         	}

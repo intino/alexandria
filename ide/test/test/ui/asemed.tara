@@ -44,7 +44,8 @@ InlineOptions zonas
 	InlineOption("Zona 1") zona1
 	InlineOption("Zona 2") zona2
 
-
+Component componentA as Decorated
+Display displayA
 
 Block dashboardBlock as Decorated
 	Block as Horizontal

@@ -10,12 +10,13 @@ def type(notifier)
 		when = (message) => {
 			var register = _register.bind(this);
 			var element = this.element;
+			var pushService = this.pushService;
 			return {
 				toSelf: function () {
 					return {
 						execute: function (action) {
-							register(PushService.registerCallback(message, function (parameters) {
-								if (parameters.id === element.id) {
+							register(pushService.listen(message, function (parameters) {
+								if (parameters.id === element.props.id) {
 									action(parameters);
 								}
 							}));
@@ -23,7 +24,7 @@ def type(notifier)
 					}
 				},
 				execute: function (action) {
-					register(PushService.registerCallback(message, function(parameters) {
+					register(pushService.listen(message, function(parameters) {
 						if (parameters.name === element.name) {
 							action(parameters);
 						}
