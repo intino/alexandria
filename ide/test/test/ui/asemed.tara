@@ -8,7 +8,7 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 	AppBar
 		ImageValue logo
 		Block cabecera as Horizontal
-			Value titulo as Title1
+			Value titulo as Title1 Input
 			Value subtitulo as Title2
 		OptionList(values=divisiones) divisiones as Selector
 		OptionList(values=zonas) zonas as Selector

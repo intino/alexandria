@@ -38,7 +38,7 @@ public class PassiveViewUpdater<C extends PassiveView> extends Updater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(DisplayTemplate.create()).format(PassiveViewRenderer.frameOf(request, settings.packageName()));
+		final String methodText = Formatters.customize(DisplayTemplate.create()).format(PassiveViewRenderer.frameOf(element, request, settings.packageName()));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), psiClass.getMethods()[psiClass.getMethods().length - 1]);
 	}
 

@@ -2,26 +2,27 @@ const PushService = (function () {
     var socketUrl = {};
     var callbacks = {};
     var service = {};
+    var ws = null;
 
     service.retries = 0;
     service.openConnection = function (url) {
-        var ws = new WebSocket(url);
+        this.ws = new WebSocket(url);
         socketUrl = url;
 
-        ws.onopen = function(e) {
+        this.ws.onopen = function(e) {
             console.log("WebSocket connection opened.");
             service.retries = 0;
         };
 
-        ws.onmessage = function (event) {
+        this.ws.onmessage = function (event) {
             var data = JSON.parse(event.data);
-            var callbacks = callback(data.name).slice(0);
+            var callbacks = callback(data.n).slice(0);
             callbacks.forEach(function (callback) {
-                callback(data.parameters);
+                callback(data.p);
             });
         };
 
-        ws.onclose = function(e) {
+        this.ws.onclose = function(e) {
             if (service.retries >= 3) {
                 this.notifyClose();
                 return;
@@ -30,7 +31,7 @@ const PushService = (function () {
             this.reconnect(e);
         };
 
-        ws.reconnect = function(e) {
+        this.ws.reconnect = function(e) {
             try {
                 service.retries++;
                 console.log("WebSocket connection lost. Status code: " + e.code + ". Retry: " + service.retries + ".");
@@ -41,7 +42,7 @@ const PushService = (function () {
             }
         }
 
-        ws.notifyClose = function() {
+        this.ws.notifyClose = function() {
             var cottonNetwork = document.querySelector("cotton-push-network");
             if (cottonNetwork == null) {
                 cottonNetwork = document.createElement("cotton-push-network");
@@ -66,6 +67,7 @@ const PushService = (function () {
     };
 
     service.send = function(message) {
+        this.ws.send(JSON.stringify(message));
     };
 
     function callback(name) {

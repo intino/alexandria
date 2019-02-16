@@ -16,7 +16,7 @@ def type(notifier)
 					return {
 						execute: function (action) {
 							register(pushService.listen(message, function (parameters) {
-								if (parameters.id === element.props.id) {
+								if (parameters.i === element.props.id) {
 									action(parameters);
 								}
 							}));
@@ -25,7 +25,7 @@ def type(notifier)
 				},
 				execute: function (action) {
 					register(pushService.listen(message, function(parameters) {
-						if (parameters.name === element.name) {
+						if (parameters.n === element.name) {
 							action(parameters);
 						}
 					}));

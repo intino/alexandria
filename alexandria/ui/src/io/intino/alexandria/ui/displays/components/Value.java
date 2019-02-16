@@ -1,21 +1,20 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-
-import java.util.function.Consumer;
+import io.intino.alexandria.schemas.KeyPressEventData;
+import io.intino.alexandria.ui.displays.events.ChangeEvent;
+import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.events.KeyPressEvent;
+import io.intino.alexandria.ui.displays.events.KeyPressListener;
 
 public class Value<B extends Box> extends AbstractValue<B> {
 	private String value;
-	private Consumer<String> changeListener = null;
+	protected ChangeListener changeListener = null;
+	protected KeyPressListener keyPressListener = null;
 
 	public Value(B box) {
         super(box);
     }
-
-    public Value<B> onChange(Consumer<String> consumer) {
-    	this.changeListener = consumer;
-    	return this;
-	}
 
 	public String value() {
 		return value;
@@ -23,8 +22,17 @@ public class Value<B extends Box> extends AbstractValue<B> {
 
 	public void update(String value) {
 		this.value = value;
-		notifier.update(value);
-		if (changeListener != null) changeListener.accept(value);
+		notifier.refresh(value);
+	}
+
+	public void notifyChange(String value) {
+		this.value = value;
+		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	}
+
+	public void notifyKeyPress(KeyPressEventData data) {
+		this.value = data.value();
+		if (keyPressListener != null) keyPressListener.accept(new KeyPressEvent(this, data.value(), data.keyCode()));
 	}
 
 }

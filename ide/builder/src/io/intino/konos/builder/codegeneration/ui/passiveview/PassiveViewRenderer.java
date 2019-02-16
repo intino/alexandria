@@ -9,6 +9,7 @@ import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.PassiveView.Notification;
 import io.intino.konos.model.graph.PassiveView.Request;
 import io.intino.konos.model.graph.decorated.DecoratedDisplay;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -43,6 +44,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	protected void createPassiveViewFiles(Frame frame) {
 		writeNotifier(frame);
 		writeRequester(frame);
+		writePushRequester(frame);
 	}
 
 	private void writeRequester(Frame frame) {
@@ -50,7 +52,22 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeRequester(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
+	}
+
+	private void writePushRequester(Frame frame) {
+		writePushRequester(element, frame);
+	}
+
+	protected void writePushRequester(PassiveView element, Frame frame) {
+		Template template = displayPushRequesterTemplate();
+		boolean accessible = isAccessible(frame);
+		if (accessible || template == null) return;
+		writeFrame(new File(gen(), format(Requesters)), snakeCaseToCamelCase(element.name$() + "PushRequester"), template.format(frame));
+	}
+
+	private boolean isAccessible(Frame frame) {
+		return Arrays.asList(frame.types()).contains("accessible");
 	}
 
 	private void writeNotifier(Frame frame) {
@@ -58,7 +75,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	protected void writeNotifier(PassiveView element, Frame frame) {
-		writeFrame(new File(gen(), format(Notifiers)), snakeCaseToCamelCase(element.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen(), format(Notifiers)), snakeCaseToCamelCase(element.name$() + (isAccessible(frame) ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
 	}
 
 	private Template displayNotifierTemplate() {
@@ -67,6 +84,11 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private Template displayRequesterTemplate() {
 		return setup(requesterTemplate());
+	}
+
+	private Template displayPushRequesterTemplate() {
+		Template template = pushRequesterTemplate();
+		return template != null ? setup(template) : null;
 	}
 
 	private String type() {
@@ -94,12 +116,14 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	}
 
 	private Frame[] framesOfRequests(List<Request> requests) {
-		return requests.stream().map(r -> frameOf(r, packageName())).toArray(Frame[]::new);
+		return requests.stream().map(r -> frameOf(element, r, packageName())).toArray(Frame[]::new);
 	}
 
-	public static Frame frameOf(Request request, String packageName) {
+	public static Frame frameOf(Layer element, Request request, String packageName) {
 		final Frame frame = new Frame().addTypes("request");
+		frame.addSlot("display", element.name$());
 		if (request.responseType().equals(Asset)) frame.addTypes("asset");
+		if (request.isFile()) frame.addTypes("file");
 		frame.addSlot("name", request.name$());
 		if (request.isType()) {
 			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", parameter(request, packageName));
@@ -123,6 +147,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 
 	private Template requesterTemplate() {
 		return templateProvider.requesterTemplate(element);
+	}
+
+	private Template pushRequesterTemplate() {
+		return templateProvider.pushRequesterTemplate(element);
 	}
 
 	private void addAccessorType(Frame frame) {

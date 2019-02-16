@@ -92,7 +92,7 @@ public class UIGenerationTest {
 		gen.mkdirs();
 		KonosGraph graph = new Graph().loadStashes(stash).as(KonosGraph.class);
 		new FullRenderer(null, graph, gen, gen, gen, workingPackage.toLowerCase()).execute();
-		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().webModule(webModule()).src(gen).gen(gen), service).execute();
+		for (UIService service : graph.uIServiceList()) new ServiceRenderer(new Settings().packageName("").webModule(webModule()).src(gen).gen(gen), service).execute();
 	}
 
 	private void cleanTestDirectory() {

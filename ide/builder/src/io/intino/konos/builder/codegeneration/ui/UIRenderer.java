@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
+import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
@@ -125,6 +126,14 @@ public abstract class UIRenderer {
 	protected File createIfNotExists(File file) {
 		if (!file.exists()) file.mkdirs();
 		return file;
+	}
+
+	protected String shortId(Layer element) {
+		return shortId(element, "");
+	}
+
+	protected String shortId(Layer element, String suffix) {
+		return settings.idGenerator().shortId(element.core$().id() + suffix);
 	}
 
 }

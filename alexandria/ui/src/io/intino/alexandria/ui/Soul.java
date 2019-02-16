@@ -96,4 +96,5 @@ public abstract class Soul implements DisplayRepository {
     public void remove(String id) {
         this.displays.remove(id);
     }
+
 }

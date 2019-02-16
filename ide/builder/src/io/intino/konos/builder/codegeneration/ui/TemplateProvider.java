@@ -9,4 +9,5 @@ public interface TemplateProvider {
 	Template genTemplate(Layer layer);
 	Template notifierTemplate(PassiveView element);
 	Template requesterTemplate(PassiveView element);
+	Template pushRequesterTemplate(PassiveView element);
 }

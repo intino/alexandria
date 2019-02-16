@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import io.intino.konos.builder.utils.IdGenerator;
 
 import java.io.File;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class Settings {
 	private String packageName;
 	private String boxName;
 	private Map<String, String> classes = new HashMap<>();
+	private static IdGenerator generator = new IdGenerator();
 
 	public Project project() {
 		return project;
@@ -97,6 +99,10 @@ public class Settings {
 	public Settings classes(Map<String, String> classes) {
 		this.classes = classes;
 		return this;
+	}
+
+	public IdGenerator idGenerator() {
+		return generator;
 	}
 
 }
