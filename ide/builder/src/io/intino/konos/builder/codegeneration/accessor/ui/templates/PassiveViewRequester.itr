@@ -8,7 +8,7 @@ export default class $name+firstUpperCase~Requester extends Requester {
     };
 
 	registerPersonifiedDisplay = function(value) {
-		this.pushService.send({ operation: "registerPersonifiedTemplate", target: this.element.props.id, value: value});
+		this.pushService.send({ op: "registerPersonifiedTemplate", s: "$name+lowercase", d: this.element.props.id, v: JSON.stringify(value)});
 	}
 }
 end
@@ -28,14 +28,18 @@ end
 
 def type(parameter) trigger(request)
 	$name = function(value) {
-		$method({ operation: "$name", target: this.element.props.id, value: value});
+		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, v: $parameter});
 	}
 end
 
 def trigger(request)
     $name = ([$parameterSignature]) => {
-        $method({ operation: "$name", target: this.element.props.id[, value: $parameter]});
+        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id[, v: $parameter]});
     };
+end
+
+def type(object) trigger(parameter)
+	JSON.stringify(value)
 end
 
 def trigger(parameter)

@@ -1,11 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.konos.builder.codegeneration.Formatters;
-import io.intino.konos.builder.codegeneration.services.ui.templates.AbstractDesktopTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.templates.AbstractDisplayTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.templates.DisplayTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.templates.PassiveViewNotifierTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.templates.PassiveViewRequesterTemplate;
+import io.intino.konos.builder.codegeneration.services.ui.templates.*;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Desktop;
 import io.intino.konos.model.graph.PassiveView;
@@ -31,6 +27,10 @@ public class ServiceTemplateProvider implements TemplateProvider {
 
 	public Template requesterTemplate(PassiveView element) {
 		return setup(PassiveViewRequesterTemplate.create());
+	}
+
+	public Template pushRequesterTemplate(PassiveView element) {
+		return setup(PassiveViewPushRequesterTemplate.create());
 	}
 
 	private Template setup(Template template) {

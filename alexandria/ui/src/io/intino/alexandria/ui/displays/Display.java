@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 
 public class Display<N extends DisplayNotifier, B extends Box> {
 	private final B box;
-	private final String id;
+	private String id;
 	private final List<Display> children = new ArrayList<>();
 	protected DisplayRepository repository;
 	protected N notifier;
@@ -32,6 +32,11 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	public Display(B box) {
 		this.box = box;
 		this.id = UUID.randomUUID().toString();
+	}
+
+	public <D extends Display> D id(String id) {
+		this.id = id;
+		return (D) this;
 	}
 
 	public B box() {

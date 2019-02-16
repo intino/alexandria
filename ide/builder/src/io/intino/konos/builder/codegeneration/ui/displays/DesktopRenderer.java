@@ -26,6 +26,8 @@ public class DesktopRenderer extends BaseDisplayRenderer<Desktop> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
+		frame.addSlot("appBarId", shortId(element, "appBarId"));
+		frame.addSlot("tabBarId", shortId(element, "tabBarId"));
 		element.appBar().componentList().forEach(c -> addComponent(c, frame));
 		element.tabs().tabList().forEach(t -> addTab(t, frame));
 		return frame;

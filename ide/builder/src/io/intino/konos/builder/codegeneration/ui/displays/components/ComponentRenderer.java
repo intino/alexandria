@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.Input;
 import org.siani.itrules.model.Frame;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
+		frame.addSlot("id", shortId(element));
+		if (element.i$(Input.class)) frame.addSlot("input", new Frame("input"));
 		if (buildReferences) frame.addTypes("reference");
 		addComponents(frame);
 		return frame;
@@ -56,12 +59,13 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 	private Frame referenceFrame(Component component) {
 		Frame result = new Frame().addTypes(typeOf(component), "component");
 		if (buildReferences) result.addTypes("reference");
+		result.addSlot("id", shortId(component));
 		result.addSlot("name", clean(component.name$()));
 		result.addSlot("parent", clean(element.name$()));
 		result.addSlot("type", typeOf(component));
+		if (component.i$(Input.class)) result.addSlot("input", new Frame("input"));
 		result.addSlot("value", new ComponentRenderer(settings, component, true, decorated, templateProvider, target).buildFrame().addSlot("addType", typeOf(component)));
 		addDecoratedFrames(result, decorated);
 		return result;
 	}
-
 }

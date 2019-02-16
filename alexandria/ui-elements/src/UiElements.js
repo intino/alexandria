@@ -13,6 +13,7 @@ import Tab from "./displays/components/Tab"
 import Tabs from "./displays/components/Tabs"
 import TaskOperation from "./displays/components/TaskOperation"
 import Value from "./displays/components/Value"
+import ValueInput from "./displays/components/ValueInput"
 
 import Desktop from "./displays/Desktop"
 import Editor from "./displays/Editor"
@@ -20,4 +21,6 @@ import Page from "./displays/Page"
 import PageDisplay from "./displays/PageDisplay"
 import Root from "./displays/Root"
 
-export { AppBar, Badge, Block, Catalog, Chart, FileValue, Grouping, Icon, ImageValue, OptionList, Sorting, Tab, Tabs, TaskOperation, Value, Desktop, Editor, Page, PageDisplay, Root }
+export { AppBar, Badge, Block, Catalog, Chart, FileValue, Grouping,
+         Icon, ImageValue, OptionList, Sorting, Tab, Tabs, TaskOperation,
+         Value, ValueInput, Desktop, Editor, Page, PageDisplay, Root }

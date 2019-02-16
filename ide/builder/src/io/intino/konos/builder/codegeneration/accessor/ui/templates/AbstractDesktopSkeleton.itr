@@ -16,10 +16,10 @@ def type(desktop)
 		render() {
 			return (
 				<React.Fragment>
-					<Ui.AppBar id="appBar">
+					<Ui.AppBar id="$appBarId">
 						$component...[$NL]
 					</Ui.AppBar>
-					<Ui.Tabs id="tabBar">
+					<Ui.Tabs id="$tabBarId">
 						$tabs...[$NL]
 					</Ui.Tabs>
 				</React.Fragment>

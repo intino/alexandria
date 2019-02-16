@@ -33,6 +33,10 @@ public class AccessorTemplateProvider implements TemplateProvider {
 		return setup(PassiveViewRequesterTemplate.create());
 	}
 
+	public Template pushRequesterTemplate(PassiveView element) {
+		return null;
+	}
+
 	private Template setup(Template template) {
 		return addFormats(template);
 	}

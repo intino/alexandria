@@ -7,7 +7,7 @@ def type(display & accessible)
     import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
     import io.intino.alexandria.ui.spark.UISparkManager;
 
-    public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.ProxyDisplayRequester {
+    public class $name+FirstUpperCase~ProxyRequester extends io.intino.alexandria.ui.displays.requesters.DisplayProxyRequester {
 
     	public $name+FirstUpperCase~ProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
     		super(manager, notifierProvider);

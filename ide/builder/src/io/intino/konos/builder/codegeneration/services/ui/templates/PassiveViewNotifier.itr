@@ -12,11 +12,11 @@ def type(display & accessible)
         }
 
 		public void refreshBaseUrl(String value) {
-			putToDisplay("refreshBaseUrl", "value", value);
+			putToDisplay("refreshBaseUrl", "v", value);
 		}
 
 		public void refreshError(String value) {
-			putToDisplay("refreshError", "value", value);
+			putToDisplay("refreshError", "v", value);
 		}
     }
 end
@@ -64,7 +64,7 @@ end
 
 def type(notification) trigger(notification)
 	public void $name+firstLowercase([$parameter value]) {
-		put[$target]("$name+firstLowercase"[, "value", $parameter+empty~value]);
+		put[$target]("$name+firstLowercase"[, "v", $parameter+empty~value]);
 	}
 end
 

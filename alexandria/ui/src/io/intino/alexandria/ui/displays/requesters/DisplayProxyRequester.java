@@ -5,9 +5,9 @@ import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import io.intino.alexandria.ui.services.push.UIClient;
 import io.intino.alexandria.ui.spark.UISparkManager;
 
-public abstract class ProxyDisplayRequester extends DisplayRequester {
+public abstract class DisplayProxyRequester extends DisplayRequester {
 
-	public ProxyDisplayRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
+	public DisplayProxyRequester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 		super(manager, notifierProvider);
 	}
 

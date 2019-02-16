@@ -87,21 +87,21 @@ public class DisplayNotifier {
 
     private Map<String, Object> addIdAndNameTo(Map<String, Object> parameters) {
         HashMap parametersWithId = new HashMap(parameters);
-        parametersWithId.put("id", display.id());
-        parametersWithId.put("name", display.name());
+        parametersWithId.put("i", display.id());
+        parametersWithId.put("n", display.name());
         return parametersWithId;
     }
 
     private Map<String, Object> initializationParameters(String id, String name) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", id);
-        parameters.put("display", name);
+        parameters.put("i", id);
+        parameters.put("d", name);
         return parameters;
     }
 
     private Map<String, Object> initializationParameters(String id, String name, String object) {
         Map<String, Object> parameters = initializationParameters(id, name);
-        parameters.put("object", object);
+        parameters.put("o", object);
         return parameters;
     }
 

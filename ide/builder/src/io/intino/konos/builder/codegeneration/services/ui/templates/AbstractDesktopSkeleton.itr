@@ -22,8 +22,8 @@ def type(desktop)
         @Override
 		protected void init() {
 			super.init();
-			appBar = addAndPersonify(new $name+firstUpperCase~AppBar(box()));
-			tabs = addAndPersonify(new $name+firstUpperCase~Tabs(box()));
+			appBar = addAndPersonify(new $name+firstUpperCase~AppBar<>(box()).id("$appBarId"));
+			tabs = addAndPersonify(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
 		}
 
 		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {

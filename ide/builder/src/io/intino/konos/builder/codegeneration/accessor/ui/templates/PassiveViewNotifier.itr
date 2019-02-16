@@ -10,8 +10,8 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
 
     setup = () => {
 		if (this.element == null || this.pushLinked) return;
-		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.refreshBaseUrl(parameters.value));
-		this.when("refreshError").toSelf().execute((parameters) => this.refreshError(parameters.value));
+		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.element.refreshBaseUrl(parameters.v));
+		this.when("refreshError").toSelf().execute((parameters) => this.element.refreshError(parameters.v));
 		this.pushLinked = true;
     };
 }
@@ -36,7 +36,7 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
 end
 
 def trigger(notification)
-	this.when("$name")[$target].execute(([$parameter+call]) => this.$name([$parameter+value]));
+	this.when("$name")[$target].execute(([$parameter+call]) => this.element.$name([$parameter+value]));
 end
 
 def type(parameter) trigger(call)
@@ -44,7 +44,7 @@ def type(parameter) trigger(call)
 end
 
 def type(parameter) trigger(value)
-	parameters.value
+	parameters.v
 end
 
 def attribute(Display) trigger(target)

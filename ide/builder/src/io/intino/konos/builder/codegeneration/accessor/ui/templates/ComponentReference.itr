@@ -13,11 +13,15 @@ def type(reference) trigger(add)
 end
 
 def type(block & reference)
-	<Ui.$type+firstUpperCase id="$name">[
+	<Ui.$type+firstUpperCase$input id="$id">[
 		$component+child...[$NL]
-	]</Ui.$type+firstUpperCase>
+	]</Ui.$type+firstUpperCase$input>
 end
 
 def type(component & reference)
-	<Ui.$type+firstUpperCase id="$name"/>
+	<Ui.$type+firstUpperCase$input id="$id"/>
+end
+
+def type(input)
+	Input
 end
