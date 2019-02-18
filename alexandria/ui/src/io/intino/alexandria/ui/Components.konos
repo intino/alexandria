@@ -1,0 +1,33 @@
+dsl Konos
+
+Component block as Decorated
+Component catalog as Decorated
+Component badge as Decorated
+Component chart as Decorated
+Component sorting as Decorated
+Component grouping as Decorated
+Component appBar as Decorated
+Component tabs as Decorated
+Component tab as Decorated
+Component icon as Decorated
+Component taskOperation as Decorated
+Component optionList as Decorated
+
+Component value as Decorated
+	Notification refresh as Text
+
+	Request notifyChange as Text
+	Request notifyKeyPress as Object(KeyPressEventData)
+
+Component fileValue as Decorated
+	Notification refresh as Text
+
+	Request notifyChange as File
+
+Component imageValue as Decorated
+	Notification refreshImage as Text
+	Request update as File
+
+Schema KeyPressEventData
+	Attribute keyCode as Text
+	Attribute value as Text

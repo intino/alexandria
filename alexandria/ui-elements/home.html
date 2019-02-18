@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>$title</title>
+
+		<meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes"/>
+
+        <link rel="icon" href-absolute="$favicon">
+
+	</head>
+
+	<body>
+		<div id="Home"></div>
+		<script>
+			document.configuration = {};
+			document.configuration.googleApiKey = "$googleApiKey";
+			document.configuration.pushServices = "$pushUrls".split(",");
+			document.configuration.clientId = "$client";
+			document.configuration.language = "$language";
+			document.configuration.url = "$url";
+			document.configuration.baseUrl = "$baseUrl";
+			document.configuration.basePath = "$basePath";
+		</script>
+	</body>
+</html>

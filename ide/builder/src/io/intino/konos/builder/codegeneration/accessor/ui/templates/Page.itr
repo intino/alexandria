@@ -1,6 +1,6 @@
 def type(resource & js)
 import React from "react";
-import Page from "lib/alexandria-ui-elements/src/displays/Page";
+import Page from "alexandria-ui-elements/src/displays/Page";
 import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
 
 export default class $name+firstUpperCase extends Page {
