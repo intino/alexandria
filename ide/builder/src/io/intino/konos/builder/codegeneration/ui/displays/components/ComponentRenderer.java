@@ -63,7 +63,7 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 		result.addSlot("name", clean(component.name$()));
 		result.addSlot("parent", clean(element.name$()));
 		result.addSlot("type", typeOf(component));
-		if (component.i$(Input.class)) result.addSlot("input", new Frame("input"));
+		if (component.i$(Input.class)) result.addSlot("input", new Frame("input", typeOf(component)));
 		result.addSlot("value", new ComponentRenderer(settings, component, true, decorated, templateProvider, target).buildFrame().addSlot("addType", typeOf(component)));
 		addDecoratedFrames(result, decorated);
 		return result;

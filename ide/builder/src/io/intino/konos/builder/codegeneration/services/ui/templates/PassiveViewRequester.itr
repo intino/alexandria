@@ -18,7 +18,7 @@ def type(display & accessible)
     		String operation = operation();
     		if (operation.equals("registerPersonifiedDisplay")) {
     			$name+FirstUpperCase~Proxy display = display();
-    			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("value", String.class));
+    			if (display != null) display.registerPersonifiedDisplay(manager.fromQuery("v", String.class));
     		}
     		else {
 				$name+FirstUppercase display = personifiedDisplay();
@@ -90,15 +90,15 @@ def type(parameter & accessible) trigger(parameter)
 end
 
 def type(list) trigger(parameter)
-    manager.fromQuery("value", $value~$[].class)
+    manager.fromQuery("v", $value~$[].class)
 end
 
 def type(parameter & file) trigger(parameter)
-    manager.fromForm("value", $value.class)
+    manager.fromForm("v", $value.class)
 end
 
 def type(parameter) trigger(parameter)
-    manager.fromQuery("value", $value.class)
+    manager.fromQuery("v", $value.class)
 end
 
 def	trigger(parameter)

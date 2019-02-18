@@ -10,6 +10,7 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 		Block cabecera as Horizontal
 			Value titulo as Title1 Input
 			Value subtitulo as Title2
+			FileValue fichero as Input
 		OptionList(values=divisiones) divisiones as Selector
 		OptionList(values=zonas) zonas as Selector
 		Block as Horizontal

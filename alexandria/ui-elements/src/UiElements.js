@@ -4,6 +4,7 @@ import Block from "./displays/components/Block"
 import Catalog from "./displays/components/Catalog"
 import Chart from "./displays/components/Chart"
 import FileValue from "./displays/components/FileValue"
+import FileValueInput from "./displays/components/FileValueInput"
 import Grouping from "./displays/components/Grouping"
 import Icon from "./displays/components/Icon"
 import ImageValue from "./displays/components/ImageValue"
@@ -21,6 +22,6 @@ import Page from "./displays/Page"
 import PageDisplay from "./displays/PageDisplay"
 import Root from "./displays/Root"
 
-export { AppBar, Badge, Block, Catalog, Chart, FileValue, Grouping,
+export { AppBar, Badge, Block, Catalog, Chart, FileValue, FileValueInput, Grouping,
          Icon, ImageValue, OptionList, Sorting, Tab, Tabs, TaskOperation,
          Value, ValueInput, Desktop, Editor, Page, PageDisplay, Root }

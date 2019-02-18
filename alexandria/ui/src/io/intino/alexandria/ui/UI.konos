@@ -28,7 +28,10 @@ Component value as Decorated
 	Request notifyKeyPress as Object(KeyPressEventData)
 
 Component fileValue as Decorated
-	Notification update as Text
+	Notification refresh as Text
+
+	Request notifyChange as File
+
 Component imageValue as Decorated
 	Notification refreshImage as Text
 	Request update as File
