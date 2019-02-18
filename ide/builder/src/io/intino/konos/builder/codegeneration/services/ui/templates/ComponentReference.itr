@@ -26,6 +26,10 @@ def type(component & reference)
 	$name = addAndPersonify(new $name+firstUpperCase(box()).id("$id"));
 end
 
+def type(input & filevalue)
+	public void onChange(io.intino.alexandria.ui.displays.events.ChangeListener listener) { this.changeListener = listener; }
+end
+
 def type(input)
 	public void onChange(io.intino.alexandria.ui.displays.events.ChangeListener listener) { this.changeListener = listener; }
 	public void onKeyPress(io.intino.alexandria.ui.displays.events.KeyPressListener listener) { this.keyPressListener = listener; }

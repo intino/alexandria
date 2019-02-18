@@ -1,6 +1,6 @@
 def type(resource & js)
 import React from "react";
-import Page from "../../lib/alexandria-ui-elements/src/displays/Page";
+import Page from "lib/alexandria-ui-elements/src/displays/Page";
 import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
 
 export default class $name+firstUpperCase extends Page {
@@ -25,11 +25,16 @@ def type(resource & html)
 		</head>
 
 		<body>
-			<div id="$name+firstUpperCase" base-url="$$baseUrl" base-path="$$basePath" url="$$url" client="$$client" language="$$language"></div>
+			<div id="$name+firstUpperCase"></div>
 			<script>
 				document.configuration = {};
 				document.configuration.googleApiKey = "$$googleApiKey";
 				document.configuration.pushServices = "$$pushUrls".split(",");
+				document.configuration.clientId = "$$client";
+				document.configuration.language = "$$language";
+				document.configuration.url = "$$url";
+				document.configuration.baseUrl = "$$baseUrl";
+				document.configuration.basePath = "$$basePath";
 			</script>
 		</body>
 	</html>

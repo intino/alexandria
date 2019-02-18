@@ -19,7 +19,7 @@ public abstract class DisplayRequester extends Resource {
 	}
 
 	public String operation() {
-		return manager.fromQuery("operation", String.class);
+		return manager.fromQuery("op", String.class);
 	}
 
 }
