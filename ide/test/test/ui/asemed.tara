@@ -28,6 +28,8 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 //			Content as CatalogContainer(caracteristicasCatalog)
 
 Root root
+	Block
+		Value valueData
 
 Block badgeBlock as Parameterizable Decorated
 	Param title as TextType

@@ -2,8 +2,8 @@ def type(app)
 	import React from "react";
 	import ReactDOM from "react-dom";
     $page+import...[$NL]
-	import PushService from "lib/alexandria-ui-elements/src/services/PushService";
-	import FileService from "lib/alexandria-ui-elements/src/services/FileService";
+	import PushService from "alexandria-ui-elements/src/services/PushService";
+	import FileService from "alexandria-ui-elements/src/services/FileService";
 
 	var launchApplication = function () {
 		var configuration = loadConfiguration();
