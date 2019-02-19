@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration;
 import io.intino.legio.graph.Parameter;
 import io.intino.plugin.project.LegioConfiguration;
 
-import java.util.List;
+import java.util.List	;
 import java.util.Set;
 
 import static io.intino.plugin.project.Safe.safeList;

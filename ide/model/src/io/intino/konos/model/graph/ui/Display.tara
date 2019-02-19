@@ -17,19 +17,19 @@ Concept:Named PassiveView is abstract
 
 Concept:Named Display extends PassiveView
 	var string label = empty
-	var Component[] components = empty
+	var Components.Component[] components = empty
 	var string parentDisplay = empty
 
-	has Block
+	has Components.Block
 
 Concept PageDisplay extends Display
 
 Concept Desktop extends PageDisplay
-	has:{1..1} AppBar
-	has:{1..1} Tabs
+	has:{1..1} Components.AppBar
+	has:{1..1} Components.Tabs
 
 Concept Root extends PageDisplay
-	has Component
+	has Components.Component
 
 Facet DrawerNavigable on Desktop
 	var word:{Left Right Top Bottom} direction = Left
@@ -38,7 +38,7 @@ Facet DrawerNavigable on Desktop
 	var boolean underAppBar = false
 
 Concept Editor extends PageDisplay
-	has Block
+	has Components.Block
 
 Facet Accessible on Display
 	var string[] parameters

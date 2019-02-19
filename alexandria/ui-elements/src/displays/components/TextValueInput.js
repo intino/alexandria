@@ -1,9 +1,9 @@
 import React from "react";
-import AbstractValue from "../../../gen/displays/components/AbstractValue";
+import AbstractTextValue from "../../../gen/displays/components/AbstractTextValue";
 import ValueNotifier from "../../../gen/displays/notifiers/ValueNotifier";
 import ValueRequester from "../../../gen/displays/requesters/ValueRequester";
 
-export default class ValueInput extends AbstractValue {
+export default class TextValueInput extends AbstractTextValue {
 	state = {
 		value : ""
 	};

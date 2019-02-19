@@ -4,10 +4,8 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Desktop;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.Root;
+import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.Components.Component;
 
 public class DisplayRendererFactory {
 

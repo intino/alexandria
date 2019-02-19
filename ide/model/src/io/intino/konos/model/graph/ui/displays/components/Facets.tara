@@ -1,0 +1,95 @@
+dsl Proteo
+
+use Component
+
+// TEXT FACETS
+Facet Title1 on Components.Text
+Facet Title2 on Components.Text
+Facet Title3 on Components.Text
+Facet Uppercase on Components.Text
+Facet Lowercase on Components.Text
+Facet Capitalize on Components.Text
+
+// OPERATION FACETS
+Facet Button on Components.Operation
+Facet IconButton extends Button on Components.Operation
+	var string alexandriaIcon
+Facet Link on Components.Operation
+
+Facet Uppercase on Components.Operation
+Facet Lowercase on Components.Operation
+Facet Capitalize on Components.Operation
+
+// IMAGE FACETS
+Facet Avatar on Components.Image
+
+// PROGRESS FACETS
+Facet Circular on Components.Progress
+Facet Linear on Components.Progress
+
+// BLOCK FACETS
+Facet RelativeSized on Components.Block
+	var integer:{%} width = 100%
+	var integer:{%} height = 100%
+
+Facet AbsoluteSized on Components.Block
+	var integer:{px} width
+
+Facet Drawer on Components.Block
+
+Facet Target on Components.Block
+	var string modelClass
+
+Facet BlockLayout on Components.Block is abstract
+Facet Horizontal extends BlockLayout
+Facet Vertical extends BlockLayout
+Facet Center extends BlockLayout
+Facet CenterJustified extends BlockLayout
+Facet Flexible extends BlockLayout
+Facet StartJustified extends BlockLayout
+Facet EndJustified extends BlockLayout
+
+Facet Paper on Components.Block
+
+Facet Selector on Components.Block
+
+Facet Parameterizable on Components.Block
+	has Param
+Concept Param is component
+Facet ParametrizableType is abstract
+Facet TextType extends ParametrizableType on Param
+Facet NumberType extends ParametrizableType on Param
+Facet WordType extends ParametrizableType on Param
+	var string[] values
+Facet ObjectType extends ParametrizableType on Param
+	var Components.Block block
+
+Facet Instance on Components.Block
+	var Components.Block type
+
+Facet InstanceCollection on Components.Block
+	var Components.Block type
+
+// CATALOG FACETS
+Facet Temporal on Components.Catalog
+	var word:{Time Range} type
+	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
+
+	Concept:{0..1} TemporalFilter
+		var word:{Always Conditional Never} enabled
+		var word:{Always Conditional Never} visible
+		var word:{Vertical Horizontal} layout = Horizontal
+
+// DIALOG FACETS
+Facet Dialog on Components.Block
+	var string title
+
+Facet AlertDialog extends Dialog
+Facet DecisionDialog extends Dialog
+	Concept Option
+		var string label
+		var string value
+
+Facet Fullscreen on Dialog
+Facet Mobile on Dialog
+Facet Draggable on Dialog

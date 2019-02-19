@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.passiveview;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.ElementRenderer;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.Components.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.PassiveView.Notification;

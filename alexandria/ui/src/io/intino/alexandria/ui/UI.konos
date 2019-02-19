@@ -4,5 +4,10 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as BlankPage(main)
 
 Root main as Decorated
-	Value value
-	Value valueInput as Input
+	AppBar appBar
+	Block as Horizontal
+		Block as RelativeSized(width=20%) > Menu menu
+		Panels
+			Panel textValue
+				TextValue value > label = "título del campo"
+				TextValue valueInput as Input

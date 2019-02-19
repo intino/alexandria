@@ -3,7 +3,10 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.templates.DisplayTemplate;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
+import io.intino.konos.model.graph.Components.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
@@ -15,6 +18,7 @@ import java.io.File;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 
 public abstract class BaseDisplayRenderer<D extends Display> extends PassiveViewRenderer<D> {
+	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
 	protected BaseDisplayRenderer(Settings settings, D display, TemplateProvider templateProvider, Target target) {
 		super(settings, display, templateProvider, target);
@@ -56,6 +60,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (decorated) abstractBoxFrame.addTypes("decorated");
 		abstractBoxFrame.addSlot("box", boxName());
 		frame.addSlot("abstractBox", abstractBoxFrame);
+	}
+
+	protected Frame componentFrame(Component component) {
+		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
+		renderer.buildReferences(true);
+		renderer.decorated(element.isDecorated());
+		return renderer.buildFrame();
 	}
 
 	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {

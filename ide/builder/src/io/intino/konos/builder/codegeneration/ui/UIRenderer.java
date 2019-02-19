@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.temporal.TemporalCatalog;
+import io.intino.konos.model.graph.temporal.components.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;

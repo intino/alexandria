@@ -13,8 +13,8 @@ import Sorting from "./displays/components/Sorting"
 import Tab from "./displays/components/Tab"
 import Tabs from "./displays/components/Tabs"
 import TaskOperation from "./displays/components/TaskOperation"
-import Value from "./displays/components/Value"
-import ValueInput from "./displays/components/ValueInput"
+import TextValue from "./displays/components/TextValue"
+import TextValueInput from "./displays/components/TextValueInput"
 
 import Desktop from "./displays/Desktop"
 import Editor from "./displays/Editor"
@@ -24,4 +24,4 @@ import Root from "./displays/Root"
 
 export { AppBar, Badge, Block, Catalog, Chart, FileValue, FileValueInput, Grouping,
          Icon, ImageValue, OptionList, Sorting, Tab, Tabs, TaskOperation,
-         Value, ValueInput, Desktop, Editor, Page, PageDisplay, Root }
+         TextValue, TextValueInput, Desktop, Editor, Page, PageDisplay, Root }
