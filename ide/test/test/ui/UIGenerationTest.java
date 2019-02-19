@@ -29,6 +29,7 @@ public class UIGenerationTest {
 	private static final String editorPackage = "io.intino.editor.box";
 	private static final String asemedPackage = "io.intino.asemed.box";
 	private static final String passiveViewPackage = "io.intino.passiveview.box";
+	private static final String componentsPackage = "io.intino.components.box";
 	private static final String DIR = "test-gen";
 
 
@@ -80,6 +81,11 @@ public class UIGenerationTest {
 	@Test
 	public void testPassiveView() throws Exception {
 		execute(new File(DIR, passiveViewPackage.replace(".", File.separator)), "passiveview", passiveViewPackage);
+	}
+
+	@Test
+	public void testComponents() throws Exception {
+		execute(new File(DIR, componentsPackage.replace(".", File.separator)), "components", componentsPackage);
 	}
 
 	@Test

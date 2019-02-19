@@ -3,10 +3,9 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.Components.Component;
+import io.intino.konos.model.graph.Components.Tab;
 import io.intino.konos.model.graph.Root;
-import io.intino.konos.model.graph.Tab;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -36,10 +35,6 @@ public class RootRenderer extends BaseDisplayRenderer<Root> {
 
 	private void addTab(Tab tab, Frame frame) {
 		frame.addSlot("tab", componentFrame(tab));
-	}
-
-	private Frame componentFrame(Component component) {
-		return new ComponentRenderer(settings, component, true, element.isDecorated(), templateProvider, target).buildFrame();
 	}
 
 }

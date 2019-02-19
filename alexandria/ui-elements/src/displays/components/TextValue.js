@@ -1,9 +1,9 @@
 import React from "react";
-import AbstractValue from "../../../gen/displays/components/AbstractValue";
+import AbstractTextValue from "../../../gen/displays/components/AbstractTextValue";
 import ValueNotifier from "../../../gen/displays/notifiers/ValueNotifier";
 import ValueRequester from "../../../gen/displays/requesters/ValueRequester";
 
-export default class Value extends AbstractValue {
+export default class TextValueInput extends AbstractTextValue {
 	state = {
 		value : ""
 	};
@@ -16,7 +16,10 @@ export default class Value extends AbstractValue {
 
 	render() {
 		return (
-			<div>{this.state.value}</div>
+			<React.Fragment>
+				{ this.props.label !== "" ? <div>{this.props.label}</div> : null }
+				<div>{this.state.value}</div>
+			</React.Fragment>
 		);
 	};
 

@@ -2,40 +2,48 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
-import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.Components.Block;
+import io.intino.konos.model.graph.Components.Component;
 import io.intino.konos.model.graph.Input;
 import org.siani.itrules.model.Frame;
 
 import java.util.List;
 
-public class ComponentRenderer extends DisplayRenderer<Component> {
-	private final boolean buildReferences;
-	private final boolean decorated;
+public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
+	private boolean buildReferences = false;
+	private boolean decorated;
+	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
-	public ComponentRenderer(Settings settings, Component component, TemplateProvider provider, Target target) {
-		this(settings, component, false, component.isDecorated(), provider, target);
-	}
-
-	public ComponentRenderer(Settings settings, Component component, boolean buildReferences, TemplateProvider provider, Target target) {
-		this(settings, component, buildReferences, component.isDecorated(), provider, target);
-	}
-
-	public ComponentRenderer(Settings settings, Component component, boolean buildReferences, boolean decorated, TemplateProvider provider, Target target) {
+	public ComponentRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
-		this.buildReferences = buildReferences;
-		this.decorated = decorated;
+		this.decorated = component.isDecorated();
 	}
 
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
 		frame.addSlot("id", shortId(element));
+		frame.addSlot("properties", properties());
 		if (element.i$(Input.class)) frame.addSlot("input", new Frame("input"));
 		if (buildReferences) frame.addTypes("reference");
 		addComponents(frame);
 		return frame;
+	}
+
+	protected Frame properties() {
+		Frame result = new Frame().addTypes("properties", typeOf(element));
+		addCommonProperties(result);
+		return result;
+	}
+
+	public void buildReferences(boolean value) {
+		this.buildReferences = value;
+	}
+
+	public void decorated(boolean value) {
+		this.decorated = value;
 	}
 
 	@Override
@@ -52,8 +60,13 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 		});
 	}
 
-	private Frame componentFrame(Component component) {
-		return new ComponentRenderer(settings, component, true, decorated, templateProvider, target).buildFrame();
+	@Override
+	protected Frame componentFrame(Component component) {
+		return componentRenderer(component).buildFrame();
+	}
+
+	protected String className(Class clazz) {
+		return clazz.getSimpleName().toLowerCase();
 	}
 
 	private Frame referenceFrame(Component component) {
@@ -64,8 +77,19 @@ public class ComponentRenderer extends DisplayRenderer<Component> {
 		result.addSlot("parent", clean(element.name$()));
 		result.addSlot("type", typeOf(component));
 		if (component.i$(Input.class)) result.addSlot("input", new Frame("input", typeOf(component)));
-		result.addSlot("value", new ComponentRenderer(settings, component, true, decorated, templateProvider, target).buildFrame().addSlot("addType", typeOf(component)));
+		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
 		addDecoratedFrames(result, decorated);
 		return result;
+	}
+
+	private UIRenderer componentRenderer(Component component) {
+		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
+		renderer.buildReferences(true);
+		renderer.decorated(decorated);
+		return renderer;
+	}
+
+	private void addCommonProperties(Frame frame) {
+		if (element.label() != null) frame.addSlot("label", element.label());
 	}
 }

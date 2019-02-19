@@ -9,11 +9,20 @@ Component grouping as Decorated
 Component appBar as Decorated
 Component tabs as Decorated
 Component tab as Decorated
+Component panels as Decorated
+	Notification refreshSelected as Text
+
+Component panel as Decorated
 Component icon as Decorated
 Component taskOperation as Decorated
 Component optionList as Decorated
 
-Component value as Decorated
+Component menu as Decorated
+	Notification refreshSelected as Text
+
+	Request select as Text
+
+Component textValue as Decorated
 	Notification refresh as Text
 
 	Request notifyChange as Text
