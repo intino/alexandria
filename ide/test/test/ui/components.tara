@@ -5,13 +5,16 @@ Service ComponentsTest as UI(title = "", favicon = "", port = "{port}")
 	Resource("/") home as BlankPage(display=main) Main
 
 Theme theme1
-	Primary(content = "")
-	Secondary(content = "")
-	Error(content = "")
-	Message(content = "")
+	Palette
+		Primary("indigo")
+		Secondary("black")
+		Error("red")
+
+	Style a
+		Margin("10px")
 
 Root main
-	Block bloque1 as Horizontal Flexible
+	Block(style=theme1.a) bloque1 as Horizontal Flexible
 		Block bloque21
 			Block bloque31
 				Text(format=H1, mode=Uppercase) text

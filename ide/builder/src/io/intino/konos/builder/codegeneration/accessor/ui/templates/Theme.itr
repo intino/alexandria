@@ -6,11 +6,9 @@ def type(theme)
 		var provider = {
 			create: () => {
 				theme = createMuiTheme({
-					palette : {
-						$paletteRule+rule...[,$NL]
-					}[,
-					$customRule+rule...[,$NL]
-					]
+					palette : { $palette },
+					typography : { $typography },
+					componentStyles: { $style...[,$NL] }
 				});
 				return theme;
 			},
@@ -24,6 +22,26 @@ def type(theme)
 	export default Theme;
 end
 
-def trigger(rule)
-	$type: { $content }
+def type(palette)
+	[type : "$type+lowerCase",
+	]primary : { main: "$primary" },
+	secondary : { main: "$secondary" },
+	error : { main: "$error" },
+	contrastThreshold : "$contrastThreshold",
+	tonalOffset : "$tonalOffset",
+end
+
+def type(typography)
+	fontFamily : '$fontFamily',
+	htmlFontSize : $fontSize
+end
+
+def type(style)
+	$name: {
+		$property...[,$NL]
+	}
+end
+
+def type(property)
+	$name: "$content"
 end

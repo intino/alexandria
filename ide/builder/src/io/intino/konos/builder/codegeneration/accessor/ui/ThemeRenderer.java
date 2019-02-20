@@ -8,11 +8,9 @@ import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.List;
 
 import static io.intino.konos.builder.helpers.Commons.write;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
+import static io.intino.konos.model.graph.Theme.Palette.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
 	private final UIService service;
@@ -26,31 +24,46 @@ public class ThemeRenderer extends UIRenderer {
 	public void execute() {
 		Frame frame = new Frame().addTypes("theme");
 		Theme theme = service.theme();
-		frame.addSlot("paletteRule", paletteRules(theme).stream().map(this::frameOf).toArray());
-		frame.addSlot("customRule", customRules(theme).stream().map(this::frameOf).toArray());
+		frame.addSlot("palette", palette(theme));
+		frame.addSlot("typography", typography(theme));
+		theme.styleList().forEach(r -> frame.addSlot("style", frameOf(r)));
 		write(new File(accessorGen() + File.separator + "Theme.js").toPath(), setup(ThemeTemplate.create()).format(frame));
 	}
 
-	private List<Theme.Rule> paletteRules(Theme theme) {
-		if (theme == null) return emptyList();
-		return theme.ruleList().stream().filter(this::isPaletteRule).collect(toList());
-	}
-
-	private List<Theme.Rule> customRules(Theme theme) {
-		if (theme == null) return emptyList();
-		return theme.ruleList().stream().filter(r -> !isPaletteRule(r)).collect(toList());
-	}
-
-	private boolean isPaletteRule(Theme.Rule r) {
-		return r.i$(Theme.Primary.class) || r.i$(Theme.Secondary.class) || r.i$(Theme.Error.class) || r.i$(Theme.Message.class);
-	}
-
-	private Frame frameOf(Theme.Rule rule) {
-		Frame result = new Frame().addTypes("rule");
-		result.addSlot("name", rule.name$());
-		result.addSlot("type", rule.getClass().getSimpleName().toLowerCase());
-		result.addSlot("content", rule.content());
+	private Frame palette(Theme theme) {
+		Theme.Palette palette = theme.palette();
+		if (palette == null) palette = theme.create().palette();
+		Frame result = new Frame("palette");
+		if (palette.type() != Normal) result.addSlot("type", palette.type().name());
+		result.addSlot("primary", palette.primary().color());
+		result.addSlot("secondary", palette.secondary().color());
+		result.addSlot("error", palette.error().color());
+		result.addSlot("contrastThreshold", palette.contrastThreshold());
+		result.addSlot("tonalOffset", palette.tonalOffset());
 		return result;
 	}
 
+	private Frame typography(Theme theme) {
+		Theme.Typography typography = theme.typography();
+		if (typography == null) typography = theme.create().typography();
+		Frame result = new Frame("typography");
+		result.addSlot("fontFamily", "\"" + String.join("\",\"", typography.fontFamily()) + "\"");
+		result.addSlot("fontSize", typography.fontSize());
+		return result;
+	}
+
+	private Frame frameOf(Theme.Style style) {
+		Frame result = new Frame().addTypes("style");
+		result.addSlot("name", style.name$());
+		result.addSlot("type", style.getClass().getSimpleName().toLowerCase());
+		style.propertyList().forEach(p -> result.addSlot("property", frameOf(p)));
+		return result;
+	}
+
+	private Frame frameOf(Theme.Style.Property property) {
+		Frame result = new Frame().addTypes("property");
+		result.addSlot("name", property.getClass().getSimpleName().toLowerCase());
+		result.addSlot("content", property.content());
+		return result;
+	}
 }

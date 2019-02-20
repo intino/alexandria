@@ -6,11 +6,6 @@ Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
 	Resource("/error") error as BlankPage(root) Main
 
 Theme theme1
-	Primary(content = "")
-	Secondary(content = "")
-	Error(content = "")
-	Message(content = "")
-
 
 Desktop desktop as DrawerNavigable(Left, mode=Modal)
 	AppBar

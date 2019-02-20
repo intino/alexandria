@@ -12,6 +12,10 @@ public class Menu<B extends Box> extends AbstractMenu<B> {
         super(box);
     }
 
+    public void binding(Selectable component) {
+		this.onSelect(e -> component.select(e));
+	}
+
 	public Menu onSelect(SelectListener selectListener) {
 		this.onSelect = selectListener;
 		return this;

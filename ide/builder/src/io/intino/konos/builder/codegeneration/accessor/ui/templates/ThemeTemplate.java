@@ -18,8 +18,11 @@ public class ThemeTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "theme"))).add(literal("import { createMuiTheme } from '@material-ui/core/styles';\n\nconst Theme = (function () {\n\tvar theme = null;\n\tvar provider = {\n\t\tcreate: () => {\n\t\t\ttheme = createMuiTheme({\n\t\t\t\tpalette : {\n\t\t\t\t\t")).add(mark("paletteRule", "rule").multiple(",\n")).add(literal("\n\t\t\t\t}")).add(expression().add(literal(",")).add(literal("\n")).add(literal("\t\t\t\t")).add(mark("customRule", "rule").multiple(",\n")).add(literal("\n")).add(literal("\t\t\t\t"))).add(literal("\n\t\t\t});\n\t\t\treturn theme;\n\t\t},\n\t\tget: () => {\n\t\t\treturn theme;\n\t\t},\n\t};\n\treturn provider;\n})();\n\nexport default Theme;")),
-			rule().add((condition("trigger", "rule"))).add(mark("type")).add(literal(": { ")).add(mark("content")).add(literal(" }"))
+			rule().add((condition("type", "theme"))).add(literal("import { createMuiTheme } from '@material-ui/core/styles';\n\nconst Theme = (function () {\n\tvar theme = null;\n\tvar provider = {\n\t\tcreate: () => {\n\t\t\ttheme = createMuiTheme({\n\t\t\t\tpalette : { ")).add(mark("palette")).add(literal(" },\n\t\t\t\ttypography : { ")).add(mark("typography")).add(literal(" },\n\t\t\t\tcomponentStyles: { ")).add(mark("style").multiple(",\n")).add(literal(" }\n\t\t\t});\n\t\t\treturn theme;\n\t\t},\n\t\tget: () => {\n\t\t\treturn theme;\n\t\t},\n\t};\n\treturn provider;\n})();\n\nexport default Theme;")),
+			rule().add((condition("type", "palette"))).add(expression().add(literal("type : \"")).add(mark("type", "lowerCase")).add(literal("\",")).add(literal("\n"))).add(literal("primary : { main: \"")).add(mark("primary")).add(literal("\" },\nsecondary : { main: \"")).add(mark("secondary")).add(literal("\" },\nerror : { main: \"")).add(mark("error")).add(literal("\" },\ncontrastThreshold : \"")).add(mark("contrastThreshold")).add(literal("\",\ntonalOffset : \"")).add(mark("tonalOffset")).add(literal("\",")),
+			rule().add((condition("type", "typography"))).add(literal("fontFamily : '")).add(mark("fontFamily")).add(literal("',\nhtmlFontSize : ")).add(mark("fontSize")),
+			rule().add((condition("type", "style"))).add(mark("name")).add(literal(": {\n\t")).add(mark("property").multiple(",\n")).add(literal("\n}")),
+			rule().add((condition("type", "property"))).add(mark("name")).add(literal(": \"")).add(mark("content")).add(literal("\""))
 		);
 		return this;
 	}

@@ -1,6 +1,6 @@
 def type(resource & js)
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Theme from '../../gen/Theme';
 import Page from "alexandria-ui-elements/src/displays/Page";
