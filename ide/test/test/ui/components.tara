@@ -5,11 +5,11 @@ Service ComponentsTest as UI(title = "", favicon = "", port = "{port}")
 
 Root main
 	Block bloque1 as Horizontal Flexible
-//		Block bloque21
-//			Block bloque31
-//				Text text as Title1 Uppercase
-//			Block bloque32
-//				Text text2 as Title1 Uppercase
+		Block bloque21
+			Block bloque31
+				Text text as Title1 Uppercase
+			Block bloque32
+				Text text2 as Title1 Uppercase
 
 		Block bloque22
 			Text text3 as Title1 Uppercase

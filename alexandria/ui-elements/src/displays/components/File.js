@@ -1,9 +1,12 @@
 import React from "react";
-import AbstractFile from "../../gen/displays/components/AbstractFile";
-import FileNotifier from "../../gen/displays/notifiers/FileNotifier";
-import FileRequester from "../../gen/displays/requesters/FileRequester";
+import AbstractFile from "../../../gen/displays/components/AbstractFile";
+import FileNotifier from "../../../gen/displays/notifiers/FileNotifier";
+import FileRequester from "../../../gen/displays/requesters/FileRequester";
 
 export default class File extends AbstractFile {
+	state = {
+		value : ""
+	};
 
 	constructor(props) {
 		super(props);
@@ -13,10 +16,11 @@ export default class File extends AbstractFile {
 
 	render() {
 		return (
-			<React.Fragment></React.Fragment>
+			<div>{this.state.value}</div>
 		);
 	};
 
 	refresh = (value) => {
+		this.setState({ "value": value });
 	};
 }

@@ -42,6 +42,9 @@ Concept ChildComponents
 	Concept User extends Component
 	Concept Chart extends Component
 	Concept Text extends Component
+		var word:{H1 H2 H3 H4 H5 H6 Subtitle1 Subtitle2 Body1 Body2 Button Caption Overline Default} format = Default
+		var word:{UpperCase LowerCase Capitalize Normal} mode = Normal
+
 	Concept File extends Component
 	Concept Image extends Component
 	Concept Icon extends Component

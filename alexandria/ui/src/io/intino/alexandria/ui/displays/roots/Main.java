@@ -11,8 +11,9 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     @Override
     protected void init() {
         super.init();
-        block.value.update("soy un valor de campo");
-        block.valueInput.update("campo value editable");
-        block.valueInput.onChange((e) -> System.out.println((String) e.value()));
+        title.update("Alexandria widgets");
+        value.update("soy un valor de campo");
+        valueEditable.update("campo value editable");
+        valueEditable.onChange((e) -> System.out.println((String) e.value()));
     }
 }

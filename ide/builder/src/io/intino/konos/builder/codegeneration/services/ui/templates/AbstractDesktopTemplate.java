@@ -19,7 +19,7 @@ public class AbstractDesktopTemplate extends Template {
 
 	public Template define() {
 		add(AbstractDesktopSkeletonTemplate.create().rules());
-		add(ComponentReferenceTemplate.create().rules());
+		add(ComponentTemplate.create().rules());
 		add(DisplayBoxTemplate.create().rules());
 		return this;
 	}

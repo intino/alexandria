@@ -19,7 +19,7 @@ public class AbstractDisplayTemplate extends Template {
 
 	public Template define() {
 		add(AbstractDisplaySkeletonTemplate.create().rules());
-		add(ComponentReferenceTemplate.create().rules());
+		add(ComponentTemplate.create().rules());
 		return this;
 	}
 }

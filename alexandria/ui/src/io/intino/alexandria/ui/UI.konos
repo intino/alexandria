@@ -5,9 +5,11 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Root main as Decorated
 	AppBar appBar
-	Block as Horizontal
-		Block as RelativeSized(width=20%) > Menu menu
-		Panels panels
-			Panel textPanel
-				Text value > label = "título del campo"
-				Text valueInput as Input
+		Text(format=H1, mode=UpperCase) title
+	Block as Horizontal Flexible
+		Block as Sized(4 Columns) > Menu menu
+		Block as Flexible
+			Panels panels
+				Panel textPanel
+					Text value > label = "título del campo"
+					Text valueEditable as Editable
