@@ -6,6 +6,9 @@ use DataTypes
 use UI
 
 Concept:Named Component extends Display
+	var word:{Primary Secondary} color = Primary
+	var Theme.Rule[] themeRules = empty
+	var string style = ""
 
 Concept Block extends Component
 	var string label = empty
@@ -42,8 +45,8 @@ Concept ChildComponents
 	Concept User extends Component
 	Concept Chart extends Component
 	Concept Text extends Component
-		var word:{H1 H2 H3 H4 H5 H6 Subtitle1 Subtitle2 Body1 Body2 Button Caption Overline Default} format = Default
-		var word:{UpperCase LowerCase Capitalize Normal} mode = Normal
+		var word:Format format = Default
+		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
 
 	Concept File extends Component
 	Concept Image extends Component
@@ -83,8 +86,7 @@ Concept ChildComponents
 		sub SearchOperation
 
 	Concept AppBar extends Component
-		var word:{Primary Secondary} color = Primary
-		var word:{Fixed Absolute Sticky Static Relative} position = Fixed
+		var word:{Fixed Absolute Sticky Static Relative} position = Relative
 
 		has Component
 

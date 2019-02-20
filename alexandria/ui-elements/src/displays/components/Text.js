@@ -1,16 +1,19 @@
 import React from "react";
+import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import Block from "./Block";
 import AbstractText from "../../../gen/displays/components/AbstractText";
 import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
 import TextRequester from "../../../gen/displays/requesters/TextRequester";
 
-const styles = {
+const styles = theme => ({
 	label: {
-		color: theme.palette.secondary.main
+		color: theme.palette.primary.main
 	},
 	value: {
+		color: theme.palette.text.main
 	}
-};
+});
 
 class Text extends AbstractText {
 	state = {
@@ -25,12 +28,12 @@ class Text extends AbstractText {
 
 	render() {
 		const { classes } = this.props;
-	    const label = this.mode(this.props.label);
-	    const value = this.mode(this.props.value);
+	    const value = this.mode(this.state.value);
+	    const format = this.props.format !== "default" ? this.props.format : "inherit";
 		return (
 			<Block layout="horizontal">
-				{ label !== "" ? <div className={classes.label}>{label}</div> : null }
-				<Typography variant={this.props.format} className={classes.value}>{value}</Typography>
+				{ this.props.label !== "" ? <div className={classes.label}>{this.props.label}</div> : null }
+				<Typography variant={format} className={classes.value}>{value}</Typography>
 			</Block>
 		);
 	};
@@ -39,11 +42,12 @@ class Text extends AbstractText {
 		this.setState({ "value": value });
 	};
 
-	mode = (label) => {
-		if (this.props.mode === "capitalize") return this.capitalize(label);
-		else if (this.props.mode === "uppercase") return label.toUpperCase();
-		else if (this.props.mode === "lowercase") return label.toLowerCase();
-		return label;
+	mode = (value) => {
+		if (value == null) return value;
+		if (this.props.mode === "capitalize") return this.capitalize(value);
+		else if (this.props.mode === "uppercase") return value.toUpperCase();
+		else if (this.props.mode === "lowercase") return value.toLowerCase();
+		return value;
 	};
 
 	capitalize = (label) => {

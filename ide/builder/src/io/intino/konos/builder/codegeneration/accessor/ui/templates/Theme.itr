@@ -1,0 +1,29 @@
+def type(theme)
+	import { createMuiTheme } from '@material-ui/core/styles';
+
+	const Theme = (function () {
+		var theme = null;
+		var provider = {
+			create: () => {
+				theme = createMuiTheme({
+					palette : {
+						$paletteRule+rule...[,$NL]
+					}[,
+					$customRule+rule...[,$NL]
+					]
+				});
+				return theme;
+			},
+			get: () => {
+				return theme;
+			},
+		};
+		return provider;
+	})();
+
+	export default Theme;
+end
+
+def trigger(rule)
+	$type: { $content }
+end
