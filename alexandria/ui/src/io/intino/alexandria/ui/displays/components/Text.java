@@ -7,12 +7,12 @@ import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.KeyPressEvent;
 import io.intino.alexandria.ui.displays.events.KeyPressListener;
 
-public class TextValue<B extends Box> extends AbstractTextValue<B> {
+public class Text<B extends Box> extends AbstractText<B> {
     private String value;
     protected ChangeListener changeListener = null;
     protected KeyPressListener keyPressListener = null;
 
-    public TextValue(B box) {
+    public Text(B box) {
         super(box);
     }
 

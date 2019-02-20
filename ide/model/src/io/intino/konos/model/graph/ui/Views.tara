@@ -9,20 +9,20 @@ Concept View
 Facet Container on View is abstract
 
 Facet AbstractCatalogContainer is abstract
-	var Components.Catalog catalog
+	var Catalog catalog
 	var boolean filtered = false
 
-Facet CatalogContainer extends AbstractCatalogContainer on Components.Tab
+Facet CatalogContainer extends AbstractCatalogContainer on ChildComponents.Tab
 Facet CatalogContainer extends AbstractCatalogContainer on View
-Facet CatalogContainer extends AbstractCatalogContainer on Components.Content
+Facet CatalogContainer extends AbstractCatalogContainer on ChildComponents.Content
 
 Facet CollectionContainer extends Container is abstract
 	var string noItemsMessage = empty
 	var Target target
-Facet DetailContainer extends CollectionContainer on Components.Content
-Facet ListContainer extends CollectionContainer on Components.Content
-Facet GridContainer extends CollectionContainer on Components.Content
-Facet MapContainer extends CollectionContainer on Components.Content
+Facet DetailContainer extends CollectionContainer on ChildComponents.Content
+Facet ListContainer extends CollectionContainer on ChildComponents.Content
+Facet GridContainer extends CollectionContainer on ChildComponents.Content
+Facet MapContainer extends CollectionContainer on ChildComponents.Content
 	Concept:{0..1} Center
 		var double latitude
 		var double longitude
@@ -33,22 +33,22 @@ Facet MapContainer extends CollectionContainer on Components.Content
 		var integer max
 
 Facet AbstractBlockContainer is abstract
-	var Components.Block block
-Facet BlockContainer extends AbstractBlockContainer on Components.Tab
+	var Block block
+Facet BlockContainer extends AbstractBlockContainer on ChildComponents.Tab
 Facet BlockContainer extends AbstractBlockContainer on View
 Facet BlockContainer extends AbstractBlockContainer on Column
 Facet BlockContainer extends AbstractBlockContainer on Item
-Facet BlockContainer extends AbstractBlockContainer on Components.Content
-Facet BlockContainer extends AbstractBlockContainer on Components.Tab.Header
+Facet BlockContainer extends AbstractBlockContainer on ChildComponents.Content
+Facet BlockContainer extends AbstractBlockContainer on ChildComponents.Tab.Header
 
 Facet AbstractTableContainer is abstract
 	has Column
-Facet TableContainer extends AbstractTableContainer on Components.Content
+Facet TableContainer extends AbstractTableContainer on ChildComponents.Content
 
 Concept Column is component
 	var string label
 
 Facet Sortable on Column
-	var Components.Sorting sorting
+	var ChildComponents.Sorting sorting
 
 Concept Item is component

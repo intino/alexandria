@@ -15,7 +15,7 @@ Facet Multiple on Input
 	var integer min= -1
 	var integer max= -1
 
-Facet Input on Components.Text
+Facet Input on ChildComponents.Text
 	var word:{Normal Email Url} edition = Normal
 
 	Concept:{0..1} Validation
@@ -30,37 +30,37 @@ Facet Input on Components.Text
 			var integer min
 			var integer max
 
-Facet Memo on Components.Text with Input
+Facet Memo on ChildComponents.Text with Input
 	var word:{Raw Rich} mode = Raw
 	var integer height = 5
 
-Facet Password on Components.Text with Input
+Facet Password on ChildComponents.Text with Input
 	Concept:{0..1} Validation
 		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
 		Concept:{1..1} Length
 			var integer min
 			var integer max
 
-Facet Input on Components.Number
+Facet Input on ChildComponents.Number
 
-Facet Input on Components.File
+Facet Input on ChildComponents.File
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on Components.Image
+Facet Input on ChildComponents.Image
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on Components.Date
-Facet Input on Components.DateTime
+Facet Input on ChildComponents.Date
+Facet Input on ChildComponents.DateTime
 
-Facet RadioBox extends Input on Components.OptionList
-Facet Checkbox extends Input on Components.OptionList
+Facet RadioBox extends Input on ChildComponents.OptionList
+Facet Checkbox extends Input on ChildComponents.OptionList
 
-Facet Selector on Components.OptionList
+Facet Selector on ChildComponents.OptionList

@@ -1,16 +1,38 @@
 dsl Proteo
 
+use Facets
 use Display
 use DataTypes
 use UI
 
-Concept Components
-	Concept:Named Component extends Display
+Concept:Named Component extends Display
 
-	Concept Block extends Component
-		var string label = empty
+Concept Block extends Component
+	var string label = empty
 
-		has Component
+	has Component
+
+Concept Catalog extends Component
+	var string targetClass
+	var string noItemsMessage = empty
+
+	Concept:{0..1} Events
+		Concept:{1..1} OnClick
+			Concept:{1..1} CatalogEvent
+				sub Open
+					var Block block
+					var boolean hasBreadcrumbs = false
+				sub OpenDialog
+					var Dialog dialog
+				sub OpenCatalog
+					var Catalog catalog
+					var boolean filtered = false
+					var boolean openItem = false
+
+	Concept:{1..1} Layout extends Component
+		has:{0..*} ChildComponents.Content
+
+Concept ChildComponents
 
 	Concept Badge extends Component
 	Concept Chip extends Component
@@ -66,7 +88,7 @@ Concept Components
 	Concept Tabs extends Component
 		has Tab
 
-	Concept Tab extends Component is component
+	Concept Tab extends Component
 		var string label = empty
 		Concept:{0..1} Header
 		has:{1..1} Content
@@ -74,31 +96,11 @@ Concept Components
 	Concept Panels extends Component
 		has Panel
 
-	Concept Panel extends Component is component
+	Concept Panel extends Component
 		has Component
 
 	Concept Content extends Component
 		has Component
-
-	Concept Catalog extends Component
-		var string targetClass
-		var string noItemsMessage = empty
-
-		Concept:{0..1} Events
-			Concept:{1..1} OnClick
-				Concept:{1..1} CatalogEvent
-					sub Open
-						var Block block
-						var boolean hasBreadcrumbs = false
-					sub OpenDialog
-						var Dialog dialog
-					sub OpenCatalog
-						var Catalog catalog
-						var boolean filtered = false
-						var boolean openItem = false
-
-		Concept:{1..1} Layout extends Component
-			has:{0..*} Content
 
 	Concept:Named Grouping extends Component
 		var string label

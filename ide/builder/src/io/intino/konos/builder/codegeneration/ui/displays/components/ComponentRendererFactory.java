@@ -3,9 +3,9 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
-import io.intino.konos.model.graph.Components.Block;
-import io.intino.konos.model.graph.Components.Component;
-import io.intino.konos.model.graph.Components.Text;
+import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.ChildComponents.Text;
 
 public class ComponentRendererFactory {
 

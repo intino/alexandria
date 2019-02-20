@@ -2,14 +2,14 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Components.Block;
-import io.intino.konos.model.graph.center.components.CenterBlock;
-import io.intino.konos.model.graph.centerjustified.components.CenterJustifiedBlock;
-import io.intino.konos.model.graph.endjustified.components.EndJustifiedBlock;
-import io.intino.konos.model.graph.flexible.components.FlexibleBlock;
-import io.intino.konos.model.graph.horizontal.components.HorizontalBlock;
-import io.intino.konos.model.graph.startjustified.components.StartJustifiedBlock;
-import io.intino.konos.model.graph.vertical.components.VerticalBlock;
+import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.center.CenterBlock;
+import io.intino.konos.model.graph.centerjustified.CenterJustifiedBlock;
+import io.intino.konos.model.graph.endjustified.EndJustifiedBlock;
+import io.intino.konos.model.graph.flexible.FlexibleBlock;
+import io.intino.konos.model.graph.horizontal.HorizontalBlock;
+import io.intino.konos.model.graph.startjustified.StartJustifiedBlock;
+import io.intino.konos.model.graph.vertical.VerticalBlock;
 import org.siani.itrules.model.Frame;
 
 import java.util.ArrayList;

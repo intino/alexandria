@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.Components.Component;
+import io.intino.konos.model.graph.Component;
 
 public class DisplayRendererFactory {
 

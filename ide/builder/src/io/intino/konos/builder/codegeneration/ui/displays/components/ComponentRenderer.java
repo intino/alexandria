@@ -4,11 +4,12 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
-import io.intino.konos.model.graph.Components.Block;
-import io.intino.konos.model.graph.Components.Component;
+import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Input;
 import org.siani.itrules.model.Frame;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
@@ -28,7 +29,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		frame.addSlot("properties", properties());
 		if (element.i$(Input.class)) frame.addSlot("input", new Frame("input"));
 		if (buildReferences) frame.addTypes("reference");
-		addComponents(frame);
+		addComponents(element, frame);
 		return frame;
 	}
 
@@ -51,9 +52,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addDecoratedFrames(frame, decorated);
 	}
 
-	private void addComponents(Frame frame) {
-		if (!element.i$(Block.class)) return;
-		List<Component> components = element.a$(Block.class).componentList();
+	private void addComponents(Component component, Frame frame) {
+		if (!component.i$(Block.class)) return;
+		List<Component> components = component.a$(Block.class).componentList();
 		components.forEach(c -> {
 			Frame componentFrame = buildReferences ? referenceFrame(c) : componentFrame(c);
 			frame.addSlot( "component", componentFrame);
@@ -75,11 +76,23 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		result.addSlot("id", shortId(component));
 		result.addSlot("name", clean(component.name$()));
 		result.addSlot("parent", clean(element.name$()));
+		result.addSlot("ancestors", ancestors(component));
 		result.addSlot("type", typeOf(component));
 		if (component.i$(Input.class)) result.addSlot("input", new Frame("input", typeOf(component)));
 		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
 		addDecoratedFrames(result, decorated);
+		addComponents(component, result);
 		return result;
+	}
+
+	private String[] ancestors(Component component) {
+		List<String> result = new ArrayList<>();
+		Component parent = component.core$().ownerAs(Component.class);
+		while (parent != null) {
+			result.add(0, clean(parent.name$()));
+			parent = parent.core$().ownerAs(Component.class);
+		}
+		return result.toArray(new String[0]);
 	}
 
 	private UIRenderer componentRenderer(Component component) {

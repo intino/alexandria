@@ -2,13 +2,13 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Components.Text;
-import io.intino.konos.model.graph.capitalize.components.CapitalizeText;
-import io.intino.konos.model.graph.lowercase.components.LowercaseText;
-import io.intino.konos.model.graph.title1.components.Title1Text;
-import io.intino.konos.model.graph.title2.components.Title2Text;
-import io.intino.konos.model.graph.title3.components.Title3Text;
-import io.intino.konos.model.graph.uppercase.components.UppercaseText;
+import io.intino.konos.model.graph.ChildComponents.Text;
+import io.intino.konos.model.graph.capitalize.childcomponents.CapitalizeText;
+import io.intino.konos.model.graph.lowercase.childcomponents.LowercaseText;
+import io.intino.konos.model.graph.title1.childcomponents.Title1Text;
+import io.intino.konos.model.graph.title2.childcomponents.Title2Text;
+import io.intino.konos.model.graph.title3.childcomponents.Title3Text;
+import io.intino.konos.model.graph.uppercase.childcomponents.UppercaseText;
 import org.siani.itrules.model.Frame;
 
 public class TextRenderer extends ComponentRenderer<Text> {

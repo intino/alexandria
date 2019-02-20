@@ -27,7 +27,7 @@ def type(desktop)
 		}
 
 		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {
-		[	$component+declaration...[$NL]
+		[	$component+declarations...[$NL]
 
 			]public $name+firstUpperCase~AppBar($abstractBox+type box) {
 				super(box);
@@ -36,7 +36,7 @@ def type(desktop)
 			@Override
 			protected void init() {[
 				super.init();
-				$component+reference...[$NL]]
+				$component+references...[$NL]]
 			}[
 
 			$component+class...[$NL]]
