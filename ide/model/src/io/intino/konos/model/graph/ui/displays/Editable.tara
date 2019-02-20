@@ -4,18 +4,18 @@ use Component
 use Display
 use UI
 
-Facet Input is abstract
+Facet Editable is abstract
 	var string isRequired = ""
 	var string isReadonly = ""
 	var string placeHolder = ""
 	var string defaultValue = ""
 	var string validator = ""
 
-Facet Multiple on Input
+Facet Multiple on Editable
 	var integer min= -1
 	var integer max= -1
 
-Facet Input on ChildComponents.Text
+Facet Editable on ChildComponents.Text
 	var word:{Normal Email Url} edition = Normal
 
 	Concept:{0..1} Validation
@@ -30,37 +30,37 @@ Facet Input on ChildComponents.Text
 			var integer min
 			var integer max
 
-Facet Memo on ChildComponents.Text with Input
+Facet Memo on ChildComponents.Text with Editable
 	var word:{Raw Rich} mode = Raw
 	var integer height = 5
 
-Facet Password on ChildComponents.Text with Input
+Facet Password on ChildComponents.Text with Editable
 	Concept:{0..1} Validation
 		var word[]:{Letter Number Symbol} isRequired = Letter Number Symbol
 		Concept:{1..1} Length
 			var integer min
 			var integer max
 
-Facet Input on ChildComponents.Number
+Facet Editable on ChildComponents.Number
 
-Facet Input on ChildComponents.File
+Facet Editable on ChildComponents.File
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on ChildComponents.Image
+Facet Editable on ChildComponents.Image
 	var boolean showPreview = false
 
 	Concept:{0..1} Validation
 		var double:{kbytes} maxSize
 		var string[] allowedExtensions = empty
 
-Facet Input on ChildComponents.Date
-Facet Input on ChildComponents.DateTime
+Facet Editable on ChildComponents.Date
+Facet Editable on ChildComponents.DateTime
 
-Facet RadioBox extends Input on ChildComponents.OptionList
-Facet Checkbox extends Input on ChildComponents.OptionList
+Facet RadioBox extends Editable on ChildComponents.OptionList
+Facet Checkbox extends Editable on ChildComponents.OptionList
 
 Facet Selector on ChildComponents.OptionList

@@ -24,9 +24,15 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	@Override
 	protected Frame properties() {
 		Frame result = super.properties();
+		addSize(result);
 		addLayout(result);
 		addPaper(result);
 		return result;
+	}
+
+	private void addSize(Frame result) {
+		if (!element.isSized()) return;
+		result.addSlot("width", element.asSized().width());
 	}
 
 	private void addLayout(Frame result) {

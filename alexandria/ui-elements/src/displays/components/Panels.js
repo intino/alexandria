@@ -1,7 +1,7 @@
 import React from "react";
-import AbstractPanels from "../../gen/displays/components/AbstractPanels";
-import PanelsNotifier from "../../gen/displays/notifiers/PanelsNotifier";
-import PanelsRequester from "../../gen/displays/requesters/PanelsRequester";
+import AbstractPanels from "../../../gen/displays/components/AbstractPanels";
+import PanelsNotifier from "../../../gen/displays/notifiers/PanelsNotifier";
+import PanelsRequester from "../../../gen/displays/requesters/PanelsRequester";
 
 export default class Panels extends AbstractPanels {
 
@@ -13,7 +13,7 @@ export default class Panels extends AbstractPanels {
 
 	render() {
 		return (
-			<React.Fragment></React.Fragment>
+			<React.Fragment>{this.props.children}</React.Fragment>
 		);
 	};
 

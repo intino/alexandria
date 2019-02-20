@@ -2,14 +2,6 @@ dsl Proteo
 
 use Component
 
-// TEXT FACETS
-Facet Title1 on ChildComponents.Text
-Facet Title2 on ChildComponents.Text
-Facet Title3 on ChildComponents.Text
-Facet Uppercase on ChildComponents.Text
-Facet Lowercase on ChildComponents.Text
-Facet Capitalize on ChildComponents.Text
-
 // OPERATION FACETS
 Facet Button on ChildComponents.Operation
 Facet IconButton extends Button on ChildComponents.Operation
@@ -28,12 +20,8 @@ Facet Circular on ChildComponents.Progress
 Facet Linear on ChildComponents.Progress
 
 // BLOCK FACETS
-Facet RelativeSized on Block
-	var integer:{%} width = 100%
-	var integer:{%} height = 100%
-
-Facet AbsoluteSized on Block
-	var integer:{px} width
+Facet Sized on Block
+	var integer:{Columns} width
 
 Facet Drawer on Block
 

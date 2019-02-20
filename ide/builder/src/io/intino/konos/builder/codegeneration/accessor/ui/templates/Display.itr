@@ -1,10 +1,13 @@
 def type(display)
 	import React from "react";
+	import { withStyles } from '@material-ui/core/styles';
 	import Abstract$name+firstUpperCase from "../../$packageTypeRelativeDirectory~gen/displays[/$packageType~s]/Abstract$name+firstUpperCase";
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 
-	export default class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+	const styles = {};
+
+	class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
 		constructor(props) {
 			super(props);
@@ -13,6 +16,7 @@ def type(display)
 		};
 
 		render() {
+	        const { classes } = this.props;
 			return (
 				<React.Fragment></React.Fragment>
 			);
@@ -20,6 +24,8 @@ def type(display)
 
 		$notification...[$NL$NL]
 	}
+
+	export default withStyle(styles)($name+firstUpperCase);
 end
 
 def type(notification)

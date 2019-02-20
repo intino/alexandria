@@ -18,11 +18,15 @@ export default class Block extends AbstractBlock {
 		const wrap = this._is("wrap") ? "wrap" : "nowrap";
 		const justify = this._justifyContent();
 		const alignItems = this._alignContent();
+		const widthDefined = this.props.width != null && this.props.width !== "";
+		const xs = widthDefined ? parseInt(this.props.width) : undefined;
 
 		return (
-			<Grid container display={display}
-				  direction={direction}
-				  wrap={wrap}
+			<Grid item={widthDefined} container={!widthDefined}
+				  xs={widthDefined ? xs : undefined}
+				  display={display}
+				  direction={!widthDefined ? direction : undefined}
+				  wrap={!widthDefined ? wrap : undefined}
 				  justify={justify}
 				  alignItems={alignItems}>{this.props.children}</Grid>
 		);

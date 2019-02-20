@@ -5,12 +5,16 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.ChildComponents.*;
 import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Input;
+import io.intino.konos.model.graph.Editable;
 import org.siani.itrules.model.Frame;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildReferences = false;
@@ -27,7 +31,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		Frame frame = super.buildFrame().addTypes("component");
 		frame.addSlot("id", shortId(element));
 		frame.addSlot("properties", properties());
-		if (element.i$(Input.class)) frame.addSlot("input", new Frame("input"));
+		if (element.i$(Editable.class)) frame.addSlot("editable", new Frame("editable"));
 		if (buildReferences) frame.addTypes("reference");
 		addComponents(element, frame);
 		return frame;
@@ -53,8 +57,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addComponents(Component component, Frame frame) {
-		if (!component.i$(Block.class)) return;
-		List<Component> components = component.a$(Block.class).componentList();
+		List<Component> components = components(component);
 		components.forEach(c -> {
 			Frame componentFrame = buildReferences ? referenceFrame(c) : componentFrame(c);
 			frame.addSlot( "component", componentFrame);
@@ -78,7 +81,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		result.addSlot("parent", clean(element.name$()));
 		result.addSlot("ancestors", ancestors(component));
 		result.addSlot("type", typeOf(component));
-		if (component.i$(Input.class)) result.addSlot("input", new Frame("input", typeOf(component)));
+		if (component.i$(Editable.class)) result.addSlot("editable", new Frame("editable", typeOf(component)));
 		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
 		addDecoratedFrames(result, decorated);
 		addComponents(component, result);
@@ -105,4 +108,16 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addCommonProperties(Frame frame) {
 		if (element.label() != null) frame.addSlot("label", element.label());
 	}
+
+	private List<Component> components(Component component) {
+		if (component.i$(Block.class)) return component.a$(Block.class).componentList();
+		if (component.i$(Panels.class)) return component.a$(Panels.class).panelList().stream().map(p -> p.a$(Component.class)).collect(toList());
+		if (component.i$(Panel.class)) return component.a$(Panel.class).componentList();
+		if (component.i$(Tabs.class)) return component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList());
+		if (component.i$(Snackbar.class)) return component.a$(Snackbar.class).componentList();
+		if (component.i$(AppBar.class)) return component.a$(AppBar.class).componentList();
+		if (component.i$(Content.class)) return component.a$(Content.class).componentList();
+		return emptyList();
+	}
+
 }

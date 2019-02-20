@@ -1,17 +1,17 @@
 import React from "react";
-import AbstractFileValue from "../../../gen/displays/components/AbstractFileValue";
-import FileValueNotifier from "../../../gen/displays/notifiers/FileValueNotifier";
-import FileValueRequester from "../../../gen/displays/requesters/FileValueRequester";
+import AbstractFile from "../../../gen/displays/components/AbstractFile";
+import FileNotifier from "../../../gen/displays/notifiers/FileValueNotifier";
+import FileRequester from "../../../gen/displays/requesters/FileValueRequester";
 
-export default class FileValueInput extends AbstractFileValue {
+export default class FileEditable extends AbstractFile {
 	state = {
 		value : ""
 	};
 
 	constructor(props) {
 		super(props);
-		this.notifier = new FileValueNotifier(this);
-		this.requester = new FileValueRequester(this);
+		this.notifier = new FileNotifier(this);
+		this.requester = new FileRequester(this);
 	};
 
 	handleChange(e) {

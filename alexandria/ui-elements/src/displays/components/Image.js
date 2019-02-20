@@ -1,7 +1,7 @@
 import React from "react";
-import AbstractImage from "../../gen/displays/components/AbstractImage";
-import ImageNotifier from "../../gen/displays/notifiers/ImageNotifier";
-import ImageRequester from "../../gen/displays/requesters/ImageRequester";
+import AbstractImage from "../../../gen/displays/components/AbstractImage";
+import ImageNotifier from "../../../gen/displays/notifiers/ImageNotifier";
+import ImageRequester from "../../../gen/displays/requesters/ImageRequester";
 
 export default class Image extends AbstractImage {
 

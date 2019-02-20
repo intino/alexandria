@@ -1,13 +1,26 @@
 def type(resource & js)
 import React from "react";
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import Page from "alexandria-ui-elements/src/displays/Page";
 import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pageDisplayType+firstLowerCase~s/$pageDisplay+firstUpperCase";
 
-export default class $name+firstUpperCase extends Page {
+let theme = createMuiTheme({});
+const styles = {};
+
+class $name+firstUpperCase extends Page {
     render() {
-        return <$pageDisplay+firstUpperCase id="$id"></$pageDisplay+firstUpperCase>;
+        const { classes } = this.props;
+        return (
+        	<MuiThemeProvider theme={theme}>
+            	<CssBaseline />
+        		<$pageDisplay+firstUpperCase id="$id"></$pageDisplay+firstUpperCase>
+        	</MuiThemeProvider>
+        );
     }
 }
+
+export default withStyles(styles)($name+firstUpperCase);
 end
 
 def type(resource & html)

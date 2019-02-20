@@ -12,18 +12,14 @@ end
 def type(reference) trigger(add)
 end
 
-def type(block & reference)
-	<Ui.$type+firstUpperCase$input id="$id"$properties+common$properties+specific>[
-		$component+child...[$NL]
-	]</Ui.$type+firstUpperCase$input>
-end
-
 def type(component & reference)
-	<Ui.$type+firstUpperCase$input id="$id"$properties+common$properties+specific/>
+	<Ui.$type+firstUpperCase$editable id="$id"$properties+common$properties+specific>[
+		$component+child...[$NL]
+	]</Ui.$type+firstUpperCase$editable>
 end
 
-def type(input)
-	Input
+def type(editable)
+	Editable
 end
 
 def type(properties) trigger(common)
@@ -31,10 +27,14 @@ def type(properties) trigger(common)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ $paper]
+	[ layout="$layout...[ ]"][ width="$width"][ $paper]
 end
 
-def type(properties & textvalue) trigger(specific)
+def type(properties & appbar) trigger(specific)
+	[ color="$color"][ position="$position"]
+end
+
+def type(properties & text) trigger(specific)
 	[ format="$format"][ mode="$mode"]
 end
 
