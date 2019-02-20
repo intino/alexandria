@@ -3,44 +3,44 @@ dsl Proteo
 use Component
 
 // TEXT FACETS
-Facet Title1 on Components.Text
-Facet Title2 on Components.Text
-Facet Title3 on Components.Text
-Facet Uppercase on Components.Text
-Facet Lowercase on Components.Text
-Facet Capitalize on Components.Text
+Facet Title1 on ChildComponents.Text
+Facet Title2 on ChildComponents.Text
+Facet Title3 on ChildComponents.Text
+Facet Uppercase on ChildComponents.Text
+Facet Lowercase on ChildComponents.Text
+Facet Capitalize on ChildComponents.Text
 
 // OPERATION FACETS
-Facet Button on Components.Operation
-Facet IconButton extends Button on Components.Operation
+Facet Button on ChildComponents.Operation
+Facet IconButton extends Button on ChildComponents.Operation
 	var string alexandriaIcon
-Facet Link on Components.Operation
+Facet Link on ChildComponents.Operation
 
-Facet Uppercase on Components.Operation
-Facet Lowercase on Components.Operation
-Facet Capitalize on Components.Operation
+Facet Uppercase on ChildComponents.Operation
+Facet Lowercase on ChildComponents.Operation
+Facet Capitalize on ChildComponents.Operation
 
 // IMAGE FACETS
-Facet Avatar on Components.Image
+Facet Avatar on ChildComponents.Image
 
 // PROGRESS FACETS
-Facet Circular on Components.Progress
-Facet Linear on Components.Progress
+Facet Circular on ChildComponents.Progress
+Facet Linear on ChildComponents.Progress
 
 // BLOCK FACETS
-Facet RelativeSized on Components.Block
+Facet RelativeSized on Block
 	var integer:{%} width = 100%
 	var integer:{%} height = 100%
 
-Facet AbsoluteSized on Components.Block
+Facet AbsoluteSized on Block
 	var integer:{px} width
 
-Facet Drawer on Components.Block
+Facet Drawer on Block
 
-Facet Target on Components.Block
+Facet Target on Block
 	var string modelClass
 
-Facet BlockLayout on Components.Block is abstract
+Facet BlockLayout on Block is abstract
 Facet Horizontal extends BlockLayout
 Facet Vertical extends BlockLayout
 Facet Center extends BlockLayout
@@ -49,11 +49,11 @@ Facet Flexible extends BlockLayout
 Facet StartJustified extends BlockLayout
 Facet EndJustified extends BlockLayout
 
-Facet Paper on Components.Block
+Facet Paper on Block
 
-Facet Selector on Components.Block
+Facet Selector on Block
 
-Facet Parameterizable on Components.Block
+Facet Parameterizable on Block
 	has Param
 Concept Param is component
 Facet ParametrizableType is abstract
@@ -62,16 +62,16 @@ Facet NumberType extends ParametrizableType on Param
 Facet WordType extends ParametrizableType on Param
 	var string[] values
 Facet ObjectType extends ParametrizableType on Param
-	var Components.Block block
+	var Block block
 
-Facet Instance on Components.Block
-	var Components.Block type
+Facet Instance on Block
+	var Block type
 
-Facet InstanceCollection on Components.Block
-	var Components.Block type
+Facet InstanceCollection on Block
+	var Block type
 
 // CATALOG FACETS
-Facet Temporal on Components.Catalog
+Facet Temporal on Catalog
 	var word:{Time Range} type
 	var word[]:{Year QuarterOfYear Month Week Day SixHours Hour FifteenMinutes Minute Second} scales
 
@@ -81,7 +81,7 @@ Facet Temporal on Components.Catalog
 		var word:{Vertical Horizontal} layout = Horizontal
 
 // DIALOG FACETS
-Facet Dialog on Components.Block
+Facet Dialog on Block
 	var string title
 
 Facet AlertDialog extends Dialog

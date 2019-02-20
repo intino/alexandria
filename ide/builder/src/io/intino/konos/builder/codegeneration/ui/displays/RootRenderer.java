@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.displays;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Components.Component;
-import io.intino.konos.model.graph.Components.Tab;
+import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.ChildComponents.Tab;
 import io.intino.konos.model.graph.Root;
 import org.siani.itrules.model.Frame;
 

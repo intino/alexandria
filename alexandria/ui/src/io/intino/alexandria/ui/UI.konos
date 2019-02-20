@@ -7,7 +7,7 @@ Root main as Decorated
 	AppBar appBar
 	Block as Horizontal
 		Block as RelativeSized(width=20%) > Menu menu
-		Panels
-			Panel textValue
-				TextValue value > label = "título del campo"
-				TextValue valueInput as Input
+		Panels panels
+			Panel textPanel
+				Text value > label = "título del campo"
+				Text valueInput as Input

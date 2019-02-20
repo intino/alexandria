@@ -4,5 +4,16 @@ Service ComponentsTest as UI(title = "", favicon = "", port = "{port}")
 	Resource("/") home as BlankPage(display=main) Main
 
 Root main
-	Block as Horizontal Flexible
-	TextValue textValue as Title1 Uppercase
+	Block bloque1 as Horizontal Flexible
+//		Block bloque21
+//			Block bloque31
+//				Text text as Title1 Uppercase
+//			Block bloque32
+//				Text text2 as Title1 Uppercase
+
+		Block bloque22
+			Text text3 as Title1 Uppercase
+
+			Panels panels
+				Panel textPanel
+					Text value > label = "título del campo"

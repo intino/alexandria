@@ -1,5 +1,10 @@
+def type(component & reference) trigger(declarations)
+	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
+	$component+declarations...[$NL]]
+end
+
 def type(component & reference) trigger(declaration)
-	public $name+firstUpperCase $name;
+	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
 def type(component & reference) trigger(class)
@@ -20,6 +25,16 @@ def type(component & reference) trigger(class)
 
 		$component+class...[$NL]]
 	}
+end
+
+def type(component & reference) trigger(childReferences)
+	$name = [$ancestors...[.].]$name;[
+	$component+childReferences...[$NL]]
+end
+
+def type(component & reference) trigger(references)
+	$name = addAndPersonify(new $name+firstUpperCase(box()).id("$id"));[
+	$component+childReferences...[$NL]]
 end
 
 def type(component & reference)

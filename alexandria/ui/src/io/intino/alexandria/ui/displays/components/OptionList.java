@@ -12,6 +12,4 @@ public class OptionList<B extends Box> extends AbstractOptionList<B> {
 	protected void init() {
 	}
 
-
-
 }

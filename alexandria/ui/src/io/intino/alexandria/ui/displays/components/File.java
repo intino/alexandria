@@ -8,13 +8,13 @@ import io.intino.alexandria.ui.resources.Asset;
 
 import static io.intino.alexandria.ui.utils.UrlUtil.toURL;
 
-public class FileValue<B extends Box> extends AbstractFileValue<B> {
+public class File<B extends Box> extends AbstractFile<B> {
 	private Resource value;
 	protected ChangeListener changeListener = null;
 
-	public FileValue(B box) {
-        super(box);
-    }
+	public File(B box) {
+		super(box);
+	}
 
 	public Resource value() {
 		return value;
@@ -29,5 +29,4 @@ public class FileValue<B extends Box> extends AbstractFileValue<B> {
 		this.value = value;
 		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
-
 }
