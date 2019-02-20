@@ -5,7 +5,8 @@ import AbstractAppBar from "../../../gen/displays/components/AbstractAppBar";
 import AppBarNotifier from "../../../gen/displays/notifiers/AppBarNotifier";
 import AppBarRequester from "../../../gen/displays/requesters/AppBarRequester";
 
-const styles = {};
+const styles = theme => ({
+});
 
 class AppBar extends AbstractAppBar {
 
@@ -19,7 +20,8 @@ class AppBar extends AbstractAppBar {
 		const color = this.props.color != null ? this.props.color : "primary";
 		const position = this.props.position != null ? this.props.position : "relative";
 		return (
-			<MaterialAppBar color={color.toLowerCase()}
+			<MaterialAppBar style={this.style()}
+							color={color.toLowerCase()}
 					  		position={position.toLowerCase()}>
 				<React.Fragment>{this.props.children}</React.Fragment>
 			</MaterialAppBar>
@@ -27,4 +29,4 @@ class AppBar extends AbstractAppBar {
 	};
 }
 
-export default withStyles(styles)(AppBar);
+export default withStyles(styles, { withTheme: true })(AppBar);

@@ -5,20 +5,25 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as BlankPage(main)
 
 Root main as Decorated
-	AppBar(themeRules=theme1.air, style="margin:10px") appBar
-		Text(format=H1, mode=UpperCase) title
+	AppBar(style=theme1.air) appBar
+		Text(format=Title) title
 	Block as Horizontal Flexible
-		Block as Sized(4 Columns) > Menu menu
-		Block as Flexible
-			Panels panels
-				Panel textPanel
-					Text value > label = "título del campo"
-					Text valueEditable as Editable
+		Block as Sized(4 Columns)
+			Menu(binding=main.panels) menu
+				Option("text") textPanel
+				Option("image") imagePanel
+		Panels(style=theme1.air) panels
+			Panel textPanel
+				Text value > label = "título del campo"
+				Text valueEditable as Editable
+			Panel imagePanel
+				Text value > label = "título del campo"
+				Text valueEditable as Editable
 
 Theme theme1
-	Primary("color:blue")
-	Secondary("color:green")
-	Error("color:red")
-	Message("color:grey")
+	Palette
+		Primary("#3f51b5")
+		Secondary("#ff9100")
+		Error("#f44336")
 
-	Rule("margin:5px") air
+	Style air > Padding("10px 20px")

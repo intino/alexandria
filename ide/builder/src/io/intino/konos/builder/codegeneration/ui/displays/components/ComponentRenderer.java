@@ -39,7 +39,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected Frame properties() {
 		Frame result = new Frame().addTypes("properties", typeOf(element));
-		addCommonProperties(result);
+		if (element.label() != null) result.addSlot("label", element.label());
+		if (element.style() != null) result.addSlot("style", element.style().name$());
 		return result;
 	}
 
@@ -103,10 +104,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		renderer.buildReferences(true);
 		renderer.decorated(decorated);
 		return renderer;
-	}
-
-	private void addCommonProperties(Frame frame) {
-		if (element.label() != null) frame.addSlot("label", element.label());
 	}
 
 	private List<Component> components(Component component) {

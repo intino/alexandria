@@ -25,7 +25,7 @@ def type(display)
 		$notification...[$NL$NL]
 	}
 
-	export default withStyles(styles)($name+firstUpperCase);
+	export default withStyles(styles, { withTheme: true })($name+firstUpperCase);
 end
 
 def type(notification)

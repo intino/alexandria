@@ -23,7 +23,7 @@ def type(editable)
 end
 
 def type(properties) trigger(common)
-	[ label="$label"]
+	[ label="$label"][ styleName="$style"]
 end
 
 def type(properties & block) trigger(specific)

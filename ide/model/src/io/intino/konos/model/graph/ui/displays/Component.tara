@@ -7,8 +7,7 @@ use UI
 
 Concept:Named Component extends Display
 	var word:{Primary Secondary} color = Primary
-	var Theme.Rule[] themeRules = empty
-	var string style = ""
+	var Theme.Style style = empty
 
 Concept Block extends Component
 	var string label = empty

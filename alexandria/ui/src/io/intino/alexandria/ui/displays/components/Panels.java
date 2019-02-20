@@ -9,7 +9,7 @@ public class Panels<B extends Box> extends AbstractPanels<B> {
         super(box);
     }
 
-    public void linkTo(Menu menu) {
+    public void binding(Menu menu) {
         menu.onSelect(event -> select(event.option()));
     }
 
