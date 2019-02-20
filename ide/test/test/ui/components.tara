@@ -1,18 +1,25 @@
 dsl Konos
 
 Service ComponentsTest as UI(title = "", favicon = "", port = "{port}")
+	theme = theme1
 	Resource("/") home as BlankPage(display=main) Main
+
+Theme theme1
+	Primary(content = "")
+	Secondary(content = "")
+	Error(content = "")
+	Message(content = "")
 
 Root main
 	Block bloque1 as Horizontal Flexible
 		Block bloque21
 			Block bloque31
-				Text text as Title1 Uppercase
+				Text(format=H1, mode=Uppercase) text
 			Block bloque32
-				Text text2 as Title1 Uppercase
+				Text(format=H1, mode=Uppercase) text2
 
 		Block bloque22
-			Text text3 as Title1 Uppercase
+			Text(format=H1, mode=Uppercase) text3
 
 			Panels panels
 				Panel textPanel

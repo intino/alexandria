@@ -1,23 +1,31 @@
 dsl Konos
 
 Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
+	theme = theme1
 	Resource("/") home as DesktopPage(desktop) Main
 	Resource("/error") error as BlankPage(root) Main
+
+Theme theme1
+	Primary(content = "")
+	Secondary(content = "")
+	Error(content = "")
+	Message(content = "")
+
 
 Desktop desktop as DrawerNavigable(Left, mode=Modal)
 	AppBar
 		Image logo
 		Block cabecera as Horizontal
-			Text titulo as Title1 Input
-			Text subtitulo as Title2
-			File fichero as Input
+			Text(format=H1) titulo as Editable
+			Text(format=H2) subtitulo
+			File fichero as Editable
 		OptionList(values=divisiones) divisiones as Selector
 		OptionList(values=zonas) zonas as Selector
 		Block as Horizontal
 			Image photo as Avatar
 			Block
 				Text fullName
-				TaskOperation(label="logout") logout as Link Capitalize
+				TaskOperation(label="logout") logout as Link
 	Tabs
 		Tab dashboard
 			Header as BlockContainer(badgeBlock)
@@ -33,7 +41,7 @@ Block badgeBlock as Parameterizable Decorated
 	Param title as TextType
 	Param count as NumberType
 	Block as Horizontal
-		Text title as Title1
+		Text(format=H1) title
 		Block custom
 		Badge count
 
@@ -76,8 +84,8 @@ Block criterioBlock as Vertical Center Parameterizable
 	Param value as NumberType
 	Param label as TextType
 
-	Text value as Title1
-	Text label as Title2
+	Text(format=H1) value
+	Text(format=H2) label
 
 Block indicatorBlock as Vertical Center Parameterizable
 	Param value as NumberType
@@ -85,15 +93,15 @@ Block indicatorBlock as Vertical Center Parameterizable
 	Param trend as WordType("PositivoMejor" "PositivoPeor")
 
 	Block as Horizontal Center
-		Text value as Title1
+		Text(format=H1) value
 		Icon(alexandriaIcon="remove") trend
-	Text label as Title2
+	Text(format=H2) label
 
 Block panelEstadisticas as Parameterizable
 	Param label as TextType
 	Param instances as ObjectType(indicatorBlock) //List
 
-	Text label as Title1
+	Text(format=H1) label
 	Block as Horizontal
 		Block instances as InstanceCollection(indicatorBlock)
 
@@ -150,12 +158,12 @@ Block criteriosArrangement
 Block criterioOperativoBlock as Target("io.intino.example.graph.Criterio")
 	Block as Horizontal
 		Block main as Flexible
-			Text titulo as Title1
-			Text descripcion as Title2
+			Text(format=H1) titulo
+			Text(format=H2) descripcion
 			Tabs
 				Tab(label="consulta") > Content as BlockContainer(consultaBlock)
 				Tab(label="balance") > Content as BlockContainer(balanceBlock)
-		Block left as AbsoluteSized(width=300px)
+		Block left
 
 Block criterioResultadosBlock as Target("io.intino.example.graph.Criterio")
 Block criterioRendimientoBlock as Target("io.intino.example.graph.Criterio")

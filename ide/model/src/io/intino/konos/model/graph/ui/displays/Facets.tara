@@ -8,10 +8,6 @@ Facet IconButton extends Button on ChildComponents.Operation
 	var string alexandriaIcon
 Facet Link on ChildComponents.Operation
 
-Facet Uppercase on ChildComponents.Operation
-Facet Lowercase on ChildComponents.Operation
-Facet Capitalize on ChildComponents.Operation
-
 // IMAGE FACETS
 Facet Avatar on ChildComponents.Image
 

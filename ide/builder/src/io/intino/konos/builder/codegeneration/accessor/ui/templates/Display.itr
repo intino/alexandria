@@ -5,7 +5,7 @@ def type(display)
 	import $name+firstUpperCase~Notifier from "../../$packageTypeRelativeDirectory~gen/displays/notifiers/$name+firstUpperCase~Notifier";
 	import $name+firstUpperCase~Requester from "../../$packageTypeRelativeDirectory~gen/displays/requesters/$name+firstUpperCase~Requester";
 
-	const styles = {};
+	const styles = theme => ({});
 
 	class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
@@ -25,7 +25,7 @@ def type(display)
 		$notification...[$NL$NL]
 	}
 
-	export default withStyle(styles)($name+firstUpperCase);
+	export default withStyles(styles)($name+firstUpperCase);
 end
 
 def type(notification)
