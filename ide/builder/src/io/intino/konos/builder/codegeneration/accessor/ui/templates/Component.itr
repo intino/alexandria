@@ -13,13 +13,13 @@ def type(reference) trigger(add)
 end
 
 def type(component & reference)
-	<Ui.$type+firstUpperCase$editable id="$id"$properties+common$properties+specific>[
+	<Ui.$type+firstUpperCase$facet id="$id"$properties+common$properties+specific>[
 		$component+child...[$NL]
-	]</Ui.$type+firstUpperCase$editable>
+	]</Ui.$type+firstUpperCase$facet>
 end
 
-def type(editable)
-	Editable
+def type(facet)
+	$name+firstUpperCase
 end
 
 def type(properties) trigger(common)

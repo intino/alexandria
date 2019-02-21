@@ -52,3 +52,7 @@ Facet Sortable on Column
 	var ChildComponents.Sorting sorting
 
 Concept Item is component
+
+Facet AbstractSelectorContainer is abstract
+	var ChildComponents.Selector selector
+Facet SelectorContainer extends AbstractSelectorContainer on Block

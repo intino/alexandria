@@ -7,18 +7,18 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 Root main as Decorated
 	AppBar(style=theme1.air) appBar
 		Text(format=Title) title
-	Block as Horizontal Flexible
-		Block as Sized(4 Columns)
-			Menu(binding=main.panels) menu
-				Option("text") textPanel
-				Option("image") imagePanel
-		Panels(style=theme1.air) panels
-			Panel textPanel
+	Block body as Horizontal Flexible
+		Block header as Sized(4 Columns)
+			Selector menu as Menu
+				Option(label="text") textPanel
+				Option(label="image") imagePanel
+		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(8 Columns)
+			Block textPanel as Flexible
 				Text value > label = "título del campo"
 				Text valueEditable as Editable
-			Panel imagePanel
-				Text value > label = "título del campo"
-				Text valueEditable as Editable
+			Block imagePanel
+//				Text value > label = "título del campo"
+//				Text valueEditable as Editable
 
 Theme theme1
 	Palette
@@ -26,4 +26,4 @@ Theme theme1
 		Secondary("#ff9100")
 		Error("#f44336")
 
-	Style air > Padding("10px 20px")
+	Style air > Padding("10px 20px");

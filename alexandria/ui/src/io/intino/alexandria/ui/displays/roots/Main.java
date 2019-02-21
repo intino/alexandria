@@ -11,10 +11,6 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     @Override
     protected void init() {
         super.init();
-
-        menu.options("textPanel");
-        panels.binding(menu);
-
         title.update("Alexandria widgets");
         value.update("soy un valor de campo");
         valueEditable.update("campo value editable");

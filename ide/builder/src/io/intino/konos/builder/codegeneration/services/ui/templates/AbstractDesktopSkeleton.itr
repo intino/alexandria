@@ -34,9 +34,10 @@ def type(desktop)
 			}
 
 			@Override
-			protected void init() {[
+			protected void init() {
 				super.init();
-				$component+references...[$NL]]
+				$component+references...[$NL][
+				$component+initializations...[$NL]]
 			}[
 
 			$component+class...[$NL]]

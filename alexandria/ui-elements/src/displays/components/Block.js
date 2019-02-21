@@ -3,8 +3,11 @@ import Grid from "@material-ui/core/Grid";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
+import {withStyles} from "@material-ui/core";
 
-export default class Block extends AbstractBlock {
+const styles = theme => ({});
+
+class Block extends AbstractBlock {
 
 	constructor(props) {
 		super(props);
@@ -13,6 +16,7 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
+		const { classes } = this.props;
 		const display = this._is("flexible") ? "flex" : undefined;
 		const direction = this._is("horizontal") ? "row" : "column";
 		const wrap = this._is("wrap") ? "wrap" : "nowrap";
@@ -22,7 +26,8 @@ export default class Block extends AbstractBlock {
 		const xs = widthDefined ? parseInt(this.props.width) : undefined;
 
 		return (
-			<Grid item={widthDefined} container={!widthDefined}
+			<Grid style={this.style()}
+				  item={widthDefined} container={!widthDefined}
 				  xs={widthDefined ? xs : undefined}
 				  display={display}
 				  direction={!widthDefined ? direction : undefined}
@@ -56,3 +61,5 @@ export default class Block extends AbstractBlock {
 		return undefined;
 	};
 }
+
+export default withStyles(styles, { withTheme: true })(Block);

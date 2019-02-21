@@ -14,8 +14,12 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 			Text(format=H1) titulo as Editable
 			Text(format=H2) subtitulo
 			File fichero as Editable
-		OptionList(values=divisiones) divisiones as Selector
-		OptionList(values=zonas) zonas as Selector
+		Selector divisiones as ComboBox
+			Option(label="División 1") división1
+			Option(label="División 2") división2
+		Selector zonas as ComboBox
+			Option(label="Zona 1") zona1
+			Option(label="Zona 2") zona2
 		Block as Horizontal
 			Image photo as Avatar
 			Block
@@ -39,14 +43,6 @@ Block badgeBlock as Parameterizable Decorated
 		Text(format=H1) title
 		Block custom
 		Badge count
-
-InlineOptions divisiones
-	InlineOption("División 1") división1
-	InlineOption("División 2") división2
-
-InlineOptions zonas
-	InlineOption("Zona 1") zona1
-	InlineOption("Zona 2") zona2
 
 Component componentA as Decorated
 Display displayA
@@ -133,7 +129,7 @@ Catalog("criterios") criteriosCatalog as Decorated
 //			Column("titulo") titulo as BlockContainer(tituloBlock)
 //
 Block criteriosArrangement
-	Block selector as Selector
+	Selector selector as ComboBox
 		Sorting(label="mejores") rankingSorting
 		Sorting(label="recientes") fechaCreacionSorting
 		Sorting(label="potencial") potencialSorting
