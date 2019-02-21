@@ -35,8 +35,6 @@ Facet EndJustified extends BlockLayout
 
 Facet Paper on Block
 
-Facet Selector on Block
-
 Facet Parameterizable on Block
 	has Param
 Concept Param is component
@@ -77,3 +75,9 @@ Facet DecisionDialog extends Dialog
 Facet Fullscreen on Dialog
 Facet Mobile on Dialog
 Facet Draggable on Dialog
+
+// SELECTOR FACETS
+Facet Menu on ChildComponents.Selector
+Facet RadioBox on ChildComponents.Selector
+Facet CheckBox on ChildComponents.Selector
+Facet ComboBox on ChildComponents.Selector

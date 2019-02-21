@@ -59,8 +59,3 @@ Facet Editable on ChildComponents.Image
 
 Facet Editable on ChildComponents.Date
 Facet Editable on ChildComponents.DateTime
-
-Facet RadioBox extends Editable on ChildComponents.OptionList
-Facet Checkbox extends Editable on ChildComponents.OptionList
-
-Facet Selector on ChildComponents.OptionList

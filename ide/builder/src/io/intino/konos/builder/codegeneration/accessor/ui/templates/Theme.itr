@@ -24,10 +24,10 @@ end
 
 def type(palette)
 	[type : "$type+lowerCase",
-	]primary : { main: "$primary" },
-	secondary : { main: "$secondary" },
-	error : { main: "$error" },
-	contrastThreshold : "$contrastThreshold",
+	][primary : { main: "$primary" },
+	][secondary : { main: "$secondary" },
+	][error : { main: "$error" },
+	]contrastThreshold : "$contrastThreshold",
 	tonalOffset : "$tonalOffset",
 end
 

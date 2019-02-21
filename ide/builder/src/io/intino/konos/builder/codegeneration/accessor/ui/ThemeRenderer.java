@@ -35,9 +35,9 @@ public class ThemeRenderer extends UIRenderer {
 		if (palette == null) palette = theme.create().palette();
 		Frame result = new Frame("palette");
 		if (palette.type() != Normal) result.addSlot("type", palette.type().name());
-		result.addSlot("primary", palette.primary().color());
-		result.addSlot("secondary", palette.secondary().color());
-		result.addSlot("error", palette.error().color());
+		if (palette.primary() != null) result.addSlot("primary", palette.primary().color());
+		if (palette.secondary() != null) result.addSlot("secondary", palette.secondary().color());
+		if (palette.error() != null) result.addSlot("error", palette.error().color());
 		result.addSlot("contrastThreshold", palette.contrastThreshold());
 		result.addSlot("tonalOffset", palette.tonalOffset());
 		return result;

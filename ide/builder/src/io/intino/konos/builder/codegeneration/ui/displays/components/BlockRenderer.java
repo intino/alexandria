@@ -22,6 +22,13 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	}
 
 	@Override
+	public Frame buildFrame() {
+		Frame frame = super.buildFrame();
+		addBinding(frame);
+		return frame;
+	}
+
+	@Override
 	protected Frame properties() {
 		Frame result = super.properties();
 		addSize(result);
@@ -53,6 +60,11 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	private void addPaper(Frame result) {
 		if (!element.isPaper()) return;
 		result.addSlot("paper", "paper");
+	}
+
+	private void addBinding(Frame result) {
+		if (!element.isSelectorContainer()) return;
+		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelectorContainer().selector().name$()));
 	}
 
 	@Override

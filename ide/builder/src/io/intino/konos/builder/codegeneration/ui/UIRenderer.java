@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.model.graph.Display;
+import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.Template;
@@ -115,6 +116,11 @@ public abstract class UIRenderer {
 	protected String clean(String name) {
 		name = name.replaceAll("-", "");
 		return Character.isDigit(name.charAt(0)) ? "_" + name : name;
+	}
+
+	protected String typeOf(PassiveView element) {
+		if (element.i$(Display.class)) return typeOf(element.a$(Display.class));
+		return element.getClass().getSimpleName();
 	}
 
 	protected String typeOf(Display element) {

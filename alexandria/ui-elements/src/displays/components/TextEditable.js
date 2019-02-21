@@ -1,17 +1,17 @@
 import React from "react";
-import AbstractText from "../../../gen/displays/components/AbstractText";
-import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
-import TextRequester from "../../../gen/displays/requesters/TextRequester";
+import AbstractTextEditable from "../../../gen/displays/components/AbstractTextEditable";
+import TextEditableNotifier from "../../../gen/displays/notifiers/TextEditableNotifier";
+import TextEditableRequester from "../../../gen/displays/requesters/TextEditableRequester";
 
-export default class TextEditable extends AbstractText {
+export default class TextEditable extends AbstractTextEditable {
 	state = {
 		value : ""
 	};
 
 	constructor(props) {
 		super(props);
-		this.notifier = new TextNotifier(this);
-		this.requester = new TextRequester(this);
+		this.notifier = new TextEditableNotifier(this);
+		this.requester = new TextEditableRequester(this);
 	};
 
 	handleChange(e) {

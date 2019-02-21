@@ -8,7 +8,7 @@ def type(component & reference) trigger(declaration)
 end
 
 def type(component & reference) trigger(class)
-	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase<$abstractBox+type> {
+	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type> {
 		[$component+declaration...[$NL]
 
 		]public $name+firstUpperCase($abstractBox+type box) {
@@ -20,8 +20,6 @@ def type(component & reference) trigger(class)
 			super.init();[
 			$component+reference...[$NL]]
 		}[
-
-		$editable][
 
 		$component+class...[$NL]]
 	}
@@ -37,15 +35,19 @@ def type(component & reference) trigger(references)
 	$component+childReferences...[$NL]]
 end
 
+def type(component & reference) trigger(initializations)
+	$binding[
+	$component+initializations...[$NL]]
+end
+
 def type(component & reference)
 	$name = addAndPersonify(new $name+firstUpperCase(box()).id("$id"));
 end
 
-def type(editable & filevalue)
-	public void onChange(io.intino.alexandria.ui.displays.events.ChangeListener listener) { this.changeListener = listener; }
+def type(facet)
+	$name+firstUpperCase
 end
 
-def type(editable)
-	public void onChange(io.intino.alexandria.ui.displays.events.ChangeListener listener) { this.changeListener = listener; }
-	public void onKeyPress(io.intino.alexandria.ui.displays.events.KeyPressListener listener) { this.keyPressListener = listener; }
+def type(binding)
+	$name.bindTo($selector);
 end

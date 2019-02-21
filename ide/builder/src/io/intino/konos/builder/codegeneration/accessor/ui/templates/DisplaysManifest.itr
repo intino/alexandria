@@ -1,0 +1,16 @@
+def type(manifest)
+	$display+import...[$NL]
+    export { $display+export...[,] }
+end
+
+def type(component) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/components/$name+firstUppercase"
+end
+
+def type(display) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/$name+firstUppercase"
+end
+
+def type(display) trigger(export)
+	$name+firstUppercase
+end

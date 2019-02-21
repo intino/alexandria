@@ -1,6 +1,11 @@
 dsl Konos
 
 Component block as Decorated
+
+Component blockSelectorContainer as Decorated
+	Notification refreshSelected as Text
+	Request select as Text
+
 Component catalog as Decorated
 Component badge as Decorated
 Component chart as Decorated
@@ -9,20 +14,19 @@ Component grouping as Decorated
 Component appBar as Decorated
 Component tabs as Decorated
 Component tab as Decorated
-Component panels as Decorated
-	Notification refreshSelected as Text
-
-Component panel as Decorated
 Component icon as Decorated
 Component taskOperation as Decorated
 Component optionList as Decorated
 
-Component menu as Decorated
+Component selectorMenu as Decorated
 	Notification refreshSelected as Text
 
 	Request select as Text
 
 Component text as Decorated
+	Notification refresh as Text
+
+Component textEditable as Decorated
 	Notification refresh as Text
 
 	Request notifyChange as Text

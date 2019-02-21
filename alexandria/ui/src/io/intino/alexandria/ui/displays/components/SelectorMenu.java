@@ -1,27 +1,38 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
 
-public class Menu<B extends Box> extends AbstractMenu<B> {
+import java.util.List;
+
+public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> implements Selector {
 	private String selected;
 	private SelectListener onSelect = null;
 
-	public Menu(B box) {
-        super(box);
-    }
-
-    public void binding(Selectable component) {
-		this.onSelect(e -> component.select(e));
+	public SelectorMenu(B box) {
+		super(box);
 	}
 
-	public Menu onSelect(SelectListener selectListener) {
+	@Override
+	public SelectorMenu onSelect(SelectListener selectListener) {
 		this.onSelect = selectListener;
 		return this;
 	}
 
-    public String selected() {
+	@Override
+	public List<Component> options() {
+		return children(Component.class);
+	}
+
+	@Override
+	public void add(Component option) {
+		addAndPersonify(option);
+	}
+
+	public String selected() {
 		return this.selected;
 	}
 

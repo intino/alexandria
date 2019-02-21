@@ -39,7 +39,6 @@ Concept ChildComponents
 	Concept Badge extends Component
 	Concept Chip extends Component
 	Concept Card extends Component
-	Concept Menu extends Component
 	Concept Tooltip extends Component
 	Concept User extends Component
 	Concept Chart extends Component
@@ -59,8 +58,6 @@ Concept ChildComponents
 	Concept DateTime extends Component
 		var string format = "dd/MM/yyyy HH:mm:ss"
 
-	Concept OptionList extends Component
-		var Options values
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
 		has Component
@@ -113,12 +110,9 @@ Concept ChildComponents
 		var string label
 		var boolean visible = true
 
-// LIST OPTIONS
-Concept Options
-	sub InlineOptions > has InlineOption
-	sub ResourceOptions > var resource file
-	sub ReactiveOptions
+	Concept Selector extends Component
+		has Component
 
-Concept InlineOption
-	var string label
-	has InlineOption
+	Concept Option extends Component
+		var string label
+		has Option

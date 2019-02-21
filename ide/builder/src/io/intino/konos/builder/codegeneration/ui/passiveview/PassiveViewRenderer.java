@@ -33,7 +33,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		frame.addSlot("type", type);
 		addAccessorType(frame);
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
-		frame.addSlot("packageTypeRelativeDirectory", !element.getClass().getSimpleName().equalsIgnoreCase("display") ? "" : "../");
+		frame.addSlot("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
 		frame.addSlot("parentType", parentType());
 		frame.addSlot("name", clean(element.name$()));
 		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
