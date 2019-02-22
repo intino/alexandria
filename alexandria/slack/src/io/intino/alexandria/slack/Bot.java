@@ -66,7 +66,7 @@ public abstract class Bot {
 
 	private void talk(SlackMessagePosted message, SlackSession session) {
 		try {
-			if (message.getSender().isBot() || isAlreadyProcessed(message)) return;
+			if (message.getSender().isBot() || isAlreadyProcessed(message) || isMine(message)) return;
 			final String messageContent = message.getSlackFile() != null ? messageContent(message) : unescapeHtml4(message.getMessageContent());
 
 			String userName = message.getSender().getUserName();
@@ -103,6 +103,10 @@ public abstract class Bot {
 		final boolean added = processedMessages.add(message.getTimestamp());
 		if (processedMessages.size() > 10) processedMessages.remove(processedMessages.iterator().next());
 		return !added;
+	}
+
+	private boolean isMine(SlackMessagePosted message) {
+		return session.sessionPersona().getId().equals(message.getSender().getId());
 	}
 
 	private Command commandNotFound() {
@@ -217,33 +221,6 @@ public abstract class Bot {
 
 	}
 
-	public class CommandInfo {
-		private final List<String> parameters;
-		private String context;
-		private List<String> components;
-		private final String description;
-
-		CommandInfo(List<String> parameters, String context, List<String> components, String description) {
-			this.parameters = parameters;
-			this.context = context;
-			this.components = components;
-			this.description = description;
-		}
-
-		public List<String> parameters() {
-			return parameters;
-		}
-
-		public List<String> components() {
-			return components;
-		}
-
-		public String description() {
-			return description;
-		}
-	}
-
-
 	public static class Context {
 		private String command;
 		private String[] objects;
@@ -267,6 +244,32 @@ public abstract class Bot {
 
 		public void objects(String... objects) {
 			this.objects = objects;
+		}
+	}
+
+	public class CommandInfo {
+		private final List<String> parameters;
+		private final String description;
+		private String context;
+		private List<String> components;
+
+		CommandInfo(List<String> parameters, String context, List<String> components, String description) {
+			this.parameters = parameters;
+			this.context = context;
+			this.components = components;
+			this.description = description;
+		}
+
+		public List<String> parameters() {
+			return parameters;
+		}
+
+		public List<String> components() {
+			return components;
+		}
+
+		public String description() {
+			return description;
 		}
 	}
 
