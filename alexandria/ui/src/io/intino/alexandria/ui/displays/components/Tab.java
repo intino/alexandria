@@ -8,10 +8,4 @@ public class Tab<B extends Box> extends AbstractTab<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

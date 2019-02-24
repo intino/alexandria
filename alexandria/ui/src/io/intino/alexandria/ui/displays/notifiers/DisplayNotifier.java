@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.notifiers;
 
 import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.PropertyList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,20 +18,10 @@ public class DisplayNotifier {
         this.carrier = carrier;
     }
 
-    public void personify(String id, String name) {
-        put("personify", initializationParameters(id, name));
-    }
-
-    public void personify(String id, String name, String object) {
-        put("personify", initializationParameters(id, name, object));
-    }
-
-    public void personifyOnce(String id, String name) {
-        put("personifyOnce", initializationParameters(id, name));
-    }
-
-    public void personifyOnce(String id, String name, String object) {
-        put("personifyOnce", initializationParameters(id, name, object));
+    public void add(Display child) {
+        String type = child.getClass().getSimpleName();
+        PropertyList propertyList = child.properties();
+        put("addChild", addIdAndNameTo(registerParameters(type, propertyList)));
     }
 
     public void die(String id) {
@@ -92,16 +83,10 @@ public class DisplayNotifier {
         return parametersWithId;
     }
 
-    private Map<String, Object> initializationParameters(String id, String name) {
+    private Map<String, Object> registerParameters(String type, PropertyList propertyList) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("i", id);
-        parameters.put("d", name);
-        return parameters;
-    }
-
-    private Map<String, Object> initializationParameters(String id, String name, String object) {
-        Map<String, Object> parameters = initializationParameters(id, name);
-        parameters.put("o", object);
+        parameters.put("tp", type);
+        parameters.put("pl", propertyList);
         return parameters;
     }
 

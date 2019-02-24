@@ -8,10 +8,4 @@ public class Block<B extends Box> extends AbstractBlock<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

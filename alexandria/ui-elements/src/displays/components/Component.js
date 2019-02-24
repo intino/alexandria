@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import AlexandriaDisplay from "../Display";
 
 export default class Component extends AlexandriaDisplay {
@@ -10,5 +11,5 @@ export default class Component extends AlexandriaDisplay {
     style = () => {
         const { styleName, theme } = this.props;
         return styleName != null ? theme.componentStyles[styleName] : undefined;
-    }
+    };
 }

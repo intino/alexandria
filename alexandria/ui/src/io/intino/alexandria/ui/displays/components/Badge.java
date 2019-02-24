@@ -8,10 +8,4 @@ public class Badge<B extends Box> extends AbstractBadge<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

@@ -8,16 +8,17 @@ import TextRequester from "../../../gen/displays/requesters/TextRequester";
 
 const styles = theme => ({
 	label: {
-		color: theme.palette.primary.main
+		color: theme.palette.grey.primary,
+		marginRight: "10px"
 	},
 	value: {
-		color: theme.palette.text.main
+		color: "inherit"
 	}
 });
 
 class Text extends AbstractText {
 	state = {
-		value : ""
+		value : this.props.value
 	};
 
 	constructor(props) {
@@ -29,10 +30,10 @@ class Text extends AbstractText {
 	render() {
 		const { classes } = this.props;
 	    const value = this.mode(this.state.value);
-	    const format = this.props.format !== "default" ? this.props.format : "inherit";
+	    const format = this.props.format !== "default" ? this.props.format : "body1";
 		return (
 			<Block layout="horizontal">
-				{ this.props.label !== "" ? <div className={classes.label}>{this.props.label}</div> : null }
+				{ this.props.label !== "" ? <Typography variant={format} className={classes.label}>{this.props.label}</Typography> : null }
 				<Typography variant={format} className={classes.value}>{value}</Typography>
 			</Block>
 		);
@@ -55,4 +56,4 @@ class Text extends AbstractText {
 	};
 }
 
-export default withStyles(styles)(Text);
+export default withStyles(styles, { withTheme: true })(Text);

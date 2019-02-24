@@ -8,10 +8,4 @@ public class Sorting<B extends Box> extends AbstractSorting<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

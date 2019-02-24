@@ -31,7 +31,7 @@ def type(component & reference) trigger(childReferences)
 end
 
 def type(component & reference) trigger(references)
-	$name = addAndPersonify(new $name+firstUpperCase(box()).id("$id"));[
+	$name = register(new $name+firstUpperCase(box()).id("$id"));[
 	$component+childReferences...[$NL]]
 end
 
@@ -41,7 +41,7 @@ def type(component & reference) trigger(initializations)
 end
 
 def type(component & reference)
-	$name = addAndPersonify(new $name+firstUpperCase(box()).id("$id"));
+	$name = register(new $name+firstUpperCase(box()).id("$id"));
 end
 
 def type(facet)

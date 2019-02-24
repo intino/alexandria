@@ -35,7 +35,7 @@ def type(properties & appbar) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ format="$format"][ mode="$mode"]
+	[ format="$format"][ mode="$mode"][ value="$defaultValue"]
 end
 
 def type(properties) trigger(specific)

@@ -5,9 +5,16 @@ import BlockSelectorContainerNotifier from "../../../gen/displays/notifiers/Bloc
 import BlockSelectorContainerRequester from "../../../gen/displays/requesters/BlockSelectorContainerRequester";
 import Block from "./Block";
 
-const styles = theme => ({});
+const styles = theme => ({
+	hidden : {
+		display: "none"
+	}
+});
 
 class BlockSelectorContainer extends AbstractBlockSelectorContainer {
+	state = {
+		selected : 0
+	};
 
 	constructor(props) {
 		super(props);
@@ -20,11 +27,16 @@ class BlockSelectorContainer extends AbstractBlockSelectorContainer {
 		return (
 			<Block styleName={this.props.styleName}
 				   layout={this.props.layout}
-				   width={this.props.width}>{this.props.children}</Block>
+				   width={this.props.width}>
+				{React.Children.map(this.props.children, (child, i) => {
+					return (<div className={i !== this.state.selected ? classes.hidden : undefined}>{child}</div>);
+				})}
+			</Block>
 		);
 	};
 
-	refreshSelected = (value) => {
+	refreshSelected = (selected) => {
+		this.setState({ selected });
 	};
 }
 

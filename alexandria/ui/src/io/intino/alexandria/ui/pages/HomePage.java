@@ -11,7 +11,7 @@ public class HomePage extends AbstractHomePage {
 			public void personify() {
 				Main component = new Main(box);
 				register(component);
-				component.personify();
+				component.init();
 			}
 		};
 	}

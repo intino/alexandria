@@ -8,10 +8,4 @@ public class AppBar<B extends Box> extends AbstractAppBar<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

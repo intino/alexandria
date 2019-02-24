@@ -8,6 +8,9 @@ import {withStyles} from "@material-ui/core";
 const styles = theme => ({});
 
 class Block extends AbstractBlock {
+	state = {
+		hidden: false
+	};
 
 	constructor(props) {
 		super(props);
@@ -38,6 +41,7 @@ class Block extends AbstractBlock {
 	};
 
 	_is = (layout) => {
+		if (this.props.layout == null) return false;
 		return this.props.layout.indexOf(layout) !== -1;
 	}
 

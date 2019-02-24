@@ -18,7 +18,7 @@ def type(display)
         }
 
         @Override
-		protected void init() {
+		public void init() {
 			super.init();
 			$component+references...[$NL][
 			$component+initializations...[$NL]]

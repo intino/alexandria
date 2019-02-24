@@ -8,10 +8,4 @@ public class Icon<B extends Box> extends AbstractIcon<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }
