@@ -16,6 +16,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 		Frame result = super.properties();
 		result.addSlot("format", element.format().name().toLowerCase());
 		result.addSlot("mode", element.mode().name().toLowerCase());
+		if (element.value() != null) result.addSlot("defaultValue", element.value());
 		return result;
 	}
 

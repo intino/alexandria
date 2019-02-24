@@ -8,10 +8,4 @@ public class Grouping<B extends Box> extends AbstractGrouping<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

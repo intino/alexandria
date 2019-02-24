@@ -120,6 +120,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Snackbar.class)) return component.a$(Snackbar.class).componentList();
 		if (component.i$(AppBar.class)) return component.a$(AppBar.class).componentList();
 		if (component.i$(Content.class)) return component.a$(Content.class).componentList();
+		if (component.i$(Selector.class)) return component.a$(Selector.class).componentList();
 		return emptyList();
 	}
 

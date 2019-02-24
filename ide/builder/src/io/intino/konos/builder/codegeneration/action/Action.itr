@@ -59,7 +59,7 @@ def type(ui & accessibleDisplay)
 			$display+snakecaseToCamelCase+firstUpperCase display = new $display+snakecaseToCamelCase+firstUpperCase(box);
 			$parameter+methodCall...[$NL]
 			soul.register(display);
-			display.personify();
+			display.init();
 			display.refresh();
 		}
 	}
@@ -156,7 +156,7 @@ def type(component)
 				$value+snakecaseToCamelCase+firstUpperCase component = new $value+snakecaseToCamelCase+firstUpperCase(box);
 				$editor+component
 				register(component);
-				component.personify();
+				component.init();
 			}
 		};
 	}

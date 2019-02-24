@@ -8,15 +8,16 @@ Root main as Decorated
 	AppBar(style=theme1.air) appBar
 		Text(format=Title) title
 	Block body as Horizontal Flexible
-		Block header as Sized(4 Columns)
+		Block header as Sized(2 Columns)
 			Selector menu as Menu
-				Option(label="text") textPanel
-				Option(label="image") imagePanel
-		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(8 Columns)
-			Block textPanel as Flexible
+				Text(value="text") textOption
+				Text(value="image") imageOption
+		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(10 Columns)
+			Block text as Flexible
 				Text value > label = "título del campo"
 				Text valueEditable as Editable
 			Block imagePanel
+				Text(value="hola mundo!!!!!")
 //				Text value > label = "título del campo"
 //				Text valueEditable as Editable
 
@@ -27,3 +28,6 @@ Theme theme1
 		Error("#f44336")
 
 	Style air > Padding("10px 20px");
+
+//Dictionary dictionary
+//	Word("Header.text") text

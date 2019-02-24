@@ -1,9 +1,13 @@
 import React from "react";
+import {withStyles} from "@material-ui/core";
 import AbstractTextEditable from "../../../gen/displays/components/AbstractTextEditable";
 import TextEditableNotifier from "../../../gen/displays/notifiers/TextEditableNotifier";
 import TextEditableRequester from "../../../gen/displays/requesters/TextEditableRequester";
+import Input from '@material-ui/core/Input';
 
-export default class TextEditable extends AbstractTextEditable {
+const styles = theme => ({});
+
+class TextEditable extends AbstractTextEditable {
 	state = {
 		value : ""
 	};
@@ -25,10 +29,13 @@ export default class TextEditable extends AbstractTextEditable {
 	}
 
 	render() {
+		const { classes } = this.props;
+		const format = this.props.format !== "default" ? this.props.format : "body1";
+
 		return (
-			<input type="text" value={this.state.value}
+				<Input type="text" value={this.state.value}
 				   onChange={this.handleChange.bind(this)}
-				   onKeyPress={this.handleKeypress.bind(this)}></input>
+				   onKeyPress={this.handleKeypress.bind(this)}></Input>
 		);
 	};
 
@@ -36,3 +43,5 @@ export default class TextEditable extends AbstractTextEditable {
 		this.setState({ "value": value });
 	};
 }
+
+export default withStyles(styles, { withTheme: true })(TextEditable);

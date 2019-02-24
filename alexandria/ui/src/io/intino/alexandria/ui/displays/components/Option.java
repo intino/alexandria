@@ -2,9 +2,9 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 
-public class Chart<B extends Box> extends AbstractChart<B> {
+public class Option<B extends Box> extends AbstractOption<B> {
 
-    public Chart(B box) {
+    public Option(B box) {
         super(box);
     }
 

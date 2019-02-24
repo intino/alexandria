@@ -11,6 +11,7 @@ Concept:Named Component extends Display
 
 Concept Block extends Component
 	var string label = empty
+	var string for = empty
 
 	has Component
 
@@ -45,6 +46,7 @@ Concept ChildComponents
 	Concept Text extends Component
 		var word:Format format = Default
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
+		var string value = empty
 
 	Concept File extends Component
 	Concept Image extends Component
@@ -112,7 +114,3 @@ Concept ChildComponents
 
 	Concept Selector extends Component
 		has Component
-
-	Concept Option extends Component
-		var string label
-		has Option

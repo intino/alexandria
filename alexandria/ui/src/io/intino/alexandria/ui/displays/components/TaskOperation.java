@@ -8,10 +8,4 @@ public class TaskOperation<B extends Box> extends AbstractTaskOperation<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

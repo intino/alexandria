@@ -8,8 +8,4 @@ public class OptionList<B extends Box> extends AbstractOptionList<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
 }

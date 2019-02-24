@@ -29,7 +29,7 @@ Root main
 					Text value > label = "título del campo"
 
 		Selector menu as Menu
-			Option(label="text") panel1
+			Text(value="text") panel1
 
 		Block selectorContainer as SelectorContainer(bloque1.menu)
 			Block panel1

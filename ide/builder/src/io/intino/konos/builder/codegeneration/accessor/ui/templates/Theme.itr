@@ -29,6 +29,10 @@ def type(palette)
 	][error : { main: "$error" },
 	]contrastThreshold : "$contrastThreshold",
 	tonalOffset : "$tonalOffset",
+	grey : {
+		primary: "#888",
+		secondary: '#ddd'
+	}
 end
 
 def type(typography)

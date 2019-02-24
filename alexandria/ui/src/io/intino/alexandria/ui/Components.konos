@@ -3,11 +3,11 @@ dsl Konos
 Component block as Decorated
 
 Component blockSelectorContainer as Decorated
-	Notification refreshSelected as Text
-	Request select as Text
+	Notification refreshSelected as Integer
 
 Component catalog as Decorated
 Component badge as Decorated
+Component option as Decorated
 Component chart as Decorated
 Component sorting as Decorated
 Component grouping as Decorated
@@ -19,9 +19,9 @@ Component taskOperation as Decorated
 Component optionList as Decorated
 
 Component selectorMenu as Decorated
-	Notification refreshSelected as Text
+	Notification refreshSelected as Integer
 
-	Request select as Text
+	Request select as Integer
 
 Component text as Decorated
 	Notification refresh as Text

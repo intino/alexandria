@@ -20,10 +20,10 @@ def type(desktop)
         }
 
         @Override
-		protected void init() {
+		public void init() {
 			super.init();
-			appBar = addAndPersonify(new $name+firstUpperCase~AppBar<>(box()).id("$appBarId"));
-			tabs = addAndPersonify(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
+			appBar = register(new $name+firstUpperCase~AppBar<>(box()).id("$appBarId"));
+			tabs = register(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
 		}
 
 		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {
@@ -34,7 +34,7 @@ def type(desktop)
 			}
 
 			@Override
-			protected void init() {
+			public void init() {
 				super.init();
 				$component+references...[$NL][
 				$component+initializations...[$NL]]

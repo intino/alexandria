@@ -77,6 +77,7 @@ Facet Mobile on Dialog
 Facet Draggable on Dialog
 
 // SELECTOR FACETS
+Facet Tabs on ChildComponents.Selector
 Facet Menu on ChildComponents.Selector
 Facet RadioBox on ChildComponents.Selector
 Facet CheckBox on ChildComponents.Selector

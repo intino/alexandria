@@ -8,10 +8,4 @@ public class Catalog<B extends Box> extends AbstractCatalog<B> {
         super(box);
     }
 
-    @Override
-	protected void init() {
-	}
-
-
-
 }

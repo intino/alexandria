@@ -28,6 +28,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private Display owner = null;
 	private Boolean dirty = null;
 	private List<String> route = new ArrayList<>();
+	private PropertyList propertyList = new PropertyList();
 
 	public Display(B box) {
 		this.box = box;
@@ -59,24 +60,8 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		this.soulProvider = soulProvider;
 	}
 
-	public final void personify() {
-//		notifier.personify(id, name());
-		init();
-	}
-
-	public final void personify(String object) {
-//		notifier.personify(id, name(), object);
-		init();
-	}
-
-	public final void personifyOnce() {
-//		notifier.personifyOnce(id, name());
-		init();
-	}
-
-	public final void personifyOnce(String object) {
-//		notifier.personifyOnce(id, name(), object);
-		init();
+	public PropertyList properties() {
+		return propertyList;
 	}
 
 	public void route(String... paths) {
@@ -165,14 +150,27 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return children(clazz).stream().findFirst().map(clazz::cast).orElse(null);
 	}
 
+	public <T extends Display> T child(int position) {
+		List<Display> children = children();
+		return children.size() > position ? (T) children().get(position) : null;
+	}
+
 	public <T extends Display> T child(String id) {
 		return (T) children().stream().filter(d -> d.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public void add(Display child) {
-		child.owner(this);
+	public <D extends Display> D register(D child) {
+		((Display)child).owner(this);
 		repository.register(child);
-		this.children.add(child);
+		children.add(child);
+		child.init();
+		return child;
+	}
+
+	public <D extends Display> D add(D child) {
+		notifier.add(child);
+		register(child);
+		return child;
 	}
 
 	public <T extends Display> T owner() {
@@ -191,12 +189,6 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	private void owner(Display owner) {
 		this.owner = owner;
-	}
-
-	public <D extends Display> D addAndPersonify(D child) {
-		add(child);
-		child.personify();
-		return child;
 	}
 
 	public void remove(Class<? extends Display> clazz) {

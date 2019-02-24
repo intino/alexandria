@@ -36,7 +36,7 @@ Concept Theme
 		Concept:{1..1} Error extends Property
 
 	Concept:{0..1} Typography
-		var integer:{px} fontSize = 12px
+		var integer:{px} fontSize = 15px
 		var string[] fontFamily = "-apple-system" "BlinkMacSystemFont" "Segoe UI" "Roboto" "Helvetica Neue" "Arial" "sans-serif" "Apple Color Emoji" "Segoe UI Emoji" "Segoe UI Symbol"
 
 	Concept Style
