@@ -8,7 +8,7 @@ export default class Component extends AlexandriaDisplay {
         super(props);
     };
 
-    style = () => {
+    style() {
         const { styleName, theme } = this.props;
         return styleName != null ? theme.componentStyles[styleName] : undefined;
     };

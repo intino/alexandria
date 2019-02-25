@@ -3,7 +3,7 @@ import {withStyles} from "@material-ui/core";
 import AbstractTextEditable from "../../../gen/displays/components/AbstractTextEditable";
 import TextEditableNotifier from "../../../gen/displays/notifiers/TextEditableNotifier";
 import TextEditableRequester from "../../../gen/displays/requesters/TextEditableRequester";
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({});
 
@@ -30,12 +30,13 @@ class TextEditable extends AbstractTextEditable {
 
 	render() {
 		const { classes } = this.props;
+		const label = this.props.label !== "" ? this.props.label : undefined;
 		const format = this.props.format !== "default" ? this.props.format : "body1";
 
 		return (
-				<Input type="text" value={this.state.value}
+				<TextField label={label} type="text" value={this.state.value}
 				   onChange={this.handleChange.bind(this)}
-				   onKeyPress={this.handleKeypress.bind(this)}></Input>
+				   onKeyPress={this.handleKeypress.bind(this)}></TextField>
 		);
 	};
 

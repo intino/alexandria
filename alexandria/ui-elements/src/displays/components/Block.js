@@ -40,6 +40,14 @@ class Block extends AbstractBlock {
 		);
 	};
 
+	style() {
+		var result = super.style();
+		if (this.props.margin == null) return result;
+		if (result == null) result = {};
+		result.margin = this.props.margin;
+		return result;
+	};
+
 	_is = (layout) => {
 		if (this.props.layout == null) return false;
 		return this.props.layout.indexOf(layout) !== -1;
