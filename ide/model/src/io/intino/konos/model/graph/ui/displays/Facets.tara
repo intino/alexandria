@@ -82,3 +82,6 @@ Facet Menu on ChildComponents.Selector
 Facet RadioBox on ChildComponents.Selector
 Facet CheckBox on ChildComponents.Selector
 Facet ComboBox on ChildComponents.Selector
+
+// TEXT FACETS
+Facet Code on ChildComponents.Text

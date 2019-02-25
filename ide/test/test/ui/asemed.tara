@@ -15,11 +15,11 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 			Text(format=H2) subtitulo
 			File fichero as Editable
 		Selector divisiones as ComboBox
-			Option(label="División 1") división1
-			Option(label="División 2") división2
+			Text(label="División 1") división1
+			Text(label="División 2") división2
 		Selector zonas as ComboBox
-			Option(label="Zona 1") zona1
-			Option(label="Zona 2") zona2
+			Text(label="Zona 1") zona1
+			Text(label="Zona 2") zona2
 		Block as Horizontal
 			Image photo as Avatar
 			Block

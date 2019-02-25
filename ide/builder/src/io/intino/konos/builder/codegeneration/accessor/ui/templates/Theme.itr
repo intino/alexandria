@@ -37,7 +37,8 @@ end
 
 def type(typography)
 	fontFamily : '$fontFamily',
-	htmlFontSize : $fontSize
+	htmlFontSize : $fontSize,
+	useNextVariants: true
 end
 
 def type(style)

@@ -34,6 +34,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		addSize(result);
 		addLayout(result);
 		addPaper(result);
+		addMargin(result);
 		return result;
 	}
 
@@ -65,6 +66,11 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	private void addBinding(Frame result) {
 		if (!element.isSelectorContainer()) return;
 		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelectorContainer().selector().name$()));
+	}
+
+	private void addMargin(Frame result) {
+		if (element.top() == 0 && element.bottom() == 0 && element.right() == 0 && element.left() == 0) return;
+		result.addSlot("margin", String.format("%dpx %dpx %dpx %dpx", element.top(), element.right(), element.bottom(), element.right()));
 	}
 
 	@Override

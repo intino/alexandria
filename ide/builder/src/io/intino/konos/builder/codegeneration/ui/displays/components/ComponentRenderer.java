@@ -9,6 +9,7 @@ import io.intino.konos.model.graph.ChildComponents.*;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Editable;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
+import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
@@ -88,6 +89,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private void addFacets(Component component, Frame result) {
 		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
+		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
 		if (component.i$(SelectorContainerBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectorContainerBlock.class.getSimpleName().replace("Block", "")));
 		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));

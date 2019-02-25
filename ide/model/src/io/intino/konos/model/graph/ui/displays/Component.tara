@@ -12,6 +12,10 @@ Concept:Named Component extends Display
 Concept Block extends Component
 	var string label = empty
 	var string for = empty
+	var integer:{px} top = 0px
+	var integer:{px} right = 0px
+	var integer:{px} bottom = 0px
+	var integer:{px} left = 0px
 
 	has Component
 
