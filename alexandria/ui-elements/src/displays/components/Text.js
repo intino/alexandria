@@ -5,6 +5,7 @@ import Block from "./Block";
 import AbstractText from "../../../gen/displays/components/AbstractText";
 import TextNotifier from "../../../gen/displays/notifiers/TextNotifier";
 import TextRequester from "../../../gen/displays/requesters/TextRequester";
+import TextBehavior from "./behaviors/TextBehavior";
 
 const styles = theme => ({
 	label: {
@@ -29,11 +30,13 @@ class Text extends AbstractText {
 
 	render() {
 		const { classes } = this.props;
-	    const value = this.mode(this.state.value);
+	    const value = TextBehavior.mode(this.state.value, this.props);
 	    const format = this.props.format !== "default" ? this.props.format : "body1";
-		return (
+	    const labelBlock = (this.props.label !== undefined) ? <Typography variant={format} className={classes.label}>{this.props.label}</Typography> : undefined;
+
+	    return (
 			<Block layout="horizontal">
-				{ this.props.label !== "" ? <Typography variant={format} className={classes.label}>{this.props.label}</Typography> : null }
+				{ labelBlock }
 				<Typography variant={format} className={classes.value}>{value}</Typography>
 			</Block>
 		);
@@ -43,17 +46,6 @@ class Text extends AbstractText {
 		this.setState({ "value": value });
 	};
 
-	mode = (value) => {
-		if (value == null) return value;
-		if (this.props.mode === "capitalize") return this.capitalize(value);
-		else if (this.props.mode === "uppercase") return value.toUpperCase();
-		else if (this.props.mode === "lowercase") return value.toLowerCase();
-		return value;
-	};
-
-	capitalize = (label) => {
-		return label.charAt(0).toUpperCase() + label.slice(1).toLowerCase();
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(Text);
