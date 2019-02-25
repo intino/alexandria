@@ -14,7 +14,8 @@ end
 
 def type(component & reference)
 	<Ui.$type+firstUpperCase$facet id="$id"$properties+common$properties+specific>[
-		$component+child...[$NL]
+		$component+child...[$NL]][
+		$code
 	]</Ui.$type+firstUpperCase$facet>
 end
 
@@ -27,7 +28,7 @@ def type(properties) trigger(common)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ $paper]
+	[ layout="$layout...[ ]"][ width="$width"][ $paper][ margin="$margin"]
 end
 
 def type(properties & appbar) trigger(specific)
@@ -39,4 +40,8 @@ def type(properties & text) trigger(specific)
 end
 
 def type(properties) trigger(specific)
+end
+
+def type(codetext)
+	$value
 end

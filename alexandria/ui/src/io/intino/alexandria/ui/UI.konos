@@ -6,16 +6,33 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Root main as Decorated
 	AppBar(style=theme1.air) appBar
-		Text(format=Title) title
+		Text(format=H3) title
 	Block body as Horizontal Flexible
 		Block header as Sized(2 Columns)
 			Selector menu as Menu
 				Text(value="text") textOption
 				Text(value="image") imageOption
-		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(10 Columns)
+		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(8 Columns)
 			Block text as Flexible
-				Text value > label = "título del campo"
-				Text valueEditable as Editable
+				Block > Text(value="Campo texto", format=Subtitle1)
+					Text valueA
+					Text valueACode as Code
+						value
+							=========
+								Konos: Text text1<br/>
+								&nbsp;Java: text1.update(abcd)
+							=========
+				Block(top=20px) > Text(value="Campo texto con título", format=Subtitle1)
+					Text valueB > label = "título del campo"
+					Text valueBCode as Code
+						value
+							=========
+								Konos: Text text1<br/>
+								          label = dddd<br/>
+								&nbsp;Java: text1.update(abcd)
+							=========
+				Block(top=20px) > Text(value="Campo texto editable", format=Subtitle1)
+					Block > Text valueC as Editable > label = "campo editable"
 			Block imagePanel
 				Text(value="hola mundo!!!!!")
 //				Text value > label = "título del campo"

@@ -26,6 +26,9 @@ Component selectorMenu as Decorated
 Component text as Decorated
 	Notification refresh as Text
 
+Component textCode as Decorated
+	Notification refresh as Text
+
 Component textEditable as Decorated
 	Notification refresh as Text
 

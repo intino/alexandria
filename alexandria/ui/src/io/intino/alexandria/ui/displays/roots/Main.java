@@ -14,23 +14,27 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
+        updateTextPanel();
+    }
+
+    private void updateTextPanel() {
         title.update("Alexandria widgets");
-        value.update("soy un valor de campo");
-        valueEditable.update("campo value editable");
-        valueEditable.onChange((e) -> System.out.println((String) e.value()));
+        valueA.update("abcd");
+        valueB.update("efgh");
+        valueC.update("ijkl");
+//        valueACode.update("<Otro></Otro>");
+        valueC.onChange((e) -> System.out.println((String) e.value()));
+        int[] counter = new int[1];
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                menu.select("imageOption");
+                valueA.update("valor A " + counter[0]);
+                valueB.update("valor B " + counter[0]);
+                valueC.update("valor C " + counter[0]);
+                counter[0]++;
             }
-        }, 2000);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                menu.select("textOption");
-                value.update("valor 2");
-            }
-        }, 4000);
+        }, 1000, 1000);
     }
 }

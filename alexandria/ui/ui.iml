@@ -64,10 +64,10 @@
     <orderEntry type="library" name="Legio: org.hashids:hashids:1.0.3" level="project" />
     <orderEntry type="library" name="Legio: org.slf4j:slf4j-log4j12:1.7.7" level="project" />
     <orderEntry type="library" name="Legio: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:rest:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.3" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
   </component>
 </module>

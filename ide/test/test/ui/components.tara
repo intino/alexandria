@@ -1,37 +1,43 @@
 dsl Konos
 
-Service ComponentsTest as UI(title = "", favicon = "", port = "{port}")
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	theme = theme1
-	Resource("/") home as BlankPage(display=main) Main
+	Resource(path = "/") home as BlankPage(main)
+
+Root main as Decorated
+	AppBar(style=theme1.air) appBar
+		Text(format=H3) title
+	Block body as Horizontal Flexible
+		Block header as Sized(2 Columns)
+			Selector menu as Menu
+				Text(value="text") textOption
+				Text(value="image") imageOption
+		Block(style=theme1.air) panels as SelectorContainer(body.header.menu) Sized(10 Columns)
+			Block text as Flexible
+				Block > Text(value="Campo texto", format=Subtitle1)
+					Text valueA
+					Text as Code
+						value
+							=======
+								Konos: Text valueA
+								Java: valueA.update("abcd")
+							=======
+				Block(top=20px) > Text(value="Campo texto con título", format=Subtitle1)
+					Text valueB > label = "título del campo"
+				Block(top=20px) > Text(value="Campo texto editable", format=Subtitle1)
+					Block > Text valueC as Editable > label = "campo editable"
+			Block imagePanel
+				Text(value="hola mundo!!!!!")
+//				Text value > label = "título del campo"
+//				Text valueEditable as Editable
 
 Theme theme1
 	Palette
-		Primary("indigo")
-		Secondary("black")
-		Error("red")
+		Primary("#3f51b5")
+		Secondary("#ff9100")
+		Error("#f44336")
 
-	Style a
-		Margin("10px")
+	Style air > Padding("10px 20px");
 
-Root main
-	Block(style=theme1.a) bloque1 as Horizontal Flexible
-		Block bloque21
-			Block bloque31
-				Text(format=H1, mode=Uppercase) text
-			Block bloque32
-				Text(format=H1, mode=Uppercase) text2
-
-		Block bloque22
-			Text(format=H1, mode=Uppercase) text3
-
-			Panels panels
-				Panel textPanel
-					Text value > label = "título del campo"
-
-		Selector menu as Menu
-			Text(value="text") panel1
-
-		Block selectorContainer as SelectorContainer(bloque1.menu)
-			Block panel1
-				Text value > label = "título del campo"
-				Text valueEditable as Editable
+//Dictionary dictionary
+//	Word("Header.text") text
