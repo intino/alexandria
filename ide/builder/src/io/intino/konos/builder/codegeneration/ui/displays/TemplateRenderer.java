@@ -4,16 +4,15 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.ChildComponents.Tab;
-import io.intino.konos.model.graph.Root;
+import io.intino.konos.model.graph.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
 @SuppressWarnings("Duplicates")
-public class RootRenderer extends BaseDisplayRenderer<Root> {
+public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
-	public RootRenderer(Settings settings, Root display, TemplateProvider provider, Target target) {
+	public TemplateRenderer(Settings settings, Template display, TemplateProvider provider, Target target) {
 		super(settings, display, provider, target);
 	}
 
@@ -31,10 +30,6 @@ public class RootRenderer extends BaseDisplayRenderer<Root> {
 
 	private void addComponent(Component component, Frame frame) {
 		frame.addSlot("component", componentFrame(component));
-	}
-
-	private void addTab(Tab tab, Frame frame) {
-		frame.addSlot("tab", componentFrame(tab));
 	}
 
 }

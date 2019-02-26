@@ -30,8 +30,6 @@ public class Main extends AbstractMain<UiFrameworkBox> {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                valueA.update("valor A " + counter[0]);
-                valueB.update("valor B " + counter[0]);
                 valueC.update("valor C " + counter[0]);
                 counter[0]++;
             }

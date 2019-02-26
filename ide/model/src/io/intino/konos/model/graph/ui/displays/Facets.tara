@@ -24,14 +24,14 @@ Facet Drawer on Block
 Facet Target on Block
 	var string modelClass
 
-Facet BlockLayout on Block is abstract
-Facet Horizontal extends BlockLayout
-Facet Vertical extends BlockLayout
-Facet Center extends BlockLayout
-Facet CenterJustified extends BlockLayout
-Facet Flexible extends BlockLayout
-Facet StartJustified extends BlockLayout
-Facet EndJustified extends BlockLayout
+// Layout facets
+Facet Absolute on Block
+	var integer:{px} width = -1px
+	var integer:{px} height = -1px
+
+Facet Relative on Block
+	var double:{%} width = 100%
+	var double:{%} height = 100%
 
 Facet Paper on Block
 
@@ -79,9 +79,11 @@ Facet Draggable on Dialog
 // SELECTOR FACETS
 Facet Tabs on ChildComponents.Selector
 Facet Menu on ChildComponents.Selector
+	var word:{Horizontal Vertical} layout
 Facet RadioBox on ChildComponents.Selector
 Facet CheckBox on ChildComponents.Selector
 Facet ComboBox on ChildComponents.Selector
 
 // TEXT FACETS
 Facet Code on ChildComponents.Text
+	var word:{Html Java Javascript Python Php Other} language

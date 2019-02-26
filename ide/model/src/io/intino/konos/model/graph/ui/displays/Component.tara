@@ -12,12 +12,12 @@ Concept:Named Component extends Display
 Concept Block extends Component
 	var string label = empty
 	var string for = empty
-	var integer:{px} top = 0px
-	var integer:{px} right = 0px
-	var integer:{px} bottom = 0px
-	var integer:{px} left = 0px
+	var word[]:Layout layout = Vertical
+	var integer:{px} spacing = 0px
 
 	has Component
+
+Concept Spacing
 
 Concept Catalog extends Component
 	var string targetClass
@@ -87,7 +87,7 @@ Concept ChildComponents
 		sub PreviewOperation
 		sub SearchOperation
 
-	Concept AppBar extends Component
+	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative
 
 		has Component

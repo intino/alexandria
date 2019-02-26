@@ -103,9 +103,7 @@ def type(ui & action) !type(gen)
 	import io.intino.alexandria.exceptions.*;
 	import java.time.*;
 	import java.util.*;
-	[import $importRoots+validPackage.ui.displays.roots.*;
-	][import $importDesktops+validPackage.ui.displays.desktops.*;
-	][import $importEditors+validPackage.ui.displays.editors.*;]
+	import $importTemplates+validPackage.ui.displays.templates.*;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Page extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Page {
 

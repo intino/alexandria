@@ -28,10 +28,10 @@ def type(properties) trigger(common)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ $paper][ margin="$margin"]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ $paper]
 end
 
-def type(properties & appbar) trigger(specific)
+def type(properties & header) trigger(specific)
 	[ color="$color"][ position="$position"]
 end
 

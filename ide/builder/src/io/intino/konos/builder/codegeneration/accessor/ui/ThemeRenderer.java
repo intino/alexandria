@@ -23,7 +23,7 @@ public class ThemeRenderer extends UIRenderer {
 	@Override
 	public void execute() {
 		Frame frame = new Frame().addTypes("theme");
-		Theme theme = service.theme();
+		Theme theme = service.graph().theme();
 		frame.addSlot("palette", palette(theme));
 		frame.addSlot("typography", typography(theme));
 		theme.styleList().forEach(r -> frame.addSlot("style", frameOf(r)));
