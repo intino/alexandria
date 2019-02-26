@@ -1,9 +1,8 @@
 package io.intino.konos.builder.codegeneration.ui.resource;
 
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.action.ActionRenderer;
-import io.intino.konos.model.graph.Display;
+import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.extractUrlPathParameters;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
-import static io.intino.konos.model.graph.KonosGraph.displayFor;
+import static io.intino.konos.model.graph.KonosGraph.templateFor;
 
 public class PageRenderer extends ActionRenderer {
 
@@ -35,13 +34,7 @@ public class PageRenderer extends ActionRenderer {
 		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
 		frame.addSlot("package", packageName);
 		frame.addSlot("box", boxName);
-		frame.addSlot("type", resource.isEditorPage() ? "Editor" : "Resource");
-
-		if (resource.isBlankPage()) frame.addSlot("importRoots", packageName);
-		else if (resource.isDesktopPage()) frame.addSlot("importDesktops", packageName);
-		else if (resource.isEditorPage()) frame.addSlot("importEditors", packageName);
-
-		if (resource.isEditorPage()) frame.addSlot("editor", new Frame("editor"));
+		frame.addSlot("importTemplates", packageName);
 		frame.addSlot("component", componentFrame());
 		frame.addSlot("parameter", parameters());
 		service.useList().stream().map(use -> frame.addSlot("usedAppUrl", new Frame("usedAppUrl", isCustom(use.url()) ? "custom" : "standard").addSlot("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
@@ -54,12 +47,7 @@ public class PageRenderer extends ActionRenderer {
 	}
 
 	private Frame componentFrame() {
-		Frame result = new Frame("component").addSlot("value", displayFor(resource).name$());
-		if (resource.isEditorPage()) {
-			Display display = resource.asEditorPage().editor();
-			result.addSlot("editor", new Frame("editor").addSlot("display", display.name$()));
-		}
-		return result;
+		return new Frame("component").addSlot("value", templateFor(resource).name$());
 	}
 
 	private Frame[] parameters() {

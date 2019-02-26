@@ -3,17 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.center.CenterBlock;
-import io.intino.konos.model.graph.centerjustified.CenterJustifiedBlock;
-import io.intino.konos.model.graph.endjustified.EndJustifiedBlock;
-import io.intino.konos.model.graph.flexible.FlexibleBlock;
-import io.intino.konos.model.graph.horizontal.HorizontalBlock;
-import io.intino.konos.model.graph.startjustified.StartJustifiedBlock;
-import io.intino.konos.model.graph.vertical.VerticalBlock;
 import org.siani.itrules.model.Frame;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlockRenderer extends ComponentRenderer<Block> {
 
@@ -34,28 +24,23 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		addSize(result);
 		addLayout(result);
 		addPaper(result);
-		addMargin(result);
 		return result;
 	}
 
 	private void addSize(Frame result) {
-		if (!element.isSized()) return;
-		result.addSlot("width", element.asSized().width());
+		if (element.isRelative()) {
+			result.addSlot("width", element.asRelative().width() + "%");
+			result.addSlot("height", element.asRelative().height() + "%");
+		}
+		else if (element.isAbsolute()) {
+			result.addSlot("width", element.asAbsolute().width() + "px");
+			result.addSlot("height", element.asAbsolute().height() + "px");
+		}
 	}
 
 	private void addLayout(Frame result) {
-		List<String> layout = new ArrayList<>();
-
-		if (element.isHorizontal()) layout.add(className(HorizontalBlock.class));
-		if (element.isVertical()) layout.add(className(VerticalBlock.class));
-		if (element.isCenter()) layout.add(className(CenterBlock.class));
-		if (element.isCenterJustified()) layout.add(className(CenterJustifiedBlock.class));
-		if (element.isFlexible()) layout.add(className(FlexibleBlock.class));
-		if (element.isStartJustified()) layout.add(className(StartJustifiedBlock.class));
-		if (element.isEndJustified()) layout.add(className(EndJustifiedBlock.class));
-		if (layout.isEmpty()) layout.add(className(VerticalBlock.class));
-
-		result.addSlot("layout", layout.toArray(new String[0]));
+		String[] layout = element.layout().stream().map(l -> l.name().toLowerCase()).toArray(String[]::new);
+		result.addSlot("layout", layout);
 	}
 
 	private void addPaper(Frame result) {
@@ -66,11 +51,6 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	private void addBinding(Frame result) {
 		if (!element.isSelectorContainer()) return;
 		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelectorContainer().selector().name$()));
-	}
-
-	private void addMargin(Frame result) {
-		if (element.top() == 0 && element.bottom() == 0 && element.right() == 0 && element.left() == 0) return;
-		result.addSlot("margin", String.format("%dpx %dpx %dpx %dpx", element.top(), element.right(), element.bottom(), element.right()));
 	}
 
 	@Override

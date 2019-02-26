@@ -15,10 +15,10 @@ module.exports = {
             }
         ]
     },
-    entry : './gen/app.js',
+    entry : './gen/App.js',
     output: {
         path: "/Users/mcaballero/Proyectos/konos/out/production/ui-elements/www",
-        filename: './ui-elements/app.js'
+        filename: './ui-elements/App.js'
     },
     resolve: {
         alias: {

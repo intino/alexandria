@@ -45,7 +45,7 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("resource");
 		frame.addSlot("name", resource.name$());
-		Display display = KonosGraph.displayFor(resource);
+		Display display = KonosGraph.templateFor(resource);
 		frame.addSlot("pageDisplay", display.name$());
 		frame.addSlot("pageDisplayType", typeOf(display));
 		addPageDisplayOrigin(frame, display);

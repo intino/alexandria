@@ -13,7 +13,7 @@ import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
-import io.intino.konos.model.graph.selectorcontainer.SelectorContainerBlock;
+import io.intino.konos.model.graph.selection.SelectionBlock;
 import org.siani.itrules.model.Frame;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addFacets(Component component, Frame result) {
 		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
 		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
-		if (component.i$(SelectorContainerBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectorContainerBlock.class.getSimpleName().replace("Block", "")));
+		if (component.i$(SelectionBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectionBlock.class.getSimpleName().replace("Block", "")));
 		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
@@ -120,7 +120,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Panel.class)) return component.a$(Panel.class).componentList();
 		if (component.i$(Tabs.class)) return component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList());
 		if (component.i$(Snackbar.class)) return component.a$(Snackbar.class).componentList();
-		if (component.i$(AppBar.class)) return component.a$(AppBar.class).componentList();
+		if (component.i$(Header.class)) return component.a$(Header.class).componentList();
 		if (component.i$(Content.class)) return component.a$(Content.class).componentList();
 		if (component.i$(Selector.class)) return component.a$(Selector.class).componentList();
 		return emptyList();

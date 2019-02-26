@@ -23,9 +23,9 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		return service.graph().displayList();
 	}
 
-	public static Display displayFor(UIService.Resource resource) {
+	public static Template templateFor(UIService.Resource resource) {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
-		return uiService.display(resource);
+		return uiService.template(resource);
 	}
 
 	public Set<String> findCustomParameters(JMSService service) {

@@ -22,23 +22,18 @@ Concept:Named Display extends PassiveView
 
 	has Block
 
-Concept PageDisplay extends Display
-
-Concept Desktop extends PageDisplay
-	has:{1..1} ChildComponents.AppBar
-	has:{1..1} ChildComponents.Tabs
-
-Concept Root extends PageDisplay
+Concept Template extends Display
 	has Component
+
+Facet Desktop on Template
+	has:{1..1} ChildComponents.Header
+	has:{1..1} ChildComponents.Tabs
 
 Facet DrawerNavigable on Desktop
 	var word:{Left Right Top Bottom} direction = Left
 	var word:{Normal Modal} mode = Normal
 	var boolean hasMiniVariant = false
-	var boolean underAppBar = false
-
-Concept Editor extends PageDisplay
-	has Block
+	var boolean underHeader = false
 
 Facet Accessible on Display
 	var string[] parameters

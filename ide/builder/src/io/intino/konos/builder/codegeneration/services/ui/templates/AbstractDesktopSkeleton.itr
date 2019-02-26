@@ -12,7 +12,7 @@ def type(desktop)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
-    	public $name+firstUpperCase~AppBar appBar;
+    	public $name+firstUpperCase~Header header;
     	public $name+firstUpperCase~Tabs tabs;
 
         public [$abstract]$name+firstUpperCase($abstractBox+type box) {
@@ -22,14 +22,14 @@ def type(desktop)
         @Override
 		public void init() {
 			super.init();
-			appBar = register(new $name+firstUpperCase~AppBar<>(box()).id("$appBarId"));
+			header = register(new $name+firstUpperCase~Header<>(box()).id("$headerId"));
 			tabs = register(new $name+firstUpperCase~Tabs<>(box()).id("$tabBarId"));
 		}
 
-		public class $name+firstUpperCase~AppBar$abstractBox+extension extends io.intino.alexandria.ui.displays.components.AppBar<$abstractBox+type> {
+		public class $name+firstUpperCase~Header$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Header<$abstractBox+type> {
 		[	$component+declarations...[$NL]
 
-			]public $name+firstUpperCase~AppBar($abstractBox+type box) {
+			]public $name+firstUpperCase~Header($abstractBox+type box) {
 				super(box);
 			}
 

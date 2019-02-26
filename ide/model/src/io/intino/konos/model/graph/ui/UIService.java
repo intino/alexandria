@@ -1,7 +1,6 @@
 package io.intino.konos.model.graph.ui;
 
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.PageDisplay;
+import io.intino.konos.model.graph.Template;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,15 +21,12 @@ public class UIService extends AbstractUIService {
 		return homeList().stream().filter(Resource::isConfidential).findFirst().orElse(null);
 	}
 
-	public List<Display> displays() {
-		return resourceList.stream().map(this::display).collect(Collectors.toList());
+	public List<Template> templates() {
+		return resourceList.stream().map(this::template).collect(Collectors.toList());
 	}
 
-	public PageDisplay display(UIService.Resource resource) {
-		if (resource.isEditorPage()) return resource.asEditorPage().editor();
-		else if (resource.isBlankPage()) return resource.asBlankPage().display();
-		else if (resource.isDesktopPage()) return resource.asDesktopPage().desktop();
-		return null;
+	public Template template(UIService.Resource resource) {
+		return resource.asPage().template();
 	}
 
 	private List<Resource> homeList() {

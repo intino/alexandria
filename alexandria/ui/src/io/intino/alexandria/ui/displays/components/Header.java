@@ -2,9 +2,9 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 
-public class AppBar<B extends Box> extends AbstractAppBar<B> {
+public class Header<B extends Box> extends AbstractHeader<B> {
 
-    public AppBar(B box) {
+    public Header(B box) {
         super(box);
     }
 

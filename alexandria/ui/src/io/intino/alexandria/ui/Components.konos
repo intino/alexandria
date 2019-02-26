@@ -11,7 +11,7 @@ Component option as Decorated
 Component chart as Decorated
 Component sorting as Decorated
 Component grouping as Decorated
-Component appBar as Decorated
+Component header as Decorated
 Component tabs as Decorated
 Component tab as Decorated
 Component icon as Decorated

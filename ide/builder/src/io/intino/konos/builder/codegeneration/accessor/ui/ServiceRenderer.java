@@ -36,6 +36,7 @@ public class ServiceRenderer extends UIRenderer {
 			createSkeleton();
 			new AppRenderer(settings, service).execute();
 			new ThemeRenderer(settings, service).execute();
+			new I18nRenderer(settings, service).execute();
 			new DisplaysManifestRenderer(settings, service).execute();
 			new DisplayListRenderer(settings, service.graph(), new AccessorTemplateProvider(), target).execute();
 			new ResourceListRenderer(settings, service.graph()).execute();

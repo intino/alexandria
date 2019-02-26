@@ -24,7 +24,7 @@ class TextCode extends AbstractTextCode {
 	};
 
 	render() {
-        const { classes } = this.props;
+		const {classes} = this.props;
 
 		return (
 			<React.Fragment>
@@ -34,7 +34,7 @@ class TextCode extends AbstractTextCode {
 	};
 
 	refresh = (value) => {
-		this.setState({ "value": value });
+		this.setState({"value": value});
 	};
 }
 

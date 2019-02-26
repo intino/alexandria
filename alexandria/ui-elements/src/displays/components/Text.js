@@ -32,7 +32,8 @@ class Text extends AbstractText {
 		const { classes } = this.props;
 	    const value = TextBehavior.mode(this.state.value, this.props);
 	    const format = this.props.format !== "default" ? this.props.format : "body1";
-	    const labelBlock = (this.props.label !== undefined) ? <Typography variant={format} className={classes.label}>{this.props.label}</Typography> : undefined;
+	    const label = TextBehavior.label(this.props);
+	    const labelBlock = (label !== undefined) ? <Typography variant={format} className={classes.label}>{label}</Typography> : undefined;
 
 	    return (
 			<Block layout="horizontal">

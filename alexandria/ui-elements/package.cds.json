@@ -2,7 +2,7 @@
   "name": "alexandria-ui-elements",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "src/App.js",
   "directories": {
     "lib-old": "lib-old"
   },

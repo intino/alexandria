@@ -12,7 +12,6 @@ Facet UI on Service is decorable
 	var string port
 	var string title
 	var string favicon
-	var Theme theme
 	var string googleApiKey = empty
 
 	Concept:{0..1} Authentication
@@ -24,7 +23,13 @@ Facet UI on Service is decorable
 	Concept:Named Resource
 		var string path
 
-Concept Theme
+Concept Translator
+	var word:Language language
+	Concept Translation
+		var string text
+		var string value
+
+Concept:{0..1} Theme
 	Concept:{0..1} Palette
 		var word:{Normal Dark} type = Normal
 		var integer contrastThreshold = 3
@@ -36,7 +41,7 @@ Concept Theme
 		Concept:{1..1} Error extends Property
 
 	Concept:{0..1} Typography
-		var integer:{px} fontSize = 15px
+		var integer:{px} fontSize = 18px
 		var string[] fontFamily = "-apple-system" "BlinkMacSystemFont" "Segoe UI" "Roboto" "Helvetica Neue" "Arial" "sans-serif" "Apple Color Emoji" "Segoe UI Emoji" "Segoe UI Symbol"
 
 	Concept Style
@@ -51,20 +56,12 @@ Concept Theme
 Facet Main on UI.Resource
 Facet Confidential on UI.Resource
 
-Facet Page on UI.Resource is abstract
-
-Facet DesktopPage extends Page
-	var Desktop desktop
-
-Facet BlankPage extends Page
-	var Root display
+Facet Page on UI.Resource
+	var Template template
 
 // deprecated
 //Facet DialogPage extends Page
 //	var Block block
-
-Facet EditorPage extends Page
-	var Editor editor
 
 Facet Responsible on DrawerNavigable
 Facet Persistent on DrawerNavigable

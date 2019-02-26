@@ -29,7 +29,7 @@ public class AppRenderer extends UIRenderer {
 	private void writeApp() {
 		Frame frame = new Frame().addTypes("app");
 		service.resourceList().forEach(r -> frame.addSlot("page", new Frame().addTypes("page").addSlot("value", r.name$())));
-		write(new File(accessorGen() + File.separator + "app.js").toPath(), setup(AppTemplate.create()).format(frame));
+		write(new File(accessorGen() + File.separator + "App.js").toPath(), setup(AppTemplate.create()).format(frame));
 	}
 
 	private void writePassiveView() {
