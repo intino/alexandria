@@ -117,4 +117,4 @@ Concept ChildComponents
 		var boolean visible = true
 
 	Concept Selector extends Component
-		has Component
+		has Option

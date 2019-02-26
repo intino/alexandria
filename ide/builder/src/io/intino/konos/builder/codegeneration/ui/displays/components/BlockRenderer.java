@@ -49,8 +49,8 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	}
 
 	private void addBinding(Frame result) {
-		if (!element.isSelectorContainer()) return;
-		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelectorContainer().selector().name$()));
+		if (!element.isSelection()) return;
+		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelection().option().name$()));
 	}
 
 	@Override
