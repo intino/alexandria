@@ -26,7 +26,7 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "component & reference")), (condition("trigger", "initializations"))).add(mark("binding")).add(expression().add(literal("\n")).add(mark("component", "initializations").multiple("\n"))),
 			rule().add((condition("type", "component & reference"))).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box()).id(\"")).add(mark("id")).add(literal("\"));")),
 			rule().add((condition("type", "facet"))).add(mark("name", "firstUpperCase")),
-			rule().add((condition("type", "binding"))).add(mark("name")).add(literal(".bindTo(")).add(mark("selector")).add(literal(");"))
+			rule().add((condition("type", "binding"))).add(mark("name")).add(literal(".bindTo(")).add(mark("option")).add(literal(");"))
 		);
 		return this;
 	}

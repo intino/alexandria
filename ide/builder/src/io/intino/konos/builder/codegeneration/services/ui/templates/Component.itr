@@ -49,5 +49,5 @@ def type(facet)
 end
 
 def type(binding)
-	$name.bindTo($selector);
+	$name.bindTo($option);
 end
