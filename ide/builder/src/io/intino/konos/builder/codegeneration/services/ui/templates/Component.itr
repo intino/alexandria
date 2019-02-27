@@ -1,14 +1,14 @@
-def type(component & reference) trigger(declarations)
+def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
 end
 
-def type(component & reference) trigger(declaration)
+def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
-def type(component & reference) trigger(class)
-	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type> {
+def type(component & child) trigger(class)
+	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>[ $implements] {
 		[$component+declaration...[$NL]
 
 		]public $name+firstUpperCase($abstractBox+type box) {
@@ -25,22 +25,22 @@ def type(component & reference) trigger(class)
 	}
 end
 
-def type(component & reference) trigger(childReferences)
+def type(component & child) trigger(childReferences)
 	$name = [$ancestors...[.].]$name;[
 	$component+childReferences...[$NL]]
 end
 
-def type(component & reference) trigger(references)
+def type(component & child) trigger(references)
 	$name = register(new $name+firstUpperCase(box()).id("$id"));[
 	$component+childReferences...[$NL]]
 end
 
-def type(component & reference) trigger(initializations)
+def type(component & child) trigger(initializations)
 	$binding[
 	$component+initializations...[$NL]]
 end
 
-def type(component & reference)
+def type(component & child)
 	$name = register(new $name+firstUpperCase(box()).id("$id"));
 end
 
@@ -50,4 +50,12 @@ end
 
 def type(binding)
 	$name.bindTo($selector, "$option");
+end
+
+def type(implements & option)
+	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
+end
+
+def type(implements)
+	implements --undefined--
 end

@@ -7,8 +7,6 @@ Concept View
 	var string label
 
 Facet Option on Component
-	has Component
-
 Facet Container on View is abstract
 
 Facet AbstractCatalogContainer is abstract
@@ -56,5 +54,6 @@ Facet Sortable on Column
 
 Concept Item is component
 
+Facet Collapsible on Block
 Facet Selection on Block
 	var Option option

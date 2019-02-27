@@ -10,7 +10,6 @@ import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -39,7 +38,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
 		addDecoratedFrames(frame);
-		frame.addSlot("component", element.components().stream().map(Layer::name$).toArray(String[]::new));
+//		frame.addSlot("reference", element.components().stream());
 		frame.addSlot("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new Frame().addSlot("componentType", type)).toArray(Frame[]::new));
 		if (element.parentDisplay() != null) addParent(element, frame);
 		if (!element.graph().schemaList().isEmpty())
@@ -64,7 +63,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	protected Frame componentFrame(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
-		renderer.buildReferences(true);
+		renderer.buildChildren(true);
 		renderer.decorated(element.isDecorated());
 		return renderer.buildFrame();
 	}

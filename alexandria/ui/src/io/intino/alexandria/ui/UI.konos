@@ -11,37 +11,39 @@ Template main as Decorated
 
 		Block header as Relative(width=30%)
 			Selector menu as Menu(layout=Vertical)
-				Text(value="text") textOption as Option
-					Text(value="text 1.1") text11Option as Option
-				Text(value="image") imageOption as Option
+				Block(label="data widgets") basicSection as Collapsible
+					Text(value="Text") text as Option
+					Text(value="Image") image as Option
+					Text(value="File") file as Option
+					Text(value="Date") date as Option
+					Text(value="DateTime") datetime as Option
+				Block(label="catalog widgets") catalogSection as Collapsible
+					Text(value="Catalog") catalog as Option
+					Text(value="Grouping") sorting as Option
+					Text(value="Sorting") grouping as Option
+				Block(label="operation widgets") operationSection as Collapsible
+					Text(value="OpenCatalogOperation") openCatalogOperation as Option
+					Text(value="OpenDialogOperation") openDialogOperation as Option
+					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
+					Text(value="ExportOperation") exportOperation as Option
+					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
+					Text(value="DownloadOperation") downloadOperation as Option
+					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
+					Text(value="TaskOperation") taskOperation as Option
+					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
+					Text(value="PreviewOperation") previewOperation as Option
+					Text(value="SearchOperation") searchOperation as Option
+				Block(label="other widgets") otherSection
+					Text(value="Badge") badge as Option
+					Text(value="Chip") chip as Option
+					Text(value="Card") card as Option
+					Text(value="Snackbar") snackbar as Option
+					Text(value="Progress") progress as Option
+					Text(value="Wizard") wizard as Option
 
 		Block(layout=Flexible, style=theme1.air) panels
+			components = textPanel imagePanel dateTimePanel
 
-			Block(spacing=DP24) textPanel as Selection(body.header.menu.textOption)
-
-				Block > Text(value="Campo texto", format=H5)
-					Text(format=Body1) valueA
-					Block > Text valueACode as Code(Html)
-							value
-								=========
-								Konos: Text text1<br/><br/>
-								&nbsp;Java: text1.update("abcd")
-								=========
-				Block > Text(value="Campo texto con título", format=H5)
-					Text(format=Body1) valueB > label = "título del campo"
-					Block > Text valueBCode as Code(Html)
-							value
-								=========
-								Konos: Text text1<br/>
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
-								&nbsp;Java: text1.update("efgh")
-								=========
-
-				Block > Text(value="Campo texto editable", format=H5)
-					Text(format=Body1) valueC as Editable > label = "campo editable"
-
-			Block imagePanel as Selection(body.header.menu.imageOption)
-				Text(value="hola mundo!!!!!")
 
 Theme theme1
 	Palette
@@ -53,3 +55,32 @@ Theme theme1
 
 Translator(Spanish)
 	Translation("título del campo", "título del campo en español")
+
+Block(spacing=DP24) textPanel as Selection(main.body.header.menu.basicSection.text)
+
+	Block > Text(value="Campo texto", format=H5)
+		Text(format=Body1) valueA
+		Block > Text valueACode as Code(Html)
+				value
+					=========
+					Konos: Text text1<br/><br/>
+					&nbsp;Java: text1.update("abcd")
+					=========
+	Block > Text(value="Campo texto con título", format=H5)
+		Text(format=Body1) valueB > label = "título del campo"
+		Block > Text valueBCode as Code(Html)
+				value
+					=========
+					Konos: Text text1<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
+					&nbsp;Java: text1.update("efgh")
+					=========
+
+	Block > Text(value="Campo texto editable", format=H5)
+		Text(format=Body1) valueC as Editable > label = "campo editable"
+
+Block imagePanel as Selection(main.body.header.menu.basicSection.image)
+	Text(value="Image!!!!!")
+
+Block dateTimePanel as Selection(main.body.header.menu.basicSection.datetime)
+	Text(value="DateTime!!!!!")

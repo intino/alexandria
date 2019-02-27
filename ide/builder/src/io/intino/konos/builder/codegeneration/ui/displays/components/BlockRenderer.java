@@ -28,6 +28,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
+		if (element.isCollapsible()) result.addSlot("collapsible", "true");
 		return result;
 	}
 

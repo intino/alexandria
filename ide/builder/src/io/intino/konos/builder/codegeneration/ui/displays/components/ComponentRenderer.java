@@ -19,11 +19,10 @@ import org.siani.itrules.model.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
-	private boolean buildReferences = false;
+	private boolean buildChildren = false;
 	private boolean decorated;
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
@@ -37,21 +36,16 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		Frame frame = super.buildFrame().addTypes("component");
 		frame.addSlot("id", shortId(element));
 		frame.addSlot("properties", properties());
-		if (buildReferences) frame.addTypes("reference");
+		if (buildChildren) frame.addTypes("child");
 		addComponents(element, frame);
+		addReferences(element, frame);
 		addFacets(element, frame);
+		addImplements(element, frame);
 		return frame;
 	}
 
-	protected Frame properties() {
-		Frame result = new Frame().addTypes("properties", typeOf(element));
-		if (element.label() != null) result.addSlot("label", element.label());
-		if (element.style() != null) result.addSlot("style", element.style().name$());
-		return result;
-	}
-
-	public void buildReferences(boolean value) {
-		this.buildReferences = value;
+	public void buildChildren(boolean value) {
+		this.buildChildren = value;
 	}
 
 	public void decorated(boolean value) {
@@ -66,9 +60,22 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addComponents(Component component, Frame frame) {
 		List<Component> components = components(component);
 		components.forEach(c -> {
-			Frame componentFrame = buildReferences ? referenceFrame(c) : componentFrame(c);
+			Frame componentFrame = buildChildren ? childFrame(c) : componentFrame(c);
 			frame.addSlot( "component", componentFrame);
 		});
+	}
+
+	private void addReferences(Component component, Frame frame) {
+		List<Component> components = component.components();
+		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
+	}
+
+	private Frame referenceFrame(Component component) {
+		Frame frame = new Frame("reference").addSlot("name", component.name$());
+		frame.addSlot("id", shortId(component));
+		frame.addSlot("properties", properties(component));
+		addFacets(component, frame);
+		return frame;
 	}
 
 	@Override
@@ -80,10 +87,21 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return clazz.getSimpleName().toLowerCase();
 	}
 
-	protected Frame referenceFrame(Component component) {
+	protected Frame childFrame(Component component) {
 		Frame result = componentRenderer(component).buildFrame();
 		result.addSlot("ancestors", ancestors(component));
 		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
+		return result;
+	}
+
+	protected Frame properties() {
+		return properties(element);
+	}
+
+	protected Frame properties(Component component) {
+		Frame result = new Frame().addTypes("properties", typeOf(component));
+		if (component.label() != null) result.addSlot("label", component.label());
+		if (component.style() != null) result.addSlot("style", component.style().name$());
 		return result;
 	}
 
@@ -100,6 +118,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
+		comprobar que el componente sea root para no incluirlo a él mismo!
 		while (parent != null) {
 			result.add(0, clean(parent.name$()));
 			parent = parent.core$().ownerAs(Component.class);
@@ -109,21 +128,27 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private UIRenderer componentRenderer(Component component) {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
-		renderer.buildReferences(true);
+		renderer.buildChildren(true);
 		renderer.decorated(decorated);
 		return renderer;
 	}
 
 	private List<Component> components(Component component) {
-		if (component.i$(Block.class)) return component.a$(Block.class).componentList();
-		if (component.i$(Panels.class)) return component.a$(Panels.class).panelList().stream().map(p -> p.a$(Component.class)).collect(toList());
-		if (component.i$(Panel.class)) return component.a$(Panel.class).componentList();
-		if (component.i$(Tabs.class)) return component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList());
-		if (component.i$(Snackbar.class)) return component.a$(Snackbar.class).componentList();
-		if (component.i$(Header.class)) return component.a$(Header.class).componentList();
-		if (component.i$(Content.class)) return component.a$(Content.class).componentList();
-		if (component.i$(Selector.class)) return component.a$(Selector.class).componentList();
-		return emptyList();
+		List<Component> components = new ArrayList<>();
+		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
+		if (component.i$(Panels.class)) components.addAll(component.a$(Panels.class).panelList().stream().map(p -> p.a$(Component.class)).collect(toList()));
+		if (component.i$(Panel.class)) components.addAll(component.a$(Panel.class).componentList());
+		if (component.i$(Tabs.class)) components.addAll(component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList()));
+		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
+		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());
+		if (component.i$(Content.class)) components.addAll(component.a$(Content.class).componentList());
+		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
+		return components;
+	}
+
+	private void addImplements(C element, Frame frame) {
+		if (!element.isOption()) return;
+		frame.addSlot("implements", new Frame("implements", "option").addSlot("option", ""));
 	}
 
 }

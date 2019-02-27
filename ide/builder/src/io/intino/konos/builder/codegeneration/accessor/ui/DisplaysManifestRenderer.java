@@ -27,7 +27,9 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	}
 
 	private boolean isGeneric(Display element) {
-		return element.getClass().getSimpleName().equalsIgnoreCase("display") || element.getClass().getSimpleName().equalsIgnoreCase("component");
+		return element.getClass().getSimpleName().equalsIgnoreCase("display") ||
+			   element.getClass().getSimpleName().equalsIgnoreCase("component") ||
+			   element.getClass().getSimpleName().equalsIgnoreCase("block");
 	}
 
 	private Frame frameOf(Display display) {
