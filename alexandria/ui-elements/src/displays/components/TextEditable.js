@@ -5,7 +5,11 @@ import TextEditableNotifier from "../../../gen/displays/notifiers/TextEditableNo
 import TextEditableRequester from "../../../gen/displays/requesters/TextEditableRequester";
 import TextField from '@material-ui/core/TextField';
 
-const styles = theme => ({});
+const styles = theme => ({
+	default : {
+		width: "100%"
+	}
+});
 
 class TextEditable extends AbstractTextEditable {
 	state = {
@@ -34,9 +38,9 @@ class TextEditable extends AbstractTextEditable {
 		const format = this.props.format !== "default" ? this.props.format : "body1";
 
 		return (
-				<TextField label={label} type="text" value={this.state.value}
-				   onChange={this.handleChange.bind(this)}
-				   onKeyPress={this.handleKeypress.bind(this)}></TextField>
+				<TextField className={classes.default} label={label} type="text"
+						   value={this.state.value} onChange={this.handleChange.bind(this)}
+				   		   onKeyPress={this.handleKeypress.bind(this)}></TextField>
 		);
 	};
 

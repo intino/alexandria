@@ -8,7 +8,8 @@ const styles = theme => ({
 	value : {
 		background: "#f4f4f4",
 		border: "1px solid #ddd",
-		padding: "5px 10px"
+		padding: "5px 10px",
+		display: "block"
 	}
 });
 
