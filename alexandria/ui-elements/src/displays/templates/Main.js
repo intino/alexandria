@@ -1,9 +1,12 @@
 import React from "react";
-import AbstractMain from "../../../gen/displays/roots/AbstractMain";
+import { withStyles } from '@material-ui/core/styles';
+import AbstractMain from "../../../gen/displays/templates/AbstractMain";
 import MainNotifier from "../../../gen/displays/notifiers/MainNotifier";
 import MainRequester from "../../../gen/displays/requesters/MainRequester";
 
-export default class Main extends AbstractMain {
+const styles = theme => ({});
+
+class Main extends AbstractMain {
 
 	constructor(props) {
 		super(props);
@@ -12,3 +15,5 @@ export default class Main extends AbstractMain {
 	};
 
 }
+
+export default withStyles(styles, { withTheme: true })(Main);

@@ -1,16 +1,21 @@
 dsl Konos
 
 Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
-	theme = theme1
-	Resource("/") home as DesktopPage(desktop) Main
-	Resource("/error") error as BlankPage(root) Main
+	Resource("/") home as Page(desktop) Main
+	Resource("/error") error as Page(root) Main
 
-Theme theme1
-
-Desktop desktop as DrawerNavigable(Left, mode=Modal)
-	AppBar
+//Theme theme1
+//	Palette
+//		Primary("#3f51b5")
+//		Secondary("#ff9100")
+//		Error("#f44336")
+//
+//	Style air > Padding("10px 20px")
+//
+Template desktop as Desktop //DrawerNavigable(direction=Left, mode=Modal)
+	Header
 		Image logo
-		Block cabecera as Horizontal
+		Block(layout=Horizontal) cabecera
 			Text(format=H1) titulo as Editable
 			Text(format=H2) subtitulo
 			File fichero as Editable
@@ -20,7 +25,7 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 		Selector zonas as ComboBox
 			Text(label="Zona 1") zona1
 			Text(label="Zona 2") zona2
-		Block as Horizontal
+		Block(layout=Horizontal)
 			Image photo as Avatar
 			Block
 				Text fullName
@@ -34,26 +39,25 @@ Desktop desktop as DrawerNavigable(Left, mode=Modal)
 //		Tab("características")
 //			Content as CatalogContainer(caracteristicasCatalog)
 
-Root root
-
 Block badgeBlock as Parameterizable Decorated
 	Param title as TextType
 	Param count as NumberType
-	Block as Horizontal
+	Block(layout=Horizontal)
 		Text(format=H1) title
 		Block custom
 		Badge count
 
+Template root
 Component componentA as Decorated
 Display displayA
 
 Block dashboardBlock as Decorated
-	Block as Horizontal
-		Block(label="criterios técnicos") as Paper Horizontal Center CenterJustified
+	Block(layout=Horizontal)
+		Block(label="criterios técnicos", layout=Horizontal Center CenterJustified) as Paper
 			Block tecnicosEnEjecucion as Instance(criterioBlock)
 			Block tecnicosDeshabilitados as Instance(criterioBlock)
 			Block tecnicosAspirantes as Instance(criterioBlock)
-		Block(label="criterios contables") as Paper Horizontal Center CenterJustified
+		Block(label="criterios contables", layout=Horizontal Center CenterJustified) as Paper
 			Block contables as InstanceCollection(criterioBlock)
 		Block(label="criterios de datos") as Paper
 			Block deDatos as InstanceCollection(criterioBlock)
@@ -71,19 +75,19 @@ Block dashboardBlock as Decorated
 			Block rendimientoDesdeCreacion as Instance(panelEstadisticas)
 			Block > Chart evolucionRendimiento
 
-Block criterioBlock as Vertical Center Parameterizable
+Block(layout=Vertical Center) criterioBlock as Parameterizable
 	Param value as NumberType
 	Param label as TextType
 
 	Text(format=H1) value
 	Text(format=H2) label
 
-Block indicatorBlock as Vertical Center Parameterizable
+Block(layout=Vertical Center) indicatorBlock as Parameterizable
 	Param value as NumberType
 	Param label as TextType
 	Param trend as WordType("PositivoMejor" "PositivoPeor")
 
-	Block as Horizontal Center
+	Block(layout=Horizontal Center)
 		Text(format=H1) value
 		Icon(alexandriaIcon="remove") trend
 	Text(format=H2) label
@@ -93,7 +97,7 @@ Block panelEstadisticas as Parameterizable
 	Param instances as ObjectType(indicatorBlock) //List
 
 	Text(format=H1) label
-	Block as Horizontal
+	Block(layout=Horizontal)
 		Block instances as InstanceCollection(indicatorBlock)
 
 
@@ -109,7 +113,7 @@ Catalog("criterios") criteriosCatalog as Decorated
 			Block drawerBlock as Instance(criteriosArrangement) Drawer
 			Block mainBlock as Instance(criteriosArrangement)
 			Block
-				Block as Horizontal
+				Block(layout=Horizontal)
 					TaskOperation(label="Añadir criterio") addCriterio as IconButton("add")
 					SearchOperation(label="buscar") searchCriterios as IconButton("search")
 
@@ -147,8 +151,8 @@ Block criteriosArrangement
 	Grouping(label="impacto total") impacto
 
 Block criterioOperativoBlock as Target("io.intino.example.graph.Criterio")
-	Block as Horizontal
-		Block main as Flexible
+	Block(layout=Horizontal)
+		Block(layout=Flexible) main
 			Text(format=H1) titulo
 			Text(format=H2) descripcion
 			Tabs

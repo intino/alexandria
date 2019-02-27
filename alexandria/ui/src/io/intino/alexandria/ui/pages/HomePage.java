@@ -1,7 +1,6 @@
 package io.intino.alexandria.ui.pages;
 
-import io.intino.alexandria.ui.displays.roots.Main;
-
+import io.intino.alexandria.ui.displays.templates.Main;
 
 public class HomePage extends AbstractHomePage {
 

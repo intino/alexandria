@@ -28,7 +28,7 @@ def type(properties) trigger(common)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ $paper]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ $paper]
 end
 
 def type(properties & header) trigger(specific)

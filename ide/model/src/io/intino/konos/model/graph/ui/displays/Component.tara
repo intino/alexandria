@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Views
 use Facets
 use Display
 use DataTypes
@@ -13,7 +14,7 @@ Concept Block extends Component
 	var string label = empty
 	var string for = empty
 	var word[]:Layout layout = Vertical
-	var integer:{px} spacing = 0px
+	var word:Spacing spacing = None
 
 	has Component
 
@@ -117,4 +118,4 @@ Concept ChildComponents
 		var boolean visible = true
 
 	Concept Selector extends Component
-		has Option
+		has Component
