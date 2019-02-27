@@ -1,4 +1,4 @@
-import Dictionary from "../../gen/Dictionary";
+import I18n from "../../gen/I18n";
 
 const TranslatorService = {
     create : function (configuration) {
@@ -6,8 +6,8 @@ const TranslatorService = {
 
         return {
             translate: (word) => {
-                let dictionary = Dictionary.load(language);
-                return dictionary != null && dictionary[word] != null ? dictionary[word] : word;
+                let translator = I18n.load(language);
+                return translator != null && translator[word] != null ? translator[word] : word;
             }
         };
     }

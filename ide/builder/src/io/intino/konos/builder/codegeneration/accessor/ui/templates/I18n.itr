@@ -1,8 +1,8 @@
 def type(i18n)
-	const i18n = (function () {
+	const I18n = (function () {
 
 		var translators = {
-			$dictionary...[,$NL]
+			$translator...[,$NL]
 		};
 
 		var loader = {
@@ -14,10 +14,10 @@ def type(i18n)
 		return loader;
 	})();
 
-	export default i18n;
+	export default I18n;
 end
 
-def type(translators)
+def type(translator)
 	"$language" : {
 		$translation...[,$NL]
 	}

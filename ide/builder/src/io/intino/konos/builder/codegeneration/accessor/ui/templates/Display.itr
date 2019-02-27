@@ -15,13 +15,6 @@ def type(display)
 			this.requester = new $name+firstUpperCase~Requester(this);
 		};
 
-		render() {
-	        const { classes } = this.props;
-			return (
-				<React.Fragment></React.Fragment>
-			);
-		};
-
 		$notification...[$NL$NL]
 	}
 

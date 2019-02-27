@@ -3,34 +3,33 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(main)
 
-Template main as Desktop Decorated
+Template main as Decorated
 	Header(style=theme1.air) appBar
 		Text(format=H3) title
 
 	Block(layout=Horizontal Flexible) body
-		Block as Relative(width=10%)
 
-		Block header as Relative(20%)
+		Block header as Relative(width=30%)
 			Selector menu as Menu(layout=Vertical)
-				Text(value="text") textOption
-				Text(value="image") imageOption
+				Text(value="text") textOption as Option
+					Text(value="text 1.1") text11Option as Option
+				Text(value="image") imageOption as Option
 
 		Block(layout=Flexible, style=theme1.air) panels
 
-			Block textPanel as Selection(body.header.menu.textOption)
-				componentSpacing = 10px
+			Block(spacing=DP24) textPanel as Selection(body.header.menu.textOption)
 
 				Block > Text(value="Campo texto", format=H5)
 					Text(format=Body1) valueA
-					Block(top=5px) > Text valueACode as Code(Html)
+					Block > Text valueACode as Code(Html)
 							value
 								=========
 								Konos: Text text1<br/><br/>
 								&nbsp;Java: text1.update("abcd")
 								=========
-				Block(top=20px) > Text(value="Campo texto con título", format=H5)
+				Block > Text(value="Campo texto con título", format=H5)
 					Text(format=Body1) valueB > label = "título del campo"
-					Block(top=5px) > Text valueBCode as Code(Html)
+					Block > Text valueBCode as Code(Html)
 							value
 								=========
 								Konos: Text text1<br/>
@@ -38,13 +37,11 @@ Template main as Desktop Decorated
 								&nbsp;Java: text1.update("efgh")
 								=========
 
-				Block(top=20px) > Text(value="Campo texto editable", format=H5)
+				Block > Text(value="Campo texto editable", format=H5)
 					Text(format=Body1) valueC as Editable > label = "campo editable"
 
 			Block imagePanel as Selection(body.header.menu.imageOption)
 				Text(value="hola mundo!!!!!")
-
-		Block as Relative(width=10%)
 
 Theme theme1
 	Palette

@@ -18,8 +18,8 @@ public class I18nTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "i18n"))).add(literal("const i18n = (function () {\n\n\tvar translators = {\n\t\t")).add(mark("dictionary").multiple(",\n")).add(literal("\n\t};\n\n\tvar loader = {\n\t\tload: (lang) => {\n\t\t\treturn translators[lang];\n\t\t}\n\t};\n\n\treturn loader;\n})();\n\nexport default i18n;")),
-			rule().add((condition("type", "translators"))).add(literal("\"")).add(mark("language")).add(literal("\" : {\n\t")).add(mark("translation").multiple(",\n")).add(literal("\n}")),
+			rule().add((condition("type", "i18n"))).add(literal("const I18n = (function () {\n\n\tvar translators = {\n\t\t")).add(mark("translator").multiple(",\n")).add(literal("\n\t};\n\n\tvar loader = {\n\t\tload: (lang) => {\n\t\t\treturn translators[lang];\n\t\t}\n\t};\n\n\treturn loader;\n})();\n\nexport default I18n;")),
+			rule().add((condition("type", "translator"))).add(literal("\"")).add(mark("language")).add(literal("\" : {\n\t")).add(mark("translation").multiple(",\n")).add(literal("\n}")),
 			rule().add((condition("type", "translation"))).add(literal("\"")).add(mark("text")).add(literal("\" : \"")).add(mark("value")).add(literal("\""))
 		);
 		return this;

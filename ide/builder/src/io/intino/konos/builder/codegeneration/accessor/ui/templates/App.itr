@@ -4,6 +4,7 @@ def type(app)
     $page+import...[$NL]
 	import PushService from "alexandria-ui-elements/src/services/PushService";
 	import FileService from "alexandria-ui-elements/src/services/FileService";
+	import TranslatorService from "alexandria-ui-elements/src/services/TranslatorService";
 
 	var launchApplication = function () {
 		var configuration = loadConfiguration();
@@ -12,7 +13,11 @@ def type(app)
 			var self = {};
 
 			self.configuration = configuration;
-			self.services = { pushService: PushService, fileService: FileService.create(configuration) };
+			self.services = {
+				pushService: PushService,
+				fileService: FileService.create(configuration),
+				translatorService: TranslatorService.create(configuration)
+			};
 
 			return self;
 		})(configuration);

@@ -3,6 +3,9 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.ChildComponents.Selector;
+import io.intino.konos.model.graph.option.OptionComponent;
+import io.intino.konos.model.graph.rules.Spacing;
 import org.siani.itrules.model.Frame;
 
 public class BlockRenderer extends ComponentRenderer<Block> {
@@ -22,6 +25,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	protected Frame properties() {
 		Frame result = super.properties();
 		addSize(result);
+		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
 		return result;
@@ -38,6 +42,10 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		}
 	}
 
+	private void addSpacing(Frame result) {
+		if (element.spacing() != Spacing.None) result.addSlot("spacing", element.spacing().value());
+	}
+
 	private void addLayout(Frame result) {
 		String[] layout = element.layout().stream().map(l -> l.name().toLowerCase()).toArray(String[]::new);
 		result.addSlot("layout", layout);
@@ -50,7 +58,12 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 
 	private void addBinding(Frame result) {
 		if (!element.isSelection()) return;
-		result.addSlot("binding", new Frame("binding").addSlot("name", element.name$()).addSlot("selector", element.asSelection().option().name$()));
+		OptionComponent option = element.asSelection().option();
+		Selector selector = option.core$().ownerAs(Selector.class);
+		result.addSlot("binding", new Frame("binding")
+			  								.addSlot("name", element.name$())
+			  								.addSlot("selector", selector.name$())
+											.addSlot("option", shortId(option)));
 	}
 
 	@Override

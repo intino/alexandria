@@ -7,11 +7,12 @@ import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.events.SelectEvent;
 import io.intino.alexandria.ui.displays.events.SelectListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> implements Selector {
 	private int selected;
-	private SelectListener onSelect = null;
+	private List<SelectListener> onSelectListeners = new ArrayList<>();
 
 	public SelectorMenu(B box) {
 		super(box);
@@ -19,8 +20,13 @@ public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> impleme
 
 	@Override
 	public SelectorMenu onSelect(SelectListener selectListener) {
-		this.onSelect = selectListener;
+		this.onSelectListeners.add(selectListener);
 		return this;
+	}
+
+	@Override
+	public String selectedOption() {
+		return nameOf(selected);
 	}
 
 	@Override
@@ -45,13 +51,19 @@ public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> impleme
 	public void select(int option) {
 		if (this.selected == option) return;
 		this.selected = option;
-		if (onSelect != null) onSelect.accept(new SelectEvent(this, nameOf(option), option));
+		notifySelection(option);
 		notifier.refreshSelected(option);
 	}
 
+	private void notifySelection(int option) {
+		SelectEvent event = new SelectEvent(this, nameOf(option), option);
+		onSelectListeners.forEach(l -> l.accept(event));
+	}
+
 	private String nameOf(int option) {
+		if (selected == -1) return null;
 		Component child = child(option);
-		return child != null ? child.name() : null;
+		return child != null ? child.id() : null;
 	}
 
 	private int position(String option) {

@@ -2,8 +2,8 @@ dsl Konos
 
 Component block as Decorated
 
-Component blockSelectorContainer as Decorated
-	Notification refreshSelected as Integer
+Component blockSelection as Decorated
+	Notification refreshVisibility as Bool
 
 Component catalog as Decorated
 Component badge as Decorated

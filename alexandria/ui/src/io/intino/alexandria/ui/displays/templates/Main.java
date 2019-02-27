@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.roots;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 

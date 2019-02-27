@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.builder.codegeneration.accessor.ui.templates.DictionaryTemplate;
+import io.intino.konos.builder.codegeneration.accessor.ui.templates.I18nTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.model.graph.Translator;
 import io.intino.konos.model.graph.ui.UIService;
@@ -22,21 +22,21 @@ public class I18nRenderer extends UIRenderer {
 
 	@Override
 	public void execute() {
-		Frame frame = new Frame().addTypes("i18n");
+		Frame frame = new Frame("i18n");
 		List<Translator> translators = service.graph().translatorList();
 		translators.forEach(t -> frame.addSlot("translator", frameOf(t)));
-		write(new File(accessorGen() + File.separator + "i18n.js").toPath(), setup(DictionaryTemplate.create()).format(frame));
+		write(new File(accessorGen() + File.separator + "I18n.js").toPath(), setup(I18nTemplate.create()).format(frame));
 	}
 
 	private Frame frameOf(Translator translator) {
 		Frame result = new Frame("translator");
 		result.addSlot("language", translator.language().code());
-		translator.translationList().forEach(t -> result.addSlot("word", frameOf(t)));
+		translator.translationList().forEach(t -> result.addSlot("translation", frameOf(t)));
 		return result;
 	}
 
 	private Frame frameOf(Translator.Translation translation) {
-		Frame result = new Frame("word");
+		Frame result = new Frame("translation");
 		result.addSlot("text", translation.text());
 		result.addSlot("value", translation.value());
 		return result;
