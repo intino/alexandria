@@ -1,5 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import Collapse from "@material-ui/core/Collapse";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
@@ -19,6 +20,11 @@ class Block extends AbstractBlock {
 	};
 
 	render() {
+		if (this.props.label === "data widgets") alert(this.props.collapsible);
+		return (this.props.collapsible ? <Collapse>{this._renderGrid()}</Collapse> : this._renderGrid());
+	};
+
+	_renderGrid = () => {
 		const display = this._is("flexible") ? "flex" : undefined;
 		const direction = this._is("horizontal") ? "row" : "column";
 		const wrap = this._is("wrap") ? "wrap" : "nowrap";
@@ -31,21 +37,21 @@ class Block extends AbstractBlock {
 
 		return (
 			<Grid style={this.style()}
-				  item={isItem}
-				  xs={isItem ? xs : undefined}
-				  display={display}
-				  container={!isItem}
-				  direction={!isItem ? direction : undefined}
-				  wrap={!isItem ? wrap : undefined}
-				  spacing={!isItem ? spacing : undefined}
-				  justify={justify}
-				  alignItems={alignItems}>
-				{React.Children.map(this.props.children, (child, i) => {
-					return isVerticalSpacing ? <div style={{paddingBottom: this.props.spacing + "px"}}>{child}</div> : child;
-				})}
+			  item={isItem}
+			  xs={isItem ? xs : undefined}
+			  display={display}
+			  container={!isItem}
+			  direction={!isItem ? direction : undefined}
+			  wrap={!isItem ? wrap : undefined}
+			  spacing={!isItem ? spacing : undefined}
+			  justify={justify}
+			  alignItems={alignItems}>
+			  {React.Children.map(this.props.children, (child, i) => {
+			  	return isVerticalSpacing ? <div style={{paddingBottom: this.props.spacing + "px"}}>{child}</div> : child;
+			  })}
 			</Grid>
 		);
-	};
+	}
 
 	style() {
 		var result = super.style();

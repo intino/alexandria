@@ -19,6 +19,7 @@ public class DisplaysManifestTemplate extends Template {
 	public Template define() {
 		add(
 			rule().add((condition("type", "manifest"))).add(mark("display", "import").multiple("\n")).add(literal("\nexport { ")).add(mark("display", "export").multiple(",")).add(literal(" }")),
+			rule().add((condition("type", "block")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/blocks/")).add(mark("name", "firstUppercase")).add(literal("\"")),
 			rule().add((condition("type", "component")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/components/")).add(mark("name", "firstUppercase")).add(literal("\"")),
 			rule().add((condition("type", "display")), (condition("trigger", "import"))).add(literal("import ")).add(mark("name", "firstUppercase")).add(literal(" from \"../")).add(mark("directory")).add(literal("/displays/")).add(mark("name", "firstUppercase")).add(literal("\"")),
 			rule().add((condition("type", "display")), (condition("trigger", "export"))).add(mark("name", "firstUppercase"))

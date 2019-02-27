@@ -1,19 +1,24 @@
-def type(reference) trigger(declaration)
+def type(reference)
+	<Displays.$name+firstUppercase id="$id"$properties+common$properties+specific></Displays.$name+firstUppercase>
 end
 
-def type(block & reference) trigger(child)
+def type(child) trigger(declaration)
+end
+
+def type(block & child) trigger(child)
 	$value
 end
 
-def type(reference) trigger(child)
+def type(child) trigger(child)
 	$value
 end
 
-def type(reference) trigger(add)
+def type(child) trigger(add)
 end
 
-def type(component & reference)
+def type(component & child)
 	<Ui.$type+firstUpperCase$facet id="$id"$properties+common$properties+specific>[
+		$reference...[$NL]][
 		$component+child...[$NL]][
 		$code
 	]</Ui.$type+firstUpperCase$facet>
@@ -28,7 +33,7 @@ def type(properties) trigger(common)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ $paper]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper]
 end
 
 def type(properties & header) trigger(specific)
