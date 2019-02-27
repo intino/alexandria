@@ -25,7 +25,7 @@ class Block extends AbstractBlock {
 		const justify = this._justifyContent();
 		const alignItems = this._alignContent();
 		const spacing = this._horizontalSpacing();
-		const isItem = this._widthDefined() && spacing === undefined;
+		const isItem = this._widthDefined() || (this.props.layout != null && this.props.layout === "vertical");
 		const xs = this._isRelativeWidth() ? this._relativeWidth() : undefined;
 		const isVerticalSpacing = this._isVerticalSpacing();
 
@@ -58,15 +58,40 @@ class Block extends AbstractBlock {
 
 	_is = (layout) => {
 		if (this.props.layout == null) return false;
-		return this.props.layout.indexOf(layout) !== -1;
+		return (" " + this.props.layout + " ").indexOf(" " + layout + " ") !== -1;
 	}
 
 	_justifyContent = () => {
-		return this._justify("horizontal", "vertical");
+		if (this._is("horizontal")) {
+			if (this._is("center") || this._is("centerjustified")) return "center";
+			else if (this._is("startjustified")) return "flex-start";
+			else if (this._is("endjustified")) return "flex-end";
+		}
+		else if (this._is("vertical")) {
+			if (this._is("centerjustified") && !this._is("center")) return "flex-start";
+			else if (this._is("center")) return "center";
+			else if (this._is("startjustified")) return "flex-start";
+			else if (this._is("endjustified")) return "flex-end";
+		}
+
+		return undefined;
 	};
 
 	_alignContent = () => {
-		return this._justify("vertical", "horizontal");
+		if (this._is("horizontal")) {
+			if (this._is("centerjustified")) return "flex-start";
+			else if (this._is("center")) return "center";
+			else if (this._is("startjustified")) return "flex-start";
+			else if (this._is("endjustified")) return "flex-end";
+		}
+		else if (this._is("vertical")) {
+			if (this._is("centerjustified")) return "center";
+			else if (this._is("center")) return "flex-start";
+			else if (this._is("startjustified")) return "flex-start";
+			else if (this._is("endjustified")) return "flex-end";
+		}
+
+		return undefined;
 	};
 
 	_isVerticalSpacing = () => {
