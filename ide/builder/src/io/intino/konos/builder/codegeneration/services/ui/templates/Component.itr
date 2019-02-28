@@ -1,3 +1,11 @@
+def type(reference) trigger(declaration)
+	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
+end
+
+def type(reference)
+	$name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+end
+
 def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
@@ -9,25 +17,37 @@ end
 
 def type(component & child) trigger(class)
 	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>[ $implements] {
-		[$component+declaration...[$NL]
+		[$reference+declaration...[$NL]
+		][$component+declaration...[$NL]]
 
-		]public $name+firstUpperCase($abstractBox+type box) {
+		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
 		}
 
 		@Override
 		public void init() {
 			super.init();[
-			$component+reference...[$NL]]
+			$reference...[$NL]][
+			$component+child...[$NL]]
 		}[
 
 		$component+class...[$NL]]
 	}
 end
 
+def type(component & child) trigger(blockChildReferences)
+	$name = [$ancestorsNotMe...[.].]$name;[
+	$component+blockChildReferences...[$NL]]
+end
+
 def type(component & child) trigger(childReferences)
 	$name = [$ancestors...[.].]$name;[
 	$component+childReferences...[$NL]]
+end
+
+def type(block & child) trigger(references)
+	$name = register(new $name+firstUpperCase(box()).id("$id"));[
+	$component+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)

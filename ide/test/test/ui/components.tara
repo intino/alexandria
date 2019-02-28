@@ -84,3 +84,5 @@ Block imagePanel as Selection(main.body.header.menu.basicSection.image)
 
 Block dateTimePanel as Selection(main.body.header.menu.basicSection.datetime)
 	Text(value="DateTime!!!!!")
+
+Display page as Decorated

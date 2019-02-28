@@ -8,6 +8,7 @@ def type(display)
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 
+	import $package+validPackage.ui.displays.blocks.*;
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {

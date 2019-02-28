@@ -1,7 +1,8 @@
 def type(display & accessible)
-	package $package.ui.displays[.$packageType~s];
+	package $package+validPackage.ui.displays[.$packageType~s];
 
-    import $package.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
+	import $package+validPackage.ui.displays.blocks.*;
+    import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
     import io.intino.alexandria.ui.displays.ProxyDisplay;
     import io.intino.alexandria.ui.services.push.UISession;
 
