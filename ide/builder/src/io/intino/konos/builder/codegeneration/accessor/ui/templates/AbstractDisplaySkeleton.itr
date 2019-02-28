@@ -1,7 +1,7 @@
 def type(display)
 	import React from "react";
 	import * as Ui from "alexandria-ui-elements/gen/Displays";
-	import * as Displays from "../../Displays";
+	import * as Displays from "../[$packageTypeRelativeDirectory]Displays";
 	$accessorType+import;[
 	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
 	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]

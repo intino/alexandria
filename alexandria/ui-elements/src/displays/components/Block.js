@@ -20,7 +20,6 @@ class Block extends AbstractBlock {
 	};
 
 	render() {
-		if (this.props.label === "data widgets") alert(this.props.collapsible);
 		return (this.props.collapsible ? <Collapse>{this._renderGrid()}</Collapse> : this._renderGrid());
 	};
 

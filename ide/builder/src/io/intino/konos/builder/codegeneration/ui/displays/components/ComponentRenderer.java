@@ -17,6 +17,7 @@ import io.intino.konos.model.graph.selection.SelectionBlock;
 import org.siani.itrules.model.Frame;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -72,6 +73,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private Frame referenceFrame(Component component) {
 		Frame frame = new Frame("reference").addSlot("name", component.name$());
+		frame.addSlot("box", boxName());
 		frame.addSlot("id", shortId(component));
 		frame.addSlot("properties", properties(component));
 		addFacets(component, frame);
@@ -89,7 +91,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected Frame childFrame(Component component) {
 		Frame result = componentRenderer(component).buildFrame();
-		result.addSlot("ancestors", ancestors(component));
+		String[] ancestors = ancestors(component);
+		result.addSlot("ancestors", ancestors);
+		result.addSlot("ancestorsNotMe", Arrays.copyOfRange(ancestors, 1, ancestors.length));
 		result.addSlot("value", componentRenderer(component).buildFrame().addSlot("addType", typeOf(component)));
 		return result;
 	}
@@ -118,7 +122,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
-		comprobar que el componente sea root para no incluirlo a él mismo!
 		while (parent != null) {
 			result.add(0, clean(parent.name$()));
 			parent = parent.core$().ownerAs(Component.class);
