@@ -4,11 +4,8 @@ import Collapse from "@material-ui/core/Collapse";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
-import {withStyles} from "@material-ui/core";
 
-const styles = theme => ({});
-
-class Block extends AbstractBlock {
+export default class Block extends AbstractBlock {
 	state = {
 		hidden: false
 	};
@@ -146,5 +143,3 @@ class Block extends AbstractBlock {
 		return this.props.height != null && this.props.height.indexOf("-1") === -1;
 	}
 }
-
-export default withStyles(styles, { withTheme: true })(Block);

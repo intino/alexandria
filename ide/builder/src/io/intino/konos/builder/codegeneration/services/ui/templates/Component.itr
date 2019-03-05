@@ -45,7 +45,7 @@ def type(component & child) trigger(childReferences)
 	$component+childReferences...[$NL]]
 end
 
-def type(block & child) trigger(references)
+def type(component & child) trigger(blockReferences)
 	$name = register(new $name+firstUpperCase(box()).id("$id"));[
 	$component+blockChildReferences...[$NL]]
 end

@@ -16,12 +16,35 @@ def type(display)
 
 		render() {
 			return (
-				<React.Fragment>[
+				$renderTag[
 					$component...[$NL]
-				]</React.Fragment>
+				]$renderTag+end
 			);
 		}
 	}
+end
+
+def type(renderTag & block) trigger(end)
+	</Ui.Block>
+end
+
+def type(renderTag & block)
+	<Ui.Block[$properties+common$properties+specific]>
+end
+
+def type(renderTag) trigger(end)
+	</React.Fragment>
+end
+
+def type(renderTag)
+	<React.Fragment>
+end
+
+def type(renderTagAttributes & block)
+	$properties+common$properties+specific
+end
+
+def type(renderTagAttributes)
 end
 
 def attribute(baseDisplay) trigger(import)

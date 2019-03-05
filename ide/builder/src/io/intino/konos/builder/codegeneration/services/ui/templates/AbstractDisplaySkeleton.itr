@@ -21,10 +21,18 @@ def type(display)
         @Override
 		public void init() {
 			super.init();
-			$component+references...[$NL][
+			$componentReferences[
 			$component+initializations...[$NL]]
 		}[
 
 		$component+class...[$NL]]
 	}
+end
+
+def type(componentReferences & forBlock)
+	$component+blockReferences...[$NL]
+end
+
+def type(componentReferences)
+	$component+references...[$NL]
 end

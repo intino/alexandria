@@ -53,6 +53,13 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		this.decorated = value;
 	}
 
+	protected Frame properties(Component component) {
+		Frame result = new Frame().addTypes("properties", typeOf(component));
+		if (component.label() != null) result.addSlot("label", component.label());
+		if (component.style() != null) result.addSlot("style", component.style().name$());
+		return result;
+	}
+
 	@Override
 	protected void addDecoratedFrames(Frame frame) {
 		addDecoratedFrames(frame, decorated);
@@ -68,7 +75,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private void addReferences(Component component, Frame frame) {
 		List<Component> components = component.components();
-		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
+		frame.addSlot("componentReferences", componentReferencesFrame());
+		components.forEach(c -> {
+			frame.addSlot( "reference", referenceFrame(c));
+		});
 	}
 
 	private Frame referenceFrame(Component component) {
@@ -98,15 +108,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return result;
 	}
 
-	protected Frame properties() {
+	public Frame properties() {
 		return properties(element);
-	}
-
-	protected Frame properties(Component component) {
-		Frame result = new Frame().addTypes("properties", typeOf(component));
-		if (component.label() != null) result.addSlot("label", component.label());
-		if (component.style() != null) result.addSlot("style", component.style().name$());
-		return result;
 	}
 
 	private void addFacets(Component component, Frame result) {
@@ -152,6 +155,14 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private void addImplements(C element, Frame frame) {
 		if (!element.isOption()) return;
 		frame.addSlot("implements", new Frame("implements", "option").addSlot("option", ""));
+	}
+
+	private Frame componentReferencesFrame() {
+		Frame result = new Frame("componentReferences");
+		if (!element.i$(Block.class)) return result;
+		result.addTypes("forBlock");
+		element.a$(Block.class).componentList().forEach(c -> addComponent(c, result));
+		return result;
 	}
 
 }

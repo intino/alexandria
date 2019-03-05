@@ -36,6 +36,10 @@ def type(properties & block) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper]
 end
 
+def type(properties & date) trigger(specific)
+	[ format="$format"][ mode="$mode"]
+end
+
 def type(properties & header) trigger(specific)
 	[ color="$color"][ position="$position"]
 end

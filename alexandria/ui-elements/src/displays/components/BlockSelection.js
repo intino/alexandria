@@ -1,20 +1,10 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractBlockSelection from "../../../gen/displays/components/AbstractBlockSelection";
 import BlockSelectionNotifier from "../../../gen/displays/notifiers/BlockSelectionNotifier";
 import BlockSelectionRequester from "../../../gen/displays/requesters/BlockSelectionRequester";
 import Block from "./Block";
 
-const styles = theme => ({
-	visible : {
-		display: "block"
-	},
-	hidden : {
-		display: "none"
-	}
-});
-
-class BlockSelection extends AbstractBlockSelection {
+export default class BlockSelection extends AbstractBlockSelection {
 	state = {
 		visible : false
 	};
@@ -26,14 +16,13 @@ class BlockSelection extends AbstractBlockSelection {
 	};
 
 	render() {
-        const { classes } = this.props;
 		return (
-			<div className={this.state.visible ? classes.visible : classes.hidden}>
+			<div style={ { display: this.state.visible ? "block" : "none" } }>
 				<Block styleName={this.props.styleName}
 					   layout={this.props.layout}
-				   	   width={this.props.width}
-				   	   height={this.props.height}
-				   	   spacing={this.props.spacing}>
+					   width={this.props.width}
+					   height={this.props.height}
+					   spacing={this.props.spacing}>
 					{this.props.children}
 				</Block>
 			</div>
@@ -44,5 +33,3 @@ class BlockSelection extends AbstractBlockSelection {
 		this.setState({ visible });
 	};
 }
-
-export default withStyles(styles, { withTheme: true })(BlockSelection);

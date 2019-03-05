@@ -4,9 +4,7 @@ import AbstractMain from "../../../gen/displays/templates/AbstractMain";
 import MainNotifier from "../../../gen/displays/notifiers/MainNotifier";
 import MainRequester from "../../../gen/displays/requesters/MainRequester";
 
-const styles = theme => ({});
-
-class Main extends AbstractMain {
+export default class Main extends AbstractMain {
 
 	constructor(props) {
 		super(props);
@@ -15,5 +13,3 @@ class Main extends AbstractMain {
 	};
 
 }
-
-export default withStyles(styles, { withTheme: true })(Main);
