@@ -16,7 +16,6 @@ Template main as Decorated
 					Text(value="Image") image as Option
 					Text(value="File") file as Option
 					Text(value="Date") date as Option
-					Text(value="DateTime") datetime as Option
 				Block(label="catalog widgets") catalogSection as Collapsible
 					Text(value="Catalog") catalog as Option
 					Text(value="Grouping") sorting as Option
@@ -41,8 +40,13 @@ Template main as Decorated
 					Text(value="Progress") progress as Option
 					Text(value="Wizard") wizard as Option
 
-		Block(layout=Flexible, style=theme1.air) panels
-			components = textPanel imagePanel dateTimePanel
+		Block(layout=Vertical Flexible, style=theme1.air) panels
+			Block textPanel as Selection(main.body.header.menu.basicSection.text)
+				components = textBlock
+			Block imagePanel as Selection(main.body.header.menu.basicSection.image)
+				components = imageBlock
+			Block datePanel as Selection(main.body.header.menu.basicSection.date)
+				components = dateBlock
 
 
 Theme theme1
@@ -54,9 +58,9 @@ Theme theme1
 	Style air > Padding("10px 20px")
 
 Translator(Spanish)
-	Translation("título del campo", "título del campo en español")
+	Translation("título del campo", "título del campo en dddd")
 
-Block(spacing=DP24) textPanel as Selection(main.body.header.menu.basicSection.text)
+Block(layout=Vertical, spacing=DP24) textBlock
 
 	Block > Text(value="Campo texto", format=H5)
 		Text(format=Body1) valueA
@@ -79,8 +83,28 @@ Block(spacing=DP24) textPanel as Selection(main.body.header.menu.basicSection.te
 	Block > Text(value="Campo texto editable", format=H5)
 		Text(format=Body1) valueC as Editable > label = "campo editable"
 
-Block imagePanel as Selection(main.body.header.menu.basicSection.image)
+Block imageBlock
 	Text(value="Image!!!!!")
 
-Block dateTimePanel as Selection(main.body.header.menu.basicSection.datetime)
-	Text(value="DateTime!!!!!")
+Block dateBlock as Decorated
+	Block
+		Text(value="Properties", format=H5)
+		EmbeddedDisplay(display=propertiesDisplay) dateProperties
+
+	Block > Text(value="Examples", format=H5)
+		Date(mode=FromNow, format="dd/MM/YYYY") dateA
+		Block > Text dateACode as Code(Html)
+				value
+					=========
+					Konos: Date date1<br/><br/>
+					&nbsp;Java: date1.update(Instant.now())
+					=========
+
+Display propertiesDisplay as Decorated
+	Notification refresh as Object(Property) List
+
+Schema Property
+	Attribute name as Text
+	Attribute type as Word("Integer" "Word" "Text")
+	Attribute values as Text List
+	Attribute description as Text

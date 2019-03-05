@@ -58,4 +58,3 @@ Facet Editable on ChildComponents.Image
 		var string[] allowedExtensions = empty
 
 Facet Editable on ChildComponents.Date
-Facet Editable on ChildComponents.DateTime

@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
+import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
@@ -37,8 +38,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
+		addRenderTagFrames(frame);
 		addDecoratedFrames(frame);
-//		frame.addSlot("reference", element.components().stream());
 		frame.addSlot("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new Frame().addSlot("componentType", type)).toArray(Frame[]::new));
 		if (element.parentDisplay() != null) addParent(element, frame);
 		if (!element.graph().schemaList().isEmpty())
@@ -46,6 +47,16 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.isAccessible())
 			frame.addSlot("parameter", element.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
 		return frame;
+	}
+
+	protected void addRenderTagFrames(Frame frame) {
+		Frame renderTag = new Frame("renderTag");
+		if (element.i$(Block.class)) {
+			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
+			renderTag.addTypes("block");
+			renderTag.addSlot("properties", renderer.properties());
+		}
+		frame.addSlot("renderTag", renderTag);
 	}
 
 	protected void addDecoratedFrames(Frame frame) {
@@ -66,6 +77,10 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		renderer.buildChildren(true);
 		renderer.decorated(element.isDecorated());
 		return renderer.buildFrame();
+	}
+
+	protected void addComponent(Component component, Frame frame) {
+		frame.addSlot("component", componentFrame(component));
 	}
 
 	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {

@@ -22,7 +22,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 	}
 
 	@Override
-	protected Frame properties() {
+	public Frame properties() {
 		Frame result = super.properties();
 		addSize(result);
 		addSpacing(result);
@@ -62,7 +62,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		OptionComponent option = element.asSelection().option();
 		Selector selector = option.core$().ownerAs(Selector.class);
 		result.addSlot("binding", new Frame("binding")
-			  								.addSlot("name", element.name$())
+			  								.addSlot("name", clean(element.name$()))
 			  								.addSlot("selector", selector.name$())
 											.addSlot("option", shortId(option)));
 	}

@@ -37,7 +37,7 @@ def type(desktop)
 			@Override
 			public void init() {
 				super.init();
-				$component+references...[$NL][
+				$componentReferences[
 				$component+initializations...[$NL]]
 			}[
 
@@ -51,4 +51,12 @@ def type(desktop)
         	}
 		}
     }
+end
+
+def type(componentReferences & forBlock)
+	$component+blockReferences...[$NL]
+end
+
+def type(componentReferences)
+	$component+references...[$NL]
 end

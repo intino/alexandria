@@ -60,10 +60,8 @@ Concept ChildComponents
 	Concept Number extends Component
 
 	Concept Date extends Component
-		var string format = "dd/MM/yyyy"
-
-	Concept DateTime extends Component
-		var string format = "dd/MM/yyyy HH:mm:ss"
+		var string format = "dd/MM/YYYY"
+		var word:{FromNow ToNow None} mode = None
 
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter
@@ -119,3 +117,6 @@ Concept ChildComponents
 
 	Concept Selector extends Component
 		has Component
+
+	Concept EmbeddedDisplay extends Component
+		var Display display

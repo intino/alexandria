@@ -17,6 +17,8 @@ Component tab as Decorated
 Component icon as Decorated
 Component taskOperation as Decorated
 Component optionList as Decorated
+Component embeddedDisplay as Decorated
+	Notification refresh as Text
 
 Component selectorMenu as Decorated
 	Notification refreshSelected as Integer
@@ -25,6 +27,9 @@ Component selectorMenu as Decorated
 
 Component text as Decorated
 	Notification refresh as Text
+
+Component Date as Decorated
+	Notification refresh as DateTime
 
 Component textCode as Decorated
 	Notification refresh as Text
