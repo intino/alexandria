@@ -37,10 +37,16 @@ public abstract class Service {
 	}
 
 	void send(String message) {
-		TopicProducer producer = newProducer();
-		if (producer == null) return;
-		producer.produce(MessageFactory.createMessageFor(message));
-		producer.close();
+		try {
+			TopicProducer producer = newProducer();
+			if (producer == null) return;
+			Message jmsMessage = MessageFactory.createMessageFor(message);
+			jmsMessage.setJMSReplyTo(this.session.createTemporaryQueue());
+			producer.produce(jmsMessage);
+			producer.close();
+		} catch (JMSException e) {
+			Logger.error(e);
+		}
 	}
 
 	protected abstract TopicProducer newProducer();

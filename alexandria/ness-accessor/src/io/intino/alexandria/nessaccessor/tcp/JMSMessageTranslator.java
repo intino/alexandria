@@ -1,4 +1,4 @@
-package io.intino.alexandria.nessaccessor;
+package io.intino.alexandria.nessaccessor.tcp;
 
 
 import io.intino.alexandria.inl.Message;
@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toMap;
 
-public class MessageTranslator {
+public class JMSMessageTranslator {
 
 	private static String ATTACHMENT_IDS = "__attachment-ids__";
 	private static String ATTACHMENT_SIZES = "__attachment-sizes__";
@@ -54,7 +54,7 @@ public class MessageTranslator {
 
 	private static List<Attachment> getAttachments(Message message) {
 		List<Attachment> attachments = new ArrayList<>(message.attachments());
-		message.components().stream().map(MessageTranslator::getAttachments).forEach(attachments::addAll);
+		message.components().stream().map(JMSMessageTranslator::getAttachments).forEach(attachments::addAll);
 		return attachments;
 	}
 

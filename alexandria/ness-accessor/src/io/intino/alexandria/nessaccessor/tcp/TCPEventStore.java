@@ -4,7 +4,6 @@ import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.jms.TopicConsumer;
 import io.intino.alexandria.jms.TopicProducer;
 import io.intino.alexandria.logger.Logger;
-import io.intino.alexandria.nessaccessor.MessageTranslator;
 import io.intino.alexandria.nessaccessor.tcp.TCPDatalake.Connection;
 import io.intino.alexandria.zim.ZimStream;
 import io.intino.alexandria.zim.ZimStream.Merge;
@@ -117,11 +116,11 @@ public class TCPEventStore implements Datalake.EventStore {
 			Logger.error("Session closed");
 			return;
 		}
-		producer(topic).produce(MessageTranslator.fromInlMessage(message));
+		producer(topic).produce(JMSMessageTranslator.fromInlMessage(message));
 	}
 
 	private void handle(javax.jms.Message message, MessageHandler[] messageHandlers) {
-		for (MessageHandler handler : messageHandlers) handler.handle(MessageTranslator.toInlMessage(message));
+		for (MessageHandler handler : messageHandlers) handler.handle(JMSMessageTranslator.toInlMessage(message));
 	}
 
 	private String feedProbe(String name) {
