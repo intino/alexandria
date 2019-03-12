@@ -1,8 +1,8 @@
 import io.intino.alexandria.Timetag;
 import io.intino.alexandria.inl.Message;
-import io.intino.alexandria.nessaccessor.stages.LocalStage;
 import io.intino.alexandria.zim.ZimReader;
 import io.intino.ness.core.fs.FSDatalake;
+import io.intino.ness.core.fs.FSStage;
 import io.intino.ness.core.sessions.EventSession;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class EventSession_ {
 	public void should_create_event_blobs() {
 		File temp = new File("temp");
 		deleteDirectory(temp);
-		LocalStage stage = new LocalStage(new File("temp"));
+		FSStage stage = new FSStage(new File("temp"));
 		EventSession session = stage.createEventSession();
 		Timetag timetag = new Timetag("201809");
 		Instant instant = Instant.parse("2018-09-10T00:00:00Z");
