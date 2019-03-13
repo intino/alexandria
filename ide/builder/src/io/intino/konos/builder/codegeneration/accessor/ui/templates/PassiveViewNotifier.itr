@@ -8,7 +8,8 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
         this.setup();
     };
 
-    setup = () => {
+    setup() {
+    	super.setup();
 		if (this.element == null || this.pushLinked) return;
 		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.element.refreshBaseUrl(parameters.v));
 		this.when("refreshError").toSelf().execute((parameters) => this.element.refreshError(parameters.v));
@@ -27,7 +28,8 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
         this.setup();
     };
 
-    setup = () => {
+    setup() {
+		super.setup();
 		if (this.element == null || this.pushLinked) return;
 		$notification...[$NL]
 		this.pushLinked = true;

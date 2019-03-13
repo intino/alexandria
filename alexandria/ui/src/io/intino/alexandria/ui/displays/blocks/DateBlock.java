@@ -26,6 +26,7 @@ public class DateBlock extends AbstractDateBlock<UiFrameworkBox> {
         PropertiesDisplay display = new PropertiesDisplay(box());
         display.properties(propertyList());
         dateProperties.set(display);
+        dateProperties.refresh();
     }
 
     private List<Property> propertyList() {

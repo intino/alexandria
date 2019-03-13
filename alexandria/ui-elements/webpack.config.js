@@ -12,6 +12,10 @@ module.exports = {
             {
                 test: /\.html$/,
                 loader: "html-loader"
+            },
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
             }
         ]
     },
@@ -22,7 +26,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            "alexandria-ui-elements": path.resolve(__dirname, '.')
+            "alexandria-ui-elements": path.resolve(__dirname, '.'),
+            "app-elements": path.resolve(__dirname, '.')
         }
     },
     plugins: [

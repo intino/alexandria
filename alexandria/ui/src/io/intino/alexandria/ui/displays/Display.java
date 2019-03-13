@@ -33,6 +33,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	public Display(B box) {
 		this.box = box;
 		this.id = UUID.randomUUID().toString();
+		propertyList.put("id", id);
 	}
 
 	public <D extends Display> D id(String id) {
@@ -131,8 +132,8 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return id;
 	}
 
-	public void die() {
-		notifier.die(id);
+	public void remove() {
+		notifier.remove(id);
 	}
 
 	public List<Display> children() {
@@ -197,7 +198,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public void removeChild(Display display) {
-		display.die();
+		display.remove();
 		children.remove(display);
 		repository.remove(display.id);
 	}

@@ -7,6 +7,11 @@ def type(notifier)
     		this.pushLinked = false;
         };
 
+		setup() {
+			this.when("add").toSelf().execute((parameters) => this.element.add(parameters));
+			this.when("remove").toSelf().execute((parameters) => this.element.remove(parameters));
+		};
+
 		when = (message) => {
 			var register = _register.bind(this);
 			var element = this.element;

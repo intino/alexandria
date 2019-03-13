@@ -61,7 +61,7 @@ def type(component & child) trigger(initializations)
 end
 
 def type(component & child)
-	$name = register(new $name+firstUpperCase(box()).id("$id"));
+	$name = register(new $name+firstUpperCase(box())$properties+common$properties+specific~.id("$id"));
 end
 
 def type(facet)
@@ -78,4 +78,14 @@ end
 
 def type(implements)
 	implements --undefined--
+end
+
+def type(properties & block) trigger(common)
+	[.label("$label")]
+end
+
+def type(properties) trigger(common)
+end
+
+def type(properties) trigger(specific)
 end

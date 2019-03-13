@@ -13,6 +13,7 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     public void init() {
         super.init();
         updateTextPanel();
+        menu.select("Date");
     }
 
     private void updateTextPanel() {

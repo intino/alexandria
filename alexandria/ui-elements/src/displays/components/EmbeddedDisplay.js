@@ -1,11 +1,12 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import AbstractEmbeddedDisplay from "../../../gen/displays/components/AbstractEmbeddedDisplay";
 import EmbeddedDisplayNotifier from "../../../gen/displays/notifiers/EmbeddedDisplayNotifier";
 import EmbeddedDisplayRequester from "../../../gen/displays/requesters/EmbeddedDisplayRequester";
 
 export default class EmbeddedDisplay extends AbstractEmbeddedDisplay {
 	state = {
-		properties : []
+		display : null
 	};
 
 	constructor(props) {
@@ -15,7 +16,7 @@ export default class EmbeddedDisplay extends AbstractEmbeddedDisplay {
 	};
 
 	render() {
-		return (<React.Fragment>{this.props.children}</React.Fragment>);
-	}
+		return (<React.Fragment>{this.renderElements()}</React.Fragment>);
+	};
 
 }

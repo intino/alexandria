@@ -18,12 +18,16 @@ Component icon as Decorated
 Component taskOperation as Decorated
 Component optionList as Decorated
 Component embeddedDisplay as Decorated
-	Notification refresh as Text
+	Notification refreshDisplay as Text
 
 Component selectorMenu as Decorated
-	Notification refreshSelected as Integer
+	Notification refreshSelected as Object(SelectorMenuSelection)
 
 	Request select as Integer
+
+Schema SelectorMenuSelection
+	Attribute option as Integer
+	Attribute ancestors as Text List
 
 Component text as Decorated
 	Notification refresh as Text
