@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractDateBlock from "../../../gen/displays/blocks/AbstractDateBlock";
 import DateBlockNotifier from "../../../gen/displays/notifiers/DateBlockNotifier";
 import DateBlockRequester from "../../../gen/displays/requesters/DateBlockRequester";
+import Displays from "../../../gen/Displays";
 
 const styles = theme => ({});
 

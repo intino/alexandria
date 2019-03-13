@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.SelectorMenuSelection;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.components.selector.SelectorOption;
@@ -9,6 +10,8 @@ import io.intino.alexandria.ui.displays.events.SelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> implements Selector {
 	private int selected;
@@ -46,14 +49,20 @@ public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> impleme
 	}
 
 	public void select(String option) {
-		this.select(position(option));
+		int position = position(option);
+		if (position == -1) return;
+		this.select(position);
 	}
 
 	public void select(int option) {
 		if (this.selected == option) return;
 		this.selected = option;
 		notifySelection(option);
-		notifier.refreshSelected(option);
+		notifier.refreshSelected(new SelectorMenuSelection().option(option).ancestors(ancestors(option)));
+	}
+
+	private List<String> ancestors(int option) {
+		return findOption(option).ancestors().stream().map(Block::label).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	private void notifySelection(int option) {
@@ -89,9 +98,11 @@ public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> impleme
 
 	private int position(String option) {
 		List<SelectorOption> options = options();
-		for (int i = 0; i< options.size(); i++)
-			if (options.get(i).id().equals(option))
+		for (int i = 0; i< options.size(); i++) {
+			SelectorOption selectorOption = options.get(i);
+			if (selectorOption.name().equalsIgnoreCase(option) || selectorOption.id().equals(option))
 				return i;
+		}
 		return -1;
 	}
 

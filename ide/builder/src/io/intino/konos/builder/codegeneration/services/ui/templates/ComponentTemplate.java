@@ -28,11 +28,14 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "component & child")), (condition("trigger", "blockReferences"))).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box()).id(\"")).add(mark("id")).add(literal("\"));")).add(expression().add(literal("\n")).add(mark("component", "blockChildReferences").multiple("\n"))),
 			rule().add((condition("type", "component & child")), (condition("trigger", "references"))).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box()).id(\"")).add(mark("id")).add(literal("\"));")).add(expression().add(literal("\n")).add(mark("component", "childReferences").multiple("\n"))),
 			rule().add((condition("type", "component & child")), (condition("trigger", "initializations"))).add(mark("binding")).add(expression().add(literal("\n")).add(mark("component", "initializations").multiple("\n"))),
-			rule().add((condition("type", "component & child"))).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box()).id(\"")).add(mark("id")).add(literal("\"));")),
+			rule().add((condition("type", "component & child"))).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box())")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal(".id(\"")).add(mark("id")).add(literal("\"));")),
 			rule().add((condition("type", "facet"))).add(mark("name", "firstUpperCase")),
 			rule().add((condition("type", "binding"))).add(mark("name")).add(literal(".bindTo(")).add(mark("selector")).add(literal(", \"")).add(mark("option")).add(literal("\");")),
 			rule().add((condition("type", "implements & option"))).add(literal("implements io.intino.alexandria.ui.displays.components.selector.SelectorOption")),
-			rule().add((condition("type", "implements"))).add(literal("implements --undefined--"))
+			rule().add((condition("type", "implements"))).add(literal("implements --undefined--")),
+			rule().add((condition("type", "properties & block")), (condition("trigger", "common"))).add(expression().add(literal(".label(\"")).add(mark("label")).add(literal("\")"))),
+			rule().add((condition("type", "properties")), (condition("trigger", "common"))),
+			rule().add((condition("type", "properties")), (condition("trigger", "specific")))
 		);
 		return this;
 	}

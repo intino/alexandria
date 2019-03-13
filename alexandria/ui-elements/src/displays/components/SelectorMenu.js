@@ -90,8 +90,10 @@ class SelectorMenu extends AbstractSelectorMenu {
 		this.setState({ open : open });
 	};
 
-	refreshSelected = (selected) => {
-		this.setState({ selected });
+	refreshSelected = (selection) => {
+        const open = this.state.open;
+        selection.ancestors.forEach(a => open[a] = true);
+		this.setState({ selected: selection.option, open: open });
 	};
 }
 

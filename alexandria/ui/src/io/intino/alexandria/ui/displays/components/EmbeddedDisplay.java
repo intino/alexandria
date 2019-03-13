@@ -15,8 +15,8 @@ public class EmbeddedDisplay<B extends Box> extends AbstractEmbeddedDisplay<B> {
     }
 
     @Override
-    public void init() {
-        super.init();
-        notifier.add(display);
+    public void refresh() {
+        super.refresh();
+        if (display != null) add(display);
     }
 }

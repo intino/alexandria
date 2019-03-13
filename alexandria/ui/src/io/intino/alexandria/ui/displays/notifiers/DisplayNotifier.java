@@ -21,11 +21,11 @@ public class DisplayNotifier {
     public void add(Display child) {
         String type = child.getClass().getSimpleName();
         PropertyList propertyList = child.properties();
-        put("addChild", addIdAndNameTo(registerParameters(type, propertyList)));
+        put("add", addIdAndNameTo(registerParameters(type, propertyList)));
     }
 
-    public void die(String id) {
-        put("die", singletonMap("id", id));
+    public void remove(String id) {
+        put("remove", singletonMap("id", id));
     }
 
     protected void put(String message) {

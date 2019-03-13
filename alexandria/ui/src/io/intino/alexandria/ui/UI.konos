@@ -86,12 +86,8 @@ Block(layout=Vertical, spacing=DP24) textBlock
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Block dateBlock as Decorated
+Block(layout=Vertical, spacing=DP24) dateBlock as Decorated
 	Block
-		Text(value="Properties", format=H5)
-		EmbeddedDisplay(display=propertiesDisplay) dateProperties
-
-	Block > Text(value="Examples", format=H5)
 		Date(mode=FromNow, format="dd/MM/YYYY") dateA
 		Block > Text dateACode as Code(Html)
 				value
@@ -99,6 +95,10 @@ Block dateBlock as Decorated
 					Konos: Date date1<br/><br/>
 					&nbsp;Java: date1.update(Instant.now())
 					=========
+
+	Block
+		Text(value="Properties", format=H5)
+		EmbeddedDisplay(display=propertiesDisplay) dateProperties
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List
