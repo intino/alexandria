@@ -7,24 +7,27 @@ import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.ChildComponents.*;
 import io.intino.konos.model.graph.Component;
+import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.Editable;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
+import io.intino.konos.model.graph.instance.InstanceBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
 import io.intino.konos.model.graph.selection.SelectionBlock;
+import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
 	private boolean decorated;
+	private Display owner;
 	private static final ComponentRendererFactory factory = new ComponentRendererFactory();
 
 	public ComponentRenderer(Settings settings, C component, TemplateProvider provider, Target target) {
@@ -36,11 +39,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
 		frame.addSlot("id", shortId(element));
+		if (owner != null) frame.addSlot("owner", owner.name$());
 		frame.addSlot("properties", properties());
+		if (element.i$(InstanceBlock.class)) {
+			frame.addTypes("instanceBlock");
+			frame.addSlot("instanceBlockName", element.a$(InstanceBlock.class).type().name$());
+		}
 		if (buildChildren) frame.addTypes("child");
 		addComponents(element, frame);
 		addReferences(element, frame);
 		addFacets(element, frame);
+		addExtends(element, frame);
 		addImplements(element, frame);
 		return frame;
 	}
@@ -51,6 +60,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	public void decorated(boolean value) {
 		this.decorated = value;
+	}
+
+	public void owner(Display owner) {
+		this.owner = owner;
 	}
 
 	protected Frame properties(Component component) {
@@ -74,11 +87,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addReferences(Component component, Frame frame) {
-		List<Component> components = component.components();
+		Set<Component> components = new HashSet<>(component.components());
 		frame.addSlot("componentReferences", componentReferencesFrame());
-		components.forEach(c -> {
-			frame.addSlot( "reference", referenceFrame(c));
-		});
+		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
 	}
 
 	private Frame referenceFrame(Component component) {
@@ -86,7 +97,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		frame.addSlot("box", boxName());
 		frame.addSlot("id", shortId(component));
 		frame.addSlot("properties", properties(component));
-		addFacets(component, frame);
+		addExtends(component, frame);
 		return frame;
 	}
 
@@ -112,21 +123,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return properties(element);
 	}
 
-	private void addFacets(Component component, Frame result) {
-		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
-		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
-		if (component.i$(SelectionBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectionBlock.class.getSimpleName().replace("Block", "")));
-		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
-		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
-	}
-
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
 		while (parent != null) {
-			result.add(0, clean(parent.name$()));
+			result.add(0, nameOf(parent));
 			parent = parent.core$().ownerAs(Component.class);
 		}
 		return result.toArray(new String[0]);
@@ -136,6 +137,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		renderer.buildChildren(true);
 		renderer.decorated(decorated);
+		renderer.owner(owner);
 		return renderer;
 	}
 
@@ -150,6 +152,37 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Content.class)) components.addAll(component.a$(Content.class).componentList());
 		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
 		return components;
+	}
+
+	@NotNull
+	private List<Component> instanceBlocks(Component component) {
+		return components(component).stream().filter(c -> c.i$(InstanceBlock.class)).map(c -> c.a$(InstanceBlock.class).type()).distinct().collect(Collectors.toList());
+	}
+
+	protected void addExtends(Component element, Frame result) {
+		Frame frame = new Frame("extends");
+
+		if (element.i$(InstanceBlock.class)) {
+			frame.addTypes("blockInstance");
+			frame.addSlot("type", element.a$(InstanceBlock.class).type().name$());
+		}
+		else
+			frame.addSlot("type", type());
+
+		addFacets(element, frame);
+		addDecoratedFrames(frame, decorated);
+
+		result.addSlot("extends", frame);
+	}
+
+	protected void addFacets(Component component, Frame result) {
+		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
+		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
+		if (component.i$(SelectionBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectionBlock.class.getSimpleName().replace("Block", "")));
+		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
 	}
 
 	private void addImplements(C element, Frame frame) {

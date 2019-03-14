@@ -12,7 +12,7 @@ def type(display)
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
-    [	$component+declarations...[$NL]
+    	[$component+declarations...[$NL]
 
         ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);

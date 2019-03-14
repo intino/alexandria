@@ -10,6 +10,10 @@ public class EmbeddedDisplay<B extends Box> extends AbstractEmbeddedDisplay<B> {
         super(box);
     }
 
+    public <D extends Display> D get() {
+        return (D) this.display;
+    }
+
     public void set(Display display) {
         this.display = display;
     }

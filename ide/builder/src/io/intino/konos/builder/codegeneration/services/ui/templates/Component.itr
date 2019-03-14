@@ -3,7 +3,11 @@ def type(reference) trigger(declaration)
 end
 
 def type(reference)
-	$name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+	$name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id").owner($owner+firstUpperCase.this));
+end
+
+def type(component & child & instanceBlock) trigger(declarations)
+	public $instanceBlockName+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declarations)
@@ -11,12 +15,19 @@ def type(component & child) trigger(declarations)
 	$component+declarations...[$NL]]
 end
 
+def type(component & child & instanceBlock) trigger(declaration)
+	public $instanceBlockName+firstUpperCase $name;
+end
+
 def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
+def type(component & child & instanceBlock) trigger(class)
+end
+
 def type(component & child) trigger(class)
-	public class $name+firstUpperCase extends io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>[ $implements] {
+	public class $name+firstUpperCase extends $extends[ $implements] {
 		[$reference+declaration...[$NL]
 		][$component+declaration...[$NL]]
 
@@ -35,6 +46,14 @@ def type(component & child) trigger(class)
 	}
 end
 
+def type(extends & blockInstance)
+	$type+firstUpperCase
+end
+
+def type(extends)
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>
+end
+
 def type(component & child) trigger(blockChildReferences)
 	$name = [$ancestorsNotMe...[.].]$name;[
 	$component+blockChildReferences...[$NL]]
@@ -46,12 +65,12 @@ def type(component & child) trigger(childReferences)
 end
 
 def type(component & child) trigger(blockReferences)
-	$name = register(new $name+firstUpperCase(box()).id("$id"));[
+	$name = register(new $name+firstUpperCase(box()).id("$id").owner($owner+firstUpperCase.this));[
 	$component+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)
-	$name = register(new $name+firstUpperCase(box()).id("$id"));[
+	$name = register(new $name+firstUpperCase(box()).id("$id").owner($owner+firstUpperCase.this));[
 	$component+childReferences...[$NL]]
 end
 
@@ -60,8 +79,12 @@ def type(component & child) trigger(initializations)
 	$component+initializations...[$NL]]
 end
 
+def type(component & child & instanceBlock)
+	$name = register(new $instanceBlockName+firstUpperCase(($box+firstUpperCase~Box)box())$properties+common$properties+specific~.id("$id"));
+end
+
 def type(component & child)
-	$name = register(new $name+firstUpperCase(box())$properties+common$properties+specific~.id("$id"));
+	$name = register(new $name+firstUpperCase(box())$properties+common$properties+specific~.id("$id").owner($owner+firstUpperCase.this));
 end
 
 def type(facet)

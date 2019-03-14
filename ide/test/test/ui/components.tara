@@ -41,13 +41,9 @@ Template main as Decorated
 					Text(value="Wizard") wizard as Option
 
 		Block(layout=Vertical Flexible, style=theme1.air) panels
-			Block textPanel as Selection(main.body.header.menu.basicSection.text)
-				components = textBlock
-			Block imagePanel as Selection(main.body.header.menu.basicSection.image)
-				components = imageBlock
-			Block datePanel as Selection(main.body.header.menu.basicSection.date)
-				components = dateBlock
-
+			Block as Selection(main.body.header.menu.basicSection.text) > Block textPanel as Instance(type=widgetBlock)
+			Block as Selection(main.body.header.menu.basicSection.image) > Block imagePanel as Instance(type=widgetBlock)
+			Block as Selection(main.body.header.menu.basicSection.date) > Block datePanel as Instance(type=widgetBlock)
 
 Theme theme1
 	Palette
@@ -60,7 +56,7 @@ Theme theme1
 Translator(Spanish)
 	Translation("título del campo", "título del campo en dddd")
 
-Block(layout=Vertical, spacing=DP24) textBlock
+Block(layout=Vertical, spacing=DP24) widgetBlock
 
 	Block > Text(value="Campo texto", format=H5)
 		Text(format=Body1) valueA
@@ -86,12 +82,10 @@ Block(layout=Vertical, spacing=DP24) textBlock
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Block dateBlock as Decorated
-	Block
-		Text(value="Properties", format=H5)
-		EmbeddedDisplay(display=propertiesDisplay) dateProperties
+Block(layout=Vertical, spacing=DP24) dateBlock as Decorated
+	Text(value="Date widget", format=H3) title
 
-	Block > Text(value="Examples", format=H5)
+	Block
 		Date(mode=FromNow, format="dd/MM/YYYY") dateA
 		Block > Text dateACode as Code(Html)
 				value
@@ -100,11 +94,41 @@ Block dateBlock as Decorated
 					&nbsp;Java: date1.update(Instant.now())
 					=========
 
+	Block
+		Text(value="Properties", format=H5)
+		EmbeddedDisplay(display=propertiesDisplay) dateProperties
+	Block
+		Text(value="Methods", format=H5)
+		EmbeddedDisplay(display=methodsDisplay) dateMethods
+	Block
+		Text(value="Events", format=H5)
+		EmbeddedDisplay(display=eventsDisplay) dateEvents
+
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List
+
+Display methodsDisplay as Decorated
+	Notification refresh as Object(Method) List
+
+Display eventsDisplay as Decorated
+	Notification refresh as Object(Event) List
 
 Schema Property
 	Attribute name as Text
 	Attribute type as Word("Integer" "Word" "Text")
 	Attribute values as Text List
 	Attribute description as Text
+
+Schema Method
+	Attribute name as Text
+	Attribute params as Object(MethodParameter) List
+	Attribute description as Text
+	Attribute returnType as Text
+
+Schema MethodParameter
+	Attribute name as Text
+	Attribute type as Text
+
+Schema Event
+	Attribute name as Text
+	Attribute eventType as Text

@@ -18,7 +18,7 @@ public class Settings {
 	private String packageName;
 	private String boxName;
 	private Map<String, String> classes = new HashMap<>();
-	private static IdGenerator generator = new IdGenerator();
+	private static Map<Project, IdGenerator> generatorMap = new HashMap<>();
 
 	public Project project() {
 		return project;
@@ -102,7 +102,8 @@ public class Settings {
 	}
 
 	public IdGenerator idGenerator() {
-		return generator;
+		if (!generatorMap.containsKey(project)) generatorMap.put(project, new IdGenerator());
+		return generatorMap.get(project);
 	}
 
 }

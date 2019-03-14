@@ -1,7 +1,8 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.blocks.TextBlock;
+import io.intino.alexandria.ui.displays.blocks.WidgetBlock;
+import io.intino.alexandria.ui.displays.blocks.WidgetHelper;
 
 public class Main extends AbstractMain<UiFrameworkBox> {
 
@@ -12,30 +13,23 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        updateTextPanel();
-        menu.select("Date");
-    }
-
-    private void updateTextPanel() {
         title.update("Alexandria widgets");
-        updateTextBlock();
-//        int[] counter = new int[1];
-//        Timer timer = new Timer();
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                panels.textPanel.valueC.update("valor C " + counter[0]);
-//                counter[0]++;
-//            }
-//        }, 1000, 1000);
+        menu.select("Date");
+        updatePanels();
     }
 
-    private void updateTextBlock() {
-        TextBlock textBlock = panels.textPanel.textBlock;
-        textBlock.valueA.update("abcd");
-        textBlock.valueB.update("efgh");
-        textBlock.valueC.update("ijkl");
-        textBlock.valueC.onChange((e) -> System.out.println((String) e.value()));
+    private void updatePanels() {
+        updatePanel(panels.textPanel.textBlock, WidgetHelper.WidgetType.Text);
+        updatePanel(panels.imagePanel.imageBlock, WidgetHelper.WidgetType.Image);
+        updatePanel(panels.datePanel.dateBlock, WidgetHelper.WidgetType.Date);
+    }
+
+    private void updatePanel(WidgetBlock block, WidgetHelper.WidgetType type) {
+        block.title.update(type.name().toLowerCase() + " widget");
+        block.properties(WidgetHelper.properties(type));
+        block.methods(WidgetHelper.methods(type));
+        block.events(WidgetHelper.events(type));
+        block.refresh();
     }
 
 }
