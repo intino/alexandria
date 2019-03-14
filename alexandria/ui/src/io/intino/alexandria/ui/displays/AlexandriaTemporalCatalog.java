@@ -117,6 +117,12 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	@Override
+	public Item item(String key) {
+		Item item = super.item(key);
+		return item != null ? item : element().item(key, queryRange(range()), session());
+	}
+
+	@Override
 	public Item rootItem(List<Item> itemList) {
 		return element().rootItem(itemList, queryRange(range()), session());
 	}

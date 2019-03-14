@@ -40,7 +40,7 @@ def type(catalog & gen)
 			$hasCustomItemsArrivalMessage][
 			$toolbar+empty~catalog.toolbar(buildToolbar(box));][
 			catalog.name("$name")][.label("$label")];
-			catalog.objectLoader((id, session) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id, session))
+			catalog.objectLoader((id[, $mode+timerange], session) -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase(box, id[, $mode+timerange], session))
 				.objectIdLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Id(box, ($type)object))
 				.objectNameLoader(object -> $name+firstUpperCase.Source.$type+shortType+firstLowerCase~Name(box, ($type) object));
     		buildViews(box).forEach(v -> catalog.add(v));

@@ -11,6 +11,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class TemporalCatalog extends Catalog {
+	private ObjectLoader objectLoader;
 	private ObjectsLoader objectsLoader;
 	private RootObjectLoader rootObjectLoader;
 	private DefaultObjectLoader defaultObjectLoader;
@@ -32,6 +33,10 @@ public class TemporalCatalog extends Catalog {
 	public TemporalCatalog type(Type type) {
 		this.type = type;
 		return this;
+	}
+
+	public Item item(String id, TimeRange range, UISession session) {
+		return objectLoader != null ? item(objectLoader.load(id, range, session)) : null;
 	}
 
 	public Item rootItem(List<Item> itemList, TimeRange range, UISession session) {
@@ -58,6 +63,11 @@ public class TemporalCatalog extends Catalog {
 		if (item == null) return null;
 		item.created(created(object));
 		return item;
+	}
+
+	public Element objectLoader(ObjectLoader loader) {
+		this.objectLoader = loader;
+		return this;
 	}
 
 	public ItemList items(Scope scope, String condition, TimeRange range, UISession session) {
@@ -121,6 +131,10 @@ public class TemporalCatalog extends Catalog {
 	public TemporalCatalog temporalFilter(TemporalFilter filter) {
 		this.temporalFilter = filter;
 		return this;
+	}
+
+	public interface ObjectLoader {
+		Object load(String id, TimeRange range, UISession session);
 	}
 
 	public interface ObjectsLoader {
