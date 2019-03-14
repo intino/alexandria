@@ -21,7 +21,9 @@ def type(notifier)
 					return {
 						execute: function (action) {
 							register(pushService.listen(message, function (parameters) {
-								if (parameters.i === element.props.id) {
+								let id = parameters.i;
+								let owner = parameters.o;
+								if (id === element.props.id && (owner == null || owner === "" || owner === element.props.owner)) {
 									action(parameters);
 								}
 							}));

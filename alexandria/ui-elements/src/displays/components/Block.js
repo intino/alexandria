@@ -43,7 +43,7 @@ export default class Block extends AbstractBlock {
 			  justify={justify}
 			  alignItems={alignItems}>
 			  {React.Children.map(this.props.children, (child, i) => {
-			  	return isVerticalSpacing ? <div style={{paddingBottom: this.props.spacing + "px"}}>{child}</div> : child;
+			  	  return isVerticalSpacing ? <div style={{paddingBottom: this.props.spacing + "px"}}>{child}</div> : child;
 			  })}
 			</Grid>
 		);

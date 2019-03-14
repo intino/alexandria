@@ -28,6 +28,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
+		if (element.isInstance()) result.addSlot("instance", "true");
 		if (element.isCollapsible()) result.addSlot("collapsible", "true");
 		return result;
 	}
@@ -62,7 +63,7 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 		OptionComponent option = element.asSelection().option();
 		Selector selector = option.core$().ownerAs(Selector.class);
 		result.addSlot("binding", new Frame("binding")
-			  								.addSlot("name", clean(element.name$()))
+			  								.addSlot("name", nameOf(element))
 			  								.addSlot("selector", selector.name$())
 											.addSlot("option", shortId(option)));
 	}

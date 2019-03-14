@@ -7,11 +7,15 @@ import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
 import io.intino.tara.magritte.Layer;
+import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
+
+import static io.intino.konos.model.graph.Utils.isUUID;
 
 public abstract class UIRenderer {
 	protected Settings settings;
@@ -26,7 +30,7 @@ public abstract class UIRenderer {
 	public static final String Displays = "%sdisplays";
 	public static final String DisplaysType = "%sdisplays/%ss";
 
-	public enum Target { Accessor, Service }
+	public enum Target {Accessor, Service}
 
 	protected UIRenderer(Settings settings, Target target) {
 		this.settings = settings;
@@ -118,6 +122,12 @@ public abstract class UIRenderer {
 		return Character.isDigit(name.charAt(0)) ? "_" + name : name;
 	}
 
+	protected String nameOf(Layer element) {
+		String result = element.name$();
+		if (!isUUID(result)) return result;
+		return generateName(element);
+	}
+
 	protected String typeOf(PassiveView element) {
 		if (element.i$(Display.class)) return typeOf(element.a$(Display.class));
 		return element.getClass().getSimpleName();
@@ -139,7 +149,28 @@ public abstract class UIRenderer {
 	}
 
 	protected String shortId(Layer element, String suffix) {
-		return settings.idGenerator().shortId(element.core$().id() + suffix);
+		return settings.idGenerator().shortId(nameOf(element) + suffix);
+	}
+
+	private String generateName(Layer element) {
+		return generateName(element.core$(), "");
+	}
+
+	private String generateName(Node element, String name) {
+		Node owner = element.owner();
+		if (isRoot(owner)) return owner.name() + position(element, owner);
+		return generateName(owner, name) + position(element, owner);
+	}
+
+	private int position(Node element, Node owner) {
+		List<Node> children = owner.componentList();
+		for (int pos = 0; pos< children.size(); pos++)
+			if (children.get(pos).id().equals(element.id())) return pos;
+		return -1;
+	}
+
+	private boolean isRoot(Node node) {
+		return node.owner() == node.model();
 	}
 
 }

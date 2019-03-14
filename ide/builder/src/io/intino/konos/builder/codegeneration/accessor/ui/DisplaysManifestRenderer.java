@@ -34,7 +34,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 
 	private Frame frameOf(Display display) {
 		Frame result = new Frame("display", typeOf(display));
-		result.addSlot("name", clean(display.name$()));
+		result.addSlot("name", nameOf(display));
 		result.addSlot("directory", display.isDecorated() ? "src" : "gen");
 		return result;
 	}

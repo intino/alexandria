@@ -41,13 +41,9 @@ Template main as Decorated
 					Text(value="Wizard") wizard as Option
 
 		Block(layout=Vertical Flexible, style=theme1.air) panels
-			Block textPanel as Selection(main.body.header.menu.basicSection.text)
-				components = textBlock
-			Block imagePanel as Selection(main.body.header.menu.basicSection.image)
-				components = imageBlock
-			Block datePanel as Selection(main.body.header.menu.basicSection.date)
-				components = dateBlock
-
+			Block textPanel as Selection(main.body.header.menu.basicSection.text) > Block textBlock as Instance(type=widgetBlock)
+			Block imagePanel as Selection(main.body.header.menu.basicSection.image) > Block imageBlock as Instance(type=widgetBlock)
+			Block datePanel as Selection(main.body.header.menu.basicSection.date) > Block dateBlock as Instance(type=widgetBlock)
 
 Theme theme1
 	Palette
@@ -60,42 +56,43 @@ Theme theme1
 Translator(Spanish)
 	Translation("título del campo", "título del campo en dddd")
 
-Block(layout=Vertical, spacing=DP24) textBlock
-
-	Block > Text(value="Campo texto", format=H5)
-		Text(format=Body1) valueA
-		Block > Text valueACode as Code(Html)
-				value
-					=========
-					Konos: Text text1<br/><br/>
-					&nbsp;Java: text1.update("abcd")
-					=========
-	Block > Text(value="Campo texto con título", format=H5)
-		Text(format=Body1) valueB > label = "título del campo"
-		Block > Text valueBCode as Code(Html)
-				value
-					=========
-					Konos: Text text1<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
-					&nbsp;Java: text1.update("efgh")
-					=========
-
-	Block > Text(value="Campo texto editable", format=H5)
-		Text(format=Body1) valueC as Editable > label = "campo editable"
+//Block(layout=Vertical, spacing=DP24) widgetBlock
+//
+//	Block > Text(value="Campo texto", format=H5)
+//		Text(format=Body1) valueA
+//		Block > Text valueACode as Code(Html)
+//				value
+//					=========
+//					Konos: Text text1<br/><br/>
+//					&nbsp;Java: text1.update("abcd")
+//					=========
+//	Block > Text(value="Campo texto con título", format=H5)
+//		Text(format=Body1) valueB > label = "título del campo"
+//		Block > Text valueBCode as Code(Html)
+//				value
+//					=========
+//					Konos: Text text1<br/>
+//					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
+//					&nbsp;Java: text1.update("efgh")
+//					=========
+//
+//	Block > Text(value="Campo texto editable", format=H5)
+//		Text(format=Body1) valueC as Editable > label = "campo editable"
 
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Block(layout=Vertical, spacing=DP24) dateBlock as Decorated
-	Text(label="Date widget", format=H3)
-	Block
-		Date(mode=FromNow, format="dd/MM/YYYY") dateA
-		Block > Text dateACode as Code(Html)
-				value
-					=========
-					Konos: Date date1<br/><br/>
-					&nbsp;Java: date1.update(Instant.now())
-					=========
+Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
+	Text(value="Date widget", format=H3) title
+
+//	Block
+//		Date(mode=FromNow, format="dd/MM/YYYY") dateA
+//		Block > Text dateACode as Code(Html)
+//				value
+//					=========
+//					Konos: Date date1<br/><br/>
+//					&nbsp;Java: date1.update(Instant.now())
+//					=========
 
 	Block
 		Text(value="Properties", format=H5)

@@ -25,6 +25,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	protected N notifier;
 	private io.intino.alexandria.ui.SoulProvider soulProvider;
 	private UISession session;
+	private Display parent = null;
 	private Display owner = null;
 	private Boolean dirty = null;
 	private List<String> route = new ArrayList<>();
@@ -38,6 +39,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D id(String id) {
 		this.id = id;
+		return (D) this;
+	}
+
+	public Display owner() {
+		return owner;
+	}
+
+	public <D extends Display> D owner(Display owner) {
+		this.owner = owner;
 		return (D) this;
 	}
 
@@ -161,7 +171,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D register(D child) {
-		((Display)child).owner(this);
+		((Display)child).parent(this);
 		repository.register(child);
 		children.add(child);
 		child.init();
@@ -174,22 +184,22 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return child;
 	}
 
-	public <T extends Display> T owner() {
-		return (T) owner;
+	public <T extends Display> T parent() {
+		return (T) parent;
 	}
 
 	public <T extends Display> T parent(Class<T> type) {
-		return parent(owner, type);
+		return parent(parent, type);
 	}
 
 	public <T extends Display> T parent(Display display, Class<T> type) {
 		if (display == null) return null;
 		if (type.isAssignableFrom(display.getClass())) return (T) display;
-		return parent(display.owner(), type);
+		return parent(display.parent(), type);
 	}
 
-	private void owner(Display owner) {
-		this.owner = owner;
+	private void parent(Display parent) {
+		this.parent = parent;
 	}
 
 	public void remove(Class<? extends Display> clazz) {

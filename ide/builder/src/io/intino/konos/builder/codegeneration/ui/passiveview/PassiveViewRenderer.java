@@ -35,7 +35,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
 		frame.addSlot("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
 		frame.addSlot("parentType", parentType());
-		frame.addSlot("name", clean(element.name$()));
+		frame.addSlot("name", nameOf(element));
 		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
 		frame.addSlot("request", framesOfRequests(element.requestList()));
 		return frame;
@@ -45,6 +45,10 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		writeNotifier(frame);
 		writeRequester(frame);
 		writePushRequester(frame);
+	}
+
+	protected String type() {
+		return typeOf(element.a$(Display.class));
 	}
 
 	private void writeRequester(Frame frame) {
@@ -89,10 +93,6 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	private Template displayPushRequesterTemplate() {
 		Template template = pushRequesterTemplate();
 		return template != null ? setup(template) : null;
-	}
-
-	private String type() {
-		return typeOf(element.a$(Display.class));
 	}
 
 	private Frame parentType() {

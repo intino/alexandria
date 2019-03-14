@@ -69,7 +69,7 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	private Frame newDisplayFrame(Display display, Frame frame) {
-		frame.addSlot("name", clean(display.name$())).addSlot("package", packageName());
+		frame.addSlot("name", nameOf(display)).addSlot("package", packageName());
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
 			frame.addSlot("asset", display.name$());
 		return frame;
