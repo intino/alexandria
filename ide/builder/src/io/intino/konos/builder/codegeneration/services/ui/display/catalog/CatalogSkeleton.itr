@@ -37,7 +37,7 @@ def type(catalog)
     			return java.util.Collections.emptyList();//TODO
     		}
 
-    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id, UISession session) {
+    		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id[, $mode+timerange range], UISession session) {
     			return null;//TODO
     		}
     		[

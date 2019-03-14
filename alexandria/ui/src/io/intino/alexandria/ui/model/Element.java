@@ -81,11 +81,11 @@ public abstract class Element {
 	}
 
 	private String id(Object object) {
-		return objectLoader != null ? objectIdLoader.load(object) : null;
+		return objectIdLoader != null ? objectIdLoader.load(object) : null;
 	}
 
 	private String name(Object object) {
-		return objectLoader != null ? objectNameLoader.load(object) : null;
+		return objectNameLoader != null ? objectNameLoader.load(object) : null;
 	}
 
 	public interface ObjectLoader {
