@@ -22,6 +22,7 @@ import org.siani.itrules.model.Frame;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static java.util.stream.Collectors.toList;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
@@ -39,7 +40,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
 		frame.addSlot("id", shortId(element));
-		if (owner != null) frame.addSlot("owner", owner.name$());
+		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		frame.addSlot("properties", properties());
 		if (element.i$(InstanceBlock.class)) {
 			frame.addTypes("instanceBlock");
