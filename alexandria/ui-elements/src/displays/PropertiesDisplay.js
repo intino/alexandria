@@ -39,11 +39,14 @@ class PropertiesDisplay extends AbstractPropertiesDisplay {
 
 	render() {
         const { classes } = this.props;
+        const propertyList = this.state.propertyList;
 		return (
-			<ul className={classes.list}>
-				{this.state.propertyList.map((property, index) => this.renderProperty(property, index))}
-			</ul>
+			<ul className={classes.list}>{propertyList != null && propertyList.length > 0 ? this.renderProperties() : this.emptyProperties() }</ul>
 		);
+	};
+
+	renderProperties = () => {
+		return this.state.propertyList.map((property, index) => this.renderProperty(property, index));
 	};
 
 	renderProperty = (property, index) => {
@@ -66,6 +69,10 @@ class PropertiesDisplay extends AbstractPropertiesDisplay {
 			</div>
 		);
     };
+
+	emptyProperties = () => {
+		return (<li>{this.translate("no properties")}</li>);
+	};
 
 	refresh = (propertyList) => {
 		this.setState({ propertyList });
