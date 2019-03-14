@@ -13,3 +13,4 @@ alexandria/activity-elements-activity/package.json
 gulpFile.js
 alexandria/ui-elements-old
 alexandria/ui-elements-new
+alexandria/ui-elements/node_modules

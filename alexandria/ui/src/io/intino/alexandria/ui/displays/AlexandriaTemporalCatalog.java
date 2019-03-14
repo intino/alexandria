@@ -182,7 +182,8 @@ public abstract class AlexandriaTemporalCatalog<DN extends AlexandriaDisplayNoti
 	}
 
 	protected void refresh(Instant instant) {
-		forceRefresh();
+		dirty(true);
+		refresh();
 	}
 
 	protected void refresh(TimeRange range) {
