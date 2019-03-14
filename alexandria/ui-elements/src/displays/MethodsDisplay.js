@@ -50,7 +50,7 @@ class MethodsDisplay extends AbstractMethodsDisplay {
 				<Typography variant="h6">{this.renderParameters(method)}</Typography>
 				<Typography variant="h6">) : {method.returnType}</Typography>
 			</div>
-			<div>{method.description}</div>
+			<Typography>{method.description}</Typography>
 		</li>);
 	};
 
@@ -63,7 +63,7 @@ class MethodsDisplay extends AbstractMethodsDisplay {
 	};
 
 	emptyMethods = () => {
-		return (<li>{this.translate("no methods")}</li>);
+		return (<li><Typography>{this.translate("no methods")}</Typography></li>);
 	};
 
 	refresh = (methodList) => {
