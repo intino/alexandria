@@ -12,6 +12,9 @@ public class NessAccessor {
 
 	public void push(Stage stage) {
 		datalake.push(stage.blobs());
+	}
+
+	public void seal() {
 		datalake.seal();
 	}
 
