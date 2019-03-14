@@ -17,7 +17,6 @@ const styles = theme => ({
 		marginBottom: "5px"
 	},
 	itemName : {
-		fontWeight: "bold",
 		marginRight: "10px"
 	},
     itemNameProps : {
@@ -56,22 +55,22 @@ class PropertiesDisplay extends AbstractPropertiesDisplay {
                         <Typography className={classes.itemName} variant="h6">{property.name}:</Typography>
                         <Typography className={classes.itemNameProps} variant="h6">{property.type}</Typography>
                     </div>
-                    <div>{property.description}</div>
+                    <Typography>{property.description}</Typography>
                     {this.renderPropertyValues(property)}
                 </li>);
     };
 
 	renderPropertyValues = (property) => {
+		const label = property.type === "Word" ? this.translate("allowed values") : this.translate("default value");
 		return (
 			<div className="layout horizontal">
-				<Typography>{property.type === "Word" ? this.translate("allowed values") : this.translate("default value") }</Typography>
-				<Typography>{property.values.join(", ")}</Typography>
+				<Typography>{label}: {property.values.join(", ")}</Typography>
 			</div>
 		);
     };
 
 	emptyProperties = () => {
-		return (<li>{this.translate("no properties")}</li>);
+		return (<li><Typography>{this.translate("no properties")}</Typography></li>);
 	};
 
 	refresh = (propertyList) => {

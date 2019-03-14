@@ -47,12 +47,12 @@ class EventsDisplay extends AbstractEventsDisplay {
 			<div className="layout horizontal">
 				<Typography variant="h6">{event.name}: {event.type}</Typography>
 			</div>
-			<div>{event.description}</div>
+			<Typography>{event.description}</Typography>
 		</li>);
 	};
 
 	emptyEvents = () => {
-		return (<li>{this.translate("no events")}</li>);
+		return (<li><Typography>{this.translate("no events")}</Typography></li>);
 	};
 
 	refresh = (eventList) => {
