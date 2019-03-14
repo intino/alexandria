@@ -87,6 +87,7 @@ Block imageBlock
 	Text(value="Image!!!!!")
 
 Block(layout=Vertical, spacing=DP24) dateBlock as Decorated
+	Text(label="Date widget", format=H3)
 	Block
 		Date(mode=FromNow, format="dd/MM/YYYY") dateA
 		Block > Text dateACode as Code(Html)
@@ -99,12 +100,38 @@ Block(layout=Vertical, spacing=DP24) dateBlock as Decorated
 	Block
 		Text(value="Properties", format=H5)
 		EmbeddedDisplay(display=propertiesDisplay) dateProperties
+	Block
+		Text(value="Methods", format=H5)
+		EmbeddedDisplay(display=methodsDisplay) dateMethods
+	Block
+		Text(value="Events", format=H5)
+		EmbeddedDisplay(display=eventsDisplay) dateEvents
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List
+
+Display methodsDisplay as Decorated
+	Notification refresh as Object(Method) List
+
+Display eventsDisplay as Decorated
+	Notification refresh as Object(Event) List
 
 Schema Property
 	Attribute name as Text
 	Attribute type as Word("Integer" "Word" "Text")
 	Attribute values as Text List
 	Attribute description as Text
+
+Schema Method
+	Attribute name as Text
+	Attribute params as Object(MethodParameter) List
+	Attribute description as Text
+	Attribute returnType as Text
+
+Schema MethodParameter
+	Attribute name as Text
+	Attribute type as Text
+
+Schema Event
+	Attribute name as Text
+	Attribute eventType as Text

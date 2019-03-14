@@ -25,7 +25,7 @@ export default class Display extends PassiveView {
 
     translate = (word) => {
         return this.translator.translate(word);
-    },
+    };
 
     renderElements = () => {
         if (this.state.elements == null) return;

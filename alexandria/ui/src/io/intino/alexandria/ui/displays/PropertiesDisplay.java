@@ -23,5 +23,4 @@ public class PropertiesDisplay extends AbstractPropertiesDisplay<UiFrameworkBox>
         super.init();
         notifier.refresh(propertyList);
     }
-
 }
