@@ -30,6 +30,7 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
 		String type = type();
+		frame.addSlot("id", shortId(element));
 		frame.addSlot("type", type);
 		addAccessorType(frame);
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());

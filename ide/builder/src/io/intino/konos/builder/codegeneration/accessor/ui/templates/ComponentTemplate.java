@@ -18,13 +18,14 @@ public class ComponentTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "reference"))).add(literal("<Displays.")).add(mark("name", "firstUppercase")).add(literal(" owner={this.props.id} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal("></Displays.")).add(mark("name", "firstUppercase")).add(literal(">")),
+			rule().add((condition("type", "reference"))).add(literal("<Displays.")).add(mark("name", "firstUppercase")).add(literal(" context={this.instanceId.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal("></Displays.")).add(mark("name", "firstUppercase")).add(literal(">")),
 			rule().add((condition("type", "child")), (condition("trigger", "declaration"))),
 			rule().add((condition("type", "block & child")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "child")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "child")), (condition("trigger", "add"))),
-			rule().add((condition("type", "component & child"))).add(literal("<")).add(mark("extends")).add(literal(" owner={this.props.id} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal(">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("reference").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("code")).add(literal("\n"))).add(literal("</")).add(mark("extends")).add(literal(">")),
-			rule().add((condition("type", "extends & blockInstance"))).add(literal("Displays.")).add(mark("type", "firstUpperCase")),
+			rule().add((condition("type", "component & child & instanceCollectionBlock"))).add(literal("{this.renderInstances(\"")).add(mark("name")).add(literal("\")}")),
+			rule().add((condition("type", "component & child"))).add(literal("<")).add(mark("extends")).add(literal(" context={this.instanceId.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal(">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("reference").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("code")).add(literal("\n"))).add(literal("</")).add(mark("extends")).add(literal(">")),
+			rule().add((condition("type", "extends & instanceBlock"))).add(literal("Displays.")).add(mark("type", "firstUpperCase")),
 			rule().add((condition("type", "extends"))).add(literal("Ui.")).add(mark("type", "firstUpperCase")).add(mark("facet")),
 			rule().add((condition("type", "facet"))).add(mark("name", "firstUpperCase")),
 			rule().add((condition("type", "properties")), (condition("trigger", "common"))).add(expression().add(literal(" label=\"")).add(mark("label")).add(literal("\""))).add(expression().add(literal(" styleName=\"")).add(mark("style")).add(literal("\""))),

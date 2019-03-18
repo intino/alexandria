@@ -16,6 +16,7 @@ def type(display)
 
         ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
+            id("$id");
         }
 
         @Override
@@ -25,7 +26,9 @@ def type(display)
 			$component+initializations...[$NL]]
 		}[
 
-		$component+class...[$NL]]
+		$component+class...[$NL]][
+		$component+method...[$NL]]
+
 	}
 end
 

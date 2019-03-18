@@ -24,6 +24,11 @@ public class WidgetHelper {
 	}
 
 	private static void initialize() {
+		propertiesMap.put(WidgetType.Text, new ArrayList<Property>() {{
+			add(property("format", Property.Type.Word, "used to...", "H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1", "Subtitle2", "Body1", "Body2", "Button", "Caption", "Overline", "Default"));
+			add(property("mode", Property.Type.Word, "used to...", "Uppercase", "Lowercase", "Capitalize", "Normal"));
+			add(property("value", Property.Type.Text, "default value for component", ""));
+		}});
 		propertiesMap.put(WidgetType.Date, new ArrayList<Property>() {{
 			add(property("format", Property.Type.Text, "used to...", "dd/MM/YYYY"));
 			add(property("mode", Property.Type.Word, "used to...", "FromNow", "ToNow"));

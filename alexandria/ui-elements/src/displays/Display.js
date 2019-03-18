@@ -10,27 +10,45 @@ export default class Display extends PassiveView {
         this.translator = Application.services.translatorService;
     };
 
-    add = (child) => {
-        let elements = this.state.elements != null ? this.state.elements : [];
-        elements.push(child);
-        this.setState( { elements });
+    instanceId() {
+        return this.props.id;
     };
 
-    remove = (id) => {
-        for (var i = 0; i < this.state.elements.length; i++)
-            if (this.state.elements[i].i === id) break;
-        if (i >= this.state.elements.length) return;
-        this.setState({ elements: this.state.elements.splice(index, 1) });
+    addInstance = (instance) => {
+        let container = instance.c;
+        let instances = this.state[container];
+        if (instances == null) instances = [];
+        instances.push(instance);
+        this._updateInstancesState(container, instances);
+    };
+
+    removeInstance = (params) => {
+        let id = params.id;
+        let container = params.c;
+        const instances = this.state[container];
+        for (var i = 0; i < instances.length; i++)
+            if (instances[i].i === id) break;
+        if (i >= instances.length) return;
+        this._updateInstancesState(container, instances.splice(index, 1));
+    };
+
+    renderInstances = (container) => {
+        if (container == null) container = "__elements";
+        var instances = this.state[container];
+        if (instances == null) return;
+        return instances.map((instance, index) => {
+            instance.pl.context = () => { return instance.pl.o };
+            return (<div key={index}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
+        });
     };
 
     translate = (word) => {
         return this.translator.translate(word);
     };
 
-    renderElements = () => {
-        if (this.state.elements == null) return;
-        return this.state.elements.map((child, index) => {
-            return (<div key={index}>{React.createElement(Elements[child.tp], child.pl)}</div>);
-        });
+    _updateInstancesState = (container, instances) => {
+        let object = {};
+        object[container] = instances;
+        this.setState(object);
     };
 }

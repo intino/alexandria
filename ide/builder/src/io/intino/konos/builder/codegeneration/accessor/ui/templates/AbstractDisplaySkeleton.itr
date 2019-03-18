@@ -13,7 +13,7 @@ def type(display)
 			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
 			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
 		};
-
+		
 		render() {
 			return (
 				$renderTag[

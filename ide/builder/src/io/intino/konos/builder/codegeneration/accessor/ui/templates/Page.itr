@@ -9,19 +9,17 @@ import $pageDisplay+firstUpperCase from "$pageDisplayOrigin+origin/displays/$pag
 let theme = Theme.create();
 const styles = theme => ({});
 
-class $name+firstUpperCase extends Page {
+export default class $name+firstUpperCase extends Page {
     render() {
         const { classes } = this.props;
         return (
         	<MuiThemeProvider theme={theme}>
             	<CssBaseline />
-        		<$pageDisplay+firstUpperCase id="$id"></$pageDisplay+firstUpperCase>
+        		<$pageDisplay+firstUpperCase id="$pageDisplayId"></$pageDisplay+firstUpperCase>
         	</MuiThemeProvider>
         );
     }
 }
-
-export default withStyles(styles)($name+firstUpperCase);
 end
 
 def type(resource & html)
@@ -54,12 +52,12 @@ def type(resource & html)
 	</html>
 end
 
-def attribute(src) trigger(origin)
-	./
+def attribute(decorated) trigger(origin)
+	../../src
 end
 
 def trigger(origin)
-	../../gen
+	..
 end
 
 def type(polymer & editor)

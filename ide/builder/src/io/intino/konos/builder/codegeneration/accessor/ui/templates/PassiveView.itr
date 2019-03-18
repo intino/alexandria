@@ -8,8 +8,8 @@ def type(notifier)
         };
 
 		setup() {
-			this.when("add").toSelf().execute((parameters) => this.element.add(parameters));
-			this.when("remove").toSelf().execute((parameters) => this.element.remove(parameters));
+			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
+			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 		};
 
 		when = (message) => {
@@ -23,7 +23,8 @@ def type(notifier)
 							register(pushService.listen(message, function (parameters) {
 								let id = parameters.i;
 								let owner = parameters.o;
-								if (id === element.props.id && (owner == null || owner === "" || owner === element.props.owner)) {
+								let context = element.props.context != null ? element.props.context() : null;
+								if (id === element.props.id && (owner == null || owner === "" || owner.indexOf(context) !== -1)) {
 									action(parameters);
 								}
 							}));
