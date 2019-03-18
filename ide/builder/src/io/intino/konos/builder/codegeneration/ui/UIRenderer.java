@@ -12,10 +12,12 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static io.intino.konos.model.graph.Utils.isUUID;
+import static java.util.Collections.reverse;
 
 public abstract class UIRenderer {
 	protected Settings settings;
@@ -146,6 +148,17 @@ public abstract class UIRenderer {
 
 	protected String shortId(Layer element) {
 		return shortId(element, "");
+	}
+
+	protected String ownerId(Layer element) {
+		Node owner = element.core$().owner();
+		List<String> result = new ArrayList<>();
+		while (owner != null) {
+			result.add(shortId(owner.as(Layer.class)));
+			owner = owner.owner();
+		}
+		reverse(result);
+		return String.join(".", result);
 	}
 
 	protected String shortId(Layer element, String suffix) {

@@ -29,9 +29,6 @@ class Text extends AbstractText {
 	};
 
 	render() {
-
-		if (this.props.id === "MA") alert(this.props.ip);
-
 		const { classes } = this.props;
 	    const value = TextBehavior.mode(this.state.value, this.props);
 	    const format = this.props.format !== "default" ? this.props.format : "body1";

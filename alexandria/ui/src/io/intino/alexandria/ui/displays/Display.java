@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.reverse;
 import static java.util.stream.Collectors.toList;
 
 public class Display<N extends DisplayNotifier, B extends Box> {
@@ -31,6 +32,8 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private List<String> route = new ArrayList<>();
 	private PropertyList propertyList = new PropertyList();
 
+	private static final String DefaultInstanceContainer = "__elements";
+
 	public Display(B box) {
 		this.box = box;
 		this.id = UUID.randomUUID().toString();
@@ -39,6 +42,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D id(String id) {
 		this.id = id;
+		propertyList.put("id", id);
 		return (D) this;
 	}
 
@@ -48,7 +52,20 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D owner(Display owner) {
 		this.owner = owner;
+		propertyList.put("o", owner.path());
 		return (D) this;
+	}
+
+	public String path() {
+		Display owner = parent();
+		List<String> result = new ArrayList<>();
+		result.add(id());
+		while (owner != null) {
+			result.add(owner.id());
+			owner = owner.parent();
+		}
+		reverse(result);
+		return String.join(".", result);
 	}
 
 	public B box() {
@@ -143,7 +160,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public void remove() {
-		notifier.remove(id);
+		notifier.remove(id, DefaultInstanceContainer);
 	}
 
 	public List<Display> children() {
@@ -179,7 +196,13 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D add(D child) {
-		notifier.add(child);
+		return add(child, null);
+	}
+
+	public <D extends Display> D add(D child, String container) {
+		if (container == null) container = DefaultInstanceContainer;
+		child.owner(this);
+		notifier.add(child, container);
 		register(child);
 		return child;
 	}

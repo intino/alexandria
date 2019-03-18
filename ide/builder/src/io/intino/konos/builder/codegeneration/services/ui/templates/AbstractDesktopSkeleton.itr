@@ -18,6 +18,7 @@ def type(desktop)
 
         public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
+            id("$id");
         }
 
         @Override
@@ -41,7 +42,8 @@ def type(desktop)
 				$component+initializations...[$NL]]
 			}[
 
-			$component+class...[$NL]]
+			$component+class...[$NL]][
+			$component+method...[$NL]]
 		}
 
 		public class $name+firstUpperCase~Tabs$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {

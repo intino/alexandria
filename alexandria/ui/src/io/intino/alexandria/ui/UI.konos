@@ -94,15 +94,25 @@ Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
 //					&nbsp;Java: date1.update(Instant.now())
 //					=========
 
-	Block
+	Block properties
 		Text(value="Properties", format=H5)
-		EmbeddedDisplay(display=propertiesDisplay) dateProperties
+//		EmbeddedDisplay(display=propertiesDisplay) properties
+		Block property as InstanceCollection(propertyBlock)
 	Block
 		Text(value="Methods", format=H5)
-		EmbeddedDisplay(display=methodsDisplay) dateMethods
+		EmbeddedDisplay(display=methodsDisplay) methods
 	Block
 		Text(value="Events", format=H5)
-		EmbeddedDisplay(display=eventsDisplay) dateEvents
+		EmbeddedDisplay(display=eventsDisplay) events
+
+Block propertyBlock as Decorated
+	Block(layout=Horizontal)
+		Text(format=H6) name
+		Text(format=H6) type
+	Text description
+	Block(layout=Horizontal)
+		Text valuesLabel
+		Text values
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List

@@ -13,6 +13,7 @@ import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.instance.InstanceBlock;
+import io.intino.konos.model.graph.instancecollection.InstanceCollectionBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
 import io.intino.konos.model.graph.selection.SelectionBlock;
@@ -39,14 +40,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
-		frame.addSlot("id", shortId(element));
 		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		frame.addSlot("properties", properties());
-		if (element.i$(InstanceBlock.class)) {
-			frame.addTypes("instanceBlock");
-			frame.addSlot("instanceBlockName", element.a$(InstanceBlock.class).type().name$());
-		}
 		if (buildChildren) frame.addTypes("child");
+		addSpecificTypes(frame);
 		addComponents(element, frame);
 		addReferences(element, frame);
 		addFacets(element, frame);
@@ -163,17 +160,29 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected void addExtends(Component element, Frame result) {
 		Frame frame = new Frame("extends");
 
-		if (element.i$(InstanceBlock.class)) {
-			frame.addTypes("blockInstance");
-			frame.addSlot("type", element.a$(InstanceBlock.class).type().name$());
-		}
-		else
-			frame.addSlot("type", type());
-
+		if (!addSpecificTypes(frame)) frame.addSlot("type", type());
 		addFacets(element, frame);
 		addDecoratedFrames(frame, decorated);
 
 		result.addSlot("extends", frame);
+	}
+
+	private boolean addSpecificTypes(Frame frame) {
+		if (element.i$(InstanceBlock.class)) {
+			frame.addTypes("instanceBlock");
+			frame.addSlot("blockName", element.a$(InstanceBlock.class).type().name$());
+			String type = element.a$(InstanceBlock.class).type().name$();
+			frame.addSlot("type", type).addSlot("blockType", type);
+			return true;
+		}
+		else if (element.i$(InstanceCollectionBlock.class)) {
+			frame.addTypes("instanceCollectionBlock");
+			frame.addSlot("blockName", element.a$(InstanceCollectionBlock.class).type().name$());
+			String type = element.a$(InstanceCollectionBlock.class).type().name$();
+			frame.addSlot("type", type).addSlot("blockType", type);
+			return true;
+		}
+		return false;
 	}
 
 	protected void addFacets(Component component, Frame result) {

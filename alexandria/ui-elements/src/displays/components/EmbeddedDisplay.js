@@ -16,7 +16,7 @@ export default class EmbeddedDisplay extends AbstractEmbeddedDisplay {
 	};
 
 	render() {
-		return (<React.Fragment>{this.renderElements()}</React.Fragment>);
+		return (<React.Fragment>{this.renderInstances()}</React.Fragment>);
 	};
 
 }

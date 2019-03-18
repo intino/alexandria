@@ -4,12 +4,9 @@ import io.intino.alexandria.rest.pushservice.MessageCarrier;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.PropertyList;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.reverse;
 import static java.util.Collections.singletonMap;
 
 public class DisplayNotifier {
@@ -21,14 +18,17 @@ public class DisplayNotifier {
         this.carrier = carrier;
     }
 
-    public void add(Display child) {
+    public void add(Display child, String container) {
         String type = child.getClass().getSimpleName();
         PropertyList propertyList = child.properties();
-        put("add", addMetadata(registerParameters(type, propertyList)));
+        put("addInstance", addMetadata(registerParameters(type, propertyList, container)));
     }
 
-    public void remove(String id) {
-        put("remove", singletonMap("id", id));
+    public void remove(String id, String container) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        params.put("c", container);
+        put("removeInstance", addMetadata(params));
     }
 
     protected void put(String message) {
@@ -81,28 +81,17 @@ public class DisplayNotifier {
 
     private Map<String, Object> addMetadata(Map<String, Object> parameters) {
         HashMap parametersWithId = new HashMap(parameters);
-        parametersWithId.put("i", id(display));
+        parametersWithId.put("i", display.id());
         parametersWithId.put("n", display.name());
-        if (display.owner() != null) parametersWithId.put("o", display.owner().id());
+        if (display.owner() != null) parametersWithId.put("o", display.owner().path());
         return parametersWithId;
     }
 
-    private String id(Display display) {
-        Display owner = display.parent();
-        List<String> result = new ArrayList<>();
-        result.add(display.id());
-        while (owner != null) {
-            result.add(owner.id());
-            owner = owner.parent();
-        }
-        reverse(result);
-        return String.join(".", result);
-    }
-
-    private Map<String, Object> registerParameters(String type, PropertyList propertyList) {
+    private Map<String, Object> registerParameters(String type, PropertyList propertyList, String container) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("tp", type);
         parameters.put("pl", propertyList);
+        parameters.put("c", container);
         return parameters;
     }
 

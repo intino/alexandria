@@ -6,15 +6,14 @@ import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.displays.EventsDisplay;
 import io.intino.alexandria.ui.displays.MethodsDisplay;
-import io.intino.alexandria.ui.displays.PropertiesDisplay;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
-    private List<Property> properties = new ArrayList<>();
-    private List<Method> methods = new ArrayList<>();
-    private List<Event> events = new ArrayList<>();
+    private List<Property> propertyList = new ArrayList<>();
+    private List<Method> methodList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
 
     public WidgetBlock(UiFrameworkBox box) {
         super(box);
@@ -23,23 +22,22 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        dateProperties.set(new PropertiesDisplay(box()));
-        dateMethods.set(new MethodsDisplay(box()));
-        dateEvents.set(new EventsDisplay(box()));
+        methods.set(new MethodsDisplay(box()));
+        events.set(new EventsDisplay(box()));
     }
 
-    public WidgetBlock properties(List<Property> properties) {
-        this.properties = properties;
+    public WidgetBlock properties(List<Property> propertyList) {
+        this.propertyList = propertyList;
         return this;
     }
 
-    public WidgetBlock methods(List<Method> methods) {
-        this.methods = methods;
+    public WidgetBlock methods(List<Method> methodList) {
+        this.methodList = methodList;
         return this;
     }
 
-    public WidgetBlock events(List<Event> events) {
-        this.events = events;
+    public WidgetBlock events(List<Event> eventList) {
+        this.eventList = eventList;
         return this;
     }
 
@@ -52,18 +50,22 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
     }
 
     private void refreshPropertiesDisplay() {
-        dateProperties.<PropertiesDisplay>get().properties(properties);
-        dateProperties.refresh();
+        propertyList.forEach(p -> {
+            PropertyBlock block = new PropertyBlock(box());
+            block.property(p);
+            properties.addProperty(block);
+            block.refresh();
+        });
     }
 
     private void refreshMethodsDisplay() {
-        dateMethods.<MethodsDisplay>get().methods(methods);
-        dateMethods.refresh();
+        methods.<MethodsDisplay>get().methods(methodList);
+        methods.refresh();
     }
 
     private void refreshEventsDisplay() {
-        dateEvents.<EventsDisplay>get().events(events);
-        dateEvents.refresh();
+        events.<EventsDisplay>get().events(eventList);
+        events.refresh();
     }
 
 }
