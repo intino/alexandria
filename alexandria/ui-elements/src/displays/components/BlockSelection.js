@@ -18,7 +18,7 @@ export default class BlockSelection extends AbstractBlockSelection {
 	render() {
 		return (
 			<div style={ { display: this.state.visible ? "block" : "none" } }>
-				<Block styleName={this.props.styleName}
+				<Block format={this.format()}
 					   layout={this.props.layout}
 					   width={this.props.width}
 					   height={this.props.height}

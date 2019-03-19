@@ -38,7 +38,7 @@ class Text extends AbstractText {
 	    return (
 			<Block layout="horizontal">
 				{ labelBlock }
-				<Typography variant={format} className={classes.value}>{value}</Typography>
+				<Typography variant={format} className={classes.value} style={this.style()}>{value}</Typography>
 			</Block>
 		);
 	};

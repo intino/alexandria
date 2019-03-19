@@ -1,64 +1,68 @@
 dsl Konos
 
-Service(title = "", favicon = "") UiElements as UI(port = "9000")
+Service(title = "", favicon = "") WidgetsUi as UI(port = "9000")
 	Resource(path = "/") home as Page(main)
 
-Template main as Decorated
-	Header(style=theme1.air) appBar
-		Text(format=H3) title
+Template(theme=theme1) main as Decorated
+	Header(format=air) appBar
+		Text(format=h3) title
 
 	Block(layout=Horizontal Flexible) body
 
 		Block header as Relative(width=30%)
 			Selector menu as Menu(layout=Vertical)
 				Block(label="data widgets") basicSection as Collapsible
-					Text(value="Text") text as Option
-					Text(value="Image") image as Option
-					Text(value="File") file as Option
-					Text(value="Date") date as Option
+					Text("Text") text as Option
+					Text("Image") image as Option
+					Text("File") file as Option
+					Text("Date") date as Option
 				Block(label="catalog widgets") catalogSection as Collapsible
-					Text(value="Catalog") catalog as Option
-					Text(value="Grouping") sorting as Option
-					Text(value="Sorting") grouping as Option
+					Text("Catalog") catalog as Option
+					Text("Grouping") sorting as Option
+					Text("Sorting") grouping as Option
 				Block(label="operation widgets") operationSection as Collapsible
-					Text(value="OpenCatalogOperation") openCatalogOperation as Option
-					Text(value="OpenDialogOperation") openDialogOperation as Option
-					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
-					Text(value="ExportOperation") exportOperation as Option
-					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
-					Text(value="DownloadOperation") downloadOperation as Option
-					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
-					Text(value="TaskOperation") taskOperation as Option
-					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
-					Text(value="PreviewOperation") previewOperation as Option
-					Text(value="SearchOperation") searchOperation as Option
+					Text("OpenCatalogOperation") openCatalogOperation as Option
+					Text("OpenDialogOperation") openDialogOperation as Option
+					Text("OpenExternalDialogOperation") openExternalDialogOperation as Option
+					Text("ExportOperation") exportOperation as Option
+					Text("ExportSelectionOperation") exportSelectionOperation as Option
+					Text("DownloadOperation") downloadOperation as Option
+					Text("DownloadSelectionOperation") downloadSelectionOperation as Option
+					Text("TaskOperation") taskOperation as Option
+					Text("TaskSelectionOperation") taskSelectionOperation as Option
+					Text("PreviewOperation") previewOperation as Option
+					Text("SearchOperation") searchOperation as Option
 				Block(label="other widgets") otherSection
-					Text(value="Badge") badge as Option
-					Text(value="Chip") chip as Option
-					Text(value="Card") card as Option
-					Text(value="Snackbar") snackbar as Option
-					Text(value="Progress") progress as Option
-					Text(value="Wizard") wizard as Option
+					Text("Badge") badge as Option
+					Text("Chip") chip as Option
+					Text("Card") card as Option
+					Text("Snackbar") snackbar as Option
+					Text("Progress") progress as Option
+					Text("Wizard") wizard as Option
 
-		Block(layout=Vertical Flexible, style=theme1.air) panels
-			Block textPanel as Selection(main.body.header.menu.basicSection.text) > Block textBlock as Instance(type=widgetBlock)
-			Block imagePanel as Selection(main.body.header.menu.basicSection.image) > Block imageBlock as Instance(type=widgetBlock)
-			Block datePanel as Selection(main.body.header.menu.basicSection.date) > Block dateBlock as Instance(type=widgetBlock)
+		Block(layout=Vertical Flexible, format=h1) panels
+			Block textPanel as Conditional(selected=main.body.header.menu.basicSection.text) > Block textBlock as Moldable(mold=widget)
+			Block imagePanel as Conditional(selected=main.body.header.menu.basicSection.image) > Block imageBlock as Moldable(mold=widget)
+			Block datePanel as Conditional(selected=main.body.header.menu.basicSection.date) > Block dateBlock as Moldable(mold=widget)
+			Block conditionalPanel as Conditional > Block > Text("soy un bloque condicional")
 
-Theme theme1
-	Palette
-		Primary("#3f51b5")
-		Secondary("#ff9100")
-		Error("#f44336")
+Theme
+	Primary("#3f51b5")
+	Secondary("#ff9100")
+	Error("#f44336")
 
-	Style air > Padding("10px 20px")
+Format h1
+Format h3
+Format h5
+Format h6
+Format air > Padding("10px 20px")
 
 Translator(Spanish)
 	Translation("título del campo", "título del campo en dddd")
 
 //Block(layout=Vertical, spacing=DP24) widgetBlock
 //
-//	Block > Text(value="Campo texto", format=H5)
+//	Block > Text(value="Campo texto", format=h5)
 //		Text(format=Body1) valueA
 //		Block > Text valueACode as Code(Html)
 //				value
@@ -66,7 +70,7 @@ Translator(Spanish)
 //					Konos: Text text1<br/><br/>
 //					&nbsp;Java: text1.update("abcd")
 //					=========
-//	Block > Text(value="Campo texto con título", format=H5)
+//	Block > Text(value="Campo texto con título", format=h5)
 //		Text(format=Body1) valueB > label = "título del campo"
 //		Block > Text valueBCode as Code(Html)
 //				value
@@ -76,14 +80,14 @@ Translator(Spanish)
 //					&nbsp;Java: text1.update("efgh")
 //					=========
 //
-//	Block > Text(value="Campo texto editable", format=H5)
+//	Block > Text(value="Campo texto editable", format=h5)
 //		Text(format=Body1) valueC as Editable > label = "campo editable"
 
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
-	Text(value="Date widget", format=H3) title
+Mold(layout=Vertical, spacing=DP24) widget as Decorated
+	Text(value="Date widget", format=h3) title
 
 //	Block
 //		Date(mode=FromNow, format="dd/MM/YYYY") dateA
@@ -95,20 +99,29 @@ Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
 //					=========
 
 	Block properties
-		Text(value="Properties", format=H5)
-//		EmbeddedDisplay(display=propertiesDisplay) properties
-		Block property as InstanceCollection(propertyBlock)
-	Block
-		Text(value="Methods", format=H5)
-		EmbeddedDisplay(display=methodsDisplay) methods
-	Block
-		Text(value="Events", format=H5)
-		EmbeddedDisplay(display=eventsDisplay) events
+		Text(value="Properties", format=h5)
+//		Frame(display=propertiesDisplay) properties
+		Block property as Multiple(emptyMessage="no properties defined") Moldable(mold=propertyMold)
+			Mold
+				Block(layout=Horizontal StartJustified)
+					Text(format=h6) name
+					Text(format=h6) type
+				Text description
+				Block(layout=Horizontal)
+					Text valuesLabel
+					Text values
 
-Block propertyBlock as Decorated
-	Block(layout=Horizontal)
-		Text(format=H6) name
-		Text(format=H6) type
+	Block
+		Text(value="Methods", format=h5)
+		Frame(display=methodsDisplay) methods
+	Block
+		Text(value="Events", format=h5)
+		Frame(display=eventsDisplay) events
+
+Mold(modelClass = "io.intino.alexandria.schemas.Property") propertyMold
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6) type
 	Text description
 	Block(layout=Horizontal)
 		Text valuesLabel

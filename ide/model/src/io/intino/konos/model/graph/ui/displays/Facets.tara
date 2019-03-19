@@ -1,5 +1,7 @@
 dsl Proteo
 
+use Views
+use Mold
 use Component
 
 // OPERATION FACETS
@@ -46,11 +48,16 @@ Facet WordType extends ParametrizableType on Param
 Facet ObjectType extends ParametrizableType on Param
 	var Block block
 
-Facet Instance on Block
-	var Block type
+Facet Option on Component
 
-Facet InstanceCollection on Block
-	var Block type
+Facet Behavior is abstract
+Facet Moldable extends Behavior on Block
+	var Mold mold
+Facet Collapsible extends Behavior on Block
+Facet Conditional extends Behavior on Block
+	var Option selected = empty
+
+Facet Multiple on Block
 
 // CATALOG FACETS
 Facet Temporal on Catalog

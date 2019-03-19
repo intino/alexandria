@@ -8,7 +8,7 @@ def type(theme)
 				theme = createMuiTheme({
 					palette : { $palette },
 					typography : { $typography },
-					componentStyles: { $style...[,$NL] }
+					formats: { $format...[,$NL] }
 				});
 				return theme;
 			},
@@ -41,7 +41,7 @@ def type(typography)
 	useNextVariants: true
 end
 
-def type(style)
+def type(format)
 	$name: {
 		$property...[,$NL]
 	}

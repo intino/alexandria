@@ -11,7 +11,7 @@ import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.instance.InstanceBlock;
+import io.intino.konos.model.graph.moldable.MoldableBlock;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -65,7 +65,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(Frame frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(InstanceBlock.class);
+		boolean isAbstract = decorated && !element.i$(MoldableBlock.class);
 		if (isAbstract) frame.addSlot("abstract", "Abstract");
 		else frame.addSlot("notDecorated", element.name$());
 		Frame abstractBoxFrame = new Frame().addTypes("box");

@@ -18,6 +18,10 @@ public class PropertyBlock extends AbstractPropertyBlock<UiFrameworkBox> {
     public void refresh() {
         super.refresh();
         name.update(property.name());
-        type.update(property.type().name());
+        type.update(property.type().name().toLowerCase());
+        description.update(property.description());
+        //valuesLabel.update(property.type() == Property.Type.Word ? translate("allowed values") : translate("default value"));
+        valuesLabel.update(property.type() == Property.Type.Word ? "allowed values" : "default value");
+        values.update(String.join(", ", property.values()));
     }
 }

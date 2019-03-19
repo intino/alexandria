@@ -1,10 +1,11 @@
 dsl Proteo
-//
-//use Views
-//use Display
-//use Dialog
-//use Catalog
-//
+
+use Component
+
+Concept Mold
+	var string modelClass
+	has Component
+
 //Concept Mold extends Display
 //	var string modelClass
 //	Concept Block

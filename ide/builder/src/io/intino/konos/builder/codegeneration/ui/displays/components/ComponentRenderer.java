@@ -4,19 +4,16 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
-import io.intino.konos.model.graph.Block;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.ChildComponents.*;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.Editable;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
-import io.intino.konos.model.graph.instance.InstanceBlock;
-import io.intino.konos.model.graph.instancecollection.InstanceCollectionBlock;
+import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
+import io.intino.konos.model.graph.moldable.MoldableBlock;
+import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
-import io.intino.konos.model.graph.selection.SelectionBlock;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 
@@ -67,7 +64,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected Frame properties(Component component) {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
 		if (component.label() != null) result.addSlot("label", component.label());
-		if (component.style() != null) result.addSlot("style", component.style().name$());
+		if (component.format() != null) result.addSlot("format", component.format().name$());
 		return result;
 	}
 
@@ -153,8 +150,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	@NotNull
-	private List<Component> instanceBlocks(Component component) {
-		return components(component).stream().filter(c -> c.i$(InstanceBlock.class)).map(c -> c.a$(InstanceBlock.class).type()).distinct().collect(Collectors.toList());
+	private List<Mold> molds(Component component) {
+		return components(component).stream().filter(c -> c.i$(MoldableBlock.class)).map(c -> c.a$(MoldableBlock.class).mold()).distinct().collect(Collectors.toList());
 	}
 
 	protected void addExtends(Component element, Frame result) {
@@ -168,27 +165,23 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private boolean addSpecificTypes(Frame frame) {
-		if (element.i$(InstanceBlock.class)) {
-			frame.addTypes("instanceBlock");
-			frame.addSlot("blockName", element.a$(InstanceBlock.class).type().name$());
-			String type = element.a$(InstanceBlock.class).type().name$();
-			frame.addSlot("type", type).addSlot("blockType", type);
+
+		if (element.i$(MultipleBlock.class))
+			frame.addTypes("multiple");
+
+		if (element.i$(MoldableBlock.class)) {
+			frame.addTypes(MoldableBlock.class.getSimpleName());
+			frame.addSlot("mold", element.a$(MoldableBlock.class).mold().name$());
 			return true;
 		}
-		else if (element.i$(InstanceCollectionBlock.class)) {
-			frame.addTypes("instanceCollectionBlock");
-			frame.addSlot("blockName", element.a$(InstanceCollectionBlock.class).type().name$());
-			String type = element.a$(InstanceCollectionBlock.class).type().name$();
-			frame.addSlot("type", type).addSlot("blockType", type);
-			return true;
-		}
+
 		return false;
 	}
 
 	protected void addFacets(Component component, Frame result) {
 		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
 		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
-		if (component.i$(SelectionBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", SelectionBlock.class.getSimpleName().replace("Block", "")));
+		if (component.i$(ConditionalBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ConditionalBlock.class.getSimpleName().replace("Block", "")));
 		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
