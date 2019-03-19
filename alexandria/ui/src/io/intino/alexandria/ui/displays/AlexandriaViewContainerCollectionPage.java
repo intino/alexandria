@@ -55,7 +55,7 @@ public abstract class AlexandriaViewContainerCollectionPage<N extends Alexandria
             int count = countItems();
             notifyNearToEnd();
             sendCount(countItems());
-            if (countItems() != count) this.sendItems(count > 0 ? count+1 : 0, limit()-(count-page*limit()));
+            if (countItems() != count) this.sendItems(count > 0 ? count+1 : 0, Math.abs(limit()-(count-page*limit())));
         }
     }
 
