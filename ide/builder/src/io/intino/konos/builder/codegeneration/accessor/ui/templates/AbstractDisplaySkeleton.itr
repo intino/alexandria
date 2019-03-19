@@ -24,8 +24,16 @@ def type(display)
 	}
 end
 
+def type(renderTag & mold) trigger(end)
+	</Ui.Block>
+end
+
 def type(renderTag & block) trigger(end)
 	</Ui.Block>
+end
+
+def type(renderTag & mold)
+	<Ui.Block[$properties+common$properties+specific]>
 end
 
 def type(renderTag & block)

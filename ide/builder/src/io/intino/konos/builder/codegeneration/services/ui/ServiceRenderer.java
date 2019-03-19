@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.services.ui;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.services.ui.templates.ServiceTemplate;
+import io.intino.konos.builder.codegeneration.ui.I18nRenderer;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Display;
@@ -27,6 +28,11 @@ public class ServiceRenderer extends UIRenderer {
 	}
 
 	public void execute() {
+		createUi();
+		new I18nRenderer(settings, service, target).execute();
+	}
+
+	private void createUi() {
 		final List<Display> displays = displaysOf(service);
 		Frame frame = buildFrame().addTypes("ui").
 				addSlot("name", service.name$()).

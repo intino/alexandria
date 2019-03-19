@@ -10,6 +10,7 @@ def type(desktop)
 	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;]
 
 	import $package+validPackage.ui.displays.blocks.*;
+	import $package+validPackage.ui.displays.molds.*;
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
@@ -29,7 +30,8 @@ def type(desktop)
 		}
 
 		public class $name+firstUpperCase~Header$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Header<$abstractBox+type> {
-		[	$component+declarations...[$NL]
+			[$attribute+declaration...[$NL]
+			][$component+declarations...[$NL]
 
 			]public $name+firstUpperCase~Header($abstractBox+type box) {
 				super(box);
@@ -43,7 +45,8 @@ def type(desktop)
 			}[
 
 			$component+class...[$NL]][
-			$component+method...[$NL]]
+			$component+method...[$NL]][
+			$attribute+getterSetter...[$NL]]
 		}
 
 		public class $name+firstUpperCase~Tabs$abstractBox+extension extends io.intino.alexandria.ui.displays.components.Tabs<$abstractBox+type> {
@@ -53,6 +56,10 @@ def type(desktop)
         	}
 		}
     }
+end
+
+def type(componentReferences & forMold)
+	$component+moldReferences...[$NL]
 end
 
 def type(componentReferences & forBlock)

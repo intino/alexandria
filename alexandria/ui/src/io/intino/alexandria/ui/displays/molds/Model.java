@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.blocks;
+package io.intino.alexandria.ui.displays.molds;
 
 import io.intino.alexandria.schemas.Event;
 import io.intino.alexandria.schemas.Method;
@@ -10,7 +10,7 @@ import java.util.*;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-public class WidgetHelper {
+public class Model {
 	private static Map<WidgetType, List<Property>> propertiesMap = new HashMap<>();
 	private static Map<WidgetType, List<Method>> methodsMap = new HashMap<>();
 	private static Map<WidgetType, List<Event>> eventsMap = new HashMap<>();

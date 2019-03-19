@@ -1,8 +1,9 @@
 dsl Konos
 
+Component mold as Decorated
 Component block as Decorated
 
-Component blockSelection as Decorated
+Component blockConditional as Decorated
 	Notification refreshVisibility as Bool
 
 Component catalog as Decorated
@@ -17,7 +18,7 @@ Component tab as Decorated
 Component icon as Decorated
 Component taskOperation as Decorated
 Component optionList as Decorated
-Component embeddedDisplay as Decorated
+Component frame as Decorated
 	Notification refreshDisplay as Text
 
 Component selectorMenu as Decorated

@@ -52,7 +52,7 @@ public class ThemeRenderer extends UIRenderer {
 	}
 
 	private Frame frameOf(Format format) {
-		Frame result = new Frame().addTypes("style");
+		Frame result = new Frame().addTypes("format");
 		result.addSlot("name", format.name$());
 		result.addSlot("type", format.getClass().getSimpleName().toLowerCase());
 		format.propertyList().forEach(p -> result.addSlot("property", frameOf(p)));

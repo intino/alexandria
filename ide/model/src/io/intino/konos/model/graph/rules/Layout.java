@@ -3,7 +3,11 @@ package io.intino.konos.model.graph.rules;
 import io.intino.tara.lang.model.Rule;
 
 public enum Layout implements Rule<Enum> {
-	Horizontal, Vertical, Center, CenterJustified, Flexible, StartJustified, EndJustified, Wrap;
+	Horizontal, HorizontalReverse, Vertical, VerticalReverse,
+	Center, CenterJustified, CenterCenter,
+	Flexible, Justified,
+	StartJustified, EndJustified, AroundJustified,
+	Wrap, NoWrap, WrapReverse;
 
 	@Override
 	public boolean accept(Enum value) {

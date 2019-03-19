@@ -60,7 +60,10 @@ public class BlockRenderer extends ComponentRenderer<Block> {
 
 	private void addBinding(Frame result) {
 		if (!element.isConditional()) return;
+
 		OptionComponent option = element.asConditional().selected();
+		if (option == null) return;
+
 		Selector selector = option.core$().ownerAs(Selector.class);
 		result.addSlot("binding", new Frame("binding")
 			  								.addSlot("name", nameOf(element))

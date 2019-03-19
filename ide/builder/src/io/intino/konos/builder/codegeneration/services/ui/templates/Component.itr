@@ -6,12 +6,11 @@ def type(reference)
 	$name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & moldable & multiple) trigger(declarations)
-	public java.util.List<$blockName+firstUpperCase> $name;
+def type(component & child & moldableblock & multipleblock) trigger(declarations)
 end
 
-def type(component & child & moldable) trigger(declarations)
-	public $blockName+firstUpperCase $name;
+def type(component & child & moldableblock) trigger(declarations)
+	public $mold+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declarations)
@@ -19,20 +18,19 @@ def type(component & child) trigger(declarations)
 	$component+declarations...[$NL]]
 end
 
-def type(component & child & moldable & multiple) trigger(declaration)
-	public java.util.List<$blockName+firstUpperCase> $name;
+def type(component & child & moldableblock & multipleblock) trigger(declaration)
 end
 
-def type(component & child & moldable) trigger(declaration)
-	public $blockName+firstUpperCase $name;
+def type(component & child & moldableblock) trigger(declaration)
+	public $mold+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
-def type(component & child & moldable & multiple) trigger(method)
-	public void add$name+firstUpperCase($blockType+firstUpperCase instance) {
+def type(component & child & moldableblock & multipleblock) trigger(method)
+	public void add$name+firstUpperCase($mold+firstUpperCase instance) {
 		instance.id(java.util.UUID.randomUUID().toString());
 		$owner.this.add(instance, "$name");
 	}
@@ -41,10 +39,10 @@ end
 def type(component & child) trigger(method)
 end
 
-def type(component & child & moldable & multiple) trigger(class)
+def type(component & child & moldableblock & multipleblock) trigger(class)
 end
 
-def type(component & child & moldable) trigger(class)
+def type(component & child & moldableblock) trigger(class)
 end
 
 def type(component & child) trigger(class)
@@ -67,12 +65,23 @@ def type(component & child) trigger(class)
 	}
 end
 
-def type(extends & moldable)
+def type(extends & moldableblock)
 	$type+firstUpperCase
 end
 
 def type(extends)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>
+end
+
+def type(component & child & multipleblock) trigger(moldChildReferences)
+end
+
+def type(component & child & multipleblock) trigger(blockChildReferences)
+end
+
+def type(component & child) trigger(moldChildReferences)
+	$name = [$ancestorsNotMe...[.].]$name;[
+	$component+moldChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockChildReferences)
@@ -83,6 +92,11 @@ end
 def type(component & child) trigger(childReferences)
 	$name = [$ancestors...[.].]$name;[
 	$component+childReferences...[$NL]]
+end
+
+def type(component & child) trigger(moldReferences)
+	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	$component+moldChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockReferences)
@@ -100,12 +114,11 @@ def type(component & child) trigger(initializations)
 	$component+initializations...[$NL]]
 end
 
-def type(component & child & moldable & multiple)
-	$name = new java.util.ArrayList<>();
+def type(component & child & moldableblock & multipleblock)
 end
 
-def type(component & child & moldable)
-	$name = register(new $blockName+firstUpperCase(($box+firstUpperCase~Box)box())$properties+common$properties+specific~.id("$id"));
+def type(component & child & moldableblock)
+	$name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box())$properties+common$properties+specific~.id("$id"));
 end
 
 def type(component & child)

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.intino.konos.builder.helpers.Commons.javaFile;
+import static io.intino.konos.builder.helpers.Commons.javascriptFile;
 import static io.intino.konos.model.graph.Utils.isUUID;
 import static java.util.Collections.reverse;
 
@@ -51,6 +53,11 @@ public abstract class UIRenderer {
 
 	public String boxName() {
 		return settings.boxName();
+	}
+
+	protected File fileOf(File file, String name) {
+		if (target == Target.Service) return javaFile(file, name);
+		return javascriptFile(file, name);
 	}
 
 	protected String packageName() {

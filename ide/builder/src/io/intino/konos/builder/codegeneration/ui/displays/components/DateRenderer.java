@@ -14,7 +14,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 	@Override
 	public Frame properties() {
 		Frame result = super.properties();
-		result.addSlot("format", element.format());
+		result.addSlot("pattern", element.pattern());
 		if (element.mode() != Date.Mode.None) result.addSlot("mode", element.mode().name().toLowerCase());
 		return result;
 	}

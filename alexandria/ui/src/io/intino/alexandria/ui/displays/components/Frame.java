@@ -5,10 +5,10 @@ import io.intino.alexandria.ui.displays.Display;
 
 import java.util.UUID;
 
-public class EmbeddedDisplay<B extends Box> extends AbstractEmbeddedDisplay<B> {
+public class Frame<B extends Box> extends AbstractFrame<B> {
     private Display display;
 
-    public EmbeddedDisplay(B box) {
+    public Frame(B box) {
         super(box);
     }
 
@@ -26,4 +26,5 @@ public class EmbeddedDisplay<B extends Box> extends AbstractEmbeddedDisplay<B> {
         super.refresh();
         if (display != null) add(display);
     }
+
 }

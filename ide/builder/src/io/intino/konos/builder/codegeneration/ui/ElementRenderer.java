@@ -51,11 +51,6 @@ public abstract class ElementRenderer<C extends Layer> extends UIRenderer {
 		writeFrame(new File(parent, child), newDisplay, template.format(frame.addTypes("gen")));
 	}
 
-	protected File fileOf(File file, String name) {
-		if (target == Target.Service) return javaFile(file, name);
-		return javascriptFile(file, name);
-	}
-
 	public void writeFrame(File packageFolder, String name, String text) {
 		try {
 			packageFolder.mkdirs();

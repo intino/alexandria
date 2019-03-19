@@ -6,10 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
-import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Display;
-import io.intino.konos.model.graph.PassiveView;
+import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import org.siani.itrules.model.Frame;
@@ -54,7 +51,12 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		Frame renderTag = new Frame("renderTag");
 		if (element.i$(Block.class)) {
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Block.class), templateProvider, target);
-			renderTag.addTypes("block");
+			renderTag.addTypes(Block.class.getSimpleName());
+			renderTag.addSlot("properties", renderer.properties());
+		}
+		else if (element.i$(Mold.class)) {
+			ComponentRenderer renderer = factory.renderer(settings, element.a$(Mold.class), templateProvider, target);
+			renderTag.addTypes(Mold.class.getSimpleName());
 			renderTag.addSlot("properties", renderer.properties());
 		}
 		frame.addSlot("renderTag", renderTag);
