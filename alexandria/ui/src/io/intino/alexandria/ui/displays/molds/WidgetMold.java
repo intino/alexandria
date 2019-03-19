@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.blocks;
+package io.intino.alexandria.ui.displays.molds;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Event;
@@ -10,12 +10,12 @@ import io.intino.alexandria.ui.displays.MethodsDisplay;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
+public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     private List<Property> propertyList = new ArrayList<>();
     private List<Method> methodList = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
 
-    public WidgetBlock(UiFrameworkBox box) {
+    public WidgetMold(UiFrameworkBox box) {
         super(box);
     }
 
@@ -27,17 +27,17 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
         events.set(new EventsDisplay(box()));
     }
 
-    public WidgetBlock properties(List<Property> propertyList) {
+    public WidgetMold properties(List<Property> propertyList) {
         this.propertyList = propertyList;
         return this;
     }
 
-    public WidgetBlock methods(List<Method> methodList) {
+    public WidgetMold methods(List<Method> methodList) {
         this.methodList = methodList;
         return this;
     }
 
-    public WidgetBlock events(List<Event> eventList) {
+    public WidgetMold events(List<Event> eventList) {
         this.eventList = eventList;
         return this;
     }
@@ -54,7 +54,7 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
 //        propertiesDisplay.<PropertiesDisplay>get().properties(propertyList);
 //        propertiesDisplay.refresh();
         propertyList.forEach(p -> {
-            PropertyBlock block = new PropertyBlock(box());
+            PropertyMold block = new PropertyMold(box());
             block.property(p);
             properties.addProperty(block);
             block.refresh();

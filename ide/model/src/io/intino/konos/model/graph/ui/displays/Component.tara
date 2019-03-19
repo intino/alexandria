@@ -8,11 +8,18 @@ use UI
 
 Concept:Named Component extends Display
 	var word:{Primary Secondary} color = Primary
-	var Format format = empty
+	var Format[] format = empty
 
 Concept Block extends Component
 	var string label = empty
 	var string for = empty
+	var word[]:Layout layout = Vertical
+	var word:Spacing spacing = None
+
+	has Component
+
+Concept Mold extends Component
+	var string modelClass = empty
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
 

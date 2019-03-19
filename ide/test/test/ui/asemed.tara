@@ -12,12 +12,16 @@ Service ReactWeb as UI(title = "", favicon = "", port = "{port}")
 //
 //	Style air > Padding("10px 20px")
 //
+
+Format h1
+Format h2
+
 Template desktop as Desktop //DrawerNavigable(direction=Left, mode=Modal)
 	Header
 		Image logo
 		Block(layout=Horizontal) cabecera
-			Text(format=H1) titulo as Editable
-			Text(format=H2) subtitulo
+			Text(format=h1) titulo as Editable
+			Text(format=h2) subtitulo
 			File fichero as Editable
 		Selector divisiones as ComboBox
 			Text(label="División 1") división1
@@ -39,11 +43,11 @@ Template desktop as Desktop //DrawerNavigable(direction=Left, mode=Modal)
 //		Tab("características")
 //			Content as CatalogContainer(caracteristicasCatalog)
 
-Block badgeBlock as Parameterizable Decorated
-	Param title as TextType
-	Param count as NumberType
+Block badgeBlock as Decorated
+//	Param title as TextType
+//	Param count as NumberType
 	Block(layout=Horizontal)
-		Text(format=H1) title
+		Text(format=h1) title
 		Block custom
 		Badge count
 
@@ -54,51 +58,48 @@ Display displayA
 Block dashboardBlock as Decorated
 	Block(layout=Horizontal)
 		Block(label="criterios técnicos", layout=Horizontal Center CenterJustified) as Paper
-			Block tecnicosEnEjecucion as Instance(criterioBlock)
-			Block tecnicosDeshabilitados as Instance(criterioBlock)
-			Block tecnicosAspirantes as Instance(criterioBlock)
+			Block tecnicosEnEjecucion as Moldable(mold=criterioBlock)
+			Block tecnicosDeshabilitados as Moldable(criterioBlock)
+			Block tecnicosAspirantes as Moldable(criterioBlock)
 		Block(label="criterios contables", layout=Horizontal Center CenterJustified) as Paper
-			Block contables as InstanceCollection(criterioBlock)
+			Block contables as Multiple Moldable(criterioBlock)
 		Block(label="criterios de datos") as Paper
-			Block deDatos as InstanceCollection(criterioBlock)
+			Block deDatos as Multiple Moldable(criterioBlock)
 	Block
 		Block(label="operaciones") as Paper
-			Block operacionesUltimoMes as Instance(panelEstadisticas)
-			Block operacionesDesdeCreacion as Instance(panelEstadisticas)
+			Block operacionesUltimoMes as Moldable(panelEstadisticas)
+			Block operacionesDesdeCreacion as Moldable(panelEstadisticas)
 			Block > Chart evolucionOperaciones
 		Block(label="resultados") as Paper
-			Block resultadosUltimoMes as Instance(panelEstadisticas)
-			Block resultadosDesdeCreacion as Instance(panelEstadisticas)
+			Block resultadosUltimoMes as Moldable(panelEstadisticas)
+			Block resultadosDesdeCreacion as Moldable(panelEstadisticas)
 			Block > Chart evolucionResultados
 		Block(label="rendimiento") as Paper
-			Block rendimientoUltimoMes as Instance(panelEstadisticas)
-			Block rendimientoDesdeCreacion as Instance(panelEstadisticas)
+			Block rendimientoUltimoMes as Moldable(panelEstadisticas)
+			Block rendimientoDesdeCreacion as Moldable(panelEstadisticas)
 			Block > Chart evolucionRendimiento
 
-Block(layout=Vertical Center) criterioBlock as Parameterizable
-	Param value as NumberType
-	Param label as TextType
+Mold(layout=Vertical Center, modelClass = "") criterioBlock
+	Text(format=h1) value
+	Text(format=h2) label
 
-	Text(format=H1) value
-	Text(format=H2) label
-
-Block(layout=Vertical Center) indicatorBlock as Parameterizable
-	Param value as NumberType
-	Param label as TextType
-	Param trend as WordType("PositivoMejor" "PositivoPeor")
+Mold(layout=Vertical Center, modelClass = "") indicatorBlock
+//	Param value as NumberType
+//	Param label as TextType
+//	Param trend as WordType("PositivoMejor" "PositivoPeor")
 
 	Block(layout=Horizontal Center)
-		Text(format=H1) value
+		Text(format=h1) value
 		Icon(alexandriaIcon="remove") trend
-	Text(format=H2) label
+	Text(format=h2) label
 
-Block panelEstadisticas as Parameterizable
-	Param label as TextType
-	Param instances as ObjectType(indicatorBlock) //List
+Mold(modelClass = "") panelEstadisticas //as Parameterizable
+//	Param label as TextType
+//	Param instances as ObjectType(indicatorBlock) //List
 
-	Text(format=H1) label
+	Text(format=h1) label
 	Block(layout=Horizontal)
-		Block instances as InstanceCollection(indicatorBlock)
+		Block instances as Multiple Moldable(indicatorBlock)
 
 
 Catalog("criterios") criteriosCatalog as Decorated
@@ -110,8 +111,8 @@ Catalog("criterios") criteriosCatalog as Decorated
 
 	Layout layout //as Horizontal
 		Content
-			Block drawerBlock as Instance(criteriosArrangement) Drawer
-			Block mainBlock as Instance(criteriosArrangement)
+			Block drawerBlock as Moldable(criteriosArrangement) Drawer
+			Block mainBlock as Moldable(criteriosArrangement)
 			Block
 				Block(layout=Horizontal)
 					TaskOperation(label="Añadir criterio") addCriterio as IconButton("add")
@@ -132,7 +133,7 @@ Catalog("criterios") criteriosCatalog as Decorated
 //			Column("ranking") ranking as BlockContainer(rankingBlock) Sortable(criteriosCatalog.layout.rankingSorting)
 //			Column("titulo") titulo as BlockContainer(tituloBlock)
 //
-Block criteriosArrangement
+Mold(modelClass = "") criteriosArrangement
 	Selector selector as ComboBox
 		Sorting(label="mejores") rankingSorting
 		Sorting(label="recientes") fechaCreacionSorting
@@ -153,8 +154,8 @@ Block criteriosArrangement
 Block criterioOperativoBlock as Target("io.intino.example.graph.Criterio")
 	Block(layout=Horizontal)
 		Block(layout=Flexible) main
-			Text(format=H1) titulo
-			Text(format=H2) descripcion
+			Text(format=h1) titulo
+			Text(format=h2) descripcion
 			Tabs
 				Tab(label="consulta") > Content as BlockContainer(consultaBlock)
 				Tab(label="balance") > Content as BlockContainer(balanceBlock)

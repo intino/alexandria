@@ -37,17 +37,6 @@ Facet Relative on Block
 
 Facet Paper on Block
 
-Facet Parameterizable on Block
-	has Param
-Concept Param is component
-Facet ParametrizableType is abstract
-Facet TextType extends ParametrizableType on Param
-Facet NumberType extends ParametrizableType on Param
-Facet WordType extends ParametrizableType on Param
-	var string[] values
-Facet ObjectType extends ParametrizableType on Param
-	var Block block
-
 Facet Option on Component
 
 Facet Behavior is abstract
@@ -58,6 +47,7 @@ Facet Conditional extends Behavior on Block
 	var Option selected = empty
 
 Facet Multiple on Block
+	var string emptyMessage = empty
 
 // CATALOG FACETS
 Facet Temporal on Catalog

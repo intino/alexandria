@@ -11,7 +11,15 @@ export default class Component extends AlexandriaDisplay {
 
     style() {
         const { format } = this.props;
+        const formats = format != null ? format.split(" ") : [];
+        if (formats.length <= 0) return undefined;
         const theme = Theme.get();
-        return format != null ? theme.formats[format] : undefined;
+        const result = {};
+        formats.forEach(f => {
+            let style = theme.formats[f];
+            if (style == null) return;
+            for (let rule in style) result[rule] = style[rule];
+        });
+        return result;
     };
 }

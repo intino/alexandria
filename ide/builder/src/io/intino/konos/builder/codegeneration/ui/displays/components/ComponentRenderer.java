@@ -14,6 +14,7 @@ import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
+import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 
@@ -64,7 +65,10 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected Frame properties(Component component) {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
 		if (component.label() != null) result.addSlot("label", component.label());
-		if (component.format() != null) result.addSlot("format", component.format().name$());
+		if (component.format() != null) {
+			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
+			result.addSlot("format", format);
+		}
 		return result;
 	}
 
@@ -139,6 +143,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private List<Component> components(Component component) {
 		List<Component> components = new ArrayList<>();
 		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
+		if (component.i$(Mold.class)) components.addAll(component.a$(Mold.class).componentList());
 		if (component.i$(Panels.class)) components.addAll(component.a$(Panels.class).panelList().stream().map(p -> p.a$(Component.class)).collect(toList()));
 		if (component.i$(Panel.class)) components.addAll(component.a$(Panel.class).componentList());
 		if (component.i$(Tabs.class)) components.addAll(component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList()));
@@ -167,11 +172,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean addSpecificTypes(Frame frame) {
 
 		if (element.i$(MultipleBlock.class))
-			frame.addTypes("multiple");
+			frame.addTypes(MultipleBlock.class.getSimpleName());
 
 		if (element.i$(MoldableBlock.class)) {
 			frame.addTypes(MoldableBlock.class.getSimpleName());
 			frame.addSlot("mold", element.a$(MoldableBlock.class).mold().name$());
+			frame.addSlot("type", element.a$(MoldableBlock.class).mold().name$());
 			return true;
 		}
 
@@ -195,9 +201,14 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private Frame componentReferencesFrame() {
 		Frame result = new Frame("componentReferences");
-		if (!element.i$(Block.class)) return result;
-		result.addTypes("forBlock");
-		element.a$(Block.class).componentList().forEach(c -> addComponent(c, result));
+		if (element.i$(Block.class)) {
+			result.addTypes("forBlock");
+			element.a$(Block.class).componentList().forEach(c -> addComponent(c, result));
+		}
+		else if (element.i$(Mold.class)) {
+			result.addTypes("forMold");
+			element.a$(Mold.class).componentList().forEach(c -> addComponent(c, result));
+		}
 		return result;
 	}
 

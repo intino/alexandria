@@ -16,7 +16,7 @@ end
 def type(child) trigger(add)
 end
 
-def type(component & child & moldable & multiple)
+def type(component & child & moldableblock & multipleblock)
 	{this.renderInstances("$name")}
 end
 
@@ -28,7 +28,7 @@ def type(component & child)
 	]</$extends>
 end
 
-def type(extends & moldable)
+def type(extends & moldableblock)
 	Displays.$type+firstUpperCase
 end
 
@@ -41,7 +41,11 @@ def type(facet)
 end
 
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format"]
+	[ label="$label"][ format="$format...[ ]"]
+end
+
+def type(properties & mold) trigger(specific)
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
 end
 
 def type(properties & block) trigger(specific)
@@ -49,7 +53,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ format="$format"][ mode="$mode"]
+	[ pattern="$pattern"][ mode="$mode"]
 end
 
 def type(properties & header) trigger(specific)
@@ -57,7 +61,7 @@ def type(properties & header) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ format="$format"][ mode="$mode"][ value="$defaultValue"]
+	[ mode="$mode"][ value="$defaultValue"]
 end
 
 def type(properties) trigger(specific)

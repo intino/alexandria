@@ -1,5 +1,4 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
@@ -18,10 +17,10 @@ export default class Block extends AbstractBlock {
 	};
 
 	render() {
-		return (this.props.collapsible ? <Collapse>{this._renderGrid()}</Collapse> : this._renderGrid());
+		return (this.props.collapsible ? <Collapse>{this._renderLayout()}</Collapse> : this._renderLayout());
 	};
 
-	_renderGrid = () => {
+	_renderLayout = () => {
 		const isVerticalSpacing = this._isVerticalSpacing();
 
 		return (
@@ -34,7 +33,15 @@ export default class Block extends AbstractBlock {
 	};
 
 	_layout = () => {
-		return "layout " + this.props.layout;
+		let layout = this.props.layout;
+		layout = layout.replace("flexible", "flex");
+		layout = layout.replace("centercenter", "center-center");
+		layout = layout.replace("preverse", "p-reverse");
+		layout = layout.replace("lreverse", "l-reverse");
+		layout = layout.replace("tjustified", "t-justified");
+		layout = layout.replace("djustified", "d-justified");
+		layout = layout.replace("nowrap", "no-wrap");
+		return "layout " + layout;
 	};
 
 	style() {

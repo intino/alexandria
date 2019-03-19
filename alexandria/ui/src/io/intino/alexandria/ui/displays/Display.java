@@ -7,6 +7,7 @@ import io.intino.alexandria.ui.SoulProvider;
 import io.intino.alexandria.ui.displays.notifiers.DisplayNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.UISession;
+import io.intino.alexandria.ui.services.push.User;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -246,4 +247,8 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return index != -1 ? name.substring(0, index) : name;
 	}
 
+	public String language() {
+		User user = session().user();
+		return user != null ? user.language() : session().discoverLanguage();
+	}
 }

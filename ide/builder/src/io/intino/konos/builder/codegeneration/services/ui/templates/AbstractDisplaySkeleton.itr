@@ -9,10 +9,12 @@ def type(display)
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	import $package+validPackage.ui.displays.blocks.*;
+	import $package+validPackage.ui.displays.molds.*;
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
-    	[$component+declarations...[$NL]
+    	[$attribute+declaration...[$NL]
+    	][$component+declarations...[$NL]
 
         ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
@@ -27,9 +29,13 @@ def type(display)
 		}[
 
 		$component+class...[$NL]][
-		$component+method...[$NL]]
-
+		$component+method...[$NL]][
+		$attribute+getterSetter...[$NL]]
 	}
+end
+
+def type(componentReferences & forMold)
+	$component+moldReferences...[$NL]
 end
 
 def type(componentReferences & forBlock)
@@ -38,4 +44,17 @@ end
 
 def type(componentReferences)
 	$component+references...[$NL]
+end
+
+def type(attribute) trigger(declaration)
+	private $clazz $name+firstLowerCase;
+end
+
+def type(attribute) trigger(getterSetter)
+	public $clazz get$name+firstUpperCase() {
+		return this.$name+firstLowerCase;
+	}
+	public void set$name+firstUpperCase($clazz $name+firstLowerCase) {
+		this.$name+firstLowerCase = $name+firstLowerCase;
+	}
 end

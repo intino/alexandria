@@ -1,15 +1,15 @@
 dsl Konos
 
-Service(title = "", favicon = "") WidgetsUi as UI(port = "9000")
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(main)
 
-Template(theme=theme1) main as Decorated
+Template main as Decorated
 	Header(format=air) appBar
 		Text(format=h3) title
 
 	Block(layout=Horizontal Flexible) body
 
-		Block header as Relative(width=30%)
+		Block header as Relative(width=25%)
 			Selector menu as Menu(layout=Vertical)
 				Block(label="data widgets") basicSection as Collapsible
 					Text("Text") text as Option
@@ -40,27 +40,27 @@ Template(theme=theme1) main as Decorated
 					Text("Progress") progress as Option
 					Text("Wizard") wizard as Option
 
-		Block(layout=Vertical Flexible, format=h1) panels
-			Block textPanel as Conditional(selected=main.body.header.menu.basicSection.text) > Block textBlock as Moldable(mold=widget)
-			Block imagePanel as Conditional(selected=main.body.header.menu.basicSection.image) > Block imageBlock as Moldable(mold=widget)
-			Block datePanel as Conditional(selected=main.body.header.menu.basicSection.date) > Block dateBlock as Moldable(mold=widget)
-			Block conditionalPanel as Conditional > Block > Text("soy un bloque condicional")
+		Block(layout=Vertical Flexible, format=air) panels
+			Block textPanel as Conditional(main.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
+			Block imagePanel as Conditional(main.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
+			Block datePanel as Conditional(main.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
 
-Theme
+Theme theme1
 	Primary("#3f51b5")
 	Secondary("#ff9100")
 	Error("#f44336")
 
-Format h1
 Format h3
 Format h5
 Format h6
+Format body2
 Format air > Padding("10px 20px")
+Format propertyType > Color("#888")
 
 Translator(Spanish)
 	Translation("título del campo", "título del campo en dddd")
 
-//Block(layout=Vertical, spacing=DP24) widgetBlock
+//Block(layout=Vertical, spacing=DP24) widgetMold
 //
 //	Block > Text(value="Campo texto", format=h5)
 //		Text(format=Body1) valueA
@@ -86,7 +86,7 @@ Translator(Spanish)
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Mold(layout=Vertical, spacing=DP24) widget as Decorated
+Mold(modelClass = "Clase", layout=Vertical, spacing=DP24) widgetMold as Decorated
 	Text(value="Date widget", format=h3) title
 
 //	Block
@@ -100,17 +100,8 @@ Mold(layout=Vertical, spacing=DP24) widget as Decorated
 
 	Block properties
 		Text(value="Properties", format=h5)
-//		Frame(display=propertiesDisplay) properties
-		Block property as Multiple(emptyMessage="no properties defined") Moldable(mold=propertyMold)
-			Mold
-				Block(layout=Horizontal StartJustified)
-					Text(format=h6) name
-					Text(format=h6) type
-				Text description
-				Block(layout=Horizontal)
-					Text valuesLabel
-					Text values
-
+//		EmbeddedDisplay(display=propertiesDisplay) propertiesDisplay
+		Block property as Multiple Moldable(propertyMold)
 	Block
 		Text(value="Methods", format=h5)
 		Frame(display=methodsDisplay) methods
@@ -118,14 +109,16 @@ Mold(layout=Vertical, spacing=DP24) widget as Decorated
 		Text(value="Events", format=h5)
 		Frame(display=eventsDisplay) events
 
-Mold(modelClass = "io.intino.alexandria.schemas.Property") propertyMold
+Mold(modelClass = "a.test.Test") propertyMold as Decorated
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
-		Text(format=h6) type
-	Text description
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 propertyType, mode = Lowercase) type
+	Text(format=body2) description
 	Block(layout=Horizontal)
-		Text valuesLabel
-		Text values
+		Text(format=body2) valuesLabel
+		Text(format=body2 propertyType, value=":&nbsp;&nbsp;")
+		Text(format=body2) values
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List

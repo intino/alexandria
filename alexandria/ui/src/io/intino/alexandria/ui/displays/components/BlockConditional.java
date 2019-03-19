@@ -2,12 +2,13 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
-import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
+import io.intino.alexandria.ui.displays.components.selector.Selector;
 
-public class BlockSelection<B extends Box> extends AbstractBlockSelection<B> implements Selection {
+public class BlockConditional<B extends Box> extends AbstractBlockConditional<B> implements Selection {
+    private boolean visible;
 
-    public BlockSelection(B box) {
+    public BlockConditional(B box) {
         super(box);
     }
 
@@ -16,17 +17,38 @@ public class BlockSelection<B extends Box> extends AbstractBlockSelection<B> imp
         super.add(container);
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public boolean isHidden() {
+        return !visible;
+    }
+
+    public void show() {
+        this.updateVisibility(true);
+    }
+
+    public void hide() {
+        this.updateVisibility(false);
+    }
+
     @Override
     public void bindTo(Selector selector, String option) {
         updateVisibility(selector, option);
         selector.onSelect(e -> notifier.refreshVisibility(e.option().equals(option)));
     }
 
+    private void updateVisibility(boolean value) {
+        this.visible = value;
+        notifier.refreshVisibility(visible);
+    }
+
     private void updateVisibility(Selector selector, String option) {
         if (selector == null) return;
         String selectedOption = selector.selectedOption();
         if (selectedOption == null || !selectedOption.equals(option)) return;
-        notifier.refreshVisibility(true);
+        updateVisibility(true);
     }
 
 }

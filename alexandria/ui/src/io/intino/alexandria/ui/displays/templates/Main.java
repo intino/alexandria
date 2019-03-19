@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.blocks.WidgetBlock;
-import io.intino.alexandria.ui.displays.blocks.WidgetHelper;
+import io.intino.alexandria.ui.I18n;
+import io.intino.alexandria.ui.displays.molds.Model;
+import io.intino.alexandria.ui.displays.molds.WidgetMold;
 
 public class Main extends AbstractMain<UiFrameworkBox> {
 
@@ -14,22 +15,22 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     public void init() {
         super.init();
         title.update("Alexandria widgets");
-        menu.select("Date");
+        menu.select(I18n.translate("Date", language()));
         updateWidgets();
     }
 
     private void updateWidgets() {
-        updateWidget(panels.textPanel.textBlock, WidgetHelper.WidgetType.Text);
-        updateWidget(panels.imagePanel.imageBlock, WidgetHelper.WidgetType.Image);
-        updateWidget(panels.datePanel.dateBlock, WidgetHelper.WidgetType.Date);
+        updateWidget(panels.textPanel.textBlock, Model.WidgetType.Text);
+        updateWidget(panels.imagePanel.imageBlock, Model.WidgetType.Image);
+        updateWidget(panels.datePanel.dateBlock, Model.WidgetType.Date);
     }
 
-    private void updateWidget(WidgetBlock block, WidgetHelper.WidgetType type) {
-        block.title.update(type.name().toLowerCase() + " widget");
-        block.properties(WidgetHelper.properties(type));
-        block.methods(WidgetHelper.methods(type));
-        block.events(WidgetHelper.events(type));
-        block.refresh();
+    private void updateWidget(WidgetMold widget, Model.WidgetType type) {
+        widget.title.update(type.name().toLowerCase() + " widget");
+        widget.properties(Model.properties(type));
+        widget.methods(Model.methods(type));
+        widget.events(Model.events(type));
+        widget.refresh();
     }
 
 }
