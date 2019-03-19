@@ -14,7 +14,6 @@ class WidgetBlock extends AbstractWidgetBlock {
 		this.requester = new WidgetBlockRequester(this);
 	};
 
-
 }
 
 export default withStyles(styles, { withTheme: true })(WidgetBlock);

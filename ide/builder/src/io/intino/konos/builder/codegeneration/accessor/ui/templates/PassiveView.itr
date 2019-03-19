@@ -1,5 +1,7 @@
 def type(notifier)
 	export default class Notifier {
+		static subscriptions = $[$];
+
     	constructor(element) {
             this.element = element;
             this.pushService = Application.services.pushService;
@@ -8,6 +10,10 @@ def type(notifier)
         };
 
 		setup() {
+			var context = this.element.props.context != null ? this.element.props.context() : "";
+			var key = this.element.props.id + context;
+			if (Notifier.subscriptions$[key$]) return;
+			Notifier.subscriptions$[key$] = true;
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 		};

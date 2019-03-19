@@ -3,6 +3,7 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.ThemeTemplate;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.model.graph.Format;
 import io.intino.konos.model.graph.Theme;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
@@ -10,7 +11,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 
 import static io.intino.konos.builder.helpers.Commons.write;
-import static io.intino.konos.model.graph.Theme.Palette.Type.Normal;
+import static io.intino.konos.model.graph.Theme.Type.Normal;
 
 public class ThemeRenderer extends UIRenderer {
 	private final UIService service;
@@ -26,20 +27,18 @@ public class ThemeRenderer extends UIRenderer {
 		Theme theme = service.graph().theme();
 		frame.addSlot("palette", palette(theme));
 		frame.addSlot("typography", typography(theme));
-		theme.styleList().forEach(r -> frame.addSlot("style", frameOf(r)));
+		service.graph().formatList().forEach(r -> frame.addSlot("format", frameOf(r)));
 		write(new File(accessorGen() + File.separator + "Theme.js").toPath(), setup(ThemeTemplate.create()).format(frame));
 	}
 
 	private Frame palette(Theme theme) {
-		Theme.Palette palette = theme.palette();
-		if (palette == null) palette = theme.create().palette();
 		Frame result = new Frame("palette");
-		if (palette.type() != Normal) result.addSlot("type", palette.type().name());
-		if (palette.primary() != null) result.addSlot("primary", palette.primary().color());
-		if (palette.secondary() != null) result.addSlot("secondary", palette.secondary().color());
-		if (palette.error() != null) result.addSlot("error", palette.error().color());
-		result.addSlot("contrastThreshold", palette.contrastThreshold());
-		result.addSlot("tonalOffset", palette.tonalOffset());
+		if (theme.type() != Normal) result.addSlot("type", theme.type().name());
+		if (theme.primary() != null) result.addSlot("primary", theme.primary().color());
+		if (theme.secondary() != null) result.addSlot("secondary", theme.secondary().color());
+		if (theme.error() != null) result.addSlot("error", theme.error().color());
+		result.addSlot("contrastThreshold", theme.contrastThreshold());
+		result.addSlot("tonalOffset", theme.tonalOffset());
 		return result;
 	}
 
@@ -52,15 +51,15 @@ public class ThemeRenderer extends UIRenderer {
 		return result;
 	}
 
-	private Frame frameOf(Theme.Style style) {
+	private Frame frameOf(Format format) {
 		Frame result = new Frame().addTypes("style");
-		result.addSlot("name", style.name$());
-		result.addSlot("type", style.getClass().getSimpleName().toLowerCase());
-		style.propertyList().forEach(p -> result.addSlot("property", frameOf(p)));
+		result.addSlot("name", format.name$());
+		result.addSlot("type", format.getClass().getSimpleName().toLowerCase());
+		format.propertyList().forEach(p -> result.addSlot("property", frameOf(p)));
 		return result;
 	}
 
-	private Frame frameOf(Theme.Style.Property property) {
+	private Frame frameOf(Format.Property property) {
 		Frame result = new Frame().addTypes("property");
 		result.addSlot("name", property.getClass().getSimpleName().toLowerCase());
 		result.addSlot("content", property.content());

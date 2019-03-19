@@ -22,6 +22,7 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
+//        propertiesDisplay.set(new PropertiesDisplay(box()));
         methods.set(new MethodsDisplay(box()));
         events.set(new EventsDisplay(box()));
     }
@@ -50,6 +51,8 @@ public class WidgetBlock extends AbstractWidgetBlock<UiFrameworkBox> {
     }
 
     private void refreshPropertiesDisplay() {
+//        propertiesDisplay.<PropertiesDisplay>get().properties(propertyList);
+//        propertiesDisplay.refresh();
         propertyList.forEach(p -> {
             PropertyBlock block = new PropertyBlock(box());
             block.property(p);

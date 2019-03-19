@@ -8,7 +8,7 @@ use UI
 
 Concept:Named Component extends Display
 	var word:{Primary Secondary} color = Primary
-	var Theme.Style style = empty
+	var Format format = empty
 
 Concept Block extends Component
 	var string label = empty
@@ -49,7 +49,6 @@ Concept ChildComponents
 	Concept User extends Component
 	Concept Chart extends Component
 	Concept Text extends Component
-		var word:Format format = Default
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
 		var string value = empty
 
@@ -60,7 +59,7 @@ Concept ChildComponents
 	Concept Number extends Component
 
 	Concept Date extends Component
-		var string format = "dd/MM/YYYY"
+		var string pattern = "dd/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 
 	Concept Snackbar extends Component
@@ -118,5 +117,5 @@ Concept ChildComponents
 	Concept Selector extends Component
 		has Component
 
-	Concept EmbeddedDisplay extends Component
+	Concept Frame extends Component
 		var Display display

@@ -10,8 +10,8 @@ export default class Component extends AlexandriaDisplay {
     };
 
     style() {
-        const { styleName } = this.props;
+        const { format } = this.props;
         const theme = Theme.get();
-        return styleName != null ? theme.componentStyles[styleName] : undefined;
+        return format != null ? theme.formats[format] : undefined;
     };
 }

@@ -22,7 +22,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	@Override
 	public Frame properties() {
 		Frame result = super.properties();
-		result.addSlot("format", element.format().name().toLowerCase());
+		result.addSlot("format", element.format().name$());
 		result.addSlot("mode", element.mode().name().toLowerCase());
 		if (element.value() != null && !element.isCode()) result.addSlot("defaultValue", element.value());
 		return result;

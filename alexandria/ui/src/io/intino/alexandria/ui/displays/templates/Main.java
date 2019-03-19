@@ -15,16 +15,16 @@ public class Main extends AbstractMain<UiFrameworkBox> {
         super.init();
         title.update("Alexandria widgets");
         menu.select("Date");
-        updatePanels();
+        updateWidgets();
     }
 
-    private void updatePanels() {
-        updatePanel(panels.textPanel.textBlock, WidgetHelper.WidgetType.Text);
-        updatePanel(panels.imagePanel.imageBlock, WidgetHelper.WidgetType.Image);
-        updatePanel(panels.datePanel.dateBlock, WidgetHelper.WidgetType.Date);
+    private void updateWidgets() {
+        updateWidget(panels.textPanel.textBlock, WidgetHelper.WidgetType.Text);
+        updateWidget(panels.imagePanel.imageBlock, WidgetHelper.WidgetType.Image);
+        updateWidget(panels.datePanel.dateBlock, WidgetHelper.WidgetType.Date);
     }
 
-    private void updatePanel(WidgetBlock block, WidgetHelper.WidgetType type) {
+    private void updateWidget(WidgetBlock block, WidgetHelper.WidgetType type) {
         block.title.update(type.name().toLowerCase() + " widget");
         block.properties(WidgetHelper.properties(type));
         block.methods(WidgetHelper.methods(type));

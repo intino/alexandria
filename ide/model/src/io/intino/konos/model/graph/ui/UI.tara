@@ -30,28 +30,27 @@ Concept Translator
 		var string value
 
 Concept:{0..1} Theme
-	Concept:{0..1} Palette
-		var word:{Normal Dark} type = Normal
-		var integer contrastThreshold = 3
-		var double tonalOffset = 0.2
+	var word:{Normal Dark} type = Normal
+	var integer contrastThreshold = 3
+	var double tonalOffset = 0.2
 
-		Concept Property is abstract > var string color
-		Concept:{1..1} Primary extends Property
-		Concept:{1..1} Secondary extends Property
-		Concept:{1..1} Error extends Property
+	Concept Property is abstract > var string color
+	Concept:{1..1} Primary extends Property
+	Concept:{1..1} Secondary extends Property
+	Concept:{1..1} Error extends Property
 
 	Concept:{0..1} Typography
 		var integer:{px} fontSize = 13px
 		var string[] fontFamily = "-apple-system" "BlinkMacSystemFont" "Segoe UI" "Roboto" "Helvetica Neue" "Arial" "sans-serif" "Apple Color Emoji" "Segoe UI Emoji" "Segoe UI Symbol"
 
-	Concept Style
-		Concept Property is abstract
-			var string content
-		Concept:{0..1} Margin extends Property
-		Concept:{0..1} Padding extends Property
-		Concept:{0..1} Background extends Property
-		Concept:{0..1} Color extends Property
-		Concept:{0..1} Border extends Property
+Concept Format
+	Concept Property is abstract
+		var string content
+	Concept:{0..1} Margin extends Property
+	Concept:{0..1} Padding extends Property
+	Concept:{0..1} Background extends Property
+	Concept:{0..1} Color extends Property
+	Concept:{0..1} Border extends Property
 
 Facet Main on UI.Resource
 Facet Confidential on UI.Resource

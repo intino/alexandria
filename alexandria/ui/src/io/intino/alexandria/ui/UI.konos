@@ -9,7 +9,7 @@ Template main as Decorated
 
 	Block(layout=Horizontal Flexible) body
 
-		Block header as Relative(width=30%)
+		Block header as Relative(width=25%)
 			Selector menu as Menu(layout=Vertical)
 				Block(label="data widgets") basicSection as Collapsible
 					Text(value="Text") text as Option
@@ -52,6 +52,7 @@ Theme theme1
 		Error("#f44336")
 
 	Style air > Padding("10px 20px")
+	Style propertyType > Color("#888")
 
 Translator(Spanish)
 	Translation("título del campo", "título del campo en dddd")
@@ -96,8 +97,8 @@ Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
 
 	Block properties
 		Text(value="Properties", format=H5)
-//		EmbeddedDisplay(display=propertiesDisplay) properties
-		Block property as InstanceCollection(propertyBlock)
+//		EmbeddedDisplay(display=propertiesDisplay) propertiesDisplay
+		Block property as InstanceCollection(type=propertyBlock)
 	Block
 		Text(value="Methods", format=H5)
 		EmbeddedDisplay(display=methodsDisplay) methods
@@ -106,13 +107,15 @@ Block(layout=Vertical, spacing=DP24) widgetBlock as Decorated
 		EmbeddedDisplay(display=eventsDisplay) events
 
 Block propertyBlock as Decorated
-	Block(layout=Horizontal)
+	Block(layout=Horizontal StartJustified)
 		Text(format=H6) name
-		Text(format=H6) type
-	Text description
+		Text(format=H6, value=":&nbsp;&nbsp;")
+		Text(format=H6, style = theme1.propertyType, mode = Lowercase) type
+	Text(format=Body2) description
 	Block(layout=Horizontal)
-		Text valuesLabel
-		Text values
+		Text(format=Body2) valuesLabel
+		Text(format=Body2, value=":&nbsp;&nbsp;", style = theme1.propertyType)
+		Text(format=Body2) values
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List
