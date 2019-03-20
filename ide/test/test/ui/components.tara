@@ -12,33 +12,33 @@ Template main as Decorated
 		Block header as Relative(width=25%)
 			Selector menu as Menu(layout=Vertical)
 				Block(label="data widgets") basicSection as Collapsible
-					Text("Text") text as Option
-					Text("Image") image as Option
-					Text("File") file as Option
-					Text("Date") date as Option
+					Text(value="Text") text as Option
+					Text(value="Image") image as Option
+					Text(value="File") file as Option
+					Text(value="Date") date as Option
 				Block(label="catalog widgets") catalogSection as Collapsible
-					Text("Catalog") catalog as Option
-					Text("Grouping") sorting as Option
-					Text("Sorting") grouping as Option
+					Text(value="Catalog") catalog as Option
+					Text(value="Grouping") sorting as Option
+					Text(value="Sorting") grouping as Option
 				Block(label="operation widgets") operationSection as Collapsible
-					Text("OpenCatalogOperation") openCatalogOperation as Option
-					Text("OpenDialogOperation") openDialogOperation as Option
-					Text("OpenExternalDialogOperation") openExternalDialogOperation as Option
-					Text("ExportOperation") exportOperation as Option
-					Text("ExportSelectionOperation") exportSelectionOperation as Option
-					Text("DownloadOperation") downloadOperation as Option
-					Text("DownloadSelectionOperation") downloadSelectionOperation as Option
-					Text("TaskOperation") taskOperation as Option
-					Text("TaskSelectionOperation") taskSelectionOperation as Option
-					Text("PreviewOperation") previewOperation as Option
-					Text("SearchOperation") searchOperation as Option
+					Text(value="OpenCatalogOperation") openCatalogOperation as Option
+					Text(value="OpenDialogOperation") openDialogOperation as Option
+					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
+					Text(value="ExportOperation") exportOperation as Option
+					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
+					Text(value="DownloadOperation") downloadOperation as Option
+					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
+					Text(value="TaskOperation") taskOperation as Option
+					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
+					Text(value="PreviewOperation") previewOperation as Option
+					Text(value="SearchOperation") searchOperation as Option
 				Block(label="other widgets") otherSection
-					Text("Badge") badge as Option
-					Text("Chip") chip as Option
-					Text("Card") card as Option
-					Text("Snackbar") snackbar as Option
-					Text("Progress") progress as Option
-					Text("Wizard") wizard as Option
+					Text(value="Badge") badge as Option
+					Text(value="Chip") chip as Option
+					Text(value="Card") card as Option
+					Text(value="Snackbar") snackbar as Option
+					Text(value="Progress") progress as Option
+					Text(value="Wizard") wizard as Option
 
 		Block(layout=Vertical Flexible, format=air) panels
 			Block textPanel as Conditional(main.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
@@ -55,10 +55,12 @@ Format h5
 Format h6
 Format body2
 Format air > Padding("10px 20px")
-Format propertyType > Color("#888")
+Format widgetType > Color("#888")
 
 Translator(Spanish)
-	Translation("título del campo", "título del campo en dddd")
+	Translation("no properties", "no tiene propiedades")
+	Translation("no methods", "no tiene métodos")
+	Translation("no events", "no tiene eventos")
 
 //Block(layout=Vertical, spacing=DP24) widgetMold
 //
@@ -86,7 +88,7 @@ Translator(Spanish)
 Block imageBlock
 	Text(value="Image!!!!!")
 
-Mold(modelClass = "Clase", layout=Vertical, spacing=DP24) widgetMold as Decorated
+Mold(layout=Vertical, spacing=DP24) widgetMold as Decorated
 	Text(value="Date widget", format=h3) title
 
 //	Block
@@ -100,25 +102,40 @@ Mold(modelClass = "Clase", layout=Vertical, spacing=DP24) widgetMold as Decorate
 
 	Block properties
 		Text(value="Properties", format=h5)
-//		EmbeddedDisplay(display=propertiesDisplay) propertiesDisplay
-		Block property as Multiple Moldable(propertyMold)
-	Block
+		Block property as Multiple("no properties") Moldable(propertyMold)
+	Block methods
 		Text(value="Methods", format=h5)
-		Frame(display=methodsDisplay) methods
+		Block method as Multiple("no methods") Moldable(methodMold)
 	Block
 		Text(value="Events", format=h5)
 		Frame(display=eventsDisplay) events
 
-Mold(modelClass = "a.test.Test") propertyMold as Decorated
+Mold(modelClass="io.intino.alexandria.schemas.Property") propertyMold as Decorated
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
 		Text(format=h6, value=":&nbsp;&nbsp;")
-		Text(format=h6 propertyType, mode = Lowercase) type
+		Text(format=h6 widgetType, mode = Lowercase) type
 	Text(format=body2) description
 	Block(layout=Horizontal)
 		Text(format=body2) valuesLabel
-		Text(format=body2 propertyType, value=":&nbsp;&nbsp;")
+		Text(format=body2 widgetType, value=":&nbsp;&nbsp;")
 		Text(format=body2) values
+
+Mold(modelClass="io.intino.alexandria.schemas.Method") methodMold as Decorated
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value="(")
+		Block(layout = Horizontal) params > Block param as Moldable(methodParamMold) Multiple
+		Text(format=h6, value=")")
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) returnType
+	Text(format=body2) description
+
+Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.MethodParameter") methodParamMold as Decorated
+	Text(format=h6) name
+	Text(format=h6, value=":&nbsp;")
+	Text(format=h6) type
+	Text(format=h6) comma
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List

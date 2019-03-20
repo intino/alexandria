@@ -1,6 +1,6 @@
 import React from "react";
 import PassiveView from "./PassiveView";
-import ReactDOM from "react-dom";
+import Typography from "@material-ui/core/Typography";
 import * as Elements from "app-elements/gen/Displays";
 
 export default class Display extends PassiveView {
@@ -32,10 +32,13 @@ export default class Display extends PassiveView {
         this._updateInstancesState(container, instances.splice(index, 1));
     };
 
-    renderInstances = (container) => {
+    renderInstances = (container, emptyMessage) => {
         if (container == null) container = "__elements";
         var instances = this.state[container];
-        if (instances == null) return;
+        if (instances == null || instances.length <= 0) {
+            if (emptyMessage) return (<Typography>{this.translate(emptyMessage)}</Typography>);
+            return;
+        }
         return instances.map((instance, index) => {
             instance.pl.context = () => { return instance.pl.o };
             return (<div key={index}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);

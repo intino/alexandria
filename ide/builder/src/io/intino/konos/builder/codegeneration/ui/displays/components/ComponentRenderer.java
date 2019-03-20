@@ -171,8 +171,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private boolean addSpecificTypes(Frame frame) {
 
-		if (element.i$(MultipleBlock.class))
+		if (element.i$(MultipleBlock.class)) {
 			frame.addTypes(MultipleBlock.class.getSimpleName());
+			String emptyMessage = element.a$(MultipleBlock.class).emptyMessage();
+			if (emptyMessage != null) frame.addSlot("emptyMessage", emptyMessage);
+		}
 
 		if (element.i$(MoldableBlock.class)) {
 			frame.addTypes(MoldableBlock.class.getSimpleName());

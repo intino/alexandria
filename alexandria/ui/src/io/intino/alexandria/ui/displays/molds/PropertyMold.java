@@ -7,14 +7,9 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.molds.AbstractPropertyMold;
 
 public class PropertyMold extends AbstractPropertyMold<UiFrameworkBox> {
-    private Property property;
 
     public PropertyMold(UiFrameworkBox box) {
         super(box);
-    }
-
-    public void property(Property property) {
-        this.property = property;
     }
 
     @Override

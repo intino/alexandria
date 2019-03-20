@@ -1,0 +1,88 @@
+dsl Konos
+
+use Theme
+use Schemas
+
+Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated
+	Text(value="Date widget", format=h3) title
+
+	Block textExamples as Conditional > Block as Moldable(textExamplesMold)
+	Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
+
+	Block properties
+		Text(value="Properties", format=h5)
+		Block property as Multiple(noItemsMessage="no properties") Moldable(propertyMold)
+	Block methods
+		Text(value="Methods", format=h5)
+		Block method as Multiple(noItemsMessage="no methods") Moldable(methodMold)
+	Block
+		Text(value="Events", format=h5)
+		Frame(display=eventsDisplay) events
+
+Mold(modelClass="io.intino.alexandria.schemas.Property") propertyMold as Decorated
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) type
+	Text(format=body2) description
+	Block(layout=Horizontal)
+		Text(format=body2) valuesLabel
+		Text(format=body2 widgetType, value=":&nbsp;&nbsp;")
+		Text(format=body2) values
+
+Mold(modelClass="io.intino.alexandria.schemas.Method") methodMold as Decorated
+	Block(layout=Horizontal StartJustified)
+		Text(format=h6) name
+		Text(format=h6, value="(")
+		Block(layout = Horizontal) params > Block param as Moldable(methodParamMold) Multiple
+		Text(format=h6, value=")")
+		Text(format=h6, value=":&nbsp;&nbsp;")
+		Text(format=h6 widgetType, mode = Lowercase) returnType
+	Text(format=body2) description
+
+Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.MethodParameter") methodParamMold as Decorated
+	Text(format=h6) name
+	Text(format=h6, value=":&nbsp;")
+	Text(format=h6) type
+	Text(format=h6) comma
+
+Display eventsDisplay as Decorated
+	Notification refresh as Object(Event) List
+
+
+Mold(layout=Horizontal AroundJustified, spacing=DP24) textExamplesMold
+
+	Block > Text(value="Campo texto", format=h5)
+		Text(format=body1) valueA
+		Block > Text valueACode as Code(Html)
+				value
+					=========
+					Konos: Text text1<br/><br/>
+					&nbsp;Java: text1.update("abcd")
+					=========
+
+	Block > Text(value="Campo texto con título", format=h5)
+		Text(format=body1) valueB > label = "título del campo"
+		Block > Text valueBCode as Code(Html)
+				value
+					=========
+					Konos: Text text1<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
+					&nbsp;Java: text1.update("efgh")
+					=========
+
+	Block > Text(value="Campo texto editable", format=h5)
+		Text(format=body1) valueC as Editable > label = "campo editable"
+
+Mold dateExamplesMold
+	Date(mode=FromNow, pattern="dd/MM/YYYY") dateA
+	Block > Text dateACode as Code(Html)
+			value
+				=========
+				Konos: Date date1<br/><br/>
+				&nbsp;Java: date1.update(Instant.now())
+				=========
+
+Block imageBlock
+	Text(value="Image!!!!!")
+

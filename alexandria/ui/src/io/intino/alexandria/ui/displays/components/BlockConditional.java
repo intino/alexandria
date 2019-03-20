@@ -25,6 +25,14 @@ public class BlockConditional<B extends Box> extends AbstractBlockConditional<B>
         return !visible;
     }
 
+    public void visible(boolean value) {
+        updateVisibility(value);
+    }
+
+    public void hidden(boolean value) {
+        updateVisibility(!value);
+    }
+
     public void show() {
         this.updateVisibility(true);
     }

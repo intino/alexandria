@@ -21,12 +21,16 @@ export default class Block extends AbstractBlock {
 	};
 
 	_renderLayout = () => {
-		const isVerticalSpacing = this._isVerticalSpacing();
+		const hasSpacing = this._hasSpacing();
 
 		return (
 			<div style={this.style()} className={this._layout()}>
 				{React.Children.map(this.props.children, (child, i) => {
-					return isVerticalSpacing ? <div style={{paddingBottom: this.props.spacing + "px"}}>{child}</div> : child;
+					if (hasSpacing) {
+						var style = this._is("vertical") ? { paddingBottom: this.props.spacing + "px" } : { paddingRight: this.props.spacing + "px" };
+						return React.cloneElement(child, { style: style });
+					}
+					return child;
 				})}
 			</div>
 		);
@@ -47,6 +51,7 @@ export default class Block extends AbstractBlock {
 	style() {
 		var result = super.style();
 		if (result == null) result = {};
+		if (this.props.style != null) this.applyStyles(this.props.style, result);
 		if (this.props.margin != null) result.margin = this.props.margin;
 		if (this._widthDefined()) result.width = this.props.width;
 		if (this._heightDefined()) result.height = this.props.height;
@@ -58,8 +63,8 @@ export default class Block extends AbstractBlock {
 		return (" " + this.props.layout + " ").indexOf(" " + layout + " ") !== -1;
 	}
 
-	_isVerticalSpacing = () => {
-		return this.props.spacing != null && this._is("vertical");
+	_hasSpacing = () => {
+		return this.props.spacing != null;
 	};
 
 	_widthDefined = () => {
