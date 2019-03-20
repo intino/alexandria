@@ -44,6 +44,10 @@ public abstract class UIRenderer {
 	public abstract void execute();
 
 	public Frame buildFrame() {
+		return baseFrame();
+	}
+
+	public Frame baseFrame() {
 		return new Frame().addSlot("box", boxName()).addSlot("package", settings.packageName());
 	}
 
@@ -117,8 +121,11 @@ public abstract class UIRenderer {
 	}
 
 	protected String path(io.intino.konos.model.graph.Display display) {
-		String type = typeOf(display);
-		return type.equalsIgnoreCase("display") ? format(Displays) : String.format(DisplaysType, uiSubPath(), type).toLowerCase();
+		return path(typeOf(display));
+	}
+
+	protected String path(String displayType) {
+		return displayType.equalsIgnoreCase("display") ? format(Displays) : String.format(DisplaysType, uiSubPath(), displayType).toLowerCase();
 	}
 
 	protected Template addFormats(Template template) {

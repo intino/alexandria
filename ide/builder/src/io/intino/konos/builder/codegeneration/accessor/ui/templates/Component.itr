@@ -17,7 +17,7 @@ def type(child) trigger(add)
 end
 
 def type(component & child & moldableblock & multipleblock)
-	{this.renderInstances("$name"[, "$emptyMessage"])}
+	{this.renderInstances("$name"[, "$noItemsMessage"])}
 end
 
 def type(component & child)
@@ -46,6 +46,10 @@ end
 
 def type(properties & mold) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
+end
+
+def type(properties & image) trigger(specific)
+	[ width="$width"][ height="$height"]
 end
 
 def type(properties & block) trigger(specific)

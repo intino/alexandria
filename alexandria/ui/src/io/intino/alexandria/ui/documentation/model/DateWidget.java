@@ -16,7 +16,7 @@ public class DateWidget extends Widget {
 	}
 
 	private void addProperties() {
-		propertyList().add(Model.property("format", Property.Type.Text, "used to...", "dd/MM/YYYY"));
+		propertyList().add(Model.property("pattern", Property.Type.Text, "pattern is defined using momentjs format", "DD/MM/YYYY"));
 		propertyList().add(Model.property("mode", Property.Type.Word, "used to...", "FromNow", "ToNow"));
 	}
 

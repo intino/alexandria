@@ -9,8 +9,8 @@ def type(desktop)
 	import $package+validPackage.$box+firstUpperCase~Box;[
 	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;]
 
-	import $package+validPackage.ui.displays.blocks.*;
-	import $package+validPackage.ui.displays.molds.*;
+	$moldsImport
+	$blocksImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
@@ -55,6 +55,14 @@ def type(desktop)
         	}
 		}
     }
+end
+
+def type(moldsImports)
+	import $package+validPackage.ui.displays.molds.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
 end
 
 def type(componentReferences & forMold)

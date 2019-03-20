@@ -7,7 +7,7 @@ use DataTypes
 use UI
 
 Concept:Named Component extends Display
-	var word:{Primary Secondary} color = Primary
+	var string color = "Primary"
 	var Format[] format = empty
 
 Concept Block extends Component
@@ -61,12 +61,15 @@ Concept ChildComponents
 
 	Concept File extends Component
 	Concept Image extends Component
+		var resource value = empty
+		var resource default = empty
+
 	Concept Icon extends Component
 		var string alexandriaIcon
 	Concept Number extends Component
 
 	Concept Date extends Component
-		var string pattern = "dd/MM/YYYY"
+		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
 
 	Concept Snackbar extends Component
@@ -78,8 +81,6 @@ Concept ChildComponents
 		Concept Step > has Component
 
 	Concept Operation extends Component
-		var string label
-
 		sub OpenCatalogOperation
 		sub OpenDialogOperation
 		sub OpenExternalDialogOperation

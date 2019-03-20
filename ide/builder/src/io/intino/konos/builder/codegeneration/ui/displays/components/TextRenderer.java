@@ -15,7 +15,11 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
-		if (element.isCode()) frame.addSlot("code", new Frame(CodeText.class.getSimpleName()).addSlot("value", element.asCode().value().trim()));
+		if (element.isCode()) {
+			Frame codeFrame = new Frame(CodeText.class.getSimpleName());
+			if (element.asCode().value() != null) codeFrame.addSlot("value", element.asCode().value().trim());
+			frame.addSlot("code", codeFrame);
+		}
 		return frame;
 	}
 

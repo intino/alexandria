@@ -27,7 +27,7 @@ export default class Block extends AbstractBlock {
 			<div style={this.style()} className={this._layout()}>
 				{React.Children.map(this.props.children, (child, i) => {
 					if (hasSpacing) {
-						var style = this._is("vertical") ? { paddingBottom: this.props.spacing + "px" } : { paddingRight: this.props.spacing + "px" };
+						var style = this._is("vertical") ? { marginBottom: this.props.spacing + "px" } : { marginRight: this.props.spacing + "px" };
 						return React.cloneElement(child, { style: style });
 					}
 					return child;
@@ -45,6 +45,7 @@ export default class Block extends AbstractBlock {
 		layout = layout.replace("tjustified", "t-justified");
 		layout = layout.replace("djustified", "d-justified");
 		layout = layout.replace("nowrap", "no-wrap");
+		if (layout === "vertical") return undefined;
 		return "layout " + layout;
 	};
 

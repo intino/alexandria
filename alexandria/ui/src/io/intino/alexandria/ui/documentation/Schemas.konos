@@ -7,7 +7,7 @@ Schema Widget
 
 Schema Property
 	Attribute name as Text
-	Attribute type as Word("Integer" "Word" "Text")
+	Attribute type as Word("Integer" "Word" "Text" "Resource")
 	Attribute values as Text List
 	Attribute description as Text
 

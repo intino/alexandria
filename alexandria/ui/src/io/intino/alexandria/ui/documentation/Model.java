@@ -5,6 +5,7 @@ import io.intino.alexandria.schemas.MethodParameter;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.documentation.model.DateWidget;
+import io.intino.alexandria.ui.documentation.model.ImageWidget;
 import io.intino.alexandria.ui.documentation.model.TextWidget;
 
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class Model {
 
 	private static void initialize() {
 		map.put(WidgetType.Text, new TextWidget());
+		map.put(WidgetType.Image, new ImageWidget());
 		map.put(WidgetType.Date, new DateWidget());
 	}
 
@@ -34,7 +36,9 @@ public class Model {
 	}
 
 	public static Property property(String name, Property.Type type, String description, String... values) {
-		return new Property().name(name).type(type).description(description).values(Arrays.asList(values));
+		Property result = new Property().name(name).type(type).description(description);
+		if (values.length > 0) result.values(Arrays.asList(values));
+		return result;
 	}
 
 	public static Method method(String name, List<MethodParameter> params, String description, String returnType) {

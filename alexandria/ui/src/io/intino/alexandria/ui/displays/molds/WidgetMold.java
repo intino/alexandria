@@ -5,6 +5,7 @@ import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.displays.EventsDisplay;
 import io.intino.alexandria.ui.documentation.model.DateWidget;
+import io.intino.alexandria.ui.documentation.model.ImageWidget;
 import io.intino.alexandria.ui.documentation.model.TextWidget;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
@@ -30,6 +31,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
 
     private void updateExamplesVisibility() {
         textExamples.visible(widget instanceof TextWidget);
+        imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
     }
 

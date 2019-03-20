@@ -6,6 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.ChildComponents.*;
+import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
@@ -64,6 +65,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected Frame properties(Component component) {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
+		if (component.color() != null) result.addSlot("color", element.color());
 		if (component.label() != null) result.addSlot("label", component.label());
 		if (component.format() != null) {
 			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
@@ -173,8 +175,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(MultipleBlock.class)) {
 			frame.addTypes(MultipleBlock.class.getSimpleName());
-			String emptyMessage = element.a$(MultipleBlock.class).emptyMessage();
-			if (emptyMessage != null) frame.addSlot("emptyMessage", emptyMessage);
+			String message = element.a$(MultipleBlock.class).noItemsMessage();
+			if (message != null) frame.addSlot("noItemsMessage", message);
 		}
 
 		if (element.i$(MoldableBlock.class)) {
@@ -195,6 +197,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(AvatarImage.class)) result.addSlot("facet", new Frame("facet").addSlot("name", AvatarImage.class.getSimpleName().replace("Image", "")));
 	}
 
 	private void addImplements(C element, Frame frame) {
