@@ -1,19 +1,13 @@
 package io.intino.alexandria.ui.displays.molds;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.schemas.Event;
 import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.displays.MethodsDisplay;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.intino.alexandria.ui.documentation.model.DateWidget;
+import io.intino.alexandria.ui.documentation.model.TextWidget;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
-    private List<Property> propertyList = new ArrayList<>();
-    private List<Method> methodList = new ArrayList<>();
-    private List<Event> eventList = new ArrayList<>();
 
     public WidgetMold(UiFrameworkBox box) {
         super(box);
@@ -22,52 +16,47 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-//        propertiesDisplay.set(new PropertiesDisplay(box()));
-        methods.set(new MethodsDisplay(box()));
         events.set(new EventsDisplay(box()));
-    }
-
-    public WidgetMold properties(List<Property> propertyList) {
-        this.propertyList = propertyList;
-        return this;
-    }
-
-    public WidgetMold methods(List<Method> methodList) {
-        this.methodList = methodList;
-        return this;
-    }
-
-    public WidgetMold events(List<Event> eventList) {
-        this.eventList = eventList;
-        return this;
     }
 
     @Override
     public void refresh() {
         super.refresh();
+        updateExamplesVisibility();
         refreshPropertiesDisplay();
         refreshMethodsDisplay();
         refreshEventsDisplay();
     }
 
+    private void updateExamplesVisibility() {
+        textExamples.visible(widget instanceof TextWidget);
+        dateExamples.visible(widget instanceof DateWidget);
+    }
+
     private void refreshPropertiesDisplay() {
-//        propertiesDisplay.<PropertiesDisplay>get().properties(propertyList);
-//        propertiesDisplay.refresh();
-        propertyList.forEach(p -> {
-            PropertyMold block = new PropertyMold(box());
-            block.property(p);
-            properties.addProperty(block);
-            block.refresh();
-        });
+        widget.propertyList().forEach(this::propertyMoldOf);
+    }
+
+    private void propertyMoldOf(Property property) {
+        PropertyMold mold = new PropertyMold(box());
+        mold.property = property;
+        properties.addPropertyMold(mold);
+        mold.refresh();
     }
 
     private void refreshMethodsDisplay() {
-        methods.<MethodsDisplay>get().methods(methodList);
-        methods.refresh();
+        widget.methodList().forEach(this::methodMoldOf);
+    }
+
+    private void methodMoldOf(Method method) {
+        MethodMold mold = new MethodMold(box());
+        mold.method = method;
+        methods.addMethodMold(mold);
+        mold.refresh();
     }
 
     private void refreshEventsDisplay() {
-        events.<EventsDisplay>get().events(eventList);
+        events.<EventsDisplay>get().events(widget.eventList());
         events.refresh();
     }
 

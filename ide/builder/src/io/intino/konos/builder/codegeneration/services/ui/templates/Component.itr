@@ -30,9 +30,9 @@ def type(component & child) trigger(declaration)
 end
 
 def type(component & child & moldableblock & multipleblock) trigger(method)
-	public void add$name+firstUpperCase($mold+firstUpperCase instance) {
-		instance.id(java.util.UUID.randomUUID().toString());
-		$owner.this.add(instance, "$name");
+	public void add$name+firstUpperCase~Mold($mold+firstUpperCase mold) {
+		mold.id(java.util.UUID.randomUUID().toString());
+		$owner.this.add(mold, "$name");
 	}
 end
 

@@ -22,4 +22,9 @@ export default class Component extends AlexandriaDisplay {
         });
         return result;
     };
+
+    applyStyles = (styles, to) => {
+        if (styles == null) return;
+        for (let rule in styles) to[rule] = styles[rule];
+    };
 }

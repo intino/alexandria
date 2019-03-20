@@ -47,7 +47,7 @@ Facet Conditional extends Behavior on Block
 	var Option selected = empty
 
 Facet Multiple on Block
-	var string emptyMessage = empty
+	var string noItemsMessage = empty
 
 // CATALOG FACETS
 Facet Temporal on Catalog

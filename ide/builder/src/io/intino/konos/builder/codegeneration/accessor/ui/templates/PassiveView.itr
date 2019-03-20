@@ -28,9 +28,10 @@ def type(notifier)
 						execute: function (action) {
 							register(pushService.listen(message, function (parameters) {
 								let id = parameters.i;
-								let owner = parameters.o;
+								let ownerPath = parameters.o;
+								let ownerId = _owner(ownerPath);
 								let context = element.props.context != null ? element.props.context() : null;
-								if (id === element.props.id && (owner == null || owner === "" || owner.indexOf(context) !== -1)) {
+								if (id === element.props.id && (ownerPath == null || ownerPath === "" || ownerPath === context || ownerId.indexOf(context) !== -1)) {
 									action(parameters);
 								}
 							}));
@@ -45,6 +46,12 @@ def type(notifier)
 					}));
 				}
 			};
+
+			function _owner(owner) {
+				if (owner == null) return "";
+				let ownerList = owner.split(".");
+				return ownerList.length > 0 ? ownerList$[ownerList.length-1$] : "";
+			}
 
 			function _register(registration) {
 				this.pushRegistrations.push(registration);

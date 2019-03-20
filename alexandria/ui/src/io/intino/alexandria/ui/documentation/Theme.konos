@@ -1,0 +1,17 @@
+dsl Konos
+
+Theme theme1
+	Primary("#3f51b5")
+	Secondary("#ff9100")
+	Error("#f44336")
+
+Format h3
+Format h5
+Format h6
+Format body1
+Format body2
+Format air > Padding("10px 20px")
+Format widgetType > Color("#888")
+
+
+

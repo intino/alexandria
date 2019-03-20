@@ -18,8 +18,11 @@ export default class BlockConditional extends AbstractBlockConditional {
 	};
 
 	render() {
+		let styles = { display: this.state.visible ? "block" : "none" };
+		if (this.props.style != null) this.applyStyles(this.props.style, styles);
+
 		return (
-			<div style={ { display: this.state.visible ? "block" : "none" } }>
+			<div style={ styles }>
 				<Block style={this.style()}
 					   layout={this.props.layout}
 					   width={this.props.width}

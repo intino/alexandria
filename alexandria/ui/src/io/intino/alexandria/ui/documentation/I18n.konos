@@ -1,0 +1,7 @@
+dsl Konos
+
+Translator(Spanish)
+	Translation("no properties", "no tiene propiedades")
+	Translation("no methods", "no tiene métodos")
+	Translation("no events", "no tiene eventos")
+	Translation("date widget", "widget Date")

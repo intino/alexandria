@@ -1,0 +1,26 @@
+dsl Konos
+
+Schema Widget
+	Attribute propertyList as Object(Property) List
+	Attribute methodList as Object(Method) List
+	Attribute eventList as Object(Event) List
+
+Schema Property
+	Attribute name as Text
+	Attribute type as Word("Integer" "Word" "Text")
+	Attribute values as Text List
+	Attribute description as Text
+
+Schema Method
+	Attribute name as Text
+	Attribute params as Object(MethodParameter) List
+	Attribute description as Text
+	Attribute returnType as Text
+
+Schema MethodParameter
+	Attribute name as Text
+	Attribute type as Text
+
+Schema Event
+	Attribute name as Text
+	Attribute eventType as Text

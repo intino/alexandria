@@ -190,7 +190,7 @@ public abstract class UIRenderer {
 	}
 
 	private boolean isRoot(Node node) {
-		return node.owner() == node.model();
+		return node.owner() == null || node.owner() == node.model();
 	}
 
 }

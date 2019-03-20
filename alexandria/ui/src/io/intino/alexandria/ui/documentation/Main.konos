@@ -1,0 +1,52 @@
+dsl Konos
+
+use Widget
+use Theme
+
+Service(title = "", favicon = "") UiElements as UI(port = "9000")
+	Resource(path = "/") home as Page(main)
+
+Template main as Decorated
+	Header(format=air) appBar
+		Text(format=h3) title
+
+	Block(layout=Horizontal Flexible) body
+
+		Block header as Relative(width=25%)
+			Selector menu as Menu(layout=Vertical)
+				Block(label="data widgets") basicSection as Collapsible
+					Text(value="Text") text as Option
+					Text(value="Image") image as Option
+					Text(value="File") file as Option
+					Text(value="Date") date as Option
+				Block(label="catalog widgets") catalogSection as Collapsible
+					Text(value="Catalog") catalog as Option
+					Text(value="Grouping") sorting as Option
+					Text(value="Sorting") grouping as Option
+				Block(label="operation widgets") operationSection as Collapsible
+					Text(value="OpenCatalogOperation") openCatalogOperation as Option
+					Text(value="OpenDialogOperation") openDialogOperation as Option
+					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
+					Text(value="ExportOperation") exportOperation as Option
+					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
+					Text(value="DownloadOperation") downloadOperation as Option
+					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
+					Text(value="TaskOperation") taskOperation as Option
+					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
+					Text(value="PreviewOperation") previewOperation as Option
+					Text(value="SearchOperation") searchOperation as Option
+				Block(label="other widgets") otherSection
+					Text(value="Badge") badge as Option
+					Text(value="Chip") chip as Option
+					Text(value="Card") card as Option
+					Text(value="Snackbar") snackbar as Option
+					Text(value="Progress") progress as Option
+					Text(value="Wizard") wizard as Option
+
+		Block(layout=Vertical Flexible, format=air) panels
+			Block textPanel as Conditional(main.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
+			Block imagePanel as Conditional(main.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
+			Block filePanel as Conditional(main.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
+			Block datePanel as Conditional(main.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
+
+			Block catalogPanel as Conditional(main.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)
