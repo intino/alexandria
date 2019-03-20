@@ -12,6 +12,6 @@ Format body1
 Format body2
 Format air > Padding("10px 20px")
 Format widgetType > Color("#888")
-
-
-
+Format filled
+	Background("#efefef")
+	Padding("8px")

@@ -35,6 +35,8 @@ class Text extends AbstractText {
 	    const label = TextBehavior.label(this.props);
 	    const labelBlock = (label !== undefined) ? <Typography variant={format} className={classes.label}>{label}</Typography> : undefined;
 
+	    if (value == null || value === "") return (<React.Fragment/>);
+
 	    return (
 			<Block layout="horizontal">
 				{ labelBlock }

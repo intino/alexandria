@@ -15,7 +15,7 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     public void init() {
         super.init();
         title.update("Alexandria widgets");
-        menu.select("Text");
+        menu.select("Image");
         updateMolds();
     }
 

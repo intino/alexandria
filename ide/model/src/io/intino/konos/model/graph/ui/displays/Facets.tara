@@ -1,7 +1,6 @@
 dsl Proteo
 
 use Views
-use Mold
 use Component
 
 // OPERATION FACETS
@@ -12,14 +11,11 @@ Facet Link on ChildComponents.Operation
 
 // IMAGE FACETS
 Facet Avatar on ChildComponents.Image
+	var string text
 
 // PROGRESS FACETS
 Facet Circular on ChildComponents.Progress
 Facet Linear on ChildComponents.Progress
-
-// BLOCK FACETS
-Facet Sized on Block
-	var integer:{Columns} width
 
 Facet Drawer on Block
 
@@ -27,13 +23,17 @@ Facet Target on Block
 	var string modelClass
 
 // Layout facets
-Facet Absolute on Block
+Facet AbstractAbsolute is abstract
 	var integer:{px} width = -1px
 	var integer:{px} height = -1px
+Facet Absolute extends AbstractAbsolute on Block
+Facet Absolute extends AbstractAbsolute on ChildComponents.Image
 
-Facet Relative on Block
+Facet AbstractRelative is abstract
 	var double:{%} width = 100%
 	var double:{%} height = 100%
+Facet Relative extends AbstractRelative on Block
+Facet Relative extends AbstractRelative on ChildComponents.Image
 
 Facet Paper on Block
 

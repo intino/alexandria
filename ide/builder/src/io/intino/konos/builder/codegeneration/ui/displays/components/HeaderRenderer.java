@@ -14,7 +14,6 @@ public class HeaderRenderer extends ComponentRenderer<Header> {
 	@Override
 	public Frame properties() {
 		Frame result = super.properties();
-		result.addSlot("color", element.color().name().toLowerCase());
 		result.addSlot("position", element.position().name().toLowerCase());
 		return result;
 	}

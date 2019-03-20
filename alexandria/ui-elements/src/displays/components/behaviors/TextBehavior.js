@@ -3,7 +3,7 @@ import ComponentBehavior from "./ComponentBehavior";
 const TextBehavior = (function () {
     return {
         label : (props) => {
-            ComponentBehavior.label(props);
+            return ComponentBehavior.label(props);
         },
 
         mode: (value, props) => {

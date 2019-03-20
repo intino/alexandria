@@ -9,6 +9,7 @@ import io.intino.alexandria.ui.resources.Asset;
 import io.intino.alexandria.ui.services.push.UISession;
 import io.intino.alexandria.ui.services.push.User;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private Boolean dirty = null;
 	private List<String> route = new ArrayList<>();
 	private PropertyList propertyList = new PropertyList();
+	private String label = "";
 
 	private static final String DefaultInstanceContainer = "__elements";
 
@@ -54,6 +56,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	public <D extends Display> D owner(Display owner) {
 		this.owner = owner;
 		propertyList.put("o", owner.path());
+		return (D) this;
+	}
+
+	public String label() {
+		return label;
+	}
+
+	public <D extends Display> D label(String label) {
+		this.label = label;
 		return (D) this;
 	}
 
@@ -245,6 +256,14 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		String name = clazz.getSimpleName();
 		int index = name.lastIndexOf("Display");
 		return index != -1 ? name.substring(0, index) : name;
+	}
+
+	public URL baseAssetUrl() {
+		try {
+			return new URL(session().browser().baseAssetUrl());
+		} catch (MalformedURLException e) {
+			return null;
+		}
 	}
 
 	public String language() {

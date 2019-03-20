@@ -7,6 +7,9 @@ Template main as Decorated
 	Header(format=air) appBar
 		Text(format=h3) title
 
+	Image avatar as Avatar(text="hola mundo")
+	Image(value="avc") image
+
 	Block(layout=Horizontal Flexible) body
 
 		Block header as Relative(width=25%)
@@ -85,9 +88,6 @@ Translator(Spanish)
 //	Block > Text(value="Campo texto editable", format=h5)
 //		Text(format=Body1) valueC as Editable > label = "campo editable"
 
-Block imageBlock
-	Text(value="Image!!!!!")
-
 Mold(layout=Vertical, spacing=DP24) widgetMold as Decorated
 	Text(value="Date widget", format=h3) title
 
@@ -129,13 +129,31 @@ Mold(modelClass="io.intino.alexandria.schemas.Method") methodMold as Decorated
 		Text(format=h6, value=")")
 		Text(format=h6, value=":&nbsp;&nbsp;")
 		Text(format=h6 widgetType, mode = Lowercase) returnType
-	Text(format=body2) description
+	Text(format=body2) description as Code(Html)
 
 Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.MethodParameter") methodParamMold as Decorated
 	Text(format=h6) name
 	Text(format=h6, value=":&nbsp;")
 	Text(format=h6) type
 	Text(format=h6) comma
+
+Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
+
+	Block(spacing=DP8)
+		Image(default="images/intino.png") image1 as Relative(width=20%)
+		Block > Text image1Code as Code(Html)
+				value
+					=========
+					Image(default\="images/intino.png") image1
+					=========
+
+	Block(spacing=DP8)
+		Image image2 as Avatar("Intino")
+		Block > Text image2Code as Code(Html)
+				value
+					=========
+					Image image2 as Avatar("Intino")
+					=========
 
 Display propertiesDisplay as Decorated
 	Notification refresh as Object(Property) List

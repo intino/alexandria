@@ -1,7 +1,8 @@
 def type(display & accessible)
 	package $package+validPackage.ui.displays[.$packageType~s];
 
-	import $package+validPackage.ui.displays.blocks.*;
+	$moldsImport
+	$blocksImport
     import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
     import io.intino.alexandria.ui.displays.ProxyDisplay;
     import io.intino.alexandria.ui.services.push.UISession;
@@ -37,6 +38,14 @@ def type(display & accessible)
         }
 
     }
+end
+
+def type(moldsImport)
+	import $package+validPackage.ui.displays.molds.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
 end
 
 def type(display)

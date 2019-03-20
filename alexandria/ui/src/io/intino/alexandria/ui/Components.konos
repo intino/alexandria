@@ -51,8 +51,11 @@ Component file as Decorated
 	Request notifyChange as File
 
 Component image as Decorated
-	Notification refreshImage as Text
-	Request update as File
+	Notification refresh as Text
+	Request notifyChange as File
+
+Component imageAvatar as Decorated
+	Notification refresh as Text
 
 Schema KeyPressEventData
 	Attribute keyCode as Text

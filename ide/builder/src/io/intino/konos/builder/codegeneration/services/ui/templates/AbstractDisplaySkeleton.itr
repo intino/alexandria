@@ -8,8 +8,8 @@ def type(display)
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 
-	import $package+validPackage.ui.displays.blocks.*;
-	import $package+validPackage.ui.displays.molds.*;
+	$moldsImport
+	$blocksImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
@@ -31,6 +31,14 @@ def type(display)
 		$component+class...[$NL]][
 		$component+method...[$NL]]
 	}
+end
+
+def type(moldsImport)
+	import $package+validPackage.ui.displays.molds.*;
+end
+
+def type(blocksImport)
+	import $package+validPackage.ui.displays.blocks.*;
 end
 
 def type(componentReferences & forMold)

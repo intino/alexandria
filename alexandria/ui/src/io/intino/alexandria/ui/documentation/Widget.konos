@@ -6,8 +6,11 @@ use Schemas
 Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated
 	Text(value="Date widget", format=h3) title
 
-	Block textExamples as Conditional > Block as Moldable(textExamplesMold)
-	Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
+	Block examples
+		Text(value="Examples", format=h5)
+		Block textExamples as Conditional > Block as Moldable(textExamplesMold)
+		Block imageExamples as Conditional > Block as Moldable(imageExamplesMold)
+		Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
 
 	Block properties
 		Text(value="Properties", format=h5)
@@ -24,10 +27,10 @@ Mold(modelClass="io.intino.alexandria.schemas.Property") propertyMold as Decorat
 		Text(format=h6) name
 		Text(format=h6, value=":&nbsp;&nbsp;")
 		Text(format=h6 widgetType, mode = Lowercase) type
-	Text(format=body2) description
+	Text(format=body2, value="") description
 	Block(layout=Horizontal)
 		Text(format=body2) valuesLabel
-		Text(format=body2 widgetType, value=":&nbsp;&nbsp;")
+		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
 		Text(format=body2) values
 
 Mold(modelClass="io.intino.alexandria.schemas.Method") methodMold as Decorated
@@ -38,7 +41,7 @@ Mold(modelClass="io.intino.alexandria.schemas.Method") methodMold as Decorated
 		Text(format=h6, value=")")
 		Text(format=h6, value=":&nbsp;&nbsp;")
 		Text(format=h6 widgetType, mode = Lowercase) returnType
-	Text(format=body2) description
+	Text(format=body2, value="") description
 
 Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.MethodParameter") methodParamMold as Decorated
 	Text(format=h6) name
@@ -50,39 +53,67 @@ Display eventsDisplay as Decorated
 	Notification refresh as Object(Event) List
 
 
-Mold(layout=Horizontal AroundJustified, spacing=DP24) textExamplesMold
+Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
-	Block > Text(value="Campo texto", format=h5)
-		Text(format=body1) valueA
-		Block > Text valueACode as Code(Html)
+	Block(spacing=DP8, format=filled)
+		Text(format=body1) text1
+		Block > Text text1Code as Code(Html)
 				value
 					=========
-					Konos: Text text1<br/><br/>
-					&nbsp;Java: text1.update("abcd")
+					Text(value\="lorem ipsum") text1
 					=========
 
-	Block > Text(value="Campo texto con título", format=h5)
-		Text(format=body1) valueB > label = "título del campo"
-		Block > Text valueBCode as Code(Html)
+	Block(spacing=DP8, format=filled)
+		Text(format=body1, label="título del campo") text2
+		Block > Text text2Code as Code(Html)
 				value
 					=========
-					Konos: Text text1<br/>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/><br/>
-					&nbsp;Java: text1.update("efgh")
+					Text text2<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;value\="lorem ipsum"
 					=========
 
-	Block > Text(value="Campo texto editable", format=h5)
-		Text(format=body1) valueC as Editable > label = "campo editable"
+	Block(spacing=DP8, format=filled)
+		Text(format=body1) text3 as Editable > label = "campo editable"
+		Block > Text text3Code as Code(Html)
+				value
+					=========
+					Text(label\="campo editable", value\="lorem ipsum") text3 as Editable
+					=========
 
-Mold dateExamplesMold
-	Date(mode=FromNow, pattern="dd/MM/YYYY") dateA
-	Block > Text dateACode as Code(Html)
-			value
-				=========
-				Konos: Date date1<br/><br/>
-				&nbsp;Java: date1.update(Instant.now())
-				=========
+Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
-Block imageBlock
-	Text(value="Image!!!!!")
+	Block(spacing=DP8, format=filled)
+		Date(pattern="MM/DD/YYYY") date1
+		Block > Text date1Code as Code(Html)
+				value
+					=========
+					Date(pattern\="MM/DD/YYYY") date1<br/><br/>
+					<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
+					=========
 
+	Block(spacing=DP8, format=filled)
+		Date(mode=FromNow) date2
+		Block > Text date2Code as Code(Html)
+				value
+					=========
+					Date(mode\=FromNow) date2
+					=========
+
+Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
+
+	Block(spacing=DP8, format=filled)
+		Image(default="images/intino.png") image1 as Relative(width=20%)
+		Block > Text image1Code as Code(Html)
+				value
+					=========
+					Image(default\="images/intino.png") image1
+					=========
+
+	Block(spacing=DP8, format=filled)
+		Image image2 as Avatar("Intino") Relative(width=20%)
+		Block > Text image2Code as Code(Html)
+				value
+					=========
+					Image image2 as Avatar("Intino")
+					=========

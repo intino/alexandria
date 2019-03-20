@@ -52,6 +52,8 @@ def type(component & child) trigger(class)
 
 		public $name+firstUpperCase($abstractBox+type box) {
 			super(box);
+			$properties+common
+			$properties+specific
 		}
 
 		@Override
@@ -118,11 +120,11 @@ def type(component & child & moldableblock & multipleblock)
 end
 
 def type(component & child & moldableblock)
-	$name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box())$properties+common$properties+specific~.id("$id"));
+	$name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
 def type(component & child)
-	$name = register(new $name+firstUpperCase(box())$properties+common$properties+specific~.<$name+firstUpperCase>id("$id").owner($owner.this));
+	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(facet)
@@ -141,8 +143,17 @@ def type(implements)
 	implements --undefined--
 end
 
+def type(properties & image & avatar) trigger(specific)
+	[text("$text");]
+end
+
+def type(properties & image) trigger(specific)
+	[value("$value");][
+	defaultImage("$default");]
+end
+
 def type(properties & block) trigger(common)
-	[.label("$label")]
+	[label("$label");]
 end
 
 def type(properties) trigger(common)
