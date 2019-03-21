@@ -13,4 +13,9 @@ public abstract class Component<DN extends ComponentNotifier, B extends Box> ext
 	public String color() {
 		return color;
 	}
+
+	public Component color(String color) {
+		this.color = color;
+		return this;
+	}
 }

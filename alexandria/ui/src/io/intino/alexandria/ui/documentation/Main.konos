@@ -4,11 +4,58 @@ use Widget
 use Theme
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(main)
+	Resource(path = "/") home as Page(homeTemplate)
+	Resource(path = "/docs") docs as Page(docsTemplate)
 
-Template main as Decorated
+Template homeTemplate
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP8)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block links
+				Text(value="home")
+				OpenResource(docs,label="docs") as Link
+
+	Block(format=containerAir) as Parallax("images/background1.jpg")
+		Block(layout=Vertical Center) as Relative(width=70%)
+			Text(value="software production lines made easy", format=h1)
+			Text(value="symplifying software mass customization", format=h2)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+	Block(format=containerAir)
+		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
+			Block > Text(value="Why intino?", format=h1 air)
+			Block(layout=Horizontal CenterCenter, spacing=DP40) as Absolute(height=300px)
+				Block as Paper Relative(width=28%)
+					Text(value="flexibility", format=h5 cardTitle)
+					Text(value="Extending benefits beyond software development into modifiability. With intino, software evolution is tailor-made, that is evolving systems built specifically for the needs of particular customer", format=h5 cardContent)
+				Block as Paper Relative(width=28%)
+					Text(value="reuse", format=h5 cardTitle)
+					Text(value="Developing core components that can be reused. This is the strategy that creates an opportunity for benefits in reducing the effort and costs costs required to create, deploy and software", format=h5 cardContent)
+				Block as Paper Relative(width=28%)
+					Text(value="quality", format=h5 cardTitle)
+					Text(value="Lowering the complexity of product line development. Application developers can focus on user requirements, getting advantage on the platform architecture that provides a stable quality", format=h5 cardContent)
+
+	Block(format=containerAir) as Parallax("images/background2.jpg")
+		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
+			Block > Text(value="What does it look like?", format=h2 air white)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+	Block(format=containerAir) as Parallax("images/background3.jpg")
+		Block
+			Text(value="software production lines made easy", format=h1)
+			Text(value="symplifying software mass customization", format=h2)
+			Block(layout=Horizontal)
+//				Link("demo") as Button
+//				Link("get started") as Button
+
+Template docsTemplate as Decorated
 	Header(format=air) appBar
-		Text(format=h3) title
+		Text(format=h3, value="Alexandria widgets") title
 
 	Block(layout=Horizontal Flexible) body
 
@@ -44,9 +91,9 @@ Template main as Decorated
 					Text(value="Wizard") wizard as Option
 
 		Block(layout=Vertical Flexible, format=air) panels
-			Block textPanel as Conditional(main.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
-			Block imagePanel as Conditional(main.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
-			Block filePanel as Conditional(main.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
-			Block datePanel as Conditional(main.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
+			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
+			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
+			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
+			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
 
-			Block catalogPanel as Conditional(main.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)
+			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)

@@ -56,7 +56,7 @@ Display eventsDisplay as Decorated
 Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
-		Text(format=body1) text1
+		Text(format=body1 widgetDemo) text1
 		Block > Text text1Code as Code(Html)
 				value
 					=========
@@ -64,7 +64,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 					=========
 
 	Block(spacing=DP8, format=filled)
-		Text(format=body1, label="título del campo") text2
+		Text(format=body1 widgetDemo, label="título del campo") text2
 		Block > Text text2Code as Code(Html)
 				value
 					=========
@@ -74,7 +74,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 					=========
 
 	Block(spacing=DP8, format=filled)
-		Text(format=body1) text3 as Editable > label = "campo editable"
+		Text(format=body1 widgetDemo) text3 as Editable > label = "campo editable"
 		Block > Text text3Code as Code(Html)
 				value
 					=========
@@ -84,7 +84,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
-		Date(pattern="MM/DD/YYYY") date1
+		Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
 		Block > Text date1Code as Code(Html)
 				value
 					=========
@@ -93,7 +93,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 					=========
 
 	Block(spacing=DP8, format=filled)
-		Date(mode=FromNow) date2
+		Date(mode=FromNow, format=body1 widgetDemo) date2
 		Block > Text date2Code as Code(Html)
 				value
 					=========
@@ -103,17 +103,17 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
-		Image(default="images/intino.png") image1 as Relative(width=20%)
+		Image(default="images/intino.png", format=widgetDemo) image1 as Absolute(width=150px, height=150px)
 		Block > Text image1Code as Code(Html)
 				value
 					=========
-					Image(default\="images/intino.png") image1
+					Image(default\="images/intino.png", format\=widgetDemo) image1 as Absolute(width\=150px, height\=150px)
 					=========
 
 	Block(spacing=DP8, format=filled)
-		Image image2 as Avatar("Intino") Relative(width=20%)
+		Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
 		Block > Text image2Code as Code(Html)
 				value
 					=========
-					Image image2 as Avatar("Intino")
+					Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
 					=========

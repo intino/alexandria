@@ -13,7 +13,7 @@ const styles = theme => ({
 		marginRight: "10px"
 	},
 	value: {
-		color: "inherit"
+		color: "black"
 	}
 });
 

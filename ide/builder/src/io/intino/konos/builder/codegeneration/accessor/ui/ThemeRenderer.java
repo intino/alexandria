@@ -54,15 +54,8 @@ public class ThemeRenderer extends UIRenderer {
 	private Frame frameOf(Format format) {
 		Frame result = new Frame().addTypes("format");
 		result.addSlot("name", format.name$());
-		result.addSlot("type", format.getClass().getSimpleName().toLowerCase());
-		format.propertyList().forEach(p -> result.addSlot("property", frameOf(p)));
+		result.addSlot("content", format.content() != null ? format.content() : "");
 		return result;
 	}
 
-	private Frame frameOf(Format.Property property) {
-		Frame result = new Frame().addTypes("property");
-		result.addSlot("name", property.getClass().getSimpleName().toLowerCase());
-		result.addSlot("content", property.content());
-		return result;
-	}
 }

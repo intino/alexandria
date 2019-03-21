@@ -16,8 +16,8 @@ public class ImageRenderer extends SizedRenderer<Image> {
 	public Frame properties() {
 		Frame result = super.properties();
 		addAvatarProperties(result);
-		if (element.value() != null) result.addSlot("value", element.value().toString());
-		if (element.default$() != null) result.addSlot("default", element.default$().toString());
+		if (element.value() != null && !element.value().isEmpty()) result.addSlot("value", resourceMethodFrame("value", element.value()));
+		if (element.default$() != null && !element.default$().isEmpty()) result.addSlot("defaultValue", resourceMethodFrame("defaultImage", element.default$()));
 		return result;
 	}
 
@@ -30,6 +30,6 @@ public class ImageRenderer extends SizedRenderer<Image> {
 
 	@Override
 	protected String className(Class clazz) {
-		return super.className(clazz).replace("text", "");
+		return super.className(clazz).replace("image", "");
 	}
 }

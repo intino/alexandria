@@ -9,7 +9,6 @@ import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
-@SuppressWarnings("Duplicates")
 public class TemplateRenderer extends BaseDisplayRenderer<Template> {
 
 	public TemplateRenderer(Settings settings, Template display, TemplateProvider provider, Target target) {

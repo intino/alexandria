@@ -50,10 +50,11 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "implements & option"))).add(literal("implements io.intino.alexandria.ui.displays.components.selector.SelectorOption")),
 			rule().add((condition("type", "implements"))).add(literal("implements --undefined--")),
 			rule().add((condition("type", "properties & image & avatar")), (condition("trigger", "specific"))).add(expression().add(literal("text(\"")).add(mark("text")).add(literal("\");"))),
-			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(literal("value(\"")).add(mark("value")).add(literal("\");"))).add(expression().add(literal("\n")).add(literal("defaultImage(\"")).add(mark("default")).add(literal("\");"))),
-			rule().add((condition("type", "properties & block")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))),
-			rule().add((condition("type", "properties")), (condition("trigger", "common"))),
-			rule().add((condition("type", "properties")), (condition("trigger", "specific")))
+			rule().add((condition("type", "properties & block")), (condition("trigger", "specific"))).add(expression().add(mark("background", "resourceMethod"))),
+			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(mark("value", "resourceMethod"))).add(literal("\n")).add(expression().add(mark("defaultValue", "resourceMethod"))),
+			rule().add((condition("type", "properties")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))).add(literal("\n")).add(expression().add(literal("color(\"")).add(mark("color")).add(literal("\");"))),
+			rule().add((condition("type", "properties")), (condition("trigger", "specific"))),
+			rule().add((condition("trigger", "resourceMethod"))).add(mark("name")).add(literal("(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\"));"))
 		);
 		return this;
 	}

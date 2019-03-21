@@ -13,11 +13,22 @@ public class Image<B extends Box> extends AbstractImage<B> {
         super(box);
     }
 
+	@Override
+	public void init() {
+		super.init();
+		refresh();
+	}
+
 	public String value() {
-		String result;
+		String result = null;
 		if (defaultPicture != null) result = Asset.toResource(baseAssetUrl(), defaultPicture).toUrl().toString();
-		else result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
+		else if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
 		return result;
+	}
+
+	public Image value(URL value) {
+    	this.value = value;
+    	return this;
 	}
 
 	public Image defaultImage(URL defaultPicture) {
@@ -31,11 +42,9 @@ public class Image<B extends Box> extends AbstractImage<B> {
     }
 
 	public void refresh() {
-		notifier.refresh(value());
-	}
-
-	public void notifyChange(io.intino.alexandria.Resource value) {
-
+		String value = value();
+		if (value == null) return;
+		notifier.refresh(value);
 	}
 
 }

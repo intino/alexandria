@@ -6,6 +6,9 @@ Component block as Decorated
 Component blockConditional as Decorated
 	Notification refreshVisibility as Bool
 
+Component blockParallax as Decorated
+	Notification refresh as Text
+
 Component catalog as Decorated
 Component badge as Decorated
 Component option as Decorated
@@ -52,7 +55,6 @@ Component file as Decorated
 
 Component image as Decorated
 	Notification refresh as Text
-	Request notifyChange as File
 
 Component imageAvatar as Decorated
 	Notification refresh as Text
