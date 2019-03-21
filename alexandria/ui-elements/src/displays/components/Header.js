@@ -17,15 +17,20 @@ class Header extends AbstractHeader {
 	};
 
 	render() {
-		const color = this.props.color != null ? this.props.color : "primary";
 		const position = this.props.position != null ? this.props.position : "relative";
 		return (
 			<AppBar style={this.style()}
-							color={color.toLowerCase()}
-					  		position={position.toLowerCase()}>
+					position={position.toLowerCase()}>
 				<React.Fragment>{this.props.children}</React.Fragment>
 			</AppBar>
 		);
+	};
+
+	style() {
+		var result = super.style();
+		if (result == null) result = {};
+		if (this.props.color != null) result.backgroundColor = this.props.color;
+		return result;
 	};
 }
 

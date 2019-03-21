@@ -7,8 +7,7 @@ import {withStyles} from "@material-ui/core";
 const styles = theme => ({
 	value: {
 		minHeight: "100px",
-		minWidth: "100px",
-		border: "1px solid red"
+		minWidth: "100px"
 	}
 });
 
@@ -38,7 +37,6 @@ class Image extends AbstractImage {
 		if (result == null) result = {};
 		if (this.props.width != null) result.width = this.props.width;
 		if (this.props.height != null) result.height = this.props.height;
-		console.log(result);
 		return result;
 	};
 

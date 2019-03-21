@@ -4,6 +4,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.accessor.ui.templates.PageTemplate;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.Template;
 import io.intino.konos.model.graph.ui.UIService;
 import org.siani.itrules.model.Frame;
 
@@ -42,11 +43,11 @@ public class ResourceRenderer extends io.intino.konos.builder.codegeneration.ui.
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("resource");
 		frame.addSlot("name", resource.name$());
-		Display display = KonosGraph.templateFor(resource);
-		frame.addSlot("pageDisplay", display.name$());
-		frame.addSlot("pageDisplayId", shortId(display));
-		frame.addSlot("pageDisplayType", typeOf(display));
-		addPageDisplayOrigin(frame, display);
+		Template template = KonosGraph.templateFor(resource);
+		frame.addSlot("pageDisplay", template.name$());
+		frame.addSlot("pageDisplayId", shortId(template));
+		frame.addSlot("pageDisplayType", typeOf(template));
+		addPageDisplayOrigin(frame, template);
 		return frame;
 	}
 

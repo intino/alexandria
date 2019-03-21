@@ -2,19 +2,18 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.I18n;
-import io.intino.alexandria.ui.documentation.Model;
 import io.intino.alexandria.ui.displays.molds.WidgetMold;
+import io.intino.alexandria.ui.documentation.Model;
 
-public class Main extends AbstractMain<UiFrameworkBox> {
+public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
 
-    public Main(UiFrameworkBox box) {
+    public DocsTemplate(UiFrameworkBox box) {
         super(box);
     }
 
     @Override
     public void init() {
         super.init();
-        title.update("Alexandria widgets");
         menu.select("Image");
         updateMolds();
     }
@@ -26,9 +25,10 @@ public class Main extends AbstractMain<UiFrameworkBox> {
     }
 
     private void updateMold(WidgetMold mold, Model.WidgetType type) {
-        mold.title.update(I18n.translate(type.name().toLowerCase() + " widget", language()));
+        mold.title.update(I18n.translate(type.name() + " widget", language()));
         mold.widget = Model.widget(type);
         mold.refresh();
     }
+
 
 }

@@ -5,7 +5,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.ChildComponents.Header;
 import org.siani.itrules.model.Frame;
 
-public class HeaderRenderer extends ComponentRenderer<Header> {
+public class HeaderRenderer extends SizedRenderer<Header> {
 
 	public HeaderRenderer(Settings settings, Header component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);

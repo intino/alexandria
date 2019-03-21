@@ -27,6 +27,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
+		addParallax(result);
 		if (element.isMoldable()) result.addSlot("moldable", "true");
 		if (element.isCollapsible()) result.addSlot("collapsible", "true");
 		return result;
@@ -44,6 +45,13 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	private void addPaper(Frame result) {
 		if (!element.isPaper()) return;
 		result.addSlot("paper", "paper");
+	}
+
+	private void addParallax(Frame result) {
+		if (!element.isParallax()) return;
+		String background = element.asParallax().background();
+		if (background == null || background.isEmpty()) return;
+		result.addSlot("background", resourceMethodFrame("background", background));
 	}
 
 	private void addBinding(Frame result) {

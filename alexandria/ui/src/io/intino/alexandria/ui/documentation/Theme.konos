@@ -5,13 +5,18 @@ Theme theme1
 	Secondary("#ff9100")
 	Error("#f44336")
 
-Format h3
-Format h5
-Format h6
-Format body1
-Format body2
-Format air > Padding("10px 20px")
-Format widgetType > Color("#888")
-Format filled
-	Background("#efefef")
-	Padding("8px")
+Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
+Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
+Format("") h3
+Format("") h5
+Format("") h6
+Format("") body1
+Format("") body2
+Format("color:'white'") white
+Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
+Format("textAlign:'left',padding:'10px'") cardContent
+Format("padding:'10px 20px'") air
+Format("padding:'20px'") containerAir
+Format("color:'#888'") widgetType
+Format("margin:'0 0 5px 0'") widgetDemo
+Format("background:'#efefef',padding:'8px'") filled

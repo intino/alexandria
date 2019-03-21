@@ -14,6 +14,7 @@ import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
+import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("component");
-		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		addOwner(frame);
 		frame.addSlot("properties", properties());
 		if (buildChildren) frame.addTypes("child");
 		addSpecificTypes(frame);
@@ -65,13 +66,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected Frame properties(Component component) {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
-		if (component.color() != null) result.addSlot("color", element.color());
-		if (component.label() != null) result.addSlot("label", component.label());
+		if (component.color() != null && !component.color().isEmpty()) result.addSlot("color", element.color());
+		if (component.label() != null && !component.label().isEmpty()) result.addSlot("label", component.label());
 		if (component.format() != null) {
 			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
 			result.addSlot("format", format);
 		}
 		return result;
+	}
+
+	protected void addOwner(Frame frame) {
+		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
 	}
 
 	@Override
@@ -198,6 +203,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(AvatarImage.class)) result.addSlot("facet", new Frame("facet").addSlot("name", AvatarImage.class.getSimpleName().replace("Image", "")));
+		if (component.i$(ParallaxBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ParallaxBlock.class.getSimpleName().replace("Block", "")));
+	}
+
+	protected Frame resourceMethodFrame(String method, String value) {
+		Frame frame = new Frame("resourceMethod").addSlot("name", method).addSlot("value", fixResourceValue(value));
+		addOwner(frame);
+		return frame;
+	}
+
+	private String fixResourceValue(String value) {
+		return value.startsWith("/") ? value : "/" + value;
 	}
 
 	private void addImplements(C element, Frame frame) {

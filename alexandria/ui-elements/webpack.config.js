@@ -36,6 +36,12 @@ module.exports = {
             title: "Test UI",
             template: "./home.html",
             filename: "./ui-elements/home.html"
+        }),
+        new HtmlWebPackPlugin({
+            hash: true,
+            title: "Test UI",
+            template: "./docs.html",
+            filename: "./ui-elements/docs.html"
         })
     ]
 };

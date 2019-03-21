@@ -35,10 +35,10 @@ class TextEditable extends AbstractTextEditable {
 	render() {
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.props.label : undefined;
-		const format = this.props.format !== "default" ? this.props.format : "body1";
+		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
 
 		return (
-				<TextField className={classes.default} label={label} type="text"
+				<TextField format={format} style={this.style()} className={classes.default} label={label} type="text"
 						   value={this.state.value} onChange={this.handleChange.bind(this)}
 				   		   onKeyPress={this.handleKeypress.bind(this)}></TextField>
 		);

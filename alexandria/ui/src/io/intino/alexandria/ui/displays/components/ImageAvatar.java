@@ -10,6 +10,12 @@ public class ImageAvatar<B extends Box> extends AbstractImageAvatar<B> {
 		super(box);
 	}
 
+	@Override
+	public void init() {
+		super.init();
+		refresh();
+	}
+
 	public String value() {
 		return generateAvatar();
 	}
@@ -29,7 +35,7 @@ public class ImageAvatar<B extends Box> extends AbstractImageAvatar<B> {
 	}
 
 	private String generateAvatar() {
-		return AvatarUtil.generateAvatar(text, color());
+		return AvatarUtil.generateAvatar(text, color() != null ? color() : "black");
 	}
 
 }

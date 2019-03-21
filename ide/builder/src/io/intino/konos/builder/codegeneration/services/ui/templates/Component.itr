@@ -147,17 +147,23 @@ def type(properties & image & avatar) trigger(specific)
 	[text("$text");]
 end
 
-def type(properties & image) trigger(specific)
-	[value("$value");][
-	defaultImage("$default");]
+def type(properties & block) trigger(specific)
+	[$background+resourceMethod]
 end
 
-def type(properties & block) trigger(common)
-	[label("$label");]
+def type(properties & image) trigger(specific)
+	[$value+resourceMethod]
+	[$defaultValue+resourceMethod]
 end
 
 def type(properties) trigger(common)
+	[label("$label");]
+	[color("$color");]
 end
 
 def type(properties) trigger(specific)
+end
+
+def trigger(resourceMethod)
+	$name($owner.class.getResource("$value"));
 end

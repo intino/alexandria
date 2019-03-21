@@ -1,8 +1,10 @@
 import React from "react";
 import Collapse from "@material-ui/core/Collapse";
+import Paper from "@material-ui/core/Paper";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
+import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class Block extends AbstractBlock {
@@ -21,19 +23,24 @@ export default class Block extends AbstractBlock {
 	};
 
 	_renderLayout = () => {
+		let paper = this.props.paper;
+
+		if (paper)
+			return (<Paper style={this.style()} className={this._layout()}>{this._renderChildren()}</Paper>);
+
+		return (<div style={this.style()} className={this._layout()}>{this._renderChildren()}</div>);
+	};
+
+	_renderChildren = () => {
 		const hasSpacing = this._hasSpacing();
 
-		return (
-			<div style={this.style()} className={this._layout()}>
-				{React.Children.map(this.props.children, (child, i) => {
-					if (hasSpacing) {
-						var style = this._is("vertical") ? { marginBottom: this.props.spacing + "px" } : { marginRight: this.props.spacing + "px" };
-						return React.cloneElement(child, { style: style });
-					}
-					return child;
-				})}
-			</div>
-		);
+		return React.Children.map(this.props.children, (child, i) => {
+			if (hasSpacing) {
+				var style = this._is("vertical") ? { marginBottom: this.props.spacing + "px" } : { marginRight: this.props.spacing + "px" };
+				return React.cloneElement(child, { style: style });
+			}
+			return child;
+		});
 	};
 
 	_layout = () => {
@@ -52,6 +59,7 @@ export default class Block extends AbstractBlock {
 	style() {
 		var result = super.style();
 		if (result == null) result = {};
+		if (this._is("vertical") && this._is("center")) result.margin = "0 auto";
 		if (this.props.style != null) this.applyStyles(this.props.style, result);
 		if (this.props.margin != null) result.margin = this.props.margin;
 		if (this._widthDefined()) result.width = this.props.width;
@@ -62,7 +70,7 @@ export default class Block extends AbstractBlock {
 	_is = (layout) => {
 		if (this.props.layout == null) return false;
 		return (" " + this.props.layout + " ").indexOf(" " + layout + " ") !== -1;
-	}
+	};
 
 	_hasSpacing = () => {
 		return this.props.spacing != null;
