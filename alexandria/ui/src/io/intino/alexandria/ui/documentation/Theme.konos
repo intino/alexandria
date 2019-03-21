@@ -13,10 +13,16 @@ Format("") h6
 Format("") body1
 Format("") body2
 Format("color:'white'") white
-Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
-Format("textAlign:'left',padding:'10px'") cardContent
 Format("padding:'10px 20px'") air
 Format("padding:'20px'") containerAir
+Format("background:'#efefef',padding:'8px'") filled
+Format("marginTop:'10px'") headerToolbar
+Format("textAlign:'center'") textCentered
+
+// Cards
+Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
+Format("textAlign:'left',padding:'10px'") cardContent
+
+// Widgets
 Format("color:'#888'") widgetType
 Format("margin:'0 0 5px 0'") widgetDemo
-Format("background:'#efefef',padding:'8px'") filled

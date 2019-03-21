@@ -28,6 +28,7 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "extends & moldableblock"))).add(literal("Displays.")).add(mark("type", "firstUpperCase")),
 			rule().add((condition("type", "extends"))).add(literal("Ui.")).add(mark("type", "firstUpperCase")).add(mark("facet")),
 			rule().add((condition("type", "facet"))).add(mark("name", "firstUpperCase")),
+			rule().add((condition("type", "properties & operation")), (condition("trigger", "common"))).add(expression().add(literal(" label=\"")).add(mark("label")).add(literal("\""))).add(expression().add(literal(" format=\"")).add(mark("format").multiple(" ")).add(literal("\""))),
 			rule().add((condition("type", "properties")), (condition("trigger", "common"))).add(expression().add(literal(" label=\"")).add(mark("label")).add(literal("\""))).add(expression().add(literal(" format=\"")).add(mark("format").multiple(" ")).add(literal("\""))),
 			rule().add((condition("type", "properties & mold")), (condition("trigger", "specific"))).add(expression().add(literal(" layout=\"")).add(mark("layout").multiple(" ")).add(literal("\""))).add(expression().add(literal(" width=\"")).add(mark("width")).add(literal("\""))).add(expression().add(literal(" height=\"")).add(mark("height")).add(literal("\""))).add(expression().add(literal(" spacing=\"")).add(mark("spacing")).add(literal("\""))),
 			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(literal(" width=\"")).add(mark("width")).add(literal("\""))).add(expression().add(literal(" height=\"")).add(mark("height")).add(literal("\""))),
@@ -35,6 +36,7 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "properties & date")), (condition("trigger", "specific"))).add(expression().add(literal(" pattern=\"")).add(mark("pattern")).add(literal("\""))).add(expression().add(literal(" mode=\"")).add(mark("mode")).add(literal("\""))),
 			rule().add((condition("type", "properties & header")), (condition("trigger", "specific"))).add(expression().add(literal(" color=\"")).add(mark("color")).add(literal("\""))).add(expression().add(literal(" position=\"")).add(mark("position")).add(literal("\""))),
 			rule().add((condition("type", "properties & text")), (condition("trigger", "specific"))).add(expression().add(literal(" mode=\"")).add(mark("mode")).add(literal("\""))).add(expression().add(literal(" value=\"")).add(mark("defaultValue")).add(literal("\""))),
+			rule().add((condition("type", "properties & openpage")), (condition("trigger", "specific"))).add(expression().add(literal(" target=\"")).add(mark("target")).add(literal("\""))),
 			rule().add((condition("type", "properties")), (condition("trigger", "specific"))),
 			rule().add((condition("type", "codetext"))).add(mark("value"))
 		);

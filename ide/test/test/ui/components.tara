@@ -10,6 +10,8 @@ Template main as Decorated
 		Block
 			Text(value="abcd")
 			Text(value="abcd")
+			OpenPage(page=UiElements.home, label="abcd") as IconButton("addd")
+			OpenPage(page=UiElements.home) as Link
 
 Theme theme1
 	Primary("#3f51b5")
@@ -18,11 +20,6 @@ Theme theme1
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
-Format h3
-Format h5
-Format h6
-Format body1
-Format body2
 Format("padding:'10px 20px'") air
 Format("padding:'20px'") containerAir
 Format("color:'#888'") widgetType

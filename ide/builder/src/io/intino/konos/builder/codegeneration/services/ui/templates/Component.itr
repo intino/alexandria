@@ -156,6 +156,16 @@ def type(properties & image) trigger(specific)
 	[$defaultValue+resourceMethod]
 end
 
+def type(properties & openpage) trigger(specific)
+	[path("$path");]
+end
+
+def type(properties & operation) trigger(common)
+	[label("$label");]
+	[color("$color");]
+	$operationMode
+end
+
 def type(properties) trigger(common)
 	[label("$label");]
 	[color("$color");]
@@ -166,4 +176,8 @@ end
 
 def trigger(resourceMethod)
 	$name($owner.class.getResource("$value"));
+end
+
+def type(operationMode & iconbutton)
+	icon("$icon");
 end

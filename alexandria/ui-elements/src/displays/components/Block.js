@@ -24,20 +24,23 @@ export default class Block extends AbstractBlock {
 
 	_renderLayout = () => {
 		let paper = this.props.paper;
+		let layout = this._layout();
+		let style = this.style();
 
 		if (paper)
-			return (<Paper style={this.style()} className={this._layout()}>{this._renderChildren()}</Paper>);
+			return (<Paper style={style} className={layout}>{this._renderChildren()}</Paper>);
 
-		return (<div style={this.style()} className={this._layout()}>{this._renderChildren()}</div>);
+		return (<div style={style} className={layout}>{this._renderChildren()}</div>);
 	};
 
 	_renderChildren = () => {
+		const vertical = this._is("vertical");
 		const hasSpacing = this._hasSpacing();
 
 		return React.Children.map(this.props.children, (child, i) => {
 			if (hasSpacing) {
-				var style = this._is("vertical") ? { marginBottom: this.props.spacing + "px" } : { marginRight: this.props.spacing + "px" };
-				return React.cloneElement(child, { style: style });
+				let spacingStyle = (vertical ? "bottom:" : "right:") + this.props.spacing;
+				return React.cloneElement(child, { spacingStyle: spacingStyle });
 			}
 			return child;
 		});

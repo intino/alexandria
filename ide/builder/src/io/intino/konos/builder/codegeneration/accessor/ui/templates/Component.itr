@@ -40,6 +40,10 @@ def type(facet)
 	$name+firstUpperCase
 end
 
+def type(properties & operation) trigger(common)
+	[ label="$label"][ format="$format...[ ]"]
+end
+
 def type(properties) trigger(common)
 	[ label="$label"][ format="$format...[ ]"]
 end
@@ -66,6 +70,10 @@ end
 
 def type(properties & text) trigger(specific)
 	[ mode="$mode"][ value="$defaultValue"]
+end
+
+def type(properties & openpage) trigger(specific)
+	[ target="$target"]
 end
 
 def type(properties) trigger(specific)

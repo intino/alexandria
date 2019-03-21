@@ -9,16 +9,16 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
-		Block(layout=Horizontal Center, spacing=DP8)
+		Block(layout=Horizontal Center, spacing=DP24)
 			Image(value="images/intino.png") as Absolute(80px, 80px)
 			Text(value="intino", format=h3)
-			Block links
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
 				Text(value="home")
-				OpenResource(docs,label="docs") as Link
+				OpenPage(page=UiElements.docs, label="docs") as Link
 
 	Block(format=containerAir) as Parallax("images/background1.jpg")
 		Block(layout=Vertical Center) as Relative(width=70%)
-			Text(value="software production lines made easy", format=h1)
+			Text(value="software production lines made easy", format=h1 textCentered)
 			Text(value="symplifying software mass customization", format=h2)
 			Block(layout=Horizontal)
 //				Link("demo") as Button
@@ -54,8 +54,13 @@ Template homeTemplate
 //				Link("get started") as Button
 
 Template docsTemplate as Decorated
-	Header(format=air) appBar
-		Text(format=h3, value="Alexandria widgets") title
+	Header(color="white", format=air) as Absolute(height=100px)
+		Block(layout=Horizontal Center, spacing=DP24)
+			Image(value="images/intino.png") as Absolute(80px, 80px)
+			Text(value="intino", format=h3)
+			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
+				OpenPage(page=UiElements.home, label="home") as Link
+				Text(value="docs")
 
 	Block(layout=Horizontal Flexible) body
 

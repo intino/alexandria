@@ -83,7 +83,7 @@ Concept ChildComponents
 	Concept Operation extends Component
 		var word:{Blank Self Parent Top} target = Self
 
-		sub OpenResource
+		sub OpenPage > var Page page
 		sub OpenCatalogOperation
 		sub OpenDialogOperation
 		sub OpenExternalDialogOperation
