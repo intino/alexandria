@@ -56,6 +56,7 @@ class SelectorMenu extends AbstractSelectorMenu {
 			return this.renderBlock(item);
 
 		const { classes } = this.props;
+
 		this._index++;
 		return (<ListItem button className={classNames(this._index === this.state.selected ? classes.selected : undefined, classes.item)}
 						  selected={this._index === this.state.selected}

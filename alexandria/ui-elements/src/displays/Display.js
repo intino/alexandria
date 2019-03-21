@@ -40,7 +40,9 @@ export default class Display extends PassiveView {
             return;
         }
         return instances.map((instance, index) => {
-            instance.pl.context = () => { return instance.pl.o };
+            instance.pl.context = () => {
+                return instance.pl.o
+            };
             return (<div key={index}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
         });
     };
@@ -49,9 +51,17 @@ export default class Display extends PassiveView {
         return this.translator.translate(word);
     };
 
+    buildApplicationUrl = (path) => {
+        let configuration = Application.configuration;
+        let url = configuration.baseUrl;
+        if (configuration.basePath !== "") url += basePath;
+        return url + path;
+    };
+
     _updateInstancesState = (container, instances) => {
         let object = {};
         object[container] = instances;
         this.setState(object);
     };
+
 }

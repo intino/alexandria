@@ -10,6 +10,12 @@ export default class Component extends AlexandriaDisplay {
     };
 
     style() {
+        let style = this._addFormats();
+        style = this._addSpacing(style);
+        return style;
+    };
+
+    _addFormats() {
         const { format } = this.props;
         const formats = format != null ? format.split(" ") : [];
         if (formats.length <= 0) return undefined;
@@ -22,6 +28,15 @@ export default class Component extends AlexandriaDisplay {
         });
         return result;
     };
+
+    _addSpacing(style) {
+        if (this.props.spacingStyle == null) return style;
+        if (style == null) style = {};
+        let spacingStyle = this.props.spacingStyle;
+        if (spacingStyle.indexOf("bottom:") !== -1) style.marginBottom = spacingStyle.replace("bottom:", "") + "px";
+        else style.marginRight = spacingStyle.replace("right:", "") + "px";
+        return style;
+    }
 
     applyStyles = (styles, to) => {
         if (styles == null) return;

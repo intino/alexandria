@@ -6,6 +6,9 @@ import HeaderNotifier from "../../../gen/displays/notifiers/HeaderNotifier";
 import HeaderRequester from "../../../gen/displays/requesters/HeaderRequester";
 
 const styles = theme => ({
+	color: {
+		color: "black"
+	}
 });
 
 class Header extends AbstractHeader {
@@ -17,10 +20,12 @@ class Header extends AbstractHeader {
 	};
 
 	render() {
+		const { classes } = this.props;
 		const position = this.props.position != null ? this.props.position : "relative";
 		return (
 			<AppBar style={this.style()}
-					position={position.toLowerCase()}>
+					position={position.toLowerCase()}
+					className={classes.color}>
 				<React.Fragment>{this.props.children}</React.Fragment>
 			</AppBar>
 		);

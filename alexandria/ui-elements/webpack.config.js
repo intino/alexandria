@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     module: {
@@ -42,6 +43,10 @@ module.exports = {
             title: "Test UI",
             template: "./docs.html",
             filename: "./ui-elements/docs.html"
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: 'res',
+            to: 'res'
+        }])
     ]
 };

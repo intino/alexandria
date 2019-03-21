@@ -59,6 +59,10 @@ Component image as Decorated
 Component imageAvatar as Decorated
 	Notification refresh as Text
 
+Component openPage as Decorated
+	Notification redirect as Text
+	Request open
+
 Schema KeyPressEventData
 	Attribute keyCode as Text
 	Attribute value as Text

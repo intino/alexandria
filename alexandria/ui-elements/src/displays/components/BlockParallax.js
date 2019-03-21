@@ -4,6 +4,7 @@ import BlockParallaxNotifier from "../../../gen/displays/notifiers/BlockParallax
 import BlockParallaxRequester from "../../../gen/displays/requesters/BlockParallaxRequester";
 import { Parallax } from "react-materialize"
 import {withStyles} from "@material-ui/core";
+import 'alexandria-ui-elements/res/styles/parallax.css';
 
 const styles = theme => ({
 	container : {

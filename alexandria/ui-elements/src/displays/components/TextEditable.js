@@ -25,12 +25,12 @@ class TextEditable extends AbstractTextEditable {
 	handleChange(e) {
 		this.requester.notifyChange(e.target.value);
 		this.setState({ value: e.target.value });
-	}
+	};
 
 	handleKeypress(e) {
 		this.requester.notifyKeyPress({ keyCode: e.key, value: e.target.value });
 		this.setState({ value: e.target.value });
-	}
+	};
 
 	render() {
 		const { classes } = this.props;

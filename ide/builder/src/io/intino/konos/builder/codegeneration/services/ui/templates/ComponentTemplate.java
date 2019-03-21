@@ -52,9 +52,12 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "properties & image & avatar")), (condition("trigger", "specific"))).add(expression().add(literal("text(\"")).add(mark("text")).add(literal("\");"))),
 			rule().add((condition("type", "properties & block")), (condition("trigger", "specific"))).add(expression().add(mark("background", "resourceMethod"))),
 			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(mark("value", "resourceMethod"))).add(literal("\n")).add(expression().add(mark("defaultValue", "resourceMethod"))),
+			rule().add((condition("type", "properties & openpage")), (condition("trigger", "specific"))).add(expression().add(literal("path(\"")).add(mark("path")).add(literal("\");"))),
+			rule().add((condition("type", "properties & operation")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))).add(literal("\n")).add(expression().add(literal("color(\"")).add(mark("color")).add(literal("\");"))).add(literal("\n")).add(mark("operationMode")),
 			rule().add((condition("type", "properties")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))).add(literal("\n")).add(expression().add(literal("color(\"")).add(mark("color")).add(literal("\");"))),
 			rule().add((condition("type", "properties")), (condition("trigger", "specific"))),
-			rule().add((condition("trigger", "resourceMethod"))).add(mark("name")).add(literal("(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\"));"))
+			rule().add((condition("trigger", "resourceMethod"))).add(mark("name")).add(literal("(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\"));")),
+			rule().add((condition("type", "operationMode & iconbutton"))).add(literal("icon(\"")).add(mark("icon")).add(literal("\");"))
 		);
 		return this;
 	}
