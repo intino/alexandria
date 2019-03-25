@@ -55,6 +55,9 @@ Concept ChildComponents
 	Concept Tooltip extends Component
 	Concept User extends Component
 	Concept Chart extends Component
+		var string code
+		Concept:{0..1} Input
+
 	Concept Text extends Component
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
 		var string value = empty

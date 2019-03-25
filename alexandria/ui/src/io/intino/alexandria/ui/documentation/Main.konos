@@ -88,6 +88,7 @@ Template docsTemplate as Decorated
 					Text(value="PreviewOperation") previewOperation as Option
 					Text(value="SearchOperation") searchOperation as Option
 				Block(label="other widgets") otherSection
+					Text(value="Chart") chart as Option
 					Text(value="Badge") badge as Option
 					Text(value="Chip") chip as Option
 					Text(value="Card") card as Option
@@ -102,3 +103,5 @@ Template docsTemplate as Decorated
 			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
 
 			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)
+
+			Block chartPanel as Conditional(docsTemplate.body.header.menu.otherSection.chart) > Block chartBlock as Moldable(widgetMold)

@@ -14,7 +14,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        menu.select("Image");
+        menu.select("Chart");
         updateMolds();
     }
 
@@ -22,6 +22,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
         updateMold(panels.textPanel.textBlock, Model.WidgetType.Text);
         updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image);
         updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date);
+        updateMold(panels.chartPanel.chartBlock, Model.WidgetType.Chart);
     }
 
     private void updateMold(WidgetMold mold, Model.WidgetType type) {

@@ -152,23 +152,28 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & image) trigger(specific)
-	[$value+resourceMethod]
-	[$defaultValue+resourceMethod]
+	[$value+resourceMethod][
+	$defaultValue+resourceMethod]
 end
 
 def type(properties & openpage) trigger(specific)
 	[path("$path");]
 end
 
+def type(properties & chart) trigger(specific)
+	[code("$code");][
+	$source+resourceMethod]
+end
+
 def type(properties & operation) trigger(common)
-	[label("$label");]
-	[color("$color");]
+	[label("$label");][
+	color("$color");]
 	$operationMode
 end
 
 def type(properties) trigger(common)
-	[label("$label");]
-	[color("$color");]
+	[label("$label");][
+	color("$color");]
 end
 
 def type(properties) trigger(specific)
