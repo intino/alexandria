@@ -7,7 +7,7 @@ import java.util.Iterator;
 import static java.lang.Integer.parseInt;
 
 public class Timetag {
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddhhmmss");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 	private final String tag;
 
 	public Timetag(LocalDateTime datetime, Scale scale) {
