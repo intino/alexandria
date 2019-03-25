@@ -4,6 +4,7 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.ui.displays.EventsDisplay;
+import io.intino.alexandria.ui.documentation.model.ChartWidget;
 import io.intino.alexandria.ui.documentation.model.DateWidget;
 import io.intino.alexandria.ui.documentation.model.ImageWidget;
 import io.intino.alexandria.ui.documentation.model.TextWidget;
@@ -33,6 +34,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         textExamples.visible(widget instanceof TextWidget);
         imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
+        chartExamples.visible(widget instanceof ChartWidget);
     }
 
     private void refreshPropertiesDisplay() {

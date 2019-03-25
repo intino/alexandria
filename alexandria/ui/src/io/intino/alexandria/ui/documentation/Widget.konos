@@ -11,6 +11,7 @@ Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Wid
 		Block textExamples as Conditional > Block as Moldable(textExamplesMold)
 		Block imageExamples as Conditional > Block as Moldable(imageExamplesMold)
 		Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
+		Block chartExamples as Conditional > Block as Moldable(chartExamplesMold)
 
 	Block properties
 		Text(value="Properties", format=h5)
@@ -116,4 +117,14 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 				value
 					=========
 					Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
+					=========
+
+Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
+
+	Block(spacing=DP8, format=filled)
+		Chart(code = "") chart1 > Input as CSV(source="data/iris.csv")
+		Block > Text chart1Code as Code(Html)
+				value
+					=========
+					Chart(code\="") chart1 > Input as CSV(source\="example.csv")
 					=========

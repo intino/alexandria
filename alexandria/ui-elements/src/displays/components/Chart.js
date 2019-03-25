@@ -14,6 +14,7 @@ export default class Chart extends AbstractChart {
 	render() {
 		return (
 			<React.Fragment>
+				<div>hola mundo!!</div>
 			</React.Fragment>
 		);
 	};

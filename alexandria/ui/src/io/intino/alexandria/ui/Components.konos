@@ -13,6 +13,8 @@ Component catalog as Decorated
 Component badge as Decorated
 Component option as Decorated
 Component chart as Decorated
+	Notification refresh as Text
+
 Component sorting as Decorated
 Component grouping as Decorated
 Component header as Decorated

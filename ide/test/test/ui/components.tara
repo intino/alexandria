@@ -10,8 +10,9 @@ Template main as Decorated
 		Block
 			Text(value="abcd")
 			Text(value="abcd")
-			OpenPage(page=UiElements.home, label="abcd") as IconButton("addd")
-			OpenPage(page=UiElements.home) as Link
+			Chart(code="abcd")
+				Input as CSV(source="abcd.csv")
+
 
 Theme theme1
 	Primary("#3f51b5")
