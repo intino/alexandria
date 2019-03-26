@@ -20,7 +20,7 @@ def type(accessor)
 		private URL url;
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
-		private RestAccessor accessor = new RestAccessor();
+		private RestAccessor accessor;
 		private RestAccessorNotifier notifier = new RestAccessorNotifier();[
 		$certificate~private URL certificate;][
 		$token~private String token;]
@@ -29,6 +29,14 @@ def type(accessor)
 			this.url = url;[
 			$certificate~this.certificate = certificate;][
 			$token~this.token = token;]
+			this.accessor = new RestAccessor();
+		}
+
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $certificate~URL certificate][$token, String token]) {
+			this.url = url;[
+			$certificate~this.certificate = certificate;][
+			$token~this.token = token;]
+			this.accessor = new RestAccessor(timeoutMillis);
 		}
 
 		$resource...[$NL$NL]
