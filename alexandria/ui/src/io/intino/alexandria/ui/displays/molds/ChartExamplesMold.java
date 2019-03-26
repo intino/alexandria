@@ -8,5 +8,9 @@ public class ChartExamplesMold extends AbstractChartExamplesMold<UiFrameworkBox>
         super(box);
     }
 
-
+    @Override
+    public void init() {
+        super.init();
+        chart1.refresh();
+    }
 }
