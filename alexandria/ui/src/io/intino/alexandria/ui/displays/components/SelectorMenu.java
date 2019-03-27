@@ -55,10 +55,10 @@ public class SelectorMenu<B extends Box> extends AbstractSelectorMenu<B> impleme
 	}
 
 	public void select(int option) {
+		notifier.refreshSelected(new SelectorMenuSelection().option(option).ancestors(ancestors(option)));
 		if (this.selected == option) return;
 		this.selected = option;
 		notifySelection(option);
-		notifier.refreshSelected(new SelectorMenuSelection().option(option).ancestors(ancestors(option)));
 	}
 
 	private List<String> ancestors(int option) {

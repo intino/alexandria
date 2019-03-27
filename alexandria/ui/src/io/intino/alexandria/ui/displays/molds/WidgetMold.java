@@ -24,6 +24,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     @Override
     public void refresh() {
         super.refresh();
+        if (widget == null) return;
         updateExamplesVisibility();
         refreshPropertiesDisplay();
         refreshMethodsDisplay();

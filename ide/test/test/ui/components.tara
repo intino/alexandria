@@ -10,9 +10,16 @@ Template main as Decorated
 		Block
 			Text(value="abcd")
 			Text(value="abcd")
-			Chart(code="abcd")
+			Chart(code="abcd") as Absolute(width=100px)
 				Input as CSV(source="abcd.csv")
-
+			Text as Code(language=HTML) Editable
+				value
+					========
+					library(plotly);
+					ggiris \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= "Species");
+					result \= ggplotly(ggiris);
+					result \= plotly_json(result, FALSE);
+					========
 
 Theme theme1
 	Primary("#3f51b5")

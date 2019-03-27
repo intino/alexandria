@@ -13,6 +13,11 @@ public class TextCode<B extends Box> extends AbstractTextCode<B> {
         return value;
     }
 
+    public TextCode<B> value(String value) {
+        this.value = value;
+        return this;
+    }
+
     public void update(String value) {
         this.value = value;
         notifier.refresh(value);

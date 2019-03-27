@@ -58,7 +58,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Text(format=body1 widgetDemo) text1
-		Block > Text text1Code as Code(Html)
+		Block > Text text1Code as Code(HTML)
 				value
 					=========
 					Text(value\="lorem ipsum") text1
@@ -66,7 +66,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Text(format=body1 widgetDemo, label="título del campo") text2
-		Block > Text text2Code as Code(Html)
+		Block > Text text2Code as Code(HTML)
 				value
 					=========
 					Text text2<br/>
@@ -76,7 +76,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Text(format=body1 widgetDemo) text3 as Editable > label = "campo editable"
-		Block > Text text3Code as Code(Html)
+		Block > Text text3Code as Code(HTML)
 				value
 					=========
 					Text(label\="campo editable", value\="lorem ipsum") text3 as Editable
@@ -86,7 +86,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
-		Block > Text date1Code as Code(Html)
+		Block > Text date1Code as Code(HTML)
 				value
 					=========
 					Date(pattern\="MM/DD/YYYY") date1<br/><br/>
@@ -95,7 +95,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Date(mode=FromNow, format=body1 widgetDemo) date2
-		Block > Text date2Code as Code(Html)
+		Block > Text date2Code as Code(HTML)
 				value
 					=========
 					Date(mode\=FromNow) date2
@@ -105,7 +105,7 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Image(default="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
-		Block > Text image1Code as Code(Html)
+		Block > Text image1Code as Code(HTML)
 				value
 					=========
 					Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
@@ -113,7 +113,7 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
-		Block > Text image2Code as Code(Html)
+		Block > Text image2Code as Code(HTML)
 				value
 					=========
 					Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
@@ -123,8 +123,30 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 
 	Block(spacing=DP8, format=filled)
 		Chart(code = "") chart1 > Input as CSV(source="data/iris.csv")
-		Block > Text chart1Code as Code(Html)
+		Text chart1Editor as Editable Code(language=R)
+			value
+				======
+				library(ggplot2);
+				result \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species);
+				======
+		Block > Text chart1Code as Code(HTML)
 				value
 					=========
-					Chart(code\="") chart1 > Input as CSV(source\="example.csv")
+					Chart chart1 > Input as CSV(source\="data/iris.csv")
+					=========
+
+	Block(spacing=DP8, format=filled)
+		Chart(code = "", mode=Image) chart2 as Absolute(width=700px) > Input as CSV(source="data/iris.csv")
+		Text chart2Editor as Editable Code(language=R)
+			value
+				======
+				library(ggplot2);
+				set.seed(100);
+				d \= diamonds[sample(nrow(diamonds), 1000), ];
+				result \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+				======
+		Block > Text chart2Code as Code(HTML)
+				value
+					=========
+					Chart(mode\=Image) chart2 > Input as CSV(source\="data/iris.csv")
 					=========

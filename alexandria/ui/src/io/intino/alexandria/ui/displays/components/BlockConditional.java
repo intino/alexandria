@@ -2,6 +2,7 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.selector.Selection;
 import io.intino.alexandria.ui.displays.components.selector.Selector;
 
@@ -27,6 +28,7 @@ public class BlockConditional<B extends Box> extends AbstractBlockConditional<B>
 
     public void visible(boolean value) {
         updateVisibility(value);
+        if (visible) children().forEach(Display::refresh);
     }
 
     public void hidden(boolean value) {
@@ -44,7 +46,10 @@ public class BlockConditional<B extends Box> extends AbstractBlockConditional<B>
     @Override
     public void bindTo(Selector selector, String option) {
         updateVisibility(selector, option);
-        selector.onSelect(e -> notifier.refreshVisibility(e.option().equals(option)));
+        selector.onSelect(e -> {
+            updateVisibility(e.option().equals(option));
+            if (visible) children().forEach(Display::refresh);
+        });
     }
 
     private void updateVisibility(boolean value) {

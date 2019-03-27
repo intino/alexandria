@@ -15,6 +15,7 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	public Frame properties() {
 		Frame result = super.properties();
 		addInput(result);
+		result.addSlot("mode", element.mode().name());
 		result.addSlot("code", element.code());
 		return result;
 	}

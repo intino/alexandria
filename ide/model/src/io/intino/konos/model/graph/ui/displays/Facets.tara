@@ -28,6 +28,7 @@ Facet AbstractAbsolute is abstract
 	var integer:{px} height = -1px
 Facet Absolute extends AbstractAbsolute on Block
 Facet Absolute extends AbstractAbsolute on ChildComponents.Image
+Facet Absolute extends AbstractAbsolute on ChildComponents.Chart
 Facet Absolute extends AbstractAbsolute on ChildComponents.Header
 
 Facet AbstractRelative is abstract
@@ -35,6 +36,7 @@ Facet AbstractRelative is abstract
 	var double:{%} height = 100%
 Facet Relative extends AbstractRelative on Block
 Facet Relative extends AbstractRelative on ChildComponents.Image
+Facet Relative extends AbstractRelative on ChildComponents.Chart
 Facet Relative extends AbstractRelative on ChildComponents.Header
 
 Facet Paper on Block
@@ -87,7 +89,7 @@ Facet ComboBox on ChildComponents.Selector
 
 // TEXT FACETS
 Facet Code on ChildComponents.Text
-	var word:{Html Java Javascript Python Php Other} language
+	var word:CodeLanguage language
 
 Facet CSV on ChildComponents.Chart.Input
 	var string source

@@ -42,4 +42,12 @@ export default class Component extends AlexandriaDisplay {
         if (styles == null) return;
         for (let rule in styles) to[rule] = styles[rule];
     };
+
+    _widthDefined = () => {
+        return this.props.width != null && this.props.width.indexOf("-1") === -1;
+    };
+
+    _heightDefined = () => {
+        return this.props.height != null && this.props.height.indexOf("-1") === -1;
+    };
 }

@@ -162,7 +162,12 @@ end
 
 def type(properties & chart) trigger(specific)
 	[code("$code");][
-	$source+resourceMethod]
+	$source+resourceMethod][
+	mode("$mode");]
+end
+
+def type(properties & text) trigger(specific)
+	[value("$defaultValue");]
 end
 
 def type(properties & operation) trigger(common)

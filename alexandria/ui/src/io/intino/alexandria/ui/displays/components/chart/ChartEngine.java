@@ -1,12 +1,16 @@
 package io.intino.alexandria.ui.displays.components.chart;
 
+import io.intino.alexandria.Base64;
 import io.intino.alexandria.logger.Logger;
-import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 import org.rosuda.REngine.REngineException;
 import org.rosuda.REngine.Rserve.RConnection;
+import org.rosuda.REngine.Rserve.RFileInputStream;
+import org.rosuda.REngine.Rserve.RFileOutputStream;
 
-import java.net.URL;
+import java.io.*;
+
+import static io.intino.alexandria.ui.utils.IOUtils.toByteArray;
 
 public class ChartEngine {
 //	private final ScriptEngine engine;
@@ -57,43 +61,81 @@ public class ChartEngine {
 //	}
 
 
-	public URL execute(ChartSheet input, String code) {
+	public String execute(ChartSheet input, String code, ChartMode mode) {
+		RConnection connection = null;
+
+		if (code == null || code.isEmpty()) return null;
+
 		try {
-			RConnection connection = new RConnection();
+			connection = new RConnection("");
 
-			connection.eval("library(plotly)");
-			connection.eval("library(ggplot2)");
-			connection.eval("set.seed(100)");
-			connection.eval("d <- diamonds[sample(nrow(diamonds), 1000), ]");
-			connection.eval("png(filename='/tmp/example.png',width=400,height=350,res=72)");
-			connection.eval("ggplot(data = d, aes(x = carat, y = price)) + geom_point(aes(text = paste(\"Clarity:\", clarity)), size = 4) + geom_smooth(aes(colour = cut, fill = cut)) + facet_wrap(~ cut)");
-			connection.eval("dev.off()");
-
-			REXP xp = connection.parseAndEval("r=readBin('/tmp/example.png','raw',1024*1024)");
-			connection.parseAndEval("unlink('/tmp/example.png'); r");
-
-			//			connection.eval("YashCustomers <- read.csv('YashCustomer.csv', header=TRUE)");
-//			connection.eval("YashAccounts <- read.csv('YashAccount.csv', header=TRUE)");
-//			connection.eval("YashCustomersAccounts <- merge(YashCustomers,YashAccounts, by='CUSTOMER_ID')");
-//
 //			connection.eval("library(ggplot2)");
-//			connection.eval("require(ggplot2)");
+//			connection.eval("set.seed(100)");
+//			connection.eval("d <- diamonds[sample(nrow(diamonds), 1000), ]");
+//			connection.eval("result = ggplot(data = d, aes(x = carat, y = price)) + geom_point(aes(text = paste(\"Clarity:\", clarity)), size = 4) + geom_smooth(aes(colour = cut, fill = cut)) + facet_wrap(~ cut)");
 
-//			connection.eval("png(file='Yash_GenderVsTotalAccountBalance.png',width=400,height=350,res=72)");
-//			connection.parseAndEval("ggplot(data=YashCustomersAccounts, aes(x=GENDER_DESC,y=ACCOUNT_BALANCE)) + geom_bar(stat='identity');dev.off()");
-//			System.out.println("5. plotting done ----------------------------------------------------------------------");
+//			connection.eval("library(plotly)");
+//			connection.eval("ggiris <- qplot(Petal.Width, Sepal.Length, data = iris, color = Species)");
+//			connection.eval("result <- ggplotly(ggiris)");
+//			connection.eval("result <- plotly_json(result, FALSE)");
 
-//			REXP xp = connection.parseAndEval("r=readBin('Yash_GenderVsTotalAccountBalance.png','raw',1024*1024)");
-//			connection.parseAndEval("unlink('Yash_GenderVsTotalAccountBalance.jpg'); r");
-			byte[] image = xp.asBytes();
-			connection.close();
+			connection.eval(code);
+			String result = null;
 
-			return null;
-		} catch (REngineException | REXPMismatchException e) {
+			if (mode == ChartMode.Image) {
+				connection.parseAndEval("ggsave('data.png', result)");
+				result = Base64.encode(toByteArray(get(connection, "data.png")));
+			}
+			else if (mode == ChartMode.Html) {
+				connection.eval("library(plotly)");
+				connection.eval("result <- ggplotly(result)");
+				connection.eval("result <- plotly_json(result, FALSE)");
+				connection.parseAndEval("write(result, 'data.json')");
+				result = new String(toByteArray(get(connection, "data.json")));
+			}
+
+			return result;
+
+		} catch (REngineException | IOException | REXPMismatchException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		finally {
+			if (connection != null) connection.close();
+		}
+	}
+
+	public void put(RConnection connection, InputStream content, String name) {
+		try {
+			RFileOutputStream serverStream = connection.createFile(name);
+			copy(content, serverStream);
+		} catch (IOException e) {
 			Logger.error(e);
 		}
+	}
 
+	public ByteArrayInputStream get(RConnection connection, String file) {
+		try {
+			RFileInputStream serverStream = connection.openFile(file);
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			copy(serverStream, result);
+			return new ByteArrayInputStream(result.toByteArray());
+		} catch (IOException e) {
+			Logger.error(e);
+		}
 		return null;
+	}
+
+	private void copy(InputStream clientStream, OutputStream serverStream) throws IOException {
+		byte [] buffer = new byte[8192];
+
+		int c = clientStream.read(buffer);
+		while(c >= 0) {
+			serverStream.write(buffer,0, c);
+			c = clientStream.read(buffer);
+		}
+
+		serverStream.close();
+		clientStream.close();
 	}
 
 }
