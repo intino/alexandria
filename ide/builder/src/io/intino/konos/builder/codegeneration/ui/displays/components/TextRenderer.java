@@ -27,7 +27,14 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	public Frame properties() {
 		Frame result = super.properties();
 		result.addSlot("mode", element.mode().name().toLowerCase());
-		if (element.value() != null && !element.isCode()) result.addSlot("defaultValue", element.value());
+		if (element.isCode()) {
+			result.addTypes(CodeText.class.getSimpleName());
+			result.addSlot("language", element.asCode().language().name());
+		}
+		if (element.value() != null) {
+			String value = element.isCode() ? element.value().replaceAll("\\n", "").replaceAll("\"", "\\\\\"") : element.value();
+			result.addSlot("defaultValue", value);
+		}
 		return result;
 	}
 

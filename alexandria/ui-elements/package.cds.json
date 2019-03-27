@@ -37,9 +37,12 @@
     "jquery": "^3.3.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
+    "plotly.js": "^1.45.3",
     "react": "^16.7.0",
+    "react-ace-editor": "0.0.3",
     "react-dom": "^16.7.0",
+    "react-materialize": "^2.6.0",
     "react-moment": "^0.8.4",
-    "react-materialize": "^2.6.0"
+    "react-plotly.js": "^2.3.0"
   }
 }

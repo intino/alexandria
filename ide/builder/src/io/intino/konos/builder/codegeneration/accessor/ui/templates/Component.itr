@@ -56,6 +56,10 @@ def type(properties & image) trigger(specific)
 	[ width="$width"][ height="$height"]
 end
 
+def type(properties & chart) trigger(specific)
+	[ width="$width"][ height="$height"]
+end
+
 def type(properties & block) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ moldable="$moldable"][ $paper]
 end
@@ -66,6 +70,10 @@ end
 
 def type(properties & header) trigger(specific)
 	[ color="$color"][ position="$position"]
+end
+
+def type(properties & codeText) trigger(specific)
+	[ mode="$mode"][ language="$language"]
 end
 
 def type(properties & text) trigger(specific)

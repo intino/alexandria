@@ -79,11 +79,4 @@ export default class Block extends AbstractBlock {
 		return this.props.spacing != null;
 	};
 
-	_widthDefined = () => {
-		return this.props.width != null && this.props.width.indexOf("-1") === -1;
-	};
-
-	_heightDefined = () => {
-		return this.props.height != null && this.props.height.indexOf("-1") === -1;
-	}
 }

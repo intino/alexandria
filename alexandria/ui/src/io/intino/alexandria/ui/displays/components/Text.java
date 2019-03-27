@@ -13,6 +13,11 @@ public class Text<B extends Box> extends AbstractText<B> {
         return value;
     }
 
+    public Text<B> value(String value) {
+        this.value = value;
+        return this;
+    }
+
     public void update(String value) {
         this.value = value;
         notifier.refresh(value);
