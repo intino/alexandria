@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractTextCode from "../../../gen/displays/components/AbstractTextCode";
 import TextCodeNotifier from "../../../gen/displays/notifiers/TextCodeNotifier";
 import TextCodeRequester from "../../../gen/displays/requesters/TextCodeRequester";
+import CodeBehavior from "./behaviors/CodeBehavior";
 
 const styles = theme => ({
 	value : {
@@ -26,10 +27,10 @@ class TextCode extends AbstractTextCode {
 
 	render() {
 		const {classes} = this.props;
-
+		const value = CodeBehavior.clean(this.state.value);
 		return (
 			<React.Fragment>
-				<code className={classes.value}>{this.state.value}</code>
+				<code className={classes.value}>{value}</code>
 			</React.Fragment>
 		);
 	};

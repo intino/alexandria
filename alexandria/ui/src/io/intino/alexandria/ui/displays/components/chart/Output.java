@@ -1,5 +1,5 @@
 package io.intino.alexandria.ui.displays.components.chart;
 
-public enum ChartMode {
+public enum Output {
 	Html, Image
 }

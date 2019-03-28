@@ -1,8 +1,9 @@
-import React, { Suspense } from "react";
+import React from "react";
 import {CircularProgress, Typography, withStyles} from "@material-ui/core";
 import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
+import Plot from "react-plotly.js"
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
@@ -11,8 +12,6 @@ const styles = theme => ({
 		margin: "10px 0"
 	}
 });
-
-const ChartPlotly = React.lazy(() => import("./chart/ChartPlotly"));
 
 class Chart extends AbstractChart {
 	state = {
@@ -41,13 +40,11 @@ class Chart extends AbstractChart {
 			return (<Typography style={this.style()} className={classes.error}>{error}</Typography>);
 
 		return (
-			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div>}>
-				<div style={this.style()} ref={this.container}>
-					{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div> : undefined}
-					{this.state.mode === "Image" && !this.state.loading && value != undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
-					{this.state.mode === "Html" && !this.state.loading && value != undefined ? <ChartPlotly data={value}/> : undefined}
-				</div>
-			</Suspense>
+			<div style={this.style()} ref={this.container}>
+				{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div> : undefined}
+				{this.state.mode === "Image" && !this.state.loading && value != undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
+				{this.state.mode === "Html" && !this.state.loading && value != undefined ? <Plot data={value}/> : undefined}
+			</div>
 		);
 	};
 

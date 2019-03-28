@@ -1,6 +1,7 @@
 dsl Konos
 
 Theme theme1
+	type = Normal
 	Primary("#3f51b5")
 	Secondary("#ff9100")
 	Error("#f44336")

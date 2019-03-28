@@ -126,8 +126,7 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 		Text chart1Editor as Editable Code(language=R)
 			value
 				======
-				library(ggplot2);
-				result \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species);
+				output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species);
 				======
 		Block > Text chart1Code as Code(HTML)
 				value
@@ -140,10 +139,9 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 		Text chart2Editor as Editable Code(language=R)
 			value
 				======
-				library(ggplot2);
-				set.seed(100);
-				d \= diamonds[sample(nrow(diamonds), 1000), ];
-				result \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+				set.seed(100);\\n
+				d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
+				output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
 				======
 		Block > Text chart2Code as Code(HTML)
 				value

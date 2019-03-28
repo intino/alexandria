@@ -47,6 +47,15 @@ Concept Catalog extends Component
 	Concept:{1..1} Layout extends Component
 		has:{0..*} ChildComponents.Content
 
+Concept DataFrame
+	Concept Column
+		var string name
+		var word:{String Integer Double Boolean} type
+Facet CSV on DataFrame
+	var string datasourceFilename
+Facet Source on DataFrame
+	var string datasourceClass
+
 Concept ChildComponents
 
 	Concept Badge extends Component
@@ -54,10 +63,11 @@ Concept ChildComponents
 	Concept Card extends Component
 	Concept Tooltip extends Component
 	Concept User extends Component
+	Concept KPI extends Component
 	Concept Chart extends Component
-		var string code
-		var word:{Image Html} mode = Html
-		Concept:{0..1} Input
+		var DataFrame input
+		var word:{Image Html} output = Html
+		var string query
 
 	Concept Text extends Component
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal

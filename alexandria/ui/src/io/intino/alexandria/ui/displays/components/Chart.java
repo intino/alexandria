@@ -3,59 +3,53 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.ChartInfo;
 import io.intino.alexandria.ui.displays.components.chart.ChartEngine;
-import io.intino.alexandria.ui.displays.components.chart.ChartMode;
-import io.intino.alexandria.ui.displays.components.chart.ChartSheet;
-
-import java.net.URL;
+import io.intino.alexandria.ui.displays.components.chart.Output;
+import io.intino.alexandria.ui.displays.components.chart.DataFrame;
+import io.intino.alexandria.ui.displays.components.chart.DataSource;
 
 public class Chart<B extends Box> extends AbstractChart<B> {
-    private ChartSheet input;
-    private String code;
+    private DataFrame input;
+    private String query;
     private ChartEngine engine = new ChartEngine();
-    private ChartMode mode = ChartMode.Html;
+    private Output output = Output.Html;
 
     public Chart(B box) {
         super(box);
     }
 
-    public ChartSheet input() {
+    public DataFrame input() {
         return input;
     }
 
-    public Chart<B> input(URL source) {
-        this.input = ChartSheet.fromSource(source);
+    public Chart<B> input(DataSource datasource) {
+        this.input = datasource.load();
         return this;
     }
 
-    public Chart<B> code(String code) {
-        this.code = code;
+    public Chart<B> query(String query) {
+        this.query = query;
         return this;
     }
 
-    public Chart<B> mode(String mode) {
-        this.mode = ChartMode.valueOf(mode);
+    public Chart<B> output(String output) {
+        this.output = Output.valueOf(output);
         return this;
     }
 
-    public Chart<B> update(ChartSheet sheet) {
-        this.input = sheet;
+    public Chart<B> update(DataFrame input) {
+        this.input = input;
         this.refresh();
-        return this;
-    }
-
-    public Chart<B> engine(ChartEngine engine) {
-        this.engine = engine;
         return this;
     }
 
     @Override
     public void refresh() {
         try {
-            ChartSheet input = input();
+            DataFrame input = input();
             if (input == null) return;
             notifier.showLoading();
             String result = execute();
-            notifier.refresh(new ChartInfo().mode(mode.name()).config(result));
+            notifier.refresh(new ChartInfo().mode(output.name()).config(result));
         }
         catch (RuntimeException ex) {
             notifier.refreshError(ex.getMessage());
@@ -63,7 +57,7 @@ public class Chart<B extends Box> extends AbstractChart<B> {
     }
 
     private String execute() {
-        return engine.execute(input, code, mode);
+        return engine.execute(input, query, output);
     }
 
 }
