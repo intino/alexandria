@@ -3,6 +3,9 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(main)
 
+DataFrame df1 as CSV("abcd.csv")
+DataFrame df2 as Source("org.siani.monet.DataFrameLoaderAAA")
+
 Template main as Decorated
 	Image(value="logo.png") as Avatar("abcd")
 	Block home as Parallax
@@ -10,8 +13,19 @@ Template main as Decorated
 		Block
 			Text(value="abcd")
 			Text(value="abcd")
-			Chart(code="abcd") as Absolute(width=100px)
-				Input as CSV(source="abcd.csv")
+
+			Chart(input=df1, output=Image) as Absolute(width=100px)
+				query
+					==========
+					dfdfdfdf
+					==========
+
+			Chart(input=df2, output=Html) as Absolute(width=100px)
+				query
+					=========
+					abcd
+					=========
+
 			Text as Code(language=HTML) Editable
 				value
 					========

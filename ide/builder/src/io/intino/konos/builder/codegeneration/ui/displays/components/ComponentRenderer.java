@@ -212,7 +212,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return frame;
 	}
 
-	private String fixResourceValue(String value) {
+	protected String fixResourceValue(String value) {
 		return value.startsWith("/") ? value : "/" + value;
 	}
 

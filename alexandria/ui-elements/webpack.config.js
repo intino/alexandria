@@ -23,7 +23,8 @@ module.exports = {
     entry : './gen/App.js',
     output: {
         path: "/Users/mcaballero/Proyectos/konos/out/production/ui-elements/www",
-        filename: './ui-elements/App.js'
+        filename: './ui-elements/App.js'/*,
+        chunkFilename: '[name].bundle.js'*/
     },
     resolve: {
         alias: {

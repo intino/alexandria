@@ -90,6 +90,3 @@ Facet ComboBox on ChildComponents.Selector
 // TEXT FACETS
 Facet Code on ChildComponents.Text
 	var word:CodeLanguage language
-
-Facet CSV on ChildComponents.Chart.Input
-	var string source

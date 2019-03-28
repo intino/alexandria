@@ -161,9 +161,9 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties & chart) trigger(specific)
-	[code("$code");][
-	$source+resourceMethod][
-	mode("$mode");]
+	[query("$query");][
+	$input+inputMethod][
+	outputType("$outputType");]
 end
 
 def type(properties & text) trigger(specific)
@@ -182,6 +182,14 @@ def type(properties) trigger(common)
 end
 
 def type(properties) trigger(specific)
+end
+
+def trigger(inputMethod & csv)
+	input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
+end
+
+def trigger(inputMethod & source)
+	input(new $value());
 end
 
 def trigger(resourceMethod)

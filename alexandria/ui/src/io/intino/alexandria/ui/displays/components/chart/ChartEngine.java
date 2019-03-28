@@ -13,88 +13,32 @@ import java.io.*;
 import static io.intino.alexandria.ui.utils.IOUtils.toByteArray;
 
 public class ChartEngine {
-//	private final ScriptEngine engine;
 
-//	public ChartEngine() {
-//		RenjinScriptEngineFactory factory = new RenjinScriptEngineFactory();
-//		engine = factory.getScriptEngine();
-//	}
-
-//	public URL execute(ChartSheet input, String code) {
-//		RCaller caller = new RCaller();
-//		caller.setRscriptExecutable("/Library/Frameworks/R.framework/Versions/3.5/Resources/Rscript");
-//		RCode rCode = new RCode();
-//		rCode.addRCode("library(plotly)");
-//		rCode.addRCode("library(ggplot2)");
-//		rCode.addRCode("set.seed(100)");
-//		rCode.addRCode("d <- diamonds[sample(nrow(diamonds), 1000), ]");
-//		rCode.addRCode("p <- ggplot(data = d, aes(x = carat, y = price)) + geom_point(aes(text = paste(\"Clarity:\", clarity)), size = 4) + geom_smooth(aes(colour = cut, fill = cut)) + facet_wrap(~ cut)");
-//		rCode.addRCode("p <- ggplotly(p)");
-//		rCode.addRCode("htmlwidgets::saveWidget(p, \"result.html\")");
-//		caller.setRCode(rCode);
-//		caller.runAndReturnResult("p");
-//		String[] ps = caller.getParser().getAsStringArray("p");
-//		Stream.of(ps).forEach(System.out::println);
-//		return null;
-//	}
-
-
-//	public URL execute(ChartSheet input, String code) {
-//		try {
-//			StringWriter writer = new StringWriter();
-//			engine.getContext().setWriter(writer);
-//
-//			engine.eval("library(plotly)");
-//			engine.eval("set.seed(100)");
-//			engine.eval("d <- diamonds[sample(nrow(diamonds), 1000), ]");
-//			engine.eval("p <- ggplot(data = d, aes(x = carat, y = price)) + geom_point(aes(text = paste(\"Clarity:\", clarity)), size = 4) + geom_smooth(aes(colour = cut, fill = cut)) + facet_wrap(~ cut)");
-//			engine.eval("p <- ggplotly(p)");
-//
-//			Object p = engine.eval("p");
-//			System.out.println(p);
-//
-//			engine.getContext().setWriter(new PrintWriter(System.out));
-//		} catch (ScriptException e) {
-//			Logger.error("Could not execute R code %s for Chart");
-//		}
-//		return null;
-//	}
-
-
-	public String execute(ChartSheet input, String code, ChartMode mode) {
+	public String execute(DataFrame input, String query, Output mode) {
 		RConnection connection = null;
 
-		if (code == null || code.isEmpty()) return null;
+		if (query == null || query.isEmpty()) return null;
 
 		try {
 			connection = new RConnection("");
 
-//			connection.eval("library(ggplot2)");
-//			connection.eval("set.seed(100)");
-//			connection.eval("d <- diamonds[sample(nrow(diamonds), 1000), ]");
-//			connection.eval("result = ggplot(data = d, aes(x = carat, y = price)) + geom_point(aes(text = paste(\"Clarity:\", clarity)), size = 4) + geom_smooth(aes(colour = cut, fill = cut)) + facet_wrap(~ cut)");
+			connection.eval("library(ggplot2)");
+			connection.eval(query);
 
-//			connection.eval("library(plotly)");
-//			connection.eval("ggiris <- qplot(Petal.Width, Sepal.Length, data = iris, color = Species)");
-//			connection.eval("result <- ggplotly(ggiris)");
-//			connection.eval("result <- plotly_json(result, FALSE)");
-
-			connection.eval(code);
-			String result = null;
-
-			if (mode == ChartMode.Image) {
-				connection.parseAndEval("ggsave('data.png', result)");
-				result = Base64.encode(toByteArray(get(connection, "data.png")));
+			String output = null;
+			if (mode == Output.Image) {
+				connection.parseAndEval("ggsave('data.png', output)");
+				output = Base64.encode(toByteArray(get(connection, "data.png")));
 			}
-			else if (mode == ChartMode.Html) {
+			else if (mode == Output.Html) {
 				connection.eval("library(plotly)");
-				connection.eval("result <- ggplotly(result)");
-				connection.eval("result <- plotly_json(result, FALSE)");
-				connection.parseAndEval("write(result, 'data.json')");
-				result = new String(toByteArray(get(connection, "data.json")));
+				connection.eval("output <- ggplotly(output)");
+				connection.eval("output <- plotly_json(output, FALSE)");
+				connection.parseAndEval("write(output, 'data.json')");
+				output = new String(toByteArray(get(connection, "data.json")));
 			}
 
-			return result;
+			return output;
 
 		} catch (REngineException | IOException | REXPMismatchException e) {
 			throw new RuntimeException(e.getMessage());

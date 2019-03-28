@@ -53,11 +53,13 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "properties & block")), (condition("trigger", "specific"))).add(expression().add(mark("background", "resourceMethod"))),
 			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(mark("value", "resourceMethod"))).add(expression().add(literal("\n")).add(mark("defaultValue", "resourceMethod"))),
 			rule().add((condition("type", "properties & openpage")), (condition("trigger", "specific"))).add(expression().add(literal("path(\"")).add(mark("path")).add(literal("\");"))),
-			rule().add((condition("type", "properties & chart")), (condition("trigger", "specific"))).add(expression().add(literal("code(\"")).add(mark("code")).add(literal("\");"))).add(expression().add(literal("\n")).add(mark("source", "resourceMethod"))).add(expression().add(literal("\n")).add(literal("mode(\"")).add(mark("mode")).add(literal("\");"))),
+			rule().add((condition("type", "properties & chart")), (condition("trigger", "specific"))).add(expression().add(literal("query(\"")).add(mark("query")).add(literal("\");"))).add(expression().add(literal("\n")).add(mark("input", "inputMethod"))).add(expression().add(literal("\n")).add(literal("outputType(\"")).add(mark("outputType")).add(literal("\");"))),
 			rule().add((condition("type", "properties & text")), (condition("trigger", "specific"))).add(expression().add(literal("value(\"")).add(mark("defaultValue")).add(literal("\");"))),
 			rule().add((condition("type", "properties & operation")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))).add(expression().add(literal("\n")).add(literal("color(\"")).add(mark("color")).add(literal("\");"))).add(literal("\n")).add(mark("operationMode")),
 			rule().add((condition("type", "properties")), (condition("trigger", "common"))).add(expression().add(literal("label(\"")).add(mark("label")).add(literal("\");"))).add(expression().add(literal("\n")).add(literal("color(\"")).add(mark("color")).add(literal("\");"))),
 			rule().add((condition("type", "properties")), (condition("trigger", "specific"))),
+			rule().add((condition("trigger", "inputMethod & csv"))).add(literal("input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\")));")),
+			rule().add((condition("trigger", "inputMethod & source"))).add(literal("input(new ")).add(mark("value")).add(literal("());")),
 			rule().add((condition("trigger", "resourceMethod"))).add(mark("name")).add(literal("(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\"));")),
 			rule().add((condition("type", "operationMode & iconbutton"))).add(literal("icon(\"")).add(mark("icon")).add(literal("\");"))
 		);

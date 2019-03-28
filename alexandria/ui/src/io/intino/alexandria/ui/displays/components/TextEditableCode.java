@@ -17,7 +17,7 @@ public class TextEditableCode<B extends Box> extends AbstractTextEditableCode<B>
 	}
 
 	public TextEditableCode<B> value(String value) {
-		this.value = value;
+		this.value = value.replaceAll("&#13;", "\n").replaceAll("\\\\n", "\n");
 		return this;
 	}
 
