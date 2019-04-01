@@ -71,20 +71,30 @@ Concept ChildComponents
 
 	Concept Text extends Component
 		var word:{Uppercase Lowercase Capitalize Normal} mode = Normal
+		!! The initial text to display in the box, if any
 		var string value = empty
+		var string prefix = empty
+		var string suffix = empty
 
 	Concept File extends Component
+		var string value = empty
+
 	Concept Image extends Component
 		var string value = empty
-		var string default = empty
+		var string defaultValue = empty
 
 	Concept Icon extends Component
 		var string alexandriaIcon
+
 	Concept Number extends Component
+		var double value = -1
+		var string prefix = empty
+		var string suffix = empty
 
 	Concept Date extends Component
 		var string pattern = "DD/MM/YYYY"
 		var word:{FromNow ToNow None} mode = None
+		var instant value = empty
 
 	Concept Snackbar extends Component
 		var word:{TopCenter TopRight BottomRight BottomCenter BottomLeft TopLeft} position = BottomCenter

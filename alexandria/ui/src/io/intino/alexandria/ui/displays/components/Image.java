@@ -19,11 +19,8 @@ public class Image<B extends Box> extends AbstractImage<B> {
 		refresh();
 	}
 
-	public String value() {
-		String result = null;
-		if (defaultPicture != null) result = Asset.toResource(baseAssetUrl(), defaultPicture).toUrl().toString();
-		else if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
-		return result;
+	public URL value() {
+    	return value;
 	}
 
 	public Image value(URL value) {
@@ -31,7 +28,7 @@ public class Image<B extends Box> extends AbstractImage<B> {
     	return this;
 	}
 
-	public Image defaultImage(URL defaultPicture) {
+	public Image defaultValue(URL defaultPicture) {
     	this.defaultPicture = defaultPicture;
     	return this;
 	}
@@ -42,9 +39,15 @@ public class Image<B extends Box> extends AbstractImage<B> {
     }
 
 	public void refresh() {
-		String value = value();
+		String value = serializedValue();
 		if (value == null) return;
 		notifier.refresh(value);
 	}
 
+	public String serializedValue() {
+		String result = null;
+		if (defaultPicture != null) result = Asset.toResource(baseAssetUrl(), defaultPicture).toUrl().toString();
+		else if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();
+		return result;
+	}
 }

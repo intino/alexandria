@@ -42,6 +42,9 @@ Facet Password on ChildComponents.Text with Editable
 			var integer max
 
 Facet Editable on ChildComponents.Number
+	var double min = -1
+	var double max = -1
+	var double step = -1
 
 Facet Editable on ChildComponents.File
 	var boolean showPreview = false
@@ -58,3 +61,5 @@ Facet Editable on ChildComponents.Image
 		var string[] allowedExtensions = empty
 
 Facet Editable on ChildComponents.Date
+	var instant min = empty
+	var instant max = empty

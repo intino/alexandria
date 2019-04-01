@@ -1,7 +1,8 @@
-package io.intino.konos.builder.codegeneration.ui.displays.components;
+package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
 import io.intino.konos.model.graph.ChildComponents.Image;
 import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
 import org.siani.itrules.model.Frame;
@@ -17,7 +18,7 @@ public class ImageRenderer extends SizedRenderer<Image> {
 		Frame result = super.properties();
 		addAvatarProperties(result);
 		if (element.value() != null && !element.value().isEmpty()) result.addSlot("value", resourceMethodFrame("value", element.value()));
-		if (element.default$() != null && !element.default$().isEmpty()) result.addSlot("defaultValue", resourceMethodFrame("defaultImage", element.default$()));
+		if (element.defaultValue() != null && !element.defaultValue().isEmpty()) result.addSlot("defaultValue", resourceMethodFrame("defaultValue", element.defaultValue()));
 		return result;
 	}
 

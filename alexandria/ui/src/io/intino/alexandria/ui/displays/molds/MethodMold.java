@@ -14,6 +14,7 @@ public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
         super.init();
         name.update(method.name());
         addParameters();
+        if (method.facets() != null) facets.update(String.join(", ", method.facets()));
         description.update(method.description());
         returnType.update(method.returnType());
     }

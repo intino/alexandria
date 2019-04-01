@@ -1,7 +1,6 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.I18n;
 import io.intino.alexandria.ui.displays.molds.WidgetMold;
 import io.intino.alexandria.ui.documentation.Model;
 
@@ -14,19 +13,29 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        menu.select("Chart");
-        updateMolds();
+        update();
+        menu.select("Number");
     }
 
-    private void updateMolds() {
+    private void update() {
+        updateDataWidgets();
+        updateOtherWidgets();
+    }
+
+    private void updateDataWidgets() {
         updateMold(panels.textPanel.textBlock, Model.WidgetType.Text);
-        updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image);
-        updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date);
-        updateMold(panels.chartPanel.chartBlock, Model.WidgetType.Chart);
+        panels.textPanel.onShow((event) -> updateMold(panels.textPanel.textBlock, Model.WidgetType.Text));
+        panels.numberPanel.onShow((event) -> updateMold(panels.numberPanel.numberBlock, Model.WidgetType.Number));
+        panels.imagePanel.onShow((event) -> updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image));
+        panels.filePanel.onShow((event) -> updateMold(panels.filePanel.fileBlock, Model.WidgetType.File));
+        panels.datePanel.onShow((event) -> updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date));
+    }
+
+    private void updateOtherWidgets() {
+        panels.chartPanel.onShow((event) -> updateMold(panels.chartPanel.chartBlock, Model.WidgetType.Chart));
     }
 
     private void updateMold(WidgetMold mold, Model.WidgetType type) {
-        mold.title.update(I18n.translate(type.name() + " widget", language()));
         mold.widget = Model.widget(type);
         mold.refresh();
     }

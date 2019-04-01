@@ -9,16 +9,20 @@ Theme theme1
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
 Format("") h3
+Format("") h4
 Format("") h5
 Format("") h6
 Format("") body1
 Format("") body2
 Format("color:'white'") white
 Format("padding:'10px 20px'") air
+Format("marginBottom:'10px'") airBottom
 Format("padding:'20px'") containerAir
 Format("background:'#efefef',padding:'8px'") filled
 Format("marginTop:'10px'") headerToolbar
 Format("textAlign:'center'") textCentered
+Format("color:'#888',fontSize:'10px',marginTop:'-7px',position:'absolute'") facetsAbsolute
+Format("whiteSpace:'nowrap'") valuesLabelFormat
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle

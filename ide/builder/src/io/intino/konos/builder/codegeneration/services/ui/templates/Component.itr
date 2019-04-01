@@ -3,7 +3,7 @@ def type(reference) trigger(declaration)
 end
 
 def type(reference)
-	$name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & moldableblock & multipleblock) trigger(declarations)
@@ -57,11 +57,12 @@ def type(component & child) trigger(class)
 		}
 
 		@Override
-		public void init() {
-			super.init();[
+		public void $methodName() {
+			super.$methodName();[
 			$reference...[$NL]][
 			$component+child...[$NL]]
 		}
+
 		[$component+class...[$NL]]
 		[$component+method...[$NL]]
 	}
@@ -97,17 +98,17 @@ def type(component & child) trigger(childReferences)
 end
 
 def type(component & child) trigger(moldReferences)
-	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+moldChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockReferences)
-	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)
-	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+childReferences...[$NL]]
 end
 
@@ -120,11 +121,11 @@ def type(component & child & moldableblock & multipleblock)
 end
 
 def type(component & child & moldableblock)
-	$name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
 def type(component & child)
-	$name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(facet)
@@ -156,6 +157,10 @@ def type(properties & image) trigger(specific)
 	$defaultValue+resourceMethod]
 end
 
+def type(properties & file) trigger(specific)
+	[$value+resourceMethod]
+end
+
 def type(properties & openpage) trigger(specific)
 	[path("$path");]
 end
@@ -163,7 +168,19 @@ end
 def type(properties & chart) trigger(specific)
 	[query("$query");][
 	$input+inputMethod][
-	outputType("$outputType");]
+	output("$output");]
+end
+
+def type(properties & number) trigger(specific)
+	[value($value);][
+	min($min);][
+	max($max);]
+end
+
+def type(properties & date) trigger(specific)
+	[value(java.time.Instant.ofEpochMilli($value~L));][
+	min(java.time.Instant.ofEpochMilli($min~L));][
+	max(java.time.Instant.ofEpochMilli($max~L));]
 end
 
 def type(properties & text) trigger(specific)
@@ -184,11 +201,11 @@ end
 def type(properties) trigger(specific)
 end
 
-def trigger(inputMethod & csv)
+def type(inputMethod & csv) trigger(inputMethod)
 	input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource($owner.class.getResource("$value")));
 end
 
-def trigger(inputMethod & source)
+def type(inputMethod & source) trigger(inputMethod)
 	input(new $value());
 end
 

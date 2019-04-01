@@ -4,10 +4,7 @@ import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.MethodParameter;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.schemas.Widget;
-import io.intino.alexandria.ui.documentation.model.ChartWidget;
-import io.intino.alexandria.ui.documentation.model.DateWidget;
-import io.intino.alexandria.ui.documentation.model.ImageWidget;
-import io.intino.alexandria.ui.documentation.model.TextWidget;
+import io.intino.alexandria.ui.documentation.model.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,7 +15,7 @@ public class Model {
 	private static Map<WidgetType, Widget> map = new HashMap<>();
 
 	public enum WidgetType {
-		Text, Image, Date, Chart
+		Text, Number, Image, File, Date, Chart
 	}
 
 	static {
@@ -27,7 +24,9 @@ public class Model {
 
 	private static void initialize() {
 		map.put(WidgetType.Text, new TextWidget());
+		map.put(WidgetType.Number, new NumberWidget());
 		map.put(WidgetType.Image, new ImageWidget());
+		map.put(WidgetType.File, new FileWidget());
 		map.put(WidgetType.Date, new DateWidget());
 		map.put(WidgetType.Chart, new ChartWidget());
 	}

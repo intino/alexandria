@@ -1,10 +1,13 @@
-package io.intino.konos.builder.codegeneration.ui.displays.components;
+package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.ChildComponents.Text;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import org.siani.itrules.model.Frame;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 public class TextRenderer extends ComponentRenderer<Text> {
 
@@ -15,12 +18,18 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
+		if (element.prefix() != null) frame.addSlot("prefix", element.prefix());
+		if (element.suffix() != null) frame.addSlot("suffix", element.suffix());
 		if (element.isCode()) {
 			Frame codeFrame = new Frame(CodeText.class.getSimpleName());
-			if (element.asCode().value() != null) codeFrame.addSlot("value", element.asCode().value().trim());
+			if (element.asCode().value() != null) codeFrame.addSlot("value", escape(element.asCode().value()));
 			frame.addSlot("code", codeFrame);
 		}
 		return frame;
+	}
+
+	private String escape(String value) {
+		return escapeHtml(value).trim().replaceAll("\"", "'");
 	}
 
 	@Override

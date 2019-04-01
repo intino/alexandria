@@ -28,6 +28,7 @@ Facet AbstractAbsolute is abstract
 	var integer:{px} height = -1px
 Facet Absolute extends AbstractAbsolute on Block
 Facet Absolute extends AbstractAbsolute on ChildComponents.Image
+Facet Absolute extends AbstractAbsolute on ChildComponents.File
 Facet Absolute extends AbstractAbsolute on ChildComponents.Chart
 Facet Absolute extends AbstractAbsolute on ChildComponents.Header
 
@@ -36,6 +37,7 @@ Facet AbstractRelative is abstract
 	var double:{%} height = 100%
 Facet Relative extends AbstractRelative on Block
 Facet Relative extends AbstractRelative on ChildComponents.Image
+Facet Relative extends AbstractRelative on ChildComponents.File
 Facet Relative extends AbstractRelative on ChildComponents.Chart
 Facet Relative extends AbstractRelative on ChildComponents.Header
 
@@ -83,8 +85,15 @@ Facet Draggable on Dialog
 Facet Tabs on ChildComponents.Selector
 Facet Menu on ChildComponents.Selector
 	var word:{Horizontal Vertical} layout
+
 Facet RadioBox on ChildComponents.Selector
+	!! The value that should initially be selected, defaults to the first value.
+	var string selected = empty
+
 Facet CheckBox on ChildComponents.Selector
+	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
+	var string[] selected = empty
+
 Facet ComboBox on ChildComponents.Selector
 
 // TEXT FACETS

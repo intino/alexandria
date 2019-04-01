@@ -18,7 +18,7 @@ const TextEditableCodeAce = React.lazy(() => import("./texteditablecode/TextEdit
 
 class TextEditableCode extends AbstractTextEditableCode {
 	state = {
-		value : this.props.children
+		value : this.props.value
 	};
 
 	constructor(props) {
@@ -39,7 +39,7 @@ class TextEditableCode extends AbstractTextEditableCode {
 		const value = CodeBehavior.clean(this.state.value);
 		return (
 			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div>}>
-				<div style={this.style()}><TextEditableCodeAce language={this.props.language} theme={theme} className={classes.editor}
+				<div style={this.style()}><TextEditableCodeAce editable={true} language={this.props.language} theme={theme} className={classes.editor}
 															   width="100%" height="100%"
 															   value={value} onChange={this.handleChange.bind(this)}/></div>
 			</Suspense>

@@ -3,13 +3,12 @@ package io.intino.alexandria.ui.displays.molds;
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
+import io.intino.alexandria.ui.I18n;
 import io.intino.alexandria.ui.displays.EventsDisplay;
-import io.intino.alexandria.ui.documentation.model.ChartWidget;
-import io.intino.alexandria.ui.documentation.model.DateWidget;
-import io.intino.alexandria.ui.documentation.model.ImageWidget;
-import io.intino.alexandria.ui.documentation.model.TextWidget;
+import io.intino.alexandria.ui.documentation.model.*;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
+    private boolean infoAdded = false;
 
     public WidgetMold(UiFrameworkBox box) {
         super(box);
@@ -25,17 +24,27 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     public void refresh() {
         super.refresh();
         if (widget == null) return;
+        title.update(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
         updateExamplesVisibility();
-        refreshPropertiesDisplay();
-        refreshMethodsDisplay();
-        refreshEventsDisplay();
+        updateInfo();
     }
 
     private void updateExamplesVisibility() {
         textExamples.visible(widget instanceof TextWidget);
+        numberExamples.visible(widget instanceof NumberWidget);
+        fileExamples.visible(widget instanceof FileWidget);
         imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
         chartExamples.visible(widget instanceof ChartWidget);
+    }
+
+    private void updateInfo() {
+        if (infoAdded) return;
+        facetsNames.update(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : I18n.translate("no facets", language()));
+        refreshPropertiesDisplay();
+        refreshMethodsDisplay();
+        refreshEventsDisplay();
+        infoAdded = true;
     }
 
     private void refreshPropertiesDisplay() {

@@ -1,6 +1,7 @@
 dsl Konos
 
 Translator(Spanish)
+	Translation("no facets", "no tiene facetas")
 	Translation("no properties", "no tiene propiedades")
 	Translation("no methods", "no tiene métodos")
 	Translation("no events", "no tiene eventos")
