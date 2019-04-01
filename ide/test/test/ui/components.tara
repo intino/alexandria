@@ -7,33 +7,10 @@ DataFrame df1 as CSV("abcd.csv")
 DataFrame df2 as Source("org.siani.monet.DataFrameLoaderAAA")
 
 Template main as Decorated
-	Image(value="logo.png") as Avatar("abcd")
-	Block home as Parallax
-		background = "/img/a.png"
-		Block
-			Text(value="abcd")
-			Text(value="abcd")
-
-			Chart(input=df1, output=Image) as Absolute(width=100px)
-				query
-					==========
-					dfdfdfdf
-					==========
-
-			Chart(input=df2, output=Html) as Absolute(width=100px)
-				query
-					=========
-					abcd
-					=========
-
-			Text as Code(language=HTML) Editable
-				value
-					========
-					library(plotly);
-					ggiris \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= "Species");
-					result \= ggplotly(ggiris);
-					result \= plotly_json(result, FALSE);
-					========
+	Block
+		Number(value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number2 as Editable
+//		Date(value = "2010-01-01T00:01:00Z", min = "2010-01-01T00:01:00Z", max = "2010-01-01T00:01:00Z")
+	Block as Conditional
 
 Theme theme1
 	Primary("#3f51b5")

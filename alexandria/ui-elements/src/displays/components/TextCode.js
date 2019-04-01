@@ -16,7 +16,7 @@ const styles = theme => ({
 
 class TextCode extends AbstractTextCode {
 	state = {
-		value: this.props.children
+		value: this.props.value
 	};
 
 	constructor(props) {
@@ -30,7 +30,8 @@ class TextCode extends AbstractTextCode {
 		const value = CodeBehavior.clean(this.state.value);
 		return (
 			<React.Fragment>
-				<code className={classes.value}>{value}</code>
+				<code style={this.style()} className={classes.value}
+					  dangerouslySetInnerHTML={{__html: value}}></code>
 			</React.Fragment>
 		);
 	};

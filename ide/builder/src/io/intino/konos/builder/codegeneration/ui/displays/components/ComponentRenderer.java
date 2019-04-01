@@ -43,6 +43,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addOwner(frame);
 		frame.addSlot("properties", properties());
 		if (buildChildren) frame.addTypes("child");
+		frame.addSlot("methodName", element.i$(ConditionalBlock.class) ? "refresh" : "init");
 		addSpecificTypes(frame);
 		addComponents(element, frame);
 		addReferences(element, frame);

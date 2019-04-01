@@ -1,32 +1,53 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.Resource;
+import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
-import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.schemas.FileInfo;
 import io.intino.alexandria.ui.resources.Asset;
 
-import static io.intino.alexandria.ui.utils.UrlUtil.toURL;
+import java.net.URL;
 
 public class File<B extends Box> extends AbstractFile<B> {
-	private Resource value;
-	protected ChangeListener changeListener = null;
+	private URL value;
+	private String mimeType;
 
 	public File(B box) {
 		super(box);
 	}
 
-	public Resource value() {
+	@Override
+	public void init() {
+		super.init();
+		refresh();
+	}
+
+	public URL value() {
 		return value;
 	}
 
-	public void update(Resource value) {
+	public File value(URL value) {
 		this.value = value;
-		notifier.refresh(Asset.toResource(toURL(session().browser().baseAssetUrl()), value.id()).toUrl().toString());
+		this.mimeType = typeOf(value);
+		return this;
 	}
 
-	public void notifyChange(Resource value) {
-		this.value = value;
-		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	public void update(URL value) {
+		value(value);
+		refresh();
 	}
+
+	public void refresh() {
+		String value = serializedValue();
+		if (value == null) return;
+		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
+	}
+
+	private String serializedValue() {
+		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
+	}
+
+	private String typeOf(URL value) {
+		return MimeTypes.getFromFilename(value.toString());
+	}
+
 }

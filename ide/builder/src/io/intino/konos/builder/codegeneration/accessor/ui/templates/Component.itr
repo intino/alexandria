@@ -21,10 +21,9 @@ def type(component & child & moldableblock & multipleblock)
 end
 
 def type(component & child)
-	<$extends context={this.instanceId.bind(this)} id="$id"$properties+common$properties+specific>[
+	<$extends context={this.instanceId.bind(this)} id="$id"$properties+common$properties+specific[ $code]>[
 		$reference...[$NL]][
 		$component+child...[$NL]][
-		$code
 	]</$extends>
 end
 
@@ -56,6 +55,10 @@ def type(properties & image) trigger(specific)
 	[ width="$width"][ height="$height"]
 end
 
+def type(properties & file) trigger(specific)
+	[ width="$width"][ height="$height"]
+end
+
 def type(properties & chart) trigger(specific)
 	[ width="$width"][ height="$height"]
 end
@@ -65,7 +68,11 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}]
+end
+
+def type(properties & number) trigger(specific)
+	[ value={$value}][ prefix="$prefix"][ suffix="$suffix"][ min={$min}][ max={$max}][ step={$step}]
 end
 
 def type(properties & header) trigger(specific)
@@ -77,7 +84,7 @@ def type(properties & codeText) trigger(specific)
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ value="$defaultValue"]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"]
 end
 
 def type(properties & openpage) trigger(specific)
@@ -88,5 +95,5 @@ def type(properties) trigger(specific)
 end
 
 def type(codetext)
-	$value
+	value="$value"
 end

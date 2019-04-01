@@ -24,7 +24,7 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	private void addInput(Frame frame) {
 		DataFrame input = element.input();
 		String type = input.isSource() ? "source" : "csv";
-		frame.addSlot("inputMethod", inputMethodFrame(input, type));
+		frame.addSlot("input", inputMethodFrame(input, type));
 	}
 
 	private Frame inputMethodFrame(DataFrame input, String type) {

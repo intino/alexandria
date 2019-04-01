@@ -68,6 +68,7 @@ Template docsTemplate as Decorated
 			Selector menu as Menu(layout=Vertical)
 				Block(label="data widgets") basicSection as Collapsible
 					Text(value="Text") text as Option
+					Text(value="Number") number as Option
 					Text(value="Image") image as Option
 					Text(value="File") file as Option
 					Text(value="Date") date as Option
@@ -98,6 +99,7 @@ Template docsTemplate as Decorated
 
 		Block(layout=Vertical Flexible, format=air) panels
 			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
+			Block numberPanel as Conditional(docsTemplate.body.header.menu.basicSection.number) > Block numberBlock as Moldable(widgetMold)
 			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
 			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
 			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)

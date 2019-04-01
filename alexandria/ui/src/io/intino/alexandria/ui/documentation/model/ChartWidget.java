@@ -1,24 +1,21 @@
 package io.intino.alexandria.ui.documentation.model;
 
 import io.intino.alexandria.schemas.Property;
-import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.documentation.Model;
 
-public class ChartWidget extends Widget {
+public class ChartWidget extends BaseWidget {
 
-	public ChartWidget() {
-		addProperties();
-		addMethods();
-		addEvents();
+	protected void addProperties() {
+		super.addProperties();
+		add(Model.property("operations", Property.Type.Text, "operations applied to chart"));
 	}
 
-	private void addProperties() {
-		propertyList().add(Model.property("operations", Property.Type.Text, "operations applied to chart"));
+	protected void addMethods() {
+		super.addMethods();
 	}
 
-	private void addMethods() {
+	protected void addEvents() {
+		super.addEvents();
 	}
 
-	private void addEvents() {
-	}
 }

@@ -22,8 +22,8 @@ public class ChartEngine {
 		try {
 			connection = new RConnection("");
 
-			connection.eval("library(ggplot2)");
-			connection.eval(query);
+			connection.voidEval("library(ggplot2)");
+			connection.voidEval(query);
 
 			String output = null;
 			if (mode == Output.Image) {
@@ -31,9 +31,9 @@ public class ChartEngine {
 				output = Base64.encode(toByteArray(get(connection, "data.png")));
 			}
 			else if (mode == Output.Html) {
-				connection.eval("library(plotly)");
-				connection.eval("output <- ggplotly(output)");
-				connection.eval("output <- plotly_json(output, FALSE)");
+				connection.voidEval("library(plotly)");
+				connection.voidEval("output <- ggplotly(output)");
+				connection.voidEval("output <- plotly_json(output, FALSE)");
 				connection.parseAndEval("write(output, 'data.json')");
 				output = new String(toByteArray(get(connection, "data.json")));
 			}
@@ -46,6 +46,10 @@ public class ChartEngine {
 		finally {
 			if (connection != null) connection.close();
 		}
+	}
+
+	private void sendInput(RConnection connection, DataFrame input) {
+
 	}
 
 	public void put(RConnection connection, InputStream content, String name) {

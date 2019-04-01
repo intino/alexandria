@@ -1,18 +1,21 @@
 dsl Konos
 
 Schema Widget
+	Attribute facets as Text List
 	Attribute propertyList as Object(Property) List
 	Attribute methodList as Object(Method) List
 	Attribute eventList as Object(Event) List
 
 Schema Property
 	Attribute name as Text
-	Attribute type as Word("Integer" "Word" "Text" "Resource")
+	Attribute facets as Text List
+	Attribute type as Word("Integer" "Word" "Text" "Resource" "Reference" "ReferenceArray")
 	Attribute values as Text List
 	Attribute description as Text
 
 Schema Method
 	Attribute name as Text
+	Attribute facets as Text List
 	Attribute params as Object(MethodParameter) List
 	Attribute description as Text
 	Attribute returnType as Text
@@ -23,4 +26,5 @@ Schema MethodParameter
 
 Schema Event
 	Attribute name as Text
+	Attribute facets as Text List
 	Attribute eventType as Text

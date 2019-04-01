@@ -1,25 +1,41 @@
 package io.intino.alexandria.ui.documentation.model;
 
 import io.intino.alexandria.schemas.Property;
-import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.documentation.Model;
 
-public class TextWidget extends Widget {
+import java.util.Collections;
+
+import static io.intino.alexandria.ui.documentation.Model.method;
+import static io.intino.alexandria.ui.documentation.Model.property;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
+public class TextWidget extends BaseWidget {
+
 	public TextWidget() {
-		addProperties();
-		addMethods();
-		addEvents();
+		super();
+		facets(asList("Multiple", "Code", "Editable"));
 	}
 
-	private void addProperties() {
-		propertyList().add(Model.property("format", Property.Type.Word, "used to...", "H1", "H2", "H3", "H4", "H5", "H6", "Subtitle1", "Subtitle2", "Body1", "Body2", "Button", "Caption", "Overline", "Default"));
-		propertyList().add(Model.property("mode", Property.Type.Word, "used to...", "Uppercase", "Lowercase", "Capitalize", "Normal"));
-		propertyList().add(Model.property("value", Property.Type.Text, "default value for component"));
+	protected void addProperties() {
+		super.addProperties();
+		add(property("mode", Property.Type.Word, "Transforms text value by applying desired mode", "Uppercase", "Lowercase", "Capitalize", "Normal"));
+		add(property("value", Property.Type.Text, "The initial text to display in the box, if any"));
+		add(property("language", Property.Type.Word, "Language of code defined in widget.", languages()).facets(singletonList("Code")));
 	}
 
-	private void addMethods() {
+	protected void addMethods() {
+		super.addMethods();
+		add(method("value", Collections.emptyList(), "Returns value stored in widget", "String"));
+		add(method("update", singletonList(Model.methodParameter("value", "String")), "Allows updating text value", "String"));
 	}
 
-	private void addEvents() {
+	protected void addEvents() {
+		super.addEvents();
 	}
+
+	private String languages() {
+		return "Html, Java, Javascript, R";
+	}
+
 }

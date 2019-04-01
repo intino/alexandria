@@ -13,7 +13,8 @@ public class PropertyMold extends AbstractPropertyMold<UiFrameworkBox> {
     public void refresh() {
         super.refresh();
         name.update(property.name());
-        type.update(property.type().name().toLowerCase());
+        type.update(property.type().name().replace("Array", "[]"));
+        if (property.facets() != null) facets.update(String.join(", ", property.facets()));
         description.update(property.description());
         //valuesLabel.update(property.type() == Property.Type.Word ? translate("allowed values") : translate("default value"));
         valuesLabel.update(valuesLabel());

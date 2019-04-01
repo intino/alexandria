@@ -41,13 +41,18 @@ Schema SelectorMenuSelection
 	Attribute option as Integer
 	Attribute ancestors as Text List
 
-Component text as Decorated
-	Notification refresh as Text
+Component number as Decorated
+	Notification refresh as Real
 
-Component Date as Decorated
+Component numberEditable as Decorated
+	Notification refresh as Real
+
+	Request notifyChange as Real
+
+Component date as Decorated
 	Notification refresh as DateTime
 
-Component textCode as Decorated
+Component text as Decorated
 	Notification refresh as Text
 
 Component textEditable as Decorated
@@ -56,15 +61,20 @@ Component textEditable as Decorated
 	Request notifyChange as Text
 	Request notifyKeyPress as Object(KeyPressEventData)
 
+Component textCode as Decorated
+	Notification refresh as Text
+
 Component textEditableCode as Decorated
 	Notification refresh as Text
 
 	Request notifyChange as Text
 
 Component file as Decorated
-	Notification refresh as Text
+	Notification refresh as Object(FileInfo)
 
-	Request notifyChange as File
+Schema FileInfo
+	Attribute value as Text
+	Attribute mimeType as Text
 
 Component image as Decorated
 	Notification refresh as Text
