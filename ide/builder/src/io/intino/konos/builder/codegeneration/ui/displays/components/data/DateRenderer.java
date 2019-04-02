@@ -28,6 +28,7 @@ public class DateRenderer extends ComponentRenderer<Date> {
 		EditableDate editableDate = element.asEditable();
 		if (editableDate.min() != null) result.addSlot("min", editableDate.min().toEpochMilli());
 		if (editableDate.max() != null) result.addSlot("max", editableDate.max().toEpochMilli());
+		if (editableDate.timePicker()) result.addSlot("timePicker", editableDate.timePicker());
 	}
 
 	@Override

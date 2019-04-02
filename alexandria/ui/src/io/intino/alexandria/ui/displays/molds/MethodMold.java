@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.molds;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.schemas.MethodParameter;
+import io.intino.alexandria.schemas.Parameter;
 
 public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
 
@@ -24,9 +24,9 @@ public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
             addParameterMold(method.params().get(i), i != method.params().size()-1);
     }
 
-    private MethodParamMold addParameterMold(MethodParameter parameter, boolean addComma) {
+    private MethodParamMold addParameterMold(Parameter parameter, boolean addComma) {
         MethodParamMold mold = new MethodParamMold(box());
-        mold.methodParameter = parameter;
+        mold.parameter = parameter;
         mold.addComma = addComma;
         params.addParamMold(mold);
         mold.refresh();

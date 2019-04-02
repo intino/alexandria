@@ -14,7 +14,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     public void init() {
         super.init();
         update();
-        menu.select("Number");
+        menu.select("Date");
     }
 
     private void update() {

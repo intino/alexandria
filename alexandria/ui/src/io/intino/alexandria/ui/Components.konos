@@ -9,8 +9,10 @@ Component blockConditional as Decorated
 Component blockParallax as Decorated
 	Notification refresh as Text
 
+Component blockBadge as Decorated
+	Notification refresh as Integer
+
 Component catalog as Decorated
-Component badge as Decorated
 Component option as Decorated
 Component chart as Decorated
 	Notification showLoading
@@ -51,6 +53,10 @@ Component numberEditable as Decorated
 
 Component date as Decorated
 	Notification refresh as DateTime
+
+Component dateEditable as Decorated
+	Notification refresh as DateTime
+	Request notifyChange as DateTime
 
 Component text as Decorated
 	Notification refresh as Text

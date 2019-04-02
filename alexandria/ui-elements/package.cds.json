@@ -34,11 +34,13 @@
     "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
+    "@date-io/moment": "^1.1.0",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.10",
     "classnames": "^2.2.6",
     "jquery": "^3.3.1",
+    "material-ui-pickers": "^2.2.4",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "plotly.js": "^1.45.3",

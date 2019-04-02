@@ -4,6 +4,7 @@ import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.ChildComponents.Selector;
+import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;
 import org.siani.itrules.model.Frame;
@@ -27,6 +28,7 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addSpacing(result);
 		addLayout(result);
 		addPaper(result);
+		addBadge(result);
 		addParallax(result);
 		if (element.isMoldable()) result.addSlot("moldable", "true");
 		if (element.isCollapsible()) result.addSlot("collapsible", "true");
@@ -45,6 +47,17 @@ public class BlockRenderer extends SizedRenderer<Block> {
 	private void addPaper(Frame result) {
 		if (!element.isPaper()) return;
 		result.addSlot("paper", "paper");
+	}
+
+	private void addBadge(Frame result) {
+		if (!element.isBadge()) return;
+		BadgeBlock badgeBlock = element.asBadge();
+		Frame badgeFrame = new Frame("badge");
+		if (badgeBlock.value() != -1) badgeFrame.addSlot("value", badgeBlock.value());
+		if (badgeBlock.max() != -1) badgeFrame.addSlot("max", badgeBlock.max());
+		if (badgeBlock.showZero()) badgeFrame.addSlot("showZero", true);
+		badgeFrame.addSlot("mode", badgeBlock.mode().name());
+		result.addSlot("badge", badgeFrame);
 	}
 
 	private void addParallax(Frame result) {

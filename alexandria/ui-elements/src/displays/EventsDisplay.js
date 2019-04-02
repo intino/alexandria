@@ -6,6 +6,7 @@ import EventsDisplayNotifier from "../../gen/displays/notifiers/EventsDisplayNot
 import EventsDisplayRequester from "../../gen/displays/requesters/EventsDisplayRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import classnames from "classnames";
+import Text from "alexandria-ui-elements/src/displays/components/Text";
 
 const styles = theme => ({
 	list : {
@@ -14,6 +15,7 @@ const styles = theme => ({
 		padding: 0
 	},
 	item : {
+		marginTop: "10px",
 		marginBottom: "5px"
 	}
 });
@@ -43,9 +45,16 @@ class EventsDisplay extends AbstractEventsDisplay {
 
 	renderEvent = (event, index) => {
 		const {classes} = this.props;
-		return (<li className={classnames(classes.item, "layout vertical")} key={index}>
+		return (<li className={classnames(classes.item, "layout vertical")} key={index} >
+			{ event.facets != null ? <Text format="body2 facetsAbsolute" mode="uppercase" value={event.facets.join(", ")}/> : undefined }
 			<div className="layout horizontal">
-				<Typography variant="h6">{event.name}: {event.type}</Typography>
+				<Text format="h6" value={event.name + "("}/>
+				{event.params.map((param, index) => {
+					return (<Text format="h6" value={param.name + ": " + param.type} key={index}/>);
+				})}
+				<Text format="h6" value=")"/>
+				<Text format="h6" value=":&nbsp;&nbsp;"/>
+				<Text format="h6 widgetType" value={event.returnType}/>
 			</div>
 			<Typography>{event.description}</Typography>
 		</li>);

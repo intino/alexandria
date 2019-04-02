@@ -63,3 +63,4 @@ Facet Editable on ChildComponents.Image
 Facet Editable on ChildComponents.Date
 	var instant min = empty
 	var instant max = empty
+	var boolean timePicker = false

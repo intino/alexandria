@@ -42,6 +42,12 @@ Facet Relative extends AbstractRelative on ChildComponents.Chart
 Facet Relative extends AbstractRelative on ChildComponents.Header
 
 Facet Paper on Block
+Facet Badge on Block
+	var integer value = -1
+	var integer max = -1
+	var boolean showZero = false
+	var word:{Normal Dot} mode = Normal
+
 Facet Parallax on Block
 	var string background
 

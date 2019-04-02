@@ -32,17 +32,19 @@ class NumberEditable extends AbstractNumberEditable {
 
 	render() {
 		const { classes } = this.props;
-		const value = this.props.value !== "" ? this.props.value : (this.props.min != -1 ? this.props.min : 0);
+		const value = this.state.value !== "" ? this.state.value : (this.props.min !== -1 ? this.props.min : 0);
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
 
 		return (
 			<TextField format={format} style={this.style()} className={classes.default} label={label} type="number"
 					   value={value} onChange={this.handleChange.bind(this)}
-					   InputProps={{
+					   inputProps={{
 						   min: this.props.min !== -1 ? this.props.min : undefined,
 						   max: this.props.max !== -1 ? this.props.max : undefined,
-						   step: this.props.step !== -1 ? this.props.step : undefined,
+						   step: this.props.step !== -1 ? this.props.step : undefined
+					   }}
+					   InputProps={{
 						   startAdornment: this.props.prefix !== undefined ? <InputAdornment position="start">{this.props.prefix}</InputAdornment> : undefined,
 						   endAdornment: this.props.suffix !== undefined ? <InputAdornment position="end">{this.props.suffix}</InputAdornment> : undefined
 					   }}></TextField>

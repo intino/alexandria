@@ -1,6 +1,5 @@
 package io.intino.alexandria.ui.documentation.model;
 
-import io.intino.alexandria.schemas.Event;
 import io.intino.alexandria.schemas.Method;
 import io.intino.alexandria.schemas.Property;
 import io.intino.alexandria.schemas.Widget;
@@ -24,7 +23,7 @@ public abstract class BaseWidget extends Widget {
 	}
 
 	protected void addMethods() {
-		add(method("refresh", Collections.emptyList(),"Refresh client side widget", "void"));
+		addMethod(method("refresh", Collections.emptyList(),"Refresh client side widget", "void"));
 	}
 
 	protected void addEvents() {
@@ -34,12 +33,11 @@ public abstract class BaseWidget extends Widget {
 		propertyList().add(property);
 	}
 
-	protected void add(Method method) {
+	protected void addMethod(Method method) {
 		methodList().add(method);
 	}
 
-	protected void add(Event event) {
-		eventList().add(event);
+	protected void addEvent(Method method) {
+		eventList().add(method);
 	}
-
 }

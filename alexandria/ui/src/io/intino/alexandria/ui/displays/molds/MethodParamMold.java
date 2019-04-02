@@ -12,8 +12,8 @@ public class MethodParamMold extends AbstractMethodParamMold<UiFrameworkBox> {
 	@Override
 	public void init() {
 		super.init();
-		name.update(methodParameter.name());
-		type.update(methodParameter.type());
+		name.update(parameter.name());
+		type.update(parameter.type());
 		if (addComma) comma.update(", ");
 	}
 }

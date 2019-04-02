@@ -50,7 +50,7 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "implements & option"))).add(literal("implements io.intino.alexandria.ui.displays.components.selector.SelectorOption")),
 			rule().add((condition("type", "implements"))).add(literal("implements --undefined--")),
 			rule().add((condition("type", "properties & image & avatar")), (condition("trigger", "specific"))).add(expression().add(literal("text(\"")).add(mark("text")).add(literal("\");"))),
-			rule().add((condition("type", "properties & block")), (condition("trigger", "specific"))).add(expression().add(mark("background", "resourceMethod"))),
+			rule().add((condition("type", "properties & block")), (condition("trigger", "specific"))).add(expression().add(mark("background", "resourceMethod"))).add(expression().add(literal("\n")).add(mark("badge"))),
 			rule().add((condition("type", "properties & image")), (condition("trigger", "specific"))).add(expression().add(mark("value", "resourceMethod"))).add(expression().add(literal("\n")).add(mark("defaultValue", "resourceMethod"))),
 			rule().add((condition("type", "properties & file")), (condition("trigger", "specific"))).add(expression().add(mark("value", "resourceMethod"))),
 			rule().add((condition("type", "properties & openpage")), (condition("trigger", "specific"))).add(expression().add(literal("path(\"")).add(mark("path")).add(literal("\");"))),
@@ -64,7 +64,8 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "inputMethod & csv")), (condition("trigger", "inputMethod"))).add(literal("input(new io.intino.alexandria.ui.displays.components.chart.datasources.CSVDataSource(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\")));")),
 			rule().add((condition("type", "inputMethod & source")), (condition("trigger", "inputMethod"))).add(literal("input(new ")).add(mark("value")).add(literal("());")),
 			rule().add((condition("trigger", "resourceMethod"))).add(mark("name")).add(literal("(")).add(mark("owner")).add(literal(".class.getResource(\"")).add(mark("value")).add(literal("\"));")),
-			rule().add((condition("type", "operationMode & iconbutton"))).add(literal("icon(\"")).add(mark("icon")).add(literal("\");"))
+			rule().add((condition("type", "operationMode & iconbutton"))).add(literal("icon(\"")).add(mark("icon")).add(literal("\");")),
+			rule().add((condition("type", "badge"))).add(expression().add(literal("value(")).add(mark("value")).add(literal(");")))
 		);
 		return this;
 	}

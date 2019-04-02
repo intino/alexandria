@@ -37,7 +37,6 @@ class TextEditable extends AbstractTextEditable {
 		const { classes } = this.props;
 		const label = this.props.label !== "" ? this.props.label : undefined;
 		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
-		const inputProps = this._inputProps();
 
 		return (
 				<TextField format={format} style={this.style()} className={classes.default} label={label} type="text"
@@ -52,13 +51,6 @@ class TextEditable extends AbstractTextEditable {
 
 	refresh = (value) => {
 		this.setState({ "value": value });
-	};
-
-	_inputProps = () => {
-		const result = {};
-		if (this.props.prefix !== undefined) result.startAdornment = <InputAdornment position="start">{this.props.prefix}</InputAdornment>;
-		if (this.props.suffix !== undefined) result.endAdornment = <InputAdornment position="end">{this.props.suffix}</InputAdornment>;
-		return result;
 	};
 }
 

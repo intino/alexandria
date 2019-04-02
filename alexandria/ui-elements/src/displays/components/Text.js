@@ -14,6 +14,18 @@ const styles = theme => ({
 	},
 	value: {
 		color: "inherit"
+	},
+	prefix : {
+		color: theme.palette.grey.primary,
+		fontSize: "10pt",
+		marginTop: "2px",
+		marginRight: "3px"
+	},
+	suffix : {
+		color: theme.palette.grey.primary,
+		fontSize: "10pt",
+		marginTop: "2px",
+		marginLeft: "3px"
 	}
 });
 
@@ -40,7 +52,9 @@ class Text extends AbstractText {
 	    return (
 			<Block layout="horizontal">
 				{ labelBlock }
+				{this.props.prefix !== undefined ? <Typography variant={format} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
 				<Typography variant={format} className={classes.value} style={this.style()}>{value}</Typography>
+				{ this.props.suffix !== undefined ? <Typography variant={format} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);
 	};

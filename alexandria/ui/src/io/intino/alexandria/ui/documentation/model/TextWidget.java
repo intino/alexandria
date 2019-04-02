@@ -22,16 +22,20 @@ public class TextWidget extends BaseWidget {
 		add(property("mode", Property.Type.Word, "Transforms text value by applying desired mode", "Uppercase", "Lowercase", "Capitalize", "Normal"));
 		add(property("value", Property.Type.Text, "The initial text to display in the box, if any"));
 		add(property("language", Property.Type.Word, "Language of code defined in widget.", languages()).facets(singletonList("Code")));
+		add(property("prefix", Property.Type.Text, "Text to add before the value."));
+		add(property("suffix", Property.Type.Text, "Text to add after the value."));
 	}
 
 	protected void addMethods() {
 		super.addMethods();
-		add(method("value", Collections.emptyList(), "Returns value stored in widget", "String"));
-		add(method("update", singletonList(Model.methodParameter("value", "String")), "Allows updating text value", "String"));
+		addMethod(method("value", Collections.emptyList(), "Returns value stored in widget", "String"));
+		addMethod(method("update", singletonList(Model.methodParameter("value", "String")), "Allows updating text value", "String"));
 	}
 
 	protected void addEvents() {
 		super.addEvents();
+		addEvent(Model.method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
+		addEvent(Model.method("onKeyPress", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.KeyPressListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
 	}
 
 	private String languages() {
