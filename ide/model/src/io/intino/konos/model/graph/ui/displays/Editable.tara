@@ -64,3 +64,4 @@ Facet Editable on ChildComponents.Date
 	var instant min = empty
 	var instant max = empty
 	var boolean timePicker = false
+	var string mask = "__/__/____"

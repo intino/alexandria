@@ -23,6 +23,7 @@ Format("marginTop:'10px'") headerToolbar
 Format("textAlign:'center'") textCentered
 Format("color:'#888',fontSize:'10px',marginTop:'-7px',position:'absolute'") facetsAbsolute
 Format("whiteSpace:'nowrap'") valuesLabelFormat
+Format("border:'1px solid',width:'100%'") bordered
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle

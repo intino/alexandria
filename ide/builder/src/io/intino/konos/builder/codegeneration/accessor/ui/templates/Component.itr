@@ -68,7 +68,7 @@ def type(properties & block) trigger(specific)
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}][ mask="$mask"]
 end
 
 def type(properties & number) trigger(specific)
@@ -95,7 +95,7 @@ def type(properties) trigger(specific)
 end
 
 def type(badge)
-	mode="$mode"[ value=$value][ max=$max][ showZero=$showZero]
+	mode="$mode"[ value={$value}][ max={$max}][ showZero={$showZero}]
 end
 
 def type(codetext)

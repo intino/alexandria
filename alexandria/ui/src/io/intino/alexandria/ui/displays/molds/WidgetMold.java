@@ -36,6 +36,7 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         imageExamples.visible(widget instanceof ImageWidget);
         dateExamples.visible(widget instanceof DateWidget);
         chartExamples.visible(widget instanceof ChartWidget);
+        blockExamples.visible(widget instanceof BlockWidget);
     }
 
     private void updateInfo() {

@@ -2,6 +2,8 @@ dsl Konos
 
 Component mold as Decorated
 Component block as Decorated
+	Notification refreshSpacing as Text
+	Notification refreshLayout as Text
 
 Component blockConditional as Decorated
 	Notification refreshVisibility as Bool

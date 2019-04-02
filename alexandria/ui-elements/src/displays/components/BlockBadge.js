@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import Badge from '@material-ui/core/Badge';
 import AbstractBlockBadge from "../../../gen/displays/components/AbstractBlockBadge";
 import BlockBadgeNotifier from "../../../gen/displays/notifiers/BlockBadgeNotifier";
 import BlockBadgeRequester from "../../../gen/displays/requesters/BlockBadgeRequester";
@@ -19,9 +20,10 @@ class BlockBadge extends AbstractBlockBadge {
 	};
 
 	render() {
-		dddd
+		const { showZero, max, mode } = this.props;
 		return (
-			<Badge style={this.style()} dddddd>
+			<Badge color="primary" style={this.style()} badgeContent={this.state.value}
+				   showZero={showZero} max={max} variant={mode === "Dot" ? "dot" : undefined}>
 				<Block style={this.style()}
 					   layout={this.props.layout}
 					   width={this.props.width}

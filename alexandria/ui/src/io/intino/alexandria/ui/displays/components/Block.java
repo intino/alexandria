@@ -18,4 +18,11 @@ public class Block<B extends Box> extends AbstractBlock<B> {
         return this;
     }
 
+    public void spacing(String spacing) {
+        notifier.refreshSpacing(spacing);
+    }
+
+    public void layout(String layout) {
+        notifier.refreshLayout(layout);
+    }
 }

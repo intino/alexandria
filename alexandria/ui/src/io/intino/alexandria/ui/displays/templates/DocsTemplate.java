@@ -14,7 +14,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     public void init() {
         super.init();
         update();
-        menu.select("Date");
+        menu.select("Block");
     }
 
     private void update() {
@@ -29,6 +29,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
         panels.imagePanel.onShow((event) -> updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image));
         panels.filePanel.onShow((event) -> updateMold(panels.filePanel.fileBlock, Model.WidgetType.File));
         panels.datePanel.onShow((event) -> updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date));
+        panels.blockPanel.onShow((event) -> updateMold(panels.blockPanel.blockBlock, Model.WidgetType.Block));
     }
 
     private void updateOtherWidgets() {

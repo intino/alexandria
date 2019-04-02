@@ -1,6 +1,6 @@
 dsl Proteo
 
-use Views
+use Viewsd
 use Facets
 use Display
 use DataTypes

@@ -4,7 +4,7 @@ import AbstractDateEditable from "../../../gen/displays/components/AbstractDateE
 import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNotifier";
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
 import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, DateTimePicker, DatePicker } from 'material-ui-pickers';
+import { MuiPickersUtilsProvider, InlineDateTimePicker, InlineDatePicker } from 'material-ui-pickers';
 import classnames from 'classnames';
 
 const styles = props => ({
@@ -37,11 +37,18 @@ class DateEditable extends AbstractDateEditable {
 		const dateLabel = this.translate("date");
 		const timeLabel = this.translate("time");
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
+		const mask = this.props.mask != null ? this._parseMask() : undefined;
 		return (
 			<MuiPickersUtilsProvider utils={MomentUtils}>
 				<div style={this.style()}>
-					{ !timePicker ? <DatePicker format={pattern} className={classes.date} value={this.state.value} onChange={this.handleChange.bind(this)} min={min} max={max} label={dateLabel}/> : undefined }
-					{ timePicker ? <DateTimePicker format={pattern} className={classes.datetime} value={this.state.value} onChange={this.handleChange.bind(this)} label={timeLabel}/> : undefined }
+					{ !timePicker ? <InlineDatePicker keyboard disableOpenOnEnter placeholder={pattern} mask={undefined}
+												format={pattern} className={classes.date}
+												value={this.state.value} onChange={this.handleChange.bind(this)}
+												min={min} max={max} label={dateLabel}/> : undefined }
+					{ timePicker ? <InlineDateTimePicker keyboard disableOpenOnEnter placeholder={pattern} mask={undefined}
+												   format={pattern} className={classes.datetime}
+												   value={this.state.value} onChange={this.handleChange.bind(this)}
+												   min={min} max={max} label={timeLabel}/> : undefined }
 				</div>
 			</MuiPickersUtilsProvider>
 		);
@@ -50,6 +57,10 @@ class DateEditable extends AbstractDateEditable {
 	refresh = (value) => {
 		this.setState({ value: new Date(value) });
 	};
+
+	_parseMask = () => {
+		return this.props.mask.replace("_", "/\\d/##").split("##");
+	}
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);

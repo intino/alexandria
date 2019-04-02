@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/alexandria/assa/assa.iml" filepath="$PROJECT_DIR$/alexandria/assa/assa.iml" group="alexandria/library" />
-      <module fileurl="file://$PROJECT_DIR$/borrame/borrame.iml" filepath="$PROJECT_DIR$/borrame/borrame.iml" />
       <module fileurl="file://$PROJECT_DIR$/ide/builder/builder.iml" filepath="$PROJECT_DIR$/ide/builder/builder.iml" group="konos" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/columnar/columnar.iml" filepath="$PROJECT_DIR$/alexandria/columnar/columnar.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/core/core.iml" filepath="$PROJECT_DIR$/alexandria/core/core.iml" group="alexandria/framework" />
