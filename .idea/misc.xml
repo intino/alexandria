@@ -35,7 +35,6 @@
         <option value="$PROJECT_DIR$/ide/model/pom.xml" />
         <option value="$PROJECT_DIR$/ide/test/pom.xml" />
         <option value="$PROJECT_DIR$/alexandria/columnar/pom.xml" />
-        <option value="$PROJECT_DIR$/borrame/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

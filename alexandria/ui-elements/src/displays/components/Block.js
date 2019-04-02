@@ -9,7 +9,9 @@ import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class Block extends AbstractBlock {
 	state = {
-		hidden: false
+		hidden: false,
+		layout: this.props.layout,
+		spacing: this.props.spacing
 	};
 
 	constructor(props) {
@@ -20,6 +22,14 @@ export default class Block extends AbstractBlock {
 
 	render() {
 		return (this.props.collapsible ? <Collapse>{this._renderLayout()}</Collapse> : this._renderLayout());
+	};
+
+	refreshSpacing = (spacing) => {
+		this.setState({ spacing });
+	};
+
+	refreshLayout = (layout) => {
+		this.setState({ layout });
 	};
 
 	_renderLayout = () => {
@@ -39,7 +49,7 @@ export default class Block extends AbstractBlock {
 
 		return React.Children.map(this.props.children, (child, i) => {
 			if (hasSpacing) {
-				let spacingStyle = (vertical ? "bottom:" : "right:") + this.props.spacing;
+				let spacingStyle = (vertical ? "bottom:" : "right:") + (this.state.spacing != null ? this.state.spacing : this.props.spacing);
 				return React.cloneElement(child, { spacingStyle: spacingStyle });
 			}
 			return child;
@@ -47,7 +57,8 @@ export default class Block extends AbstractBlock {
 	};
 
 	_layout = () => {
-		let layout = this.props.layout;
+		let layout = this.state.layout != null ? this.state.layout : this.props.layout;
+		layout = layout.toLowerCase();
 		layout = layout.replace("flexible", "flex");
 		layout = layout.replace("centercenter", "center-center");
 		layout = layout.replace("preverse", "p-reverse");
@@ -71,12 +82,12 @@ export default class Block extends AbstractBlock {
 	};
 
 	_is = (layout) => {
-		if (this.props.layout == null) return false;
-		return (" " + this.props.layout + " ").indexOf(" " + layout + " ") !== -1;
+		if (this.state.layout == null) return false;
+		return (" " + this.state.layout + " ").indexOf(" " + layout + " ") !== -1;
 	};
 
 	_hasSpacing = () => {
-		return this.props.spacing != null;
+		return this.state.spacing != null || this.props.spacing != null;
 	};
 
 }
