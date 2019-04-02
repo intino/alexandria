@@ -8,6 +8,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
@@ -31,6 +32,16 @@ import java.util.*;
 import static java.util.Collections.*;
 
 public class RestAccessor implements io.intino.alexandria.restaccessor.RestAccessor {
+
+	private final int timeOutMillis;
+
+	public RestAccessor() {
+		timeOutMillis = 120 * 1000;
+	}
+
+	public RestAccessor(int timeOutMillis) {
+		this.timeOutMillis = timeOutMillis;
+	}
 
 	private static String toString(InputStream content) throws IOException {
 		return new String(IOUtils.readFully(content, -1, false));
@@ -322,7 +333,8 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 	}
 
 	private HttpClient client() {
-		return HttpClientBuilder.create().build();
+		RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(this.timeOutMillis).build();
+		return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 	}
 
 	private Response doGet(URL url, String path, List<NameValuePair> parameters) throws RestfulFailure {
