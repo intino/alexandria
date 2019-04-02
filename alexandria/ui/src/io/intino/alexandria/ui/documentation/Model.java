@@ -1,9 +1,6 @@
 package io.intino.alexandria.ui.documentation;
 
-import io.intino.alexandria.schemas.Method;
-import io.intino.alexandria.schemas.MethodParameter;
-import io.intino.alexandria.schemas.Property;
-import io.intino.alexandria.schemas.Widget;
+import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.ui.documentation.model.*;
 
 import java.util.Arrays;
@@ -42,12 +39,12 @@ public class Model {
 		return result;
 	}
 
-	public static Method method(String name, List<MethodParameter> params, String description, String returnType) {
+	public static Method method(String name, List<Parameter> params, String description, String returnType) {
 		return new Method().name(name).params(params).description(description).returnType(returnType);
 	}
 
-	public static MethodParameter methodParameter(String name, String type) {
-		return new MethodParameter().name(name).type(type);
+	public static Parameter methodParameter(String name, String type) {
+		return new Parameter().name(name).type(type);
 	}
 
 }

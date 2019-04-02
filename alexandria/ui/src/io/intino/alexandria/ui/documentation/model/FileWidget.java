@@ -25,12 +25,13 @@ public class FileWidget extends BaseWidget {
 
 	protected void addMethods() {
 		super.addMethods();
-		add(method("value", Collections.emptyList(), "Returns value stored in widget", "java.net.URL"));
-		add(method("update", singletonList(Model.methodParameter("value", "java.net.URL")), "Updates file value and refresh widget", "Void"));
+		addMethod(method("value", Collections.emptyList(), "Returns value stored in widget", "java.net.URL"));
+		addMethod(method("update", singletonList(Model.methodParameter("value", "java.net.URL")), "Updates file value and refresh widget", "Void"));
 	}
 
 	protected void addEvents() {
 		super.addEvents();
+		addEvent(Model.method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
 	}
 
 }

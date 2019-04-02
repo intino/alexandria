@@ -51,14 +51,14 @@ Mold(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodM
 		Text(format=h6 widgetType, mode = Lowercase) returnType
 	Text(format=body2, value="") description
 
-Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.MethodParameter") methodParamMold as Decorated
+Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
 	Text(format=h6) name
 	Text(format=h6, value=":&nbsp;")
 	Text(format=h6) type
 	Text(format=h6) comma
 
 Display eventsDisplay as Decorated
-	Notification refresh as Object(Event) List
+	Notification refresh as Object(Method) List
 
 
 Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
@@ -116,7 +116,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 							=========
 
 		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Code with Editable facet")
+			Text(format=h6, value="Code and Editable facet")
 			Block(spacing=DP8, format=filled)
 				Text(format=body1 widgetDemo) textCode2 as Code(Html) Editable
 					value
@@ -146,10 +146,19 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 							Number(value\=10, label\="Campo numérico") number1
 							=========
 		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with prefix and suffix")
+			Block(spacing=DP8, format=filled)
+				Number(format=body1 widgetDemo, value = 0, prefix = "Amount", suffix = "$") number2
+				Block > Text number2Code as Code(Html)
+						value
+							=========
+							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$") number1
+							=========
+		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
-				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number2 as Editable
-				Block > Text number2Code as Code(Html)
+				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable
+				Block > Text number3Code as Code(Html)
 						value
 							=========
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
@@ -157,80 +166,123 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 
 Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
-	Block(spacing=DP8, format=filled)
-		Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
-		Block > Text date1Code as Code(Html)
-				value
-					=========
-					Date(pattern\="MM/DD/YYYY") date1<br/><br/>
-					<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
-					=========
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
+				Block > Text date1Code as Code(Html)
+						value
+							=========
+							Date(pattern\="MM/DD/YYYY") date1<br/><br/>
+							<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
+							=========
 
-	Block(spacing=DP8, format=filled)
-		Date(mode=FromNow, format=body1 widgetDemo) date2
-		Block > Text date2Code as Code(Html)
-				value
-					=========
-					Date(mode\=FromNow) date2
-					=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Mode")
+			Block(spacing=DP8, format=filled)
+				Date(mode=FromNow, format=body1 widgetDemo) date2
+				Block > Text date2Code as Code(Html)
+						value
+							=========
+							Date(mode\=FromNow) date2
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date3 as Editable
+				Block > Text date3Code as Code(Html)
+						value
+							=========
+							Date date3 as Editable
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with timePicker")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
+				Block > Text date4Code as Code(Html)
+						value
+							=========
+							Date date4 as Editable(timePicker\=true)
+							=========
 
 Mold(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
 
-	Block(spacing=DP8, format=filled)
-		Block as Absolute(height=600px)
-			File(value="data/example.pdf", format=widgetDemo) file1 as Relative(width=50%, height=100%)
-		Block > Text file1Code as Code(Html)
-				value
-					=========
-					File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
-					=========
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Block as Absolute(height=600px)
+					File(value="data/example.pdf", format=widgetDemo) file1 as Relative(width=100%, height=100%)
+				Block > Text file1Code as Code(Html)
+						value
+							=========
+							File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
+							=========
 
 Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
-	Block(spacing=DP8, format=filled)
-		Image(defaultValue="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
-		Block > Text image1Code as Code(Html)
-				value
-					=========
-					Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
-					=========
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Image(defaultValue="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
+				Block > Text image1Code as Code(Html)
+						value
+							=========
+							Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
+							=========
 
-	Block(spacing=DP8, format=filled)
-		Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
-		Block > Text image2Code as Code(Html)
-				value
-					=========
-					Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
-					=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Avatar facet")
+			Block(spacing=DP8, format=filled)
+				Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
+				Block > Text image2Code as Code(Html)
+						value
+							=========
+							Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
+							=========
+
+
 
 DataFrame iris as CSV("data/iris.csv")
 
 Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 
-	Block(spacing=DP8, format=filled)
-		Chart(input=iris, query = "") chart1
-		Text chart1Editor as Editable Code(language=R)
-			value
-				======
-				output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
-				======
-		Block > Text chart1Code as Code(Html)
-				value
-					=========
-					Chart chart1 > Input as CSV(source\="data/iris.csv")
-					=========
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Html output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query = "") chart1
+				Text chart1Editor as Editable Code(language=R)
+					value
+						======
+						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
+						======
+				Block > Text chart1Code as Code(Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="") chart1
+							=========
 
-	Block(spacing=DP8, format=filled)
-		Chart(input=iris, query = "", output=Image) chart2 as Absolute(width=700px)
-		Text chart2Editor as Editable Code(language=R)
-			value
-				======
-				set.seed(100);\\n
-				d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
-				output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
-				======
-		Block > Text chart2Code as Code(Html)
-				value
-					=========
-					Chart(mode\=Image) chart2 > Input as CSV(source\="data/iris.csv")
-					=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Image output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query = "", output=Image) chart2
+				Text chart2Editor as Editable Code(language=R)
+					value
+						======
+						set.seed(100);\\n
+						d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
+						output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+						======
+				Block > Text chart2Code as Code(Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="", output\=Image) chart2
+							=========

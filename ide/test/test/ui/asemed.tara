@@ -43,13 +43,12 @@ Template desktop as Desktop //DrawerNavigable(direction=Left, mode=Modal)
 //		Tab("características")
 //			Content as CatalogContainer(caracteristicasCatalog)
 
-Block badgeBlock as Decorated
+Block badgeBlock as Decorated Badge
 //	Param title as TextType
 //	Param count as NumberType
 	Block(layout=Horizontal)
 		Text(format=h1) title
 		Block custom
-		Badge count
 
 Template root
 Component componentA as Decorated

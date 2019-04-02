@@ -58,7 +58,6 @@ Facet Source on DataFrame
 
 Concept ChildComponents
 
-	Concept Badge extends Component
 	Concept Chip extends Component
 	Concept Card extends Component
 	Concept Tooltip extends Component

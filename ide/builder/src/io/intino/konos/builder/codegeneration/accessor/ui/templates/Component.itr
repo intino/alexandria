@@ -64,11 +64,11 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ moldable="$moldable"][ $paper]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ moldable="$moldable"][ $paper][ $badge]
 end
 
 def type(properties & date) trigger(specific)
-	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}]
+	[ pattern="$pattern"][ mode="$mode"][ value={new Date($value)}][ timePicker={$timePicker}]
 end
 
 def type(properties & number) trigger(specific)
@@ -92,6 +92,10 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties) trigger(specific)
+end
+
+def type(badge)
+	mode="$mode"[ value=$value][ max=$max][ showZero=$showZero]
 end
 
 def type(codetext)

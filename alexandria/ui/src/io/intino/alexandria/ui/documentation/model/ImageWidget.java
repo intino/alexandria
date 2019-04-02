@@ -27,13 +27,14 @@ public class ImageWidget extends BaseWidget {
 
 	protected void addMethods() {
 		super.addMethods();
-		add(method("value", Collections.emptyList(), "Returns value stored in widget", "java.net.URL"));
-		add(method("defaultValue", singletonList(Model.methodParameter("value", "java.net.URL")), "Sets the default image", "Void"));
-		add(method("update", singletonList(Model.methodParameter("value", "java.net.URL")), "Updates image value and refresh widget", "Void"));
+		addMethod(method("value", Collections.emptyList(), "Returns value stored in widget", "java.net.URL"));
+		addMethod(method("defaultValue", singletonList(Model.methodParameter("value", "java.net.URL")), "Sets the default image", "Void"));
+		addMethod(method("update", singletonList(Model.methodParameter("value", "java.net.URL")), "Updates image value and refresh widget", "Void"));
 	}
 
 	protected void addEvents() {
 		super.addEvents();
+		addEvent(Model.method("onChange", singletonList(Model.methodParameter("listener", "io.intino.alexandria.ui.displays.events.ChangeListener")), "This event is fired when widget value changes", "void").facets(singletonList("Editable")));
 	}
 
 }

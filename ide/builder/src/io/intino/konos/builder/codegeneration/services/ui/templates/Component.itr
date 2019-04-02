@@ -149,7 +149,8 @@ def type(properties & image & avatar) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[$background+resourceMethod]
+	[$background+resourceMethod][
+	$badge]
 end
 
 def type(properties & image) trigger(specific)
@@ -215,4 +216,8 @@ end
 
 def type(operationMode & iconbutton)
 	icon("$icon");
+end
+
+def type(badge)
+	[value($value);]
 end

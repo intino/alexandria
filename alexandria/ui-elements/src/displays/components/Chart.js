@@ -45,7 +45,7 @@ class Chart extends AbstractChart {
 				<div style={this.style()} ref={this.container}>
 					{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div> : undefined}
 					{this.state.mode === "Image" && !this.state.loading && value != undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
-					{this.state.mode === "Html" && !this.state.loading && value != undefined ? <ChartPlotly data={value}/> : undefined}
+					{this.state.mode === "Html" && !this.state.loading && value != undefined ? <ChartPlotly data={value} width={this._width()}/> : undefined}
 				</div>
 			</Suspense>
 		);

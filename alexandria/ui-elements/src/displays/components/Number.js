@@ -7,7 +7,20 @@ import NumberRequester from "../../../gen/displays/requesters/NumberRequester";
 import TextBehavior from "./behaviors/TextBehavior";
 import Block from "./Block";
 
-const styles = theme => ({});
+const styles = theme => ({
+	prefix : {
+		color: theme.palette.grey.primary,
+		fontSize: "10pt",
+		marginTop: "2px",
+		marginRight: "3px"
+	},
+	suffix : {
+		color: theme.palette.grey.primary,
+		fontSize: "10pt",
+		marginTop: "2px",
+		marginLeft: "3px"
+	}
+});
 
 class Number extends AbstractNumber {
 	state = {
@@ -32,7 +45,9 @@ class Number extends AbstractNumber {
 		return (
 			<Block layout="horizontal">
 				{ labelBlock }
+				{this.props.prefix !== undefined ? <Typography variant={format} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
 				<Typography variant={format} className={classes.value} style={this.style()}>{value}</Typography>
+				{ this.props.suffix !== undefined ? <Typography variant={format} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);
 	};
