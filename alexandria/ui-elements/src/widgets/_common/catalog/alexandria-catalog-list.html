@@ -427,7 +427,11 @@
 
             _generateGroups : function(itemList) {
                 let page = this._page;
-                if (page == 0) this._groupMap = {};
+
+                if (page === 0) {
+                    this._groupMap = {};
+                    this._lastGroup = null;
+                }
 
                 let offset = this._itemList.length;
                 for (var i=0; i<itemList.length; i++) {
@@ -435,10 +439,11 @@
                     var item = itemList[i];
                     if (item.group == null) continue;
 
-                    if (index == 0 || (i > 0 && item.group != itemList[i-1].group) ||
-                        (this._groupMap[index-1] != null && this._groupMap[index-1] != item.group)) {
+                    if (index === 0 || item.group !== this._lastGroup) {
                         this._groupMap[index] = item.group;
                     }
+
+                    this._lastGroup = item.group;
                 }
             },
 
