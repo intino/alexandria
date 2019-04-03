@@ -1,17 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractMold;
+import io.intino.alexandria.core.Box;
 
-public class Mold extends AbstractMold<UiFrameworkBox> {
+public class Mold<B extends Box> extends AbstractMold<B> {
 
-    public Mold(UiFrameworkBox box) {
+    public Mold(B box) {
         super(box);
     }
-
-
 
 }

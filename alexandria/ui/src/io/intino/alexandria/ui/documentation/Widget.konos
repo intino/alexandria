@@ -15,6 +15,7 @@ Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Wid
 		Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
 		Block chartExamples as Conditional > Block as Moldable(chartExamplesMold)
 		Block blockExamples as Conditional > Block as Moldable(blockExamplesMold)
+		Block collectionExamples as Conditional > Block as Moldable(collectionExamplesMold)
 
 	Block facets
 		Text(value="Facets", format=h5)
@@ -210,7 +211,6 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 							Date date4 as Editable(timePicker\=true)
 							=========
 
-	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Editable facet with mask")
 			Block(spacing=DP8, format=filled)
@@ -224,7 +224,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 Mold(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=50%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Block as Absolute(height=600px)
@@ -367,3 +367,21 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						Block as Parallax(value\="images/background1.jpg") Absolute(height\=175px)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
 						=========
+
+Mold(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="List facet")
+			Block(spacing=DP8, format=filled)
+				Collection(modelClass = "io.intino.alexandria.ui.documentation.Item", mold = itemMold) collection1 as List
+			Block > Text collection1Code as Code(Html)
+					value
+						=========
+						Mold itemMold > Text label
+						Collection(modelClass\="io.intino.alexandria.ui.documentation.Item", mold\=itemMold) as List
+						=========
+
+Mold(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold
+	Text label
+

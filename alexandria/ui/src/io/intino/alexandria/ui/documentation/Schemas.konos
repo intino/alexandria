@@ -9,7 +9,7 @@ Schema Widget
 Schema Property
 	Attribute name as Text
 	Attribute facets as Text List
-	Attribute type as Word("Integer" "Word" "Text" "TextList" "Resource" "Reference" "ReferenceArray" "Bool")
+	Attribute type as Word("Integer" "Word" "Text" "TextList" "Resource" "Reference" "ReferenceArray" "Bool" "Instant")
 	Attribute values as Text List
 	Attribute description as Text
 

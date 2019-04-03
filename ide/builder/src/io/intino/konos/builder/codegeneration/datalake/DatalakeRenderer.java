@@ -9,6 +9,7 @@ import org.siani.itrules.Template;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.*;
 import java.util.stream.Collectors;
 

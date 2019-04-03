@@ -4,6 +4,7 @@ import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
+export const ChartPlotly = React.lazy(() => import("./chart/ChartPlotly"));
 
 const styles = theme => ({
 	error: {
@@ -11,8 +12,6 @@ const styles = theme => ({
 		margin: "10px 0"
 	}
 });
-
-const ChartPlotly = React.lazy(() => import("./chart/ChartPlotly"));
 
 class Chart extends AbstractChart {
 	state = {
