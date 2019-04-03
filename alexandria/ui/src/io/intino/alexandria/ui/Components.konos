@@ -69,6 +69,10 @@ Component textEditable as Decorated
 	Request notifyChange as Text
 	Request notifyKeyPress as Object(KeyPressEventData)
 
+Schema KeyPressEventData
+	Attribute keyCode as Text
+	Attribute value as Text
+
 Component textCode as Decorated
 	Notification refresh as Text
 
@@ -94,6 +98,4 @@ Component openPage as Decorated
 	Notification redirect as Text
 	Request open
 
-Schema KeyPressEventData
-	Attribute keyCode as Text
-	Attribute value as Text
+Component CollectionList as Decorated

@@ -27,7 +27,7 @@ Concept Template extends Display
 
 Facet Desktop on Template
 	has:{1..1} ChildComponents.Header
-	has:{1..1} ChildComponents.Tabs
+	//has:{1..1} ChildComponents.Tabs
 
 Facet DrawerNavigable on Desktop
 	var word:{Left Right Top Bottom} direction = Left

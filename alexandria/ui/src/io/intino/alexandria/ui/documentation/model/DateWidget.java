@@ -20,7 +20,10 @@ public class DateWidget extends BaseWidget {
 		add(property("value", Property.Type.Text, "The initial text to display in the box, if any"));
 		add(property("pattern", Property.Type.Text, "Pattern is defined using momentjs format", "DD/MM/YYYY"));
 		add(property("mode", Property.Type.Word, "Defines date value with a relative time. Displays the date as the time from or to now", "FromNow", "ToNow"));
-		add(property("scale", Property.Type.Word, "Defines scale used to select date value", "FromNow", "ToNow").facets(singletonList("Editable")));
+		add(property("timePicker", Property.Type.Bool, "Defines if the edition component allows time selection").facets(singletonList("Editable")));
+		add(property("min", Property.Type.Instant, "Defines the min instant allowed").facets(singletonList("Editable")));
+		add(property("max", Property.Type.Instant, "Defines the max instant allowed").facets(singletonList("Editable")));
+		add(property("mask", Property.Type.Text, "Defines the mask to show for user when editing. Example: '__/__/____'").facets(singletonList("Editable")));
 	}
 
 	protected void addMethods() {

@@ -13,6 +13,10 @@ def type(component & child & moldableblock) trigger(declarations)
 	public $mold+firstUpperCase $name;
 end
 
+def type(component & child & collectableblock) trigger(declarations)
+	public $mold+firstUpperCase $name;
+end
+
 def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
@@ -22,6 +26,10 @@ def type(component & child & moldableblock & multipleblock) trigger(declaration)
 end
 
 def type(component & child & moldableblock) trigger(declaration)
+	public $mold+firstUpperCase $name;
+end
+
+def type(component & child & collectableblock) trigger(declaration)
 	public $mold+firstUpperCase $name;
 end
 
@@ -36,6 +44,19 @@ def type(component & child & moldableblock & multipleblock) trigger(method)
 	}
 end
 
+def type(component & child & collectableblock & withMold) trigger(method)
+	public void addAll(java.util.List<$modelClass> items) {
+		items.forEach(this::add);
+	}
+
+	public void add($modelClass item) {
+		$mold+firstUpperCase mold = new $mold+firstUpperCase(($box+firstUpperCase~Box)box());
+		mold.id(java.util.UUID.randomUUID().toString());
+		mold.item = item;
+		$owner.this.add(mold, "items");
+	}
+end
+
 def type(component & child) trigger(method)
 end
 
@@ -43,6 +64,9 @@ def type(component & child & moldableblock & multipleblock) trigger(class)
 end
 
 def type(component & child & moldableblock) trigger(class)
+end
+
+def type(component & child & collectableblock) trigger(class)
 end
 
 def type(component & child) trigger(class)
@@ -69,6 +93,10 @@ def type(component & child) trigger(class)
 end
 
 def type(extends & moldableblock)
+	$type+firstUpperCase
+end
+
+def type(extends & collectableblock)
 	$type+firstUpperCase
 end
 
@@ -121,6 +149,10 @@ def type(component & child & moldableblock & multipleblock)
 end
 
 def type(component & child & moldableblock)
+	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+end
+
+def type(component & child & collectableblock)
 	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 

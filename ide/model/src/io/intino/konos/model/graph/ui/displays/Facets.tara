@@ -1,6 +1,5 @@
 dsl Proteo
 
-use Views
 use Component
 
 // OPERATION FACETS
@@ -19,14 +18,12 @@ Facet Linear on ChildComponents.Progress
 
 Facet Drawer on Block
 
-Facet Target on Block
-	var string modelClass
-
 // Layout facets
 Facet AbstractAbsolute is abstract
 	var integer:{px} width = -1px
 	var integer:{px} height = -1px
 Facet Absolute extends AbstractAbsolute on Block
+Facet Absolute extends AbstractAbsolute on Collection
 Facet Absolute extends AbstractAbsolute on ChildComponents.Image
 Facet Absolute extends AbstractAbsolute on ChildComponents.File
 Facet Absolute extends AbstractAbsolute on ChildComponents.Chart
@@ -36,6 +33,7 @@ Facet AbstractRelative is abstract
 	var double:{%} width = 100%
 	var double:{%} height = 100%
 Facet Relative extends AbstractRelative on Block
+Facet Relative extends AbstractRelative on Collection
 Facet Relative extends AbstractRelative on ChildComponents.Image
 Facet Relative extends AbstractRelative on ChildComponents.File
 Facet Relative extends AbstractRelative on ChildComponents.Chart
@@ -59,6 +57,11 @@ Facet Moldable extends Behavior on Block
 Facet Collapsible extends Behavior on Block
 Facet Conditional extends Behavior on Block
 	var Option selected = empty
+Facet Collectable extends Behavior on Block
+	var Collection collection
+Facet Infinite extends Behavior on Collection
+Facet Paged extends Behavior on Collection
+	var integer itemsPerPage = 20
 
 Facet Multiple on Block
 	var string noItemsMessage = empty
@@ -105,3 +108,30 @@ Facet ComboBox on ChildComponents.Selector
 // TEXT FACETS
 Facet Code on ChildComponents.Text
 	var word:CodeLanguage language
+
+Facet Detail on Collection
+	var Mold mold
+
+Facet List on Collection
+	var Mold mold
+
+Facet Grid on Collection
+	var Mold mold
+
+Facet Table on Collection
+	has ChildComponents.Column
+
+Facet Map on Collection
+	var Mold mold
+
+	Concept:{0..1} Center
+		var double latitude
+		var double longitude
+
+	Concept:{1..1} Zoom
+		var integer defaultZoom
+		var integer min
+		var integer max
+
+Facet Sortable on ChildComponents.Column
+//	var ChildComponents.Sorting sorting

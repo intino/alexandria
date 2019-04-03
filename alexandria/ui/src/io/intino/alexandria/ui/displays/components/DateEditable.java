@@ -48,6 +48,11 @@ public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
 		notifier.refresh(value);
 	}
 
+	public DateEditable<B> onChange(ChangeListener listener) {
+		this.changeListener = listener;
+		return this;
+	}
+
 	public void notifyChange(Instant value) {
     	value(value);
     	if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));

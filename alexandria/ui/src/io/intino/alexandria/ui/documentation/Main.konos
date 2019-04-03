@@ -16,7 +16,7 @@ Template homeTemplate
 				Text(value="home")
 				OpenPage(page=UiElements.docs, label="docs") as Link
 
-	Block(format=containerAir) as Parallax("images/background1.jpg")
+	Block(format=containerAir) as Parallax("images/background1.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center) as Relative(width=70%)
 			Text(value="software production lines made easy", format=h1 textCentered)
 			Text(value="symplifying software mass customization", format=h2)
@@ -38,14 +38,14 @@ Template homeTemplate
 					Text(value="quality", format=h5 cardTitle)
 					Text(value="Lowering the complexity of product line development. Application developers can focus on user requirements, getting advantage on the platform architecture that provides a stable quality", format=h5 cardContent)
 
-	Block(format=containerAir) as Parallax("images/background2.jpg")
+	Block(format=containerAir) as Parallax("images/background2.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
 			Block > Text(value="What does it look like?", format=h2 air white)
 			Block(layout=Horizontal)
 //				Link("demo") as Button
 //				Link("get started") as Button
 
-	Block(format=containerAir) as Parallax("images/background3.jpg")
+	Block(format=containerAir) as Parallax("images/background3.jpg") Absolute(height=500px)
 		Block
 			Text(value="software production lines made easy", format=h1)
 			Text(value="symplifying software mass customization", format=h2)
@@ -73,6 +73,7 @@ Template docsTemplate as Decorated
 					Text(value="File") file as Option
 					Text(value="Date") date as Option
 				Block(label="catalog widgets") catalogSection as Collapsible
+					Text(value="Collection") collection as Option
 					Text(value="Catalog") catalog as Option
 					Text(value="Grouping") sorting as Option
 					Text(value="Sorting") grouping as Option
@@ -104,6 +105,7 @@ Template docsTemplate as Decorated
 			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
 			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
 
+			Block collectionPanel as Conditional(docsTemplate.body.header.menu.catalogSection.collection) > Block collectionBlock as Moldable(widgetMold)
 			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)
 
 			Block blockPanel as Conditional(docsTemplate.body.header.menu.otherSection.block) > Block blockBlock as Moldable(widgetMold)

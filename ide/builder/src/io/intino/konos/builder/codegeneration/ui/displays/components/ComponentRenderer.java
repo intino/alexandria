@@ -5,27 +5,35 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.ChildComponents.*;
+import io.intino.konos.model.graph.ChildComponents.Column;
+import io.intino.konos.model.graph.ChildComponents.Header;
+import io.intino.konos.model.graph.ChildComponents.Selector;
+import io.intino.konos.model.graph.ChildComponents.Snackbar;
+import io.intino.konos.model.graph.ChildComponents.Wizard.Step;
+import io.intino.konos.model.graph.Collection;
 import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
+import io.intino.konos.model.graph.collectable.CollectableBlock;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
+import io.intino.konos.model.graph.detail.DetailCollection;
+import io.intino.konos.model.graph.grid.GridCollection;
+import io.intino.konos.model.graph.list.ListCollection;
+import io.intino.konos.model.graph.map.MapCollection;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
+import io.intino.konos.model.graph.table.TableCollection;
 import io.intino.tara.magritte.Layer;
-import org.jetbrains.annotations.NotNull;
 import org.siani.itrules.model.Frame;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static java.util.stream.Collectors.toList;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
@@ -152,20 +160,15 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private List<Component> components(Component component) {
 		List<Component> components = new ArrayList<>();
 		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
+		if (component.i$(Column.class)) components.addAll(component.a$(Column.class).componentList());
+		if (component.i$(TableCollection.class)) components.addAll(component.a$(TableCollection.class).columnList());
 		if (component.i$(Mold.class)) components.addAll(component.a$(Mold.class).componentList());
-		if (component.i$(Panels.class)) components.addAll(component.a$(Panels.class).panelList().stream().map(p -> p.a$(Component.class)).collect(toList()));
-		if (component.i$(Panel.class)) components.addAll(component.a$(Panel.class).componentList());
-		if (component.i$(Tabs.class)) components.addAll(component.a$(Tabs.class).tabList().stream().map(t -> t.a$(Component.class)).collect(toList()));
+		if (component.i$(Catalog.class)) components.addAll(component.a$(Catalog.class).componentList());
 		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
+		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
 		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());
-		if (component.i$(Content.class)) components.addAll(component.a$(Content.class).componentList());
 		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
 		return components;
-	}
-
-	@NotNull
-	private List<Mold> molds(Component component) {
-		return components(component).stream().filter(c -> c.i$(MoldableBlock.class)).map(c -> c.a$(MoldableBlock.class).mold()).distinct().collect(Collectors.toList());
 	}
 
 	protected void addExtends(Component element, Frame result) {
@@ -188,8 +191,20 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(MoldableBlock.class)) {
 			frame.addTypes(MoldableBlock.class.getSimpleName());
-			frame.addSlot("mold", element.a$(MoldableBlock.class).mold().name$());
-			frame.addSlot("type", element.a$(MoldableBlock.class).mold().name$());
+			Mold mold = element.a$(MoldableBlock.class).mold();
+			frame.addSlot("mold", mold.name$());
+			frame.addSlot("type", mold.name$());
+			return true;
+		}
+
+		if (element.i$(CollectableBlock.class)) {
+			frame.addTypes(CollectableBlock.class.getSimpleName());
+			Collection collection = element.a$(CollectableBlock.class).collection();
+			frame.addSlot("modelClass", collection.modelClass());
+			if (collection.hasMold()) {
+				frame.addTypes("withMold");
+				frame.addSlot("mold", collection.mold().name$());
+			}
 			return true;
 		}
 
@@ -197,6 +212,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	protected void addFacets(Component component, Frame result) {
+		if (component.i$(ListCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ListCollection.class.getSimpleName().replace("Collection", "")));
+		if (component.i$(DetailCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", DetailCollection.class.getSimpleName().replace("Collection", "")));
+		if (component.i$(MapCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MapCollection.class.getSimpleName().replace("Collection", "")));
+		if (component.i$(GridCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", GridCollection.class.getSimpleName().replace("Collection", "")));
+		if (component.i$(TableCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", TableCollection.class.getSimpleName().replace("Collection", "")));
 		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
 		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
 		if (component.i$(BadgeBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", BadgeBlock.class.getSimpleName().replace("Block", "")));

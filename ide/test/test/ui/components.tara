@@ -7,7 +7,45 @@ DataFrame df1 as CSV("abcd.csv")
 DataFrame df2 as Source("org.siani.monet.DataFrameLoaderAAA")
 
 Template main as Decorated
-	Date date4 as Editable(mask="__/__/____")
+	components = catalog1
+
+Catalog(targetClass="io.intino.Catalog") catalog1
+	Block
+		Grouping(label="grouping 1") grouping1
+		Grouping(label="grouping 2") grouping2
+
+	Selector tabs as Tabs
+		Text listOption as Option
+		Text tableOption as Option
+		Text gridOption as Option
+		Text mapOption as Option
+		Text magazineOption as Option
+
+	Block as Collectable(list) Conditional(catalog1.tabs.listOption)
+	Block as Collectable(table) Conditional(catalog1.tabs.tableOption)
+	Block as Collectable(grid) Conditional(catalog1.tabs.gridOption)
+	Block as Collectable(map) Conditional(catalog1.tabs.mapOption)
+	Block as Collectable(magazine) Conditional(catalog1.tabs.magazineOption)
+
+Collection(modelClass="org.siani.Item") list as List(itemMold) Paged(30)
+
+Collection(modelClass="org.siani.Item") table as Table Infinite
+	Column(label = "") a as Sortable
+		Text a
+		Block dfgasdga
+	Column(label = "b") b
+	Column(label = "c") c
+
+Collection(modelClass="org.siani.Item") grid as Grid(itemMold)
+
+Collection(modelClass="org.siani.Item") map as Map(itemMold)
+	Center(latitude=2,longitude=2)
+	Zoom(defaultZoom=10, min=1, max=14)
+
+Collection(modelClass="org.siani.Item") magazine as Detail(itemMold)
+
+Mold itemMold
+	Text label
 
 Theme theme1
 	Primary("#3f51b5")

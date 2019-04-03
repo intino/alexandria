@@ -30,6 +30,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
         panels.filePanel.onShow((event) -> updateMold(panels.filePanel.fileBlock, Model.WidgetType.File));
         panels.datePanel.onShow((event) -> updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date));
         panels.blockPanel.onShow((event) -> updateMold(panels.blockPanel.blockBlock, Model.WidgetType.Block));
+        panels.collectionPanel.onShow((event) -> updateMold(panels.collectionPanel.collectionBlock, Model.WidgetType.Collection));
     }
 
     private void updateOtherWidgets() {

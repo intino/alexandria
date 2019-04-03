@@ -8,7 +8,8 @@ import 'alexandria-ui-elements/res/styles/parallax.css';
 
 const styles = theme => ({
 	container : {
-		position: "relative"
+		position: "relative",
+		height: "100%"
 	},
 	children: {
 		position: "absolute",
@@ -32,9 +33,10 @@ class BlockParallax extends AbstractBlockParallax {
 	render() {
 		const {classes} = this.props;
 		const hasBackground = this.state.background != null;
+		const height = this.props.height != -1 ? this.props.height : "100%";
 
 		return (
-			<div className={classes.container}>
+			<div className={classes.container} style={{height:height}}>
 				{ hasBackground ? <Parallax imageSrc={this.state.background}></Parallax> : undefined}
 				<div className={classes.children} style={this.style()}>{this.props.children}</div>
 			</div>

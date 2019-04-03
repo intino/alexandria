@@ -41,11 +41,11 @@ class DateEditable extends AbstractDateEditable {
 		return (
 			<MuiPickersUtilsProvider utils={MomentUtils}>
 				<div style={this.style()}>
-					{ !timePicker ? <InlineDatePicker keyboard disableOpenOnEnter placeholder={pattern} mask={undefined}
+					{ !timePicker ? <InlineDatePicker keyboard disableOpenOnEnter placeholder={pattern} mask={mask}
 												format={pattern} className={classes.date}
 												value={this.state.value} onChange={this.handleChange.bind(this)}
 												min={min} max={max} label={dateLabel}/> : undefined }
-					{ timePicker ? <InlineDateTimePicker keyboard disableOpenOnEnter placeholder={pattern} mask={undefined}
+					{ timePicker ? <InlineDateTimePicker keyboard disableOpenOnEnter placeholder={pattern} mask={mask}
 												   format={pattern} className={classes.datetime}
 												   value={this.state.value} onChange={this.handleChange.bind(this)}
 												   min={min} max={max} label={timeLabel}/> : undefined }
@@ -59,7 +59,11 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	_parseMask = () => {
-		return this.props.mask.replace("_", "/\\d/##").split("##");
+		let result = "$" + this.props.mask.replace(/_/g, "##regex##").replace(/####/g, "##") + "$";
+		result = result.replace("$##", "").replace("##$", "").replace(/$/, "").split("##");
+		for (var i=0; i<result.length; i++)
+			if (result[i] === "regex") result[i] = new RegExp("\\d");
+		return result;
 	}
 }
 
