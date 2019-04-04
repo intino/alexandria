@@ -3,6 +3,9 @@ dsl Konos
 use Theme
 use Schemas
 
+Dataframe iris as CSV("data/iris.csv")
+Datasource(modelClass = "io.intino.alexandria.ui.documentation.Item") items
+
 Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated
 	Text(value="Date widget", format=h3) title
 
@@ -70,7 +73,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Text(format=body1 widgetDemo) text1
-				Block > Text text1Code as Code(Html)
+				Block > Text text1Code as Code(language=Html)
 						value
 							=========
 							Text(value\="lorem ipsum") text1
@@ -79,38 +82,37 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets with label")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo, label="título del campo") text2
-				Block > Text text2Code as Code(Html)
+				Text(format=body1 widgetDemo) text2 as Labeled("título del campo")
+				Block > Text text2Code as Code(language=Html)
 						value
 							=========
-							Text text2<br/>
-							&nbsp;&nbsp;&nbsp;&nbsp;label\="título del campo"<br/>
+							Text text2 as Labeled("título del campo")<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;value\="lorem ipsum"
 							=========
 
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo) text3 as Editable > label = "campo editable"
-				Block > Text text3Code as Code(Html)
+				Text(format=body1 widgetDemo) text3 as Editable Labeled("campo editable")
+				Block > Text text3Code as Code(language=Html)
 						value
 							=========
-							Text(label\="campo editable", value\="lorem ipsum") text3 as Editable
+							Text(value\="lorem ipsum") text3 as Editable Labeled("campo editable")
 							=========
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Code facet")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo) textCode1 as Code(Html)
+				Text(format=body1 widgetDemo) textCode1 as Code(language=Html)
 					value
 						=========
 						Text(value\="lorem") text1
 						=========
-				Block > Text textCode1Code as Code(Html)
+				Block > Text textCode1Code as Code(language=Html)
 						value
 							=========
-							Text textCode1 as Code(Html)<br/>
+							Text textCode1 as Code(language\=Html)<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="lorem") text1<br/>
@@ -120,15 +122,15 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Code and Editable facet")
 			Block(spacing=DP8, format=filled)
-				Text(format=body1 widgetDemo) textCode2 as Code(Html) Editable
+				Text(format=body1 widgetDemo) textCode2 as Code(language=Html) Editable
 					value
 						=========
 						<div>Here goes code</div>
 						=========
-				Block > Text textCode2Code as Code(Html)
+				Block > Text textCode2Code as Code(language=Html)
 						value
 							=========
-							Text textCode1 as Code(Html) Editable<br/>
+							Text textCode1 as Code(language\=Html) Editable<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;value<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&gt;Here goes code&lt;/div&gt;<br/>
@@ -142,7 +144,7 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0) number1
-				Block > Text number1Code as Code(Html)
+				Block > Text number1Code as Code(language=Html)
 						value
 							=========
 							Number(value\=10, label\="Campo numérico") number1
@@ -151,7 +153,7 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 			Text(format=h6, value="No facets with prefix and suffix")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0, prefix = "Amount", suffix = "$") number2
-				Block > Text number2Code as Code(Html)
+				Block > Text number2Code as Code(language=Html)
 						value
 							=========
 							Number(format\=body1 widgetDemo, value\=0, prefix\="Amount", suffix\="$") number1
@@ -160,7 +162,7 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Number(format=body1 widgetDemo, value = 0, min=0, max=100, step=10, prefix="Price:", suffix="$") number3 as Editable
-				Block > Text number3Code as Code(Html)
+				Block > Text number3Code as Code(language=Html)
 						value
 							=========
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
@@ -173,7 +175,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
-				Block > Text date1Code as Code(Html)
+				Block > Text date1Code as Code(language=Html)
 						value
 							=========
 							Date(pattern\="MM/DD/YYYY") date1<br/><br/>
@@ -184,7 +186,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="No facets with Mode")
 			Block(spacing=DP8, format=filled)
 				Date(mode=FromNow, format=body1 widgetDemo) date2
-				Block > Text date2Code as Code(Html)
+				Block > Text date2Code as Code(language=Html)
 						value
 							=========
 							Date(mode\=FromNow) date2
@@ -194,7 +196,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="Editable facet")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date3 as Editable
-				Block > Text date3Code as Code(Html)
+				Block > Text date3Code as Code(language=Html)
 						value
 							=========
 							Date date3 as Editable
@@ -205,7 +207,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="Editable facet with timePicker")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
-				Block > Text date4Code as Code(Html)
+				Block > Text date4Code as Code(language=Html)
 						value
 							=========
 							Date date4 as Editable(timePicker\=true)
@@ -215,7 +217,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="Editable facet with mask")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date5 as Editable(mask="__/__/____")
-				Block > Text date5Code as Code(Html)
+				Block > Text date5Code as Code(language=Html)
 						value
 							=========
 							Date date5 as Editable(mask\="__/__/____")
@@ -229,7 +231,7 @@ Mold(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
 			Block(spacing=DP8, format=filled)
 				Block as Absolute(height=600px)
 					File(value="data/example.pdf", format=widgetDemo) file1 as Relative(width=100%, height=100%)
-				Block > Text file1Code as Code(Html)
+				Block > Text file1Code as Code(language=Html)
 						value
 							=========
 							File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
@@ -242,7 +244,7 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filled)
 				Image(defaultValue="images/image.jpg", format=widgetDemo) image1 as Absolute(width=200px, height=150px)
-				Block > Text image1Code as Code(Html)
+				Block > Text image1Code as Code(language=Html)
 						value
 							=========
 							Image(default\="images/image.jpg", format\=widgetDemo) image1 as Absolute(width\=300px, height\=150px)
@@ -252,15 +254,13 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 			Text(format=h6, value="Avatar facet")
 			Block(spacing=DP8, format=filled)
 				Image image2 as Avatar("Intino avatar", format=widgetDemo, color="#3F52B5") Absolute(width=75px, height=75px)
-				Block > Text image2Code as Code(Html)
+				Block > Text image2Code as Code(language=Html)
 						value
 							=========
 							Image image2 as Avatar("Intino avatar", format\=widgetDemo, color\="#3F52B5") Absolute(width\=75px, height\=75px)
 							=========
 
 
-
-DataFrame iris as CSV("data/iris.csv")
 
 Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 
@@ -274,7 +274,7 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 						======
 						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
 						======
-				Block > Text chart1Code as Code(Html)
+				Block > Text chart1Code as Code(language=Html)
 						value
 							=========
 							DataFrame iris as CSV("data/iris.csv")
@@ -292,7 +292,7 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 						d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
 						output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
 						======
-				Block > Text chart2Code as Code(Html)
+				Block > Text chart2Code as Code(language=Html)
 						value
 							=========
 							DataFrame iris as CSV("data/iris.csv")
@@ -309,7 +309,7 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 					Text(value="value 1", format=body1 bordered)
 					Text(value="value 2", format=body1 bordered)
 					Text(value="value 3", format=body1 bordered)
-			Block > Text block1Code as Code(Html)
+			Block > Text block1Code as Code(language=Html)
 					value
 						=========
 						Block<br/>
@@ -325,7 +325,7 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 					Text(value="value 1", format=body1 bordered)
 					Text(value="value 2", format=body1 bordered)
 					Text(value="value 3", format=body1 bordered)
-			Block > Text block2Code as Code(Html) Editable
+			Block > Text block2Code as Code(language=Html) Editable
 					value
 						=========
 						DP8
@@ -338,7 +338,7 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 					Text(value="value 1", format=body1 bordered)
 					Text(value="value 2", format=body1 bordered)
 					Text(value="value 3", format=body1 bordered)
-			Block > Text block3Code as Code(Html) Editable
+			Block > Text block3Code as Code(language=Html) Editable
 					value
 						=========
 						Horizontal CenterCenter
@@ -350,7 +350,7 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 			Block(spacing=DP8, format=filled)
 				Block(layout=Horizontal) as Badge(value=10)
 					Text(value="value", format=body1)
-			Block > Text block4Code as Code(Html)
+			Block > Text block4Code as Code(language=Html)
 					value
 						=========
 						Block as Badge(value\=10)<br/>
@@ -361,7 +361,7 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 			Block(spacing=DP8, format=filled)
 				Block as Parallax(background="images/background1.jpg") Absolute(height=175px)
 					Text(value="value", format=body1)
-			Block > Text block5Code as Code(Html)
+			Block > Text block5Code as Code(language=Html)
 					value
 						=========
 						Block as Parallax(value\="images/background1.jpg") Absolute(height\=175px)<br/>
@@ -374,12 +374,13 @@ Mold(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="List facet")
 			Block(spacing=DP8, format=filled)
-				Collection(modelClass = "io.intino.alexandria.ui.documentation.Item", mold = itemMold) collection1 as List
-			Block > Text collection1Code as Code(Html)
+				List(source=items, mold=itemMold) collection1
+			Block > Text collection1Code as Code(language=Html)
 					value
 						=========
+						Datasource(modelClass\="io.intino.alexandria.ui.documentation.Item") items
 						Mold itemMold > Text label
-						Collection(modelClass\="io.intino.alexandria.ui.documentation.Item", mold\=itemMold) as List
+						List(source\=items, mold\=itemMold) collection1
 						=========
 
 Mold(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold

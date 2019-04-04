@@ -27,6 +27,7 @@ public abstract class UIRenderer {
 
 	public static final String UI = "ui";
 	public static final String Resources = "%sresources";
+	public static final String Sources = "%ssources";
 	public static final String Notifiers = "%sdisplays/notifiers";
 	public static final String Requesters = "%sdisplays/requesters";
 

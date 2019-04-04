@@ -1,0 +1,24 @@
+dsl Proteo
+
+Concept:Named Source
+
+	sub Datasource
+		var string modelClass
+		Concept:Named Category
+
+	sub Dataframe
+		Concept Column
+			var string name
+			var word:{String Integer Double Boolean} type
+
+Facet CSV on Dataframe
+	var string datasourceFilename
+
+Facet Custom on Dataframe
+	var string datasourceClass
+
+Facet Classified on Datasource
+	Concept Grouping
+
+Facet Indexed on Datasource
+	Concept Sorting

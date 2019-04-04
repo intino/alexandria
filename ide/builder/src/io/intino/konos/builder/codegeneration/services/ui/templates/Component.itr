@@ -13,10 +13,6 @@ def type(component & child & moldableblock) trigger(declarations)
 	public $mold+firstUpperCase $name;
 end
 
-def type(component & child & collectableblock) trigger(declarations)
-	public $mold+firstUpperCase $name;
-end
-
 def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
@@ -29,22 +25,11 @@ def type(component & child & moldableblock) trigger(declaration)
 	public $mold+firstUpperCase $name;
 end
 
-def type(component & child & collectableblock) trigger(declaration)
-	public $mold+firstUpperCase $name;
-end
-
 def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(method)
-	public void add$name+firstUpperCase~Mold($mold+firstUpperCase mold) {
-		mold.id(java.util.UUID.randomUUID().toString());
-		$owner.this.add(mold, "$name");
-	}
-end
-
-def type(component & child & collectableblock & withMold) trigger(method)
+def type(method & collection)
 	public void addAll(java.util.List<$modelClass> items) {
 		items.forEach(this::add);
 	}
@@ -57,6 +42,13 @@ def type(component & child & collectableblock & withMold) trigger(method)
 	}
 end
 
+def type(component & child & moldableblock & multipleblock) trigger(method)
+	public void add$name+firstUpperCase~Mold($mold+firstUpperCase mold) {
+		mold.id(java.util.UUID.randomUUID().toString());
+		$owner.this.add(mold, "$name");
+	}
+end
+
 def type(component & child) trigger(method)
 end
 
@@ -64,9 +56,6 @@ def type(component & child & moldableblock & multipleblock) trigger(class)
 end
 
 def type(component & child & moldableblock) trigger(class)
-end
-
-def type(component & child & collectableblock) trigger(class)
 end
 
 def type(component & child) trigger(class)
@@ -87,16 +76,14 @@ def type(component & child) trigger(class)
 			$component+child...[$NL]]
 		}
 
+		$methods
+
 		[$component+class...[$NL]]
 		[$component+method...[$NL]]
 	}
 end
 
 def type(extends & moldableblock)
-	$type+firstUpperCase
-end
-
-def type(extends & collectableblock)
 	$type+firstUpperCase
 end
 
@@ -152,10 +139,6 @@ def type(component & child & moldableblock)
 	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
-def type(component & child & collectableblock)
-	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
-end
-
 def type(component & child)
 	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
@@ -195,7 +178,8 @@ def type(properties & file) trigger(specific)
 end
 
 def type(properties & openpage) trigger(specific)
-	[path("$path");]
+	title("$title");[
+	path("$path");]
 end
 
 def type(properties & chart) trigger(specific)
@@ -218,6 +202,11 @@ end
 
 def type(properties & text) trigger(specific)
 	[value("$defaultValue");]
+end
+
+def type(properties & collection) trigger(specific)
+	source("$source");
+	pageSize("$pageSize");
 end
 
 def type(properties & operation) trigger(common)

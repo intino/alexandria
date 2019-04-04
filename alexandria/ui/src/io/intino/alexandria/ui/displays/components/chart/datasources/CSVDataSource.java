@@ -6,7 +6,6 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.ui.displays.components.chart.DataFrameColumn;
-import io.intino.alexandria.ui.displays.components.chart.DataFrame;
 import io.intino.alexandria.ui.displays.components.chart.DataSource;
 
 import java.io.IOException;

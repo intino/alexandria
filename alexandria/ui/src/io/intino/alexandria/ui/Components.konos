@@ -98,4 +98,8 @@ Component openPage as Decorated
 	Notification redirect as Text
 	Request open
 
-Component CollectionList as Decorated
+Component list as Decorated
+Component grid as Decorated
+Component brochure as Decorated
+Component map as Decorated
+Component table as Decorated

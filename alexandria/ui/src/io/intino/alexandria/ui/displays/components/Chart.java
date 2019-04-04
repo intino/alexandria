@@ -3,9 +3,9 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.ChartInfo;
 import io.intino.alexandria.ui.displays.components.chart.ChartEngine;
-import io.intino.alexandria.ui.displays.components.chart.Output;
-import io.intino.alexandria.ui.displays.components.chart.DataFrame;
 import io.intino.alexandria.ui.displays.components.chart.DataSource;
+import io.intino.alexandria.ui.displays.components.chart.Output;
+import org.eclipse.jetty.websocket.common.frames.DataFrame;
 
 public class Chart<B extends Box> extends AbstractChart<B> {
     private DataFrame input;

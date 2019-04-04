@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
-public class DataFrame {
+public class Dataframe {
 	private List<DataFrameColumn> columns = new ArrayList<>();
 	private Map<DataFrameColumn, List<Object>> values = new HashMap<>();
 

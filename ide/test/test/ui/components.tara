@@ -3,16 +3,26 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(main)
 
-DataFrame df1 as CSV("abcd.csv")
-DataFrame df2 as Source("org.siani.monet.DataFrameLoaderAAA")
+Dataframe df1 as CSV("abcd.csv")
+Dataframe df2 as Custom("org.siani.monet.DataFrameLoaderAAA")
 
 Template main as Decorated
 	components = catalog1
 
-Catalog(targetClass="io.intino.Catalog") catalog1
+Datasource(modelClass="org.siani.Item") sourceA as Classified Indexed
+	// Classified
+	Grouping priceGrouping
+	Grouping dateGrouping
+
+	// Indexed
+	Sorting price
+	Sorting date
+
+Catalog(source=sourceA) catalog1
 	Block
-		Grouping(label="grouping 1") grouping1
-		Grouping(label="grouping 2") grouping2
+		GroupBox(grouping=sourceA.priceGrouping) grouping1 as Labeled("grouping 1")
+		GroupBox(grouping=sourceA.dateGrouping) grouping2 as Labeled("grouping 2")
+		SortBox(sorting=sourceA.price) price1 as Labeled("sorting 1")
 
 	Selector tabs as Tabs
 		Text listOption as Option
@@ -21,28 +31,38 @@ Catalog(targetClass="io.intino.Catalog") catalog1
 		Text mapOption as Option
 		Text magazineOption as Option
 
-	Block as Collectable(list) Conditional(catalog1.tabs.listOption)
-	Block as Collectable(table) Conditional(catalog1.tabs.tableOption)
-	Block as Collectable(grid) Conditional(catalog1.tabs.gridOption)
-	Block as Collectable(map) Conditional(catalog1.tabs.mapOption)
-	Block as Collectable(magazine) Conditional(catalog1.tabs.magazineOption)
+	Block as Conditional(catalog1.tabs.listOption)
+		List(source=sourceA, mold=itemMold, pageSize=30)
 
-Collection(modelClass="org.siani.Item") list as List(itemMold) Paged(30)
+	Block as Conditional(catalog1.tabs.tableOption)
+		Table(source=sourceA, mold=itemMold, pageSize=30) as Infinite Labeled("tabla")
+			Column(column1Mold) as Labeled("name")
+			Column(column2Mold) as Labeled("price")
 
-Collection(modelClass="org.siani.Item") table as Table Infinite
-	Column(label = "") a as Sortable
-		Text a
-		Block dfgasdga
-	Column(label = "b") b
-	Column(label = "c") c
+	Block as Conditional(catalog1.tabs.gridOption)
+		Grid(source=sourceA, mold=itemMold)
 
-Collection(modelClass="org.siani.Item") grid as Grid(itemMold)
+	Block as Conditional(catalog1.tabs.mapOption)
+		Map(source=sourceA, mold=itemMold)
+			Center(latitude=2,longitude=2)
+			Zoom(defaultZoom=10, min=1, max=14)
 
-Collection(modelClass="org.siani.Item") map as Map(itemMold)
-	Center(latitude=2,longitude=2)
-	Zoom(defaultZoom=10, min=1, max=14)
+	Block as Conditional(catalog1.tabs.magazineOption)
+		Brochure(source=sourceA, mold=itemMold)
 
-Collection(modelClass="org.siani.Item") magazine as Detail(itemMold)
+Mold itemMold
+	Block price
+	Block date
+	Block name
+	Block aaa
+
+Mold column1Mold
+Mold column2Mold
+
+Mold mold
+	List(source=sourceA, pageSize=30, mold=mold) collectionA
+	Block > SearchBox(source=sourceA, placeholder="rellene para buscar")
+	Grid(source=sourceA, pageSize=30, mold=mold) collectionB as Infinite
 
 Mold itemMold
 	Text label

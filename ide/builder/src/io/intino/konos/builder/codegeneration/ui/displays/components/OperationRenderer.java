@@ -23,6 +23,7 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	public Frame properties() {
 		Frame properties = super.properties();
 		properties.addTypes(Operation.class.getSimpleName().toLowerCase());
+		properties.addSlot("title", element.title());
 		properties.addSlot("target", element.target().name().toLowerCase());
 		properties.addSlot("operationMode", modeFrame());
 		return properties;
