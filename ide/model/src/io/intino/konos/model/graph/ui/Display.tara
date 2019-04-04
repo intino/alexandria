@@ -16,7 +16,6 @@ Concept:Named PassiveView is abstract
 		has Exception
 
 Concept:Named Display extends PassiveView
-	var string label = empty
 	var Component[] components = empty
 	var string parentDisplay = empty
 

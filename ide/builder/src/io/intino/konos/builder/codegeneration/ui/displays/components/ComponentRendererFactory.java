@@ -7,7 +7,6 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.ChildComponents.Number;
 import io.intino.konos.model.graph.ChildComponents.*;
-import io.intino.konos.model.graph.Collection;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Mold;
 

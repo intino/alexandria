@@ -3,12 +3,18 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 
 public class OpenPage<B extends Box> extends AbstractOpenPage<B> {
+	private String title;
 	private String path;
 	private String icon;
 
     public OpenPage(B box) {
         super(box);
     }
+
+	public OpenPage title(String title) {
+		this.title = title;
+		return this;
+	}
 
     public OpenPage path(String path) {
     	this.path = path;

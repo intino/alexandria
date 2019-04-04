@@ -1,0 +1,71 @@
+def type(datasource & abstract)
+	package $package+validPackage.ui.sources;
+
+    import io.intino.alexandria.ui.model.Datasource;
+    import io.intino.alexandria.ui.model.datasource.Category;
+
+    import java.util.List;
+
+    public abstract class Abstract$name+firstUpperCase extends DataSource<$modelClass> {
+
+		public Abstract$name+firstUpperCase() {
+			$grouping+constructor...[$NL]
+			$sorting+constructor...[$NL]
+		}
+
+		public abstract List<$modelClass> items(int start, int limit, String condition);
+    	$grouping...[$NL]
+    	$sorting...[$NL]
+    }
+end
+
+def type(datasource)
+	package $package+validPackage.ui.sources;
+
+    import io.intino.alexandria.ui.model.Datasource;
+	import io.intino.alexandria.ui.model.datasource.Category;
+	import io.intino.alexandria.ui.model.datasource.Group;
+
+    import java.util.List;
+
+    public abstract class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+
+		@Override
+		public List<Item> items(int start, int limit, String condition) {
+			return null;
+		}
+
+		$grouping...[$NL]
+		$sorting...[$NL]
+    }
+end
+
+def type(grouping & abstract) trigger(constructor)
+	add($name+firstLowerCase());
+end
+
+def type(grouping & abstract)
+	public abstract Grouping<$modelClass> $name+firstLowerCase();
+end
+
+def type(sorting & abstract) trigger(constructor)
+	add($name+firstLowerCase());
+end
+
+def type(sorting & abstract)
+	public abstract Sorting<$modelClass> $name+firstLowerCase();
+end
+
+def type(grouping)
+	@Override
+	public Grouping<$modelClass> $name+firstLowerCase() {
+		return null;
+	}
+end
+
+def type(sorting)
+	@Override
+	public Sorting<$modelClass> $name+firstLowerCase() {
+		return null;
+	}
+end

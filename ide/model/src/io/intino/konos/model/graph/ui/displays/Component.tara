@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Source
 use Facets
 use Display
 use DataTypes
@@ -10,7 +11,6 @@ Concept:Named Component extends Display
 	var Format[] format = empty
 
 Concept Block extends Component
-	var string label = empty
 	var string for = empty
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
@@ -24,13 +24,8 @@ Concept Mold extends Component
 
 	has Component
 
-Concept Collection extends Component is decorable
-	var string modelClass
-	var string noItemsMessage = empty
-
 Concept Catalog extends Component
-	var string targetClass
-	var string noItemsMessage = empty
+	var Datasource source
 
 	Concept:{0..1} Events
 		Concept:{1..1} OnClick
@@ -47,15 +42,6 @@ Concept Catalog extends Component
 
 	has Component
 
-Concept DataFrame
-	Concept Column
-		var string name
-		var word:{String Integer Double Boolean} type
-
-Facet CSV on DataFrame
-	var string datasourceFilename
-Facet Source on DataFrame
-	var string datasourceClass
 
 Concept ChildComponents
 
@@ -65,7 +51,7 @@ Concept ChildComponents
 	Concept User extends Component
 	Concept KPI extends Component
 	Concept Chart extends Component
-		var DataFrame input
+		var Dataframe input
 		var word:{Image Html} output = Html
 		var string query
 
@@ -105,6 +91,7 @@ Concept ChildComponents
 		Concept Step > has Component
 
 	Concept Operation extends Component
+		var string title
 		var word:{Blank Self Parent Top} target = Self
 
 		sub OpenPage > var Page page
@@ -125,12 +112,17 @@ Concept ChildComponents
 
 		has Component
 
-	Concept:Named Grouping extends Component
-		var string label
-
-	Concept:Named Sorting extends Component
-		var string label
+	Concept:Named GroupBox extends Component
 		var boolean visible = true
+		var Classified.Grouping grouping
+
+	Concept:Named SortBox extends Component
+		var boolean visible = true
+		var Indexed.Sorting sorting
+
+	Concept:Named SearchBox extends Component
+		var Indexed source
+		var string placeholder
 
 	Concept Selector extends Component
 		has Component
@@ -138,6 +130,23 @@ Concept ChildComponents
 	Concept Frame extends Component
 		var Display display
 
-	Concept Column extends Component
-		var string label
-		has Component
+	Concept Collection extends Component
+		var Datasource source
+		var string noItemsMessage = empty
+		var integer pageSize = 20
+		var Mold mold
+
+		sub Brochure
+		sub List
+		sub Grid
+		sub Table
+			Concept Column > var Mold mold
+		sub Map
+			Concept:{0..1} Center
+				var double latitude
+				var double longitude
+
+			Concept:{1..1} Zoom
+				var integer defaultZoom
+				var integer min
+				var integer max

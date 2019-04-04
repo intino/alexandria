@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.ChildComponents.Chart;
-import io.intino.konos.model.graph.DataFrame;
+import io.intino.konos.model.graph.Dataframe;
 import org.siani.itrules.model.Frame;
 
 public class ChartRenderer extends SizedRenderer<Chart> {
@@ -22,20 +22,20 @@ public class ChartRenderer extends SizedRenderer<Chart> {
 	}
 
 	private void addInput(Frame frame) {
-		DataFrame input = element.input();
-		String type = input.isSource() ? "source" : "csv";
+		Dataframe input = element.input();
+		String type = input.isCustom() ? "source" : "csv";
 		frame.addSlot("input", inputMethodFrame(input, type));
 	}
 
-	private Frame inputMethodFrame(DataFrame input, String type) {
+	private Frame inputMethodFrame(Dataframe input, String type) {
 		Frame frame = new Frame("inputMethod", type).addSlot("value", value(input));
 		addOwner(frame);
 		return frame;
 	}
 
-	private String value(DataFrame input) {
+	private String value(Dataframe input) {
 		if (input.isCSV()) return fixResourceValue(input.asCSV().datasourceFilename());
-		if (input.isSource()) return input.asSource().datasourceClass();
+		if (input.isCustom()) return input.asCustom().datasourceClass();
 		return "";
 	}
 

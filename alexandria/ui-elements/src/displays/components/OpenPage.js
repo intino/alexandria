@@ -27,7 +27,7 @@ class OpenPage extends AbstractOpenPage {
 	render() {
 		const { classes } = this.props;
 		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
-		return (<a onClick={this.handleClick.bind(this)} style={this.style()}><Typography variant={format} className={classes.link}>{this.props.label}</Typography></a>);
+		return (<a onClick={this.handleClick.bind(this)} style={this.style()}><Typography variant={format} className={classes.link}>{this.props.title}</Typography></a>);
 	};
 
 	handleClick(e) {

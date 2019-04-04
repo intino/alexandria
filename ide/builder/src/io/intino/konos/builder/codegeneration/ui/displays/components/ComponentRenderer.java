@@ -5,29 +5,22 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.ChildComponents.Column;
+import io.intino.konos.model.graph.ChildComponents.Collection;
 import io.intino.konos.model.graph.ChildComponents.Header;
 import io.intino.konos.model.graph.ChildComponents.Selector;
 import io.intino.konos.model.graph.ChildComponents.Snackbar;
 import io.intino.konos.model.graph.ChildComponents.Wizard.Step;
-import io.intino.konos.model.graph.Collection;
 import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
-import io.intino.konos.model.graph.collectable.CollectableBlock;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
-import io.intino.konos.model.graph.detail.DetailCollection;
-import io.intino.konos.model.graph.grid.GridCollection;
-import io.intino.konos.model.graph.list.ListCollection;
-import io.intino.konos.model.graph.map.MapCollection;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
-import io.intino.konos.model.graph.table.TableCollection;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
@@ -77,7 +70,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	protected Frame properties(Component component) {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
 		if (component.color() != null && !component.color().isEmpty()) result.addSlot("color", element.color());
-		if (component.label() != null && !component.label().isEmpty()) result.addSlot("label", component.label());
+		if (component.i$(AbstractLabeled.class)) result.addSlot("label", component.a$(AbstractLabeled.class).label());
 		if (component.format() != null) {
 			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
 			result.addSlot("format", format);
@@ -85,8 +78,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return result;
 	}
 
-	protected void addOwner(Frame frame) {
+	protected Frame addOwner(Frame frame) {
 		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
+		return frame;
 	}
 
 	@Override
@@ -160,8 +154,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private List<Component> components(Component component) {
 		List<Component> components = new ArrayList<>();
 		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
-		if (component.i$(Column.class)) components.addAll(component.a$(Column.class).componentList());
-		if (component.i$(TableCollection.class)) components.addAll(component.a$(TableCollection.class).columnList());
 		if (component.i$(Mold.class)) components.addAll(component.a$(Mold.class).componentList());
 		if (component.i$(Catalog.class)) components.addAll(component.a$(Catalog.class).componentList());
 		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
@@ -197,26 +189,19 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			return true;
 		}
 
-		if (element.i$(CollectableBlock.class)) {
-			frame.addTypes(CollectableBlock.class.getSimpleName());
-			Collection collection = element.a$(CollectableBlock.class).collection();
-			frame.addSlot("modelClass", collection.modelClass());
-			if (collection.hasMold()) {
-				frame.addTypes("withMold");
-				frame.addSlot("mold", collection.mold().name$());
-			}
-			return true;
+		if (element.i$(Collection.class)) {
+			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName());
+			Collection collection = element.a$(Collection.class);
+			methodsFrame.addSlot("modelClass", collection.source().modelClass());
+			methodsFrame.addSlot("mold", collection.mold().name$());
+			frame.addSlot("methods", methodsFrame);
+			return false;
 		}
 
 		return false;
 	}
 
 	protected void addFacets(Component component, Frame result) {
-		if (component.i$(ListCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ListCollection.class.getSimpleName().replace("Collection", "")));
-		if (component.i$(DetailCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", DetailCollection.class.getSimpleName().replace("Collection", "")));
-		if (component.i$(MapCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MapCollection.class.getSimpleName().replace("Collection", "")));
-		if (component.i$(GridCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", GridCollection.class.getSimpleName().replace("Collection", "")));
-		if (component.i$(TableCollection.class)) result.addSlot("facet", new Frame("facet").addSlot("name", TableCollection.class.getSimpleName().replace("Collection", "")));
 		if (component.i$(Editable.class)) result.addSlot("facet", new Frame("facet").addSlot("name", Editable.class.getSimpleName()));
 		if (component.i$(CodeText.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CodeText.class.getSimpleName().replace("Text", "")));
 		if (component.i$(BadgeBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", BadgeBlock.class.getSimpleName().replace("Block", "")));
