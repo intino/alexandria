@@ -14,11 +14,14 @@ public class Logger {
 
 	private static String pattern = "[%level]\nts: %date\nsource: %C\nmessage: %m\n";
 
-	private static ConsoleAppender appender = null;
+	private static ConsoleAppender appender = new ConsoleAppender();
 
 	public static void init() {
+		init(Level.INFO);
+	}
+
+	public static void init(Level level) {
 		org.apache.log4j.Logger.getRootLogger().getLoggerRepository().resetConfiguration();
-		appender = new ConsoleAppender();
 		appender.setLayout(new Layout() {
 			@Override
 			public void activateOptions() {
@@ -45,13 +48,12 @@ public class Logger {
 				return "\n\t" + writer.toString().replace("\n", "\n\t");
 			}
 
-
 			@Override
 			public boolean ignoresThrowable() {
 				return false;
 			}
 		});
-		appender.setThreshold(Level.INFO);
+		setLevel(level);
 		appender.activateOptions();
 		org.apache.log4j.Logger.getRootLogger().addAppender(appender);
 	}
