@@ -49,6 +49,8 @@
     "react-dom": "^16.7.0",
     "react-materialize": "^2.6.0",
     "react-moment": "^0.8.4",
-    "react-plotly.js": "^2.3.0"
+    "react-plotly.js": "^2.3.0",
+    "react-window": "^1.7.1",
+    "react-window-infinite-loader": "^1.0.3"
   }
 }

@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import * as Elements from "app-elements/gen/Displays";
 
 export default class Display extends PassiveView {
+    state = {};
 
     constructor(props) {
         super(props);

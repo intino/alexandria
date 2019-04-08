@@ -25,7 +25,7 @@ public class DatasourceRenderer extends ElementRenderer<Datasource> {
 		Frame frame = buildFrame("");
 		Commons.writeFrame(new File(src(), format(Sources)), snakeCaseToCamelCase(element.name$()), setup(DatasourceTemplate.create()).format(frame));
 		frame = buildFrame("abstract");
-		Commons.writeFrame(new File(gen(), format(Sources)), snakeCaseToCamelCase("Abstract" + element.name$()), setup(DatasourceTemplate.create()).format(frame));
+		Commons.writeFrame(new File(gen(), format(Sources)), "Abstract" + snakeCaseToCamelCase(element.name$()), setup(DatasourceTemplate.create()).format(frame));
 	}
 
 	public Frame buildFrame(String type) {

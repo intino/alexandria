@@ -4,7 +4,6 @@ import MoldNotifier from "../../../gen/displays/notifiers/MoldNotifier";
 import MoldRequester from "../../../gen/displays/requesters/MoldRequester";
 
 export default class Mold extends AbstractMold {
-	state = {};
 
 	constructor(props) {
 		super(props);

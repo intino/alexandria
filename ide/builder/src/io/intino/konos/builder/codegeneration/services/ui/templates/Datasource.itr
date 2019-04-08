@@ -2,11 +2,13 @@ def type(datasource & abstract)
 	package $package+validPackage.ui.sources;
 
     import io.intino.alexandria.ui.model.Datasource;
-    import io.intino.alexandria.ui.model.datasource.Category;
+	import io.intino.alexandria.ui.model.datasource.Group;
+    import io.intino.alexandria.ui.model.datasource.Grouping;
+    import io.intino.alexandria.ui.model.datasource.Sorting;
 
     import java.util.List;
 
-    public abstract class Abstract$name+firstUpperCase extends DataSource<$modelClass> {
+    public abstract class Abstract$name+firstUpperCase extends Datasource<$modelClass> {
 
 		public Abstract$name+firstUpperCase() {
 			$grouping+constructor...[$NL]
@@ -23,15 +25,21 @@ def type(datasource)
 	package $package+validPackage.ui.sources;
 
     import io.intino.alexandria.ui.model.Datasource;
-	import io.intino.alexandria.ui.model.datasource.Category;
 	import io.intino.alexandria.ui.model.datasource.Group;
+    import io.intino.alexandria.ui.model.datasource.Grouping;
+    import io.intino.alexandria.ui.model.datasource.Sorting;
 
     import java.util.List;
 
-    public abstract class $name+firstUpperCase extends Abstract$name+firstUpperCase {
+    public class $name+firstUpperCase extends Abstract$name+firstUpperCase {
 
 		@Override
-		public List<Item> items(int start, int limit, String condition) {
+		public int countItems(String condition) {
+			return 0;
+		}
+
+		@Override
+		public List<$modelClass> items(int start, int limit, String condition) {
 			return null;
 		}
 

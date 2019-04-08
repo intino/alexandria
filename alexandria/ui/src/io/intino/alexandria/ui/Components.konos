@@ -96,9 +96,12 @@ Component imageAvatar as Decorated
 
 Component openPage as Decorated
 	Notification redirect as Text
+	Notification refresh as Text
 	Request open
 
 Component list as Decorated
+	Request nextPage
+
 Component grid as Decorated
 Component brochure as Decorated
 Component map as Decorated

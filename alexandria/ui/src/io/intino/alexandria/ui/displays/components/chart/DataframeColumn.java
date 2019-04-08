@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays.components.chart;
 
-public class DataFrameColumn {
+public class DataframeColumn {
 	public String name;
 	public Type type = Type.Double;
 
@@ -12,7 +12,7 @@ public class DataFrameColumn {
 		return name;
 	}
 
-	public DataFrameColumn name(String name) {
+	public DataframeColumn name(String name) {
 		this.name = name;
 		return this;
 	}
@@ -21,7 +21,7 @@ public class DataFrameColumn {
 		return type;
 	}
 
-	public DataFrameColumn type(Type type) {
+	public DataframeColumn type(Type type) {
 		this.type = type;
 		return this;
 	}

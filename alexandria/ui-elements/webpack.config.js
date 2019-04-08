@@ -22,8 +22,9 @@ module.exports = {
     },
     entry : './gen/App.js',
     output: {
-        path: "/Users/mcaballero/Proyectos/konos/out/production/ui-elements/www",
-        filename: './ui-elements/App.js'/*,
+        path: "/Users/mcaballero/Proyectos/konos/out/production/ui-elements/www/ui-elements",
+        publicPath: '/ui-elements/',
+        filename: 'App.js'/*,
         chunkFilename: '[name].bundle.js'*/
     },
     resolve: {
@@ -37,17 +38,23 @@ module.exports = {
             hash: true,
             title: "Test UI",
             template: "./home.html",
-            filename: "./ui-elements/home.html"
+            filename: "./home.html"
         }),
         new HtmlWebPackPlugin({
             hash: true,
             title: "Test UI",
             template: "./docs.html",
-            filename: "./ui-elements/docs.html"
+            filename: "./docs.html"
+        }),
+        new HtmlWebPackPlugin({
+            hash: true,
+            title: "Test UI",
+            template: "./widgetType.html",
+            filename: "./widgetType.html"
         }),
         new CopyWebpackPlugin([{
             from: 'res',
-            to: 'res'
+            to: './res'
         }])
     ]
 };

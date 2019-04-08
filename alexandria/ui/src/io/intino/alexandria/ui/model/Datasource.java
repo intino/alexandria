@@ -15,6 +15,7 @@ public abstract class Datasource<O> {
 		this.items.clear();
 	}
 
+	public abstract int countItems(String condition);
 	public abstract List<O> items(int start, int limit, String condition);
 
 	public Datasource<O> addAll(List<O> items) {
@@ -36,4 +37,5 @@ public abstract class Datasource<O> {
 		this.sortings.add(sorting);
 		return this;
 	}
+
 }

@@ -1,17 +1,39 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractList;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.components.collection.PageManager;
+import io.intino.alexandria.ui.model.Datasource;
 
-public class List extends AbstractList<UiFrameworkBox> {
+public abstract class List<B extends Box, Item> extends AbstractList<B> {
+    private Datasource source;
+    private int pageSize;
+    private PageManager<Item> pageManager;
 
-    public List(UiFrameworkBox box) {
+    public List(B box) {
         super(box);
     }
 
+    public List source(Datasource source) {
+        this.source = source;
+        return this;
+    }
 
+    public List pageSize(int pageSize) {
+        this.pageSize = pageSize;
+        return this;
+    }
+
+    public abstract void addAll(java.util.List<Item> items);
+    public abstract void add(Item item);
+
+    @Override
+    public void init() {
+        super.init();
+        this.pageManager = new PageManager<>(source, pageSize);
+    }
+
+    public void nextPage() {
+        addAll(pageManager.next());
+    }
 
 }

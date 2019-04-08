@@ -33,8 +33,8 @@ export default class Component extends AlexandriaDisplay {
         if (this.props.spacingStyle == null) return style;
         if (style == null) style = {};
         let spacingStyle = this.props.spacingStyle;
-        if (spacingStyle.indexOf("bottom:") !== -1) style.marginBottom = spacingStyle.replace("bottom:", "") + "px";
-        else style.marginRight = spacingStyle.replace("right:", "") + "px";
+        style.marginBottom = spacingStyle.bottom + "px";
+        style.marginRight = spacingStyle.right + "px";
         return style;
     }
 

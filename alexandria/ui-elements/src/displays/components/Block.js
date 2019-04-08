@@ -1,6 +1,7 @@
 import React from "react";
 import Collapse from "@material-ui/core/Collapse";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
@@ -37,19 +38,28 @@ export default class Block extends AbstractBlock {
 		let layout = this._layout();
 		let style = this.style();
 
-		if (paper)
-			return (<Paper style={style} className={layout}>{this._renderChildren()}</Paper>);
+		if (paper) {
+			const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "h5";
+			return (
+				<Paper style={style} className={layout}>
+					{this.props.label !== "" ? <Typography style={{padding:"0 10px"}} variant={format}>{this.props.label}</Typography> : undefined }
+					<div style={{padding:"0 10px"}}>{this._renderChildren()}</div>
+				</Paper>
+			);
+		}
 
 		return (<div style={style} className={layout}>{this._renderChildren()}</div>);
 	};
 
 	_renderChildren = () => {
-		const vertical = this._is("vertical");
+		const withBottom = this._is("vertical") || (this._is("horizontal") && this._is("wrap"));
 		const hasSpacing = this._hasSpacing();
 
 		return React.Children.map(this.props.children, (child, i) => {
 			if (hasSpacing) {
-				let spacingStyle = (vertical ? "bottom:" : "right:") + (this.state.spacing != null ? this.state.spacing : this.props.spacing);
+				let spacingSize = this.state.spacing != null ? this.state.spacing : this.props.spacing;
+				let spacingStyle = { right: spacingSize };
+				if (withBottom) spacingStyle.bottom = spacingSize;
 				return React.cloneElement(child, { spacingStyle: spacingStyle });
 			}
 			return child;

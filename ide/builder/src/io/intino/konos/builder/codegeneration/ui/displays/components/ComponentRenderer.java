@@ -192,9 +192,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(Collection.class)) {
 			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName());
 			Collection collection = element.a$(Collection.class);
-			methodsFrame.addSlot("modelClass", collection.source().modelClass());
+			String modelClass = collection.source().modelClass();
+			methodsFrame.addSlot("modelClass", modelClass);
 			methodsFrame.addSlot("mold", collection.mold().name$());
+			frame.addTypes(Collection.class.getSimpleName());
 			frame.addSlot("methods", methodsFrame);
+			frame.addSlot("modelClass", modelClass);
 			return false;
 		}
 

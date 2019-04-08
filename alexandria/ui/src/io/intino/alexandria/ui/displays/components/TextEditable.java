@@ -20,6 +20,11 @@ public class TextEditable<B extends Box> extends AbstractTextEditable<B> {
         return value;
     }
 
+    public TextEditable<B> value(String value) {
+        this.value = value;
+        return this;
+    }
+
     public void update(String value) {
         this.value = value;
         notifier.refresh(value);

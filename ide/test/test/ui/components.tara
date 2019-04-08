@@ -1,76 +1,15 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(main)
+	Resource(path = "/") home as Page(docsTemplate)
 
-Dataframe df1 as CSV("abcd.csv")
-Dataframe df2 as Custom("org.siani.monet.DataFrameLoaderAAA")
+Template docsTemplate as Decorated
+	Block dataBlock as Paper Labeled("data widgets") Relative(width=50%)
 
-Template main as Decorated
-	components = catalog1
-
-Datasource(modelClass="org.siani.Item") sourceA as Classified Indexed
-	// Classified
-	Grouping priceGrouping
-	Grouping dateGrouping
-
-	// Indexed
-	Sorting price
-	Sorting date
-
-Catalog(source=sourceA) catalog1
-	Block
-		GroupBox(grouping=sourceA.priceGrouping) grouping1 as Labeled("grouping 1")
-		GroupBox(grouping=sourceA.dateGrouping) grouping2 as Labeled("grouping 2")
-		SortBox(sorting=sourceA.price) price1 as Labeled("sorting 1")
-
-	Selector tabs as Tabs
-		Text listOption as Option
-		Text tableOption as Option
-		Text gridOption as Option
-		Text mapOption as Option
-		Text magazineOption as Option
-
-	Block as Conditional(catalog1.tabs.listOption)
-		List(source=sourceA, mold=itemMold, pageSize=30)
-
-	Block as Conditional(catalog1.tabs.tableOption)
-		Table(source=sourceA, mold=itemMold, pageSize=30) as Infinite Labeled("tabla")
-			Column(column1Mold) as Labeled("name")
-			Column(column2Mold) as Labeled("price")
-
-	Block as Conditional(catalog1.tabs.gridOption)
-		Grid(source=sourceA, mold=itemMold)
-
-	Block as Conditional(catalog1.tabs.mapOption)
-		Map(source=sourceA, mold=itemMold)
-			Center(latitude=2,longitude=2)
-			Zoom(defaultZoom=10, min=1, max=14)
-
-	Block as Conditional(catalog1.tabs.magazineOption)
-		Brochure(source=sourceA, mold=itemMold)
-
-Mold itemMold
-	Block price
-	Block date
-	Block name
-	Block aaa
-
-Mold column1Mold
-Mold column2Mold
-
-Mold mold
-	List(source=sourceA, pageSize=30, mold=mold) collectionA
-	Block > SearchBox(source=sourceA, placeholder="rellene para buscar")
-	Grid(source=sourceA, pageSize=30, mold=mold) collectionB as Infinite
-
-Mold itemMold
-	Text label
-
-Theme theme1
-	Primary("#3f51b5")
-	Secondary("#ff9100")
-	Error("#f44336")
+Theme
+	Primary(color = "") 
+	Secondary(color = "") 
+	Error(color = "")
 
 Format("color:'#B71C1C',textShadow:'2px 2px 2px #fff'") h1
 Format("color:'black',textShadow:'2px 2px 2px #fff'") h2

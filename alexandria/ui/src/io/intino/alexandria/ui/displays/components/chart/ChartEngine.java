@@ -14,7 +14,7 @@ import static io.intino.alexandria.ui.utils.IOUtils.toByteArray;
 
 public class ChartEngine {
 
-	public String execute(DataFrame input, String query, Output mode) {
+	public String execute(Dataframe input, String query, Output mode) {
 		RConnection connection = null;
 
 		if (query == null || query.isEmpty()) return null;
@@ -48,7 +48,7 @@ public class ChartEngine {
 		}
 	}
 
-	private void sendInput(RConnection connection, DataFrame input) {
+	private void sendInput(RConnection connection, Dataframe input) {
 
 	}
 

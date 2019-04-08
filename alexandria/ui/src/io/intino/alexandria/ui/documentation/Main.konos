@@ -1,11 +1,19 @@
 dsl Konos
 
-use Widget
+use Docs
+use WidgetType
 use Theme
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(homeTemplate)
 	Resource(path = "/docs") docs as Page(docsTemplate)
+	Resource(path = "/docs/data/:type") widgetType as Page(widgetTypeTemplate)
+//	Resource(path = "/docs/data/number") number as Page(numberTemplate)
+//	Resource(path = "/docs/data/image") image as Page(imageTemplate)
+//	Resource(path = "/docs/data/file") file as Page(fileTemplate)
+//	Resource(path = "/docs/data/date") date as Page(dateTemplate)
+//	Resource(path = "/docs/other/block") block as Page(blockTemplate)
+//	Resource(path = "/docs/other/chart") chart as Page(chartTemplate)
 
 Template homeTemplate
 	Header(color="white", format=air) as Absolute(height=100px)
@@ -52,61 +60,3 @@ Template homeTemplate
 			Block(layout=Horizontal)
 //				Link("demo") as Button
 //				Link("get started") as Button
-
-Template docsTemplate as Decorated
-	Header(color="white", format=air) as Absolute(height=100px)
-		Block(layout=Horizontal Center, spacing=DP24)
-			Image(value="images/intino.png") as Absolute(80px, 80px)
-			Text(value="intino", format=h3)
-			Block(layout=Horizontal Center, format=headerToolbar, spacing=DP24) links
-				OpenPage(page=UiElements.home, title="home") as Link
-				Text(value="docs")
-
-	Block(layout=Horizontal Flexible) body
-
-		Block header as Relative(width=25%)
-			Selector menu as Menu(layout=Vertical)
-				Block basicSection as Collapsible Labeled("data widgets")
-					Text(value="Text") text as Option
-					Text(value="Number") number as Option
-					Text(value="Image") image as Option
-					Text(value="File") file as Option
-					Text(value="Date") date as Option
-				Block catalogSection as Collapsible Labeled("catalog widgets")
-					Text(value="Collection") collection as Option
-					Text(value="Catalog") catalog as Option
-					Text(value="Grouping") sorting as Option
-					Text(value="Sorting") grouping as Option
-				Block operationSection as Collapsible Labeled("operation widgets")
-					Text(value="OpenCatalogOperation") openCatalogOperation as Option
-					Text(value="OpenDialogOperation") openDialogOperation as Option
-					Text(value="OpenExternalDialogOperation") openExternalDialogOperation as Option
-					Text(value="ExportOperation") exportOperation as Option
-					Text(value="ExportSelectionOperation") exportSelectionOperation as Option
-					Text(value="DownloadOperation") downloadOperation as Option
-					Text(value="DownloadSelectionOperation") downloadSelectionOperation as Option
-					Text(value="TaskOperation") taskOperation as Option
-					Text(value="TaskSelectionOperation") taskSelectionOperation as Option
-					Text(value="PreviewOperation") previewOperation as Option
-					Text(value="SearchOperation") searchOperation as Option
-				Block otherSection as Labeled(label="other widgets")
-					Text(value="Block") block as Option
-					Text(value="Chart") chart as Option
-					Text(value="Chip") chip as Option
-					Text(value="Card") card as Option
-					Text(value="Snackbar") snackbar as Option
-					Text(value="Progress") progress as Option
-					Text(value="Wizard") wizard as Option
-
-		Block(layout=Vertical Flexible, format=air) panels
-			Block textPanel as Conditional(docsTemplate.body.header.menu.basicSection.text) > Block textBlock as Moldable(widgetMold)
-			Block numberPanel as Conditional(docsTemplate.body.header.menu.basicSection.number) > Block numberBlock as Moldable(widgetMold)
-			Block imagePanel as Conditional(docsTemplate.body.header.menu.basicSection.image) > Block imageBlock as Moldable(widgetMold)
-			Block filePanel as Conditional(docsTemplate.body.header.menu.basicSection.file) > Block fileBlock as Moldable(widgetMold)
-			Block datePanel as Conditional(docsTemplate.body.header.menu.basicSection.date) > Block dateBlock as Moldable(widgetMold)
-
-			Block collectionPanel as Conditional(docsTemplate.body.header.menu.catalogSection.collection) > Block collectionBlock as Moldable(widgetMold)
-			Block catalogPanel as Conditional(docsTemplate.body.header.menu.catalogSection.catalog) > Block catalogBlock as Moldable(widgetMold)
-
-			Block blockPanel as Conditional(docsTemplate.body.header.menu.otherSection.block) > Block blockBlock as Moldable(widgetMold)
-			Block chartPanel as Conditional(docsTemplate.body.header.menu.otherSection.chart) > Block chartBlock as Moldable(widgetMold)
