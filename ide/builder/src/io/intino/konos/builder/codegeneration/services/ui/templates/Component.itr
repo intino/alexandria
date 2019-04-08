@@ -3,7 +3,7 @@ def type(reference) trigger(declaration)
 end
 
 def type(reference)
-	if($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(component & child & moldableblock & multipleblock) trigger(declarations)
@@ -30,10 +30,12 @@ def type(component & child) trigger(declaration)
 end
 
 def type(method & collection)
+	@Override
 	public void addAll(java.util.List<$modelClass> items) {
 		items.forEach(this::add);
 	}
 
+	@Override
 	public void add($modelClass item) {
 		$mold+firstUpperCase mold = new $mold+firstUpperCase(($box+firstUpperCase~Box)box());
 		mold.id(java.util.UUID.randomUUID().toString());
@@ -83,6 +85,10 @@ def type(component & child) trigger(class)
 	}
 end
 
+def type(extends & collection)
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass>
+end
+
 def type(extends & moldableblock)
 	$type+firstUpperCase
 end
@@ -107,23 +113,26 @@ def type(component & child) trigger(blockChildReferences)
 	$component+blockChildReferences...[$NL]]
 end
 
+def type(component & child & moldableblock & multipleblock) trigger(childReferences)
+end
+
 def type(component & child) trigger(childReferences)
 	$name = [$ancestors...[.].]$name;[
 	$component+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(moldReferences)
-	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+moldChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockReferences)
-	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(references)
-	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+childReferences...[$NL]]
 end
 
@@ -136,11 +145,11 @@ def type(component & child & moldableblock & multipleblock)
 end
 
 def type(component & child & moldableblock)
-	if($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+	if ($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
 def type(component & child)
-	if($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
 def type(facet)
@@ -205,8 +214,8 @@ def type(properties & text) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	source("$source");
-	pageSize("$pageSize");
+	source(new io.intino.alexandria.ui.sources.$source+firstUpperCase());
+	pageSize($pageSize);
 end
 
 def type(properties & operation) trigger(common)

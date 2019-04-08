@@ -1,7 +1,8 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.molds.WidgetMold;
+import io.intino.alexandria.schemas.Widget;
+import io.intino.alexandria.ui.displays.molds.WidgetSummaryMold;
 import io.intino.alexandria.ui.documentation.Model;
 
 public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
@@ -13,34 +14,64 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     @Override
     public void init() {
         super.init();
-        update();
-        menu.select("Block");
+        addDataWidgets();
+        addCatalogWidgets();
+        addOtherWidgets();
     }
 
-    private void update() {
-        updateDataWidgets();
-        updateOtherWidgets();
+    private void addDataWidgets() {
+        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Text)));
+        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Number)));
+        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Image)));
+        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.File)));
+        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Date)));
     }
 
-    private void updateDataWidgets() {
-        updateMold(panels.textPanel.textBlock, Model.WidgetType.Text);
-        panels.textPanel.onShow((event) -> updateMold(panels.textPanel.textBlock, Model.WidgetType.Text));
-        panels.numberPanel.onShow((event) -> updateMold(panels.numberPanel.numberBlock, Model.WidgetType.Number));
-        panels.imagePanel.onShow((event) -> updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image));
-        panels.filePanel.onShow((event) -> updateMold(panels.filePanel.fileBlock, Model.WidgetType.File));
-        panels.datePanel.onShow((event) -> updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date));
-        panels.blockPanel.onShow((event) -> updateMold(panels.blockPanel.blockBlock, Model.WidgetType.Block));
-        panels.collectionPanel.onShow((event) -> updateMold(panels.collectionPanel.collectionBlock, Model.WidgetType.Collection));
+    private void addCatalogWidgets() {
+        body.catalogBlock.addCatalogWidgetsMold(moldOf(Model.widget(Model.WidgetType.Collection)));
     }
 
-    private void updateOtherWidgets() {
-        panels.chartPanel.onShow((event) -> updateMold(panels.chartPanel.chartBlock, Model.WidgetType.Chart));
+    private void addOtherWidgets() {
+        body.otherBlock.addOtherWidgetsMold(moldOf(Model.widget(Model.WidgetType.Block)));
+        body.otherBlock.addOtherWidgetsMold(moldOf(Model.widget(Model.WidgetType.Chart)));
     }
 
-    private void updateMold(WidgetMold mold, Model.WidgetType type) {
-        mold.widget = Model.widget(type);
-        mold.refresh();
+    private WidgetSummaryMold moldOf(Widget widget) {
+        WidgetSummaryMold result = new WidgetSummaryMold(box());
+        result.widget = widget;
+        return result;
     }
 
+    //    @Override
+//    public void init() {
+//        super.init();
+//        update();
+//        menu.select("Block");
+//    }
+//
+//    private void update() {
+//        updateDataWidgets();
+//        updateOtherWidgets();
+//    }
+//
+//    private void updateDataWidgets() {
+//        updateMold(panels.textPanel.textBlock, Model.WidgetType.Text);
+//        panels.textPanel.onShow((event) -> updateMold(panels.textPanel.textBlock, Model.WidgetType.Text));
+//        panels.numberPanel.onShow((event) -> updateMold(panels.numberPanel.numberBlock, Model.WidgetType.Number));
+//        panels.imagePanel.onShow((event) -> updateMold(panels.imagePanel.imageBlock, Model.WidgetType.Image));
+//        panels.filePanel.onShow((event) -> updateMold(panels.filePanel.fileBlock, Model.WidgetType.File));
+//        panels.datePanel.onShow((event) -> updateMold(panels.datePanel.dateBlock, Model.WidgetType.Date));
+//        panels.blockPanel.onShow((event) -> updateMold(panels.blockPanel.blockBlock, Model.WidgetType.Block));
+//        panels.collectionPanel.onShow((event) -> updateMold(panels.collectionPanel.collectionBlock, Model.WidgetType.Collection));
+//    }
+//
+//    private void updateOtherWidgets() {
+//        panels.chartPanel.onShow((event) -> updateMold(panels.chartPanel.chartBlock, Model.WidgetType.Chart));
+//    }
+//
+//    private void updateMold(WidgetMold mold, Model.WidgetType type) {
+//        mold.widget = Model.widget(type);
+//        mold.refresh();
+//    }
 
 }

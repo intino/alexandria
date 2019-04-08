@@ -28,13 +28,13 @@ end
 
 def type(parameter) trigger(request)
 	$name = function(value) {
-		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, v: $parameter});
+		$method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.context(), v: $parameter});
 	}
 end
 
 def trigger(request)
     $name = ([$parameterSignature]) => {
-        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id[, v: $parameter]});
+        $method({ op: "$name", s: "$display+lowercase", d: this.element.props.id, o: this.element.props.context()[, v: $parameter]});
     };
 end
 

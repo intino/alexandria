@@ -14,7 +14,7 @@ public class OpenPageRenderer extends OperationRenderer<OpenPage> {
 	@Override
 	public Frame properties() {
 		Frame properties = super.properties();
-		properties.addSlot("path", element.page().path());
+		if (element.page() != null) properties.addSlot("path", element.page().path());
 		return properties;
 	}
 

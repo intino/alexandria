@@ -4,10 +4,10 @@ use Theme
 use Schemas
 
 Dataframe iris as CSV("data/iris.csv")
-Datasource(modelClass = "io.intino.alexandria.ui.documentation.Item") items
+Datasource(modelClass="io.intino.alexandria.ui.documentation.Item") items
 
 Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated
-	Text(value="Date widget", format=h3) title
+	Text(value="Widget", format=h3) title
 
 	Block examples
 		Text(value="Examples", format=h5)

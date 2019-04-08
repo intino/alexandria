@@ -3,12 +3,13 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.ChartInfo;
 import io.intino.alexandria.ui.displays.components.chart.ChartEngine;
-import io.intino.alexandria.ui.displays.components.chart.DataSource;
+import io.intino.alexandria.ui.displays.components.chart.Dataframe;
+import io.intino.alexandria.ui.displays.components.chart.DataframeLoader;
 import io.intino.alexandria.ui.displays.components.chart.Output;
 import org.eclipse.jetty.websocket.common.frames.DataFrame;
 
 public class Chart<B extends Box> extends AbstractChart<B> {
-    private DataFrame input;
+    private Dataframe input;
     private String query;
     private ChartEngine engine = new ChartEngine();
     private Output output = Output.Html;
@@ -17,12 +18,12 @@ public class Chart<B extends Box> extends AbstractChart<B> {
         super(box);
     }
 
-    public DataFrame input() {
+    public Dataframe input() {
         return input;
     }
 
-    public Chart<B> input(DataSource datasource) {
-        this.input = datasource.load();
+    public Chart<B> input(DataframeLoader loader) {
+        this.input = loader.load();
         return this;
     }
 
@@ -36,7 +37,7 @@ public class Chart<B extends Box> extends AbstractChart<B> {
         return this;
     }
 
-    public Chart<B> update(DataFrame input) {
+    public Chart<B> update(Dataframe input) {
         this.input = input;
         this.refresh();
         return this;
@@ -45,7 +46,7 @@ public class Chart<B extends Box> extends AbstractChart<B> {
     @Override
     public void refresh() {
         try {
-            DataFrame input = input();
+            Dataframe input = input();
             if (input == null) return;
             notifier.showLoading();
             String result = execute();

@@ -31,4 +31,8 @@ public class OpenPage<B extends Box> extends AbstractOpenPage<B> {
 		notifier.redirect(path);
     }
 
+    public void refresh() {
+    	notifier.refresh(title);
+	}
+
 }
