@@ -4,7 +4,12 @@ import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
 import 'alexandria-ui-elements/res/styles/layout.css';
-export const ChartPlotly = React.lazy(() => import("./chart/ChartPlotly"));
+
+export const ChartPlotly = React.lazy(() => {
+	return new Promise(resolve => {
+		setTimeout(() => resolve(import("./chart/ChartPlotly"), 300));
+	});
+});
 
 const styles = theme => ({
 	error: {

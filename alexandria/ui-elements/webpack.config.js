@@ -7,8 +7,13 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                loader: "babel-loader",
-                options: { rootMode: "upward" }
+                exclude: /(node_modules)/,
+                options: {
+                    rootMode: "upward",
+                    presets: ['@babel/preset-env'],
+                    cacheDirectory: true
+                },
+                loader: "babel-loader"
             },
             {
                 test: /\.html$/,

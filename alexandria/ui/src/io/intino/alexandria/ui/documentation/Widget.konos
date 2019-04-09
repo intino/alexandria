@@ -10,7 +10,7 @@ Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Wid
 	Text(value="Widget", format=h3) title
 
 	Block examples
-		Text(value="Examples", format=h5)
+		Text(value="Examples", format=h5 underline)
 		Block textExamples as Conditional > Block as Moldable(textExamplesMold)
 		Block numberExamples as Conditional > Block as Moldable(numberExamplesMold)
 		Block fileExamples as Conditional > Block as Moldable(fileExamplesMold)
@@ -21,16 +21,16 @@ Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Wid
 		Block collectionExamples as Conditional > Block as Moldable(collectionExamplesMold)
 
 	Block facets
-		Text(value="Facets", format=h5)
+		Text(value="Facets", format=h5 underline)
 		Text facetsNames
 	Block properties
-		Text(value="Properties", format=h5)
+		Text(value="Properties", format=h5 underline)
 		Block property as Multiple(noItemsMessage="no properties") Moldable(propertyMold)
 	Block methods
-		Text(value="Methods", format=h5)
+		Text(value="Methods", format=h5 underline)
 		Block method as Multiple(noItemsMessage="no methods") Moldable(methodMold)
 	Block
-		Text(value="Events", format=h5)
+		Text(value="Events", format=h5 underline)
 		Frame(display=eventsDisplay) events
 
 Mold(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated

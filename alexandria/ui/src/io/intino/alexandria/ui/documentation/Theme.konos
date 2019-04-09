@@ -25,6 +25,7 @@ Format("color:'#888',fontSize:'10px',marginTop:'-7px',position:'absolute'") face
 Format("whiteSpace:'nowrap'") valuesLabelFormat
 Format("border:'1px solid',width:'100%'") bordered
 Format("minHeight:'300px'") paperFormat
+Format("borderBottom:'1px dotted #ddd',width:'100%'") underline
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle
