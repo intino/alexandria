@@ -5,7 +5,12 @@ import TextEditableCodeNotifier from "../../../gen/displays/notifiers/TextEditab
 import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEditableCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
 import {CircularProgress} from "@material-ui/core";
-const TextEditableCodeAce = React.lazy(() => import("./texteditablecode/TextEditableCodeAce"));
+
+const TextEditableCodeAce = React.lazy(() => {
+	return new Promise(resolve => {
+		setTimeout(() => resolve(import("./texteditablecode/TextEditableCodeAce"), 300));
+	});
+});
 
 const styles = theme => ({
 	editor: {

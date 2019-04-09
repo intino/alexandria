@@ -8,10 +8,9 @@ import ListRequester from "../../../gen/displays/requesters/ListRequester";
 
 const styles = theme => ({});
 
-const Item = ({ index, scrolling, style }) => {
-	if (scrolling) return "scrolling";
-	return (<div style={style} key={index}>Row {index}</div>);
-	//{React.createElement(Elements[instance.tp], instance.pl)}
+const Item = ({ index, isScrolling, style }) => {
+	return (<div style={style} key={index}>{isScrolling ? "scrolling" : "Row " + index}</div>);
+	// return (<div style={style} key={index}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);//{React.createElement(Elements[instance.tp], instance.pl)}
 };
 
 class List extends AbstractList {
@@ -27,7 +26,7 @@ class List extends AbstractList {
 
 	render() {
 		return (
-			<FixedSizeList height={150} width={300} itemCount={100} itemSize={35}>{Item}</FixedSizeList>
+			<FixedSizeList useIsScrolling height={150} width={300} itemCount={100} itemSize={35}>{Item}</FixedSizeList>
 		);
 	};
 
