@@ -10,7 +10,7 @@ import static java.util.Collections.singletonList;
 public class BlockWidget extends BaseWidget {
 
 	public BlockWidget() {
-		super();
+		super("With this widget you can organize your page in order to define the page layout.");
 		facets(asList("Paper", "Badge", "Conditional", "Absolute", "Relative", "Parallax", "Moldable"));
 	}
 

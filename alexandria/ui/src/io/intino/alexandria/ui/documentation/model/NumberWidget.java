@@ -12,7 +12,7 @@ import static java.util.Collections.singletonList;
 public class NumberWidget extends BaseWidget {
 
 	public NumberWidget() {
-		super();
+		super("Render formatted numbers with prefixes or suffixes like currency approach.");
 		facets(singletonList("Editable"));
 	}
 

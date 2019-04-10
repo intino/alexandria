@@ -29,18 +29,18 @@ export default class Component extends AlexandriaDisplay {
         return result;
     };
 
-    _addSpacing(style) {
-        if (this.props.spacingStyle == null) return style;
-        if (style == null) style = {};
-        let spacingStyle = this.props.spacingStyle;
-        style.marginBottom = spacingStyle.bottom + "px";
-        style.marginRight = spacingStyle.right + "px";
-        return style;
-    }
-
     applyStyles = (styles, to) => {
         if (styles == null) return;
         for (let rule in styles) to[rule] = styles[rule];
+    };
+
+    _addSpacing(style) {
+        if (style == null) style = {};
+        if (this.props.spacingstyle == null) return style;
+        const spacingStyle = this.props.spacingstyle;
+        style.marginBottom = spacingStyle.bottom + "px";
+        style.marginRight = spacingStyle.right + "px";
+        return style;
     };
 
     _widthDefined = () => {

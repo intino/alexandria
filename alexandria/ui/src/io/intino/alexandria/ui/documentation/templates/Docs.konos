@@ -13,18 +13,20 @@ Template docsTemplate as Decorated
 				Text(value="docs")
 
 	Block(layout=Horizontal CenterCenter Wrap, spacing=DP40, format=containerAir) body
-		Block(format=h5 paperFormat) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
 			Block dataWidgets as Multiple(noItemsMessage="no widgets") Moldable(widgetSummaryMold)
-		Block(format=h5 paperFormat) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
 			Block catalogWidgets as Multiple(noItemsMessage="no widgets") Moldable(widgetSummaryMold)
-		Block(format=h5 paperFormat) operationBlock as Paper Relative(width=40%) Labeled("operation widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Paper Relative(width=40%) Labeled("operation widgets")
 			Block operationWidgets as Multiple(noItemsMessage="no widgets") Moldable(widgetSummaryMold)
-		Block(format=h5 paperFormat) otherBlock as Paper Relative(width=40%) Labeled("other widgets")
+		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Paper Relative(width=40%) Labeled("other widgets")
 			Block otherWidgets as Multiple(noItemsMessage="no widgets") Moldable(widgetSummaryMold)
 
 
 Mold(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
-	OpenPage(title = "", page = UiElements.widgetType) title as Link
+	OpenPage(title = "", page = UiElements.widgetType, format=h6) title as Link
+	Text description
+	Text facets as Multiple Highlight("white","#679164")
 
 
 //Template docsTemplate as Decorated

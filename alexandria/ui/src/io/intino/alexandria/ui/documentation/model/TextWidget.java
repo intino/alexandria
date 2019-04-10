@@ -13,7 +13,7 @@ import static java.util.Collections.singletonList;
 public class TextWidget extends BaseWidget {
 
 	public TextWidget() {
-		super();
+		super("Use this widget to present text content in your user interface");
 		facets(asList("Multiple", "Code", "Editable"));
 	}
 

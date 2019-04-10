@@ -11,7 +11,7 @@ import static java.util.Collections.singletonList;
 public class DateWidget extends BaseWidget {
 
 	public DateWidget() {
-		super();
+		super("No worries about rendering dates in client side. This widget enables date rendering in a easy way.");
 		facets(asList("Multiple", "Code", "Editable"));
 	}
 

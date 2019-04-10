@@ -11,7 +11,7 @@ Format("color:'black',textShadow:'2px 2px 2px #fff'") h2
 Format("") h3
 Format("") h4
 Format("") h5
-Format("") h6
+Format("lineHeight:'17pt'") h6
 Format("") body1
 Format("") body2
 Format("color:'white'") white

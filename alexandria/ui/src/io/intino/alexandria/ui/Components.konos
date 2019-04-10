@@ -102,6 +102,8 @@ Component openPage as Decorated
 Component list as Decorated
 	Request nextPage
 
+Component multiple as Decorated
+
 Component grid as Decorated
 Component brochure as Decorated
 Component map as Decorated

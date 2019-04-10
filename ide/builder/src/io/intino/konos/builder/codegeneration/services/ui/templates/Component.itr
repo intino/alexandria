@@ -29,6 +29,16 @@ def type(component & child) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
+def type(method & multiple)
+	@Override
+	public void add($objectType value) {
+		io.intino.alexandria.ui.displays.components.$componentType child = new io.intino.alexandria.ui.displays.components.$componentType(box());
+		child.id(java.util.UUID.randomUUID().toString());
+		add(child, "$name");
+		child.update(value);
+	}
+end
+
 def type(method & collection)
 	@Override
 	public void addAll(java.util.List<$modelClass> items) {
@@ -83,6 +93,10 @@ def type(component & child) trigger(class)
 		[$component+class...[$NL]]
 		[$component+method...[$NL]]
 	}
+end
+
+def type(extends & multiple)
+	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, io.intino.alexandria.ui.displays.components.$componentType, $objectType>
 end
 
 def type(extends & collection)

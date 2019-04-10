@@ -52,15 +52,13 @@ export default class Block extends AbstractBlock {
 	};
 
 	_renderChildren = () => {
-		const withBottom = this._is("vertical") || (this._is("horizontal") && this._is("wrap"));
 		const hasSpacing = this._hasSpacing();
 
 		return React.Children.map(this.props.children, (child, i) => {
 			if (hasSpacing) {
-				let spacingSize = this.state.spacing != null ? this.state.spacing : this.props.spacing;
-				let spacingStyle = { right: spacingSize };
-				if (withBottom) spacingStyle.bottom = spacingSize;
-				return React.cloneElement(child, { spacingStyle: spacingStyle });
+				let spacing = this._spacing();
+				let props = child.type !== "div" ? { spacingstyle: spacing } : { style: { marginBottom: spacing.bottom + "px", marginRight: spacing.right + "px" } };
+				return React.cloneElement(child, props);
 			}
 			return child;
 		});
@@ -94,6 +92,15 @@ export default class Block extends AbstractBlock {
 	_is = (layout) => {
 		if (this.state.layout == null) return false;
 		return (" " + this.state.layout + " ").indexOf(" " + layout + " ") !== -1;
+	};
+
+	_spacing() {
+		if (!this._hasSpacing()) return null;
+		const withBottom = this._is("vertical") || (this._is("horizontal") && this._is("wrap"));
+		let spacingSize = this.state.spacing != null ? this.state.spacing : this.props.spacing;
+		let spacingStyle = { right: spacingSize };
+		if (withBottom) spacingStyle.bottom = spacingSize;
+		return spacingStyle;
 	};
 
 	_hasSpacing = () => {
