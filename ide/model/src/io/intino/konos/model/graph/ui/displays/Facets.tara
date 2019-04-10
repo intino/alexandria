@@ -59,6 +59,12 @@ Facet Infinite extends Behavior on ChildComponents.Collection
 
 Facet Multiple on Block
 	var string noItemsMessage = empty
+Facet Multiple on ChildComponents.Text
+	var word:{Vertical Horizontal} layout = Horizontal
+
+Facet Highlight on ChildComponents.Text
+	var string textColor
+	var string backgroundColor
 
 // CATALOG FACETS
 Facet Temporal on Catalog

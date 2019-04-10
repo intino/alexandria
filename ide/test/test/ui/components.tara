@@ -4,7 +4,9 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(docsTemplate)
 
 Template docsTemplate as Decorated
-	Block dataBlock as Paper Labeled("data widgets") Relative(width=50%)
+	Text a
+	Text b as Highlight("red", "white")
+	Text c as Multiple Highlight("red", "white")
 
 Theme
 	Primary(color = "") 

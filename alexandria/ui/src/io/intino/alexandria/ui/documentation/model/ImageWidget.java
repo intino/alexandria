@@ -12,7 +12,7 @@ import static java.util.Collections.singletonList;
 public class ImageWidget extends BaseWidget {
 
 	public ImageWidget() {
-		super();
+		super("This widget allows preview images or create avatars from text.");
 		facets(asList("Avatar", "Absolute", "Relative"));
 	}
 

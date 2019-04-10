@@ -12,7 +12,7 @@ import static java.util.Collections.singletonList;
 public class FileWidget extends BaseWidget {
 
 	public FileWidget() {
-		super();
+		super("This widget allows both uploading or preview files of different types.");
 		facets(asList("Absolute", "Relative"));
 	}
 

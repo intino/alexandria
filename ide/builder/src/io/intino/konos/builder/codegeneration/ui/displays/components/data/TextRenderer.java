@@ -5,6 +5,7 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
 import io.intino.konos.model.graph.ChildComponents.Text;
 import io.intino.konos.model.graph.code.childcomponents.CodeText;
+import io.intino.konos.model.graph.highlight.childcomponents.HighlightText;
 import org.siani.itrules.model.Frame;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
@@ -35,6 +36,7 @@ public class TextRenderer extends ComponentRenderer<Text> {
 	@Override
 	public Frame properties() {
 		Frame result = super.properties();
+		addHighlight(result);
 		result.addSlot("mode", element.mode().name().toLowerCase());
 		if (element.isCode()) {
 			result.addTypes(CodeText.class.getSimpleName());
@@ -45,6 +47,13 @@ public class TextRenderer extends ComponentRenderer<Text> {
 			result.addSlot("defaultValue", value);
 		}
 		return result;
+	}
+
+	private void addHighlight(Frame result) {
+		if (!element.isHighlight()) return;
+		HighlightText highlight = element.asHighlight();
+		Frame highlightFrame = new Frame("highlight").addSlot("text", highlight.textColor()).addSlot("background", highlight.backgroundColor());
+		result.addSlot("highlight", highlightFrame);
 	}
 
 	@Override

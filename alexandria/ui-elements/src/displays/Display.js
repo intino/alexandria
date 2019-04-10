@@ -33,18 +33,17 @@ export default class Display extends PassiveView {
         this._updateInstancesState(container, instances.splice(index, 1));
     };
 
-    renderInstances = (container, emptyMessage) => {
+    renderInstances = (container, props, style) => {
         if (container == null) container = "__elements";
-        var instances = this.state[container];
+        let instances = this.state[container];
         if (instances == null || instances.length <= 0) {
-            if (emptyMessage) return (<Typography>{this.translate(emptyMessage)}</Typography>);
+            if (props != null && props.noItemsMessage != null) return (<Typography>{this.translate(props.noItemsMessage)}</Typography>);
             return;
         }
         return instances.map((instance, index) => {
-            instance.pl.context = () => {
-                return instance.pl.o
-            };
-            return (<div key={index}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
+            instance.pl.context = () => { return instance.pl.o};
+            this.copyProps(props, instance.pl);
+            return (<div key={index} style={style}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
         });
     };
 
@@ -57,6 +56,15 @@ export default class Display extends PassiveView {
         let url = configuration.baseUrl;
         if (configuration.basePath !== "") url += basePath;
         return url + path;
+    };
+
+    copyProps = (from, to, excludedList) => {
+        excludedList = excludedList != null ? excludedList : "";
+        excludedList += "id,context";
+        for (var index in from) {
+            if (excludedList != null && excludedList.indexOf(index) !== -1) continue;
+            to[index] = from[index];
+        }
     };
 
     _updateInstancesState = (container, instances) => {

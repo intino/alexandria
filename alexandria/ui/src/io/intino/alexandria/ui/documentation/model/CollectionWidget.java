@@ -8,7 +8,7 @@ import static java.util.Arrays.asList;
 public class CollectionWidget extends BaseWidget {
 
 	public CollectionWidget() {
-		super();
+		super("Render list of items of same type in a paged or infinite view.");
 		facets(asList("List", "Grid", "Table", "Map", "Detail"));
 	}
 

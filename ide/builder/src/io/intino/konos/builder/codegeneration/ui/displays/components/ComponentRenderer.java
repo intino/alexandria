@@ -19,6 +19,7 @@ import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
+import io.intino.konos.model.graph.multiple.childcomponents.MultipleText;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
@@ -27,6 +28,7 @@ import org.siani.itrules.model.Frame;
 import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.model.graph.KonosGraph.isMultiple;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
@@ -71,6 +73,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
 		if (component.color() != null && !component.color().isEmpty()) result.addSlot("color", element.color());
 		if (component.i$(AbstractLabeled.class)) result.addSlot("label", component.a$(AbstractLabeled.class).label());
+		if (isMultiple(component)) result.addSlot("instances", nameOf(component));
+		if (component.i$(MultipleText.class)) result.addSlot("multipleLayout", component.a$(MultipleText.class).layout().name());
 		if (component.format() != null) {
 			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
 			result.addSlot("format", format);
@@ -179,6 +183,16 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			frame.addTypes(MultipleBlock.class.getSimpleName());
 			String message = element.a$(MultipleBlock.class).noItemsMessage();
 			if (message != null) frame.addSlot("noItemsMessage", message);
+		}
+		else if (element.i$(MultipleText.class)) {
+			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", "multiple");
+			methodsFrame.addSlot("componentType", "Text");
+			methodsFrame.addSlot("objectType", "String");
+			methodsFrame.addSlot("name", nameOf(element));
+			frame.addSlot("methods", methodsFrame);
+			frame.addTypes("multiple");
+			frame.addSlot("componentType", "Text");
+			frame.addSlot("objectType", "String");
 		}
 
 		if (element.i$(MoldableBlock.class)) {

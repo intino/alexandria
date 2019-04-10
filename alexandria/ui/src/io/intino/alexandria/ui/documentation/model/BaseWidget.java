@@ -11,7 +11,8 @@ import static io.intino.alexandria.ui.documentation.Model.property;
 
 public abstract class BaseWidget extends Widget {
 
-	public BaseWidget() {
+	public BaseWidget(String description) {
+		description(description);
 		addProperties();
 		addMethods();
 		addEvents();

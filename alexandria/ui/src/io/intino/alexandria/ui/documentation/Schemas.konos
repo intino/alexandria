@@ -1,6 +1,7 @@
 dsl Konos
 
 Schema Widget
+	Attribute description as Text
 	Attribute facets as Text List
 	Attribute propertyList as Object(Property) List
 	Attribute methodList as Object(Method) List
