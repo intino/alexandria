@@ -12,7 +12,7 @@ Template docsTemplate as Decorated
 				OpenPage(page=UiElements.home, title="home") as Link
 				Text(value="docs")
 
-	Block(layout=Horizontal CenterCenter Wrap, spacing=DP40, format=containerAir) body
+	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAir) body
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
 			Block dataWidgets as Multiple(noItemsMessage="no widgets") Moldable(widgetSummaryMold)
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
@@ -25,8 +25,8 @@ Template docsTemplate as Decorated
 
 Mold(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
 	OpenPage(title = "", page = UiElements.widgetType, format=h6) title as Link
+	Text(format=body2) facets as Multiple Highlight("white","#679164")
 	Text description
-	Text facets as Multiple Highlight("white","#679164")
 
 
 //Template docsTemplate as Decorated

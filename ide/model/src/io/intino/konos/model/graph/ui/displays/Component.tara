@@ -50,6 +50,9 @@ Concept ChildComponents
 	Concept Tooltip extends Component
 	Concept User extends Component
 	Concept KPI extends Component
+	Concept Spinner extends Component
+		var word:{Bar Circle Hash Ring Rise} mode = Rise
+
 	Concept Chart extends Component
 		var Dataframe input
 		var word:{Image Html} output = Html

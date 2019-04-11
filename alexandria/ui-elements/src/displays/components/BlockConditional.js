@@ -4,7 +4,6 @@ import AbstractBlockConditional from "../../../gen/displays/components/AbstractB
 import BlockConditionalNotifier from "../../../gen/displays/notifiers/BlockConditionalNotifier";
 import BlockConditionalRequester from "../../../gen/displays/requesters/BlockConditionalRequester";
 import Block from "./Block";
-import {CircularProgress} from "@material-ui/core";
 
 export default class BlockConditional extends AbstractBlockConditional {
 

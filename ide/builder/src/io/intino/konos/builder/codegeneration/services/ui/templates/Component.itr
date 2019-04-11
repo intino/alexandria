@@ -41,16 +41,11 @@ end
 
 def type(method & collection)
 	@Override
-	public void addAll(java.util.List<$modelClass> items) {
-		items.forEach(this::add);
-	}
-
-	@Override
 	public void add($modelClass item) {
 		$mold+firstUpperCase mold = new $mold+firstUpperCase(($box+firstUpperCase~Box)box());
 		mold.id(java.util.UUID.randomUUID().toString());
 		mold.item = item;
-		$owner.this.add(mold, "items");
+		addPromise(mold);
 	}
 end
 
@@ -176,6 +171,10 @@ end
 
 def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
+end
+
+def type(implements & timeconsumingmold)
+	implements io.intino.alexandria.ui.displays.components.mold.TimeConsuming
 end
 
 def type(implements)

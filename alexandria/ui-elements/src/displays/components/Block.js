@@ -5,7 +5,6 @@ import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
-import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class Block extends AbstractBlock {
@@ -71,6 +70,7 @@ export default class Block extends AbstractBlock {
 		layout = layout.replace("centercenter", "center-center");
 		layout = layout.replace("preverse", "p-reverse");
 		layout = layout.replace("lreverse", "l-reverse");
+		layout = layout.replace("rjustified", "r-justified");
 		layout = layout.replace("tjustified", "t-justified");
 		layout = layout.replace("djustified", "d-justified");
 		layout = layout.replace("nowrap", "no-wrap");

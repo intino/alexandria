@@ -4,9 +4,7 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(docsTemplate)
 
 Template docsTemplate as Decorated
-	Text a
-	Text b as Highlight("red", "white")
-	Text c as Multiple Highlight("red", "white")
+	Spinner(color="red", mode=Circle)
 
 Theme
 	Primary(color = "") 

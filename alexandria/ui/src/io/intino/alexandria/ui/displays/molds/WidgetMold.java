@@ -23,10 +23,14 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     @Override
     public void refresh() {
         super.refresh();
+        showLoading();
         if (widget == null) return;
         title.update(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
+        description.update(I18n.translate(widget.description(), language()));
+        highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();
+		hideLoading();
     }
 
     private void updateExamplesVisibility() {

@@ -9,6 +9,7 @@ import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.moldable.MoldableBlock;
+import io.intino.konos.model.graph.timeconsuming.TimeConsumingMold;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -37,6 +38,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
 		addImports(frame);
+		addImplements(frame);
+		addMethods(frame);
 		addRenderTagFrames(frame);
 		addDecoratedFrames(frame);
 		frame.addSlot("componentType", element.components().stream().map(this::typeOf).distinct().map(type -> new Frame().addSlot("componentType", type)).toArray(Frame[]::new));
@@ -51,6 +54,16 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private void addImports(Frame frame) {
 		if (element.graph().moldList().size() > 0) frame.addSlot("moldsImport", baseFrame().addTypes("moldsImport"));
 		if (element.graph().blockList().size() > 0) frame.addSlot("blocksImport", baseFrame().addTypes("blocksImport"));
+	}
+
+	protected void addImplements(Frame frame) {
+		if (element.i$(TimeConsumingMold.class)) frame.addSlot("implements", new Frame("implements", TimeConsumingMold.class.getSimpleName()));
+	}
+
+	protected void addMethods(Frame frame) {
+		if (!element.i$(TimeConsumingMold.class)) return;
+		frame.addSlot("baseMethod", "renderTimeConsuming");
+		frame.addSlot("methods", new Frame("methods", TimeConsumingMold.class.getSimpleName()));
 	}
 
 	protected void addRenderTagFrames(Frame frame) {

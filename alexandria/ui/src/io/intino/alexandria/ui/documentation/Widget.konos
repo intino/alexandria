@@ -6,32 +6,35 @@ use Schemas
 Dataframe iris as CSV("data/iris.csv")
 Datasource(modelClass="io.intino.alexandria.ui.documentation.Item") items
 
-Mold(layout=Vertical, spacing=DP24, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated
+Mold(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated TimeConsuming
 	Text(value="Widget", format=h3) title
+	Text(format=body1) highlightFacets as Multiple Highlight("white","#679164")
+	Text(format=body1 airBottom) description
 
-	Block examples
-		Text(value="Examples", format=h5 underline)
-		Block textExamples as Conditional > Block as Moldable(textExamplesMold)
-		Block numberExamples as Conditional > Block as Moldable(numberExamplesMold)
-		Block fileExamples as Conditional > Block as Moldable(fileExamplesMold)
-		Block imageExamples as Conditional > Block as Moldable(imageExamplesMold)
-		Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
-		Block chartExamples as Conditional > Block as Moldable(chartExamplesMold)
-		Block blockExamples as Conditional > Block as Moldable(blockExamplesMold)
-		Block collectionExamples as Conditional > Block as Moldable(collectionExamplesMold)
+	Block(layout=Vertical, spacing=DP24)
+		Block examples
+			Text(value="Examples", format=h5 underline)
+			Block textExamples as Conditional > Block as Moldable(textExamplesMold)
+			Block numberExamples as Conditional > Block as Moldable(numberExamplesMold)
+			Block fileExamples as Conditional > Block as Moldable(fileExamplesMold)
+			Block imageExamples as Conditional > Block as Moldable(imageExamplesMold)
+			Block dateExamples as Conditional > Block as Moldable(dateExamplesMold)
+			Block chartExamples as Conditional > Block as Moldable(chartExamplesMold)
+			Block blockExamples as Conditional > Block as Moldable(blockExamplesMold)
+			Block collectionExamples as Conditional > Block as Moldable(collectionExamplesMold)
 
-	Block facets
-		Text(value="Facets", format=h5 underline)
-		Text facetsNames
-	Block properties
-		Text(value="Properties", format=h5 underline)
-		Block property as Multiple(noItemsMessage="no properties") Moldable(propertyMold)
-	Block methods
-		Text(value="Methods", format=h5 underline)
-		Block method as Multiple(noItemsMessage="no methods") Moldable(methodMold)
-	Block
-		Text(value="Events", format=h5 underline)
-		Frame(display=eventsDisplay) events
+		Block facets
+			Text(value="Facets", format=h5 underline)
+			Text facetsNames
+		Block properties
+			Text(value="Properties", format=h5 underline)
+			Block property as Multiple(noItemsMessage="no properties") Moldable(propertyMold)
+		Block methods
+			Text(value="Methods", format=h5 underline)
+			Block method as Multiple(noItemsMessage="no methods") Moldable(methodMold)
+		Block
+			Text(value="Events", format=h5 underline)
+			Frame(display=eventsDisplay) events
 
 Mold(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
@@ -383,6 +386,7 @@ Mold(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 						List(source\=items, mold\=itemMold) collection1
 						=========
 
-Mold(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold
+Mold(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
+	Image avatar as Avatar("")
 	Text label
 

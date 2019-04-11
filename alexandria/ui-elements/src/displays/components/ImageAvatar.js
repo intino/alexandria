@@ -6,8 +6,8 @@ import ImageAvatarRequester from "../../../gen/displays/requesters/ImageAvatarRe
 
 const styles = theme => ({
 	value: {
-		minHeight: "100px",
-		minWidth: "100px",
+		minHeight: "50px",
+		minWidth: "50px",
 		borderRadius: "100px"
 	}
 });
@@ -36,8 +36,8 @@ class ImageAvatar extends AbstractImageAvatar {
 	style() {
 		var result = super.style();
 		if (result == null) result = {};
-		if (this.props.width != null) result.width = this.props.width;
-		if (this.props.height != null) result.height = this.props.height;
+		result.width = this.props.width != null ? this.props.width : "50px";
+		result.height = this.props.height != null ? this.props.height : "50px";
 		return result;
 	};
 

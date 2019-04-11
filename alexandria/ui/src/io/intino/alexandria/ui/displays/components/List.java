@@ -23,7 +23,10 @@ public abstract class List<B extends Box, Item> extends AbstractList<B> {
         return this;
     }
 
-    public abstract void addAll(java.util.List<Item> items);
+    public void addAll(java.util.List<Item> items) {
+        items.forEach(this::add);
+    }
+
     public abstract void add(Item item);
 
     @Override
@@ -34,6 +37,10 @@ public abstract class List<B extends Box, Item> extends AbstractList<B> {
 
     public void nextPage() {
         addAll(pageManager.next());
+    }
+
+    public void notifyItemsRendered() {
+        promisedChildren().forEach(this::register);
     }
 
 }

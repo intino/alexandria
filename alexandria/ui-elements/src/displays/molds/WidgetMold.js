@@ -14,7 +14,6 @@ class WidgetMold extends AbstractWidgetMold {
 		this.requester = new WidgetMoldRequester(this);
 	};
 
-
 }
 
 export default withStyles(styles, { withTheme: true })(WidgetMold);
