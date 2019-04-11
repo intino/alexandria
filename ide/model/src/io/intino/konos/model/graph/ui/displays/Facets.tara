@@ -114,3 +114,6 @@ Facet AbstractLabeled is abstract
 	var word:{Top Bottom Left Right} position = Left
 Facet Labeled extends AbstractLabeled on Component
 Facet Labeled extends AbstractLabeled on ChildComponents.Table.Column
+
+Facet TimeConsuming on Mold
+	var word:{Low Medium High} loadTime = Low

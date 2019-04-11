@@ -24,6 +24,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private final B box;
 	private String id;
 	private final List<Display> children = new ArrayList<>();
+	private List<Display> promisedChildren = new ArrayList<>();
 	protected DisplayRepository repository;
 	protected N notifier;
 	private io.intino.alexandria.ui.SoulProvider soulProvider;
@@ -179,6 +180,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return children;
 	}
 
+	public List<Display> promisedChildren() {
+		return new ArrayList<>(promisedChildren);
+	}
+
 	public <T extends Display> List<T> children(Class<T> clazz) {
 		return children.stream()
 				.filter(child -> clazz.isAssignableFrom(child.getClass()))
@@ -201,6 +206,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D register(D child) {
 		((Display)child).parent(this);
+		promisedChildren.remove(child);
 		repository.register(child);
 		children.add(child);
 		child.init();
@@ -212,10 +218,20 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D add(D child, String container) {
+		addPromise(child, container);
+		register(child);
+		return child;
+	}
+
+	public <D extends Display> D addPromise(D child) {
+		return addPromise(child, null);
+	}
+
+	public <D extends Display> D addPromise(D child, String container) {
 		if (container == null) container = DefaultInstanceContainer;
 		child.owner(this);
 		notifier.add(child, container);
-		register(child);
+		promisedChildren.add(child);
 		return child;
 	}
 

@@ -19,6 +19,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Image.class)) return (T) new ImageRenderer(settings, component.a$(Image.class), provider, target);
 		if (component.i$(Number.class)) return (T) new NumberRenderer(settings, component.a$(Number.class), provider, target);
 
+		if (component.i$(Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(Spinner.class), provider, target);
 		if (component.i$(Mold.class)) return (T) new MoldRenderer(settings, component.a$(Mold.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);

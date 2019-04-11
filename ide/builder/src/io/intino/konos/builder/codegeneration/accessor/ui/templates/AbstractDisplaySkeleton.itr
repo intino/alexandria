@@ -15,7 +15,7 @@ def type(display)
 		};
 		
 		render() {
-			return (
+			return [this.$baseMethod](
 				$renderTag[
 					$component...[$NL]
 				]$renderTag+end

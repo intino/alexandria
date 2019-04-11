@@ -33,6 +33,10 @@ export default class Display extends PassiveView {
         this._updateInstancesState(container, instances.splice(index, 1));
     };
 
+    instances = () => {
+        return this.state["__elements"] != null ? this.state["__elements"] : [];
+    };
+
     renderInstances = (container, props, style) => {
         if (container == null) container = "__elements";
         let instances = this.state[container];

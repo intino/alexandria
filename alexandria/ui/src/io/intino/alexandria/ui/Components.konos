@@ -1,6 +1,8 @@
 dsl Konos
 
 Component mold as Decorated
+	Notification refreshLoading as Bool
+
 Component block as Decorated
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text
@@ -100,7 +102,7 @@ Component openPage as Decorated
 	Request open
 
 Component list as Decorated
-	Request nextPage
+	Request notifyItemsRendered
 
 Component multiple as Decorated
 
@@ -108,3 +110,5 @@ Component grid as Decorated
 Component brochure as Decorated
 Component map as Decorated
 Component table as Decorated
+Component spinner as Decorated
+	Notification refreshLoading as Bool

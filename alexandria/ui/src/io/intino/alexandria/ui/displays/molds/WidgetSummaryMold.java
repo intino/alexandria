@@ -14,7 +14,7 @@ public class WidgetSummaryMold extends AbstractWidgetSummaryMold<UiFrameworkBox>
         super.init();
         if (this.widget == null) return;
         updateTitle();
-        description.update(widget.description());
+        description.update(I18n.translate(widget.description(), language()));
         facets.addAll(widget.facets());
     }
 

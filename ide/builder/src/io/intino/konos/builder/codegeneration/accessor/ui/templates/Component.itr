@@ -56,7 +56,7 @@ def type(properties & operation) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",layout:"$multipleLayout"}}]
+	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",layout:"$multipleLayout"}}][ color="$color"]
 end
 
 def type(properties & mold) trigger(specific)
@@ -88,7 +88,7 @@ def type(properties & number) trigger(specific)
 end
 
 def type(properties & header) trigger(specific)
-	[ color="$color"][ position="$position"]
+	[ position="$position"]
 end
 
 def type(properties & codeText) trigger(specific)
@@ -105,6 +105,10 @@ end
 
 def type(properties & collection) trigger(specific)
 	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}]
+end
+
+def type(properties & spinner) trigger(specific)
+	[ mode="$mode"]
 end
 
 def type(properties) trigger(specific)

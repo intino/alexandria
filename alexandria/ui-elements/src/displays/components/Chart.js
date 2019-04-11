@@ -1,8 +1,9 @@
 import React, { Suspense } from "react";
-import {CircularProgress, Typography, withStyles} from "@material-ui/core";
+import { Typography, withStyles} from "@material-ui/core";
 import AbstractChart from "../../../gen/displays/components/AbstractChart";
 import ChartNotifier from "../../../gen/displays/notifiers/ChartNotifier";
 import ChartRequester from "../../../gen/displays/requesters/ChartRequester";
+import { Spinner } from "../../../gen/Displays";
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export const ChartPlotly = React.lazy(() => {
@@ -45,9 +46,9 @@ class Chart extends AbstractChart {
 			return (<Typography style={this.style()} className={classes.error}>{error}</Typography>);
 
 		return (
-			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div>}>
+			<Suspense fallback={<div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div>}>
 				<div style={this.style()} ref={this.container}>
-					{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><CircularProgress/></div> : undefined}
+					{this.state.loading ? <div className="layout horizontal center-center" style={ {margin: "10px", height: "100%"} }><Spinner/></div> : undefined}
 					{this.state.mode === "Image" && !this.state.loading && value != undefined ? <img style={ { width: this._width() } } src={"data:image/png;base64, " + value}></img> : undefined }
 					{this.state.mode === "Html" && !this.state.loading && value != undefined ? <ChartPlotly data={value} width={this._width()}/> : undefined}
 				</div>
