@@ -19,6 +19,7 @@ class Builder implements Generator {
 		this.stream = stream;
 		try {
 			this.file = File.createTempFile("tabb_" + stream.name(), ColumnExtension);
+			file.deleteOnExit();
 			this.os = new BufferedOutputStream(new FileOutputStream(file));
 		} catch (IOException e) {
 			Logger.error(e);
