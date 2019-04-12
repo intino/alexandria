@@ -2,7 +2,6 @@ package io.intino.alexandria.tabb.exporters;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
-import io.intino.alexandria.tabb.ColumnStream.NotAvailable;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.Exporter;
 import org.siani.itrules.model.Frame;
@@ -17,6 +16,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 
 public class ArffExporter implements Exporter {
+	private static final String NULL_VALUE = "?";
 
 	private final List<ColumnStream> streams;
 	private BufferedWriter writer;
@@ -48,7 +48,7 @@ public class ArffExporter implements Exporter {
 	@Override
 	public void put(long key) {
 		String line = streams.stream()
-				.map(s -> s.type().toString(s.key().equals(key) ? s.value() : NotAvailable.bytesOf(s.type())))
+				.map(s -> s.key().equals(key) ? s.type().toString(s.value()) : NULL_VALUE)
 				.collect(joining(","));
 		try {
 			writer.write(line + "\n");

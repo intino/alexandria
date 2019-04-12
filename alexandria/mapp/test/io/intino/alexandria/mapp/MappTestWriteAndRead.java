@@ -123,6 +123,6 @@ public class MappTestWriteAndRead {
 		assertEquals("test2\ntest1", item.value());
 
 		assertFalse(reader.hasNext());
-		file.delete();
+//		file.delete();
 	}
 }
