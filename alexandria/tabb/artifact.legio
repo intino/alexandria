@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "org.example", version = "1.0.0") tabb
+Artifact(groupId = "io.intino.alexandria", version = "1.0.0") tabb
 	Imports
 		Compile("com.opencsv", "opencsv", "4.1")
 		Compile("org.siani.itrules", "itrules", "LATEST")
