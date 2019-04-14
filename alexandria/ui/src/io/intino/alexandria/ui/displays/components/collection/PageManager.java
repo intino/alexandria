@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PageManager<Item> {
 	private final Datasource source;
-	private final int pageSize;
+	private int pageSize;
 	private int page;
 	private int countItems;
 	private String condition;
@@ -19,6 +19,11 @@ public class PageManager<Item> {
 
 	public int page() {
 		return this.page;
+	}
+
+	public PageManager<Item> pageSize(int size) {
+		this.pageSize = size;
+		return this;
 	}
 
 	public synchronized List<Item> page(int index) {

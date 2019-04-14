@@ -50,7 +50,7 @@ Facet Parallax on Block
 Facet Option on Component
 
 Facet Behavior is abstract
-Facet Moldable extends Behavior on Block
+Facet Stamp extends Behavior on Block
 	var Mold mold
 Facet Collapsible extends Behavior on Block
 Facet Conditional extends Behavior on Block
@@ -62,7 +62,7 @@ Facet Multiple on Block
 Facet Multiple on ChildComponents.Text
 	var word:{Vertical Horizontal} layout = Horizontal
 
-Facet Highlight on ChildComponents.Text
+Facet Highlighted on ChildComponents.Text
 	var string textColor
 	var string backgroundColor
 
@@ -115,5 +115,5 @@ Facet AbstractLabeled is abstract
 Facet Labeled extends AbstractLabeled on Component
 Facet Labeled extends AbstractLabeled on ChildComponents.Table.Column
 
-Facet TimeConsuming on Mold
-	var word:{Low Medium High} loadTime = Low
+Facet DynamicLoaded on Component
+	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast

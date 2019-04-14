@@ -1,18 +1,37 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import AlexandriaDisplay from "../Display";
 import Theme from "../../../gen/Theme";
+import ComponentNotifier from "../notifiers/ComponentNotifier";
+import {Spinner} from "../../../gen/Displays";
 
 export default class Component extends AlexandriaDisplay {
+    state = {
+        loading: true
+    };
 
     constructor(props) {
         super(props);
+        this.notifier = new ComponentNotifier(this);
     };
 
     style() {
         let style = this._addFormats();
         style = this._addSpacing(style);
         return style;
+    };
+
+    renderTimeConsuming(components) {
+        const theme = Theme.get();
+        return (
+            <React.Fragment>
+                {this.state.loading ? <div style={{position:'absolute',top:'50%',left:'50%'}}><Spinner mode="Rise" color={theme.palette.secondary.main} loading={this.state.loading}/></div> : undefined }
+                <div style={ { visibility: this.state.loading ? "hidden" : "" } }>{components}</div>
+            </React.Fragment>
+        );
+    };
+
+    refreshLoading = (loading) => {
+        this.setState({ loading: loading });
     };
 
     _addFormats() {
@@ -50,4 +69,5 @@ export default class Component extends AlexandriaDisplay {
     _heightDefined = () => {
         return this.props.height != null && this.props.height.indexOf("-1") === -1;
     };
+
 }

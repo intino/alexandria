@@ -58,7 +58,12 @@ def type(attribute)
 	public $clazz $name+firstLowerCase;
 end
 
-def type(methods & timeconsumingmold)
+def type(methods & timeconsumingcomponent)
+	@Override
+	public io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime loadTime() {
+		return io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime.valueOf("$loadTime");
+	}
+
 	@Override
 	public void showLoading() {
 		notifier.refreshLoading(true);

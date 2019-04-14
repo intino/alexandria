@@ -11,7 +11,7 @@ public class BlockWidget extends BaseWidget {
 
 	public BlockWidget() {
 		super("With this widget you can organize your page in order to define the page layout.");
-		facets(asList("Paper", "Badge", "Conditional", "Absolute", "Relative", "Parallax", "Moldable"));
+		facets(asList("Paper", "Badge", "Conditional", "Absolute", "Relative", "Parallax", "Stamp"));
 	}
 
 	protected void addProperties() {
@@ -27,7 +27,7 @@ public class BlockWidget extends BaseWidget {
 		add(Model.property("width", Property.Type.Integer, "Width of image in pixels with Absolute facet or percentage with Relative facet").facets(asList("Absolute", "Relative")));
 		add(Model.property("height", Property.Type.Integer, "Height of image in pixels with Absolute facet or percentage with Relative facet").facets(asList("Absolute", "Relative")));
 		add(Model.property("background", Property.Type.Text, "If parallax facet is enabled, this property defines the background to use for this effect. It must be a resource directory relative path.").facets(asList("Parallax")));
-		add(Model.property("mold", Property.Type.Reference, "This property defines the mold to use for rendering block").facets(asList("Moldable")));
+		add(Model.property("mold", Property.Type.Reference, "This property defines the mold to use for rendering block").facets(asList("Stamp")));
 	}
 
 	protected void addMethods() {

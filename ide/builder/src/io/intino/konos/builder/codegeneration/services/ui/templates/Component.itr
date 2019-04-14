@@ -6,10 +6,10 @@ def type(reference)
 	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(declarations)
+def type(component & child & stampblock & multipleblock) trigger(declarations)
 end
 
-def type(component & child & moldableblock) trigger(declarations)
+def type(component & child & stampblock) trigger(declarations)
 	public $mold+firstUpperCase $name;
 end
 
@@ -18,10 +18,10 @@ def type(component & child) trigger(declarations)
 	$component+declarations...[$NL]]
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(declaration)
+def type(component & child & stampblock & multipleblock) trigger(declaration)
 end
 
-def type(component & child & moldableblock) trigger(declaration)
+def type(component & child & stampblock) trigger(declaration)
 	public $mold+firstUpperCase $name;
 end
 
@@ -41,15 +41,21 @@ end
 
 def type(method & collection)
 	@Override
-	public void add($modelClass item) {
+	public $mold+firstUpperCase add($modelClass item) {
 		$mold+firstUpperCase mold = new $mold+firstUpperCase(($box+firstUpperCase~Box)box());
 		mold.id(java.util.UUID.randomUUID().toString());
 		mold.item = item;
 		addPromise(mold);
+		return mold;
+	}
+
+	@Override
+	public void removeAll() {
+		remove($mold+firstUpperCase.class);
 	}
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(method)
+def type(component & child & stampblock & multipleblock) trigger(method)
 	public void add$name+firstUpperCase~Mold($mold+firstUpperCase mold) {
 		mold.id(java.util.UUID.randomUUID().toString());
 		$owner.this.add(mold, "$name");
@@ -59,10 +65,10 @@ end
 def type(component & child) trigger(method)
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(class)
+def type(component & child & stampblock & multipleblock) trigger(class)
 end
 
-def type(component & child & moldableblock) trigger(class)
+def type(component & child & stampblock) trigger(class)
 end
 
 def type(component & child) trigger(class)
@@ -95,10 +101,10 @@ def type(extends & multiple)
 end
 
 def type(extends & collection)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass, $mold>
 end
 
-def type(extends & moldableblock)
+def type(extends & stampblock)
 	$type+firstUpperCase
 end
 
@@ -122,7 +128,7 @@ def type(component & child) trigger(blockChildReferences)
 	$component+blockChildReferences...[$NL]]
 end
 
-def type(component & child & moldableblock & multipleblock) trigger(childReferences)
+def type(component & child & stampblock & multipleblock) trigger(childReferences)
 end
 
 def type(component & child) trigger(childReferences)
@@ -150,10 +156,10 @@ def type(component & child) trigger(initializations)
 	$component+initializations...[$NL]]
 end
 
-def type(component & child & moldableblock & multipleblock)
+def type(component & child & stampblock & multipleblock)
 end
 
-def type(component & child & moldableblock)
+def type(component & child & stampblock)
 	if ($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
@@ -173,8 +179,8 @@ def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
 
-def type(implements & timeconsumingmold)
-	implements io.intino.alexandria.ui.displays.components.mold.TimeConsuming
+def type(implements & timeconsumingcomponent)
+	implements io.intino.alexandria.ui.displays.components.TimeConsuming
 end
 
 def type(implements)

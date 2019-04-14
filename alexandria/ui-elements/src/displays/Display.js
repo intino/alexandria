@@ -77,4 +77,7 @@ export default class Display extends PassiveView {
         this.setState(object);
     };
 
+    componentWillUnmount() {
+        if (this.notifier != null) this.notifier.detached();
+    }
 }

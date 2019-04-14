@@ -17,11 +17,11 @@ import io.intino.konos.model.graph.code.childcomponents.CodeText;
 import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
-import io.intino.konos.model.graph.moldable.MoldableBlock;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
 import io.intino.konos.model.graph.multiple.childcomponents.MultipleText;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
+import io.intino.konos.model.graph.stamp.StampBlock;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
@@ -195,9 +195,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			frame.addSlot("objectType", "String");
 		}
 
-		if (element.i$(MoldableBlock.class)) {
-			frame.addTypes(MoldableBlock.class.getSimpleName());
-			Mold mold = element.a$(MoldableBlock.class).mold();
+		if (element.i$(StampBlock.class)) {
+			frame.addTypes(StampBlock.class.getSimpleName());
+			Mold mold = element.a$(StampBlock.class).mold();
 			frame.addSlot("mold", mold.name$());
 			frame.addSlot("type", mold.name$());
 			return true;
@@ -212,6 +212,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			frame.addTypes(Collection.class.getSimpleName());
 			frame.addSlot("methods", methodsFrame);
 			frame.addSlot("modelClass", modelClass);
+			frame.addSlot("mold", collection.mold().name$());
 			return false;
 		}
 

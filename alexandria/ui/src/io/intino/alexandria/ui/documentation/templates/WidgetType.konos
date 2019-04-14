@@ -14,4 +14,4 @@ Template widgetTypeTemplate as Decorated
 				OpenPage(page=UiElements.docs, title="docs") as Link
 
 	Block(format=containerAir) body
-		Block widgetTypeBlock as Moldable(widgetMold)
+		Block widgetTypeBlock as Stamp(widgetMold)

@@ -5,6 +5,13 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 
 Template docsTemplate as Decorated
 	Spinner(color="red", mode=Circle)
+	Block as Stamp(mold1)
+	Block
+		Image as TimeConsuming(loadTime=Medium)
+	Text as TimeConsuming(loadTime=Medium)
+
+Mold mold1 as TimeConsuming(loadTime=Medium)
+Mold mold2 as TimeConsuming
 
 Theme
 	Primary(color = "") 

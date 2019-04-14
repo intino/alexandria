@@ -16,7 +16,7 @@ end
 def type(child) trigger(add)
 end
 
-def type(component & child & moldableblock & multipleblock)
+def type(component & child & stampblock & multipleblock)
 	{this.renderInstances("$name"[, { noItemsMessage: "$noItemsMessage" }])}
 end
 
@@ -32,7 +32,7 @@ def type(extends & multiple)
 	Ui.Multiple
 end
 
-def type(extends & moldableblock)
+def type(extends & stampblock)
 	Displays.$type+firstUpperCase
 end
 
@@ -76,7 +76,7 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ moldable="$moldable"][ $paper][ $badge]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ stamp="$stamp"][ $paper][ $badge]
 end
 
 def type(properties & date) trigger(specific)

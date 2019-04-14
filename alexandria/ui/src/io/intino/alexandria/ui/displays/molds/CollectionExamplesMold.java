@@ -14,5 +14,24 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
         super.refresh();
         collection1.add(new Item().label("Item 1"));
         collection1.add(new Item().label("Item 2"));
+        collection1.add(new Item().label("Item 3"));
+        collection1.add(new Item().label("Item 4"));
+        collection1.add(new Item().label("Item 5"));
+        collection1.add(new Item().label("Item 6"));
+        collection1.add(new Item().label("Item 7"));
+        collection1.add(new Item().label("Item 8"));
+        collection1.add(new Item().label("Item 9"));
+        collection1.add(new Item().label("Item 10"));
+        collection1.add(new Item().label("Item 11"));
+        collection1.add(new Item().label("Item 12"));
+        collection1.add(new Item().label("Item 13"));
+        collection1.add(new Item().label("Item 14"));
+        collection1.add(new Item().label("Item 15"));
+        collection1.add(new Item().label("Item 16"));
+        collection1.add(new Item().label("Item 17"));
+        collection1.add(new Item().label("Item 18"));
+        collection1.add(new Item().label("Item 19"));
+        collection1.add(new Item().label("Item 20"));
+        collection1.add(new Item().label("Item 21"));
     }
 }
