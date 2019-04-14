@@ -4,18 +4,18 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.notifiers.ComponentNotifier;
 
 public abstract class Block<DN extends ComponentNotifier, B extends Box> extends Display<DN, B> {
-	private boolean isMoldable;
+	private boolean isStamp;
 
 	protected Block(B box) {
 		super(box);
 	}
 
-	public boolean isMoldable() {
-		return isMoldable;
+	public boolean isStamp() {
+		return isStamp;
 	}
 
-	public Block isMoldable(boolean value) {
-		this.isMoldable = value;
+	public Block isStamp(boolean value) {
+		this.isStamp = value;
 		return this;
 	}
 

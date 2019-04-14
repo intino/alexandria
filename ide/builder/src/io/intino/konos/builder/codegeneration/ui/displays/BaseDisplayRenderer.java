@@ -8,8 +8,8 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.moldable.MoldableBlock;
-import io.intino.konos.model.graph.timeconsuming.TimeConsumingMold;
+import io.intino.konos.model.graph.stamp.StampBlock;
+import io.intino.konos.model.graph.timeconsuming.TimeConsumingComponent;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -57,13 +57,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addImplements(Frame frame) {
-		if (element.i$(TimeConsumingMold.class)) frame.addSlot("implements", new Frame("implements", TimeConsumingMold.class.getSimpleName()));
+		if (element.i$(TimeConsumingComponent.class)) frame.addSlot("implements", new Frame("implements", TimeConsumingComponent.class.getSimpleName()));
 	}
 
 	protected void addMethods(Frame frame) {
-		if (!element.i$(TimeConsumingMold.class)) return;
+		if (!element.i$(TimeConsumingComponent.class)) return;
 		frame.addSlot("baseMethod", "renderTimeConsuming");
-		frame.addSlot("methods", new Frame("methods", TimeConsumingMold.class.getSimpleName()));
+		frame.addSlot("methods", new Frame("methods", TimeConsumingComponent.class.getSimpleName()).addSlot("loadTime", element.a$(TimeConsumingComponent.class).loadTime().name()));
 	}
 
 	protected void addRenderTagFrames(Frame frame) {
@@ -86,7 +86,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(Frame frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(MoldableBlock.class);
+		boolean isAbstract = decorated && !element.i$(StampBlock.class);
 		if (isAbstract) frame.addSlot("abstract", "Abstract");
 		else frame.addSlot("notDecorated", element.name$());
 		Frame abstractBoxFrame = new Frame().addTypes("box");

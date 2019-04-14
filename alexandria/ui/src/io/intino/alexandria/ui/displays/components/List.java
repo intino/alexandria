@@ -1,10 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.PageManager;
 import io.intino.alexandria.ui.model.Datasource;
 
-public abstract class List<B extends Box, Item> extends AbstractList<B> {
+public abstract class List<B extends Box, Item, ItemMold> extends AbstractList<B> {
     private Datasource source;
     private int pageSize;
     private PageManager<Item> pageManager;
@@ -27,7 +28,8 @@ public abstract class List<B extends Box, Item> extends AbstractList<B> {
         items.forEach(this::add);
     }
 
-    public abstract void add(Item item);
+    public abstract ItemMold add(Item item);
+    public abstract void removeAll();
 
     @Override
     public void init() {
@@ -39,8 +41,19 @@ public abstract class List<B extends Box, Item> extends AbstractList<B> {
         addAll(pageManager.next());
     }
 
-    public void notifyItemsRendered() {
-        promisedChildren().forEach(this::register);
+    public void page(Integer value) {
+        removeAll();
+        addAll(pageManager.page(value));
+    }
+
+    public void itemsPerPage(Integer value) {
+        removeAll();
+//        addAll(pageManager.pageSize(value));
+    }
+
+    public void notifyItemsRendered(io.intino.alexandria.schemas.ItemsRenderedInfo info) {
+        promisedChildren(info.items()).forEach(this::register);
+        children(info.visible()).forEach(Display::refresh);
     }
 
 }

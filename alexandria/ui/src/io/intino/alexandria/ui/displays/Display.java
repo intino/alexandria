@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
@@ -184,11 +185,19 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return new ArrayList<>(promisedChildren);
 	}
 
+	public List<Display> promisedChildren(List<String> ids) {
+		return promisedChildren.stream().filter(c -> ids.contains(c.id())).collect(Collectors.toList());
+	}
+
 	public <T extends Display> List<T> children(Class<T> clazz) {
 		return children.stream()
 				.filter(child -> clazz.isAssignableFrom(child.getClass()))
 				.map(clazz::cast)
 				.collect(toList());
+	}
+
+	public List<Display> children(List<String> ids) {
+		return children.stream().filter(child -> ids.contains(child.id())).collect(toList());
 	}
 
 	public <T extends Display> T child(Class<T> clazz) {

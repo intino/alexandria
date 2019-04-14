@@ -25,7 +25,7 @@ public class AbstractDisplaySkeletonTemplate extends Template {
 			rule().add((condition("type", "componentReferences & forBlock"))).add(mark("component", "blockReferences").multiple("\n")),
 			rule().add((condition("type", "componentReferences"))).add(mark("component", "references").multiple("\n")),
 			rule().add((condition("type", "attribute"))).add(literal("public ")).add(mark("clazz")).add(literal(" ")).add(mark("name", "firstLowerCase")).add(literal(";")),
-			rule().add((condition("type", "methods & timeconsumingmold"))).add(literal("@Override\npublic void showLoading() {\n\tnotifier.refreshLoading(true);\n}\n\n@Override\npublic void hideLoading() {\n\tnotifier.refreshLoading(false);\n}"))
+			rule().add((condition("type", "methods & timeconsumingcomponent"))).add(literal("@Override\npublic io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime loadTime() {\n\treturn io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime.valueOf(\"")).add(mark("loadTime")).add(literal("\");\n}\n\n@Override\npublic void showLoading() {\n\tnotifier.refreshLoading(true);\n}\n\n@Override\npublic void hideLoading() {\n\tnotifier.refreshLoading(false);\n}"))
 		);
 		return this;
 	}
