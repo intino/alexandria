@@ -25,6 +25,7 @@ class List extends AbstractList {
 		this.notifier = new ListNotifier(this);
 		this.requester = new ListRequester(this);
 		this.container = React.createRef();
+		this._widths = {};
 	};
 
 	render() {
@@ -43,8 +44,18 @@ class List extends AbstractList {
 
 	_renderItem = (instances, { index, isScrolling, style }) => {
 		const instance = instances[index];
+		const id = instance.pl.id;
 		const { classes } = this.props;
-		return (<div style={style} key={index}>{isScrolling ? <div style={ { width: (Math.random() * 100) + "%" }} className={classes.scrolling}></div> : React.createElement(Elements[instance.tp], instance.pl)}</div>);
+		const width = this._width(id);
+		return (<div style={style} key={index}>{isScrolling ? <div style={ { width: width }} className={classes.scrolling}></div> : React.createElement(Elements[instance.tp], instance.pl)}</div>);
+	};
+
+	_width = (id) => {
+		const max = 70;
+		const min = 50;
+		if (this._widths[id] == null)
+			this._widths[id] = Math.floor(Math.random()*(max-min+1)+min) + "%";
+		return this._widths[id];
 	};
 
 	handleItemsRendered = (instances, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
