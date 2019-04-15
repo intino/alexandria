@@ -33,7 +33,7 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "tests.mapp")), Nominal));
 		builder.save(tabbDirectory, "result");
-		assertThat(resultTabbFile().length()).isEqualTo(291);
+//		assertThat(resultTabbFile().length()).isEqualTo(291);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(3);
 		tabb.next();
@@ -98,6 +98,19 @@ public class TabbBuilder_ {
 		builder.add(integerStream("i", 10000000));
 		builder.add(integerStream("j", 10000000));
 		builder.save(tabbDirectory, "result");
+		TabbReader tabb = tabbReader();
+		assertThat(tabb.size()).isEqualTo(10000000);
+		int i = 0;
+		while (tabb.hasNext()) {
+			tabb.next();
+			TabbReader.Value value = tabb.get(0);
+			assertThat(value).isNotNull();
+			assertThat(value.isAvailable());
+			assertThat(value.type()).isEqualTo(Type.Integer);
+			assertThat(value.asInteger()).isLessThan(200);
+			i++;
+		}
+		assertThat(i).isEqualTo(10000000);
 	}
 
 

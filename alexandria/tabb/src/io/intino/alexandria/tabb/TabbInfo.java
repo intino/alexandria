@@ -16,9 +16,11 @@ public class TabbInfo {
 
 	static TabbInfo of(File file) throws IOException {
 		InputStream inputStream = ZipEntryReader.openEntry(file, FileName);
-		return new TabbInfo(readInfo(inputStream).stream().
+		TabbInfo tabbInfo = new TabbInfo(readInfo(inputStream).stream().
 				map(line -> line.split(",")).map(l -> new ColumnInfo(l[0], ColumnStream.Type.valueOf(l[1]), Long.parseLong(l[2]), modes(l))).
 				toArray(ColumnInfo[]::new));
+		inputStream.close();
+		return tabbInfo;
 	}
 
 	private static String[] modes(String[] fields) {

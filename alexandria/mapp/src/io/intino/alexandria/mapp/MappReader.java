@@ -1,4 +1,4 @@
-package io.intino.alexandria.assa;
+package io.intino.alexandria.mapp;
 
 import io.intino.alexandria.logger.Logger;
 
@@ -6,37 +6,34 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-
-public class AssaReader implements AssaStream {
+public class MappReader implements MappStream {
 	final int size;
-	final List<String> values;
+	final List<String> labels;
 	final EntryReader entryReader;
 	private final DataInputStream inputStream;
 	private final String name;
 	private int index;
 
-	public AssaReader(File file) throws IOException {
-		this(name(file), file.exists() ? new FileInputStream(file) : emptyAssaFile());
+	public MappReader(File file) throws IOException {
+		this(baseName(file.getName()), file.exists() ? new FileInputStream(file) : emptyMappFile());
 	}
 
-	public AssaReader(String name, InputStream inputStream) throws IOException {
+	public MappReader(String name, InputStream inputStream) throws IOException {
 		this.inputStream = new DataInputStream(new BufferedInputStream(inputStream));
 		this.name = name;
-		this.values = readValues();
+		this.labels = readLabels();
 		this.index = 0;
 		this.size = this.inputStream.readInt();
 		this.entryReader = new EntryReader();
 		if (size == 0) close();
 	}
 
-	private static ByteArrayInputStream emptyAssaFile() {
+	private static ByteArrayInputStream emptyMappFile() {
 		return new ByteArrayInputStream(new byte[]{0, 0, 0, 0, 0, 0, 0, 0});
 	}
 
-	private static String name(File file) {
-		return file.getParentFile() != null ? file.getParentFile().getName() : file.getName();
+	private static String baseName(String file) {
+		return file.substring(0, file.lastIndexOf("."));
 	}
 
 	public String name() {
@@ -47,6 +44,10 @@ public class AssaReader implements AssaStream {
 		return size;
 	}
 
+	public List<String> labels() {
+		return labels;
+	}
+
 	@Override
 	public boolean hasNext() {
 		return index < size;
@@ -54,9 +55,9 @@ public class AssaReader implements AssaStream {
 
 	@Override
 	public Item next() {
-		AssaEntry entry = entryReader.readEntry();
+		Mapp.Entry entry = entryReader.readEntry();
 		if (++index >= size) close();
-		return assaItem(entry);
+		return mappItem(entry);
 	}
 
 	@Override
@@ -68,14 +69,14 @@ public class AssaReader implements AssaStream {
 		}
 	}
 
-	private List<String> readValues() throws IOException {
+	private List<String> readLabels() throws IOException {
 		ArrayList<String> values = new ArrayList<>();
 		int count = inputStream.readInt();
 		for (int i = 0; i < count; i++) values.add(inputStream.readUTF());
 		return values;
 	}
 
-	private Item assaItem(AssaEntry entry) {
+	private Item mappItem(Mapp.Entry entry) {
 		return new Item() {
 			@Override
 			public long key() {
@@ -83,9 +84,9 @@ public class AssaReader implements AssaStream {
 			}
 
 			@Override
-			public List<String> value() {
-				String value = values.get(entry.value);
-				return value.contains("\n") ? asList(value.split("\n")) : singletonList(value);
+			public String value() {
+				int value = entry.value;
+				return value == -1 ? null : labels.get(value);
 			}
 
 			@Override
@@ -97,7 +98,7 @@ public class AssaReader implements AssaStream {
 
 	class EntryReader {
 
-		private AssaEntry[] data = new AssaEntry[256];
+		private Mapp.Entry[] data = new Mapp.Entry[256];
 		private long base = 0;
 		private int index = 0;
 
@@ -114,7 +115,7 @@ public class AssaReader implements AssaStream {
 			}
 		}
 
-		AssaEntry readEntry() {
+		Mapp.Entry readEntry() {
 			try {
 				if (index == count) readBlock();
 				return data[index++];
@@ -143,7 +144,7 @@ public class AssaReader implements AssaStream {
 			if (count == 0) count = 256;
 			for (int i = 0; i < count; i++) {
 				byte readByte = inputStream.readByte();
-				data[i] = new AssaEntry((this.base << 8) | (readByte & 0xFF), readValue());
+				data[i] = new Mapp.Entry((this.base << 8) | (readByte & 0xFF), readValue());
 			}
 		}
 

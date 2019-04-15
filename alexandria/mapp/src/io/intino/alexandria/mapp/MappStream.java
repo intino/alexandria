@@ -1,10 +1,10 @@
-package io.intino.alexandria.assa;
+package io.intino.alexandria.mapp;
 
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
-public interface AssaStream extends Iterator<AssaStream.Item> {
+public interface MappStream extends Iterator<MappStream.Item> {
 
 	Item next();
 
@@ -15,18 +15,18 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 	interface Item {
 		long key();
 
-		List<String> value();
+		String value();
 	}
 
 	class Merge {
-		public static AssaStream of(List<AssaStream> cursors) {
-			return new AssaStream() {
+		public static MappStream of(List<MappStream> cursors) {
+			return new MappStream() {
 
-				private List<AssaStreamWithCurrent> streams = cursors.stream().map(AssaStreamWithCurrent::new).collect(toList());
-				private Comparator<AssaStreamWithCurrent> comparator = Comparator.comparing(a -> a.current().key());
+				private List<MappStreamWithCurrent> streams = cursors.stream().map(MappStreamWithCurrent::new).collect(toList());
+				private Comparator<MappStreamWithCurrent> comparator = Comparator.comparing(a -> a.current().key());
 
 				{
-					streams.forEach(AssaStreamWithCurrent::next);
+					streams.forEach(MappStreamWithCurrent::next);
 					streams.sort(comparator);
 				}
 
@@ -40,7 +40,7 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 
 				private void updateStreams(List<Item> items) {
 					for (int i = 0; i < items.size(); i++) {
-						AssaStreamWithCurrent stream = streams.remove(0);
+						MappStreamWithCurrent stream = streams.remove(0);
 						stream.next();
 						int index = Collections.binarySearch(streams, stream, comparator);
 						index = index < 0 ? (index + 1) * -1 : index;
@@ -50,7 +50,7 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 
 				private List<Item> itemsWith(long key) {
 					List<Item> items = new ArrayList<>();
-					for (AssaStreamWithCurrent stream : streams) {
+					for (MappStreamWithCurrent stream : streams) {
 						if (stream.current.key() != key) break;
 						items.add(stream.current);
 					}
@@ -65,10 +65,10 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 						}
 
 						@Override
-						public List<String> value() {
+						public String value() {
 							List<String> result = new ArrayList<>();
-							for (Item item : items) result.addAll(item.value());
-							return new ArrayList<>(result);
+							for (Item item : items) result.add(item.value());
+							return String.join("\n", result);
 						}
 					};
 				}
@@ -80,14 +80,14 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 
 				@Override
 				public void close() {
-					streams.forEach(AssaStreamWithCurrent::close);
+					streams.forEach(MappStreamWithCurrent::close);
 				}
 
-				class AssaStreamWithCurrent {
-					private final AssaStream stream;
+				class MappStreamWithCurrent {
+					private final MappStream stream;
 					private Item current = null;
 
-					AssaStreamWithCurrent(AssaStream stream) {
+					MappStreamWithCurrent(MappStream stream) {
 						this.stream = stream;
 					}
 
@@ -107,7 +107,7 @@ public interface AssaStream extends Iterator<AssaStream.Item> {
 							}
 
 							@Override
-							public List<String> value() {
+							public String value() {
 								return null;
 							}
 						};

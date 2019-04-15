@@ -1,4 +1,4 @@
-package io.intino.alexandria.assa;
+package io.intino.alexandria.mapp;
 
 import java.io.*;
 import java.util.*;
@@ -8,14 +8,14 @@ import static java.util.Arrays.stream;
 import static java.util.Comparator.comparingLong;
 
 @SuppressWarnings("WeakerAccess")
-public class AssaBuilder {
+public class MappBuilder {
 	private Index index = new Index();
 	private Map<String, Integer> map = new HashMap<>();
 
-	public AssaBuilder() {
+	public MappBuilder() {
 	}
 
-	public AssaBuilder(List<String> values) {
+	public MappBuilder(List<String> values) {
 		values.forEach(this::map);
 	}
 
@@ -39,11 +39,11 @@ public class AssaBuilder {
 		stream(keys).forEach(k -> index.put(k, value));
 	}
 
-	public void put(AssaStream stream) {
+	public void put(MappStream stream) {
 		while (stream.hasNext()) put(stream.next());
 	}
 
-	public void put(AssaStream.Item item) {
+	public void put(MappStream.Item item) {
 		index.put(item.key(), map(String.join("\n", item.value())));
 	}
 
@@ -77,7 +77,7 @@ public class AssaBuilder {
 
 	public class IndexToByteArray {
 		private long base = -1;
-		private AssaEntry[] data = new AssaEntry[256];
+		private Mapp.Entry[] data = new Mapp.Entry[256];
 		private int count = 0;
 		private Index index;
 
@@ -94,7 +94,7 @@ public class AssaBuilder {
 			return stream.toByteArray();
 		}
 
-		private void writeEntry(DataOutputStream stream, AssaEntry entry) {
+		private void writeEntry(DataOutputStream stream, Mapp.Entry entry) {
 			this.base(stream, entry.key >> 8);
 			if (isRepeated((byte) entry.key)) return;
 			this.data[this.count++] = entry;
@@ -151,11 +151,11 @@ public class AssaBuilder {
 	}
 
 	private class Index {
-		private final Comparator<AssaEntry> comparator = comparingLong(o -> o.key);
-		private final List<AssaEntry> ids = new ArrayList<>();
+		private final Comparator<Mapp.Entry> comparator = comparingLong(o -> o.key);
+		private final List<Mapp.Entry> ids = new ArrayList<>();
 
 		void put(long key, int value) {
-			ids.add(new AssaEntry(key, value));
+			ids.add(new Mapp.Entry(key, value));
 		}
 
 		private void sort() {
