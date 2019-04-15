@@ -1,13 +1,13 @@
 package io.intino.konos.model.graph;
 
 import io.intino.konos.model.graph.jms.JMSService;
-import io.intino.konos.model.graph.multiple.MultipleBlock;
-import io.intino.konos.model.graph.multiple.childcomponents.MultipleText;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Graph;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,10 +28,6 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	public static Template templateFor(UIService.Resource resource) {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 		return uiService.template(resource);
-	}
-
-	public static boolean isMultiple(Component component) {
-		return component.i$(MultipleText.class) || component.i$(MultipleBlock.class);
 	}
 
 	public Set<String> findCustomParameters(JMSService service) {

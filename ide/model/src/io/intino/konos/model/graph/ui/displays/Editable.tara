@@ -1,5 +1,6 @@
 dsl Proteo
 
+use Facets
 use Component
 use Display
 use UI
@@ -11,9 +12,9 @@ Facet Editable is abstract
 	var string defaultValue = ""
 	var string validator = ""
 
-Facet Multiple on Editable
-	var integer min= -1
-	var integer max= -1
+Facet Range on Editable with Multiple
+	var integer min = -1
+	var integer max = -1
 
 Facet Editable on ChildComponents.Text
 	var word:{Normal Email Url} edition = Normal

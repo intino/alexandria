@@ -7,9 +7,9 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.model.graph.*;
+import io.intino.konos.model.graph.ChildComponents.Stamp;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
-import io.intino.konos.model.graph.stamp.StampBlock;
-import io.intino.konos.model.graph.timeconsuming.TimeConsumingComponent;
+import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -52,18 +52,18 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	private void addImports(Frame frame) {
-		if (element.graph().moldList().size() > 0) frame.addSlot("moldsImport", baseFrame().addTypes("moldsImport"));
+		if (element.graph().templateList().size() > 0) frame.addSlot("templatesImport", baseFrame().addTypes("templatesImport"));
 		if (element.graph().blockList().size() > 0) frame.addSlot("blocksImport", baseFrame().addTypes("blocksImport"));
 	}
 
 	protected void addImplements(Frame frame) {
-		if (element.i$(TimeConsumingComponent.class)) frame.addSlot("implements", new Frame("implements", TimeConsumingComponent.class.getSimpleName()));
+		if (element.i$(DynamicLoadedComponent.class)) frame.addSlot("implements", new Frame("implements", DynamicLoadedComponent.class.getSimpleName()));
 	}
 
 	protected void addMethods(Frame frame) {
-		if (!element.i$(TimeConsumingComponent.class)) return;
-		frame.addSlot("baseMethod", "renderTimeConsuming");
-		frame.addSlot("methods", new Frame("methods", TimeConsumingComponent.class.getSimpleName()).addSlot("loadTime", element.a$(TimeConsumingComponent.class).loadTime().name()));
+		if (!element.i$(DynamicLoadedComponent.class)) return;
+		frame.addSlot("baseMethod", "renderDynamicLoaded");
+		frame.addSlot("methods", new Frame("methods", DynamicLoadedComponent.class.getSimpleName()).addSlot("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
 	}
 
 	protected void addRenderTagFrames(Frame frame) {
@@ -73,9 +73,9 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			renderTag.addTypes(Block.class.getSimpleName());
 			renderTag.addSlot("properties", renderer.properties());
 		}
-		else if (element.i$(Mold.class)) {
-			ComponentRenderer renderer = factory.renderer(settings, element.a$(Mold.class), templateProvider, target);
-			renderTag.addTypes(Mold.class.getSimpleName());
+		else if (element.i$(Template.class)) {
+			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
+			renderTag.addTypes(Template.class.getSimpleName());
 			renderTag.addSlot("properties", renderer.properties());
 		}
 		frame.addSlot("renderTag", renderTag);
@@ -86,7 +86,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(Frame frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(StampBlock.class);
+		boolean isAbstract = decorated && !element.i$(Stamp.class);
 		if (isAbstract) frame.addSlot("abstract", "Abstract");
 		else frame.addSlot("notDecorated", element.name$());
 		Frame abstractBoxFrame = new Frame().addTypes("box");

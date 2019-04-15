@@ -9,7 +9,7 @@ def type(desktop)
 	import $package+validPackage.$box+firstUpperCase~Box;[
 	import $package+validPackage.ui.displays.desktops.$abstract$name+firstUpperCase;]
 
-	$moldsImport
+	$templatesImport
 	$blocksImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -57,16 +57,16 @@ def type(desktop)
     }
 end
 
-def type(moldsImports)
-	import $package+validPackage.ui.displays.molds.*;
+def type(templatesImports)
+	import $package+validPackage.ui.displays.templates.*;
 end
 
 def type(blocksImport)
 	import $package+validPackage.ui.displays.blocks.*;
 end
 
-def type(componentReferences & forMold)
-	$component+moldReferences...[$NL]
+def type(componentReferences & forTemplate)
+	$component+templateReferences...[$NL]
 end
 
 def type(componentReferences & forBlock)

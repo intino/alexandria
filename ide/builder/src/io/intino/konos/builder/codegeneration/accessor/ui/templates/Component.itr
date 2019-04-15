@@ -16,7 +16,7 @@ end
 def type(child) trigger(add)
 end
 
-def type(component & child & stampblock & multipleblock)
+def type(component & child & stamp & multipleDDDDDDDD)
 	{this.renderInstances("$name"[, { noItemsMessage: "$noItemsMessage" }])}
 end
 
@@ -56,10 +56,10 @@ def type(properties & operation) trigger(common)
 end
 
 def type(properties) trigger(common)
-	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",layout:"$multipleLayout"}}][ color="$color"]
+	[ label="$label"][ format="$format...[ ]"][ multiple={{instances:"$instances",arrangement:"$multipleArrangement",noItemsMessage:"$multipleNoItemsMessage"}}][ color="$color"]
 end
 
-def type(properties & mold) trigger(specific)
+def type(properties & template) trigger(specific)
 	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"]
 end
 
@@ -76,7 +76,7 @@ def type(properties & chart) trigger(specific)
 end
 
 def type(properties & block) trigger(specific)
-	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ stamp="$stamp"][ $paper][ $badge]
+	[ layout="$layout...[ ]"][ width="$width"][ height="$height"][ spacing="$spacing"][ collapsible="$collapsible"][ $paper][ $badge]
 end
 
 def type(properties & date) trigger(specific)
@@ -92,11 +92,11 @@ def type(properties & header) trigger(specific)
 end
 
 def type(properties & codeText) trigger(specific)
-	[ mode="$mode"][ language="$language"][ highlight=$highlight]
+	[ mode="$mode"][ language="$language"][ highlighted=$highlighted]
 end
 
 def type(properties & text) trigger(specific)
-	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ highlight={$highlight}]
+	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ highlighted={$highlighted}]
 end
 
 def type(properties & openpage) trigger(specific)
@@ -122,6 +122,6 @@ def type(codetext)
 	value="$value"
 end
 
-def type(highlight)
+def type(highlighted)
 	{text:"$text",background:"$background"}
 end

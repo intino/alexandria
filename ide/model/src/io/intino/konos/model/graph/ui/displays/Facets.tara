@@ -17,8 +17,6 @@ Facet Circular on ChildComponents.Progress
 Facet Linear on ChildComponents.Progress
 
 Facet Drawer on Block
-Facet Header on Block
-	var Item for
 
 // Layout facets
 Facet AbstractAbsolute is abstract
@@ -50,21 +48,23 @@ Facet Parallax on Block
 	var string background
 
 Facet Option on Component
-Facet Item on Component
-//Facet Header on Component
-//	var Item for
 
 Facet Behavior is abstract
-Facet Stamp extends Behavior on Block
-	var Mold mold
 Facet Collapsible extends Behavior on Block
 Facet Conditional extends Behavior on Block
 	var Option selected = empty
 
-Facet Multiple on Block
+Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty
-Facet Multiple on ChildComponents.Text
-	var word:{Vertical Horizontal} layout = Horizontal
+	var word:{Vertical Horizontal} arrangement = Horizontal
+Facet Multiple extends AbstractMultiple on Block
+Facet Multiple extends AbstractMultiple on ChildComponents.Text
+Facet Multiple extends AbstractMultiple on ChildComponents.File
+Facet Multiple extends AbstractMultiple on ChildComponents.Image
+Facet Multiple extends AbstractMultiple on ChildComponents.Icon
+Facet Multiple extends AbstractMultiple on ChildComponents.Number
+Facet Multiple extends AbstractMultiple on ChildComponents.Date
+Facet Multiple extends AbstractMultiple on ChildComponents.Stamp
 
 Facet Highlighted on ChildComponents.Text
 	var string textColor
@@ -117,6 +117,7 @@ Facet AbstractLabeled is abstract
 	var string label
 	var word:{Top Bottom Left Right} position = Left
 Facet Labeled extends AbstractLabeled on Component
+Facet Labeled extends AbstractLabeled on ChildComponents.Collection.Mold.Heading
 
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast

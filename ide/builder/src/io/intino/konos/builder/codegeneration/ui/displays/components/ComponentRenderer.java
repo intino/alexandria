@@ -18,17 +18,15 @@ import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
-import io.intino.konos.model.graph.multiple.childcomponents.MultipleText;
+import io.intino.konos.model.graph.multiple.childcomponents.*;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
 import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
-import io.intino.konos.model.graph.stamp.StampBlock;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
 import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static io.intino.konos.model.graph.KonosGraph.isMultiple;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
@@ -73,8 +71,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		Frame result = new Frame().addTypes("properties", typeOf(component));
 		if (component.color() != null && !component.color().isEmpty()) result.addSlot("color", element.color());
 		if (component.i$(AbstractLabeled.class)) result.addSlot("label", component.a$(AbstractLabeled.class).label());
-		if (isMultiple(component)) result.addSlot("instances", nameOf(component));
-		if (component.i$(MultipleText.class)) result.addSlot("multipleLayout", component.a$(MultipleText.class).layout().name());
+		if (component.i$(AbstractMultiple.class)) {
+			AbstractMultiple abstractMultiple = component.a$(AbstractMultiple.class);
+			result.addSlot("instances", nameOf(component));
+			result.addSlot("multipleArrangement", abstractMultiple.arrangement().name());
+			result.addSlot("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
+		}
 		if (component.format() != null) {
 			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
 			result.addSlot("format", format);
@@ -158,7 +160,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private List<Component> components(Component component) {
 		List<Component> components = new ArrayList<>();
 		if (component.i$(Block.class)) components.addAll(component.a$(Block.class).componentList());
-		if (component.i$(Mold.class)) components.addAll(component.a$(Mold.class).componentList());
+		if (component.i$(Template.class)) components.addAll(component.a$(Template.class).componentList());
 		if (component.i$(Catalog.class)) components.addAll(component.a$(Catalog.class).componentList());
 		if (component.i$(Snackbar.class)) components.addAll(component.a$(Snackbar.class).componentList());
 		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
@@ -179,44 +181,70 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private boolean addSpecificTypes(Frame frame) {
 
-		if (element.i$(MultipleBlock.class)) {
-			frame.addTypes(MultipleBlock.class.getSimpleName());
-			String message = element.a$(MultipleBlock.class).noItemsMessage();
+		if (element.i$(AbstractMultiple.class)) {
+			frame.addTypes(AbstractMultiple.class.getSimpleName().replace("Abstract", ""));
+			String message = element.a$(AbstractMultiple.class).noItemsMessage();
 			if (message != null) frame.addSlot("noItemsMessage", message);
-		}
-		else if (element.i$(MultipleText.class)) {
 			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", "multiple");
-			methodsFrame.addSlot("componentType", "Text");
-			methodsFrame.addSlot("objectType", "String");
+			methodsFrame.addSlot("componentType", multipleComponentType(element));
+			String objectType = multipleObjectType(element);
+			if (objectType != null) methodsFrame.addSlot("objectType", objectType);
 			methodsFrame.addSlot("name", nameOf(element));
 			frame.addSlot("methods", methodsFrame);
 			frame.addTypes("multiple");
-			frame.addSlot("componentType", "Text");
-			frame.addSlot("objectType", "String");
+			frame.addSlot("componentType", multipleComponentType(element));
+			if (objectType != null) {
+				frame.addSlot("objectType", objectType);
+				frame.addSlot("objectTypeValue", "value");
+			}
 		}
 
-		if (element.i$(StampBlock.class)) {
-			frame.addTypes(StampBlock.class.getSimpleName());
-			Mold mold = element.a$(StampBlock.class).mold();
-			frame.addSlot("mold", mold.name$());
-			frame.addSlot("type", mold.name$());
-			return true;
-		}
+//		if (element.i$(Stamp.class)) {
+//			frame.addTypes(Stamp.class.getSimpleName());
+//			Template template = element.a$(Stamp.class).template();
+//			frame.addSlot("template", template.name$());
+//			frame.addSlot("type", template.name$());
+//			return true;
+//		}
 
 		if (element.i$(Collection.class)) {
-			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName());
-			Collection collection = element.a$(Collection.class);
-			String modelClass = collection.source().modelClass();
-			methodsFrame.addSlot("modelClass", modelClass);
-			methodsFrame.addSlot("mold", collection.mold().name$());
-			frame.addTypes(Collection.class.getSimpleName());
-			frame.addSlot("methods", methodsFrame);
-			frame.addSlot("modelClass", modelClass);
-			frame.addSlot("mold", collection.mold().name$());
-			return false;
+//			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName());
+//			Collection collection = element.a$(Collection.class);
+//			String modelClass = collection.source().modelClass();
+//			methodsFrame.addSlot("modelClass", modelClass);
+//			methodsFrame.addSlot("mold", collection.mold().name$());
+//			frame.addTypes(Collection.class.getSimpleName());
+//			frame.addSlot("methods", methodsFrame);
+//			frame.addSlot("modelClass", modelClass);
+//			frame.addSlot("mold", collection.mold().name$());
+//			return false;
 		}
 
 		return false;
+	}
+
+	private String multipleComponentType(C element) {
+		if (element.i$(MultipleText.class)) return MultipleText.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleFile.class)) return MultipleFile.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleImage.class)) return MultipleImage.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleIcon.class)) return MultipleIcon.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleNumber.class)) return MultipleNumber.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleDate.class)) return MultipleDate.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleStamp.class)) return firstUpperCase(element.a$(MultipleStamp.class).template().name$());
+		if (element.i$(MultipleBlock.class)) return firstUpperCase(element.a$(MultipleBlock.class).name$());
+		return null;
+	}
+
+	private String multipleObjectType(C element) {
+		if (element.i$(MultipleText.class)) return "java.lang.String";
+		if (element.i$(MultipleFile.class)) return "java.net.URL";
+		if (element.i$(MultipleImage.class)) return "java.net.URL";
+		if (element.i$(MultipleIcon.class)) return "java.net.URL";
+		if (element.i$(MultipleNumber.class)) return "java.lang.Double";
+		if (element.i$(MultipleDate.class)) return "java.time.Instant";
+		if (element.i$(MultipleStamp.class)) return element.a$(MultipleStamp.class).template().modelClass();
+		if (element.i$(MultipleBlock.class)) return null;
+		return null;
 	}
 
 	protected void addFacets(Component component, Frame result) {
@@ -253,9 +281,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			result.addTypes("forBlock");
 			element.a$(Block.class).componentList().forEach(c -> addComponent(c, result));
 		}
-		else if (element.i$(Mold.class)) {
-			result.addTypes("forMold");
-			element.a$(Mold.class).componentList().forEach(c -> addComponent(c, result));
+		else if (element.i$(Template.class)) {
+			result.addTypes("forTemplate");
+			element.a$(Template.class).componentList().forEach(c -> addComponent(c, result));
 		}
 		return result;
 	}

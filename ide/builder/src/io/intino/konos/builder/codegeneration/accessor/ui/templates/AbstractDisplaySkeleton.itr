@@ -24,7 +24,7 @@ def type(display)
 	}
 end
 
-def type(renderTag & mold) trigger(end)
+def type(renderTag & template) trigger(end)
 	</Ui.Block>
 end
 
@@ -32,7 +32,7 @@ def type(renderTag & block) trigger(end)
 	</Ui.Block>
 end
 
-def type(renderTag & mold)
+def type(renderTag & template)
 	<Ui.Block[$properties+common$properties+specific]>
 end
 

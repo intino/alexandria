@@ -8,7 +8,7 @@ import io.intino.konos.model.graph.Block;
 import io.intino.konos.model.graph.ChildComponents.Number;
 import io.intino.konos.model.graph.ChildComponents.*;
 import io.intino.konos.model.graph.Component;
-import io.intino.konos.model.graph.Mold;
+import io.intino.konos.model.graph.Template;
 
 public class ComponentRendererFactory {
 
@@ -20,7 +20,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Number.class)) return (T) new NumberRenderer(settings, component.a$(Number.class), provider, target);
 
 		if (component.i$(Spinner.class)) return (T) new SpinnerRenderer(settings, component.a$(Spinner.class), provider, target);
-		if (component.i$(Mold.class)) return (T) new MoldRenderer(settings, component.a$(Mold.class), provider, target);
+		if (component.i$(Template.class)) return (T) new TemplateRenderer(settings, component.a$(Template.class), provider, target);
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);

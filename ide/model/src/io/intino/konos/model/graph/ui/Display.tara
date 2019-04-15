@@ -21,9 +21,6 @@ Concept:Named Display extends PassiveView
 
 	has Block
 
-Concept Template extends Display
-	has Component
-
 Facet Desktop on Template
 	has:{1..1} ChildComponents.Header
 	//has:{1..1} ChildComponents.Tabs

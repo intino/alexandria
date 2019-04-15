@@ -2,13 +2,13 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.Mold;
+import io.intino.konos.model.graph.Template;
 import io.intino.konos.model.graph.rules.Spacing;
 import org.siani.itrules.model.Frame;
 
-public class MoldRenderer extends ComponentRenderer<Mold> {
+public class TemplateRenderer extends ComponentRenderer<Template> {
 
-	public MoldRenderer(Settings settings, Mold component, TemplateProvider provider, Target target) {
+	public TemplateRenderer(Settings settings, Template component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 
@@ -47,6 +47,6 @@ public class MoldRenderer extends ComponentRenderer<Mold> {
 
 	@Override
 	protected String className(Class clazz) {
-		return super.className(clazz).replace("mold", "");
+		return super.className(clazz).replace("template", "");
 	}
 }

@@ -20,7 +20,7 @@ export default class Component extends AlexandriaDisplay {
         return style;
     };
 
-    renderTimeConsuming(components) {
+    renderDynamicLoaded(components) {
         const theme = Theme.get();
         return (
             <React.Fragment>

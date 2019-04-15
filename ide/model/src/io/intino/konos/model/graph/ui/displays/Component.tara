@@ -16,14 +16,14 @@ Concept Block extends Component
 
 	has Component
 
-Concept Mold extends Component
+Concept:Named Template extends Component
 	var string modelClass = empty
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
 
 	has Component
 
-Concept Catalog extends Component
+Concept:Named Catalog extends Component
 	var Datasource source
 
 	Concept:{0..1} Events
@@ -63,6 +63,9 @@ Concept ChildComponents
 		var string value = empty
 		var string prefix = empty
 		var string suffix = empty
+
+	Concept Stamp extends Component
+		var Template template
 
 	Concept File extends Component
 		var string value = empty
@@ -133,10 +136,14 @@ Concept ChildComponents
 		var Display display
 
 	Concept Collection extends Component
+		var string sourceClass = empty
+		var string itemClass = empty
 		var string noItemsMessage = empty
 		var integer pageSize = 20
 
-		has Component
+		Concept Mold
+			Concept:{1..1} Heading > has Component
+			Concept:{1..1} Item > has Component
 
 		sub Magazine
 		sub List
