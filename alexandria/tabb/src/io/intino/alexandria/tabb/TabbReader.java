@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.nio.ByteBuffer.wrap;
 import static java.util.stream.Collectors.toList;
 
 public class TabbReader {
@@ -41,7 +40,7 @@ public class TabbReader {
 		return new Value(stream.type(), stream.mode(), stream.value());
 	}
 
-	public class Value {
+	public static class Value {
 		private final Type type;
 		private final ColumnStream.Mode mode;
 		private final byte[] value;
@@ -65,19 +64,19 @@ public class TabbReader {
 		}
 
 		public int asInteger() {
-			return isAvailable() ? wrap(value).getInt() : NotAvailable.NaInt;
+			return isAvailable() ? get32(value) : NotAvailable.NaInt;
 		}
 
 		public double asDouble() {
-			return isAvailable() ? wrap(value).getDouble() : NotAvailable.NaDouble;
+			return isAvailable() ? Double.longBitsToDouble(get64(value)) : NotAvailable.NaDouble;
 		}
 
 		public boolean asBoolean() {
-			return wrap(value).getInt() == 1;//FIXME Na??
+			return get32(value) == 1;//FIXME Na??
 		}
 
 		public Long asLong() {
-			return isAvailable() ? wrap(value).getLong() : NotAvailable.NaDouble;
+			return isAvailable() ? get64(value) : NotAvailable.NaDouble;
 		}
 
 		public LocalDateTime asDatetime() {
@@ -89,7 +88,16 @@ public class TabbReader {
 		}
 
 		public String asString() {
-			return mode.features[wrap(value).getInt()];
+			return mode.features[get32(value)];
+		}
+
+		private static int get32(byte[] data) {
+			return (data[0] & 0xFF) << 24 | (data[1] & 0xFF) << 16 | (data[2] & 0xFF) << 8 | (data[3] & 0xFF);
+		}
+
+		private static long get64(byte[] data) {
+			return (data[0] & 0xFFL) << 56 | (data[1] & 0xFFL) << 48 | (data[2] & 0xFFL) << 40 | (data[3] & 0xFFL) << 32 |
+					(data[4] & 0xFF) << 24 | (data[5] & 0xFF) << 16 | (data[6] & 0xFF) << 8 | (data[7] & 0xFF);
 		}
 
 	}
