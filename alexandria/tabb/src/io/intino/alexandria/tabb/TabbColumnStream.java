@@ -18,11 +18,10 @@ class TabbColumnStream implements ColumnStream {
 		this.column = column;
 		value = new byte[size()];
 		try {
-			inputStream = ZipEntryReader.openEntry(file, column.name + ColumnStream.ColumnExtension);
+			inputStream = ZipEntryReader.openEntry(file, column.name + ColumnExtension);
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-
 	}
 
 	private int size() {
