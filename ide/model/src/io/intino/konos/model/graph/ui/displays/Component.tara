@@ -141,13 +141,13 @@ Concept ChildComponents
 		sub Magazine
 		sub List
 		sub Grid
-//		sub Table
-//		sub Map
-//			Concept:{0..1} Center
-//				var double latitude
-//				var double longitude
-//
-//			Concept:{1..1} Zoom
-//				var integer defaultZoom
-//				var integer min
-//				var integer max
+		sub Table
+		sub Map
+			Concept:{0..1} Center
+				var double latitude
+				var double longitude
+
+			Concept:{1..1} Zoom
+				var integer defaultZoom
+				var integer min
+				var integer max
