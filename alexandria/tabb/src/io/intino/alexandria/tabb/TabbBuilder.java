@@ -12,7 +12,7 @@ import java.util.zip.ZipOutputStream;
 import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
 import static java.util.stream.Collectors.toList;
-import static java.util.zip.Deflater.DEFAULT_COMPRESSION;
+import static java.util.zip.Deflater.BEST_COMPRESSION;
 
 
 public class TabbBuilder {
@@ -85,7 +85,7 @@ public class TabbBuilder {
 
 	private void createTabbFile(File file, List<Builder> builders) throws IOException {
 		ZipOutputStream os = new ZipOutputStream(new FileOutputStream(file));
-		os.setLevel(DEFAULT_COMPRESSION);
+		os.setLevel(BEST_COMPRESSION);
 		for (Builder builder : builders)
 			writeEntry(os, builder.name() + ColumnExtension, createColumnStream(builder));
 		writeEntry(os, TabbInfo.FileName, createInfo(builders));

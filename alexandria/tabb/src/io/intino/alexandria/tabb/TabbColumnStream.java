@@ -2,6 +2,7 @@ package io.intino.alexandria.tabb;
 
 import io.intino.alexandria.logger.Logger;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,7 @@ class TabbColumnStream implements ColumnStream {
 		this.column = column;
 		value = new byte[size()];
 		try {
-			inputStream = ZipEntryReader.openEntry(file, column.name + ColumnExtension);
+			inputStream = new BufferedInputStream(ZipEntryReader.openEntry(file, column.name + ColumnExtension));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
