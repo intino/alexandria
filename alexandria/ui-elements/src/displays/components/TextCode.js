@@ -10,7 +10,8 @@ const styles = theme => ({
 		background: "#f4f4f4",
 		border: "1px solid #ddd",
 		padding: "5px 10px",
-		display: "block"
+		display: "block",
+		overflow: "auto"
 	}
 });
 

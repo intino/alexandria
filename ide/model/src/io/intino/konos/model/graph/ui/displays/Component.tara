@@ -11,7 +11,6 @@ Concept:Named Component extends Display
 	var Format[] format = empty
 
 Concept Block extends Component
-	var string for = empty
 	var word[]:Layout layout = Vertical
 	var word:Spacing spacing = None
 
@@ -134,22 +133,21 @@ Concept ChildComponents
 		var Display display
 
 	Concept Collection extends Component
-		var Datasource source
 		var string noItemsMessage = empty
 		var integer pageSize = 20
-		var Mold mold
 
-		sub Brochure
+		has Component
+
+		sub Magazine
 		sub List
 		sub Grid
-		sub Table
-			Concept Column > var Mold mold
-		sub Map
-			Concept:{0..1} Center
-				var double latitude
-				var double longitude
-
-			Concept:{1..1} Zoom
-				var integer defaultZoom
-				var integer min
-				var integer max
+//		sub Table
+//		sub Map
+//			Concept:{0..1} Center
+//				var double latitude
+//				var double longitude
+//
+//			Concept:{1..1} Zoom
+//				var integer defaultZoom
+//				var integer min
+//				var integer max
