@@ -29,7 +29,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	private boolean isGeneric(Display element) {
 		return element.getClass().getSimpleName().equalsIgnoreCase("display") ||
 			   element.getClass().getSimpleName().equalsIgnoreCase("component") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("mold") ||
+			   element.getClass().getSimpleName().equalsIgnoreCase("template") ||
 			   element.getClass().getSimpleName().equalsIgnoreCase("block");
 	}
 

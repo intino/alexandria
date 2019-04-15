@@ -8,7 +8,7 @@ def type(display)
 	$schemaImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 
-	$moldsImport
+	$templatesImport
 	$blocksImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
@@ -34,16 +34,16 @@ def type(display)
 	}
 end
 
-def type(moldsImport)
-	import $package+validPackage.ui.displays.molds.*;
+def type(templatesImport)
+	import $package+validPackage.ui.displays.templates.*;
 end
 
 def type(blocksImport)
 	import $package+validPackage.ui.displays.blocks.*;
 end
 
-def type(componentReferences & forMold)
-	$component+moldReferences...[$NL]
+def type(componentReferences & forTemplate)
+	$component+templateReferences...[$NL]
 end
 
 def type(componentReferences & forBlock)
@@ -58,10 +58,10 @@ def type(attribute)
 	public $clazz $name+firstLowerCase;
 end
 
-def type(methods & timeconsumingcomponent)
+def type(methods & dynamicloadedcomponent)
 	@Override
-	public io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime loadTime() {
-		return io.intino.alexandria.ui.displays.components.TimeConsuming.LoadTime.valueOf("$loadTime");
+	public io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime loadTime() {
+		return io.intino.alexandria.ui.displays.components.DynamicLoaded.LoadTime.valueOf("$loadTime");
 	}
 
 	@Override

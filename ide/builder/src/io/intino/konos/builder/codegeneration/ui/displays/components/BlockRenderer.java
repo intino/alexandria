@@ -30,7 +30,6 @@ public class BlockRenderer extends SizedRenderer<Block> {
 		addPaper(result);
 		addBadge(result);
 		addParallax(result);
-		if (element.isStamp()) result.addSlot("stamp", "true");
 		if (element.isCollapsible()) result.addSlot("collapsible", "true");
 		return result;
 	}

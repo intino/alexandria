@@ -61,9 +61,9 @@ class Text extends AbstractText {
 
 	style() {
 		var result = super.style();
-		if (!this.props.highlight) return result;
-		result.color = this.props.highlight.text;
-		result.background = this.props.highlight.background;
+		if (!this.props.highlighted) return result;
+		result.color = this.props.highlighted.text;
+		result.background = this.props.highlighted.background;
 		result.padding = "0 10px";
 		result.borderRadius = "3px";
 		return result;

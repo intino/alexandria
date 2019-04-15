@@ -3,8 +3,8 @@ def type(manifest)
     export { $display+export...[,] }
 end
 
-def type(mold) trigger(import)
-	import $name+firstUppercase from "../$directory/displays/molds/$name+firstUppercase"
+def type(template) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/templates/$name+firstUppercase"
 end
 
 def type(block) trigger(import)

@@ -1,7 +1,7 @@
 package io.intino.alexandria.ui.displays.components;
 
-public interface TimeConsuming {
-	enum LoadTime { Low, Medium, High }
+public interface DynamicLoaded {
+	enum LoadTime { VerySlow, Slow, Fast, VeryFast }
 
 	LoadTime loadTime();
 	void showLoading();

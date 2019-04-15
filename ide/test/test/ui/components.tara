@@ -1,17 +1,45 @@
 dsl Konos
 
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
-	Resource(path = "/") home as Page(docsTemplate)
+	Resource(path = "/") home as Page(testTemplate)
 
-Template docsTemplate as Decorated
-	Spinner(color="red", mode=Circle)
-	Block as Stamp(mold1)
-	Block
-		Image as TimeConsuming(loadTime=Medium)
-	Text as TimeConsuming(loadTime=Medium)
+Template testTemplate as Decorated
+	Text facetas as Multiple
+	Stamp(template=template1) templates as Multiple
+	Block as Multiple
 
-Mold mold1 as TimeConsuming(loadTime=Medium)
-Mold mold2 as TimeConsuming
+Template template1
+	Text campo1
+
+//	List<Header> headers = tabla.setHeader();
+//	Row row = tabla.addRow(Item item);
+//
+//	Row row = tabla.addRow(Item item) {
+//		List<Item> items = createRow();
+//		items.forEach(i -> i.item(instancia); i.refresh());
+//	}
+//
+//	tabla.add(new Item().name("name").label("label")) {
+//		List<Item> item = tabla.addItem();
+//	}
+//	item.nombre.update("dddd")
+
+//	Table tabla
+//		Mold
+//			Header > SortBox(sorting = empty) sortBox
+//			Item nombreTemplate > Text nombre
+//		Mold
+//			Header
+//			Item apellidosTemplate > Text apellidos
+//			SortBox(sorting = empty) sortBox
+//
+//	List(sourceClass="io.intino.components.box.ui.Source", itemClass="io.intino.components.box.ui.Source.Item")
+//		Mold
+//			Header as Labeled(label="compact")
+//			Item
+//				Text fila1
+//
+
 
 Theme
 	Primary(color = "") 

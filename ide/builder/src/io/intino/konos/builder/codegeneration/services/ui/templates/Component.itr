@@ -10,7 +10,7 @@ def type(component & child & stampblock & multipleblock) trigger(declarations)
 end
 
 def type(component & child & stampblock) trigger(declarations)
-	public $mold+firstUpperCase $name;
+	public $template+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declarations)
@@ -22,7 +22,7 @@ def type(component & child & stampblock & multipleblock) trigger(declaration)
 end
 
 def type(component & child & stampblock) trigger(declaration)
-	public $mold+firstUpperCase $name;
+	public $template+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declaration)
@@ -31,34 +31,34 @@ end
 
 def type(method & multiple)
 	@Override
-	public void add($objectType value) {
+	public void add([$objectType value]) {
 		io.intino.alexandria.ui.displays.components.$componentType child = new io.intino.alexandria.ui.displays.components.$componentType(box());
 		child.id(java.util.UUID.randomUUID().toString());
-		add(child, "$name");
-		child.update(value);
+		add(child, "$name");[
+		child.update($objectTypeValue)];
 	}
 end
 
 def type(method & collection)
 	@Override
-	public $mold+firstUpperCase add($modelClass item) {
-		$mold+firstUpperCase mold = new $mold+firstUpperCase(($box+firstUpperCase~Box)box());
-		mold.id(java.util.UUID.randomUUID().toString());
-		mold.item = item;
-		addPromise(mold);
-		return mold;
+	public $template+firstUpperCase add($modelClass item) {
+		$template+firstUpperCase template = new $template+firstUpperCase(($box+firstUpperCase~Box)box());
+		template.id(java.util.UUID.randomUUID().toString());
+		template.item = item;
+		addPromise(template);
+		return template;
 	}
 
 	@Override
 	public void removeAll() {
-		remove($mold+firstUpperCase.class);
+		remove($template+firstUpperCase.class);
 	}
 end
 
-def type(component & child & stampblock & multipleblock) trigger(method)
-	public void add$name+firstUpperCase~Mold($mold+firstUpperCase mold) {
-		mold.id(java.util.UUID.randomUUID().toString());
-		$owner.this.add(mold, "$name");
+def type(component & child & stamp & multipleDDDDDDDD) trigger(method)
+	public void add$name+firstUpperCase~Template($template+firstUpperCase template) {
+		template.id(java.util.UUID.randomUUID().toString());
+		$owner.this.add(template, "$name");
 	}
 end
 
@@ -101,7 +101,7 @@ def type(extends & multiple)
 end
 
 def type(extends & collection)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass, $mold>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass, $template>
 end
 
 def type(extends & stampblock)
@@ -112,15 +112,15 @@ def type(extends)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>
 end
 
-def type(component & child & multipleblock) trigger(moldChildReferences)
+def type(component & child & multipleblock) trigger(templateChildReferences)
 end
 
 def type(component & child & multipleblock) trigger(blockChildReferences)
 end
 
-def type(component & child) trigger(moldChildReferences)
+def type(component & child) trigger(templateChildReferences)
 	$name = [$ancestorsNotMe...[.].]$name;[
-	$component+moldChildReferences...[$NL]]
+	$component+templateChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockChildReferences)
@@ -136,9 +136,9 @@ def type(component & child) trigger(childReferences)
 	$component+childReferences...[$NL]]
 end
 
-def type(component & child) trigger(moldReferences)
+def type(component & child) trigger(templateReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$component+moldChildReferences...[$NL]]
+	$component+templateChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockReferences)
@@ -160,7 +160,7 @@ def type(component & child & stampblock & multipleblock)
 end
 
 def type(component & child & stampblock)
-	if ($name == null) $name = register(new $mold+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
+	if ($name == null) $name = register(new $template+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
 def type(component & child)
@@ -179,8 +179,8 @@ def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
 
-def type(implements & timeconsumingcomponent)
-	implements io.intino.alexandria.ui.displays.components.TimeConsuming
+def type(implements & dynamicloadedcomponent)
+	implements io.intino.alexandria.ui.displays.components.DynamicLoaded
 end
 
 def type(implements)
