@@ -6,23 +6,14 @@ def type(reference)
 	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
 
-def type(component & child & stampblock & multipleblock) trigger(declarations)
-end
-
-def type(component & child & stampblock) trigger(declarations)
-	public $template+firstUpperCase $name;
+def type(component & child & collection) trigger(declarations)
+	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
+	$heading+declarations...[$NL]]
 end
 
 def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
-end
-
-def type(component & child & stampblock & multipleblock) trigger(declaration)
-end
-
-def type(component & child & stampblock) trigger(declaration)
-	public $template+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declaration)
@@ -31,44 +22,69 @@ end
 
 def type(method & multiple)
 	@Override
-	public void add([$objectType value]) {
-		io.intino.alexandria.ui.displays.components.$componentType child = new io.intino.alexandria.ui.displays.components.$componentType(box());
+	public $componentType add([$objectType value]) {
+		$componentType child = new $componentType(box());
 		child.id(java.util.UUID.randomUUID().toString());
 		add(child, "$name");[
-		child.update($objectTypeValue)];
+		child.update($objectTypeValue);]
+		return child;
+	}
+end
+
+def type(method & collection & table)
+	public class $name+firstUpperCase~Row extends io.intino.alexandria.ui.displays.components.CollectionRow<B> {[
+		$item+property...[$NL]]
+		@Override
+		public void init() {[
+			$item+addRow...[$NL]]
+		}
+	}
+
+	public $name+firstUpperCase~Row add([$itemClass item]) {
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());
+		addPromise(row, "rows");
+		return row;
+	}
+
+	[$item+addMethod...[$NL]]
+
+	@Override
+	public void removeAll() {
+		remove(io.intino.alexandria.ui.displays.components.CollectionRow.class);
 	}
 end
 
 def type(method & collection)
-	@Override
-	public $template+firstUpperCase add($modelClass item) {
-		$template+firstUpperCase template = new $template+firstUpperCase(($box+firstUpperCase~Box)box());
-		template.id(java.util.UUID.randomUUID().toString());
-		template.item = item;
-		addPromise(template);
-		return template;
-	}
-
-	@Override
-	public void removeAll() {
-		remove($template+firstUpperCase.class);
-	}
-end
-
-def type(component & child & stamp & multipleDDDDDDDD) trigger(method)
-	public void add$name+firstUpperCase~Template($template+firstUpperCase template) {
-		template.id(java.util.UUID.randomUUID().toString());
-		$owner.this.add(template, "$name");
-	}
+	[$item+addMethod...[$NL]]
+	[$item+removeMethod...[$NL]]
 end
 
 def type(component & child) trigger(method)
 end
 
-def type(component & child & stampblock & multipleblock) trigger(class)
-end
+def type(component & child & collection) trigger(class)
+	public class $name+firstUpperCase extends $extends[ $implements] {
+		[$reference+declaration...[$NL]
+		][$heading+declaration...[$NL]]
 
-def type(component & child & stampblock) trigger(class)
+		public $name+firstUpperCase($abstractBox+type box) {
+			super(box);
+			$properties+common
+			$properties+specific
+		}
+
+		@Override
+		public void $methodName() {
+			super.$methodName();[
+			$reference...[$NL]][
+			$heading+child...[$NL]]
+		}
+
+		$methods
+
+		[$component+class...[$NL]]
+		[$component+method...[$NL]]
+	}
 end
 
 def type(component & child) trigger(class)
@@ -97,14 +113,22 @@ def type(component & child) trigger(class)
 end
 
 def type(extends & multiple)
-	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, io.intino.alexandria.ui.displays.components.$componentType, $objectType>
+	io.intino.alexandria.ui.displays.components.Multiple<$abstractBox+type, $componentType, $objectType>
+end
+
+def type(extends & collection & table)
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, io.intino.alexandria.ui.displays.components.CollectionRow, $itemClass>
 end
 
 def type(extends & collection)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $modelClass, $template>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, $componentType, $itemClass>
 end
 
-def type(extends & stampblock)
+def type(extends & item)
+	io.intino.alexandria.ui.displays.components.Item<$abstractBox+type, $itemClass>
+end
+
+def type(extends & stamp)
 	$type+firstUpperCase
 end
 
@@ -118,9 +142,19 @@ end
 def type(component & child & multipleblock) trigger(blockChildReferences)
 end
 
+def type(component & child & collection) trigger(templateChildReferences)
+	$name = [$ancestorsNotMe...[.].]$name;[
+	$heading+templateChildReferences...[$NL]]
+end
+
 def type(component & child) trigger(templateChildReferences)
 	$name = [$ancestorsNotMe...[.].]$name;[
 	$component+templateChildReferences...[$NL]]
+end
+
+def type(component & child & collection) trigger(blockChildReferences)
+	$name = [$ancestorsNotMe...[.].]$name;[
+	$heading+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockChildReferences)
@@ -128,7 +162,9 @@ def type(component & child) trigger(blockChildReferences)
 	$component+blockChildReferences...[$NL]]
 end
 
-def type(component & child & stampblock & multipleblock) trigger(childReferences)
+def type(component & child & collection) trigger(childReferences)
+	$name = [$ancestors...[.].]$name;[
+	$heading+childReferences...[$NL]]
 end
 
 def type(component & child) trigger(childReferences)
@@ -136,9 +172,19 @@ def type(component & child) trigger(childReferences)
 	$component+childReferences...[$NL]]
 end
 
+def type(component & child & collection) trigger(templateReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	$heading+templateChildReferences...[$NL]]
+end
+
 def type(component & child) trigger(templateReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+templateChildReferences...[$NL]]
+end
+
+def type(component & child & collection) trigger(blockReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	$heading+blockChildReferences...[$NL]]
 end
 
 def type(component & child) trigger(blockReferences)
@@ -146,9 +192,19 @@ def type(component & child) trigger(blockReferences)
 	$component+blockChildReferences...[$NL]]
 end
 
+def type(component & child & collection) trigger(references)
+	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
+	$heading+childReferences...[$NL]]
+end
+
 def type(component & child) trigger(references)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$component+childReferences...[$NL]]
+end
+
+def type(component & child & collection) trigger(initializations)
+	$binding[
+	$heading+initializations...[$NL]]
 end
 
 def type(component & child) trigger(initializations)
@@ -156,10 +212,7 @@ def type(component & child) trigger(initializations)
 	$component+initializations...[$NL]]
 end
 
-def type(component & child & stampblock & multipleblock)
-end
-
-def type(component & child & stampblock)
+def type(component & child & stamp)
 	if ($name == null) $name = register(new $template+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
@@ -233,7 +286,7 @@ def type(properties & text) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	source(new io.intino.alexandria.ui.sources.$source+firstUpperCase());
+	[source(new io.intino.alexandria.ui.sources.$sourceClass+firstUpperCase());]
 	pageSize($pageSize);
 end
 
@@ -269,4 +322,37 @@ end
 
 def type(badge)
 	[value($value);]
+end
+
+def type(item) trigger(addDeclaration)
+	$name(add$name+firstUpperCase(new $name+firstUpperCase(box())[, $itemVariable]))
+end
+
+def type(item) trigger(type)
+	$name+firstUpperCase
+end
+
+def type(item) trigger(addRow)
+	$name = register(add$name+firstUpperCase(box()));
+end
+
+def type(item) trigger(property)
+	public $name+firstUpperCase $name;
+end
+
+def type(item) trigger(addMethod)
+	$methodAccessibility $name+firstUpperCase add$methodName+firstUpperCase([$itemClass item]) {
+		$name+firstUpperCase result = new $name+firstUpperCase(box());
+		result.id(java.util.UUID.randomUUID().toString());[
+		result.$itemVariable = $itemVariable;][
+		$addPromise~(result, "rows");]
+		return result;
+	}
+end
+
+def type(item) trigger(removeMethod)
+	@Override
+	public void removeAll() {
+		remove($name+firstUpperCase~.class);
+	}
 end

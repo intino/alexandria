@@ -42,6 +42,11 @@ Concept:Named Catalog extends Component
 	has Component
 
 
+//Concept DataComponents
+//Concept CatalogComponents
+//Concept OperationComponents
+//Concept OtherComponents
+
 Concept ChildComponents
 
 	Concept Chip extends Component
@@ -141,9 +146,9 @@ Concept ChildComponents
 		var string noItemsMessage = empty
 		var integer pageSize = 20
 
-		Concept Mold
-			Concept:{1..1} Heading > has Component
-			Concept:{1..1} Item > has Component
+		Concept:{1..*} Mold
+			Concept:{0..1} Heading extends Component > has Component
+			Concept:{1..1} Item extends Component > has Component
 
 		sub Magazine
 		sub List

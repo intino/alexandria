@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.molds;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 
@@ -14,4 +14,5 @@ public class BlockExamplesMold extends AbstractBlockExamplesMold<UiFrameworkBox>
         block2Code.onChange(event -> block2.spacing(event.<String>value().replace("DP", "")));
         block3Code.onChange(event -> block3.layout(event.value()));
     }
+
 }

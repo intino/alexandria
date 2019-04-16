@@ -4,12 +4,16 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template testTemplate as Decorated
-	Text facetas as Multiple
-	Stamp(template=template1) templates as Multiple
-	Block as Multiple
+	Frame(display=eventsDisplay)
 
-Template template1
-	Text campo1
+Display eventsDisplay as Decorated
+
+//	Text facetas as Multiple
+//	Stamp(template=template1) templates as Multiple
+//	Block as Multiple
+//
+//Template(modelClass="Abcde") template1
+//	Text campo1
 
 //	List<Header> headers = tabla.setHeader();
 //	Row row = tabla.addRow(Item item);
@@ -26,19 +30,20 @@ Template template1
 
 //	Table tabla
 //		Mold
-//			Header > SortBox(sorting = empty) sortBox
-//			Item nombreTemplate > Text nombre
+//			Heading cabeceraNombre > SortBox(sorting = empty) sortBox
+//			Item nombre > Text valor
 //		Mold
-//			Header
-//			Item apellidosTemplate > Text apellidos
-//			SortBox(sorting = empty) sortBox
+//			Heading cabeceraApellidos
+//				SortBox(sorting = empty) sortBox
+//			Item apellidos
+//				Text valor
 //
-//	List(sourceClass="io.intino.components.box.ui.Source", itemClass="io.intino.components.box.ui.Source.Item")
+//	List(sourceClass="io.intino.components.box.ui.Source", itemClass="io.intino.components.box.ui.Source.Item") lista
 //		Mold
-//			Header as Labeled(label="compact")
-//			Item
+//			Heading cabeceraCompact as Labeled(label="compact")
+//			Item compact
 //				Text fila1
-//
+
 
 
 Theme

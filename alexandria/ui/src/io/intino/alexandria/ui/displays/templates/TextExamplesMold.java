@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.molds;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 
@@ -15,4 +15,5 @@ public class TextExamplesMold extends AbstractTextExamplesMold<UiFrameworkBox> {
         text2.update("lorem ipsum");
         text3.update("lorem ipsum");
     }
+
 }

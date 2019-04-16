@@ -6,37 +6,37 @@ use Schemas
 Dataframe iris as CSV("data/iris.csv")
 Datasource(modelClass="io.intino.alexandria.ui.documentation.Item") items
 
-Mold(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated TimeConsuming(loadTime=Low)
+Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated DynamicLoaded(loadTime=Slow)
 	Text(value="Widget", format=h3) title
-	Text(format=body1) highlightFacets as Multiple Highlight("white","#679164")
+	Text(format=body1) highlightFacets as Multiple Highlighted("white","#679164")
 	Text(format=body1 airBottom) description
 
 	Block(layout=Vertical, spacing=DP24)
 		Block examples
 			Text(value="Examples", format=h5 underline)
-			Block textExamples as Conditional > Block as Stamp(textExamplesMold)
-			Block numberExamples as Conditional > Block as Stamp(numberExamplesMold)
-			Block fileExamples as Conditional > Block as Stamp(fileExamplesMold)
-			Block imageExamples as Conditional > Block as Stamp(imageExamplesMold)
-			Block dateExamples as Conditional > Block as Stamp(dateExamplesMold)
-			Block chartExamples as Conditional > Block as Stamp(chartExamplesMold)
-			Block blockExamples as Conditional > Block as Stamp(blockExamplesMold)
-			Block collectionExamples as Conditional > Block as Stamp(collectionExamplesMold)
+			Block textExamples as Conditional > Stamp(template=textExamplesMold)
+			Block numberExamples as Conditional > Stamp(template=numberExamplesMold)
+			Block fileExamples as Conditional > Stamp(template=fileExamplesMold)
+			Block imageExamples as Conditional > Stamp(template=imageExamplesMold)
+			Block dateExamples as Conditional > Stamp(template=dateExamplesMold)
+			Block chartExamples as Conditional > Stamp(template=chartExamplesMold)
+			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
+			Block collectionExamples as Conditional > Stamp(template=collectionExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)
 			Text facetsNames
-		Block properties
+		Block
 			Text(value="Properties", format=h5 underline)
-			Block property as Multiple(noItemsMessage="no properties") Stamp(propertyMold)
-		Block methods
+			Stamp(template=propertyMold) properties as Multiple(noItemsMessage="no properties")
+		Block
 			Text(value="Methods", format=h5 underline)
-			Block method as Multiple(noItemsMessage="no methods") Stamp(methodMold)
+			Stamp(template=methodMold) methods as Multiple(noItemsMessage="no methods")
 		Block
 			Text(value="Events", format=h5 underline)
 			Frame(display=eventsDisplay) events
 
-Mold(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
+Template(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) propertyMold as Decorated
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
@@ -48,18 +48,18 @@ Mold(modelClass="io.intino.alexandria.schemas.Property", format=airBottom) prope
 		Text(format=body2 widgetType, value=":&nbsp;&nbsp;") valuesSeparator
 		Text(format=body2) values
 
-Mold(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold as Decorated
+Template(modelClass="io.intino.alexandria.schemas.Method", format=airBottom) methodMold as Decorated
 	Text(format=body2 facetsAbsolute, value="", mode=Uppercase) facets
 	Block(layout=Horizontal StartJustified)
 		Text(format=h6) name
 		Text(format=h6, value="(")
-		Block(layout = Horizontal) params > Block param as Stamp(methodParamMold) Multiple
+		Block(layout = Horizontal) params > Stamp(template=methodParamMold) param as Multiple
 		Text(format=h6, value=")")
 		Text(format=h6, value=":&nbsp;&nbsp;")
 		Text(format=h6 widgetType, mode = Lowercase) returnType
 	Text(format=body2, value="") description
 
-Mold(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
+Template(layout=Horizontal, modelClass="io.intino.alexandria.schemas.Parameter") methodParamMold as Decorated
 	Text(format=h6) name
 	Text(format=h6, value=":&nbsp;")
 	Text(format=h6) type
@@ -69,7 +69,7 @@ Display eventsDisplay as Decorated
 	Notification refresh as Object(Method) List
 
 
-Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -140,7 +140,7 @@ Mold(layout=Vertical, spacing=DP8) textExamplesMold as Decorated
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\=\=\=\=\=\=\=\=\=<br/>
 							=========
 
-Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -171,7 +171,7 @@ Mold(layout=Vertical, spacing=DP8) numberExamplesMold as Decorated
 							Number(format\=body1 widgetDemo, value\=0, min\=0, max\=100, step\=10, prefix\="Price:", suffix\="$") number2 as Editable
 							=========
 
-Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -226,7 +226,7 @@ Mold(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 							Date date5 as Editable(mask\="__/__/____")
 							=========
 
-Mold(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=50%, height=100%)
@@ -240,7 +240,7 @@ Mold(layout=Vertical, spacing=DP8) fileExamplesMold as Decorated
 							File(value\="data/example.pdf") file1 as Absolute(width\=200px, height\=150px)
 							=========
 
-Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -265,7 +265,7 @@ Mold(layout=Vertical, spacing=DP8) imageExamplesMold as Decorated
 
 
 
-Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -302,7 +302,7 @@ Mold(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
 							Chart(input\=iris, query\="", output\=Image) chart2
 							=========
 
-Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
@@ -371,13 +371,14 @@ Mold(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;Text(value\="value")
 						=========
 
-Mold(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
+Template(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="List facet")
 			Block(spacing=DP8, format=filled)
-				List(source=items, mold=itemMold) collection1
+				List(itemClass="io.intino.alexandria.ui.documentation.Item") collection1
+					Mold > Item mold > Stamp(template=itemMold) stamp
 			Block > Text collection1Code as Code(language=Html)
 					value
 						=========
@@ -386,7 +387,7 @@ Mold(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 						List(source\=items, mold\=itemMold) collection1
 						=========
 
-Mold(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
+Template(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
 	Block(layout=Horizontal Center, spacing=DP8)
 		Image avatar as Avatar("")
 		Text label

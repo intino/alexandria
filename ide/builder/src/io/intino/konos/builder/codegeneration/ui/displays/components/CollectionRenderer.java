@@ -2,11 +2,11 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.model.graph.ChildComponents;
 import io.intino.konos.model.graph.ChildComponents.Collection;
-import io.intino.konos.model.graph.Component;
 import org.siani.itrules.model.Frame;
 
-import java.util.List;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
 public class CollectionRenderer extends SizedRenderer<Collection> {
 
@@ -16,36 +16,74 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 
 	@Override
 	public Frame buildFrame() {
-		Frame result = super.buildFrame();
-		addMolds(result);
-		return result;
+		Frame frame = super.buildFrame();
+		addHeadings(frame);
+		addRow(frame);
+		return frame;
 	}
 
-	private void addMolds(Frame frame) {
-		element.moldList().forEach(m -> addMold(m, frame));
+	private void addHeadings(Frame frame) {
+		element.moldList().forEach(m -> addHeading(m, frame));
 	}
 
-	private void addMold(Collection.Mold mold, Frame frame) {
-		Frame result = new Frame("mold");
-		result.addSlot("heading", componentFrame(mold.heading().componentList()));
-		result.addSlot("item", componentFrame(mold.item().componentList()));
-		frame.addSlot("mold", result);
+	private void addRow(Frame frame) {
+		element.moldList().forEach(m -> frame.addSlot("component", childFrame(m.item())));
 	}
 
-	private Frame componentFrame(List<Component> componentList) {
-		Frame result = new Frame("heading");
-		componentList.stream().map(this::componentFrame).forEach(f -> result.addSlot("component", f));
-		return result;
+	private void addHeading(Collection.Mold mold, Frame frame) {
+		if (mold.heading() == null) return;
+		frame.addSlot("heading", childFrame(mold.heading()));
+		frame.addSlot("component", childFrame(mold.heading()));
 	}
 
 	@Override
 	public Frame properties() {
 		Frame result = super.properties();
 		result.addTypes("collection");
-		result.addSlot("source", element.sourceClass());
+		if (element.sourceClass() != null) result.addSlot("sourceClass", element.sourceClass());
 		result.addSlot("pageSize", element.pageSize());
 		if (element.noItemsMessage() != null) result.addSlot("noItemsMessage", element.noItemsMessage());
 		return result;
+	}
+
+	@Override
+	protected boolean addSpecificTypes(Frame frame) {
+		super.addSpecificTypes(frame);
+
+		frame.addTypes(Collection.class.getSimpleName(), typeOf(element));
+		if (element.sourceClass() != null) frame.addSlot("sourceClass", element.sourceClass());
+		frame.addSlot("componentType", firstUpperCase(nameOf(element.mold(0).item())));
+		frame.addSlot("itemClass", element.itemClass() != null ? element.itemClass() : "java.lang.Void");
+
+		addMethodsFrame(frame);
+
+		return false;
+	}
+
+	private void addMethodsFrame(Frame frame) {
+		Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName(), className(element.getClass()));
+		methodsFrame.addSlot("name", nameOf(element));
+		if (element.sourceClass() != null) methodsFrame.addSlot("sourceClass", element.sourceClass());
+		if (element.itemClass() != null) {
+			methodsFrame.addSlot("itemClass", element.itemClass());
+			methodsFrame.addSlot("itemVariable", "item");
+		}
+		element.moldList().forEach(m -> addItemFrame(m.item(), methodsFrame));
+		frame.addSlot("methods", methodsFrame);
+	}
+
+	private void addItemFrame(Collection.Mold.Item item, Frame frame) {
+		Frame result = new Frame("item");
+		result.addSlot("methodAccessibility", element.i$(ChildComponents.Table.class) ? "private" : "public");
+		result.addSlot("name", nameOf(item));
+		result.addSlot("methodName", element.i$(ChildComponents.Table.class) ? nameOf(item) : "");
+		if (!element.i$(ChildComponents.Table.class)) result.addSlot("addPromise", "addPromise");
+		String itemClass = element.itemClass();
+		if (itemClass != null) {
+			result.addSlot("itemClass", itemClass);
+			result.addSlot("itemVariable", "item");
+		}
+		frame.addSlot("item", result);
 	}
 
 	@Override

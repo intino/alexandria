@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.molds;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Property;
@@ -12,6 +12,7 @@ public class PropertyMold extends AbstractPropertyMold<UiFrameworkBox> {
     @Override
     public void refresh() {
         super.refresh();
+        Property property = item();
         name.update(property.name());
         type.update(property.type().name().replace("Array", "[]"));
         if (property.facets() != null) facets.update(String.join(", ", property.facets()));
@@ -24,11 +25,11 @@ public class PropertyMold extends AbstractPropertyMold<UiFrameworkBox> {
 
     private String valuesLabel() {
         if (!hasValues()) return null;
-        return property.type() == Property.Type.Word ? "allowed values" : "default value";
+        return item().type() == Property.Type.Word ? "allowed values" : "default value";
     }
 
     private boolean hasValues() {
-        return property.values().size() > 0;
+        return item().values().size() > 0;
     }
 
 }

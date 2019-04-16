@@ -12,9 +12,8 @@ def type(display)
 	$blocksImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-    public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>[ $implements] {
-    	[$attribute...[$NL]
-    	][$component+declarations...[$NL]
+    public class [$abstract]$name+firstUpperCase$abstractBox+extension $displayExtends[ $implements] {
+    	[$component+declarations...[$NL]
 
         ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
@@ -32,6 +31,14 @@ def type(display)
 		$component+class...[$NL]][
 		$component+method...[$NL]]
 	}
+end
+
+def type(displayExtends & template)
+	extends io.intino.alexandria.ui.displays.components.Template<$name+firstUpperCase~Notifier, $modelClass, $abstractBox+type>
+end
+
+def type(displayExtends)
+	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
 end
 
 def type(templatesImport)

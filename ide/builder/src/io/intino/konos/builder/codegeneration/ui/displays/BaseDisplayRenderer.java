@@ -37,6 +37,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
+		addExtends(frame);
 		addImports(frame);
 		addImplements(frame);
 		addMethods(frame);
@@ -49,6 +50,19 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.isAccessible())
 			frame.addSlot("parameter", element.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
 		return frame;
+	}
+
+	private void addExtends(Frame frame) {
+		Frame result = new Frame("displayExtends");
+		if (element.i$(Template.class)) result.addTypes(Template.class.getSimpleName());
+		result.addSlot("type", typeOf(element));
+		addDecoratedFrames(result);
+		if (element.i$(Template.class)) {
+			String modelClass = element.a$(Template.class).modelClass();
+			result.addSlot("modelClass", modelClass != null ? modelClass : "java.lang.Void");
+		}
+		result.addSlot("name", nameOf(element));
+		frame.addSlot("displayExtends", result);
 	}
 
 	private void addImports(Frame frame) {

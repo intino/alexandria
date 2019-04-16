@@ -16,8 +16,7 @@ end
 def type(child) trigger(add)
 end
 
-def type(component & child & stamp & multipleDDDDDDDD)
-	{this.renderInstances("$name"[, { noItemsMessage: "$noItemsMessage" }])}
+def type(component & child & item)
 end
 
 def type(component & child)
@@ -32,7 +31,7 @@ def type(extends & multiple)
 	Ui.Multiple
 end
 
-def type(extends & stampblock)
+def type(extends & stamp)
 	Displays.$type+firstUpperCase
 end
 

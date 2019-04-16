@@ -6,9 +6,7 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.ChildComponents.Collection;
-import io.intino.konos.model.graph.ChildComponents.Header;
-import io.intino.konos.model.graph.ChildComponents.Selector;
-import io.intino.konos.model.graph.ChildComponents.Snackbar;
+import io.intino.konos.model.graph.ChildComponents.*;
 import io.intino.konos.model.graph.ChildComponents.Wizard.Step;
 import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
@@ -24,6 +22,7 @@ import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
+import java.util.List;
 import java.util.*;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -142,7 +141,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
-		while (parent != null) {
+		while (parent != null && !isRoot(parent)) {
 			result.add(0, nameOf(parent));
 			parent = parent.core$().ownerAs(Component.class);
 		}
@@ -166,6 +165,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
 		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());
 		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
+		if (component.i$(Collection.Mold.Heading.class)) components.addAll(component.a$(Collection.Mold.Heading.class).componentList());
+		if (component.i$(Collection.Mold.Item.class)) components.addAll(component.a$(Collection.Mold.Item.class).componentList());
 		return components;
 	}
 
@@ -179,7 +180,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		result.addSlot("extends", frame);
 	}
 
-	private boolean addSpecificTypes(Frame frame) {
+	protected boolean addSpecificTypes(Frame frame) {
 
 		if (element.i$(AbstractMultiple.class)) {
 			frame.addTypes(AbstractMultiple.class.getSimpleName().replace("Abstract", ""));
@@ -188,50 +189,53 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", "multiple");
 			methodsFrame.addSlot("componentType", multipleComponentType(element));
 			String objectType = multipleObjectType(element);
-			if (objectType != null) methodsFrame.addSlot("objectType", objectType);
+			if (objectType != null && !objectType.equals("java.lang.Void")) {
+				methodsFrame.addSlot("objectType", objectType);
+				methodsFrame.addSlot("objectTypeValue", "value");
+			}
 			methodsFrame.addSlot("name", nameOf(element));
 			frame.addSlot("methods", methodsFrame);
 			frame.addTypes("multiple");
 			frame.addSlot("componentType", multipleComponentType(element));
-			if (objectType != null) {
-				frame.addSlot("objectType", objectType);
-				frame.addSlot("objectTypeValue", "value");
-			}
+			if (objectType != null) frame.addSlot("objectType", objectType);
 		}
 
-//		if (element.i$(Stamp.class)) {
-//			frame.addTypes(Stamp.class.getSimpleName());
-//			Template template = element.a$(Stamp.class).template();
-//			frame.addSlot("template", template.name$());
-//			frame.addSlot("type", template.name$());
-//			return true;
-//		}
+		if (element.i$(Template.class)) {
+			frame.addTypes(Template.class.getSimpleName());
+			String modelClass = element.a$(Template.class).modelClass();
+			frame.addSlot("componentType", nameOf(element));
+			frame.addSlot("objectType", modelClass != null ? modelClass : "java.lang.Void");
+			return true;
+		}
 
-		if (element.i$(Collection.class)) {
-//			Frame methodsFrame = addOwner(baseFrame()).addTypes("method", Collection.class.getSimpleName());
-//			Collection collection = element.a$(Collection.class);
-//			String modelClass = collection.source().modelClass();
-//			methodsFrame.addSlot("modelClass", modelClass);
-//			methodsFrame.addSlot("mold", collection.mold().name$());
-//			frame.addTypes(Collection.class.getSimpleName());
-//			frame.addSlot("methods", methodsFrame);
-//			frame.addSlot("modelClass", modelClass);
-//			frame.addSlot("mold", collection.mold().name$());
-//			return false;
+		if (element.i$(Stamp.class)) {
+			frame.addTypes(Stamp.class.getSimpleName());
+			Template template = element.a$(Stamp.class).template();
+			frame.addSlot("template", template.name$());
+			frame.addSlot("type", template.name$());
+			return true;
+		}
+
+		if (element.i$(Collection.Mold.Item.class)) {
+			frame.addTypes(Collection.Mold.Item.class.getSimpleName());
+			Collection collection = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class);
+			frame.addSlot("itemClass", collection.itemClass() != null ? collection.itemClass() : "java.lang.Void");
+			return true;
 		}
 
 		return false;
 	}
 
 	private String multipleComponentType(C element) {
-		if (element.i$(MultipleText.class)) return MultipleText.class.getSimpleName().replace("Multiple", "");
-		if (element.i$(MultipleFile.class)) return MultipleFile.class.getSimpleName().replace("Multiple", "");
-		if (element.i$(MultipleImage.class)) return MultipleImage.class.getSimpleName().replace("Multiple", "");
-		if (element.i$(MultipleIcon.class)) return MultipleIcon.class.getSimpleName().replace("Multiple", "");
-		if (element.i$(MultipleNumber.class)) return MultipleNumber.class.getSimpleName().replace("Multiple", "");
-		if (element.i$(MultipleDate.class)) return MultipleDate.class.getSimpleName().replace("Multiple", "");
+		String prefix = "io.intino.alexandria.ui.displays.components.";
+		if (element.i$(MultipleText.class)) return prefix + MultipleText.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleFile.class)) return prefix + MultipleFile.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleImage.class)) return prefix + MultipleImage.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleIcon.class)) return prefix + MultipleIcon.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleNumber.class)) return prefix + MultipleNumber.class.getSimpleName().replace("Multiple", "");
+		if (element.i$(MultipleDate.class)) return prefix + MultipleDate.class.getSimpleName().replace("Multiple", "");
 		if (element.i$(MultipleStamp.class)) return firstUpperCase(element.a$(MultipleStamp.class).template().name$());
-		if (element.i$(MultipleBlock.class)) return firstUpperCase(element.a$(MultipleBlock.class).name$());
+		if (element.i$(MultipleBlock.class)) return firstUpperCase(nameOf(element));
 		return null;
 	}
 
@@ -242,8 +246,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (element.i$(MultipleIcon.class)) return "java.net.URL";
 		if (element.i$(MultipleNumber.class)) return "java.lang.Double";
 		if (element.i$(MultipleDate.class)) return "java.time.Instant";
-		if (element.i$(MultipleStamp.class)) return element.a$(MultipleStamp.class).template().modelClass();
-		if (element.i$(MultipleBlock.class)) return null;
+		if (element.i$(MultipleStamp.class)) {
+			String modelClass = element.a$(MultipleStamp.class).template().modelClass();
+			return modelClass != null ? modelClass : "java.lang.Void";
+		}
+		if (element.i$(MultipleBlock.class)) return "java.lang.Void";
 		return null;
 	}
 

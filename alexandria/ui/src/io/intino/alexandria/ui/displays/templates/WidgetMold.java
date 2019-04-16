@@ -1,13 +1,13 @@
-package io.intino.alexandria.ui.displays.molds;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.schemas.Method;
-import io.intino.alexandria.schemas.Property;
+import io.intino.alexandria.schemas.Widget;
 import io.intino.alexandria.ui.I18n;
 import io.intino.alexandria.ui.displays.EventsDisplay;
 import io.intino.alexandria.ui.documentation.model.*;
 
 public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
+
     private boolean infoAdded = false;
 
     public WidgetMold(UiFrameworkBox box) {
@@ -24,16 +24,18 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
     public void refresh() {
         super.refresh();
         showLoading();
-        if (widget == null) return;
+        if (item() == null) return;
+        Widget widget = item();
         title.update(I18n.translate(widget.getClass().getSimpleName().replace("Widget", ""), language()));
         description.update(I18n.translate(widget.description(), language()));
         highlightFacets.addAll(widget.facets());
         updateExamplesVisibility();
         updateInfo();
-		hideLoading();
+        hideLoading();
     }
 
     private void updateExamplesVisibility() {
+        Widget widget = item();
         textExamples.visible(widget instanceof TextWidget);
         numberExamples.visible(widget instanceof NumberWidget);
         fileExamples.visible(widget instanceof FileWidget);
@@ -46,37 +48,24 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
 
     private void updateInfo() {
         if (infoAdded) return;
+        Widget widget = item();
         facetsNames.update(widget.facets().size() > 0 ? String.join(", ", widget.facets()) : I18n.translate("no facets", language()));
-        refreshPropertiesDisplay();
-        refreshMethodsDisplay();
+        refreshProperties();
+        refreshMethods();
         refreshEventsDisplay();
         infoAdded = true;
     }
 
-    private void refreshPropertiesDisplay() {
-        widget.propertyList().forEach(this::propertyMoldOf);
+    private void refreshProperties() {
+        item().propertyList().forEach(p -> properties.add(p));
     }
 
-    private void propertyMoldOf(Property property) {
-        PropertyMold mold = new PropertyMold(box());
-        mold.property = property;
-        properties.addPropertyMold(mold);
-        mold.refresh();
-    }
-
-    private void refreshMethodsDisplay() {
-        widget.methodList().forEach(this::methodMoldOf);
-    }
-
-    private void methodMoldOf(Method method) {
-        MethodMold mold = new MethodMold(box());
-        mold.method = method;
-        methods.addMethodMold(mold);
-        mold.refresh();
+    private void refreshMethods() {
+        item().methodList().forEach(m -> methods.add(m));
     }
 
     private void refreshEventsDisplay() {
-        events.<EventsDisplay>get().events(widget.eventList());
+        events.<EventsDisplay>get().events(item().eventList());
         events.refresh();
     }
 
