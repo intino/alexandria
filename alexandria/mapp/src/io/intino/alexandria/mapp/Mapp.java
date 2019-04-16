@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Mapp {
 	private final int size;
 	private final String[] values;
-	private Entry[]  entries;
+	private Entry[] entries;
 
 	public Mapp(File file) throws IOException {
 		this(new MappReader(file));
@@ -31,7 +31,9 @@ public class Mapp {
 	}
 
 	public String get(long key) {
-		return values[entries[indexOf(key)].value];
+		int i = indexOf(key);
+		if (i < 0) return null;
+		return values[entries[i].value];
 	}
 
 	private int indexOf(long key) {
@@ -51,12 +53,12 @@ public class Mapp {
 	static class Entry {
 		long key;
 		int value;
-	
+
 		Entry(long key, int value) {
 			this.key = key;
 			this.value = value;
 		}
-	
+
 		@Override
 		public int hashCode() {
 			return Long.hashCode(key);
