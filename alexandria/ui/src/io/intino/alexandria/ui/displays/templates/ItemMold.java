@@ -1,4 +1,4 @@
-package io.intino.alexandria.ui.displays.molds;
+package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 
@@ -31,4 +31,5 @@ public class ItemMold extends AbstractItemMold<UiFrameworkBox> {
         avatar.update(item.label());
         label.update(item.label());
     }
+
 }

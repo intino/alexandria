@@ -15,6 +15,6 @@ public abstract class Multiple<B extends Box, C extends Component, V extends Obj
         values.forEach(this::add);
     }
 
-    public abstract void add(V value);
+    public abstract C add(V value);
 
 }

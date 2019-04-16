@@ -2,10 +2,12 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 
-public class Mold<B extends Box> extends AbstractMold<B> {
+public class CollectionRow<B extends Box> extends AbstractCollectionRow<B> {
 
-    public Mold(B box) {
+    public CollectionRow(B box) {
         super(box);
     }
+
+
 
 }

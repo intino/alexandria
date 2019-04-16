@@ -1,6 +1,6 @@
 dsl Konos
 
-Component mold as Decorated
+Component template as Decorated
 Component block as Decorated
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text
@@ -103,6 +103,9 @@ Component list as Decorated
 	Request page as Integer
 	Request itemsPerPage as Integer
 	Request notifyItemsRendered as Object(ItemsRenderedInfo)
+
+Component Item as Decorated
+Component CollectionRow as Decorated
 
 Schema ItemsRenderedInfo
 	Attribute items as Text List

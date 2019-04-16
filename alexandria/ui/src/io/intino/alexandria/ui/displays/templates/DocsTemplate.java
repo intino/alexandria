@@ -20,20 +20,20 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     }
 
     private void addDataWidgets() {
-        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Text)));
-        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Number)));
-        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Image)));
-        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.File)));
-        body.dataBlock.addDataWidgetsMold(moldOf(Model.widget(Model.WidgetType.Date)));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Text));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Number));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Image));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.File));
+        body.dataBlock.dataWidgets.add(Model.widget(Model.WidgetType.Date));
     }
 
     private void addCatalogWidgets() {
-        body.catalogBlock.addCatalogWidgetsMold(moldOf(Model.widget(Model.WidgetType.Collection)));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Collection));
     }
 
     private void addOtherWidgets() {
-        body.otherBlock.addOtherWidgetsMold(moldOf(Model.widget(Model.WidgetType.Block)));
-        body.otherBlock.addOtherWidgetsMold(moldOf(Model.widget(Model.WidgetType.Chart)));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Block));
+        body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Chart));
     }
 
     private WidgetSummaryMold moldOf(Widget widget) {

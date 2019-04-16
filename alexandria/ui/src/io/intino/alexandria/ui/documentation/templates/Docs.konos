@@ -14,18 +14,18 @@ Template docsTemplate as Decorated
 
 	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAir) body
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
-			Block dataWidgets as Multiple(noItemsMessage="no widgets") Stamp(widgetSummaryMold)
+			Stamp(template=widgetSummaryMold) dataWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")
-			Block catalogWidgets as Multiple(noItemsMessage="no widgets") Stamp(widgetSummaryMold)
+			Stamp(template=widgetSummaryMold) catalogWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) operationBlock as Paper Relative(width=40%) Labeled("operation widgets")
-			Block operationWidgets as Multiple(noItemsMessage="no widgets") Stamp(widgetSummaryMold)
+			Stamp(template=widgetSummaryMold) operationWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) otherBlock as Paper Relative(width=40%) Labeled("other widgets")
-			Block otherWidgets as Multiple(noItemsMessage="no widgets") Stamp(widgetSummaryMold)
+			Stamp(template=widgetSummaryMold) otherWidgets as Multiple(noItemsMessage="no widgets")
 
 
-Mold(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
+Template(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
 	OpenPage(title = "", page = UiElements.widgetType, format=h6) title as Link
-	Text(format=body2) facets as Multiple Highlight("white","#679164")
+	Text(format=body2) facets as Multiple Highlighted("white","#679164")
 	Text description
 
 

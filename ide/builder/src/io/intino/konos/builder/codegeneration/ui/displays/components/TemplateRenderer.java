@@ -13,13 +13,6 @@ public class TemplateRenderer extends ComponentRenderer<Template> {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		addAttributes(frame);
-		return frame;
-	}
-
-	@Override
 	public Frame properties() {
 		Frame result = super.properties();
 		addSpacing(result);
@@ -34,15 +27,6 @@ public class TemplateRenderer extends ComponentRenderer<Template> {
 	private void addLayout(Frame result) {
 		String[] layout = element.layout().stream().map(l -> l.name().toLowerCase()).toArray(String[]::new);
 		result.addSlot("layout", layout);
-	}
-
-	private void addAttributes(Frame result) {
-		String modelClass = element.modelClass();
-		if (modelClass == null) return;
-		Frame frame = new Frame("attribute");
-		frame.addSlot("clazz", modelClass);
-		frame.addSlot("name", modelClass.lastIndexOf(".") != -1 ? modelClass.substring(modelClass.lastIndexOf(".")+1) : modelClass);
-		result.addSlot("attribute", frame);
 	}
 
 	@Override
