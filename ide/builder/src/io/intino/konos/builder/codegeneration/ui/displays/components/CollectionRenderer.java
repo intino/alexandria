@@ -18,16 +18,11 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
 		addHeadings(frame);
-		addRow(frame);
 		return frame;
 	}
 
 	private void addHeadings(Frame frame) {
 		element.moldList().forEach(m -> addHeading(m, frame));
-	}
-
-	private void addRow(Frame frame) {
-		element.moldList().forEach(m -> frame.addSlot("component", childFrame(m.item())));
 	}
 
 	private void addHeading(Collection.Mold mold, Frame frame) {
@@ -73,7 +68,7 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	}
 
 	private void addItemFrame(Collection.Mold.Item item, Frame frame) {
-		Frame result = new Frame("item");
+		Frame result = baseFrame().addTypes("item");
 		result.addSlot("methodAccessibility", element.i$(ChildComponents.Table.class) ? "private" : "public");
 		result.addSlot("name", nameOf(item));
 		result.addSlot("methodName", element.i$(ChildComponents.Table.class) ? nameOf(item) : "");

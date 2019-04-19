@@ -1,12 +1,9 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
 import AbstractTemplate from "../../../gen/displays/components/AbstractTemplate";
 import TemplateNotifier from "../../../gen/displays/notifiers/TemplateNotifier";
 import TemplateRequester from "../../../gen/displays/requesters/TemplateRequester";
 
-const styles = theme => ({});
-
-class Template extends AbstractTemplate {
+export default class Template extends AbstractTemplate {
 
 	constructor(props) {
 		super(props);
@@ -16,5 +13,3 @@ class Template extends AbstractTemplate {
 
 
 }
-
-export default withStyles(styles, { withTheme: true })(Template);

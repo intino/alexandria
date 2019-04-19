@@ -11,9 +11,17 @@ def type(component & child & collection) trigger(declarations)
 	$heading+declarations...[$NL]]
 end
 
+def type(component & child & stamp & single) trigger(declarations)
+	public $template+firstUpperCase $name;
+end
+
 def type(component & child) trigger(declarations)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;[
 	$component+declarations...[$NL]]
+end
+
+def type(component & child & stamp & single) trigger(declaration)
+	public $template+firstUpperCase $name;
 end
 
 def type(component & child) trigger(declaration)
@@ -136,30 +144,17 @@ def type(extends)
 	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>
 end
 
-def type(component & child & multipleblock) trigger(templateChildReferences)
+def type(component & child & multipleblock) trigger(rootChildReferences)
 end
 
-def type(component & child & multipleblock) trigger(blockChildReferences)
-end
-
-def type(component & child & collection) trigger(templateChildReferences)
+def type(component & child & collection) trigger(rootChildReferences)
 	$name = [$ancestorsNotMe...[.].]$name;[
-	$heading+templateChildReferences...[$NL]]
+	$heading+rootChildReferences...[$NL]]
 end
 
-def type(component & child) trigger(templateChildReferences)
+def type(component & child) trigger(rootChildReferences)
 	$name = [$ancestorsNotMe...[.].]$name;[
-	$component+templateChildReferences...[$NL]]
-end
-
-def type(component & child & collection) trigger(blockChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;[
-	$heading+blockChildReferences...[$NL]]
-end
-
-def type(component & child) trigger(blockChildReferences)
-	$name = [$ancestorsNotMe...[.].]$name;[
-	$component+blockChildReferences...[$NL]]
+	$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(childReferences)
@@ -172,24 +167,14 @@ def type(component & child) trigger(childReferences)
 	$component+childReferences...[$NL]]
 end
 
-def type(component & child & collection) trigger(templateReferences)
+def type(component & child & collection) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$heading+templateChildReferences...[$NL]]
+	$heading+rootChildReferences...[$NL]]
 end
 
-def type(component & child) trigger(templateReferences)
+def type(component & child) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$component+templateChildReferences...[$NL]]
-end
-
-def type(component & child & collection) trigger(blockReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$heading+blockChildReferences...[$NL]]
-end
-
-def type(component & child) trigger(blockReferences)
-	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
-	$component+blockChildReferences...[$NL]]
+	$component+rootChildReferences...[$NL]]
 end
 
 def type(component & child & collection) trigger(references)
@@ -212,7 +197,11 @@ def type(component & child) trigger(initializations)
 	$component+initializations...[$NL]]
 end
 
-def type(component & child & stamp)
+def type(component & child & stamp & multiple)
+	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+end
+
+def type(component & child & stamp & single)
 	if ($name == null) $name = register(new $template+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
@@ -342,9 +331,9 @@ end
 
 def type(item) trigger(addMethod)
 	$methodAccessibility $name+firstUpperCase add$methodName+firstUpperCase([$itemClass item]) {
-		$name+firstUpperCase result = new $name+firstUpperCase(box());
+		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
 		result.id(java.util.UUID.randomUUID().toString());[
-		result.$itemVariable = $itemVariable;][
+		result.item($itemVariable);][
 		$addPromise~(result, "rows");]
 		return result;
 	}

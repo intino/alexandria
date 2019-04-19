@@ -8,6 +8,4 @@ public class CollectionRow<B extends Box> extends AbstractCollectionRow<B> {
         super(box);
     }
 
-
-
 }

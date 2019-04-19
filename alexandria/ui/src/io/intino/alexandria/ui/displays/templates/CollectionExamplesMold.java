@@ -1,6 +1,7 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
+import io.intino.alexandria.ui.displays.items.Mold;
 import io.intino.alexandria.ui.documentation.Item;
 
 public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFrameworkBox> {
@@ -11,9 +12,14 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
 
     @Override
     public void init() {
+        super.init();
         collection1.onAddItem(event -> {
-            CollectionExamplesMold0.CollectionExamplesMold00.CollectionExamplesMold000.Collection1.Mold template = event.component();
-            template.stamp.item = event.item();
+            Mold template = event.component();
+            //template.stamp.item(event.item());
+            Item item = event.item();
+//            template.stamp.update(item);
+            template.label.update(item.label());
+            template.avatar.update(item.label());
             template.refresh();
         });
     }

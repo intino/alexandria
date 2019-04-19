@@ -3,10 +3,27 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
-Template testTemplate as Decorated
-	Frame(display=eventsDisplay)
+Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
 
-Display eventsDisplay as Decorated
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(value="List facet")
+			Block(spacing=DP8, format=filled)
+				List(itemClass="io.intino.alexandria.ui.documentation.Item") collection1
+					Mold > Item collection2Mold > Stamp(template=valor2) v2
+					Mold > Item collection1Mold > Text valor
+					Mold > Item mold
+							Block(layout=Horizontal Center, spacing=DP8)
+								Image avatar as Avatar("")
+								Text label
+//					Mold > Item mold > Stamp(template=itemMold) stamp
+			Block > Text collection1Code as Code(language=Html)
+					value
+						=========
+						Datasource(modelClass\="io.intino.alexandria.ui.documentation.Item") items
+						Mold itemMold > Text label
+						List(source\=items, mold\=itemMold) collection1
+						=========
 
 //	Text facetas as Multiple
 //	Stamp(template=template1) templates as Multiple
@@ -44,7 +61,8 @@ Display eventsDisplay as Decorated
 //			Item compact
 //				Text fila1
 
-
+Template valor2
+	Text v2
 
 Theme
 	Primary(color = "") 

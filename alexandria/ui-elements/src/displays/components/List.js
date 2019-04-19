@@ -29,7 +29,7 @@ class List extends AbstractList {
 	};
 
 	render() {
-		const instances = this.instances();
+		const instances = this.instances("rows");
 		const count = instances.length;
 
 		return (

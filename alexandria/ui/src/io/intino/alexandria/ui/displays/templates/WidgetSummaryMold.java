@@ -11,8 +11,7 @@ public class WidgetSummaryMold extends AbstractWidgetSummaryMold<UiFrameworkBox>
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void refresh() {
         if (this.item() == null) return;
         Widget item = item();
         updateTitle();

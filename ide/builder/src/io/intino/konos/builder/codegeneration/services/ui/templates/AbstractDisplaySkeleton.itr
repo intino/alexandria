@@ -6,10 +6,12 @@ def type(display)
 	import io.intino.alexandria.ui.displays.components.*;
 	import $package.ui.*;
 	$schemaImport
+	$collectionItemsImport
 	import $package+validPackage.$box+firstUpperCase~Box;
 
 	$templatesImport
 	$blocksImport
+	$itemsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension $displayExtends[ $implements] {
@@ -37,6 +39,10 @@ def type(displayExtends & template)
 	extends io.intino.alexandria.ui.displays.components.Template<$name+firstUpperCase~Notifier, $modelClass, $abstractBox+type>
 end
 
+def type(displayExtends & item)
+	extends io.intino.alexandria.ui.displays.components.Item<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+end
+
 def type(displayExtends)
 	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
 end
@@ -49,12 +55,12 @@ def type(blocksImport)
 	import $package+validPackage.ui.displays.blocks.*;
 end
 
-def type(componentReferences & forTemplate)
-	$component+templateReferences...[$NL]
+def type(itemsImport)
+	import $package+validPackage.ui.displays.items.*;
 end
 
-def type(componentReferences & forBlock)
-	$component+blockReferences...[$NL]
+def type(componentReferences & forRoot)
+	$component+rootReferences...[$NL]
 end
 
 def type(componentReferences)

@@ -56,7 +56,7 @@ Facet Conditional extends Behavior on Block
 
 Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty
-	var word:{Vertical Horizontal} arrangement = Horizontal
+	var word:{Vertical Horizontal} arrangement = Vertical
 Facet Multiple extends AbstractMultiple on Block
 Facet Multiple extends AbstractMultiple on ChildComponents.Text
 Facet Multiple extends AbstractMultiple on ChildComponents.File

@@ -34,7 +34,7 @@ public abstract class UI {
     }
 
     private static Constructor<? extends DisplayNotifier> notifierFor(Display display) throws NoSuchMethodException {
-        Class<? extends DisplayNotifier> clazz = notifiers.get(display.getClass());;
+        Class<? extends DisplayNotifier> clazz = notifiers.get(display.getClass());
 
         if (clazz == null)
 			clazz = notifiers.getOrDefault(displayByInheritance(display.getClass()), DisplayNotifier.class);

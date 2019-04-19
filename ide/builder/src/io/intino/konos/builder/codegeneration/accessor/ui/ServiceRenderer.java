@@ -39,8 +39,8 @@ public class ServiceRenderer extends UIRenderer {
 			new ThemeRenderer(settings, service).execute();
 			new I18nRenderer(settings, service, target).execute();
 			new DisplaysManifestRenderer(settings, service).execute();
-			new DisplayListRenderer(settings, service.graph(), new AccessorTemplateProvider(), target).execute();
-			new ResourceListRenderer(settings, service.graph()).execute();
+			new DisplayListRenderer(settings, service, new AccessorTemplateProvider(), target).execute();
+			new ResourceListRenderer(settings, service).execute();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

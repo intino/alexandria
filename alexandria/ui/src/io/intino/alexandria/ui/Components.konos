@@ -1,6 +1,7 @@
 dsl Konos
 
 Component template as Decorated
+
 Component block as Decorated
 	Notification refreshSpacing as Text
 	Notification refreshLayout as Text

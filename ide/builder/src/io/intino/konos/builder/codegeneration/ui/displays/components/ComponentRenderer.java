@@ -141,7 +141,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
-		while (parent != null && !isRoot(parent)) {
+		while (parent != null && !parent.i$(Collection.Mold.Item.class)) {
 			result.add(0, nameOf(parent));
 			parent = parent.core$().ownerAs(Component.class);
 		}
@@ -172,6 +172,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	protected void addExtends(Component element, Frame result) {
 		Frame frame = new Frame("extends");
+		frame.addSlot("name", nameOf(element));
 
 		if (!addSpecificTypes(frame)) frame.addSlot("type", type());
 		addFacets(element, frame);
@@ -210,6 +211,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(Stamp.class)) {
 			frame.addTypes(Stamp.class.getSimpleName());
+			if (!element.i$(AbstractMultiple.class)) frame.addTypes("single");
 			Template template = element.a$(Stamp.class).template();
 			frame.addSlot("template", template.name$());
 			frame.addSlot("type", template.name$());
@@ -284,14 +286,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 	private Frame componentReferencesFrame() {
 		Frame result = new Frame("componentReferences");
-		if (element.i$(Block.class)) {
-			result.addTypes("forBlock");
-			element.a$(Block.class).componentList().forEach(c -> addComponent(c, result));
-		}
-		else if (element.i$(Template.class)) {
-			result.addTypes("forTemplate");
-			element.a$(Template.class).componentList().forEach(c -> addComponent(c, result));
-		}
+		List<Component> componentList = null;
+
+		if (element.i$(Block.class)) componentList = element.a$(Block.class).componentList();
+		else if (element.i$(Template.class)) componentList = element.a$(Template.class).componentList();
+		else if (element.i$(Collection.Mold.Item.class)) componentList = element.a$(Collection.Mold.Item.class).componentList();
+
+		if (componentList == null) return result;
+
+		result.addTypes("forRoot");
+		componentList.forEach(c -> addComponent(c, result));
+
 		return result;
 	}
 

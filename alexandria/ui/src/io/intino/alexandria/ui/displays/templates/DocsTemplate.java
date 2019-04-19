@@ -1,8 +1,6 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.schemas.Widget;
-import io.intino.alexandria.ui.displays.molds.WidgetSummaryMold;
 import io.intino.alexandria.ui.documentation.Model;
 
 public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
@@ -34,12 +32,6 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     private void addOtherWidgets() {
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Block));
         body.otherBlock.otherWidgets.add(Model.widget(Model.WidgetType.Chart));
-    }
-
-    private WidgetSummaryMold moldOf(Widget widget) {
-        WidgetSummaryMold result = new WidgetSummaryMold(box());
-        result.widget = widget;
-        return result;
     }
 
     //    @Override
