@@ -25,7 +25,7 @@ Template docsTemplate as Decorated
 
 Template(modelClass="io.intino.alexandria.schemas.Widget") widgetSummaryMold as Decorated
 	OpenPage(title = "", page = UiElements.widgetType, format=h6) title as Link
-	Text(format=body2) facets as Multiple Highlighted("white","#679164")
+	Text(format=body2) facets as Multiple(arrangement=Horizontal) Highlighted("white","#679164")
 	Text description
 
 

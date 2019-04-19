@@ -13,8 +13,7 @@ public class WidgetTypeTemplate extends AbstractWidgetTypeTemplate<UiFrameworkBo
     @Override
     public void init() {
         super.init();
-        body.widgetTypeBlock.update(Model.widget(type));
-        body.widgetTypeBlock.refresh();
+        widget.update(Model.widget(type));
     }
 
     public void type(String type) {

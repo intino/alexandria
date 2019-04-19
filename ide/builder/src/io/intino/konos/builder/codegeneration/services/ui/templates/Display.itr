@@ -3,6 +3,7 @@ def type(display & accessible)
 
 	$templatesImport
 	$blocksImport
+	$itemsImport
     import $package+validPackage.ui.displays.notifiers.$name+SnakeCaseToCamelCase+FirstUpperCase~ProxyNotifier;
     import io.intino.alexandria.ui.displays.ProxyDisplay;
     import io.intino.alexandria.ui.services.push.UISession;
@@ -46,6 +47,10 @@ end
 
 def type(blocksImport)
 	import $package+validPackage.ui.displays.blocks.*;
+end
+
+def type(itemsImport)
+	import $package+validPackage.ui.displays.items.*;
 end
 
 def type(display)

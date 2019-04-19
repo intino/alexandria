@@ -18,12 +18,12 @@ public class ServiceListRenderer extends UIRenderer {
 
 	public void execute() {
 		graph.uIServiceList().forEach(this::processUIService);
-		new DisplayListRenderer(settings, graph, templateProvider(), target).execute();
 		new ResourceListRenderer(settings, graph, Target.Service).execute();
 	}
 
 	private void processUIService(UIService service) {
 		new ServiceRenderer(settings, service).execute();
+		new DisplayListRenderer(settings, service, templateProvider(), target).execute();
 	}
 
 	private TemplateProvider templateProvider() {

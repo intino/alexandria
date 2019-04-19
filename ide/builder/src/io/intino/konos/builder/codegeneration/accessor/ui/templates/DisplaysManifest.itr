@@ -3,6 +3,10 @@ def type(manifest)
     export { $display+export...[,] }
 end
 
+def type(item) trigger(import)
+	import $name+firstUppercase from "../$directory/displays/items/$name+firstUppercase"
+end
+
 def type(template) trigger(import)
 	import $name+firstUppercase from "../$directory/displays/templates/$name+firstUppercase"
 end

@@ -7,7 +7,7 @@ import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.AddItemListener;
 import io.intino.alexandria.ui.model.Datasource;
 
-public abstract class List<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item<B, Item>, Item> extends AbstractList<B> implements Collection<ItemComponent, Item> {
+public abstract class List<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends AbstractList<B> implements Collection<ItemComponent, Item> {
     private Datasource source;
     private int pageSize;
     private PageManager<Item> pageManager;

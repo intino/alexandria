@@ -4,7 +4,6 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.schemas.Parameter;
 
 public class MethodParamMold extends AbstractMethodParamMold<UiFrameworkBox> {
-
     public boolean addComma;
 
     public MethodParamMold(UiFrameworkBox box) {
@@ -12,8 +11,8 @@ public class MethodParamMold extends AbstractMethodParamMold<UiFrameworkBox> {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void refresh() {
+        super.refresh();
         Parameter parameter = item();
         name.update(parameter.name());
         type.update(parameter.type());

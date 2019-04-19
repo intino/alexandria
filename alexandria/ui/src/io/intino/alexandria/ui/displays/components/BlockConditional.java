@@ -66,8 +66,10 @@ public class BlockConditional<B extends Box> extends AbstractBlockConditional<B>
     private void updateVisibility(boolean value) {
         this.visible = value;
         notifier.refreshVisibility(visible);
-        refresh();
-        if (visible) children().forEach(Display::refresh);
+        if (visible) {
+            refresh();
+            children().forEach(Display::refresh);
+        }
         if (showListener != null && visible) showListener.accept(new Event(this));
         if (hideListener != null && !visible) hideListener.accept(new Event(this));
     }

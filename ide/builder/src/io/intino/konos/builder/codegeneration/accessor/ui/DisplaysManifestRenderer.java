@@ -10,6 +10,7 @@ import org.siani.itrules.model.Frame;
 import java.io.File;
 
 import static io.intino.konos.builder.helpers.Commons.write;
+import static io.intino.konos.model.graph.KonosGraph.displaysOf;
 
 public class DisplaysManifestRenderer extends UIRenderer {
 	private final UIService service;
@@ -22,7 +23,7 @@ public class DisplaysManifestRenderer extends UIRenderer {
 	@Override
 	public void execute() {
 		Frame frame = new Frame().addTypes("manifest");
-		service.graph().displayList().stream().filter(this::isGeneric).forEach(d -> frame.addSlot("display", frameOf(d)));
+		displaysOf(service).stream().filter(this::isGeneric).forEach(d -> frame.addSlot("display", frameOf(d)));
 		write(new File(accessorGen() + File.separator + "Displays.js").toPath(), setup(DisplaysManifestTemplate.create()).format(frame));
 	}
 
@@ -30,7 +31,8 @@ public class DisplaysManifestRenderer extends UIRenderer {
 		return element.getClass().getSimpleName().equalsIgnoreCase("display") ||
 			   element.getClass().getSimpleName().equalsIgnoreCase("component") ||
 			   element.getClass().getSimpleName().equalsIgnoreCase("template") ||
-			   element.getClass().getSimpleName().equalsIgnoreCase("block");
+			   element.getClass().getSimpleName().equalsIgnoreCase("block") ||
+			   element.getClass().getSimpleName().equalsIgnoreCase("item");
 	}
 
 	private Frame frameOf(Display display) {

@@ -1,8 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Component;
+import io.intino.alexandria.ui.displays.notifiers.ItemNotifier;
 
-public class Item<B extends Box, Type> extends AbstractItem<B> {
+public class Item<DN extends ItemNotifier, Type, B extends Box> extends Component<DN, B> {
     private Type item;
 
     public Item(B box) {
@@ -13,7 +15,7 @@ public class Item<B extends Box, Type> extends AbstractItem<B> {
         return this.item;
     }
 
-    public Item<B, Type> item(Type item) {
+    public Item item(Type item) {
         this.item = item;
         return this;
     }

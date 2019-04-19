@@ -1,11 +1,10 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.molds.MethodParamMold;
-import io.intino.alexandria.ui.displays.templates.AbstractMethodMold;
+import io.intino.alexandria.schemas.Method;
+import io.intino.alexandria.schemas.Parameter;
+
+import java.util.List;
 
 public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
 
@@ -14,8 +13,9 @@ public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
     }
 
     @Override
-    public void init() {
-        super.init();
+    public void refresh() {
+        super.refresh();
+        Method method = item();
         name.update(method.name());
         addParameters();
         if (method.facets() != null) facets.update(String.join(", ", method.facets()));
@@ -24,17 +24,13 @@ public class MethodMold extends AbstractMethodMold<UiFrameworkBox> {
     }
 
     private void addParameters() {
-        for (int i = 0; i < method.params().size(); i++)
-            addParameterMold(method.params().get(i), i != method.params().size()-1);
-    }
-
-    private io.intino.alexandria.ui.displays.molds.MethodParamMold addParameterMold(Parameter parameter, boolean addComma) {
-        io.intino.alexandria.ui.displays.molds.MethodParamMold mold = new MethodParamMold(box());
-        mold.parameter = parameter;
-        mold.addComma = addComma;
-        params.addParamMold(mold);
-        mold.refresh();
-        return mold;
+        Method method = item();
+        List<Parameter> params = method.params();
+        for (int i = 0; i < params.size(); i++) {
+            MethodParamMold mold = this.params.add(params.get(i));
+            mold.addComma = i != params.size()-1;
+            mold.refresh();
+        }
     }
 
 }

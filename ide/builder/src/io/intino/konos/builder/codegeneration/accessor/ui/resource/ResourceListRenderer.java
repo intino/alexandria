@@ -2,12 +2,12 @@ package io.intino.konos.builder.codegeneration.accessor.ui.resource;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.resource.AccessibleDisplayRenderer;
-import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.ui.UIService;
 
 public class ResourceListRenderer extends io.intino.konos.builder.codegeneration.ui.resource.ResourceListRenderer {
 
-	public ResourceListRenderer(Settings settings, KonosGraph graph) {
-		super(settings, graph, Target.Accessor);
+	public ResourceListRenderer(Settings settings, UIService service) {
+		super(settings, service.graph(), Target.Accessor);
 	}
 
 	public void execute() {

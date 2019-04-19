@@ -22,7 +22,10 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	}
 
 	public static List<Display> displaysOf(UIService service) {
-		return service.graph().displayList();
+		KonosGraph graph = service.graph();
+		List<Display> result = graph.displayList();
+		result.addAll(graph.core$().find(ChildComponents.Collection.Mold.Item.class));
+		return result;
 	}
 
 	public static Template templateFor(UIService.Resource resource) {
