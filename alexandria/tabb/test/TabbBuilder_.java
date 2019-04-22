@@ -24,7 +24,7 @@ public class TabbBuilder_ {
 	@Test
 	public void should_read_empty_tabb() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(!resultTabbFile().exists());
 	}
 
@@ -32,7 +32,7 @@ public class TabbBuilder_ {
 	public void should_build_a_column() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "tests.mapp")), Nominal));
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 //		assertThat(resultTabbFile().length()).isEqualTo(291);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(3);
@@ -54,7 +54,7 @@ public class TabbBuilder_ {
 	public void should_read_a_column_with_many_values() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "many_values.mapp")), Nominal));
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 //		assertThat(resultTabbFile().length()).isEqualTo(213507);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(50000);
@@ -75,7 +75,7 @@ public class TabbBuilder_ {
 	public void should_read_a_column_with_multiple_values() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "multivalued.mapp")), Nominal));
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(resultTabbFile().length()).isEqualTo(315);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(2);
@@ -97,7 +97,7 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(integerStream("i", 10000000));
 		builder.add(integerStream("j", 10000000));
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(10000000);
 		System.out.println("Reading...");
@@ -120,7 +120,7 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "tests.mapp")), Nominal));
 		builder.add(new MappColumnStream(new MappReader(new File(mapps, "letters.mapp")), Nominal));
-		builder.save(tabbDirectory, "result");
+		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(resultTabbFile().length()).isEqualTo(429);
 		TabbReader tabbReader = tabbReader();
 		assertThat(tabbReader.size()).isEqualTo(3);

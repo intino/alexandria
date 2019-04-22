@@ -34,13 +34,17 @@ public class TabbBuilder {
 		return this;
 	}
 
-	public void save(File directory, String name) throws IOException {
+	public void save(File file) throws IOException {
 		if (streams.isEmpty()) return;
 		List<Generator> generators = generators();
-		setDestinationIn(generators, directory, name);
+		setDestinationIn(generators, file.getParentFile(), baseName(file.getName()));
 		execute(generators);
 		generators.forEach(Generator::close);
-		createTabbFile(new File(directory, name + ".tabb"), buildersIn(generators));
+		createTabbFile(file, buildersIn(generators));
+	}
+
+	private String baseName(String name) {
+		return name.endsWith(".tabb") ? name.substring(0, name.lastIndexOf(".")) : name;
 	}
 
 	private void setDestinationIn(List<Generator> generators, File directory, String name) {
