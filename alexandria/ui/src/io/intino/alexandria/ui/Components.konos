@@ -101,8 +101,9 @@ Component openPage as Decorated
 	Request open
 
 Component list as Decorated
-	Request page as Integer
-	Request itemsPerPage as Integer
+	Request notifyItemsRendered as Object(ItemsRenderedInfo)
+
+Component grid as Decorated
 	Request notifyItemsRendered as Object(ItemsRenderedInfo)
 
 Component Item as Decorated
@@ -114,7 +115,6 @@ Schema ItemsRenderedInfo
 
 Component multiple as Decorated
 
-Component grid as Decorated
 Component brochure as Decorated
 Component map as Decorated
 Component table as Decorated

@@ -70,10 +70,10 @@
     <orderEntry type="library" name="Legio: commons-collections:commons-collections:3.2.2" level="project" />
     <orderEntry type="library" name="Legio: net.rforge:Rserve:0.6-8.1" level="project" />
     <orderEntry type="library" name="Legio: net.rforge:REngine:0.6-8.1" level="project" />
+    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:rest:2.0.0" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.4" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:logger:1.0.0" level="project" />
   </component>
 </module>
