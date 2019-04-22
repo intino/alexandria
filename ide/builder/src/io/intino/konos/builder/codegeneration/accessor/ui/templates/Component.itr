@@ -1,5 +1,5 @@
 def type(reference)
-	<Displays.$name+firstUppercase context={this.instanceId.bind(this)} id="$id"$properties+common$properties+specific></Displays.$name+firstUppercase>
+	<Displays.$name+firstUppercase context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific></Displays.$name+firstUppercase>
 end
 
 def type(child) trigger(declaration)
@@ -20,7 +20,7 @@ def type(component & child & item)
 end
 
 def type(component & child)
-	<$extends context={this.instanceId.bind(this)} id="$id"$properties+common$properties+specific[ $code]>[
+	<$extends context={this._context.bind(this)} owner={this._owner.bind(this)} id="$id"$properties+common$properties+specific[ $code]>[
 		$reference...[$NL]][
 		$methods][
 		$component+child...[$NL]][

@@ -141,8 +141,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private String[] ancestors(Component component) {
 		List<String> result = new ArrayList<>();
 		Component parent = component.core$().ownerAs(Component.class);
-		while (parent != null && !parent.i$(Collection.Mold.Item.class)) {
+		while (parent != null) {
 			result.add(0, nameOf(parent));
+			if (parent.i$(Collection.Mold.Item.class)) break;
 			parent = parent.core$().ownerAs(Component.class);
 		}
 		return result.toArray(new String[0]);

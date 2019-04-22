@@ -149,6 +149,7 @@ Concept ChildComponents
 		Concept:{1..*} Mold
 			Concept:{0..1} Heading extends Component > has Component
 			Concept:{1..1} Item extends Component > has Component
+				var integer:{px} height
 
 		sub Magazine
 		sub List

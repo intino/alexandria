@@ -1,10 +1,12 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import { FixedSizeList as ReactWindowList, areEqual } from 'react-window';
+import { FixedSizeList as ReactWindowList } from 'react-window';
+import InfiniteLoader from 'react-window-infinite-loader';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
+import CollectionBehavior from "./behaviors/CollectionBehavior";
 import * as Elements from "app-elements/gen/Displays";
 
 const styles = theme => ({
@@ -16,70 +18,39 @@ const styles = theme => ({
 });
 
 class List extends AbstractList {
-	state = {
-		countItems : -1
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new ListNotifier(this);
 		this.requester = new ListRequester(this);
-		this.container = React.createRef();
-		this._widths = {};
+		this.behavior = new CollectionBehavior(this, this.itemView.bind(this));
 	};
 
 	render() {
-		const instances = this.instances("rows");
-		const count = instances.length;
+		const items = this.instances("rows");
+		const count = items.length;
+		const isItemLoaded = index => !!items[index];
 
 		return (
 			<AutoSizer>
 				{({ height, width }) => (
-					<ReactWindowList useIsScrolling onItemsRendered={this.handleItemsRendered.bind(this, instances)} height={height} width={width}
-									 itemCount={count} itemSize={100}>{this._renderItem.bind(this, instances)}</ReactWindowList>
+					<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={10000} loadMoreItems={this.behavior.nextPage.bind(this)}>
+						{({ onItemsRendered, ref }) => (
+							<ReactWindowList ref={ref} onScroll={this.behavior.scrolling.bind(this, items)}
+											 onItemsRendered={this.behavior.refreshItemsRendered.bind(this, items)}
+											 height={height} width={width} itemCount={10000} itemSize={60}>
+								{this.behavior.renderItem.bind(this, items)}
+							</ReactWindowList>
+						)}
+					</InfiniteLoader>
 				)}
 			</AutoSizer>
 		);
 	};
 
-	_renderItem = (instances, { index, isScrolling, style }) => {
-		const instance = instances[index];
-		const id = instance.pl.id;
-		const { classes } = this.props;
-		const width = this._width(id);
-		return (<div style={style} key={index}>{isScrolling ? <div style={ { width: width }} className={classes.scrolling}></div> : React.createElement(Elements[instance.tp], instance.pl)}</div>);
+	itemView = (item) => {
+		return React.createElement(Elements[item.tp], item.pl);
 	};
-
-	_width = (id) => {
-		const max = 70;
-		const min = 50;
-		if (this._widths[id] == null)
-			this._widths[id] = Math.floor(Math.random()*(max-min+1)+min) + "%";
-		return this._widths[id];
-	};
-
-	handleItemsRendered = (instances, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
-		if (this.itemsView == null) this.itemsView = { start: Number.MAX_VALUE, end: Number.MIN_VALUE };
-		if (visibleStartIndex < this.itemsView.start) this.itemsView.start = visibleStartIndex;
-		if (visibleStopIndex > this.itemsView.stop) this.itemsView.stop = visibleStopIndex;
-		if (this.timeout != null) window.clearTimeout(this.timeout);
-		this.timeout = window.setTimeout(() => {
-			this.requester.notifyItemsRendered({ items: this._instancesIds(instances, overscanStartIndex, overscanStopIndex),
-														visible: this._instancesIds(instances, visibleStartIndex, visibleStopIndex)
-												});
-			this.itemsView = null;
-		}, 50);
-	};
-
-	_instancesIds = (instances, start, end) => {
-		var result = [];
-		for (var i=0; i<instances.length; i++) {
-			if (i < start || i > end) continue;
-			result.push(instances[i].pl.id);
-		}
-		return result;
-	}
-
 }
 
 export default withStyles(styles, { withTheme: true })(List);

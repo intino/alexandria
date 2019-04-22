@@ -70,6 +70,9 @@ end
 def type(component & child) trigger(method)
 end
 
+def type(component & child & stamp & single) trigger(class)
+end
+
 def type(component & child & collection) trigger(class)
 	public class $name+firstUpperCase extends $extends[ $implements] {
 		[$reference+declaration...[$NL]
@@ -170,6 +173,14 @@ end
 def type(component & child & collection) trigger(rootReferences)
 	if ($name == null) $name = register(new $name+firstUpperCase(box()).<$name+firstUpperCase>id("$id").owner($owner.this));[
 	$heading+rootChildReferences...[$NL]]
+end
+
+def type(component & child & stamp & multiple) trigger(rootReferences)
+	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
+end
+
+def type(component & child & stamp & single) trigger(rootReferences)
+	if ($name == null) $name = register(new $template+firstUpperCase(($box+firstUpperCase~Box)box()).id("$id"));
 end
 
 def type(component & child) trigger(rootReferences)

@@ -12,6 +12,9 @@ public class Grid extends AbstractGrid<UiFrameworkBox> {
         super(box);
     }
 
+	public void notifyItemsRendered(ItemsRenderedInfo value) {
+
+	}
 
 
 }

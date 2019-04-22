@@ -29,9 +29,8 @@ def type(notifier)
 							register(pushService.listen(message, function (parameters) {
 								let id = parameters.i;
 								let ownerPath = parameters.o;
-								let ownerId = _owner(ownerPath);
 								let context = element.props.context != null ? element.props.context() : null;
-								if (id === element.props.id && (ownerPath == null || ownerPath === "" || ownerPath === context || ownerId.indexOf(context) !== -1)) {
+								if (id === element.props.id && (ownerPath == null || ownerPath === "" || ownerPath === context || _containsAll(ownerPath, context))) {
 									action(parameters);
 								}
 							}));
@@ -47,10 +46,12 @@ def type(notifier)
 				}
 			};
 
-			function _owner(owner) {
-				if (owner == null) return "";
-				let ownerList = owner.split(".");
-				return ownerList.length > 0 ? ownerList$[ownerList.length-1$] : "";
+			function _containsAll(owner, context) {
+				let contextList = context.split(".");
+				for (var i=0; i<contextList.length; i++) {
+					if (owner.indexOf(contextList$[i$]) === -1) return false;
+				}
+				return true;
 			}
 
 			function _register(registration) {

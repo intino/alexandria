@@ -15,11 +15,10 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
         super.init();
         collection1.onAddItem(event -> {
             Mold template = event.component();
-            //template.stamp.item(event.item());
             Item item = event.item();
-//            template.stamp.update(item);
-            template.label.update(item.label());
-            template.avatar.update(item.label());
+            template.stamp.update(item);
+//            template.label.update(item.label());
+//            template.avatar.update(item.label());
             template.refresh();
         });
     }

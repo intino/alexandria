@@ -11,10 +11,6 @@ export default class Display extends PassiveView {
         this.translator = Application.services.translatorService;
     };
 
-    instanceId() {
-        return this.props.id;
-    };
-
     addInstance = (instance) => {
         let container = instance.c;
         let instances = this.state[container];
@@ -49,7 +45,7 @@ export default class Display extends PassiveView {
             return;
         }
         return instances.map((instance, index) => {
-            instance.pl.context = () => { return instance.pl.o};
+            instance.pl.context = () => { return instance.pl.o };
             this.copyProps(props, instance.pl);
             return (<div key={index} style={style}>{React.createElement(Elements[instance.tp], instance.pl)}</div>);
         });
@@ -75,13 +71,22 @@ export default class Display extends PassiveView {
         }
     };
 
+    componentWillUnmount() {
+        if (this.notifier != null) this.notifier.detached();
+    };
+
+    _context() {
+        return (this.props.owner != null ? this.props.owner() + "." : "") + this.props.id;
+    };
+
+    _owner() {
+        return this.props.id;
+    };
+
     _updateInstancesState = (container, instances) => {
         let object = {};
         object[container] = instances;
         this.setState(object);
     };
 
-    componentWillUnmount() {
-        if (this.notifier != null) this.notifier.detached();
-    }
 }

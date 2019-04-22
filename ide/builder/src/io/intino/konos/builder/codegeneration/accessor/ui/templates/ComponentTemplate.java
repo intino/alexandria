@@ -18,13 +18,13 @@ public class ComponentTemplate extends Template {
 
 	public Template define() {
 		add(
-			rule().add((condition("type", "reference"))).add(literal("<Displays.")).add(mark("name", "firstUppercase")).add(literal(" context={this.instanceId.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal("></Displays.")).add(mark("name", "firstUppercase")).add(literal(">")),
+			rule().add((condition("type", "reference"))).add(literal("<Displays.")).add(mark("name", "firstUppercase")).add(literal(" context={this._context.bind(this)} owner={this._owner.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(literal("></Displays.")).add(mark("name", "firstUppercase")).add(literal(">")),
 			rule().add((condition("type", "child")), (condition("trigger", "declaration"))),
 			rule().add((condition("type", "block & child")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "child")), (condition("trigger", "child"))).add(mark("value")),
 			rule().add((condition("type", "child")), (condition("trigger", "add"))),
 			rule().add((condition("type", "component & child & item"))),
-			rule().add((condition("type", "component & child"))).add(literal("<")).add(mark("extends")).add(literal(" context={this.instanceId.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(expression().add(literal(" ")).add(mark("code"))).add(literal(">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("reference").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("methods"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n"))).add(expression().add(literal("\n"))).add(literal("</")).add(mark("extends")).add(literal(">")),
+			rule().add((condition("type", "component & child"))).add(literal("<")).add(mark("extends")).add(literal(" context={this._context.bind(this)} owner={this._owner.bind(this)} id=\"")).add(mark("id")).add(literal("\"")).add(mark("properties", "common")).add(mark("properties", "specific")).add(expression().add(literal(" ")).add(mark("code"))).add(literal(">")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("reference").multiple("\n"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("methods"))).add(expression().add(literal("\n")).add(literal("\t")).add(mark("component", "child").multiple("\n"))).add(expression().add(literal("\n"))).add(literal("</")).add(mark("extends")).add(literal(">")),
 			rule().add((condition("type", "extends & multiple"))).add(literal("Ui.Multiple")),
 			rule().add((condition("type", "extends & stamp"))).add(literal("Displays.")).add(mark("type", "firstUpperCase")),
 			rule().add((condition("type", "extends"))).add(literal("Ui.")).add(mark("type", "firstUpperCase")).add(mark("facet")),
