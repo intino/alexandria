@@ -24,7 +24,6 @@ Concept:Named Template extends Component
 	has Component
 
 Concept:Named Catalog extends Component
-	var Datasource source
 
 	Concept:{0..1} Events
 		Concept:{1..1} OnClick
@@ -124,14 +123,11 @@ Concept ChildComponents
 
 	Concept:Named GroupBox extends Component
 		var boolean visible = true
-		var Classified.Grouping grouping
 
 	Concept:Named SortBox extends Component
 		var boolean visible = true
-		var Indexed.Sorting sorting
 
 	Concept:Named SearchBox extends Component
-		var Indexed source
 		var string placeholder
 
 	Concept Selector extends Component
@@ -145,15 +141,16 @@ Concept ChildComponents
 		var string itemClass = empty
 		var string noItemsMessage = empty
 		var integer pageSize = 20
+		var boolean scrollingMark = true
 
 		Concept:{1..*} Mold
 			Concept:{0..1} Heading extends Component > has Component
 			Concept:{1..1} Item extends Component > has Component
 				var integer:{px} height
+				var integer:{%} width = -1%
 
 		sub Magazine
 		sub List
-		sub Grid
 		sub Table
 		sub Map
 			Concept:{0..1} Center
@@ -164,3 +161,8 @@ Concept ChildComponents
 				var integer defaultZoom
 				var integer min
 				var integer max
+
+Concept PrivateComponents
+	Concept PrivateComponent extends Component
+	Concept Row extends PrivateComponent
+		var ChildComponents.Collection.Mold.Item[] items

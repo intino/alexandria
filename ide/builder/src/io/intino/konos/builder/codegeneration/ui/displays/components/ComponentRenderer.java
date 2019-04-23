@@ -24,6 +24,7 @@ import org.siani.itrules.model.Frame;
 
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 
@@ -102,16 +103,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addReferences(Component component, Frame frame) {
-		Set<Component> components = new HashSet<>(component.components());
+		Set<Component> components = new HashSet<>(references(component));
 		frame.addSlot("componentReferences", componentReferencesFrame());
 		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
 	}
 
 	private Frame referenceFrame(Component component) {
-		Frame frame = new Frame("reference").addSlot("name", component.name$());
+		Frame frame = new Frame("reference", typeOf(component)).addSlot("name", component.name$());
 		frame.addSlot("box", boxName());
 		frame.addSlot("id", shortId(component));
 		frame.addSlot("properties", properties(component));
+		addOwner(frame);
 		addExtends(component, frame);
 		return frame;
 	}
@@ -169,6 +171,11 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Collection.Mold.Heading.class)) components.addAll(component.a$(Collection.Mold.Heading.class).componentList());
 		if (component.i$(Collection.Mold.Item.class)) components.addAll(component.a$(Collection.Mold.Item.class).componentList());
 		return components;
+	}
+
+	private List<Component> references(Component component) {
+		if (element.i$(PrivateComponents.Row.class)) return element.a$(PrivateComponents.Row.class).items().stream().map(i -> i.a$(Component.class)).collect(Collectors.toList());
+		return component.components();
 	}
 
 	protected void addExtends(Component element, Frame result) {

@@ -12,11 +12,15 @@ export default class Display extends PassiveView {
     };
 
     addInstance = (instance) => {
-        let container = instance.c;
-        let instances = this.state[container];
-        if (instances == null) instances = [];
+        let instances = this.instances(instance.c);
         instances.push(instance);
-        this._updateInstancesState(container, instances);
+        this._registerInstances(instance.c, instances);
+    };
+
+    insertInstance = (instance) => {
+        let instances = this.instances(instance.c);
+        instances[instance.idx] = instance;
+        this._registerInstances(instance.c, instances);
     };
 
     removeInstance = (params) => {
@@ -26,7 +30,7 @@ export default class Display extends PassiveView {
         for (var i = 0; i < instances.length; i++)
             if (instances[i].i === id) break;
         if (i >= instances.length) return;
-        this._updateInstancesState(container, instances.splice(index, 1));
+        this._registerInstances(container, instances.splice(index, 1));
     };
 
     instances = () => {
@@ -83,7 +87,7 @@ export default class Display extends PassiveView {
         return this.props.id;
     };
 
-    _updateInstancesState = (container, instances) => {
+    _registerInstances = (container, instances) => {
         let object = {};
         object[container] = instances;
         this.setState(object);

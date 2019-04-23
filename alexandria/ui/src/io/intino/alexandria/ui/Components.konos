@@ -101,22 +101,33 @@ Component openPage as Decorated
 	Request open
 
 Component list as Decorated
-	Request notifyItemsRendered as Object(ItemsRenderedInfo)
+	Notification setup as Object(CollectionSetup)
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request moreItems as Object(CollectionMoreItems)
 
-Component grid as Decorated
-	Request notifyItemsRendered as Object(ItemsRenderedInfo)
+Component table as Decorated
+	Notification setup as Object(CollectionSetup)
+	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
+	Request moreItems as Object(CollectionMoreItems)
 
 Component Item as Decorated
 Component CollectionRow as Decorated
 
-Schema ItemsRenderedInfo
+Schema CollectionSetup
+	Attribute itemCount as Integer
+	Attribute pageSize as Integer
+
+Schema CollectionItemsRenderedInfo
 	Attribute items as Text List
 	Attribute visible as Text List
+
+Schema CollectionMoreItems
+	Attribute start as Integer
+	Attribute stop as Integer
 
 Component multiple as Decorated
 
 Component brochure as Decorated
 Component map as Decorated
-Component table as Decorated
 Component spinner as Decorated
 	Notification refreshLoading as Bool

@@ -56,6 +56,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		Frame result = new Frame("displayExtends");
 		if (element.i$(Template.class)) result.addTypes(Template.class.getSimpleName());
 		if (element.i$(ChildComponents.Collection.Mold.Item.class)) result.addTypes(ChildComponents.Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(PrivateComponents.Row.class)) result.addTypes(PrivateComponents.Row.class.getSimpleName());
 		result.addSlot("type", typeOf(element));
 		addDecoratedFrames(result);
 		if (element.i$(Template.class)) {
@@ -66,6 +67,10 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			String itemClass = element.a$(ChildComponents.Collection.Mold.Item.class).core$().ownerAs(ChildComponents.Collection.class).itemClass();
 			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
+		if (element.i$(PrivateComponents.Row.class)) {
+			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(ChildComponents.Collection.class).itemClass();
+			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
+		}
 		result.addSlot("name", nameOf(element));
 		frame.addSlot("displayExtends", result);
 	}
@@ -74,6 +79,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		if (element.graph().templateList().size() > 0) frame.addSlot("templatesImport", baseFrame().addTypes("templatesImport"));
 		if (element.graph().blockList().size() > 0) frame.addSlot("blocksImport", baseFrame().addTypes("blocksImport"));
 		if (element.graph().core$().find(ChildComponents.Collection.Mold.Item.class) != null) frame.addSlot("itemsImport", baseFrame().addTypes("itemsImport"));
+		if (element.graph().core$().find(PrivateComponents.Row.class) != null) frame.addSlot("rowsImport", baseFrame().addTypes("rowsImport"));
 	}
 
 	protected void addImplements(Frame frame) {

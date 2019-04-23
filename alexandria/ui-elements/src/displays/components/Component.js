@@ -24,7 +24,7 @@ export default class Component extends AlexandriaDisplay {
         const theme = Theme.get();
         return (
             <React.Fragment>
-                {this.state.loading ? <div style={{position:'absolute',top:'50%',left:'50%'}}><Spinner mode="Rise" color={theme.palette.secondary.main} loading={this.state.loading}/></div> : undefined }
+                {this.state.loading ? <div style={{position:'absolute',top:'50%',left:'43%'}}><Spinner mode="Rise" color={theme.palette.secondary.main} loading={this.state.loading}/></div> : undefined }
                 <div style={ { visibility: this.state.loading ? "hidden" : "" } }>{components}</div>
             </React.Fragment>
         );

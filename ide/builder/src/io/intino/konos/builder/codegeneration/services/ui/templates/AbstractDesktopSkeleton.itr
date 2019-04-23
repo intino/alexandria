@@ -12,6 +12,7 @@ def type(desktop)
 	$templatesImport
 	$blocksImport
 	$itemsImport
+	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type> {
@@ -68,6 +69,10 @@ end
 
 def type(itemsImport)
 	import $package+validPackage.ui.displays.items.*;
+end
+
+def type(rowsImport)
+	import $package+validPackage.ui.displays.rows.*;
 end
 
 def type(componentReferences & forRoot)

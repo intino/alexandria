@@ -21,7 +21,13 @@ public class DisplayNotifier {
     public void add(Display child, String container) {
         String type = child.getClass().getSimpleName();
         PropertyList propertyList = child.properties();
-        put("addInstance", addMetadata(registerParameters(type, propertyList, container)));
+        put("addInstance", addMetadata(registerParameters(type, propertyList, container, -1)));
+    }
+
+    public void insert(Display child, int index, String container) {
+        String type = child.getClass().getSimpleName();
+        PropertyList propertyList = child.properties();
+        put("insertInstance", addMetadata(registerParameters(type, propertyList, container, index)));
     }
 
     public void remove(String id, String container) {
@@ -87,11 +93,12 @@ public class DisplayNotifier {
         return parametersWithId;
     }
 
-    private Map<String, Object> registerParameters(String type, PropertyList propertyList, String container) {
+    private Map<String, Object> registerParameters(String type, PropertyList propertyList, String container, int index) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("tp", type);
         parameters.put("pl", propertyList);
         parameters.put("c", container);
+        if (index != -1) parameters.put("idx", index);
         return parameters;
     }
 

@@ -2,10 +2,6 @@ dsl Proteo
 
 Concept:Named Source
 
-	sub Datasource
-		var string modelClass
-		Concept:Named Category
-
 	sub Dataframe
 		Concept Column
 			var string name
@@ -16,9 +12,3 @@ Facet CSV on Dataframe
 
 Facet Custom on Dataframe
 	var string datasourceClass
-
-Facet Classified on Datasource
-	Concept Grouping
-
-Facet Indexed on Datasource
-	Concept Sorting

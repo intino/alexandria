@@ -244,6 +244,18 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return child;
 	}
 
+	public <D extends Display> D insertPromise(D child, int index) {
+		return insertPromise(child, index, null);
+	}
+
+	public <D extends Display> D insertPromise(D child, int index, String container) {
+		if (container == null) container = DefaultInstanceContainer;
+		child.owner(this);
+		notifier.insert(child, index, container);
+		promisedChildren.add(child);
+		return child;
+	}
+
 	public <T extends Display> T parent() {
 		return (T) parent;
 	}
