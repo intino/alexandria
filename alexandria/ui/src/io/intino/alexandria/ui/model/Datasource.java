@@ -15,8 +15,12 @@ public abstract class Datasource<O> {
 		this.items.clear();
 	}
 
-	public abstract int countItems(String condition);
-	public abstract List<O> items(int start, int limit, String condition);
+	public int itemCount() {
+		return itemCount(null);
+	}
+
+	public abstract int itemCount(String condition);
+	public abstract List<O> items(int start, int count, String condition);
 
 	public Datasource<O> addAll(List<O> items) {
 		this.items.addAll(items);

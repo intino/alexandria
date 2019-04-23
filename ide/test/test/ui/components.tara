@@ -4,11 +4,12 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
-	List
-		Mold > Item mold
-				Block(layout=Horizontal Center, spacing=DP8)
-					Image avatar as Avatar("")
-					Text label
+	Table(itemClass="io.intino.alexandria.ui.documentation.Item") collection3
+		Mold > Item(height=60px) collection3Mold > Stamp(template=valor2) stamp
+		Mold > Item(height=60px, width=30%) collection4Mold > Stamp(template=valor2) stamp
+
+	List(itemClass="io.intino.alexandria.ui.documentation.Item") collection4
+		Mold > Item(height=60px) collection5Mold > Stamp(template=valor2) stamp
 
 //	Text facetas as Multiple
 //	Stamp(template=template1) templates as Multiple

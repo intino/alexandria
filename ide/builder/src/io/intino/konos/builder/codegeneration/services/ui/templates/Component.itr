@@ -2,6 +2,10 @@ def type(reference) trigger(declaration)
 	public [$ancestors+firstUpperCase...[.].]$name+firstUpperCase $name;
 end
 
+def type(reference & item)
+	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").<$name+firstUpperCase>item($owner.this.item()).owner($owner.this));
+end
+
 def type(reference)
 	if ($name == null) $name = register(new $name+firstUpperCase(($box+firstUpperCase~Box)box()).<$name+firstUpperCase>id("$id").owner($owner.this));
 end
@@ -40,25 +44,25 @@ def type(method & multiple)
 end
 
 def type(method & collection & table)
-	public class $name+firstUpperCase~Row extends io.intino.alexandria.ui.displays.components.CollectionRow<B> {[
-		$item+property...[$NL]]
-		@Override
-		public void init() {[
-			$item+addRow...[$NL]]
-		}
-	}
-
 	public $name+firstUpperCase~Row add([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());[
+		row.id(java.util.UUID.randomUUID().toString());
+		row.item($itemVariable);]
 		addPromise(row, "rows");
 		return row;
 	}
 
-	[$item+addMethod...[$NL]]
+	public $name+firstUpperCase~Row insert([$itemClass item, ]int index) {
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());[
+		row.id(java.util.UUID.randomUUID().toString());
+		row.item($itemVariable);]
+		insertPromise(row, index, "rows");
+		return row;
+	}
 
 	@Override
 	public void removeAll() {
-		remove(io.intino.alexandria.ui.displays.components.CollectionRow.class);
+		remove(io.intino.alexandria.ui.displays.components.Row.class);
 	}
 end
 
@@ -128,7 +132,7 @@ def type(extends & multiple)
 end
 
 def type(extends & collection & table)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, io.intino.alexandria.ui.displays.components.CollectionRow, $itemClass>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type, io.intino.alexandria.ui.displays.components.Row, $itemClass>
 end
 
 def type(extends & collection)
@@ -346,6 +350,13 @@ def type(item) trigger(addMethod)
 		result.id(java.util.UUID.randomUUID().toString());[
 		result.item($itemVariable);][
 		$addPromise~(result, "rows");]
+		return result;
+	}
+	$methodAccessibility $name+firstUpperCase insert$methodName+firstUpperCase([$itemClass item, ]int index) {
+		$name+firstUpperCase result = new $name+firstUpperCase(($box+firstUpperCase~Box)box());
+		result.id(java.util.UUID.randomUUID().toString());[
+		result.item($itemVariable);][
+		$insertPromise~(result, index, "rows");]
 		return result;
 	}
 end

@@ -1,6 +1,7 @@
 import React from "react";
 
 const CollectionBehavior = (collection, itemView) => {
+    var pageSize = 0;
     collection._widths = {};
     const self = {};
 
@@ -26,24 +27,27 @@ const CollectionBehavior = (collection, itemView) => {
     self.itemsIds = (instances, start, end) => {
         var result = [];
         for (var i=0; i<instances.length; i++) {
-            if (i < start || i > end) continue;
+            if (i < start || i > end || instances[i] == null) continue;
             result.push(instances[i].pl.id);
         }
         return result;
     };
 
-    self.renderItem = (items, { index, style }) => {
+    self.renderItem = (items, { index, isScrolling, style }) => {
         const item = items[index];
         const { classes } = collection.props;
         const width = self.width(index);
-        return (<div style={style} key={index}>{item == null ? self.scrollingView(width, classes) : itemView(item)}</div>);
+        var view = null;
+        if (item != null) view = isScrolling ? self.scrollingView(width, classes) : itemView(item, index);
+        else view = self.scrollingView(width, classes);
+        return (<div style={style} key={index}>{view}</div>);
     };
 
-    self.refreshItemsRendered = (instances, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
-        console.log({ overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex });
+    self.refreshItemsRendered = (instances, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
         collection.itemsWindow = { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex };
         if (collection.timeout != null) window.clearTimeout(collection.timeout);
         self.notifyItemsRendered(instances, collection.itemsWindow);
+        if (callback != null) callback(collection.itemsWindow);
     };
 
     self.scrolling = (instances, { scrollDirection, scrollOffset, scrollUpdateWasRequested }) => {
@@ -51,7 +55,7 @@ const CollectionBehavior = (collection, itemView) => {
         if (collection.rendering) return;
         collection.scrollingTimeout = window.setTimeout(() => {
             if (collection.itemsWindow == null) return;
-            self.refreshItemsRendered(instances, collection.itemsWindow);
+            self.refreshItemsRendered(instances, null, collection.itemsWindow);
         }, 300);
     };
 
@@ -59,27 +63,32 @@ const CollectionBehavior = (collection, itemView) => {
         return (<div style={ { width: width }} className={classes.scrolling}/>);
     };
 
-    self.nextPage = (items, startIndex, stopIndex) => {
-        console.log("more items " + startIndex + " - " + stopIndex);
-        collection.moreItemsCallback = new Promise(resolve => {
-            self.refreshItemsRendered(items);
-            resolve();
-        });
-        // collection.requester.nextPage(startIndex, stopIndex);
+    self.moreItems = (items, startIndex, stopIndex) => {
+        if (collection.moreItemsTimeout != null) window.clearTimeout(collection.moreItemsTimeout);
+        collection.moreItemsTimeout = window.setTimeout(() => collection.requester.moreItems({ start: startIndex, stop: stopIndex }), 100);
+        collection.moreItemsCallback = new Promise(resolve => resolve());
         return collection.moreItemsCallback;
     };
 
+    self.pageSize = (size) => {
+        pageSize = size;
+    };
+
     return {
-        renderItem: (items, { index, style }) => {
-            return self.renderItem(items, { index, style });
+        renderItem: (items, { index, isScrolling, style }) => {
+            return self.renderItem(items, { index, isScrolling, style });
         },
 
-        nextPage : (startIndex, endIndex) => {
-            return self.nextPage(startIndex, endIndex);
+        pageSize: (size) => {
+            self.pageSize(size);
         },
 
-        refreshItemsRendered: (instances, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
-            return self.refreshItemsRendered(instances, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex });
+        moreItems : (items, startIndex, endIndex) => {
+            return self.moreItems(items, startIndex, endIndex);
+        },
+
+        refreshItemsRendered: (instances, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
+            return self.refreshItemsRendered(instances, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex });
         },
 
         scrolling: (instances, { scrollDirection, scrollOffset, scrollUpdateWasRequested }) => {

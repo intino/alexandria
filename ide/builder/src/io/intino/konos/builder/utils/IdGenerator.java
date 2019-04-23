@@ -15,7 +15,7 @@ public class IdGenerator {
 	public String shortId(String name) {
 		int seed = idsMap.containsKey(name) ? idsMap.get(name) : this.seed++;
 		String result = generator.encode(seed);
-		if (StringUtils.isNumeric(result)) result = "_" + result;
+		if (StringUtils.isNumeric(result) || StringUtils.isNumeric(result.substring(0, 1))) result = "_" + result;
 		idsMap.put(name, seed);
 		return result;
 	}

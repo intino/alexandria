@@ -1,17 +1,60 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractTable;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.schemas.CollectionItemsRenderedInfo;
+import io.intino.alexandria.schemas.CollectionMoreItems;
+import io.intino.alexandria.schemas.CollectionSetup;
+import io.intino.alexandria.ui.displays.components.collection.Collection;
+import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
+import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.ui.displays.events.AddItemListener;
+import io.intino.alexandria.ui.model.Datasource;
 
-public class Table extends AbstractTable<UiFrameworkBox> {
+public abstract class Table<B extends Box, ItemComponent extends Row, Item> extends AbstractTable<B> implements Collection<ItemComponent, Item> {
+	private CollectionBehavior<ItemComponent, Item> behavior;
+	private Datasource source;
+	private int pageSize;
+	private AddItemListener addItemListener;
 
-    public Table(UiFrameworkBox box) {
+    public Table(B box) {
         super(box);
     }
 
+	public Table source(Datasource source) {
+		this.source = source;
+		setup();
+		return this;
+	}
 
+	@Override
+	public void init() {
+		super.init();
+		setup();
+	}
 
+	@Override
+	public void onAddItem(AddItemListener listener) {
+		this.addItemListener = listener;
+	}
+
+	public void moreItems(CollectionMoreItems info) {
+		behavior.moreItems(info);
+	}
+
+	public void notifyItemsRendered(CollectionItemsRenderedInfo info) {
+		promisedChildren(info.items()).forEach(this::register);
+		children(info.visible()).forEach(c -> addItemListener.accept(new AddItemEvent(this, (ItemComponent)c, ((ItemComponent)c).item())));
+	}
+
+	protected Table pageSize(int pageSize) {
+		this.pageSize = pageSize;
+		return this;
+	}
+
+	private void setup() {
+		if (source == null || behavior != null) return;
+		this.behavior = new CollectionBehavior<>(this, source, pageSize);
+		notifier.setup(new CollectionSetup().itemCount(source.itemCount()).pageSize(pageSize));
+		behavior.page(0);
+	}
 }

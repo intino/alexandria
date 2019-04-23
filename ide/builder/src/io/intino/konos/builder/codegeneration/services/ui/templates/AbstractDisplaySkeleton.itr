@@ -12,10 +12,12 @@ def type(display)
 	$templatesImport
 	$blocksImport
 	$itemsImport
+	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
     public class [$abstract]$name+firstUpperCase$abstractBox+extension $displayExtends[ $implements] {
-    	[$component+declarations...[$NL]
+    	[$reference+declaration...[$NL]
+    	][$component+declarations...[$NL]
 
         ]public [$abstract]$name+firstUpperCase($abstractBox+type box) {
             super(box);
@@ -24,7 +26,8 @@ def type(display)
 
         @Override
 		public void init() {
-			super.init();
+			super.init();[
+			$reference...[$NL]]
 			$componentReferences[
 			$component+initializations...[$NL]]
 		}[
@@ -43,6 +46,10 @@ def type(displayExtends & item)
 	extends io.intino.alexandria.ui.displays.components.Item<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
 end
 
+def type(displayExtends & row)
+	extends io.intino.alexandria.ui.displays.components.Row<$name+firstUpperCase~Notifier, $itemClass, $abstractBox+type>
+end
+
 def type(displayExtends)
 	extends io.intino.alexandria.ui.displays.$type+firstUpperCase<$name+firstUpperCase~Notifier, $abstractBox+type>
 end
@@ -57,6 +64,10 @@ end
 
 def type(itemsImport)
 	import $package+validPackage.ui.displays.items.*;
+end
+
+def type(rowsImport)
+	import $package+validPackage.ui.displays.rows.*;
 end
 
 def type(componentReferences & forRoot)

@@ -18,6 +18,10 @@ const styles = theme => ({
 });
 
 class List extends AbstractList {
+	state = {
+		itemCount: 20,
+		pageSize: 20
+	};
 
 	constructor(props) {
 		super(props);
@@ -28,17 +32,21 @@ class List extends AbstractList {
 
 	render() {
 		const items = this.instances("rows");
-		const count = items.length;
+		const threshold = Math.round(this.state.pageSize * 0.8);
 		const isItemLoaded = index => !!items[index];
+
+		this.behavior.pageSize(this.state.pageSize);
 
 		return (
 			<AutoSizer>
 				{({ height, width }) => (
-					<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={10000} loadMoreItems={this.behavior.nextPage.bind(this)}>
+					<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={this.state.itemCount}
+									loadMoreItems={this.behavior.moreItems.bind(this, items)}
+									threshold={threshold}>
 						{({ onItemsRendered, ref }) => (
-							<ReactWindowList ref={ref} onScroll={this.behavior.scrolling.bind(this, items)}
-											 onItemsRendered={this.behavior.refreshItemsRendered.bind(this, items)}
-											 height={height} width={width} itemCount={10000} itemSize={60}>
+							<ReactWindowList useIsScrolling={this.props.scrollingMark} ref={ref} onScroll={this.behavior.scrolling.bind(this, items)}
+											 onItemsRendered={this.behavior.refreshItemsRendered.bind(this, items, onItemsRendered)}
+											 height={height} width={width} itemCount={this.state.itemCount} itemSize={this.props.itemHeight}>
 								{this.behavior.renderItem.bind(this, items)}
 							</ReactWindowList>
 						)}
@@ -48,7 +56,11 @@ class List extends AbstractList {
 		);
 	};
 
-	itemView = (item) => {
+	setup = (info) => {
+		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
+	};
+
+	itemView = (item, index) => {
 		return React.createElement(Elements[item.tp], item.pl);
 	};
 }

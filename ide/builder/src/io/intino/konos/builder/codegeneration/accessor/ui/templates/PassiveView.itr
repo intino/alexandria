@@ -15,6 +15,7 @@ def type(notifier)
 			if (Notifier.subscriptions$[key$]) return;
 			Notifier.subscriptions$[key$] = true;
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
+			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
 		};
 

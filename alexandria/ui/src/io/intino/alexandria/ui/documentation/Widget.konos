@@ -4,7 +4,6 @@ use Theme
 use Schemas
 
 Dataframe iris as CSV("data/iris.csv")
-Datasource(modelClass="io.intino.alexandria.ui.documentation.Item") items
 
 Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widgetMold as Decorated DynamicLoaded(loadTime=Slow)
 	Text(value="Widget", format=h3) title
@@ -378,12 +377,47 @@ Template(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 			Text(format=h6, value="List facet")
 			Block(spacing=DP8, format=filled)
 				List(itemClass="io.intino.alexandria.ui.documentation.Item") collection1
-					Mold > Item mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) collection1Mold > Stamp(template=itemMold) stamp
 			Block > Text collection1Code as Code(language=Html)
 					value
 						=========
-						List(itemClass\="io.intino.alexandria.ui.documentation.Item") collection1<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item mold > Stamp(template\=itemMold) stamp<br/><br/>
+						List(itemClass\="io.intino.alexandria.ui.documentation.Item") collection<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item collection1Mold > Stamp(template\=itemMold) stamp<br/><br/>
+
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="List facet, no mark on scrolling")
+			Block(spacing=DP8, format=filled)
+				List(itemClass="io.intino.alexandria.ui.documentation.Item", scrollingMark=false) collection2
+					Mold > Item(height=60px) collection2Mold > Stamp(template=itemMold) stamp
+			Block > Text collection2Code as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) collection<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item collection2Mold > Stamp(template\=itemMold) stamp<br/><br/>
+
+						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="List facet, no mark on scrolling")
+			Block(spacing=DP8, format=filled)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Item") collection3
+					Mold > Item(height=60px) collection3Mold > Stamp(template=itemMold) stamp
+					Mold > Item(height=60px) collection4Mold > Stamp(template=itemMold) stamp
+			Block > Text collection3Code as Code(language=Html)
+					value
+						=========
+						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) collection<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item collection2Mold > Stamp(template\=itemMold) stamp<br/><br/>
 
 						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
