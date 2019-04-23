@@ -14,6 +14,7 @@
       <module fileurl="file://$PROJECT_DIR$/alexandria/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/alexandria/logger4j/logger4j.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/mapp/mapp.iml" filepath="$PROJECT_DIR$/alexandria/mapp/mapp.iml" group="alexandria/library/dataformats" />
       <module fileurl="file://$PROJECT_DIR$/ide/model/model.iml" filepath="$PROJECT_DIR$/ide/model/model.iml" group="konos" />
+      <module fileurl="file://$PROJECT_DIR$/alexandria/movv/movv.iml" filepath="$PROJECT_DIR$/alexandria/movv/movv.iml" group="alexandria/library/dataformats" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/primitives/primitives.iml" filepath="$PROJECT_DIR$/alexandria/primitives/primitives.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/rest/rest.iml" filepath="$PROJECT_DIR$/alexandria/rest/rest.iml" group="alexandria/library" />
       <module fileurl="file://$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" filepath="$PROJECT_DIR$/alexandria/rest-accessor/rest-accessor.iml" group="alexandria/library" />
