@@ -12,11 +12,13 @@ def type(display)
 			super(props);[
 			this.notifier = new $notDecorated+firstUpperCase~Notifier(this);][
 			this.requester = new $notDecorated+firstUpperCase~Requester(this);]
+			$properties+initialization
 		};
 		
 		render() {
 			return [this.$baseMethod](
 				$renderTag[
+					$reference...[$NL]
 					$component...[$NL]
 				]$renderTag+end
 			);
@@ -32,6 +34,14 @@ def type(renderTag & block) trigger(end)
 	</Ui.Block>
 end
 
+def type(renderTag & item) trigger(end)
+	</div>
+end
+
+def type(renderTag) trigger(end)
+	</React.Fragment>
+end
+
 def type(renderTag & template)
 	<Ui.Block[$properties+common$properties+specific]>
 end
@@ -40,8 +50,8 @@ def type(renderTag & block)
 	<Ui.Block[$properties+common$properties+specific]>
 end
 
-def type(renderTag) trigger(end)
-	</React.Fragment>
+def type(renderTag & item)
+	<div style={this.props.style}>
 end
 
 def type(renderTag)

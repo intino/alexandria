@@ -4,7 +4,10 @@ import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.Collection1Mold;
 import io.intino.alexandria.ui.displays.items.Collection2Mold;
+import io.intino.alexandria.ui.displays.rows.Collection3Row;
+import io.intino.alexandria.ui.displays.rows.Collection4Row;
 import io.intino.alexandria.ui.documentation.Item;
+import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.model.Datasource;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
         init(collection1);
         init(collection2);
         init(collection3);
+        init(collection4);
     }
 
     private void init(io.intino.alexandria.ui.displays.components.List list) {
@@ -30,7 +34,7 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
     }
 
     private void init(io.intino.alexandria.ui.displays.components.Table table) {
-        table.source(datasource());
+        table.source(personDatasource());
         table.onAddItem(this::onAddItem);
     }
 
@@ -51,10 +55,39 @@ public class CollectionExamplesMold extends AbstractCollectionExamplesMold<UiFra
         };
     }
 
+    private Datasource<Person> personDatasource() {
+        return new Datasource<Person>() {
+            @Override
+            public int itemCount(String condition) {
+                return 1000;
+            }
+
+            @Override
+            public List<Person> items(int start, int count, String condition) {
+                List<Person> result = new ArrayList<>();
+                for (int i = start; i < start + count; i++)
+                    result.add(new Person().firstName("first name " + i).lastName("last name" + i));
+                return result;
+            }
+        };
+    }
+
     private void onAddItem(AddItemEvent event) {
-        Item item = event.item();
-        if (event.component() instanceof Collection1Mold) ((Collection1Mold)event.component()).stamp.update(item);
-        else if (event.component() instanceof Collection2Mold) ((Collection2Mold)event.component()).stamp.update(item);
+
+        if (event.component() instanceof Collection1Mold) ((Collection1Mold)event.component()).stamp.update(event.item());
+        else if (event.component() instanceof Collection2Mold) ((Collection2Mold)event.component()).stamp.update(event.item());
+        else if (event.component() instanceof Collection3Row) {
+            Person person = event.item();
+            Collection3Row component = event.component();
+            component.collection3Mold.nombre.update(person.firstName());
+            component.collection4Mold.apellidos.update(person.lastName());
+        }
+        else if (event.component() instanceof Collection4Row) {
+            Person person = event.item();
+            Collection4Row component = event.component();
+            component.collection5Mold.nombre.update(person.firstName());
+            component.collection6Mold.apellidos.update(person.lastName());
+        }
         event.component().refresh();
     }
 

@@ -110,8 +110,9 @@ Component table as Decorated
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
 	Request moreItems as Object(CollectionMoreItems)
 
-Component Item as Decorated
-Component CollectionRow as Decorated
+Component item as Decorated
+Component heading as Decorated
+Component row as Decorated
 
 Schema CollectionSetup
 	Attribute itemCount as Integer

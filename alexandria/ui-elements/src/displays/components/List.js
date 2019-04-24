@@ -7,13 +7,19 @@ import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
 import CollectionBehavior from "./behaviors/CollectionBehavior";
-import * as Elements from "app-elements/gen/Displays";
 
 const styles = theme => ({
 	scrolling: {
 		background: "#ddd",
 		height: "50%",
 		borderRadius: "5px"
+	},
+	itemView : {
+		height: "100%",
+		padding: "0 10px",
+		'&:hover': {
+			background: '#ddd',
+		}
 	}
 });
 
@@ -27,7 +33,7 @@ class List extends AbstractList {
 		super(props);
 		this.notifier = new ListNotifier(this);
 		this.requester = new ListRequester(this);
-		this.behavior = new CollectionBehavior(this, this.itemView.bind(this));
+		this.behavior = new CollectionBehavior(this);
 	};
 
 	render() {
@@ -58,10 +64,6 @@ class List extends AbstractList {
 
 	setup = (info) => {
 		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
-	};
-
-	itemView = (item, index) => {
-		return React.createElement(Elements[item.tp], item.pl);
 	};
 }
 

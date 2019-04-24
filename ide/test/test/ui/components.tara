@@ -8,8 +8,18 @@ Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
 		Mold > Item(height=60px) collection3Mold > Stamp(template=valor2) stamp
 		Mold > Item(height=60px, width=30%) collection4Mold > Stamp(template=valor2) stamp
 
+	Table(itemClass="io.intino.alexandria.ui.documentation.Person") collection4
+		Mold
+			Heading nombreHeading > Text(value="nombre")
+			Item(height=60px,width=30%) collection5Mold > Text nombre as Editable
+		Mold
+			Heading apellidosHeading > Text(value="apellidos")
+			Item(height=60px,width=70%) collection6Mold > Text apellidos as Editable
+
 	List(itemClass="io.intino.alexandria.ui.documentation.Item") collection4
 		Mold > Item(height=60px) collection5Mold > Stamp(template=valor2) stamp
+
+Display page as Decorated
 
 //	Text facetas as Multiple
 //	Stamp(template=template1) templates as Multiple

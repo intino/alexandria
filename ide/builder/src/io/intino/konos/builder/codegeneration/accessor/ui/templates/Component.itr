@@ -103,7 +103,15 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ itemsWidth={$[$itemWidth...[,]$]}][ scrollingMark={$scrollingMark}]
+	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}]
+end
+
+def type(properties & heading) trigger(specific)
+	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
+end
+
+def type(properties & item) trigger(specific)
+	 style={{width:"calc($width~% - $marginSize~px)",marginRight:"10px"[,$marginLeft:"10px"]}}
 end
 
 def type(properties & spinner) trigger(specific)

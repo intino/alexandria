@@ -25,6 +25,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		KonosGraph graph = service.graph();
 		List<Display> result = graph.displayList();
 		result.addAll(graph.core$().find(ChildComponents.Collection.Mold.Item.class));
+		result.addAll(graph.core$().find(PrivateComponents.Row.class));
 		return result;
 	}
 

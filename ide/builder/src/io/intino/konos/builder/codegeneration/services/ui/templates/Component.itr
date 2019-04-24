@@ -45,7 +45,7 @@ end
 
 def type(method & collection & table)
 	public $name+firstUpperCase~Row add([$itemClass item]) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());[
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());[
 		row.id(java.util.UUID.randomUUID().toString());
 		row.item($itemVariable);]
 		addPromise(row, "rows");
@@ -53,7 +53,7 @@ def type(method & collection & table)
 	}
 
 	public $name+firstUpperCase~Row insert([$itemClass item, ]int index) {
-		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(box());[
+		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());[
 		row.id(java.util.UUID.randomUUID().toString());
 		row.item($itemVariable);]
 		insertPromise(row, index, "rows");

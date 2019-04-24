@@ -15,7 +15,7 @@ public class Item<DN extends ItemNotifier, Type, B extends Box> extends Componen
         return this.item;
     }
 
-    public Item item(Type item) {
+    public Item<DN, Type, B> item(Type item) {
         this.item = item;
         return this;
     }

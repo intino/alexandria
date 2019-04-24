@@ -67,23 +67,6 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		this.owner = owner;
 	}
 
-	protected Frame properties(Component component) {
-		Frame result = new Frame().addTypes("properties", typeOf(component));
-		if (component.color() != null && !component.color().isEmpty()) result.addSlot("color", element.color());
-		if (component.i$(AbstractLabeled.class)) result.addSlot("label", component.a$(AbstractLabeled.class).label());
-		if (component.i$(AbstractMultiple.class)) {
-			AbstractMultiple abstractMultiple = component.a$(AbstractMultiple.class);
-			result.addSlot("instances", nameOf(component));
-			result.addSlot("multipleArrangement", abstractMultiple.arrangement().name());
-			result.addSlot("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
-		}
-		if (component.format() != null) {
-			String[] format = component.format().stream().map(Layer::name$).toArray(String[]::new);
-			result.addSlot("format", format);
-		}
-		return result;
-	}
-
 	protected Frame addOwner(Frame frame) {
 		if (owner != null) frame.addSlot("owner", (owner.isDecorated() ? "Abstract" : "") + firstUpperCase(owner.name$()));
 		return frame;
@@ -103,16 +86,17 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	private void addReferences(Component component, Frame frame) {
-		Set<Component> components = new HashSet<>(references(component));
+		Set<Component> components = new LinkedHashSet<>(references(component));
 		frame.addSlot("componentReferences", componentReferencesFrame());
 		components.forEach(c -> frame.addSlot( "reference", referenceFrame(c)));
 	}
 
 	private Frame referenceFrame(Component component) {
+		ComponentRenderer renderer = factory.renderer(settings, component, templateProvider, target);
 		Frame frame = new Frame("reference", typeOf(component)).addSlot("name", component.name$());
 		frame.addSlot("box", boxName());
 		frame.addSlot("id", shortId(component));
-		frame.addSlot("properties", properties(component));
+		frame.addSlot("properties", renderer.properties());
 		addOwner(frame);
 		addExtends(component, frame);
 		return frame;
@@ -137,7 +121,20 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	}
 
 	public Frame properties() {
-		return properties(element);
+		Frame result = new Frame().addTypes("properties", typeOf(element));
+		if (element.color() != null && !element.color().isEmpty()) result.addSlot("color", element.color());
+		if (element.i$(AbstractLabeled.class)) result.addSlot("label", element.a$(AbstractLabeled.class).label());
+		if (element.i$(AbstractMultiple.class)) {
+			AbstractMultiple abstractMultiple = element.a$(AbstractMultiple.class);
+			result.addSlot("instances", nameOf(element));
+			result.addSlot("multipleArrangement", abstractMultiple.arrangement().name());
+			result.addSlot("multipleNoItemsMessage", abstractMultiple.noItemsMessage() != null ? abstractMultiple.noItemsMessage() : "");
+		}
+		if (element.format() != null) {
+			String[] format = element.format().stream().map(Layer::name$).toArray(String[]::new);
+			result.addSlot("format", format);
+		}
+		return result;
 	}
 
 	private String[] ancestors(Component component) {

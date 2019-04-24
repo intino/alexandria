@@ -121,3 +121,6 @@ Facet Labeled extends AbstractLabeled on ChildComponents.Collection.Mold.Heading
 
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
+
+Facet Infinite on ChildComponents.List
+Facet Infinite on ChildComponents.Table

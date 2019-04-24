@@ -22,7 +22,9 @@ import io.intino.konos.builder.codegeneration.services.rest.RESTServiceRenderer;
 import io.intino.konos.builder.codegeneration.services.slack.SlackRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskRenderer;
 import io.intino.konos.builder.codegeneration.task.TaskerRenderer;
+import io.intino.konos.model.graph.ChildComponents;
 import io.intino.konos.model.graph.KonosGraph;
+import io.intino.konos.model.graph.PrivateComponents;
 import io.intino.plugin.codeinsight.linemarkers.InterfaceToJavaImplementation;
 import io.intino.plugin.project.LegioConfiguration;
 import org.apache.commons.io.IOUtils;
@@ -36,8 +38,10 @@ import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.plugin.project.Safe.safe;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.configurationOf;
+import static java.util.stream.Collectors.toList;
 
 public class FullRenderer {
 	@Nullable
@@ -128,6 +132,7 @@ public class FullRenderer {
 
 	private void ui() {
 		Settings settings = settings();
+		prepareGraphForUi();
 		new io.intino.konos.builder.codegeneration.accessor.ui.ServiceListRenderer(settings, graph).execute();
 		new io.intino.konos.builder.codegeneration.services.ui.ServiceListRenderer(settings, graph).execute();
 	}
@@ -194,6 +199,22 @@ public class FullRenderer {
 		return new Settings().project(project).module(module).parent(parent)
 							 .src(src).gen(gen).boxName(boxName).packageName(packageName)
 							 .classes(classes);
+	}
+
+	protected void prepareGraphForUi() {
+		createUiTableRows();
+	}
+
+	protected void createUiTableRows() {
+		graph.serviceList().forEach(service -> service.graph().core$().find(ChildComponents.Table.class).forEach(this::createUiTableRow));
+	}
+
+	protected void createUiTableRow(ChildComponents.Table element) {
+		List<ChildComponents.Collection.Mold.Item> itemList = element.moldList().stream().map(ChildComponents.Collection.Mold::item).collect(toList());
+		String name = firstUpperCase(element.name$()) + "Row";
+		if (element.graph().privateComponentsList().size() <= 0) element.graph().create().privateComponents();
+		PrivateComponents.Row row = element.graph().privateComponents(0).rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
+		if (row == null) element.graph().privateComponents(0).create(name).row(itemList);
 	}
 
 }

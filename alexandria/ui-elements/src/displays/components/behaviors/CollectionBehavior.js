@@ -1,6 +1,9 @@
 import React from "react";
+import * as Elements from "app-elements/gen/Displays";
+import classNames from "classnames";
+import 'alexandria-ui-elements/res/styles/layout.css';
 
-const CollectionBehavior = (collection, itemView) => {
+const CollectionBehavior = (collection) => {
     var pageSize = 0;
     collection._widths = {};
     const self = {};
@@ -38,7 +41,7 @@ const CollectionBehavior = (collection, itemView) => {
         const { classes } = collection.props;
         const width = self.width(index);
         var view = null;
-        if (item != null) view = isScrolling ? self.scrollingView(width, classes) : itemView(item, index);
+        if (item != null) view = isScrolling ? self.scrollingView(width, classes) : self.itemView(item, classes, index);
         else view = self.scrollingView(width, classes);
         return (<div style={style} key={index}>{view}</div>);
     };
@@ -60,7 +63,11 @@ const CollectionBehavior = (collection, itemView) => {
     };
 
     self.scrollingView = (width, classes) => {
-        return (<div style={ { width: width }} className={classes.scrolling}/>);
+        return (<div style={{width:width,margin:"0 10px"}} className={classes.scrolling}/>);
+    };
+
+    self.itemView = (item, classes, index) => {
+        return (<div className={classNames(classes.itemView, "layout horizontal center")}>{React.createElement(Elements[item.tp], item.pl)}</div>);
     };
 
     self.moreItems = (items, startIndex, stopIndex) => {
