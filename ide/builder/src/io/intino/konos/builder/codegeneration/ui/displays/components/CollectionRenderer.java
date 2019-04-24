@@ -2,16 +2,11 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.builder.codegeneration.ui.displays.DisplayRendererFactory;
 import io.intino.konos.model.graph.ChildComponents;
 import io.intino.konos.model.graph.ChildComponents.Collection;
-import io.intino.konos.model.graph.PrivateComponents;
 import org.siani.itrules.model.Frame;
 
-import java.util.List;
-
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
-import static java.util.stream.Collectors.toList;
 
 public class CollectionRenderer extends SizedRenderer<Collection> {
 
@@ -22,19 +17,9 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
+		poner el infinite como property
 		addHeadings(frame);
-		createRowComponent();
 		return frame;
-	}
-
-	private void createRowComponent() {
-		if (!element.i$(ChildComponents.Table.class)) return;
-		List<Collection.Mold.Item> itemList = element.moldList().stream().map(Collection.Mold::item).collect(toList());
-		String name = firstUpperCase(element.name$()) + "Row";
-		if (element.graph().privateComponentsList().size() <= 0) element.graph().create().privateComponents();
-		PrivateComponents.Row row = element.graph().privateComponents(0).rowList().stream().filter(c -> c.name$().equals(name)).findFirst().orElse(null);
-		if (row == null) row = element.graph().privateComponents(0).create(name).row(itemList);
-		new DisplayRendererFactory().renderer(settings, row, templateProvider, target).execute();
 	}
 
 	private void addHeadings(Frame frame) {
@@ -54,7 +39,6 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 		if (element.sourceClass() != null) result.addSlot("sourceClass", element.sourceClass());
 		result.addSlot("pageSize", element.pageSize());
 		result.addSlot("itemHeight", itemHeight());
-		addItemWidths(result);
 		result.addSlot("scrollingMark", element.scrollingMark());
 		if (element.noItemsMessage() != null) result.addSlot("noItemsMessage", element.noItemsMessage());
 		return result;
@@ -105,12 +89,6 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 
 	private int itemHeight() {
 		return element.moldList().stream().mapToInt(m -> m.item().height()).max().orElse(100);
-	}
-
-	private void addItemWidths(Frame frame) {
-		int countMolds = element.moldList().size();
-		int defaultWidth = countMolds > 0 ? Math.round(100 / countMolds) : 100;
-		element.moldList().stream().mapToInt(m -> m.item().width() != -1 ? m.item().width() : defaultWidth).boxed().forEach(w -> frame.addSlot("itemWidth", w));
 	}
 
 	@Override

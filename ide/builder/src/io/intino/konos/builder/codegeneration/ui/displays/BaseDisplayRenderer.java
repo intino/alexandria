@@ -87,9 +87,13 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addMethods(Frame frame) {
-		if (!element.i$(DynamicLoadedComponent.class)) return;
-		frame.addSlot("baseMethod", "renderDynamicLoaded");
-		frame.addSlot("methods", new Frame("methods", DynamicLoadedComponent.class.getSimpleName()).addSlot("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
+		if (element.i$(DynamicLoadedComponent.class)) {
+			frame.addSlot("baseMethod", "renderDynamicLoaded");
+			frame.addSlot("methods", new Frame("methods", DynamicLoadedComponent.class.getSimpleName()).addSlot("loadTime", element.a$(DynamicLoadedComponent.class).loadTime().name()));
+		}
+		else if (element.i$(PrivateComponents.Row.class)) {
+			frame.addSlot("baseMethod", "renderRow");
+		}
 	}
 
 	protected void addRenderTagFrames(Frame frame) {
@@ -103,6 +107,14 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			ComponentRenderer renderer = factory.renderer(settings, element.a$(Template.class), templateProvider, target);
 			renderTag.addTypes(Template.class.getSimpleName());
 			renderTag.addSlot("properties", renderer.properties());
+		}
+		else if (element.i$(PrivateComponents.Row.class)) {
+			ComponentRenderer renderer = factory.renderer(settings, element.a$(PrivateComponents.Row.class), templateProvider, target);
+			renderTag.addTypes(PrivateComponents.Row.class.getSimpleName());
+			renderTag.addSlot("properties", renderer.properties());
+		}
+		else if (element.i$(ChildComponents.Collection.Mold.Item.class)) {
+			renderTag.addTypes(ChildComponents.Collection.Mold.Item.class.getSimpleName());
 		}
 		frame.addSlot("renderTag", renderTag);
 	}

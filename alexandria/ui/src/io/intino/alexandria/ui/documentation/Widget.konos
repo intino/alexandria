@@ -373,9 +373,9 @@ Template(layout=Vertical, spacing=DP8) blockExamplesMold as Decorated
 Template(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 
 	Block(layout=Horizontal, spacing=DP24)
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="List facet")
-			Block(spacing=DP8, format=filled)
+			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Item") collection1
 					Mold > Item(height=60px) collection1Mold > Stamp(template=itemMold) stamp
 			Block > Text collection1Code as Code(language=Html)
@@ -390,9 +390,9 @@ Template(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
 						=========
 
-		Block as Relative(width=32%, height=100%)
+		Block as Relative(width=48%, height=100%)
 			Text(format=h6, value="List facet, no mark on scrolling")
-			Block(spacing=DP8, format=filled)
+			Block(spacing=DP8, format=filledNoAir)
 				List(itemClass="io.intino.alexandria.ui.documentation.Item", scrollingMark=false) collection2
 					Mold > Item(height=60px) collection2Mold > Stamp(template=itemMold) stamp
 			Block > Text collection2Code as Code(language=Html)
@@ -407,26 +407,57 @@ Template(layout=Vertical, spacing=DP8) collectionExamplesMold as Decorated
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
 						=========
 
-		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="List facet, no mark on scrolling")
-			Block(spacing=DP8, format=filled)
-				Table(itemClass="io.intino.alexandria.ui.documentation.Item") collection3
-					Mold > Item(height=60px) collection3Mold > Stamp(template=itemMold) stamp
-					Mold > Item(height=60px) collection4Mold > Stamp(template=itemMold) stamp
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Table facet")
+			Block(spacing=DP8, format=filledNoAir)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person") collection3
+					Mold > Item(height=60px,width=30%) collection3Mold > Text nombre as Editable
+					Mold > Item(height=60px,width=70%) collection4Mold > Text apellidos as Editable
 			Block > Text collection3Code as Code(language=Html)
 					value
 						=========
-						List(itemClass\="io.intino.alexandria.ui.documentation.Item", loadingMark\=false) collection<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item collection2Mold > Stamp(template\=itemMold) stamp<br/><br/>
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") collection3<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) collection3Mold > Text nombre as Editable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=70%) collection4Mold > Text apellidos as Editable
+						=========
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Table facet with heading")
+			Block(spacing=DP8, format=filledNoAir)
+				Table(itemClass="io.intino.alexandria.ui.documentation.Person") collection4
+					Mold
+						Heading nombreHeading > Text(value="nombre")
+						Item(height=60px,width=30%) collection5Mold > Text nombre
+					Mold
+						Heading apellidosHeading > Text(value="apellidos")
+						Item(height=60px,width=70%) collection6Mold > Text apellidos
+			Block > Text collection4Code as Code(language=Html)
+					value
+						=========
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") collection4<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading nombreHeading > Text(value\="nombre")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=30%) collection4Mold > Text nombre as Editable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Heading apellidosHeading > Text(value\="apellidos")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Item(height\=60px,width\=70%) collection5Mold > Text apellidos as Editable
+						=========
 
-						Template(modelClass\="io.intino.alexandria.ui.documentation.Item") itemMold<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Block(layout\=Horizontal Center, spacing\=DP8)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image avatar as Avatar<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Text label
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=48%, height=100%)
+			Text(format=h6, value="Table facet")
+			Block(spacing=DP8, format=filledNoAir)
+				List(itemClass="io.intino.alexandria.ui.documentation.Person") collection5 as Infinite
+					Mold > Item(height=60px,width=30%) collection7Mold > Text nombre as Editable
+			Block > Text collection5Code as Code(language=Html)
+					value
+						=========
+						Table(itemClass\="io.intino.alexandria.ui.documentation.Person") collection3<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) collection3Mold > Text nombre as Editable<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=70%) collection4Mold > Text apellidos as Editable
 						=========
 
 Template(modelClass = "io.intino.alexandria.ui.documentation.Item") itemMold as Decorated
 	Block(layout=Horizontal Center, spacing=DP8)
 		Image avatar as Avatar("")
 		Text label
-
