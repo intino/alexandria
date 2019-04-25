@@ -1,4 +1,4 @@
-package io.intino.alexandria.tabb.exporters;
+package io.intino.alexandria.tabb.generators;
 
 import org.siani.itrules.LineSeparator;
 import org.siani.itrules.Template;

@@ -9,7 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/fileformats/inl/inl.iml" filepath="$PROJECT_DIR$/fileformats/inl/inl.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jms/jms.iml" filepath="$PROJECT_DIR$/libraries/jms/jms.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/jmx/jmx.iml" filepath="$PROJECT_DIR$/libraries/jmx/jmx.iml" group="libraries" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/json/json.iml" filepath="$PROJECT_DIR$/libraries/json/json.iml" group="libraries" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/json/json.iml" filepath="$PROJECT_DIR$/fileformats/json/json.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger/logger.iml" filepath="$PROJECT_DIR$/libraries/logger/logger.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/libraries/logger4j/logger4j.iml" filepath="$PROJECT_DIR$/libraries/logger4j/logger4j.iml" group="libraries" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/mapp/mapp.iml" filepath="$PROJECT_DIR$/fileformats/mapp/mapp.iml" group="fileformats" />
@@ -22,7 +22,7 @@
       <module fileurl="file://$PROJECT_DIR$/framework/slack/slack.iml" filepath="$PROJECT_DIR$/framework/slack/slack.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/tabb/tabb.iml" filepath="$PROJECT_DIR$/fileformats/tabb/tabb.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/toolbox/test/test.iml" filepath="$PROJECT_DIR$/toolbox/test/test.iml" group="toolbox" />
-      <module fileurl="file://$PROJECT_DIR$/fileformats/triplestore/triplestore.iml" filepath="$PROJECT_DIR$/fileformats/triplestore/triplestore.iml" group="fileformats" />
+      <module fileurl="file://$PROJECT_DIR$/fileformats/tris/tris.iml" filepath="$PROJECT_DIR$/fileformats/tris/tris.iml" group="fileformats" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui/ui.iml" filepath="$PROJECT_DIR$/framework/ui/ui.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" filepath="$PROJECT_DIR$/framework/ui-elements/ui-elements.iml" group="framework" />
       <module fileurl="file://$PROJECT_DIR$/fileformats/zet/zet.iml" filepath="$PROJECT_DIR$/fileformats/zet/zet.iml" group="fileformats" />

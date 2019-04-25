@@ -1,6 +1,6 @@
 package io.intino.alexandria.tabb;
 
-public interface Generator {
+public interface FileGenerator {
 	void put(long key);
 
 	void close();

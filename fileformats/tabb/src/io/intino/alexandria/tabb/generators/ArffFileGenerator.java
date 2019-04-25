@@ -1,9 +1,9 @@
-package io.intino.alexandria.tabb.exporters;
+package io.intino.alexandria.tabb.generators;
 
 import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
-import io.intino.alexandria.tabb.Exporter;
+import io.intino.alexandria.tabb.FileGenerator;
 import org.siani.itrules.model.Frame;
 
 import java.io.BufferedWriter;
@@ -15,18 +15,18 @@ import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
-public class ArffExporter implements Exporter {
+public class ArffFileGenerator implements FileGenerator {
 	private static final String NULL_VALUE = "?";
 
 	private final List<ColumnStream> streams;
 	private BufferedWriter writer;
 
-	public ArffExporter(List<ColumnStream> streams) {
+	public ArffFileGenerator(List<ColumnStream> streams) {
 		this.streams = streams;
+
 	}
 
-	@Override
-	public Exporter destination(File directory, String name) {
+	public FileGenerator destination(File directory, String name) {
 		try {
 			writer = new BufferedWriter(new FileWriter(new File(directory, name + ".arff")));
 			writer.write(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes())));
@@ -48,13 +48,27 @@ public class ArffExporter implements Exporter {
 	@Override
 	public void put(long key) {
 		String line = streams.stream()
-				.map(s -> s.key().equals(key) ? s.type().toString(s.value()) : NULL_VALUE)
+				.map(s -> s.key().equals(key) ? formatterOf(s.type()).format(s.value()) : NULL_VALUE)
 				.collect(joining(","));
 		try {
 			writer.write(line + "\n");
 		} catch (IOException e) {
 			Logger.error(e);
 		}
+	}
+
+	private Formatter formatterOf(Type type) {
+		return new Formatter() {
+			@Override
+			public String pattern() {
+				return null;
+			}
+
+			@Override
+			public String format(Object value) {
+				return value.toString();
+			}
+		};
 	}
 
 	private Frame[] attributes() {
@@ -73,4 +87,12 @@ public class ArffExporter implements Exporter {
 		if (type.equals(Type.Nominal)) return new Frame("Nominal").addSlot("value", stream.mode().features);
 		return new Frame("String");
 	}
+
+
+	private interface Formatter {
+		String pattern();
+
+		String format(Object value);
+	}
+
 }
