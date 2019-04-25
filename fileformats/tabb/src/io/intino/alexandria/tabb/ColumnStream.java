@@ -1,13 +1,5 @@
 package io.intino.alexandria.tabb;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static java.nio.ByteBuffer.allocate;
-import static java.nio.ByteBuffer.wrap;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 public interface ColumnStream {
 	String ColumnExtension = ".tabbc";
 
@@ -23,51 +15,109 @@ public interface ColumnStream {
 
 	Long key();
 
-	byte[] value();
+	Object value();
 
 	enum Type {
 		Nominal {
-			public String toString(byte[] bytes) {
-				return new String(bytes);
+			@Override
+			public byte[] toByteArray(Object object) {
+				return object.toString().getBytes();
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable32;
 			}
 		},
 		Long {
-			public String toString(byte[] bytes) {
-				return wrap(bytes).getLong() + "";
+			@Override
+			public byte[] toByteArray(Object object) {
+				byte[] result = new byte[8];
+				long value = (long) object;
+				for (int i = 0, shift = 56; i < 8; i++, shift -= 8) result[i] = (byte) (value >> shift);
+				return result;
 			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable64;
+			}
+
 		},
 		Integer {
-			public String toString(byte[] bytes) {
-				return wrap(bytes).getInt() + "";
+			@Override
+			public byte[] toByteArray(Object object) {
+				byte[] result = new byte[4];
+				long value = (long) object;
+				for (int i = 0, shift = 24; i < 8; i++, shift -= 8) result[i] = (byte) (value >> shift);
+				return result;
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable32;
 			}
 		},
+
 		Double {
-			public String toString(byte[] bytes) {
-				return wrap(bytes).getDouble() + "";
+			@Override
+			public byte[] toByteArray(Object object) {
+				return Long.toByteArray(toLong(object));
+			}
+
+			private long toLong(Object object) {
+				return java.lang.Double.doubleToRawLongBits((java.lang.Double) object);
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable64;
 			}
 		},
 		Boolean {
-			public String toString(byte[] bytes) {
-				return (wrap(bytes).getInt() == 1) + "";
+			@Override
+			public byte[] toByteArray(Object object) {
+				return Integer.toByteArray(toInteger(object));
+			}
+
+			private int toInteger(Object object) {
+				return (Boolean) object ? 1 : 0;
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable32;
 			}
 		},
 		Datetime {
-			public String toString(byte[] bytes) {
-				Date date = new Date(MILLISECONDS.convert(wrap(bytes).getInt(), SECONDS));
-				return new SimpleDateFormat().format(date);
+			@Override
+			public byte[] toByteArray(Object object) {
+				return Integer.toByteArray(object);
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable32;
 			}
 		},
 		Instant {
-			public String toString(byte[] bytes) {
-				Date date = Date.from(java.time.Instant.ofEpochMilli(wrap(bytes).getLong()));
-				return new SimpleDateFormat().format(date);
+			@Override
+			public byte[] toByteArray(Object object) {
+				return Integer.toByteArray(object);
+			}
+
+			@Override
+			public byte[] notAvailable() {
+				return NotAvailable32;
 			}
 		};
 
+		private static final byte[] NotAvailable64 = Type.Long.toByteArray(0x7ff00000000007a2L);
+		private static final byte[] NotAvailable32 = Type.Integer.toByteArray(0x80000000);
 
-		public String toString(byte[] bytes) {
-			return "";
-		}
+		public abstract byte[] toByteArray(Object object);
+
+		public abstract byte[] notAvailable();
 	}
 
 	class Mode {
@@ -79,16 +129,5 @@ public interface ColumnStream {
 
 	}
 
-	class NotAvailable {
-		static final long NaDouble = 0x7ff00000000007a2L;
-		static final int NaInt = 0x80000000;
-		static final Long NaLong = null;
-		private static final byte[] NaDoubleBytes = allocate(8).putDouble(NaDouble).array();
-		private static final byte[] NaIntBytes = allocate(4).putInt(NaInt).array();
-
-		public static byte[] bytesOf(Type type) {
-			return type.equals(Type.Double) ? NaDoubleBytes : NaIntBytes;
-		}
-	}
 
 }
