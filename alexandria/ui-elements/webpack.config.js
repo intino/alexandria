@@ -27,7 +27,7 @@ module.exports = {
     },
     entry : './gen/App.js',
     output: {
-        path: "/Users/mcaballero/Proyectos/konos/out/production/ui-elements/www/ui-elements",
+        path: "/Users/mcaballero/Proyectos/alexandria/out/production/ui-elements/www/ui-elements",
         publicPath: '/ui-elements/',
         filename: 'App.js'/*,
         chunkFilename: '[name].bundle.js'*/

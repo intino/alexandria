@@ -167,6 +167,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
 		if (component.i$(Collection.Mold.Heading.class)) components.addAll(component.a$(Collection.Mold.Heading.class).componentList());
 		if (component.i$(Collection.Mold.Item.class)) components.addAll(component.a$(Collection.Mold.Item.class).componentList());
+		if (component.i$(Toolbar.class)) components.addAll(component.a$(Toolbar.class).componentList());
 		return components;
 	}
 
@@ -175,7 +176,12 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		return component.components();
 	}
 
-	protected void addExtends(Component element, Frame result) {
+	private void addExtends(Component element, Frame result) {
+		Frame frame = extendsFrame(element, result);
+		result.addSlot("extends", frame);
+	}
+
+	protected Frame extendsFrame(Component element, Frame result) {
 		Frame frame = new Frame("extends");
 		frame.addSlot("name", nameOf(element));
 
@@ -183,7 +189,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		addFacets(element, frame);
 		addDecoratedFrames(frame, decorated);
 
-		result.addSlot("extends", frame);
+		return frame;
 	}
 
 	protected boolean addSpecificTypes(Frame frame) {

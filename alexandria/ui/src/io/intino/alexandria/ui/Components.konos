@@ -102,13 +102,19 @@ Component openPage as Decorated
 
 Component list as Decorated
 	Notification setup as Object(CollectionSetup)
+	Notification refresh
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
-	Request moreItems as Object(CollectionMoreItems)
+	Request loadMoreItems as Object(CollectionMoreItems)
+	Request changePage as Integer
+	Request changePageSize as Integer
 
 Component table as Decorated
 	Notification setup as Object(CollectionSetup)
+	Notification refresh
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
-	Request moreItems as Object(CollectionMoreItems)
+	Request loadMoreItems as Object(CollectionMoreItems)
+	Request changePage as Integer
+	Request changePageSize as Integer
 
 Component item as Decorated
 Component heading as Decorated
@@ -132,3 +138,7 @@ Component brochure as Decorated
 Component map as Decorated
 Component spinner as Decorated
 	Notification refreshLoading as Bool
+
+Component toolbar as Decorated
+Component task as Decorated
+Component taskSelection as Decorated

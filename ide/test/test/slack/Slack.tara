@@ -37,6 +37,6 @@ Service Nessie as SlackBot(token = "")
 	Request("Reproduce events of a channel") reflow
 		Parameter(String) channel
 
-Task toReservoir as CronTrigger("0 0 0 1/1 * ? *", "daily starting at 00:00")
+//Task toReservoir as CronTrigger("0 0 0 1/1 * ? *", "daily starting at 00:00")
 
 

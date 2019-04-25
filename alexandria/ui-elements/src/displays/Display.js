@@ -28,9 +28,13 @@ export default class Display extends PassiveView {
         let container = params.c;
         const instances = this.state[container];
         for (var i = 0; i < instances.length; i++)
-            if (instances[i].i === id) break;
+            if (instances[i].pl.id === id) break;
         if (i >= instances.length) return;
-        this._registerInstances(container, instances.splice(index, 1));
+        this._registerInstances(container, instances.splice(i, 1));
+    };
+
+    clearContainer = (params) => {
+        this._registerInstances(params.c, []);
     };
 
     instances = () => {

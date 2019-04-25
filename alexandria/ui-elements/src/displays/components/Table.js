@@ -4,12 +4,10 @@ import AbstractTable from "../../../gen/displays/components/AbstractTable";
 import TableNotifier from "../../../gen/displays/notifiers/TableNotifier";
 import TableRequester from "../../../gen/displays/requesters/TableRequester";
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {FixedSizeList as ReactWindowList} from "react-window";
-import InfiniteLoader from 'react-window-infinite-loader';
 import CollectionBehavior from "./behaviors/CollectionBehavior";
 import classNames from "classnames";
-import Heading from "./Heading";
 import 'alexandria-ui-elements/res/styles/layout.css';
+import Heading from "./Heading";
 
 const styles = theme => ({
 	scrolling: {
@@ -33,7 +31,8 @@ const styles = theme => ({
 class Table extends AbstractTable {
 	state = {
 		itemCount: 20,
-		pageSize: 20
+		pageSize: 20,
+		page: 0
 	};
 
 	constructor(props) {
@@ -45,37 +44,22 @@ class Table extends AbstractTable {
 
 	render() {
 		const { classes } = this.props;
-		const items = this.instances("rows");
-		const threshold = Math.round(this.state.pageSize * 0.8);
-		const isItemLoaded = index => !!items[index];
 		const offset = React.Children.count(this.props.children) > 0 ? Heading.Height : 0;
-
-		this.behavior.pageSize(this.state.pageSize);
 
 		return (
 			<React.Fragment>
 				<div className={classNames(classes.headerView, "layout horizontal")}>{this.props.children}</div>
-				<AutoSizer>
-					{({ height, width }) => (
-						<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={this.state.itemCount}
-										loadMoreItems={this.behavior.moreItems.bind(this, items)}
-										threshold={threshold}>
-							{({ onItemsRendered, ref }) => (
-								<ReactWindowList ref={ref} onScroll={this.behavior.scrolling.bind(this, items)}
-												 onItemsRendered={this.behavior.refreshItemsRendered.bind(this, items, onItemsRendered)}
-												 height={height-offset} width={width} itemCount={this.state.itemCount} itemSize={this.props.itemHeight}>
-									{this.behavior.renderItem.bind(this, items)}
-								</ReactWindowList>
-							)}
-						</InfiniteLoader>
-					)}
-				</AutoSizer>
+				<AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height-offset, width))}</AutoSizer>
 			</React.Fragment>
 		);
 	}
 
 	setup = (info) => {
 		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
+	};
+
+	refresh = () => {
+		this.behavior.refresh(this.instances("rows"));
 	};
 }
 

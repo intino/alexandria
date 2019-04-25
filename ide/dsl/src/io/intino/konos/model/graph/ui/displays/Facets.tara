@@ -122,5 +122,11 @@ Facet Labeled extends AbstractLabeled on ChildComponents.Collection.Mold.Heading
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
 
-Facet Infinite on ChildComponents.List
-Facet Infinite on ChildComponents.Table
+Facet AbstractNavigable is abstract
+	var word:{Top Bottom} position = Bottom
+Facet Navigable extends AbstractNavigable on ChildComponents.List
+Facet Navigable extends AbstractNavigable on ChildComponents.Table
+
+Facet Linked on ChildComponents.Toolbar
+	var ChildComponents.Collection to
+	has ChildComponents.SelectionOperation

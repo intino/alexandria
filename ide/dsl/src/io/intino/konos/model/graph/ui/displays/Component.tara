@@ -99,22 +99,26 @@ Concept ChildComponents
 	Concept Wizard extends Component
 		Concept Step > has Component
 
-	Concept Operation extends Component
+	Concept Toolbar extends Component
+		has Component
+
+	Concept Operation extends Component is abstract
 		var string title
 		var word:{Blank Self Parent Top} target = Self
 
 		sub OpenPage > var Page page
-		sub OpenCatalogOperation
-		sub OpenDialogOperation
-		sub OpenExternalDialogOperation
-		sub ExportOperation
-		sub ExportSelectionOperation
-		sub DownloadOperation
-		sub DownloadSelectionOperation
-		sub TaskOperation
-		sub TaskSelectionOperation
-		sub PreviewOperation
-		sub SearchOperation
+		sub OpenCatalog
+		sub OpenDialog
+		sub OpenExternalDialog
+		sub Export
+		sub Download
+		sub Task
+		sub Preview
+
+	Concept SelectionOperation extends Operation is abstract
+		sub ExportSelection
+		sub DownloadSelection
+		sub TaskSelection
 
 	Concept Header extends Component
 		var word:{Fixed Absolute Sticky Static Relative} position = Relative

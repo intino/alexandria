@@ -2,6 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.model.graph.AbstractNavigable;
 import io.intino.konos.model.graph.ChildComponents;
 import io.intino.konos.model.graph.ChildComponents.Collection;
 import org.siani.itrules.model.Frame;
@@ -35,6 +36,7 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	public Frame properties() {
 		Frame result = super.properties();
 		result.addTypes("collection");
+		if (element.i$(AbstractNavigable.class)) result.addSlot("navigable", element.a$(AbstractNavigable.class).position().name());
 		if (element.sourceClass() != null) result.addSlot("sourceClass", element.sourceClass());
 		result.addSlot("pageSize", element.pageSize());
 		result.addSlot("itemHeight", itemHeight());

@@ -37,6 +37,12 @@ public class DisplayNotifier {
         put("removeInstance", addMetadata(params));
     }
 
+    public void clearContainer(String container) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("c", container);
+        put("clearContainer", addMetadata(params));
+    }
+
     protected void put(String message) {
         put(message, addMetadata(new HashMap<>()));
     }

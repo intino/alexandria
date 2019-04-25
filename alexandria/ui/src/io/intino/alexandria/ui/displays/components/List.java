@@ -7,12 +7,14 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.AddItemListener;
+import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.model.Datasource;
 
 public abstract class List<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends AbstractList<B> implements Collection<ItemComponent, Item> {
     private CollectionBehavior<ItemComponent, Item> behavior;
     private Datasource source;
     private int pageSize;
+    private SelectionListener selectionListener;
     private AddItemListener addItemListener;
 
     public List(B box) {
@@ -33,17 +35,32 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
     }
 
     @Override
-    public void onAddItem(AddItemListener listener) {
-        this.addItemListener = listener;
+    public void onSelect(SelectionListener listener) {
+        this.selectionListener = listener;
     }
 
-    public void moreItems(CollectionMoreItems info) {
-        behavior.moreItems(info);
+    @Override
+    public void onAddItem(AddItemListener listener) {
+        this.addItemListener = listener;
     }
 
     public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
         promisedChildren(info.items()).forEach(this::register);
         children(info.visible()).forEach(c -> addItemListener.accept(new AddItemEvent(this, (ItemComponent)c, ((ItemComponent)c).item())));
+    }
+
+    public void loadMoreItems(CollectionMoreItems info) {
+        behavior.moreItems(info);
+    }
+
+    public void changePage(Integer page) {
+        behavior.page(page);
+        notifier.refresh();
+    }
+
+    public void changePageSize(Integer size) {
+        behavior.pageSize(size);
+        notifier.refresh();
     }
 
     protected List pageSize(int pageSize) {
