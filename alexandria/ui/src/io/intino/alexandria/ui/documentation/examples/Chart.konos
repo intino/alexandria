@@ -1,0 +1,43 @@
+dsl Konos
+
+use Theme
+
+Dataframe iris as CSV("data/iris.csv")
+
+Template(layout=Vertical, spacing=DP8) chartExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Html output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query = "") chart1
+				Text chart1Editor as Editable Code(language=R)
+					value
+						======
+						output \= qplot(Petal.Width, Sepal.Length, data \= iris, color \= Species)
+						======
+				Block > Text chart1Code as Code(language=Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="") chart
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Image output")
+			Block(spacing=DP8, format=filled)
+				Chart(input=iris, query="") chart2
+// TODO Octavio				Chart(input=iris, query="", output=Image) chart2
+				Text chart2Editor as Editable Code(language=R)
+					value
+						======
+						set.seed(100);\\n
+						d \= diamonds[sample(nrow(diamonds), 1000), ];\\n
+						output \= ggplot(data \= d, aes(x \= carat, y \= price)) + geom_point(aes(text \= paste("Clarity:", clarity)), size \= 4) + geom_smooth(aes(colour \= cut, fill \= cut)) + facet_wrap(~ cut);
+						======
+				Block > Text chart2Code as Code(language=Html)
+						value
+							=========
+							DataFrame iris as CSV("data/iris.csv")
+							Chart(input\=iris, query\="", output\=Image) chart
+							========

@@ -6,6 +6,7 @@ import io.intino.alexandria.ui.model.Datasource;
 public class CollectionBehavior<ItemComponent, Item> {
 	private final Collection collection;
 	private ItemLoader<Item> itemLoader;
+	private int page = 0;
 
 	public CollectionBehavior(Collection collection) {
 		this.collection = collection;
@@ -18,7 +19,16 @@ public class CollectionBehavior<ItemComponent, Item> {
     }
 
 	public void page(int pos) {
+		page = pos;
+		collection.clear();
 		collection.addAll(itemLoader.page(pos));
+	}
+
+	public void pageSize(int size) {
+		itemLoader.pageSize(size);
+		while (page > itemLoader.pageCount() && page > 0) page--;
+		collection.clear();
+		collection.addAll(itemLoader.page(page));
 	}
 
 	public void moreItems(CollectionMoreItems info) {

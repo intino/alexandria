@@ -11,11 +11,7 @@ import io.intino.alexandria.ui.services.push.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
@@ -24,8 +20,8 @@ import static java.util.stream.Collectors.toList;
 public class Display<N extends DisplayNotifier, B extends Box> {
 	private final B box;
 	private String id;
-	private final List<Display> children = new ArrayList<>();
-	private List<Display> promisedChildren = new ArrayList<>();
+	private final Map<String, List<Display>> children = new HashMap<>();
+	private Map<String, List<Display>> promisedChildren = new HashMap<>();
 	protected DisplayRepository repository;
 	protected N notifier;
 	private io.intino.alexandria.ui.SoulProvider soulProvider;
@@ -150,7 +146,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private void propagateLanguageChanged(String language) {
 		if (this instanceof io.intino.alexandria.ui.International)
 			((International) this).onChangeLanguage(language);
-		children.stream().forEach(c -> c.propagateLanguageChanged(language));
+		allChildren().forEach(c -> c.propagateLanguageChanged(language));
 	}
 
 	public void refresh() {
@@ -178,26 +174,26 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public List<Display> children() {
-		return children;
+		return new ArrayList<>(allChildren());
 	}
 
 	public List<Display> promisedChildren() {
-		return new ArrayList<>(promisedChildren);
+		return new ArrayList<>(allPromisedChildren());
 	}
 
 	public List<Display> promisedChildren(List<String> ids) {
-		return promisedChildren.stream().filter(c -> ids.contains(c.id())).collect(Collectors.toList());
+		return allPromisedChildren().stream().filter(c -> ids.contains(c.id())).collect(toList());
 	}
 
 	public <T extends Display> List<T> children(Class<T> clazz) {
-		return children.stream()
+		return allChildren().stream()
 				.filter(child -> clazz.isAssignableFrom(child.getClass()))
 				.map(clazz::cast)
 				.collect(toList());
 	}
 
 	public List<Display> children(List<String> ids) {
-		return children.stream().filter(child -> ids.contains(child.id())).collect(toList());
+		return allChildren().stream().filter(child -> ids.contains(child.id())).collect(toList());
 	}
 
 	public <T extends Display> T child(Class<T> clazz) {
@@ -217,13 +213,13 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		((Display)child).parent(this);
 		promisedChildren.remove(child);
 		repository.register(child);
-		children.add(child);
+		addChild(child, DefaultInstanceContainer);
 		child.init();
 		return child;
 	}
 
 	public <D extends Display> D add(D child) {
-		return add(child, null);
+		return add(child, DefaultInstanceContainer);
 	}
 
 	public <D extends Display> D add(D child, String container) {
@@ -233,26 +229,26 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D addPromise(D child) {
-		return addPromise(child, null);
+		return addPromise(child, DefaultInstanceContainer);
 	}
 
 	public <D extends Display> D addPromise(D child, String container) {
 		if (container == null) container = DefaultInstanceContainer;
 		child.owner(this);
 		notifier.add(child, container);
-		promisedChildren.add(child);
+		addPromisedChild(child, container);
 		return child;
 	}
 
 	public <D extends Display> D insertPromise(D child, int index) {
-		return insertPromise(child, index, null);
+		return insertPromise(child, index, DefaultInstanceContainer);
 	}
 
 	public <D extends Display> D insertPromise(D child, int index, String container) {
 		if (container == null) container = DefaultInstanceContainer;
 		child.owner(this);
 		notifier.insert(child, index, container);
-		promisedChildren.add(child);
+		addPromisedChild(child, container);
 		return child;
 	}
 
@@ -275,12 +271,31 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public void remove(Class<? extends Display> clazz) {
+		remove(clazz, DefaultInstanceContainer);
+	}
+
+	public void remove(Class<? extends Display> clazz, String container) {
 		List<? extends Display> childrenToRemove = children(clazz);
-		childrenToRemove.forEach(this::removeChild);
+		childrenToRemove.forEach(d -> removeChild(d, container));
+	}
+
+	public void clear(String container) {
+		children(container).ifPresent(children -> children.forEach(d -> {
+			d.remove();
+			repository.remove(d.id);
+		}));
+		children.remove(container);
+		promisedChildren.remove(container);
+		notifier.clearContainer(container);
 	}
 
 	public void removeChild(Display display) {
+		removeChild(display, null);
+	}
+
+	public void removeChild(Display display, String container) {
 		display.remove();
+		notifier.remove(display.id, container);
 		children.remove(display);
 		repository.remove(display.id);
 	}
@@ -307,4 +322,27 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		User user = session().user();
 		return user != null ? user.language() : session().discoverLanguage();
 	}
+
+	private Optional<List<Display>> children(String container) {
+		return Optional.ofNullable(children.getOrDefault(container, null));
+	}
+
+	private List<Display> allChildren() {
+		return children.values().stream().flatMap(Collection::stream).collect(toList());
+	}
+
+	private List<Display> allPromisedChildren() {
+		return promisedChildren.values().stream().flatMap(Collection::stream).collect(toList());
+	}
+
+	private void addChild(Display child, String container) {
+		if (!children.containsKey(container)) children.put(container, new ArrayList<>());
+		children.get(container).add(child);
+	}
+
+	private void addPromisedChild(Display child, String container) {
+		if (!promisedChildren.containsKey(container)) promisedChildren.put(container, new ArrayList<>());
+		promisedChildren.get(container).add(child);
+	}
+
 }

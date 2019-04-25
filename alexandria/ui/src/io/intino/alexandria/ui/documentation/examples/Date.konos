@@ -1,0 +1,58 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filled)
+				Date(pattern="MM/DD/YYYY", format=body1 widgetDemo) date1
+				Block > Text date1Code as Code(language=Html)
+						value
+							=========
+							Date(pattern\="MM/DD/YYYY") date1<br/><br/>
+							<i>pattern</i> is defined using <a href\="https://momentjs.com/docs/#/displaying/format/" target\="_blank">momentjs format</a>
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets with Mode")
+			Block(spacing=DP8, format=filled)
+				Date(mode=FromNow, format=body1 widgetDemo) date2
+				Block > Text date2Code as Code(language=Html)
+						value
+							=========
+							Date(mode\=FromNow) date2
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date3 as Editable
+				Block > Text date3Code as Code(language=Html)
+						value
+							=========
+							Date date3 as Editable
+							=========
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with timePicker")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
+				Block > Text date4Code as Code(language=Html)
+						value
+							=========
+							Date date4 as Editable(timePicker\=true)
+							=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Editable facet with mask")
+			Block(spacing=DP8, format=filled)
+				Date(format=body1 widgetDemo) date5 as Editable(mask="__/__/____")
+				Block > Text date5Code as Code(language=Html)
+						value
+							=========
+							Date date5 as Editable(mask\="__/__/____")
+							=========

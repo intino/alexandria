@@ -61,8 +61,8 @@ def type(method & collection & table)
 	}
 
 	@Override
-	public void removeAll() {
-		remove(io.intino.alexandria.ui.displays.components.Row.class);
+	public void clear() {
+		clear("rows");
 	}
 end
 
@@ -228,6 +228,10 @@ def type(facet)
 	$name+firstUpperCase
 end
 
+def type(binding & toolbar)
+	$name.bindTo($collection);
+end
+
 def type(binding)
 	$name.bindTo($selector, "$option");
 end
@@ -363,7 +367,7 @@ end
 
 def type(item) trigger(removeMethod)
 	@Override
-	public void removeAll() {
-		remove($name+firstUpperCase~.class);
+	public void clear() {
+		clear("rows");
 	}
 end

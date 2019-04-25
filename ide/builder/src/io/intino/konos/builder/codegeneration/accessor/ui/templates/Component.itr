@@ -103,7 +103,7 @@ def type(properties & openpage) trigger(specific)
 end
 
 def type(properties & collection) trigger(specific)
-	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}]
+	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"]
 end
 
 def type(properties & heading) trigger(specific)

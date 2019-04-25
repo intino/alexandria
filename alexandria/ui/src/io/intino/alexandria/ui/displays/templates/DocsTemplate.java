@@ -26,7 +26,8 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     }
 
     private void addCatalogWidgets() {
-        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Collection));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.List));
+        body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Table));
     }
 
     private void addOtherWidgets() {

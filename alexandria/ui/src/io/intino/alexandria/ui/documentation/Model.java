@@ -12,7 +12,7 @@ public class Model {
 	private static Map<WidgetType, Widget> map = new HashMap<>();
 
 	public enum WidgetType {
-		Text, Number, Image, File, Date, Chart, Block, Collection
+		Text, Number, Image, File, Date, Chart, Block, List, Table
 	}
 
 	static {
@@ -27,7 +27,8 @@ public class Model {
 		map.put(WidgetType.Date, new DateWidget());
 		map.put(WidgetType.Chart, new ChartWidget());
 		map.put(WidgetType.Block, new BlockWidget());
-		map.put(WidgetType.Collection, new CollectionWidget());
+		map.put(WidgetType.List, new ListWidget());
+		map.put(WidgetType.Table, new TableWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

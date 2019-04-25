@@ -4,20 +4,12 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
-	Table(itemClass="io.intino.alexandria.ui.documentation.Item") collection3
-		Mold > Item(height=60px) collection3Mold > Stamp(template=valor2) stamp
-		Mold > Item(height=60px, width=30%) collection4Mold > Stamp(template=valor2) stamp
-
-	Table(itemClass="io.intino.alexandria.ui.documentation.Person") collection4
-		Mold
-			Heading nombreHeading > Text(value="nombre")
-			Item(height=60px,width=30%) collection5Mold > Text nombre as Editable
-		Mold
-			Heading apellidosHeading > Text(value="apellidos")
-			Item(height=60px,width=70%) collection6Mold > Text apellidos as Editable
-
-	List(itemClass="io.intino.alexandria.ui.documentation.Item") collection4
-		Mold > Item(height=60px) collection5Mold > Stamp(template=valor2) stamp
+	Toolbar as Linked(to=list3)
+		OpenPage(title = "", page = UiElements.home) openPage
+		Task(title="añadir") add
+		TaskSelection(title="eliminar")
+	List(itemClass="io.intino.alexandria.ui.documentation.Person") list3
+		Mold > Item(height=60px,width=30%) list3Mold > Text firstName
 
 Display page as Decorated
 

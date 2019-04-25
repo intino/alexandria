@@ -17,6 +17,7 @@ def type(notifier)
 			this.when("addInstance").toSelf().execute((parameters) => this.element.addInstance(parameters));
 			this.when("insertInstance").toSelf().execute((parameters) => this.element.insertInstance(parameters));
 			this.when("removeInstance").toSelf().execute((parameters) => this.element.removeInstance(parameters));
+			this.when("clearContainer").toSelf().execute((parameters) => this.element.clearContainer(parameters));
 		};
 
 		when = (message) => {
@@ -48,6 +49,7 @@ def type(notifier)
 			};
 
 			function _containsAll(owner, context) {
+				if (context == null) return false;
 				let contextList = context.split(".");
 				for (var i=0; i<contextList.length; i++) {
 					if (owner.indexOf(contextList$[i$]) === -1) return false;
