@@ -103,7 +103,7 @@ public class TCPDatalake implements Datalake {
 			this.args = args;
 			try {
 				connection = factory.createConnection(username, password);
-				if (clientId != null) connection.setClientID(clientId);
+//				if (clientId != null) connection.setClientID(clientId);
 				connection.start();
 				this.session = createSession(args.length > 0 ? args[0] : "");
 				this.onOpen.execute();
