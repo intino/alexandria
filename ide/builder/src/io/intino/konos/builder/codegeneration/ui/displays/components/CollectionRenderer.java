@@ -17,7 +17,6 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
-		poner el infinite como property
 		addHeadings(frame);
 		return frame;
 	}
