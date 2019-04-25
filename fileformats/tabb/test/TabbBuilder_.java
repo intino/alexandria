@@ -10,7 +10,6 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Random;
 
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
@@ -33,7 +32,6 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
-//		assertThat(resultTabbFile().length()).isEqualTo(291);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(3);
 		tabb.next();
@@ -55,7 +53,6 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "many_values.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
-//		assertThat(resultTabbFile().length()).isEqualTo(213507);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(50000);
 		int i = 0;
@@ -76,7 +73,7 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "multivalued.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
-		assertThat(resultTabbFile().length()).isEqualTo(315);
+		assertThat(resultTabbFile().length()).isEqualTo(323);
 		TabbReader tabb = tabbReader();
 		assertThat(tabb.size()).isEqualTo(2);
 		tabb.next();
@@ -121,7 +118,7 @@ public class TabbBuilder_ {
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")), Nominal));
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "letters.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
-		assertThat(resultTabbFile().length()).isEqualTo(429);
+		assertThat(resultTabbFile().length()).isEqualTo(437);
 		TabbReader tabbReader = tabbReader();
 		assertThat(tabbReader.size()).isEqualTo(3);
 
@@ -154,7 +151,7 @@ public class TabbBuilder_ {
 		return new ColumnStream() {
 			int key = 0;
 			Random random = new Random();
-			byte[] current = ByteBuffer.allocate(4).putInt(random.nextInt(200)).array();
+			int current = random.nextInt(200);
 
 			@Override
 			public String name() {
@@ -179,7 +176,7 @@ public class TabbBuilder_ {
 			@Override
 			public void next() {
 				key++;
-				current = ByteBuffer.allocate(4).putInt(random.nextInt(200)).array();
+				current = random.nextInt(200);
 			}
 
 			@Override
@@ -188,7 +185,7 @@ public class TabbBuilder_ {
 			}
 
 			@Override
-			public byte[] value() {
+			public Object value() {
 				return current;
 			}
 		};
@@ -205,7 +202,7 @@ public class TabbBuilder_ {
 
 	@After
 	public void tearDown() throws Exception {
-//		tabbDirectory.delete();
+		resultTabbFile().delete();
 	}
 
 	private ByteArrayOutputStream output() {
