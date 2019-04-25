@@ -19,7 +19,7 @@
     <orderEntry type="library" name="Legio: org.siani.itrules:itrules:1.9.3" level="project" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="mapp" />
-    <orderEntry type="module" module-name="triplestore" />
+    <orderEntry type="module" module-name="tris" />
     <orderEntry type="module" module-name="primitives" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-2" level="project" />

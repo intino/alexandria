@@ -1,21 +1,23 @@
-package io.intino.alexandria.tabb;
+package io.intino.alexandria.tabb.generators;
 
 import io.intino.alexandria.logger.Logger;
+import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Mode;
 import io.intino.alexandria.tabb.ColumnStream.Type;
+import io.intino.alexandria.tabb.FileGenerator;
 
 import java.io.*;
 
 import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 
-class Builder implements Generator {
+public class TabbFileGenerator implements FileGenerator {
 	private final ColumnStream stream;
 	private final byte[] notAvailable;
 	private File file;
 	private OutputStream os;
 	private long size = 0;
 
-	Builder(ColumnStream stream) {
+	public TabbFileGenerator(ColumnStream stream) {
 		this.stream = stream;
 		try {
 			this.file = File.createTempFile("tabb_" + stream.name(), ColumnExtension);
@@ -24,7 +26,7 @@ class Builder implements Generator {
 		} catch (IOException e) {
 			Logger.error(e);
 		}
-		this.notAvailable = ColumnStream.NotAvailable.bytesOf(stream.type());
+		this.notAvailable = stream.type().notAvailable();
 	}
 
 	public File file() {
@@ -47,20 +49,24 @@ class Builder implements Generator {
 		}
 	}
 
-	String name() {
+	public String name() {
 		return stream.name();
 	}
 
-	Type type() {
+	public Type type() {
 		return stream.type();
 	}
 
-	Mode mode() {
+	public Mode mode() {
 		return stream.mode();
 	}
 
-	long size() {
+	public long size() {
 		return size;
+	}
+
+	private byte[] value() {
+		return stream.key() != null ? type().toByteArray(stream.value()) : notAvailable;
 	}
 
 	private void write(byte[] b) throws IOException {
@@ -70,10 +76,6 @@ class Builder implements Generator {
 
 	private Long key() {
 		return stream.key();
-	}
-
-	private byte[] value() {
-		return stream.key() != null ? stream.value() : notAvailable;
 	}
 
 	private byte[] notAvailable() {

@@ -1,9 +1,9 @@
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
-import io.intino.alexandria.tabb.MappColumnStream;
 import io.intino.alexandria.tabb.TabbBuilder;
 import io.intino.alexandria.tabb.TabbReader;
+import io.intino.alexandria.tabb.streamers.MappColumnStreamer;
 import org.junit.After;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class TabbBuilder_ {
 	@Test
 	public void should_build_a_column() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStream(new MappReader(new File(mapps, "tests.mapp")), Nominal));
+		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
 //		assertThat(resultTabbFile().length()).isEqualTo(291);
 		TabbReader tabb = tabbReader();
@@ -53,7 +53,7 @@ public class TabbBuilder_ {
 	@Test
 	public void should_read_a_column_with_many_values() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStream(new MappReader(new File(mapps, "many_values.mapp")), Nominal));
+		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "many_values.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
 //		assertThat(resultTabbFile().length()).isEqualTo(213507);
 		TabbReader tabb = tabbReader();
@@ -74,7 +74,7 @@ public class TabbBuilder_ {
 	@Test
 	public void should_read_a_column_with_multiple_values() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStream(new MappReader(new File(mapps, "multivalued.mapp")), Nominal));
+		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "multivalued.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(resultTabbFile().length()).isEqualTo(315);
 		TabbReader tabb = tabbReader();
@@ -118,8 +118,8 @@ public class TabbBuilder_ {
 	@Test
 	public void should_build_multiple_nominal_column() throws IOException {
 		TabbBuilder builder = new TabbBuilder();
-		builder.add(new MappColumnStream(new MappReader(new File(mapps, "tests.mapp")), Nominal));
-		builder.add(new MappColumnStream(new MappReader(new File(mapps, "letters.mapp")), Nominal));
+		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "tests.mapp")), Nominal));
+		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "letters.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(resultTabbFile().length()).isEqualTo(429);
 		TabbReader tabbReader = tabbReader();

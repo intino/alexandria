@@ -6,28 +6,28 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class TabbInfo {
-	static final String FileName = ".info";
+class TabbManifest {
+	static final String FileName = ".manifest";
 	private final ColumnInfo[] columns;
 
-	TabbInfo(ColumnInfo[] columns) {
-		this.columns = columns;
-	}
-
-	static TabbInfo of(File file) throws IOException {
-		InputStream inputStream = ZipEntryReader.openEntry(file, FileName);
-		TabbInfo tabbInfo = new TabbInfo(readInfo(inputStream).stream().
+	static TabbManifest of(File file) throws IOException {
+		InputStream inputStream = TabbReader.ZipEntryReader.openEntry(file, FileName);
+		TabbManifest tabbManifest = new TabbManifest(readManifest(inputStream).stream().
 				map(line -> line.split(",")).map(l -> new ColumnInfo(l[0], ColumnStream.Type.valueOf(l[1]), Long.parseLong(l[2]), modes(l))).
 				toArray(ColumnInfo[]::new));
 		inputStream.close();
-		return tabbInfo;
+		return tabbManifest;
+	}
+
+	private TabbManifest(ColumnInfo[] columns) {
+		this.columns = columns;
 	}
 
 	private static String[] modes(String[] fields) {
 		return fields.length > 3 ? fields[3].split(":") : new String[0];
 	}
 
-	private static List<String> readInfo(InputStream inputStream) throws IOException {
+	private static List<String> readManifest(InputStream inputStream) throws IOException {
 		List<String> collect = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(toList());
 		inputStream.close();
 		return collect.subList(1, collect.size());
