@@ -22,6 +22,7 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
 
 	public Table source(Datasource source) {
 		this.source = source;
+		this.behavior = new CollectionBehavior<>(this);
 		setup();
 		return this;
 	}
@@ -52,9 +53,8 @@ public abstract class Table<B extends Box, ItemComponent extends Row, Item> exte
 	}
 
 	private void setup() {
-		if (source == null || behavior != null) return;
-		this.behavior = new CollectionBehavior<>(this, source, pageSize);
+		if (source == null) return;
 		notifier.setup(new CollectionSetup().itemCount(source.itemCount()).pageSize(pageSize));
-		behavior.page(0);
+		behavior.setup(source, pageSize);
 	}
 }
