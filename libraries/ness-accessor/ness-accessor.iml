@@ -12,7 +12,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="logger" />
     <orderEntry type="library" name="Legio: com.google.code.gson:gson:2.8.0" level="project" />
-    <orderEntry type="module" module-name="triplestore" />
+    <orderEntry type="module" module-name="tris" />
     <orderEntry type="module" module-name="zet" />
     <orderEntry type="module" module-name="zim" />
     <orderEntry type="module" module-name="jms" />
