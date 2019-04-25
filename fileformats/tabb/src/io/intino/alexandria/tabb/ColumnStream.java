@@ -1,5 +1,7 @@
 package io.intino.alexandria.tabb;
 
+import static java.nio.ByteBuffer.allocate;
+
 public interface ColumnStream {
 	String ColumnExtension = ".tabbc";
 
@@ -21,7 +23,7 @@ public interface ColumnStream {
 		Nominal {
 			@Override
 			public byte[] toByteArray(Object object) {
-				return object.toString().getBytes();
+				return Integer.toByteArray(object);
 			}
 
 			@Override
@@ -47,10 +49,7 @@ public interface ColumnStream {
 		Integer {
 			@Override
 			public byte[] toByteArray(Object object) {
-				byte[] result = new byte[4];
-				long value = (long) object;
-				for (int i = 0, shift = 24; i < 8; i++, shift -= 8) result[i] = (byte) (value >> shift);
-				return result;
+				return allocate(4).putInt((java.lang.Integer) object).array();
 			}
 
 			@Override

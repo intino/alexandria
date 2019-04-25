@@ -102,9 +102,8 @@ public class TabbReader {
 		}
 
 		public String asString() {
-			return mode.features[get32(value)];
+			return isAvailable() ? mode.features[get32(value)] : null;
 		}
-
 	}
 
 	static class ZipEntryReader {
