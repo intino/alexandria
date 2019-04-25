@@ -102,9 +102,9 @@ public class TCPDatalake implements Datalake {
 		public void connect(String... args) {
 			this.args = args;
 			try {
-				if (connection != null) connection.close();
 				connection = factory.createConnection(username, password);
 				if (clientId != null) connection.setClientID(clientId);
+				connection.start();
 				this.session = createSession(args.length > 0 ? args[0] : "");
 				this.onOpen.execute();
 				Logger.warn("Established new connection");
@@ -114,8 +114,7 @@ public class TCPDatalake implements Datalake {
 		}
 
 		private Session createSession(String arg) throws JMSException {
-			connection.start();
-			return connection.createSession(arg != null && arg.equals("Transacted"), AUTO_ACKNOWLEDGE);
+			return connection.createSession("Transacted".equals(arg), AUTO_ACKNOWLEDGE);
 		}
 
 		public Session session() {
