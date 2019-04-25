@@ -19,9 +19,9 @@
     </properties>
 
     <build>
-        <outputDirectory>../../out/production/konos-model</outputDirectory>
-        <testOutputDirectory>../../out/test/konos-model</testOutputDirectory>
-        <directory>../../out/build/konos-model</directory>
+        <outputDirectory>../../out/production/dsl</outputDirectory>
+        <testOutputDirectory>../../out/test/dsl</testOutputDirectory>
+        <directory>../../out/build/dsl</directory>
         <resources>
             <resource>
                 <directory>res</directory>
@@ -52,7 +52,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <finalName>konos-model</finalName>
+                    <finalName>konos-dsl</finalName>
                 </configuration>
             </plugin>
         </plugins>
