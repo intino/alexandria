@@ -1,6 +1,6 @@
 package io.intino.alexandria.zim;
 
-import io.intino.alexandria.inl.InlReader;
+import io.intino.alexandria.inl.MessageReader;
 import io.intino.alexandria.inl.Message;
 
 import java.io.*;
@@ -47,7 +47,7 @@ public class ZimReader implements ZimStream {
 	}
 
 	private static Iterator<Message> iteratorOf(InputStream is) {
-		InlReader source = readerOf(is);
+		MessageReader source = readerOf(is);
 		return new Iterator<Message>() {
 			private Message current;
 			private Message next;
@@ -79,8 +79,8 @@ public class ZimReader implements ZimStream {
 		};
 	}
 
-	private static InlReader readerOf(InputStream is) {
-		return new InlReader(is);
+	private static MessageReader readerOf(InputStream is) {
+		return new MessageReader(is);
 	}
 
 	private static InputStream inputStream(File file) {

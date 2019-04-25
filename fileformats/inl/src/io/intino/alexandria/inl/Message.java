@@ -46,7 +46,7 @@ public class Message {
 			@SuppressWarnings("unchecked")
 			public <T> T as(Class<T> type) {
 				String value = use(attribute).value;
-				return value != null ? (T) InlParsers.get(type).parse(value) : null;
+				return value != null ? (T) Parser.of(type).parse(value) : null;
 			}
 		} : null;
 	}
@@ -219,7 +219,7 @@ public class Message {
 		return value != null && value.contains("\n");
 	}
 
-	public String qualifiedType() {
+	private String qualifiedType() {
 		return owner != null ? owner.qualifiedType() + "." + type : type;
 	}
 
