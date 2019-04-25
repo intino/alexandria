@@ -1,256 +1,278 @@
 package io.intino.alexandria.inl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.util.stream.IntStream;
+import io.intino.alexandria.Resource;
+import io.intino.alexandria.ResourceStore;
+import io.intino.alexandria.inl.helpers.Fields;
+import io.intino.alexandria.inl.helpers.Mapping;
 
-public class InlReader implements Iterable<Message>, Iterator<Message> {
-	private Parser parser;
-	private Message next;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-	public InlReader(InputStream is) {
-		this.parser = new Parser(new BufferedReader(new InputStreamReader(is)));
-		this.next = parser.read();
+public class InlReader {
+	private final BufferedReader reader;
+	private final ResourceStore[] stores;
+	private final Mapping mapping = new Mapping();
+	private String line;
+
+	public static InlReader read(String text, ResourceStore... stores) {
+		return read(new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)), stores);
 	}
 
-	@Override
-	public Iterator<Message> iterator() {
-		return this;
+	public static InlReader read(InputStream is, ResourceStore... stores) {
+		return new InlReader(is, stores);
 	}
 
-	@Override
-	public boolean hasNext() {
-		return next != null;
+	private InlReader(InputStream is, ResourceStore[] stores) {
+		this.reader = new BufferedReader(new InputStreamReader(is));
+		this.stores = stores;
+		nextLine();
 	}
 
-	@Override
-	public Message next() {
-		Message current = next;
-		next = parser.read();
+	public <T> boolean hasNext(Class<T> type) {
+		return startBlockOf(type);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T next(Class<T> type) {
+		return fill((T) create(type));
+	}
+
+	private boolean startBlockOf(Class type) {
+		return line != null && map(unwrapBlock(line)).equalsIgnoreCase(type.getSimpleName());
+	}
+
+	private String unwrapBlock(String text) {
+		return text.startsWith("[") ? text.substring(1, text.length() - 1) : text;
+	}
+
+	private String unwrap(String value) {
+		return value.startsWith("\"") && value.endsWith("\"") ? value.substring(1, value.length() - 1) : value;
+	}
+
+	private <T> T fill(T object) {
+		Object scope = object;
+		String attribute = "";
+		String value = "";
+		nextLine();
+		while (!isTerminated(object)) {
+			if (isMultiline()) setAttribute(scope, attribute, value = (value != null ? value + "\n" : "") + line.substring(1));
+			else if (isHeader()) scope = addComponent(object, line.substring(1, line.length() - 1));
+			else if (isAttribute()) setAttribute(scope, attribute = attributeOf(line), value = valueOf(line));
+			nextLine();
+		}
+		return object;
+	}
+
+	private String attributeOf(String line) {
+		return line.substring(0, line.indexOf(":"));
+	}
+
+	private String valueOf(String line) {
+		return line.indexOf(":") + 1 < line.length() ? unwrap(line.substring(line.indexOf(":") + 1)) : null;
+	}
+
+	private boolean isMultiline() {
+		return line.startsWith("\t");
+	}
+
+	private String map(String id) {
+		return mapping.get(id);
+	}
+
+	private boolean isHeader() {
+		return line.startsWith("[");
+	}
+
+	private boolean isAttribute() {
+		return line.contains(":");
+	}
+
+	private boolean isTerminated(Object object) {
+		return line == null || startBlockOf(object.getClass());
+	}
+
+	private void setAttribute(Object object, String attribute, String value) {
+		if (object == null || value == null || value.isEmpty()) return;
+		Field field = Fields.of(object).get(map(attribute));
+		setField(field, object, parserOf(field).parse(deIndent(value)));
+	}
+
+	private Object addComponent(Object scope, String path) {
+		String[] paths = path.split("\\.");
+		for (int i = 1; i < paths.length - 1; i++) {
+			scope = findScope(scope, paths[i]);
+			if (scope == null) return null;
+		}
+		return createComponent(paths[paths.length - 1], scope);
+	}
+
+	private Object valueOf(Field field, Object object) {
+		try {
+			field.setAccessible(true);
+			return field.get(object);
+		} catch (IllegalAccessException e) {
+			return null;
+		}
+	}
+
+	private String deIndent(String value) {
+		return value.startsWith("\n") ? value.substring(1) : value;
+	}
+
+	private Object findScope(Object object, String attribute) {
+		for (Field field : Fields.of(object).asList()) {
+			if (!match(field, attribute)) continue;
+			Object result = valueOf(field, object);
+			return result instanceof List ? lastItemOf((List) result) : result;
+		}
+		return null;
+	}
+
+	private boolean match(Field field, String attribute) {
+		return attribute.equalsIgnoreCase(field.getName()) ||
+				attribute.equalsIgnoreCase(classOf(field).getSimpleName());
+	}
+
+	private Object lastItemOf(List list) {
+		return list.get(list.size() - 1);
+	}
+
+	private Class classOf(Field field) {
+		if (!(field.getGenericType() instanceof ParameterizedType)) return field.getType();
+		ParameterizedType ptype = (ParameterizedType) field.getGenericType();
+		return (Class) ptype.getActualTypeArguments()[0];
+	}
+
+	private Object createComponent(String type, Object object) {
+		return createComponent(findField(type, object), object);
+	}
+
+	private Object createComponent(Field field, Object object) {
+		if (field == null) return null;
+		return isList(field) ? createListItem(field, object) : setField(field, object, create(classOf(field)));
+	}
+
+	@SuppressWarnings("unchecked")
+	private Object createListItem(Field field, Object object) {
+		List list = (List) valueOf(field, object);
+		if (list == null) {
+			list = new ArrayList<>();
+			setField(field, object, list);
+		}
+		Object item = create(classOf(field));
+		list.add(item);
+		return item;
+	}
+
+	private static boolean isList(Field field) {
+		return field.getType().isAssignableFrom(List.class);
+	}
+
+	private Object setField(Field field, Object object, Object value) {
+		if (field == null) return null;
+		try {
+			field.setAccessible(true);
+			if (value.getClass().isArray()) value = append((Object[]) field.get(object), (Object[]) value);
+			if (value instanceof List) value = append((List) field.get(object), (List) value);
+			if (value instanceof Resource) load((Resource) value);
+			field.set(object, value);
+			return value;
+		} catch (IllegalAccessException e) {
+			return null;
+		}
+	}
+
+	private Object append(Object[] current, Object[] value) {
+		if (current == null) current = new Object[0];
+		System.arraycopy(current, 0, value, 0, current.length);
+		Object o = value[current.length];
+		if (o instanceof Resource) load((Resource) o);
+		return value;
+	}
+
+	private List append(List current, List value) {
+		if (current == null) current = new ArrayList();
+		final Object o = value.get(value.size() - 1);
+		if (o instanceof Resource) load((Resource) o);
+		//noinspection unchecked
+		current.add(o);
 		return current;
 	}
 
-	public void close() {
-		try {
-			parser.close();
-		} catch (IOException ignored) {
+	private void load(Resource resource) {
+		for (ResourceStore store : stores) {
+			InputStream data = store.get(resource.id()).data();
+			if (data == null) continue;
+			resource.data(data);
+			return;
 		}
 	}
 
-	private static class Parser {
-
-		private final BufferedReader reader;
-		private final List<Message> scopes;
-		private String line;
-
-		Parser(BufferedReader reader) {
-			this.reader = reader;
-			this.scopes = new ArrayList<>();
-			this.line = nextLine();
+	private Field findField(String type, Object object) {
+		for (Field field : Fields.of(object).asList()) {
+			if (!match(field, type)) continue;
+			if (isList(field) || valueOf(field, object) == null) return field;
 		}
+		return null;
+	}
 
-		private static Message create(Block block) {
-			Message message = new Message(typeIn(block.header));
-			for (String[] data : block) {
-				message.set(data[0], isMultiline(data[1]) ? data[1].substring(1) : data[1]);
-				if (isAttachment(data[1])) message.attach(attachmentName(data[1]), attachmentType(data[1]), new byte[0]);
-			}
-			return message;
+	static Object create(Class<?> type) {
+		try {
+			return type.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+			return null;
 		}
+	}
 
-		private static String attachmentName(String value) {
-			return value.substring(1);
+	private void nextLine() {
+		try {
+			do {
+				line = normalize(reader.readLine());
+			} while (line != null && line.isEmpty());
+		} catch (IOException e) {
+			line = null;
 		}
+	}
 
-		private static String attachmentType(String value) {
-			return value.contains(".") ? value.split("\\.")[1] : "";
-		}
+	static Parser parserOf(Field field) {
+		return isList(field) ? listParserOf(field.getGenericType().toString()) : Parser.of(field.getType());
+	}
 
-		private static String typeIn(String line) {
-			String[] path = typesIn(line);
-			return path[path.length - 1];
-		}
+	static Parser listParserOf(final String name) {
+		return new Parser() {
+			Parser parser = Parser.of(arrayClass());
 
-		private static String[] typesIn(String line) {
-			return line.split("\\.");
-		}
-
-		private static String normalize(String line) {
-			return line == null ? null : isEmpty(line) ? "" : isTrimRequired(line) ? trim(line) : line;
-		}
-
-		private static boolean isTrimRequired(String line) {
-			return !isMultiline(line) && !isHeaderIn(line);
-		}
-
-		private static boolean isMultiline(String line) {
-			return line.length() > 0 && line.charAt(0) == '\t';
-		}
-
-		private static boolean isHeaderIn(String line) {
-			return !isEmpty(line) && line.charAt(0) == '[';
-		}
-
-		private static boolean isEmpty(String line) {
-			char[] chars = charsOf(line);
-			if (chars.length > 0 && chars[0] == '\t') return false;
-			for (char c : chars)
-				if (c != ' ' && c != '\t') return false;
-			return true;
-		}
-
-		private static char[] charsOf(String line) {
-			return line == null ? new char[0] : line.toCharArray();
-		}
-
-		private static String trim(String line) {
-			int[] index = splitIndex(line.toCharArray());
-			return line.substring(0, index[0] + 1) + ":" + line.substring(index[1]);
-		}
-
-		private static int[] splitIndex(char[] data) {
-			int index = -1;
-			while (++index < data.length) if (data[index] == ':' || data[index] == '=') break;
-			int[] result = new int[]{index, index};
-			while (--result[0] >= 0 && data[result[0]] == ' ') ;
-			while (++result[1] < data.length && data[result[1]] == ' ') ;
-			return result;
-		}
-
-		private static boolean isAttachment(String value) {
-			return value.startsWith("@") && value.length() > 37 && isUUID(value.substring(1, 36));
-		}
-
-		private static boolean isUUID(String str) {
-			try {
-				if (!IntStream.of(8, 13, 18, 23).allMatch(n -> str.charAt(n) == '-')) return false;
-				UUID.fromString(str);
-				return true;
-			} catch (Exception ignored) {
-				return false;
-			}
-		}
-
-		Message read() {
-			return parse(blocks());
-		}
-
-		private Message parse(List<Block> blocks) {
-			scopes.clear();
-			for (Block block : blocks) {
-				scopes.add(createMessage(block));
-			}
-			return scopes.isEmpty() ? null : scopes.get(0);
-		}
-
-		private Message createMessage(Block block) {
-			Message owner = scopeOf(block);
-			Message component = create(block);
-			if (owner != null) owner.add(component);
-			return component;
-		}
-
-		private Message scopeOf(Block block) {
-			int depth = depthOf(block.header) - 1;
-			scopes.subList(depth + 1, scopes.size()).clear();
-			return depth >= 0 ? scopes.get(depth) : null;
-		}
-
-		private int depthOf(String header) {
-			int count = 0;
-			for (char c : header.toCharArray())
-				if (c == '.') count++;
-			return count;
-		}
-
-		private List<Block> blocks() {
-			List<Block> blocks = new ArrayList<>();
-			Block block = new Block("");
-			while (line != null) {
-				if (isHeaderIn(line))
-					blocks.add(block = new Block(stripBrackets(line)));
-				else
-					block.add(line);
-				line = nextLine();
-				if (line == null || isMainHeaderIn(line)) break;
-			}
-			return blocks;
-		}
-
-		private boolean isMainHeaderIn(String line) {
-			return isHeaderIn(line) && !isInnerBlockIn(line);
-		}
-
-		private boolean isInnerBlockIn(String line) {
-			return line.contains(".");
-		}
-
-		private String nextLine() {
-			try {
-				return normalize(reader.readLine());
-			} catch (IOException ignored) {
-				return null;
-			}
-		}
-
-		private String stripBrackets(String line) {
-			return line.substring(1, line.length() - 1);
-		}
-
-		public void close() throws IOException {
-			reader.close();
-		}
-
-		private static class Block implements Iterable<String[]> {
-			private final String header;
-			private final Stack<String> lines;
-
-			Block(String header) {
-				this.header = header;
-				this.lines = new Stack<>();
-			}
-
-			void add(String line) {
-				if (line.isEmpty()) return;
-				lines.push(ifMultilineMerge(line));
-			}
-
-			private String ifMultilineMerge(String line) {
-				return line.startsWith("\t") ? previous() + line.substring(1) : line;
-			}
-
-			private String previous() {
-				String pop = lines.pop();
-				return pop + (pop.endsWith(":") ? "" : "\n");
-			}
-
-			boolean isChildOf(String type) {
-				return header.startsWith(type + ".");
+			private Class<?> arrayClass() {
+				try {
+					String className = "[L" + name.substring(name.indexOf('<') + 1).replace(">", "") + ";";
+					return Class.forName(className);
+				} catch (ClassNotFoundException e) {
+					return null;
+				}
 			}
 
 			@Override
-			public Iterator<String[]> iterator() {
-				return new Iterator<String[]>() {
-					Iterator<String> iterator = lines.iterator();
-
-					@Override
-					public boolean hasNext() {
-						return iterator.hasNext();
-					}
-
-					@Override
-					public String[] next() {
-						String line = iterator.next();
-						int idx = line.indexOf(':');
-						return new String[]{line.substring(0, idx), idx == line.length() - 1 ? "" : line.substring(idx + 1)};
-					}
-				};
+			public Object parse(String text) {
+				Object[] array = (Object[]) parser.parse(text);
+				return Arrays.asList(array);
 			}
-		}
+		};
+	}
 
+	public InlReader map(String from, String to) {
+		mapping.put(from, to);
+		return this;
+	}
 
+	private static String normalize(String line) {
+		if (line == null) return null;
+		if (line.startsWith("\t") || line.isEmpty() || line.startsWith("[")) return line;
+		return line.trim().replaceAll("(\\w*)\\s*[:=]\\s*(.*)", "$1:$2");
 	}
 }

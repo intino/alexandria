@@ -4,7 +4,7 @@ Artifact("io.intino.alexandria", "1.0.4") inl
 	Imports
 		Compile("io.intino.alexandria", "primitives", "1.0.2")
 		Test("junit", "junit", "LATEST")
-		Test("commons-io", "commons-io", "2.6")
+		Test("org.assertj", "assertj-core", "3.12.2")
 
 	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
 	Distribution(intino.releases)
