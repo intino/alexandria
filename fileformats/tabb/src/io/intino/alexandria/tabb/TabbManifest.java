@@ -13,7 +13,7 @@ class TabbManifest {
 	static TabbManifest of(File file) throws IOException {
 		InputStream inputStream = TabbReader.ZipEntryReader.openEntry(file, FileName);
 		TabbManifest tabbManifest = new TabbManifest(readManifest(inputStream).stream().
-				map(line -> line.split(",")).map(l -> new ColumnInfo(l[0], ColumnStream.Type.valueOf(l[1]), Long.parseLong(l[2]), modes(l))).
+				map(line -> line.split("\t")).map(l -> new ColumnInfo(l[0], ColumnStream.Type.valueOf(l[1]), Long.parseLong(l[2]), modes(l))).
 				toArray(ColumnInfo[]::new));
 		inputStream.close();
 		return tabbManifest;
