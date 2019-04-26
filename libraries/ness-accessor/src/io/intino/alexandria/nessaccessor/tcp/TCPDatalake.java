@@ -5,7 +5,6 @@ import io.intino.alexandria.zim.ZimReader;
 import io.intino.alexandria.zim.ZimStream;
 import io.intino.ness.core.Blob;
 import io.intino.ness.core.Datalake;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSession;
 
@@ -83,10 +82,7 @@ public class TCPDatalake implements Datalake {
 		private final String clientId;
 		private final CallBack onOpen;
 		private final TCPDatalake.CallBack onClose;
-		private final ActiveMQConnectionFactory factory;
 		private Session session;
-		private String[] args;
-		private javax.jms.Connection connection;
 
 		Connection(String uri, String username, String password, String clientId, CallBack onOpen, CallBack onClose) {
 			this.uri = uri;
@@ -95,33 +91,29 @@ public class TCPDatalake implements Datalake {
 			this.clientId = clientId;
 			this.onOpen = onOpen;
 			this.onClose = onClose;
-			factory = new ActiveMQConnectionFactory(uri);
 		}
+
 
 		@Override
 		public void connect(String... args) {
-			this.args = args;
-			try {
-				connection = factory.createConnection(username, password);
-//				if (clientId != null) connection.setClientID(clientId);
-				connection.start();
-				this.session = createSession(args.length > 0 ? args[0] : "");
-				this.onOpen.execute();
-				Logger.warn("Established new connection");
-			} catch (Throwable e) {
-				Logger.error(e);
-			}
+			session = createSession(args.length > 0 ? args[0] : "");
+			onOpen.execute();
 		}
 
-		private Session createSession(String arg) throws JMSException {
-			return connection.createSession("Transacted".equals(arg), AUTO_ACKNOWLEDGE);
+		private Session createSession(String arg) {
+			try {
+				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(uri);
+				javax.jms.Connection connection = connectionFactory.createConnection(username, password);
+				if (this.clientId != null) connection.setClientID(this.clientId);
+				connection.start();
+				return connection.createSession("Transacted".equals(arg), AUTO_ACKNOWLEDGE);
+			} catch (JMSException e) {
+				Logger.error(e);
+				return null;
+			}
 		}
 
 		public Session session() {
-			if (!((ActiveMQConnection) connection).isStarted() || session == null || !((ActiveMQSession) session).isRunning() || ((ActiveMQSession) session).isClosed()) {
-				Logger.warn("Connection lost");
-				connect(args);
-			}
 			return session;
 		}
 
@@ -131,11 +123,12 @@ public class TCPDatalake implements Datalake {
 				try {
 					onClose.execute();
 					session.close();
-					connection.close();
-				} catch (Throwable e) {
+				} catch (JMSException e) {
 					Logger.error(e);
 				}
 			}
 		}
 	}
+
+
 }
