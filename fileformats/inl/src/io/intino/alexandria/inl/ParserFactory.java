@@ -11,6 +11,7 @@ import static java.lang.reflect.Array.set;
 
 class ParserFactory {
     private static Map<Class<?>, Parser> parsers;
+    private static String NullValue = "\0";
 
     static Parser get(Class<?> class_) {
         return parsers.get(class_);
@@ -61,7 +62,7 @@ class ParserFactory {
             String[] lines = text.split("\n");
             Object result = Array.newInstance(type, lines.length);
             for (int i = 0; i < lines.length; i++) {
-                set(result, i, (Parser.NullValue.equals(lines[i]) ? null : parser.parse(lines[i])));
+                set(result, i, (NullValue.equals(lines[i]) ? null : parser.parse(lines[i])));
             }
             return result;
         }

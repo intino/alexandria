@@ -1,4 +1,4 @@
-package io.intino.alexandria;
+package io.intino.alexandria.rest.spark;
 
 import eu.medsea.mimeutil.MimeUtil;
 
@@ -8,9 +8,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
 
-public class MimeTypes {
-	private static final Map<String, String> mimeTypes = new HashMap<>();
-	private static final Map<String, String> mimeTypesInverted = new HashMap<>();
+class MimeTypes {
 	public static final String DEFAULT_MIME_TYPE = "bin";
 	public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 	public static final String Text = "text/plain";
@@ -19,17 +17,23 @@ public class MimeTypes {
 	public static final String Odt = "application/vnd.oasis.opendocument.text";
 	public static final String Doc = "application/msword";
 	public static final String Docx = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+	private static final Map<String, String> mimeTypes = new HashMap<>();
+	private static final Map<String, String> mimeTypesInverted = new HashMap<>();
 	private static final String Default = "bin";
 	private static final List<String> PREVIEWABLE_TYPES = Arrays.asList("application/vnd.oasis.opendocument.text", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
-	public MimeTypes() {
+	static {
+		registerMimeTypes();
+	}
+
+	MimeTypes() {
 	}
 
 	public static String get(String code) {
 		return (String) mimeTypes.getOrDefault(code, mimeTypes.get("bin"));
 	}
 
-	public static String getExtension(String mimeType) {
+	static String getExtension(String mimeType) {
 		return (String) mimeTypesInverted.getOrDefault(mimeType, "bin");
 	}
 
@@ -37,12 +41,12 @@ public class MimeTypes {
 		return PREVIEWABLE_TYPES.contains(contentType) || contentType.startsWith("image");
 	}
 
-	public static String getFromStream(InputStream stream) {
+	static String getFromStream(InputStream stream) {
 		Collection mimeTypes = MimeUtil.getMimeTypes(stream);
 		return mimeTypes.isEmpty() ? "" : mimeTypes.iterator().next().toString();
 	}
 
-	public static String getFromFile(File file) {
+	static String getFromFile(File file) {
 		try {
 			return Files.probeContentType(file.toPath());
 		} catch (IOException e) {
@@ -50,10 +54,9 @@ public class MimeTypes {
 		}
 	}
 
-	public static String getFromFilename(String filename) {
+	static String getFromFilename(String filename) {
 		return getContentType(filename, getExtensionFromFile(filename));
 	}
-
 
 	private static String getContentType(String filename, Optional<String> extension) {
 		String contentType = null;
@@ -539,10 +542,6 @@ public class MimeTypes {
 		mimeTypesInverted.put("text/plain", "txt");
 		mimeTypesInverted.put("image/jpeg", "jpg");
 		mimeTypesInverted.put("image/png", "png");
-	}
-
-	static {
-		registerMimeTypes();
 	}
 
 	static Optional<String> getExtensionFromFile(String filename) {

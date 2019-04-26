@@ -1,6 +1,5 @@
 package io.intino.alexandria.rest.spark;
 
-import io.intino.alexandria.MimeTypes;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.exceptions.AlexandriaError;
 import spark.Response;
