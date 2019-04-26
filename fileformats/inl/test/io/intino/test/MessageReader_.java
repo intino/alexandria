@@ -3,6 +3,7 @@ package io.intino.test;
 import io.intino.alexandria.Resource;
 import io.intino.alexandria.ResourceStore;
 import io.intino.alexandria.inl.*;
+import io.intino.test.schemas.Document;
 import org.junit.Test;
 import io.intino.test.schemas.Teacher;
 
@@ -15,7 +16,9 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 
+import static io.intino.alexandria.inl.MessageCast.cast;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("ALL")
 public class MessageReader_ {
@@ -131,7 +134,7 @@ public class MessageReader_ {
 
 
 	@Test
-	public void should_read_message_in_old_format() {
+	public void should_read_message_in_old_format() throws IllegalAccessException {
 		String str =
 				"[Teacher]\n" +
 				"name = \"Jose\"\n" +
@@ -142,7 +145,7 @@ public class MessageReader_ {
 				"[Teacher.Country]\n" +
 				"name=\"Spain\"\n" +
 				"continent=\n";
-		Teacher teacher = InlReader.read(str).next(Teacher.class);
+		Teacher teacher = cast(new MessageReader(str).next()).as(Teacher.class);
 		assertThat(teacher.name).isEqualTo("Jose");
 		assertThat(teacher.money).isEqualTo(50.0);
 		assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 12));
@@ -150,8 +153,6 @@ public class MessageReader_ {
 		assertThat(teacher.country.name).isEqualTo("Spain");
 		assertThat(teacher.country.continent).isNull();
 	}
-
-
 
 	private ResourceStore resourceStore() {
 		return new ResourceStore() {
