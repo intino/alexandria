@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Index_ {
 
     @After
-    public void tearDown() throws Exception {
+	public void tearDown() {
         new File("index").delete();
     }
 

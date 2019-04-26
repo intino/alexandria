@@ -9,15 +9,15 @@ public class Message_ {
 
 	@Test
 	public void should_contain_attributes() {
-		Message message = new Message("Status");
-		message.set("battery", 78.0);
-		message.set("cpuUsage", 11.95);
-		message.set("isPlugged", true);
-		message.set("isScreenOn", false);
-		message.set("temperature", 29.0);
-		message.set("created", "2017-03-22T12:56:18Z");
-		message.set("battery", 80.0);
-		message.set("taps", 100);
+		Message message = new Message("Status")
+				.set("battery", 78.0)
+				.set("cpuUsage", 11.95)
+				.set("isPlugged", true)
+				.set("isScreenOn", false)
+				.set("temperature", 29.0)
+				.set("created", "2017-03-22T12:56:18Z")
+				.set("battery", 80.0)
+				.set("taps", 100);
 
 		assertThat(message.read("battery").as(Double.class)).isEqualTo(80.0);
 		assertThat(message.read("taps").as(Integer.class)).isEqualTo(100);
@@ -34,15 +34,15 @@ public class Message_ {
 
 	@Test
 	public void should_remove_attributes() {
-		Message message = new Message("Status");
-		message.set("battery", 78.0);
-		message.set("cpuUsage", 11.95);
-		message.set("isPlugged", true);
-		message.set("isScreenOn", false);
-		message.set("temperature", 29.0);
-		message.set("created", "2017-03-22T12:56:18Z");
-		message.remove("battery");
-		message.remove("isscreenon");
+		Message message = new Message("Status")
+				.set("battery", 78.0)
+				.set("cpuUsage", 11.95)
+				.set("isPlugged", true)
+				.set("isScreenOn", false)
+				.set("temperature", 29.0)
+				.set("created", "2017-03-22T12:56:18Z")
+				.remove("battery")
+				.remove("isscreenon");
 		assertThat(message.contains("battery")).isEqualTo(false);
 		assertThat(message.contains("isScreenOn")).isEqualTo(false);
 		assertThat(message.contains("isPlugged")).isEqualTo(true);
@@ -50,14 +50,15 @@ public class Message_ {
 
 	@Test
 	public void should_rename_attributes() {
-		Message message = new Message("Status");
-		message.set("battery", 78.0);
-		message.set("cpuUsage", 11.95);
-		message.set("isPlugged", true);
-		message.set("isScreenOn", false);
-		message.set("temperature", 29.0);
-		message.set("created", "2017-03-22T12:56:18Z");
-		message.rename("isPlugged", "plugged").rename("battery", "b");
+		Message message = new Message("Status")
+				.set("battery", 78.0)
+				.set("cpuUsage", 11.95)
+				.set("isPlugged", true)
+				.set("isScreenOn", false)
+				.set("temperature", 29.0)
+				.set("created", "2017-03-22T12:56:18Z")
+				.rename("isPlugged", "plugged")
+				.rename("battery", "b");
 		assertThat(message.contains("battery")).isEqualTo(false);
 		assertThat(message.contains("b")).isEqualTo(true);
 		assertThat(message.contains("isPlugged")).isEqualTo(false);

@@ -26,7 +26,7 @@ public class MappColumnStreamer implements ColumnStreamer {
 	}
 
 	public MappColumnStreamer(MappReader reader, Type type) {
-		this(reader, null, type);
+		this(reader, reader.name(), type);
 	}
 
 	public MappColumnStreamer(MappReader reader, String name, Type type) {

@@ -21,7 +21,7 @@ public class MessageBuilder_ {
                 instant(2016, 10, 4, 10, 10, 11),
                 new Country("Spain")
         );
-		assertThat(MessageBuilder.build(person).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(person).toString()).isEqualTo(
 				"[Person]\n" +
 				"name: Jose\n" +
 				"money: 50.0\n" +
@@ -40,7 +40,7 @@ public class MessageBuilder_ {
             new Boolean[]{true, false}
         );
 
-		assertThat(MessageBuilder.build(menu).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
 				"meals:\n" +
 				"\tSoup\n" +
@@ -61,7 +61,7 @@ public class MessageBuilder_ {
 	@Test
 	public void should_build_empty_array_attributes_of_a_class() {
 		Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
-		assertThat(MessageBuilder.build(menu).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
 				"[Menu]\n" +
 				"availability:\n" +
 				"\ttrue\n" +
@@ -76,7 +76,7 @@ public class MessageBuilder_ {
 				.mailingList(singletonList("cambullonero@monentia.es"))
 				.applyToAllStations(false);
 
-		assertThat(MessageBuilder.build(alert).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(alert).toString()).isEqualTo(
 				"[AlertModified]\n" +
 				"alert: Alerts#bbc15556-244b-45af-97b9-c0f18b1e42be\n" +
 				"active: true\n" +
@@ -87,7 +87,7 @@ public class MessageBuilder_ {
     @Test
     public void should_serialize_empty_array_attributes_of_a_class() {
         Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
-        assertThat(MessageBuilder.build(menu).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
                 "[Menu]\n" +
                 "availability:\n" +
                 "\ttrue\n" +
@@ -97,7 +97,7 @@ public class MessageBuilder_ {
     @Test
     public void should_build_array_attribute_with_null_values_of_a_class() {
         Menu menu = new Menu(new String[]{"Soup", null, "Mussels", "Cake"}, new Double[]{5.0, null, 8.0, 7.0}, new Boolean[]{true, false});
-        assertThat(MessageBuilder.build(menu).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(menu).toString()).isEqualTo(
                 "[Menu]\n" +
                         "meals:\n" +
                         "\tSoup\n" +
@@ -117,7 +117,7 @@ public class MessageBuilder_ {
     @Test
     public void should_not_serialize_null_attributes_of_a_class() {
         Person person = new Person("Jose", 50, null, null);
-        assertThat(MessageBuilder.build(person).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(person).toString()).isEqualTo(
                 "[Person]\n" +
                         "name: Jose\n" +
                         "money: 50.0\n");
@@ -128,7 +128,7 @@ public class MessageBuilder_ {
         Teacher teacher = new Teacher("Jose", 50, instant(2016, 10, 4, 20, 10, 11), new Country("Spain"), "ULPGC");
         teacher.add(new Phone("+150512101402", new Country("USA")));
         teacher.add(new Phone("+521005101402", new Country("Mexico")));
-        assertThat(MessageBuilder.build(teacher).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(teacher).toString()).isEqualTo(
                 "[Teacher]\n" +
                         "name: Jose\n" +
                         "money: 50.0\n" +
@@ -156,7 +156,7 @@ public class MessageBuilder_ {
         Teacher teacher = new Teacher("Jose\nHernandez", 50, instant(2016, 10, 4, 20, 10, 11), new Country("Spain"), "ULPGC");
         teacher.add(new Phone("+150512101402", new Country("USA")));
         teacher.add(new Phone("+521005101402", new Country("Mexico")));
-        assertThat(MessageBuilder.build(teacher).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(teacher).toString()).isEqualTo(
                 "[Teacher]\n" +
                         "name:\n" +
                         "\tJose\n" +
@@ -202,7 +202,7 @@ public class MessageBuilder_ {
         crash.app = "io.intino.consul";
         crash.deviceId = "b367172b0c6fe726";
         crash.stack = stack;
-        assertThat(MessageBuilder.build(crash).toString()).isEqualTo(
+		assertThat(MessageBuilder.toMessage(crash).toString()).isEqualTo(
                 "[Crash]\n" +
                 "instant: 2017-03-21T07:39:00Z\n" +
                 "app: io.intino.consul\n" +
