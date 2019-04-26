@@ -5,6 +5,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.FileGenerator;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class CsvFileGenerator implements FileGenerator {
 
 	public FileGenerator destination(File directory, String name) {
 		try {
-			csvWriter = new CSVWriter(new FileWriter(new File(directory, name + ".csv")), SEPARATOR, NO_QUOTE_CHARACTER);
+			csvWriter = new CSVWriter(new BufferedWriter(new FileWriter(new File(directory, name + ".csv"))), SEPARATOR, NO_QUOTE_CHARACTER);
 			csvWriter.writeNext(headers());
 		} catch (IOException e) {
 			Logger.error(e);

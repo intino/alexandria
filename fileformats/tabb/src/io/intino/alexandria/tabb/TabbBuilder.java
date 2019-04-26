@@ -12,6 +12,7 @@ import java.util.zip.ZipOutputStream;
 
 import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
+import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.zip.Deflater.BEST_COMPRESSION;
@@ -94,7 +95,7 @@ public class TabbBuilder {
 		os.setLevel(BEST_COMPRESSION);
 		for (TabbFileGenerator tabbGenerator : tabbGenerators)
 			writeEntry(os, tabbGenerator.name() + ColumnExtension, createColumnStream(tabbGenerator));
-		writeEntry(os, TabbManifest.FileName, createInfo(tabbGenerators));
+		writeEntry(os, TabbManifest.FileName, createManifest(tabbGenerators));
 		os.close();
 	}
 
@@ -107,12 +108,12 @@ public class TabbBuilder {
 		zos.closeEntry();
 	}
 
-	private InputStream createInfo(List<TabbFileGenerator> tabbGenerators) throws IOException {
+	private InputStream createManifest(List<TabbFileGenerator> tabbGenerators) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-		writer.write("name,type,size,mode\n");
+		writer.write("name\ttype\tsize\tmode\n");
 		for (TabbFileGenerator tabbGenerator : tabbGenerators) {
-			writer.write(tabbGenerator.name() + "," + tabbGenerator.type().name() + "," + tabbGenerator.size());
+			writer.write(tabbGenerator.name() + "\t" + tabbGenerator.type().name() + "\t" + tabbGenerator.size());
 			addNominalModes(writer, tabbGenerator);
 			writer.write("\n");
 		}
@@ -121,11 +122,11 @@ public class TabbBuilder {
 	}
 
 	private void addNominalModes(BufferedWriter writer, TabbFileGenerator tabbGenerator) throws IOException {
-		if (tabbGenerator.type() == Nominal) writer.write("," + serialize(tabbGenerator.mode()));
+		if (tabbGenerator.type() == Nominal) writer.write("\n" + serialize(tabbGenerator.mode()));
 	}
 
 	private String serialize(ColumnStream.Mode mode) {
-		return String.join(":", mode.features);
+		return join("|", mode.features);
 	}
 
 	private InputStream createColumnStream(TabbFileGenerator column) throws FileNotFoundException {
