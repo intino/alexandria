@@ -23,6 +23,7 @@ public interface ColumnStream {
 		Nominal {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				return Integer.toByteArray(object);
 			}
 
@@ -34,6 +35,7 @@ public interface ColumnStream {
 		Long {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				byte[] result = new byte[8];
 				long value = (long) object;
 				for (int i = 0, shift = 56; i < 8; i++, shift -= 8) result[i] = (byte) (value >> shift);
@@ -49,6 +51,7 @@ public interface ColumnStream {
 		Integer {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				return allocate(4).putInt((java.lang.Integer) object).array();
 			}
 
@@ -61,6 +64,7 @@ public interface ColumnStream {
 		Double {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				return Long.toByteArray(toLong(object));
 			}
 
@@ -76,6 +80,7 @@ public interface ColumnStream {
 		Boolean {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				return Integer.toByteArray(toInteger(object));
 			}
 
@@ -91,6 +96,7 @@ public interface ColumnStream {
 		Datetime {
 			@Override
 			public byte[] toByteArray(Object object) {
+				if (object == null) return notAvailable();
 				return Integer.toByteArray(object);
 			}
 
@@ -102,7 +108,8 @@ public interface ColumnStream {
 		Instant {
 			@Override
 			public byte[] toByteArray(Object object) {
-				return Integer.toByteArray(object);
+				if (object == null) return notAvailable();
+				return Integer.toByteArray((int) (((java.time.Instant) object).toEpochMilli() / 1000));
 			}
 
 			@Override
