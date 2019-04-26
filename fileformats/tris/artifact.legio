@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.4") triplestore
+Artifact("io.intino.alexandria", "1.0.0") tris
 	Imports
 		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Test("junit", "junit", "LATEST")
