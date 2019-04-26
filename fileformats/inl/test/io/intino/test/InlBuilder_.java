@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.inl.InlBuilder;
+import io.intino.alexandria.inl.MessageBuilder;
 import io.intino.test.schemas.*;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class InlBuilder_ {
                 instant(2016, 10, 4, 10, 10, 11),
                 new Country("Spain")
         );
-        assertThat(InlBuilder.build(person).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(person)).isEqualTo(
                 "[Person]\n" +
                 "name: Jose\n" +
                 "money: 50.0\n" +
@@ -39,7 +39,7 @@ public class InlBuilder_ {
                 new Boolean[]{true, false}
         );
 
-        assertThat(InlBuilder.build(menu).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(menu)).isEqualTo(
                 "[Menu]\n" +
                         "meals:\n" +
                         "\tSoup\n" +
@@ -60,7 +60,7 @@ public class InlBuilder_ {
     @Test
     public void should_build_empty_array_attributes_of_a_class() {
         Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
-        assertThat(InlBuilder.build(menu).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(menu)).isEqualTo(
                 "[Menu]\n" +
                         "availability:\n" +
                         "\ttrue\n" +
@@ -75,7 +75,7 @@ public class InlBuilder_ {
                 .mailingList(asList("cambullonero@monentia.es", "locuaz@gmail.com"))
                 .applyToAllStations(false);
 
-        assertThat(InlBuilder.build(alert).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(alert)).isEqualTo(
                 "[AlertModified]\n" +
                         "alert: Alerts#bbc15556-244b-45af-97b9-c0f18b1e42be\n" +
                         "active: true\n" +
@@ -86,7 +86,7 @@ public class InlBuilder_ {
     @Test
     public void should_serialize_empty_array_attributes_of_a_class() {
         Menu menu = new Menu(new String[]{}, new Double[]{}, new Boolean[]{true, false});
-        assertThat(InlBuilder.build(menu).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(menu)).isEqualTo(
                 "[Menu]\n" +
                         "availability:\n" +
                         "\ttrue\n" +
@@ -96,7 +96,7 @@ public class InlBuilder_ {
     @Test
     public void should_build_array_attribute_with_null_values_of_a_class() {
         Menu menu = new Menu(new String[]{"Soup", null, "Mussels", "Cake"}, new Double[]{5.0, null, 8.0, 7.0}, new Boolean[]{true, false});
-        assertThat(InlBuilder.build(menu).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(menu)).isEqualTo(
                 "[Menu]\n" +
                         "meals:\n" +
                         "\tSoup\n" +
@@ -116,7 +116,7 @@ public class InlBuilder_ {
     @Test
     public void should_not_serialize_null_attributes_of_a_class() {
         Person person = new Person("Jose", 50, null, null);
-        assertThat(InlBuilder.build(person).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(person)).isEqualTo(
                 "[Person]\n" +
                         "name: Jose\n" +
                         "money: 50.0\n");
@@ -127,7 +127,7 @@ public class InlBuilder_ {
         Teacher teacher = new Teacher("Jose", 50, instant(2016, 10, 4, 20, 10, 11), new Country("Spain"), "ULPGC");
         teacher.add(new Phone("+150512101402", new Country("USA")));
         teacher.add(new Phone("+521005101402", new Country("Mexico")));
-        assertThat(InlBuilder.build(teacher).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(teacher)).isEqualTo(
                 "[Teacher]\n" +
                         "name: Jose\n" +
                         "money: 50.0\n" +
@@ -155,7 +155,7 @@ public class InlBuilder_ {
         Teacher teacher = new Teacher("Jose\nHernandez", 50, instant(2016, 10, 4, 20, 10, 11), new Country("Spain"), "ULPGC");
         teacher.add(new Phone("+150512101402", new Country("USA")));
         teacher.add(new Phone("+521005101402", new Country("Mexico")));
-        assertThat(InlBuilder.build(teacher).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(teacher)).isEqualTo(
                 "[Teacher]\n" +
                         "name:\n" +
                         "\tJose\n" +
@@ -201,7 +201,7 @@ public class InlBuilder_ {
         crash.app = "io.intino.consul";
         crash.deviceId = "b367172b0c6fe726";
         crash.stack = stack;
-        assertThat(InlBuilder.build(crash).toInl()).isEqualTo(
+        assertThat(MessageBuilder.toMessage(crash)).isEqualTo(
                 "[Crash]\n" +
                         "instant: 2017-03-21T07:39:00Z\n" +
                         "app: io.intino.consul\n" +
