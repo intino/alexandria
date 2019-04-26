@@ -1,6 +1,6 @@
 package io.intino.test;
 
-import io.intino.alexandria.inl.MessageCast;
+import io.intino.alexandria.inl.Message;
 import io.intino.alexandria.inl.MessageReader;
 import io.intino.test.schemas.*;
 import org.junit.Test;
@@ -9,13 +9,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static io.intino.alexandria.inl.MessageCast.cast;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MessageCast_ {
 
     @Test
     public void should_cast_null_objects() throws IllegalAccessException {
-        Teacher teacher = MessageCast.cast(null).as(Teacher.class);
+		Teacher teacher = cast(null).as(Teacher.class);
         assertThat(teacher).isNull();
     }
 
@@ -30,7 +31,8 @@ public class MessageCast_ {
                 "\n" +
                 "[Teacher.Country]\n" +
                 "name: Spain\n";
-        Teacher teacher = MessageCast.cast(new MessageReader(str).next()).as(Teacher.class);
+		Message message = new MessageReader(str).next();
+		Teacher teacher = cast(message).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 12));
@@ -50,7 +52,7 @@ public class MessageCast_ {
                 "[Person.Country]\n" +
                 "name: Spain\n";
 
-        Teacher teacher = MessageCast.cast(new MessageReader(str).next()).as(Teacher.class);
+		Teacher teacher = cast(new MessageReader(str).next()).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 11));
@@ -76,7 +78,7 @@ public class MessageCast_ {
                 "availability:\n" +
                 "\ttrue\n" +
                 "\tfalse\n";
-        Menu menu = MessageCast.cast(new MessageReader(str).next()).as(Menu.class);
+		Menu menu = cast(new MessageReader(str).next()).as(Menu.class);
         assertThat(menu.meals.length).isEqualTo(4);
         assertThat(menu.prices.length).isEqualTo(4);
         assertThat(menu.availability.length).isEqualTo(2);
@@ -103,7 +105,7 @@ public class MessageCast_ {
                 "availability:\n" +
                 "\ttrue\n" +
                 "\tfalse\n";
-        Menu menu = MessageCast.cast(new MessageReader(str).next()).as(Menu.class);
+		Menu menu = cast(new MessageReader(str).next()).as(Menu.class);
         assertThat(menu.prices.length).isEqualTo(1);
         assertThat(menu.prices[0]).isEqualTo(7.0);
     }
@@ -115,7 +117,7 @@ public class MessageCast_ {
                 "availability:\n" +
                 "\ttrue\n" +
                 "\tfalse\n";
-        Menu menu = MessageCast.cast(new MessageReader(str).next()).as(Menu.class);
+		Menu menu = cast(new MessageReader(str).next()).as(Menu.class);
         assertThat(menu.meals.length).isEqualTo(0);
         assertThat(menu.prices.length).isEqualTo(0);
         assertThat(menu.availability.length).isEqualTo(2);
@@ -140,7 +142,7 @@ public class MessageCast_ {
                 "availability:\n" +
                 "\ttrue\n" +
                 "\tfalse\n";
-        Menu menu = MessageCast.cast(new MessageReader(str).next()).as(Menu.class);
+		Menu menu = cast(new MessageReader(str).next()).as(Menu.class);
         assertThat(menu.meals.length).isEqualTo(4);
         assertThat(menu.prices.length).isEqualTo(4);
         assertThat(menu.availability.length).isEqualTo(2);
@@ -175,7 +177,7 @@ public class MessageCast_ {
             "app: io.intino.consul\n" +
             "deviceId: b367172b0c6fe726\n" +
             "stack:\n" + indent(stack) + "\n";
-        Crash crash = MessageCast.cast(new MessageReader(str).next()).as(Crash.class);
+		Crash crash = cast(new MessageReader(str).next()).as(Crash.class);
         assertThat(crash.instant.toString()).isEqualTo("2017-03-21T07:39:00Z");
         assertThat(crash.app).isEqualTo("io.intino.consul");
         assertThat(crash.deviceId).isEqualTo("b367172b0c6fe726");
@@ -205,7 +207,7 @@ public class MessageCast_ {
             "\n" +
             "[Teacher.Phone.Country]\n" +
             "name: Mexico\n";
-        Teacher teacher = MessageCast.cast(new MessageReader(str).next()).as(Teacher.class);
+		Teacher teacher = cast(new MessageReader(str).next()).as(Teacher.class);
         assertThat(teacher.name).isEqualTo("Jose");
         assertThat(teacher.money).isEqualTo(50.0);
         assertThat(teacher.birthDate).isEqualTo(instant(2016, 10, 4, 20, 10, 11));
@@ -236,7 +238,7 @@ public class MessageCast_ {
                 "[CredentialLogin.Parameter]\n" +
                 "name: token\n" +
                 "value: abcdedgrd\n";
-        final CredentialLogin t = MessageCast.cast(new MessageReader(str).next()).as(CredentialLogin.class);
+		final CredentialLogin t = cast(new MessageReader(str).next()).as(CredentialLogin.class);
         assertThat(t.authentication()).isEqualTo("open");
         assertThat(t.parameterList().size()).isEqualTo(3);
         assertThat(t.parameterList().get(0).name()).isEqualTo("username");
@@ -256,7 +258,7 @@ public class MessageCast_ {
                 "\tjosejuanhernandez\n" +
                 "\tU0CU1BD7E\n" +
                 "\tjosejuanhernandez@siani.es\n";
-        InfrastructureOperation op = MessageCast.cast(new MessageReader(str).next()).as(InfrastructureOperation.class);
+		InfrastructureOperation op = cast(new MessageReader(str).next()).as(InfrastructureOperation.class);
         assertThat(op.operation()).isEqualTo("Add");
         assertThat(op.user()).isEqualTo("cesar");
         assertThat(op.objectType()).isEqualTo("Responsible");
