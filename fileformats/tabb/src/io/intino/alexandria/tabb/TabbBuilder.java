@@ -122,7 +122,7 @@ public class TabbBuilder {
 	}
 
 	private void addNominalModes(BufferedWriter writer, TabbFileGenerator tabbGenerator) throws IOException {
-		if (tabbGenerator.type() == Nominal) writer.write("\n" + serialize(tabbGenerator.mode()));
+		if (tabbGenerator.type() == Nominal) writer.write("\t" + serialize(tabbGenerator.mode()));
 	}
 
 	private String serialize(ColumnStream.Mode mode) {
