@@ -1,6 +1,7 @@
 package io.intino.alexandria.zim;
 
 import io.intino.alexandria.inl.Message;
+import io.intino.alexandria.inl.MessageWriter;
 import io.intino.alexandria.logger.Logger;
 
 import java.io.*;
@@ -12,7 +13,7 @@ import java.util.zip.GZIPOutputStream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+@SuppressWarnings({"WeakerAccess"})
 public class ZimBuilder {
 	private final File source;
 
@@ -43,9 +44,9 @@ public class ZimBuilder {
 
 	private File merge(ZimStream data) {
 		File file = tempFile();
-		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(zipStream(file)))) {
+		try (MessageWriter writer = new MessageWriter(zipStream(file))) {
 			ZimStream stream = mergeFileWith(data);
-			while (stream.hasNext()) writer.write(stream.next() + "\n");
+			while (stream.hasNext()) writer.write(stream.next());
 		} catch (IOException e) {
 			Logger.error(e);
 		}

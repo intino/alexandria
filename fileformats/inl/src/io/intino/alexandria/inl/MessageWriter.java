@@ -6,7 +6,7 @@ import java.io.OutputStream;
 import java.util.Base64;
 import java.util.Map;
 
-public class MessageWriter {
+public class MessageWriter implements AutoCloseable {
     private final OutputStream os;
 
     public MessageWriter(OutputStream os) {
