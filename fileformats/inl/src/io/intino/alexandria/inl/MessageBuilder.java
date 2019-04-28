@@ -1,9 +1,7 @@
 package io.intino.alexandria.inl;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.inl.helpers.Fields;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -23,15 +21,7 @@ public class MessageBuilder {
 
 	private static void convertAttachment(Message message, Field field, Object value) {
 		Resource resource = (Resource) value;
-		message.attach(field.getName(), resource.id(), resource.type(), resource.data());
-		reset(resource);
-	}
-
-	private static void reset(Resource resource) {
-		try {
-			resource.data().reset();
-		} catch (IOException ignored) {
-		}
+		message.set(field.getName(), resource.name(), resource.data());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -49,12 +39,12 @@ public class MessageBuilder {
 		return field.getType().isArray();
 	}
 
-	static boolean isAttribute(Field field) {
+	private static boolean isAttribute(Field field) {
 		Class<?> aClass = field.getType();
 		return isPrimitive(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
 	}
 
-	static boolean isAttachment(Field field) {
+	private static boolean isAttachment(Field field) {
 		final Class<?> aClass = field.getType();
 		return aClass.equals(Resource.class);
 	}
@@ -99,7 +89,7 @@ public class MessageBuilder {
 		return false;
 	}
 
-	static boolean isEmpty(Object value) {
+	private static boolean isEmpty(Object value) {
 		return value == null
 				|| value.getClass().isArray() && ((Object[]) value).length == 0
 				|| value instanceof List && ((List) value).isEmpty();

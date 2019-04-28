@@ -1,11 +1,12 @@
 package io.intino.alexandria.inl;
 
 import io.intino.alexandria.Resource;
-import io.intino.alexandria.inl.helpers.Fields;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.*;
+
+import static java.util.Arrays.stream;
 
 
 @SuppressWarnings("unchecked")
@@ -22,34 +23,42 @@ public class MessageCast {
 		return new MessageCast(message);
 	}
 
-	private static <T> Object fillObject(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+	private <T> Object fillObject(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 		fillAttributes(message, aClass, object);
 		fillComponents(message, aClass, object);
 		return object;
 	}
 
-	private static <T> void fillAttributes(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+	private <T> void fillAttributes(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 		for (String attribute : message.attributes()) {
 			Field field = fieldByName(aClass, attribute);
 			if (field != null) setField(field, object, valueOf(message, attribute, field));
 		}
 	}
 
-	private static Object valueOf(Message message, String attribute, Field field) {
-		if (field.getType().isAssignableFrom(Resource.class)) {
-			Message.Attachment attachment = message.attachment(message.get(attribute));
-			return new Resource(idOf(attachment)).data(attachment.data());
-		}
-		return parserOf(field).parse(message.get(attribute));
+	private Object valueOf(Message message, String attribute, Field field) {
+		return fill(parserOf(field).parse(message.get(attribute).toString()));
 	}
 
-	private static String idOf(Message.Attachment attachment) {
-		String id = attachment.id();
-		if (id.contains("#")) id = id.substring(id.indexOf("#") + 1);
-		return id;
-	}
+    private Object fill(Object object) {
+        if (object == null) return null;
+        if (object instanceof Resource) return fill((Resource) object);
+        if (object instanceof Resource[]) return fill((Resource[]) object);
+        return object;
+    }
 
-	private static <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
+    private Object fill(Resource[] resources) {
+        stream(resources).forEach(this::fill);
+        return resources;
+    }
+
+    private Object fill(Resource resource) {
+        String key = new String(resource.data());
+        resource.data(message.attachment(key));
+        return resource;
+    }
+
+	private <T> void fillComponents(Message message, Class<T> aClass, Object object) throws IllegalAccessException {
 		for (Message component : message.components()) {
 			Field field = fieldByName(aClass, component.type());
 			if (field != null)
@@ -57,7 +66,7 @@ public class MessageCast {
 		}
 	}
 
-	private static void setField(Field field, Object owner, Object value) throws IllegalAccessException {
+	private void setField(Field field, Object owner, Object value) throws IllegalAccessException {
 		field.setAccessible(true);
 		if (field.getType().isAssignableFrom(List.class))
 			field.set(owner, value instanceof List ? append((List) field.get(owner), (List) value) : append((List) field.get(owner), value));
@@ -110,8 +119,8 @@ public class MessageCast {
 
 	private static Class classOf(Field field) {
 		if (!(field.getGenericType() instanceof ParameterizedType)) return field.getType();
-		ParameterizedType ptype = (ParameterizedType) field.getGenericType();
-		return (Class) ptype.getActualTypeArguments()[0];
+		ParameterizedType type = (ParameterizedType) field.getGenericType();
+		return (Class) type.getActualTypeArguments()[0];
 	}
 
 	private static Object create(Class<?> type) {
@@ -123,15 +132,15 @@ public class MessageCast {
 		}
 	}
 
-	private static Parser parserOf(Field field) {
+	private Parser parserOf(Field field) {
 		return isList(field) ? listParserOf(field.getGenericType().toString()) : Parser.of(field.getType());
 	}
 
-	private static boolean isList(Field field) {
+	private boolean isList(Field field) {
 		return field.getType().isAssignableFrom(List.class);
 	}
 
-	private static Parser listParserOf(final String name) {
+	private Parser listParserOf(final String name) {
 		return new Parser() {
 			Parser parser = Parser.of(arrayClass());
 
@@ -146,7 +155,7 @@ public class MessageCast {
 
 			@Override
 			public Object parse(String text) {
-				Object[] array = (Object[]) parser.parse(text);
+				Object[] array = (Object[]) fill(parser.parse(text));
 				return Arrays.asList(array);
 			}
 		};

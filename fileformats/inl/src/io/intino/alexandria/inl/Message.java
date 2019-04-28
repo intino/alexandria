@@ -1,5 +1,6 @@
 package io.intino.alexandria.inl;
 
+import io.intino.alexandria.Resource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,21 +8,23 @@ import java.io.InputStream;
 import java.util.*;
 
 import static io.intino.alexandria.inl.Event.TS;
+import static java.util.Arrays.stream;
 
 public class Message {
+	static final String AttachmentHeader = "[&]";
 	private String type;
 	private Message owner;
 	private Event event;
 	private Map<String, Attribute> attributes;
-	private List<Message> components;
-	private List<Attachment> attachments;
+    private List<Message> components;
+    private Map<String, byte[]> attachments;
 
-	public Message(String type) {
+    public Message(String type) {
 		this.type = type;
 		this.owner = null;
 		this.attributes = new LinkedHashMap<>();
-		this.attachments = null;
-		this.components = null;
+        this.attachments = new HashMap<>();
+        this.components = null;
 	}
 
 	public String type() {
@@ -36,19 +39,43 @@ public class Message {
 		this.type = type;
 	}
 
-	public String get(String attribute) {
-		return contains(attribute) ? use(attribute).value : null;
-	}
+	public Value get(final String attribute) {
+		return !contains(attribute) ? null : new Value() {
+            @Override
+            public Object data() {
+                return use(attribute).value;
+            }
 
-	public Value read(final String attribute) {
-		return contains(attribute) ? new Value() {
-			@Override
-			@SuppressWarnings("unchecked")
-			public <T> T as(Class<T> type) {
-				String value = use(attribute).value;
-				return value != null ? (T) Parser.of(type).parse(value) : null;
-			}
-		} : null;
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> T as(Class<T> type) {
+                return (T) fill(Parser.of(type).parse(use(attribute).value));
+            }
+
+            private Object fill(Object object) {
+                if (object == null) return null;
+                if (object instanceof Resource) return fill((Resource) object);
+                if (object instanceof Resource[]) return fill((Resource[]) object);
+                return object;
+            }
+
+            private Object fill(Resource[] resources) {
+                stream(resources).forEach(this::fill);
+                return resources;
+            }
+
+            private Object fill(Resource resource) {
+                String key = new String(resource.data());
+                resource.data(attachments.getOrDefault(key, new byte[0]));
+                return resource;
+            }
+
+
+            @Override
+            public String toString() {
+                return use(attribute).value;
+            }
+        };
 	}
 
 	public Message set(String attribute, String value) {
@@ -69,23 +96,16 @@ public class Message {
 		return set(attribute, value.toString());
 	}
 
-	public Message attach(String attribute, String type, InputStream is) {
-		return attach(attribute, randomId(), type, contentOf(is));
+	public Message set(String attribute, String value, InputStream is) {
+		return set(attribute, value, contentOf(is));
 	}
 
-	public Message attach(String attribute, String type, byte[] content) {
-		return attach(attribute, randomId(), type, content);
+	public Message set(String attribute, String value, byte[] content) {
+        return set(attribute, value + "@" + attach(content));
 	}
 
-	Message attach(String attribute, String id, String type, InputStream is) {
-		return attach(attribute, randomId() + "#" + id, type, contentOf(is));
-	}
 
-	Message attach(String attribute, String id, String type, byte[] content) {
-		return append(use(attribute), "@" + putAttachment(id + "." + type, content));
-	}
-
-	public Message append(String attribute, Boolean value) {
+    public Message append(String attribute, Boolean value) {
 		return append(use(attribute), value.toString());
 	}
 
@@ -108,20 +128,15 @@ public class Message {
 		return this;
 	}
 
-	public List<Attachment> attachments() {
-		return attachments != null ? attachments : (attachments = new ArrayList<>());
-	}
+    public Message append(String attribute, String name, InputStream is) {
+        return append(attribute, name, contentOf(is));
+    }
 
-	private String randomId() {
-		return UUID.randomUUID().toString();
-	}
+    public Message append(String attribute, String name, byte[] content) {
+        return append(attribute, name + "@" + attach(content));
+    }
 
-	private String putAttachment(String id, byte[] bytes) {
-		attachments().add(new Attachment(id, bytes));
-		return id;
-	}
-
-	public boolean isEvent() {
+    public boolean isEvent() {
 		return contains(TS);
 	}
 
@@ -159,11 +174,12 @@ public class Message {
 	}
 
 	public Message remove(String attribute) {
+	    detach(use(attribute).value);
 		attributes.remove(attribute.toLowerCase());
 		return this;
 	}
 
-	private Attribute use(String attribute) {
+    private Attribute use(String attribute) {
 		if (!contains(attribute)) add(new Attribute(attribute));
 		return attributes.get(attribute.toLowerCase());
 	}
@@ -172,7 +188,31 @@ public class Message {
 		attributes.put(attribute.name.toLowerCase(), attribute);
 	}
 
-	public List<Message> components() {
+    private String attach(byte[] content) {
+        String uuid = UUID.random();
+        attachments.put(uuid, content);
+        return uuid;
+    }
+
+    private void detach(String value) {
+        if ((value == null) || (!value.contains("@"))) return;
+        removeAttachments(value);
+    }
+
+    private void removeAttachments(String value) {
+        for (String item : value.split("\n"))
+            removeAttachment(uuidIn(item));
+    }
+
+    private String uuidIn(String item) {
+        return item.substring(item.indexOf('@') + 1);
+    }
+
+    private void removeAttachment(String uuid) {
+        if (UUID.is(uuid)) attachments.remove(uuid);
+    }
+
+    public List<Message> components() {
 		return components == null ? new ArrayList<>() : new ArrayList<>(components);
 	}
 
@@ -187,8 +227,9 @@ public class Message {
 	public void add(Message component) {
 		if (components == null) components = new ArrayList<>();
 		components.add(component);
-		component.owner = this;
-	}
+        component.owner = this;
+        component.attachments = attachments;
+    }
 
 	public void add(List<Message> components) {
 		if (components == null) return;
@@ -205,13 +246,23 @@ public class Message {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder("[" + qualifiedType() + "]\n");
-		for (Attribute attribute : attributes.values()) result.append(stringOf(attribute)).append("\n");
-		for (Message component : components()) result.append("\n").append(component.toString());
-		return result.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append("[").append(qualifiedType()).append("]\n");
+		for (Attribute attribute : attributes.values()) sb.append(stringOf(attribute)).append("\n");
+		for (Message component : components()) sb.append("\n").append(component.toString());
+		if (hasAttachments()) sb.append("\n" + AttachmentHeader + "\n");
+		return sb.toString();
 	}
 
-	private String stringOf(Attribute attribute) {
+    boolean hasAttachments() {
+        return (owner == null) && (attachments.size() > 0);
+    }
+
+    Map<String, byte[]> allAttachments() {
+        return attachments;
+    }
+
+    private String stringOf(Attribute attribute) {
 		return attribute.name + ":" + (isMultiline(attribute.value) ? indent(attribute.value) : " " + attribute.value);
 	}
 
@@ -231,24 +282,50 @@ public class Message {
 		return new ArrayList<>(attributes.keySet());
 	}
 
-	public Attachment attachment(String id) {
-		if (id.startsWith("@")) id = id.substring(1);
-		for (Attachment a : attachments()) {
-			if (a.id().equals(id)) {
-				return a;
-			}
-		}
-		return null;
-	}
-
 	public boolean contains(String attribute) {
 		return attributes.containsKey(attribute.toLowerCase());
 	}
 
-	public interface Value {
+    public List<String> attachments() {
+        return new ArrayList<>(attachments.keySet());
+    }
 
+    public byte[] attachment(String id) {
+        return attachments.getOrDefault(id, new byte[0]);
+    }
+
+    Message put(Map<String, byte[]> attachments) {
+	    this.attachments = attachments;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Message message = (Message) object;
+        return Objects.equals(type, message.type) &&
+               attributes.keySet().stream().allMatch(k-> attributeEquals(message, k)) &&
+               attachments.keySet().stream().allMatch(k-> attachmentEquals(message, k)) &&
+               Objects.equals(components, message.components) ;
+    }
+
+    private boolean attributeEquals(Message message, String key) {
+        return message.get(key).data().equals(get(key).data());
+    }
+
+    private boolean attachmentEquals(Message message, String key) {
+        return Arrays.equals(message.attachments.get(key), message.attachments.get(key));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, owner, event, attributes, components, attachments);
+    }
+
+    public interface Value {
+        Object data();
 		<T> T as(Class<T> type);
-
 	}
 
 	static class Attribute {
@@ -261,41 +338,25 @@ public class Message {
 
 		@Override
 		public String toString() {
-			return name + ": " + value;
+			return name + ":" + value;
 		}
-
 
 	}
 
-	public static class Attachment {
-		private String id;
+	private static class UUID {
+        private static int[] HyphenPositions = new int[] {8, 13, 18, 23};
 
-		private byte[] data;
+        static boolean is(String str) {
+            for (int n : HyphenPositions)
+                if (str.charAt(n) != '-') return false;
+            return true;
+        }
 
-		private Attachment(String id, byte[] data) {
-			this.id = id;
-			this.data = data;
-		}
 
-		public String id() {
-			return id;
-		}
+        static String random() {
+            return java.util.UUID.randomUUID().toString();
+        }
+    }
 
-		public String type() {
-			return id.substring(id.lastIndexOf('.') + 1);
-		}
-
-		public byte[] data() {
-			return data;
-		}
-
-		public void data(InputStream is) {
-			data(Message.contentOf(is));
-		}
-
-		public void data(byte[] data) {
-			this.data = data;
-		}
-	}
 }
 

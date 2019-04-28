@@ -1,5 +1,6 @@
 package io.intino.test;
 
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.inl.Message;
 import org.junit.Test;
 
@@ -10,39 +11,62 @@ public class Message_ {
 	@Test
 	public void should_contain_attributes() {
 		Message message = new Message("Status")
-				.set("battery", 78.0)
-				.set("cpuUsage", 11.95)
-				.set("isPlugged", true)
-				.set("isScreenOn", false)
-				.set("temperature", 29.0)
-				.set("created", "2017-03-22T12:56:18Z")
-				.set("battery", 80.0)
-				.set("taps", 100);
+            .set("battery", 78.0)
+            .set("cpuUsage", 11.95)
+            .set("isPlugged", true)
+            .set("isScreenOn", false)
+            .set("temperature", 29.0)
+            .set("created", "2017-03-22T12:56:18Z")
+            .set("battery", 80.0)
+            .set("taps", 100);
 
-		assertThat(message.read("battery").as(Double.class)).isEqualTo(80.0);
-		assertThat(message.read("taps").as(Integer.class)).isEqualTo(100);
+		assertThat(message.get("battery").as(Double.class)).isEqualTo(80.0);
+		assertThat(message.get("taps").as(Integer.class)).isEqualTo(100);
 		assertThat(message.toString()).isEqualTo(
 				"[Status]\n" +
-						"battery: 80.0\n" +
-						"cpuUsage: 11.95\n" +
-						"isPlugged: true\n" +
-						"isScreenOn: false\n" +
-						"temperature: 29.0\n" +
-						"created: 2017-03-22T12:56:18Z\n" +
-						"taps: 100\n");
+				"battery: 80.0\n" +
+				"cpuUsage: 11.95\n" +
+				"isPlugged: true\n" +
+				"isScreenOn: false\n" +
+				"temperature: 29.0\n" +
+				"created: 2017-03-22T12:56:18Z\n" +
+				"taps: 100\n");
+	}
+
+	@Test
+	public void should_contain_multiline_attributes() {
+		Message message = new Message("Multiline")
+		    .append("name", "John")
+		    .append("age", 30)
+		    .append("age", 20)
+		    .append("comment", "hello")
+		    .append("comment", "world")
+		    .append("comment", "!!!");
+		assertThat(message.get("age").toString()).isEqualTo("30\n20");
+		assertThat(message.get("comment").toString()).isEqualTo("hello\nworld\n!!!");
+		assertThat(message.toString()).isEqualTo("" +
+				"[Multiline]\n" +
+				"name: John\n" +
+				"age:\n" +
+				"\t30\n" +
+				"\t20\n" +
+				"comment:\n" +
+				"\thello\n" +
+				"\tworld\n" +
+				"\t!!!\n");
 	}
 
 	@Test
 	public void should_remove_attributes() {
 		Message message = new Message("Status")
-				.set("battery", 78.0)
-				.set("cpuUsage", 11.95)
-				.set("isPlugged", true)
-				.set("isScreenOn", false)
-				.set("temperature", 29.0)
-				.set("created", "2017-03-22T12:56:18Z")
-				.remove("battery")
-				.remove("isscreenon");
+            .set("battery", 78.0)
+            .set("cpuUsage", 11.95)
+            .set("isPlugged", true)
+            .set("isScreenOn", false)
+            .set("temperature", 29.0)
+            .set("created", "2017-03-22T12:56:18Z")
+            .remove("battery")
+            .remove("isscreenon");
 		assertThat(message.contains("battery")).isEqualTo(false);
 		assertThat(message.contains("isScreenOn")).isEqualTo(false);
 		assertThat(message.contains("isPlugged")).isEqualTo(true);
@@ -80,52 +104,51 @@ public class Message_ {
 	}
 
 	@Test
-	public void should_handle_document_list_attributes() {
-		Message message = new Message("Document");
-		message.set("name", "my attachment");
-		message.attach("file1", "png", data(20));
-		message.attach("file1", "png", data(30));
-		message.attach("file2", "png", data(40));
-		message.attach("file2", "png", data(80));
-		assertThat(message.attachments().size()).isEqualTo(4);
-		assertThat(message.attachment(message.get("file1").split("\n")[0]).type()).isEqualTo("png");
-		assertThat(message.attachment(message.get("file2").split("\n")[0]).data().length).isEqualTo(40);
-	}
+	public void should_handle_attachments() {
+		Message message = new Message("Document")
+    		.set("name", "my attachment")
+    		.set("file1", "photo.png", data(120))
+    		.set("file2", "cv.pdf", data(80))
+    		.append("file2", "xx.png", data(0))
+    		.append("file2", "yy.png", data(100));
+        assertThat(message.get("file1").as(Resource.class).name()).isEqualTo("photo.png");
+        assertThat(message.get("file1").as(Resource.class).data().length).isEqualTo(120);
+        assertThat(message.get("file1").as(Resource.class).data()).isEqualTo(data(120));
+        assertThat(message.get("file1").as(Resource[].class).length).isEqualTo(1);
+        assertThat(message.get("file1").as(Resource[].class)[0].name()).isEqualTo("photo.png");
+        assertThat(message.get("file2").as(Resource[].class).length).isEqualTo(3);
+        assertThat(message.get("file2").as(Resource[].class)[0].name()).isEqualTo("cv.pdf");
+        assertThat(message.get("file2").as(Resource[].class)[0].data()).isEqualTo(data(80));
+        assertThat(message.get("file2").as(Resource[].class)[1].data()).isEqualTo(data(0));
+        assertThat(message.get("file2").as(Resource[].class)[2].data()).isEqualTo(data(100));
+        assertThat(message.attachments().size()).isEqualTo(4);
+		assertThat(withoutUUID(message.toString())).isEqualTo(
+		        "[Document]\n" +
+                "name: my attachment\n" +
+                "file1: photo.png@...\n" +
+                "file2:\n" +
+                "\tcv.pdf@...\n" +
+                "\txx.png@...\n" +
+                "\tyy.png@...\n" +
+                "\n" +
+                "[&]\n");
+		}
 
 	@Test
-	public void should_handle_document_attributes() {
-		Message message = new Message("Document");
-		message.set("name", "my attachment");
-		message.attach("attachment", "png", data(64));
-		message.attach("attachment", "png", data(128));
-		assertThat(message.attachments().size()).isEqualTo(2);
-		assertThat(message.attachment(message.get("attachment").split("\n")[0]).type()).isEqualTo("png");
-		assertThat(message.attachment(message.get("attachment").split("\n")[1]).data().length).isEqualTo(128);
-	}
-
-	@Test
-	public void should_update_documents() {
-		Message message = new Message("Document");
-		message.attach("attachment", "png", data(0));
-		for (Message.Attachment attachment : message.attachments())
-			attachment.data(data(128));
+	public void should_update_attachments() {
+		Message message = new Message("Document")
+            .set("file", "0.png", data(0))
+            .remove("file")
+            .set("file","0.png",data(128));
+		assertThat(message.get("file").as(Resource.class).type()).isEqualTo("png");
+		assertThat(message.get("file").as(Resource.class).data().length).isEqualTo(128);
+		assertThat(message.get("file").as(Resource.class).data()).isEqualTo(data(128));
 		assertThat(message.attachments().size()).isEqualTo(1);
-		assertThat(message.attachment(message.get("attachment")).type()).isEqualTo("png");
-		assertThat(message.attachment(message.get("attachment")).data().length).isEqualTo(128);
-	}
-
-	@Test
-	public void should_handle_multi_line_attributes() {
-		Message message = new Message("Multiline");
-		message.append("name", "John");
-		message.append("age", 30);
-		message.append("age", 20);
-		message.append("comment", "hello");
-		message.append("comment", "world");
-		message.append("comment", "!!!");
-		assertThat(message.get("age")).isEqualTo("30\n20");
-		assertThat(message.get("comment")).isEqualTo("hello\nworld\n!!!");
-		assertThat(message.toString()).isEqualTo("[Multiline]\nname: John\nage:\n\t30\n\t20\ncomment:\n\thello\n\tworld\n\t!!!\n");
+		assertThat(withoutUUID(message.toString())).isEqualTo(
+		        "[Document]\n" +
+                "file: 0.png@...\n" +
+                "\n" +
+                "[&]\n");
 	}
 
 	private byte[] data(int size) {
@@ -134,4 +157,12 @@ public class Message_ {
 		return data;
 	}
 
+    private String withoutUUID(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : str.split("\n")) {
+            if (s.contains("@")) s = s.substring(0,s.indexOf('@')+1)+"...";
+            sb.append(s).append('\n');
+        }
+        return sb.toString();
+    }
 }

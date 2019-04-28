@@ -1,6 +1,5 @@
 package io.intino.alexandria.inl;
 
-import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class Event extends Message {
 	Event(Message message) {
 		super(message.type());
 		this.message = message;
-		this.instant = Instant.parse(get(TS));
+		this.instant = Instant.parse(get(TS).toString());
 	}
 
 	@Override
@@ -81,11 +80,6 @@ public class Event extends Message {
 	}
 
 	@Override
-	public Attachment attachment(String id) {
-		return message.attachment(id);
-	}
-
-	@Override
 	public boolean contains(String attribute) {
 		return message.contains(attribute);
 	}
@@ -110,13 +104,8 @@ public class Event extends Message {
 	}
 
 	@Override
-	public String get(String attribute) {
+	public Value get(String attribute) {
 		return message.get(attribute);
-	}
-
-	@Override
-	public Value read(String attribute) {
-		return message.read(attribute);
 	}
 
 	@Override
@@ -139,25 +128,6 @@ public class Event extends Message {
 		return message.set(attribute, value);
 	}
 
-	@Override
-	public Message attach(String attribute, String type, InputStream is) {
-		return message.attach(attribute, type, is);
-	}
-
-	@Override
-	public Message attach(String attribute, String id, String type, InputStream is) {
-		return message.attach(attribute, id, type, is);
-	}
-
-	@Override
-	public Message attach(String attribute, String type, byte[] content) {
-		return message.attach(attribute, type, content);
-	}
-
-	@Override
-	public Message attach(String attribute, String id, String type, byte[] content) {
-		return message.attach(attribute, id, type, content);
-	}
 
 	@Override
 	public Message append(String attribute, Boolean value) {
@@ -179,8 +149,4 @@ public class Event extends Message {
 		return message.append(attribute, value);
 	}
 
-	@Override
-	public List<Attachment> attachments() {
-		return message.attachments();
-	}
 }
