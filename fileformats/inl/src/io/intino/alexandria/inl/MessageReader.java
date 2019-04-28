@@ -42,6 +42,7 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
         loader.close();
     }
 
+
 	private static class Loader {
 		private final BufferedInputStream is;
 		private final List<Message> scopes;
@@ -77,9 +78,9 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
             blocks.clear();
             Block block = new Block("");
             while (cursor.hasNext()) {
-                if (cursor.isHeader()) {
-                    if (cursor.isAttachmentHeader()) break;
-                    if (cursor.isMainHeader() && !blocks.isEmpty()) break;
+                if (isHeader(cursor.next)) {
+                    if (cursor.hasAttachmentHeader()) break;
+                    if (cursor.hasMainHeader() && !blocks.isEmpty()) break;
                     blocks.add(block = cursor.block());
                     cursor.next();
                     continue;
@@ -90,12 +91,12 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
         }
 
         private Map<String, byte[]> attachments() throws IOException {
-            if (!cursor.isAttachmentHeader()) return new HashMap<>();
+            if (!cursor.hasAttachmentHeader()) return new HashMap<>();
             cursor.next();
             Map<String, byte[]> attachments = new HashMap<>();
             while (cursor.hasNext()) {
                 attachments.put(cursor.blobId(), cursor.readBlob());
-                if (cursor.isMainHeader()) break;
+                if (cursor.hasMainHeader()) break;
             }
             return attachments;
         }
@@ -145,6 +146,7 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
 		}
     }
 
+
     private static class Block implements Iterable<String[]> {
         private final String header;
         private final Stack<String> lines;
@@ -186,8 +188,8 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
                 }
             };
         }
-
     }
+
 
     private static class Cursor {
 	    private InputStream is;
@@ -200,36 +202,16 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
             this.mark();
         }
 
-        boolean isHeader() {
-            return next != null && next.length() > 0 && next.charAt(0) == '[';
+        boolean hasAttachmentHeader() {
+            return isAttachmentHeader(next);
         }
 
-        boolean isAttachmentHeader() {
-            return next != null && next.equals(AttachmentHeader);
+        boolean hasMainHeader() {
+            return isHeader(next) && !isInnerHeader(next);
         }
 
-        boolean isMainHeader() {
-            return isHeader() && !isInnerBlockIn(next);
-        }
-
-        private static boolean isTrimRequired(String line) {
-            return !isMultiline(line) && !(line.length() > 0 && line.charAt(0) == '[');
-        }
-
-        private boolean isInnerBlockIn(String line) {
-            return line.contains(".");
-        }
-
-        private static boolean isEmpty(String line) {
-            char[] chars = charsOf(line);
-            if (chars.length > 0 && chars[0] == '\t') return false;
-            for (char c : chars)
-                if (c != ' ' && c != '\t') return false;
-            return true;
-        }
-
-        private static char[] charsOf(String line) {
-            return line == null ? new char[0] : line.toCharArray();
+        private static boolean shouldTrim(String line) {
+            return !isMultiline(line) && !isHeader(line);
         }
 
         private static String trim(String line) {
@@ -247,7 +229,7 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
         }
 
         private static String normalize(String line) {
-            return line == null ? null : isEmpty(line) ? "" : isTrimRequired(line) ? trim(line) : line;
+            return line == null ? null : line.isEmpty() ? "" : shouldTrim(line) ? trim(line) : line;
         }
 
         boolean hasNext() {
@@ -303,6 +285,19 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
         }
 
     }
+
+    private static boolean isHeader(String line) {
+        return line != null && line.length() > 0 && line.charAt(0) == '[';
+    }
+
+    private static boolean isAttachmentHeader(String line) {
+        return line != null && line.equals(AttachmentHeader);
+    }
+
+    private static boolean isInnerHeader(String line) {
+        return isHeader(line) && line.contains(".");
+    }
+
 
     private static boolean isMultiline(String line) {
         return line.length() > 0 && line.charAt(0) == '\t';
