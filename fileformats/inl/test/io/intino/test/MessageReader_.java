@@ -91,7 +91,7 @@ public class MessageReader_ {
 				"hearts = 1\n";
 		MessageReader messages = new MessageReader(inl);
         Message message = messages.next();
-        assertThat(message.toString()).isEqualTo(inl.replace(" =",":"));
+        assertThat(message.contains("issueId")).isFalse();
         assertThat(message.get("wantsToBeContacted").as(Boolean.class)).isFalse();
         assertThat(message.get("hearts").as(Integer.class)).isEqualTo(1);
 		assertThat(messages.hasNext()).isFalse();
@@ -180,7 +180,7 @@ public class MessageReader_ {
 		assertThat(message.get("birthDate").as(Instant.class)).isEqualTo(instant(2016, 10, 4, 20, 10, 12));
 		assertThat(message.get("university").as(String.class)).isEqualTo("ULPGC");
 		assertThat(message.components("country").get(0).get("name").as(String.class)).isEqualTo("Spain");
-		assertThat(message.components("country").get(0).get("continent").as(String.class)).isEqualTo("");
+		assertThat(message.components("country").get(0).get("continent").as(String.class)).isNull();
 	}
 
     @Test

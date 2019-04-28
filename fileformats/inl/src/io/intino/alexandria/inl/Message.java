@@ -40,42 +40,43 @@ public class Message {
 	}
 
 	public Value get(final String attribute) {
-		return !contains(attribute) ? null : new Value() {
-            @Override
-            public Object data() {
-                return use(attribute).value;
-            }
+		return contains(attribute) ? new Value() {
+			@Override
+			public Object data() {
+				return use(attribute).value;
+			}
 
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> T as(Class<T> type) {
-                return (T) fill(Parser.of(type).parse(use(attribute).value));
-            }
+			@Override
+			@SuppressWarnings("unchecked")
+			public <T> T as(Class<T> type) {
+				String value = use(attribute).value;
+				return value != null ? (T) fill(Parser.of(type).parse(value)) : null;
+			}
 
-            private Object fill(Object object) {
-                if (object == null) return null;
-                if (object instanceof Resource) return fill((Resource) object);
-                if (object instanceof Resource[]) return fill((Resource[]) object);
-                return object;
-            }
+			private Object fill(Object object) {
+				if (object == null) return null;
+				if (object instanceof Resource) return fill((Resource) object);
+				if (object instanceof Resource[]) return fill((Resource[]) object);
+				return object;
+			}
 
-            private Object fill(Resource[] resources) {
-                stream(resources).forEach(this::fill);
-                return resources;
-            }
+			private Object fill(Resource[] resources) {
+				stream(resources).forEach(this::fill);
+				return resources;
+			}
 
-            private Object fill(Resource resource) {
-                String key = new String(resource.data());
-                resource.data(attachments.getOrDefault(key, new byte[0]));
-                return resource;
-            }
+			private Object fill(Resource resource) {
+				String key = new String(resource.data());
+				resource.data(attachments.getOrDefault(key, new byte[0]));
+				return resource;
+			}
 
 
-            @Override
-            public String toString() {
-                return use(attribute).value;
-            }
-        };
+			@Override
+			public String toString() {
+				return use(attribute).value;
+			}
+		} : NullValue;
 	}
 
 	public Message set(String attribute, String value) {
@@ -327,6 +328,18 @@ public class Message {
         Object data();
 		<T> T as(Class<T> type);
 	}
+
+	private static Value NullValue = new Value() {
+        @Override
+        public Object data() {
+            return null;
+        }
+
+        @Override
+        public <T> T as(Class<T> type) {
+            return null;
+        }
+    };
 
 	static class Attribute {
 		String name;

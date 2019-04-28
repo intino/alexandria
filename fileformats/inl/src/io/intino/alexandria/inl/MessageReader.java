@@ -104,8 +104,9 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
 		private static Message create(Block block) {
 			Message message = new Message(typeIn(block.header));
 			for (String[] data : block) {
-				message.set(data[0], isMultiline(data[1]) ? data[1].substring(1) : data[1]);
-			}
+			    if (data[1].isEmpty()) continue;
+                message.set(data[0], isMultiline(data[1]) ? data[1].substring(1) : data[1]);
+            }
 			return message;
 		}
 
