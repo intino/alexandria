@@ -8,28 +8,57 @@ import java.util.List;
 
 import static java.lang.reflect.Modifier.isStatic;
 import static java.lang.reflect.Modifier.isTransient;
-import static java.util.Collections.emptyList;
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.isNull;
 
 public class MessageBuilder {
-
 	private static String[] primitives = {"java.lang", Resource.class.getName(), "java.time"};
 
 	public static Message toMessage(Object object) {
-		return new MessageBuilder().getMessage(object);
+		return new MessageBuilder().build(object);
 	}
 
-	private static void convertAttachment(Message message, Field field, Object value) {
-		Resource resource = (Resource) value;
-		message.set(field.getName(), resource.name(), resource.data());
+	private Message build(Object object) {
+		final Message message = new Message(object.getClass().getSimpleName());
+		for (Field field : Fields.of(object).asList())
+			if (canBuild(field)) build(message, field, valueOf(field, object));
+		return message;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void convertAttribute(Message message, Field field, Object value) {
-		if (isList(field)) ((List) value).forEach(o -> writeAttribute(message, field, o));
-		else if (isArray(field)) Arrays.asList((Object[]) value).forEach(ob -> writeAttribute(message, field, ob));
-		else writeAttribute(message, field, value);
-	}
+    private void build(Message message, Field field, Object value) {
+        if (isNull(value) || isEmpty(value)) return;
+        builderOf(field).build(message, field, value);
+    }
+
+    private AttributeBuilder builderOf(Field field) {
+        return isAttachment(field) ? this::buildAttachment :
+               isPrimitive(field) ? this::buildPrimitive : this::buildComposite;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void buildPrimitive(Message message, Field field, Object value) {
+	    valuesIn(field, value).forEach(o -> writeAttribute(message, field, o));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void buildComposite(Message message, Field field, Object value) {
+        valuesIn(field, value).forEach(o -> message.add(toMessage(o)));
+    }
+
+    private void buildAttachment(Message message, Field field, Object object) {
+        message.set(field.getName(), resource(object).name(), resource(object).data());
+    }
+
+    private static Resource resource(Object object) {
+        return (Resource) object;
+    }
+
+    private static List valuesIn(Field field, Object value) {
+        return isList(field) ? (List) value :
+               isArray(field) ? asList((Object[]) value) : singletonList(value);
+    }
 
 	private static boolean isList(Field field) {
 		return field.getType().isAssignableFrom(List.class);
@@ -39,27 +68,25 @@ public class MessageBuilder {
 		return field.getType().isArray();
 	}
 
-	private static boolean isAttribute(Field field) {
+	private static boolean isPrimitive(Field field) {
 		Class<?> aClass = field.getType();
 		return isPrimitive(aClass) || isArrayOfPrimitives(aClass) || isListOfPrimitives(field);
 	}
 
 	private static boolean isAttachment(Field field) {
-		final Class<?> aClass = field.getType();
-		return aClass.equals(Resource.class);
+        return field.getType().isAssignableFrom(Resource.class);
 	}
 
-
 	private static void writeAttribute(Message message, Field field, Object value) {
-		final String name = field.getName();
+		String name = field.getName();
 		if (value instanceof Double) message.append(name, (Double) value);
 		else if (value instanceof Boolean) message.append(name, (Boolean) value);
 		else if (value instanceof Integer) message.append(name, (Integer) value);
 		else message.append(name, value == null ? null : value.toString());
 	}
 
-	private static boolean isConvertible(Field field) {
-		return !(isTransient(field.getModifiers()) || isStatic(field.getModifiers()));
+	private static boolean canBuild(Field field) {
+		return !isTransient(field.getModifiers()) && !isStatic(field.getModifiers());
 	}
 
 	private static Object valueOf(Field field, Object object) {
@@ -84,36 +111,21 @@ public class MessageBuilder {
 	}
 
 	private static boolean isPrimitive(String className) {
-		if (className.contains("<")) className = className.substring(className.indexOf('<') + 1);
-		for (String primitive : primitives) if (className.startsWith(primitive)) return true;
-		return false;
+        return checkPrimitives(className.contains("<") ? className.substring(className.indexOf('<') + 1) : className);
 	}
 
-	private static boolean isEmpty(Object value) {
-		return value == null
-				|| value.getClass().isArray() && ((Object[]) value).length == 0
-				|| value instanceof List && ((List) value).isEmpty();
+    private static boolean checkPrimitives(String name) {
+        return stream(primitives).anyMatch(name::startsWith);
+    }
+
+    private static boolean isEmpty(Object value) {
+		return value == null ||
+               value.getClass().isArray() && ((Object[]) value).length == 0 ||
+               value instanceof List && ((List) value).isEmpty();
 	}
 
-	@SuppressWarnings("unchecked")
-	private static List<Object> valuesOf(Field field, Object object) {
-		final Object o = valueOf(field, object);
-		return o == null ? emptyList() : o instanceof List ? (List<Object>) o : Arrays.asList((Object[]) o);
-	}
+    private interface AttributeBuilder {
+        void build(Message message, Field field, Object value);
+    }
 
-	private Message getMessage(Object object) {
-		final Message message = new Message(object.getClass().getSimpleName());
-		for (Field field : Fields.of(object).asList()) {
-			if (!isConvertible(field)) continue;
-			Object value = valueOf(field, object);
-			if (isNull(value) || isEmpty(value)) continue;
-			if (isAttachment(field)) convertAttachment(message, field, value);
-			else if (isAttribute(field)) convertAttribute(message, field, value);
-			else {
-				if (isList(field) || isArray(field)) for (Object v : valuesOf(field, object)) message.add(toMessage(v));
-				else message.add(toMessage(value));
-			}
-		}
-		return message;
-	}
 }

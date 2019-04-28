@@ -1,7 +1,9 @@
 package io.intino.alexandria.inl;
 
+import java.io.InputStream;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 public class Event extends Message {
 	static final String TS = "ts";
@@ -22,6 +24,10 @@ public class Event extends Message {
 	@Override
 	public Event asEvent() {
 		return this;
+	}
+
+	public Instant instant() {
+		return instant;
 	}
 
 	@Override
@@ -70,6 +76,16 @@ public class Event extends Message {
 	}
 
 	@Override
+	public boolean hasAttachments() {
+		return message.hasAttachments();
+	}
+
+	@Override
+	public Map<String, byte[]> allAttachments() {
+		return message.allAttachments();
+	}
+
+	@Override
 	public int length() {
 		return message.length();
 	}
@@ -84,8 +100,31 @@ public class Event extends Message {
 		return message.contains(attribute);
 	}
 
-	public Instant instant() {
-		return instant;
+	@Override
+	public List<String> attachments() {
+		return message.attachments();
+	}
+
+	@Override
+	public byte[] attachment(String id) {
+		return message.attachment(id);
+	}
+
+	@Override
+	public Message put(Map<String, byte[]> attachments) {
+		return message.put(attachments);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) return true;
+		if (object == null || getClass() != object.getClass()) return false;
+		return message.equals(object);
+	}
+
+	@Override
+	public int hashCode() {
+		return message.hashCode();
 	}
 
 	@Override
@@ -128,6 +167,15 @@ public class Event extends Message {
 		return message.set(attribute, value);
 	}
 
+	@Override
+	public Message set(String attribute, String value, InputStream is) {
+		return message.set(attribute, value, is);
+	}
+
+	@Override
+	public Message set(String attribute, String value, byte[] content) {
+		return message.set(attribute, value, content);
+	}
 
 	@Override
 	public Message append(String attribute, Boolean value) {
@@ -147,6 +195,16 @@ public class Event extends Message {
 	@Override
 	public Message append(String attribute, String value) {
 		return message.append(attribute, value);
+	}
+
+	@Override
+	public Message append(String attribute, String name, InputStream is) {
+		return message.append(attribute, name, is);
+	}
+
+	@Override
+	public Message append(String attribute, String name, byte[] content) {
+		return message.append(attribute, name, content);
 	}
 
 }
