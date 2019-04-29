@@ -18,6 +18,10 @@ public class MappReader implements MappStream {
 		this(baseName(file.getName()), file.exists() ? new FileInputStream(file) : emptyMappFile());
 	}
 
+	public MappReader(String name, File file) throws IOException {
+		this(name, file.exists() ? new FileInputStream(file) : emptyMappFile());
+	}
+
 	public MappReader(String name, InputStream inputStream) throws IOException {
 		this.inputStream = new DataInputStream(new BufferedInputStream(inputStream));
 		this.name = name;

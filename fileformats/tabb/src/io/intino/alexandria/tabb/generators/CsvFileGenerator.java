@@ -34,13 +34,14 @@ public class CsvFileGenerator implements FileGenerator {
 
 	@Override
 	public void put(long key) {
-		csvWriter.writeNext(streams.stream()
-				.map(s -> value(key, s)).toArray(String[]::new));
+		String[] values = streams.stream()
+				.map(s -> value(key, s)).toArray(String[]::new);
+		csvWriter.writeNext(values);
 	}
 
 	private String value(long key, ColumnStream stream) {
-		Object o = stream.key().equals(key) ? stream.value() : stream.type().notAvailable();
-		return formatterOf(stream.type()).format(o);
+		if (!stream.key().equals(key)) return "NA";
+		return formatterOf(stream.type()).format(stream.value());
 	}
 
 	@Override
