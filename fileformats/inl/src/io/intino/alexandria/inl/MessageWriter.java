@@ -15,7 +15,8 @@ public class MessageWriter implements AutoCloseable {
 
     public void write(Message message) throws IOException {
         write(message.toString());
-        if (message.hasAttachments()) write(message.allAttachments());
+        if (message.hasAttachments()) write(message.allAttachments()); else write("\n");
+        write("\n");
     }
 
     private void write(Map<String, byte[]> attachments) throws IOException {

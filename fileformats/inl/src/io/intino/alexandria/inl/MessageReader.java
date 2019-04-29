@@ -42,7 +42,6 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
         loader.close();
     }
 
-
 	private static class Loader {
 		private final BufferedInputStream is;
 		private final List<Message> scopes;
@@ -95,7 +94,10 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
             cursor.next();
             Map<String, byte[]> attachments = new HashMap<>();
             while (cursor.hasNext()) {
-                attachments.put(cursor.blobId(), cursor.readBlob());
+                if (cursor.isEmpty())
+                    cursor.next();
+                else
+                    attachments.put(cursor.blobId(), cursor.readBlob());
                 if (cursor.hasMainHeader()) break;
             }
             return attachments;
@@ -285,6 +287,9 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
             return line.substring(1, line.length() - 1);
         }
 
+        boolean isEmpty() {
+            return next.isEmpty();
+        }
     }
 
     private static boolean isHeader(String line) {
@@ -298,7 +303,6 @@ public class MessageReader implements Iterable<Message>, Iterator<Message> {
     private static boolean isInnerHeader(String line) {
         return isHeader(line) && line.contains(".");
     }
-
 
     private static boolean isMultiline(String line) {
         return line.length() > 0 && line.charAt(0) == '\t';
