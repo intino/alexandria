@@ -39,10 +39,14 @@ public class Message {
 		this.type = type;
 	}
 
+	public List<String> attributes() {
+        return new ArrayList<>(attributes.keySet());
+    }
+
 	public Value get(final String attribute) {
 		return contains(attribute) ? new Value() {
 			@Override
-			public Object data() {
+			public String data() {
 				return use(attribute).value;
 			}
 
@@ -80,7 +84,7 @@ public class Message {
 	}
 
 	public Message set(String attribute, String value) {
-		if (value == null) return remove(attribute);
+		remove(attribute);
 		use(attribute).value = value;
 		return this;
 	}
@@ -104,7 +108,6 @@ public class Message {
 	public Message set(String attribute, String value, byte[] content) {
         return set(attribute, value + "@" + attach(content));
 	}
-
 
     public Message append(String attribute, Boolean value) {
 		return append(use(attribute), value.toString());
@@ -279,10 +282,6 @@ public class Message {
 		return toString().length();
 	}
 
-	public List<String> attributes() {
-		return new ArrayList<>(attributes.keySet());
-	}
-
 	public boolean contains(String attribute) {
 		return attributes.containsKey(attribute.toLowerCase());
 	}
@@ -325,13 +324,13 @@ public class Message {
     }
 
     public interface Value {
-        Object data();
+        String data();
 		<T> T as(Class<T> type);
 	}
 
 	private static Value NullValue = new Value() {
         @Override
-        public Object data() {
+        public String data() {
             return null;
         }
 
