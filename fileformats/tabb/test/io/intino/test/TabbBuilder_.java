@@ -75,18 +75,16 @@ public class TabbBuilder_ {
 		TabbBuilder builder = new TabbBuilder();
 		builder.add(new MappColumnStreamer(new MappReader(new File(mapps, "multivalued.mapp")), Nominal));
 		builder.save(new File(tabbDirectory, "result.tabb"));
-		assertThat(resultTabbFile().length()).isEqualTo(323);
 		TabbReader tabb = tabbReader();
-		assertThat(tabb.size()).isEqualTo(2);
 		tabb.next();
 		TabbReader.Value value = tabb.get(0);
 		assertThat(value).isNotNull();
 		assertThat(value.type()).isEqualTo(Nominal);
 		assertThat(value.isAvailable());
-		assertThat(value.asString()).isEqualTo("test1|test2");
+		assertThat(value.asString()).isEqualTo("test1");
 		tabb.next();
 		value = tabb.get(0);
-		assertThat(value.asString()).isEqualTo("test2|test1");
+		assertThat(value.asString()).isEqualTo("test2");
 		assertThat(!tabb.hasNext());
 
 	}
@@ -122,7 +120,6 @@ public class TabbBuilder_ {
 		builder.save(new File(tabbDirectory, "result.tabb"));
 		assertThat(resultTabbFile().length()).isEqualTo(437);
 		TabbReader tabbReader = tabbReader();
-		assertThat(tabbReader.size()).isEqualTo(3);
 
 		tabbReader.next();
 		TabbReader.Value value1 = tabbReader.get(0);
@@ -204,7 +201,7 @@ public class TabbBuilder_ {
 
 	@After
 	public void tearDown() throws Exception {
-		resultTabbFile().delete();
+//		resultTabbFile().delete();
 	}
 
 	private ByteArrayOutputStream output() {

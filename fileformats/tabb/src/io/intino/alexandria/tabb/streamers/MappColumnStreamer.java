@@ -1,11 +1,13 @@
 package io.intino.alexandria.tabb.streamers;
 
+import io.intino.alexandria.logger.Formatter;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.mapp.MappStream;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.ColumnStreamer;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -41,55 +43,76 @@ public class MappColumnStreamer implements ColumnStreamer {
 	}
 
 	private ColumnStream create() {
-		Map<String, Integer> labels = mapOf(reader.labels());
-
-		return new ColumnStream() {
-
-			private MappStream.Item current;
-
-			@Override
-			public String name() {
-				return name == null ? reader.name() : name;
-			}
-
-			@Override
-			public Type type() {
-				return type;
-			}
-
-			@Override
-			public Mode mode() {
-				return new Mode(reader.labels().stream()
-						.map(l -> l.replace("\n", "|"))
-						.toArray(String[]::new));
-			}
-
-			@Override
-			public boolean hasNext() {
-				return reader.hasNext();
-			}
-
-			@Override
-			public void next() {
-				current = reader.next();
-			}
-
-			@Override
-			public Long key() {
-				return current != null ? current.key() : null;
-			}
-
-			@Override
-			public Object value() {
-				return labels.get(current.value());
-			}
-		};
+		return new MappColumnStream(mapOf(reader.labels()));
 	}
 
 	private Map<String, Integer> mapOf(List<String> labels) {
 		return range(0, labels.size()).boxed()
 				.collect(toMap(labels::get, i -> i));
 	}
+
+
+	public class MappColumnStream implements ColumnStream {
+		private final Map<String, Integer> labels;
+		private MappStream.Item current;
+		private Parser parser;
+
+		MappColumnStream(Map<String, Integer> labels) {
+			this.labels = labels;
+			this.parser = parserOf(type);
+		}
+
+		@Override
+		public String name() {
+			return name == null ? reader.name() : name;
+		}
+
+		@Override
+		public Type type() {
+			return type;
+		}
+
+		@Override
+		public Mode mode() {
+			return new Mode(reader.labels().stream()
+					.map(l -> l.replace("\n", "|"))
+					.toArray(String[]::new));
+		}
+
+		@Override
+		public boolean hasNext() {
+			return reader.hasNext();
+		}
+
+		@Override
+		public void next() {
+			current = reader.next();
+		}
+
+		@Override
+		public Long key() {
+			return current != null ? current.key() : null;
+		}
+
+		@Override
+		public Object value() {
+			return parser.parse(current.value());
+		}
+
+		private Parser parserOf(Type type) {
+			if (type == Type.Double) return Double::parseDouble;
+			else if (type == Type.Nominal) return labels::get;
+			else if (type == Type.Integer || type == Type.Datetime) return Integer::parseInt;
+			else if (type == Type.Instant) return Instant::parse;
+			else if (type == Type.Boolean) return Boolean::parseBoolean;
+			else if (type == Type.Long) return Long::parseLong;
+			return value -> value;
+		}
+	}
+	private interface Parser {
+		Object parse(String value);
+	}
+
 }
 
 

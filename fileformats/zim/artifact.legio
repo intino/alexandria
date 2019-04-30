@@ -2,7 +2,7 @@ dsl Legio
 
 Artifact("io.intino.alexandria", "1.0.5") zim
 	Imports
-		Compile("io.intino.alexandria", "inl", "1.0.4")
+		Compile("io.intino.alexandria", "inl", "1.0.5")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
 		Test("junit", "junit", "4.12")
 		Test("org.assertj", "assertj-core", "3.12.2")
