@@ -19,6 +19,10 @@ public interface MappStream extends Iterator<MappStream.Item> {
 	}
 
 	class Merge {
+		private Merge() {
+
+		}
+
 		public static MappStream of(List<MappStream> cursors) {
 			return new MappStream() {
 
@@ -123,7 +127,5 @@ public interface MappStream extends Iterator<MappStream.Item> {
 				}
 			};
 		}
-
 	}
-
 }

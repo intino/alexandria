@@ -24,7 +24,7 @@ class TabbManifest {
 	}
 
 	private static String[] modes(String[] fields) {
-		return fields.length > 3 ? fields[3].split(":") : new String[0];
+		return fields.length > 3 ? fields[3].split("\\|") : new String[0];
 	}
 
 	private static List<String> readManifest(InputStream inputStream) throws IOException {
