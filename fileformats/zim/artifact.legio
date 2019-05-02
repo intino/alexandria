@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.alexandria", "1.0.5") zim
+Artifact("io.intino.alexandria", "1.0.6") zim
 	Imports
 		Compile("io.intino.alexandria", "inl", "1.0.5")
 		Compile("io.intino.alexandria", "logger", "2.0.0")
