@@ -2,10 +2,13 @@ package io.intino.alexandria.mapp;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Mapp {
 	private final int size;
+	private final String name;
 	private final String[] values;
+	private final List<String> labels;
 	private Entry[] entries;
 
 	public Mapp(File file) throws IOException {
@@ -15,8 +18,28 @@ public class Mapp {
 	public Mapp(MappReader reader) {
 		this.values = reader.labels.toArray(new String[0]);
 		this.size = reader.size;
+		this.name = reader.name();
+		this.labels = reader.labels();
 		this.entries = readEntries(reader);
 		reader.close();
+	}
+
+	public List<String> labels() {
+		return labels;
+	}
+
+	public int size() {
+		return size;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public String get(long key) {
+		int i = indexOf(key);
+		if (i < 0) return null;
+		return values[entries[i].value];
 	}
 
 	private Entry[] readEntries(MappReader reader) {
@@ -24,16 +47,6 @@ public class Mapp {
 		for (int i = 0; i < size; i++)
 			entries[i] = reader.entryReader.readEntry();
 		return entries;
-	}
-
-	public int size() {
-		return size;
-	}
-
-	public String get(long key) {
-		int i = indexOf(key);
-		if (i < 0) return null;
-		return values[entries[i].value];
 	}
 
 	private int indexOf(long key) {
@@ -48,7 +61,6 @@ public class Mapp {
 		}
 		return -1;
 	}
-
 
 	static class Entry {
 		long key;
