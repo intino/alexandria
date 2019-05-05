@@ -1,12 +1,10 @@
 package io.intino.alexandria.ui.displays.components.collection;
 
 import io.intino.alexandria.ui.displays.events.AddItemListener;
-import io.intino.alexandria.ui.displays.events.SelectionListener;
 
 public interface Collection<ItemComponent, Item> {
 	ItemComponent add(Item item);
 	ItemComponent insert(Item item, int index);
-	void onSelect(SelectionListener listener);
 	void onAddItem(AddItemListener listener);
 	void clear();
 

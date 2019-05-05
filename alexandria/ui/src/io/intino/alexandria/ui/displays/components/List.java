@@ -7,14 +7,18 @@ import io.intino.alexandria.ui.displays.components.collection.Collection;
 import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
 import io.intino.alexandria.ui.displays.events.AddItemListener;
+import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.model.Datasource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class List<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends AbstractList<B> implements Collection<ItemComponent, Item> {
     private CollectionBehavior<ItemComponent, Item> behavior;
     private Datasource source;
     private int pageSize;
-    private SelectionListener selectionListener;
+    private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
     private AddItemListener addItemListener;
 
     public List(B box) {
@@ -32,11 +36,6 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
     public void init() {
         super.init();
         setup();
-    }
-
-    @Override
-    public void onSelect(SelectionListener listener) {
-        this.selectionListener = listener;
     }
 
     @Override
@@ -61,6 +60,14 @@ public abstract class List<B extends Box, ItemComponent extends io.intino.alexan
     public void changePageSize(Integer size) {
         behavior.pageSize(size);
         notifier.refresh();
+    }
+
+    public void changeSelection(String[] selection) {
+        selectionListeners.forEach(l -> l.accept(new SelectionEvent(this, Arrays.asList(selection))));
+    }
+
+    protected void addSelectionListener(SelectionListener listener) {
+        this.selectionListeners.add(listener);
     }
 
     protected List pageSize(int pageSize) {

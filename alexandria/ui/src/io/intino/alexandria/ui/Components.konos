@@ -107,6 +107,7 @@ Component list as Decorated
 	Request loadMoreItems as Object(CollectionMoreItems)
 	Request changePage as Integer
 	Request changePageSize as Integer
+	Request changeSelection as Text List
 
 Component table as Decorated
 	Notification setup as Object(CollectionSetup)
@@ -115,6 +116,7 @@ Component table as Decorated
 	Request loadMoreItems as Object(CollectionMoreItems)
 	Request changePage as Integer
 	Request changePageSize as Integer
+	Request changeSelection as Text List
 
 Component item as Decorated
 Component heading as Decorated
@@ -142,3 +144,4 @@ Component spinner as Decorated
 Component toolbar as Decorated
 Component task as Decorated
 Component taskSelection as Decorated
+	Notification refreshEnabled as Bool

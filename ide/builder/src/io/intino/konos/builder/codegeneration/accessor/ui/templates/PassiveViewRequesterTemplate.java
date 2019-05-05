@@ -23,6 +23,7 @@ public class PassiveViewRequesterTemplate extends Template {
 			rule().add((condition("type", "parameter")), (condition("trigger", "request"))).add(mark("name")).add(literal(" = function(value) {\n\t")).add(mark("method")).add(literal("({ op: \"")).add(mark("name")).add(literal("\", s: \"")).add(mark("display", "lowercase")).add(literal("\", d: this.element.props.id, o: this.element.props.owner(), v: ")).add(mark("parameter")).add(literal("});\n}")),
 			rule().add((condition("trigger", "request"))).add(mark("name")).add(literal(" = (")).add(expression().add(mark("parameterSignature"))).add(literal(") => {\n    ")).add(mark("method")).add(literal("({ op: \"")).add(mark("name")).add(literal("\", s: \"")).add(mark("display", "lowercase")).add(literal("\", d: this.element.props.id, o: this.element.props.owner()")).add(expression().add(literal(", v: ")).add(mark("parameter"))).add(literal("});\n};")),
 			rule().add((condition("type", "object")), (condition("trigger", "parameter"))).add(literal("JSON.stringify(value)")),
+			rule().add((condition("type", "list")), (condition("trigger", "parameter"))).add(literal("JSON.stringify(value)")),
 			rule().add((condition("trigger", "parameter"))).add(literal("value")),
 			rule().add((condition("attribute", "upload")), (condition("trigger", "method"))).add(literal("this.fileService.upload")),
 			rule().add((condition("attribute", "download")), (condition("trigger", "method"))).add(literal("this.fileService.download")),

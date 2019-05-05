@@ -42,6 +42,10 @@ def type(object) trigger(parameter)
 	JSON.stringify(value)
 end
 
+def type(list) trigger(parameter)
+	JSON.stringify(value)
+end
+
 def trigger(parameter)
 	value
 end

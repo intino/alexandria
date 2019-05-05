@@ -41,5 +41,4 @@ public abstract class Datasource<O> {
 		this.sortings.add(sorting);
 		return this;
 	}
-
 }

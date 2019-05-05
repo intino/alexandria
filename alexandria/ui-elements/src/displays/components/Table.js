@@ -30,6 +30,7 @@ const styles = theme => ({
 
 class Table extends AbstractTable {
 	state = {
+		selection: [],
 		itemCount: 20,
 		pageSize: 20,
 		page: 0

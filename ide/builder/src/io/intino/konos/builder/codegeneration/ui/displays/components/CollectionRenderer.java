@@ -41,6 +41,7 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 		result.addSlot("pageSize", element.pageSize());
 		result.addSlot("itemHeight", itemHeight());
 		result.addSlot("scrollingMark", element.scrollingMark());
+		if (element.isSelectable()) result.addSlot("selection", element.asSelectable().multiple() ? "multiple" : "single");
 		if (element.noItemsMessage() != null) result.addSlot("noItemsMessage", element.noItemsMessage());
 		return result;
 	}
@@ -67,6 +68,7 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 			methodsFrame.addSlot("itemClass", element.itemClass());
 			methodsFrame.addSlot("itemVariable", "item");
 		}
+		addSelectionMethod(methodsFrame);
 		element.moldList().forEach(m -> addItemFrame(m.item(), methodsFrame));
 		frame.addSlot("methods", methodsFrame);
 	}
@@ -86,6 +88,11 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 			result.addSlot("itemVariable", "item");
 		}
 		frame.addSlot("item", result);
+	}
+
+	private void addSelectionMethod(Frame frame) {
+		if (!element.isSelectable()) return;
+		frame.addSlot("selectionMethod", new Frame("selectionMethod"));
 	}
 
 	private int itemHeight() {

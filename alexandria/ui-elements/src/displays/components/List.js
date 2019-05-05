@@ -15,14 +15,26 @@ const styles = theme => ({
 	itemView : {
 		height: "100%",
 		padding: "0 10px",
-		'&:hover': {
-			background: '#ddd',
+		'&:hover' : {
+			background: '#ddd'
+		},
+		'&:hover $selector' : {
+			display: 'block'
 		}
+	},
+	selectable : {
+		paddingLeft: "35px"
+	},
+	selector : {
+		display: "none",
+		position: "absolute",
+		left: "-5px"
 	}
 });
 
 class List extends AbstractList {
 	state = {
+		selection: [],
 		itemCount: 20,
 		pageSize: 20,
 		page: 0

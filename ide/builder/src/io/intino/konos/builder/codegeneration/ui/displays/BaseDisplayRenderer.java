@@ -10,6 +10,7 @@ import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.ChildComponents.Stamp;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
+import io.intino.konos.model.graph.selectable.childcomponents.SelectableCollection;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -84,6 +85,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 
 	protected void addImplements(Frame frame) {
 		if (element.i$(DynamicLoadedComponent.class)) frame.addSlot("implements", new Frame("implements", DynamicLoadedComponent.class.getSimpleName()));
+		if (element.i$(SelectableCollection.class)) frame.addSlot("implements", new Frame("implements", SelectableCollection.class.getSimpleName()));
 	}
 
 	protected void addMethods(Frame frame) {
