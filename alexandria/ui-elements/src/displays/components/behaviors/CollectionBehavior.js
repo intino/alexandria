@@ -1,5 +1,6 @@
 import React from "react";
 import * as Elements from "app-elements/gen/Displays";
+import Checkbox from '@material-ui/core/Checkbox';
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -128,7 +129,13 @@ const CollectionBehavior = (collection) => {
     };
 
     self.itemView = (item, classes, index) => {
-        return (<div className={classNames(classes.itemView, "layout horizontal center")}>{React.createElement(Elements[item.tp], item.pl)}</div>);
+        var selectable = self.collection.props.selection != null;
+        var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
+        return (<div className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined)}>
+                    {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item.pl.id)}/> : undefined}
+                    {React.createElement(Elements[item.tp], item.pl)}
+                </div>
+        );
     };
 
     self.loadMoreItems = (items, startIndex, stopIndex) => {
@@ -136,6 +143,21 @@ const CollectionBehavior = (collection) => {
         self.collection.moreItemsTimeout = window.setTimeout(() => self.collection.requester.loadMoreItems({ start: startIndex, stop: stopIndex }), 100);
         self.collection.moreItemsCallback = new Promise(resolve => resolve());
         return self.collection.moreItemsCallback;
+    };
+
+    self.isItemSelected = (item) => {
+        return self.collection.state.selection.indexOf(item.pl.id) !== -1;
+    };
+
+    self.handleSelectItem = (item, e) => {
+        var selection = self.collection.state.selection;
+        var index = selection.indexOf(item);
+        if (index !== -1) selection.splice(index, 1);
+        else selection.push(item);
+        self.collection.setState({selection : selection});
+        mandar a refrescar la coleccion
+        if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
+        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.changeSelection(selection), 1000);
     };
 
     self.handlePage = (e, page) => {
@@ -159,7 +181,6 @@ const CollectionBehavior = (collection) => {
     };
 
     self.refresh = () => {
-        console.log("refresh");
         if (self.collection.itemsWindow == null) return;
         const items = self.items();
         return self.refreshItemsRendered(items, null, self.collection.itemsWindow);

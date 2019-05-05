@@ -2,10 +2,7 @@ package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
 import io.intino.alexandria.ui.displays.events.AddItemEvent;
-import io.intino.alexandria.ui.displays.items.List1Mold;
-import io.intino.alexandria.ui.displays.items.List2Mold;
-import io.intino.alexandria.ui.displays.items.List3Mold;
-import io.intino.alexandria.ui.displays.items.List4Mold;
+import io.intino.alexandria.ui.displays.items.*;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
 import io.intino.alexandria.ui.model.Datasource;
@@ -23,6 +20,7 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         init(list2, Datasources.itemDatasource());
         init(list3, Datasources.personDatasource());
         init(list4, Datasources.personDatasource());
+        init(list5, Datasources.personDatasource());
     }
 
     private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {
@@ -35,6 +33,7 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         else if (event.component() instanceof List2Mold) ((List2Mold)event.component()).stamp.update(event.item());
         else if (event.component() instanceof List3Mold) ((List3Mold) event.component()).firstName.update(((Person) event.item()).firstName());
         else if (event.component() instanceof List4Mold) ((List4Mold) event.component()).firstName.update(((Person) event.item()).firstName());
+        else if (event.component() instanceof List5Mold) ((List5Mold) event.component()).firstName.update(((Person) event.item()).firstName());
     }
 
 }

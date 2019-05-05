@@ -44,6 +44,8 @@ def type(method & multiple)
 end
 
 def type(method & collection & table)
+	$selectionMethod
+
 	public $name+firstUpperCase~Row add([$itemClass item]) {
 		$name+firstUpperCase~Row row = new $name+firstUpperCase~Row(($box+firstUpperCase~Box)box());[
 		row.id(java.util.UUID.randomUUID().toString());
@@ -67,6 +69,7 @@ def type(method & collection & table)
 end
 
 def type(method & collection)
+	$selectionMethod
 	[$item+addMethod...[$NL]]
 	[$item+removeMethod...[$NL]]
 end
@@ -236,6 +239,10 @@ def type(binding)
 	$name.bindTo($selector, "$option");
 end
 
+def type(implements & selectablecollection)
+	implements io.intino.alexandria.ui.displays.components.collection.Selectable
+end
+
 def type(implements & option)
 	implements io.intino.alexandria.ui.displays.components.selector.SelectorOption
 end
@@ -330,6 +337,12 @@ end
 
 def type(badge)
 	[value($value);]
+end
+
+def type(selectionMethod)
+	public void onSelect(io.intino.alexandria.ui.displays.events.SelectionListener listener) {
+		super.addSelectionListener(listener);
+	}
 end
 
 def type(item) trigger(addDeclaration)

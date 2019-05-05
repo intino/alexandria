@@ -130,3 +130,6 @@ Facet Navigable extends AbstractNavigable on ChildComponents.Table
 Facet Linked on ChildComponents.Toolbar
 	var ChildComponents.Collection to
 	has ChildComponents.SelectionOperation
+
+Facet Selectable on ChildComponents.Collection
+	var boolean multiple = false
