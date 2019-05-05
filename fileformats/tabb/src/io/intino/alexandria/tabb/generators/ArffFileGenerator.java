@@ -7,11 +7,7 @@ import io.intino.alexandria.tabb.FileGenerator;
 import io.intino.itrules.Frame;
 import io.intino.itrules.FrameBuilder;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -23,6 +19,7 @@ public class ArffFileGenerator implements FileGenerator {
 	private final Map<ColumnStream, Set<String>> modes = new HashMap<>();
 	private BufferedWriter writer;
 	private File file;
+	private File temp;
 
 	public ArffFileGenerator(List<ColumnStream> streams) {
 		this.streams = streams;
@@ -31,7 +28,8 @@ public class ArffFileGenerator implements FileGenerator {
 	public FileGenerator destination(File directory, String name) {
 		try {
 			file = new File(directory, name + ".arff");
-			writer = new BufferedWriter(new FileWriter(file));
+			temp = new File(directory, name + ".temp");
+			writer = new BufferedWriter(new FileWriter(temp));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -42,18 +40,21 @@ public class ArffFileGenerator implements FileGenerator {
 	public void close() {
 		try {
 			writer.close();
-			String preface = new ArffTemplate().render(new FrameBuilder("arff").add("attribute", attributes())) + "\n";
-			Files.write(file.toPath(), append(preface.getBytes(), Files.readAllBytes(file.toPath())));
+			append(new ArffTemplate().render(new FrameBuilder("arff").add("attribute", attributes())) + "\n");
+			temp.delete();
 		} catch (IOException e) {
 			Logger.error(e);
 		}
 	}
 
-	private byte[] append(byte[] preface, byte[] rest) {
-		byte[] result = new byte[preface.length + rest.length];
-		System.arraycopy(preface, 0, result, 0, preface.length);
-		System.arraycopy(rest, 0, result, preface.length, rest.length);
-		return result;
+	private void append(String preface) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		BufferedReader reader = new BufferedReader(new FileReader(temp));
+		writer.write(preface);
+		String line;
+		while ((line = reader.readLine()) != null) writer.write(line + "\n");
+		writer.close();
+		reader.close();
 	}
 
 	@Override
