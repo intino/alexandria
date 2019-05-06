@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.NumberEditableNotifier;
 
-public class NumberEditable<B extends Box> extends AbstractNumberEditable<B> {
+public class NumberEditable<DN extends NumberEditableNotifier, B extends Box> extends AbstractNumberEditable<DN, B> {
 	private double value;
 	private double min;
 	private double max;

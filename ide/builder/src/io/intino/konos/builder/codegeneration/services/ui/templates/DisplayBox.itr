@@ -1,8 +1,15 @@
 def type(box & decorated) trigger(extension)
-	<B extends Box>
+	B extends Box
 end
 
 def type(box) trigger(extension)
+end
+
+def type(box & decorated) trigger(extensionTagged)
+	<B extends Box>
+end
+
+def type(box) trigger(extensionTagged)
 end
 
 def type(box & decorated) trigger(type)

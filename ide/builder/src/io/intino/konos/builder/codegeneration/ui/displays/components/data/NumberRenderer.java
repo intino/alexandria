@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.ChildComponents.Number;
-import io.intino.konos.model.graph.editable.childcomponents.EditableNumber;
+import io.intino.konos.model.graph.DataComponents.Number;
+import io.intino.konos.model.graph.editable.datacomponents.EditableNumber;
 import org.siani.itrules.model.Frame;
 
 public class NumberRenderer extends ComponentRenderer<Number> {

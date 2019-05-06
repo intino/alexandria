@@ -5,6 +5,7 @@ import TextEditableCodeNotifier from "../../../gen/displays/notifiers/TextEditab
 import TextEditableCodeRequester from "../../../gen/displays/requesters/TextEditableCodeRequester";
 import CodeBehavior from "./behaviors/CodeBehavior";
 import { Spinner } from "../../../gen/Displays";
+import { Theme } from "../../../gen/Theme";
 
 const TextEditableCodeAce = React.lazy(() => {
 	return new Promise(resolve => {

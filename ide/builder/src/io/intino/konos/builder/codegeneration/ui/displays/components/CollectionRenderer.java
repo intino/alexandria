@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.AbstractNavigable;
-import io.intino.konos.model.graph.ChildComponents;
-import io.intino.konos.model.graph.ChildComponents.Collection;
+import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.model.graph.CatalogComponents.Collection;
 import org.siani.itrules.model.Frame;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
@@ -75,10 +75,10 @@ public class CollectionRenderer extends SizedRenderer<Collection> {
 
 	private void addItemFrame(Collection.Mold.Item item, Frame frame) {
 		Frame result = baseFrame().addTypes("item");
-		result.addSlot("methodAccessibility", element.i$(ChildComponents.Table.class) ? "private" : "public");
+		result.addSlot("methodAccessibility", element.i$(CatalogComponents.Table.class) ? "private" : "public");
 		result.addSlot("name", nameOf(item));
-		result.addSlot("methodName", element.i$(ChildComponents.Table.class) ? nameOf(item) : "");
-		if (!element.i$(ChildComponents.Table.class)) {
+		result.addSlot("methodName", element.i$(CatalogComponents.Table.class) ? nameOf(item) : "");
+		if (!element.i$(CatalogComponents.Table.class)) {
 			result.addSlot("addPromise", "addPromise");
 			result.addSlot("insertPromise", "insertPromise");
 		}

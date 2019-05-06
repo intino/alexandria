@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents.OpenPage;
+import io.intino.konos.model.graph.OperationComponents.OpenPage;
 import org.siani.itrules.model.Frame;
 
 public class OpenPageRenderer extends OperationRenderer<OpenPage> {

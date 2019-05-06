@@ -1,5 +1,5 @@
 import React from "react";
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 import AbstractTextEditable from "../../../gen/displays/components/AbstractTextEditable";
 import TextEditableNotifier from "../../../gen/displays/notifiers/TextEditableNotifier";
 import TextEditableRequester from "../../../gen/displays/requesters/TextEditableRequester";

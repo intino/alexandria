@@ -1,9 +1,10 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.ImageAvatarNotifier;
 import io.intino.alexandria.ui.utils.AvatarUtil;
 
-public class ImageAvatar<B extends Box> extends AbstractImageAvatar<B> {
+public class ImageAvatar<DN extends ImageAvatarNotifier, B extends Box> extends AbstractImageAvatar<DN, B> {
 	private String text;
 
 	public ImageAvatar(B box) {
@@ -16,11 +17,7 @@ public class ImageAvatar<B extends Box> extends AbstractImageAvatar<B> {
 		refresh();
 	}
 
-	public String value() {
-		return generateAvatar();
-	}
-
-	public ImageAvatar<B> text(String text) {
+	public ImageAvatar<DN, B> text(String text) {
 		this.text = text;
 		return this;
 	}
@@ -30,11 +27,8 @@ public class ImageAvatar<B extends Box> extends AbstractImageAvatar<B> {
 		refresh();
 	}
 
-	public void refresh() {
-		notifier.refresh(value());
-	}
-
-	private String generateAvatar() {
+	@Override
+	String serializedValue() {
 		return AvatarUtil.generateAvatar(text, color() != null ? color() : "black");
 	}
 

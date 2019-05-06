@@ -1,10 +1,11 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.DateNotifier;
 
 import java.time.Instant;
 
-public class Date<B extends Box> extends AbstractDate<B> {
+public class Date<DN extends DateNotifier, B extends Box> extends AbstractDate<DN, B> {
     private Instant min;
     private Instant max;
     private Instant value;
@@ -17,7 +18,7 @@ public class Date<B extends Box> extends AbstractDate<B> {
         return value;
     }
 
-    public Date<B> value(Instant value) {
+    public Date<DN, B> value(Instant value) {
         this.value = value;
         return this;
     }
@@ -26,7 +27,7 @@ public class Date<B extends Box> extends AbstractDate<B> {
         return this.min;
     }
 
-    public Date<B> min(Instant min) {
+    public Date<DN, B> min(Instant min) {
         this.min = min;
         return this;
     }
@@ -35,7 +36,7 @@ public class Date<B extends Box> extends AbstractDate<B> {
         return this.max;
     }
 
-    public Date<B> max(Instant max) {
+    public Date<DN, B> max(Instant max) {
         this.max = max;
         return this;
     }

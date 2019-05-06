@@ -6,8 +6,9 @@ import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
 import io.intino.alexandria.ui.displays.events.KeyPressEvent;
 import io.intino.alexandria.ui.displays.events.KeyPressListener;
+import io.intino.alexandria.ui.displays.notifiers.TextEditableNotifier;
 
-public class TextEditable<B extends Box> extends AbstractTextEditable<B> {
+public class TextEditable<DN extends TextEditableNotifier, B extends Box> extends AbstractTextEditable<DN, B> {
     private String value;
     private ChangeListener changeListener = null;
     private KeyPressListener keyPressListener = null;
@@ -20,7 +21,7 @@ public class TextEditable<B extends Box> extends AbstractTextEditable<B> {
         return value;
     }
 
-    public TextEditable<B> value(String value) {
+    public TextEditable<DN, B> value(String value) {
         this.value = value;
         return this;
     }
@@ -30,12 +31,12 @@ public class TextEditable<B extends Box> extends AbstractTextEditable<B> {
         notifier.refresh(value);
     }
 
-    public TextEditable<B> onChange(ChangeListener listener) {
+    public TextEditable<DN, B> onChange(ChangeListener listener) {
         this.changeListener = listener;
         return this;
     }
 
-    public TextEditable<B> onKeyPress(KeyPressListener listener) {
+    public TextEditable<DN, B> onKeyPress(KeyPressListener listener) {
         this.keyPressListener = listener;
         return this;
     }

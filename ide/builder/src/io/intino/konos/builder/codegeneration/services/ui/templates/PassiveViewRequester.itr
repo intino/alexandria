@@ -48,7 +48,7 @@ def type(display)
 	import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 	import io.intino.alexandria.ui.spark.UISparkManager;
 
-	public class $name+firstUpperCase~Requester extends io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~Requester {
+	public class $name+firstUpperCase~Requester extends $parentType {
 
 		public $name+firstUpperCase~Requester(UISparkManager manager, DisplayNotifierProvider notifierProvider) {
 			super(manager, notifierProvider);
@@ -64,6 +64,14 @@ def type(display)
 			super.execute();
 		}
 	}
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Requester
+end
+
+def trigger(parentType)
+	io.intino.alexandria.ui.displays.requesters.[$type+class+FirstUpperCase]~Requester
 end
 
 def attribute(Display) trigger(class)

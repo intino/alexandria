@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.BlockNotifier;
 
-public class Block<B extends Box> extends AbstractBlock<B> {
+public class Block<DN extends BlockNotifier, B extends Box> extends AbstractBlock<B> {
     private String label;
 
     public Block(B box) {
@@ -13,7 +14,7 @@ public class Block<B extends Box> extends AbstractBlock<B> {
         return label;
     }
 
-    public Block<B> label(String label) {
+    public Block<DN, B> label(String label) {
         this.label = label;
         return this;
     }

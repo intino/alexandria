@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.collection
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.ChildComponents;
+import io.intino.konos.model.graph.CatalogComponents;
 import io.intino.konos.model.graph.Component;
 import org.siani.itrules.model.Frame;
 
@@ -26,20 +26,20 @@ public abstract class CollectionComponentRenderer<C extends Component> extends C
 	}
 
 	private int width() {
-		return element.core$().ownerAs(ChildComponents.Collection.Mold.class).item().width();
+		return element.core$().ownerAs(CatalogComponents.Collection.Mold.class).item().width();
 	}
 
 	int defaultWidth() {
-		ChildComponents.Collection owner = element.core$().ownerAs(ChildComponents.Collection.class);
+		CatalogComponents.Collection owner = element.core$().ownerAs(CatalogComponents.Collection.class);
 		if (owner == null) return 100;
 		return Math.round(100/owner.moldList().size());
 	}
 
 	int position() {
-		ChildComponents.Collection owner = element.core$().ownerAs(ChildComponents.Collection.class);
-		ChildComponents.Collection.Mold mold = element.core$().ownerAs(ChildComponents.Collection.Mold.class);
+		CatalogComponents.Collection owner = element.core$().ownerAs(CatalogComponents.Collection.class);
+		CatalogComponents.Collection.Mold mold = element.core$().ownerAs(CatalogComponents.Collection.Mold.class);
 		if (owner == null) return 0;
-		List<ChildComponents.Collection.Mold> molds = owner.moldList();
+		List<CatalogComponents.Collection.Mold> molds = owner.moldList();
 		for (int i = 0; i< molds.size(); i++)
 			if (molds.get(i).name$().equals(mold.name$())) return i;
 		return 0;

@@ -3,9 +3,10 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.ChildComponents.Date;
-import io.intino.konos.model.graph.editable.childcomponents.EditableDate;
+import io.intino.konos.model.graph.editable.datacomponents.EditableDate;
 import org.siani.itrules.model.Frame;
+
+import static io.intino.konos.model.graph.DataComponents.Date;
 
 public class DateRenderer extends ComponentRenderer<Date> {
 

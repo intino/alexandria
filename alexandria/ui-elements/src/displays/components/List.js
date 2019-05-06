@@ -29,6 +29,11 @@ const styles = theme => ({
 		display: "none",
 		position: "absolute",
 		left: "-5px"
+	},
+	selecting : {
+		"& $selector" : {
+			display: "block"
+		}
 	}
 });
 

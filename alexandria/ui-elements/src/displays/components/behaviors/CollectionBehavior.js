@@ -105,7 +105,15 @@ const CollectionBehavior = (collection) => {
         var view = null;
         if (item != null) view = isScrolling ? self.scrollingView(width, classes) : self.itemView(item, classes, index);
         else view = self.scrollingView(width, classes);
-        return (<div style={style} key={index}>{view}</div>);
+
+        var selectable = self.collection.props.selection != null;
+        var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
+        var selecting = self.collection.state.selection.length > 0;
+        return (<div style={style} key={index} className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined, selecting ? classes.selecting : undefined)}>
+                {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item.pl.id)}/> : undefined}
+                {view}
+            </div>
+        );
     };
 
     self.refreshItemsRendered = (items, callback, { overscanStartIndex, overscanStopIndex, visibleStartIndex, visibleStopIndex }) => {
@@ -129,13 +137,7 @@ const CollectionBehavior = (collection) => {
     };
 
     self.itemView = (item, classes, index) => {
-        var selectable = self.collection.props.selection != null;
-        var multiple = self.collection.props.selection != null && self.collection.props.selection === "multiple";
-        return (<div className={classNames(classes.itemView, "layout horizontal center", selectable ? classes.selectable : undefined)}>
-                    {multiple ? <Checkbox checked={self.isItemSelected(item)} className={classes.selector} onChange={self.handleSelectItem.bind(self, item.pl.id)}/> : undefined}
-                    {React.createElement(Elements[item.tp], item.pl)}
-                </div>
-        );
+        return React.createElement(Elements[item.tp], item.pl);
     };
 
     self.loadMoreItems = (items, startIndex, stopIndex) => {
@@ -155,9 +157,9 @@ const CollectionBehavior = (collection) => {
         if (index !== -1) selection.splice(index, 1);
         else selection.push(item);
         self.collection.setState({selection : selection});
-        mandar a refrescar la coleccion
+        self.refreshItemsRendered(self.items(), null, self.collection.itemsWindow);
         if (self.collection.selectTimeout != null) window.clearTimeout(self.collection.selectTimeout);
-        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.changeSelection(selection), 1000);
+        self.collection.selectTimeout = window.setTimeout(() => self.collection.requester.changeSelection(selection), 50);
     };
 
     self.handlePage = (e, page) => {

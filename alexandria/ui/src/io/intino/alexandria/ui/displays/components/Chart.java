@@ -6,9 +6,9 @@ import io.intino.alexandria.ui.displays.components.chart.ChartEngine;
 import io.intino.alexandria.ui.displays.components.chart.Dataframe;
 import io.intino.alexandria.ui.displays.components.chart.DataframeLoader;
 import io.intino.alexandria.ui.displays.components.chart.Output;
-import org.eclipse.jetty.websocket.common.frames.DataFrame;
+import io.intino.alexandria.ui.displays.notifiers.ChartNotifier;
 
-public class Chart<B extends Box> extends AbstractChart<B> {
+public class Chart<DN extends ChartNotifier, B extends Box> extends AbstractChart<B> {
     private Dataframe input;
     private String query;
     private ChartEngine engine = new ChartEngine();
@@ -22,22 +22,22 @@ public class Chart<B extends Box> extends AbstractChart<B> {
         return input;
     }
 
-    public Chart<B> input(DataframeLoader loader) {
+    public Chart<DN, B> input(DataframeLoader loader) {
         this.input = loader.load();
         return this;
     }
 
-    public Chart<B> query(String query) {
+    public Chart<DN, B> query(String query) {
         this.query = query;
         return this;
     }
 
-    public Chart<B> output(String output) {
+    public Chart<DN, B> output(String output) {
         this.output = Output.valueOf(output);
         return this;
     }
 
-    public Chart<B> update(Dataframe input) {
+    public Chart<DN, B> update(Dataframe input) {
         this.input = input;
         this.refresh();
         return this;

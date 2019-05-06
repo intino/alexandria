@@ -1,23 +1,18 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.ImageNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 
 import java.net.URL;
 
-public class Image<B extends Box> extends AbstractImage<B> {
+public class Image<DN extends ImageNotifier, B extends Box> extends AbstractImage<DN, B> {
 	private URL value;
 	private URL defaultPicture = null;
 
     public Image(B box) {
         super(box);
     }
-
-	@Override
-	public void init() {
-		super.init();
-		refresh();
-	}
 
 	public URL value() {
     	return value;
@@ -38,13 +33,8 @@ public class Image<B extends Box> extends AbstractImage<B> {
     	refresh();
     }
 
-	public void refresh() {
-		String value = serializedValue();
-		if (value == null) return;
-		notifier.refresh(value);
-	}
-
-	public String serializedValue() {
+    @Override
+	String serializedValue() {
 		String result = null;
 		if (defaultPicture != null) result = Asset.toResource(baseAssetUrl(), defaultPicture).toUrl().toString();
 		else if (value != null) result = Asset.toResource(baseAssetUrl(), value).toUrl().toString();

@@ -22,8 +22,24 @@ const styles = theme => ({
 	itemView : {
 		borderBottom: "1px solid #ddd",
 		height: "100%",
-		'&:hover': {
-			background: '#ddd',
+		'&:hover' : {
+			background: '#ddd'
+		},
+		'&:hover $selector' : {
+			display: 'block'
+		}
+	},
+	selectable : {
+		paddingLeft: "35px"
+	},
+	selector : {
+		display: "none",
+		position: "absolute",
+		left: "-5px"
+	},
+	selecting : {
+		"& $selector" : {
+			display: "block"
 		}
 	}
 });
@@ -60,7 +76,7 @@ class Table extends AbstractTable {
 	};
 
 	refresh = () => {
-		this.behavior.refresh(this.instances("rows"));
+		this.behavior.refresh();
 	};
 }
 

@@ -8,8 +8,9 @@ import io.intino.alexandria.ui.displays.components.selector.Selector;
 import io.intino.alexandria.ui.displays.events.Event;
 import io.intino.alexandria.ui.displays.events.HideListener;
 import io.intino.alexandria.ui.displays.events.ShowListener;
+import io.intino.alexandria.ui.displays.notifiers.BlockConditionalNotifier;
 
-public class BlockConditional<B extends Box> extends AbstractBlockConditional<B> implements Selection {
+public class BlockConditional<DN extends BlockConditionalNotifier, B extends Box> extends AbstractBlockConditional<B> implements Selection {
     private boolean visible;
     private ShowListener showListener = null;
     private HideListener hideListener = null;
@@ -47,12 +48,12 @@ public class BlockConditional<B extends Box> extends AbstractBlockConditional<B>
         this.updateVisibility(false);
     }
 
-    public BlockConditional<B> onShow(ShowListener listener) {
+    public BlockConditional<DN, B> onShow(ShowListener listener) {
         this.showListener = listener;
         return this;
     }
 
-    public BlockConditional<B> onHide(HideListener listener) {
+    public BlockConditional<DN, B> onHide(HideListener listener) {
         this.hideListener = listener;
         return this;
     }

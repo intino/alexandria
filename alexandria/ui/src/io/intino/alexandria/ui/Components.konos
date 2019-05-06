@@ -46,60 +46,6 @@ Schema SelectorMenuSelection
 	Attribute option as Integer
 	Attribute ancestors as Text List
 
-Component number as Decorated
-	Notification refresh as Real
-
-Component numberEditable as Decorated
-	Notification refresh as Real
-
-	Request notifyChange as Real
-
-Component date as Decorated
-	Notification refresh as DateTime
-
-Component dateEditable as Decorated
-	Notification refresh as DateTime
-	Request notifyChange as DateTime
-
-Component text as Decorated
-	Notification refresh as Text
-
-Component textEditable as Decorated
-	Notification refresh as Text
-
-	Request notifyChange as Text
-	Request notifyKeyPress as Object(KeyPressEventData)
-
-Schema KeyPressEventData
-	Attribute keyCode as Text
-	Attribute value as Text
-
-Component textCode as Decorated
-	Notification refresh as Text
-
-Component textEditableCode as Decorated
-	Notification refresh as Text
-
-	Request notifyChange as Text
-
-Component file as Decorated
-	Notification refresh as Object(FileInfo)
-
-Schema FileInfo
-	Attribute value as Text
-	Attribute mimeType as Text
-
-Component image as Decorated
-	Notification refresh as Text
-
-Component imageAvatar as Decorated
-	Notification refresh as Text
-
-Component openPage as Decorated
-	Notification redirect as Text
-	Notification refresh as Text
-	Request open
-
 Component list as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh
@@ -140,8 +86,3 @@ Component brochure as Decorated
 Component map as Decorated
 Component spinner as Decorated
 	Notification refreshLoading as Bool
-
-Component toolbar as Decorated
-Component task as Decorated
-Component taskSelection as Decorated
-	Notification refreshEnabled as Bool

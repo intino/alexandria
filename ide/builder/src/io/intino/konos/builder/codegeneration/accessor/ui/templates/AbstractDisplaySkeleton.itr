@@ -6,7 +6,7 @@ def type(display)
 	import $notDecorated+firstUpperCase~Notifier from "../notifiers/$notDecorated+firstUpperCase~Notifier";][
 	import $notDecorated+firstUpperCase~Requester from "../requesters/$notDecorated+firstUpperCase~Requester";]
 
-	export default class [$abstract]$name+firstUpperCase extends Ui~$type+firstUpperCase {
+	export default class [$abstract]$name+firstUpperCase extends $displayExtends {
 
 		constructor(props) {
 			super(props);[
@@ -24,6 +24,14 @@ def type(display)
 			);
 		}
 	}
+end
+
+def type(displayExtends & extensionOf)
+	Displays.~$parent+firstUpperCase
+end
+
+def type(displayExtends)
+	Ui~$type+firstUpperCase
 end
 
 def type(renderTag & template) trigger(end)

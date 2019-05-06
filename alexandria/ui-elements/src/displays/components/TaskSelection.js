@@ -7,18 +7,10 @@ import TaskSelectionRequester from "../../../gen/displays/requesters/TaskSelecti
 const styles = theme => ({});
 
 class TaskSelection extends AbstractTaskSelection {
-	state = {
-		enabled: true
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new TaskSelectionNotifier(this);
 		this.requester = new TaskSelectionRequester(this);
-	};
-
-	refreshEnabled = (value) => {
-		this.setState({ enabled: value });
 	};
 }
 

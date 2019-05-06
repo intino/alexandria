@@ -3,9 +3,9 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.ChildComponents.Text;
-import io.intino.konos.model.graph.code.childcomponents.CodeText;
-import io.intino.konos.model.graph.highlighted.childcomponents.HighlightedText;
+import io.intino.konos.model.graph.DataComponents.Text;
+import io.intino.konos.model.graph.code.datacomponents.CodeText;
+import io.intino.konos.model.graph.highlighted.datacomponents.HighlightedText;
 import org.siani.itrules.model.Frame;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;

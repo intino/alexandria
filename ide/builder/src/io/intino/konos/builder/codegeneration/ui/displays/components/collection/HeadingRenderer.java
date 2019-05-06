@@ -2,11 +2,11 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.collection
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents;
+import io.intino.konos.model.graph.CatalogComponents;
 
-public class HeadingRenderer extends CollectionComponentRenderer<ChildComponents.Collection.Mold.Heading> {
+public class HeadingRenderer extends CollectionComponentRenderer<CatalogComponents.Collection.Mold.Heading> {
 
-	public HeadingRenderer(Settings settings, ChildComponents.Collection.Mold.Heading component, TemplateProvider provider, Target target) {
+	public HeadingRenderer(Settings settings, CatalogComponents.Collection.Mold.Heading component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 

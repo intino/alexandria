@@ -29,13 +29,15 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame();
+		Frame extensionFrame = extensionFrame();
 		String type = type();
 		frame.addSlot("id", shortId(element));
 		frame.addSlot("type", type);
 		addAccessorType(frame);
+		frame.addSlot("parentType", extensionFrame);
+		frame.addSlot("import", extensionFrame);
 		if (!type.equalsIgnoreCase("display")) frame.addSlot("packageType", type.toLowerCase());
 		frame.addSlot("packageTypeRelativeDirectory", typeOf(element).equalsIgnoreCase("display") ? "" : "../");
-		frame.addSlot("parentType", parentType());
 		frame.addSlot("name", nameOf(element));
 		frame.addSlot("notification", framesOfNotifications(element.notificationList()));
 		frame.addSlot("request", framesOfRequests(element.requestList()));
@@ -96,8 +98,13 @@ public abstract class PassiveViewRenderer<C extends PassiveView> extends Element
 		return template != null ? setup(template) : null;
 	}
 
-	private Frame parentType() {
-		return new Frame().addSlot(type(),"").addSlot("value", type());
+	private Frame extensionFrame() {
+		Frame result = new Frame().addSlot(type(), "").addSlot("value", type()).addSlot("type", type());
+		if (element.isExtensionOf()) {
+			result.addSlot("extensionOf", "extensionOf");
+			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+		}
+		return result;
 	}
 
 	private Frame[] framesOfNotifications(List<Notification> notifications) {

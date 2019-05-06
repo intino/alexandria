@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.TextCodeNotifier;
 
-public class TextCode<B extends Box> extends AbstractTextCode<B> {
+public class TextCode<DN extends TextCodeNotifier, B extends Box> extends AbstractTextCode<DN, B> {
     private String value;
 
     public TextCode(B box) {
@@ -13,7 +14,7 @@ public class TextCode<B extends Box> extends AbstractTextCode<B> {
         return value;
     }
 
-    public TextCode<B> value(String value) {
+    public TextCode<DN, B> value(String value) {
         this.value = value;
         return this;
     }

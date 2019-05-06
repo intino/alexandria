@@ -14,9 +14,9 @@ export default class $name+firstUpperCase~Requester extends Requester {
 end
 
 def type(display)
-import Requester from "./Requester";
+$import
 
-export default class $name+firstUpperCase~Requester extends Requester {
+export default class $name+firstUpperCase~Requester extends $parentType {
 
     constructor(element) {
         super(element);
@@ -24,6 +24,22 @@ export default class $name+firstUpperCase~Requester extends Requester {
 
 	$request...[$NL]
 }
+end
+
+def attribute(extensionOf) trigger(import)
+	import $parent+firstUpperCase~Requester from "./$parent+firstUpperCase~Requester"
+end
+
+def trigger(import)
+	import Requester from "./Requester";
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Requester
+end
+
+def trigger(parentType)
+	Requester
 end
 
 def type(parameter) trigger(request)
