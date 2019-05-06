@@ -45,25 +45,60 @@ public class MovvBuilder_ {
     }
 
     @Test
-    public void should_create_a_movv_with_a_single_item() throws IOException {
-        buildSingle();
+    public void should_create_a_movv() throws IOException {
+        build();
 
         Movv movv = new Movv(new File("movvs/single.movv"));
         assertThat(movv.get(1000).length()).isEqualTo(1);
         assertThat(movv.get(1000).last()).isEqualTo("1");
         assertThat(movv.get(1000).iterator().hasNext()).isTrue();
         assertThat(movv.get(1000).iterator().next().data).isEqualTo("1");
-        assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,1));
-        assertThat(movv.get(1000).at(instant(2010,1,1))).isNull();
-        assertThat(movv.get(1000).at(instant(2018,2,10))).isEqualTo("1");
-        assertThat(movv.get(2000).at(instant(2018,2,10))).isNull();
+        assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,2));
+        assertThat(movv.get(1000).at(instant(2018,1,1))).isNull();
+        assertThat(movv.get(1000).at(instant(2018,1,2))).isEqualTo("1");
+        assertThat(movv.get(1000).at(instant(2019,1,1))).isEqualTo("1");
+        assertThat(movv.get(2000).at(instant(2019,1,1))).isNull();
 
     }
 
     @Test
-    public void should_update_a_movv_with_a_single_item() throws IOException {
-        buildSingle();
-        updateSingle();
+    public void should_create_a_movv_using_non_sorted_stage() throws IOException {
+        buildWithNonSortedStage();
+
+        Movv movv = new Movv(new File("movvs/single.movv"));
+        assertThat(movv.get(1000).length()).isEqualTo(2);
+        assertThat(movv.get(1000).last()).isEqualTo("2");
+        assertThat(movv.get(1000).iterator().hasNext()).isTrue();
+        assertThat(movv.get(1000).iterator().next().data).isEqualTo("1");
+        assertThat(movv.get(1000).iterator().next().instant).isEqualTo(instant(2018,1,1));
+        assertThat(movv.get(1000).at(instant(2010,1,1))).isNull();
+        assertThat(movv.get(1000).at(instant(2018,2,10))).isEqualTo("1");
+        assertThat(movv.get(1000).at(instant(2018,2,20))).isEqualTo("2");
+        assertThat(movv.get(1000).at(instant(2019,1,1))).isEqualTo("2");
+        assertThat(movv.get(2000).at(instant(2019,1,1))).isNull();
+
+    }
+
+    @Test
+    public void should_update_a_movv() throws IOException {
+        buildWithNonSortedStage();
+        update();
+
+        Movv movv = new Movv(new File("movvs/single.movv"));
+        assertThat(movv.get(1000).length()).isEqualTo(4);
+        assertThat(movv.get(1000).at(instant(2010,1,1))).isNull();
+        assertThat(movv.get(1000).at(instant(2018,2,10))).isEqualTo("1");
+        assertThat(movv.get(1000).at(instant(2018,2,25))).isEqualTo("2");
+        assertThat(movv.get(1000).at(instant(2018,2,25))).isEqualTo("2");
+        assertThat(movv.get(1000).at(instant(2019,1,1))).isEqualTo("4");
+        assertThat(movv.get(1000).at(instant(2019,2,15))).isEqualTo("5");
+        assertThat(movv.get(1000).at(Instant.now())).isEqualTo("5");
+    }
+
+    @Test
+    public void should_update_a_movv_using_non_sorted_stage() throws IOException {
+        buildWithNonSortedStage();
+        updateWithNonSortedStages();
 
         Movv movv = new Movv(new File("movvs/single.movv"));
         assertThat(movv.get(1000).length()).isEqualTo(4);
@@ -105,17 +140,47 @@ public class MovvBuilder_ {
                 .close();
     }
 
-    private void buildSingle() throws IOException {
+    private void build() throws IOException {
         MovvBuilder.create(new File("movvs/single.movv"), 32)
-                .add(1000, instant(2018, 1, 1), "1")
+                .add(1000, instant(2018, 1, 2), "1")
                 .close();
     }
 
-    private void updateSingle() throws IOException {
+    private void buildWithNonSortedStage() throws IOException {
+        MovvBuilder.create(new File("movvs/single.movv"), 32)
+                .stageOf(1000)
+                    .add(instant(2018, 2, 24), "2")
+                    .add(instant(2018, 1, 1), "1")
+                    .add(instant(2018, 2, 20), "2")
+                .commit()
+                .close();
+    }
+
+    private void update() throws IOException {
         MovvBuilder.update(new File("movvs/single.movv"))
-                .add(1000, instant(2018, 2, 20), "2")
-                .add(1000, instant(2018, 3, 13), "2")
-                .add(1000, instant(2018, 4, 18), "4")
+                .add(1000, instant(2018, 3, 20), "2")
+                .add(1000, instant(2018, 3, 24), "2")
+                .add(1000, instant(2018, 4, 13), "2")
+                .add(1000, instant(2018, 8, 18), "4")
+                .add(1000, instant(2019, 1, 6), "4")
+                .close();
+
+        MovvBuilder.update(new File("movvs/single.movv"))
+                .add(1000, instant(2019,2,1), "4")
+                .add(1000, instant(2019,2,10), "5")
+                .close();
+    }
+
+    private void updateWithNonSortedStages() throws IOException {
+        MovvBuilder.update(new File("movvs/single.movv"))
+                .stageOf(1000)
+                    .add(instant(2018, 3, 20), "2")
+                    .add(instant(2018, 3, 24), "2")
+                    .commit()
+                .stageOf(1000)
+                    .add(instant(2018, 8, 18), "4")
+                    .add(instant(2018, 4, 13), "2")
+                    .commit()
                 .add(1000, instant(2019, 1, 6), "4")
                 .close();
 

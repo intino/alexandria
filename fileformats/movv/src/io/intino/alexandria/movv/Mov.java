@@ -77,7 +77,7 @@ public class Mov implements Iterable<Mov.Entry> {
         return access.readInstant().compareTo(instant) > 0;
     }
 
-    void link(long id, int cursor) throws IOException {
+    void append(long id, int cursor) throws IOException {
         if (this.head < 0) create(id, cursor); else append(cursor);
     }
 

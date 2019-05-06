@@ -1,6 +1,5 @@
 package io.intino.alexandria.tabb.streamers;
 
-import io.intino.alexandria.logger.Formatter;
 import io.intino.alexandria.mapp.MappReader;
 import io.intino.alexandria.mapp.MappStream;
 import io.intino.alexandria.tabb.ColumnStream;
@@ -100,12 +99,12 @@ public class MappColumnStreamer implements ColumnStreamer {
 		}
 
 		private Parser parserOf(Type type) {
+			if (type == Type.Nominal) return labels::get;
 			if (type == Type.Double) return Double::parseDouble;
-			else if (type == Type.Nominal) return labels::get;
-			else if (type == Type.Integer || type == Type.Datetime) return Integer::parseInt;
-			else if (type == Type.Instant) return Instant::parse;
-			else if (type == Type.Boolean) return Boolean::parseBoolean;
-			else if (type == Type.Long) return Long::parseLong;
+			if (type == Type.Integer || type == Type.Datetime) return Integer::parseInt;
+			if (type == Type.Instant) return Instant::parse;
+			if (type == Type.Boolean) return Boolean::parseBoolean;
+			if (type == Type.Long) return Long::parseLong;
 			return value -> value;
 		}
 	}
