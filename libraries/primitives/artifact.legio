@@ -6,5 +6,4 @@ Artifact("io.intino.alexandria", "1.0.3") primitives
 	Distribution(intino.releases)
 
 Repository("intino-maven") intino
-	Release("https://artifactory.intino.io/artifactory/releases")
 	Release("https://artifactory.intino.io/artifactory/release-libraries") releases

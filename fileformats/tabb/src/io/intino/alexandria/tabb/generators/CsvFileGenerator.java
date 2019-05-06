@@ -15,6 +15,7 @@ import static com.opencsv.CSVWriter.NO_QUOTE_CHARACTER;
 
 public class CsvFileGenerator implements FileGenerator {
 	private static final char SEPARATOR = ';';
+	private static final String NA = "NA";
 	private final List<ColumnStream> streams;
 	private CSVWriter csvWriter;
 
@@ -40,7 +41,7 @@ public class CsvFileGenerator implements FileGenerator {
 	}
 
 	private String value(long key, ColumnStream stream) {
-		if (!stream.key().equals(key)) return "NA";
+		if (!stream.key().equals(key)) return NA;
 		return formatterOf(stream.type()).format(stream.value());
 	}
 
@@ -66,7 +67,7 @@ public class CsvFileGenerator implements FileGenerator {
 
 			@Override
 			public String format(Object value) {
-				return value.toString();
+				return value != null ? value.toString() : NA;
 			}
 		};
 	}

@@ -34,6 +34,10 @@ public class MessageWriter implements AutoCloseable {
         os.write('\n');
     }
 
+	public void flush() throws IOException {
+		os.flush();
+	}
+
     private void write(String str) throws IOException {
         os.write(str.getBytes());
     }
