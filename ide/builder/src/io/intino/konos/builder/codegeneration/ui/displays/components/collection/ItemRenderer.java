@@ -2,11 +2,11 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.collection
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents;
+import io.intino.konos.model.graph.CatalogComponents;
 
-public class ItemRenderer extends CollectionComponentRenderer<ChildComponents.Collection.Mold.Item> {
+public class ItemRenderer extends CollectionComponentRenderer<CatalogComponents.Collection.Mold.Item> {
 
-	public ItemRenderer(Settings settings, ChildComponents.Collection.Mold.Item component, TemplateProvider provider, Target target) {
+	public ItemRenderer(Settings settings, CatalogComponents.Collection.Mold.Item component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 

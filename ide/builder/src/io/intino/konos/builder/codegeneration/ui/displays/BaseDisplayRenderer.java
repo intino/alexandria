@@ -7,10 +7,9 @@ import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRe
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRendererFactory;
 import io.intino.konos.builder.codegeneration.ui.passiveview.PassiveViewRenderer;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.ChildComponents.Stamp;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.dynamicloaded.DynamicLoadedComponent;
-import io.intino.konos.model.graph.selectable.childcomponents.SelectableCollection;
+import io.intino.konos.model.graph.selectable.catalogcomponents.SelectableCollection;
 import org.siani.itrules.model.Frame;
 
 import java.io.File;
@@ -38,6 +37,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	@Override
 	public Frame buildFrame() {
 		Frame frame = super.buildFrame().addTypes("display").addTypes(typeOf(element));
+		addParametrized(frame);
 		addExtends(frame);
 		addImports(frame);
 		addImplements(frame);
@@ -53,23 +53,38 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 		return frame;
 	}
 
+	private void addParametrized(Frame frame) {
+		Frame result = new Frame("parametrized");
+		result.addSlot("name", element.name$());
+		if (element.isExtensionOf()) {
+			result.addTypes("extensionOf");
+			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+		}
+		addDecoratedFrames(result);
+		frame.addSlot("parametrized", result);
+	}
+
 	private void addExtends(Frame frame) {
 		Frame result = new Frame("displayExtends");
 		if (element.i$(Template.class)) result.addTypes(Template.class.getSimpleName());
-		if (element.i$(ChildComponents.Collection.Mold.Item.class)) result.addTypes(ChildComponents.Collection.Mold.Item.class.getSimpleName());
+		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) result.addTypes(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
 		if (element.i$(PrivateComponents.Row.class)) result.addTypes(PrivateComponents.Row.class.getSimpleName());
+		if (element.isExtensionOf()) {
+			result.addTypes("extensionOf");
+			result.addSlot("parent", element.asExtensionOf().parentView().name$());
+		}
 		result.addSlot("type", typeOf(element));
 		addDecoratedFrames(result);
 		if (element.i$(Template.class)) {
 			String modelClass = element.a$(Template.class).modelClass();
 			result.addSlot("modelClass", modelClass != null ? modelClass : "java.lang.Void");
 		}
-		if (element.i$(ChildComponents.Collection.Mold.Item.class)) {
-			String itemClass = element.a$(ChildComponents.Collection.Mold.Item.class).core$().ownerAs(ChildComponents.Collection.class).itemClass();
+		if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
+			String itemClass = element.a$(CatalogComponents.Collection.Mold.Item.class).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
 			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		if (element.i$(PrivateComponents.Row.class)) {
-			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(ChildComponents.Collection.class).itemClass();
+			String itemClass = element.a$(PrivateComponents.Row.class).items(0).core$().ownerAs(CatalogComponents.Collection.class).itemClass();
 			result.addSlot("itemClass", itemClass != null ? itemClass : "java.lang.Void");
 		}
 		result.addSlot("name", nameOf(element));
@@ -79,7 +94,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	private void addImports(Frame frame) {
 		if (element.graph().templateList().size() > 0) frame.addSlot("templatesImport", baseFrame().addTypes("templatesImport"));
 		if (element.graph().blockList().size() > 0) frame.addSlot("blocksImport", baseFrame().addTypes("blocksImport"));
-		if (element.graph().core$().find(ChildComponents.Collection.Mold.Item.class) != null) frame.addSlot("itemsImport", baseFrame().addTypes("itemsImport"));
+		if (element.graph().core$().find(CatalogComponents.Collection.Mold.Item.class) != null) frame.addSlot("itemsImport", baseFrame().addTypes("itemsImport"));
 		if (element.graph().core$().find(PrivateComponents.Row.class) != null) frame.addSlot("rowsImport", baseFrame().addTypes("rowsImport"));
 	}
 
@@ -115,8 +130,8 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 			renderTag.addTypes(PrivateComponents.Row.class.getSimpleName());
 			renderTag.addSlot("properties", renderer.properties());
 		}
-		else if (element.i$(ChildComponents.Collection.Mold.Item.class)) {
-			renderTag.addTypes(ChildComponents.Collection.Mold.Item.class.getSimpleName());
+		else if (element.i$(CatalogComponents.Collection.Mold.Item.class)) {
+			renderTag.addTypes(CatalogComponents.Collection.Mold.Item.class.getSimpleName());
 		}
 		frame.addSlot("renderTag", renderTag);
 	}
@@ -126,7 +141,7 @@ public abstract class BaseDisplayRenderer<D extends Display> extends PassiveView
 	}
 
 	protected void addDecoratedFrames(Frame frame, boolean decorated) {
-		boolean isAbstract = decorated && !element.i$(Stamp.class);
+		boolean isAbstract = decorated && !element.i$(OtherComponents.Stamp.class);
 		if (isAbstract) frame.addSlot("abstract", "Abstract");
 		else frame.addSlot("notDecorated", element.name$());
 		Frame abstractBoxFrame = new Frame().addTypes("box");

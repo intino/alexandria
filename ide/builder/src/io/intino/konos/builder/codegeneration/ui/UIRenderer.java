@@ -3,12 +3,9 @@ package io.intino.konos.builder.codegeneration.ui;
 import com.intellij.openapi.project.Project;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.Settings;
-import io.intino.konos.model.graph.ChildComponents;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.PassiveView;
-import io.intino.konos.model.graph.PrivateComponents;
 import io.intino.konos.model.graph.temporal.TemporalCatalog;
-import io.intino.konos.model.graph.ui.UIService;
 import io.intino.tara.magritte.Layer;
 import io.intino.tara.magritte.Node;
 import org.siani.itrules.Template;
@@ -19,12 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.javascriptFile;
 import static io.intino.konos.model.graph.Utils.isUUID;
 import static java.util.Collections.reverse;
-import static java.util.stream.Collectors.toList;
 
 public abstract class UIRenderer {
 	protected Settings settings;

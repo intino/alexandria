@@ -1,5 +1,6 @@
 package io.intino.konos.model.graph;
 
+import io.intino.konos.model.graph.extensionof.ExtensionOfPassiveView;
 import io.intino.konos.model.graph.jms.JMSService;
 import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.ui.UIService;
@@ -11,7 +12,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.stream.Collectors.toSet;
+
 public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
+	private static Set<String> hierarchyDisplays = null;
 
 	public KonosGraph(Graph graph) {
 		super(graph);
@@ -24,7 +28,7 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	public static List<Display> displaysOf(UIService service) {
 		KonosGraph graph = service.graph();
 		List<Display> result = graph.displayList();
-		result.addAll(graph.core$().find(ChildComponents.Collection.Mold.Item.class));
+		result.addAll(graph.core$().find(CatalogComponents.Collection.Mold.Item.class));
 		result.addAll(graph.core$().find(PrivateComponents.Row.class));
 		return result;
 	}
@@ -32,6 +36,11 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 	public static Template templateFor(UIService.Resource resource) {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
 		return uiService.template(resource);
+	}
+
+	public static boolean isParentComponent(Component component) {
+		loadParentComponents(component.graph());
+		return hierarchyDisplays.contains(component.name$());
 	}
 
 	public Set<String> findCustomParameters(JMSService service) {
@@ -65,4 +74,10 @@ public class KonosGraph extends io.intino.konos.model.graph.AbstractGraph {
 		while (matcher.find()) list.add(matcher.group(1));
 		return list;
 	}
+
+	private static void loadParentComponents(KonosGraph graph) {
+		if (hierarchyDisplays != null) return;
+		hierarchyDisplays = graph.core$().find(ExtensionOfPassiveView.class).stream().map(d -> d.core$().as(ExtensionOfPassiveView.class).parentView().name$()).collect(toSet());
+	}
+
 }

@@ -1,16 +1,16 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.MimeTypes;
+import io.intino.alexandria.Resource;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.FileInfo;
-import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
-import io.intino.alexandria.ui.resources.Asset;
+import io.intino.alexandria.ui.displays.notifiers.FileEditableNotifier;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class FileEditable<B extends Box> extends AbstractFile<B> {
+public class FileEditable<DN extends FileEditableNotifier, B extends Box> extends AbstractFileEditable<DN, B> {
 	private URL value;
 	private String mimeType;
 	protected ChangeListener changeListener = null;
@@ -40,13 +40,14 @@ public class FileEditable<B extends Box> extends AbstractFile<B> {
 		notifier.refresh(new FileInfo().value(value).mimeType(mimeType));
 	}
 
-	public void notifyChange(URL value) {
-		value(value);
-		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
+	public void notifyChange(Resource value) {
+//		value(value);
+//		if (changeListener != null) changeListener.accept(new ChangeEvent(this, value));
 	}
 
 	private String serializedValue() {
-		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
+//		return value != null ? Asset.toResource(baseAssetUrl(), value).toUrl().toString() : null;
+		return null;
 	}
 
 	private String typeOf(URL value) {

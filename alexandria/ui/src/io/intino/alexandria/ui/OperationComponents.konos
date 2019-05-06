@@ -1,0 +1,21 @@
+dsl Konos
+
+Component toolbar as Decorated
+
+Component operation as Decorated
+	Notification refresh as Object(OperationInfo)
+	Notification refreshDisabled as Bool
+
+	Request execute
+
+Component task as Decorated ExtensionOf(operation)
+Component openPage as Decorated ExtensionOf(operation)
+	Notification redirect as Text
+
+Component selectionOperation as Decorated ExtensionOf(operation)
+
+Component taskSelection as Decorated ExtensionOf(selectionOperation)
+
+Schema OperationInfo
+	Attribute title as Text
+	Attribute disabled as Bool

@@ -151,7 +151,7 @@ def type(extends & stamp)
 end
 
 def type(extends)
-	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<$abstractBox+type>
+	io.intino.alexandria.ui.displays.components.$type+firstUpperCase$facet<io.intino.alexandria.ui.displays.notifiers.$type+firstUpperCase$facet~Notifier, $abstractBox+type>
 end
 
 def type(component & child & multipleblock) trigger(rootChildReferences)
@@ -274,8 +274,7 @@ def type(properties & file) trigger(specific)
 end
 
 def type(properties & openpage) trigger(specific)
-	title("$title");[
-	path("$path");]
+	[path("$path");]
 end
 
 def type(properties & chart) trigger(specific)
@@ -306,8 +305,9 @@ def type(properties & collection) trigger(specific)
 end
 
 def type(properties & operation) trigger(common)
-	[label("$label");][
-	color("$color");]
+	[title("$title");][
+	color("$color");][
+	disabled($disabled);]
 	$operationMode
 end
 
@@ -332,6 +332,10 @@ def trigger(resourceMethod)
 end
 
 def type(operationMode & iconbutton)
+	icon("$icon");
+end
+
+def type(operationMode & materialiconbutton)
 	icon("$icon");
 end
 

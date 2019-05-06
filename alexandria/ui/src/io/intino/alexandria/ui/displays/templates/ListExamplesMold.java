@@ -21,6 +21,8 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         init(list3, Datasources.personDatasource());
         init(list4, Datasources.personDatasource());
         init(list5, Datasources.personDatasource());
+        add.onExecute((event) -> System.out.println("add item"));
+        remove.onExecute((event) -> System.out.println("remove items " + String.join(",", event.items())));
     }
 
     private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {

@@ -3,18 +3,23 @@ dsl Proteo
 use Component
 
 // OPERATION FACETS
-Facet Button on ChildComponents.Operation
-Facet IconButton extends Button on ChildComponents.Operation
-	var string alexandriaIcon
-Facet Link on ChildComponents.Operation
+Facet Link on OperationComponents.Operation
+Facet Button on OperationComponents.Operation
+Facet IconButton extends Button on OperationComponents.Operation
+	var string icon
+Facet MaterialIconButton extends Button on OperationComponents.Operation
+	var string icon
+
+Facet Confirmable on OperationComponents.Operation
+	var string confirmText
 
 // IMAGE FACETS
-Facet Avatar on ChildComponents.Image
+Facet Avatar on DataComponents.Image
 	var string text
 
 // PROGRESS FACETS
-Facet Circular on ChildComponents.Progress
-Facet Linear on ChildComponents.Progress
+Facet Circular on OtherComponents.Progress
+Facet Linear on OtherComponents.Progress
 
 Facet Drawer on Block
 
@@ -23,19 +28,19 @@ Facet AbstractAbsolute is abstract
 	var integer:{px} width = -1px
 	var integer:{px} height = -1px
 Facet Absolute extends AbstractAbsolute on Block
-Facet Absolute extends AbstractAbsolute on ChildComponents.Image
-Facet Absolute extends AbstractAbsolute on ChildComponents.File
-Facet Absolute extends AbstractAbsolute on ChildComponents.Chart
-Facet Absolute extends AbstractAbsolute on ChildComponents.Header
+Facet Absolute extends AbstractAbsolute on DataComponents.Image
+Facet Absolute extends AbstractAbsolute on DataComponents.File
+Facet Absolute extends AbstractAbsolute on OtherComponents.Chart
+Facet Absolute extends AbstractAbsolute on OtherComponents.Header
 
 Facet AbstractRelative is abstract
 	var double:{%} width = 100%
 	var double:{%} height = 100%
 Facet Relative extends AbstractRelative on Block
-Facet Relative extends AbstractRelative on ChildComponents.Image
-Facet Relative extends AbstractRelative on ChildComponents.File
-Facet Relative extends AbstractRelative on ChildComponents.Chart
-Facet Relative extends AbstractRelative on ChildComponents.Header
+Facet Relative extends AbstractRelative on DataComponents.Image
+Facet Relative extends AbstractRelative on DataComponents.File
+Facet Relative extends AbstractRelative on OtherComponents.Chart
+Facet Relative extends AbstractRelative on OtherComponents.Header
 
 Facet Paper on Block
 Facet Badge on Block
@@ -58,15 +63,16 @@ Facet AbstractMultiple is abstract
 	var string noItemsMessage = empty
 	var word:{Vertical Horizontal} arrangement = Vertical
 Facet Multiple extends AbstractMultiple on Block
-Facet Multiple extends AbstractMultiple on ChildComponents.Text
-Facet Multiple extends AbstractMultiple on ChildComponents.File
-Facet Multiple extends AbstractMultiple on ChildComponents.Image
-Facet Multiple extends AbstractMultiple on ChildComponents.Icon
-Facet Multiple extends AbstractMultiple on ChildComponents.Number
-Facet Multiple extends AbstractMultiple on ChildComponents.Date
-Facet Multiple extends AbstractMultiple on ChildComponents.Stamp
+Facet Multiple extends AbstractMultiple on DataComponents.Text
+Facet Multiple extends AbstractMultiple on DataComponents.File
+Facet Multiple extends AbstractMultiple on DataComponents.Image
+Facet Multiple extends AbstractMultiple on DataComponents.Number
+Facet Multiple extends AbstractMultiple on DataComponents.Date
+Facet Multiple extends AbstractMultiple on OtherComponents.Icon
+Facet Multiple extends AbstractMultiple on OtherComponents.MaterialIcon
+Facet Multiple extends AbstractMultiple on OtherComponents.Stamp
 
-Facet Highlighted on ChildComponents.Text
+Facet Highlighted on DataComponents.Text
 	var string textColor
 	var string backgroundColor
 
@@ -95,41 +101,41 @@ Facet Mobile on Dialog
 Facet Draggable on Dialog
 
 // SELECTOR FACETS
-Facet Tabs on ChildComponents.Selector
-Facet Menu on ChildComponents.Selector
+Facet Tabs on OtherComponents.Selector
+Facet Menu on OtherComponents.Selector
 	var word:{Horizontal Vertical} layout
 
-Facet RadioBox on ChildComponents.Selector
+Facet RadioBox on OtherComponents.Selector
 	!! The value that should initially be selected, defaults to the first value.
 	var string selected = empty
 
-Facet CheckBox on ChildComponents.Selector
+Facet CheckBox on OtherComponents.Selector
 	!! The value(s) that should initially be selected. Defaults to the first value, or no values if Multiple facet is present
 	var string[] selected = empty
 
-Facet ComboBox on ChildComponents.Selector
+Facet ComboBox on OtherComponents.Selector
 
 // TEXT FACETS
-Facet Code on ChildComponents.Text
+Facet Code on DataComponents.Text
     var word:CodeLanguage language
 
 Facet AbstractLabeled is abstract
 	var string label
 	var word:{Top Bottom Left Right} position = Left
 Facet Labeled extends AbstractLabeled on Component
-Facet Labeled extends AbstractLabeled on ChildComponents.Collection.Mold.Heading
+Facet Labeled extends AbstractLabeled on CatalogComponents.Collection.Mold.Heading
 
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
 
 Facet AbstractNavigable is abstract
 	var word:{Top Bottom} position = Bottom
-Facet Navigable extends AbstractNavigable on ChildComponents.List
-Facet Navigable extends AbstractNavigable on ChildComponents.Table
+Facet Navigable extends AbstractNavigable on CatalogComponents.List
+Facet Navigable extends AbstractNavigable on CatalogComponents.Table
 
-Facet Linked on ChildComponents.Toolbar
-	var ChildComponents.Collection to
-	has ChildComponents.SelectionOperation
+Facet Linked on OperationComponents.Toolbar
+	var CatalogComponents.Collection to
+	has OperationComponents.SelectionOperation
 
-Facet Selectable on ChildComponents.Collection
+Facet Selectable on CatalogComponents.Collection
 	var boolean multiple = false

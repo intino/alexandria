@@ -4,11 +4,14 @@ import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.components.toolbar.SelectionOperation;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
+import io.intino.alexandria.ui.displays.notifiers.TaskSelectionNotifier;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class TaskSelection<B extends Box> extends AbstractTaskSelection<B> implements SelectionOperation {
+public abstract class TaskSelection<DN extends TaskSelectionNotifier, B extends Box> extends AbstractTaskSelection<DN, B> implements SelectionOperation {
+    private String title;
+    private String icon;
     private SelectionListener executeListener;
     private List<String> selection = Collections.emptyList();
 
@@ -20,7 +23,17 @@ public abstract class TaskSelection<B extends Box> extends AbstractTaskSelection
         this.executeListener = listener;
     }
 
-    public TaskSelection<B> selection(List<String> selection) {
+    public TaskSelection<DN, B> title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public TaskSelection<DN, B> icon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public TaskSelection<DN, B> selection(List<String> selection) {
         this.selection = selection;
         return this;
     }
@@ -34,7 +47,7 @@ public abstract class TaskSelection<B extends Box> extends AbstractTaskSelection
     @Override
     public void refresh() {
         super.refresh();
-        notifier.refreshEnabled(selection.size() > 0);
+        notifier.refreshDisabled(selection.size() <= 0);
     }
 
     public void execute() {

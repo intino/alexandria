@@ -9,8 +9,8 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
     };
 
     setup() {
-    	super.setup();
 		if (this.element == null || this.pushLinked) return;
+    	super.setup();
 		this.when("refreshBaseUrl").toSelf().execute((parameters) => this.element.refreshBaseUrl(parameters.v));
 		this.when("refreshError").toSelf().execute((parameters) => this.element.refreshError(parameters.v));
 		this.pushLinked = true;
@@ -19,9 +19,9 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
 end
 
 def type(display)
-import Notifier from "./Notifier";
+$import
 
-export default class $name+firstUpperCase~Notifier extends Notifier {
+export default class $name+firstUpperCase~Notifier extends $parentType {
 
     constructor(element) {
         super(element);
@@ -29,12 +29,28 @@ export default class $name+firstUpperCase~Notifier extends Notifier {
     };
 
     setup() {
-		super.setup();
 		if (this.element == null || this.pushLinked) return;
+		super.setup();
 		$notification...[$NL]
 		this.pushLinked = true;
     };
 }
+end
+
+def attribute(extensionOf) trigger(import)
+	import $parent+firstUpperCase~Notifier from "./$parent+firstUpperCase~Notifier"
+end
+
+def trigger(import)
+	import Notifier from "./Notifier";
+end
+
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Notifier
+end
+
+def trigger(parentType)
+	Notifier
 end
 
 def trigger(notification)

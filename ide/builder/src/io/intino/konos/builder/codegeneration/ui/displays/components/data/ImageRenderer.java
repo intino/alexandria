@@ -3,8 +3,8 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
-import io.intino.konos.model.graph.ChildComponents.Image;
-import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
+import io.intino.konos.model.graph.DataComponents.Image;
+import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
 import org.siani.itrules.model.Frame;
 
 public class ImageRenderer extends SizedRenderer<Image> {

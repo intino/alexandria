@@ -3,10 +3,11 @@ package io.intino.alexandria.ui.displays.components;
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.ui.displays.events.ChangeEvent;
 import io.intino.alexandria.ui.displays.events.ChangeListener;
+import io.intino.alexandria.ui.displays.notifiers.DateEditableNotifier;
 
 import java.time.Instant;
 
-public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
+public class DateEditable<DN extends DateEditableNotifier, B extends Box> extends AbstractDateEditable<DN, B> {
 	private Instant min;
 	private Instant max;
 	private Instant value;
@@ -20,7 +21,7 @@ public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
 		return value;
 	}
 
-	public DateEditable<B> value(Instant value) {
+	public DateEditable<DN, B> value(Instant value) {
 		this.value = value;
 		return this;
 	}
@@ -29,7 +30,7 @@ public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
 		return this.min;
 	}
 
-	public DateEditable<B> min(Instant min) {
+	public DateEditable<DN, B> min(Instant min) {
 		this.min = min;
 		return this;
 	}
@@ -38,7 +39,7 @@ public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
 		return this.max;
 	}
 
-	public DateEditable<B> max(Instant max) {
+	public DateEditable<DN, B> max(Instant max) {
 		this.max = max;
 		return this;
 	}
@@ -48,7 +49,7 @@ public class DateEditable<B extends Box> extends AbstractDateEditable<B> {
 		notifier.refresh(value);
 	}
 
-	public DateEditable<B> onChange(ChangeListener listener) {
+	public DateEditable<DN, B> onChange(ChangeListener listener) {
 		this.changeListener = listener;
 		return this;
 	}

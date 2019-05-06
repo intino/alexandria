@@ -4,18 +4,11 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
-	Toolbar as Linked(to=list3)
-		OpenPage(title = "", page = UiElements.home) openPage
-		Task(title="añadir") add
-		TaskSelection(title="eliminar")
-	List(itemClass="io.intino.alexandria.ui.documentation.Person") list3 as Selectable(multiple=true)
-		Mold > Item(height=60px,width=30%) list3Mold > Text firstName
-
-Component testTable as Decorated
-	Request changeSelection as Text List
-	Request changeSelection2 as Text
-
-Display page as Decorated
+	Task(title="añadir1") add1 as IconButton(icon="/images/add.png")
+	Task(title="añadir2") add2 as MaterialIconButton(icon="add")
+	Task(title="añadir3") add3 as Button Confirmable(confirmText="haaaaa?")
+	Task(title="añadir4") add4 as Link Confirmable(confirmText="bbbb?")
+	TaskSelection(title="añadir5") add5
 
 //	Text facetas as Multiple
 //	Stamp(template=template1) templates as Multiple

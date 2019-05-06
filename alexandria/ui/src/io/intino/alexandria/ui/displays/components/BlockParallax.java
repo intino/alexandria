@@ -1,11 +1,12 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.BlockParallaxNotifier;
 import io.intino.alexandria.ui.resources.Asset;
 
 import java.net.URL;
 
-public class BlockParallax<B extends Box> extends AbstractBlockParallax<B> {
+public class BlockParallax<DN extends BlockParallaxNotifier, B extends Box> extends AbstractBlockParallax<B> {
     private URL background;
 
     public BlockParallax(B box) {

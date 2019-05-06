@@ -1,7 +1,7 @@
 import React from "react";
 import AbstractFile from "../../../gen/displays/components/AbstractFile";
-import FileNotifier from "../../../gen/displays/notifiers/FileValueNotifier";
-import FileRequester from "../../../gen/displays/requesters/FileValueRequester";
+import FileEditableNotifier from "../../../gen/displays/notifiers/FileEditableNotifier";
+import FileEditableRequester from "../../../gen/displays/requesters/FileEditableRequester";
 
 export default class FileEditable extends AbstractFile {
 	state = {
@@ -10,8 +10,8 @@ export default class FileEditable extends AbstractFile {
 
 	constructor(props) {
 		super(props);
-		this.notifier = new FileNotifier(this);
-		this.requester = new FileRequester(this);
+		this.notifier = new FileEditableNotifier(this);
+		this.requester = new FileEditableRequester(this);
 	};
 
 	handleChange(e) {

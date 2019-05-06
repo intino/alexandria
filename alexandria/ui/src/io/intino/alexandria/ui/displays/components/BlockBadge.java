@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.BlockBadgeNotifier;
 
-public class BlockBadge<B extends Box> extends AbstractBlockBadge<B> {
+public class BlockBadge<DN extends BlockBadgeNotifier, B extends Box> extends AbstractBlockBadge<B> {
     private int value;
 
     public BlockBadge(B box) {
@@ -13,7 +14,7 @@ public class BlockBadge<B extends Box> extends AbstractBlockBadge<B> {
         return this.value;
     }
 
-    public BlockBadge<B> value(int value) {
+    public BlockBadge<DN, B> value(int value) {
         this.value = value;
         return this;
     }

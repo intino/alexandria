@@ -5,28 +5,33 @@ import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.DisplayRenderer;
 import io.intino.konos.model.graph.*;
-import io.intino.konos.model.graph.ChildComponents.Collection;
-import io.intino.konos.model.graph.ChildComponents.*;
-import io.intino.konos.model.graph.ChildComponents.Wizard.Step;
-import io.intino.konos.model.graph.avatar.childcomponents.AvatarImage;
+import io.intino.konos.model.graph.CatalogComponents.Collection.Mold;
+import io.intino.konos.model.graph.OtherComponents.Header;
+import io.intino.konos.model.graph.OtherComponents.Selector;
+import io.intino.konos.model.graph.OtherComponents.Snackbar;
+import io.intino.konos.model.graph.OtherComponents.Stamp;
+import io.intino.konos.model.graph.OtherComponents.Wizard.Step;
+import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
-import io.intino.konos.model.graph.checkbox.childcomponents.CheckBoxSelector;
-import io.intino.konos.model.graph.code.childcomponents.CodeText;
-import io.intino.konos.model.graph.combobox.childcomponents.ComboBoxSelector;
+import io.intino.konos.model.graph.checkbox.othercomponents.CheckBoxSelector;
+import io.intino.konos.model.graph.code.datacomponents.CodeText;
+import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
-import io.intino.konos.model.graph.menu.childcomponents.MenuSelector;
+import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
 import io.intino.konos.model.graph.multiple.MultipleBlock;
-import io.intino.konos.model.graph.multiple.childcomponents.*;
+import io.intino.konos.model.graph.multiple.datacomponents.*;
+import io.intino.konos.model.graph.multiple.othercomponents.MultipleIcon;
+import io.intino.konos.model.graph.multiple.othercomponents.MultipleStamp;
 import io.intino.konos.model.graph.parallax.ParallaxBlock;
-import io.intino.konos.model.graph.radiobox.childcomponents.RadioBoxSelector;
+import io.intino.konos.model.graph.radiobox.othercomponents.RadioBoxSelector;
 import io.intino.tara.magritte.Layer;
 import org.siani.itrules.model.Frame;
 
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.konos.builder.codegeneration.Formatters.firstUpperCase;
+import static io.intino.konos.model.graph.OperationComponents.Toolbar;
 
 public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 	private boolean buildChildren = false;
@@ -142,7 +147,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		Component parent = component.core$().ownerAs(Component.class);
 		while (parent != null) {
 			result.add(0, nameOf(parent));
-			if (parent.i$(Collection.Mold.Item.class)) break;
+			if (parent.i$(Mold.Item.class)) break;
 			parent = parent.core$().ownerAs(Component.class);
 		}
 		return result.toArray(new String[0]);
@@ -165,8 +170,8 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(Step.class)) components.addAll(component.a$(Step.class).componentList());
 		if (component.i$(Header.class)) components.addAll(component.a$(Header.class).componentList());
 		if (component.i$(Selector.class)) components.addAll(component.a$(Selector.class).componentList());
-		if (component.i$(Collection.Mold.Heading.class)) components.addAll(component.a$(Collection.Mold.Heading.class).componentList());
-		if (component.i$(Collection.Mold.Item.class)) components.addAll(component.a$(Collection.Mold.Item.class).componentList());
+		if (component.i$(Mold.Heading.class)) components.addAll(component.a$(Mold.Heading.class).componentList());
+		if (component.i$(Mold.Item.class)) components.addAll(component.a$(Mold.Item.class).componentList());
 		if (component.i$(Toolbar.class)) components.addAll(component.a$(Toolbar.class).componentList());
 		return components;
 	}
@@ -229,9 +234,9 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 			return true;
 		}
 
-		if (element.i$(Collection.Mold.Item.class)) {
-			frame.addTypes(Collection.Mold.Item.class.getSimpleName());
-			Collection collection = element.a$(Collection.Mold.Item.class).core$().ownerAs(Collection.class);
+		if (element.i$(Mold.Item.class)) {
+			frame.addTypes(Mold.Item.class.getSimpleName());
+			CatalogComponents.Collection collection = element.a$(Mold.Item.class).core$().ownerAs(CatalogComponents.Collection.class);
 			frame.addSlot("itemClass", collection.itemClass() != null ? collection.itemClass() : "java.lang.Void");
 			return true;
 		}
@@ -301,7 +306,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 
 		if (element.i$(Block.class)) componentList = element.a$(Block.class).componentList();
 		else if (element.i$(Template.class)) componentList = element.a$(Template.class).componentList();
-		else if (element.i$(Collection.Mold.Item.class)) componentList = element.a$(Collection.Mold.Item.class).componentList();
+		else if (element.i$(Mold.Item.class)) componentList = element.a$(Mold.Item.class).componentList();
 
 		if (componentList == null) return result;
 

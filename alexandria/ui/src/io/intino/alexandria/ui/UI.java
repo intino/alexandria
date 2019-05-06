@@ -8,7 +8,10 @@ import io.intino.alexandria.ui.displays.notifiers.DisplayNotifierProvider;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 public abstract class UI {
     private static Map<Class<? extends Display>, Class<? extends DisplayNotifier>> notifiers = new HashMap<>();
@@ -43,7 +46,10 @@ public abstract class UI {
     }
 
     private static Class<? extends Display> displayByInheritance(Class<? extends Display> clazz) {
-        return notifiers.keySet().stream().filter(dc -> dc.isAssignableFrom(clazz)).findFirst().orElse(null);
+        Class<?> superclass = clazz.getSuperclass();
+        if (Display.class.isAssignableFrom(superclass) && notifiers.containsKey(superclass)) return (Class<? extends Display>) superclass;
+        List<Class<? extends Display>> result = notifiers.keySet().stream().filter(dc -> dc.isAssignableFrom(clazz)).collect(toList());
+        return result.size() > 0 ? result.get(result.size()-1) : null;
     }
 
     protected interface DisplayNotifierRegistration {

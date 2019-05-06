@@ -38,6 +38,10 @@ def type(display)
     }
 end
 
+def attribute(extensionOf) trigger(parentType)
+	$parent+firstUpperCase~Notifier
+end
+
 def attribute(catalog) trigger(parentType)
 	io.intino.alexandria.ui.displays.notifiers.CatalogNotifier
 end

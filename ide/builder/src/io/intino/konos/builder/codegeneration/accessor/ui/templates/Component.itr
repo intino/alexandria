@@ -51,7 +51,7 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & operation) trigger(common)
-	[ label="$label"][ format="$format...[ ]"]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}]
 end
 
 def type(properties) trigger(common)
@@ -98,10 +98,6 @@ def type(properties & text) trigger(specific)
 	[ mode="$mode"][ prefix="$prefix"][ suffix="$suffix"][ value="$defaultValue"][ highlighted={$highlighted}]
 end
 
-def type(properties & openpage) trigger(specific)
-	[ title="$title"][ target="$target"]
-end
-
 def type(properties & collection) trigger(specific)
 	[ noItemsMessage="$noItemsMessage"][ pageSize={$pageSize}][ itemHeight={$itemHeight}][ scrollingMark={$scrollingMark}][ navigable="$navigable"][ selection="$selection"]
 end
@@ -131,4 +127,8 @@ end
 
 def type(highlighted)
 	{text:"$text",background:"$background"}
+end
+
+def type(operationMode)
+	$mode
 end

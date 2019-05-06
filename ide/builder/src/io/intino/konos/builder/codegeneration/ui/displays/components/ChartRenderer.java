@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents.Chart;
+import io.intino.konos.model.graph.OtherComponents.Chart;
 import io.intino.konos.model.graph.Dataframe;
 import org.siani.itrules.model.Frame;
 

@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.model.graph.Block;
-import io.intino.konos.model.graph.ChildComponents.Selector;
+import io.intino.konos.model.graph.OtherComponents.Selector;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.option.OptionComponent;
 import io.intino.konos.model.graph.rules.Spacing;

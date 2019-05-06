@@ -1,8 +1,9 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.notifiers.NumberNotifier;
 
-public class Number<B extends Box> extends AbstractNumber<B> {
+public class Number<DN extends NumberNotifier, B extends Box> extends AbstractNumber<DN, B> {
     private double value;
     private double min;
     private double max;

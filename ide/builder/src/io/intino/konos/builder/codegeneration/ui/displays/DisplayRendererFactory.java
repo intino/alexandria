@@ -17,8 +17,8 @@ public class DisplayRendererFactory {
 			renderer.owner(display);
 			return (T) renderer;
 		}
-		if (display.i$(ChildComponents.Collection.Mold.Item.class)) {
-			ItemRenderer renderer = new ItemRenderer(settings, display.a$(ChildComponents.Collection.Mold.Item.class), provider, target);
+		if (display.i$(CatalogComponents.Collection.Mold.Item.class)) {
+			ItemRenderer renderer = new ItemRenderer(settings, display.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
 			renderer.owner(display);
 			return (T) renderer;
 		}

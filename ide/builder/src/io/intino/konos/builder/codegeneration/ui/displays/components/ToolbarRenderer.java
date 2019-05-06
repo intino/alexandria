@@ -2,8 +2,8 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents.Collection;
-import io.intino.konos.model.graph.ChildComponents.Toolbar;
+import io.intino.konos.model.graph.CatalogComponents;
+import io.intino.konos.model.graph.OperationComponents.Toolbar;
 import org.siani.itrules.model.Frame;
 
 public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
@@ -22,7 +22,7 @@ public class ToolbarRenderer extends ComponentRenderer<Toolbar> {
 	private void addBinding(Frame frame) {
 		if (!element.isLinked()) return;
 
-		Collection collection = element.asLinked().to();
+		CatalogComponents.Collection collection = element.asLinked().to();
 		if (collection == null) return;
 
 		frame.addSlot("binding", new Frame("binding", Toolbar.class.getSimpleName())

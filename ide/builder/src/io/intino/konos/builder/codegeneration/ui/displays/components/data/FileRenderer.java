@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.data;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.SizedRenderer;
-import io.intino.konos.model.graph.ChildComponents.File;
+import io.intino.konos.model.graph.DataComponents.File;
 import org.siani.itrules.model.Frame;
 
 public class FileRenderer extends SizedRenderer<File> {

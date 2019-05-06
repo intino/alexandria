@@ -2,7 +2,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
-import io.intino.konos.model.graph.ChildComponents.Header;
+import io.intino.konos.model.graph.OtherComponents.Header;
 import org.siani.itrules.model.Frame;
 
 public class HeaderRenderer extends SizedRenderer<Header> {
