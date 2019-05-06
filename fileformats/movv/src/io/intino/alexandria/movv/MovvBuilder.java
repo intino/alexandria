@@ -2,6 +2,7 @@ package io.intino.alexandria.movv;
 
 import java.io.*;
 import java.time.Instant;
+import java.util.*;
 
 import static io.intino.alexandria.movv.Movv.indexOf;
 import static java.lang.Integer.min;
@@ -11,9 +12,10 @@ public class MovvBuilder {
     private final File file;
     private final Index index;
     private final Writer writer;
+    private final Map<Long, Stage> stages;
 
     private interface Writer {
-        int write(Instant instant, String data) throws IOException;
+        int write(Instant instant, String data, boolean isTheLast) throws IOException;
         void close() throws IOException;
     }
 
@@ -29,17 +31,76 @@ public class MovvBuilder {
         this.file = file;
         this.index = index;
         this.writer = isStatic(index) ? new BulkWriter(file) : new RandomWriter(new RandomAccessFile(file, "rw"));
+        this.stages = new HashMap<>();
     }
 
     private boolean isStatic(Index index) {
         return index instanceof Index.BulkIndex;
     }
 
+    public Stage stageOf(long id)  {
+        if (!stages.containsKey(id)) stages.put(id, createStage(id));
+        return stages.get(id);
+
+    }
+
+    private Stage createStage(long id) {
+        return new Stage() {
+            List<Object[]> items = new ArrayList<>();
+            @Override
+            public Stage add(Instant instant, String data) {
+                items.add(new Object[]{instant, data});
+                return this;
+            }
+
+            @Override
+            public MovvBuilder commit() throws IOException {
+                items.sort(Comparator.comparing(o -> ((Instant) o[0])));
+                return update(new Mov(index, access()).of(id));
+            }
+
+            private MovvBuilder update(Mov mov) throws IOException {
+                items = clean(items, isUpdatingFile() ? lastDataOf(mov) : null);
+                int i = 0;
+                for (Object[] item : items) {
+                    int cursor = write(item, ++i == items.size());
+                    if (i == 1) mov.append(id, cursor);
+                }
+                return MovvBuilder.this;
+            }
+
+            private int write(Object[] item, boolean isTheLast) throws IOException {
+                return writer.write((Instant) item[0], (String) item[1], isTheLast);
+            }
+
+            private List<Object[]> clean(List<Object[]> items, String data) {
+                List<Object[]> result = new ArrayList<>();
+                for (Object[] item : items) {
+                    if (item[1].equals(data)) continue;
+                    result.add(item);
+                    data = (String) item[1];
+                }
+                return result;
+            }
+
+        };
+    }
+
+    public interface Stage {
+        Stage add(Instant instant, String data);
+        MovvBuilder commit() throws IOException;
+    }
+
+
     public MovvBuilder add(long id, Instant instant, String data) throws IOException {
         Mov mov = new Mov(index, access()).of(id);
-        if (isUpdating() && data.equals(mov.last())) return this;
-        mov.link(id, writer.write(instant, data));
+        if (isUpdatingFile() && data.equals(lastDataOf(mov))) return this;
+        mov.append(id, writer.write(instant, data, true));
         return this;
+    }
+
+    private String lastDataOf(Mov mov) throws IOException {
+        return mov.last();
     }
 
     private Access access() {
@@ -48,7 +109,11 @@ public class MovvBuilder {
                 Access.Null;
     }
 
-    private boolean isUpdating() {
+    private boolean isCreatingFile() {
+        return index instanceof Index.BulkIndex;
+    }
+
+    private boolean isUpdatingFile() {
         return index instanceof Index.RandomIndex;
     }
 
@@ -73,10 +138,10 @@ public class MovvBuilder {
         }
 
         @Override
-        public int write(Instant instant, String data) throws IOException {
+        public int write(Instant instant, String data, boolean isTheLast) throws IOException {
             os.writeLong(instant.toEpochMilli());
             os.write(toByteArray(data));
-            os.writeInt(-1);
+            os.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
 
@@ -96,11 +161,11 @@ public class MovvBuilder {
         }
 
         @Override
-        public int write(Instant instant, String data) throws IOException {
+        public int write(Instant instant, String data, boolean isTheLast) throws IOException {
             raf.seek(raf.length());
             raf.writeLong(instant.toEpochMilli());
             raf.write(toByteArray(data));
-            raf.writeInt(-1);
+            raf.writeInt(isTheLast ? -1 : cursor + 1);
             return cursor++;
         }
 

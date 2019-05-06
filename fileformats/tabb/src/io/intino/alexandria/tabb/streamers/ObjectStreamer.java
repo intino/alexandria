@@ -19,12 +19,13 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 	private Iterator<T> items;
 	private List<ColumnStream> streams;
 
-	private long key = -1;
+	private long key;
 	private T current;
 
 	public ObjectStreamer(Iterator<T> iterator) {
 		this.iterator = iterator;
 		this.selectors = new ArrayList<>();
+		this.key = -1;
 	}
 
 	public <R> ObjectStreamer<R> reduceWith(Reducer<T, R> reducer) {
@@ -43,7 +44,7 @@ public class ObjectStreamer<T> implements ColumnStreamer {
 
 	private List<ColumnStream> streams() {
 		if (streams != null) return streams;
-		this.items = Collections.emptyIterator();
+		this.items = iterator;
 		return streams = selectors.stream().map(this::selectorStream).collect(toList());
 	}
 

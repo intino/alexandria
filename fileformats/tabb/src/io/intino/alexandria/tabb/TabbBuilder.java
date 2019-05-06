@@ -14,6 +14,7 @@ import static io.intino.alexandria.tabb.ColumnStream.ColumnExtension;
 import static io.intino.alexandria.tabb.ColumnStream.Type.Nominal;
 import static java.lang.String.join;
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static java.util.zip.Deflater.BEST_COMPRESSION;
 
@@ -27,13 +28,8 @@ public class TabbBuilder {
 		formats = new ArrayList<>();
 	}
 
-	public TabbBuilder add(ColumnStream stream) {
-		streams.add(stream);
-		return this;
-	}
-
-	public TabbBuilder add(ColumnStreamer streamer) {
-		streams.addAll(asList(streamer.get()));
+	public TabbBuilder add(ColumnStream... streams) {
+		this.streams.addAll(asList(streams));
 		return this;
 	}
 

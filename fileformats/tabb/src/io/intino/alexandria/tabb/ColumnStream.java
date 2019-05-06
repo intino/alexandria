@@ -20,6 +20,18 @@ public interface ColumnStream {
 	Object value();
 
 	enum Type {
+		String {
+            @Override
+            public byte[] toByteArray(Object object) {
+                if (object == null) return notAvailable();
+                return (object.toString() + '\0').getBytes();
+            }
+
+            @Override
+            public byte[] notAvailable() {
+                return new byte[] {0};
+            }
+        },
 		Nominal {
 			@Override
 			public byte[] toByteArray(Object object) {
