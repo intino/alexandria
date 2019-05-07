@@ -4,7 +4,6 @@ import AbstractTable from "../../../gen/displays/components/AbstractTable";
 import TableNotifier from "../../../gen/displays/notifiers/TableNotifier";
 import TableRequester from "../../../gen/displays/requesters/TableRequester";
 import AutoSizer from 'react-virtualized-auto-sizer';
-import CollectionBehavior from "./behaviors/CollectionBehavior";
 import classNames from "classnames";
 import 'alexandria-ui-elements/res/styles/layout.css';
 import Heading from "./Heading";
@@ -45,18 +44,11 @@ const styles = theme => ({
 });
 
 class Table extends AbstractTable {
-	state = {
-		selection: [],
-		itemCount: 20,
-		pageSize: 20,
-		page: 0
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new TableNotifier(this);
 		this.requester = new TableRequester(this);
-		this.behavior = new CollectionBehavior(this);
 	};
 
 	render() {
@@ -71,13 +63,6 @@ class Table extends AbstractTable {
 		);
 	}
 
-	setup = (info) => {
-		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
-	};
-
-	refresh = () => {
-		this.behavior.refresh();
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(Table);

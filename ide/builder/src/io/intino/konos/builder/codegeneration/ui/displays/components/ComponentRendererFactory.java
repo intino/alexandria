@@ -6,14 +6,15 @@ import io.intino.konos.builder.codegeneration.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.HeadingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
+import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.operation.ExportRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.operation.OpenPageRenderer;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.DataComponents.Date;
 import io.intino.konos.model.graph.DataComponents.File;
 import io.intino.konos.model.graph.DataComponents.Image;
 import io.intino.konos.model.graph.DataComponents.Text;
-import io.intino.konos.model.graph.OperationComponents.OpenPage;
-import io.intino.konos.model.graph.OperationComponents.Operation;
-import io.intino.konos.model.graph.OperationComponents.Toolbar;
+import io.intino.konos.model.graph.OperationComponents.*;
 import io.intino.konos.model.graph.OtherComponents.Chart;
 import io.intino.konos.model.graph.OtherComponents.Header;
 
@@ -37,6 +38,8 @@ public class ComponentRendererFactory {
 
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
+		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
+		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);
 		if (component.i$(Operation.class)) return (T) new OperationRenderer(settings, component.a$(Operation.class), provider, target);
 
 		return (T) new ComponentRenderer(settings, component, provider, target);

@@ -74,7 +74,6 @@ export default class Block extends AbstractBlock {
 		layout = layout.replace("tjustified", "t-justified");
 		layout = layout.replace("djustified", "d-justified");
 		layout = layout.replace("nowrap", "no-wrap");
-		if (layout === "vertical") return undefined;
 		return "layout " + layout;
 	};
 

@@ -41,18 +41,9 @@ Template(layout=Vertical, spacing=DP8) dateExamplesMold as Decorated
 			Text(format=h6, value="Editable facet with timePicker")
 			Block(spacing=DP8, format=filled)
 				Date(format=body1 widgetDemo) date4 as Editable(timePicker=true)
+					pattern = "DD/MM/YYYY HH:mm"
 				Block > Text date4Code as Code(language=Html)
 						value
 							=========
 							Date date4 as Editable(timePicker\=true)
-							=========
-
-		Block as Relative(width=32%, height=100%)
-			Text(format=h6, value="Editable facet with mask")
-			Block(spacing=DP8, format=filled)
-				Date(format=body1 widgetDemo) date5 as Editable(mask="__/__/____")
-				Block > Text date5Code as Code(language=Html)
-						value
-							=========
-							Date date5 as Editable(mask\="__/__/____")
 							=========

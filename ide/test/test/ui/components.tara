@@ -3,12 +3,21 @@ dsl Konos
 Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
-Template(layout=Vertical, spacing=DP8) testTemplate as Decorated
-	Task(title="añadir1") add1 as IconButton(icon="/images/add.png")
-	Task(title="añadir2") add2 as MaterialIconButton(icon="add")
-	Task(title="añadir3") add3 as Button Confirmable(confirmText="haaaaa?")
-	Task(title="añadir4") add4 as Link Confirmable(confirmText="bbbb?")
-	TaskSelection(title="añadir5") add5
+Template(layout=Vertical, spacing=DP8) testTemplate
+	Export(title="exportar1") export1
+	Export(title="exportar2") export2
+		from = "2011-12-03T10:15:30Z"
+        to = "2011-12-03T10:15:31Z"
+        options = "a" "b"
+        min = "2011-12-03T10:15:30Z"
+        max = "2011-12-03T10:15:30Z"
+        rangeMin = 1 Days
+        rangeMax = 10 Days
+	Download(title="download1") download1
+	Download(title="download2") download2
+        options = "a"
+	Download(title="download3") download3
+        options = "a" "b"
 
 //	Text facetas as Multiple
 //	Stamp(template=template1) templates as Multiple

@@ -1,5 +1,5 @@
 package io.intino.alexandria.ui.displays.events;
 
-public interface ExecuteListener {
+public interface TaskListener {
 	void accept(Event event);
 }

@@ -1,7 +1,8 @@
-package io.intino.konos.builder.codegeneration.ui.displays.components;
+package io.intino.konos.builder.codegeneration.ui.displays.components.operation;
 
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
+import io.intino.konos.builder.codegeneration.ui.displays.components.OperationRenderer;
 import io.intino.konos.model.graph.OperationComponents.OpenPage;
 import org.siani.itrules.model.Frame;
 

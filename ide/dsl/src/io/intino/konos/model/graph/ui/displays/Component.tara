@@ -109,15 +109,21 @@ Concept OperationComponents
 	Concept Operation extends Component is abstract
 		var string title
 		var word:{Blank Self Parent Top} target = Self
+		var word:{Small Medium Large} size = Medium
 
+		sub OpenDialog > var Block content
 		sub OpenPage > var Page page
-		sub OpenCatalog
-		sub OpenDialog
-		sub OpenExternalDialog
 		sub Export
+			var string[] options = empty
+			var instant from = empty
+			var instant to = empty
+			var instant min = empty
+			var instant max = empty
+			var integer:{Days} rangeMin = -1 Days
+			var integer:{Days} rangeMax = -1 Days
 		sub Download
+			var string[] options = empty
 		sub Task
-		sub Preview
 
 	Concept SelectionOperation extends Operation is abstract
 		sub ExportSelection

@@ -277,6 +277,19 @@ def type(properties & openpage) trigger(specific)
 	[path("$path");]
 end
 
+def type(properties & export) trigger(specific)
+	[from($from~L);][
+	to($to~L);][
+	min($min~L);][
+	max($max~L);][
+	range($rangeMin,$rangeMax);][
+	options(java.util.Arrays.asList("$option...[","]"));]
+end
+
+def type(properties & download) trigger(specific)
+	[options(java.util.Arrays.asList("$option...[","]"));]
+end
+
 def type(properties & chart) trigger(specific)
 	[query("$query");][
 	$input+inputMethod][
@@ -308,6 +321,7 @@ def type(properties & operation) trigger(common)
 	[title("$title");][
 	color("$color");][
 	disabled($disabled);]
+	mode(io.intino.alexandria.ui.displays.components.Operation.Mode.valueOf("$mode+firstUpperCase"));
 	$operationMode
 end
 

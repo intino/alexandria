@@ -1,0 +1,58 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation")
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Button facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") as Button
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as Button
+						=========
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="IconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") as IconButton("/icons/operation.png")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as IconButton("/icons/operation.png")
+						=========
+
+	Block(layout=Horizontal, spacing=DP24)
+
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="MaterialIconButton facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") as MaterialIconButton("Add")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as MaterialIconButton("Add")<br/><br/>
+						for icons gallery, refer to <a href\="https://material.io/tools/icons" target\="_blank">material.io</a>
+						=========
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="Confirmable facet")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Task(title="operation") as Button Confirmable("Are you sure you want to execute operation?")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation") as Button Confirmable("Are you sure you want to execute operation?")
+						=========

@@ -3,8 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractTaskSelection from "../../../gen/displays/components/AbstractTaskSelection";
 import TaskSelectionNotifier from "../../../gen/displays/notifiers/TaskSelectionNotifier";
 import TaskSelectionRequester from "../../../gen/displays/requesters/TaskSelectionRequester";
-
-const styles = theme => ({});
+import Operation from "./Operation"
 
 class TaskSelection extends AbstractTaskSelection {
 	constructor(props) {
@@ -14,4 +13,4 @@ class TaskSelection extends AbstractTaskSelection {
 	};
 }
 
-export default withStyles(styles, { withTheme: true })(TaskSelection);
+export default withStyles(Operation.Styles, { withTheme: true })(TaskSelection);

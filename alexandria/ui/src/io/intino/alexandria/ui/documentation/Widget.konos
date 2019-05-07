@@ -1,5 +1,8 @@
 dsl Konos
 
+use Download
+use Export
+use Operation
 use Table
 use List
 use Block
@@ -19,7 +22,7 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 
 	Block(layout=Vertical, spacing=DP24)
 		Block examples
-			Text(value="Examples", format=h5 underline)
+			Text(value="Examples", format=h5 underline) examplesTitle
 			Block textExamples as Conditional > Stamp(template=textExamplesMold)
 			Block numberExamples as Conditional > Stamp(template=numberExamplesMold)
 			Block fileExamples as Conditional > Stamp(template=fileExamplesMold)
@@ -29,6 +32,9 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block blockExamples as Conditional > Stamp(template=blockExamplesMold)
 			Block listExamples as Conditional > Stamp(template=listExamplesMold)
 			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
+			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
+			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
+			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

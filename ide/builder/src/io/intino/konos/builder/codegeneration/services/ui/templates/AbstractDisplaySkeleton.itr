@@ -15,7 +15,7 @@ def type(display)
 	$rowsImport
 	import $package+validPackage.ui.displays.notifiers.$name+firstUpperCase~Notifier;
 
-    public class [$abstract]$name+firstUpperCase$parametrized $displayExtends[ $implements] {
+    public[ $abstract+lowerCase] class [$abstract]$name+firstUpperCase$parametrized $displayExtends[ $implements] {
     	[$reference+declaration...[$NL]
     	][$component+declarations...[$NL]
 

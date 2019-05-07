@@ -3,13 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AbstractOpenPage from "../../../gen/displays/components/AbstractOpenPage";
 import OpenPageNotifier from "../../../gen/displays/notifiers/OpenPageNotifier";
 import OpenPageRequester from "../../../gen/displays/requesters/OpenPageRequester";
-
-const styles = theme => ({
-	link : {
-		color: theme.palette.primary.main,
-		cursor: "pointer"
-	}
-});
+import Operation from "./Operation"
 
 class OpenPage extends AbstractOpenPage {
 	state = {
@@ -30,4 +24,4 @@ class OpenPage extends AbstractOpenPage {
 
 }
 
-export default withStyles(styles, { withTheme: true })(OpenPage);
+export default withStyles(Operation.Styles, { withTheme: true })(OpenPage);
