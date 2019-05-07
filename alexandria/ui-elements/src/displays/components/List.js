@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import AbstractList from "../../../gen/displays/components/AbstractList";
 import ListNotifier from "../../../gen/displays/notifiers/ListNotifier";
 import ListRequester from "../../../gen/displays/requesters/ListRequester";
-import CollectionBehavior from "./behaviors/CollectionBehavior";
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const styles = theme => ({
 	scrolling: {
@@ -38,31 +38,17 @@ const styles = theme => ({
 });
 
 class List extends AbstractList {
-	state = {
-		selection: [],
-		itemCount: 20,
-		pageSize: 20,
-		page: 0
-	};
 
 	constructor(props) {
 		super(props);
 		this.notifier = new ListNotifier(this);
 		this.requester = new ListRequester(this);
-		this.behavior = new CollectionBehavior(this);
 	};
 
 	render() {
-		return (<AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer>);
+		return (<div className="flex"><AutoSizer>{({ height, width }) => (this.behavior.renderCollection(height, width))}</AutoSizer></div>);
 	};
 
-	setup = (info) => {
-		this.setState({ itemCount : info.itemCount, pageSize: info.pageSize });
-	};
-
-	refresh = () => {
-		this.behavior.refresh();
-	};
 }
 
 export default withStyles(styles, { withTheme: true })(List);

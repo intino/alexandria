@@ -4,8 +4,7 @@ import AbstractDateEditable from "../../../gen/displays/components/AbstractDateE
 import DateEditableNotifier from "../../../gen/displays/notifiers/DateEditableNotifier";
 import DateEditableRequester from "../../../gen/displays/requesters/DateEditableRequester";
 import MomentUtils from '@date-io/moment';
-import { MuiPickersUtilsProvider, InlineDateTimePicker, InlineDatePicker } from 'material-ui-pickers';
-import classnames from 'classnames';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 
 const styles = props => ({
 	date : {
@@ -28,6 +27,7 @@ class DateEditable extends AbstractDateEditable {
 	};
 
 	handleChange(moment) {
+		if (!moment.isValid()) return;
 		this.requester.notifyChange(moment.toDate().getTime());
 		this.setState({ value: moment.toDate() });
 	};
@@ -37,20 +37,16 @@ class DateEditable extends AbstractDateEditable {
 		const dateLabel = this.translate("date");
 		const timeLabel = this.translate("time");
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
-		const mask = this.props.mask != null ? this._parseMask() : undefined;
-		return (
-			<MuiPickersUtilsProvider utils={MomentUtils}>
-				<div style={this.style()}>
-					{ !timePicker ? <InlineDatePicker keyboard disableOpenOnEnter placeholder={pattern} mask={mask}
-												format={pattern} className={classes.date}
+		return (<div style={this.style()}>
+					{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
+												format={pattern} className={classes.date} mask={this.props.mask}
 												value={this.state.value} onChange={this.handleChange.bind(this)}
-												min={min} max={max} label={dateLabel}/> : undefined }
-					{ timePicker ? <InlineDateTimePicker keyboard disableOpenOnEnter placeholder={pattern} mask={mask}
+                                                minDate={min} maxDate={max} label={dateLabel}/></MuiPickersUtilsProvider> : undefined }
+					{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
 												   format={pattern} className={classes.datetime}
 												   value={this.state.value} onChange={this.handleChange.bind(this)}
-												   min={min} max={max} label={timeLabel}/> : undefined }
+                                                   minDate={min} maxDate={max} label={timeLabel}/></MuiPickersUtilsProvider> : undefined }
 				</div>
-			</MuiPickersUtilsProvider>
 		);
 	};
 
@@ -58,13 +54,6 @@ class DateEditable extends AbstractDateEditable {
 		this.setState({ value: new Date(value) });
 	};
 
-	_parseMask = () => {
-		let result = "$" + this.props.mask.replace(/_/g, "##regex##").replace(/####/g, "##") + "$";
-		result = result.replace("$##", "").replace("##$", "").replace(/$/, "").split("##");
-		for (var i=0; i<result.length; i++)
-			if (result[i] === "regex") result[i] = new RegExp("\\d");
-		return result;
-	}
 }
 
 export default withStyles(styles, { withTheme: true })(DateEditable);

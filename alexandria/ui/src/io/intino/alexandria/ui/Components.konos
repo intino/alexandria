@@ -46,7 +46,7 @@ Schema SelectorMenuSelection
 	Attribute option as Integer
 	Attribute ancestors as Text List
 
-Component list as Decorated
+Component collection as Decorated
 	Notification setup as Object(CollectionSetup)
 	Notification refresh
 	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
@@ -55,14 +55,8 @@ Component list as Decorated
 	Request changePageSize as Integer
 	Request changeSelection as Text List
 
-Component table as Decorated
-	Notification setup as Object(CollectionSetup)
-	Notification refresh
-	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
-	Request loadMoreItems as Object(CollectionMoreItems)
-	Request changePage as Integer
-	Request changePageSize as Integer
-	Request changeSelection as Text List
+Component list as Decorated ExtensionOf(collection)
+Component table as Decorated ExtensionOf(collection)
 
 Component item as Decorated
 Component heading as Decorated

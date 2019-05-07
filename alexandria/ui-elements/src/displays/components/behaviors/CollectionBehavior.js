@@ -19,11 +19,11 @@ const CollectionBehavior = (collection) => {
         const navigable = collection.props.navigable;
         if (navigable == null) return self.renderInfiniteList(items, height, width);
         return (
-            <React.Fragment>
+            <div>
                 {navigable === "Top" ? self.renderPagination() : undefined}
                 {self.renderList(items, height - PaginationHeight, width, null, null)}
                 {navigable === "Bottom" ? self.renderPagination() : undefined}
-            </React.Fragment>
+            </div>
         );
     };
 
@@ -34,8 +34,8 @@ const CollectionBehavior = (collection) => {
         return (<InfiniteLoader isItemLoaded={isItemLoaded} itemCount={self.collection.state.itemCount}
                                 loadMoreItems={self.loadMoreItems.bind(self, items)}
                                 threshold={threshold}>
-                {({ onItemsRendered, ref }) => (self.renderList(items, height, width, onItemsRendered, ref))}
-            </InfiniteLoader>
+                        {({ onItemsRendered, ref }) => (self.renderList(items, height, width, onItemsRendered, ref))}
+                </InfiniteLoader>
         );
     };
 

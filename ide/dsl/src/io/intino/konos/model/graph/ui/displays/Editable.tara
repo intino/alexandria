@@ -23,10 +23,6 @@ Facet Editable on DataComponents.Text
 		var string[] allowedValues = empty
 		var string[] disallowedValues = empty
 		var boolean disallowEmptySpaces = false
-		var string mask = ""
-			//a - Represents an alpha character (A-Z,a-z)
-			//9 - Represents a numeric character (0-9)
-			//* - Represents an alphanumeric character (A-Z,a-z,0-9)
 		Concept:{0..1} Length
 			var integer min
 			var integer max

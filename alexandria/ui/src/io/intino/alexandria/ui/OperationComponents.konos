@@ -5,10 +5,19 @@ Component toolbar as Decorated
 Component operation as Decorated
 	Notification refresh as Object(OperationInfo)
 	Notification refreshDisabled as Bool
+	Notification refreshIcon as Text
 
 	Request execute
 
 Component task as Decorated ExtensionOf(operation)
+Component export as Decorated ExtensionOf(operation)
+	Notification refreshResult as File
+	Request changeSelection as Object(ExportSelection)
+
+Component download as Decorated ExtensionOf(operation)
+	Notification refreshResult as File
+	Request changeSelection as Text
+
 Component openPage as Decorated ExtensionOf(operation)
 	Notification redirect as Text
 
@@ -19,3 +28,8 @@ Component taskSelection as Decorated ExtensionOf(selectionOperation)
 Schema OperationInfo
 	Attribute title as Text
 	Attribute disabled as Bool
+
+Schema ExportSelection
+	Attribute from as DateTime
+	Attribute to as DateTime
+	Attribute option as Text

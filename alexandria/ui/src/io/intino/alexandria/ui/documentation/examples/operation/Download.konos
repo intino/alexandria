@@ -1,0 +1,16 @@
+dsl Konos
+
+use Theme
+
+Template(layout=Vertical, spacing=DP8) downloadExamplesMold as Decorated
+
+	Block(layout=Horizontal, spacing=DP24)
+		Block as Relative(width=32%, height=100%)
+			Text(format=h6, value="No facets")
+			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
+				Download(title="operation")
+			Block > Text as Code(language=Html)
+					value
+						=========
+						Task(title\="operation")
+						=========

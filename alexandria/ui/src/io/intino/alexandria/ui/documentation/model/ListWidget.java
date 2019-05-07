@@ -14,9 +14,12 @@ public class ListWidget extends BaseWidget {
 
 	protected void addProperties() {
 		super.addProperties();
-		add(Model.property("modelClass", Property.Type.Text, "Class for items stored in list"));
+		add(Model.property("sourceClass", Property.Type.Text, "Class responsible of loading items in list"));
+		add(Model.property("itemClass", Property.Type.Text, "Class for items stored in list"));
 		add(Model.property("noItemsMessage", Property.Type.Text, "Message if no items in list. By default, 'no items' message is shown."));
-		add(Model.property("mold", Property.Type.Reference, "Mold used to render each item in list").facets(asList("List", "Grid", "Map", "Detail")));
+		add(Model.property("pageSize", Property.Type.Integer, "Count of items per page by default."));
+		add(Model.property("scrollingMark", Property.Type.Text, "Used to optimize scrolling if views are slow-moving while rendering. A mark view is shown when scrolling."));
+		add(Model.property("Mold", Property.Type.Object, "Defines the template used to render each item in list"));
 	}
 
 	protected void addMethods() {

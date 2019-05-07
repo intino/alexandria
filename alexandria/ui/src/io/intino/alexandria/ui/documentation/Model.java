@@ -12,7 +12,15 @@ public class Model {
 	private static Map<WidgetType, Widget> map = new HashMap<>();
 
 	public enum WidgetType {
-		Text, Number, Image, File, Date, Chart, Block, List, Table
+		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download;
+
+		public static WidgetType from(String type) {
+			WidgetType[] values = values();
+			for (int i = 0; i< values.length; i++) {
+				if (values[i].name().toLowerCase().equalsIgnoreCase(type)) return values[i];
+			}
+			return null;
+		}
 	}
 
 	static {
@@ -29,6 +37,10 @@ public class Model {
 		map.put(WidgetType.Block, new BlockWidget());
 		map.put(WidgetType.List, new ListWidget());
 		map.put(WidgetType.Table, new TableWidget());
+		map.put(WidgetType.Task, new TaskWidget());
+		map.put(WidgetType.OpenPage, new OpenPageWidget());
+		map.put(WidgetType.Export, new ExportWidget());
+		map.put(WidgetType.Download, new DownloadWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

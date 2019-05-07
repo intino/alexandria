@@ -79,6 +79,14 @@ export default class Display extends PassiveView {
         }
     };
 
+    showError = (error, options) => {
+        if (options == null) options = { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        if (this.errorTimeout != null) window.clearTimeout(this.errorTimeout);
+        this.errorTimeout = window.setTimeout(() => {
+            this.props.enqueueSnackbar(error, options);
+        }, 100);
+    };
+
     componentWillUnmount() {
         if (this.notifier != null) this.notifier.detached();
     };

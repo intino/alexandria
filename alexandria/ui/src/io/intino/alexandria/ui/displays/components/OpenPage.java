@@ -5,7 +5,6 @@ import io.intino.alexandria.ui.displays.notifiers.OpenPageNotifier;
 
 public class OpenPage<DN extends OpenPageNotifier, B extends Box> extends AbstractOpenPage<DN, B> {
 	private String path;
-	private String icon;
 
     public OpenPage(B box) {
         super(box);
@@ -13,11 +12,6 @@ public class OpenPage<DN extends OpenPageNotifier, B extends Box> extends Abstra
 
     public OpenPage path(String path) {
     	this.path = path;
-    	return this;
-	}
-
-    public OpenPage icon(String icon) {
-    	this.icon = icon;
     	return this;
 	}
 

@@ -78,8 +78,8 @@ Template(layout=Vertical, spacing=DP8) listExamplesMold as Decorated
 					value
 						=========
 						Toolbar toolbar5 as Linked(to\=list5)<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="añadir") add<br/>
-						&nbsp;&nbsp;&nbsp;&nbsp;TaskSelection(title\="eliminar")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;Task(title\="añadir") add as MaterialIconButton(icon\="Add")<br/>
+						&nbsp;&nbsp;&nbsp;&nbsp;TaskSelection(title\="eliminar") as MaterialIconButton(icon\="Delete")<br/>
 						List(itemClass\="io.intino.alexandria.ui.documentation.Person") list5 as Selectable(multiple\=true)<br/>
 						&nbsp;&nbsp;&nbsp;&nbsp;Mold > Item(height\=60px,width\=30%) list5Mold > Text firstName<br/>
 						=========

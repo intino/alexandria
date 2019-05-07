@@ -51,7 +51,7 @@ def type(properties & multiple) trigger(common)
 end
 
 def type(properties & operation) trigger(common)
-	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}]
+	[ title="$title"][ target="$target"][ mode="$operationMode"][ icon="$icon"][ confirm="$confirm"][ disabled={$disabled}][ size="$size"]
 end
 
 def type(properties) trigger(common)
@@ -112,6 +112,14 @@ end
 
 def type(properties & spinner) trigger(specific)
 	[ mode="$mode"]
+end
+
+def type(properties & export) trigger(specific)
+	[ from={$from}][ to={$to}][ min={$min}][ max={$max}][ range={{min:$rangeMin,max:$rangeMax}}][ options={$["$option...[","]"$]}]
+end
+
+def type(properties & download) trigger(specific)
+	[ options={$["$option...[","]"$]}]
 end
 
 def type(properties) trigger(specific)

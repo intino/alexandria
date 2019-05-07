@@ -14,6 +14,7 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
         super.init();
         addDataWidgets();
         addCatalogWidgets();
+        addOperationWidgets();
         addOtherWidgets();
     }
 
@@ -28,6 +29,13 @@ public class DocsTemplate extends AbstractDocsTemplate<UiFrameworkBox> {
     private void addCatalogWidgets() {
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.List));
         body.catalogBlock.catalogWidgets.add(Model.widget(Model.WidgetType.Table));
+    }
+
+    private void addOperationWidgets() {
+        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.OpenPage));
+        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Task));
+        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Export));
+        body.operationBlock.operationWidgets.add(Model.widget(Model.WidgetType.Download));
     }
 
     private void addOtherWidgets() {

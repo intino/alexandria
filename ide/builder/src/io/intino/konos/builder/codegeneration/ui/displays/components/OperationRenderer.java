@@ -27,7 +27,9 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 		properties.addTypes(Operation.class.getSimpleName().toLowerCase());
 		properties.addSlot("title", element.title());
 		properties.addSlot("target", element.target().name().toLowerCase());
+		properties.addSlot("mode", mode());
 		properties.addSlot("operationMode", modeFrame());
+		properties.addSlot("size", element.size().name());
 		if (element.i$(OperationComponents.SelectionOperation.class)) properties.addSlot("disabled", "true");
 		if (element.isConfirmable()) properties.addSlot("confirm", element.asConfirmable().confirmText());
 		if (element.isMaterialIconButton()) properties.addSlot("icon", element.asMaterialIconButton().icon());
@@ -43,10 +45,10 @@ public class OperationRenderer<O extends Operation> extends ComponentRenderer<O>
 	}
 
 	private String mode() {
-		if (element.isIconButton()) return className(IconButtonOperation.class);
-		else if (element.isMaterialIconButton()) return className(MaterialIconButtonOperation.class);
-		else if (element.isButton()) return className(ButtonOperation.class);
-		return className(LinkOperation.class);
+		if (element.isIconButton()) return IconButtonOperation.class.getSimpleName().replace("Operation", "");
+		else if (element.isMaterialIconButton()) return MaterialIconButtonOperation.class.getSimpleName().replace("Operation", "");
+		else if (element.isButton()) return ButtonOperation.class.getSimpleName().replace("Operation", "");
+		return LinkOperation.class.getSimpleName().replace("Operation", "");
 	}
 
 	@Override
