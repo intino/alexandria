@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Iterator;
 
-public class Mov implements Iterable<Mov.Entry> {
+public class Mov implements Iterable<Mov.Item> {
     private final Index index;
     private final Access access;
     private int head;
@@ -19,29 +19,29 @@ public class Mov implements Iterable<Mov.Entry> {
         return this;
     }
 
-    public String at(Instant instant) throws IOException {
-        String result = null;
+    public Item at(Instant instant) {
+        Item result = Item.Null;
         int cursor = head;
         while (cursor >= 0) {
-            access.seekInstantOf(cursor);
-            if (isAfter(instant)) break;
-            result = access.readData();
-            cursor = access.readNext();
+            Item item = itemAt(cursor);
+            if (item == null || item.isAfter(instant)) break;
+            cursor = readNext();
+            result = item;
         }
         return result;
     }
 
-    public String last() throws IOException {
+    public Item last()  {
         int cursor = head;
         while (cursor >= 0) {
             int next = nextOf(cursor);
-            if (next < 0) return dataOf(cursor);
+            if (next < 0) return itemAt(cursor);
             cursor = next;
         }
-        return null;
+        return Item.Null;
     }
 
-    public int length() throws IOException {
+    public int length() {
         int length =0;
         int cursor = head;
         while (cursor >= 0) {
@@ -52,8 +52,8 @@ public class Mov implements Iterable<Mov.Entry> {
     }
 
     @Override
-    public Iterator<Entry> iterator() {
-        return new Iterator<Entry>() {
+    public Iterator<Item> iterator() {
+        return new Iterator<Item>() {
             int cursor = head;
             @Override
             public boolean hasNext() {
@@ -61,68 +61,85 @@ public class Mov implements Iterable<Mov.Entry> {
             }
 
             @Override
-            public Entry next() {
-                try {
-                    Entry entry = entryAt(cursor);
-                    cursor = nextOf(cursor);
-                    return entry;
-                } catch (IOException e) {
-                    return null;
-                }
+            public Item next() {
+                Item item = itemAt(cursor);
+                cursor = readNext();
+                return item;
             }
         };
     }
 
-    private boolean isAfter(Instant instant) throws IOException {
-        return access.readInstant().compareTo(instant) > 0;
+    boolean reject(Instant instant, String data) {
+        Item item = last();
+        return item.isAfter(instant) || item.data.equals(data);
     }
 
-    void append(long id, int cursor) throws IOException {
-        if (this.head < 0) create(id, cursor); else append(cursor);
+    void append(long id, int next) {
+        if (this.head < 0) create(id, next); else append(next);
     }
 
-    private void create(long id, int value) {
-        this.index.put(id, value);
-        this.head = value;
+    private void create(long id, int next) {
+        this.index.put(id, next);
+        this.head = next;
     }
 
-    private void append(int value) throws IOException {
+    private void append(int next)  {
         int cursor = head;
         while (true) {
-            int next = nextOf(cursor);
-            if (next == -1) break;
-            cursor = next;
+            int last = nextOf(cursor);
+            if (last == -1) break;
+            cursor = last;
         }
-        access.seekNextOf(cursor);
-        write(value);
+        updateNext(cursor, next);
     }
 
-    private Entry entryAt(int cursor) throws IOException {
-        access.seekInstantOf(cursor);
-        return new Entry(access.readInstant(), access.readData());
+    private int nextOf(int cursor) {
+        try {
+            access.seekNextOf(cursor);
+            return access.readNext();
+        } catch (IOException e) {
+            return -1;
+        }
     }
 
-    private int nextOf(int cursor) throws IOException {
-        access.seekNextOf(cursor);
-        return access.readNext();
+    private int readNext() {
+        try {
+            return access.readNext();
+        } catch (IOException e) {
+            return -1;
+        }
     }
 
-    private String dataOf(int cursor) throws IOException {
-        access.seekDataOf(cursor);
-        return access.readData();
+    private Item itemAt(int cursor) {
+        try {
+            access.seek(cursor);
+            return new Item(access.readInstant(), access.readData());
+        } catch (IOException e) {
+            return null;
+        }
     }
 
-    private void write(int cursor) throws IOException {
-        access.writeNext(cursor);
+    private void updateNext(int cursor, int next)  {
+        try {
+            access.seekNextOf(cursor);
+            access.writeNext(next);
+        } catch (IOException ignored) {
+        }
     }
 
-    public static class Entry {
+    public static class Item {
+        static final Item Null = new Item(null, null);
         public final Instant instant;
         public final String data;
 
-        Entry(Instant instant, String data) {
+        Item(Instant instant, String data) {
             this.instant = instant;
             this.data = data;
         }
+
+        boolean isAfter(Instant instant) {
+            return this.instant.compareTo(instant) > 0;
+        }
+
     }
 }

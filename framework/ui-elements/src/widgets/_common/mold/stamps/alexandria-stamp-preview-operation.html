@@ -20,7 +20,7 @@
                                           on-execute="_preview"></alexandria-operation-trigger>
         </div>
         <div id="dialogContainer" class="alexandria-stamp-preview-operation-0">
-            <paper-dialog id="dialog" no-overlap entry-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
+            <paper-dialog id="dialog" no-overlap item-animation="scale-up-animation" exit-animation="fade-out-animation" on-iron-overlay-closed="_overlayClosed">
                 <paper-icon-button icon="close" on-tap="_close"></paper-icon-button>
                 <div style="height:calc(100% - 40px)">
                     <cotton-pdf-viewer file="[[stamp.properties.document]]" width="100%" height="100%"></cotton-pdf-viewer>
