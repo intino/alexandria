@@ -8,10 +8,9 @@ import java.util.Arrays;
 interface Access {
     Access Null = Null();
 
-    void seekInstantOf(int cursor) throws IOException;
-    Instant readInstant() throws IOException;
+    void seek(int cursor) throws IOException;
 
-    void seekDataOf(int cursor) throws IOException;
+    Instant readInstant() throws IOException;
     String readData() throws IOException;
 
     void seekNextOf(int cursor) throws IOException;
@@ -22,18 +21,13 @@ interface Access {
         return new Access() {
 
             @Override
-            public void seekInstantOf(int cursor) {
+            public void seek(int cursor) {
 
             }
 
             @Override
             public Instant readInstant() {
                 return null;
-            }
-
-            @Override
-            public void seekDataOf(int cursor) {
-
             }
 
             @Override
@@ -61,8 +55,13 @@ interface Access {
     static Access of(RandomAccessFile raf, int recordLength) {
         return new Access() {
             @Override
-            public void seekInstantOf(int cursor) throws IOException {
+            public void seek(int cursor) throws IOException {
                 raf.seek(positionOf(cursor));
+            }
+
+            @Override
+            public void seekNextOf(int cursor) throws IOException {
+                raf.seek(positionOf(cursor) + Long.BYTES + recordLength);
             }
 
             @Override
@@ -71,18 +70,8 @@ interface Access {
             }
 
             @Override
-            public void seekDataOf(int cursor) throws IOException {
-                raf.seek(positionOf(cursor) + Long.BYTES);
-            }
-
-            @Override
             public String readData() throws IOException {
                 return new String(readBytes());
-            }
-
-            @Override
-            public void seekNextOf(int cursor) throws IOException {
-                raf.seek(positionOf(cursor) + Long.BYTES + recordLength);
             }
 
             @Override

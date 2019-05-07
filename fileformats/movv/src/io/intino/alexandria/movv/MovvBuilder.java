@@ -1,12 +1,16 @@
 package io.intino.alexandria.movv;
 
+import io.intino.alexandria.movv.Mov.Item;
+
 import java.io.*;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static io.intino.alexandria.movv.Movv.indexOf;
 import static java.lang.Integer.min;
 import static java.lang.System.arraycopy;
+import static java.util.Comparator.comparing;
 
 public class MovvBuilder {
     private final File file;
@@ -38,47 +42,60 @@ public class MovvBuilder {
         return index instanceof Index.BulkIndex;
     }
 
-    public Stage stageOf(long id)  {
-        if (!stages.containsKey(id)) stages.put(id, createStage(id));
-        return stages.get(id);
+    public Stage stageOf(long id) {
+        return createIfNotExist(id).get(id);
+    }
 
+    private Map<Long, Stage> createIfNotExist(long id) {
+        if (!stages.containsKey(id)) stages.put(id, createStage(id));
+        return stages;
     }
 
     private Stage createStage(long id) {
         return new Stage() {
-            List<Object[]> items = new ArrayList<>();
+            List<Item> items = new ArrayList<>();
+
+            @Override
+            public long id() {
+                return id;
+            }
+
             @Override
             public Stage add(Instant instant, String data) {
-                items.add(new Object[]{instant, data});
+                items.add(new Item(instant, data));
                 return this;
             }
 
             @Override
-            public MovvBuilder commit() throws IOException {
-                items.sort(Comparator.comparing(o -> ((Instant) o[0])));
-                return update(new Mov(index, access()).of(id));
-            }
-
-            private MovvBuilder update(Mov mov) throws IOException {
-                items = clean(items, isUpdatingFile() ? lastDataOf(mov) : null);
-                int i = 0;
-                for (Object[] item : items) {
-                    int cursor = write(item, ++i == items.size());
-                    if (i == 1) mov.append(id, cursor);
-                }
+            public MovvBuilder commit() {
+                stages.remove(id);
+                items.sort(comparing(o -> o.instant));
+                update(new Mov(index, access()).of(id));
                 return MovvBuilder.this;
             }
 
-            private int write(Object[] item, boolean isTheLast) throws IOException {
-                return writer.write((Instant) item[0], (String) item[1], isTheLast);
+            private void update(Mov mov) {
+                try {
+                    items = clean(items, isUpdatingFile() ? lastDataOf(mov) : null);
+                    int i = 0;
+                    for (Item item : items) {
+                        int cursor = write(item, ++i == items.size());
+                        if (i == 1) mov.append(id, cursor);
+                    }
+                } catch (IOException ignored) {
+                }
             }
 
-            private List<Object[]> clean(List<Object[]> items, String data) {
-                List<Object[]> result = new ArrayList<>();
-                for (Object[] item : items) {
-                    if (item[1].equals(data)) continue;
+            private int write(Item item, boolean isTheLast) throws IOException {
+                return writer.write(item.instant, item.data, isTheLast);
+            }
+
+            private List<Item> clean(List<Item> items, String data) {
+                List<Item> result = new ArrayList<>();
+                for (Item item : items) {
+                    if (item.data.equals(data)) continue;
                     result.add(item);
-                    data = (String) item[1];
+                    data = item.data;
                 }
                 return result;
             }
@@ -87,30 +104,33 @@ public class MovvBuilder {
     }
 
     public interface Stage {
+        long id();
         Stage add(Instant instant, String data);
-        MovvBuilder commit() throws IOException;
+        MovvBuilder commit();
     }
 
+    public Stream<Stage> stages() {
+        return new ArrayList<>(stages.values()).stream();
+    }
 
-    public MovvBuilder add(long id, Instant instant, String data) throws IOException {
-        Mov mov = new Mov(index, access()).of(id);
-        if (isUpdatingFile() && data.equals(lastDataOf(mov))) return this;
-        mov.append(id, writer.write(instant, data, true));
+    public MovvBuilder add(long id, Instant instant, String data)  {
+        try {
+            Mov mov = new Mov(index, access()).of(id);
+            if (isUpdatingFile() && mov.reject(instant, data)) return this;
+            mov.append(id, writer.write(instant, data, true));
+        } catch (IOException ignored) {
+        }
         return this;
     }
 
     private String lastDataOf(Mov mov) throws IOException {
-        return mov.last();
+        return mov.last().data;
     }
 
     private Access access() {
         return writer instanceof RandomWriter ?
                 Access.of(((RandomWriter) writer).raf, index.dataSize()) :
                 Access.Null;
-    }
-
-    private boolean isCreatingFile() {
-        return index instanceof Index.BulkIndex;
     }
 
     private boolean isUpdatingFile() {
