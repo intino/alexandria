@@ -38,17 +38,46 @@ public class MovvBuilder {
         this.stages = new HashMap<>();
     }
 
-    private boolean isStatic(Index index) {
-        return index instanceof Index.BulkIndex;
+    public Mov movOf(long id) {
+        return new Mov(index, access()).of(id);
     }
 
     public Stage stageOf(long id) {
         return createIfNotExist(id).get(id);
     }
 
+    public Stream<Stage> stages() {
+        return new ArrayList<>(stages.values()).stream();
+    }
+
+    public MovvBuilder add(long id, Instant instant, String data)  {
+        try {
+            Mov mov = movOf(id);
+            if (isUpdatingFile() && mov.reject(instant, data)) return this;
+            mov.append(id, writer.write(instant, data, true));
+        } catch (IOException ignored) {
+        }
+        return this;
+    }
+
+    public void close() throws IOException {
+        index.store(indexOf(file));
+        writer.close();
+    }
+
+    public interface Stage {
+        long id();
+        Stage add(Instant instant, String data);
+        MovvBuilder commit();
+    }
+
     private Map<Long, Stage> createIfNotExist(long id) {
         if (!stages.containsKey(id)) stages.put(id, createStage(id));
         return stages;
+    }
+
+    private boolean isStatic(Index index) {
+        return index instanceof Index.BulkIndex;
     }
 
     private Stage createStage(long id) {
@@ -70,7 +99,7 @@ public class MovvBuilder {
             public MovvBuilder commit() {
                 stages.remove(id);
                 items.sort(comparing(o -> o.instant));
-                update(new Mov(index, access()).of(id));
+                update(movOf(id));
                 return MovvBuilder.this;
             }
 
@@ -103,27 +132,7 @@ public class MovvBuilder {
         };
     }
 
-    public interface Stage {
-        long id();
-        Stage add(Instant instant, String data);
-        MovvBuilder commit();
-    }
-
-    public Stream<Stage> stages() {
-        return new ArrayList<>(stages.values()).stream();
-    }
-
-    public MovvBuilder add(long id, Instant instant, String data)  {
-        try {
-            Mov mov = new Mov(index, access()).of(id);
-            if (isUpdatingFile() && mov.reject(instant, data)) return this;
-            mov.append(id, writer.write(instant, data, true));
-        } catch (IOException ignored) {
-        }
-        return this;
-    }
-
-    private String lastDataOf(Mov mov) throws IOException {
+    private String lastDataOf(Mov mov) {
         return mov.last().data;
     }
 
@@ -141,11 +150,6 @@ public class MovvBuilder {
         byte[] bytes = new byte[index.dataSize()];
         arraycopy(data.getBytes(),0,bytes,0,min(index.dataSize(), data.length()));
         return bytes;
-    }
-
-    public void close() throws IOException {
-        index.store(indexOf(file));
-        writer.close();
     }
 
     private class BulkWriter implements Writer {
