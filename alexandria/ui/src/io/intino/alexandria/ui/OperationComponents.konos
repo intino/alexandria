@@ -6,30 +6,42 @@ Component operation as Decorated
 	Notification refresh as Object(OperationInfo)
 	Notification refreshDisabled as Bool
 	Notification refreshIcon as Text
-
-	Request execute
+	Notification userMessage as Object(UserMessage)
 
 Component task as Decorated ExtensionOf(operation)
+	Request execute
+
 Component export as Decorated ExtensionOf(operation)
-	Notification refreshResult as File
-	Request changeSelection as Object(ExportSelection)
+	Request changeParams as Object(ExportParams)
+
+	Request(Asset) execute
 
 Component download as Decorated ExtensionOf(operation)
-	Notification refreshResult as File
-	Request changeSelection as Text
+	Request changeParams as Text
+
+	Request(Asset) execute
 
 Component openPage as Decorated ExtensionOf(operation)
 	Notification redirect as Text
+	Request execute
 
 Component selectionOperation as Decorated ExtensionOf(operation)
-
 Component taskSelection as Decorated ExtensionOf(selectionOperation)
+	Request execute
+
+Component downloadSelection as Decorated ExtensionOf(selectionOperation)
+	Request changeParams as Text
+	Request(Asset) execute
 
 Schema OperationInfo
 	Attribute title as Text
 	Attribute disabled as Bool
 
-Schema ExportSelection
+Schema ExportParams
 	Attribute from as DateTime
 	Attribute to as DateTime
 	Attribute option as Text
+
+Schema UserMessage
+	Attribute message as Text
+	Attribute type as Word("Success" "Error" "Warning" "Info")

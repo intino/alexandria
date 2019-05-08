@@ -124,6 +124,8 @@ Facet AbstractLabeled is abstract
 	var word:{Top Bottom Left Right} position = Left
 Facet Labeled extends AbstractLabeled on Component
 Facet Labeled extends AbstractLabeled on CatalogComponents.Collection.Mold.Heading
+Facet Labeled extends AbstractLabeled on CatalogComponents.GroupBox
+Facet Labeled extends AbstractLabeled on CatalogComponents.SortBox
 
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast

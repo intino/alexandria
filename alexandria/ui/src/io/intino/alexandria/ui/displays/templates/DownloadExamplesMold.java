@@ -1,10 +1,11 @@
 package io.intino.alexandria.ui.displays.templates;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.templates.AbstractDownloadExamplesMold;
+import io.intino.alexandria.ui.displays.events.operation.DownloadListener;
+import io.intino.alexandria.ui.spark.UIFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class DownloadExamplesMold extends AbstractDownloadExamplesMold<UiFrameworkBox> {
 
@@ -12,6 +13,24 @@ public class DownloadExamplesMold extends AbstractDownloadExamplesMold<UiFramewo
         super(box);
     }
 
+    @Override
+    public void init() {
+        super.init();
+        download1.onExecute(exampleFile());
+        download2.onExecute(exampleFile());
+    }
 
+    private DownloadListener exampleFile() {
+        return (event) -> new UIFile() {
+            @Override
+            public String label() {
+                return "example" + (!event.option().isEmpty() ? " - " + event.option() : "") + ".pdf";
+            }
 
+            @Override
+            public InputStream content() {
+                return new ByteArrayInputStream(new byte[0]);
+            }
+        };
+    }
 }

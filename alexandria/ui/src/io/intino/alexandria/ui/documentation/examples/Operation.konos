@@ -8,7 +8,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="No facets")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation")
+				Task(title="operation") operation1
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -18,7 +18,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Button facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") as Button
+				Task(title="operation") operation2 as Button
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -28,7 +28,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="IconButton facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") as IconButton("/icons/operation.png")
+				Task(title="operation") operation3 as IconButton("/icons/operation.png")
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -40,7 +40,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="MaterialIconButton facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") as MaterialIconButton("Add")
+				Task(title="operation") operation4 as MaterialIconButton("Add")
 			Block > Text as Code(language=Html)
 					value
 						=========
@@ -50,7 +50,7 @@ Template(layout=Vertical, spacing=DP8) operationExamplesMold as Decorated
 		Block as Relative(width=32%, height=100%)
 			Text(format=h6, value="Confirmable facet")
 			Block(spacing=DP8, format=filledNoAir, layout=Horizontal CenterCenter)
-				Task(title="operation") as Button Confirmable("Are you sure you want to execute operation?")
+				Task(title="operation") operation5 as Button Confirmable("Are you sure you want to execute operation?")
 			Block > Text as Code(language=Html)
 					value
 						=========

@@ -1,16 +1,17 @@
 package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
-import io.intino.alexandria.schemas.ExportSelection;
+import io.intino.alexandria.schemas.ExportParams;
 import io.intino.alexandria.ui.displays.events.operation.ExportEvent;
 import io.intino.alexandria.ui.displays.events.operation.ExportListener;
 import io.intino.alexandria.ui.displays.notifiers.ExportNotifier;
+import io.intino.alexandria.ui.spark.UIFile;
 
 import java.time.Instant;
 import java.util.List;
 
 public class Export<DN extends ExportNotifier, B extends Box> extends AbstractExport<DN, B> {
-    private ExportSelection selection = new ExportSelection();
+    private ExportParams params = new ExportParams();
     private Instant min;
     private Instant max;
     private Range range;
@@ -22,7 +23,7 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
     }
 
     public Instant from() {
-        return selection.from();
+        return params.from();
     }
 
     public Export<DN, B> from(long from) {
@@ -30,12 +31,12 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
     }
 
     public Export<DN, B> from(Instant from) {
-        selection.from(from);
+        params.from(from);
         return this;
     }
 
     public Instant to() {
-        return selection.to();
+        return params.to();
     }
 
     public Export<DN, B> to(long to) {
@@ -43,7 +44,7 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
     }
 
     public Export<DN, B> to(Instant to) {
-        selection.to(to);
+        params.to(to);
         return this;
     }
 
@@ -81,7 +82,7 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
 
     public Export<DN, B> select(String option) {
         if (!this.options.contains(option)) return this;
-        selection.option(option);
+        params.option(option);
         return this;
     }
 
@@ -89,20 +90,19 @@ public class Export<DN extends ExportNotifier, B extends Box> extends AbstractEx
         this.exportListener = listener;
     }
 
-    public void changeSelection(ExportSelection selection) {
-        this.selection = selection;
+    public void changeParams(ExportParams selection) {
+        this.params = selection;
     }
 
-    @Override
-    public void execute() {
-        if (this.exportListener == null) return;
-        Instant from = selection.from();
-        Instant to = selection.to();
-        String option = selection.option();
-        notifier.refreshResult(this.exportListener.accept(new ExportEvent(this, from, to, option)));
+    public UIFile execute() {
+        if (this.exportListener == null) return defaultFile();
+        Instant from = params.from();
+        Instant to = params.to();
+        String option = params.option();
+        return this.exportListener.accept(new ExportEvent(this, from, to, option));
     }
 
-    class Range {
+	class Range {
         final int min;
         final int max;
 

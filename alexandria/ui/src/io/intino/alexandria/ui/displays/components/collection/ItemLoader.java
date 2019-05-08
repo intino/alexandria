@@ -1,7 +1,9 @@
 package io.intino.alexandria.ui.displays.components.collection;
 
 import io.intino.alexandria.ui.model.Datasource;
+import io.intino.alexandria.ui.model.datasource.Filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemLoader<Item> {
@@ -9,6 +11,7 @@ public class ItemLoader<Item> {
 	private int pageSize;
 	private int itemCount;
 	private String condition;
+	private List<Filter> filters = new ArrayList<>();
 
 	public ItemLoader(Datasource source, int pageSize) {
 		this.source = source;
@@ -23,12 +26,17 @@ public class ItemLoader<Item> {
 
 	public synchronized List<Item> page(int page) {
 		page = this.checkPageRange(page);
-		return source.items(start(page), count(), condition);
+		return source.items(start(page), count(), condition, filters);
+	}
+
+	public ItemLoader filter(String grouping, List<String> groups) {
+		filters.add(new Filter(grouping, groups));
+		return this;
 	}
 
 	public ItemLoader condition(String condition) {
 		this.condition = condition;
-		this.itemCount = source.itemCount(condition);
+		this.itemCount = source.itemCount(condition, filters);
 		return this;
 	}
 
@@ -60,6 +68,6 @@ public class ItemLoader<Item> {
 	}
 
 	public List<Item> moreItems(int start, int stop) {
-		return source.items(start, stop-start+1, condition);
+		return source.items(start, stop-start+1, condition, filters);
 	}
 }

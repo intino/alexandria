@@ -47,7 +47,9 @@ public class WidgetMold extends AbstractWidgetMold<UiFrameworkBox> {
         tableExamples.visible(widget instanceof TableWidget);
         exportExamples.visible(widget instanceof ExportWidget);
         downloadExamples.visible(widget instanceof DownloadWidget);
-        operationExamples.visible(widget instanceof OperationWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget));
+        downloadSelectionExamples.visible(widget instanceof DownloadSelectionWidget);
+        operationExamples.visible(widget instanceof OperationWidget && !(widget instanceof ExportWidget) && !(widget instanceof DownloadWidget) && !(widget instanceof DownloadSelectionWidget));
+        groupBoxExamples.visible(widget instanceof GroupBoxWidget);
     }
 
     private void updateInfo() {

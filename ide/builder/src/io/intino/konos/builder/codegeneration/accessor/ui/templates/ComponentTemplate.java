@@ -49,11 +49,14 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "properties & spinner")), (condition("trigger", "specific"))).add(expression().add(literal(" mode=\"")).add(mark("mode")).add(literal("\""))),
 			rule().add((condition("type", "properties & export")), (condition("trigger", "specific"))).add(expression().add(literal(" from={")).add(mark("from")).add(literal("}"))).add(expression().add(literal(" to={")).add(mark("to")).add(literal("}"))).add(expression().add(literal(" min={")).add(mark("min")).add(literal("}"))).add(expression().add(literal(" max={")).add(mark("max")).add(literal("}"))).add(expression().add(literal(" range={{min:")).add(mark("rangeMin")).add(literal(",max:")).add(mark("rangeMax")).add(literal("}}"))).add(expression().add(literal(" options={")).add(literal("[")).add(literal("\"")).add(mark("option").multiple("\",\"")).add(literal("\"")).add(literal("]")).add(literal("}"))),
 			rule().add((condition("type", "properties & download")), (condition("trigger", "specific"))).add(expression().add(literal(" options={")).add(literal("[")).add(literal("\"")).add(mark("option").multiple("\",\"")).add(literal("\"")).add(literal("]")).add(literal("}"))),
+			rule().add((condition("type", "properties & downloadselection")), (condition("trigger", "specific"))).add(expression().add(literal(" options={")).add(literal("[")).add(literal("\"")).add(mark("option").multiple("\",\"")).add(literal("\"")).add(literal("]")).add(literal("}"))),
+			rule().add((condition("type", "properties & groupbox")), (condition("trigger", "specific"))).add(expression().add(literal(" histogram={")).add(mark("histogram")).add(literal("}"))),
 			rule().add((condition("type", "properties")), (condition("trigger", "specific"))),
 			rule().add((condition("type", "badge"))).add(literal("mode=\"")).add(mark("mode")).add(literal("\"")).add(expression().add(literal(" value={")).add(mark("value")).add(literal("}"))).add(expression().add(literal(" max={")).add(mark("max")).add(literal("}"))).add(expression().add(literal(" showZero={")).add(mark("showZero")).add(literal("}"))),
 			rule().add((condition("type", "codetext"))).add(literal("value=\"")).add(mark("value")).add(literal("\"")),
 			rule().add((condition("type", "highlighted"))).add(literal("{text:\"")).add(mark("text")).add(literal("\",background:\"")).add(mark("background")).add(literal("\"}")),
-			rule().add((condition("type", "operationMode"))).add(mark("mode"))
+			rule().add((condition("type", "operationMode"))).add(mark("mode")),
+			rule().add((condition("type", "histogram"))).add(literal("{alwaysVisible:")).add(mark("alwaysVisible")).add(literal(",type:\"")).add(mark("type")).add(literal("\"}"))
 		);
 		return this;
 	}

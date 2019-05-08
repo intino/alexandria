@@ -2,9 +2,14 @@ package io.intino.alexandria.ui.displays.components;
 
 import io.intino.alexandria.core.Box;
 import io.intino.alexandria.schemas.OperationInfo;
+import io.intino.alexandria.schemas.UserMessage;
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.notifiers.OperationNotifier;
 import io.intino.alexandria.ui.resources.Asset;
+import io.intino.alexandria.ui.spark.UIFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class Operation<DN extends OperationNotifier, B extends Box> extends Component<DN, B> {
     private String title;
@@ -51,13 +56,32 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
         notifier.refresh(info);
     }
 
-    public void execute() {
+    public void notifyUser(String message) {
+        notifyUser(message, UserMessage.Type.Info);
+    }
+
+    public void notifyUser(String message, UserMessage.Type messageType) {
+        notifier.userMessage(new UserMessage().message(message).type(messageType));
     }
 
     @Override
     protected void init() {
         super.init();
         if (isResourceIcon()) refreshIcon();
+    }
+
+    UIFile defaultFile() {
+        return new UIFile() {
+            @Override
+            public String label() {
+                return title();
+            }
+
+            @Override
+            public InputStream content() {
+                return new ByteArrayInputStream(new byte[0]);
+            }
+        };
     }
 
     private void refreshIcon() {
@@ -67,4 +91,5 @@ public class Operation<DN extends OperationNotifier, B extends Box> extends Comp
     private boolean isResourceIcon() {
         return mode == Mode.IconButton && icon != null;
     }
+
 }

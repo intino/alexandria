@@ -15,7 +15,6 @@ Component blockParallax as Decorated
 Component blockBadge as Decorated
 	Notification refresh as Integer
 
-Component catalog as Decorated
 Component option as Decorated
 Component chart as Decorated
 	Notification showLoading
@@ -26,13 +25,10 @@ Schema ChartInfo
 	Attribute mode as Text
 	Attribute config as Text
 
-Component sorting as Decorated
-Component grouping as Decorated
 Component header as Decorated
 Component tabs as Decorated
 Component tab as Decorated
 Component icon as Decorated
-Component taskOperation as Decorated
 Component optionList as Decorated
 Component frame as Decorated
 	Notification refreshDisplay as Text
@@ -46,37 +42,7 @@ Schema SelectorMenuSelection
 	Attribute option as Integer
 	Attribute ancestors as Text List
 
-Component collection as Decorated
-	Notification setup as Object(CollectionSetup)
-	Notification refresh
-	Request notifyItemsRendered as Object(CollectionItemsRenderedInfo)
-	Request loadMoreItems as Object(CollectionMoreItems)
-	Request changePage as Integer
-	Request changePageSize as Integer
-	Request changeSelection as Text List
-
-Component list as Decorated ExtensionOf(collection)
-Component table as Decorated ExtensionOf(collection)
-
-Component item as Decorated
-Component heading as Decorated
-Component row as Decorated
-
-Schema CollectionSetup
-	Attribute itemCount as Integer
-	Attribute pageSize as Integer
-
-Schema CollectionItemsRenderedInfo
-	Attribute items as Text List
-	Attribute visible as Text List
-
-Schema CollectionMoreItems
-	Attribute start as Integer
-	Attribute stop as Integer
-
 Component multiple as Decorated
 
-Component brochure as Decorated
-Component map as Decorated
 Component spinner as Decorated
 	Notification refreshLoading as Bool

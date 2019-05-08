@@ -4,16 +4,17 @@ import AbstractOpenPage from "../../../gen/displays/components/AbstractOpenPage"
 import OpenPageNotifier from "../../../gen/displays/notifiers/OpenPageNotifier";
 import OpenPageRequester from "../../../gen/displays/requesters/OpenPageRequester";
 import Operation from "./Operation"
+import { withSnackbar } from 'notistack';
 
 class OpenPage extends AbstractOpenPage {
-	state = {
-		path : null
-	};
-
 	constructor(props) {
 		super(props);
 		this.notifier = new OpenPageNotifier(this);
 		this.requester = new OpenPageRequester(this);
+		this.state = {
+			...this.state,
+			path : null
+		};
 	};
 
 	redirect = (path) => {
@@ -24,4 +25,4 @@ class OpenPage extends AbstractOpenPage {
 
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(OpenPage);
+export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(OpenPage));

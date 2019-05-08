@@ -132,6 +132,10 @@ export default class Operation extends AbstractOperation {
 		this.setState({ title, disabled });
 	};
 
+	userMessage = (info) => {
+		this.showMessage(info.message, info.type);
+	};
+
 	refreshDisabled = (value) => {
 		this.setState({ disabled: value });
 	};

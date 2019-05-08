@@ -1,5 +1,7 @@
 dsl Konos
 
+use GroupBox
+use DownloadSelection
 use Download
 use Export
 use Operation
@@ -33,8 +35,10 @@ Template(layout=Vertical, modelClass="io.intino.alexandria.schemas.Widget") widg
 			Block listExamples as Conditional > Stamp(template=listExamplesMold)
 			Block tableExamples as Conditional > Stamp(template=tableExamplesMold)
 			Block downloadExamples as Conditional > Stamp(template=downloadExamplesMold)
+			Block downloadSelectionExamples as Conditional > Stamp(template=downloadSelectionExamplesMold)
 			Block exportExamples as Conditional > Stamp(template=exportExamplesMold)
 			Block operationExamples as Conditional > Stamp(template=operationExamplesMold)
+			Block groupBoxExamples as Conditional > Stamp(template=groupBoxExamplesMold)
 
 		Block facets
 			Text(value="Facets", format=h5 underline)

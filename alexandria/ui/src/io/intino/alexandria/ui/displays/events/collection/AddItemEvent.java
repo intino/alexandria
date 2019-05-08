@@ -1,7 +1,8 @@
-package io.intino.alexandria.ui.displays.events;
+package io.intino.alexandria.ui.displays.events.collection;
 
 import io.intino.alexandria.ui.displays.Component;
 import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.events.Event;
 
 public class AddItemEvent extends Event {
 	private final Component component;
