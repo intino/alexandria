@@ -1,6 +1,6 @@
-import React from "react";
+import I18nComponent from "./I18nComponent";
 
-export default class PassiveView extends React.Component {
+export default class PassiveView extends I18nComponent {
 
     constructor(props) {
         super(props);

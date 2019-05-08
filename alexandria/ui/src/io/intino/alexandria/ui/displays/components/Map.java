@@ -1,17 +1,27 @@
 package io.intino.alexandria.ui.displays.components;
 
-import io.intino.alexandria.exceptions.*;
-import io.intino.alexandria.*;
-import io.intino.alexandria.schemas.*;
-import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.components.AbstractMap;
+import io.intino.alexandria.core.Box;
+import io.intino.alexandria.ui.displays.Display;
+import io.intino.alexandria.ui.displays.components.collection.Collection;
+import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
+import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
+import io.intino.alexandria.ui.displays.notifiers.ListNotifier;
+import io.intino.alexandria.ui.model.Datasource;
 
-public class Map extends AbstractMap<UiFrameworkBox> {
+public abstract class Map<B extends Box, ItemComponent extends io.intino.alexandria.ui.displays.components.Item, Item> extends AbstractList<ListNotifier, B> implements Collection<ItemComponent, Item> {
 
-    public Map(UiFrameworkBox box) {
+    public Map(B box) {
         super(box);
     }
 
+    public Map<B, ItemComponent, Item> source(Datasource source) {
+        source(source, new CollectionBehavior<ItemComponent, Item>(this));
+        return this;
+    }
 
+    @Override
+    protected AddItemEvent itemEvent(Display display) {
+        return new AddItemEvent(this, (ItemComponent)display, ((ItemComponent)display).item());
+    }
 
 }

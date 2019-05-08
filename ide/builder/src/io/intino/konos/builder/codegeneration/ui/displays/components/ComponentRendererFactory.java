@@ -3,10 +3,12 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupBoxRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.HeadingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.operation.DownloadSelectionRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.ExportRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.operation.OpenPageRenderer;
 import io.intino.konos.model.graph.*;
@@ -32,6 +34,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
 		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
+		if (component.i$(CatalogComponents.GroupBox.class)) return (T) new GroupBoxRenderer(settings, component.a$(CatalogComponents.GroupBox.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.class)) return (T) new CollectionRenderer(settings, component.a$(CatalogComponents.Collection.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) return (T) new HeadingRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Heading.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return (T) new ItemRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);
@@ -39,6 +42,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Toolbar.class)) return (T) new ToolbarRenderer(settings, component.a$(Toolbar.class), provider, target);
 		if (component.i$(OpenPage.class)) return (T) new OpenPageRenderer(settings, component.a$(OpenPage.class), provider, target);
 		if (component.i$(Download.class)) return (T) new DownloadRenderer(settings, component.a$(Download.class), provider, target);
+		if (component.i$(DownloadSelection.class)) return (T) new DownloadSelectionRenderer(settings, component.a$(DownloadSelection.class), provider, target);
 		if (component.i$(Export.class)) return (T) new ExportRenderer(settings, component.a$(Export.class), provider, target);
 		if (component.i$(Operation.class)) return (T) new OperationRenderer(settings, component.a$(Operation.class), provider, target);
 

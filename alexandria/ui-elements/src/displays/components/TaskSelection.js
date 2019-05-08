@@ -4,6 +4,7 @@ import AbstractTaskSelection from "../../../gen/displays/components/AbstractTask
 import TaskSelectionNotifier from "../../../gen/displays/notifiers/TaskSelectionNotifier";
 import TaskSelectionRequester from "../../../gen/displays/requesters/TaskSelectionRequester";
 import Operation from "./Operation"
+import { withSnackbar } from 'notistack';
 
 class TaskSelection extends AbstractTaskSelection {
 	constructor(props) {
@@ -13,4 +14,4 @@ class TaskSelection extends AbstractTaskSelection {
 	};
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(TaskSelection);
+export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(TaskSelection));

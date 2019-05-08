@@ -1,6 +1,6 @@
 package io.intino.alexandria.ui.displays.components.collection;
 
-import io.intino.alexandria.ui.displays.events.AddItemListener;
+import io.intino.alexandria.ui.displays.events.collection.AddItemListener;
 
 public interface Collection<ItemComponent, Item> {
 	ItemComponent add(Item item);

@@ -4,56 +4,17 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template(layout=Vertical, spacing=DP8) testTemplate
-	Export(title="exportar1") export1
-	Export(title="exportar2") export2
-		from = "2011-12-03T10:15:30Z"
-        to = "2011-12-03T10:15:31Z"
-        options = "a" "b"
-        min = "2011-12-03T10:15:30Z"
-        max = "2011-12-03T10:15:30Z"
-        rangeMin = 1 Days
-        rangeMax = 10 Days
-	Download(title="download1") download1
-	Download(title="download2") download2
-        options = "a"
-	Download(title="download3") download3
-        options = "a" "b"
+	GroupBox(collections=list1) group1
+	GroupBox(collections=list1 list2) group2
+		Histogram(alwaysVisible=true, type=Percentage)
 
-//	Text facetas as Multiple
-//	Stamp(template=template1) templates as Multiple
-//	Block as Multiple
-//
-//Template(modelClass="Abcde") template1
-//	Text campo1
+	List list1
+		Mold
+			Item(height = 100px) item
 
-//	List<Header> headers = tabla.setHeader();
-//	Row row = tabla.addRow(Item item);
-//
-//	Row row = tabla.addRow(Item item) {
-//		List<Item> items = createRow();
-//		items.forEach(i -> i.item(instancia); i.refresh());
-//	}
-//
-//	tabla.add(new Item().name("name").label("label")) {
-//		List<Item> item = tabla.addItem();
-//	}
-//	item.nombre.update("dddd")
-
-//	Table tabla
-//		Mold
-//			Heading cabeceraNombre > SortBox(sorting = empty) sortBox
-//			Item nombre > Text valor
-//		Mold
-//			Heading cabeceraApellidos
-//				SortBox(sorting = empty) sortBox
-//			Item apellidos
-//				Text valor
-//
-//	List(sourceClass="io.intino.components.box.ui.Source", itemClass="io.intino.components.box.ui.Source.Item") lista
-//		Mold
-//			Heading cabeceraCompact as Labeled(label="compact")
-//			Item compact
-//				Text fila1
+	List list2
+		Mold
+			Item(height = 100px) item
 
 Template valor2
 	Text v2

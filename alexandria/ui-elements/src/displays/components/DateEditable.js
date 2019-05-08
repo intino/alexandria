@@ -41,11 +41,15 @@ class DateEditable extends AbstractDateEditable {
 					{ !timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDatePicker variant="inline" placeholder={pattern} autoOk
 												format={pattern} className={classes.date} mask={this.props.mask}
 												value={this.state.value} onChange={this.handleChange.bind(this)}
-                                                minDate={min} maxDate={max} label={dateLabel}/></MuiPickersUtilsProvider> : undefined }
+                                                minDate={min} maxDate={max} label={dateLabel}
+												minDateMessage={this.translate("Date should not be before minimal date")}
+												maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 					{ timePicker ? <MuiPickersUtilsProvider utils={MomentUtils}><KeyboardDateTimePicker variant="inline" placeholder={pattern} autoOk
 												   format={pattern} className={classes.datetime}
 												   value={this.state.value} onChange={this.handleChange.bind(this)}
-                                                   minDate={min} maxDate={max} label={timeLabel}/></MuiPickersUtilsProvider> : undefined }
+                                                   minDate={min} maxDate={max} label={timeLabel}
+												   minDateMessage={this.translate("Date should not be before minimal date")}
+												   maxDateMessage={this.translate("Date should not be after maximal date")}/></MuiPickersUtilsProvider> : undefined }
 				</div>
 		);
 	};

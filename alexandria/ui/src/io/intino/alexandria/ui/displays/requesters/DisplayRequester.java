@@ -13,9 +13,14 @@ public abstract class DisplayRequester extends Resource {
 	}
 
 	public <D extends Display> D display() {
-		String displayId = manager.fromPath("displayId", String.class);
+		return display(manager.fromPath("displayId", String.class));
+	}
+
+	public <D extends Display> D display(String displayId) {
+		if (displayId == null) return null;
+		String[] data = manager.fromPath("displayId", String.class).split(":");
 		UIClient client = manager.currentClient();
-		return client == null ? null : client.soul().get(displayId);
+		return client == null ? null : client.soul().displayWithId(data[0], data[1]);
 	}
 
 	public String operation() {

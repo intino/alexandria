@@ -1,7 +1,8 @@
 package io.intino.alexandria.ui.displays.templates;
 
 import io.intino.alexandria.UiFrameworkBox;
-import io.intino.alexandria.ui.displays.events.AddItemEvent;
+import io.intino.alexandria.schemas.UserMessage;
+import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
 import io.intino.alexandria.ui.displays.items.*;
 import io.intino.alexandria.ui.documentation.Person;
 import io.intino.alexandria.ui.documentation.model.Datasources;
@@ -21,8 +22,8 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         init(list3, Datasources.personDatasource());
         init(list4, Datasources.personDatasource());
         init(list5, Datasources.personDatasource());
-        add.onExecute((event) -> System.out.println("add item"));
-        remove.onExecute((event) -> System.out.println("remove items " + String.join(",", event.items())));
+        add.onExecute((event) -> add.notifyUser("add item", UserMessage.Type.Info));
+        remove.onExecute((event) -> remove.notifyUser("remove items " + String.join(",", event.items())));
     }
 
     private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {

@@ -1,26 +1,26 @@
 package io.intino.alexandria.ui.model;
 
-import io.intino.alexandria.ui.model.datasource.Grouping;
-import io.intino.alexandria.ui.model.datasource.Sorting;
+import io.intino.alexandria.ui.model.datasource.Filter;
+import io.intino.alexandria.ui.model.datasource.Group;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public abstract class Datasource<O> {
 	private List<O> items = new ArrayList<>();
-	private List<Grouping> groupings = new ArrayList<>();
-	private List<Sorting> sortings = new ArrayList<>();
 
 	public void clear() {
 		this.items.clear();
 	}
 
 	public int itemCount() {
-		return itemCount(null);
+		return itemCount(null, emptyList());
 	}
-
-	public abstract int itemCount(String condition);
-	public abstract List<O> items(int start, int count, String condition);
+	public abstract int itemCount(String condition, List<Filter> filters);
+	public abstract List<O> items(int start, int count, String condition, List<Filter> filters);
+	public abstract List<Group> groups(String name, List<O> items);
 
 	public Datasource<O> addAll(List<O> items) {
 		this.items.addAll(items);
@@ -32,13 +32,4 @@ public abstract class Datasource<O> {
 		return this;
 	}
 
-	public Datasource<O> add(Grouping<O> grouping) {
-		this.groupings.add(grouping);
-		return this;
-	}
-
-	public Datasource<O> add(Sorting<O> sorting) {
-		this.sortings.add(sorting);
-		return this;
-	}
 }

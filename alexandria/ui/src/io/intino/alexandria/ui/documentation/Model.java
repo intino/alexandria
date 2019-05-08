@@ -12,7 +12,8 @@ public class Model {
 	private static Map<WidgetType, Widget> map = new HashMap<>();
 
 	public enum WidgetType {
-		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download;
+		Text, Number, Image, File, Date, Chart, Block, List, Table, Task, OpenPage, Export, Download, DownloadSelection,
+		GroupBox;
 
 		public static WidgetType from(String type) {
 			WidgetType[] values = values();
@@ -41,6 +42,8 @@ public class Model {
 		map.put(WidgetType.OpenPage, new OpenPageWidget());
 		map.put(WidgetType.Export, new ExportWidget());
 		map.put(WidgetType.Download, new DownloadWidget());
+		map.put(WidgetType.DownloadSelection, new DownloadSelectionWidget());
+		map.put(WidgetType.GroupBox, new GroupBoxWidget());
 	}
 
 	public static Widget widget(WidgetType type) {

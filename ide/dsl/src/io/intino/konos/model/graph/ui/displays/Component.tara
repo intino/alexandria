@@ -94,12 +94,18 @@ Concept CatalogComponents
 				var integer max
 
 	Concept:Named GroupBox extends Component
-		var boolean visible = true
+		var Collection collection
+
+		Concept:{0..1} Histogram
+			var boolean alwaysVisible = false
+			var word:{Percentage Absolute} type = Percentage
 
 	Concept:Named SortBox extends Component
-		var boolean visible = true
+		var Collection collection
 
 	Concept:Named SearchBox extends Component
+		var Collection collection
+
 		var string placeholder
 
 Concept OperationComponents
@@ -126,8 +132,8 @@ Concept OperationComponents
 		sub Task
 
 	Concept SelectionOperation extends Operation is abstract
-		sub ExportSelection
 		sub DownloadSelection
+			var string[] options = empty
 		sub TaskSelection
 
 Concept OtherComponents

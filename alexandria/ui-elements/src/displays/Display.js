@@ -8,7 +8,6 @@ export default class Display extends PassiveView {
 
     constructor(props) {
         super(props);
-        this.translator = Application.services.translatorService;
     };
 
     addInstance = (instance) => {
@@ -59,10 +58,6 @@ export default class Display extends PassiveView {
         });
     };
 
-    translate = (word) => {
-        return this.translator.translate(word);
-    };
-
     buildApplicationUrl = (path) => {
         let configuration = Application.configuration;
         let url = configuration.baseUrl;
@@ -79,16 +74,22 @@ export default class Display extends PassiveView {
         }
     };
 
-    showError = (error, options) => {
-        if (options == null) options = { variant: 'error', autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
-        if (this.errorTimeout != null) window.clearTimeout(this.errorTimeout);
-        this.errorTimeout = window.setTimeout(() => {
-            this.props.enqueueSnackbar(error, options);
-        }, 100);
+    showError = (error) => {
+        this.showMessage(error, 'error');
+    };
+
+    showMessage = (message, type) => {
+        const options = { variant: type.toLowerCase(), autoHideDuration: 2000, anchorOrigin: { vertical: 'top', horizontal: 'center' }};
+        if (this.messageTimeout != null) window.clearTimeout(this.messageTimeout);
+        this.messageTimeout = window.setTimeout(() => this.props.enqueueSnackbar(message, options), 100);
     };
 
     componentWillUnmount() {
         if (this.notifier != null) this.notifier.detached();
+    };
+
+    attribute = (name) => {
+        return this.state[name] != null ? this.state[name] : this.props[name];
     };
 
     _context() {

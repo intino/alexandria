@@ -4,6 +4,7 @@ import AbstractTask from "../../../gen/displays/components/AbstractTask";
 import TaskNotifier from "../../../gen/displays/notifiers/TaskNotifier";
 import TaskRequester from "../../../gen/displays/requesters/TaskRequester";
 import Operation from "./Operation"
+import { withSnackbar } from 'notistack';
 
 class Task extends AbstractTask {
 	constructor(props) {
@@ -13,4 +14,4 @@ class Task extends AbstractTask {
 	};
 }
 
-export default withStyles(Operation.Styles, { withTheme: true })(Task);
+export default withStyles(Operation.Styles, { withTheme: true })(withSnackbar(Task));

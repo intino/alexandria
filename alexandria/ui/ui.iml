@@ -70,10 +70,5 @@
     <orderEntry type="library" name="Legio: net.rforge:REngine:0.6-8.1" level="project" />
     <orderEntry type="library" name="Legio: io.intino.alexandria:logger:2.0.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Legio: junit:junit:4.13-beta-3" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:ui-framework:2.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:primitives:1.0.3" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:exceptions:1.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:rest:2.0.0" level="project" />
-    <orderEntry type="library" name="Legio: io.intino.alexandria:rest-accessor:1.0.4" level="project" />
   </component>
 </module>

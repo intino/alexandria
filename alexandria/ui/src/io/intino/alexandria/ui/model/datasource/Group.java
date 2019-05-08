@@ -1,15 +1,15 @@
 package io.intino.alexandria.ui.model.datasource;
 
 public class Group {
-	private String name;
+	private String label;
 	private int count;
 
-	public String name() {
-		return name;
+	public String label() {
+		return label;
 	}
 
-	public Group name(String name) {
-		this.name = name;
+	public Group label(String label) {
+		this.label = label;
 		return this;
 	}
 
