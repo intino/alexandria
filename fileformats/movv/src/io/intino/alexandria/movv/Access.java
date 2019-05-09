@@ -91,7 +91,9 @@ interface Access {
 
             private int lengthOf(byte[] bytes) {
                 int length = 0;
-                while (bytes[length] != 0) length++;
+                while ((length < bytes.length) && (bytes[length] != 0)) {
+                    length++;
+                }
                 return length;
             }
 
