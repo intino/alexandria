@@ -6,6 +6,8 @@ import io.intino.alexandria.schemas.CollectionSetup;
 import io.intino.alexandria.ui.displays.Display;
 import io.intino.alexandria.ui.displays.components.collection.CollectionBehavior;
 import io.intino.alexandria.ui.displays.components.collection.CollectionItemDisplay;
+import io.intino.alexandria.ui.displays.events.Event;
+import io.intino.alexandria.ui.displays.events.Listener;
 import io.intino.alexandria.ui.displays.events.SelectionEvent;
 import io.intino.alexandria.ui.displays.events.SelectionListener;
 import io.intino.alexandria.ui.displays.events.collection.AddItemEvent;
@@ -28,6 +30,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     private java.util.List<SelectionListener> selectionListeners = new ArrayList<>();
     private AddItemListener addItemListener;
     private List<RefreshListener> refreshListeners = new ArrayList<>();
+    private List<Listener> readyListeners = new ArrayList<>();
 
     public Collection(B box) {
         super(box);
@@ -48,6 +51,10 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         this.refreshListeners.add(listener);
     }
 
+    public void onReady(Listener listener) {
+        this.readyListeners.add(listener);
+    }
+
     @Override
     public void init() {
         super.init();
@@ -55,10 +62,9 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
     }
 
     public void notifyItemsRendered(io.intino.alexandria.schemas.CollectionItemsRenderedInfo info) {
-        List<Display> promisedChildren = promisedChildren(info.items());
-        promisedChildren.forEach(this::register);
+        promisedChildren(info.items()).forEach(this::register);
         children(info.visible()).forEach(c -> addItemListener.accept(itemEvent(c)));
-        notifyRefresh(promisedChildren);
+        notifyRefresh();
     }
 
     public Datasource source() {
@@ -81,6 +87,7 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
 
     public void filter(String grouping, List<String> groups) {
         behavior.filter(grouping, groups);
+        notifier.refreshItemCount(behavior.itemCount());
     }
 
     public void changeSelection(String[] selection) {
@@ -102,11 +109,16 @@ public abstract class Collection<DN extends CollectionNotifier, B extends Box> e
         if (source == null) return;
         notifier.setup(new CollectionSetup().itemCount(source.itemCount()).pageSize(pageSize));
         behavior.setup(source, pageSize);
+        notifyReady();
     }
 
-    private void notifyRefresh(List<Display> children) {
+    private void notifyReady() {
+        readyListeners.forEach(l -> l.accept(new Event(this)));
+    }
+
+    private void notifyRefresh() {
         if (refreshListeners.size() <= 0) return;
-        List<Object> items = children.stream().map(d -> ((CollectionItemDisplay) d).item()).collect(toList());
+        List<Object> items = children().stream().map(d -> ((CollectionItemDisplay) d).item()).collect(toList());
         refreshListeners.forEach(l -> l.accept(new RefreshEvent(this, items)));
     }
 

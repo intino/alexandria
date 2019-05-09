@@ -5,9 +5,9 @@ import io.intino.alexandria.ui.documentation.Model;
 
 import static java.util.Collections.singletonList;
 
-public class GroupBoxWidget extends BaseWidget {
+public class GroupingWidget extends BaseWidget {
 
-	public GroupBoxWidget() {
+	public GroupingWidget() {
 		super("Component used to filter collections with items that are classified in groups");
 		facets(singletonList("Labeled"));
 	}

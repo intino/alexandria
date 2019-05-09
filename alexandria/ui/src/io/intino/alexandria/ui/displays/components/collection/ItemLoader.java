@@ -9,7 +9,7 @@ import java.util.List;
 public class ItemLoader<Item> {
 	private final Datasource source;
 	private int pageSize;
-	private int itemCount;
+	private long itemCount;
 	private String condition;
 	private List<Filter> filters = new ArrayList<>();
 
@@ -30,7 +30,13 @@ public class ItemLoader<Item> {
 	}
 
 	public ItemLoader filter(String grouping, List<String> groups) {
-		filters.add(new Filter(grouping, groups));
+		if (groups.size() <= 0) remove(grouping);
+		else {
+			Filter filter = filter(grouping);
+			if (filter == null) filters.add(new Filter(grouping, groups));
+			else filter.groups(groups);
+		}
+		this.itemCount = source.itemCount(condition, filters);
 		return this;
 	}
 
@@ -40,9 +46,25 @@ public class ItemLoader<Item> {
 		return this;
 	}
 
+	public long itemCount() {
+		return itemCount;
+	}
+
 	public int pageCount() {
 		if (pageSize <= 0) return 0;
 		return pageOf(itemCount);
+	}
+
+	public int start(int page) {
+		return page * this.pageSize;
+	}
+
+	public int pageOf(long index) {
+		return (int) (Math.floor(index / pageSize) + (index % pageSize > 0 ? 1 : 0));
+	}
+
+	public List<Item> moreItems(int start, int stop) {
+		return source.items(start, stop-start+1, condition, filters);
 	}
 
 	private int checkPageRange(int page) {
@@ -55,19 +77,17 @@ public class ItemLoader<Item> {
 		return page;
 	}
 
-	public int start(int page) {
-		return page * this.pageSize;
-	}
-
-	public int pageOf(int index) {
-		return (int) (Math.floor(index / pageSize) + (index % pageSize > 0 ? 1 : 0));
-	}
-
 	private int count() {
 		return this.pageSize;
 	}
 
-	public List<Item> moreItems(int start, int stop) {
-		return source.items(start, stop-start+1, condition, filters);
+	private Filter filter(String grouping) {
+		return filters.stream().filter(f -> f.grouping().equalsIgnoreCase(grouping)).findFirst().orElse(null);
 	}
+
+	private void remove(String grouping) {
+		Filter filter = filter(grouping);
+		if (filter != null) filters.remove(filter);
+	}
+
 }

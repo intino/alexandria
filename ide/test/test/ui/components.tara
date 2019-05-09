@@ -4,8 +4,8 @@ Service(title = "", favicon = "") UiElements as UI(port = "9000")
 	Resource(path = "/") home as Page(testTemplate)
 
 Template(layout=Vertical, spacing=DP8) testTemplate
-	GroupBox(collections=list1) group1
-	GroupBox(collections=list1 list2) group2
+	Grouping(collections=list1) group1
+	Grouping(collections=list1 list2) group2
 		Histogram(alwaysVisible=true, type=Percentage)
 
 	List list1

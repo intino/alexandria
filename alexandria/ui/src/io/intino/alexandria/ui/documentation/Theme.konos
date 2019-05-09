@@ -15,9 +15,11 @@ Format("lineHeight:'17pt'") h6
 Format("") body1
 Format("") body2
 Format("color:'white'") white
+Format("background:'white',borderRadius:'3px',height:'100%'") whiteBackground
 Format("padding:'10px 20px'") air
 Format("marginBottom:'10px'") airBottom
-Format("padding:'20px'") containerAir
+Format("padding:'10px'") containerAirMedium
+Format("padding:'20px'") containerAirLarge
 Format("background:'#efefef',padding:'8px',minHeight:'200px'") filled
 Format("background:'#efefef',minHeight:'200px'") filledNoAir
 Format("marginTop:'10px'") headerToolbar
@@ -27,6 +29,7 @@ Format("whiteSpace:'nowrap'") valuesLabelFormat
 Format("border:'1px solid',width:'100%'") bordered
 Format("minHeight:'300px'") paperFormat
 Format("borderBottom:'1px dotted #ddd',width:'100%',marginBottom:'10px'") underline
+Format("fontSize:'10pt',color:'grey'") description
 
 // Cards
 Format("textAlign:'left',color:'#B71A1C',padding:'10px'") cardTitle

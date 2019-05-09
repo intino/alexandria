@@ -126,10 +126,6 @@ def type(properties & downloadselection) trigger(specific)
 	[ options={$["$option...[","]"$]}]
 end
 
-def type(properties & groupbox) trigger(specific)
-	[ histogram={$histogram}]
-end
-
 def type(properties) trigger(specific)
 end
 

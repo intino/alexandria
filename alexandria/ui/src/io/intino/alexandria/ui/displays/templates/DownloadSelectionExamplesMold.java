@@ -23,7 +23,7 @@ public class DownloadSelectionExamplesMold extends AbstractDownloadSelectionExam
         super.init();
         init(list6, Datasources.personDatasource());
         download.onExecute((event) -> {
-            download.notifyUser("download items " + String.join(",", event.items()), UserMessage.Type.Info);
+            download.notifyUser("download " + event.selection().size() + " items ", UserMessage.Type.Info);
             return new UIFile() {
                 @Override
                 public String label() {

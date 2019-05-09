@@ -15,6 +15,7 @@ import io.intino.konos.model.graph.avatar.datacomponents.AvatarImage;
 import io.intino.konos.model.graph.badge.BadgeBlock;
 import io.intino.konos.model.graph.checkbox.othercomponents.CheckBoxSelector;
 import io.intino.konos.model.graph.code.datacomponents.CodeText;
+import io.intino.konos.model.graph.combobox.catalogcomponents.ComboBoxGrouping;
 import io.intino.konos.model.graph.combobox.othercomponents.ComboBoxSelector;
 import io.intino.konos.model.graph.conditional.ConditionalBlock;
 import io.intino.konos.model.graph.menu.othercomponents.MenuSelector;
@@ -279,6 +280,7 @@ public class ComponentRenderer<C extends Component> extends DisplayRenderer<C> {
 		if (component.i$(ConditionalBlock.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ConditionalBlock.class.getSimpleName().replace("Block", "")));
 		if (component.i$(MenuSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", MenuSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(ComboBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxSelector.class.getSimpleName().replace("Selector", "")));
+		if (component.i$(ComboBoxGrouping.class)) result.addSlot("facet", new Frame("facet").addSlot("name", ComboBoxGrouping.class.getSimpleName().replace("Grouping", "")));
 		if (component.i$(RadioBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", RadioBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(CheckBoxSelector.class)) result.addSlot("facet", new Frame("facet").addSlot("name", CheckBoxSelector.class.getSimpleName().replace("Selector", "")));
 		if (component.i$(AvatarImage.class)) result.addSlot("facet", new Frame("facet").addSlot("name", AvatarImage.class.getSimpleName().replace("Image", "")));

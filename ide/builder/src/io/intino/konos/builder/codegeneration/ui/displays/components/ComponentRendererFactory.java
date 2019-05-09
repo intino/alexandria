@@ -3,7 +3,7 @@ package io.intino.konos.builder.codegeneration.ui.displays.components;
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.UIRenderer;
-import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupBoxRenderer;
+import io.intino.konos.builder.codegeneration.ui.displays.components.collection.GroupingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.HeadingRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.collection.ItemRenderer;
 import io.intino.konos.builder.codegeneration.ui.displays.components.data.*;
@@ -34,7 +34,7 @@ public class ComponentRendererFactory {
 		if (component.i$(Block.class)) return (T) new BlockRenderer(settings, component.a$(Block.class), provider, target);
 		if (component.i$(Header.class)) return (T) new HeaderRenderer(settings, component.a$(Header.class), provider, target);
 		if (component.i$(Chart.class)) return (T) new ChartRenderer(settings, component.a$(Chart.class), provider, target);
-		if (component.i$(CatalogComponents.GroupBox.class)) return (T) new GroupBoxRenderer(settings, component.a$(CatalogComponents.GroupBox.class), provider, target);
+		if (component.i$(CatalogComponents.Grouping.class)) return (T) new GroupingRenderer(settings, component.a$(CatalogComponents.Grouping.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.class)) return (T) new CollectionRenderer(settings, component.a$(CatalogComponents.Collection.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Heading.class)) return (T) new HeadingRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Heading.class), provider, target);
 		if (component.i$(CatalogComponents.Collection.Mold.Item.class)) return (T) new ItemRenderer(settings, component.a$(CatalogComponents.Collection.Mold.Item.class), provider, target);

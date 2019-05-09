@@ -13,5 +13,5 @@ Template widgetTypeTemplate as Decorated
 				OpenPage(page=UiElements.home, title="home") as Link
 				OpenPage(page=UiElements.docs, title="docs") as Link
 
-	Block(format=containerAir)
+	Block(format=containerAirLarge)
 		Stamp(template=widgetMold) widget

@@ -57,7 +57,7 @@ public class ComponentTemplate extends Template {
 			rule().add((condition("type", "component & child"))).add(literal("if (")).add(mark("name")).add(literal(" == null) ")).add(mark("name")).add(literal(" = register(new ")).add(mark("name", "firstUpperCase")).add(literal("(box()).<")).add(mark("name", "firstUpperCase")).add(literal(">id(\"")).add(mark("id")).add(literal("\").owner(")).add(mark("owner")).add(literal(".this));")),
 			rule().add((condition("type", "facet"))).add(mark("name", "firstUpperCase")),
 			rule().add((condition("type", "binding & toolbar"))).add(mark("name")).add(literal(".bindTo(")).add(mark("collection")).add(literal(");")),
-			rule().add((condition("type", "binding & groupbox"))).add(mark("name")).add(literal(".bindTo(")).add(mark("collection")).add(literal(");")),
+			rule().add((condition("type", "binding & grouping"))).add(mark("name")).add(literal(".bindTo(")).add(mark("collection")).add(literal(");")),
 			rule().add((condition("type", "binding"))).add(mark("name")).add(literal(".bindTo(")).add(mark("selector")).add(literal(", \"")).add(mark("option")).add(literal("\");")),
 			rule().add((condition("type", "implements & selectablecollection"))).add(literal("implements io.intino.alexandria.ui.displays.components.collection.Selectable")),
 			rule().add((condition("type", "implements & option"))).add(literal("implements io.intino.alexandria.ui.displays.components.selector.SelectorOption")),

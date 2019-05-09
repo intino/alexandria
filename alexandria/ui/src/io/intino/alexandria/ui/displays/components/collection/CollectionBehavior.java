@@ -35,9 +35,13 @@ public class CollectionBehavior<ItemComponent, Item> {
 		recalculateCurrentPageAndReset();
 	}
 
-	public void moreItems(CollectionMoreItems info) {
+	public synchronized void moreItems(CollectionMoreItems info) {
 		java.util.List<Item> items = itemLoader.moreItems(info.start(), info.stop());
 		for (int i=0; i<items.size(); i++) collection.insert(items.get(i), info.start()+i);
+	}
+
+	public long itemCount() {
+		return itemLoader.itemCount();
 	}
 
 	private void reset(List<Item> items) {
@@ -49,4 +53,5 @@ public class CollectionBehavior<ItemComponent, Item> {
 		while (page > itemLoader.pageCount() && page > 0) page--;
 		reset(itemLoader.page(page));
 	}
+
 }

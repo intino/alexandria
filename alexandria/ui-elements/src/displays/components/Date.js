@@ -34,7 +34,6 @@ class Date extends AbstractDate {
 		const { classes } = this.props;
 		const label = ComponentBehavior.label(this.props);
 		const pattern = this.props.pattern !== "" ? this.props.pattern : undefined;
-		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
 		const labelBlock = (label !== undefined) ? <Typography variant="body1" className={classes.label}>{label}</Typography> : undefined;
 		const dateToFormat = this.state.value != null ? new Date(this.state.value) : null;
 		const hasMode = this.props.mode != null;
@@ -42,7 +41,7 @@ class Date extends AbstractDate {
 		return (
 			<Block layout="horizontal">
 				{ labelBlock }
-				<Typography variant={format} className={classes.value}>
+				<Typography variant={this.variant("body1")} className={classes.value}>
 					<Moment format={!hasMode ? pattern : undefined}
 							fromNow={this.props.mode === "fromnow"}
 							toNow={this.props.mode === "tonow"}

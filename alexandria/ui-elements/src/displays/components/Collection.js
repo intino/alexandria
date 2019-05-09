@@ -26,4 +26,8 @@ export default class Collection extends AbstractCollection {
 	refresh = () => {
 		this.behavior.refresh();
 	};
+
+	refreshItemCount = (itemCount) => {
+		this.setState({ itemCount });
+	};
 }

@@ -114,6 +114,7 @@ Facet CheckBox on OtherComponents.Selector
 	var string[] selected = empty
 
 Facet ComboBox on OtherComponents.Selector
+Facet ComboBox on CatalogComponents.Grouping
 
 // TEXT FACETS
 Facet Code on DataComponents.Text
@@ -124,8 +125,8 @@ Facet AbstractLabeled is abstract
 	var word:{Top Bottom Left Right} position = Left
 Facet Labeled extends AbstractLabeled on Component
 Facet Labeled extends AbstractLabeled on CatalogComponents.Collection.Mold.Heading
-Facet Labeled extends AbstractLabeled on CatalogComponents.GroupBox
-Facet Labeled extends AbstractLabeled on CatalogComponents.SortBox
+Facet Labeled extends AbstractLabeled on CatalogComponents.Grouping
+Facet Labeled extends AbstractLabeled on CatalogComponents.Sorting
 
 Facet DynamicLoaded on Component
 	var word:{VerySlow Slow Fast VeryFast} loadTime = VeryFast
