@@ -24,7 +24,7 @@ Template homeTemplate
 				Text(value="home")
 				OpenPage(page=UiElements.docs, title = "docs") as Link
 
-	Block(format=containerAir) as Parallax("images/background1.jpg") Absolute(height=500px)
+	Block(format=containerAirLarge) as Parallax("images/background1.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center) as Relative(width=70%)
 			Text(value="software production lines made easy", format=h1 textCentered)
 			Text(value="symplifying software mass customization", format=h2)
@@ -32,7 +32,7 @@ Template homeTemplate
 //				Link("demo") as Button
 //				Link("get started") as Button
 
-	Block(format=containerAir)
+	Block(format=containerAirLarge)
 		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
 			Block > Text(value="Why intino?", format=h1 air)
 			Block(layout=Horizontal CenterCenter, spacing=DP40) as Absolute(height=300px)
@@ -46,14 +46,14 @@ Template homeTemplate
 					Text(value="quality", format=h5 cardTitle)
 					Text(value="Lowering the complexity of product line development. Application developers can focus on user requirements, getting advantage on the platform architecture that provides a stable quality", format=h5 cardContent)
 
-	Block(format=containerAir) as Parallax("images/background2.jpg") Absolute(height=500px)
+	Block(format=containerAirLarge) as Parallax("images/background2.jpg") Absolute(height=500px)
 		Block(layout=Vertical Center, spacing=DP40) as Relative(width=70%)
 			Block > Text(value="What does it look like?", format=h2 air white)
 			Block(layout=Horizontal)
 //				Link("demo") as Button
 //				Link("get started") as Button
 
-	Block(format=containerAir) as Parallax("images/background3.jpg") Absolute(height=500px)
+	Block(format=containerAirLarge) as Parallax("images/background3.jpg") Absolute(height=500px)
 		Block
 			Text(value="software production lines made easy", format=h1)
 			Text(value="symplifying software mass customization", format=h2)

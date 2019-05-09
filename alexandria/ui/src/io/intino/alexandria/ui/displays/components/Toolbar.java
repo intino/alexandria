@@ -18,7 +18,7 @@ public class Toolbar<DN extends ToolbarNotifier, B extends Box> extends Abstract
 
     @Override
     public void bindTo(Selectable collection) {
-        collection.onSelect(event -> selectionOperations().forEach(child -> child.selectedItems(event.items())));
+        collection.onSelect(event -> selectionOperations().forEach(child -> child.selectedItems(event.selection())));
     }
 
     private List<SelectionOperation> selectionOperations() {

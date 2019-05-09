@@ -15,12 +15,12 @@ public abstract class Datasource<O> {
 		this.items.clear();
 	}
 
-	public int itemCount() {
+	public long itemCount() {
 		return itemCount(null, emptyList());
 	}
-	public abstract int itemCount(String condition, List<Filter> filters);
+	public abstract long itemCount(String condition, List<Filter> filters);
 	public abstract List<O> items(int start, int count, String condition, List<Filter> filters);
-	public abstract List<Group> groups(String name, List<O> items);
+	public abstract List<Group> groups(String key);
 
 	public Datasource<O> addAll(List<O> items) {
 		this.items.addAll(items);

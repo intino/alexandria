@@ -12,7 +12,7 @@ Template docsTemplate as Decorated
 				OpenPage(page=UiElements.home, title="home") as Link
 				Text(value="docs")
 
-	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAir) body
+	Block(layout=Horizontal CenterJustified Wrap, spacing=DP40, format=containerAirLarge) body
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) dataBlock as Paper Relative(width=40%) Labeled("data widgets")
 			Stamp(template=widgetSummaryMold) dataWidgets as Multiple(noItemsMessage="no widgets")
 		Block(format=h5 paperFormat, layout=Vertical, spacing=DP8) catalogBlock as Paper Relative(width=40%) Labeled("catalog widgets")

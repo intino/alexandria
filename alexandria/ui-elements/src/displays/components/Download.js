@@ -7,7 +7,7 @@ import DownloadDialog from "./operation/DownloadDialog";
 import Operation from "./Operation";
 import { withSnackbar } from 'notistack';
 
-const styles = theme => ({...Operation.Styles});
+const styles = theme => ({...Operation.Styles(theme)});
 
 class Download extends AbstractDownload {
 

@@ -30,6 +30,13 @@ export default class Component extends AlexandriaDisplay {
         );
     };
 
+    variant = (defaultVariant) => {
+        if (this.props.format == null || this.props.format === "default") return defaultVariant;
+        let theme = Theme.get();
+        const variant = this.props.format.split(" ")[0];
+        return theme[variant] != null ? variant : defaultVariant;
+    };
+
     refreshLoading = (loading) => {
         this.setState({ loading: loading });
     };

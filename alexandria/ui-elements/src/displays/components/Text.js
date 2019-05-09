@@ -10,7 +10,7 @@ import TextBehavior from "./behaviors/TextBehavior";
 const styles = theme => ({
 	label: {
 		color: theme.palette.grey.primary,
-		marginRight: "10px"
+		marginRight: "5px"
 	},
 	value: {
 		color: "inherit"
@@ -43,18 +43,18 @@ class Text extends AbstractText {
 	render() {
 		const { classes } = this.props;
 	    const value = TextBehavior.mode(this.state.value, this.props);
-	    const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
+	    const variant = this.variant("body1");
 	    const label = TextBehavior.label(this.props);
-	    const labelBlock = (label !== undefined) ? <Typography variant={format} className={classes.label}>{label}</Typography> : undefined;
+	    const labelBlock = (label !== undefined) ? <Typography variant={variant} className={classes.label}>{label}</Typography> : undefined;
 
 	    if (value == null || value === "") return (<React.Fragment/>);
 
 	    return (
 			<Block layout="horizontal">
 				{ labelBlock }
-				{this.props.prefix !== undefined ? <Typography variant={format} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
-				<Typography variant={format} className={classes.value} style={this.style()}>{value}</Typography>
-				{ this.props.suffix !== undefined ? <Typography variant={format} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
+				{this.props.prefix !== undefined ? <Typography variant={variant} className={classes.prefix}>{this.props.prefix}:</Typography> : undefined }
+				<Typography variant={variant} className={classes.value} style={this.style()}>{value}</Typography>
+				{ this.props.suffix !== undefined ? <Typography variant={variant} className={classes.suffix}>{this.props.suffix}</Typography> : undefined }
 			</Block>
 		);
 	};

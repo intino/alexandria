@@ -93,14 +93,10 @@ Concept CatalogComponents
 				var integer min
 				var integer max
 
-	Concept:Named GroupBox extends Component
+	Concept:Named Grouping extends Component
 		var Collection collection
 
-		Concept:{0..1} Histogram
-			var boolean alwaysVisible = false
-			var word:{Percentage Absolute} type = Percentage
-
-	Concept:Named SortBox extends Component
+	Concept:Named Sorting extends Component
 		var Collection collection
 
 	Concept:Named SearchBox extends Component

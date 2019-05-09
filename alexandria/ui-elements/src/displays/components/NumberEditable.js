@@ -34,10 +34,9 @@ class NumberEditable extends AbstractNumberEditable {
 		const { classes } = this.props;
 		const value = this.state.value !== "" ? this.state.value : (this.props.min !== -1 ? this.props.min : 0);
 		const label = this.props.label !== "" ? this.props.label : undefined;
-		const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "body1";
 
 		return (
-			<TextField format={format} style={this.style()} className={classes.default} label={label} type="number"
+			<TextField format={this.variant("body1")} style={this.style()} className={classes.default} label={label} type="number"
 					   value={value} onChange={this.handleChange.bind(this)}
 					   inputProps={{
 						   min: this.props.min !== -1 ? this.props.min : undefined,

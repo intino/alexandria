@@ -23,7 +23,7 @@ public class ListExamplesMold extends AbstractListExamplesMold<UiFrameworkBox> {
         init(list4, Datasources.personDatasource());
         init(list5, Datasources.personDatasource());
         add.onExecute((event) -> add.notifyUser("add item", UserMessage.Type.Info));
-        remove.onExecute((event) -> remove.notifyUser("remove items " + String.join(",", event.items())));
+        remove.onExecute((event) -> remove.notifyUser("remove " + event.selection().size() + " items "));
     }
 
     private void init(io.intino.alexandria.ui.displays.components.List list, Datasource datasource) {

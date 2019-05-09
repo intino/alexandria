@@ -3,12 +3,12 @@ package io.intino.konos.builder.codegeneration.ui.displays.components.collection
 import io.intino.konos.builder.codegeneration.Settings;
 import io.intino.konos.builder.codegeneration.ui.TemplateProvider;
 import io.intino.konos.builder.codegeneration.ui.displays.components.ComponentRenderer;
-import io.intino.konos.model.graph.CatalogComponents.GroupBox;
+import io.intino.konos.model.graph.CatalogComponents.Grouping;
 import org.siani.itrules.model.Frame;
 
-public class GroupBoxRenderer extends ComponentRenderer<GroupBox> {
+public class GroupingRenderer extends ComponentRenderer<Grouping> {
 
-	public GroupBoxRenderer(Settings settings, GroupBox component, TemplateProvider provider, Target target) {
+	public GroupingRenderer(Settings settings, Grouping component, TemplateProvider provider, Target target) {
 		super(settings, component, provider, target);
 	}
 
@@ -17,22 +17,6 @@ public class GroupBoxRenderer extends ComponentRenderer<GroupBox> {
 		Frame frame = super.buildFrame();
 		addBinding(frame);
 		return frame;
-	}
-
-	@Override
-	public Frame properties() {
-		Frame result = super.properties();
-		addHistograms(result);
-		return result;
-	}
-
-	private void addHistograms(Frame frame) {
-		if (element.histogram() == null) return;
-		Frame result = new Frame("histogram");
-		GroupBox.Histogram histogram = element.histogram();
-		result.addSlot("alwaysVisible", histogram.alwaysVisible());
-		result.addSlot("type", histogram.type().name());
-		frame.addSlot("histogram", result);
 	}
 
 	private void addBinding(Frame frame) {

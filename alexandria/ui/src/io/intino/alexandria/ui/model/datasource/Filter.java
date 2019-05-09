@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Filter {
 	private final String grouping;
-	private final List<String> groups;
+	private List<String> groups;
 
 	public Filter(String grouping, List<String> groups) {
 		this.grouping = grouping;
@@ -17,5 +17,10 @@ public class Filter {
 
 	public List<String> groups() {
 		return groups;
+	}
+
+	public Filter groups(List<String> groups) {
+		this.groups = groups;
+		return this;
 	}
 }

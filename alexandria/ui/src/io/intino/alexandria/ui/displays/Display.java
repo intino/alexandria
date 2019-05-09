@@ -24,6 +24,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	private Map<String, List<Display>> promisedChildren = new HashMap<>();
 	protected DisplayRepository repository;
 	protected N notifier;
+	protected String container = null;
 	private io.intino.alexandria.ui.SoulProvider soulProvider;
 	private UISession session;
 	private Display parent = null;
@@ -181,6 +182,10 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 		return new ArrayList<>(allPromisedChildren());
 	}
 
+	public List<Display> promisedChildren(String container) {
+		return promisedChildren.containsKey(container) ? promisedChildren.get(container) : new ArrayList<>();
+	}
+
 	public List<Display> promisedChildren(List<String> ids) {
 		return allPromisedChildren().stream().filter(c -> ids.contains(c.id())).collect(toList());
 	}
@@ -211,15 +216,15 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	public <D extends Display> D register(D child) {
 		((Display)child).parent(this);
-		promisedChildren.remove(child);
+		promisedChildren(child.container).remove(child);
 		repository.register(child);
-		addChild(child, DefaultInstanceContainer);
+		addChild(child, container(child));
 		child.init();
 		return child;
 	}
 
 	public <D extends Display> D add(D child) {
-		return add(child, DefaultInstanceContainer);
+		return add(child, container(child));
 	}
 
 	public <D extends Display> D add(D child, String container) {
@@ -229,7 +234,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D addPromise(D child) {
-		return addPromise(child, DefaultInstanceContainer);
+		return addPromise(child, container(child));
 	}
 
 	public <D extends Display> D addPromise(D child, String container) {
@@ -241,7 +246,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	}
 
 	public <D extends Display> D insertPromise(D child, int index) {
-		return insertPromise(child, index, DefaultInstanceContainer);
+		return insertPromise(child, index, container(child));
 	}
 
 	public <D extends Display> D insertPromise(D child, int index, String container) {
@@ -296,7 +301,7 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 	public void removeChild(Display display, String container) {
 		display.remove();
 		notifier.remove(display.id, container);
-		children.remove(display);
+		children.get(container).remove(display);
 		repository.remove(display.id);
 	}
 
@@ -342,7 +347,12 @@ public class Display<N extends DisplayNotifier, B extends Box> {
 
 	private void addPromisedChild(Display child, String container) {
 		if (!promisedChildren.containsKey(container)) promisedChildren.put(container, new ArrayList<>());
+		child.container = container;
 		promisedChildren.get(container).add(child);
+	}
+
+	private String container(Display child) {
+		return child.container != null ? child.container : DefaultInstanceContainer;
 	}
 
 }

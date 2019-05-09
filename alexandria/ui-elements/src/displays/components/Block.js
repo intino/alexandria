@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import AbstractBlock from "../../../gen/displays/components/AbstractBlock";
 import BlockNotifier from "../../../gen/displays/notifiers/BlockNotifier";
 import BlockRequester from "../../../gen/displays/requesters/BlockRequester";
+import Theme from "../../../gen/Theme"
 import 'alexandria-ui-elements/res/styles/layout.css';
 
 export default class Block extends AbstractBlock {
@@ -38,10 +39,9 @@ export default class Block extends AbstractBlock {
 		let style = this.style();
 
 		if (paper) {
-			const format = this.props.format != null && this.props.format !== "default" ? this.props.format.split(" ")[0] : "h5";
 			return (
 				<Paper style={style} className={layout}>
-					{this.props.label !== "" ? <Typography style={{padding:"0 10px"}} variant={format}>{this.props.label}</Typography> : undefined }
+					{this.props.label !== "" ? <Typography style={{padding:"0 10px"}} variant={this.variant("h5")}>{this.props.label}</Typography> : undefined }
 					<div style={{padding:"0 10px"}}>{this._renderChildren()}</div>
 				</Paper>
 			);

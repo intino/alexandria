@@ -1,11 +1,11 @@
 import React from "react";
 import * as Elements from "app-elements/gen/Displays";
-import Checkbox from '@material-ui/core/Checkbox';
+import { Typography, Checkbox } from "@material-ui/core";
 import classNames from "classnames";
-import 'alexandria-ui-elements/res/styles/layout.css';
 import TablePagination from '@material-ui/core/TablePagination';
 import {FixedSizeList as ReactWindowList} from "react-window";
 import InfiniteLoader from 'react-window-infinite-loader';
+import 'alexandria-ui-elements/res/styles/layout.css';
 
 const CollectionBehavior = (collection) => {
     const PaginationHeight = 56;
@@ -17,6 +17,11 @@ const CollectionBehavior = (collection) => {
     self.renderCollection = (height, width) => {
         const items = self.items();
         const navigable = collection.props.navigable;
+
+        if (items.length <= 0) return self.renderEmpty(height, width);
+
+        self.collection.itemsRenderedCalled = false;
+        window.setTimeout(() => self.forceNotifyItemsRendered(items), 50);
         if (navigable == null) return self.renderInfiniteList(items, height, width);
         return (
             <div>
@@ -70,7 +75,22 @@ const CollectionBehavior = (collection) => {
         );
     };
 
+    self.renderEmpty = (height, width) => {
+        const noItemsMessage = self.collection.props.noItemsMessage != null ? self.collection.props.noItemsMessage : "No elements";
+        return (<Typography style={{height, width}} className="layout horizontal center-center">{self.collection.translate(noItemsMessage)}</Typography>);
+    };
+
+    self.forceNotifyItemsRendered = (items) => {
+        if (self.collection.forceTimeout != null) window.clearTimeout(self.collection.forceTimeout);
+        self.collection.forceTimeout = window.setTimeout(() => {
+            if (self.collection.itemsRenderedCalled) return;
+            self.refreshItemsRendered(items, null, self.collection.itemsWindow);
+            self.collection.itemsRenderedCalled = true;
+        }, 50);
+    };
+
     self.notifyItemsRendered = (instances, itemsWindow) => {
+        self.collection.itemsRenderedCalled = true;
         self.collection.rendering = true;
         self.collection.timeout = window.setTimeout(() => {
             self.collection.requester.notifyItemsRendered({
@@ -142,7 +162,7 @@ const CollectionBehavior = (collection) => {
 
     self.loadMoreItems = (items, startIndex, stopIndex) => {
         if (self.collection.moreItemsTimeout != null) window.clearTimeout(self.collection.moreItemsTimeout);
-        self.collection.moreItemsTimeout = window.setTimeout(() => self.collection.requester.loadMoreItems({ start: startIndex, stop: stopIndex }), 100);
+        self.collection.moreItemsTimeout = window.setTimeout(() => self.collection.requester.loadMoreItems({ start: startIndex, stop: stopIndex }), 150);
         self.collection.moreItemsCallback = new Promise(resolve => resolve());
         return self.collection.moreItemsCallback;
     };
