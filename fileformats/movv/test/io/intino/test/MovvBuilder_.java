@@ -94,8 +94,8 @@ public class MovvBuilder_ {
         assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
         assertThat(movv.get(1000).at(instant(2018,2,25)).data).isEqualTo("2");
         assertThat(movv.get(1000).at(instant(2019,1,1)).data).isEqualTo("4");
-        assertThat(movv.get(1000).at(instant(2019,2,15)).data).isEqualTo("5");
-        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("5");
+        assertThat(movv.get(1000).at(instant(2019,2,15)).data).isEqualTo("05");
+        assertThat(movv.get(1000).at(Instant.now()).data).isEqualTo("05");
     }
 
     @Test
@@ -154,18 +154,18 @@ public class MovvBuilder_ {
     }
 
     private void buildEmptyMovv() throws IOException {
-        MovvBuilder.create(new File("movvs/empty.movv"), 32)
+        MovvBuilder.create(new File("movvs/empty.movv"), 1)
                 .close();
     }
 
     private void build() throws IOException {
-        MovvBuilder.create(new File("movvs/single.movv"), 32)
+        MovvBuilder.create(new File("movvs/single.movv"), 2)
                 .add(1000, instant(2018, 1, 2), "1")
                 .close();
     }
 
     private void buildWithNonSortedStage() throws IOException {
-        MovvBuilder.create(new File("movvs/single.movv"), 32)
+        MovvBuilder.create(new File("movvs/single.movv"), 2)
                 .stageOf(1000)
                     .add(instant(2018, 2, 24), "2")
                     .add(instant(2018, 1, 1), "1")
@@ -185,7 +185,7 @@ public class MovvBuilder_ {
 
         MovvBuilder.update(new File("movvs/single.movv"))
                 .add(1000, instant(2019,2,1), "4")
-                .add(1000, instant(2019,2,10), "5")
+                .add(1000, instant(2019,2,10), "05")
                 .close();
     }
 
