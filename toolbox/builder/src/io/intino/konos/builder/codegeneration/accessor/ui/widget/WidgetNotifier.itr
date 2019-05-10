@@ -50,7 +50,7 @@ def trigger(parameter)
 	parameters.value
 end
 
-def attribute(Display) trigger(to)
+def attribute(this:Display) trigger(to)
 	.toSelf()
 end
 

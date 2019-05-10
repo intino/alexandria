@@ -1,6 +1,7 @@
 package cesar;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
+import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.magritte.Graph;
 import org.junit.Ignore;
@@ -18,9 +19,9 @@ public class CesarGenerationTest {
 	public void testCesar() {
 		File gen = new File("test-gen", CESAR);
 		KonosGraph graph = new Graph().loadStashes("Cesar").as(KonosGraph.class);
-		new FullRenderer(null, graph, gen, gen, gen, CESAR).execute();
-//		graph.rESTServiceList().forEach(a ->
-//				new RESTAccessorRenderer(a, new File("test-gen/accessor/" + CESAR), CESAR).execute());
+//		new FullRenderer(null, graph, gen, gen, gen, CESAR).execute();
+		graph.rESTServiceList().forEach(a ->
+				new RESTAccessorRenderer(a, new File("test-gen/accessor/" + CESAR), CESAR).execute());
 	}
 
 	@Test
