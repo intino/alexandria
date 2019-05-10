@@ -1,28 +1,27 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.catalog;
 
+import io.intino.itrules.Rule;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewTemplate;
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
 
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CatalogTemplate extends Template {
 
-	protected CatalogTemplate(Locale locale, LineSeparator lineSeparator) {
-		super(locale, lineSeparator);
+	@Override
+	protected RuleSet ruleSet() {
+		return new RuleSet().add(
+				getAll(new CatalogSkeletonTemplate().ruleSet()))
+				.add(getAll(new OperationTemplate().ruleSet()))
+				.add(getAll(new ViewTemplate().ruleSet()));
 	}
 
-	public static Template create() {
-		return new CatalogTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(CatalogSkeletonTemplate.create().rules());
-		add(OperationTemplate.create().rules());
-		add(ViewTemplate.create().rules());
-		return this;
+	private Rule[] getAll(Iterable<Rule> ruleSet) {
+		List<Rule> rules = new ArrayList<>();
+		ruleSet.forEach(rules::add);
+		return rules.toArray(new Rule[0]);
 	}
 }

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.newExternalProvider;
 import static io.intino.tara.plugin.project.configuration.ConfigurationManager.register;
@@ -74,7 +75,7 @@ public class UIAccessorCreator {
 	private void addExcludeFiles(File parent, ContentEntry contentEntry)  {
 		final File lib = new File(parent, "lib");
 		lib.mkdirs();
-		contentEntry.addExcludeFolder(VfsUtil.findFileByIoFile(lib, true));
+		contentEntry.addExcludeFolder(Objects.requireNonNull(VfsUtil.findFileByIoFile(lib, true)));
 	}
 
 	private String toSnakeCase(String name) {

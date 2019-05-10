@@ -1,52 +1,56 @@
 dsl Konos
+//
+//Client (clientID = "{subscriberId}", domain = "ebar") as Ness(url = "{ness_url}", user = "{ness_user}", password = "{ness_password}")
+//	Mounter(SensorChanged) sensorChanged
+//	Mounter(StationDisconnected) stationDisconnected
+//	Mounter(StationAdded) stationAdded
+//	Mounter(StationRemoved) stationRemoved
+//	Mounter(StationModified) stationModified
+//	Mounter(subdomain = "configuration", schema = AlertModified) alertModified
+//
+//Schema AlertModified
+//	Attribute alert as Text
+//	Attribute active as Bool
+//	Attribute mailingList as Text List
+//	Attribute applyToAllStations as Bool
+//
+//Schema SensorChanged
+//	Attribute station as Text
+//	Attribute sensor as Text
+//	Attribute value as Bool
+//	Attribute ts as DateTime
+//
+//Schema StationDisconnected
+//	Attribute station as Text
+//	Attribute ts as DateTime
+//
+//Schema StationAdded
+//	Attribute name as Text
+//	Attribute label as Text
+//	Attribute coordinates as Text
+//	Attribute ts as DateTime
+//
+//Schema StationRemoved
+//	Attribute name as Text
+//	Attribute ts as DateTime
+//
+//Schema StationModified
+//	Attribute name as Text
+//	Attribute newLabel as Text
+//	Attribute ts as DateTime
+//
+//
+//Task CheckSequences as CronTrigger(pattern = "0 0 12 1/1 * ? *", "Every day at 12")
+//Task CheckEnginesAndAlarmsDuration as CronTrigger(pattern = "0 0/15 * 1/1 * ? *", "Every fifteen minutes")
+//
 
-Client (clientID = "{subscriberId}", domain = "ebar") as Ness(url = "{ness_url}", user = "{ness_user}", password = "{ness_password}")
-	Mounter(SensorChanged) sensorChanged
-	Mounter(StationDisconnected) stationDisconnected
-	Mounter(StationAdded) stationAdded
-	Mounter(StationRemoved) stationRemoved
-	Mounter(StationModified) stationModified
-	Mounter(subdomain = "configuration", schema = AlertModified) alertModified
-
-Schema AlertModified
-	Attribute alert as Text
-	Attribute active as Bool
-	Attribute mailingList as Text List
-	Attribute applyToAllStations as Bool
-
-Schema SensorChanged
-	Attribute station as Text
-	Attribute sensor as Text
-	Attribute value as Bool
-	Attribute ts as DateTime
-
-Schema StationDisconnected
-	Attribute station as Text
-	Attribute ts as DateTime
-
-Schema StationAdded
-	Attribute name as Text
-	Attribute label as Text
-	Attribute coordinates as Text
-	Attribute ts as DateTime
-
-Schema StationRemoved
-	Attribute name as Text
-	Attribute ts as DateTime
-
-Schema StationModified
-	Attribute name as Text
-	Attribute newLabel as Text
-	Attribute ts as DateTime
-
-
-Task CheckSequences as CronTrigger(pattern = "0 0 12 1/1 * ? *", "Every day at 12")
-Task CheckEnginesAndAlarmsDuration as CronTrigger(pattern = "0 0/15 * 1/1 * ? *", "Every fifteen minutes")
-
-Service(title = "Smart Port", favicon = "") productUi as UI(port = "9000")
+Service(title = "Smart Port", favicon = "") productUi as UI(port = "{port}")
+	googleApiKey = "AIzaSyCht-qe1rc76NTpLzfpwDRavTV6kCGBQLY"
 	Authentication(by = "{federationUrl}")
-	Resource("/") homePage as DisplayPage(ebarDesktop) Confidential
-	Resource("/configuration/alert/:name") configurationPage as DialogPage(editStationAlerts)
+	Resource(path = "/", display = ebarDesktop) homePage as Root Confidential DisplayPage
+	Resource configurationPage as DialogPage
+		path = "/configuration/alert/:name"
+		dialog = editStationAlerts
 
 Dialog(label = "Editar alertas", description = "alertas de la estación ::station::", url="") editStationAlerts
 	Tab("información")
@@ -88,13 +92,13 @@ Mold(modelClass = "com.monentia.ebar.graph.Asset") infrastructureMold
 					defaultStyle = "margin-top:6px;max-height: 175px;"
 				Snippet(label = "sequencia", layout = Flexible, defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;") sequence
 			Block > Snippet stats
-
+//
 TemporalCatalog(label = "Episodios", itemClass = "com.monentia.ebar.graph.StationSequence", scales = Day, type = Range) sequenceCatalog
 	Views views > View("listado", mold = sequenceMold) as ListContainer
 	Toolbar > Export(title = "Descarga los episodios del último mes", mode = Icon, polymerIcon = "archive")
 	Content
-		Sorting(label = "fecha") date
-		Grouping(label = "Estación") stations
+		Sorting("fecha") date
+		Grouping("Estación") stations
 		Grouping("Estado del episodio") stationSequenceStates
 		Grouping("Tipo de episodio") stationSequenceTypes
 
@@ -122,12 +126,15 @@ Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") analysisCatalo
 Catalog("Configuración", itemClass = "com.monentia.ebar.graph.Alerts.Alert") configurationCatalog
 	Views views > View("alertas", mold = configurationMold) as ListContainer
 
+
 Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") configurationMold
 	Block(Horizontal)
 		Block > Icon(source = Polymer) alertIcon
 		Block(Flexible)
 			Title("estación") title
-			Description("direcciones de correo") emails
+			Description("direcciones de correo") emails > defaultStyle = "font-size: 11pt;"
 			Highlight("estado") estado
 	Block(Horizontal Wrap, mode = Expanded)
-		Block(Flexible) > OpenDialogOperation("editar...", dialog = editStationAlerts,defaultStyle = "margin-left:32px;") editAlert
+		Block(Flexible)
+			OpenDialogOperation("editar...", dialog = editStationAlerts, defaultStyle = "margin-left:32px;") editAlert
+

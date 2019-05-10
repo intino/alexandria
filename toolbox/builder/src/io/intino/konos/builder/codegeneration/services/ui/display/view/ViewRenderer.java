@@ -1,8 +1,11 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.view;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
+import io.intino.itrules.formatters.StringFormatters;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.UIPrototypeRenderer;
-import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Component;
@@ -22,9 +25,6 @@ import io.intino.konos.model.graph.setcontainer.SetContainerView.Group;
 import io.intino.konos.model.graph.setcontainer.SetContainerView.Item;
 import io.intino.konos.model.graph.setcontainer.SetContainerView.Items;
 import io.intino.tara.magritte.Node;
-import org.siani.itrules.Template;
-import org.siani.itrules.engine.formatters.StringFormatter;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -46,33 +46,31 @@ public class ViewRenderer extends UIPrototypeRenderer {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame();
-		frame.addTypes("view")
-				.addSlot("owner", owner.name$())
-				.addSlot("ownerClass", owner.getClass().getSimpleName())
-				.addSlot("label", view.label())
-				.addSlot("layout", view.layout().name())
-				.addSlot("width", view.width());
-
+	public FrameBuilder frameBuilder() {
+		FrameBuilder builder = super.frameBuilder()
+				.add("view")
+				.add("owner", owner.name$())
+				.add("ownerClass", owner.getClass().getSimpleName())
+				.add("label", view.label())
+				.add("layout", view.layout().name())
+				.add("width", view.width());
 		if (view.hidden() == HiddenEnabled) {
-			frame.addSlot("hidden", hidden(view, box));
-			frame.addTypes("hasMethods");
+			builder.add("hidden", hidden(view, box));
+			builder.add("hasMethods");
 		}
 
-		addViewProperties(frame);
-
-		return frame;
+		addViewProperties(builder);
+		return builder;
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(ViewTemplate.create());
+		return Formatters.customize(new ViewTemplate());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(AbstractViewTemplate.create());
+		return Formatters.customize(new AbstractViewTemplate());
 	}
 
 	@Override
@@ -80,101 +78,100 @@ public class ViewRenderer extends UIPrototypeRenderer {
 		return null;
 	}
 
-	private void addViewProperties(Frame frame) {
-		frame.addSlot("viewDisplayLoaders", new Frame("viewDisplayLoaders").addSlot("package", packageName));
-
-		addCollectionContainerProperties(view, frame);
-		addDisplayContainerProperties(view, frame);
-		addMoldContainerProperties(view, frame);
-		addCatalogContainerProperties(view, frame);
-		addPanelContainerProperties(view, frame);
-		addSetContainerProperties(view, frame);
+	private void addViewProperties(FrameBuilder builder) {
+		builder.add("viewDisplayLoaders", new FrameBuilder("viewDisplayLoaders").add("package", packageName));
+		addCollectionContainerProperties(view, builder);
+		addDisplayContainerProperties(view, builder);
+		addMoldContainerProperties(view, builder);
+		addCatalogContainerProperties(view, builder);
+		addPanelContainerProperties(view, builder);
+		addSetContainerProperties(view, builder);
 	}
 
-	private void addCollectionContainerProperties(View view, Frame frame) {
+	private void addCollectionContainerProperties(View view, FrameBuilder builder) {
 		if (!view.isCollectionContainer()) return;
 
 		CollectionContainerView collectionView = this.view.asCollectionContainer();
-		frame.addSlot("mold", collectionView.mold().name$());
+		builder.add("mold", collectionView.mold().name$());
 
-		if (collectionView.noItemsMessage() != null) frame.addSlot("noItemsMessage", collectionView.noItemsMessage());
+		if (collectionView.noItemsMessage() != null) builder.add("noItemsMessage", collectionView.noItemsMessage());
 
-		addListContainerProperties(collectionView, frame);
-		addGridContainerProperties(collectionView, frame);
-		addMapContainerProperties(collectionView, frame);
-		addMagazineContainerProperties(collectionView, frame);
+		addListContainerProperties(collectionView, builder);
+		addGridContainerProperties(collectionView, builder);
+		addMapContainerProperties(collectionView, builder);
+		addMagazineContainerProperties(collectionView, builder);
 	}
 
-	private void addListContainerProperties(CollectionContainerView view, Frame frame) {
+	private void addListContainerProperties(CollectionContainerView view, FrameBuilder builder) {
 		if (!view.i$(ListContainerView.class)) return;
-		frame.addTypes("list");
+		builder.add("list");
 	}
 
-	private void addGridContainerProperties(CollectionContainerView view, Frame frame) {
+	private void addGridContainerProperties(CollectionContainerView view, FrameBuilder builder) {
 		if (!view.i$(GridContainerView.class)) return;
-		frame.addTypes("grid");
+		builder.add("grid");
 	}
 
-	private void addMapContainerProperties(CollectionContainerView view, Frame frame) {
+	private void addMapContainerProperties(CollectionContainerView view, FrameBuilder builder) {
 		if (!view.i$(MapContainerView.class)) return;
-		frame.addTypes("map");
+		builder.add("map");
 
 		MapContainerView mapView = view.a$(MapContainerView.class);
 
 		if (mapView.center() != null)
-			frame.addSlot("latitude", mapView.center().latitude()).addSlot("longitude", mapView.center().longitude());
+			builder.add("latitude", mapView.center().latitude()).add("longitude", mapView.center().longitude());
 
-		frame.addSlot("zoom", new Frame("zoom")
-				.addSlot("default", mapView.zoom().defaultZoom())
-				.addSlot("min", mapView.zoom().min())
-				.addSlot("max", mapView.zoom().max()));
+		builder.add("zoom", new FrameBuilder("zoom")
+				.add("default", mapView.zoom().defaultZoom())
+				.add("min", mapView.zoom().min())
+				.add("max", mapView.zoom().max()));
 	}
 
-	private void addMagazineContainerProperties(CollectionContainerView view, Frame frame) {
+	private void addMagazineContainerProperties(CollectionContainerView view, FrameBuilder frame) {
 		if (!view.i$(MagazineContainerView.class)) return;
-		frame.addTypes("magazine");
+		frame.add("magazine");
 	}
 
-	private void addDisplayContainerProperties(View view, Frame frame) {
+	private void addDisplayContainerProperties(View view, FrameBuilder frame) {
 		if (!view.isDisplayContainer()) return;
-		frame.addTypes("display");
+		frame.add("display");
 
 		DisplayContainerView displayView = view.asDisplayContainer();
-		frame.addSlot("hideNavigator", displayView.hideNavigator());
-		frame.addSlot("display", displayView.display());
+		frame.add("hideNavigator", displayView.hideNavigator());
+		frame.add("display", displayView.display());
 
 		if (owner.i$(Catalog.class))
-			frame.addSlot("catalogScope", new Frame("catalogScope").addSlot("name", view.name$()).addSlot("display", displayView.display()).addSlot("box", box).addSlot("owner", owner.name$()));
+			frame.add("catalogScope", new FrameBuilder("catalogScope").add("name", view.name$()).add("display", displayView.display()).add("box", box).add("owner", owner.name$()));
 	}
 
-	private void addMoldContainerProperties(View view, Frame frame) {
+	private void addMoldContainerProperties(View view, FrameBuilder frame) {
 		if (!view.isMoldContainer()) return;
-		frame.addTypes("mold");
+		frame.add("mold");
 		final Mold mold = view.asMoldContainer().mold();
-		frame.addSlot("mold", mold.name$());
+		frame.add("mold", mold.name$());
 	}
 
-	private void addCatalogContainerProperties(View view, Frame frame) {
+	private void addCatalogContainerProperties(View view, FrameBuilder frame) {
 		if (!view.isCatalogContainer()) return;
-		frame.addTypes("catalog");
+		frame.add("catalog");
 		CatalogContainerView catalogContainerView = view.asCatalogContainer();
-		frame.addSlot("catalog", catalogContainerView.catalog().name$());
-		frame.addSlot("catalogDisplayLoader", new Frame("catalogDisplayLoader").addSlot("package", packageName));
-		if (catalogContainerView.filtered()) frame.addSlot("filter", filterFrame(view, box));
+		frame.add("catalog", catalogContainerView.catalog().name$());
+		frame.add("catalogDisplayLoader", new FrameBuilder("catalogDisplayLoader").add("package", packageName));
+		if (catalogContainerView.filtered()) frame.add("filter", filterFrame(view, box));
 	}
 
-	private void addPanelContainerProperties(View view, Frame frame) {
+	private void addPanelContainerProperties(View view, FrameBuilder frame) {
 		if (!view.isPanelContainer()) return;
-		frame.addTypes("panel");
+		frame.add("panel");
 		PanelContainerView panelContainerView = view.asPanelContainer();
-		frame.addSlot("panel", panelContainerView.panel().name$());
+		frame.add("panel", panelContainerView.panel().name$());
 	}
 
-	private void addSetContainerProperties(View view, Frame frame) {
+	private void addSetContainerProperties(View view, FrameBuilder frame) {
 		if (!view.isSetContainer()) return;
-		frame.addTypes("set");
+		frame.add("set");
 		SetContainerView setView = view.asSetContainer();
-		frame.addSlot("viewContainerSetItems", new Frame("viewContainerSetItems").addSlot("item", frameOf(setView.abstractItemList())));
+		frame.add("viewContainerSetItems", new FrameBuilder("viewContainerSetItems").add("item", frameOf(setView.abstractItemList())));
 	}
 
 	private Frame[] frameOf(List<AbstractItem> items) {
@@ -188,56 +185,54 @@ public class ViewRenderer extends UIPrototypeRenderer {
 	}
 
 	private Frame frameOf(Group group) {
-		final Frame frame = baseFrame(group).addTypes("group").addSlot("label", group.label()).addSlot("mode", group.mode());
+		final FrameBuilder builder = baseFrameBuilder(group).add("group").add("label", group.label()).add("mode", group.mode());
 		if (!group.itemList().isEmpty())
-			frame.addSlot("item", group.itemList().stream().map(this::frameOf).toArray(Frame[]::new));
+			builder.add("item", group.itemList().stream().map(this::frameOf).toArray(Frame[]::new));
 		if (!group.itemsList().isEmpty())
-			frame.addSlot("item", group.itemsList().stream().map(this::frameOf).toArray(Frame[]::new));
-		return frame;
+			builder.add("item", group.itemsList().stream().map(this::frameOf).toArray(Frame[]::new));
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Item item) {
-		final Frame frame = baseFrame(item).addTypes("item");
+		final FrameBuilder builder = baseFrameBuilder(item).add("item");
 		final View view = item.view();
-		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
-		frame.addSlot("label", item.label());
-		frame.addSlot("view", builder.buildFrame());
-		return frame;
+		builder.add("label", item.label());
+		builder.add("view", new ViewRenderer(view, owner, box, packageName).frameBuilder().toFrame());
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Items items) {
-		Frame frame = baseFrame(items).addTypes("items").addSlot("layout", owner.name$()).addSlot("path", pathOf(items.core$())).addSlot("modelClass", items.itemClass());
+		FrameBuilder builder = baseFrameBuilder(items).add("items").add("layout", owner.name$()).add("path", pathOf(items.core$())).add("modelClass", items.itemClass());
 		final View view = items.view();
-		ViewRenderer builder = new ViewRenderer(view, owner, box, packageName);
-		frame.addSlot("view", builder.buildFrame());
-		return frame;
+		builder.add("view", new ViewRenderer(view, owner, box, packageName).frameBuilder().toFrame());
+		return builder.toFrame();
 	}
 
-	private Frame baseFrame(AbstractItem item) {
-		Frame frame = new Frame("set", item.getClass().getSimpleName().toLowerCase()).addSlot("box", box).addSlot("name", item.name$());
+	private FrameBuilder baseFrameBuilder(AbstractItem item) {
+		FrameBuilder builder = new FrameBuilder("set", item.getClass().getSimpleName().toLowerCase()).add("box", box).add("name", item.name$());
 		if (item.hidden() == AbstractItem.Hidden.HiddenEnabled)
-			frame.addSlot("hidden", new Frame().addSlot("box", box).addSlot("layout", owner.name$()).addSlot("path", pathOf(item.core$())));
-		return frame;
+			builder.add("hidden", new FrameBuilder().add("box", box).add("layout", owner.name$()).add("path", pathOf(item.core$())).toFrame());
+		return builder;
 	}
 
-	private Frame filterFrame(View view, String box) {
+	private FrameBuilder filterFrame(View view, String box) {
 		final String itemClass = view.asCatalogContainer().catalog().itemClass();
-		return new Frame("filter").addSlot("owner", owner.name$()).addSlot("view", view.name$()).addSlot("box", box).addSlot("itemClass", itemClass);
+		return new FrameBuilder("filter").add("owner", owner.name$()).add("view", view.name$()).add("box", box).add("itemClass", itemClass);
 	}
 
-	private Frame hidden(View view, String box) {
-		return new Frame("hidden").addSlot("owner", owner.name$()).addSlot("view", view.name$()).addSlot("box", box);
+	private FrameBuilder hidden(View view, String box) {
+		return new FrameBuilder("hidden").add("owner", owner.name$()).add("view", view.name$()).add("box", box);
 	}
 
 	private String pathOf(Node node) {
-		String qn = "";
+		StringBuilder qn = new StringBuilder();
 		Node parent = node;
 		while (!parent.equals(view.core$())) {
-			qn = StringFormatter.firstUpperCase().format(parent.name()).toString() + (qn.isEmpty() ? "" : ".") + qn;
+			qn.insert(0, StringFormatters.firstUpperCase().format(parent.name()).toString() + ((qn.length() == 0) ? "" : "."));
 			parent = parent.owner();
 		}
-		qn = StringFormatter.firstUpperCase().format(view.core$().name()).toString() + (qn.isEmpty() ? "" : ".") + qn;
-		return qn;
+		qn.insert(0, StringFormatters.firstUpperCase().format(view.core$().name()).toString() + ((qn.length() == 0) ? "" : "."));
+		return qn.toString();
 	}
 
 }

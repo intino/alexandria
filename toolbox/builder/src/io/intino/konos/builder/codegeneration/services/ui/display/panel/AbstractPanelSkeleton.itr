@@ -48,12 +48,12 @@ def type(desktop)
     		[desktop.favicon(toBase64(Abstract$name+firstUpperCase.class.getResourceAsStream("$favicon")));]
     		[desktop.layout(Desktop.Layout.$layout);]
     		[$toolbar+empty~desktop.toolbar(buildToolbar(box));]
-    		buildViews(box).forEach(v -> desktop.add(v));
+    		buildViews(box).forEach(desktop::add);
     		return desktop;
     	}
-		[
-		$toolbar
-		]
+
+		[$toolbar]
+
     	private static List<View> buildViews($box+firstUpperCase~Box box) {
     		List<View> result = new ArrayList<>();
     		$view+add...[$NL]
@@ -91,7 +91,7 @@ def type(custom) trigger(authentication)
 end
 
 def trigger(authentication)
-	url("$value")
+	url("$this")
 end
 
 def type(panel)
@@ -127,9 +127,9 @@ def type(panel)
     		buildViews(box).forEach(v -> panel.add(v));
     		return panel;
     	}
-		[
-		$toolbar
-		]
+
+		[$toolbar]
+
     	private static List<View> buildViews($box+firstUpperCase~Box box) {
     		List<View> result = new ArrayList<>();
     		$view+add...[$NL]

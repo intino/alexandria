@@ -43,7 +43,7 @@ public class DisplayUpdater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(DisplayTemplate.create()).format(DisplayRenderer.frameOf(request, packageName));
+		final String methodText = Formatters.customize(new DisplayTemplate()).render(DisplayRenderer.frameOf(request, packageName));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), psiClass.getMethods()[psiClass.getMethods().length - 1]);
 	}
 

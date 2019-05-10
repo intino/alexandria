@@ -113,12 +113,12 @@ public class FullRenderer {
 
 	private void jms() {
 		new JMSRequestRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new JMSServiceRenderer(graph, gen, packageName, boxName, classes).execute();
+		new JMSServiceRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void tasks() {
-		new TaskRenderer(project, graph, src, gen, packageName, boxName, classes).execute();
-		new TaskerRenderer(graph, gen, packageName, boxName, classes).execute();
+		new TaskRenderer(graph, src, gen, packageName, boxName, classes).execute();
+		new TaskerRenderer(graph, gen, packageName, boxName).execute();
 	}
 
 	private void bus() {
@@ -147,7 +147,7 @@ public class FullRenderer {
 	private void box() {
 		new AbstractBoxRenderer(graph, gen, packageName, module, parent, hasModel).execute();
 		new BoxRenderer(graph, src, packageName, module, hasModel).execute();
-		new BoxConfigurationRenderer(graph, gen, packageName, module, parent, hasModel).execute();
+		new BoxConfigurationRenderer(gen, packageName, module, parent, hasModel).execute();
 	}
 
 	private String boxName() {

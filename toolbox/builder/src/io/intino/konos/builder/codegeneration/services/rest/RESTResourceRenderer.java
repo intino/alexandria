@@ -2,6 +2,9 @@ package io.intino.konos.builder.codegeneration.services.rest;
 
 import com.intellij.openapi.project.Project;
 import cottons.utils.MimeTypes;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.RESTNotificationActionRenderer;
 import io.intino.konos.builder.codegeneration.action.RESTResourceActionRenderer;
@@ -15,9 +18,6 @@ import io.intino.konos.model.graph.rest.RESTService.Notification;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Operation;
 import io.intino.konos.model.graph.rest.RESTService.Resource.Parameter;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -60,7 +60,7 @@ public class RESTResourceRenderer {
 		for (Operation operation : resource.operationList()) {
 			Frame frame = frameOf(resource, operation);
 			final String className = snakeCaseToCamelCase(operation.getClass().getSimpleName() + "_" + resource.name$()) + "Resource";
-			Commons.writeFrame(new File(gen, RESOURCES_PACKAGE), className, template().format(frame));
+			Commons.writeFrame(new File(gen, RESOURCES_PACKAGE), className, template().render(frame));
 			createCorrespondingAction(operation);
 		}
 	}
@@ -68,13 +68,13 @@ public class RESTResourceRenderer {
 	private void processNotification(Notification notification) {
 		final String className = snakeCaseToCamelCase(notification.name$()) + "Notification";
 		RESTService service = notification.core$().ownerAs(RESTService.class);
-		Frame frame = new Frame("notification").addSlot("path", notification.path());
-		addCommonSlots(notification.name$(), frame);
-		frame.addSlot("parameter", (AbstractFrame[]) notificationParameters(notification.parameterList()));
-		frame.addSlot("returnType", notificationResponse());
-		authenticated(service, frame);
-		if (service.authenticatedWithToken() != null) frame.addSlot("throws", "Unauthorized");
-		Commons.writeFrame(new File(gen, NOTIFICATIONS_PACKAGE), className, template().format(frame));
+		FrameBuilder builder = new FrameBuilder("notification").add("path", notification.path());
+		addCommons(notification.name$(), builder);
+		builder.add("parameter", notificationParameters(notification.parameterList()));
+		builder.add("returnType", notificationResponse());
+		authenticated(service, builder);
+		if (service.authenticatedWithToken() != null) builder.add("throws", "Unauthorized");
+		Commons.writeFrame(new File(gen, NOTIFICATIONS_PACKAGE), className, template().render(builder.toFrame()));
 		createCorrespondingAction(notification);
 	}
 
@@ -87,27 +87,28 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame frameOf(Resource resource, Operation operation) {
-		Frame frame = new Frame().addTypes("resource");
-		addCommonSlots(resource.name$(), frame);
-		frame.addSlot("operation", operation.getClass().getSimpleName());
-		frame.addSlot("throws", throwCodes(operation));
-		frame.addSlot("parameter", (AbstractFrame[]) parameters(operation.parameterList()));
-		if (hasResponse(operation)) frame.addSlot("returnType", frameOf(operation.response()));
+		FrameBuilder builder = new FrameBuilder("resource");
+		addCommons(resource.name$(), builder);
+		builder.add("operation", operation.getClass().getSimpleName());
+		builder.add("throws", throwCodes(operation));
+		builder.add("parameter", parameters(operation.parameterList()));
+		if (hasResponse(operation)) builder.add("returnType", frameOf(operation.response()));
 		if (!resource.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		authenticated(resource.core$().ownerAs(RESTService.class), frame);
-		return frame;
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+		authenticated(resource.core$().ownerAs(RESTService.class), builder);
+		return builder.toFrame();
 	}
 
-	private void authenticated(RESTService service, Frame frame) {
+	private void authenticated(RESTService service, FrameBuilder builder) {
 		final RESTService.AuthenticatedWithToken authenticated = service.authenticatedWithToken();
-		if (authenticated != null) frame.addSlot("authenticationValidator", new Frame("authenticationValidator").addSlot("type", "Basic"));
+		if (authenticated != null)
+			builder.add("authenticationValidator", new FrameBuilder("authenticationValidator").add("type", "Basic").toFrame());
 	}
 
-	private void addCommonSlots(String name, Frame frame) {
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", name);
-		frame.addSlot("box", boxName);
+	private void addCommons(String name, FrameBuilder builder) {
+		builder.add("package", packageName);
+		builder.add("name", name);
+		builder.add("box", boxName);
 	}
 
 	private boolean hasResponse(Operation operation) {
@@ -115,14 +116,14 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame frameOf(Response response) {
-		Frame frame = new Frame(response.getClass().getSimpleName()).addSlot("value", Commons.returnType(response, packageName));
+		FrameBuilder builder = new FrameBuilder(response.getClass().getSimpleName()).add("value", Commons.returnType(response, packageName));
 		if (response.isText() && response.dataFormat() != Response.DataFormat.html)
-			frame.addSlot("format", MimeTypes.get(response.dataFormat().toString()));
-		return frame;
+			builder.add("format", MimeTypes.get(response.dataFormat().toString()));
+		return builder.toFrame();
 	}
 
 	private Frame notificationResponse() {
-		return new Frame("Response").addSlot("value", String.class.getSimpleName()).addSlot("format", MimeTypes.get("text"));
+		return new FrameBuilder("Response").add("value", String.class.getSimpleName()).add("format", MimeTypes.get("text")).toFrame();
 	}
 
 	private String[] throwCodes(Operation resource) {
@@ -141,41 +142,41 @@ public class RESTResourceRenderer {
 	}
 
 	private Frame parameter(Parameter parameter) {
-		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
-		if (parameter.isList()) parameterFrame.addTypes("List");
-		parameterFrame
-				.addSlot("name", parameter.name$())
-				.addSlot("parameterType", parameterType(parameter))
-				.addSlot("in", parameter.in().name());
-		if (parameter.isRequired()) return parameterFrame;
-		if (parameter.isBool()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asBool().defaultValue());
+		final FrameBuilder builder = new FrameBuilder("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
+		if (parameter.isList()) builder.add("List");
+		builder
+				.add("name", parameter.name$())
+				.add("parameterType", parameterType(parameter))
+				.add("in", parameter.in().name());
+		if (parameter.isRequired()) return builder.toFrame();
+		if (parameter.isBool()) builder.add("defaultValue").add("defaultValue", parameter.asBool().defaultValue());
 		else if (parameter.isText() && parameter.asText().defaultValue() != null)
-			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asText().defaultValue());
-		else if (parameter.isReal()) parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asReal().defaultValue());
+			builder.add("defaultValue").add("defaultValue", parameter.asText().defaultValue());
+		else if (parameter.isReal()) builder.add("defaultValue").add("defaultValue", parameter.asReal().defaultValue());
 		else if (parameter.isInteger())
-			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asInteger().defaultValue());
+			builder.add("defaultValue").add("defaultValue", parameter.asInteger().defaultValue());
 		else if (parameter.isLongInteger())
-			parameterFrame.addTypes("defaultValue").addSlot("defaultValue", parameter.asLongInteger().defaultValue());
-		return parameterFrame;
+			builder.add("defaultValue").add("defaultValue", parameter.asLongInteger().defaultValue());
+		return builder.toFrame();
 	}
 
 	private Frame parameter(Notification.Parameter parameter) {
-		final Frame parameterFrame = new Frame().addTypes("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
-		if (parameter.isList()) parameterFrame.addTypes("List");
-		return parameterFrame
-				.addSlot("name", parameter.name$())
-				.addSlot("parameterType", parameterType(parameter))
-				.addSlot("in", parameter.in().name());
+		final FrameBuilder builder = new FrameBuilder("parameter", parameter.in().toString(), parameter.asType().getClass().getSimpleName(), (parameter.isRequired() ? "required" : "optional"));
+		if (parameter.isList()) builder.add("List");
+		return builder
+				.add("name", parameter.name$())
+				.add("parameterType", parameterType(parameter))
+				.add("in", parameter.in().name()).toFrame();
 	}
 
 	private Frame parameterType(io.intino.konos.model.graph.Parameter parameter) {
 		String innerPackage = parameter.isObject() && parameter.asObject().isComponent() ? String.join(".", packageName, "schemas.") : "";
-		final Frame frame = new Frame().addSlot("value", innerPackage + parameter.asType().type());
-		if (parameter.i$(ListData.class)) frame.addTypes("list");
-		return frame;
+		final FrameBuilder builder = new FrameBuilder().add("value", innerPackage + parameter.asType().type());
+		if (parameter.i$(ListData.class)) builder.add("list");
+		return builder.toFrame();
 	}
 
 	private Template template() {
-		return Formatters.customize(RestResourceTemplate.create());
+		return Formatters.customize(new RestResourceTemplate());
 	}
 }

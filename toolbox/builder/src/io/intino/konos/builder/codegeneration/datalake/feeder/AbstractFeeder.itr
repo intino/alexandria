@@ -47,9 +47,9 @@ def type(sensor) trigger(class)
 		$parent+field
 
 		public Abstract$name+FirstUpperCase~Sensor() {
-			$parent+super[
-			$width][
-			$height]
+			$parent+super
+			[$width]
+			[$height]
 		}
 
 		$parent+methods

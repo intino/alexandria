@@ -6,6 +6,7 @@ Schema ServerLog
 
 Schema KeyValuePair
 	Schema(multiple = false) InnerSchema
+	Schema(multiple = true) InnerSchemaMultiple
 	Attribute multipleReference as List Object(Reference)
 	Attribute singleReference  as Object(Reference)
 

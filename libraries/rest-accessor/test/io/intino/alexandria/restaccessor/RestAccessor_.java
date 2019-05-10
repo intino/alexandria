@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,9 +31,9 @@ public class RestAccessor_ {
 	}
 
 	@Test
-	public void should_post_resource_encoded_with_utf8() throws RestfulFailure {
+	public void should_post_resource_encoded_with_utf8() throws RestfulFailure, IOException {
 		io.intino.alexandria.restaccessor.RestAccessor client = new RestAccessor();
-		Resource resource = new Resource("example").data(new ByteArrayInputStream(new byte[0])).contentType("application/octet-stream");
+		Resource resource = new Resource("example", new ByteArrayInputStream(new byte[0]));
 //		resource.addParameter("param1", "holá");
 //		resource.addParameter("param2", "adiós");
 		io.intino.alexandria.restaccessor.RestAccessor.Response post = client.post(localhost(), "/encoding", resource);

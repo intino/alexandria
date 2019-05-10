@@ -57,8 +57,8 @@ def type(viewContainerSetItems)
 end
 
 def type(group)
-	.add(new io.intino.alexandria.ui.model.view.set.item.Group()[.label("$label")].mode(Group.Mode.$mode)[.hidden($hidden)][
-			$item+group...[$NL]].name("$name"));
+	.add(new io.intino.alexandria.ui.model.view.set.item.Group()[.label("$label")].mode(Group.Mode.$mode)[.hidden($hidden)]
+			[$item+group...[$NL]].name("$name"));
 end
 
 def type(items)

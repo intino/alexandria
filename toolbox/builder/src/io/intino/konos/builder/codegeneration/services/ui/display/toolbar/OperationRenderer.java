@@ -1,5 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.toolbar;
 
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.UIPrototypeRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
@@ -9,8 +11,6 @@ import io.intino.konos.model.graph.Catalog;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.Toolbar;
 import io.intino.tara.magritte.Layer;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -25,33 +25,33 @@ public class OperationRenderer extends UIPrototypeRenderer {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		Frame frame = super.buildFrame().addTypes("operation", operation.getClass().getSimpleName())
-				.addSlot("title", operation.title())
-				.addSlot("owner", owner.name$())
-				.addSlot("ownerClass", owner.getClass().getSimpleName())
-				.addSlot("mode", operation.mode().toString());
+	public FrameBuilder frameBuilder() {
+		FrameBuilder builder = super.frameBuilder().add("operation").add(operation.getClass().getSimpleName())
+				.add("title", operation.title())
+				.add("owner", owner.name$())
+				.add("ownerClass", owner.getClass().getSimpleName())
+				.add("mode", operation.mode().toString());
 
-		if (owner.i$(Catalog.class)) frame.addSlot("itemClass", owner.a$(Catalog.class).itemClass());
-		if (operation.polymerIcon() != null) frame.addSlot("icon", operation.polymerIcon());
+		if (owner.i$(Catalog.class)) builder.add("itemClass", owner.a$(Catalog.class).itemClass());
+		if (operation.polymerIcon() != null) builder.add("icon", operation.polymerIcon());
 
-		addTaskProperties(frame);
-		addTaskSelectionProperties(frame);
-		addOpenDialogProperties(frame);
-		addOpenCatalogProperties(frame);
-		addOpenCatalogSelectionProperties(frame);
+		addTaskProperties(builder);
+		addTaskSelectionProperties(builder);
+		addOpenDialogProperties(builder);
+		addOpenCatalogProperties(builder);
+		addOpenCatalogSelectionProperties(builder);
 
-		return frame;
+		return builder;
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(OperationTemplate.create());
+		return Formatters.customize(new OperationTemplate());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(AbstractOperationTemplate.create());
+		return Formatters.customize(new AbstractOperationTemplate());
 	}
 
 	@Override
@@ -59,50 +59,50 @@ public class OperationRenderer extends UIPrototypeRenderer {
 		return null;
 	}
 
-	private void addTaskProperties(Frame frame) {
+	private void addTaskProperties(FrameBuilder builder) {
 		if (!operation.i$(AbstractToolbar.Task.class)) return;
 		AbstractToolbar.Task task = operation.a$(AbstractToolbar.Task.class);
 		if (task.confirmText() == null) return;
-		frame.addSlot("confirmText", task.confirmText());
+		builder.add("confirmText", task.confirmText());
 	}
 
-	private void addTaskSelectionProperties(Frame frame) {
+	private void addTaskSelectionProperties(FrameBuilder builder) {
 		if (!operation.i$(AbstractToolbar.TaskSelection.class)) return;
 		AbstractToolbar.TaskSelection taskSelection = operation.a$(AbstractToolbar.TaskSelection.class);
 		if (taskSelection.confirmText() == null) return;
-		frame.addSlot("confirmText", taskSelection.confirmText());
+		builder.add("confirmText", taskSelection.confirmText());
 	}
 
-	private void addOpenDialogProperties(Frame frame) {
+	private void addOpenDialogProperties(FrameBuilder builder) {
 		if (!operation.i$(AbstractToolbar.OpenDialog.class)) return;
-		frame.addSlot("dialog", operation.a$(AbstractToolbar.OpenDialog.class).dialog().name$());
+		builder.add("dialog", operation.a$(AbstractToolbar.OpenDialog.class).dialog().name$());
 	}
 
-	private void addOpenCatalogProperties(Frame frame) {
+	private void addOpenCatalogProperties(FrameBuilder builder) {
 		if (!operation.i$(Toolbar.OpenCatalog.class)) return;
 		Toolbar.OpenCatalog openCatalog = operation.a$(Toolbar.OpenCatalog.class);
-		frame.addSlot("width", openCatalog.width());
-		frame.addSlot("height", openCatalog.height());
-		frame.addSlot("position", openCatalog.position().toString());
-		frame.addSlot("openCatalog", openCatalog.catalog().name$());
-		frame.addSlot("view", openCatalog.views().stream().map(Layer::name$).toArray(String[]::new));
+		builder.add("width", openCatalog.width());
+		builder.add("height", openCatalog.height());
+		builder.add("position", openCatalog.position().toString());
+		builder.add("openCatalog", openCatalog.catalog().name$());
+		builder.add("view", openCatalog.views().stream().map(Layer::name$).toArray(String[]::new));
 		if (openCatalog.filtered())
-			frame.addSlot("openCatalogOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box));
+			builder.add("openCatalogOperationFilter", new FrameBuilder().add("owner", owner.name$()).add("ownerClass", owner.getClass().getSimpleName()).add("box", box));
 	}
 
-	private void addOpenCatalogSelectionProperties(Frame frame) {
+	private void addOpenCatalogSelectionProperties(FrameBuilder builder) {
 		if (!operation.i$(AbstractToolbar.OpenCatalogSelection.class)) return;
 		String itemClass = owner.a$(Catalog.class).itemClass();
 		AbstractToolbar.OpenCatalogSelection openCatalogSelection = operation.a$(AbstractToolbar.OpenCatalogSelection.class);
-		frame.addSlot("width", openCatalogSelection.width());
-		frame.addSlot("height", openCatalogSelection.height());
-		frame.addSlot("position", openCatalogSelection.position().toString());
-		frame.addSlot("openCatalog", openCatalogSelection.catalog().name$());
-		frame.addSlot("view", openCatalogSelection.views().stream().map(Layer::name$).toArray(String[]::new));
-		frame.addSlot("selection", openCatalogSelection.selection().toString());
+		builder.add("width", openCatalogSelection.width());
+		builder.add("height", openCatalogSelection.height());
+		builder.add("position", openCatalogSelection.position().toString());
+		builder.add("openCatalog", openCatalogSelection.catalog().name$());
+		builder.add("view", openCatalogSelection.views().stream().map(Layer::name$).toArray(String[]::new));
+		builder.add("selection", openCatalogSelection.selection().toString());
 		if (openCatalogSelection.filtered())
-			frame.addSlot("openCatalogSelectionOperationFilter", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box).addSlot("itemClass", itemClass));
-		frame.addSlot("openCatalogSelectionOperation", new Frame().addSlot("owner", owner.name$()).addSlot("ownerClass", owner.getClass().getSimpleName()).addSlot("box", box).addSlot("itemClass", itemClass));
+			builder.add("openCatalogSelectionOperationFilter", new FrameBuilder().add("owner", owner.name$()).add("ownerClass", owner.getClass().getSimpleName()).add("box", box).add("itemClass", itemClass));
+		builder.add("openCatalogSelectionOperation", new FrameBuilder().add("owner", owner.name$()).add("ownerClass", owner.getClass().getSimpleName()).add("box", box).add("itemClass", itemClass));
 	}
 
 }

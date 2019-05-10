@@ -1,17 +1,17 @@
 def type(operation & download)
-	public static io.intino.alexandria.ui.Resource download($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, String option, String selfId, UISession session) {
+	public static io.intino.alexandria.ui.Resource download($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, String option, String selfId, UISession session) {
 		return null;
 	}
 end
 
 def type(operation & export)
-	public static io.intino.alexandria.ui.Resource export($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, java.time.Instant from, java.time.Instant to, String selfId, UISession session) {
+	public static io.intino.alexandria.ui.Resource export($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, java.time.Instant from, java.time.Instant to, String selfId, UISession session) {
 		return null;
 	}
 end
 
 def type(operation & task)
-	public static io.intino.alexandria.ui.model.toolbar.ToolbarResult task($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, String selfId, UISession session) {
+	public static io.intino.alexandria.ui.model.toolbar.ToolbarResult task($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, String selfId, UISession session) {
 		return io.intino.alexandria.ui.model.toolbar.ToolbarResult.none();
 	}
 end
@@ -44,19 +44,19 @@ def type(operation & openCatalogSelection)
 end
 
 def trigger(openCatalogOperationFilter)
-	public static boolean openCatalogFilter($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, Object object, UISession session) {
+	public static boolean openCatalogFilter($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, Object object, UISession session) {
 		return true;
 	}
 end
 
 def trigger(openCatalogSelectionOperationFilter)
-	public static boolean openCatalogSelectionFilter($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, java.util.List<$itemClass> selection, Object object, UISession session) {
+	public static boolean openCatalogSelectionFilter($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, java.util.List<$itemClass> selection, Object object, UISession session) {
 		return true;
 	}
 end
 
 def trigger(openCatalogSelectionOperation)
-	public static io.intino.alexandria.ui.model.toolbar.ToolbarSelectionResult openCatalogSelection($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+toLowerCase, java.util.List<$itemClass> selection, java.util.List<Object> openCatalogSelection, UISession session) {
+	public static io.intino.alexandria.ui.model.toolbar.ToolbarSelectionResult openCatalogSelection($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.$ownerClass $ownerClass+firstLowerCase, java.util.List<$itemClass> selection, java.util.List<Object> openCatalogSelection, UISession session) {
 		return io.intino.alexandria.ui.model.toolbar.ToolbarSelectionResult.none();
 
 	}

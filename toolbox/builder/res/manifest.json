@@ -8,14 +8,6 @@
       "anchor": "after"
     },
     {
-      "id": "NewKonosTestFile",
-      "aClass": "io.intino.konos.builder.actions.CreateKonosTestFileAction",
-      "description": "Create Box Test File",
-      "groupId": "NewGroup",
-      "relativeToAction": "NewKonosFile",
-      "anchor": "after"
-    },
-    {
       "id": "CreateKonosBox",
       "aClass": "io.intino.konos.builder.actions.CreateKonosBoxAction",
       "text": "Create Konos Box",

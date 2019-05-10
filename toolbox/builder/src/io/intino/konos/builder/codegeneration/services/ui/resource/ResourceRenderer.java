@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.ui.resource;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.action.AccessibleDisplayActionRenderer;
 import io.intino.konos.builder.codegeneration.action.UIActionRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
@@ -8,8 +11,6 @@ import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
+import static io.intino.konos.builder.helpers.Commons.writeFrame;
 
 public class ResourceRenderer extends UIRenderer {
 	private final Project project;
@@ -42,24 +44,23 @@ public class ResourceRenderer extends UIRenderer {
 	}
 
 	private void processDisplay(AccessibleDisplay display) {
-		Frame frame = buildFrame().addSlot("name", display.name$()).addTypes("resource", display.getClass().getSimpleName());
-		frame.addSlot("parameter", parameters(display));
-		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(display.name$() + "ProxyResource"), template().format(frame));
+		writeFrame(new File(gen, RESOURCES), name(display.name$(), "ProxyResource"), template()
+				.render(frameBuilder().add("name", display.name$()).add("resource").add(display.getClass().getSimpleName()).add("parameter", parameters(display)).toFrame()));
 		createCorrespondingAction(display);
 	}
 
 	private void processResource(UIService.Resource resource) {
 		UIService uiService = resource.core$().ownerAs(UIService.class);
-		Frame frame = buildFrame().addTypes("resource").addSlot("name", resource.name$()).addSlot("parameter", parameters(resource));
-		if (resource.isEditorPage()) frame.addSlot("editor", "Editor");
-		if (uiService.googleApiKey() != null) frame.addSlot("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
-		if (resource.isConfidential()) frame.addSlot("confidential", "");
-		Commons.writeFrame(new File(gen, RESOURCES), snakeCaseToCamelCase(resource.name$() + "Resource"), template().format(frame));
+		FrameBuilder builder = frameBuilder().add("resource").add("name", resource.name$()).add("parameter", parameters(resource));
+		if (resource.isEditorPage()) builder.add("editor", "Editor");
+		if (uiService.googleApiKey() != null) builder.add("googleApiKey", customize("googleApiKey", uiService.googleApiKey()));
+		if (resource.isConfidential()) builder.add("confidential", "");
+		writeFrame(new File(gen, RESOURCES), name(resource.name$(), "Resource"), template().render(builder.toFrame()));
 		createCorrespondingAction(resource);
 	}
 
-	protected Frame buildFrame() {
-		return new Frame().addSlot("box", box).addSlot("package", packageName);
+	private String name(String s, String proxyResource) {
+		return snakeCaseToCamelCase(s + proxyResource);
 	}
 
 	private void createCorrespondingAction(UIService.Resource resource) {
@@ -72,25 +73,25 @@ public class ResourceRenderer extends UIRenderer {
 
 
 	private Template template() {
-		Template template = ResourceTemplate.create();
-		addFormats(template);
-		return template;
+		return customized(new ResourceTemplate());
 	}
 
-	private void addFormats(Template template) {
+	private Template customized(Template template) {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
+		return template;
 	}
 
 	private Frame[] parameters(UIService.Resource resource) {
 		List<String> parameters = Commons.extractUrlPathParameters(resource.path());
-		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+		return parameters.stream()
+				.map(parameter -> new FrameBuilder("parameter").add("name", parameter).toFrame())
+				.toArray(Frame[]::new);
 	}
 
 	private Frame[] parameters(AccessibleDisplay display) {
-		return display.parameters().stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+		return display.parameters().stream().map(parameter -> new FrameBuilder("parameter")
+				.add("name", parameter).toFrame()).toArray(Frame[]::new);
 	}
 }

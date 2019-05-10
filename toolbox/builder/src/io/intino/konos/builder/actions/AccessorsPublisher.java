@@ -12,6 +12,8 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.accessor.jms.JMSAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.jmx.JMXAccessorRenderer;
 import io.intino.konos.builder.codegeneration.accessor.rest.RESTAccessorRenderer;
@@ -26,8 +28,6 @@ import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -181,23 +181,22 @@ class AccessorsPublisher {
 	}
 
 	private File createPom(File root, Service service, String group, String artifact, String version) {
-		final Frame frame = new Frame().addTypes("pom").addSlot("group", group).addSlot("artifact", artifact).addSlot("version", version);
-		configuration.releaseRepositories().forEach((u, i) -> frame.addSlot("repository", createRepositoryFrame(u, i, "release")));
+		final FrameBuilder builder = new FrameBuilder("pom").add("group", group).add("artifact", artifact).add("version", version);
+		configuration.releaseRepositories().forEach((u, i) -> builder.add("repository", createRepositoryFrame(u, i, "release")));
 		SimpleEntry<String, String> distroRepo = configuration.distributionReleaseRepository();
-		frame.addSlot("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
-		final Frame depFrame = new Frame(service.core$().conceptList().stream().map(s -> s.id().split("#")[0].toLowerCase()).toArray(String[]::new)).addSlot("value", "");
-		frame.addSlot("dependency", depFrame);
-		final Template template = AccessorPomTemplate.create();
+		builder.add("repository", createRepositoryFrame(distroRepo.getKey(), distroRepo.getValue(), "distribution"));
+		final FrameBuilder depBuilder = new FrameBuilder(service.core$().conceptList().stream().map(s -> s.id().split("#")[0].toLowerCase()).toArray(String[]::new)).add("value", "");
+		builder.add("dependency", depBuilder.toFrame());
 		final File pomFile = new File(root, "pom.xml");
-		Commons.write(pomFile.toPath(), template.format(frame));
+		Commons.write(pomFile.toPath(), new AccessorPomTemplate().render(builder.toFrame()));
 		return pomFile;
 	}
 
 	private Frame createRepositoryFrame(String url, String id, String type) {
-		return new Frame().addTypes("repository", "release", type).
-				addSlot("name", id).
-				addSlot("random", UUID.randomUUID().toString()).
-				addSlot("url", url);
+		return new FrameBuilder("repository", "release", type).
+				add("name", id).
+				add("random", UUID.randomUUID().toString()).
+				add("url", url).toFrame();
 	}
 
 	private void notifySuccess(Configuration conf, String app) {

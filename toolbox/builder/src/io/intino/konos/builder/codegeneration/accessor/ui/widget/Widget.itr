@@ -69,12 +69,9 @@ def type(widget)
     <link rel="import" href="../../lib/cotton-translator/cotton-translator-behavior.html">
     [<link rel="import" href="../../lib/alexandria-ui-elements/alexandria-$type+camelCaseToSnakeCase.html">]
 
-	[$parent+import
-	]
-	[$imports
-	][
-	$routes+routesImport
-	]
+	[$parent+import]
+	[$imports]
+	[$routes+routesImport]
 	<script src="$name+lowercase/requester.js"></script>
     <script src="$name+lowercase/notifier-listener.js"></script>
 

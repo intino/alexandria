@@ -1,11 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.KonosGraph;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -26,27 +27,27 @@ public class DialogsRenderer extends UIRenderer {
 
 	public void execute() {
 		if (dialogs.isEmpty()) return;
-		Frame frame = buildFrame();
-		for (Dialog dialog : dialogs) frame.addSlot("dialog", dialogFrame(dialog));
+		FrameBuilder frame = frameBuilder();
+		for (Dialog dialog : dialogs) frame.add("dialog", dialogFrame(dialog));
 		write(frame);
 	}
 
 	private Frame dialogFrame(Dialog dialog) {
-		return new Frame("dialog")
-				.addSlot("name", dialog.name$())
-				.addSlot("type", dialog.getClass().getSimpleName());
+		return new FrameBuilder("dialog")
+				.add("name", dialog.name$())
+				.add("type", dialog.getClass().getSimpleName()).toFrame();
 	}
 
-	private void write(Frame frame) {
+	private void write(FrameBuilder builder) {
 		final String newDisplay = snakeCaseToCamelCase("Dialogs");
-		writeFrame(new File(gen, DIALOGS), newDisplay, template().format(frame));
+		writeFrame(new File(gen, DIALOGS), newDisplay, template().render(builder.toFrame()));
 	}
 
 	private Template template() {
-		return Formatters.customize(DialogsTemplate.create());
+		return Formatters.customize(new DialogsTemplate());
 	}
 
-	protected Frame buildFrame() {
-		return super.buildFrame().addTypes("dialogs");
+	protected FrameBuilder frameBuilder() {
+		return super.frameBuilder().add("dialogs");
 	}
 }

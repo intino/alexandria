@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.panel;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
@@ -8,8 +11,6 @@ import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.Operat
 import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewRenderer;
 import io.intino.konos.model.graph.Panel;
 import io.intino.konos.model.graph.Toolbar;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -22,41 +23,36 @@ public class PanelRenderer extends DisplayRenderer {
 	}
 
 	@Override
-	public Frame buildFrame() {
+	public FrameBuilder frameBuilder() {
 		final Panel panel = display().a$(Panel.class);
-		final Frame frame = super.buildFrame();
-		frame.addTypes(panel.isDesktop() ? "desktop" : "panel");
-		if (panel.label() != null) frame.addSlot("label", panel.label());
-		if (panel.toolbar() != null) frame.addSlot("toolbar", frameOf(panel.toolbar()));
-		views(panel.views(), frame);
-		return frame;
+		final FrameBuilder builder = super.frameBuilder();
+		builder.add(panel.isDesktop() ? "desktop" : "panel");
+		if (panel.label() != null) builder.add("label", panel.label());
+		if (panel.toolbar() != null) builder.add("toolbar", frameOf(panel.toolbar()));
+		views(panel.views(), builder);
+		return builder;
 	}
 
-	private Frame frameOf(Toolbar toolbar) {
-		final Frame frame = new Frame("toolbar");
-		frame.addSlot("box", box).addSlot("canSearch", toolbar.canSearch());
-		toolbar.operations().forEach(operation -> {
-			OperationRenderer builder = new OperationRenderer(operation, display(), box, packageName);
-			frame.addSlot("operation", builder.buildFrame());
-		});
-		return frame;
+	private FrameBuilder frameOf(Toolbar toolbar) {
+		return new FrameBuilder("toolbar")
+				.add("box", box).add("canSearch", toolbar.canSearch())
+				.add("operation", toolbar.operations().stream().map(o -> new OperationRenderer(o, display(), box, packageName).frameBuilder().toFrame()).toArray(Frame[]::new));
 	}
 
-	private void views(Panel.Views views, Frame frame) {
+	private void views(Panel.Views views, FrameBuilder frame) {
 		views.viewList().forEach(view -> {
-			ViewRenderer builder = new ViewRenderer(view, display(), box, packageName);
-			frame.addSlot("view", new Frame().addSlot("value", builder.buildFrame()));
+			frame.add("view", new FrameBuilder().add("value", new ViewRenderer(view, display(), box, packageName).frameBuilder()));
 		});
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(PanelTemplate.create());
+		return Formatters.customize(new PanelTemplate());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(AbstractPanelTemplate.create());
+		return Formatters.customize(new AbstractPanelTemplate());
 	}
 
 	@Override

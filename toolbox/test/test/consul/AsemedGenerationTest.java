@@ -1,4 +1,4 @@
-package datalake;
+package consul;
 
 import io.intino.konos.builder.codegeneration.FullRenderer;
 import io.intino.konos.model.graph.KonosGraph;

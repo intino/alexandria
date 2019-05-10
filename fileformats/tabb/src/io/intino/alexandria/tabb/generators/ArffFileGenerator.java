@@ -4,7 +4,8 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.alexandria.tabb.ColumnStream;
 import io.intino.alexandria.tabb.ColumnStream.Type;
 import io.intino.alexandria.tabb.FileGenerator;
-import org.siani.itrules.model.Frame;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,7 +30,7 @@ public class ArffFileGenerator implements FileGenerator {
 	public FileGenerator destination(File directory, String name) {
 		try {
 			writer = new BufferedWriter(new FileWriter(new File(directory, name + ".arff")));
-			writer.write(ArffTemplate.create().format(new Frame("arff").addSlot("attribute", attributes())));
+			writer.write(new ArffTemplate().render(new FrameBuilder("arff").add("attribute", attributes())));
 		} catch (IOException e) {
 			Logger.error(e);
 		}
@@ -73,19 +74,20 @@ public class ArffFileGenerator implements FileGenerator {
 
 	private Frame[] attributes() {
 		List<Frame> headers = new ArrayList<>();
-		headers.add(new Frame("attribute").addSlot("name", "id").addSlot("type", new Frame("Numeric")));
-		headers.add(new Frame("attribute").addSlot("name", "timetag").addSlot("type", new Frame("Date").addSlot("format", "yyyyMM")));
+		headers.add(new FrameBuilder("attribute").add("name", "id").add("type", new FrameBuilder("Numeric").toFrame()).toFrame());
+		headers.add(new FrameBuilder("attribute").add("name", "timetag").add("type", new FrameBuilder("Date").add("format", "yyyyMM").toFrame()).toFrame());
 		for (ColumnStream stream : streams)
-			headers.add(new Frame("attribute").addSlot("name", stream).addSlot("type", columnType(stream)));
+			headers.add(new FrameBuilder("attribute").add("name", stream).add("type", columnType(stream)).toFrame());
 		return headers.toArray(new Frame[0]);
 	}
 
 	private Frame columnType(ColumnStream stream) {
 		Type type = stream.type();
-		if (type.equals(Type.Integer) || type.equals(Type.Double) || type.equals(Type.Long)) return new Frame("Numeric");
-		if (type.equals(Type.Datetime) || type.equals(Type.Instant)) return new Frame("Date").addSlot("format", "yyyy-MM-dd'T'HH:mm:ss");
-		if (type.equals(Type.Nominal)) return new Frame("Nominal").addSlot("value", stream.mode().features);
-		return new Frame("String");
+		if (type.equals(Type.Integer) || type.equals(Type.Double) || type.equals(Type.Long)) return new FrameBuilder("Numeric").toFrame();
+		if (type.equals(Type.Datetime) || type.equals(Type.Instant))
+			return new FrameBuilder("Date").add("format", "yyyy-MM-dd'T'HH:mm:ss").toFrame();
+		if (type.equals(Type.Nominal)) return new FrameBuilder("Nominal").add("value", stream.mode().features).toFrame();
+		return new FrameBuilder("String").toFrame();
 	}
 
 

@@ -1,30 +1,29 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.catalog;
 
+import io.intino.itrules.Rule;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.AbstractOperationTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.OperationTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.AbstractViewTemplate;
-import io.intino.konos.builder.codegeneration.services.ui.display.view.ViewTemplate;
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.siani.itrules.LineSeparator.LF;
 
 public class AbstractCatalogTemplate extends Template {
 
-	protected AbstractCatalogTemplate(Locale locale, LineSeparator lineSeparator) {
-		super(locale, lineSeparator);
+	@Override
+	protected RuleSet ruleSet() {
+		return new RuleSet()
+				.add(getAll(new AbstractViewTemplate().ruleSet()))
+				.add(getAll(new AbstractCatalogSkeletonTemplate().ruleSet()))
+				.add(getAll(new AbstractOperationTemplate().ruleSet()))
+				;
 	}
 
-	public static Template create() {
-		return new AbstractCatalogTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(AbstractCatalogSkeletonTemplate.create().rules());
-		add(AbstractOperationTemplate.create().rules());
-		add(AbstractViewTemplate.create().rules());
-		return this;
+	private Rule[] getAll(Iterable<Rule> ruleSet) {
+		List<Rule> rules = new ArrayList<>();
+		ruleSet.forEach(rules::add);
+		return rules.toArray(new Rule[0]);
 	}
 }

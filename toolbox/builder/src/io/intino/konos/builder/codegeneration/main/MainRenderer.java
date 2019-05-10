@@ -1,12 +1,12 @@
 package io.intino.konos.builder.codegeneration.main;
 
 import com.intellij.openapi.module.Module;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 
@@ -28,14 +28,14 @@ public class MainRenderer {
 	public void execute() {
 		if (configuration == null) return;
 		final String name = name();
-		Frame frame = new Frame().addTypes("main").addSlot("package", packageName).addSlot("name", name);
-		if (hasModel) frame.addSlot("model", new Frame("model").addSlot("name", name));
+		FrameBuilder builder = new FrameBuilder("main").add("package", packageName).add("name", name);
+		if (hasModel) builder.add("model", new FrameBuilder("model").add("name", name).toFrame());
 		if (!Commons.javaFile(destination, "Main").exists())
-			Commons.writeFrame(destination, "Main", template().format(frame));
+			Commons.writeFrame(destination, "Main", template().render(builder.toFrame()));
 	}
 
 	private Template template() {
-		return Formatters.customize(MainTemplate.create());
+		return Formatters.customize(new MainTemplate());
 	}
 
 	private String name() {

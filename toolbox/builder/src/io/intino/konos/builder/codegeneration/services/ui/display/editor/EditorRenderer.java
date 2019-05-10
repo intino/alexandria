@@ -1,14 +1,15 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.editor;
 
 import com.intellij.openapi.project.Project;
-import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.DisplayRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.Updater;
 import io.intino.konos.model.graph.Editor;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
+
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 
 public class EditorRenderer extends DisplayRenderer {
 	private final Project project;
@@ -19,21 +20,21 @@ public class EditorRenderer extends DisplayRenderer {
 	}
 
 	@Override
-	public Frame buildFrame() {
+	public FrameBuilder frameBuilder() {
 		final Editor editor = display().a$(Editor.class);
-		Frame frame = super.buildFrame();
-		frame.addSlot("display", editor.display().name$());
-		return frame;
+		FrameBuilder builder = super.frameBuilder();
+		builder.add("display", editor.display().name$());
+		return builder;
 	}
 
 	@Override
 	protected Template srcTemplate() {
-		return Formatters.customize(EditorTemplate.create());
+		return customize(new EditorTemplate());
 	}
 
 	@Override
 	protected Template genTemplate() {
-		return Formatters.customize(AbstractEditorTemplate.create());
+		return customize(new AbstractEditorTemplate());
 	}
 
 	@Override

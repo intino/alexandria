@@ -3,26 +3,27 @@ def type(box)
 
 	import java.util.LinkedHashMap;
 	import java.util.Map;
-	import java.util.UUID;[$hasUi
+	import java.util.UUID;
+	[$hasUi
 	import java.util.HashMap;
     import java.util.Map;
 	]
 	import io.intino.alexandria.logger.Logger;
 	import java.util.logging.ConsoleHandler;
 	import java.util.logging.Level;
-	[
-	$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;][
-    $hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
+
+	[$hasREST~import io.intino.alexandria.rest.AlexandriaSpark;]
+    [$hasUi+hide~import io.intino.alexandria.ui.displays.Soul;]
 
 	public abstract class AbstractBox extends [$hasUi+uiBox?io.intino.alexandria.core.Box] {
-		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;[
-		$service+field...[$NL]][
-		$dataLake+field...[$NL]][
-		$task+field][
-        $hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();][
-	    $hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();][
-		$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;][
-		$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
+		protected $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration;
+		[$service+field...[$NL]]
+		[$dataLake+field...[$NL]]
+		[$task+field]
+        [$hasUi+hide~protected Map<String, Soul> uiSouls = new java.util.HashMap<>();]
+	    [$hasUi+hide~private java.util.List<io.intino.alexandria.ui.AlexandriaUiBox.SoulsClosed> soulsClosedListeners = new java.util.ArrayList<>();]
+		[$hasUi+hide~private io.intino.alexandria.ui.services.AuthService authService;]
+		[$hasUi+hide~private io.intino.alexandria.ui.services.EditorService editorService;]
 
 		public AbstractBox(String$[] args) {
 			this(new $name+SnakeCaseToCamelCase+FirstUpperCase~Configuration(args));
@@ -30,10 +31,10 @@ def type(box)
 		
 		public AbstractBox($name+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration) {
 			[owner = new $parent~Box(configuration);]
-			this.configuration = configuration;[
+			this.configuration = configuration;
 			initJavaLogger();
-			$service+setup...[$NL]]
-			$datalake+setup
+			[$service+setup...[$NL]]
+			[$datalake+setup]
 		}
 
 		public $name+SnakeCaseToCamelCase+firstUpperCase~Configuration configuration() {
@@ -65,12 +66,12 @@ def type(box)
 			$dataLake+quit...[$NL]
 		}
 
-		[$hasUi+registerSoul~
-		][$service+getter...[$NL$NL]]
+		[$hasUi+registerSoul]
+		[$service+getter...[$NL$NL]]
 		[$hasUi+authService]
 		[$hasUi+editorService]
-		$dataLake+getter...[$NL$NL]
-		$task+getter...[$NL$NL]
+		[$dataLake+getter...[$NL$NL]]
+		[$task+getter...[$NL$NL]]
 
 		private void initRESTServices() {
 			$service+rest...[$NL]
@@ -103,7 +104,7 @@ def type(box)
 		}
 		]
 		private void initTasks() {
-			$task+init...[$NL]
+			[$task+init...[$NL]]
 		}
 
 		private void initJavaLogger() {
@@ -175,7 +176,7 @@ def trigger(use)
 	$value.initDisplays(sparkInstance);
 end
 
-def type(service & jms) trigger(jms)
+def type(service & jms) trigger(init)
 	try {
 		connection = new org.apache.activemq.ActiveMQConnectionFactory($parameter...[, ]).createConnection();
 		java.lang.Thread thread = new java.lang.Thread(() -> {

@@ -1,9 +1,10 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.model.graph.Component;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -31,40 +32,40 @@ public class UIActionRenderer extends ActionRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("action", "ui");
-		frame.addSlot("name", resource.name$());
-		frame.addSlot("uiService", resource.core$().ownerAs(UIService.class).name$());
-		frame.addSlot("package", packageName);
-		frame.addSlot("box", boxName);
-		frame.addSlot("type", resource.isEditorPage() ? "Editor" : "Resource");
-		frame.addSlot("importDialogs", packageName);
-		frame.addSlot("importDisplays", packageName);
-		if (resource.isEditorPage()) frame.addSlot("editor", new Frame("editor"));
-		frame.addSlot("component", componentFrame());
-		frame.addSlot("parameter", parameters());
-		service.useList().stream().map(use -> frame.addSlot("usedAppUrl", new Frame("usedAppUrl", isCustom(use.url()) ? "custom" : "standard").addSlot("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
-		if (service.favicon() != null) frame.addSlot("favicon", service.favicon());
-		else if (service.title() != null) frame.addSlot("title", service.title());
+		FrameBuilder builder = new FrameBuilder("action", "ui");
+		builder.add("name", resource.name$());
+		builder.add("uiService", resource.core$().ownerAs(UIService.class).name$());
+		builder.add("package", packageName);
+		builder.add("box", boxName);
+		builder.add("type", resource.isEditorPage() ? "Editor" : "Resource");
+		builder.add("importDialogs", packageName);
+		builder.add("importDisplays", packageName);
+		if (resource.isEditorPage()) builder.add("editor", new FrameBuilder("editor"));
+		builder.add("component", componentFrame());
+		builder.add("parameter", parameters());
+		service.useList().stream().map(use -> builder.add("usedAppUrl", new FrameBuilder("usedAppUrl", isCustom(use.url()) ? "custom" : "standard").add("value", isCustom(use.url()) ? customValue(use.url()) : use.url()))).collect(Collectors.toList());
+		if (service.favicon() != null) builder.add("favicon", service.favicon());
+		else if (service.title() != null) builder.add("title", service.title());
 		classes.put(resource.getClass().getSimpleName() + "#" + firstUpperCase(resource.core$().name()), "actions" + "." + firstUpperCase(snakeCaseToCamelCase(resource.name$())) + "Action");
 		if (!alreadyRendered(destiny, resource.name$()))
-			writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().format(frame));
-		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(resource.name$()) + "Action", template().format(frame.addTypes("gen")));
+			writeFrame(destinyPackage(destiny), resource.name$() + "Action", template().render(builder));
+		writeFrame(destinyPackage(gen), "Abstract" + firstUpperCase(resource.name$()) + "Action", template().render(builder.add("gen")));
 	}
 
 	private Frame componentFrame() {
-		Frame result = new Frame("component").addSlot("value", componentFor(resource).name$());
+		FrameBuilder result = new FrameBuilder("component").add("value", componentFor(resource).name$());
 		if (resource.isEditorPage()) {
 			Component display = resource.asEditorPage().editor().display();
-			result.addSlot("editor", new Frame("editor").addSlot("display", display.name$()));
+			result.add("editor", new FrameBuilder("editor").add("display", display.name$()).toFrame());
 		}
-		return result;
+		return result.toFrame();
 	}
 
 	private Frame[] parameters() {
 		List<String> parameters = extractUrlPathParameters(resource.path());
-		return parameters.stream().map(parameter -> new Frame().addTypes("parameter")
-				.addSlot("type", "String")
-				.addSlot("name", parameter)).toArray(Frame[]::new);
+		return parameters.stream().map(parameter -> new FrameBuilder("parameter")
+				.add("type", "String")
+				.add("name", parameter).toFrame()).toArray(Frame[]::new);
 	}
 
 	private boolean isCustom(String value) {
