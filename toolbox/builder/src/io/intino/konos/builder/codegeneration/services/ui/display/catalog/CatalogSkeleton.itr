@@ -25,13 +25,13 @@ def type(catalog)
     	public $name+FirstUpperCase($box+firstUpperCase~Box box) {
     		super(box);
     	}
-    	[
-    	$range
-    	][
-		$temporalFilter
-		][
-		$toolbar
-    	]
+
+    	[$range]
+
+		[$temporalFilter]
+
+		[$toolbar]
+
     	public static class Source {
     		public static java.util.List<$type> $type+shortType+firstLowerCase~List($box+firstUpperCase~Box box, io.intino.alexandria.ui.model.catalog.Scope scope, String condition[, $mode+timerange range], UISession session) {
     			return java.util.Collections.emptyList();//TODO
@@ -40,13 +40,12 @@ def type(catalog)
     		public static $type $type+shortType+firstLowerCase($box+firstUpperCase~Box box, String id[, $mode+timerange range], UISession session) {
     			return null;//TODO
     		}
-    		[
-			$hasMagazineView
-			][
-			$range+created
-			][
-				$hasCustomItemsArrivalMessage
-			]
+
+			[$hasMagazineView]
+
+			[$range+created]
+
+			[$hasCustomItemsArrivalMessage]
     		public static String $type+shortType+firstLowerCase~Id($box+firstUpperCase~Box box, $type $type+shortType+firstLowerCase) {
     			//return $type+shortType+firstLowerCase~.core$$().id();
     			return null;
@@ -56,22 +55,21 @@ def type(catalog)
     			//return $type+shortType+firstLowerCase.name$$();
     			return null;
     		}
-    	}[
+    	}
 
-		$view
-		]
-    	public static class Events {[
-    		$event
-    	]}
+		[$view]
 
+    	public static class Events {
+    		[$event]
+    	}
 
-    	public static class Arrangements {[
-    		$arrangement+method...[$NL$NL]][
+    	public static class Arrangements {
+    		[$arrangement+method...[$NL$NL]]
 
-			$groupingSelection][
+			[$groupingSelection]
 
-			$hasArrangements
-    	]}
+			[$hasArrangements]
+    	}
     }
 end
 

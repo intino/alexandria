@@ -7,7 +7,7 @@ def type(operation & downloadselection) trigger(operation)
 end
 
 def type(operation & export) trigger(operation)
-	result.add(new io.intino.alexandria.ui.model.toolbar.Export().execute((element, from, to, selfId, session) -> $owner+FirstUpperCase.Toolbar.export(box, (Catalog) element, from, to, selfId, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
+	result.add(new io.intino.alexandria.ui.model.toolbar.Export().execute((element, from, to, selfId, session) -> $owner+FirstUpperCase.Toolbar.export(box, ($ownerClass) element, from, to, selfId, session)).mode("$mode").name("$name")[.title("$title")][.alexandriaIcon("$icon")]);
 end
 
 def type(operation & exportselection) trigger(operation)

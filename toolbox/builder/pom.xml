@@ -5,7 +5,7 @@
     <groupId>io.intino.konos</groupId>
     <artifactId>builder</artifactId>
     <name>Builder</name>
-    <version>5.0.9</version>
+    <version>5.1.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -104,20 +104,14 @@
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.intino.tara</groupId>
-                    <artifactId>io</artifactId>
-                </exclusion>
-            </exclusions>
             <scope>provided</scope>
-            <version>2.1.9</version>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
-            <groupId>org.siani.itrules</groupId>
-            <artifactId>itrules</artifactId>
+            <groupId>io.intino.itrules</groupId>
+            <artifactId>engine</artifactId>
             <scope>provided</scope>
-            <version>1.9.3</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.shared</groupId>

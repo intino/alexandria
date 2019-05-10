@@ -2,6 +2,9 @@ package io.intino.konos.builder.codegeneration.services.rest;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.vfs.VirtualFile;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.swagger.SwaggerProfileGenerator;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -9,9 +12,6 @@ import io.intino.konos.model.graph.rest.RESTService;
 import io.intino.konos.model.graph.rest.RESTService.Resource;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +22,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 import static com.intellij.platform.templates.github.ZipUtil.unzip;
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.codegeneration.Formatters.customize;
 import static io.intino.tara.plugin.lang.psi.impl.TaraUtil.getSourceRoots;
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 
 public class RESTServiceRenderer {
@@ -78,18 +78,18 @@ public class RESTServiceRenderer {
 	}
 
 	private void createConfigFile(File api) {
-		Template template = customize(ApiPortalConfigurationTemplate.create());
-		Frame frame = new Frame("api").addSlot("url", services.stream().filter(RESTService::generateDocs).map(Layer::name$).toArray(String[]::new));
+		Template template = customize(new ApiPortalConfigurationTemplate());
+		FrameBuilder frame = new FrameBuilder("api").add("url", services.stream().filter(RESTService::generateDocs).map(Layer::name$).toArray(String[]::new));
 		RESTService service = services.get(0);
-		if (service.color() != null) frame.addSlot("color", service.color());
-		if (service.backgroundColor() != null) frame.addSlot("background", service.backgroundColor());
-		if (service.title() != null) frame.addSlot("title", service.title());
-		if (service.subtitle() != null) frame.addSlot("subtitle", service.subtitle());
-		else frame.addSlot("title", "API Portal");
+		if (service.color() != null) frame.add("color", service.color());
+		if (service.backgroundColor() != null) frame.add("background", service.backgroundColor());
+		if (service.title() != null) frame.add("title", service.title());
+		if (service.subtitle() != null) frame.add("subtitle", service.subtitle());
+		else frame.add("title", "API Portal");
 		if (service.logo() != null) copyLogoToImages(new File(api, "images"), service.logo());
 		if (service.favicon() != null) copyFaviconToImages(new File(api, "images"), service.favicon());
 		try {
-			Files.write(new File(api, "config.json").toPath(), template.format(frame).getBytes());
+			Files.write(new File(api, "config.json").toPath(), template.render(frame).getBytes());
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -130,30 +130,30 @@ public class RESTServiceRenderer {
 
 	private void processService(RESTService service, File gen) {
 		if (service.resourceList().isEmpty()) return;
-		Frame frame = new Frame().addTypes("server").
-				addSlot("name", service.name$()).
-				addSlot("box", boxName).
-				addSlot("package", packageName).
-				addSlot("resource", (AbstractFrame[]) framesOf(service.resourceList()));
+		FrameBuilder builder = new FrameBuilder("server").
+				add("name", service.name$()).
+				add("box", boxName).
+				add("package", packageName).
+				add("resource", framesOf(service.resourceList()));
 		if (!service.notificationList().isEmpty()) {
-			frame.addSlot("notification", notificationsFrame(service.notificationList()));
-			if (graph.uIServiceList().isEmpty()) frame.addSlot("hasNotifications", notificationsFrame(service.notificationList()));
+			builder.add("notification", notificationsFrame(service.notificationList()));
+			if (graph.uIServiceList().isEmpty()) builder.add("hasNotifications", notificationsFrame(service.notificationList()));
 		}
 		final RESTService.AuthenticatedWithCertificate secure = service.authenticatedWithCertificate();
 		if (secure != null && secure.store() != null)
-			frame.addSlot("secure", new Frame().addTypes("secure").addSlot("file", secure.store()).addSlot("password", secure.storePassword()));
+			builder.add("secure", new FrameBuilder("secure").add("file", secure.store()).add("password", secure.storePassword()).toFrame());
 		final String className = snakeCaseToCamelCase(service.name$()) + "Service";
 		classes.put(service.getClass().getSimpleName() + "#" + service.name$(), className);
-		Commons.writeFrame(gen, className, template().format(frame));
+		Commons.writeFrame(gen, className, template().render(builder.toFrame()));
 	}
 
 	private Frame[] notificationsFrame(List<RESTService.Notification> list) {
 		List<Frame> frames = new ArrayList<>();
 		for (RESTService.Notification notification : list)
-			frames.add(new Frame("notification").
-					addSlot("path", notification.path()).
-					addSlot("package", packageName).
-					addSlot("name", notification.name$()));
+			frames.add(new FrameBuilder("notification").
+					add("path", notification.path()).
+					add("package", packageName).
+					add("name", notification.name$()).toFrame());
 		return frames.toArray(new Frame[0]);
 	}
 
@@ -164,14 +164,14 @@ public class RESTServiceRenderer {
 	}
 
 	private List<Frame> processResource(Resource resource, List<Resource.Operation> operations) {
-		return operations.stream().map(operation -> new Frame().addTypes("resource", operation.getClass().getSimpleName())
-				.addSlot("name", resource.name$())
-				.addSlot("operation", operation.getClass().getSimpleName())
-				.addSlot("path", customize("path", Commons.path(resource)))
-				.addSlot("method", operation.getClass().getSimpleName())).collect(Collectors.toList());
+		return operations.stream().map(operation -> new FrameBuilder("resource", operation.getClass().getSimpleName())
+				.add("name", resource.name$())
+				.add("operation", operation.getClass().getSimpleName())
+				.add("path", customize("path", Commons.path(resource)))
+				.add("method", operation.getClass().getSimpleName()).toFrame()).collect(toList());
 	}
 
 	private Template template() {
-		return customize(RESTServiceTemplate.create());
+		return customize(new RESTServiceTemplate());
 	}
 }

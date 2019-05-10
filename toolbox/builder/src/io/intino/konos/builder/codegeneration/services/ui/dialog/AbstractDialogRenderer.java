@@ -1,5 +1,8 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -8,9 +11,6 @@ import io.intino.konos.model.graph.Dialog.Tab;
 import io.intino.konos.model.graph.Dialog.Toolbar.Operation;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.multiple.dialog.tab.MultipleInput;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -22,7 +22,7 @@ public class AbstractDialogRenderer extends UIRenderer {
 	private final File gen;
 	private final List<Dialog> dialogs;
 
-	public AbstractDialogRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
+	AbstractDialogRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		super(boxName, packageName);
 		this.gen = gen;
 		this.dialogs = graph.dialogList();
@@ -33,191 +33,189 @@ public class AbstractDialogRenderer extends UIRenderer {
 	}
 
 	private void processDialog(Dialog dialog) {
-		Frame frame = new Frame().addTypes("dialogDisplay");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", dialog.name$());
-		frame.addSlot("box", box);
-		final Frame dialogFrame = new Frame().addTypes("dialog");
-		if (!dialog.label().isEmpty()) dialogFrame.addSlot("label", dialog.label());
-		if (!dialog.description().isEmpty()) dialogFrame.addSlot("description", dialog.description());
-		frame.addSlot("dialog", dialogFrame);
+		FrameBuilder frame = new FrameBuilder("dialogDisplay");
+		frame.add("package", packageName);
+		frame.add("name", dialog.name$());
+		frame.add("box", box);
+		final FrameBuilder dialogFrame = new FrameBuilder("dialog");
+		if (!dialog.label().isEmpty()) dialogFrame.add("label", dialog.label());
+		if (!dialog.description().isEmpty()) dialogFrame.add("description", dialog.description());
+		frame.add("dialog", dialogFrame);
 		createToolbar(dialogFrame, dialog.name$(), dialog.toolbar());
-		for (Tab tab : dialog.tabList()) dialogFrame.addSlot("tab", frameOf(tab));
-		Commons.writeFrame(new File(gen, DIALOGS), "Abstract" + snakeCaseToCamelCase(dialog.name$()), template().format(frame));
+		for (Tab tab : dialog.tabList()) dialogFrame.add("tab", frameOf(tab));
+		Commons.writeFrame(new File(gen, DIALOGS), "Abstract" + snakeCaseToCamelCase(dialog.name$()), template().render(frame));
 	}
 
-	private void createToolbar(Frame frame, String dialog, Dialog.Toolbar toolbar) {
+	private void createToolbar(FrameBuilder builder, String dialog, Dialog.Toolbar toolbar) {
 		if (toolbar == null) return;
 		for (Operation operation : toolbar.operationList())
-			frame.addSlot("operation", frameOf(dialog, operation.name$(), operation.label(), operation.closeAfterExecution()));
+			builder.add("operation", frameOf(dialog, operation.name$(), operation.label(), operation.closeAfterExecution()));
 	}
 
 	private Frame frameOf(String dialog, String operation, String operationLabel, boolean closeAfterExecution) {
-		final Frame operationFrame = new Frame().addTypes("operation").addSlot("dialog", dialog).addSlot("execution", operation);
-		if (!operation.isEmpty()) operationFrame.addSlot("name", operation).addSlot("label", operationLabel);
-		operationFrame.addSlot("closeAfterExecution", closeAfterExecution);
-		return operationFrame;
+		final FrameBuilder builder = new FrameBuilder("operation").add("dialog", dialog).add("execution", operation);
+		if (!operation.isEmpty()) builder.add("name", operation).add("label", operationLabel);
+		builder.add("closeAfterExecution", closeAfterExecution);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab tab) {
-		final Frame tabFrame = new Frame().addTypes("tab");
-		if (!tab.name$().isEmpty()) tabFrame.addSlot("name", tab.name$());
-		if (!tab.label().isEmpty()) tabFrame.addSlot("label", tab.label());
-		for (Tab.Input input : tab.inputList()) processInput(tabFrame, input);
-		return tabFrame;
+		final FrameBuilder tabBuilder = new FrameBuilder("tab");
+		if (!tab.name$().isEmpty()) tabBuilder.add("name", tab.name$());
+		if (!tab.label().isEmpty()) tabBuilder.add("label", tab.label());
+		for (Tab.Input input : tab.inputList()) processInput(tabBuilder, input);
+		return tabBuilder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Text text) {
-		final Frame frame = new Frame().addTypes("text");
-		if (text.edition() != null) frame.addSlot("edition", text.edition());
-		if (text.validation() != null) frame.addSlot("validation", frameOf(text.validation()));
-		addCommon(frame, text);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("text");
+		if (text.edition() != null) builder.add("edition", text.edition());
+		if (text.validation() != null) builder.add("validation", frameOf(text.validation()));
+		addCommon(builder, text);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Text.Validation validation) {
-		final Frame frame = new Frame().addTypes("text", "validation");
+		final FrameBuilder builder = new FrameBuilder("text", "validation");
 		if (!validation.allowedValues().isEmpty())
-			frame.addSlot("allowedValues", validation.allowedValues().toArray(new String[0]));
+			builder.add("allowedValues", validation.allowedValues().toArray(new String[0]));
 		if (!validation.disallowedValues().isEmpty())
-			frame.addSlot("disallowedValues", validation.disallowedValues().toArray(new String[0]));
-		frame.addSlot("disallowEmptySpaces", validation.disallowEmptySpaces());
-		return frame;
+			builder.add("disallowedValues", validation.disallowedValues().toArray(new String[0]));
+		builder.add("disallowEmptySpaces", validation.disallowEmptySpaces());
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Section section) {
-		final Frame frame = new Frame().addTypes("section");
+		final FrameBuilder builder = new FrameBuilder("section");
 		final List<Tab.Input> inputs = section.inputList();
-		for (Tab.Input input : inputs) processInput(frame, input);
-		addCommon(frame, section);
-		return frame;
+		for (Tab.Input input : inputs) processInput(builder, input);
+		addCommon(builder, section);
+		return builder.toFrame();
 	}
 
-	private void processInput(Frame sectionFrame, Tab.Input input) {
-		if (input.i$(Tab.Text.class)) sectionFrame.addSlot("input", frameOf((Tab.Text) input));
-		else if (input.i$(Tab.Section.class)) sectionFrame.addSlot("input", frameOf((Tab.Section) input));
-		else if (input.i$(Tab.Memo.class)) sectionFrame.addSlot("input", frameOf((Tab.Memo) input));
-		else if (input.i$(Tab.RadioBox.class)) sectionFrame.addSlot("input", frameOf((Tab.RadioBox) input));
-		else if (input.i$(Tab.CheckBox.class)) sectionFrame.addSlot("input", frameOf((Tab.CheckBox) input));
-		else if (input.i$(Tab.ComboBox.class)) sectionFrame.addSlot("input", frameOf((Tab.ComboBox) input));
-		else if (input.i$(Tab.Password.class)) sectionFrame.addSlot("input", frameOf((Tab.Password) input));
-		else if (input.i$(Tab.File.class)) sectionFrame.addSlot("input", frameOf((Tab.File) input));
-		else if (input.i$(Tab.Picture.class)) sectionFrame.addSlot("input", frameOf((Tab.Picture) input));
-		else if (input.i$(Tab.Date.class)) sectionFrame.addSlot("input", frameOf((Tab.Date) input));
-		else if (input.i$(Tab.DateTime.class)) sectionFrame.addSlot("input", frameOf((Tab.DateTime) input));
+	private void processInput(FrameBuilder builder, Tab.Input input) {
+		if (input.i$(Tab.Text.class)) builder.add("input", frameOf((Tab.Text) input));
+		else if (input.i$(Tab.Section.class)) builder.add("input", frameOf((Tab.Section) input));
+		else if (input.i$(Tab.Memo.class)) builder.add("input", frameOf((Tab.Memo) input));
+		else if (input.i$(Tab.RadioBox.class)) builder.add("input", frameOf((Tab.RadioBox) input));
+		else if (input.i$(Tab.CheckBox.class)) builder.add("input", frameOf((Tab.CheckBox) input));
+		else if (input.i$(Tab.ComboBox.class)) builder.add("input", frameOf((Tab.ComboBox) input));
+		else if (input.i$(Tab.Password.class)) builder.add("input", frameOf((Tab.Password) input));
+		else if (input.i$(Tab.File.class)) builder.add("input", frameOf((Tab.File) input));
+		else if (input.i$(Tab.Picture.class)) builder.add("input", frameOf((Tab.Picture) input));
+		else if (input.i$(Tab.Date.class)) builder.add("input", frameOf((Tab.Date) input));
+		else if (input.i$(Tab.DateTime.class)) builder.add("input", frameOf((Tab.DateTime) input));
 	}
 
 	private Frame frameOf(Tab.Memo memo) {
-		final Frame frame = new Frame().addTypes("memo");
-		frame.addSlot("mode", memo.mode().name());
-		frame.addSlot("height", memo.height());
-		addCommon(frame, memo);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("memo");
+		builder.add("mode", memo.mode().name());
+		builder.add("height", memo.height());
+		addCommon(builder, memo);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Password password) {
-		final Frame frame = new Frame().addTypes("password");
-		if (password.validation() != null) frame.addSlot("validation", frameOf(password.validation()));
-		addCommon(frame, password);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("password");
+		if (password.validation() != null) builder.add("validation", frameOf(password.validation()));
+		addCommon(builder, password);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Password.Validation validation) {
-		final Frame frame = new Frame().addTypes("password", "validation");
-		frame.addSlot("required", validation.isRequired().stream().map(Enum::name).toArray(String[]::new));
+		final FrameBuilder builder = new FrameBuilder("password", "validation");
+		builder.add("required", validation.isRequired().stream().map(Enum::name).toArray(String[]::new));
 		if (validation.length() != null)
-			frame.addSlot("min", validation.length().min()).addSlot("max", validation.length().max());
-		return frame;
+			builder.add("min", validation.length().min()).add("max", validation.length().max());
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.ComboBox combo) {
-		final Frame frame = new Frame().addTypes("combo");
-		addSources(combo, frame);
-		addCommon(frame, combo);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("combo");
+		addSources(combo, builder);
+		addCommon(builder, combo);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.CheckBox check) {
-		final Frame frame = new Frame().addTypes("check");
-		addSources(check, frame);
-		addCommon(frame, check);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("check");
+		addSources(check, builder);
+		addCommon(builder, check);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.RadioBox radio) {
-		final Frame frame = new Frame().addTypes("radio");
-		addSources(radio, frame);
-		addCommon(frame, radio);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("radio");
+		addSources(radio, builder);
+		addCommon(builder, radio);
+		return builder.toFrame();
 	}
 
-	private void addSources(Tab.OptionBox comboBox, Frame frame) {
-		if (comboBox.source() != null && !comboBox.source().isEmpty()) frame.addSlot("source", sourceOf(comboBox));
+	private void addSources(Tab.OptionBox comboBox, FrameBuilder builder) {
+		if (comboBox.source() != null && !comboBox.source().isEmpty()) builder.add("source", sourceOf(comboBox));
 		else if (comboBox.options() != null && !comboBox.options().isEmpty())
-			frame.addSlot("options", comboBox.options().toArray(new String[0]));
+			builder.add("options", comboBox.options().toArray(new String[0]));
 	}
 
 	private Frame sourceOf(Tab.OptionBox optionBox) {
-		return new Frame().addSlot("dialog", optionBox.core$().ownerAs(Dialog.class).name$()).addSlot("name", optionBox.source()).addSlot("type", optionBox.getClass().getSimpleName());
+		return new FrameBuilder().add("dialog", optionBox.core$().ownerAs(Dialog.class).name$()).add("name", optionBox.source()).add("type", optionBox.getClass().getSimpleName()).toFrame();
 	}
 
 	private Frame frameOf(Tab.File file) {
-		final Frame frame = new Frame().addTypes("file");
-		if (file.validation() != null) frame.addSlot("validation", frameOf(file.validation()));
-		addCommon(frame, file);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("file");
+		if (file.validation() != null) builder.add("validation", frameOf(file.validation()));
+		addCommon(builder, file);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Picture picture) {
-		final Frame frame = new Frame().addTypes("picture");
-		if (picture.validation() != null) frame.addSlot("validation", frameOf(picture.validation()));
-		addCommon(frame, picture);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("picture");
+		if (picture.validation() != null) builder.add("validation", frameOf(picture.validation()));
+		addCommon(builder, picture);
+		return builder.toFrame();
 	}
 
-	private AbstractFrame frameOf(Tab.Resource.Validation validation) {
-		final Frame frame = new Frame().addTypes("resource", "validation");
-		if (validation.maxSize() > 0) frame.addSlot("maxSize", validation.maxSize());
-		if (!validation.allowedExtensions().isEmpty()) frame.addSlot("allowedExtensions", validation.allowedExtensions());
-		return frame;
+	private Frame frameOf(Tab.Resource.Validation validation) {
+		final FrameBuilder builder = new FrameBuilder("resource", "validation");
+		if (validation.maxSize() > 0) builder.add("maxSize", validation.maxSize());
+		if (!validation.allowedExtensions().isEmpty()) builder.add("allowedExtensions", validation.allowedExtensions());
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.Date date) {
-		final Frame frame = new Frame().addTypes("date");
-		frame.addSlot("format", date.format());
-		addCommon(frame, date);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("date");
+		builder.add("format", date.format());
+		addCommon(builder, date);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Tab.DateTime dateTime) {
-		final Frame frame = new Frame().addTypes("dateTime");
-		frame.addSlot("format", dateTime.format());
-		addCommon(frame, dateTime);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("dateTime");
+		builder.add("format", dateTime.format());
+		addCommon(builder, dateTime);
+		return builder.toFrame();
 	}
 
-	private void addCommon(Frame frame, Tab.Input input) {
-		frame.addSlot("owner", input.core$().owner().name());
-		if (input.name$() != null && !input.name$().isEmpty()) frame.addSlot("name", input.name$());
-		frame.addSlot("label", input.label());
-		frame.addSlot("readonly", input.isReadonly());
-		frame.addSlot("required", input.isRequired());
-		frame.addSlot("placeholder", input.placeHolder());
-		frame.addSlot("defaultValue", input.defaultValue());
+	private void addCommon(FrameBuilder frame, Tab.Input input) {
+		frame.add("owner", input.core$().owner().name());
+		if (input.name$() != null && !input.name$().isEmpty()) frame.add("name", input.name$());
+		frame.add("label", input.label());
+		frame.add("readonly", input.isReadonly());
+		frame.add("required", input.isRequired());
+		frame.add("placeholder", input.placeHolder());
+		frame.add("defaultValue", input.defaultValue());
 		if (input.i$(MultipleInput.class)) {
 			final MultipleInput multiple = input.asMultiple();
-			frame.addSlot("multiple", new Frame().addTypes("multiple").addSlot("min", multiple.min()).addSlot("max", multiple.max()));
+			frame.add("multiple", new FrameBuilder("multiple").add("min", multiple.min()).add("max", multiple.max()));
 		}
-		if (input.validator() != null && !input.validator().isEmpty()) frame.addSlot("validator", validator(input));
+		if (input.validator() != null && !input.validator().isEmpty()) frame.add("validator", validator(input));
 	}
 
 	private Frame validator(Tab.Input input) {
-		return new Frame().addTypes("validator").addSlot("dialog", input.core$().ownerAs(Dialog.class).name$()).addSlot("name", input.validator()).addSlot("type", input.getClass().getSimpleName());
+		return new FrameBuilder("validator").add("dialog", input.core$().ownerAs(Dialog.class).name$()).add("name", input.validator()).add("type", input.getClass().getSimpleName()).toFrame();
 	}
 
 	private Template template() {
-		Template template = AbstractDialogTemplate.create();
-		Formatters.customize(template);
-		return template;
+		return Formatters.customize(new AbstractDialogTemplate());
 	}
 }

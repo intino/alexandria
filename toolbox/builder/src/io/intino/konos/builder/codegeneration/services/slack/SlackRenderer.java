@@ -2,14 +2,15 @@ package io.intino.konos.builder.codegeneration.services.slack;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
 import org.jetbrains.annotations.NotNull;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -46,10 +47,10 @@ public class SlackRenderer {
 
 	private void processService(SlackBotService service) {
 		String srcName = snakeCaseToCamelCase(service.name$()) + "Slack";
-		final Frame frame = createFrame(service.name$(), service.requestList(), true);
+		final FrameBuilder builder = createFrameBuilder(service.name$(), service.requestList(), true);
 		for (String level : collectLevels(service).keySet())
-			frame.addSlot("level", new Frame().addTypes("level").addSlot("name", level));
-		writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "SlackBot", template().format(frame));
+			builder.add("level", new FrameBuilder("level").add("name", level).toFrame());
+		writeFrame(gen, snakeCaseToCamelCase(service.name$()) + "SlackBot", template().render(builder));
 		if (alreadyRendered(new File(src, "slack"), srcName)) updateBot(service, srcName);
 		else newBotActions(service);
 	}
@@ -62,12 +63,12 @@ public class SlackRenderer {
 	private void newBotActions(SlackBotService service) {
 		final File directory = new File(src, "slack");
 		if (!alreadyRendered(directory, snakeCaseToCamelCase(service.name$()) + "Slack"))
-			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().format(createFrame(service.name$(), service.requestList(), false)));
+			writeFrame(directory, snakeCaseToCamelCase(service.name$()) + "Slack", template().render(createFrameBuilder(service.name$(), service.requestList(), false)));
 		Map<String, List<Request>> groups = collectLevels(service);
 		for (String requestContainer : groups.keySet()) {
 			classes.put("Service#" + service.name$(), "slack." + requestContainer + "Slack");
 			if (!alreadyRendered(directory, requestContainer + "Slack"))
-				writeFrame(directory, requestContainer + "Slack", template().format(createFrame(requestContainer, groups.get(requestContainer), false)));
+				writeFrame(directory, requestContainer + "Slack", template().render(createFrameBuilder(requestContainer, groups.get(requestContainer), false)));
 		}
 	}
 
@@ -95,42 +96,42 @@ public class SlackRenderer {
 	}
 
 	@NotNull
-	private Frame createFrame(String name, List<Request> requests, boolean gen) {
-		Frame frame = new Frame().addTypes("slack", (gen ? "gen" : "actions"));
-		frame.addSlot("package", packageName).
-				addSlot("name", name).
-				addSlot("box", boxName);
-		if (gen) allRequests(requests, frame);
-		else createRequests(requests, frame);
-		return frame;
+	private FrameBuilder createFrameBuilder(String name, List<Request> requests, boolean gen) {
+		FrameBuilder builder = new FrameBuilder("slack", (gen ? "gen" : "actions"));
+		builder.add("package", packageName).
+				add("name", name).
+				add("box", boxName);
+		if (gen) allRequests(requests, builder);
+		else createRequests(requests, builder);
+		return builder;
 	}
 
-	private void allRequests(List<Request> requests, Frame frame) {
+	private void allRequests(List<Request> requests, FrameBuilder builder) {
 		for (Request request : requests) {
-			frame.addSlot("request", createRequestFrame(request));
-			allRequests(request.requestList(), frame);
+			builder.add("request", createRequestFrame(request));
+			allRequests(request.requestList(), builder);
 		}
 	}
 
-	private void createRequests(List<Request> requests, Frame frame) {
-		for (Request request : requests) frame.addSlot("request", createRequestFrame(request));
+	private void createRequests(List<Request> requests, FrameBuilder builder) {
+		for (Request request : requests) builder.add("request", createRequestFrame(request));
 	}
 
 	private Frame createRequestFrame(Request request) {
-		final Frame requestFrame = new Frame().addTypes("request").addSlot("type", request.core$().owner().is(Request.class) ? name(request.core$().ownerAs(Request.class)) : request.core$().owner().name()).addSlot("box", boxName).addSlot("name", request.name$()).addSlot("description", request.description());
-		if (request.core$().owner().is(Request.class)) requestFrame.addSlot("context", name(request.core$().ownerAs(Request.class)));
-		requestFrame.addSlot("responseType", request.responseType().equals(Text) ? "String" : "SlackAttachment");
+		final FrameBuilder builder = new FrameBuilder("request").add("type", request.core$().owner().is(Request.class) ? name(request.core$().ownerAs(Request.class)) : request.core$().owner().name()).add("box", boxName).add("name", request.name$()).add("description", request.description());
+		if (request.core$().owner().is(Request.class)) builder.add("context", name(request.core$().ownerAs(Request.class)));
+		builder.add("responseType", request.responseType().equals(Text) ? "String" : "SlackAttachment");
 		final List<Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++)
-			requestFrame.addSlot("parameter", new Frame().addTypes("parameter", parameters.get(i).type().name(), parameters.get(i).multiple() ? "multiple" : "single").
-					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name$()).addSlot("pos", i));
+			builder.add("parameter", new FrameBuilder("parameter", parameters.get(i).type().name(), parameters.get(i).multiple() ? "multiple" : "single").
+					add("type", parameters.get(i).type().name()).add("name", parameters.get(i).name$()).add("pos", i).toFrame());
 		for (Request component : request.requestList())
-			requestFrame.addSlot("component", component.name$());
-		return requestFrame;
+			builder.add("component", component.name$());
+		return builder.toFrame();
 	}
 
 	private Template template() {
-		return Formatters.customize(SlackTemplate.create()).add("slashToCamelCase", o -> snakeCaseToCamelCase(o.toString().replace("|", "_")));
+		return Formatters.customize(new SlackTemplate()).add("slashToCamelCase", o -> snakeCaseToCamelCase(o.toString().replace("|", "_")));
 	}
 
 	private boolean alreadyRendered(File destiny, String name) {

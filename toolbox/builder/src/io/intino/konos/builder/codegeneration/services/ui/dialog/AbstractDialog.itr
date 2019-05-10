@@ -26,8 +26,8 @@ end
 def type(dialog)
 	[dialog.name("$name");]
 	[dialog.label("$label");]
-	[dialog.description("$description");][
-	$operation...[$NL]]
+	[dialog.description("$description");]
+	[$operation...[$NL]]
 	$tab...[$NL]
 end
 

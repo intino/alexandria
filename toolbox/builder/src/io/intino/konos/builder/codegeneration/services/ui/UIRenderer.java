@@ -1,8 +1,6 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
-import org.siani.itrules.model.Frame;
-
-import java.io.File;
+import io.intino.itrules.FrameBuilder;
 
 import static java.io.File.separator;
 
@@ -21,7 +19,7 @@ public abstract class UIRenderer {
 		this.packageName = packageName;
 	}
 
-	protected Frame buildFrame() {
-		return new Frame().addSlot("box", box).addSlot("package", packageName);
+	protected FrameBuilder frameBuilder() {
+		return new FrameBuilder().add("box", box).add("package", packageName);
 	}
 }

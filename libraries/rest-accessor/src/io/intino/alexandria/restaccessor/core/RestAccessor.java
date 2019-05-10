@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
 import sun.misc.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -375,7 +376,7 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 			}
 
 			HttpEntity entity = response.getEntity();
-			return new Resource("content").contentType(entity.getContentType().getValue()).data(entity.getContent());
+			return new Resource("content", entity.getContent());
 		} catch (URISyntaxException | IOException exception) {
 			throw new RestfulFailure(exception.getMessage());
 		}
@@ -486,8 +487,8 @@ public class RestAccessor implements io.intino.alexandria.restaccessor.RestAcces
 
 	private void addResource(MultipartEntityBuilder builder, Resource resource) {
 		if (resource == null) return;
-		ContentType contentType = resource.contentType() != null ? ContentType.create(resource.contentType()) : ContentType.APPLICATION_OCTET_STREAM;
-		builder.addPart(resource.id(), new InputStreamBody(resource.data(), contentType, resource.id()));
+		ContentType contentType = resource.type() != null ? ContentType.create(resource.type()) : ContentType.APPLICATION_OCTET_STREAM;
+		builder.addPart(resource.name(), new InputStreamBody(new ByteArrayInputStream(resource.data()), contentType, resource.name()));
 	}
 
 	private void addParameters(MultipartEntityBuilder builder, Map<String, String> parameterList) {

@@ -121,19 +121,14 @@ def type(resource)
 			$name+firstUpperCase~Action action = new $name+firstUpperCase~Action();
 			action.session = manager.currentSession();
 			action.session.browser().requestUrl(manager.requestUrl());
-			action.session.whenLogin(new Function<String, String>() {
-				@Override
-				public String apply(String baseUrl) {
-					return $name+firstUpperCase~Resource.this.authenticate(baseUrl);
-				}
-			});
+			action.session.whenLogin($name+firstUpperCase~Resource.this::authenticate);
 			action.session.whenLogout(b -> logout());
 			action.box = box;
 			action.clientId = clientId;
 			[action.googleApiKey = $googleApiKey+format;]
 			action.device = parameterValue("device");
-			action.token = parameterValue("token");[
-			$editor+parameters]
+			action.token = parameterValue("token");
+			[$editor+parameters]
 			$parameter...[$NL]
 			manager.pushService().onOpen(client -> {
 				if (!client.id().equals(action.clientId))

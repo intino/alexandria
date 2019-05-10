@@ -1,12 +1,13 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -35,16 +36,16 @@ public class UIServiceRenderer extends UIRenderer {
 	private void processUIService(UIService service) {
 		final List<Dialog> dialogs = dialogsOf(service);
 		final List<Display> displays = displaysOf(service);
-		Frame frame = buildFrame().addTypes("ui").
-				addSlot("name", service.name$()).
-				addSlot("resource", resourcesFrame(service.resourceList()));
-		if (service.userHome() != null) frame.addSlot("userHome", service.userHome().name$());
+		FrameBuilder builder = frameBuilder().add("ui").
+				add("name", service.name$()).
+				add("resource", resourcesFrame(service.resourceList()));
+		if (service.userHome() != null) builder.add("userHome", service.userHome().name$());
 		if (!dialogs.isEmpty())
-			frame.addSlot("dialog", dialogsFrame(dialogs)).addSlot("dialogsImport", packageName);
+			builder.add("dialog", dialogsFrame(dialogs)).add("dialogsImport", packageName);
 		if (!displays.isEmpty())
-			frame.addSlot("display", displaysFrame(displays)).addSlot("displaysImport", packageName);
-		if (service.authentication() != null) frame.addSlot("auth", service.authentication().by());
-		writeFrame(gen, snakeCaseToCamelCase(service.name$() + "Service"), template().format(frame));
+			builder.add("display", displaysFrame(displays)).add("displaysImport", packageName);
+		if (service.authentication() != null) builder.add("auth", service.authentication().by());
+		writeFrame(gen, snakeCaseToCamelCase(service.name$() + "Service"), template().render(builder.toFrame()));
 	}
 
 	private Frame[] resourcesFrame(List<UIService.Resource> resourceList) {
@@ -60,46 +61,44 @@ public class UIServiceRenderer extends UIRenderer {
 	}
 
 	private Frame frameOf(UIService.Resource resource) {
-		final Frame frame = new Frame().addTypes("resource", "abstractResource");
-		frame.addSlot("name", resource.name$());
 		final UIService service = resource.core$().ownerAs(UIService.class);
 		String path = resource.path();
 		Set<String> custom = Commons.extractParameters(path);
-		Frame pathFrame = new Frame("path").addSlot("value", path).addSlot("name", resource.name$());
-		if (resource.isEditorPage()) pathFrame.addTypes("editor");
-		if (service.userHome() != null) pathFrame.addSlot("userHome", service.userHome().name$());
-		if (!custom.isEmpty()) pathFrame.addSlot("custom", custom.toArray(new String[0]));
-		frame.addSlot("path", pathFrame);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("resource", "abstractResource").add("name", resource.name$());
+		FrameBuilder pathFrameBuilder = new FrameBuilder("path").add("value", path).add("name", resource.name$());
+		if (resource.isEditorPage()) pathFrameBuilder.add("editor");
+		if (service.userHome() != null) pathFrameBuilder.add("userHome", service.userHome().name$());
+		if (!custom.isEmpty()) pathFrameBuilder.add("custom", custom.toArray(new String[0]));
+		builder.add("path", pathFrameBuilder.toFrame());
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Display display) {
-		final Frame frame = newDisplayFrame(display, new Frame("display"));
+		final FrameBuilder builder = newDisplayFrame(display, new FrameBuilder("display"));
 		if (display.isAccessible())
-			frame.addTypes("accessible").addSlot("display", newDisplayFrame(display, new Frame("display", "proxy")));
-		return frame;
+			builder.add("accessible").add("display", newDisplayFrame(display, new FrameBuilder("display", "proxy")).toFrame());
+		return builder.toFrame();
 	}
 
-	private Frame newDisplayFrame(Display display, Frame frame) {
-		frame.addSlot("name", display.name$()).addSlot("package", packageName);
+	private FrameBuilder newDisplayFrame(Display display, FrameBuilder builder) {
+		builder.add("name", display.name$()).add("package", packageName);
 		if (display.requestList().stream().anyMatch(r -> r.responseType().equals(Asset)))
-			frame.addSlot("asset", display.name$());
-		return frame;
+			builder.add("asset", display.name$());
+		return builder;
 	}
 
 	private Frame frameOf(Dialog dialog) {
-		return new Frame().addTypes("dialog").addSlot("name", dialog.name$()).addSlot("package", packageName);
+		return new FrameBuilder("dialog").add("name", dialog.name$()).add("package", packageName).toFrame();
 	}
 
 	private Template template() {
-		Template template = UIServiceTemplate.create();
-		addFormats(template);
-		return template;
+		return customize(new UIServiceTemplate());
 	}
 
-	private void addFormats(Template template) {
+	private Template customize(Template template) {
 		template.add("SnakeCaseToCamelCase", value -> snakeCaseToCamelCase(value.toString()));
 		template.add("ReturnTypeFormatter", (value) -> value.equals("Void") ? "void" : value);
 		template.add("validname", value -> value.toString().replace("-", "").toLowerCase());
+		return template;
 	}
 }

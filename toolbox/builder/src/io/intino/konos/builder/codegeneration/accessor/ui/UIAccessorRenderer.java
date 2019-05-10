@@ -2,6 +2,8 @@ package io.intino.konos.builder.codegeneration.accessor.ui;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.util.io.ZipUtil;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldFrameBuilder;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldLayoutTemplate;
 import io.intino.konos.builder.codegeneration.accessor.ui.mold.MoldTemplate;
@@ -14,7 +16,6 @@ import io.intino.tara.magritte.Layer;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.siani.itrules.model.Frame;
 import org.slf4j.LoggerFactory;
 import sun.net.www.protocol.file.FileURLConnection;
 
@@ -44,9 +45,9 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
 public class UIAccessorRenderer {
 	private static final String SRC_DIRECTORY = "src";
 	private static final String ARTIFACT_LEGIO = "artifact.legio";
-	private Module appModule;
 	private final File genDirectory;
 	private final UIService service;
+	private Module appModule;
 	private String parent;
 
 	UIAccessorRenderer(Module appModule, Module webModule, UIService service, String parent) {
@@ -63,20 +64,20 @@ public class UIAccessorRenderer {
 
 	boolean createConfigurationFile() {
 		final Configuration configuration = TaraUtil.configurationOf(appModule);
-		Frame frame = new Frame();
-		frame.addTypes("artifact", "legio");
-		frame.addSlot("groupID", configuration.groupId());
-		frame.addSlot("artifactID", configuration.artifactId());
-		frame.addSlot("version", configuration.version());
+		FrameBuilder builder = new FrameBuilder();
+		builder.add("artifact", "legio");
+		builder.add("groupID", configuration.groupId());
+		builder.add("artifactID", configuration.artifactId());
+		builder.add("version", configuration.version());
 		final Map<String, List<String>> repositories = reduce(configuration.releaseRepositories());
 		for (String id : repositories.keySet()) {
-			final Frame repoFrame = new Frame().addTypes("repository", "release").addSlot("id", id);
-			for (String url : repositories.get(id)) repoFrame.addSlot("url", url);
-			frame.addSlot("repository", ((Frame) repoFrame));
+			final FrameBuilder repoFrameBuilder = new FrameBuilder("repository", "release").add("id", id);
+			for (String url : repositories.get(id)) repoFrameBuilder.add("url", url);
+			builder.add("repository", repoFrameBuilder);
 		}
 		File file = new File(genDirectory, ARTIFACT_LEGIO);
 		if (!file.exists()) {
-			write(file.toPath(), ArtifactTemplate.create().format(frame));
+			write(file.toPath(), new ArtifactTemplate().render(builder));
 			return true;
 		}
 		return false;
@@ -104,32 +105,29 @@ public class UIAccessorRenderer {
 	private void createResources() {
 		for (UIService.Resource resource : service.resourceList()) {
 			Path resourcePath = new File(genDirectory, SRC_DIRECTORY + separator + resource.name$() + ".html").toPath();
-			if (!exists(resourcePath)) write(resourcePath, ResourceTemplate.create().format(resourceFrame(resource)));
+			if (!exists(resourcePath)) write(resourcePath, new ResourceTemplate().render(resourceFrame(resource)));
 		}
 	}
 
 	private Frame resourceFrame(UIService.Resource resource) {
-		Component uses = componentFor(resource);
-		Frame result = new Frame().addTypes("resource").addSlot("uses", uses.name$()).addSlot("name", resource.name$());
-		result.addSlot("polymer", polymerFrame(resource));
-		return result;
+		return new FrameBuilder("resource").add("uses", componentFor(resource).name$()).add("name", resource.name$()).add("polymer", polymerFrame(resource)).toFrame();
 	}
 
 	private Frame polymerFrame(UIService.Resource resource) {
-		Frame result = new Frame("polymer");
-		if (resource.isEditorPage()) result.addTypes("editor");
-		return result;
+		FrameBuilder result = new FrameBuilder("polymer");
+		if (resource.isEditorPage()) result.add("editor");
+		return result.toFrame();
 	}
 
 	private void createWidgets() {
-		Frame widgets = new Frame().addTypes("widgets");
+		FrameBuilder widgets = new FrameBuilder("widgets");
 		for (Component component : componentsOf(service)) {
 			if (component.i$(Mold.class)) createMold(component.a$(Mold.class));
 			if (component.i$(Display.class) && !component.i$(Mold.class)) createDisplay(component.a$(Display.class));
 			if (component.i$(Dialog.class)) createDialog(component.a$(Dialog.class));
-			widgets.addSlot("widget", component.name$());
+			widgets.add("widget", component.name$());
 		}
-		write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), customize(WidgetsTemplate.create()).format(widgets));
+		write(new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + "widgets.html").toPath(), customize(new WidgetsTemplate()).render(widgets));
 	}
 
 	private void createDisplay(Display component) {
@@ -151,30 +149,30 @@ public class UIAccessorRenderer {
 	private void createMoldLayout(String name, Frame frame) {
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + name.toLowerCase() + separator + camelCaseToSnakeCase().format(name) + "-layout.html");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), customize(MoldLayoutTemplate.create()).format(frame));
+		write(file.toPath(), customize(new MoldLayoutTemplate()).render(frame));
 	}
 
 	private void createMold(String name, Frame frame) {
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase().format(name) + ".html");
-		if (!file.exists()) write(file.toPath(), customize(MoldTemplate.create()).format(frame));
+		if (!file.exists()) write(file.toPath(), customize(new MoldTemplate()).render(frame));
 	}
 
 	private void createDisplayWidget(Display display) {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
-		if (display.isAccessible()) frame.addTypes("accessible");
+		final FrameBuilder frame = new FrameBuilder("widget").add("name", display.name$()).add("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.isAccessible()) frame.add("accessible");
 		if (display.parentDisplay() != null)
-			frame.addSlot("parent", new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
+			frame.add("parent", new FrameBuilder().add("value", display.parentDisplay()).add("dsl", this.parent.substring(this.parent.lastIndexOf(".") + 1)));
 		final boolean prototype = isPrototype(display);
 		final String type = typeOf(display);
-		if (prototype) frame.addSlot("prototype", new Frame("prototype").addSlot("widget", display.name$()).addSlot("type", type));
-		if (!prototype) frame.addSlot("attached", new Frame("display").addSlot("widget", display.name$()).addSlot("type", type));
+		if (prototype) frame.add("prototype", new FrameBuilder("prototype").add("widget", display.name$()).add("type", type));
+		if (!prototype) frame.add("attached", new FrameBuilder("display").add("widget", display.name$()).add("type", type));
 		if (prototype) {
-			frame.addSlot("imports", new Frame().addSlot("type", type));
-			frame.addSlot("type", type);
+			frame.add("imports", new FrameBuilder().add("type", type));
+			frame.add("type", type);
 		}
 		final List<Display.Request> requests = display.requestList().stream().filter(Display.Request::isAddressable).collect(Collectors.toList());
 		if (!requests.isEmpty()) {
-			frame.addSlot("routes", new Frame("routes").addSlot("name", display.name$()));
+			frame.add("routes", new FrameBuilder("routes").add("name", display.name$()));
 			writeWidgetRoutes(display, requests);
 		}
 		writeWidget(display, frame);
@@ -188,39 +186,38 @@ public class UIAccessorRenderer {
 	}
 
 	private void writeWidgetRoutes(Display display, List<Display.Request> requests) {
-		final Frame frame = new Frame("routes").addSlot("name", display.name$());
-		for (Display.Request request : requests) frame.addSlot("route", routeFrame(request));
+		final FrameBuilder builder = new FrameBuilder("routes").add("name", display.name$());
+		for (Display.Request request : requests) builder.add("route", routeFrame(request));
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-routes.html");
-		write(file.toPath(), customize(WidgetRoutesTemplate.create()).format(frame));
+		write(file.toPath(), customize(new WidgetRoutesTemplate()).render(builder));
 	}
 
 	private Frame routeFrame(Display.Request r) {
-		final Frame frame = new Frame().addTypes("route").addSlot("request", r.name$());
-		if (r.isType()) frame.addTypes("parameter");
+		final FrameBuilder builder = new FrameBuilder("route").add("request", r.name$());
+		if (r.isType()) builder.add("parameter");
 		if (r.isAddressable()) {
 			AddressableRequest addressableRequest = r.asAddressable();
-			if (addressableRequest.listenForChanges()) frame.addTypes("listenForChanges");
-			frame.addSlot("routePath", routePathFrame(r));
-			frame.addSlot("value", addressableRequest.addressableResource().path());
+			if (addressableRequest.listenForChanges()) builder.add("listenForChanges");
+			builder.add("routePath", routePathFrame(r));
+			builder.add("value", addressableRequest.addressableResource().path());
 		}
-		return frame;
+		return builder.toFrame();
 	}
 
 	private Frame routePathFrame(Display.Request r) {
-		Frame frame = new Frame("routePath");
+		FrameBuilder builder = new FrameBuilder("routePath");
 		AddressableRequest addressable = r.asAddressable();
-		if (addressable.encoded()) frame.addTypes("encoded");
-		frame.addSlot("value", addressable.addressableResource().path());
-		return frame;
+		if (addressable.encoded()) builder.add("encoded");
+		return builder.add("value", addressable.addressableResource().path()).toFrame();
 	}
 
-	private void writeWidget(Display display, Frame frame) {
+	private void writeWidget(Display display, FrameBuilder frame) {
 		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + ".html");
-		if (!file.exists()) write(file.toPath(), customize(WidgetTemplate.create()).format(frame));
+		if (!file.exists()) write(file.toPath(), customize(new WidgetTemplate()).render(frame));
 		if (display.isAccessible()) {
-			frame.addTypes("accessible");
+			frame.add("accessible");
 			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(display.name$()).toLowerCase() + "-proxy.html");
-			write(file.toPath(), customize(WidgetTemplate.create()).format(frame));
+			write(file.toPath(), customize(new WidgetTemplate()).render(frame));
 		}
 	}
 
@@ -229,50 +226,50 @@ public class UIAccessorRenderer {
 	}
 
 	private void createDialog(Dialog dialog) {
-		final Frame frame = new Frame().addTypes("dialog").addSlot("name", dialog.name$());
+		final FrameBuilder frame = new FrameBuilder("dialog").add("name", dialog.name$());
 		final File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + camelCaseToSnakeCase(dialog.name$()).toLowerCase() + ".html");
 		if (!file.exists())
-			write(file.toPath(), customize(DialogWidgetTemplate.create()).format(frame));
+			write(file.toPath(), customize(new DialogWidgetTemplate()).render(frame));
 	}
 
 	private void createRequester(Display display) {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("request", (Frame[]) display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
+		final FrameBuilder frame = new FrameBuilder("widget").add("name", display.name$()).add("request", display.requestList().stream().map(this::frameOf).toArray(Frame[]::new));
 		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "requester.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame));
+		write(file.toPath(), customize(new WidgetRequesterTemplate()).render(frame));
 		if (display.isAccessible()) {
-			frame.addTypes("accessible");
+			frame.add("accessible");
 			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "proxy" + separator + "requester.js");
 			file.getParentFile().mkdirs();
-			write(file.toPath(), customize(WidgetRequesterTemplate.create()).format(frame));
+			write(file.toPath(), customize(new WidgetRequesterTemplate()).render(frame));
 		}
 	}
 
 	private void createNotifier(Display display) {
-		final Frame frame = new Frame().addTypes("widget").addSlot("name", display.name$()).addSlot("notification", (Frame[]) display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
+		final FrameBuilder frame = new FrameBuilder("widget").add("name", display.name$()).add("notification", display.notificationList().stream().map(this::frameOf).toArray(Frame[]::new));
 		File file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + separator + "notifier-listener.js");
 		file.getParentFile().mkdirs();
-		write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame));
+		write(file.toPath(), customize(new WidgetNotifierTemplate()).render(frame));
 		if (display.isAccessible()) {
-			frame.addTypes("accessible");
+			frame.add("accessible");
 			file = new File(genDirectory, SRC_DIRECTORY + separator + "widgets" + separator + display.name$().toLowerCase() + "proxy" + separator + "notifier-listener.js");
 			file.getParentFile().mkdirs();
-			write(file.toPath(), customize(WidgetNotifierTemplate.create()).format(frame));
+			write(file.toPath(), customize(new WidgetNotifierTemplate()).render(frame));
 		}
 	}
 
 	private Frame frameOf(Display.Notification n) {
-		final Frame frame = new Frame().addTypes("notification").addSlot("name", n.name$()).addSlot("to", n.to().name());
-		if (n.asType() != null) frame.addSlot("parameter", "");
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("notification").add("name", n.name$()).add("to", n.to().name());
+		if (n.asType() != null) builder.add("parameter", "");
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(Display.Request r) {
-		final Frame frame = new Frame().addTypes("request").addSlot("name", r.name$()).addSlot("widget", r.core$().owner().name());
-		if (r.isType()) frame.addTypes("parameter");
-		if (r.isAddressable()) frame.addTypes("addressable");
-		frame.addSlot("method", r.responseType().name());
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("request").add("name", r.name$()).add("widget", r.core$().owner().name());
+		if (r.isType()) builder.add("parameter");
+		if (r.isAddressable()) builder.add("addressable");
+		builder.add("method", r.responseType().name());
+		return builder.toFrame();
 	}
 
 	private void createStaticFiles() throws IOException {

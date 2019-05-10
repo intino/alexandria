@@ -1,9 +1,9 @@
 package io.intino.konos.builder.codegeneration.datalake.mounter;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.konos.model.graph.Mounter;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -29,19 +29,19 @@ public class MounterRenderer {
 
 	public void execute() {
 		for (Mounter mounter : mounters) {
-			final Frame frame = new Frame().addTypes("mounter").
-					addSlot("box", boxName).
-					addSlot("package", packageName).
-					addSlot("name", mounter.name());
+			final FrameBuilder builder = new FrameBuilder("mounter").
+					add("box", boxName).
+					add("package", packageName).
+					add("name", mounter.name());
 			if (mounter.schema() != null) {
-				frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-				frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", mounter.schema().name$()));
-			} else frame.addSlot("type", "message");
+				builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
+				builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", mounter.schema().name$()));
+			} else builder.add("type", "message");
 			final File destination = new File(src, "datalake/mounters");
 			final String handlerName = mounter.name() + "Mounter";
 			classes.put(mounter.getClass().getSimpleName() + "#" + mounter.name$(), "datalake.mounters." + handlerName);
 			if (!alreadyRendered(destination, handlerName))
-				writeFrame(destination, handlerName, customize(MounterTemplate.create()).format(frame));
+				writeFrame(destination, handlerName, customize(new MounterTemplate()).render(builder.toFrame()));
 		}
 	}
 

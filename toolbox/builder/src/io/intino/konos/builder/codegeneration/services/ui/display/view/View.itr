@@ -42,9 +42,7 @@ def type(group)
 	public static class $name+FirstUpperCase {
 		$item...[$NL]
 
-		[
-		$hidden
-	]
+		[$hidden]
 	}
 end
 
@@ -67,17 +65,15 @@ def type(items)
 			return null;
 		}
 
-		$view[
-		$hidden
-	]
+		$view
+		[$hidden]
 	}
 end
 
 def type(item)
 	public static class $name+FirstUpperCase {
 		$view
-		$hidden[
-	]
+		[$hidden]
 	}
 end
 

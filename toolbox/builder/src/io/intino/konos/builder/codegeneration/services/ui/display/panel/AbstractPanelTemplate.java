@@ -1,28 +1,27 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.panel;
 
+import io.intino.itrules.Rule;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.display.toolbar.AbstractOperationTemplate;
 import io.intino.konos.builder.codegeneration.services.ui.display.view.AbstractViewTemplate;
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
 
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AbstractPanelTemplate extends Template {
 
-	protected AbstractPanelTemplate(Locale locale, LineSeparator lineSeparator) {
-		super(locale, lineSeparator);
+	@Override
+	protected RuleSet ruleSet() {
+		return new RuleSet().add(
+				getAll(new AbstractPanelSkeletonTemplate().ruleSet()))
+				.add(getAll(new AbstractOperationTemplate().ruleSet()))
+				.add(getAll(new AbstractViewTemplate().ruleSet()));
 	}
 
-	public static Template create() {
-		return new AbstractPanelTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(AbstractPanelSkeletonTemplate.create().rules());
-		add(AbstractOperationTemplate.create().rules());
-		add(AbstractViewTemplate.create().rules());
-		return this;
+	private Rule[] getAll(Iterable<Rule> ruleSet) {
+		List<Rule> rules = new ArrayList<>();
+		ruleSet.forEach(rules::add);
+		return rules.toArray(new Rule[0]);
 	}
 }

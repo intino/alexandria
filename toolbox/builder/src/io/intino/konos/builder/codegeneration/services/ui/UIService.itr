@@ -25,10 +25,10 @@ def type(ui)
 			$box+SnakeCaseToCamelCase+FirstUpperCase~Configuration configuration = ($box+SnakeCaseToCamelCase+FirstUpperCase~Configuration) box.configuration();
 			spark.route("/push").push(new PushService());
 			spark.route("/authenticate-callback").get(manager -> new AuthenticateCallbackResource(manager, notifierProvider()).execute());
-			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());[
-			$userHome][
-			$resource+path...[$NL]][
-			$display+path...[$NL]]
+			spark.route("/asset/:name").get(manager -> new AssetResource(name -> new AssetResourceLoader(box).load(name), manager, notifierProvider()).execute());
+			[$userHome]
+			[$resource+path...[$NL]]
+			[$display+path...[$NL]]
 			initDisplays(spark);
 		}
 
@@ -50,7 +50,7 @@ def type(resource) trigger(path)
 end
 
 def trigger(userHome)
-	spark.route("/alexandria/user").get(manager -> new $value+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
+	spark.route("/alexandria/user").get(manager -> new $this+firstUpperCase~Resource(box, manager, notifierProvider()).execute());
 end
 
 def type(display & accessible) trigger(path)
@@ -74,8 +74,8 @@ def type(display & proxy) trigger(notifier)
 end
 
 def type(display) trigger(notifier)
-	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);[
-	$display+notifier]
+	register($name+firstUpperCase~Notifier.class).forDisplay($package+validPackage.displays.$name+firstUpperCase.class);
+	[$display+notifier]
 end
 
 def type(dialog) trigger(notifier)
@@ -83,19 +83,19 @@ def type(dialog) trigger(notifier)
 end
 
 def trigger(custom)
-	.replace("{$value}", configuration.get("$value"))
+	.replace("{$this}", configuration.get("$this"))
 end
 
 def type(display & proxy) trigger(proxy)
 	spark.route("/$name+lowercase~proxy/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());//CCC
-	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUppercase~ProxyRequester(manager, notifierProvider()).execute());
+	spark.route("/$name+lowercase~proxy/:displayId").post(manager -> new $name+firstUpperCase~ProxyRequester(manager, notifierProvider()).execute());
 	spark.route("/$name+lowercase~proxy/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 end
 
 def type(display)
 	spark.route("/$name+lowercase/:displayId").before(manager -> new BeforeDisplayRequest(manager).execute());//BBB
-	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~Requester(manager, notifierProvider()).execute());[
-	$asset]
+	spark.route("/$name+lowercase/:displayId").post(manager -> new $name+firstUppercase~Requester(manager, notifierProvider()).execute());
+	[$asset]
 	spark.route("/$name+lowercase/:displayId").after(manager -> new AfterDisplayRequest(manager).execute());
 	$display+proxy
 end

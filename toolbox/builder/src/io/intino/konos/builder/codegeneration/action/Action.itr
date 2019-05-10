@@ -8,8 +8,8 @@ def type(action & notification) !type(ui)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();[
-		$parameter+type...[$NL]]
+		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		[$parameter+type...[$NL]]
 
 		public void onOpen(Client client, SparkNotifier notifier) {
 			//register listener
@@ -34,10 +34,10 @@ def type(action) !type(ui)
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action {
 
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();[
-		$parameter+type...[$NL]]
+		public io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
+		[$parameter+type...[$NL]]
 
-		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ] ]{
+		public [$returnType?void] execute() [throws $throws+FirstUpperCase...[, ]] {
 			$returnType+return
 		}
 	}
@@ -52,7 +52,7 @@ def type(ui & accessibleDisplay)
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~ProxyAction extends io.intino.alexandria.ui.spark.actions.AlexandriaProxyResourceAction {
 		public $box+snakecaseToCamelCase+firstUpperCase~Box box;
-		$parameter+type...[$NL]
+		[$parameter+type...[$NL]]
 		public Soul soul;
 
 		public void execute() {
@@ -78,7 +78,7 @@ def type(ui & action & gen)
 
 		public Abstract$name+snakecaseToCamelCase+firstUpperCase~Action() { super("$uiService+camelCaseToSnakeCase+lowerCase"); }
 
-		public String execute() [throws $throws+FirstUpperCase...[, ] ]{
+		public String execute() [throws $throws+FirstUpperCase...[, ]] {
 			return super.template("$name"[, Arrays.asList($usedAppUrl...[,])]);
 		}
 
@@ -108,8 +108,7 @@ def type(ui & action) !type(gen)
 	import $importDisplays+validPackage.displays.*;
 
 	public class $name+snakecaseToCamelCase+firstUpperCase~Action extends Abstract$name+snakecaseToCamelCase+firstUpperCase~Action {
-
-		$parameter+type...[$NL]
+		[$parameter+type...[$NL]]
 		[$editor+parameter]
 
 		$component
@@ -137,7 +136,7 @@ def type(editor) trigger(parameter)
 	public io.intino.alexandria.ui.services.EditorService.Permission permission;
 end
 
-def attribute(void) trigger(return)
+def attribute(this:void) trigger(return)
 end
 
 def trigger(return)
@@ -169,9 +168,9 @@ def type(editor) trigger(component)
 end
 
 def type(usedAppUrl & standard)
-	"$value"
+	"$this"
 end
 
 def type(usedAppUrl & custom)
-	box.configuration().get("$value")
+	box.configuration().get("$this")
 end

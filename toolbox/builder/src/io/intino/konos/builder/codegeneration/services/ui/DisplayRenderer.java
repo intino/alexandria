@@ -1,7 +1,7 @@
 package io.intino.konos.builder.codegeneration.services.ui;
 
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.model.graph.Display;
-import org.siani.itrules.model.Frame;
 
 public abstract class DisplayRenderer extends UIPrototypeRenderer {
 	private final Display display;
@@ -16,7 +16,7 @@ public abstract class DisplayRenderer extends UIPrototypeRenderer {
 	}
 
 	@Override
-	public Frame buildFrame() {
-		return super.buildFrame().addTypes(display.getClass().getSimpleName().toLowerCase());
+	public FrameBuilder frameBuilder() {
+		return super.frameBuilder().add(display.getClass().getSimpleName().toLowerCase());
 	}
 }

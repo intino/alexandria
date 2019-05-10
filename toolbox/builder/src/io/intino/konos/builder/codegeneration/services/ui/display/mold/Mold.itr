@@ -25,14 +25,14 @@ end
 
 def type(block) trigger(stamps)
 	$stamp...[$NL]
-	$block+stamps...[$NL][
-	$blockClassName]
+	$block+stamps...[$NL]
+	[$blockClassName]
 end
 
 def trigger(block)
 	$hidden
-	$block...[$NL][
-	$blockClassName]
+	$block...[$NL]
+	[$blockClassName]
 end
 
 def trigger(hidden)
@@ -65,11 +65,11 @@ end
 
 def type(stamp & openCatalogOperation)
 	public static class $name+FirstUpperCase {
-		$common[
+		$common
 
-		$catalogFilter][
+		[$catalogFilter]
 
-		$openCatalogOperationExecution]
+		[$openCatalogOperationExecution]
 	}
 end
 
@@ -135,9 +135,9 @@ end
 
 def type(stamp & picture)
 	public static class $name+FirstUpperCase {
-		$common[
+		$common
 
-		$avatarProperties]
+		[$avatarProperties]
 	}
 end
 
@@ -216,17 +216,16 @@ end
 
 def trigger(common)
 
-	$valueMethod[
+	$valueMethod
+	[$editable]
 
-	$editable][
+	[$labelLoader]
 
-	$labelLoader][
+	[$style]
 
-	$style][
+	[$className]
 
-	$className][
-
-	$color]
+	[$color]
 end
 
 def trigger(labelLoader)

@@ -39,43 +39,43 @@ def type(display)
 end
 
 
-def attribute(display) trigger(type)
+def attribute(this:display) trigger(type)
 	io.intino.alexandria.ui.displays.AlexandriaDisplayNotifier
 end
 
-def attribute(desktop) trigger(type)
+def attribute(this:desktop) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaDesktopNotifier
 end
 
-def attribute(panel) trigger(type)
+def attribute(this:panel) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaPanelNotifier
 end
 
-def attribute(catalog) trigger(type)
+def attribute(this:catalog) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaCatalogNotifier
 end
 
-def attribute(temporalTimeCatalog) trigger(type)
+def attribute(this:temporalTimeCatalog) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalTimeCatalogNotifier
 end
 
-def attribute(temporalRangeCatalog) trigger(type)
+def attribute(this:temporalRangeCatalog) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaTemporalRangeCatalogNotifier
 end
 
-def attribute(editor) trigger(type)
+def attribute(this:editor) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaEditorNotifier
 end
 
-def attribute(mold) trigger(type)
+def attribute(this:mold) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaMoldNotifier
 end
 
-def attribute(MenuLayout) trigger(type)
+def attribute(this:MenuLayout) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaMenuLayoutNotifier
 end
 
-def attribute(TabLayout) trigger(type)
+def attribute(this:TabLayout) trigger(type)
 	io.intino.alexandria.ui.displays.notifiers.AlexandriaTabLayoutNotifier
 end
 
@@ -100,13 +100,13 @@ def type(schemaImport)
 	import $package.schemas.*;
 end
 
-def attribute(All) trigger(target)
+def attribute(this:All) trigger(target)
 	ToAll
 end
 
-def attribute(Display) trigger(target)
+def attribute(this:Display) trigger(target)
 	ToDisplay
 end
 
-def attribute(Client) trigger(target)
+def attribute(this:Client) trigger(target)
 end

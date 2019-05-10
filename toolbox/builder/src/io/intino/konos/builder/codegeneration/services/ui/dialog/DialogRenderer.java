@@ -1,26 +1,26 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
-import io.intino.konos.builder.codegeneration.Formatters;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Dialog;
 import io.intino.konos.model.graph.Dialog.Tab;
 import io.intino.konos.model.graph.KonosGraph;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import static cottons.utils.StringHelper.snakeCaseToCamelCase;
+import static io.intino.konos.builder.codegeneration.Formatters.customize;
 
 public class DialogRenderer extends UIRenderer {
-	private KonosGraph graph;
 	private final File gen;
 	private final File src;
 	private final List<Dialog> dialogs;
 	private final Map<String, String> classes;
+	private KonosGraph graph;
 
 	public DialogRenderer(KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		super(boxName, packageName);
@@ -43,45 +43,41 @@ public class DialogRenderer extends UIRenderer {
 	private void renderDialog(Dialog dialog) {
 		final String newDialog = snakeCaseToCamelCase(dialog.name$());
 		if (Commons.javaFile(new File(src, DIALOGS), newDialog).exists()) return;
-		Frame frame = buildFrame().addTypes("dialog").addSlot("name", dialog.name$());
-		processToolbar(frame, dialog.toolbar());
-		for (Tab tab : dialog.tabList()) processTab(frame, tab);
+		FrameBuilder builder = frameBuilder().add("dialog").add("name", dialog.name$());
+		processToolbar(builder, dialog.toolbar());
+		for (Tab tab : dialog.tabList()) processTab(builder, tab);
 		classes.put("Dialog#" + dialog.name$(), DIALOGS + "." + newDialog);
-		Commons.writeFrame(new File(src, DIALOGS), newDialog, template().format(frame));
+		Commons.writeFrame(new File(src, DIALOGS), newDialog, template().render(builder.toFrame()));
 	}
 
-	private void processToolbar(Frame frame, Dialog.Toolbar toolbar) {
+	private void processToolbar(FrameBuilder builder, Dialog.Toolbar toolbar) {
 		if (toolbar == null) return;
-		for (Dialog.Toolbar.Operation operation : toolbar.operationList()) processOperation(frame, operation);
+		for (Dialog.Toolbar.Operation operation : toolbar.operationList()) processExecution(builder, operation);
 	}
 
-	private void processOperation(Frame frame, Dialog.Toolbar.Operation operation) {
-		processExecution(frame, operation);
+	private void processExecution(FrameBuilder builder, Dialog.Toolbar.Operation operation) {
+		builder.add("execution", new FrameBuilder().add("execution").add("box", box).add("name", operation.name$()));
 	}
 
-	private void processExecution(Frame frame, Dialog.Toolbar.Operation operation) {
-		frame.addSlot("execution", new Frame().addTypes("execution").addSlot("box", box).addSlot("name", operation.name$()));
+	private void processTab(FrameBuilder builder, Tab tab) {
+		for (Tab.Input input : tab.inputList()) processInput(builder, input);
 	}
 
-	private void processTab(Frame frame, Tab tab) {
-		for (Tab.Input input : tab.inputList()) processInput(frame, input);
-	}
-
-	private void processInput(Frame frame, Tab.Input input) {
-		processValidator(frame, input);
-		if (input.i$(Tab.OptionBox.class)) processSources(frame, input.a$(Tab.OptionBox.class));
+	private void processInput(FrameBuilder builder, Tab.Input input) {
+		processValidator(builder, input);
+		if (input.i$(Tab.OptionBox.class)) processSources(builder, input.a$(Tab.OptionBox.class));
 		else if (input.i$(Tab.Section.class))
-			for (Tab.Input i : ((Tab.Section) input).inputList()) processInput(frame, i);
+			for (Tab.Input i : ((Tab.Section) input).inputList()) processInput(builder, i);
 	}
 
-	private void processSources(Frame frame, Tab.OptionBox optionBox) {
+	private void processSources(FrameBuilder builder, Tab.OptionBox optionBox) {
 		if (optionBox.source() != null && !optionBox.source().isEmpty())
-			frame.addSlot("source", new Frame().addTypes("source").addSlot("box", box).addSlot("name", optionBox.source()).addSlot("field", optionBox.getClass().getSimpleName()));
+			builder.add("source", new FrameBuilder("source").add("box", box).add("name", optionBox.source()).add("field", optionBox.getClass().getSimpleName()));
 	}
 
-	private void processValidator(Frame frame, Tab.Input input) {
+	private void processValidator(FrameBuilder builder, Tab.Input input) {
 		if (input.validator() != null && !input.validator().isEmpty())
-			frame.addSlot("validator", new Frame().addTypes("validator").addSlot("box", box).addSlot("name", input.validator()).addSlot("field", input.getClass().getSimpleName()));
+			builder.add("validator", new FrameBuilder("validator").add("box", box).add("name", input.validator()).add("field", input.getClass().getSimpleName()));
 	}
 
 	private void renderDialogDisplay() {
@@ -89,8 +85,6 @@ public class DialogRenderer extends UIRenderer {
 	}
 
 	private Template template() {
-		Template template = DialogTemplate.create();
-		Formatters.customize(template);
-		return template;
+		return customize(new DialogTemplate());
 	}
 }

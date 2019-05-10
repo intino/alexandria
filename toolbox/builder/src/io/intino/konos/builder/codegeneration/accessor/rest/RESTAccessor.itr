@@ -21,21 +21,21 @@ def type(accessor)
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
 		private RestAccessor accessor;
-		private RestAccessorNotifier notifier = new RestAccessorNotifier();[
-		$certificate~private URL certificate;][
-		$token~private String token;]
+		private RestAccessorNotifier notifier = new RestAccessorNotifier();
+		[$certificate~private URL certificate;]
+		[$token~private String token;]
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$token, String token]) {
-			this.url = url;[
-			$certificate~this.certificate = certificate;][
-			$token~this.token = token;]
+			this.url = url;
+			[$certificate~this.certificate = certificate;]
+			[$token~this.token = token;]
 			this.accessor = new RestAccessor();
 		}
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $certificate~URL certificate][$token, String token]) {
-			this.url = url;[
-			$certificate~this.certificate = certificate;][
-			$token~this.token = token;]
+			this.url = url;
+			[$certificate~this.certificate = certificate;]
+			[$token~this.token = token;]
 			this.accessor = new RestAccessor(timeoutMillis);
 		}
 
@@ -222,7 +222,7 @@ def type(exceptionResponse) trigger(throws)
 end
 
 def type(exceptionResponses) trigger(declaration)
-	throws [$exceptionResponse+declaration...[, ], ]Unknown
+	throws [$exceptionResponse+declaration...[, ],] Unknown
 end
 
 def type(exceptionResponse) trigger(declaration)

@@ -1,12 +1,13 @@
 package io.intino.konos.builder.codegeneration.datalake;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.*;
 import io.intino.konos.model.graph.Procedure.Process.Input;
 import io.intino.konos.model.graph.ness.NessClient;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.*;
@@ -35,16 +36,16 @@ public class DatalakeRenderer {
 	}
 
 	public void execute() {
-		Frame frame = new Frame().addTypes("tanks").
-				addSlot("package", packageName).
-				addSlot("name", datalake.name$()).
-				addSlot("box", boxName).
-				addSlot("tank", tanks());
-		frame.addSlot("clientId", new Frame(isCustom(datalake.clientID()) ? "custom" : "standard").addSlot("value", datalake.clientID()));
-		if (eventSources.stream().anyMatch(h -> h.i$(Mounter.class))) frame.addSlot("tankImport", packageName);
+		FrameBuilder builder = new FrameBuilder("tanks").
+				add("package", packageName).
+				add("name", datalake.name$()).
+				add("box", boxName).
+				add("tank", tanks());
+		builder.add("clientId", new FrameBuilder(isCustom(datalake.clientID()) ? "custom" : "standard").add("value", datalake.clientID()).toFrame());
+		if (eventSources.stream().anyMatch(h -> h.i$(Mounter.class))) builder.add("tankImport", packageName);
 		if (!datalake.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(new File(gen, "datalake"), "Datalake", template().format(frame));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+		Commons.writeFrame(new File(gen, "datalake"), "Datalake", template().render(builder.toFrame()));
 	}
 
 	private Frame[] tanks() {
@@ -56,45 +57,43 @@ public class DatalakeRenderer {
 
 	private Frame frameOf(EventSource source) {
 		final String messageType = messageType(source);
-		final Frame frame = new Frame().addTypes("tank", source.getClass().getSimpleName().toLowerCase()).
-				addSlot("messageType", messageType).
-				addSlot("box", boxName).
-				addSlot("name", source.name()).
-				addSlot("fullname", fullName(source));
-		if (source.i$(Input.class)) frame.addSlot("handler", handlers(messageType));
-		type(source, frame);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("tank", source.getClass().getSimpleName().toLowerCase()).
+				add("messageType", messageType).
+				add("box", boxName).
+				add("name", source.name()).
+				add("fullname", fullName(source));
+		if (source.i$(Input.class)) builder.add("handler", handlers(messageType));
+		type(source, builder);
+		return builder.toFrame();
 	}
 
 	private Frame frameOf(FeederEventSource source) {
-		final Frame frame = new Frame().addTypes("tank").
-				addSlot("messageType", source.composedName()).
-				addSlot("box", boxName).
-				addSlot("name", source.name).
-				addSlot("fullname", source.fullName());
-		frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.name));
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("tank").
+				add("messageType", source.composedName()).
+				add("box", boxName).
+				add("name", source.name).
+				add("fullname", source.fullName());
+		builder.add("type", new FrameBuilder("schema").add("package", packageName).add("name", source.name).toFrame());
+		return builder.toFrame();
 	}
 
 	private Frame[] handlers(String name) {
 		final List<Input> inputs = graph.core$().find(Input.class).stream().filter(s -> composedName(s).equals(name)).collect(Collectors.toList());
 		List<Frame> frames = new ArrayList<>();
 		for (Input input : inputs) {
-			final Frame frame = new Frame("handler").
-					addSlot("box", boxName).
-					addSlot("processPackage", input.i$(Input.class) ? packageName + ".procedures." + input.core$().ownerAs(Procedure.class).name$() : "").
-					addSlot("output", input.core$().ownerAs(Procedure.Process.class).outputList().stream().map(this::fullName).toArray(String[]::new)).
-					addSlot("processName", input.i$(Input.class) ? input.core$().ownerAs(Procedure.Process.class).name$() : "");
-			type(input, frame);
-			frames.add(frame);
+			final FrameBuilder builder = new FrameBuilder("handler").
+					add("box", boxName).
+					add("processPackage", input.i$(Input.class) ? packageName + ".procedures." + input.core$().ownerAs(Procedure.class).name$() : "").
+					add("output", input.core$().ownerAs(Procedure.Process.class).outputList().stream().map(this::fullName).toArray(String[]::new)).
+					add("processName", input.i$(Input.class) ? input.core$().ownerAs(Procedure.Process.class).name$() : "");
+			type(input, builder);
+			frames.add(builder.toFrame());
 		}
 		return frames.toArray(new Frame[0]);
 	}
 
-	private void type(EventSource source, Frame frame) {
-		if (source.schema() != null)
-			frame.addSlot("type", new Frame("schema").addSlot("package", packageName).addSlot("name", source.schema().name$()));
-		else frame.addSlot("type", "message");
+	private void type(EventSource source, FrameBuilder builder) {
+		builder.add("type", source.schema() != null ? new FrameBuilder("schema").add("package", packageName).add("name", source.schema().name$()).toFrame() : "message");
 	}
 
 	private String fullName(EventSource source) {
@@ -122,7 +121,7 @@ public class DatalakeRenderer {
 	}
 
 	private Template template() {
-		return Formatters.customize(DatalakeTemplate.create()).add("shortPath", value -> {
+		return Formatters.customize(new DatalakeTemplate()).add("shortPath", value -> {
 			String[] names = value.toString().split("\\.");
 			return names[names.length - 1];
 		});

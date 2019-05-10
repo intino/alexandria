@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.jmx;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.action.JMXActionRenderer;
 import io.intino.konos.builder.helpers.Commons;
@@ -11,8 +14,6 @@ import io.intino.konos.model.graph.jmx.JMXService.Operation;
 import io.intino.konos.model.graph.list.ListData;
 import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -22,11 +23,11 @@ public class JMXOperationsServiceRenderer {
 
 	private final Project project;
 	private final List<JMXService> services;
-	private File src;
 	private final File gen;
-	private String packageName;
 	private final String boxName;
 	private final Map<String, String> classes;
+	private File src;
+	private String packageName;
 
 	public JMXOperationsServiceRenderer(Project project, KonosGraph graph, File src, File gen, String packageName, String boxName, Map<String, String> classes) {
 		this.project = project;
@@ -47,25 +48,24 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private void createInterface(JMXService service) {
-		Frame frame = new Frame().addTypes("jmx", "interface");
-		frame.addSlot("name", service.name$());
-		frame.addSlot("package", packageName);
-		frame.addSlot("box", boxName);
+		FrameBuilder builder = new FrameBuilder("jmx", "interface")
+				.add("name", service.name$())
+				.add("package", packageName)
+				.add("box", boxName);
 		if (!service.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 		for (Operation operation : service.operationList())
-			frame.addSlot("operation", frameOf(operation));
-		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().format(frame));
+			builder.add("operation", frameOf(operation));
+		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", template().render(builder));
 	}
 
 	private void createImplementation(JMXService service) {
-		Frame frame = new Frame().addTypes("jmx", "implementation");
-		frame.addSlot("name", service.name$());
-		frame.addSlot("box", boxName);
-		frame.addSlot("package", packageName);
-		for (Operation operation : service.operationList())
-			frame.addSlot("operation", frameOf(operation));
-		Commons.writeFrame(destinationPackage(), service.name$(), template().format(frame));
+		FrameBuilder builder = new FrameBuilder("jmx", "implementation")
+				.add("name", service.name$())
+				.add("box", boxName)
+				.add("package", packageName)
+				.add("operation", service.operationList().stream().map(this::frameOf).toArray(Frame[]::new));
+		Commons.writeFrame(destinationPackage(), service.name$(), template().render(builder));
 	}
 
 	private void createCorrespondingActions(List<Operation> operations) {
@@ -74,33 +74,33 @@ public class JMXOperationsServiceRenderer {
 	}
 
 	private Frame frameOf(Operation operation) {
-		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name$()).addSlot("action", operation.name$()).
-				addSlot("package", packageName).addSlot("returnType", returnType(operation));
-		frame.addSlot("description", operation.description());
-		setupParameters(operation.parameterList(), frame);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("operation").add("name", operation.name$()).add("action", operation.name$()).
+				add("package", packageName).add("returnType", returnType(operation));
+		builder.add("description", operation.description());
+		setupParameters(operation.parameterList(), builder);
+		return builder.toFrame();
 	}
 
 	private Frame returnType(Operation operation) {
-		final Frame frame = new Frame().addTypes("returnType").addSlot("value", operation.response() == null ? "void" : formatType(operation.response().asType()));
-		if (operation.response() != null && operation.response().i$(ListData.class)) frame.addTypes("list");
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("returnType").add("value", operation.response() == null ? "void" : formatType(operation.response().asType()));
+		if (operation.response() != null && operation.response().i$(ListData.class)) builder.add("list");
+		return builder.toFrame();
 	}
 
 	private String formatType(TypeData typeData) {
 		return (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
-	private void setupParameters(List<Parameter> parameters, Frame frame) {
+	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {
 		for (Parameter parameter : parameters) {
-			final Frame parameterFrame = new Frame().addTypes("parameter").addSlot("name", parameter.name$()).addSlot("type", formatType(parameter.asType()));
-			if (parameter.i$(ListData.class)) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame);
+			final FrameBuilder parameterBuilder = new FrameBuilder("parameter").add("name", parameter.name$()).add("type", formatType(parameter.asType()));
+			if (parameter.i$(ListData.class)) parameterBuilder.add("list");
+			builder.add("parameter", parameterBuilder.toFrame());
 		}
 	}
 
 	private Template template() {
-		return Formatters.customize(JMXServerTemplate.create());
+		return Formatters.customize(new JMXServerTemplate());
 	}
 
 	private File destinationPackage() {

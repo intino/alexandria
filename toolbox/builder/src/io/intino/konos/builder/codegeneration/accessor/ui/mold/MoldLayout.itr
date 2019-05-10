@@ -21,9 +21,9 @@ def type(mold)
 				height:100%;
 				overflow:auto;
 				position:relative;
-			}[
-			$block+style...[$NL]][
-			$stamp+style...[$NL]]
+			}
+			[$block+style...[$NL]]
+			[$stamp+style...[$NL]]
 			:host$[mode="list"], :host$[mode="grid"] {
 				width: 100%;
 			}
@@ -62,16 +62,16 @@ def type(mold)
 				behaviors: $[ CottonBehaviors.TranslatorBehavior, AlexandriaBehaviors.MoldLayoutBehavior, AlexandriaBehaviors.BreadcrumbsBehavior ],
 
 				blocks : function() {
-					var blocks = $[];[
-					$block+js...[$NL]][
-					$expandedblocks+js
-					]return blocks;
+					var blocks = $[];
+					[$block+js...[$NL]]
+					[$expandedblocks+js]
+					return blocks;
 				},
 
 				stamps : function() {
 					var stamps = $[];
-					[$stamp+js...[$NL]
-					]return stamps;
+					[$stamp+js...[$NL]]
+					return stamps;
 				}
 			});
 		</script>
@@ -81,8 +81,8 @@ end
 
 
 def type(block) trigger(js)
-	blocks.push({[name:"$name"][,layout:"$layout...[ ]"][,expanded:$expanded][,style:"$style"][,width:"$width"][,height:"$height"][,hiddenIfMobile:$hiddenIfMobile]});[
-	$block+js...[$NL]]
+	blocks.push({[name:"$name"][,layout:"$layout...[ ]"][,expanded:$expanded][,style:"$style"][,width:"$width"][,height:"$height"][,hiddenIfMobile:$hiddenIfMobile]});
+	[$block+js...[$NL]]
 end
 
 def type(stamp) trigger(js)
@@ -97,8 +97,8 @@ def type(stamp) trigger(style)
 end
 
 def type(block & hasCustomClass) trigger(style)
-	:host .$name { @apply(--$name); }[
-	$block+style...[$NL]]
+	:host .$name { @apply(--$name); }
+	[$block+style...[$NL]]
 end
 
 def type(block) trigger(style)
@@ -121,9 +121,9 @@ def trigger(property)
 end
 
 def type(block) trigger(block)
-	<alexandria-mold-block class="$name" block="$[$[$name]]">[
-		$block...[$NL]][
-		$stamp...[$NL]]
+	<alexandria-mold-block class="$name" block="$[$[$name]]">
+		[$block...[$NL]]
+		[$stamp...[$NL]]
 	</alexandria-mold-block>
 end
 
@@ -136,8 +136,8 @@ def type(expandedBlocks) trigger(js)
 end
 
 def trigger(expandedBlocks)
-	<div class="expanded-block" hidden$$="$[$[!hasExpandedBlocks]]">[
-		$block...[$NL]
-	]</div>
+	<div class="expanded-block" hidden$$="$[$[!hasExpandedBlocks]]">
+		[$block...[$NL]]
+	</div>
 end
 

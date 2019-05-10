@@ -1,11 +1,12 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.model.graph.Display;
 import io.intino.konos.model.graph.KonosGraph;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -26,28 +27,26 @@ public class DisplaysRenderer extends UIRenderer {
 
 	public void execute() {
 		if (displays.isEmpty()) return;
-		Frame frame = buildFrame();
-		for (Display display : displays) frame.addSlot("display", displayFrame(display));
-		write(frame);
+		FrameBuilder builder = frameBuilder().add("display", displays.stream().map(this::displayFrame).toArray(Frame[]::new));
+		write(builder.toFrame());
 	}
 
-
 	private Frame displayFrame(Display display) {
-		return new Frame("display")
-				.addSlot("name", display.name$())
-				.addSlot("type", display.getClass().getSimpleName());
+		return new FrameBuilder("display")
+				.add("name", display.name$())
+				.add("type", display.getClass().getSimpleName()).toFrame();
 	}
 
 	private void write(Frame frame) {
 		final String newDisplay = snakeCaseToCamelCase("Displays");
-		writeFrame(new File(gen, DISPLAYS), newDisplay, template().format(frame));
+		writeFrame(new File(gen, DISPLAYS), newDisplay, template().render(frame));
 	}
 
 	private Template template() {
-		return Formatters.customize(DisplaysTemplate.create());
+		return Formatters.customize(new DisplaysTemplate());
 	}
 
-	protected Frame buildFrame() {
-		return super.buildFrame().addTypes("displays");
+	protected FrameBuilder frameBuilder() {
+		return super.frameBuilder().add("displays");
 	}
 }

@@ -32,16 +32,16 @@ def type(request)
 
 		private $package.actions.$name+firstUpperCase~Action actionFor(Message message) {
 			final $package.actions.$name+firstUpperCase~Action action = new $package.actions.$name+firstUpperCase~Action();
-			action.box = this.box;[
-			try {
+			action.box = this.box;
+			[try {
 				$parameter+assign...[$NL]
 			} catch (JMSException e) {
 				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}]
 			return action;
 		}
-		[
-		private Message responseMessage(Session session, String responseId, $returnType response) {
+
+		[private Message responseMessage(Session session, String responseId, $returnType response) {
 			try {
 				$returnMessageType~Message message = session.create$returnMessageType~Message();
 				message.setJMSCorrelationID(responseId);

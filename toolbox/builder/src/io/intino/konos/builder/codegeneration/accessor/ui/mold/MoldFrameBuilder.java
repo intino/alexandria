@@ -1,9 +1,10 @@
 package io.intino.konos.builder.codegeneration.accessor.ui.mold;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.model.graph.Mold;
 import io.intino.konos.model.graph.Mold.Block;
 import io.intino.konos.model.graph.ui.UIService;
-import org.siani.itrules.model.Frame;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -16,47 +17,42 @@ import static io.intino.konos.builder.codegeneration.Formatters.validMoldName;
 import static io.intino.konos.model.graph.Mold.Block.Mode.Expanded;
 import static java.util.stream.Collectors.toList;
 
-public class MoldFrameBuilder extends Frame {
-	private final UIService service;
+public class MoldFrameBuilder {
 	private final Mold mold;
-	private final Frame moldFrame;
+	private final FrameBuilder moldFrameBuilder;
 
 	public MoldFrameBuilder(UIService service, Mold mold) {
-		super();
-		this.service = service;
 		this.mold = mold;
-		moldFrame = new Frame().addTypes("mold").addSlot("name", mold.name$());
+		moldFrameBuilder = new FrameBuilder("mold").add("name", mold.name$());
 	}
 
 	public Frame build() {
-		moldFrame.addSlot("block", mold.blockList().stream().filter(b -> !b.mode().equals(Expanded)).map(this::frameOf).toArray(Frame[]::new));
+		moldFrameBuilder.add("block", mold.blockList().stream().filter(b -> !b.mode().equals(Expanded)).map(this::frameOf).toArray(Frame[]::new));
 		final List<Block> expandedBlocks = mold.blockList().stream().filter(b -> b.mode().equals(Expanded)).collect(toList());
 
 		if (!expandedBlocks.isEmpty()) {
-			final Frame expanded = new Frame().addTypes("expandedBlocks");
-			expanded.addSlot("block", expandedBlocks.stream().map(this::frameOf).toArray(Frame[]::new));
-			moldFrame.addSlot("expandedBlocks", expanded);
+			moldFrameBuilder.add("expandedBlocks", new FrameBuilder("expandedBlocks").add("block", expandedBlocks.stream().map(this::frameOf).toArray(Frame[]::new)));
 		}
 
-		return moldFrame;
+		return moldFrameBuilder.toFrame();
 	}
 
 	private Frame frameOf(Block block) {
-		Frame frame = new Frame("block")
-				.addSlot("name", validMoldName().format(block.name$()))
-				.addSlot("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
-		if (block.hasCustomClass()) frame.addTypes("hasCustomClass");
-		if (isExpanded(block)) frame.addSlot("expanded", true);
-		if (block.hiddenIfMobile()) frame.addSlot("hiddenIfMobile", block.hiddenIfMobile());
-		if (!block.style().isEmpty()) frame.addSlot("style", block.style());
-		if (block.height() >= 0) frame.addSlot("height", block.height());
-		if (block.width() >= 0) frame.addSlot("width", block.width());
+		FrameBuilder builder = new FrameBuilder("block")
+				.add("name", validMoldName().format(block.name$()))
+				.add("layout", block.layout().stream().map(Enum::name).toArray(String[]::new));
+		if (block.hasCustomClass()) builder.add("hasCustomClass");
+		if (isExpanded(block)) builder.add("expanded", true);
+		if (block.hiddenIfMobile()) builder.add("hiddenIfMobile", block.hiddenIfMobile());
+		if (!block.style().isEmpty()) builder.add("style", block.style());
+		if (block.height() >= 0) builder.add("height", block.height());
+		if (block.width() >= 0) builder.add("width", block.width());
 		for (Block.Stamp stamp : block.stampList()) {
-			frame.addSlot("stamp", baseFrameOf(stamp));
-			moldFrame.addSlot("stamp", frameOf(stamp, isExpanded(block)));
+			builder.add("stamp", baseFrameOf(stamp));
+			moldFrameBuilder.add("stamp", frameOf(stamp, isExpanded(block)));
 		}
-		for (Block inner : block.blockList()) frame.addSlot("block", frameOf(inner));
-		return frame;
+		for (Block inner : block.blockList()) builder.add("block", frameOf(inner));
+		return builder.toFrame();
 	}
 
 	private boolean isExpanded(Block block) {
@@ -67,16 +63,16 @@ public class MoldFrameBuilder extends Frame {
 	}
 
 	private Frame frameOf(Block.Stamp stamp, boolean expanded) {
-		final Frame frame = baseFrameOf(stamp);
+		final FrameBuilder builder = baseFrameOf(stamp);
 		List<Frame> attributeList = new ArrayList<>();
 		List<Frame> propertyList = new ArrayList<>();
 
 		addAttributes(attributeList, stamp, expanded);
 		addCommonProperties(propertyList, stamp);
 		addCustomProperties(propertyList, stamp);
-		frame.addSlot("attribute", attributeList.toArray(new Frame[0]));
-		frame.addSlot("property", propertyList.toArray(new Frame[0]));
-		return frame;
+		builder.add("attribute", attributeList.toArray(new Frame[0]));
+		builder.add("property", propertyList.toArray(new Frame[0]));
+		return builder.toFrame();
 	}
 
 	private void addAttributes(List<Frame> attributeList, Block.Stamp stamp, boolean expanded) {
@@ -157,13 +153,13 @@ public class MoldFrameBuilder extends Frame {
 	}
 
 	private Frame frameOf(String name, Object value, String type) {
-		return new Frame().addTypes(type).addSlot("name", name).addSlot("value", value);
+		return new FrameBuilder(type).add("name", name).add("value", value).toFrame();
 	}
 
-	private Frame baseFrameOf(Block.Stamp stamp) {
-		Frame result = new Frame().addTypes("stamp");
-		if (stamp.hasCustomClass()) result.addTypes("hasCustomClass");
-		result.addSlot("name", validMoldName().format(stamp.name$())).addSlot("type", camelCaseToSnakeCase().format(stamp.getClass().getSimpleName()));
-		return result;
+	private FrameBuilder baseFrameOf(Block.Stamp stamp) {
+		FrameBuilder builder = new FrameBuilder("stamp");
+		if (stamp.hasCustomClass()) builder.add("hasCustomClass");
+		builder.add("name", validMoldName().format(stamp.name$())).add("type", camelCaseToSnakeCase().format(stamp.getClass().getSimpleName()));
+		return builder;
 	}
 }

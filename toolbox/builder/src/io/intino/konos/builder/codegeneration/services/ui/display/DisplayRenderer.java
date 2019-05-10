@@ -1,6 +1,9 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.services.ui.UIRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.catalog.CatalogRenderer;
 import io.intino.konos.builder.codegeneration.services.ui.display.desktop.DesktopRenderer;
@@ -12,11 +15,8 @@ import io.intino.konos.model.graph.accessible.AccessibleDisplay;
 import io.intino.konos.model.graph.desktop.DesktopPanel;
 import io.intino.tara.magritte.Layer;
 import org.jetbrains.annotations.NotNull;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +24,6 @@ import static cottons.utils.StringHelper.snakeCaseToCamelCase;
 import static io.intino.konos.builder.helpers.Commons.javaFile;
 import static io.intino.konos.builder.helpers.Commons.writeFrame;
 import static io.intino.konos.model.graph.Display.Request.ResponseType.Asset;
-import static java.io.File.separator;
 
 @SuppressWarnings("Duplicates")
 public class DisplayRenderer extends UIRenderer {
@@ -45,18 +44,34 @@ public class DisplayRenderer extends UIRenderer {
 		this.classes = classes;
 	}
 
+	static FrameBuilder frameOf(Display.Request request, String packageName) {
+		final FrameBuilder builder = new FrameBuilder("request");
+		if (request.responseType().equals(Asset)) builder.add("asset");
+		builder.add("name", request.name$());
+		if (request.isType()) {
+			final FrameBuilder parameterFrame = new FrameBuilder("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).add("value", parameter(request, packageName));
+			if (request.isList()) parameterFrame.add("list");
+			builder.add("parameter", parameterFrame.toFrame());
+		}
+		return builder;
+	}
+
+	private static String parameter(Display.Request request, String packageName) {
+		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
+	}
+
 	public void execute() {
 		displays.forEach(this::processDisplay);
 	}
 
 	private void processDisplay(Display display) {
 		if (display == null) return;
-		Frame frame = createFrame(display);
-		writeNotifier(display, frame);
-		writeRequester(display, frame);
-		if (display.getClass().getSimpleName().equals(Display.class.getSimpleName())) writeDisplay(display, frame);
+		FrameBuilder builder = createFrameBuilder(display);
+		writeNotifier(display, builder.toFrame());
+		writeRequester(display, builder.toFrame());
+		if (display.getClass().getSimpleName().equals(Display.class.getSimpleName())) writeDisplay(display, builder.toFrame());
 		else processPrototype(display);
-		if (display.isAccessible()) writeDisplaysFor(display.asAccessible(), frame);
+		if (display.isAccessible()) writeDisplaysFor(display.asAccessible(), builder);
 	}
 
 	private void processPrototype(Display display) {
@@ -77,42 +92,42 @@ public class DisplayRenderer extends UIRenderer {
 		final String newDisplay = snakeCaseToCamelCase(display.name$());
 		classes.put("Display#" + display.name$(), DISPLAYS + "." + newDisplay);
 		if (!javaFile(new File(src, DISPLAYS), newDisplay).exists())
-			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().format(frame));
+			writeFrame(new File(src, DISPLAYS), newDisplay, displayTemplate().render(frame));
 		else new DisplayUpdater(project, display, javaFile(new File(src, DISPLAYS), newDisplay), packageName).update();
 	}
 
 	private void writeRequester(Display display, Frame frame) {
-		writeFrame(new File(gen, REQUESTERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().format(frame));
+		writeFrame(new File(gen, REQUESTERS), snakeCaseToCamelCase(display.name$() + (frame.is("accessible") ? "Proxy" : "") + "Requester"), displayRequesterTemplate().render(frame));
 	}
 
 	private void writeNotifier(Display display, Frame frame) {
-		writeFrame(new File(gen, NOTIFIERS), snakeCaseToCamelCase(display.name$() + (Arrays.asList(frame.types()).contains("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().format(frame));
+		writeFrame(new File(gen, NOTIFIERS), snakeCaseToCamelCase(display.name$() + (frame.is("accessible") ? "Proxy" : "") + "Notifier"), displayNotifierTemplate().render(frame));
 	}
 
-	private void writeDisplaysFor(AccessibleDisplay display, Frame frame) {
-		frame.addTypes("accessible");
+	private void writeDisplaysFor(AccessibleDisplay display, FrameBuilder builder) {
+		builder.add("accessible");
 		final String name = snakeCaseToCamelCase(display.name$());
-		writeFrame(new File(src, DISPLAYS), name + "Proxy", displayTemplate().format(frame.addTypes("accessible")));
-		writeNotifier(display.a$(Display.class), frame);
-		writeRequester(display.a$(Display.class), frame);
+		writeFrame(new File(src, DISPLAYS), name + "Proxy", displayTemplate().render(builder.add("accessible")));
+		writeNotifier(display.a$(Display.class), builder.toFrame());
+		writeRequester(display.a$(Display.class), builder.toFrame());
 	}
 
 	@NotNull
-	private Frame createFrame(Display display) {
-		Frame frame = new Frame().addTypes("display");
-		frame.addSlot("package", packageName);
-		frame.addSlot("name", display.name$());
-		frame.addSlot("type", typeOf(display));
-		frame.addSlot("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
-		if (display.parentDisplay() != null) addParent(display, frame);
+	private FrameBuilder createFrameBuilder(Display display) {
+		FrameBuilder builder = new FrameBuilder("display");
+		builder.add("package", packageName);
+		builder.add("name", display.name$());
+		builder.add("type", typeOf(display));
+		builder.add("innerDisplay", display.displays().stream().map(Layer::name$).toArray(String[]::new));
+		if (display.parentDisplay() != null) addParent(display, builder);
 		if (!display.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		frame.addSlot("notification", framesOfNotifications(display.notificationList()));
-		frame.addSlot("request", framesOfRequests(display.requestList()));
-		frame.addSlot("box", box);
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
+		builder.add("notification", framesOfNotifications(display.notificationList()));
+		builder.add("request", framesOfRequests(display.requestList()));
+		builder.add("box", box);
 		if (display.isAccessible())
-			frame.addSlot("parameter", display.asAccessible().parameters().stream().map(p -> new Frame("parameter", "accessible").addSlot("value", p)).toArray(Frame[]::new));
-		return frame;
+			builder.add("parameter", display.asAccessible().parameters().stream().map(p -> new FrameBuilder("parameter", "accessible").add("value", p).toFrame()).toArray(Frame[]::new));
+		return builder;
 	}
 
 	private String typeOf(Display display) {
@@ -122,9 +137,8 @@ public class DisplayRenderer extends UIRenderer {
 		else return type;
 	}
 
-	private void addParent(Display display, Frame frame) {
-		final Frame parent = new Frame().addSlot("value", display.parentDisplay()).addSlot("dsl", this.parent).addSlot("package", this.parent.substring(0, this.parent.lastIndexOf(".")));
-		frame.addSlot("parent", parent);
+	private void addParent(Display display, FrameBuilder builder) {
+		builder.add("parent", new FrameBuilder().add("value", display.parentDisplay()).add("dsl", this.parent).add("package", this.parent.substring(0, this.parent.lastIndexOf("."))));
 	}
 
 	private Frame[] framesOfNotifications(List<Display.Notification> notifications) {
@@ -132,51 +146,35 @@ public class DisplayRenderer extends UIRenderer {
 	}
 
 	private Frame frameOf(Display.Notification notification) {
-		final Frame frame = new Frame().addTypes("notification");
-		frame.addSlot("name", notification.name$());
-		frame.addSlot("target", notification.to().name());
+		final FrameBuilder builder = new FrameBuilder("notification");
+		builder.add("name", notification.name$());
+		builder.add("target", notification.to().name());
 		if (notification.isType()) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", notification.asType().type(), notification.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", notification.asType().type());
-			if (notification.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame);
+			final FrameBuilder parameterFrame = new FrameBuilder("parameter", notification.asType().type(), notification.asType().getClass().getSimpleName().replace("Data", "")).add("value", notification.asType().type());
+			if (notification.isList()) parameterFrame.add("list");
+			builder.add("parameter", parameterFrame);
 		}
-		return frame;
+		return builder.toFrame();
 	}
 
 	private Frame[] framesOfRequests(List<Display.Request> requests) {
-		return requests.stream().map(r -> frameOf(r, this.packageName)).toArray(Frame[]::new);
-	}
-
-	static Frame frameOf(Display.Request request, String packageName) {
-		final Frame frame = new Frame().addTypes("request");
-		if (request.responseType().equals(Asset)) frame.addTypes("asset");
-		frame.addSlot("name", request.name$());
-		if (request.isType()) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", request.asType().type(), request.asType().getClass().getSimpleName().replace("Data", "")).addSlot("value", parameter(request, packageName));
-			if (request.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame);
-		}
-		return frame;
-	}
-
-	private static String parameter(Display.Request request, String packageName) {
-		return request.isObject() ? packageName.toLowerCase() + ".schemas." + request.asType().type() : request.asType().type();
+		return requests.stream().map(r -> frameOf(r, this.packageName).toFrame()).toArray(Frame[]::new);
 	}
 
 	private Template displayNotifierTemplate() {
-		Template template = DisplayNotifierTemplate.create();
+		Template template = new DisplayNotifierTemplate();
 		addFormats(template);
 		return template;
 	}
 
 	private Template displayTemplate() {
-		Template template = DisplayTemplate.create();
+		Template template = new DisplayTemplate();
 		addFormats(template);
 		return template;
 	}
 
 	private Template displayRequesterTemplate() {
-		Template template = DisplayRequesterTemplate.create();
+		Template template = new DisplayRequesterTemplate();
 		addFormats(template);
 		return template;
 	}

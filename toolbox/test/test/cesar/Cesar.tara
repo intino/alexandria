@@ -56,7 +56,6 @@ Service(title = "Cesar DevOps Service") cesar-rest as REST(host = "{host}", port
 			Exception(BadRequest)
 	Resource(path = "/devices") devices
 		Get(description = "List of devices")
-			Parameter(in = form, isRequired = true) contenido as File
 			Response as Text List
 			Exception(BadRequest)
 	Resource(path = "/devices/:device") device

@@ -56,14 +56,14 @@ def type(display)
             super();
             this.box = box;
         }
-		[
-        @Override
+
+        [@Override
 		protected void init() {
 			super.init();
 			$parent
 			$innerDisplay...[$NL]
-		}
-	]
+		}]
+
 		$request...[$NL$NL]
 		$parameter+setter...[$NL$NL]
     }
