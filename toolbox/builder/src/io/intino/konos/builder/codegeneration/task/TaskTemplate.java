@@ -1,28 +1,15 @@
 package io.intino.konos.builder.codegeneration.task;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class TaskTemplate extends Template {
 
-	protected TaskTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new TaskTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "scheduled"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(".scheduling;\n\nimport org.quartz.JobExecutionContext;\nimport org.quartz.JobExecutionException;\nimport ")).add(mark("package", "ValidPackage")).add(literal(".")).add(mark("box", "FirstUpperCase")).add(literal("Box;\nimport io.intino.alexandria.scheduler.ScheduledTrigger;\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal("Task implements ScheduledTrigger {\n\n\tpublic void execute(JobExecutionContext context) throws JobExecutionException {\n\t\t")).add(mark("box", "FirstUpperCase")).add(literal("Box box = (")).add(mark("box", "FirstUpperCase")).add(literal("Box) context.getMergedJobDataMap().get(\"box\");\n\t\t")).add(mark("package", "ValidPackage")).add(literal(".actions.")).add(mark("name", "firstUpperCase")).add(literal("Action action = new ")).add(mark("package", "ValidPackage")).add(literal(".actions.")).add(mark("name", "firstUpperCase")).add(literal("Action();\n\t\taction.box = box;\n\t\taction.execute();\n\t}\n}")),
-			rule().add((condition("type", "parameter")), (condition("trigger", "assign"))).add(literal("action.")).add(mark("name")).add(literal(" = ")).add(mark("name")).add(literal(";")),
-			rule().add((condition("type", "parameter")), (condition("trigger", "name"))).add(mark("name"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((type("scheduled"))).output(literal("package ")).output(mark("package", "ValidPackage")).output(literal(".scheduling;\n\nimport org.quartz.JobExecutionContext;\nimport org.quartz.JobExecutionException;\nimport ")).output(mark("package", "ValidPackage")).output(literal(".")).output(mark("box", "FirstUpperCase")).output(literal("Box;\nimport io.intino.alexandria.scheduler.ScheduledTrigger;\n\npublic class ")).output(mark("name", "firstUpperCase")).output(literal("Task implements ScheduledTrigger {\n\n\tpublic void execute(JobExecutionContext context) throws JobExecutionException {\n\t\t")).output(mark("box", "FirstUpperCase")).output(literal("Box box = (")).output(mark("box", "FirstUpperCase")).output(literal("Box) context.getMergedJobDataMap().get(\"box\");\n\t\t")).output(mark("package", "ValidPackage")).output(literal(".actions.")).output(mark("name", "firstUpperCase")).output(literal("Action action = new ")).output(mark("package", "ValidPackage")).output(literal(".actions.")).output(mark("name", "firstUpperCase")).output(literal("Action();\n\t\taction.box = box;\n\t\taction.execute();\n\t}\n}")),
+				rule().condition((type("parameter")), (trigger("assign"))).output(literal("action.")).output(mark("name")).output(literal(" = ")).output(mark("name")).output(literal(";")),
+				rule().condition((type("parameter")), (trigger("name"))).output(mark("name"))
 		);
-		return this;
 	}
 }

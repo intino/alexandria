@@ -1,35 +1,22 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.view;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class ViewTemplate extends Template {
 
-	protected ViewTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new ViewTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "view & display"))).add(literal("public static class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\t")).add(expression().add(mark("catalogScope")).add(literal("\n")).add(literal("\t"))).add(literal("\n\tpublic static AlexandriaDisplay display(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {\n\t\treturn null;//TODO\n\t}\n\n\t")).add(mark("hidden")).add(literal("\n}")),
-			rule().add((condition("type", "view & mold & hasMethods"))).add(literal("public static class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\t")).add(mark("hidden")).add(literal("\n}")),
-			rule().add((condition("type", "view & catalog & hasMethods"))).add(literal("public static class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\t")).add(mark("filter")).add(literal("\n\n\t")).add(mark("hidden")).add(literal("\n}")),
-			rule().add((condition("type", "view & panel & hasMethods"))).add(literal("public static class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\t")).add(mark("hidden")).add(literal("\n}")),
-			rule().add((condition("type", "view & set"))).add(literal("public static class ")).add(mark("name", "firstUpperCase")).add(literal(" {\n\t")).add(mark("item").multiple("\n")).add(literal("\n\n\t")).add(mark("hidden")).add(literal("\n}")),
-			rule().add((condition("type", "group"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\t")).add(mark("item").multiple("\n")).add(literal("\n\n\t")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("hidden")).add(literal("\n"))).add(literal("\n}")),
-				rule().add((condition("type", "items"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\n\tpublic static java.util.List<io.intino.alexandria.ui.model.Item> items(")).add(mark("box", "firstUpperCase")).add(literal("Box box, UISession session) {\n\t\treturn java.util.Collections.emptyList();\n\t}\n\n\tpublic static String label(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).add(mark("itemClass")).add(literal(" ")).add(mark("itemClass", "shortType", "firstLowerCase")).add(literal(") {\n\t\treturn null;\n\t}\n\n\tpublic static String icon(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).add(mark("itemClass")).add(literal(" ")).add(mark("itemClass", "shortType", "firstLowerCase")).add(literal(") {\n\t\treturn null;\n\t}\n\n\tpublic static Integer bubble(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).add(mark("itemClass")).add(literal(" ")).add(mark("itemClass", "shortType", "firstLowerCase")).add(literal(") {\n\t\treturn null;\n\t}\n\n\t")).add(mark("view")).add(expression().add(literal("\n")).add(literal("\t")).add(mark("hidden")).add(literal("\n"))).add(literal("\n}")),
-			rule().add((condition("type", "item"))).add(literal("public static class ")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\t")).add(mark("view")).add(literal("\n\t")).add(mark("hidden")).add(expression().add(literal("\n"))).add(literal("\n}")),
-			rule().add((condition("type", "hidden"))).add(literal("public static boolean hidden(")).add(mark("box")).add(literal("Box box, Object object, UISession session) {\n\treturn false;//TODO\n}")),
-				rule().add((condition("type", "filter"))).add(literal("public static boolean filter(")).add(mark("box")).add(literal("Box box, io.intino.alexandria.ui.model.Catalog catalog, io.intino.alexandria.ui.model.Element context, Object target, ")).add(mark("itemClass")).add(literal(" object, UISession session) {\n\treturn true;//TODO\n}\ndef\n\ndef type(catalogScope)\npublic static void scope(")).add(mark("box", "firstUpperCase")).add(literal("Box box, io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.ui.model.catalog.Scope scope) {\n}"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((allTypes("view", "display"))).output(literal("public static class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\t")).output(expression().output(mark("catalogScope")).output(literal("\n")).output(literal("\t"))).output(literal("\n\tpublic static AlexandriaDisplay display(")).output(mark("box", "firstUpperCase")).output(literal("Box box, io.intino.alexandria.ui.model.Element context, Consumer<Boolean> loadingListener, Consumer<io.intino.alexandria.ui.displays.CatalogInstantBlock> instantListener, UISession session) {\n\t\treturn null;//TODO\n\t}\n\n\t")).output(mark("hidden")).output(literal("\n}")),
+				rule().condition((allTypes("view", "hasmethods", "mold"))).output(literal("public static class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\t")).output(mark("hidden")).output(literal("\n}")),
+				rule().condition((allTypes("view", "catalog", "hasmethods"))).output(literal("public static class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\t")).output(mark("filter")).output(literal("\n\n\t")).output(mark("hidden")).output(literal("\n}")),
+				rule().condition((allTypes("view", "hasmethods", "panel"))).output(literal("public static class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\t")).output(mark("hidden")).output(literal("\n}")),
+				rule().condition((allTypes("view", "set"))).output(literal("public static class ")).output(mark("name", "firstUpperCase")).output(literal(" {\n\t")).output(mark("item").multiple("\n")).output(literal("\n\n\t")).output(mark("hidden")).output(literal("\n}")),
+				rule().condition((type("group"))).output(literal("public static class ")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\t")).output(mark("item").multiple("\n")).output(literal("\n\n\t")).output(expression().output(mark("hidden"))).output(literal("\n}")),
+				rule().condition((type("items"))).output(literal("public static class ")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\n\tpublic static java.util.List<io.intino.alexandria.ui.model.Item> items(")).output(mark("box", "firstUpperCase")).output(literal("Box box, UISession session) {\n\t\treturn java.util.Collections.emptyList();\n\t}\n\n\tpublic static String label(")).output(mark("box", "firstUpperCase")).output(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).output(mark("itemClass")).output(literal(" ")).output(mark("itemClass", "shortType", "firstLowerCase")).output(literal(") {\n\t\treturn null;\n\t}\n\n\tpublic static String icon(")).output(mark("box", "firstUpperCase")).output(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).output(mark("itemClass")).output(literal(" ")).output(mark("itemClass", "shortType", "firstLowerCase")).output(literal(") {\n\t\treturn null;\n\t}\n\n\tpublic static Integer bubble(")).output(mark("box", "firstUpperCase")).output(literal("Box box, io.intino.alexandria.ui.model.Element element, ")).output(mark("itemClass")).output(literal(" ")).output(mark("itemClass", "shortType", "firstLowerCase")).output(literal(") {\n\t\treturn null;\n\t}\n\n\t")).output(mark("view")).output(literal("\n\t")).output(expression().output(mark("hidden"))).output(literal("\n}")),
+				rule().condition((type("item"))).output(literal("public static class ")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\t")).output(mark("view")).output(literal("\n\t")).output(expression().output(mark("hidden"))).output(literal("\n}")),
+				rule().condition((type("hidden"))).output(literal("public static boolean hidden(")).output(mark("box")).output(literal("Box box, Object object, UISession session) {\n\treturn false;//TODO\n}")),
+				rule().condition((type("filter"))).output(literal("public static boolean filter(")).output(mark("box")).output(literal("Box box, io.intino.alexandria.ui.model.Catalog catalog, io.intino.alexandria.ui.model.Element context, Object target, ")).output(mark("itemClass")).output(literal(" object, UISession session) {\n\treturn true;//TODO\n}\ndef\n\ndef type(catalogScope)\npublic static void scope(")).output(mark("box", "firstUpperCase")).output(literal("Box box, io.intino.alexandria.ui.displays.AlexandriaDisplay display, io.intino.alexandria.ui.model.catalog.Scope scope) {\n}"))
 		);
-		return this;
 	}
 }

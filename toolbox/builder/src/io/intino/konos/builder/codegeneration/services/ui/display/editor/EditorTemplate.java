@@ -1,26 +1,13 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.editor;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class EditorTemplate extends Template {
 
-	protected EditorTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new EditorTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "editor"))).add(literal("package ")).add(mark("package")).add(literal(".displays;\n\nimport cottons.utils.StreamHelper;\nimport io.intino.alexandria.ui.Resource;\nimport io.intino.alexandria.ui.displays.AlexandriaEditor;\nimport io.intino.alexandria.ui.model.Element;\nimport io.intino.alexandria.ui.services.push.UISession;\nimport io.intino.alexandria.ui.services.EditorService;\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\nimport ")).add(mark("package", "validPackage")).add(literal(".dialogs.*;\nimport ")).add(mark("package", "validPackage")).add(literal(".displays.*;\n\npublic class ")).add(mark("name", "FirstUpperCase")).add(literal(" extends Abstract")).add(mark("name", "FirstUpperCase")).add(literal(" {\n\tpublic ")).add(mark("name", "FirstUpperCase")).add(literal("(")).add(mark("box", "firstUpperCase")).add(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t@Override\n\tpublic void prepare(")).add(mark("display", "firstUpperCase")).add(literal(" dialog, io.intino.alexandria.Resource document, EditorService.Permission permission) {\n\t}\n\n\t@Override\n\tpublic void save() {\n\t}\n}"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((type("editor"))).output(literal("package ")).output(mark("package")).output(literal(".displays;\n\nimport cottons.utils.StreamHelper;\nimport io.intino.alexandria.ui.Resource;\nimport io.intino.alexandria.ui.displays.AlexandriaEditor;\nimport io.intino.alexandria.ui.model.Element;\nimport io.intino.alexandria.ui.services.push.UISession;\nimport io.intino.alexandria.ui.services.EditorService;\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "firstUpperCase")).output(literal("Box;\nimport ")).output(mark("package", "validPackage")).output(literal(".dialogs.*;\nimport ")).output(mark("package", "validPackage")).output(literal(".displays.*;\n\npublic class ")).output(mark("name", "FirstUpperCase")).output(literal(" extends Abstract")).output(mark("name", "FirstUpperCase")).output(literal(" {\n\tpublic ")).output(mark("name", "FirstUpperCase")).output(literal("(")).output(mark("box", "firstUpperCase")).output(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t@Override\n\tpublic void prepare(")).output(mark("display", "firstUpperCase")).output(literal(" dialog, io.intino.alexandria.Resource document, EditorService.Permission permission) {\n\t}\n\n\t@Override\n\tpublic void save() {\n\t}\n}"))
 		);
-		return this;
 	}
 }

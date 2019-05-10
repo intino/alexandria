@@ -1,43 +1,30 @@
 package io.intino.konos.builder.codegeneration.services.ui.display;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class DisplayTemplate extends Template {
 
-	protected DisplayTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new DisplayTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "display & accessible"))).add(literal("package ")).add(mark("package")).add(literal(".displays;\n\nimport ")).add(mark("package")).add(literal(".displays.notifiers.")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("ProxyNotifier;\nimport io.intino.alexandria.ui.displays.AlexandriaProxyDisplay;\nimport io.intino.alexandria.ui.services.push.UISession;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class ")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Proxy extends AlexandriaProxyDisplay<")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("ProxyNotifier> {\n    ")).add(mark("parameter", "field").multiple("\n")).add(literal("\n\n    public ")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Proxy(UISession session, String appUrl) {\n        super(session, appUrl, \"/")).add(mark("name", "SnakeCaseToCamelCase", "lowercase")).add(literal("proxy\");\n    }\n\n\t")).add(mark("request", "accessible").multiple("\n\n")).add(literal("\n\t")).add(mark("parameter", "method").multiple("\n\n")).add(literal("\n\n    @Override\n    protected Map<String, String> parameters() {\n        Map<String, String> result = new HashMap<>();\n        ")).add(mark("parameter", "map").multiple("\n")).add(literal("\n        return result;\n    }\n\n    @Override\n    protected void refreshBaseUrl(String url) {\n        notifier.refreshBaseUrl(url);\n    }\n\n    @Override\n    protected void refreshError(String error) {\n        notifier.refreshError(error);\n    }\n\n}")),
-				rule().add((condition("type", "display"))).add(literal("package ")).add(mark("package")).add(literal(".displays;\n\nimport io.intino.alexandria.exceptions.*;\nimport ")).add(mark("package")).add(literal(".*;\n")).add(mark("schemaImport")).add(literal("\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\nimport ")).add(mark("package", "validPackage")).add(literal(".displays.notifiers.")).add(mark("name", "firstUpperCase")).add(literal("Notifier;\nimport io.intino.alexandria.ui.displays.AlexandriaDisplay;\n")).add(mark("parent", "import")).add(literal("\n\npublic class ")).add(mark("name", "firstUpperCase")).add(literal(" extends AlexandriaDisplay<")).add(mark("name", "firstUpperCase")).add(literal("Notifier> {\n    private ")).add(mark("box", "firstUpperCase")).add(literal("Box box;\n\n    public ")).add(mark("name", "firstUpperCase")).add(literal("(")).add(mark("box", "firstUpperCase")).add(literal("Box box) {\n        super();\n        this.box = box;\n    }\n\t")).add(expression().add(literal("\n")).add(literal("    @Override")).add(literal("\n")).add(literal("\tprotected void init() {")).add(literal("\n")).add(literal("\t\tsuper.init();")).add(literal("\n")).add(literal("\t\t")).add(mark("parent")).add(literal("\n")).add(literal("\t\t")).add(mark("innerDisplay").multiple("\n")).add(literal("\n")).add(literal("\t}")).add(literal("\n"))).add(literal("\n\t")).add(mark("request").multiple("\n\n")).add(literal("\n\t")).add(mark("parameter", "setter").multiple("\n\n")).add(literal("\n}")),
-				rule().add((condition("type", "request & asset"))).add(literal("public io.intino.alexandria.ui.spark.UIFile ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter")).add(literal(" value"))).add(literal(") {\n    return null;\n}")),
-			rule().add((condition("type", "request")), (condition("trigger", "accessible"))).add(literal("public void ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter")).add(literal(" value"))).add(literal(") {\n\trequest(\"")).add(mark("name")).add(literal("\"")).add(expression().add(literal(", ")).add(mark("parameter", "parameterValue"))).add(literal(");\n}")),
-			rule().add((condition("trigger", "parameterValue"))).add(literal("value")),
-			rule().add((condition("type", "request"))).add(literal("public void ")).add(mark("name")).add(literal("(")).add(expression().add(mark("parameter")).add(literal(" value"))).add(literal(") {\n\n}")),
-			rule().add((condition("trigger", "setter"))).add(literal("public void ")).add(mark("value", "firstLowerCase")).add(literal("(String value) {\n\n}")),
-			rule().add((condition("trigger", "field"))).add(literal("private String ")).add(mark("value", "firstLowerCase")).add(literal(";")),
-			rule().add((condition("trigger", "map"))).add(literal("result.put(\"")).add(mark("value")).add(literal("\", ")).add(mark("value", "firstLowerCase")).add(literal(");")),
-			rule().add((condition("trigger", "method"))).add(literal("public void ")).add(mark("value", "firstLowerCase")).add(literal("(String value) {\n    this.")).add(mark("value", "firstLowerCase")).add(literal(" = value;\n}")),
-			rule().add((condition("type", "dateTime | date")), (condition("type", "list")), (condition("trigger", "parameter"))).add(mark("value")),
-			rule().add((condition("type", "dateTime | date")), (condition("trigger", "parameter"))).add(mark("value")),
-			rule().add((condition("type", "list")), (condition("trigger", "parameter"))).add(mark("value")).add(literal("[]")),
-			rule().add((condition("trigger", "parameter"))).add(mark("value")),
-			rule().add((condition("type", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;")),
-			rule().add((condition("trigger", "import"))).add(literal("import ")).add(mark("package")).add(literal(".displays.*;")),
-			rule().add((condition("trigger", "parent"))).add(literal("addAndPersonify(new ")).add(mark("value", "firstUpperCase")).add(literal("((")).add(mark("dsl")).add(literal("Box) box.owner()));")),
-			rule().add((condition("trigger", "innerDisplay"))).add(literal("addAndPersonify(new ")).add(mark("value", "firstUpperCase")).add(literal("((box)));"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((allTypes("accessible", "display"))).output(literal("package ")).output(mark("package")).output(literal(".displays;\n\nimport ")).output(mark("package")).output(literal(".displays.notifiers.")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("ProxyNotifier;\nimport io.intino.alexandria.ui.displays.AlexandriaProxyDisplay;\nimport io.intino.alexandria.ui.services.push.UISession;\n\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class ")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Proxy extends AlexandriaProxyDisplay<")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("ProxyNotifier> {\n    ")).output(mark("parameter", "field").multiple("\n")).output(literal("\n\n    public ")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Proxy(UISession session, String appUrl) {\n        super(session, appUrl, \"/")).output(mark("name", "SnakeCaseToCamelCase", "lowercase")).output(literal("proxy\");\n    }\n\n\t")).output(mark("request", "accessible").multiple("\n\n")).output(literal("\n\t")).output(mark("parameter", "method").multiple("\n\n")).output(literal("\n\n    @Override\n    protected Map<String, String> parameters() {\n        Map<String, String> result = new HashMap<>();\n        ")).output(mark("parameter", "map").multiple("\n")).output(literal("\n        return result;\n    }\n\n    @Override\n    protected void refreshBaseUrl(String url) {\n        notifier.refreshBaseUrl(url);\n    }\n\n    @Override\n    protected void refreshError(String error) {\n        notifier.refreshError(error);\n    }\n\n}")),
+				rule().condition((type("display"))).output(literal("package ")).output(mark("package")).output(literal(".displays;\n\nimport io.intino.alexandria.exceptions.*;\nimport ")).output(mark("package")).output(literal(".*;\n")).output(mark("schemaImport")).output(literal("\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "firstUpperCase")).output(literal("Box;\nimport ")).output(mark("package", "validPackage")).output(literal(".displays.notifiers.")).output(mark("name", "firstUpperCase")).output(literal("Notifier;\nimport io.intino.alexandria.ui.displays.AlexandriaDisplay;\n")).output(mark("parent", "import")).output(literal("\n\npublic class ")).output(mark("name", "firstUpperCase")).output(literal(" extends AlexandriaDisplay<")).output(mark("name", "firstUpperCase")).output(literal("Notifier> {\n    private ")).output(mark("box", "firstUpperCase")).output(literal("Box box;\n\n    public ")).output(mark("name", "firstUpperCase")).output(literal("(")).output(mark("box", "firstUpperCase")).output(literal("Box box) {\n        super();\n        this.box = box;\n    }\n\n    ")).output(expression().output(literal("@Override")).output(literal("\n")).output(literal("\tprotected void init() {")).output(literal("\n")).output(literal("\t\tsuper.init();")).output(literal("\n")).output(literal("\t\t")).output(mark("parent")).output(literal("\n")).output(literal("\t\t")).output(mark("innerDisplay").multiple("\n")).output(literal("\n")).output(literal("\t}"))).output(literal("\n\n\t")).output(mark("request").multiple("\n\n")).output(literal("\n\t")).output(mark("parameter", "setter").multiple("\n\n")).output(literal("\n}")),
+				rule().condition((allTypes("request", "asset"))).output(literal("public io.intino.alexandria.ui.spark.UIFile ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameter")).output(literal(" value"))).output(literal(") {\n    return null;\n}")),
+				rule().condition((type("request")), (trigger("accessible"))).output(literal("public void ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameter")).output(literal(" value"))).output(literal(") {\n\trequest(\"")).output(mark("name")).output(literal("\"")).output(expression().output(literal(", ")).output(mark("parameter", "parameterValue"))).output(literal(");\n}")),
+				rule().condition((trigger("parametervalue"))).output(literal("value")),
+				rule().condition((type("request"))).output(literal("public void ")).output(mark("name")).output(literal("(")).output(expression().output(mark("parameter")).output(literal(" value"))).output(literal(") {\n\n}")),
+				rule().condition((trigger("setter"))).output(literal("public void ")).output(mark("value", "firstLowerCase")).output(literal("(String value) {\n\n}")),
+				rule().condition((trigger("field"))).output(literal("private String ")).output(mark("value", "firstLowerCase")).output(literal(";")),
+				rule().condition((trigger("map"))).output(literal("result.put(\"")).output(mark("value")).output(literal("\", ")).output(mark("value", "firstLowerCase")).output(literal(");")),
+				rule().condition((trigger("method"))).output(literal("public void ")).output(mark("value", "firstLowerCase")).output(literal("(String value) {\n    this.")).output(mark("value", "firstLowerCase")).output(literal(" = value;\n}")),
+				rule().condition((anyTypes("date", "datetime")), (type("list")), (trigger("parameter"))).output(mark("value")),
+				rule().condition((anyTypes("date", "datetime")), (trigger("parameter"))).output(mark("value")),
+				rule().condition((type("list")), (trigger("parameter"))).output(mark("value")).output(literal("[]")),
+				rule().condition((trigger("parameter"))).output(mark("value")),
+				rule().condition((type("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;")),
+				rule().condition((trigger("import"))).output(literal("import ")).output(mark("package")).output(literal(".displays.*;")),
+				rule().condition((trigger("parent"))).output(literal("addAndPersonify(new ")).output(mark("value", "firstUpperCase")).output(literal("((")).output(mark("dsl")).output(literal("Box) box.owner()));")),
+				rule().condition((trigger("innerdisplay"))).output(literal("addAndPersonify(new ")).output(mark("value", "firstUpperCase")).output(literal("((box)));"))
 		);
-		return this;
 	}
 }

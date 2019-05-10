@@ -1,29 +1,16 @@
 package io.intino.konos.builder.codegeneration.services.ui.dialog;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class DialogTemplate extends Template {
 
-	protected DialogTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new DialogTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "dialog"))).add(literal("package ")).add(mark("package")).add(literal(".dialogs;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box;\nimport io.intino.alexandria.ui.model.Dialog;\nimport io.intino.alexandria.ui.displays.DialogValidator;\n\nimport static io.intino.alexandria.ui.model.dialog.DialogResult;\n\npublic class ")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal(" extends Abstract")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal(" {\n\n\tpublic ")).add(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t@Override\n\tpublic void prepare() {\n\t}\n\n\tpublic static class Toolbar {\n\t\t")).add(mark("execution").multiple("\n")).add(literal("\n\t}\n\n\tpublic static class Validators {\n\t\t")).add(mark("validator").multiple("\n")).add(literal("\n\t}\n\n\tpublic static class Sources {\n\t\t")).add(mark("source").multiple("\n")).add(literal("\n\t}\n}")),
-				rule().add((condition("type", "execution"))).add(literal("public static DialogResult ")).add(mark("name")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.alexandria.ui.services.push.UISession session) {\n\treturn DialogResult.none();\n}\n")),
-			rule().add((condition("type", "validator"))).add(literal("public static DialogValidator.Result ")).add(mark("name")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box, Dialog.Tab.")).add(mark("field")).add(literal(" value) {\n\treturn null;\n}\n")),
-			rule().add((condition("type", "source"))).add(literal("public static java.util.List<String> ")).add(mark("name")).add(literal("(")).add(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).add(literal("Box box, Dialog.Tab.")).add(mark("field")).add(literal(" self) {\n\treturn java.util.Collections.emptyList();\n}\n"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((type("dialog"))).output(literal("package ")).output(mark("package")).output(literal(".dialogs;\n\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Box;\nimport io.intino.alexandria.ui.model.Dialog;\nimport io.intino.alexandria.ui.displays.DialogValidator;\n\nimport static io.intino.alexandria.ui.model.dialog.DialogResult;\n\npublic class ")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal(" extends Abstract")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal(" {\n\n\tpublic ")).output(mark("name", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("(")).output(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n\t@Override\n\tpublic void prepare() {\n\t}\n\n\tpublic static class Toolbar {\n\t\t")).output(mark("execution").multiple("\n")).output(literal("\n\t}\n\n\tpublic static class Validators {\n\t\t")).output(mark("validator").multiple("\n")).output(literal("\n\t}\n\n\tpublic static class Sources {\n\t\t")).output(mark("source").multiple("\n")).output(literal("\n\t}\n}")),
+				rule().condition((type("execution"))).output(literal("public static DialogResult ")).output(mark("name")).output(literal("(")).output(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Box box, Dialog dialog, Dialog.Toolbar.Operation self, io.intino.alexandria.ui.services.push.UISession session) {\n\treturn DialogResult.none();\n}\n")),
+				rule().condition((type("validator"))).output(literal("public static DialogValidator.Result ")).output(mark("name")).output(literal("(")).output(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Box box, Dialog.Tab.")).output(mark("field")).output(literal(" value) {\n\treturn null;\n}\n")),
+				rule().condition((type("source"))).output(literal("public static java.util.List<String> ")).output(mark("name")).output(literal("(")).output(mark("box", "SnakeCaseToCamelCase", "FirstUpperCase")).output(literal("Box box, Dialog.Tab.")).output(mark("field")).output(literal(" self) {\n\treturn java.util.Collections.emptyList();\n}\n"))
 		);
-		return this;
 	}
 }

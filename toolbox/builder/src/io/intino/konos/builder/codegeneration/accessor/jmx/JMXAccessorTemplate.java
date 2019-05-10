@@ -1,30 +1,17 @@
 package io.intino.konos.builder.codegeneration.accessor.jmx;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class JMXAccessorTemplate extends Template {
 
-	protected JMXAccessorTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new JMXAccessorTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "accessor"))).add(literal("package ")).add(mark("package", "ValidPackage")).add(literal(";\n\nimport java.util.List;\nimport java.util.ArrayList;\nimport io.intino.alexandria.exceptions.*;\nimport io.intino.alexandria.jmx.JMXClient;\nimport ")).add(mark("package", "ValidPackage")).add(literal(".jmx.")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean;\n\n")).add(mark("schemaImport")).add(literal("\n\npublic class ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor {\n\n\tprivate final JMXClient.JMXConnection connection;\n\tprivate ")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean bean;\n\n\tpublic ")).add(mark("name", "validName", "firstUpperCase")).add(literal("JMXAccessor(String url, int port) throws java.io.IOException {\n\t\tJMXClient server = new JMXClient(url, port);\n\t\tconnection = server.connect();\n\t\tbean = connection.mBean(")).add(mark("name", "validName", "firstUpperCase")).add(literal("MBean.class);\n\t}\n\n\tpublic void closeJMXConnection() {\n\t\tconnection.close();\n\t}\n\n\t")).add(mark("operation").multiple("\n\n")).add(literal("\n}")),
-			rule().add((condition("type", "operation"))).add(literal("public ")).add(mark("returnType", "firstUpperCase", "ReturnTypeFormatter")).add(literal(" ")).add(mark("name", "validName", "firstLowerCase")).add(literal("(")).add(mark("parameter", "signature").multiple(", ")).add(literal(") {\n\treturn bean != null ? bean.")).add(mark("name", "validName", "firstLowerCase")).add(literal("(")).add(mark("parameter", "name").multiple(", ")).add(literal(") : null;\n}")),
-			rule().add((condition("type", "parameter")), (condition("trigger", "signature"))).add(mark("type")).add(literal(" ")).add(mark("name", "validName", "firstLowerCase")),
-			rule().add((condition("type", "parameter")), (condition("trigger", "name"))).add(mark("name", "validName", "firstLowerCase")),
-			rule().add((condition("type", "schemaImport")), (condition("trigger", "schemaImport"))).add(literal("import ")).add(mark("package")).add(literal(".schemas.*;"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((type("accessor"))).output(literal("package ")).output(mark("package", "ValidPackage")).output(literal(";\n\nimport java.util.List;\nimport java.util.ArrayList;\nimport io.intino.alexandria.exceptions.*;\nimport io.intino.alexandria.jmx.JMXClient;\nimport ")).output(mark("package", "ValidPackage")).output(literal(".jmx.")).output(mark("name", "validName", "firstUpperCase")).output(literal("MBean;\n\n")).output(mark("schemaImport")).output(literal("\n\npublic class ")).output(mark("name", "validName", "firstUpperCase")).output(literal("JMXAccessor {\n\n\tprivate final JMXClient.JMXConnection connection;\n\tprivate ")).output(mark("name", "validName", "firstUpperCase")).output(literal("MBean bean;\n\n\tpublic ")).output(mark("name", "validName", "firstUpperCase")).output(literal("JMXAccessor(String url, int port) throws java.io.IOException {\n\t\tJMXClient server = new JMXClient(url, port);\n\t\tconnection = server.connect();\n\t\tbean = connection.mBean(")).output(mark("name", "validName", "firstUpperCase")).output(literal("MBean.class);\n\t}\n\n\tpublic void closeJMXConnection() {\n\t\tconnection.close();\n\t}\n\n\t")).output(mark("operation").multiple("\n\n")).output(literal("\n}")),
+				rule().condition((type("operation"))).output(literal("public ")).output(mark("returnType", "firstUpperCase", "ReturnTypeFormatter")).output(literal(" ")).output(mark("name", "validName", "firstLowerCase")).output(literal("(")).output(mark("parameter", "signature").multiple(", ")).output(literal(") {\n\treturn bean != null ? bean.")).output(mark("name", "validName", "firstLowerCase")).output(literal("(")).output(mark("parameter", "name").multiple(", ")).output(literal(") : null;\n}")),
+				rule().condition((type("parameter")), (trigger("signature"))).output(mark("type")).output(literal(" ")).output(mark("name", "validName", "firstLowerCase")),
+				rule().condition((type("parameter")), (trigger("name"))).output(mark("name", "validName", "firstLowerCase")),
+				rule().condition((type("schemaimport")), (trigger("schemaimport"))).output(literal("import ")).output(mark("package")).output(literal(".schemas.*;"))
 		);
-		return this;
 	}
 }
