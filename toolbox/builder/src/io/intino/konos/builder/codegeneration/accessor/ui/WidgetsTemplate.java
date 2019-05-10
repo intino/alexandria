@@ -1,26 +1,14 @@
 package io.intino.konos.builder.codegeneration.accessor.ui;
 
-import org.siani.itrules.*;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.*;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class WidgetsTemplate extends Template {
 
-	protected WidgetsTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new WidgetsTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-			rule().add((condition("type", "widgets"))).add(mark("widget").multiple("\n")),
-			rule().add((condition("trigger", "widget"))).add(literal("<link rel=\"import\" href=\"")).add(mark("value", "camelCaseToSnakeCase")).add(literal(".html\">"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((type("widgets"))).output(mark("widget").multiple("\n")),
+				rule().condition((trigger("widget"))).output(literal("<link rel=\"import\" href=\"")).output(mark("value", "camelCaseToSnakeCase")).output(literal(".html\">"))
 		);
-		return this;
 	}
 }

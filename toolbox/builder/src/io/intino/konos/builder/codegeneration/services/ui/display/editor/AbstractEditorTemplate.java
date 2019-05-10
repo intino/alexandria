@@ -1,26 +1,13 @@
 package io.intino.konos.builder.codegeneration.services.ui.display.editor;
 
-import org.siani.itrules.LineSeparator;
-import org.siani.itrules.Template;
-
-import java.util.Locale;
-
-import static org.siani.itrules.LineSeparator.LF;
+import io.intino.itrules.RuleSet;
+import io.intino.itrules.Template;
 
 public class AbstractEditorTemplate extends Template {
 
-	protected AbstractEditorTemplate(Locale locale, LineSeparator separator) {
-		super(locale, separator);
-	}
-
-	public static Template create() {
-		return new AbstractEditorTemplate(Locale.ENGLISH, LF).define();
-	}
-
-	public Template define() {
-		add(
-				rule().add((condition("type", "editor & gen"))).add(literal("package ")).add(mark("package")).add(literal(".displays;\n\nimport ")).add(mark("package", "validPackage")).add(literal(".")).add(mark("box", "firstUpperCase")).add(literal("Box;\nimport ")).add(mark("package", "validPackage")).add(literal(".displays.*;\nimport ")).add(mark("package", "validPackage")).add(literal(".dialogs.*;\nimport io.intino.alexandria.ui.displays.AlexandriaEditor;\n\npublic abstract class Abstract")).add(mark("name", "FirstUpperCase")).add(literal(" extends io.intino.alexandria.ui.displays.AlexandriaEditor<")).add(mark("display", "FirstUpperCase")).add(literal("> {\n\n\tpublic Abstract")).add(mark("name", "FirstUpperCase")).add(literal("(")).add(mark("box", "firstUpperCase")).add(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n}"))
+	public RuleSet ruleSet() {
+		return new RuleSet().add(
+				rule().condition((allTypes("editor", "gen"))).output(literal("package ")).output(mark("package")).output(literal(".displays;\n\nimport ")).output(mark("package", "validPackage")).output(literal(".")).output(mark("box", "firstUpperCase")).output(literal("Box;\nimport ")).output(mark("package", "validPackage")).output(literal(".displays.*;\nimport ")).output(mark("package", "validPackage")).output(literal(".dialogs.*;\nimport io.intino.alexandria.ui.displays.AlexandriaEditor;\n\npublic abstract class Abstract")).output(mark("name", "FirstUpperCase")).output(literal(" extends io.intino.alexandria.ui.displays.AlexandriaEditor<")).output(mark("display", "FirstUpperCase")).output(literal("> {\n\n\tpublic Abstract")).output(mark("name", "FirstUpperCase")).output(literal("(")).output(mark("box", "firstUpperCase")).output(literal("Box box) {\n\t\tsuper(box);\n\t}\n\n}"))
 		);
-		return this;
 	}
 }
