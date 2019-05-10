@@ -167,9 +167,9 @@ def trigger(import)
 end
 
 def trigger(innerDisplay)
-	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
+	<div><cotton-zombie display="$this" widget="$this"></cotton-zombie></div>
 end
 
 def trigger(parent)
-	<div><cotton-zombie display="$value" widget="$value"></cotton-zombie></div>
+	<div><cotton-zombie display="$this" widget="$this"></cotton-zombie></div>
 end

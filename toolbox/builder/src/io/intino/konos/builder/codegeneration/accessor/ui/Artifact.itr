@@ -15,5 +15,5 @@ def type(repository)
 end
 
 def trigger(url)
-	Release("$value")
+	Release("$this")
 end

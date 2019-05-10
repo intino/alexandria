@@ -7,8 +7,8 @@ public class WidgetsTemplate extends Template {
 
 	public RuleSet ruleSet() {
 		return new RuleSet().add(
-				rule().condition((type("widgets"))).output(mark("widget").multiple("\n")),
-				rule().condition((trigger("widget"))).output(literal("<link rel=\"import\" href=\"")).output(mark("value", "camelCaseToSnakeCase")).output(literal(".html\">"))
+			rule().condition((type("widgets"))).output(mark("widget").multiple("\n")),
+			rule().condition((trigger("widget"))).output(literal("<link rel=\"import\" href=\"")).output(mark("", "camelCaseToSnakeCase")).output(literal(".html\">"))
 		);
 	}
 }
