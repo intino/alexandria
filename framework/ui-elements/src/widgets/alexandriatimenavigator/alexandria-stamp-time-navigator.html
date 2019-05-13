@@ -1,0 +1,162 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../_common/alexandria-item-selector-combo.html">
+<link rel="import" href="../_common/alexandria-date-selector.html">
+<link rel="import" href="../_common/alexandria-scale-selector-slider.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-stamp-time-navigator">
+
+    <template>
+        <div class="layout horizontal">
+            <div><a class="previous" disabled$="[[!_canPrevious]]" on-tap="_previous">&lt;&nbsp;[[Previous]]</a></div>
+            <div class="field">
+                <div><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" boxed></alexandria-item-selector-combo></div>
+            </div>
+            <div><a class="next" disabled$="[[!_canNext]]" on-tap="_next">[[Next]]&nbsp;&gt;</a></div>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            position: relative;
+        }
+        :host a {
+            background: var(--default-primary-color);
+            padding: 4px 10px;
+            margin: 1px 10px;
+            display: inline-block;
+            border-radius: 2px;
+            color: white;
+            width: 80px;
+            text-align: center;
+            cursor: pointer;
+        }
+        :host a[disabled] {
+            background-color: var(--disabled-text-color);
+            cursor: default;
+        }
+        :host .previous {
+            @apply(--alexandria-stamp-time-navigator-previous);
+        }
+        :host .next {
+            @apply(--alexandria-stamp-time-navigator-next);
+        }
+        :host alexandria-item-selector-combo {
+            display: block;
+            width: 100%;
+            --text-size: 10pt;
+            --option-style : {
+                min-height: 20px !important;
+            }
+        }
+        :host .field {
+            margin-bottom: 10px;
+        }
+        :host .field label {
+            font-size: 9pt;
+            color: var(--secondary-text-color);
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaStampTimeNavigatorDictionary = {
+            es: {
+                Scale: 'escala',
+                Date: 'fecha',
+                Previous : 'anterior',
+                Next : 'siguiente'
+            },
+            en: {
+                Scale: 'scale',
+                Date: 'date',
+                Previous : 'previous',
+                Next : 'next'
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-time-navigator',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaTimeNavigatorBehaviors.Requester,
+                AlexandriaTimeNavigatorBehaviors.NotifierListener ],
+
+            properties : {
+                _olapRange : Object,
+                _internalDate : { type: Object, value: function() { return new Date(); } },
+                _slider : { type: Object },
+                _maxDate : Object,
+                _selectedScale : String,
+                _selectedScaleEntity : Object,
+                _canPrevious : Boolean,
+                _canNext : Boolean
+            },
+
+            attached : function() {
+                this.translate(AlexandriaStampTimeNavigatorDictionary);
+                this.listenToDisplay();
+            },
+
+            getDate : function() {
+                return this._dateObject;
+            },
+
+            _refreshScales : function(scaleList) {
+                this._scaleList = scaleList;
+            },
+
+            _refreshScale : function(scale) {
+                this._selectedScale = scale;
+                this._selectedScaleEntity = { name: scale };
+                this._refresh();
+            },
+
+            _refreshOlapRange : function(range) {
+                this._olapRange = range;
+                this._refresh();
+            },
+
+            _refreshDate : function(date) {
+                this._date = date;
+                this._dateObject = new Date(date);
+                this._refresh();
+            },
+
+            _refreshState : function(state) {
+                this._canPrevious = state.canPrevious;
+                this._canNext = state.canNext;
+            },
+
+            _refresh : function() {
+            },
+
+            _selectDate : function(event) {
+                this.selectDate(event.detail.date);
+            },
+
+            _notifyScaleSelected : function(e) {
+                this.selectScale(e.detail);
+            },
+
+            _previous : function() {
+                if (!this._canPrevious) return;
+                this.previousDate();
+            },
+
+            _next : function() {
+                if (!this._canNext) return;
+                this.nextDate();
+            }
+        });
+    </script>
+</dom-module>

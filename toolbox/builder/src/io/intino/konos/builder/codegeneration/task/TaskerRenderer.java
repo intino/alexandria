@@ -1,5 +1,8 @@
 package io.intino.konos.builder.codegeneration.task;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
@@ -8,14 +11,10 @@ import io.intino.konos.model.graph.boottrigger.BootTriggerTask;
 import io.intino.konos.model.graph.crontrigger.CronTriggerTask;
 import io.intino.konos.model.graph.directorysentinel.DirectorySentinelTask;
 import io.intino.konos.model.graph.scheduled.ScheduledTask;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.AbstractFrame;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TaskerRenderer {
@@ -24,7 +23,7 @@ public class TaskerRenderer {
 	private final String packageName;
 	private final String boxName;
 
-	public TaskerRenderer(KonosGraph graph, File gen, String packageName, String boxName, Map<String, String> classes) {
+	public TaskerRenderer(KonosGraph graph, File gen, String packageName, String boxName) {
 		this.tasks = graph.taskList();
 		this.gen = gen;
 		this.packageName = packageName;
@@ -33,11 +32,11 @@ public class TaskerRenderer {
 
 	public void execute() {
 		if (tasks.isEmpty()) return;
-		Frame frame = new Frame().addTypes("scheduler");
-		frame.addSlot("package", packageName);
-		frame.addSlot("box", boxName);
-		frame.addSlot("task", (AbstractFrame[]) processTasks(tasks));
-		Commons.writeFrame(gen, "Tasks", template().format(frame));
+		Commons.writeFrame(gen, "Tasks", template().render(
+				new FrameBuilder("scheduler")
+						.add("package", packageName)
+						.add("box", boxName)
+						.add("task", processTasks(tasks)).toFrame()));
 	}
 
 	private Frame[] processTasks(List<Task> tasks) {
@@ -48,38 +47,37 @@ public class TaskerRenderer {
 	}
 
 	private Frame processTask(ScheduledTask task) {
-		final Frame schedule = new Frame().addTypes("task").addTypes(task.getClass().getSimpleName()).addSlot("name", task.name$());
+		final FrameBuilder builder = new FrameBuilder().add("task").add(task.getClass().getSimpleName()).add("name", task.name$());
 		List<Frame> jobFrames = new ArrayList<>();
 		if (task.i$(CronTriggerTask.class)) {
-			final Frame jobFrame = new Frame().addTypes("job").addTypes("Cron" + task.getClass().getSimpleName())
-					.addSlot("name", task.core$().id());
-			final CronTriggerTask cron = task.a$(CronTriggerTask.class);
-			jobFrame.addTypes("cronTrigger")
-					.addSlot("pattern", cron.pattern())
-					.addSlot("mean", cron.mean());
-			if (cron.timeZone() != null) jobFrame.addSlot("timeZone", cron.timeZone());
-			jobFrames.add(jobFrame);
+			CronTriggerTask cron = task.a$(CronTriggerTask.class);
+			FrameBuilder jobFrameBuilder = new FrameBuilder().add("job").add("Cron" + task.getClass().getSimpleName())
+					.add("name", task.core$().id());
+			jobFrameBuilder.add("cronTrigger")
+					.add("pattern", cron.pattern())
+					.add("mean", cron.mean());
+			if (cron.timeZone() != null) jobFrameBuilder.add("timeZone", cron.timeZone());
+			jobFrames.add(jobFrameBuilder.toFrame());
 		}
 		if (task.i$(BootTriggerTask.class)) {
-			final Frame jobFrame = new Frame().addTypes("job").addTypes("Boot" + task.getClass().getSimpleName())
-					.addSlot("name", task.core$().id());
-			jobFrame.addTypes("onBootTrigger");
-			jobFrames.add(jobFrame);
+			final FrameBuilder jobFrameBuilder = new FrameBuilder("onBootTrigger", "job", "Boot" + task.getClass().getSimpleName())
+					.add("name", task.core$().id());
+			jobFrames.add(jobFrameBuilder.toFrame());
 		}
-		schedule.addSlot("job", jobFrames.toArray(new Frame[0]));
-		return schedule;
+		builder.add("job", jobFrames.toArray(new Frame[0]));
+		return builder.toFrame();
 	}
 
 	private Frame processDirectorySentinel(DirectorySentinelTask task) {
-		final Frame sentinel = new Frame().addTypes("task").addTypes(task.getClass().getSimpleName());
-		sentinel.addSlot("event", task.events().stream().map(Enum::name).toArray(String[]::new));
-		sentinel.addSlot("file", task.directory() == null ? "" : task.directory());
-		sentinel.addSlot("name", task.name$());
-		sentinel.addSlot("package", packageName);
-		return sentinel;
+		final FrameBuilder builder = new FrameBuilder().add("task").add(task.getClass().getSimpleName())
+				.add("event", task.events().stream().map(Enum::name).toArray(String[]::new))
+				.add("file", task.directory() == null ? "" : task.directory())
+				.add("name", task.name$())
+				.add("package", packageName);
+		return builder.toFrame();
 	}
 
 	private Template template() {
-		return Formatters.customize(SchedulerTemplate.create());
+		return Formatters.customize(new SchedulerTemplate());
 	}
 }

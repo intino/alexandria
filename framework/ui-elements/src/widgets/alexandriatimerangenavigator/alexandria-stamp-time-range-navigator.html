@@ -1,0 +1,126 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../_common/alexandria-item-selector-combo.html"/>
+<link rel="import" href="../_common/alexandria-date-selector.html"/>
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-stamp-time-range-navigator">
+
+    <template>
+        <div class="field">
+            <label>[[Scale]]</label>
+            <div><alexandria-item-selector-combo label="" items="[[_scaleList]]" selected="[[_selectedScaleEntity]]" on-item-selected="_notifyScaleSelected" boxed></alexandria-item-selector-combo></div>
+        </div>
+        <div class="field">
+            <label>[[RangeMin]]</label>
+            <alexandria-date-selector id="minDateSelector" date="[[_range.min]]" scale="[[_selectedScale]]" label="" on-change="_updateFrom" short></alexandria-date-selector>
+        </div>
+        <div class="field">
+            <label>[[RangeMax]]</label>
+            <alexandria-date-selector id="maxDateSelector" date="[[_range.max]]" scale="[[_selectedScale]]" label="" on-change="_updateTo" short></alexandria-date-selector>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+            position: relative;
+        }
+        :host alexandria-item-selector-combo {
+            display: block;
+            width: 100%;
+            --text-size: 10pt;
+            --option-style : {
+                min-height: 20px !important;
+            }
+        }
+        :host .field {
+            margin-bottom: 10px;
+        }
+        :host .field label {
+            font-size: 9pt;
+            color: var(--secondary-text-color);
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaStampTimeRangeNavigatorDictionary = {
+            es: {
+                Scale: 'escala',
+                RangeMin: 'desde',
+                RangeMax: 'hasta'
+            },
+            en: {
+                Scale: 'scale',
+                RangeMin: 'from',
+                RangeMax: 'to'
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-time-range-navigator',
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                         CottonBehaviors.PushBehavior,
+                         CottonBehaviors.TranslatorBehavior,
+                         AlexandriaTimeRangeNavigatorBehaviors.Requester,
+                         AlexandriaTimeRangeNavigatorBehaviors.NotifierListener ],
+
+            properties : {
+                _zoomRange: Object,
+                _widget: Object,
+                _range : Object,
+                _scaleList : Array,
+                _selectedScale : String,
+                _selectedScaleEntity : Object
+            },
+
+            attached : function() {
+                this.translate(AlexandriaStampTimeRangeNavigatorDictionary);
+                this.listenToDisplay();
+            },
+
+            _refreshScales : function(scaleList) {
+                this._scaleList = scaleList;
+            },
+
+            _refreshRange : function(range) {
+                this._range = range;
+                this._selectedScale = range.scale;
+                this._selectedScaleEntity = { name: range.scale };
+            },
+
+            _min : function (range) {
+                if (range.scale == "FiffteenMinutes") return range.min-(60000);
+                return range.min;
+            },
+
+            _refreshOlapRange : function(range) {
+            },
+
+            _refreshZoomRange : function(range) {
+                this._zoomRange = range;
+            },
+
+            _updateFrom : function(event) {
+                this.selectFrom(event.detail.date);
+            },
+
+            _updateTo : function(event) {
+                this.selectTo(event.detail.date);
+            },
+
+            _notifyScaleSelected : function(e) {
+                this.selectScale(e.detail);
+            }
+
+        });
+    </script>
+</dom-module>

@@ -35,7 +35,7 @@ def type(jms)
 			try {
 				return connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			} catch (JMSException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 				return null;
 			}
 		}
@@ -51,7 +51,7 @@ def type(jms)
 				buffer.flush();
 				return buffer.toByteArray();
 			} catch (IOException e) {
-				org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME).error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 			}
 			return new byte$[0];
 		}

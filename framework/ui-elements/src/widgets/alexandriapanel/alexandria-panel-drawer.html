@@ -1,0 +1,117 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-push/cotton-push-behavior.html">
+<link rel="import" href="../../../lib/cotton-carrier/cotton-carrier-behavior.html">
+<link rel="import" href="../../../lib/cotton-zombie/cotton-zombie.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-tabs/paper-tabs.html">
+<link rel="import" href="../../../lib/paper-tabs/paper-tabs-icons.html">
+<link rel="import" href="../../../lib/cotton-breadcrumbs/cotton-breadcrumbs.html">
+<link rel="import" href="../../../lib/paper-toast/paper-toast.html">
+<link rel="import" href="../alexandriaviewcontainercatalog/alexandria-view-container-catalog-drawer.html">
+<link rel="import" href="alexandria-panel-behavior.html">
+<link rel="import" href="../_common/alexandria-element-behavior.html">
+<link rel="import" href="../_common/alexandria-view-behavior.html">
+
+<script src="requester.js"></script>
+<script src="notifier-listener.js"></script>
+
+<dom-module id="alexandria-panel-drawer">
+
+    <template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isTabLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]">
+                    <div name$="[[view.name]]"><cotton-zombie display="AlexandriaViewContainerCatalog" widget="AlexandriaViewContainerCatalogDrawer" object$="[[display.id]][[view.name]]"></cotton-zombie></div>
+                </template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
+            </template>
+        </template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isLeftFixedLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
+            </template>
+        </template>
+        <template is="dom-repeat" items="[[_viewList]]" as="view">
+            <template is="dom-if" if="[[_isRightFixedLayoutView(view)]]">
+                <template is="dom-if" if="[[_isMoldContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerMold" widget="AlexandriaViewContainerMold" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isCatalogContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isPanelContainer(view)]]"></template>
+                <template is="dom-if" if="[[_isDisplayContainer(view)]]">
+                    <cotton-zombie display="AlexandriaViewContainerDisplay" widget="AlexandriaViewContainerDisplay" object$="[[display.id]][[view.name]]"></cotton-zombie>
+                </template>
+                <template is="dom-if" if="[[_isSetContainer(view)]]"></template>
+            </template>
+        </template>
+    </template>
+
+    <style>
+        :host {
+            position: relative;
+        }
+        :host iron-pages, :host iron-pages > div {
+            height: 100%;
+        }
+        @media screen and (max-width: 736px) {
+        }
+        @media screen and (max-width: 540px) {
+        }
+    </style>
+
+    <script>
+
+        const AlexandriaPanelDrawerDictionary = {
+            es: {
+                NoDrawer: "no hay opciones"
+            },
+            en: {
+                NoDrawer: "no options"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-panel-drawer',
+            lastView: null,
+
+            behaviors: [ CottonBehaviors.CarrierBehavior,
+                CottonBehaviors.PushBehavior,
+                CottonBehaviors.TranslatorBehavior,
+                AlexandriaBehaviors.BreadcrumbsBehavior,
+                AlexandriaBehaviors.PanelBehavior,
+                AlexandriaBehaviors.ElementBehavior,
+                AlexandriaBehaviors.ViewBehavior,
+                AlexandriaPanelBehaviors.Requester,
+                AlexandriaPanelBehaviors.NotifierListener ],
+
+            properties : {
+                _selectedPage : { type: Number, value: function () { return 0; } }
+            },
+
+            attached : function() {
+                this.translate(AlexandriaPanelDrawerDictionary);
+                this.listenToDisplay();
+                this.listenOpenEvents();
+            },
+
+            _refreshViewList : function(viewList) {
+                this._viewList = viewList;
+            },
+
+            _refreshViewListVisibility : function(viewList) {
+            }
+
+        });
+    </script>
+</dom-module>

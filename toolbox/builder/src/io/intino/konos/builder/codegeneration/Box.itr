@@ -23,10 +23,10 @@ def type(box)
 
 		public void close() {
 			super.close();
-		}[
+		}
 
-		$rest][
-		$authenticationValidator]
+		[$rest]
+		[$authenticationValidator]
 	}
 end
 
@@ -34,7 +34,7 @@ def trigger(hide)
 end
 
 def trigger(quoted)
-	"$value"
+	"$this"
 end
 
 def trigger(rest)

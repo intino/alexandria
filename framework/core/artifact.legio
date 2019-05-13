@@ -1,0 +1,15 @@
+dsl Legio
+
+Artifact("io.intino.alexandria", "1.0.1") core-framework
+	Imports
+		Compile("io.intino.alexandria", "json", "[1.0.0, 2.0.0)")
+		Compile("io.intino.alexandria", "logger", "2.0.0")
+		Compile("io.intino.alexandria", "inl", "[1.0.0, 2.0.0)")
+		Test("junit", "junit", "4.12")
+	Package(ModulesAndLibrariesLinkedByManifest, attachSources = true)
+	Distribution(intino.release)
+
+
+Repository("intino-maven") intino
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Release("https://artifactory.intino.io/artifactory/release-frameworks") release

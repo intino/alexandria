@@ -1,39 +1,39 @@
 dsl Konos
 
-//Service (title = "", favicon = "") TestWeb as UI(port = "")
-//    Resource("/") applicationPage as DisplayPage(application) Root
-//    Resource("/opinion") opinionsPage as DialogPage(dialog=opinion)
-//
-//Display application
-//
-//Dialog(url = "", label = "Añadir opinión", description = "añadir una nueva opinión") opinion2
-//    Tab("")
-//        ComboBox(label = "felicidad") > options = "A" "B" "C" "D"
-//
-//Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
-//	Toolbar
-//		Operation(label = "enviar") a
-//	Tab("Opinión") tab
-//		Text(label = "Tipo") tipo > isReadonly = true
-//		Text(label = "Área") area > isReadonly = true
-//		Text(label = "Habitación") room > isReadonly = true
-//		Text(label = "Teléfono") phone > isReadonly = true
-//		Text(label = "Email") mail > isReadonly = true
-//		Text(label = "Asunto") issue > isReadonly = true
-//		CheckBox(label = "Finalizado", mode = Boolean) finished
-//
-//	Tab("Jobs pantalla") screenJobs
-//		Section("Jobs") jobs as Multiple
-//			ComboBox("Tipo") type > options = "Screen on" "Screen off"
-//			Text("Patrón") pattern
-//
-//
-//Dialog(label = "¿La solicitud es correcta?", description = "", url = "") dialogoRevisarSolicitud
-//	Tab("")
-//		Section(label = "Solicitud desestimada") seccionDesestimacion
-//			CheckBox("Se desestima la solicitud", mode = Boolean) solicitudDesestimada
-//			Memo("Motivo de la desestimación") motivoDesestimacion
-//
-//		Section(label = "Solicitud con defectos a subsanar") seccionDefectos
-//			CheckBox("Se detectan defectos a subsanar", mode = Boolean) defectosASubsanar
-//			Memo("Defectos encontrados") defectosEncontrados
+Service (title = "", favicon = "") TestWeb as UI(port = "")
+    Resource("/") applicationPage as DisplayPage(application) Root
+    Resource("/opinion") opinionsPage as DialogPage(dialog=opinion)
+
+Display application
+
+Dialog(url = "", label = "Añadir opinión", description = "añadir una nueva opinión") opinion2
+    Tab("")
+        ComboBox(label = "felicidad") > options = "A" "B" "C" "D"
+
+Dialog(url = "", label = "Información adicional", description = "Complementar información") opinion
+	Toolbar
+		Operation(label = "enviar") a
+	Tab("Opinión") tab
+		Text(label = "Tipo") tipo > isReadonly = true
+		Text(label = "Área") area > isReadonly = true
+		Text(label = "Habitación") room > isReadonly = true
+		Text(label = "Teléfono") phone > isReadonly = true
+		Text(label = "Email") mail > isReadonly = true
+		Text(label = "Asunto") issue > isReadonly = true
+		CheckBox(label = "Finalizado", mode = Boolean) finished
+
+	Tab("Jobs pantalla") screenJobs
+		Section("Jobs") jobs as Multiple
+			ComboBox("Tipo") type > options = "Screen on" "Screen off"
+			Text("Patrón") pattern
+
+
+Dialog(label = "¿La solicitud es correcta?", description = "", url = "") dialogoRevisarSolicitud
+	Tab("")
+		Section(label = "Solicitud desestimada") seccionDesestimacion
+			CheckBox("Se desestima la solicitud", mode = Boolean) solicitudDesestimada
+			Memo("Motivo de la desestimación") motivoDesestimacion
+
+		Section(label = "Solicitud con defectos a subsanar") seccionDefectos
+			CheckBox("Se detectan defectos a subsanar", mode = Boolean) defectosASubsanar
+			Memo("Defectos encontrados") defectosEncontrados

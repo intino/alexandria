@@ -1,0 +1,16 @@
+def type(editor & gen)
+	package $package.displays;
+
+    import $package+validPackage.$box+firstUpperCase~Box;
+    import $package+validPackage.displays.*;
+    import $package+validPackage.dialogs.*;
+	import io.intino.alexandria.ui.displays.AlexandriaEditor;
+
+    public abstract class Abstract$name+FirstUpperCase extends io.intino.alexandria.ui.displays.AlexandriaEditor<$display+FirstUpperCase> {
+
+    	public Abstract$name+FirstUpperCase($box+firstUpperCase~Box box) {
+    		super(box);
+    	}
+
+    }
+end

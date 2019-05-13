@@ -1,0 +1,46 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+
+<dom-module id="alexandria-hyperlink">
+
+    <template>
+        <a class="link" style="[[style]]" on-tap="_navigate">[[label]]</a>
+    </template>
+
+    <style>
+        :host a {
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 1px 10px;
+            font-size: 12pt;
+            color: var(--default-primary-color);
+        }
+        :host .link {
+            @apply(--alexandria-hyperlink-link);
+        }
+        :host a:hover {
+            background: var(--footer-background-color);
+            border-radius: 2px;
+        }
+        :host .link:hover {
+            @apply(--alexandria-hyperlink-link-hover);
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-hyperlink',
+
+            properties : {
+                name : String,
+                label : String,
+                style : { type: String, value: function() { return ""; } }
+            },
+
+            _navigate : function(e) {
+                this.fire("item-tap", { item: { name: this.name, label: this.label } });
+            }
+
+        });
+    </script>
+
+</dom-module>

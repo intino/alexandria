@@ -1,0 +1,207 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/cotton-checkbox/cotton-checkbox.html">
+<link rel="import" href="../../../lib/paper-menu/paper-menu.html">
+<link rel="import" href="../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../lib/iron-icons/av-icons.html">
+<link rel="import" href="alexandria-expand-animation.html">
+
+<dom-module id="alexandria-item-selector">
+
+    <template>
+        <h1 hidden$="[[noLabel]]">[[label]]</h1>
+        <paper-menu id="menu" multi$="[[multiple]]">
+            <template is="dom-repeat" items="[[items]]">
+                <template is="dom-if" if="[[multiple]]">
+                    <paper-item name$="[[item.name]]">
+                        <cotton-checkbox on-change="_onMultipleItemSelected">
+                            <span>{{item.label}}</span>
+                        </cotton-checkbox>
+                    </paper-item>
+                </template>
+                <template is="dom-if" if="[[!multiple]]">
+                    <paper-item name$="[[item.name]]">
+                        <cotton-checkbox on-change="_onItemSelected" circle-box>
+                            <span>{{item.label}}</span>
+                        </cotton-checkbox>
+                    </paper-item>
+                </template>
+            </template>
+        </paper-menu>
+        <div class="no-items" hidden="[[items.length]]">[[noItemsLabel]]</div>
+    </template>
+
+    <style>
+        :host {
+            display: inline-block;
+            position: relative;
+            --paper-menu-background-color: #fff;
+        }
+        :host .no-items {
+            font-size: 10pt;
+        }
+        paper-menu {
+            width: 100%;
+            padding: 0;
+            max-height: 300px;
+            overflow: auto;
+            @apply(--alexandria-item-selector-menu);
+            --paper-menu-selected-item : {
+                font-weight: normal;
+            };
+            --paper-menu-focused-item-after : {
+                background: transparent !important;
+            };
+        }
+
+        :host paper-item:before, :host paper-item:after {
+            background: white !important;
+        }
+
+        paper-item {
+            @apply(--option-style);
+            cursor: pointer;
+            line-height: 18px;
+            min-height: 24px;
+            font-size: 11pt;
+            padding: 0 10px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            @apply(--alexandria-item-selector-menu-item);
+        }
+
+        :host[multiple=false] paper-item :hover {
+            background-color: var(--accent-color);
+        }
+
+        h1 {
+            border-bottom: 2px solid var(--default-primary-color);
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            font-size: 12pt;
+            @apply(--alexandria-item-selector-title);
+        }
+
+    </style>
+
+    <script>
+        const AlexandriaItemSelectorDictionary = {
+            es: {
+                Select : "seleccionar"
+            },
+            en: {
+                Select : "select"
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-item-selector',
+            _refreshingSelection : false,
+            _lastSelected : -1,
+
+            behaviors: [CottonBehaviors.TranslatorBehavior],
+
+            properties: {
+                label: String,
+                items: { type: Array, value: function() { return []; }, observer: '_refreshSelected' },
+                multiple: { type: Boolean, value: function() { return false; } },
+                noLabel: { type: Boolean, value: function() { return false; } },
+                selected: { type: Object, observer: '_refreshSelected' },
+                noItemsLabel : String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaItemSelectorDictionary);
+                this.$.menu.selected = undefined;
+            },
+
+            unCheckAll : function() {
+                this._forEachItem((item) => { item.querySelector("cotton-checkbox").checked = false; });
+            },
+
+            _refreshSelected : function() {
+                if (this.selected == null) return;
+                this._updateItemsSelection(this.multiple ? this.selected : [ this.selected ]);
+            },
+
+            _updateItemsSelection : function(selection) {
+                this._refreshingSelection = true;
+                this._forEachItem((item) => {
+                    var isItemInSelection = this._isItemInSelection(item.getAttribute('name'), selection);
+                    item.querySelector("cotton-checkbox").checked = isItemInSelection;
+                });
+                this._refreshingSelection = false;
+            },
+
+            _isItemInSelection : function(itemKey, selection) {
+                for (var i=0; i<selection.length; i++) {
+                    if (selection[i].name === itemKey)
+                        return true;
+                }
+                return false;
+            },
+
+            _onItemSelected: function (e) {
+                if (this._refreshingSelection) return;
+                let selectedItem = $(e.target).parents("paper-item").get(0);
+                let selected = selectedItem.querySelector("span").textContent.trim();
+                let index = this._itemIndexOf(selected);
+
+                if (this._lastSelected == index) {
+                    selectedItem.querySelector("cotton-checkbox").checked = true;
+                    this.fire('item-selected', selected);
+                    return;
+                }
+
+                this._forEachItem((item) => {
+                    if (item == selectedItem) return;
+                    item.querySelector("cotton-checkbox").checked = false;
+                });
+
+                this._lastSelected = index;
+                this.fire('item-selected', selected);
+            },
+
+            _forEachItem : function(method) {
+                this.querySelectorAll('paper-item').forEach((item) => method(item));
+            },
+
+            _onMultipleItemSelected: function (e) {
+                if (this._refreshingSelection) return;
+                var disabled = null;
+                this._forEachItem((item) => {
+                    var checked = item.querySelector("cotton-checkbox").checked;
+                    if (disabled == null && checked) disabled = false;
+                });
+                this._notifyMultipleItemSelected();
+            },
+
+            _notifyMultipleItemSelected: function () {
+                var result = [];
+
+                this._forEachItem((item) => {
+                    var checked = item.querySelector("cotton-checkbox").checked;
+                    if (checked) result.push(item.querySelector("span").innerHTML.trim());
+                });
+
+                this.fire('items-selected', result);
+            },
+
+            _checkedItems : function() {
+                var result = [];
+                this._forEachItem((item) => { if (item.querySelector("cotton-checkbox").checked) result.push(item); });
+                return result;
+            },
+
+            _itemIndexOf : function(key) {
+                for (var i=0; i<this.items.length; i++)
+                    if (this.items[i].name == key || this.items[i].label == key)
+                        return i;
+                return 0;
+            }
+
+        });
+    </script>
+
+</dom-module>

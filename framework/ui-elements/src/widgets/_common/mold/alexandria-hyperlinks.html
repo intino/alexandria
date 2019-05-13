@@ -1,0 +1,46 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-hyperlink.html">
+
+<dom-module id="alexandria-hyperlinks">
+
+    <template>
+        <div hidden$="[[!items.length]]">
+            <div class="title" hidden$="[[!title]]">[[title]]</div>
+            <ul class="layout horizontal flex wrap">
+                <template is="dom-repeat" items="[[items]]">
+                    <li><alexandria-hyperlink style$="[[styles]]" name="[[item.name]]" label="[[item.label]]"></alexandria-hyperlink></li>
+                </template>
+            </ul>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host .title {
+            min-width: 75px;
+            font-size: 12pt;
+        }
+        :host ul, :host li {
+            list-style: none;
+        }
+        :host ul {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-hyperlinks',
+
+            properties : {
+                title : { type: String, value: function() { return null; } },
+                items : Array,
+                styles : String
+            }
+        });
+    </script>
+
+</dom-module>

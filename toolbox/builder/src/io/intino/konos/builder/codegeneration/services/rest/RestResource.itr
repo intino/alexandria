@@ -19,8 +19,8 @@ def type(notification)
 	public class $name+firstUpperCase~Notification implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;[
-		$authenticationValidator+field]
+		private SparkManager<SparkPushService> manager;
+		[$authenticationValidator+field]
 
 		public $name+firstUpperCase~Notification($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
@@ -28,7 +28,7 @@ def type(notification)
 			$authenticationValidator+assign
 		}
 
-		public void execute()[ throws $throws...[, ]] {
+		public void execute() [throws $throws...[, ]] {
 			[$authenticationValidator+validate]
 			Session session = manager.currentSession();
 			String clientId = java.util.UUID.randomUUID().toString();
@@ -43,12 +43,12 @@ def type(notification)
 
 		private $package+validPackage.actions.$name+firstUpperCase~Action fill($package+validPackage.actions.$name+firstUpperCase~Action action) {
 			action.box = this.box;
-			action.context = context();[
-			$parameter+assign...[$NL]]
+			action.context = context();
+			[$parameter+assign...[$NL]]
 			return action;
 		}
-		[
-		$returnType+method]
+
+		[$returnType+method]
 
 		private SparkNotifier notifier(Session session, Client client) {
 			return new SparkNotifier(new MessageCarrier(manager.pushService(), session, client));
@@ -85,8 +85,8 @@ def type(resource)
 	public class $operation+firstUpperCase$name+firstUpperCase~Resource implements Resource {
 
 		private $box+FirstUpperCase~Box box;
-		private SparkManager<SparkPushService> manager;[
-		$authenticationValidator+field]
+		private SparkManager<SparkPushService> manager;
+		[$authenticationValidator+field]
 
 		public $operation+firstUpperCase$name+firstUpperCase~Resource($box+FirstUpperCase~Box box, SparkManager manager) {
 			this.box = box;
@@ -94,19 +94,19 @@ def type(resource)
 			$authenticationValidator+assign
 		}
 
-		public void execute() throws $throws...[, ] {[
-			$authenticationValidator+validate]
+		public void execute() throws $throws...[, ] {
+			[$authenticationValidator+validate]
 			[$returnType+methodCall]fill(new $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action()).execute()[$returnType+ending];
 		}
 
 		private $package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action fill($package+validPackage.actions.$operation+firstUpperCase$name+firstUpperCase~Action action) {
 			action.box = this.box;
-			action.context = context();[
-			$parameter+assign...[$NL]]
+			action.context = context();
+			[$parameter+assign...[$NL]]
 			return action;
 		}
-		[
-		$returnType+method]
+
+		[$returnType+method]
 
 		private io.intino.alexandria.core.Context context() {
 			io.intino.alexandria.core.Context context = new io.intino.alexandria.core.Context();
@@ -159,8 +159,8 @@ def type(parameter) trigger(type)
 end
 
 
-def type(parameter & defaultValue) trigger(assign)
-	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultValue");
+def type(parameter & defaultvalue) trigger(assign)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = manager.from$in+firstUpperCase~OrDefault("$name", $parameterType, "$defaultvalue");
 end
 
 def type(parameter) trigger(assign)

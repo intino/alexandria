@@ -1,37 +1,37 @@
 dsl Konos
 
-//Service marcetUi as UI(port = "{ui_port}", title = "Marcet", favicon = "")
-//	Authentication(by="")
-//
-//	Resource("/") home as DisplayPage(marcetDesktop) Root
-//
-//Panel marcetDesktop as Desktop(title = "Marcet", subTitle = "Interreg", logoPath = "/images/logo.png", faviconPath = "/images/logo.png")
-//	Views
-//		View(label = "avistamientos") vistaAvistamientos as CatalogContainer(catalog = marcetAvistamientos)
-//		View(label = "tesauros") vistaTesauros as PanelContainer(panel = marcetTesauros)
-//
-//Catalog(itemClass = "org.marcet.graph.Avistamiento") marcetAvistamientos
-//	Views
-//		View("listado", mold=marcetMoldeAvistamiento) as ListContainer
-//			noItemsMessage = "no hay avistamientos pendientes de resolver"
-//
-//Mold(modelClass = "org.marcet.graph.Avistamiento") marcetMoldeAvistamiento
-//	Block
-//		Title titulo
-//
-//Panel marcetTesauros
-//	Views
-//		View(label = "tesauros") tesauros as SetContainer
-//			Item(label="causa varamiento") causaVaramiento
-//				View(label = "causa varamiento") as CatalogContainer(catalog = marcetCausaVaramiento)
-//
-//Catalog(itemClass = "org.marcet.graph.Term") marcetCausaVaramiento
-//	Views
-//		View("listado", mold=marcetMoldeCausaVaramiento) as ListContainer
-//
-//Mold(modelClass = "org.marcet.graph.Term") marcetMoldeCausaVaramiento
-//	Block
-//		Title titulo
-//
+Service marcetUi as UI(port = "{ui_port}", title = "Marcet", favicon = "")
+	Authentication(by="")
+
+	Resource("/") home as DisplayPage(marcetDesktop) Root
+
+Panel marcetDesktop as Desktop(title = "Marcet", subTitle = "Interreg", logoPath = "/images/logo.png", faviconPath = "/images/logo.png")
+	Views
+		View(label = "avistamientos") vistaAvistamientos as CatalogContainer(catalog = marcetAvistamientos)
+		View(label = "tesauros") vistaTesauros as PanelContainer(panel = marcetTesauros)
+
+Catalog(itemClass = "org.marcet.graph.Avistamiento") marcetAvistamientos
+	Views
+		View("listado", mold=marcetMoldeAvistamiento) as ListContainer
+			noItemsMessage = "no hay avistamientos pendientes de resolver"
+
+Mold(modelClass = "org.marcet.graph.Avistamiento") marcetMoldeAvistamiento
+	Block
+		Title titulo
+
+Panel marcetTesauros
+	Views
+		View(label = "tesauros") tesauros as SetContainer
+			Item(label="causa varamiento") causaVaramiento
+				View(label = "causa varamiento") as CatalogContainer(catalog = marcetCausaVaramiento)
+
+Catalog(itemClass = "org.marcet.graph.Term") marcetCausaVaramiento
+	Views
+		View("listado", mold=marcetMoldeCausaVaramiento) as ListContainer
+
+Mold(modelClass = "org.marcet.graph.Term") marcetMoldeCausaVaramiento
+	Block
+		Title titulo
+
 
 

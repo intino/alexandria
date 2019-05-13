@@ -1,0 +1,37 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="alexandria-stamp-description.html">
+
+<dom-module id="alexandria-stamp-description">
+
+    <template>
+        <div class$="description [[stamp.classes]] layout horizontal" style$="[[_style]]" hidden$="[[!stamp.value.length]]">
+            <template is="dom-if" if="[[stamp.label.length]]"><div class="tag">[[stamp.label]]</div></template>
+            <div>[[stamp.value]]</div>
+            <div class="suffix">[[stamp.properties.suffix]]</div>
+        </div>
+    </template>
+
+    <style>
+        :host .description {
+            color: var(--secondary-text-color);
+        }
+        :host .description .tag {
+            color: black;
+            margin-right: 7px;
+            @apply(--alexandria-stamp-description-tag);
+        }
+        :host .description .suffix {
+            margin-left: 4px;
+            @apply(--alexandria-stamp-description-suffix);
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-stamp-description',
+            behaviors : [ AlexandriaBehaviors.StampBehavior ]
+        });
+    </script>
+
+</dom-module>

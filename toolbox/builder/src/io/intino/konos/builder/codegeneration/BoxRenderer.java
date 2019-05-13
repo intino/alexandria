@@ -4,14 +4,15 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.search.GlobalSearchScope;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.KonosGraph;
 import io.intino.tara.compiler.shared.Configuration;
 import io.intino.tara.dsl.Proteo;
 import io.intino.tara.dsl.Verso;
 import io.intino.tara.plugin.lang.psi.impl.TaraUtil;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class BoxRenderer {
 	private final Configuration configuration;
 	private boolean isTara;
 
-	public BoxRenderer(KonosGraph graph, File destination, String packageName, Module module, boolean isTara) {
+	BoxRenderer(KonosGraph graph, File destination, String packageName, Module module, boolean isTara) {
 		this.graph = graph;
 		this.destination = destination;
 		this.packageName = packageName;
@@ -42,16 +43,16 @@ public class BoxRenderer {
 		if (configuration == null || Commons.javaFile(destination, snakeCaseToCamelCase(name) + "Box").exists()) {
 			return;
 		}
-		Frame frame = new Frame().addTypes("Box").addSlot("package", packageName).addSlot("name", name);
-		if (isTara) frame.addSlot("tara", fillTara());
+		FrameBuilder builder = new FrameBuilder("Box").add("package", packageName).add("name", name);
+		if (isTara) builder.add("tara", fillTara());
 		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(true);
 		final JavaPsiFacade facade = JavaPsiFacade.getInstance(module.getProject());
 		if (facade.findClass("io.intino.konos.server.ui.services.AuthService", GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)) != null)
-			frame.addSlot("rest", name);
+			builder.add("rest", name);
 
-		if (hasAuthenticatedApis()) frame.addSlot("authenticationValidator", new Frame().addSlot("type", "Basic"));
+		if (hasAuthenticatedApis()) builder.add("authenticationValidator", new FrameBuilder().add("type", "Basic"));
 		DumbService.getInstance(module.getProject()).setAlternativeResolveEnabled(false);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().format(frame));
+		Commons.writeFrame(destination, snakeCaseToCamelCase(name) + "Box", template().render(builder.toFrame()));
 	}
 
 	private boolean hasAuthenticatedApis() {
@@ -59,11 +60,11 @@ public class BoxRenderer {
 	}
 
 	private Frame fillTara() {
-		Frame frame = new Frame();
-		frame.addSlot("name", name());
-		if (configuration.outDSL() != null) frame.addSlot("outDSL", configuration.outDSL());
-		frame.addSlot("wrapper", dsls());
-		return frame;
+		FrameBuilder builder = new FrameBuilder();
+		builder.add("name", name());
+		if (configuration.outDSL() != null) builder.add("outDSL", configuration.outDSL());
+		builder.add("wrapper", dsls());
+		return builder.toFrame();
 	}
 
 	private String[] dsls() {
@@ -75,11 +76,11 @@ public class BoxRenderer {
 			}
 		if (configuration.level() != Configuration.Level.Solution)
 			dsls.add(configuration.workingPackage().toLowerCase() + "." + firstUpperCase(configuration.outDSL()));
-		return dsls.toArray(new String[dsls.size()]);
+		return dsls.toArray(new String[0]);
 	}
 
 	private Template template() {
-		return Formatters.customize(BoxTemplate.create());
+		return Formatters.customize(new BoxTemplate());
 	}
 
 	private String name() {

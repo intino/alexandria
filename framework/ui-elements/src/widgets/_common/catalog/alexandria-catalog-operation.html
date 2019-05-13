@@ -1,0 +1,142 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../alexandria-operation-download.html">
+<link rel="import" href="../alexandria-operation-trigger.html">
+<link rel="import" href="../alexandria-export-dialog.html">
+<link rel="import" href="../alexandria-operation-confirm-dialog.html">
+
+<dom-module id="alexandria-catalog-operation">
+
+    <template>
+        <template is="dom-if" if="[[_isOperation(operation)]]">
+            <alexandria-operation-trigger message$="[[operation.confirmText]]" title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_confirm"></alexandria-operation-trigger>
+        </template>
+        <template is="dom-if" if="[[_isDownload(operation)]]">
+            <alexandria-operation-download title="[[operation.title]]" icon="[[operation.icon]]"
+                                           options="[[_options()]]" on-tap-download="_download"
+                                           mode="Icon"></alexandria-operation-download>
+        </template>
+        <template is="dom-if" if="[[_isExport(operation)]]">
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_showExportDialog"></alexandria-operation-trigger>
+        </template>
+        <template is="dom-if" if="[[_isOpenDialog(operation)]]">
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
+        </template>
+        <template is="dom-if" if="[[_isGrouping(operation)]]">
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_group"></alexandria-operation-trigger>
+        </template>
+        <template is="dom-if" if="[[_isOpenCatalog(operation)]]">
+            <alexandria-operation-trigger title="[[operation.title]]" icon="[[operation.icon]]"
+                                          mode="[[operation.mode]]" on-execute="_execute"></alexandria-operation-trigger>
+        </template>
+        <alexandria-operation-confirm-dialog id="confirmDialog" on-accept="_execute"></alexandria-operation-confirm-dialog>
+        <alexandria-export-dialog on-export="_export"></alexandria-export-dialog>
+    </template>
+
+    <style>
+    </style>
+
+    <script>
+        const AlexandriaCatalogOperationDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-catalog-operation',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                operation: Object
+            },
+
+            attached: function () {
+                this.translate(AlexandriaCatalogOperationDictionary);
+            },
+
+            _isOperation : function(operation) {
+                return operation.type === "operation";
+            },
+
+            _isDownload : function(operation) {
+                return operation.type === "download";
+            },
+
+            _isExport : function(operation) {
+                return operation.type === "export";
+            },
+
+            _isOpenDialog : function(operation) {
+                return operation.type === "open-dialog";
+            },
+
+            _isOpenCatalog : function(operation) {
+                return operation.type === "open-catalog";
+            },
+
+            _isGrouping : function(operation) {
+                return operation.type === "grouping";
+            },
+
+            _confirm : function(e) {
+                var message = e.target.getAttribute("message");
+                var dialog = this.$.confirmDialog;
+                dialog.message = message;
+                if (!dialog.requireConfirm()) {
+                    this._execute(e);
+                    return;
+                }
+                dialog.open();
+                e.stopPropagation();
+            },
+
+            _execute : function(e) {
+                var position = $(e.target).offset();
+                this.fire("execute", { operation: this.operation.name, position: position });
+            },
+
+            _download : function(e) {
+                this.fire("download", { operation: this.operation.name, option: e.detail.option });
+            },
+
+            _group : function() {
+                this.fire("group", { operation: this.operation.name });
+            },
+
+            _showExportDialog : function(e) {
+                var properties = this._properties();
+                var dialog = this.querySelector("alexandria-export-dialog");
+                dialog.open({ min: parseInt(properties.from), max: parseInt(properties.to) });
+            },
+
+            _export : function(e) {
+                var from = e.detail.from;
+                var to = e.detail.to;
+                this.fire("download", { operation: this.operation.name, from: from, to: to });
+            },
+
+            _options : function() {
+                return this._properties()["options"].split(",");
+            },
+
+            _properties : function() {
+                let propertyList = this.operation.propertyList;
+                var result = {};
+                for (var i=0; i<propertyList.length; i++)
+                    result[propertyList[i].name] = propertyList[i].value;
+                return result;
+            }
+
+        });
+    </script>
+
+</dom-module>

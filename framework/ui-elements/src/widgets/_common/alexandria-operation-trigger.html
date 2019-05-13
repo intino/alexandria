@@ -1,0 +1,98 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="../../../lib/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../lib/cotton-chip/cotton-chip.html">
+
+<dom-module id="alexandria-operation-trigger">
+
+    <template>
+        <div class$="mode [[mode]]">
+            <paper-icon-button style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Icon" id="iconOperation" icon="[[icon]]" title="[[_title]]" on-tap="_execute"></paper-icon-button>
+            <paper-button style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Button" on-tap="_execute">[[_title]]</paper-button>
+            <a style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Link" title="[[_title]]" on-tap="_execute">[[_title]]</a>
+            <cotton-chip style$="color:[[_textColor]];background-color:[[_backgroundColor]];" class="option Chip" text="[[_title]]" icon="[[icon]]" on-tap="_execute"></cotton-chip>
+        </div>
+    </template>
+
+    <style>
+        :host {
+            display: block;
+        }
+        :host paper-button {
+            text-align: center;
+        }
+        :host a {
+            color: var(--default-primary-color);
+            cursor: pointer;
+        }
+        :host .mode .option {
+            display: none;
+            @apply(--alexandria-operation-trigger-option);
+        }
+        :host .mode.Icon .option.Icon {
+            display: block;
+        }
+        :host .mode.Button .option.Button {
+            display: block;
+        }
+        :host .mode.Link .option.Link {
+            display: block;
+        }
+        :host .mode.Chip .option.Chip {
+            display: block;
+        }
+    </style>
+
+    <script>
+        const AlexandriaOperationTriggerDictionary = {
+            es: {
+                Execute: "ejecutar..."
+            },
+            en: {
+                Execute: "execute..."
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-operation-trigger',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties : {
+                title : { type: String, observer: "_refreshTitle" },
+                _title : String,
+                icon : String,
+                styles : String,
+                mode : { type: String, observer: "_fillColor" },
+                color: { type: Object, observer: "_fillColor" },
+                _textColor: String,
+                _backgroundColor: String
+            },
+
+            attached: function () {
+                this.translate(AlexandriaOperationTriggerDictionary);
+                this._fillColor();
+            },
+
+            _refreshTitle : function() {
+                this._title = this.title != null && this.title != "" ? this.title : this.Execute;
+            },
+
+            _execute : function(e) {
+                this.fire("execute");
+                e.stopPropagation();
+            },
+
+            _fillColor : function() {
+                var color = this._ownStyleProperties != null ? this._ownStyleProperties['--default-primary-color'] : "";
+                var defaultTextColor = this.mode == "Button" || this.mode == "Chip" ? "white" : color;
+                var defaultBackgroundColor = this.mode == "Button" || this.mode == "Chip" ? color : "white";
+                this._textColor = this.color != null ? this.color.text : defaultTextColor;
+                this._backgroundColor = this.color != null ? this.color.background : defaultBackgroundColor;
+            }
+
+        });
+    </script>
+
+</dom-module>

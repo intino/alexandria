@@ -197,7 +197,7 @@ def trigger(replace)
 end
 
 def trigger(tankImport)
-	import $value+validPackage.datalake.mounters.*;
+	import $this+validPackage.datalake.mounters.*;
 end
 
 def type(schema) trigger(load)
@@ -217,5 +217,5 @@ def trigger(typeName)
 end
 
 def trigger(quoted)
-	"$value"
+	"$this"
 end

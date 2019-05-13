@@ -13,29 +13,30 @@ def type(accessor)
 	import com.google.gson.Gson;
 	import com.google.gson.GsonBuilder;
 	import com.google.gson.reflect.TypeToken;
-	import org.slf4j.Logger;
-	import org.slf4j.LoggerFactory;
-
-	import static org.slf4j.Logger.ROOT_LOGGER_NAME;
-
-
+	
 	$schemaImport
 
 	public class $name+firstUpperCase+SnakeCaseToCamelCase$~Accessor {
-		private static Logger logger = LoggerFactory.getLogger(ROOT_LOGGER_NAME);
-
 		private URL url;
 		private static Gson gsonReader = gsonReader();
 		private static Gson gsonWriter = gsonWriter();
-		private RestAccessor accessor = new RestAccessor();
-		private RestAccessorNotifier notifier = new RestAccessorNotifier();[
-		$certificate~private URL certificate;][
-		$token~private String token;]
+		private RestAccessor accessor;
+		private RestAccessorNotifier notifier = new RestAccessorNotifier();
+		[$certificate~private URL certificate;]
+		[$token~private String token;]
 
 		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url[, $certificate~URL certificate][$token, String token]) {
-			this.url = url;[
-			$certificate~this.certificate = certificate;][
-			$token~this.token = token;]
+			this.url = url;
+			[$certificate~this.certificate = certificate;]
+			[$token~this.token = token;]
+			this.accessor = new RestAccessor();
+		}
+
+		public $name+firstUpperCase+SnakeCaseToCamelCase~Accessor(URL url, int timeoutMillis[, $certificate~URL certificate][$token, String token]) {
+			this.url = url;
+			[$certificate~this.certificate = certificate;]
+			[$token~this.token = token;]
+			this.accessor = new RestAccessor(timeoutMillis);
 		}
 
 		$resource...[$NL$NL]
@@ -46,7 +47,7 @@ def type(accessor)
 			try {
 				return java.net.URLEncoder.encode(value, "UTF-8");
 			} catch (java.io.UnsupportedEncodingException e) {
-				logger.error(e.getMessage(), e);
+				io.intino.alexandria.logger.Logger.error(e.getMessage(), e);
 				return "";
 			}
 		}
@@ -221,7 +222,7 @@ def type(exceptionResponse) trigger(throws)
 end
 
 def type(exceptionResponses) trigger(declaration)
-	throws [$exceptionResponse+declaration...[, ], ]Unknown
+	throws [$exceptionResponse+declaration...[, ],] Unknown
 end
 
 def type(exceptionResponse) trigger(declaration)

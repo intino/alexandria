@@ -1,0 +1,185 @@
+def type(resource & accessibleDisplay)
+	package $package+validPackage.resources;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.actions.$name+firstUpperCase~ProxyAction;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.exceptions.Unauthorized;
+	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+	import io.intino.alexandria.ui.displays.Soul;
+	import io.intino.alexandria.ui.services.auth.exceptions.CouldNotObtainInfo;
+	import io.intino.alexandria.ui.services.push.UIClient;
+	import io.intino.alexandria.ui.services.push.UISession;
+
+	import java.util.function.Function;
+
+	public class $name+firstUpperCase~ProxyResource extends io.intino.alexandria.ui.spark.resources.ProxyResource {
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase~ProxyResource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+			this.box = box;
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			fillBrowser(manager, session());
+			fillDeviceParameter();
+			try {
+				if (!isLogged(accessToken()))
+					throw new Unauthorized("user is not logged");
+
+				authenticate(session(), accessToken());
+				render();
+			} catch (CouldNotObtainInfo couldNotObtainInfo) {
+				throw new Unauthorized("user is not logged");
+			} catch (Throwable error) {
+				throw new Unauthorized("could not render component");
+			}
+		}
+
+		private void render() {
+			UIClient client = client();
+
+			$name+firstUpperCase~ProxyAction action = new $name+firstUpperCase~ProxyAction();
+			action.session = session();
+			action.session.browser().requestUrl(manager.requestUrl());
+			action.session.whenLogin(new Function<String, String>() {
+				@Override
+				public String apply(String baseUrl) {
+					return $name+firstUpperCase~ProxyResource.this.authenticate(baseUrl);
+				}
+			});
+			action.session.whenLogout(b -> logout());
+			action.box = box;
+			action.clientId = client.id();
+			action.googleApiKey = "";
+			action.device = parameterValue("device");
+			$parameter...[$NL]
+
+			Soul soul = soul();
+			if (soul != null) {
+				action.soul = soul;
+				action.execute();
+				return;
+			}
+
+			soul = new Soul(action.session) {
+				@Override
+				public void personify() {
+					Soul soul = this;
+					addRegisterDisplayListener(display -> {
+						display.inject(notifier(action.session, client, display));
+						display.inject(action.session);
+						display.inject(soul);
+						display.inject(() -> soul);
+					});
+				}
+			};
+			client.soul(soul);
+			action.soul = soul;
+			action.execute();
+			box.registerSoul(client.id(), soul);
+
+			manager.write("OK");
+		}
+	}
+end
+
+def type(resource)
+	package $package+validPackage.resources;
+
+	import $package+validPackage.$box+SnakeCaseToCamelCase+FirstUpperCase~Box;
+	import $package+validPackage.actions.$name+firstUpperCase~Action;
+	import io.intino.alexandria.exceptions.AlexandriaException;
+	import io.intino.alexandria.ui.displays.AlexandriaDisplayNotifierProvider;
+
+	import java.util.Base64;
+	import java.util.UUID;
+	import java.util.function.Consumer;
+	import java.util.function.Function;
+
+	public class $name+firstUpperCase~Resource extends io.intino.alexandria.ui.spark.resources.[$editor]Resource {
+		private final $box+SnakeCaseToCamelCase+FirstUpperCase~Box box;
+
+		public $name+firstUpperCase~Resource($box+SnakeCaseToCamelCase+FirstUpperCase~Box box, io.intino.alexandria.ui.spark.UISparkManager manager, AlexandriaDisplayNotifierProvider notifierProvider) {
+			super(manager, notifierProvider);
+			this.box = box;
+		}
+
+		@Override
+		public void execute() throws AlexandriaException {
+			super.execute();
+			fillDeviceParameter();
+			[$confidential
+			if (isLogged()) render();
+			else authenticate();?render();]
+		}
+
+		private void render() {
+			String clientId = UUID.randomUUID().toString();
+			$name+firstUpperCase~Action action = new $name+firstUpperCase~Action();
+			action.session = manager.currentSession();
+			action.session.browser().requestUrl(manager.requestUrl());
+			action.session.whenLogin($name+firstUpperCase~Resource.this::authenticate);
+			action.session.whenLogout(b -> logout());
+			action.box = box;
+			action.clientId = clientId;
+			[action.googleApiKey = $googleApiKey+format;]
+			action.device = parameterValue("device");
+			action.token = parameterValue("token");
+			[$editor+parameters]
+			$parameter...[$NL]
+			manager.pushService().onOpen(client -> {
+				if (!client.id().equals(action.clientId))
+					return false;
+
+				if (client.soul() != null)
+					return false;
+
+				io.intino.alexandria.ui.displays.Soul soul = action.prepareSoul(client);
+				soul.onRedirect((location) -> manager.redirect(location));
+				soul.addRegisterDisplayListener(display -> {
+					display.inject(notifier(action.session, client, display));
+					display.inject(action.session);
+					display.inject(soul);
+					display.inject(() -> soul);
+				});
+				client.soul(soul);
+
+				box.registerSoul(clientId, soul);
+
+				return true;
+			});
+
+			manager.pushService().onClose(clientId).execute(new Consumer<io.intino.alexandria.ui.services.push.UIClient>() {
+				@Override
+				public void accept(io.intino.alexandria.ui.services.push.UIClient client) {
+					box.soul(client.id()).ifPresent(s -> s.destroy());
+					box.unRegisterSoul(client.id());
+					manager.unRegister(client);
+				}
+			});
+
+			manager.write(action.execute());
+		}
+
+	}
+end
+
+def trigger(parameters)
+	action.document = loadDocument();
+	action.permission = loadPermission();
+end
+
+def type(parameter)
+	action.$name+SnakeCaseToCamelCase+firstLowerCase = parameterValue("$name");
+end
+
+def type(googleApiKey) trigger(format)
+	"$name"[$custom...[]]
+end
+
+def trigger(custom)
+	.replace("{$value}", box.configuration().get("$value"))
+end

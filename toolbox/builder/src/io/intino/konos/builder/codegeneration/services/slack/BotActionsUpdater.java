@@ -5,10 +5,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.model.graph.slackbot.SlackBotService;
 import io.intino.konos.model.graph.slackbot.SlackBotService.Request;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -50,7 +51,7 @@ class BotActionsUpdater {
 	}
 
 	private void addMethod(PsiClass psiClass, Request request) {
-		final String methodText = Formatters.customize(SlackTemplate.create()).format(createRequestFrame(request.core$().ownerAs(SlackBotService.class), request));
+		final String methodText = Formatters.customize(new SlackTemplate()).render(createRequestFrame(request.core$().ownerAs(SlackBotService.class), request));
 		psiClass.addAfter(factory.createMethodFromText(methodText, psiClass), anchor(psiClass));
 	}
 
@@ -64,15 +65,15 @@ class BotActionsUpdater {
 	}
 
 	private Frame createRequestFrame(SlackBotService service, SlackBotService.Request request) {
-		final Frame requestFrame = new Frame().addTypes("request", "newMethod").addSlot("bot", service.name$()).addSlot("box", boxName).addSlot("name", request.name$()).addSlot("description", request.description());
+		final FrameBuilder builder = new FrameBuilder("request", "newMethod").add("bot", service.name$()).add("box", boxName).add("name", request.name$()).add("description", request.description());
 		final List<SlackBotService.Request.Parameter> parameters = request.parameterList();
 		for (int i = 0; i < parameters.size(); i++) {
-			final Frame frame = new Frame().addTypes("parameter", parameters.get(i).type().name()).
-					addSlot("type", parameters.get(i).type().name()).addSlot("name", parameters.get(i).name$()).addSlot("pos", i);
-			if (parameters.get(i).multiple()) frame.addTypes("multiple");
-			requestFrame.addSlot("parameter", frame);
+			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameters.get(i).type().name()).
+					add("type", parameters.get(i).type().name()).add("name", parameters.get(i).name$()).add("pos", i);
+			if (parameters.get(i).multiple()) parameterBuilder.add("multiple");
+			builder.add("parameter", parameterBuilder.toFrame());
 		}
-		return requestFrame;
+		return builder.toFrame();
 	}
 
 	private PsiMethod methodOf(Request request, PsiClass psiClass) {

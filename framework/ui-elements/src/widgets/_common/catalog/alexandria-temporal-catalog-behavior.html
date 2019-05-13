@@ -1,0 +1,57 @@
+<script>
+    var AlexandriaBehaviors = AlexandriaBehaviors || {};
+
+    AlexandriaBehaviors.TemporalCatalogBehavior = {
+
+        properties : {
+            _filtered : { type: Boolean, value: function() { return false; }},
+            _navigatorLayout : { type: String, value: function() { return ""; }},
+            _navigator : String,
+            _hideNavigatorTimeout : Number
+        },
+
+        _addListeners : function(widget) {
+            this._navigator = widget;
+            this._navigator.addEventListener("open-dialog", this._showRangeNavigatorAlways.bind(this));
+            this._navigator.addEventListener("close-dialog", this._hideRangeNavigatorAlways.bind(this));
+            this._addScrollListener(widget);
+        },
+
+        _addScrollListener : function() {
+            this.addEventListener("scroll", () => {
+                this._showScrollingRangeNavigators();
+            if (this._hideNavigatorTimeout != null) window.clearTimeout(this._hideNavigatorTimeout);
+            this._hideNavigatorTimeout = window.setTimeout(() => this._hideScrollingRangeNavigators(), 1500);
+        });
+        },
+
+        _showScrollingRangeNavigators : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).addClass("visible");
+        },
+
+        _showRangeNavigatorAlways : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).addClass("visible-always");
+        },
+
+        _hideScrollingRangeNavigators : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).removeClass("visible");
+        },
+
+        _hideRangeNavigatorAlways : function() {
+            if (this._navigator == null || !this._navigator.isVisible) return;
+            $(this._navigator).removeClass("visible-always");
+        },
+
+        _loadTimezoneOffset : function() {
+            this.timezoneOffset(new Date().getTimezoneOffset()*-1);
+        },
+
+        _refreshNavigatorLayout : function(layout) {
+            this._navigatorLayout = layout;
+        }
+
+    };
+</script>

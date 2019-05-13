@@ -1,6 +1,8 @@
 package io.intino.konos.builder.codegeneration.action;
 
 import com.intellij.openapi.project.Project;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.helpers.Commons;
 import io.intino.konos.model.graph.Exception;
@@ -9,8 +11,6 @@ import io.intino.konos.model.graph.Response;
 import io.intino.konos.model.graph.Schema;
 import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.List;
@@ -21,9 +21,9 @@ import static io.intino.konos.builder.codegeneration.Formatters.snakeCaseToCamel
 public abstract class ActionRenderer {
 	protected final Project project;
 	protected final File destiny;
-	protected String packageName;
 	protected final String boxName;
 	private final String type;
+	protected String packageName;
 
 	public ActionRenderer(Project project, File destiny, String packageName, String boxName, String type) {
 		this.project = project;
@@ -55,25 +55,26 @@ public abstract class ActionRenderer {
 	}
 
 	private void createNewClass(String name, Response response, List<? extends Parameter> parameters, List<Exception> exceptions, List<Schema> schemas) {
-		Frame frame = new Frame().addTypes("action", this.type);
-		frame.addSlot("name", name);
-		frame.addSlot("package", packageName);
-		frame.addSlot("box", boxName);
-		setupParameters(parameters, frame);
-		frame.addSlot("returnType", Commons.returnType(response, packageName));
+		FrameBuilder builder = new FrameBuilder("action", this.type)
+				.add("name", name)
+				.add("package", packageName)
+				.add("box", boxName)
+				.add("returnType", Commons.returnType(response, packageName));
+		setupParameters(parameters, builder);
 
 		if (!exceptions.isEmpty())
-			frame.addSlot("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
+			builder.add("throws", exceptions.stream().map(e -> e.code().name()).toArray(String[]::new));
 		if (!schemas.isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
-		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().format(frame));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName).toFrame());
+		
+		Commons.writeFrame(destinyPackage(destiny), firstUpperCase(snakeCaseToCamelCase(name)) + suffix(), template().render(builder.toFrame()));
 	}
 
-	private void setupParameters(List<? extends Parameter> parameters, Frame frame) {
+	private void setupParameters(List<? extends Parameter> parameters, FrameBuilder builder) {
 		for (Parameter parameter : parameters) {
-			final Frame parameterFrame = new Frame().addTypes("parameter", parameter.asType().getClass().getSimpleName());
-			if (parameter.isList()) parameterFrame.addTypes("list");
-			frame.addSlot("parameter", parameterFrame.addSlot("name", snakeCaseToCamelCase().format(parameter.name$())).addSlot("type", formatType(parameter.asType())));
+			final FrameBuilder parameterBuilder = new FrameBuilder("parameter", parameter.asType().getClass().getSimpleName());
+			if (parameter.isList()) parameterBuilder.add("list");
+			builder.add("parameter", parameterBuilder.add("name", snakeCaseToCamelCase().format(parameter.name$())).add("type", formatType(parameter.asType())).toFrame());
 		}
 	}
 
@@ -86,6 +87,6 @@ public abstract class ActionRenderer {
 	}
 
 	protected Template template() {
-		return Formatters.customize(ActionTemplate.create());
+		return Formatters.customize(new ActionTemplate());
 	}
 }

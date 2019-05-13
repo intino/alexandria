@@ -19,9 +19,9 @@
     </properties>
 
     <build>
-        <outputDirectory>../../out/production/konos-model</outputDirectory>
-        <testOutputDirectory>../../out/test/konos-model</testOutputDirectory>
-        <directory>../../out/build/konos-model</directory>
+        <outputDirectory>../../out/production/model</outputDirectory>
+        <testOutputDirectory>../../out/test/model</testOutputDirectory>
+        <directory>../../out/build/model</directory>
         <resources>
             <resource>
                 <directory>res</directory>
@@ -68,14 +68,8 @@
         <dependency>
             <groupId>io.intino.tara</groupId>
             <artifactId>magritte</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.intino.tara</groupId>
-                    <artifactId>io</artifactId>
-                </exclusion>
-            </exclusions>
             <scope>provided</scope>
-            <version>2.1.8</version>
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

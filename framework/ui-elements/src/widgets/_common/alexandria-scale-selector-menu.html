@@ -1,0 +1,111 @@
+<link rel="import" href="../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../lib/iron-icon/iron-icon.html">
+<link rel="import" href="../../../lib/iron-icons/iron-icons.html">
+<link rel="import" href="../../../lib/paper-button/paper-button.html">
+<link rel="import" href="../../../lib/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../../../lib/paper-item/paper-item.html">
+<link rel="import" href="../../../lib/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../../lib/cotton-translator/cotton-translator-behavior.html">
+
+<dom-module id="alexandria-scale-selector-menu">
+    <template>
+        <paper-menu-button vertical-align="bottom" disabled="[[!scales.length]]">
+            <paper-button class="dropdown-trigger">[[selectedScale.symbol]]<iron-icon icon="arrow-drop-down"></iron-icon></paper-button>
+            <paper-menu id="menu" class="dropdown-content" on-iron-select="_scaleSelected">
+                <template is="dom-repeat" items="[[scales]]">
+                    <paper-item toggles raised on-tap="_scaleSelected" scale="[[item]]">
+                        <paper-ripple opacityDecayVelocity="2"></paper-ripple>
+                        <a class="symbol" scale="[[item]]" href="#" alt="[[item.label]]" title="[[item.label]]">[[item.symbol]]</a>
+                    </paper-item>
+                </template>
+            </paper-menu>
+        </paper-menu-button>
+    </template>
+
+    <style>
+        :host paper-button {
+            text-transform: none;
+        }
+        :host {
+            display: inline-block;
+            position: relative;
+            --paper-menu-background-color: #fff;
+            --paper-menu-button-dropdown-background: #fff;
+            --paper-menu-button-content : {
+                border: 1px solid var(--default-primary-color);
+                margin: 6px;
+                padding: 1px;
+                bottom: 55px !important;
+                left: -6px !important;
+            };
+        }
+        paper-menu-button {
+            padding: 0;
+        }
+        paper-menu {
+            width: var(--selector-width, 72px);
+        }
+        paper-button {
+            padding: 6px;
+            width: var(--selector-width, 75px);
+        }
+        paper-item {
+            @apply(--option-style);
+            cursor: pointer;
+            line-height: 16px;
+            min-height: 24px;
+            font-size: 14px;
+            padding: 10px;
+        }
+        paper-item:hover {
+            background-color: var(--accent-color);
+        }
+        .symbol {
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            color: black;
+        }
+    </style>
+
+    <script>
+        const AlexandriaScaleSelectorMenuDictionary = {
+            es: {
+            },
+            en: {
+            }
+        };
+
+        Polymer({
+            is: 'alexandria-scale-selector-menu',
+
+            behaviors: [ CottonBehaviors.TranslatorBehavior ],
+
+            properties: {
+                scales: { type: Array, value: function() { return []; } },
+                selectedScale: String
+            },
+
+            attached : function() {
+                this.translate(AlexandriaScaleSelectorMenuDictionary);
+            },
+
+            selectScale: function (scale) {
+                this.selectedScale = this._findScaleByName(scale);
+            },
+
+            _scaleSelected: function (e) {
+                let scale = e.target.scale;
+                if (scale == null) return;
+                this.selectedScale = scale;
+                this.fire('scale-selected', scale.name);
+            },
+
+            _findScaleByName: function (name) {
+                return this.scales.filter(scale => scale.name === name)[0];
+            }
+        });
+    </script>
+
+</dom-module>

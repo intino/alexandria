@@ -1,0 +1,62 @@
+<link rel="import" href="../../../../lib/polymer/polymer.html">
+<link rel="import" href="alexandria-mold-stamps.html">
+
+<dom-module id="alexandria-mold-block">
+
+    <template>
+        <content></content>
+    </template>
+
+    <style>
+        :host {
+            font-size: 10pt;
+            height: auto;
+            position: relative;
+        }
+        :host > * {
+            margin-left: 2px;
+            margin-right: 2px;
+        }
+        @media screen and (max-width: 736px) {
+            :host.not-mobile {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <script>
+        Polymer({
+            is: 'alexandria-mold-block',
+
+            properties : {
+                item: String,
+                block: { type: Object, observer: '_refresh' }
+            },
+
+            _refresh : function() {
+                if (this.block == null) return;
+                $(this).addClass(this.block.layout);
+                $(this).addClass(this.block.mode);
+                $(this).removeClass(this.lastClassName);
+                if (this.block.className != "") {
+                    $(this).addClass(this.block.className);
+                    this.lastClassName = this.block.className;
+                }
+                if (this.block.style != "") this.style.cssText += ";" + this.block.style;
+                if (this.block.hiddenIfMobile) $(this).addClass("not-mobile");
+                if (this.block.layout.indexOf("flex") !== -1)
+                    this.style.width = "calc(100% - 4px)";
+                if (this.block.width !== "100%")
+                    this.style.width = this.block.width;
+                if (this.block.height !== "-1") {
+                    this.style.height = this.block.height;
+                    if (this.block.layout.indexOf("horizontal") == -1)
+                        this.style.display = "block";
+                }
+                if (this.block.hidden) this.style.display = "none";
+                else this.style.display = "";
+            }
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,34 @@
+<link rel="import" href="../../../../../lib/polymer/polymer.html">
+<link rel="import" href="../../../../../lib/cotton-translator/cotton-translator-behavior.html">
+<link rel="import" href="alexandria-stamp-behavior.html">
+<link rel="import" href="../../alexandria-operation-download.html">
+
+<dom-module id="alexandria-stamp-download-operation">
+
+    <template>
+        <alexandria-operation-download title="[[stamp.label]]" icon="[[stamp.properties.alexandriaIcon]]"
+                                       styles="[[_style]]" mode="[[stamp.properties.mode]]"
+                                       options="[[stamp.properties.options]]" on-tap-download="_download"></alexandria-operation-download>
+    </template>
+
+    <script>
+        const AlexandriaStampDownloadOperationDictionary = {
+        };
+
+        Polymer({
+            is: 'alexandria-stamp-download-operation',
+
+            behaviors: [ AlexandriaBehaviors.StampBehavior, CottonBehaviors.TranslatorBehavior ],
+
+            attached: function () {
+                this.translate(AlexandriaStampDownloadOperationDictionary);
+            },
+
+            _download : function(e) {
+                var option = e.detail.option;
+                this.fire("download-item", { item: this.stamp.item, stamp: this.stamp.name, option: option });
+            }
+        });
+    </script>
+
+</dom-module>

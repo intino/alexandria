@@ -1,5 +1,8 @@
 package io.intino.konos.builder.codegeneration.accessor.jmx;
 
+import io.intino.itrules.Frame;
+import io.intino.itrules.FrameBuilder;
+import io.intino.itrules.Template;
 import io.intino.konos.builder.codegeneration.Formatters;
 import io.intino.konos.builder.codegeneration.schema.SchemaRenderer;
 import io.intino.konos.builder.codegeneration.services.jmx.JMXServerTemplate;
@@ -8,8 +11,6 @@ import io.intino.konos.model.graph.Parameter;
 import io.intino.konos.model.graph.jmx.JMXService;
 import io.intino.konos.model.graph.object.ObjectData;
 import io.intino.konos.model.graph.type.TypeData;
-import org.siani.itrules.Template;
-import org.siani.itrules.model.Frame;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,9 +36,9 @@ public class JMXAccessorRenderer {
 	}
 
 	private void createInterface(JMXService service) {
-		Frame frame = new Frame().addTypes("jmx", "interface");
+		FrameBuilder frame = new FrameBuilder("jmx", "interface");
 		fillFrame(service, frame);
-		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", interfaceTemplate().format(frame));
+		Commons.writeFrame(destinationPackage(), service.name$() + "MBean", interfaceTemplate().render(frame));
 	}
 
 	private File destinationPackage() {
@@ -45,42 +46,42 @@ public class JMXAccessorRenderer {
 	}
 
 	private void createService(JMXService service) {
-		Frame frame = new Frame().addTypes("accessor");
-		fillFrame(service, frame);
-		Commons.writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "JMXAccessor", template().format(frame));
+		FrameBuilder builder = new FrameBuilder("accessor");
+		fillFrame(service, builder);
+		Commons.writeFrame(destination, snakeCaseToCamelCase(service.name$()) + "JMXAccessor", template().render(builder.toFrame()));
 	}
 
-	private void fillFrame(JMXService service, Frame frame) {
-		frame.addSlot("name", service.name$());
-		frame.addSlot("package", packageName);
+	private void fillFrame(JMXService service, FrameBuilder builder) {
+		builder.add("name", service.name$());
+		builder.add("package", packageName);
 		if (!service.graph().schemaList().isEmpty())
-			frame.addSlot("schemaImport", new Frame().addTypes("schemaImport").addSlot("package", packageName));
+			builder.add("schemaImport", new FrameBuilder("schemaImport").add("package", packageName));
 		for (JMXService.Operation operation : service.operationList())
-			frame.addSlot("operation", frameOf(operation));
+			builder.add("operation", frameOf(operation));
 	}
 
 	private Frame frameOf(JMXService.Operation operation) {
-		final Frame frame = new Frame().addTypes("operation").addSlot("name", operation.name$()).addSlot("action", operation.name$()).
-				addSlot("package", packageName).addSlot("returnType", operation.response() == null ? "void" : formatType(operation.response().asType()));
-		setupParameters(operation.parameterList(), frame);
-		return frame;
+		final FrameBuilder builder = new FrameBuilder("operation").add("name", operation.name$()).add("action", operation.name$()).
+				add("package", packageName).add("returnType", operation.response() == null ? "void" : formatType(operation.response().asType()));
+		setupParameters(operation.parameterList(), builder);
+		return builder.toFrame();
 	}
 
 	private String formatType(TypeData typeData) {
 		return (typeData.i$(ObjectData.class) ? (packageName + ".schemas.") : "") + typeData.type();
 	}
 
-	private void setupParameters(List<Parameter> parameters, Frame frame) {
+	private void setupParameters(List<Parameter> parameters, FrameBuilder builder) {
 		for (Parameter parameter : parameters)
-			frame.addSlot("parameter", new Frame().addTypes("parameter").addSlot("name", parameter.name$()).addSlot("type", formatType(parameter.asType())));
+			builder.add("parameter", new FrameBuilder("parameter").add("name", parameter.name$()).add("type", formatType(parameter.asType())).toFrame());
 	}
 
 	private Template template() {
-		return Formatters.customize(JMXAccessorTemplate.create());
+		return Formatters.customize(new JMXAccessorTemplate());
 	}
 
 	private Template interfaceTemplate() {
-		return Formatters.customize(JMXServerTemplate.create());
+		return Formatters.customize(new JMXServerTemplate());
 	}
 
 }

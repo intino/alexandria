@@ -2,91 +2,91 @@ dsl Konos
 
 Schema dummy
 
-//Service (title = "", favicon = "") testEbar as UI(port = "")
-//	Resource("/") testEbarHomePage as DisplayPage(testEbarHome) Root
-//
-//Panel(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome as Desktop
-//	layout = Tab
-//
-//	Views
-//		View(label = "análisis") as DisplayContainer("testEbarAnalysis")
-//		View("infraestructura") as CatalogContainer(testEbarInfrastructure)
-//
-//Catalog("Infrastructure", itemClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
-//	Views
-//		View("mapa", mold = testEbarInfrastructureMold) as MapContainer
-//			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
-//			Zoom(14,min=1,max=18)
-//
-//Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMold
-//	Block
-//		Block
-//			Location("coordinates") coordinates
-//		Block(mode = Expanded)
-//			Block
-//				Title("label") title
-//				Description("Estado") lastEpisode
-//			Block(layout = Horizontal)
-//				Picture("chart") chart
-//					defaultStyle = "margin-top:6px;"
-//				Snippet("sequencia") sequence
-//					layout = Flexible
-//					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-//			Block
-//				Snippet("") stats
-//
-//
-//TemporalCatalog(label = "Episodios EBAR", itemClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
-//	type = Range
-//	scales = Day
-//
-//	Toolbar
-//		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
-//
-//	Views
-//		View("listado", mold = testEbarSequenceMold) as ListContainer
-//
-//	Content
-//		Sorting(label = "fecha") date
-//		Grouping(label = "Estación") sequenceStations
-//		Grouping(label = "Estado del episodio") stationSequenceStates
-//		Grouping(label = "Tipo de episodio") stationSequenceTypes
-//
-//Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
-//	Block(layout = Horizontal)
-//		Icon(label = "icon") icon
-//			source = Polymer
-//		Title("label") label
-//	Block(layout = Horizontal Wrap, mode = Expanded)
-//		Picture("sequencia") chart
-//			defaultStyle = "margin-top:6px;"
-//		Snippet("sequencia") sequence
-//			layout = Flexible
-//			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
-//
-//Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") testEbarAnalysis
-//	Views > View("análisis") as DisplayContainer("ebarOlap")
-//
-//Display ebarOlap
-//
-//Catalog("Configuración", itemClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
-//	Views > View("alertas", mold = testEbarConfigurationMold) as ListContainer
-//
-//Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationMold
-//	Block(layout = Horizontal)
-//		Block
-//			Icon(label = "icono") icono
-//				source = Polymer
-//		Block(layout = Flexible)
-//			Title("estación") title
-//			Description("direcciones de correo") emails
-//			Highlight("estado") estado
-//	Block(layout = Horizontal Wrap)
-//		mode = Expanded
-//		Block
-//			Icon(label = "icono", source = Polymer) dummy
-//		Block(layout = Flexible)
-//			OpenDialogOperation(dialog=editAlertDialog) editAlert
-//			 	label = "editar..."
-//
-//Dialog(url = "", label = "", description = "") editAlertDialog
+Service (title = "", favicon = "") testEbar as UI(port = "")
+	Resource("/") testEbarHomePage as DisplayPage(testEbarHome) Root
+
+Panel(title = "", subTitle = "", logoPath = "", faviconPath = "") testEbarHome as Desktop
+	layout = Tab
+
+	Views
+		View(label = "análisis") as DisplayContainer("testEbarAnalysis")
+		View("infraestructura") as CatalogContainer(testEbarInfrastructure)
+
+Catalog("Infrastructure", itemClass = "com.monentia.ebar.graph.Asset") testEbarInfrastructure
+	Views
+		View("mapa", mold = testEbarInfrastructureMold) as MapContainer
+			Center(latitude = 28.146773457066104, longitude = -15.418557420532238)
+			Zoom(14,min=1,max=18)
+
+Mold(modelClass = "io.intino.test.konos.graph.Station") testEbarInfrastructureMold
+	Block
+		Block
+			Location("coordinates") coordinates
+		Block(mode = Expanded)
+			Block
+				Title("label") title
+				Description("Estado") lastEpisode
+			Block(layout = Horizontal)
+				Picture("chart") chart
+					defaultStyle = "margin-top:6px;"
+				Snippet("sequencia") sequence
+					layout = Flexible
+					defaultStyle = "height:155px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+			Block
+				Snippet("") stats
+
+
+TemporalCatalog(label = "Episodios EBAR", itemClass = "com.monentia.ebar.graph.StationSequence") testEbarSequence
+	type = Range
+	scales = Day
+
+	Toolbar
+		Export(title = "Descarga los episodios del último mes", polymerIcon = "archive") export
+
+	Views
+		View("listado", mold = testEbarSequenceMold) as ListContainer
+
+	Content
+		Sorting(label = "fecha") date
+		Grouping(label = "Estación") sequenceStations
+		Grouping(label = "Estado del episodio") stationSequenceStates
+		Grouping(label = "Tipo de episodio") stationSequenceTypes
+
+Mold(modelClass ="com.monentia.ebar.graph.StationSequence") testEbarSequenceMold
+	Block(layout = Horizontal)
+		Icon(label = "icon") icon
+			source = Polymer
+		Title("label") label
+	Block(layout = Horizontal Wrap, mode = Expanded)
+		Picture("sequencia") chart
+			defaultStyle = "margin-top:6px;"
+		Snippet("sequencia") sequence
+			layout = Flexible
+			defaultStyle = "height:270px;overflow:auto;margin-top:10px;margin-bottom:10px;"
+
+Catalog("Análisis", itemClass = "com.monentia.ebar.graph.Asset") testEbarAnalysis
+	Views > View("análisis") as DisplayContainer("ebarOlap")
+
+Display ebarOlap
+
+Catalog("Configuración", itemClass="com.monentia.ebar.graph.Alerts.Alert") testEbarConfiguration
+	Views > View("alertas", mold = testEbarConfigurationMold) as ListContainer
+
+Mold(modelClass = "com.monentia.ebar.graph.Alerts.Alert") testEbarConfigurationMold
+	Block(layout = Horizontal)
+		Block
+			Icon(label = "icono") icono
+				source = Polymer
+		Block(layout = Flexible)
+			Title("estación") title
+			Description("direcciones de correo") emails
+			Highlight("estado") estado
+	Block(layout = Horizontal Wrap)
+		mode = Expanded
+		Block
+			Icon(label = "icono", source = Polymer) dummy
+		Block(layout = Flexible)
+			OpenDialogOperation(dialog=editAlertDialog) editAlert
+			 	label = "editar..."
+
+Dialog(url = "", label = "", description = "") editAlertDialog
